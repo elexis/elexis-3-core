@@ -215,7 +215,7 @@ public final class ElexisEventDispatcher extends Job {
 						continue;
 					}
 				}
-				
+
 				// [1403] inconsistent state patch
 				if (clazz != null && clazz.equals(Konsultation.class)) {
 					Konsultation konsultation = (Konsultation) ee.getObject();
@@ -249,12 +249,12 @@ public final class ElexisEventDispatcher extends Job {
 								.getLetzteKons(false));
 					}
 					lastSelection.put(Fall.class, fall);
-				} else {
-					lastSelection.put(clazz, ee.getObject());
 				}
-				
+
+				lastSelection.put(clazz, ee.getObject());
+
 				guardState();
-				
+
 			} else if (ee.getType() == ElexisEvent.EVENT_DESELECTED) {
 				lastSelection.remove(ee.getObjectClass());
 			}
@@ -279,17 +279,22 @@ public final class ElexisEventDispatcher extends Job {
 		Fall f = (Fall) lastSelection.get(Fall.class);
 		Konsultation k = (Konsultation) lastSelection.get(Konsultation.class);
 
-		if (p == null && f == null & k == null)
+		if (p == null && f == null & k == null) {
 			validState = true;
-		if (p != null && f == null && k == null)
+		} else if (p != null && f == null && k == null) {
 			validState = true;
-		if (p != null && f.getPatient().equals(p) && k.getFall().equals(f))
+		} else if (p != null && f.getPatient().equals(p)
+				&& k.getFall().equals(f)) {
 			validState = true;
-		if (p != null && k == null && f.getPatient().equals(p))
+		} else if (p != null && k == null && f.getPatient().equals(p)) {
 			validState = true;
+		}
 
+		// TODO REMOVE
+		log.debug("State: " + p + " / " + f + " / " + k);
+		
 		if (!validState) {
-			log.error("invalid state: " + p.getLabel() + " / " + f.getLabel()
+			log.error("Invalid state: " + p.getLabel() + " / " + f.getLabel()
 					+ " / " + k.getLabel());
 		}
 		return validState;
