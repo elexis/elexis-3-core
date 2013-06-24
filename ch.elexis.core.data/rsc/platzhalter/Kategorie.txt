@@ -1,0 +1,9 @@
+# Details zu den Kategorien
+# Format: <Kategorie>=<Detaillierte Beschreibung>
+Allgemein=Allgemeine Informationen
+Adressat=Informationen zu Adressaten
+Anwender=Informationen zu aktuell eingeloggtem Anwender
+Arbeitsunfähigkeit=Arbeitsunfähigkeit. Funktioniert nur, wenn beim Erstellen des Briefs ein AUF-Zeugnis markiert ist
+Bestellung=Bestellung
+Patient=Informationen zum Patienten
+Fall=Fall
