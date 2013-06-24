@@ -1,0 +1,11 @@
+h1. Data types core
+
+To allow different backends for storage and different frontends not only for medical practices, the core data types system has been refactored. All data types are defined as interfaces now and clients are encouraged to refer only to the interfaces, not to implementations.
+
+The base interface is *IPersistentObject*.
+
+An *IPersistentObjectManager* handles creation and retrieving of IPersistentObjects.
+
+An IPersistentObject has always a unique ID and a number of named properties. A property can be read with *get(name)* and written with *set(name,value)*. There are also some derived methods for convenience to get and set Integer values or Maps and so on.
+
+A *Query* can be used to retrieve Objects by properties.
