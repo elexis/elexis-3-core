@@ -178,7 +178,7 @@ public final class ElexisEventDispatcher extends Job {
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param me
@@ -186,11 +186,9 @@ public final class ElexisEventDispatcher extends Job {
 	 */
 	public void fireMessageEvent(MessageEvent me) {
 		ElexisEvent ev = new ElexisEvent(me, MessageEvent.class,
-				ElexisEvent.EVENT_NOTIFICATION,
-				ElexisEvent.PRIORITY_SYNC);
+				ElexisEvent.EVENT_NOTIFICATION, ElexisEvent.PRIORITY_SYNC);
 		fire(ev);
 	}
-	
 
 	/**
 	 * Fire an ElexisEvent. The class concerned is named in ee.getObjectClass.
@@ -217,60 +215,46 @@ public final class ElexisEventDispatcher extends Job {
 						continue;
 					}
 				}
-
-				if (clazz.equals(Patient.class)) {
-					Patient pat = (Patient) ee.getObject();
-					Fall selectedFall = (Fall) lastSelection.get(Fall.class);
-					Konsultation selectedKonsultation = (Konsultation) lastSelection
-							.get(Konsultation.class);
-					boolean changeSelection = true;
-					// dont change selection if Fall or Konsultation matches the
-					// patient
-					if (selectedFall != null
-							&& selectedFall.getPatient().equals(pat))
-						changeSelection = false;
-					if (selectedKonsultation != null
-							&& selectedKonsultation.getFall() != null
-							&& selectedKonsultation.getFall().getPatient()
-									.equals(pat))
-						changeSelection = false;
-
-					if (changeSelection) {
-						// [1103] assure that the current selections of Fall and
-						// Konsultation
-						// are not "inherited" by a prior patient selection
-						lastSelection.remove(Fall.class);
-						lastSelection.remove(Konsultation.class);
-						log.debug("pat changes selection to Kuerzel: "
-								+ pat.getKuerzel());
-
-						// [1103] 17.10.2012
-						// Wird Patient gewechselt ist der neue Standard-Fall
-						// der Fall der letzten
-						// Konsultation; gibt es diese nicht wird der erste aus
-						// der Liste als
-						// Standard-Fall gesetzt
-						Konsultation kons = pat.getLetzteKons(false);
-						selectedFall = null;
-						if (kons != null) {
-							selectedFall = kons.getFall();
-						}
-						// "can't be sure" if the last kons had a fall, don't
-						// rely on it
-						if (selectedFall == null) {
-							if (pat.getFaelle().length > 0)
-								selectedFall = pat.getFaelle()[0];
-						}
-						if (selectedFall != null) {
-							lastSelection.put(Fall.class, selectedFall);
-						} else {
-							log.error("No default Fall for Patient found: "
-									+ pat);
-						}
+				
+				// [1403] inconsistent state patch
+				if (clazz != null && clazz.equals(Konsultation.class)) {
+					Konsultation konsultation = (Konsultation) ee.getObject();
+					if (konsultation != null) {
+						lastSelection.put(Fall.class, konsultation.getFall());
+						lastSelection.put(Patient.class, konsultation.getFall()
+								.getPatient());
 					}
-				}
+					lastSelection.put(Konsultation.class, konsultation);
+				} else if (clazz != null && clazz.equals(Patient.class)) {
+					Patient patient = (Patient) ee.getObject();
 
-				lastSelection.put(clazz, ee.getObject());
+					if (patient != null) {
+						Konsultation konsultation = patient
+								.getLetzteKons(false);
+						lastSelection.put(Konsultation.class, konsultation);
+						Fall selectedFall = (konsultation != null) ? konsultation
+								.getFall() : null;
+						lastSelection.put(Fall.class, selectedFall);
+					} else {
+						lastSelection.put(Patient.class, null);
+						lastSelection.put(Fall.class, null);
+						lastSelection.put(Konsultation.class, null);
+					}
+
+				} else if (clazz != null && clazz.equals(Fall.class)) {
+					Fall fall = (Fall) ee.getObject();
+					if (fall != null) {
+						lastSelection.put(Patient.class, fall.getPatient());
+						lastSelection.put(Konsultation.class, fall.getPatient()
+								.getLetzteKons(false));
+					}
+					lastSelection.put(Fall.class, fall);
+				} else {
+					lastSelection.put(clazz, ee.getObject());
+				}
+				
+				guardState();
+				
 			} else if (ee.getType() == ElexisEvent.EVENT_DESELECTED) {
 				lastSelection.remove(ee.getObjectClass());
 			}
@@ -287,6 +271,28 @@ public final class ElexisEventDispatcher extends Job {
 				}
 			}
 		}
+	}
+
+	private boolean guardState() {
+		boolean validState = false;
+		Patient p = (Patient) lastSelection.get(Patient.class);
+		Fall f = (Fall) lastSelection.get(Fall.class);
+		Konsultation k = (Konsultation) lastSelection.get(Konsultation.class);
+
+		if (p == null && f == null & k == null)
+			validState = true;
+		if (p != null && f == null && k == null)
+			validState = true;
+		if (p != null && f.getPatient().equals(p) && k.getFall().equals(f))
+			validState = true;
+		if (p != null && k == null && f.getPatient().equals(p))
+			validState = true;
+
+		if (!validState) {
+			log.error("invalid state: " + p.getLabel() + " / " + f.getLabel()
+					+ " / " + k.getLabel());
+		}
+		return validState;
 	}
 
 	/**
