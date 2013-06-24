@@ -1,0 +1,103 @@
+# Liste aller Platzhalter 
+# Das Format auf der linken Seite setzt sich folgendermassen zusammen:
+# Default entspricht der Key dem Platzhalter. Der erste Text (vor dem ersten Punkt falls einer vorhanden)
+# entspricht der Kategorie. 
+# Es kann jedoch auch explizit eine Kategorie angegeben werden.
+# Detailierte Beschreibung (wird verwenden für Tooltip) zu den Kategorien befinden sich Kategorie.txt
+# Beispiele: 
+#       <Platzhalter>=<Beschreibung>
+#	    <Kategorie>.[<Platzhalter>]=<Beschreibung>
+
+Allgemein.[Datum.Datum]=Datumfeld.
+Allgemein.[Datum.heute]=Aktuelles Datum.
+
+Adressat.Anschrift=Anschrift des Adressaten.
+Adressat.Bezeichnung1=Bezeichnung des Adressaten.
+Adressat:mw:Er/Sie='Er' oder 'Sie' je nach Geschlecht
+Adressat:mw:Herr/Frau='Herr' oder 'Frau' je nach Geschlecht
+Adressat.[Adressat:mwn:r Herr [Adressat.Name]/ Frau [Adressat.Name]/ Damen und Herren]=Briefanrede
+
+Anwender.Name=Name des aktuell eingeloggten Anwenders.
+Anwender.Vorname=Vorname des aktuell eingeloggten Anwenders.
+Anwender.Titel=Titel des aktuell eingeloggten Anwenders.
+Anwender.Kuerzel=Initialen des aktuell eingeloggten Anwenders.
+Anwender.Label=Login-Name des aktuell eingeloggten Anwenders.
+Anwender:mw:Er/Sie='Er' oder 'Sie' je nach Geschlecht
+Anwender:mw:Herr/Frau='Herr' oder 'Frau' je nach Geschlecht
+
+Arbeitsunfähigkeit.[AUF.von]=Beginn der aktuell ausgewählten Arbeitsunfähigkeit.
+Arbeitsunfähigkeit.[AUF.bis]=Ende der aktuell ausgewählten Arbeitsunfähigkeit.
+Arbeitsunfähigkeit.[AUF.Grund]=Grund des aktuellen AUF (Unfall/ Krankheit).
+Arbeitsunfähigkeit.[AUF.Prozent]=Prozentsatz der aktuell ausgewählten Auftrag.
+Arbeitsunfähigkeit.[AUF.Zusatz]=Allfälliger Zusatztext.
+
+Fall.ArbeitgeberName=Name des Arbeitgebers, wenn eingetragen. Funktioniert nicht in allgemeinen Briefen.
+Fall.Fallnummer
+Fall.Gesetz=Bei KVG entspricht dies der Versicherungsnummer. Bei IV der AHV-Nummer. Funktioniert nur, wenn KK-Fall markiert beim Erstellen des Briefes.
+Fall.Grund=Krankheit oder Unfall.
+Fall.Kostentraeger=Bezeichnung des Kostenträgers. Funktioniert nicht in allgemeinen Briefen.
+Fall.KostentraegerKuerzel=Kürzel des Kostenträgers. Funktioniert nicht in allgemeinen Briefen.
+Fall.payment=Tier garant oder payant. Funktioniert nur, wenn KK-Fall markiert beim Erstellen des Briefes.
+Fall.Unfalldatum=Unfalldatum. Funktioniert nur, wenn ein Unfall mit eingegebener Unfall-Nr markiert ist beim Erstellen des Briefes.
+Fall.Unfallnummer=Unfallnummer. Funktioniert nur, wenn ein Unfall mit eingegebener Unfall-Nr markiert ist beim Erstellen des Briefes.
+Fall.Versicherungsnummer=Versicherungsnummer, wenn angegeben.
+
+Konsultation.Datum=Datum. Funktioniert nicht in allgemeinen Briefen.
+Konsultation.Diagnose
+Konsultation.Eintrag=Achtung, trägt manchmal den Konsultationstext von früher bearbeiteten Patienten ein.
+
+Mandant.Name=Name des aktiven Mandanten.
+Mandant.Vorname=Vorname des aktiven Mandanten.
+Mandant.Titel=Titel des aktiven Mandanten.
+Mandant.Kuerzel=Initialen des aktiven Mandanten.
+Mandant.Label=Login-Name des aktiven Mandanten.
+Mandant.EAN=Die EAN des aktuell aktiven Mandanten. Nur vorhanden, wenn das Plugin Arzttarife Schweiz geladen ist.
+Mandant.KSK=Die KSK (bzw. ZSR)-Nummer des aktuell aktiven Mandanten. Nur vorhanden, wenn das Plugin Arzttarife Schweiz geladen ist.
+Mandant.Ort
+Mandant.Plz
+Mandant.Strasse
+Mandant.E-Mail
+Mandant.Fax
+Mandant.Telefon1
+Mandant:mw:Er/Sie='Er' oder 'Sie' je nach Geschlecht
+Mandant:mw:Herr/Frau='Herr' oder 'Frau' je nach Geschlecht
+
+Patient.Auftragsnummer=Auftragsnummer des aktuell selektierten Patienten
+Patient.Name=Name des aktuell selektierten Patienten
+Patient.Vorname=Vorname des aktuell selektierten Patienten
+Patient.Titel=Titel des aktuell selektierten Patienten
+Patient.Balance=Kontostand des aktuell selektierten Patienten
+Patient.E-Mail=E-Mail Adresse des aktuell selektierten Patienten
+Patient.Plz=Plz des aktuell selektierten Patienten
+Patient.Ort=Ort des aktuell selektierten Patienten
+Patient.Strasse=Strasse des aktuell selektierten Patienten
+Patient.Telefon1=Telefon1 des aktuell selektierten Patienten
+Patient.Telefon2=Telefon2 des aktuell selektierten Patienten
+Patient.Natel=Natel des aktuell selektierten Patienten
+Patient.PatientNr=Die interne Patientennummer des aktuell selektierten Patienten
+Patient.AHV=AHV-Nr des aktuell selektierten Patienten
+Patient.Alter=Alter des aktuell selektierten Patienten
+Patient.Geburtsdatum=Geburtsdatum des aktuell selektierten Patienten
+Patient.Geschlecht=Geschlecht des aktuell selektierten Patienten
+Patient.PersAnamnese=Anamnese wie auf dem Titelblatt
+Patient.Medikation=Aktuelle Fixmedikation des aktuell selektierten Patienten
+Patient.Allergien=Allergien wie auf dem Titelblatt
+Patient.Diagnosen=Diagnosen wie auf dem Titelblatt genannt
+Patient.Stammarzt=Hausarzt des Patienten
+Patient:mw:Er/Sie='Er' oder 'Sie' je nach Geschlecht
+Patient:mw:Herr/Frau='Herr' oder 'Frau' je nach Geschlecht
+
+Rechnung.RnDatumBis
+Rechnung.RnDatumVon=Nur für den Rechnungsdruck. Funktioniert nicht in allgemeinen Briefen.
+Rechnung.RnDatum=Rechnungsdatum.
+Rechnung.RnNummer=Nummer der aktuellen Rechnung.
+Rechnung.[Rechnungszeilen]=Rechnungszeilen für den Ausdruck von 'Tarmedrechnung_S..' dh den KK-Rückforderungsbeleg.
+Rechnung.[Leistungen]=Leistungen für den Ausdruck von 'Tarmedrechnung_ES' dh die erste Tarmed-Rechnungsseite mit Einzahlungsschein.
+
+Spezial.[Liste]=Liste für Abrechnungliste des Plugins KonsNachDatum. Funktionieren nicht in allgemeinen Briefen.
+Spezial.[Tabelle]=Für den Ausdruck von 'Messwerte. Funktionieren nicht in allgemeinen Briefen.
+Spezial.[Laborwerte]=Laborwerte für den Ausdruck von 'Laborblatt'. Funktionieren nicht in allgemeinen Briefen.
+Spezial.[Rezeptzeilen]=Für den Ausdruck von 'Rezept'. Funktionieren nicht in allgemeinen Briefen.
+Spezial.[Medikamentenliste]=Liste für den Ausdruck von 'Einnahmeliste'. Funktionieren nicht in allgemeinen Briefen.
+Spezial.[Termine]=Die Agenda-Termine des aktuellen Tags. Funktionieren nicht in allgemeinen Briefen.
+Spezial.[Bestellung]=Bestellung für den Ausdruck von 'Bestellung' für den Ausdruck von 'Bestellung'. Funktionieren nicht in allgemeinen Briefen.

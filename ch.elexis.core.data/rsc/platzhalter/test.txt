@@ -1,0 +1,29 @@
+# Liste einiger spezieller Platzhalter
+# Diese Datei wird nur für Entwicklungstests verwendet
+=Test0
+[]=Test1
+[=Test2
+]=Test3
+].=Test4
+.[=Test5
+.=Test6
+
+[Test7]=Test7
+.[Test8]=Test8
+a.[Test9]=Test9
+a[Test10]=Test10
+
+Test11]=Test11
+.Test12]=Test12
+a.Test13]=Test13
+aTest14]=Test14
+
+[Test15=Test15
+.[Test16=Test16
+a.[Test17=Test17
+a[Test18=Test18
+
+Test19=Test19
+.Test20=Test20
+a.Test21=Test21
+aTest22=Test22
