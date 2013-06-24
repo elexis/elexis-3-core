@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Elexis Console Application
+Bundle-SymbolicName: ch.elexis.core.console.application;singleton:=true
+Bundle-Version: 3.0.0.qualifier
+Bundle-Vendor: elexis.info
+Require-Bundle: org.eclipse.core.runtime,
+ ch.elexis.core;bundle-version="3.0.0",
+ ch.elexis.core.data;bundle-version="3.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.ui.services,
+ org.slf4j;version="1.6.4"

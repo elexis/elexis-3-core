@@ -1,0 +1,1 @@
+Headless core. Contains all elements required for non-UI Elexis operation.

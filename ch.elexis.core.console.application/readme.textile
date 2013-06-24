@@ -1,0 +1,13 @@
+h1. Elexis Console Application
+
+**Initial implementation by**  "MEDEVIT":www.medevit.at
+
+This application runs a bare Elexis on the console. It demonstrates the headless running
+capabilities of @ch.elexis.core.data@. This allows to access an Elexis database without
+starting a full graphical system.
+
+ In order to use this plugin as unit test starting point for the core, please add your 
+ testing code to @ch.elexis.core.console.application.test@.
+ 
+ To start the application right click on @ConsoleWithCoreDataOnly.launch@ and 
+ select @Run As@.

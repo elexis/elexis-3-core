@@ -1,0 +1,7 @@
+h1. System independent utilities
+
+This project contains some system independent utility classes. 
+(No dependencies to SWT or eclipse)
+
+__Cloned on 10.6.2013 from http://hg.code.sf.net/p/elexis/elexis-base/__ 
+

@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core Module for elexis
+Bundle-SymbolicName: ch.elexis.core
+Bundle-Version: 3.0.0.dev-qualifier
+Bundle-Vendor: elexis.info
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
+ ch.rgw.utility;bundle-version="3.0.0"
+Export-Package: ch.elexis.core.constants,
+ ch.elexis.core.datatypes,
+ ch.elexis.core.exceptions,
+ ch.elexis.core.preferences,
+ ch.elexis.core.text,
+ ch.elexis.core.text.model
