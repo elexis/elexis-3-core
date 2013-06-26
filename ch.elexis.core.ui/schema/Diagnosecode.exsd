@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="ch.elexis" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="ch.elexis" id="Diagnosecode" name="Diagnosesysteme einbinden"/>
+      </appinfo>
+      <documentation>
+         &lt;p&gt;Erweiterungspunkt für das Einbinden externer Diagnosecode-Systeme&lt;/p&gt;
+&lt;p&gt;Ein Plugin, das diesen Punkt erweitert, muss folgende Abhängigkeiten einbinden:&lt;/p&gt;&lt;ul&gt;
+&lt;li&gt;ch.elexis&lt;/li&gt;
+&lt;li&gt;org.eclipse.core.runtime&lt;/li&gt;
+&lt;li&gt;org.eclipse.swt&lt;/li&gt;
+&lt;/ul&gt;
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="Diagnosesystem" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Diagnosesystem">
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Ein frei wählbarer Name
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="CodeDetailDisplay" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.core.ui.views.IDetailDisplay"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="ImporterClass" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.util.ImporterPage"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="CodeSelectorFactory" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.core.ui.views.codesystems.CodeSelectorFactory:"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="ElementFactory" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.core.data.PersistentObjectFactory:"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         0.1.5
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         Das mitgelieferte Plugin elexis-diagnosecodes-schweiz teigt die Verwendung
+      </documentation>
+   </annotation>
+
+
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         (c) 2006 by G. Weirich
+      </documentation>
+   </annotation>
+
+</schema>

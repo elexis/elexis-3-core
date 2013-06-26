@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://informatics.sgam.ch/xChange"
+	elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:xChange="http://informatics.sgam.ch/xChange">
+
+
+	<include schemaLocation="xchange.xsd"></include>
+	<complexType name="serviceBlockType">
+		<sequence maxOccurs="unbounded" minOccurs="1">
+			<choice maxOccurs="unbounded" minOccurs="1">
+				<element name="serviceBlock"
+					type="xChange:serviceBlockType">
+				</element>
+                <element name="service" type="xChange:ServiceType"></element>
+            </choice>
+		</sequence>
+		<attribute name="name" type="string"></attribute>
+	</complexType>
+
+
+
+
+	<complexType name="serviceBlocksType">
+		<sequence maxOccurs="unbounded" minOccurs="1">
+			<element name="serviceblock" type="xChange:serviceBlockType" maxOccurs="unbounded" minOccurs="1"></element>
+		</sequence>
+	</complexType>
+
+	<element name="serviceblocks" type="xChange:serviceBlocksType"></element>
+
+	<complexType name="ServiceType">
+		<annotation>
+			<documentation>
+				A Service is defined by a name, a service system that is
+				applied by contract (but might also be a custom defines
+				service), a price and a cost
+			</documentation>
+		</annotation>
+		<sequence>
+			<element name="xid" type="xChange:XIDType" maxOccurs="1"
+				minOccurs="1">
+			</element>
+		</sequence>
+		<attribute name="name" type="string" use="required">
+			<annotation>
+				<documentation>name of this service</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="contractName" type="string" use="required"
+			default="custom">
+			<annotation>
+				<documentation>
+					The name of the contractual system this service
+					belongs to (e.g. Tarmed, OKP, Analysenliste) or
+					"custom" to declare a custom service
+
+				</documentation>
+			</annotation>
+		</attribute>
+        <attribute name="contractCode" type="string"></attribute>
+        <attribute name="minutes" type="string" use="optional"></attribute>
+		<attribute name="cost" type="string" use="optional"></attribute>
+		<attribute name="price" type="string" use="optional">
+			<annotation>
+				<documentation>
+					the price of this service in units of the contryct
+					(e.g. Rp., TP, cents)
+				</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+</schema>

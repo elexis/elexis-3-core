@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="ch.elexis" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="ch.elexis" id="xCHangeContribution" name="xCHange Contribution"/>
+      </appInfo>
+      <documentation>
+         Description of a capability to handle a certain kind of xChange data. The capability
+is declared by
+ (1) declaring the datatype (Name of the XML-Element as in xchange.xsd)
+ (2) declaring conditions to apply on this element
+ (3) declaring a value
+
+ If an xChange Element is to be imported, the xChange framework first searches a handler that can handle the given type. If more than one such handler is found, the conditions are checked, and the one meeting the most conditions is chosen. If more than one handler meets the same number of conditions, then the one with the higher value is chosen. If more than one has the same value, then one is chosen randomly.
+
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="Contributor" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Contributor">
+      <annotation>
+         <documentation>
+            Description of a capability to handle a certain kind of xChange data. The capability is declared by
+ 
+  (1) declaring the datatype (Name of the XML-Element as in xchange.xsd)
+ (2) declaring conditions to apply on this element
+ (3) declaring a value
+
+If an xChange Element is to be imported, the xChange framework first searches a handler that can handle the given type. If more than one such handler is found, the conditions are checked, and the one meeting the most conditions is chosen. If more than one handler meets the same number of conditions,  then the one with the higher value is chosen. If more than one has the same value, then one is chosen randomly.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="ElementType" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the name of the datatype (as in xchange.xsd) that can be handled. If tha name is * then this is a catch-all handler
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a self-declared &quot;quality&quot; of this ability. Must be an Integer  between 0 and Integer.MAX_VALUE
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="Actor" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Tha class that handles the xCHange process.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.exchange.IExchangeContributor"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="restrictions" type="string">
+            <annotation>
+               <documentation>
+                  conditions to apply for this rule.  The syntax of the conditions is as follows:
+
+  (name operator value)
+  name is an xpath expression to apply on the given element
+  operator is one of  = , &lt; , &gt; , &lt;= , &gt;= , ! , ~ 
+  Value can contain * or can be a regular expression if operator is ~
+  
+  several such conditions can be given
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         2.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

@@ -1,0 +1,983 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://informatics.sgam.ch/xChange"
+	elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xChange="http://informatics.sgam.ch/xChange">
+	<xs:include schemaLocation="xid.xsd"></xs:include>
+	<xs:include schemaLocation="service.xsd"></xs:include>
+	<xs:annotation>
+		<xs:documentation>xChange Version 2.0.0</xs:documentation>
+	</xs:annotation>
+	<xs:element name="xChange" type="xChange:xChangeDescriptor" />
+
+
+	<xs:complexType name="addressType" mixed="true">
+
+		<xs:attribute name="description" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					a description describing the addresse, e.g "home"
+					or
+					"work". Defaults to "default"
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="street" type="xs:string"></xs:attribute>
+		<xs:attribute name="zip" type="xs:string"></xs:attribute>
+		<xs:attribute name="city" type="xs:string"></xs:attribute>
+
+
+		<xs:attribute name="country" type="xs:string"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="xChangeDescriptor">
+		<xs:sequence>
+			<xs:element name="header" type="xChange:headerType"
+				maxOccurs="1" minOccurs="1">
+			</xs:element>
+			<xs:element name="contacts" type="xChange:contactsListType"
+				maxOccurs="1" minOccurs="1">
+			</xs:element>
+			<xs:element name="documents" type="xChange:documentListType"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
+		<xs:attribute name="origin" type="xs:IDREF" use="required"></xs:attribute>
+		<xs:attribute name="destination" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="timestamp" type="xs:dateTime" use="required">
+		</xs:attribute>
+		<xs:attribute name="responsible" type="xs:IDREF" use="required">
+		</xs:attribute>
+		<xs:attribute name="authorization" type="xs:string" use="optional">
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="xChangeContactType">
+
+		<xs:sequence>
+
+			<xs:element name="xid" type="xChange:XIDType" maxOccurs="1"
+				minOccurs="1">
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="unbounded" type="xChange:addressType"
+				name="address">
+			</xs:element>
+			<xs:element name="contactref" minOccurs="0" maxOccurs="unbounded"
+				type="xChange:contactRefType" />
+			<xs:element name="medical" type="xChange:medicalType"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+
+			<xs:element name="meta" type="xChange:metaType" maxOccurs="unbounded"
+				minOccurs="0">
+			</xs:element>
+			<xs:element name="financial" type="xChange:financialType"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="lastname" type="xs:string" use="required"></xs:attribute>
+		<xs:attribute name="middlename" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="firstname" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="birthdate" type="xs:date" use="optional"></xs:attribute>
+
+
+
+
+		<xs:attribute name="salutation" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="sex" type="xs:string" use="optional"></xs:attribute>
+		<xs:attribute name="title" type="xs:string" use="optional"></xs:attribute>
+		<xs:attribute use="required" name="type">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="person"></xs:enumeration>
+					<xs:enumeration value="organization"></xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="shortname" type="xs:string" use="optional">
+		</xs:attribute>
+	</xs:complexType>
+
+	<!--
+		xs:complexType name="xChangeEpisode"> <xs:sequence> <xs:element
+		minOccurs="0" ref="diagnosis"></xs:element> <xs:element minOccurs="0"
+		ref="text"></xs:element> <xs:element name="insurance"
+		type="insuranceType"></xs:element> </xs:sequence> <xs:attribute
+		name="begin" type="xs:date"></xs:attribute> <xs:attribute
+		use="required" name="id" type="xs:string"></xs:attribute>
+		<xs:attribute name="active" type="xs:boolean"></xs:attribute>
+		<xs:attribute name="title" type="xs:string"></xs:attribute>
+		</xs:complexType
+	-->
+
+	<xs:complexType name="insuranceType">
+
+
+		<xs:sequence>
+			<xs:element name="contract" type="xChange:tariffType"
+				maxOccurs="unbounded" minOccurs="1">
+			</xs:element>
+
+		</xs:sequence>
+		<xs:attribute name="companyref" type="xs:IDREF"></xs:attribute>
+		<xs:attribute name="reason">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="disease"></xs:enumeration>
+					<xs:enumeration value="accident"></xs:enumeration>
+					<xs:enumeration value="maternity"></xs:enumeration>
+					<xs:enumeration value="prevention"></xs:enumeration>
+					<xs:enumeration value="birthdefect"></xs:enumeration>
+					<xs:enumeration value="other"></xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+
+
+		<xs:attribute name="publicDiagnosis" type="xs:string"></xs:attribute>
+		<xs:attribute name="dateFrom" type="xs:date"></xs:attribute>
+		<xs:attribute name="dateUntil" type="xs:string"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="tariffType">
+
+		<xs:attribute name="country">
+			<xs:annotation>
+				<xs:documentation>
+					ISO Countrycode for the country, that tariff
+					applies
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"></xs:minLength>
+					<xs:maxLength value="3"></xs:maxLength>
+					<xs:whiteSpace value="collapse"></xs:whiteSpace>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="caseID" type="xs:string"></xs:attribute>
+	</xs:complexType>
+
+
+	<xs:complexType name="medicalType">
+		<xs:sequence>
+
+			<xs:element name="episodes" type="xChange:episodeListType"
+				maxOccurs="1" minOccurs="0" />
+			<xs:element type="xChange:recordListType" name="records"
+				maxOccurs="1" minOccurs="1" />
+			<xs:element type="xChange:findingsListType" name="findings"
+				maxOccurs="1" minOccurs="0" />
+			<xs:element type="xChange:documentListType" name="documents"
+				maxOccurs="1" minOccurs="0" />
+			<xs:element type="xChange:medicationListType" name="medications"
+				maxOccurs="1" minOccurs="0" />
+			<xs:element type="xChange:riskListType" name="risks"
+				maxOccurs="1" minOccurs="0" />
+
+			<xs:element name="meta" type="xChange:metaType" maxOccurs="unbounded"
+				minOccurs="0">
+			</xs:element>
+
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+	<xs:complexType name="riskType">
+		<xs:annotation>
+			<xs:documentation>
+				A risk ist an allergy or a life style risk or a
+				genetic
+				risk
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="meta" type="xChange:metaType" maxOccurs="unbounded"
+				minOccurs="0">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute use="required" name="confirmedBy" type="xs:IDREF">
+		</xs:attribute>
+		<xs:attribute use="required" name="firstMentioned" type="xs:date">
+		</xs:attribute>
+		<xs:attribute use="required" name="substance" type="xs:string">
+		</xs:attribute>
+		<xs:attribute name="relevance" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="findingType">
+		<xs:annotation>
+			<xs:documentation>
+				a finding. This might be a lab result or an ecg
+				result
+				or a microbiological finding.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="xid" type="xChange:XIDType" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						a unique identifier of the code system this item
+						comes from. In the most simple case this is a
+						xid of domain
+						www.xid.ch/labitems/
+						&lt;NameOfLab&gt; with the string that
+						identifies the item within this lab (e.g.
+						"Potassium") as
+						domain_id. Other EMR systems
+						might choose to use
+						www.xid.ch/labitems/LOINC as
+						the codebase and use the LOINC-Code of
+						the item
+						as domain_id.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+
+			<xs:element name="meta" type="xChange:metaType" maxOccurs="unbounded"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						any additional information the application might
+						want to give
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID">
+			<xs:annotation>
+				<xs:documentation>
+					a globally unique id to identify this findingType
+					unambiguously
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute use="required" name="name" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					a textual representation of the finding item (the
+					name of the finding, eg hemoglobine or ecg or x-ray
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="normRange" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					the norm range. shoud be adapted for sex and age
+					of
+					the current patient
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+
+		<xs:attribute name="type">
+			<xs:annotation>
+				<xs:documentation>
+					the type of results of this finding
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:NMTOKEN">
+					<xs:enumeration value="numeric"></xs:enumeration>
+					<xs:enumeration value="text"></xs:enumeration>
+					<xs:enumeration value="image"></xs:enumeration>
+					<xs:enumeration value="absolute"></xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="unit" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>units if any</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="group" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					a hint where this item should be shown in a result
+					sheet. e.g. Hematology or elektrolytes
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="contactRefType">
+		<xs:annotation>
+			<xs:documentation>
+				A relation of a contact. Points to another contact
+				inside the same file
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute use="required" name="refID" type="xs:IDREF">
+			<xs:annotation>
+				<xs:documentation>
+					ID of the contact in the contacts section inside
+					the
+					same file
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute use="required" name="description" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					a description of the relationship of the contact
+					to
+					this identity
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+
+	<xs:complexType name="medicationType">
+		<xs:sequence>
+			<xs:element name="xid" type="xChange:XIDType" maxOccurs="1"
+				minOccurs="1">
+			</xs:element>
+			<xs:element name="meta" type="xChange:metaType" maxOccurs="unbounded"
+				minOccurs="0">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute use="required" name="product" type="xs:string">
+		</xs:attribute>
+		<xs:attribute use="optional" name="dosage" type="xs:string">
+		</xs:attribute>
+		<xs:attribute name="dosageUnit" type="xs:string"></xs:attribute>
+		<xs:attribute name="frequency" type="xs:string"></xs:attribute>
+		<xs:attribute use="optional" name="startDate" type="xs:date">
+		</xs:attribute>
+		<xs:attribute use="optional" name="stopDate" type="xs:date">
+		</xs:attribute>
+
+		<xs:attribute name="substance" type="xs:string"></xs:attribute>
+		<xs:attribute name="remark" type="xs:string"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="medicationListType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" type="xChange:medicationType"
+				name="medication" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="recordListType">
+		<xs:sequence>
+
+			<xs:element name="record" type="xChange:recordType"
+				maxOccurs="unbounded" minOccurs="1">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="documentListType">
+		<xs:annotation>
+			<xs:documentation>
+				container around the documents section inside a
+				medical
+				element. contains all patient-related documents
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="document" type="xChange:documentType"
+				maxOccurs="unbounded" minOccurs="1">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="documentType">
+		<xs:annotation>
+			<xs:documentation>
+				a document of arbitrary type (can be image, text or
+				other)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="xid" type="xChange:XIDType" maxOccurs="1"
+				minOccurs="1">
+			</xs:element>
+			<xs:element name="hint" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						a hint to display to the user if the application
+						can not render the document
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="meta" type="xChange:metaType" maxOccurs="unbounded"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						any additional informations the application
+						might
+						want to include
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="contents" type="xChange:contentsType" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						if placement was inline: The base64 encoded
+						document. If placement was url: The URL.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+		</xs:sequence>
+
+		<xs:attribute name="title" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					title of the document
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="origin" type="xs:IDREF" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					Reference to the xChangeContact where the document
+					originated
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="destination" type="xs:IDREF" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					Reference to tthe xChangeContact this document was
+					addressed originally
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="date" type="xs:date" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					date this document was originally created
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="recordref" type="xs:IDREF" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					record this document belongs to (if any)
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:simpleType name="placementType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="inline"></xs:enumeration>
+			<xs:enumeration value="infile"></xs:enumeration>
+			<xs:enumeration value="url"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="contactsListType">
+		<xs:annotation>
+			<xs:documentation>
+				Container around the contacts section of the file
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="contact" type="xChange:xChangeContactType"
+				maxOccurs="unbounded" minOccurs="1">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="episodeListType">
+		<xs:annotation>
+			<xs:documentation>
+				container around the episodes section of the
+				medical
+				element. The episodes section contains all
+				diagnoses/problems/episodes that are described in this
+				medical
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="episode" type="xChange:episodeType"
+				maxOccurs="unbounded" minOccurs="1">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="episodeType">
+		<xs:annotation>
+			<xs:documentation>
+				An Episode, aka Problem. This is something that
+				happened
+				to the patient at a given moment - the beginDate and
+				continues trough some amount of time, over one or more
+				consultations
+				or patient records and might eventually
+				declared inactive at some
+				moment - the endDate
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="diagnosis" type="xChange:diagnosisType">
+				<xs:annotation>
+					<xs:documentation>
+						the diagnosis more formally declared as in
+						"name"
+						-> see descrption of diagnosisType
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="insurance" type="xChange:insuranceType"
+				maxOccurs="unbounded" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						The insurance that is in charge for this episode
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="meta" type="xChange:metaType" maxOccurs="unbounded"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						any additional informations the application
+						might
+						to give
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute use="required" name="id" type="xs:ID">
+			<xs:annotation>
+				<xs:documentation>
+					a globalliy unique identifier
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute use="required" name="name" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					A name this episode has for the physician. This
+					might (but does not need to) duplicate the
+					diagnosis-text. The name
+					might something like
+					"thorax pain" wihle the diagnose states
+					"gastroesophageal reflux".
+
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="beginDate" type="xs:date" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					The date this episode was constated first. (if
+					known).
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="endDate" type="xs:date" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					The date, this episode was declared inactive (if
+					ever)
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="diagnosisType">
+		<xs:annotation>
+			<xs:documentation>a systematic diagnosis</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="text" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					textual description of the diagnosis
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="codesystem" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					codesystem this diagnosis is taken from
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="code" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					cod einside the diagnosis system
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="recordType">
+		<xs:sequence>
+			<xs:element name="chunk" type="xChange:chunkType"></xs:element>
+
+			<xs:element name="episode" type="xChange:episodeRefType"
+				maxOccurs="unbounded" minOccurs="0">
+			</xs:element>
+			<xs:element name="meta" type="xChange:metaType" maxOccurs="unbounded"
+				minOccurs="0">
+			</xs:element>
+
+		</xs:sequence>
+		<xs:attribute use="required" name="id" type="xs:ID"></xs:attribute>
+		<xs:attribute use="required" name="author" type="xs:string"></xs:attribute>
+		<xs:attribute use="required" name="date" type="xs:date"></xs:attribute>
+
+		<xs:attribute name="responsible" type="xs:IDREF"></xs:attribute>
+	</xs:complexType>
+
+
+	<xs:complexType name="riskListType">
+		<xs:sequence>
+			<xs:element name="risk" type="xChange:riskType" maxOccurs="unbounded"
+				minOccurs="1">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="findingsListType">
+		<xs:annotation>
+			<xs:documentation>
+				container around the findings-section of this
+				medical
+				element
+			</xs:documentation>
+		</xs:annotation>
+
+		<xs:sequence>
+			<xs:choice maxOccurs="unbounded" minOccurs="0">
+				<xs:element name="finding" type="xChange:findingType"></xs:element>
+				<xs:element name="result" type="xChange:resultType"></xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="headerType">
+		<xs:annotation>
+			<xs:documentation>
+				The header of every xChange document
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="protocolVersion" type="xs:string"
+			use="required">
+			<xs:annotation>
+				<xs:documentation>
+					version of the xChange protocol that created this
+					document, given as maior.minor.rev
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="creatorName" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Name of the software that created this document
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="creatorID" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					glibally unique id of the software that created
+					this
+					document
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="creatorVersion" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Version of the software that created this document
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="language" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					language this document is created in
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+
+	</xs:complexType>
+
+
+	<xs:complexType name="episodeRefType">
+		<xs:attribute name="ref" type="xs:IDREF"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="metaType">
+		<xs:annotation>
+			<xs:documentation>
+				This type is for application specific informations
+				within one of the other elements. In most cases this
+				infkrmations are
+				only useful for other instances of the
+				same application that created
+				them. No application may
+				relay on any meta information to be present.
+				Meta
+				informations may safely and silently be ignored by
+				applications
+				that don't recognize them.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="name" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					name of the application specific information
+					element. It is recommended to prefix the name with
+					an application
+					name to make meta names unique.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="value" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					value of the element. A Processor must not make
+					any
+					assumptions on the type of any meta tags even if it
+					regognizes
+					the name.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="markupType">
+		<xs:annotation>
+			<xs:documentation>
+				A markup inside the record text. A markup can be
+				any
+				structural information inside the text (e.g. "Subj") or
+				a
+				modification of the appearance of the text (e.g.
+				"bold"). The
+				pos-attribute tells the position inside orf
+				the text where this
+				markup will appear. The length
+				attribute tells the number of
+				characters (inlcuding
+				whitespace and linebreak) will be included by
+				this
+				markup. The length can be omitted ot set to 0, then the
+				markup is
+				solely a positional information or the text
+				attibute put at the given
+				position.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="meta" type="xChange:metaType" maxOccurs="unbounded"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						any additional data the application might want
+						to
+						provide
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="pos" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					position this markup begins
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="length" type="xs:int" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					length in characters this markup consumes
+
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="type" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>type of the markup</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="text" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					a text that should be inserted at position "pos"
+					before applying the markup
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="hint" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					a hint what to display for processors that cant't
+					interpret this markup
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+
+	<xs:complexType name="resultType">
+		<xs:annotation>
+			<xs:documentation>a medical result</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="meta" type="xChange:metaType" maxOccurs="unbounded"
+				minOccurs="0">
+			</xs:element>
+			<xs:element name="textResult" type="xs:string" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						if the result is a text or a value, it must be
+						given here. If the result is a document or
+						image, this can be
+						omitted or can contain a
+						textual explanation of the image.
+
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="documentRef" type="xs:IDREF" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						indicates that the result is in the
+						documents-section and might be a letter or an
+						image
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required">
+			<xs:annotation>
+				<xs:documentation>globally unique id</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+
+		<xs:attribute name="findingRef" type="xs:IDREF" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					findingType that describes this result
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="timestamp" type="xs:dateTime" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					date and time this result was found
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="isNormal" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					an optional shorthand indicator whether this
+					result
+					is normal or not.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:group name="ModelGroupDefinition">
+		<xs:sequence></xs:sequence>
+	</xs:group>
+
+	<xs:complexType name="chunkType">
+		<xs:annotation>
+			<xs:documentation>
+				A Chunk is a part of a record. It has an optional
+				title,
+				a text, an optional style information (display hint) and
+				optional markups.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="title" type="xs:string" maxOccurs="1"
+				minOccurs="0">
+			</xs:element>
+			<xs:element name="text" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+			</xs:element>
+			<xs:element name="style" type="xChange:styleType"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="markup" type="xChange:markupType"
+				maxOccurs="unbounded" minOccurs="0">
+			</xs:element>
+
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="styleType">
+		<xs:sequence>
+			<xs:element name="bounds" type="xChange:rectangleType"></xs:element>
+		</xs:sequence>
+
+
+
+
+		<xs:attribute name="opacity" type="xs:double"></xs:attribute>
+		<xs:attribute name="background" type="xs:string"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="rgbType">
+		<xs:attribute name="red" type="xs:int"></xs:attribute>
+		<xs:attribute name="green" type="xs:int"></xs:attribute>
+		<xs:attribute name="blue" type="xs:int"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="rectangleType">
+		<xs:attribute name="x" type="xs:int"></xs:attribute>
+		<xs:attribute name="y" type="xs:int"></xs:attribute>
+		<xs:attribute name="w" type="xs:int"></xs:attribute>
+		<xs:attribute name="h" type="xs:int"></xs:attribute>
+		<xs:attribute name="unit" type="xs:string"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="financialType">
+		<xs:sequence>
+
+			<xs:element name="servicesRendered" type="xChange:servicesRenderedType"
+				maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="dateFrom" type="xs:date"></xs:attribute>
+		<xs:attribute name="dateUntil" type="xs:date"></xs:attribute>
+		<xs:attribute name="billedTotal" type="xs:float"></xs:attribute>
+		<xs:attribute name="paidTotal" type="xs:float"></xs:attribute>
+		<xs:attribute name="lostTotal" type="xs:float"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="servicesType">
+		<xs:sequence>
+			<xs:element name="service" type="xChange:serviceType"
+				maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="servicesRenderedType">
+		<xs:sequence>
+			<xs:element name="service" type="xChange:serviceType"
+				maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="provider" type="xs:IDREF"></xs:attribute>
+		<xs:attribute name="receiver" type="xs:IDREF"></xs:attribute>
+		<xs:attribute name="time" type="xs:dateTime"></xs:attribute>
+		<xs:attribute name="encounter" type="xs:IDREF"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="contentsType">
+		<xs:attribute name="placement" type="xChange:placementType"></xs:attribute>
+		<xs:attribute name="mimetype" type="xs:string"></xs:attribute>
+	</xs:complexType>
+</xs:schema>

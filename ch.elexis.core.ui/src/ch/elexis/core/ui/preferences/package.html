@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+	<head>
+		<title>Preferences</title>
+		<!-- $Id: package.html 23 2006-03-24 15:36:01Z rgw_ch $ -->
+	</head>
+	<body>
+		<h1>Klassen f&uuml;r Einstellungen</h1>
+		<p>Hier sind alle Seiten des "Einstellungen"-Dialogs abgelegt. Jede Seite
+		als eigene Klasse. Als Beispiel f&uuml;r eigene Einstellungen sei SamplePreferencePage
+		genannt, welche einige einfache Einstellungsm&ouml;glichkeiten zeigt.</p>
+		<p>Einstellungen k&ouml;nnen lokal oder global sein. Lokale Einstellungen befinden sich auf dem
+		aktuellen Computer und gelten nur f&uuml;r den im Moment angemeldeten Benutzer. Andere 
+		Benutzer und andere Computer k&ouml;nnen dieselben Parameter mit anderen Werten besetzen.
+		Globale Einstellugen dagegen sind in der Datenbank gespeichert und gelten f&uuml;r alle an dieser
+		Datenbank angemeldeten Systeme, egal welcher Benutzer an welchem Computer darauf zugreift. Die &Auml;nderung
+		globaler Einstellungen ben&ouml;tigt deswegen idR. auch Administratorprivileg.</p>
+		<h2>Festlegen, ob eine Einstellungsseite global oder lokal gelten soll</h2>
+		<p>Die Entscheidung kann jeweils nur f&uuml;r die ganze Seite getroffen werden, und erfolgt am Anfang der Seite:<br>
+		<code>setPreferenceStore(CoreHub.localCfg);</code> f&uuml;r lokale und <code>setPreferenceStore(CoreHub.globalCfg);</code> f&uuml;r 
+		globale Einstellungen.</p>
+		<h2>Voreinstellungen (Defaults) setzen</h2>
+		<p>Wenn n&ouml;tig, k&ouml;nnen f&uuml;r alle EInstellungen sinnvolle Standardwerte voreingestellt werden. Dies erfolgt einfach
+		durch setzen des entsprechenden Werts in PreferenceInitializer</p>
+		<h2>Konstanten f&uuml;r Einstellwerte</h2>
+		<p>Als Vereinfachung k&ouml;nnen Konstanten f&uuml;r die Namen der verschiedenen Einstellungen verwendet werden.
+		Diese Konstanten sollten in PreferenceConstants definiert werden.</p>
+	</body>
+</html>

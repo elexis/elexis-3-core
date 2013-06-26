@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/XMLComposite"
+	xmlns:tns="http://www.example.org/XMLComposite"
+	elementFormDefault="qualified">
+
+
+    <complexType name="body">
+    	<sequence>
+    		<element name="columns" type="tns:coldef" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="items" type="tns:itemdef"></element>
+    	</sequence>
+    </complexType>
+    
+
+    <complexType name="header">
+    	<sequence>
+    		<element name="name" type="string"></element>
+    		<element name="creator" type="string"></element>
+    		<element name="topic" type="string"></element>
+    		<element name="title" type="string"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="coldef">
+    	<attribute name="title" type="string"></attribute>
+    	<attribute name="date" type="string"></attribute>
+    </complexType>
+
+
+    <complexType name="composite">
+    	<sequence>
+            <element name="header" type="tns:header" maxOccurs="1" minOccurs="0"></element>
+            <element name="body" type="tns:body" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+    <element name="XMLComposite" type="tns:composite"></element>
+
+    <complexType name="itemdef">
+    	<sequence>
+    		<element name="objectclass" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="fillIn" type="string"></element>
+    		<element name="readOut" type="string"></element>
+    	</sequence>
+    	<attribute name="title" type="string"></attribute>
+    </complexType>
+</schema>
