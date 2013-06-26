@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html>
+	<head>
+		<title>Oberfl&auml;chen-Klassen</title>
+		<!-- $Id: package.html 23 2006-03-24 15:36:01Z rgw_ch $ -->
+	</head>
+	<body>
+		<h1>Klassen, die die Benutzeroberfl&auml;che definieren</h1>
+		<p>In dieser Package findet der Kontakt mit dem Anwender statt. Datenpr&auml;sentation und
+		-bearbeitung ist in Eclipse in "Views" und "Editors" organisiert. Diese Wiederum sind als
+		in "Perspektiven" zu sinnvollen Kombinationen zusammengestellt</p><p>Eine View ist das mit einem Tab 
+		versehene Element, das der Benutzer beliebig umherziehen kann. Perspektiven sind in Elexis 
+		mit der linken Buttonleiste aufrufbar. Sowohl Views als auch Perspektiven k&ouml;nnen die aktuell vom
+		Benutzer eingestellte Anordnung speichern und beim n&auml;chsten Start wiederherstellen.</p>
+		<h2>Ausf&uuml;hrung</h2>
+		<p>Ein View muss eine von einer ViewPart abgeleitete Klasse sein, und bestimmten Konventionen folgen.
+		Am besten nimmt man sich die Beipielview "view.java" als Anleitung. Alle View-Klassen werden in Elexis
+		mit der suffix View am Namen gekennzeichnet.</p>
+		<h2>Was geh&ouml;rt in eine View?</h2>
+		<p>Eine View soll immer eine einzelne sinnvoll zusammengeh&ouml;rende Dateineinheit repr&auml;sentieren. Da in einer Perspektive
+		die Views ja sowieso beliebig nebeneinander, unterinander und hintereinander angeordet werden k&ouml;nnen, macht es
+		nur wenig Sinn, verschiedene Datenelemente in einer View zu kombinieren.</p>
+	</body>
+</html>

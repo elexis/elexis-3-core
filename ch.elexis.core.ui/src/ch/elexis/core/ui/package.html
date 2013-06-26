@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+	<head>
+		<title>
+			Steuerpackage
+		</title>
+		<!-- $Id: package.html 23 2006-03-24 15:36:01Z rgw_ch $ -->
+	</head>
+	<body>
+		<h1>Steuer-Package</h1>
+		<p>Dieses Package ist die zentrale Ablaufsteuerung des Plugin-Systems. Die Klasse Hub 
+		definiert verschiedene globale Variablen, die Klassen mit ..Perspektive definieren
+		Perspektiven. Beim Programmstart werden die Steuerklassen in definierter Reihenfolge aufgerufen:</p>
+		<h2>Aktivierungsreihenfolge</h2>
+		<ul><li>Hub</li><li>Desk</li><li>ApplicationWorkbenchAdvisor</li>
+		<li>ApplicationWorkbenchWindowAdvisor</li>
+		<li>ApplicationActionBarAdvisor</li><li>LoginPerspektive</li>
+		<li>PatientPerspektive</li></ul>
+	</body>
+</html>

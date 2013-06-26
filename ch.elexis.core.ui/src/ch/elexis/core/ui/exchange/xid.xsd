@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://informatics.sgam.ch/xChange"
+	elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xChange="http://informatics.sgam.ch/xChange">
+	<xs:complexType name="XIDType">
+		<xs:sequence>
+			<xs:element name="identity" maxOccurs="unbounded"
+				minOccurs="1" type="xChange:identityType">
+
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID"></xs:attribute>
+
+	</xs:complexType>
+	<xs:complexType name="identityType">
+		<xs:annotation>
+			<xs:documentation>
+				an identity within a XID element
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="domain" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					domain this identity comes from. must be globally
+					unique
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="domainID" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					the ID of the denoted object within the given
+					domain. Should be unique within that domain.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="quality">
+			<xs:annotation>
+				<xs:documentation>
+					The Quality od this identity. it can be a locally
+					(only in the given sofware) or a regionally (e.g. in
+					a country) or a
+					globally assigned and recognized
+					identification.
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="local"></xs:enumeration>
+					<xs:enumeration value="regional"></xs:enumeration>
+					<xs:enumeration value="global"></xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="isGUID" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>
+					true if this domainID is guaranteed to be
+					glohbally
+					unique (and not only within the domain).
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="date" type="xs:date"></xs:attribute>
+		<xs:attribute name="usage" type="xs:int">
+			<xs:annotation>
+				<xs:documentation>Usage count of this identity. Will always be
+					increased by one if this identity was helpful for an identification
+					procecc.
+</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

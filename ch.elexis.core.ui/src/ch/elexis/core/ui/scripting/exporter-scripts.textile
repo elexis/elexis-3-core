@@ -1,0 +1,49 @@
+h1. Export von Daten aus Elexis
+
+{toc}
+
+h2. Scriptanweisungen
+
+Mit den folgenden Scriptanweisungen können Daten aus Elexis in Standardfiles exportiert werden:
+
+* @new ConsultationExport().doExport(pfad,sticker);@ exportiert Konsultationseinträge. Parameter:
+** pfad: Verzeichnis, in das die Dateien exportiert werden. Sollte ein Absoluter Pfad sein, Pfadteile auch in Windows mit slash (/) nicht mit Backslash (\) voneinander getrennt.  
+** sticker: Kann null sein, dann werden alle Patienten exportiert. Oder kann der Name eines Stickers sein, dann werden nur die Patienten exportiert, die diesen Sticker haben.
+* @new DocumentExport().doExport(datei,sticker);@ exportiert Dokumente aus dem Dokumentverwaltungssystem (z.B. aus Omnivore). Parameter:
+** datei: Voller Pfadname einer CSV-Datei (Formaterläuterung s. unter Dateiformate)
+** sticker: Kann null sein, dann werden alle Dokumente exportiert. Oder kann der Name eines Sticker sein, dann werden nur die Dokumente derhenigen Patienten exportiert, die diesen Sticker haben.
+* @new BriefExport().doExport(datei,sticker);@ exportiert Briefe (also ausgehende Dokumente). Parameter wie bei DocumentExport.
+
+*Achtung*: Der Prozess kann eventuell recht lange dauern und gibt keine Rückmeldungen. Elexis scheint dann "abgestürzt". Bitte trotzdem warten, am Schluss öffnet sich eine Dialogbox. Den Fortschritt kann man daran erkennen, dass das Exportverzeichnis sich immer mehr füllt.
+
+h2. Dateiformate
+
+* ConsultationExport: Eine XML-Datei, deren Dateiname der UUID des Patienten entspricht. Enthält alle Fälle und alle Konsultationen jedes Falls. Das file ist selbsterklärend.
+
+* DocumentExport und BriefExport: Einerseits je eine CSV-Datei mit dem Namen, der dem Befehl übergeben wurde. Diese enthält die Dokument-Metadaten. Das file ist selbsterklärend. Andererseits ein Verzeichnis mit dem Basisnamen der CSV-Datei. Dieses enthält die Dokumente selbst in ihrem nativen Format. Jedes Dokument ist durch einen Eintrag im CSV referenziert.
+
+h2. Anwendungsbeispiel
+
+bc.  
+/* !BSH! */
+import ch.elexis.scripting.*;
+
+bc. 
+// Die folgenden zwei Zeilen anpassen
+exportDir="/Users/gerry/Desktop/export";
+stickerName="Hausarztmodel";
+
+bc. 
+// Der Rest kann so belassen werden.
+
+bc. 
+// Als erstes exportieren wir die Konsultationen
+new ConsultationExport().doExport(exportDir,stickerName);
+
+bc. 
+// Dann die Briefe
+new BriefExport().doExport(exportDir+"/briefe.csv",stickerName);
+
+bc. 
+// Und schliesslich noch die Dokumente
+new DocumentExport().doExport(exportDir+"/dokumente.csv",stickerName);

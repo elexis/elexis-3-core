@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="ch.elexis">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="ch.elexis" id="Verrechnungscode" name="Codesysteme Artikel und Leistungen"/>
+      </appInfo>
+      <documentation>
+         Dieser Erweiterungspunkt dient zum Einhängen von neuen Artikeln und Leistungen.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="Artikel" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="Leistung" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Artikel">
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="ElementFactory" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.data.PersistentObjectFactory"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="ImporterClass" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.util.ImporterPage"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="CodeDetailDisplay" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.views.IDetailDisplay"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="CodeSelectorFactory" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.views.CodeSelectorFactory"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="OptifierClass" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.util.IOptifier"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Leistung">
+      <annotation>
+         <documentation>
+            Definition einer neuen Leistung.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="ElementFactory" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.data.PersistentObjectFactory"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="OptifierClass" type="string">
+            <annotation>
+               <documentation>
+                  &lt;p&gt;Eine Klasse, die Verrechnungen optimieren und verifizieren kann.&lt;/p&gt;
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.util.IOptifier"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="ComparatorClass" type="string">
+            <annotation>
+               <documentation>
+                  &lt;p&gt;Eine Klasse, die dazu dient, eine Liste von Einträgen dieser Leistungsart sinnvoll sortiert dazustellen. Was &quot;sinnvoll&quot; ist, bleibt dabei ganz der implementierenden Klasse überlassen. Muss java.util.Comparator implementieren.&lt;/p&gt;
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="java.util.Comparator"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="MandandFilterClass" type="string">
+            <annotation>
+               <documentation>
+                  &lt;p&gt;Eine Klasse, die dazu dient festzustellen, ob ein bestimmtes Element dieses Leistungstyps von einem bestimmten Mandanten angewendet werden kann. muss org.eclipse.jface.viewers.IFilter implementieren&lt;/p&gt;
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.jface.viewers.IFilter"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="CodeDetailDisplay" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.views.IDetailDisplay"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="ImporterClass" type="string">
+            <annotation>
+               <documentation>
+                  &lt;p&gt;Eine von ch.elexis.util.ImporterPage abgeleitete Klasse, die das Datensubstrat dieser Leistungsklasse nach Elexis importieren kann.&lt;/p&gt;
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.util.ImporterPage"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="CodeSelectorFactory" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.views.CodeSelectorFactory"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         0.1.5
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Geben Sie hier ein Verwendungsbeispiel für den Erweiterungspunkt ein.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Geben Sie hier die API-Informationen ein.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Geben Sie hier Informationen zur bereitgestellten Implementierung dieses Erweiterungspunkts ein.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         (c) 2006 by G. Weirich
+      </documentation>
+   </annotation>
+
+</schema>
