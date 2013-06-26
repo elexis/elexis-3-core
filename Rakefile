@@ -1,7 +1,7 @@
 #!/bin/env ruby
 require 'rake/clean'
 
-LibDirectory = File.expand_path(File.join(File.dirname(__FILE__), 'foreign-libraries'))
+LibDirectory = File.expand_path(File.join(File.dirname(__FILE__), 'ch.elexis.core.releng', 'foreign-libraries'))
 JettyPort    = 8753
 
 desc "Create p2-site with libraries needed for Elexis 3"
