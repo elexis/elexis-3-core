@@ -5,3 +5,5 @@
 *.war
 *.ear
 rebel.xml
+bin/
+target/
