@@ -12,13 +12,14 @@ This repository hosts the core forming Elexis 3. It consists of the following pl
 * `ch.elexis.core.ui` User Interface dependent portions. Dependent on Eclipse RCP 3.x.
 * `ch.elexis.core.application` Core UI Elexis Application.
 * `ch.elexis.core.releng` Release Engineering specific parts (Build Target, 3rd party ...)
-* `ch.elexis.core.icons` Plug-In for central icon management.
+* `ch.elexis.core.ui.icons` Plug-In for central icon management.
+* `ch.elexis.core.ui.contacts` Plug-In for contact management.
 * `ch.elexis.core.common.feature`	Headless Core Feature.
-* `ch.elexis.core.feature` Core Feature.
+* `ch.elexis.core.ui.feature` Core UI Feature.
 * `ch.elexis.core.application.feature` Core Application Feature.
 
 For details about the resp. plug-ins/features switch to the respective directory. The plug-ins and features
 are contained and inter-dependent as follows:
 
-![FeatureStructure](FeatureStructure.png)!
+![FeatureStructure](FeatureStructure.png)
 
