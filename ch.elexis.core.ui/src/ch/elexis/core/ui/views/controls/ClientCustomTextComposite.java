@@ -44,9 +44,9 @@ import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.icons.Images;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
+import ch.elexis.core.ui.icons.Images;
 
 public class ClientCustomTextComposite extends Composite {
 	

@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.databinding;bundle-version="1.4.1",
  org.eclipse.jface.databinding;bundle-version="1.6.0",
  ch.rgw.utility;bundle-version="3.0.0",
- ch.elexis.core.icons;bundle-version="2.3.0",
+ ch.elexis.core.ui.icons;bundle-version="2.3.0",
  ch.elexis.core;bundle-version="3.0.0",
  ch.elexis.core.data;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

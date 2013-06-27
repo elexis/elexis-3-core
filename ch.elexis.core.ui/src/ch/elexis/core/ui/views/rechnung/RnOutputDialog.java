@@ -37,8 +37,8 @@ import ch.elexis.core.data.RnStatus;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.icons.ImageSize;
-import ch.elexis.core.icons.Images;
+import ch.elexis.core.ui.icons.ImageSize;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class RnOutputDialog extends TitleAreaDialog {

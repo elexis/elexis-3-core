@@ -20,9 +20,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import ch.elexis.core.data.Sticker;
-import ch.elexis.core.icons.ImageSize;
-import ch.elexis.core.icons.Images;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.icons.ImageSize;
+import ch.elexis.core.ui.icons.Images;
 
 /**
  * Eine Markierung für im Prinzip beliebige Objekte. Ein Objekt, das eine Etikette hat, kann diese

@@ -18,8 +18,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.data.Leistungsblock;
-import ch.elexis.core.icons.ImageSize;
-import ch.elexis.core.icons.Images;
+import ch.elexis.core.ui.icons.ImageSize;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.BlockSelector;

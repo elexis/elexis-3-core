@@ -22,13 +22,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="ch.elexis.core.icons"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="ch.elexis.core.ui"
          download-size="0"
          install-size="0"
@@ -37,6 +30,13 @@
 
    <plugin
          id="ch.elexis.core.ui.contacts"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.icons"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -26,8 +26,8 @@ import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.data.Mandant;
 import ch.elexis.core.data.Person;
 import ch.elexis.core.data.admin.AccessControl;
-import ch.elexis.core.icons.ImageSize;
-import ch.elexis.core.icons.Images;
+import ch.elexis.core.ui.icons.ImageSize;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.StringTool;
 

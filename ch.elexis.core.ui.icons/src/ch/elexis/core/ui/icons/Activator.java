@@ -1,4 +1,4 @@
-package ch.elexis.core.icons;
+package ch.elexis.core.ui.icons;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

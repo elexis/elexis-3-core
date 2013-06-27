@@ -8,7 +8,7 @@
  * Contributors:
  *    M. Descher - initial implementation
  *******************************************************************************/
-package ch.elexis.core.icons;
+package ch.elexis.core.ui.icons;
 
 import java.io.IOException;
 import java.io.InputStream;

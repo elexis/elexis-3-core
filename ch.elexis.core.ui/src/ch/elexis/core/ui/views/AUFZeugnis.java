@@ -18,9 +18,9 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.data.AUF;
 import ch.elexis.core.data.Brief;
 import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.icons.Images;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 

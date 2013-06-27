@@ -25,8 +25,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 
 import ch.elexis.core.data.Artikel;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.icons.Images;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 
 public class ArtikelContextMenu {

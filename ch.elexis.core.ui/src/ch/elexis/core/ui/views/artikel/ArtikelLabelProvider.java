@@ -19,8 +19,8 @@ import org.eclipse.swt.graphics.Image;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.Artikel;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.icons.Images;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 
 public class ArtikelLabelProvider extends DefaultLabelProvider implements ITableColorProvider {

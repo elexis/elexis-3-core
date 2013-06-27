@@ -32,9 +32,9 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.icons.ImageSize;
-import ch.elexis.core.icons.Images;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.icons.ImageSize;
+import ch.elexis.core.ui.icons.Images;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 

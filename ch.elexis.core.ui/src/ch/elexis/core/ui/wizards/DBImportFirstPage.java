@@ -25,9 +25,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-import ch.elexis.core.icons.ImageSize;
-import ch.elexis.core.icons.Images;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.icons.ImageSize;
+import ch.elexis.core.ui.icons.Images;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 

@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 
-import ch.elexis.core.icons.Images;
+import ch.elexis.core.ui.icons.Images;
 import ch.rgw.tools.LimitSizeStack;
 import ch.rgw.tools.StringTool;
 

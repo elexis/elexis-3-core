@@ -1,4 +1,4 @@
-package ch.elexis.core.icons;
+package ch.elexis.core.ui.icons;
 
 public enum ImageSize {
 	_16x16_DefaultIconSize("16x16"), 
