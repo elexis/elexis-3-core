@@ -12,30 +12,24 @@
 
 package ch.elexis.core.ui.preferences;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.util.Hashtable;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.util.DatabaseCleaner;
-import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.io.Settings;
-import ch.rgw.tools.ExHandler;
+import ch.rgw.tools.StringTool;
 
 /**
  * Datenbankspezifische Einstellungen. Datenbanktyp, Connect-String, Jdbc-Klasse usw.
@@ -59,66 +53,32 @@ public class Datenbank extends PreferencePage implements IWorkbenchPreferencePag
 	protected Control createContents(Composite parent){
 		final Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, false));
-		new Label(ret, SWT.NONE).setText(Messages.Datenbank_databaseConnection);
-		new Text(ret, SWT.READ_ONLY).setText(cfg.get(Preferences.DB_CLASS, "")); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.Datenbank_connectString);
-		new Text(ret, SWT.READ_ONLY).setText(cfg.get(Preferences.DB_CONNECT, "")); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.Datenbank_usernameForDatabase);
-		new Text(ret, SWT.READ_ONLY).setText(cfg.get(Preferences.DB_USERNAME, "")); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.Datenbank_passwordForDatabase);
-		new Text(ret, SWT.READ_ONLY).setText(cfg.get(Preferences.DB_PWD, "")); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.Datenbank_typeOfDatabase);
-		new Text(ret, SWT.READ_ONLY).setText(cfg.get(Preferences.DB_TYP, "")); //$NON-NLS-1$
+
+		String driver = ""; 
+		String user = "";
+		String typ = ""; 
+		String connectstring = "";
 		
-		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(2,
-			true, 1, false));
-		if (false) { // TODO
-			new Label(ret, SWT.NONE).setText(Messages.Datenbank_reorganization);
-			bRepair = new Button(ret, SWT.CHECK);
-			bRepair.setText(Messages.Datenbank_repairImmediately);
-			bOutputFile = new Button(ret, SWT.PUSH);
-			bOutputFile.setText(Messages.Datenbank_writeLogTo);
-			bOutputFile.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e){
-					FileDialog fd = new FileDialog(ret.getShell(), SWT.SAVE);
-					String f = fd.open();
-					if (f != null) {
-						lOutputFile.setText(f);
-					}
-				}
-			});
-			lOutputFile = new Label(ret, SWT.NONE);
-			lOutputFile.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			bKons = new Button(ret, SWT.CHECK);
-			bKons.setText(Messages.Datenbank_checkKonsultations);
-			bRn = new Button(ret, SWT.CHECK);
-			bRn.setText(Messages.Datenbank_checkBills);
-			bCheck = new Button(ret, SWT.PUSH);
-			bCheck.setText(Messages.Datenbank_doCheck);
-			bCheck.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e){
-					try {
-						File fo = new File(lOutputFile.getText());
-						fo.createNewFile();
-						FileOutputStream fos = new FileOutputStream(fo);
-						DatabaseCleaner dc = new DatabaseCleaner(fos, bRepair.getSelection());
-						if (bKons.getSelection()) {
-							dc.checkKonsultationen();
-						}
-						if (bRn.getSelection()) {
-							dc.checkRechnungen();
-						}
-						fos.close();
-					} catch (Exception ex) {
-						ExHandler.handle(ex);
-						MessageDialog.openError(getShell(), Messages.Datenbank_errorWritingLog,
-							Messages.Datenbank_couldntCreateLog);
-					}
-				}
-			});
-		} // false
+		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
+		if (cnt != null) {
+			Hashtable<Object, Object> hConn = PersistentObject.fold(StringTool.dePrintable(cnt));
+			if (hConn != null) {
+				driver = PersistentObject.checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
+				user = PersistentObject.checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
+				typ = PersistentObject.checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
+				connectstring = PersistentObject.checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
+			}
+		}
+		
+		new Label(ret, SWT.NONE).setText(Messages.Datenbank_databaseConnection);
+		new Text(ret, SWT.READ_ONLY).setText(driver); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Datenbank_connectString);
+		new Text(ret, SWT.READ_ONLY).setText(connectstring); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Datenbank_usernameForDatabase);
+		new Text(ret, SWT.READ_ONLY).setText(user); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Datenbank_typeOfDatabase);
+		new Text(ret, SWT.READ_ONLY).setText(typ); //$NON-NLS-1$
+		
 		return ret;
 	}
 	

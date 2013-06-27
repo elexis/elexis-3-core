@@ -29,6 +29,15 @@ public class Preferences {
 	public static final String DB_TYP = "verbindung/Datenbanktyp"; //$NON-NLS-1$
 	public static final String DB_NAME = "verbindung/Datenbankname"; //$NON-NLS-1$
 	public final static String DB_WIZARD = "verbindung/ass"; //$NON-NLS-1$
+	/**
+	 * contains folded Hashtable with db connection data
+	 */
+	public static final String CFG_FOLDED_CONNECTION = "verbindung/folded_string";
+	public static final String CFG_FOLDED_CONNECTION_DRIVER = "driver";
+	public static final String CFG_FOLDED_CONNECTION_USER = "user";
+	public static final String CFG_FOLDED_CONNECTION_PASS = "pwd";
+	public static final String CFG_FOLDED_CONNECTION_TYPE = "typ";
+	public static final String CFG_FOLDED_CONNECTION_CONNECTSTRING = "connectionstring";
 	
 	// Ablauf
 	public static final String ABL_LANGUAGE = "ablauf/sprache"; //$NON-NLS-1$

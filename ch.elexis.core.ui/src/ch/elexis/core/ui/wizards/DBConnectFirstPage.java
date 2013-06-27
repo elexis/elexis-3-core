@@ -30,6 +30,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
@@ -76,15 +77,15 @@ public class DBConnectFirstPage extends WizardPage {
 		String typ = "";
 		String connectString = "";
 		Hashtable<Object, Object> hConn = null;
-		String cnt = CoreHub.localCfg.get(PersistentObject.CFG_FOLDED_CONNECTION, null);
+		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
 			hConn = PersistentObject.fold(StringTool.dePrintable(cnt));
 			if (hConn != null) {
-				driver = PersistentObject.checkNull(hConn.get(PersistentObject.CFG_DRIVER));
+				driver = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
 				connectString =
-					PersistentObject.checkNull(hConn.get(PersistentObject.CFG_CONNECTSTRING));
-				user = PersistentObject.checkNull(hConn.get(PersistentObject.CFG_USER));
-				typ = PersistentObject.checkNull(hConn.get(PersistentObject.CFG_TYPE));
+					PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
+				user = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
+				typ = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
 			}
 		}
 		if (ch.rgw.tools.StringTool.isNothing(connectString)) {

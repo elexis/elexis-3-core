@@ -58,7 +58,6 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.data.interfaces.events.MessageEvent.MessageType;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.DBUpdate;
 import ch.elexis.core.data.util.SqlRunner;
@@ -122,12 +121,7 @@ import ch.rgw.tools.net.NetTool;
  */
 public abstract class PersistentObject implements IPersistentObject {
 	protected static final String MAPPING_ERROR_MARKER = "**ERROR:";
-	public static final String CFG_FOLDED_CONNECTION = "verbindung/folded_string";
-	public static final String CFG_CONNECTSTRING = "connectionstring";
-	public static final String CFG_TYPE = "typ";
-	public static final String CFG_PWD = "pwd";
-	public static final String CFG_USER = "user";
-	public static final String CFG_DRIVER = "driver";
+
 	public static final String FLD_EXTINFO = "ExtInfo";
 	public static final String FLD_DELETED = "deleted";
 	public static final String FLD_LASTUPDATE = "lastupdate";
@@ -318,16 +312,16 @@ public abstract class PersistentObject implements IPersistentObject {
 		String typ = "";
 		String connectstring = "";
 		Hashtable<Object, Object> hConn = null;
-		String cnt = CoreHub.localCfg.get(CFG_FOLDED_CONNECTION, null);
+		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
 			log.debug("Read connection string from localCfg");
 			hConn = fold(StringTool.dePrintable(cnt));
 			if (hConn != null) {
-				driver = checkNull((String) hConn.get(CFG_DRIVER));
-				user = checkNull((String) hConn.get(CFG_USER));
-				pwd = checkNull((String) hConn.get(CFG_PWD));
-				typ = checkNull((String) hConn.get(CFG_TYPE));
-				connectstring = checkNull((String) hConn.get(CFG_CONNECTSTRING));
+				driver = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
+				user = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
+				pwd = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS));
+				typ = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
+				connectstring = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
 			}
 		}
 		log.info("Driver is " + driver);

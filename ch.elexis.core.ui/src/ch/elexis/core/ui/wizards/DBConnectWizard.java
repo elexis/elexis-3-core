@@ -17,6 +17,7 @@ import java.util.Hashtable;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.status.ElexisStatus;
@@ -75,14 +76,14 @@ public class DBConnectWizard extends Wizard {
 			return false;
 		}
 		Hashtable<String, String> h = new Hashtable<String, String>();
-		h.put(PersistentObject.CFG_DRIVER, j.getDriverName());
-		h.put(PersistentObject.CFG_CONNECTSTRING, j.getConnectString());
-		h.put(PersistentObject.CFG_USER, user);
-		h.put(PersistentObject.CFG_PWD, pwd);
-		h.put(PersistentObject.CFG_TYPE, first.dbTypes.getItem(ti));
+		h.put(Preferences.CFG_FOLDED_CONNECTION_DRIVER, j.getDriverName());
+		h.put(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING, j.getConnectString());
+		h.put(Preferences.CFG_FOLDED_CONNECTION_USER, user);
+		h.put(Preferences.CFG_FOLDED_CONNECTION_PASS, pwd);
+		h.put(Preferences.CFG_FOLDED_CONNECTION_TYPE, first.dbTypes.getItem(ti));
 		try {
 			String conn = StringTool.enPrintable(PersistentObject.flatten(h));
-			CoreHub.localCfg.set(PersistentObject.CFG_FOLDED_CONNECTION, conn);
+			CoreHub.localCfg.set(Preferences.CFG_FOLDED_CONNECTION, conn);
 			CoreHub.localCfg.flush();
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
