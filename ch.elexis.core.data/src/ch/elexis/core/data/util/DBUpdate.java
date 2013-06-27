@@ -389,7 +389,7 @@ public class DBUpdate {
 					ElexisStatus.CODE_RESTART,
 					"Fataler Fehler bei Datenbank-Update: Kann keine Versionsinformation lesen. Abbruch",
 					ElexisStatus.LOG_FATALS);
-			ElexisEventDispatcher.getInstance().fireElexisStatusEvent(es);
+			ElexisEventDispatcher.fireElexisStatusEvent(es);
 			
 			System.exit(0);
 		} else {

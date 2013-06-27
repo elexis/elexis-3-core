@@ -1139,7 +1139,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING,
 						CoreHub.PLUGIN_ID, ElexisStatus.CODE_NOFEEDBACK,
 						"Fehler bei Felddefinition", nmex);
-				ElexisEventDispatcher.getInstance().fireElexisStatusEvent(
+				ElexisEventDispatcher.fireElexisStatusEvent(
 						status);
 				return mapped;
 			} catch (Exception ex) {
@@ -1719,7 +1719,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Feld " + field
 							+ " ist keine n:m Verknüpfung", null,
 					ElexisStatus.LOG_ERRORS);
-			ElexisEventDispatcher.getInstance().fireElexisStatusEvent(status);
+			ElexisEventDispatcher.fireElexisStatusEvent(status);
 			return false;
 		}
 		String[] m = mapped.split(":");// m[1] FremdID, m[2] eigene ID, m[3]
@@ -2536,7 +2536,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				// (this is executed in a Runnable where Exception handling is
 				// not blocking UI
 				// thread)
-				ElexisEventDispatcher.getInstance().fireElexisStatusEvent(
+				ElexisEventDispatcher.fireElexisStatusEvent(
 						status);
 			} else {
 				status.setLogLevel(ElexisStatus.LOG_FATALS);

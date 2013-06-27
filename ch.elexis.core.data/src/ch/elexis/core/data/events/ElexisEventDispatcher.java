@@ -307,10 +307,10 @@ public final class ElexisEventDispatcher extends Job {
 	 *            an {@link ElexisStatus} describing the problem
 	 * @since 3.0.0
 	 */
-	public void fireElexisStatusEvent(ElexisStatus es) {
+	public static void fireElexisStatusEvent(ElexisStatus es) {
 		ElexisEvent statusEvent = new ElexisEvent(es, ElexisStatus.class,
 				ElexisEvent.EVENT_ELEXIS_STATUS, ElexisEvent.PRIORITY_SYNC);
-		doDispatch(statusEvent);
+		getInstance().doDispatch(statusEvent);
 	}
 
 	/**

@@ -129,7 +129,7 @@ public class SqlRunner {
 					ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR,
 							pluginId, ElexisStatus.CODE_NONE, "Error "
 									+ e.getMessage() + " during db update", e);
-					ElexisEventDispatcher.getInstance().fireElexisStatusEvent(
+					ElexisEventDispatcher.fireElexisStatusEvent(
 							status);
 				} catch (AssertionFailedException appnotinit) {
 					log.error("Error " + e.getMessage() + " during db update",

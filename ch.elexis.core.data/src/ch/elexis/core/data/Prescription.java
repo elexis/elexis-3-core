@@ -292,7 +292,7 @@ public class Prescription extends PersistentObject {
 			ElexisStatus status = new ElexisStatus(ElexisStatus.INFO,
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					e.getLocalizedMessage(), e);
-			ElexisEventDispatcher.getInstance().fireElexisStatusEvent(status);
+			ElexisEventDispatcher.fireElexisStatusEvent(status);
 			return 0.0F;
 		}
 	}
