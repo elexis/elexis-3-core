@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+	<view
+            category="ch.elexis.datenKategorie"
+            class="ch.elexis.core.ui.contacts.views.KontakteView"
+            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/kontakte_view.png"
+            id="ch.elexis.Kontakte"
+            name="%elexis.contactsView">
+      </view>
+            <view
+            category="ch.elexis.datenKategorie"
+            class="ch.elexis.core.ui.contacts.views.KontaktDetailView"
+            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/kontaktdetail_view.png"
+            id="ch.elexis.KontaktDetailView"
+            name="%elexis.contactDetailView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+                  <perspective
+            class="ch.elexis.core.ui.contacts.perspectives.AdressPerspektive"
+            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/address_book.png"
+            id="ch.elexis.AdressPerspektive"
+            name="%elexis.addressPerspective">
+      </perspective>
+   </extension>
+   <extension
+         point="ch.elexis.core.ui.Sidebar">
+      <Perspektive
+            ID="ch.elexis.AdressPerspektive"
+            icon="contact_perspective"
+            name="%sidebar.contacts">
+      </Perspektive>
+   </extension>
+
+</plugin>
