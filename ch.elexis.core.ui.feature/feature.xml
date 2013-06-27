@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ch.elexis.core.feature"
-      label="Elexis 3.0 Core Feature"
+      id="ch.elexis.core.ui.feature"
+      label="Elexis 3.0 Core UI Feature"
       version="3.0.0.dev-qualifier"
       provider-name="elexis.info">
 

@@ -18,7 +18,7 @@
    </license>
 
    <includes
-         id="ch.elexis.core.feature"
+         id="ch.elexis.core.ui.feature"
          version="0.0.0"/>
 
    <plugin
