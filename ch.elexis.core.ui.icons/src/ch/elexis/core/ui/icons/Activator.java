@@ -5,7 +5,7 @@ import org.osgi.framework.BundleContext;
 
 public class Activator implements BundleActivator {
 
-	public static final String PLUGIN_ID = "ch.elexis.core.icons";
+	public static final String PLUGIN_ID = "ch.elexis.core.ui.icons";
 	
 	private static BundleContext context;
 

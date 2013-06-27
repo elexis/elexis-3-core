@@ -28,7 +28,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * image registry takes its values from a properties file, namely
  * <code>ch.elexis.iconset.properties</code>. This properties file is to be
  * provided, together with the respective icons by a contributing fragment. See
- * <code>ch.elexis.core.icons</code> for the basic open source icons
+ * <code>ch.elexis.core.ui.icons</code> for the basic open source icons
  * contribution.
  * 
  * @author M. Descher / MEDEVIT Austria

@@ -29,62 +29,62 @@
          point="org.eclipse.ui.views">
       <view
             class="ch.elexis.core.ui.views.TemplatePrintView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/printer.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/printer.png"
             id="ch.elexis.views.TemplatePrintView"
             name="%elexis.templatePrintView">
       </view>
       <view
             category="ch.elexis.konsultationKategorie"
             class="ch.elexis.core.ui.views.FallListeView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/documents_stack.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/documents_stack.png"
             id="ch.elexis.FallListeView"
             name="%elexis.caseKonsView">
       </view>
       <view
             category="ch.elexis.messungenKategorie"
             class="ch.elexis.core.ui.views.LaborView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/labor_view.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/labor_view.png"
             id="ch.elexis.Labor"
             name="%elexis.labView">
       </view>
       <view
             category="ch.elexis.konsultationKategorie"
             class="ch.elexis.core.ui.views.RezepteView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/rezept_view.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/rezept_view.png"
             id="ch.elexis.Rezepte"
             name="%elexis.prescriptionView">
       </view>
       <view
             category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.PatientenListeView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/group.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/group.png"
             id="ch.elexis.PatListView"
             name="%elexis.patListView">
       </view>
       <view
             category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.KompendiumView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/information.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/information.png"
             id="ch.elexis.Kompendium"
             name="%elexis.kompendiumView">
       </view>
       <view
             category="ch.elexis.abrechnungKategorie"
             class="ch.elexis.core.ui.views.rechnung.KonsZumVerrechnenView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/page_red.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_red.png"
             id="ch.elexis.BehandlungenVerrechnenView"
             name="%elexis.openKonsView">
       </view>
       <view
             category="ch.elexis.abrechnungKategorie"
             class="ch.elexis.core.ui.views.codesystems.LeistungenView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/leistung.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/leistung.png"
             id="ch.elexis.LeistungenView"
             name="%elexis.activityView">
       </view>
       <view
             class="ch.elexis.core.ui.views.BBSView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/tafel.jpg"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/tafel.jpg"
             id="ch.elexis.BBSView"
             name="%elexis.bbsView">
       </view>
@@ -103,21 +103,21 @@
       <view
             category="ch.elexis.textKategorie"
             class="ch.elexis.core.ui.views.BriefAuswahl"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/mail.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/mail.png"
             id="ch.elexis.BriefAuswahlView"
             name="%elexis.selectLetterView">
       </view>
       <view
             category="ch.elexis.konsultationKategorie"
             class="ch.elexis.core.ui.views.KonsDetailView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/consult_view.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/consult_view.png"
             id="ch.elexis.Konsdetail"
             name="%elexis.konsDetailView">
       </view>
       <view
             category="ch.elexis.konsultationKategorie"
             class="ch.elexis.core.ui.views.codesystems.DiagnosenView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/stethoskop.gif"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/stethoskop.gif"
             id="ch.elexis.DiagnosenView"
             name="%elexis.diagnosesView">
       </view>
@@ -125,7 +125,7 @@
             allowMultiple="true"
             category="ch.elexis.textKategorie"
             class="ch.elexis.core.ui.views.TextView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/dokument.gif"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/dokument.gif"
             id="ch.elexis.TextView"
             name="%elexis.textView">
       </view>
@@ -134,42 +134,42 @@
             category="ch.elexis.codesKategorie"
             class="ch.elexis.core.ui.views.codesystems.CodeDetailView"
             fastViewWidthRatio="0.5f"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/report.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/report.png"
             id="ch.elexis.codedetailview"
             name="%elexis.codesView">
       </view>
       <view
             category="ch.elexis.textKategorie"
             class="ch.elexis.core.ui.views.LaborblattView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/printer.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/printer.png"
             id="ch.elexis.Laborblatt"
             name="%elexis.labPrintView">
       </view>
       <view
             category="ch.elexis.textKategorie"
             class="ch.elexis.core.ui.views.AUFZeugnis"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/printer.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/printer.png"
             id="ch.elexis.AUFView"
             name="%elexis.auzPrintView">
       </view>
       <view
             category="ch.elexis.textKategorie"
             class="ch.elexis.core.ui.views.RezeptBlatt"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/printer.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/printer.png"
             id="ch.elexis.RezeptBlatt"
             name="%elexis.prescriptionPrintView">
       </view>
       <view
             category="ch.elexis.konsultationKategorie"
             class="ch.elexis.core.ui.views.PatHeuteView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/calendar_view_day.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/calendar_view_day.png"
             id="ch.elexis.PatHeuteView"
             name="%elexis.patTodayView">
       </view>
       <view
             category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.LagerView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/box_label.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/box_label.png"
             id="ch.elexis.LagerView"
             name="%elexis.stocksView">
       </view>
@@ -182,7 +182,7 @@
       <view
             category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.artikel.ArtikelView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/pill.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/pill.png"
             id="ch.elexis.artikelview"
             name="%elexis.articlesView">
       </view>
@@ -195,7 +195,7 @@
       <view
             category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.BestellBlatt"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/printer.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/printer.png"
             id="ch.elexis.BestellBlatt"
             name="%elexis.orderPrintView">
       </view>
@@ -203,7 +203,7 @@
             allowMultiple="false"
             category="ch.elexis.konsultationKategorie"
             class="ch.elexis.core.ui.views.KonsListe"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/book_open_view.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/book_open_view.png"
             id="ch.elexis.HistoryView"
             name="%elexis.historyView">
       </view>
@@ -216,61 +216,61 @@
       <view
             category="ch.elexis.textKategorie"
             class="ch.elexis.core.ui.views.TemplatePrintView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/printer.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/printer.png"
             id="ch.elexis.views.TemplatePrintView"
             name="%elexis.templatePrintView">
       </view>
       <view
             category="ch.elexis.konsultationKategorie"
             class="ch.elexis.core.ui.views.AUF2"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/auf.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/auf.png"
             id="ch.elexis.auf"
             name="%elexis.aufView">
       </view>
       <view
             category="ch.elexis.abrechnungKategorie"
             class="ch.elexis.core.ui.views.rechnung.RnDetailView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/page_green.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_green.png"
             id="ch.elexis.RechnungsDetailView"
             name="%elexis.billDetail">
       </view>
       <view
             category="ch.elexis.abrechnungKategorie"
             class="ch.elexis.core.ui.views.rechnung.RechnungsListeView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/page_copy.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_copy.png"
             id="ch.elexis.RechnungsListeView"
             name="%elexis.billsListView">
       </view>
       <view
             class="ch.elexis.core.ui.views.DauerMediView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/pill.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/pill.png"
             id="ch.elexis.dauermedikationview"
             name="%elexis.fixMediView">
       </view>
       <view
             category="ch.elexis.konsultationKategorie"
             class="ch.elexis.core.ui.views.FaelleView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/documents_stack.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/documents_stack.png"
             id="ch.elexis.schoebufaelle"
             name="%elexis.casesListView">
       </view>
       <view
             class="ch.elexis.core.ui.views.ReminderView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/bell__exclamation.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/bell__exclamation.png"
             id="ch.elexis.reminderview"
             name="%elexis.remindersView">
       </view>
       <view
             category="ch.elexis.abrechnungKategorie"
             class="ch.elexis.core.ui.views.rechnung.AccountView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/money.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/money.png"
             id="ch.elexis.views.rechnung.AccountView"
             name="%elexis.AccountView">
       </view>
       <view
             category="ch.elexis.abrechnungKategorie"
             class="ch.elexis.core.ui.views.rechnung.AccountListView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/money.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/money.png"
             id="ch.elexis.views.rechnung.AccountListView"
             name="%elexis.AccountListView">
       </view>
@@ -284,7 +284,7 @@
             allowMultiple="true"
             category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.FieldDisplayView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/daten.gif"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/daten.gif"
             id="ch.elexis.dbfielddisplay"
             name="%view.name.1">
       </view>
@@ -304,14 +304,14 @@
             category="ch.elexis.messungenKategorie"
             class="ch.elexis.core.ui.views.LabNotSeenView"
             fastViewWidthRatio="0.4"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/reagensask.ico"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/reagensask.ico"
             id="ch.elexis.LabNotSeenView"
             name="%view.name.4">
       </view>
       <view
             category="ch.elexis.abrechnungKategorie"
             class="ch.elexis.core.ui.views.rechnung.BillSummary"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/rechnungen.ico"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/rechnungen.ico"
             id="ch.elexis.views.rechnung.BillSummary"
             name="%elexis.BillSummaryView">
       </view>
@@ -319,27 +319,27 @@
             allowMultiple="true"
             category="ch.elexis.textKategorie"
             class="ch.elexis.core.ui.views.textsystem.PlatzhalterView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/platzhalter.gif"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/platzhalter.gif"
             id="ch.elexis.views.textsystem.Platzhalterview"
             name="Platzhalter">
       </view>
       <view
             category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.PatientDetailView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/person.ico"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/person.ico"
             id="ch.elexis.PatientDetailView"
             name="%elexis.patDetailView">
       </view>
       <view
             category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.PatientDetailView2"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/person.ico"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/person.ico"
             id="ch.elexis.PatDetail_v2"
             name="%elexis.patDetailView">
       </view>
       <view
             class="ch.elexis.core.ui.views.ScriptView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/script_code.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/script_code.png"
             id="ch.elexis.scriptsView"
             name="%view.name.5">
       </view>
@@ -372,19 +372,19 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="ch.elexis.core.ui.perspectives.ArtikelPerspektive"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/pill.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/pill.png"
             id="ch.elexis.ArtikelPerspektive"
             name="%elexis.articlePerspective">
       </perspective>
       <perspective
             class="ch.elexis.core.ui.perspectives.PatientPerspektive"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/group.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/group.png"
             id="ch.elexis.PatientPerspective"
             name="%elexis.patientPerspective">
       </perspective>
       <perspective
             class="ch.elexis.core.ui.perspectives.AbrechnungsPerspektive"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/money.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/money.png"
             id="ch.elexis.AbrechnungPerspektive"
             name="%elexis.accountingPerspective">
          <description>
@@ -393,25 +393,25 @@
       </perspective>
       <perspective
             class="ch.elexis.core.ui.perspectives.LeistungPerspektive"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/coins.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/coins.png"
             id="ch.elexis.LeistungPerspektive"
             name="%elexis.activityPerspective">
       </perspective>
       <perspective
             class="ch.elexis.core.ui.perspectives.ReminderPerspektive"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/bell.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/bell.png"
             id="ch.elexis.ReminderPerspektive"
             name="%elexis.reminderPerspective">
       </perspective>
       <perspective
             class="ch.elexis.core.ui.perspectives.BriefePerspektive"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/documents_text.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/documents_text.png"
             id="ch.elexis.BriefePerspektive"
             name="%elexis.letterPerspective">
       </perspective>
       <perspective
             class="ch.elexis.core.ui.perspectives.BestellPerspektive"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/cart.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/cart.png"
             id="ch.elexis.bestellperspektive"
             name="%perspective.name.0">
       </perspective>

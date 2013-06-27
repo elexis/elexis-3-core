@@ -320,7 +320,7 @@
                id="ch.elexis.toolbar1">
             <command
                   commandId="org.eclipse.ui.views.showView"
-                  icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/new_wiz.gif"
+                  icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/new_wiz.gif"
                   label="Views anzeigen"
                   style="push"
                   tooltip="%command.showViews">
