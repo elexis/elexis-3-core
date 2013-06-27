@@ -1,0 +1,35 @@
+h1. elexis-3-core/ch.elexis.core.releng
+
+This project contains utilities needed for the release engineering for elexis-3.
+
+h2. Usage
+
+* Very minimal at the time being
+
+h2. Requirements
+
+* Java 7
+* Maven 3
+* Rake
+* Eclipse Juno (3.8.2)
+
+h2. headless build (aka command line)
+
+* @p2_lib_site@ # Builds a p2-site needed to use Eclipse target definition ch.elexis.core.releng/elexis-3.target
+
+h2. Eclipse IDE
+
+* build the project foreign-libraries
+* open  foreign-libraries/elexis-3.target and click on "Set as Target Platform"
+* build your plug-ins
+
+h2. TODO
+
+* Build more target like
+** ch.elexis.core.console.application
+** ch.elexis.core.application, the core UI Elexis application.
+
+h2. Open questions
+
+* @rake p2-libs@  # Builds a p2-site and starts a jetty p2-server at http://localhost:8753
+** Is this target needed or is this simply a Tycho bug?

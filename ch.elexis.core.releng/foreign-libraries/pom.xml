@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.reficio.rcp</groupId>
+    <artifactId>example-p2-site</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.reficio</groupId>
+                <artifactId>p2-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <configuration>
+                            <artifacts>
+                                <!-- specify your depencies here -->
+                                <!-- groupId:artifactId:version -->
+<!-- For postgresql we should be able to add bnd['Eclipse-RegisterBuddy'] = 'ch.rgw.utility'" -->
+<artifact><id>org.postgresql:postgresql:jar:9.2-1002-jdbc4</id></artifact>
+<artifact><id>xstream:xstream:1.2.2</id></artifact>
+<artifact><id>org.milyn:milyn-smooks-all:1.4</id></artifact>
+<artifact><id>javax.persistence:persistence-api::1.0</id></artifact>
+<artifact><id>antlr:stringtemplate:2.2</id></artifact>
+<!--artifact><id>org.antlr:stringtemplate:4.0.2</id></artifact-->
+<artifact><id>log4j:log4j:1.2.16</id></artifact>
+<artifact><id>wutka:dtdparser:1.21</id></artifact>
+<artifact><id>javax.transaction:jta:1.1</id></artifact>
+<artifact><id>xerces:xercesImpl:2.6.2</id></artifact>
+<artifact><id>commons-collections:commons-collections:3.1</id></artifact>
+<artifact><id>jline:jline:0.9.94</id></artifact>
+
+<artifact><id>net.sf.opencsv:opencsv:1.8</id></artifact>
+<artifact><id>org.mvel:mvel2:2.0.17</id></artifact>
+<artifact><id>org.codehaus.groovy:groovy-all:1.5.7</id></artifact>
+
+<artifact><id>org.freemarker:freemarker:2.3.15</id></artifact>
+<artifact><id>antlr:antlr:2.7.7</id></artifact>
+<!--artifact><id>org.antlr:antlr:3.5</id></artifact-->
+<artifact><id>xpp3:xpp3_min:1.1.3.4.O</id></artifact>
+<artifact><id>org.yaml:snakeyaml:1.6</id></artifact>
+<artifact><id>jaxen:jaxen:1.1.1</id></artifact>
+<artifact><id>org.codehaus.jackson:jackson-core-lgpl:1.0.1</id></artifact>
+<artifact><id>ognl:ognl:2.7.3</id></artifact>
+<artifact><id>bsf:bsf:jar:2.4.0</id></artifact>
+<artifact><id>ch.qos.logback:logback-classic:jar:1.0.7</id></artifact>
+<artifact><id>ch.qos.logback:logback-core:jar:1.0.7</id></artifact>
+<artifact><id>com.h2database:h2:jar:1.3.170</id></artifact>
+<artifact><id>commons-io:commons-io:2.1</id></artifact>
+<artifact><id>commons-io:commons-io:jar:2.4</id></artifact>
+<artifact><id>commons-lang:commons-lang:2.4</id></artifact>
+<artifact><id>commons-lang:commons-lang:2.5</id></artifact>
+<artifact><id>commons-lang:commons-lang:2.6</id></artifact>
+<artifact><id>commons-lang:commons-lang:jar:2.4</id></artifact>
+<artifact><id>commons-logging:commons-logging:jar:1.1.1</id></artifact>
+<artifact><id>javax.ws.rs:jsr311-api:jar:1.1.1</id></artifact>
+<artifact><id>javax.xml:jaxp-api:jar:1.4.2</id></artifact>
+<artifact><id>mysql:mysql-connector-java:jar:5.1.21</id></artifact>
+<artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
+<artifact><id>org.apache.poi:poi:jar:3.0.2-FINAL</id></artifact>
+<artifact><id>org.beanshell:bsh:jar:2.0b4</id></artifact>
+<artifact><id>org.bouncycastle:bcprov-jdk16:jar:1.46</id></artifact>
+<artifact><id>org.jdom:jdom:jar:1.1</id></artifact>
+<artifact><id>org.odftoolkit:odfdom-java:jar:0.8.6</id></artifact>
+<artifact><id>org.rxtx:rxtx:jar:2.1.7</id></artifact>
+<artifact><id>org.slf4j:jul-to-slf4j:jar:1.6.6</id></artifact>
+<artifact><id>org.slf4j:slf4j-api:jar:1.6.6</id></artifact>
+<artifact><id>org.slf4j:slf4j-ext:jar:1.6.6</id></artifact>
+<artifact><id>org.slf4j:slf4j-jcl:jar:1.6.6</id></artifact>
+<artifact><id>org.slf4j:slf4j-log4j12:jar:1.6.6</id></artifact>
+<artifact><id>org.yaml:snakeyaml:jar:1.11</id></artifact>
+<artifact><id>xalan:serializer:jar:2.7.1</id></artifact>
+<artifact><id>xerces:xercesImpl:jar:2.9.0</id></artifact>
+<artifact><id>xml-resolver:xml-resolver:jar:1.2</id></artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.1.5.v20120716</version>
+                <configuration>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
+                    <webApp>
+                        <contextPath>/site</contextPath>
+                    </webApp>
+               </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <pluginRepositories>
+        <pluginRepository> 
+            <id>reficio</id>
+            <url>http://repo.reficio.org/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
