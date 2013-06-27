@@ -28,9 +28,9 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IOutputter;
 import ch.elexis.core.icons.Images;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher.IActivationListener;
-import ch.elexis.core.ui.text.TextContainer;
+import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
+import ch.elexis.core.ui.text.TextContainer;
 import ch.rgw.tools.StringTool;
 
 

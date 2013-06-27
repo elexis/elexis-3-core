@@ -69,13 +69,6 @@
             name="%elexis.kompendiumView">
       </view>
       <view
-            category="ch.elexis.datenKategorie"
-            class="ch.elexis.core.ui.views.KontakteView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/kontakte_view.png"
-            id="ch.elexis.Kontakte"
-            name="%elexis.contactsView">
-      </view>
-      <view
             category="ch.elexis.abrechnungKategorie"
             class="ch.elexis.core.ui.views.rechnung.KonsZumVerrechnenView"
             icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/page_red.png"
@@ -113,13 +106,6 @@
             icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/mail.png"
             id="ch.elexis.BriefAuswahlView"
             name="%elexis.selectLetterView">
-      </view>
-      <view
-            category="ch.elexis.datenKategorie"
-            class="ch.elexis.core.ui.views.KontaktDetailView"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/kontaktdetail_view.png"
-            id="ch.elexis.KontaktDetailView"
-            name="%elexis.contactDetailView">
       </view>
       <view
             category="ch.elexis.konsultationKategorie"
@@ -223,7 +209,7 @@
       </view>
       <view
             category="ch.elexis.textKategorie"
-            class="ch.elexis.core.uiviews.KGPrintView"
+            class="ch.elexis.core.ui.views.KGPrintView"
             id="ch.elexis.views.KGPrintView"
             name="%elexis.emrPrintView">
       </view>
@@ -397,12 +383,6 @@
             name="%elexis.patientPerspective">
       </perspective>
       <perspective
-            class="ch.elexis.core.ui.perspectives.AdressPerspektive"
-            icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/address_book.png"
-            id="ch.elexis.AdressPerspektive"
-            name="%elexis.addressPerspective">
-      </perspective>
-      <perspective
             class="ch.elexis.core.ui.perspectives.AbrechnungsPerspektive"
             icon="platform:/plugin/ch.elexis.core.icons/icons/16x16/money.png"
             id="ch.elexis.AbrechnungPerspektive"
@@ -452,10 +432,6 @@
             ID="ch.elexis.PatientPerspective"
             icon="kons_perspective"
             name="%sidebar.kons"/>
-      <Perspektive
-            ID="ch.elexis.AdressPerspektive"
-            icon="kontakt_perspective"
-            name="%sidebar.contacts"/>
       <Perspektive
             ID="ch.elexis.BriefePerspektive"
             icon="briefe_perspective"

@@ -26,8 +26,8 @@ import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.text.ReplaceCallback;
-import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
+import ch.elexis.core.ui.text.TextContainer;
 
 public class KGPrintView extends ViewPart {
 	public static final String ID = "ch.elexis.views.KGPrintView"; //$NON-NLS-1$

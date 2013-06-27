@@ -27,7 +27,7 @@ import ch.elexis.core.datatypes.ICodeElement;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher.IActivationListener;
+import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
 
 public class DiagnosenView extends ViewPart implements IActivationListener, ISaveablePart2 {

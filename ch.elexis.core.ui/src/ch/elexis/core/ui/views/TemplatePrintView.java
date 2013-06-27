@@ -24,8 +24,8 @@ import ch.elexis.core.data.Brief;
 import ch.elexis.core.data.Konsultation;
 import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.data.Patient;
-import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
+import ch.elexis.core.ui.text.TextContainer;
 
 public class TemplatePrintView extends ViewPart {
 	private static final String KEY_TEXT = "text"; //$NON-NLS-1$

@@ -42,7 +42,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher.IActivationListener;
+import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;

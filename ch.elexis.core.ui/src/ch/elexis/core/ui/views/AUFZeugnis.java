@@ -20,9 +20,9 @@ import ch.elexis.core.data.Brief;
 import ch.elexis.core.data.Konsultation;
 import ch.elexis.core.icons.Images;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher.IActivationListener;
-import ch.elexis.core.ui.text.TextContainer;
+import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
+import ch.elexis.core.ui.text.TextContainer;
 
 public class AUFZeugnis extends ViewPart implements ICallback, IActivationListener {
 	public static final String ID = "ch.elexis.AUFView"; //$NON-NLS-1$

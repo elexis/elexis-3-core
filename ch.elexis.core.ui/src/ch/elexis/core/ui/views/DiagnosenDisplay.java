@@ -39,14 +39,14 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
-import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.Hub;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
+import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.core.ui.views.codesystems.DiagnosenView;
 
 public class DiagnosenDisplay extends Composite implements ISelectionRenderer {

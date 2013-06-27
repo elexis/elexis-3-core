@@ -40,7 +40,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.icons.Images;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher.IActivationListener;
+import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry.IObjectFilterProvider;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;

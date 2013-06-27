@@ -150,12 +150,6 @@ public class GlobalEventDispatcher implements IPartListener2 {
 		
 	};
 	
-	public interface IActivationListener {
-		public void activation(boolean mode);
-		
-		public void visible(boolean mode);
-	}
-	
 	private static class GlobalListener implements ISelectionChangedListener {
 		boolean daempfung;
 		

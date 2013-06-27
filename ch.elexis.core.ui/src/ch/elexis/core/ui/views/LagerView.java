@@ -51,7 +51,7 @@ import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher.IActivationListener;
+import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
