@@ -1,0 +1,1 @@
+http://wiki.eclipse.org/Equinox/p2/Adding_Self-Update_to_an_RCP_Application

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="ch.elexis.core.ui.p2.command.update"
+            name="%Update.command">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="ch.elexis.core.ui.p2.handlers.UpdateHandler"
+            commandId="ch.elexis.core.ui.p2.command.update">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:help?after=additions">
+         <command
+               commandId="ch.elexis.core.ui.p2.command.update"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="ch.elexis.core.ui.p2.internal.PreferenceInitializer">
+      </initializer>
+   </extension>
+
+</plugin>
