@@ -3,8 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.reficio.rcp</groupId>
-    <artifactId>example-p2-site</artifactId>
+    <groupId>ch.elexis.foreign.libraries</groupId>
+    <artifactId>elexis-p2-site</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
