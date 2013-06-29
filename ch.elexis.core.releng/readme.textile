@@ -15,7 +15,22 @@ h2. Requirements
 
 h2. headless build (aka command line)
 
-* @p2_lib_site@ # Builds a p2-site needed to use Eclipse target definition ch.elexis.core.releng/elexis-3.target
+* @export JAVA_HOME=/opt/java-oracle/jdk1.7.0_25@ # Set your Java home
+* @cd ch.elexis.core.releng/elexis.3rdpart.librarie && mvn p2:site@ # Builds a p2-site needed to use Eclipse target definition ch.elexis.core.releng/elexis-3.target
+* @cd ../../ch.elexis.core.releng && mvn clean install@ # compiles and create packages
+
+h2. problems
+
+At the moment mvn install does not work. The plug-Ins ch.elexis.core.ui and ch.elexis.core.data don't compile.
+E.g.
+bc.cd ch.elexis.core.ui
+mvn clean install
+<..>
+ERROR] Failed to execute goal org.eclipse.tycho:tycho-compiler-plugin:0.18.0:compile (default-compile) on project ch.elexis.core.ui: Compilation failure: Compilation failure:
+[ERROR] /opt/elexis-3-core-ngiger/ch.elexis.core.ui/src/ch/elexis/core/ui/exchange/elements/InsuranceElement.java:[15,0]
+[ERROR] import ch.elexis.core.data.Fall;
+[ERROR] ^^^^^^^^^^^^^^^^^^^
+[ERROR] The import ch.elexis.core.data cannot be resolved
 
 h2. Eclipse IDE
 
