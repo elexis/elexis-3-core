@@ -85,7 +85,7 @@ import ch.rgw.tools.VersionedResource.ResourceItem;
  * @author gerry
  * 
  */
-public class KonsDetailView extends ViewPart implements ElexisEventListener,
+public class KonsDetailView extends ViewPart implements 
 		IActivationListener, ISaveablePart2 {
 	private static final String NO_CONS_SELECTED = Messages
 			.getString("KonsDetailView.NoConsSelected"); //$NON-NLS-1$
@@ -116,26 +116,9 @@ public class KonsDetailView extends ViewPart implements ElexisEventListener,
 
 	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(
 			Patient.class) {
-
+		@Override
 		public void runInUi(ElexisEvent ev) {
-			Patient pat = (Patient) ev.getObject();
-			if (pat != null) {
-				if (!pat.equals(actPat)) {
-					setPatient(pat);
-					Konsultation b = pat.getLetzteKons(false);
-					if (b == null) {
-						ElexisEventDispatcher.getInstance().fire(
-								new ElexisEvent(null, Konsultation.class,
-										ElexisEvent.EVENT_DESELECTED));
-					} else {
-						if (actKons == null) {
-							ElexisEventDispatcher.fireSelectionEvent(b);
-						} else if (!actKons.getId().equals(b.getId())) {
-							ElexisEventDispatcher.fireSelectionEvent(b);
-						}
-					}
-				}
-			}
+			setPatient((Patient) ev.getObject());
 		};
 	};
 
@@ -146,6 +129,15 @@ public class KonsDetailView extends ViewPart implements ElexisEventListener,
 			adaptMenus();
 		}
 	};
+	
+	private final ElexisEventListener eeli_kons = new ElexisUiEventListenerImpl(
+			Konsultation.class) {
+		@Override
+		public void runInUi(ElexisEvent ev) {
+			setKons((Konsultation) ev.getObject());
+		}
+	};
+	
 
 	@Override
 	public void saveState(IMemento memento) {
@@ -381,11 +373,6 @@ public class KonsDetailView extends ViewPart implements ElexisEventListener,
 		}
 
 		if (b != null) {
-			/*
-			 * System.out.println("setKons: " + b.getLabel()); Fall fall =
-			 * b.getFall(); System.out.println(fall.getLabel()); Patient oat =
-			 * fall.getPatient(); System.out.println(oat.getLabel());
-			 */
 			Fall act = b.getFall();
 			setPatient(act.getPatient());
 			setKonsText(b, b.getHeadVersion());
@@ -417,15 +404,12 @@ public class KonsDetailView extends ViewPart implements ElexisEventListener,
 					.request(AccessControlDefaults.KONS_REASSIGN));
 			dd.setDiagnosen(b);
 			vd.setLeistungen(b);
-			// ElexisEventDispatcher.fireSelectionEvent(b);
 			if (b.isEditable(false)) {
-				// text.getControl().
 				text.setEnabled(true);
 				text.setToolTipText("");
 				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 				lBeh.setBackground(defaultBackground);
 			} else {
-				// text.setEnabled(false);
 				text.setToolTipText("Konsultation geschlossen oder nicht von Ihnen");
 				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
 				lBeh.setBackground(UiDesk.getColor(UiDesk.COL_GREY20));
@@ -437,7 +421,6 @@ public class KonsDetailView extends ViewPart implements ElexisEventListener,
 			hlMandant.setText("--"); //$NON-NLS-1$
 			hlMandant.setEnabled(false);
 			lVersion.setText(""); //$NON-NLS-1$
-			// cbFall.removeAll();
 			dd.clear();
 			vd.clear();
 			text.setText(""); //$NON-NLS-1$
@@ -568,7 +551,7 @@ public class KonsDetailView extends ViewPart implements ElexisEventListener,
 			}
 			text.setDirty(false);
 		} else {
-			setKons((Konsultation) ElexisEventDispatcher.getInstance()
+			setKons((Konsultation) ElexisEventDispatcher
 					.getSelected(Konsultation.class));
 		}
 
@@ -576,12 +559,11 @@ public class KonsDetailView extends ViewPart implements ElexisEventListener,
 
 	public void visible(final boolean mode) {
 		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(this, eeli_pat,
+			ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_pat,
 					eeli_user);
 			adaptMenus();
-			eeli_pat.catchElexisEvent(ElexisEvent.createPatientEvent());
 		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(this, eeli_pat,
+			ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_pat,
 					eeli_user);
 		}
 
@@ -628,43 +610,4 @@ public class KonsDetailView extends ViewPart implements ElexisEventListener,
 		vd.addPersistentObject(artikel);
 	}
 
-	/**
-	 * Konsultation event
-	 */
-	public void catchElexisEvent(final ElexisEvent ev) {
-		UiDesk.syncExec(new Runnable() {
-			public void run() {
-				switch (ev.getType()) {
-				case ElexisEvent.EVENT_DELETE:
-					if ((actKons != null) && actKons.equals(ev.getObject())) {
-						setKons(null);
-					}
-					break;
-				case ElexisEvent.EVENT_UPDATE:
-					if ((ev.getObject() != null) && (actKons != null)
-							&& (ev.getObject().getId().equals(actKons.getId()))) {
-						setKons((Konsultation) ev.getObject());
-					}
-					break;
-				case ElexisEvent.EVENT_DESELECTED:
-					setKons(null);
-					break;
-
-				case ElexisEvent.EVENT_SELECTED:
-					setKons((Konsultation) ev.getObject());
-					break;
-				}
-			}
-		});
-	}
-
-	final private ElexisEvent eetemplate = new ElexisEvent(null,
-			Konsultation.class, ElexisEvent.EVENT_CREATE
-					| ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_DESELECTED
-					| ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_SELECTED
-					| ElexisEvent.EVENT_UPDATE);
-
-	public ElexisEvent getElexisEventFilter() {
-		return eetemplate;
-	}
 }

@@ -41,6 +41,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
+import ch.elexis.core.datatypes.IPersistentObject;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -82,7 +83,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 			@Override
 			public void focusLost(FocusEvent arg0){
 				if (bCanEdit) {
-					PersistentObject mine = ElexisEventDispatcher.getSelected(myClass);
+					IPersistentObject mine = ElexisEventDispatcher.getSelected(myClass);
 					if (mine != null) {
 						mine.set(myField, text.getText());
 					}
@@ -181,7 +182,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	}
 	
 	public void heartbeat(){
-		PersistentObject mine = ElexisEventDispatcher.getSelected(myClass);
+		IPersistentObject mine = ElexisEventDispatcher.getSelected(myClass);
 		if (mine == null) {
 			catchElexisEvent(new ElexisEvent(mine, myClass, ElexisEvent.EVENT_DESELECTED));
 		} else {
