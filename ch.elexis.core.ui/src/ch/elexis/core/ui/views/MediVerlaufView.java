@@ -43,9 +43,9 @@ import ch.elexis.core.data.Prescription;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.TimeTool;
 
@@ -65,7 +65,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 		90, 90, 300, 200
 	};
 	
-	private ElexisEventListenerImpl eeli_pat = new ElexisEventListenerImpl(Patient.class) {
+	private ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
 		public void runInUi(ElexisEvent ev){
 			reload();
