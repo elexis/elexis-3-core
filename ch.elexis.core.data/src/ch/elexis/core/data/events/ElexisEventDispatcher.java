@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2010, G. Weirich and Elexis
+ * Copyright (c) 2009-2013, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ * 	  MEDEVIT <office@medevit.at> - major changes in 3.0
  *******************************************************************************/
 
 package ch.elexis.core.data.events;
@@ -25,12 +25,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
 import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.datatypes.IPersistentObject;
 import ch.elexis.core.exceptions.ElexisException;
 
 /**
@@ -51,19 +50,19 @@ import ch.elexis.core.exceptions.ElexisException;
  * operations are neccessary, these must be sheduled in a separate thread, The
  * Listener can specify objects, classes and event types it wants to be
  * informed. If no such filter is given, it will be informed about all events.
- * 
- * @author gerry
- * 
+ *
+ * @since 3.0.0 major changes, switch to {@link ElexisContext}
  */
 public final class ElexisEventDispatcher extends Job {
 	private final List<ElexisEventListener> listeners;
 	private static ElexisEventDispatcher theInstance;
 	private final Map<Class<?>, IElexisEventDispatcher> dispatchers;
-	private final Map<Class<?>, PersistentObject> lastSelection;
 	private final PriorityQueue<ElexisEvent> eventQueue;
 	private transient boolean bStop = false;
 	private final Logger log = LoggerFactory
 			.getLogger(ElexisEventDispatcher.class.getName());
+
+	private final ElexisContext elexisUIContext;
 
 	public static ElexisEventDispatcher getInstance() {
 		if (theInstance == null) {
@@ -80,8 +79,9 @@ public final class ElexisEventDispatcher extends Job {
 		setPriority(Job.SHORT);
 		listeners = new LinkedList<ElexisEventListener>();
 		dispatchers = new HashMap<Class<?>, IElexisEventDispatcher>();
-		lastSelection = new HashMap<Class<?>, PersistentObject>();
 		eventQueue = new PriorityQueue<ElexisEvent>(50);
+
+		elexisUIContext = new ElexisContext();
 	}
 
 	/**
@@ -112,10 +112,10 @@ public final class ElexisEventDispatcher extends Job {
 	}
 
 	/**
-	 * Unregister a previosly registered dispatcher
+	 * Unregister a previously registered dispatcher
 	 * 
 	 * @param ec
-	 *            th class the dispatcher takes care of
+	 *            the class the dispatcher takes care of
 	 * @param ied
 	 *            the dispatcher to unregister
 	 * @throws ElexisException
@@ -206,98 +206,50 @@ public final class ElexisEventDispatcher extends Job {
 	 */
 	public void fire(final ElexisEvent... ees) {
 		for (ElexisEvent ee : ees) {
-			if (ee.getType() == ElexisEvent.EVENT_SELECTED) {
-				Class<?> clazz = ee.getObjectClass();
-				// continue if selection is same as lastSelection
-				PersistentObject po = lastSelection.get(clazz);
-				if (po != null) {
-					if (po.equals(ee.getObject())) {
-						continue;
-					}
-				}
 
-				// [1403] inconsistent state patch
-				if (clazz != null && clazz.equals(Konsultation.class)) {
-					Konsultation konsultation = (Konsultation) ee.getObject();
-					if (konsultation != null) {
-						lastSelection.put(Fall.class, konsultation.getFall());
-						lastSelection.put(Patient.class, konsultation.getFall()
-								.getPatient());
-					}
-					lastSelection.put(Konsultation.class, konsultation);
-				} else if (clazz != null && clazz.equals(Patient.class)) {
-					Patient patient = (Patient) ee.getObject();
-
-					if (patient != null) {
-						Konsultation konsultation = patient
-								.getLetzteKons(false);
-						lastSelection.put(Konsultation.class, konsultation);
-						Fall selectedFall = (konsultation != null) ? konsultation
-								.getFall() : null;
-						lastSelection.put(Fall.class, selectedFall);
-					} else {
-						lastSelection.put(Patient.class, null);
-						lastSelection.put(Fall.class, null);
-						lastSelection.put(Konsultation.class, null);
-					}
-
-				} else if (clazz != null && clazz.equals(Fall.class)) {
-					Fall fall = (Fall) ee.getObject();
-					if (fall != null) {
-						lastSelection.put(Patient.class, fall.getPatient());
-						lastSelection.put(Konsultation.class, fall.getPatient()
-								.getLetzteKons(false));
-					}
-					lastSelection.put(Fall.class, fall);
-				}
-
-				lastSelection.put(clazz, ee.getObject());
-
-				guardState();
-
-			} else if (ee.getType() == ElexisEvent.EVENT_DESELECTED) {
-				lastSelection.remove(ee.getObjectClass());
+			// Those are single events
+			if (ee.getPriority() == ElexisEvent.PRIORITY_SYNC
+					&& ee.getType() != ElexisEvent.EVENT_SELECTED) {
+				doDispatch(ee);
+				continue;
 			}
+
+			int eventType = ee.getType();
+
+			if (eventType == ElexisEvent.EVENT_SELECTED
+					|| eventType == ElexisEvent.EVENT_DESELECTED) {
+				
+				List<ElexisEvent> eventsToThrow = null;
+				eventsToThrow = elexisUIContext.setSelection(
+						ee.getObjectClass(),
+						(eventType == ElexisEvent.EVENT_SELECTED) ? ee
+								.getObject() : null);
+
+				for (ElexisEvent elexisEvent : eventsToThrow) {
+					IElexisEventDispatcher ied = dispatchers.get(elexisEvent
+							.getObjectClass());
+					if (ied != null) {
+						ied.fire(elexisEvent);
+					}
+
+					synchronized (eventQueue) {
+						eventQueue.offer(elexisEvent);
+					}
+
+				}
+				continue;
+			}
+
 			IElexisEventDispatcher ied = dispatchers.get(ee.getObjectClass());
 			if (ied != null) {
 				ied.fire(ee);
 			}
 
-			if (ee.getPriority() == ElexisEvent.PRIORITY_SYNC) {
-				doDispatch(ee);
-			} else {
-				synchronized (eventQueue) {
-					eventQueue.offer(ee);
-				}
+			synchronized (eventQueue) {
+				eventQueue.offer(ee);
 			}
-		}
-	}
 
-	private boolean guardState() {
-		boolean validState = false;
-		Patient p = (Patient) lastSelection.get(Patient.class);
-		Fall f = (Fall) lastSelection.get(Fall.class);
-		Konsultation k = (Konsultation) lastSelection.get(Konsultation.class);
-
-		if (p == null && f == null & k == null) {
-			validState = true;
-		} else if (p != null && f == null && k == null) {
-			validState = true;
-		} else if (p != null && f.getPatient().equals(p)
-				&& k.getFall().equals(f)) {
-			validState = true;
-		} else if (p != null && k == null && f.getPatient().equals(p)) {
-			validState = true;
 		}
-
-		// TODO REMOVE
-		log.debug("State: " + p + " / " + f + " / " + k);
-		
-		if (!validState) {
-			log.error("Invalid state: " + p.getLabel() + " / " + f.getLabel()
-					+ " / " + k.getLabel());
-		}
-		return validState;
 	}
 
 	/**
@@ -321,8 +273,8 @@ public final class ElexisEventDispatcher extends Job {
 	 * @return the last object of the given type or null if no such object is
 	 *         selected
 	 */
-	public static PersistentObject getSelected(final Class<?> template) {
-		return getInstance().lastSelection.get(template);
+	public static IPersistentObject getSelected(final Class<?> template) {
+		return getInstance().elexisUIContext.getSelected(template);
 	}
 
 	/**
@@ -416,7 +368,7 @@ public final class ElexisEventDispatcher extends Job {
 			eventQueue.notifyAll();
 		}
 		if (!bStop) {
-			this.schedule(50);
+			this.schedule(30);
 		}
 		return Status.OK_STATUS;
 	}

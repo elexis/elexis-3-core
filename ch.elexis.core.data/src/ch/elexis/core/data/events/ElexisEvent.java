@@ -16,6 +16,7 @@ import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.datatypes.IPersistentObject;
 
 /**
  * A universal event object. Can optionally created with a priority
@@ -74,30 +75,10 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	 * @param type
 	 *            the type of Event. One of the EVENT_ constants
 	 */
-	public ElexisEvent(final PersistentObject o, final Class<?> c, final int type){
+	public ElexisEvent(final IPersistentObject o, final Class<?> c, final int type){
 		this(o, c, type, PRIORITY_NORMAL);
 	}
 	
-	/**
-	 * Create an ElexisEvent with explicitely set priority
-	 * 
-	 * @param o
-	 *            the PersistentObject that sources the event
-	 * @param c
-	 *            The object classs of the event source
-	 * @param type
-	 *            the type of Event. One of the EVENT_ constants
-	 * @param priority
-	 *            the priority for this event. One of the PRIORITY_ Constants or any other int
-	 *            value. An Event will be fired before all other events with same or lower priority.
-	 */
-	public ElexisEvent(final PersistentObject o, Class<?> c, int type, int priority){
-		obj = o;
-		objClass = c;
-		genericObject = null;
-		this.type = type;
-		this.priority = priority;
-	}
 	
 	/**
 	 * Create an {@link ElexisEvent} carrying a generic object. This event is
@@ -111,9 +92,15 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	 * @since 3.0.0
 	 */
 	public ElexisEvent(final Object genericObject, Class<?> c, int type, int priority) {
-		obj = null;
+		if(genericObject instanceof PersistentObject) {
+			obj = (PersistentObject) genericObject;
+			this.genericObject = null;
+		} else {
+			this.genericObject = genericObject;
+			obj = null;
+		}
+
 		objClass = c;
-		this.genericObject = genericObject;
 		this.type = type;
 		this.priority = priority;
 	}

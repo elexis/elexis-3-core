@@ -1686,7 +1686,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				xid.delete();
 			}
 			new DBLog(this, DBLog.TYP.DELETE);
-			PersistentObject sel = ElexisEventDispatcher.getSelected(this
+			IPersistentObject sel = ElexisEventDispatcher.getSelected(this
 					.getClass());
 			if ((sel != null) && sel.equals(this)) {
 				ElexisEventDispatcher.clearSelection(this.getClass());
