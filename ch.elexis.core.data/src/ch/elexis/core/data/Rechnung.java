@@ -31,18 +31,11 @@ import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
-import ch.rgw.tools.Log;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
-//201303130710js:
-//This would require project: ch.elexis: plugin.xml/build.properties -> Dependencies -> imported packages
-//to contain ch.elexis.TarmedRechnung (will be auto done by eclipse if required after confirmation dialog.)
-//And that in turn will cause circular dependencies accross some 100+ projects to appear.
-//So we cannot easily use the TarmedRechnung.Messages.Validator_RgWithKonsWithoutBillablesNorRevenue message string
-//introduced down in that other project.
-//import ch.elexis.TarmedRechnung.Messages;
+
 
 public class Rechnung extends PersistentObject {
 	public static final String REMARK = "Bemerkung";
@@ -144,80 +137,13 @@ public class Rechnung extends PersistentObject {
 			}
 		}
 
-		// Lets check whether a consultation contains at least one Verrechnungen
-		// entry,
-		// and a total sum > 0, and at least warn if at least one entry == 0.00
-		// This will interrupt creation of a bill. The user must, however, be
-		// offered to
-		// continue, as there are a few examples where such an entry may
-		// actually be intended
-		// i.e. Gehörgangsspülung as part of an Allgemeine Grundleistung in the
-		// Tarmed CH.
-		// (For details and examples, refer to Stefan Henzi.)
-
-		// The following block was first added to
-		// arzttarife_ch...Validator.checkBill().
-		// But as it is apparently not called over there when I create an
-		// invoice for a case,
-		// I copy/adopt this code over to Rechnung.build(); where other coarse
-		// checks are
-		// already located (and used) as well.
-
-		// In the long term, I guess that this code here should replace the code
-		// over there.
-		// Best bet will be to ask Gerry/Niklaus.
-
-		System.out
-				.println("js Rechnung: build(): Check whether all consultations contain Verrechnungen > 0 and a total sum > 0");
-		System.out
-				.println("js Rechnung: build(): TODO: This functionality might possibly be moved to Fall.isValid()");
-		System.out
-				.println("js Rechnung: build(): TODO: or even by definition of Abrechnungsregeln outside of the program.");
-		System.out
-				.println("js Rechnung: build(): TODO: Möglicherweise muss dieser Test hier noch auf Tarmed-Rechnungen beschränkt werden?");
-
-		// The unwanted case behandlungen.size()==0 was already caught (and
-		// returned from) above.
-
 		System.out.println("js Rechnung: build(): number of consultations: "
 				+ behandlungen.size());
 		for (Konsultation b : behandlungen) {
-			// b.getUmsatz() ist als deprecated geflaggt.
-			// Wenn es wirklich irgendwann einmal nicht mehr gehen sollte,
-			// dann kann man den Umsatz auch aufsummieren,
-			// wie es weiter unten getan wird.
 			if (b.getLeistungen().isEmpty() || b.getUmsatz() == 0) {
-				Patient pat = b.getFall().getPatient();
-				return result
-						.add(Result.SEVERITY.WARNING,
-								1,
-								"Eine Konsultation vom "
-										+ b.getDatum().toString()
-										+ " für\nPatient Nr. "
-										+ pat.getPatCode()
-										+ ", "
-										+ pat.getName()
-										+ ", "
-										+ pat.getVorname()
-										+ ", "
-										+ pat.getGeburtsdatum()
-										+ "\n"
-										+ "enthält keine verrechneten Leistungen.\n"
-										+ "\nDie Ärztekasse würde so eine Rechnung zurückgeben.\nDeshalb erstelle ich sie nicht.\n\nBitte tragen Sie Leistungen für die Konsultation ein, oder verschieben Sie die Konsultation zu einem später zu verrechnenden Fall.",
-								null, true);
-				// js: sadly we can't easily use
-				// TarmedRechnung.Messages.Validator_RgWithKonsWithoutBillablesNorRevenue
-				// as this would cause a major circular references problem. See
-				// notes in the import section of this file.
+				System.out.println("Ignoriere Behandlung mit Umsatz 0");
 			}
-			// Nun muss ich noch die einzelnen Verrechnungsposten auf ==0.00
-			// prüfen.
-			// Beim Eintragen hab ich zwar eine Warnung installiert, aber
-			// erstens erfasst die keine alten Verrechnungen,
-			// zweitens aktuell nicht alle möglichen Leistungsarten (sondern nur
-			// Tarmed und Medikamente_BAG), und drittens
-			// kann man ja die Warnung auch ignorieren. Also: Prüfen vor dem
-			// Verbrauchen einer Rechnungsnummer.
+
 			else {
 				List<Verrechnet> lstg = b.getLeistungen();
 				for (Verrechnet l : lstg) {
