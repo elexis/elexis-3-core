@@ -10,26 +10,17 @@
  * 
  *******************************************************************************/
 
-package ch.elexis.core.ui.data;
+package ch.elexis.core.data;
 
+import java.awt.Image;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
-
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
-import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.Hub;
-import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.StringTool;
 
 /**
@@ -66,58 +57,16 @@ public class DBImage extends PersistentObject {
 		return get(FLD_TITLE);
 	}
 	
-	public DBImage(String prefix, final String name, final InputStream source){
-		ImageLoader iml = new ImageLoader();
+	public DBImage(String prefix, final String name){
+		create(null);
+		
 		if (StringTool.isNothing(prefix)) {
 			prefix = DEFAULT_PREFIX;
 		}
-		try {
-			iml.load(source);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			iml.save(baos, SWT.IMAGE_PNG);
-			create(null);
-			set(new String[] {
+		
+		set(new String[] {
 				FLD_PREFIX, FLD_TITLE
 			}, prefix, name);
-			setBinary(FLD_IMAGE, baos.toByteArray());
-		} catch (Exception ex) {
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					"Image error: Das Bild konnte nicht geladen werden " + ex.getMessage(), ex);
-			throw new PersistenceException(status);
-		}
-	}
-	
-	public Image getImage() {
-		byte[] in = getBinary(FLD_IMAGE);
-		ByteArrayInputStream bais = new ByteArrayInputStream(in);
-		try {
-			ImageData idata = new ImageData(bais);
-			Image ret = new Image(UiDesk.getDisplay(), idata);
-			return ret;
-		} catch (Exception ex) {
-			SWTHelper.showError("Image Error", "Ungültiges Bild",
-					"Das Bild ist ungültig " + ex.getMessage());
-			return null;
-		}
-	}
-
-	public Image getImageScaledTo(int width, int height, boolean bShrinkOnly) {
-		byte[] in = getBinary(FLD_IMAGE);
-		ByteArrayInputStream bais = new ByteArrayInputStream(in);
-		try {
-			ImageData idata = new ImageData(bais);
-			if (idata.width != width || idata.height != height) {
-				idata = idata.scaledTo(width, height);
-			}
-			Image ret = new Image(UiDesk.getDisplay(), idata);
-			return ret;
-		} catch (Exception ex) {
-			SWTHelper.showError("Image Error", "Ungültiges Bild",
-					"Das Bild ist ungültig " + ex.getMessage());
-			return null;
-		}
-
 	}
 	
 	public static DBImage find(String prefix, String name){

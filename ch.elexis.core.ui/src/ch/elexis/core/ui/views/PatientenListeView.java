@@ -46,6 +46,7 @@ import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Person;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.data.Reminder;
+import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -261,7 +262,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				}
 				ISticker et = pat.getSticker();
 				Image im = null;
-				if (et != null && (im = ((UiSticker) et).getImage()) != null) {
+				if (et != null && (im = new UiSticker((Sticker) et).getImage()) != null) {
 					return im;
 				} else {
 					if (pat.getGeschlecht().equals(Person.MALE)) {
@@ -280,7 +281,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				Patient pat = (Patient) element;
 				ISticker et = pat.getSticker();
 				if (et != null) {
-					return ((UiSticker) et).getBackground();
+					return UiDesk.getColorFromRGB(et.getBackground());
 				}
 			}
 			return null;
@@ -291,7 +292,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				Patient pat = (Patient) element;
 				ISticker et = pat.getSticker();
 				if (et != null) {
-					return ((UiSticker) et).getForeground();
+					return UiDesk.getColorFromRGB(et.getForeground());
 				}
 			}
 			

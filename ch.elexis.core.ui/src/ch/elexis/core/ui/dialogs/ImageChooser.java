@@ -39,9 +39,10 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
+import ch.elexis.core.data.DBImage;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.data.DBImage;
+import ch.elexis.core.ui.data.UiDBImage;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.ExHandler;
 
@@ -52,9 +53,9 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 	private Text tTitle;
 	private static String NOFILESELECTED = Messages.getString("ImageChooser.PleaseChooseFile"); //$NON-NLS-1$
 	private Button bDB, bFile;
-	private DBImage result;
+	private UiDBImage result;
 	
-	public DBImage getSelection(){
+	public UiDBImage getSelection(){
 		return result;
 	}
 	
@@ -62,8 +63,8 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 		super(shell, new LabelProvider() {
 			@Override
 			public Image getImage(Object element){
-				if (element instanceof DBImage) {
-					return ((DBImage) element).getImage();
+				if (element instanceof UiDBImage) {
+					return ((UiDBImage) element).getImage();
 				}
 				return null;
 			}
@@ -96,7 +97,7 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 			setResult(Arrays.asList(getSelectedElements()));
 			Object[] sel = getResult();
 			if (sel != null && sel.length > 0) {
-				result = (DBImage) sel[0];
+				result = new UiDBImage((DBImage) sel[0]);
 			} else {
 				result = null;
 			}
@@ -211,7 +212,7 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 			if (!fname.equals(NOFILESELECTED)) {
 				try {
 					File file = new File(fname);
-					result = new DBImage("ch.elexis.images", tTitle.getText() + ":" //$NON-NLS-1$
+					result = new UiDBImage("ch.elexis.images", tTitle.getText() + ":" //$NON-NLS-1$
 						+ file.getName(), new FileInputStream(file));
 				} catch (Exception ex) {
 					ExHandler.handle(ex);

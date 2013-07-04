@@ -51,6 +51,7 @@ import ch.elexis.core.data.Konsultation;
 import ch.elexis.core.data.Mandant;
 import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.Rechnungssteller;
+import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -344,7 +345,7 @@ public class KonsDetailView extends ViewPart implements
 				// Point size = form.getHead().getSize();
 				for (ISticker et : etis) {
 					if (et != null) {
-						((UiSticker) et).createForm(cEtiketten);
+						new UiSticker((Sticker) et).createForm(cEtiketten);
 					}
 				}
 			}

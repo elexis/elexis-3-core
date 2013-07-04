@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2011, G. Weirich and Elexis
+ * Copyright (c) 2005-2013, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
+ *    MEDEVIT <office@medevit.at>
  *******************************************************************************/
 
 package ch.elexis.core.data;
@@ -896,7 +897,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return a List of Sticker objects
 	 */
 	private static String queryStickersString = "SELECT etikette FROM "
-			+ Sticker.LINKTABLE + " WHERE obj=?";
+			+ Sticker.FLD_LINKTABLE + " WHERE obj=?";
 	private static PreparedStatement queryStickers = null;
 
 	/**
@@ -951,7 +952,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			ret.remove(et);
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append("DELETE FROM ").append(Sticker.LINKTABLE)
+		sb.append("DELETE FROM ").append(Sticker.FLD_LINKTABLE)
 				.append(" WHERE obj=").append(getWrappedId())
 				.append(" AND etikette=").append(JdbcLink.wrap(et.getId()));
 		getConnection().exec(sb.toString());
@@ -975,7 +976,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			ret.add(st);
 			Collections.sort(ret);
 			StringBuilder sb = new StringBuilder();
-			sb.append("INSERT INTO ").append(Sticker.LINKTABLE)
+			sb.append("INSERT INTO ").append(Sticker.FLD_LINKTABLE)
 					.append("(obj,etikette) VALUES (").append(getWrappedId())
 					.append(",").append(JdbcLink.wrap(st.getId())).append(");");
 			getConnection().exec(sb.toString());
@@ -1166,7 +1167,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		return res;
 	}
 
-	protected byte[] getBinary(final String field) {
+	public byte[] getBinary(final String field) {
 		String key = getKey(field);
 		Object o = cache.get(key);
 		if (o instanceof byte[]) {
@@ -1474,7 +1475,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		unlock("VersionedResource", lockid);
 	}
 
-	protected void setBinary(final String field, final byte[] value) {
+	public void setBinary(final String field, final byte[] value) {
 		String key = getKey(field);
 		cache.put(key, value, getCacheTime());
 		setBinaryRaw(field, value);
