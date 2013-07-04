@@ -88,8 +88,7 @@ import ch.rgw.tools.VersionedResource.ResourceItem;
  */
 public class KonsDetailView extends ViewPart implements 
 		IActivationListener, ISaveablePart2 {
-	private static final String NO_CONS_SELECTED = Messages
-			.getString("KonsDetailView.NoConsSelected"); //$NON-NLS-1$
+	private static final String NO_CONS_SELECTED = Messages.KonsDetailView_NoConsSelected; //$NON-NLS-1$
 	public static final String ID = "ch.elexis.Konsdetail"; //$NON-NLS-1$
 	public static final String CFG_VERTRELATION = "vertrelation"; //$NON-NLS-1$
 	static Log log = Log.get("Detail"); //$NON-NLS-1$
@@ -176,8 +175,8 @@ public class KonsDetailView extends ViewPart implements
 				KontaktSelektor ksl = new KontaktSelektor(
 						getSite().getShell(),
 						Mandant.class,
-						Messages.getString("KonsDetailView.SelectMandatorCaption"), //$NON-NLS-1$
-						Messages.getString("KonsDetailView.SelectMandatorBody"),
+						Messages.KonsDetailView_SelectMandatorCaption, //$NON-NLS-1$
+						Messages.KonsDetailView_SelectMandatorBody,
 						new String[] { Mandant.FLD_SHORT_LABEL,
 								Mandant.FLD_NAME1, Mandant.FLD_NAME2 }); //$NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
@@ -209,22 +208,22 @@ public class KonsDetailView extends ViewPart implements
 					if (!nFall.getId().equals(fallId)) {
 						if (!nFall.isOpen()) {
 							SWTHelper.alert(
-									Messages.getString("KonsDetailView.CaseClosedCaption"), //$NON-NLS-1$
-									Messages.getString("KonsDetailView.CaseClosedBody")); //$NON-NLS-1$
+									Messages.KonsDetailView_CaseClosedCaption, //$NON-NLS-1$
+									Messages.KonsDetailView_CaseClosedBody); //$NON-NLS-1$
 						} else {
 							MessageDialog msd = new MessageDialog(
 									getViewSite().getShell(),
-									Messages.getString("KonsDetailView.ChangeCaseCaption"), //$NON-NLS-1$
+									Messages.KonsDetailView_ChangeCaseCaption, //$NON-NLS-1$
 									Images.IMG_LOGO
 											.getImage(ImageSize._75x66_TitleDialogIconSize),
 									MessageFormat.format(
-											Messages.getString("KonsDetailView.ConfirmChangeConsToCase"),
+											Messages.KonsDetailView_ConfirmChangeConsToCase,
 											new Object[] { actFall.getLabel(),
 													nFall.getLabel() }),
 									MessageDialog.QUESTION,
 									new String[] {
-											Messages.getString("KonsDetailView.Yes"), //$NON-NLS-1$
-											Messages.getString("KonsDetailView.No") }, 0); //$NON-NLS-1$
+											Messages.KonsDetailView_Yes, //$NON-NLS-1$
+											Messages.KonsDetailView_No }, 0); //$NON-NLS-1$
 							if (msd.open() == 0) {
 								actKons.setFall(nFall);
 								setKons(actKons);
@@ -240,7 +239,7 @@ public class KonsDetailView extends ViewPart implements
 		cbFall.setLayoutData(gdFall);
 
 		lVersion = tk.createLabel(form.getBody(),
-				Messages.getString("KonsDetailView.actual")); //$NON-NLS-1$
+				Messages.KonsDetailView_actual); //$NON-NLS-1$
 		GridData gdVer = new GridData(GridData.FILL_HORIZONTAL
 				| GridData.GRAB_HORIZONTAL);
 		lVersion.setLayoutData(gdVer);
@@ -387,10 +386,10 @@ public class KonsDetailView extends ViewPart implements
 			}
 			cbFall.setEnabled(act.isOpen());
 			Mandant m = b.getMandant();
-			lBeh.setText(Messages.getString("KonsDetailView.ConsOfDate") + " " + b.getDatum()); //$NON-NLS-1$
+			lBeh.setText(Messages.KonsDetailView_ConsOfDate + " " + b.getDatum()); //$NON-NLS-1$
 			StringBuilder sb = new StringBuilder();
 			if (m == null) {
-				sb.append(Messages.getString("KonsDetailView.NotYours")); //$NON-NLS-1$
+				sb.append(Messages.KonsDetailView_NotYours); //$NON-NLS-1$
 			} else {
 				Rechnungssteller rs = m.getRechnungssteller();
 				if (rs.getId().equals(m.getId())) {
@@ -438,7 +437,7 @@ public class KonsDetailView extends ViewPart implements
 			ResourceItem entry = vr.getVersion(version);
 			ntext = entry.data;
 			StringBuilder sb = new StringBuilder();
-			sb.append("rev. ").append(version).append(Messages.getString("KonsDetailView.of")).append( //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append("rev. ").append(version).append(Messages.KonsDetailView_of).append( //$NON-NLS-1$ //$NON-NLS-2$
 							new TimeTool(entry.timestamp)
 									.toString(TimeTool.FULL_GER))
 					.append(" (").append(entry.remark).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -456,7 +455,7 @@ public class KonsDetailView extends ViewPart implements
 	private void makeActions() {
 
 		purgeAction = new Action(
-				Messages.getString("KonsDetailView.PurgeOldEntries")) { //$NON-NLS-1$
+				Messages.KonsDetailView_PurgeOldEntries) { //$NON-NLS-1$
 
 			@Override
 			public void run() {
@@ -466,7 +465,7 @@ public class KonsDetailView extends ViewPart implements
 
 		};
 		versionBackAction = new Action(
-				Messages.getString("KonsDetailView.PreviousEntry")) { //$NON-NLS-1$
+				Messages.KonsDetailView_PreviousEntry) { //$NON-NLS-1$
 
 			@Override
 			public void run() {
@@ -476,8 +475,8 @@ public class KonsDetailView extends ViewPart implements
 				if (MessageDialog
 						.openConfirm(
 								getViewSite().getShell(),
-								Messages.getString("KonsDetailView.ReplaceKonsTextCaption"), //$NON-NLS-1$
-								Messages.getString("KonsDetailView.ReplaceKonsTextBody"))) { //$NON-NLS-1$
+								Messages.KonsDetailView_ReplaceKonsTextCaption, //$NON-NLS-1$
+								Messages.KonsDetailView_ReplaceKonsTextBody)) { //$NON-NLS-1$
 					setKonsText(actKons, displayedVersion - 1);
 					text.setDirty(true);
 				}
@@ -485,7 +484,7 @@ public class KonsDetailView extends ViewPart implements
 
 		};
 		versionFwdAction = new Action(
-				Messages.getString("KonsDetailView.nextEntry")) { //$NON-NLS-1$
+				Messages.KonsDetailView_nextEntry) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				if (actKons == null) {
@@ -494,18 +493,17 @@ public class KonsDetailView extends ViewPart implements
 				if (MessageDialog
 						.openConfirm(
 								getViewSite().getShell(),
-								Messages.getString("KonsDetailView.ReplaceKonsTextCaption"), //$NON-NLS-1$
-								Messages.getString("KonsDetailView.ReplaceKonsTextBody2"))) { //$NON-NLS-1$
+								Messages.KonsDetailView_ReplaceKonsTextCaption, //$NON-NLS-1$
+								Messages.KonsDetailView_ReplaceKonsTextBody2)) { //$NON-NLS-1$
 					setKonsText(actKons, displayedVersion + 1);
 					text.setDirty(true);
 				}
 			}
 		};
-		saveAction = new Action(Messages.getString("KonsDetailView.SaveEntry")) { //$NON-NLS-1$
+		saveAction = new Action(Messages.KonsDetailView_SaveEntry) { //$NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_DISK.getImageDescriptor());
-				setToolTipText(Messages
-						.getString("KonsDetailView.SaveExplicit")); //$NON-NLS-1$
+				setToolTipText(Messages.KonsDetailView_SaveExplicit); //$NON-NLS-1$
 			}
 
 			@Override

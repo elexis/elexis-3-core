@@ -68,45 +68,45 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(2, false));
-		new Label(ret, SWT.NONE).setText(Messages.getString("PatientErfassenDialog.Name")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_Name); //$NON-NLS-1$
 		tName = new Text(ret, SWT.BORDER);
 		tName.setText(getField(Patient.FLD_NAME));
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.getString("PatientErfassenDialog.firstName")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_firstName); //$NON-NLS-1$
 		tVorname = new Text(ret, SWT.BORDER);
 		tVorname.setText(getField(Patient.FLD_FIRSTNAME));
 		tVorname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.getString("PatientErfassenDialog.sex")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_sex); //$NON-NLS-1$
 		cbSex = new Combo(ret, SWT.SINGLE);
 		cbSex
 			.setItems(new String[] {
-				Messages.getString("PatientErfassenDialog.male"), Messages.getString("PatientErfassenDialog.female")}); //$NON-NLS-1$ //$NON-NLS-2$
+				Messages.PatientErfassenDialog_male, Messages.PatientErfassenDialog_female}); //$NON-NLS-1$ //$NON-NLS-2$
 		if (StringTool.isNothing(getField(Patient.FLD_SEX))) {
 			cbSex.select(0);
 		} else {
 			cbSex.select(StringTool.isFemale(getField(Patient.FLD_FIRSTNAME)) ? 1 : 0);
 		}
-		new Label(ret, SWT.NONE).setText(Messages.getString("PatientErfassenDialog.birthDate")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_birthDate); //$NON-NLS-1$
 		tGebDat = new Text(ret, SWT.BORDER);
 		tGebDat.setText(getField(Patient.FLD_DOB));
 		tGebDat.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
-		new Label(ret, SWT.NONE).setText(Messages.getString("PatientErfassenDialog.street")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_street); //$NON-NLS-1$
 		tStrasse = new Text(ret, SWT.BORDER);
 		tStrasse.setText(getField(Patient.FLD_STREET));
 		tStrasse.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
-		new Label(ret, SWT.NONE).setText(Messages.getString("PatientErfassenDialog.zip")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_zip); //$NON-NLS-1$
 		tPlz = new Text(ret, SWT.BORDER);
 		tPlz.setText(getField(Patient.FLD_ZIP));
 		tPlz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
-		new Label(ret, SWT.NONE).setText(Messages.getString("PatientErfassenDialog.city")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_city); //$NON-NLS-1$
 		tOrt = new Text(ret, SWT.BORDER);
 		tOrt.setText(getField(Patient.FLD_PLACE));
 		tOrt.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
-		new Label(ret, SWT.NONE).setText(Messages.getString("PatientErfassenDialog.phone")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_phone); //$NON-NLS-1$
 		tTel = new Text(ret, SWT.BORDER);
 		tTel.setText(getField(Patient.FLD_PHONE1));
 		tTel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -116,9 +116,9 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setMessage(Messages.getString("PatientErfassenDialog.pleaseEnterPersonalia")); //$NON-NLS-1$
-		setTitle(Messages.getString("PatientErfassenDialog.enterData")); //$NON-NLS-1$
-		getShell().setText(Messages.getString("PatientErfassenDialog.enterPatient")); //$NON-NLS-1$
+		setMessage(Messages.PatientErfassenDialog_pleaseEnterPersonalia); //$NON-NLS-1$
+		setTitle(Messages.PatientErfassenDialog_enterData); //$NON-NLS-1$
+		getShell().setText(Messages.PatientErfassenDialog_enterPatient); //$NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}
 	
@@ -165,7 +165,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 					if (MessageDialog
 						.openConfirm(
 							getShell(),
-							Messages.getString("PatientErfassenDialog.personExists"), Messages.getString("PatientErfassenDialog.personWithThisNameExists")) == false) { //$NON-NLS-1$ //$NON-NLS-2$
+							Messages.PatientErfassenDialog_personExists, Messages.PatientErfassenDialog_personWithThisNameExists) == false) { //$NON-NLS-1$ //$NON-NLS-2$
 						// abort dialog
 						super.cancelPressed();
 						return;

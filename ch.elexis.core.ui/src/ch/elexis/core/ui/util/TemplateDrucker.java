@@ -61,17 +61,16 @@ public class TemplateDrucker {
 				new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor){
 						monitor.beginTask(
-							Messages.getString("TemplateDrucker.printing") + template + "...", 1); //$NON-NLS-1$
+							Messages.TemplateDrucker_printing + template + "...", 1); //$NON-NLS-1$
 						
 						Patient actPatient =
 							(Patient) ElexisEventDispatcher.getSelected(Patient.class);
 						if (tpw.doPrint(actPatient, template, printer, tray, monitor) == false) {
 							Status status =
-								new Status(Status.ERROR, "ch.elexis", Status.ERROR, Messages
-									.getString("TemplateDrucker.errorPrinting"), null);
+								new Status(Status.ERROR, "ch.elexis", Status.ERROR, Messages.TemplateDrucker_errorPrinting, null);
 							ErrorDialog.openError(
 								null,
-								Messages.getString("TemplateDrucker.errorPrinting"), Messages.getString("TemplateDrucker.docname") + template + Messages.getString("TemplateDrucker.couldntPrint"), status); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								Messages.TemplateDrucker_errorPrinting, Messages.TemplateDrucker_docname + template + Messages.TemplateDrucker_couldntPrint, status); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							
 						}
 						
@@ -84,8 +83,8 @@ public class TemplateDrucker {
 		} catch (Exception ex) {
 			ElexisStatus status =
 				new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					Messages.getString("TemplateDrucker.errorPrinting") + ": "
-						+ Messages.getString("TemplateDrucker.couldntOpen"), ex);
+					Messages.TemplateDrucker_errorPrinting + ": "
+						+ Messages.TemplateDrucker_couldntOpen, ex);
 			StatusManager.getManager().handle(status);
 		}
 	}

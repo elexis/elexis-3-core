@@ -38,7 +38,7 @@ public class WikipediaSearchAction extends Action implements IKonsExtension, IHa
 	}
 	
 	public WikipediaSearchAction(){
-		super(Messages.getString("WikipediaSearchAction.DisplayName")); //$NON-NLS-1$
+		super(Messages.WikipediaSearchAction_DisplayName); //$NON-NLS-1$
 	}
 	
 	public boolean doLayout(StyleRange n, String provider, String id){

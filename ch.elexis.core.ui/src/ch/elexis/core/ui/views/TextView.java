@@ -76,7 +76,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		if (textContainer == null) {
 			SWTHelper
 				.showError(
-					Messages.getString("TextView.couldNotCreateTextView"), Messages.getString("TextView.couldNotLoadTextPlugin")); //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.TextView_couldNotCreateTextView, Messages.TextView_couldNotLoadTextPlugin); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			makeActions();
 			menus = new ViewMenus(getViewSite());
@@ -154,7 +154,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		if (template == null) {
 			SWTHelper
 				.showError(
-					Messages.getString("TextView.noTemplateSelected"), Messages.getString("TextView.pleaseSelectTemplate")); //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
 		actBrief =
@@ -183,7 +183,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		if (template == null) {
 			SWTHelper
 				.showError(
-					Messages.getString("TextView.noTemplateSelected"), Messages.getString("TextView.pleaseSelectTemplate")); //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
 		actBrief =
@@ -197,7 +197,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	}
 	
 	private void makeActions(){
-		briefLadenAction = new Action(Messages.getString("TextView.openLetter")) { //$NON-NLS-1$
+		briefLadenAction = new Action(Messages.TextView_openLetter) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
@@ -211,7 +211,7 @@ public class TextView extends ViewPart implements IActivationListener {
 				
 			};
 		
-		loadSysTemplateAction = new Action(Messages.getString("TextView.openSysTemplate")) { //$NON-NLS-1$
+		loadSysTemplateAction = new Action(Messages.TextView_openSysTemplate) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					DocumentSelectDialog bs =
@@ -222,7 +222,7 @@ public class TextView extends ViewPart implements IActivationListener {
 					}
 				}
 			};
-		loadTemplateAction = new Action(Messages.getString("TextView.openTemplate")) { //$NON-NLS-1$
+		loadTemplateAction = new Action(Messages.TextView_openTemplate) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					DocumentSelectDialog bs =
@@ -233,30 +233,30 @@ public class TextView extends ViewPart implements IActivationListener {
 					}
 				}
 			};
-		saveTemplateAction = new Action(Messages.getString("TextView.saveAsTemplate")) { //$NON-NLS-1$
+		saveTemplateAction = new Action(Messages.TextView_saveAsTemplate) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					if (actBrief != null) {
-						txt.saveTemplate(actBrief.get(Messages.getString("TextView.Subject"))); //$NON-NLS-1$
+						txt.saveTemplate(actBrief.get(Messages.TextView_Subject)); //$NON-NLS-1$
 					} else {
 						txt.saveTemplate(null);
 					}
 				}
 			};
 		
-		showMenuAction = new Action(Messages.getString("TextView.showMenu"), Action.AS_CHECK_BOX) { //$NON-NLS-1$			
+		showMenuAction = new Action(Messages.TextView_showMenu, Action.AS_CHECK_BOX) { //$NON-NLS-1$			
 				public void run(){
 					txt.getPlugin().showMenu(isChecked());
 				}
 			};
 		
 		showToolbarAction =
-			new Action(Messages.getString("TextView.Toolbar"), Action.AS_CHECK_BOX) { //$NON-NLS-1$
+			new Action(Messages.TextView_Toolbar, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				public void run(){
 					txt.getPlugin().showToolbar(isChecked());
 				}
 			};
-		importAction = new Action(Messages.getString("TextView.importText")) { //$NON-NLS-1$
+		importAction = new Action(Messages.TextView_importText) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					try {
@@ -279,7 +279,7 @@ public class TextView extends ViewPart implements IActivationListener {
 				}
 			};
 		
-		exportAction = new Action(Messages.getString("TextView.exportText")) { //$NON-NLS-1$
+		exportAction = new Action(Messages.TextView_exportText) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					try {
@@ -315,7 +315,7 @@ public class TextView extends ViewPart implements IActivationListener {
 					}
 				}
 			};
-		newDocAction = new Action(Messages.getString("TextView.newDocument")) { //$NON-NLS-1$
+		newDocAction = new Action(Messages.TextView_newDocument) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				}
@@ -332,9 +332,8 @@ public class TextView extends ViewPart implements IActivationListener {
 							} else {
 								MessageDialog
 									.openInformation(UiDesk.getTopShell(),
-										Messages.getString("TextView.NoCaseSelected"), //$NON-NLS-1$
-										Messages
-											.getString("TextView.SaveNotPossibleNoCaseAndKonsSelected")); //$NON-NLS-1$
+										Messages.TextView_NoCaseSelected, //$NON-NLS-1$
+										Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); //$NON-NLS-1$
 								return;
 							}
 						}
@@ -355,8 +354,8 @@ public class TextView extends ViewPart implements IActivationListener {
 						txt.getPlugin().createEmptyDocument();
 					} else {
 						MessageDialog.openInformation(UiDesk.getTopShell(),
-							Messages.getString("BriefAuswahlNoPatientSelected"), //$NON-NLS-1$
-							Messages.getString("BriefAuswahlNoPatientSelected")); //$NON-NLS-1$
+							Messages.BriefAuswahlNoPatientSelected, //$NON-NLS-1$
+							Messages.BriefAuswahlNoPatientSelected); //$NON-NLS-1$
 					}
 				}
 				
@@ -365,11 +364,11 @@ public class TextView extends ViewPart implements IActivationListener {
 		briefLadenAction.setToolTipText("Brief zum Bearbeiten öffnen"); //$NON-NLS-1$
 		// briefNeuAction.setImageDescriptor(Hub.getImageDescriptor("rsc/schreiben.gif"));
 		// briefNeuAction.setToolTipText("Einen neuen Brief erstellen");
-		showMenuAction.setToolTipText(Messages.getString("TextView.showMenuBar")); //$NON-NLS-1$
+		showMenuAction.setToolTipText(Messages.TextView_showMenuBar); //$NON-NLS-1$
 		showMenuAction.setImageDescriptor(Images.IMG_MENUBAR.getImageDescriptor());
 		showMenuAction.setChecked(true);
 		showToolbarAction.setImageDescriptor(Images.IMG_TOOLBAR.getImageDescriptor());
-		showToolbarAction.setToolTipText(Messages.getString("TextView.showToolbar")); //$NON-NLS-1$
+		showToolbarAction.setToolTipText(Messages.TextView_showToolbar); //$NON-NLS-1$
 		showToolbarAction.setChecked(true);
 	}
 	
@@ -387,7 +386,7 @@ public class TextView extends ViewPart implements IActivationListener {
 			InputDialog il =
 				new InputDialog(
 					getViewSite().getShell(),
-					Messages.getString("TextView.saveText"), Messages.getString("TextView.enterTitle"), "", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					Messages.TextView_saveText, Messages.TextView_enterTitle, "", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if (il.open() == Dialog.OK) {
 				actBrief.setBetreff(il.getValue());
 				return actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin()
@@ -418,7 +417,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	void setName(){
 		String n = ""; //$NON-NLS-1$
 		if (actBrief == null) {
-			setPartName(Messages.getString("TextView.noLetterSelected")); //$NON-NLS-1$
+			setPartName(Messages.TextView_noLetterSelected); //$NON-NLS-1$
 		} else {
 			Person pat = actBrief.getPatient();
 			if (pat != null) {

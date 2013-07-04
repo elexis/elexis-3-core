@@ -50,7 +50,7 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	public PersistentObjectLoader(CommonViewer cv, Query<? extends PersistentObject> qbe){
 		this.cv = cv;
 		this.qbe = qbe;
-		dj = new DelayableJob(Messages.getString("PersistentObjectLoader.2"), this); //$NON-NLS-1$
+		dj = new DelayableJob(Messages.PersistentObjectLoader_LoadingData, this); //$NON-NLS-1$
 	}
 	
 	public Query<? extends PersistentObject> getQuery(){

@@ -48,7 +48,7 @@ public class DecoratedStringChooser extends Composite {
 		}
 		setLayout(new GridLayout(typCols, true));
 		Label expl = new Label(this, SWT.WRAP);
-		expl.setText(Messages.getString("DecoratedStringChooser.howToChange")); //$NON-NLS-1$
+		expl.setText(Messages.DecoratedStringChooser_howToChange); //$NON-NLS-1$
 		expl.setLayoutData(SWTHelper.getFillGridData(typCols, false, 1, false));
 		for (int i = 0; i < num; i++) {
 			Label lab = new Label(this, SWT.NONE);

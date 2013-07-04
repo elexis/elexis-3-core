@@ -150,8 +150,8 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 						String val = po.get(myField);
 						if (val == null) {
 							SWTHelper.showError(
-								Messages.getString("FieldDisplayView.ErrorFieldCaption"), //$NON-NLS-1$
-								Messages.getString("FieldDisplayView.ErrorFieldBody") //$NON-NLS-1$
+								Messages.FieldDisplayView_ErrorFieldCaption, //$NON-NLS-1$
+								Messages.FieldDisplayView_ErrorFieldBody
 									+ myField);
 							text.setText(StringTool.leer);
 						} else {
@@ -194,8 +194,8 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	private void setField(String field, boolean canEdit){
 		String[] def = field.split("\\."); //$NON-NLS-1$
 		if (def.length != 2) {
-			SWTHelper.showError(Messages.getString("FieldDisplayView.BadDefinitionCaption"), //$NON-NLS-1$
-				Messages.getString("FieldDisplayView.BadDefinitionBody")); //$NON-NLS-1$
+			SWTHelper.showError(Messages.FieldDisplayView_BadDefinitionCaption, //$NON-NLS-1$
+				Messages.FieldDisplayView_BadDefinitionBody); //$NON-NLS-1$
 		} else {
 			myClass = resolveName(def[0]);
 			if (myClass != null) {
@@ -222,8 +222,8 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 				String fqname = "ch.elexis.data." + k; //$NON-NLS-1$
 				ret = Class.forName(fqname);
 			} catch (java.lang.Exception ex) {
-				SWTHelper.showError(Messages.getString("FieldDisplayView.WrongTypeCaption"), //$NON-NLS-1$
-					Messages.getString("FieldDisplayView.WrongTypeBody") + k + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+				SWTHelper.showError(Messages.FieldDisplayView_WrongTypeCaption, //$NON-NLS-1$
+					Messages.FieldDisplayView_WrongTypeBody + k + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 				ret = null;
 			}
 		}
@@ -231,10 +231,10 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	}
 	
 	private void makeActions(){
-		newViewAction = new Action(Messages.getString("FieldDisplayView.NewWindow")) { //$NON-NLS-1$
+		newViewAction = new Action(Messages.FieldDisplayView_NewWindow) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
-					setToolTipText(Messages.getString("FieldDisplayView.NewWindowToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.FieldDisplayView_NewWindowToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -252,10 +252,10 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 					}
 				}
 			};
-		editDataAction = new Action(Messages.getString("FieldDisplayView.DataTypeAction")) { //$NON-NLS-1$
+		editDataAction = new Action(Messages.FieldDisplayView_DataTypeAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-					setToolTipText(Messages.getString("FieldDisplayView.DataTypeToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.FieldDisplayView_DataTypeToolTip); //$NON-NLS-1$
 				}
 				
 				public void run(){
@@ -269,7 +269,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	}
 	
 	class SelectDataDialog extends TitleAreaDialog {
-		private final String DATATYPE = Messages.getString("FieldDisplayView.DataType"); //$NON-NLS-1$
+		private final String DATATYPE = Messages.FieldDisplayView_DataType; //$NON-NLS-1$
 		String[] nodes;
 		Combo cbNodes;
 		Button btEditable;
@@ -301,7 +301,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 			nodes = CoreHub.localCfg.get(NODE, "Patient.Diagnosen").split(","); //$NON-NLS-1$ //$NON-NLS-2$
 			cbNodes.setItems(nodes);
 			btEditable = new Button(ret, SWT.CHECK);
-			btEditable.setText(Messages.getString("FieldDisplayView.FieldCanBeChanged")); //$NON-NLS-1$
+			btEditable.setText(Messages.FieldDisplayView_FieldCanBeChanged); //$NON-NLS-1$
 			return ret;
 		}
 		
@@ -309,7 +309,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 		public void create(){
 			super.create();
 			setTitle(DATATYPE);
-			setMessage(Messages.getString("FieldDisplayView.EnterExpression"), //$NON-NLS-1$
+			setMessage(Messages.FieldDisplayView_EnterExpression, //$NON-NLS-1$
 				IMessageProvider.INFORMATION);
 		}
 		

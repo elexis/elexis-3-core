@@ -68,7 +68,7 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 		tabFolder = new TabFolder(main, SWT.NONE);
 		tabFolder.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		mainTabItem = new TabItem(tabFolder, SWT.NONE);
-		mainTabItem.setText(Messages.getString("SearchView.general")); //$NON-NLS-1$
+		mainTabItem.setText(Messages.SearchView_general); //$NON-NLS-1$
 		Composite mainSearchArea = new Composite(tabFolder, SWT.NONE);
 		mainTabItem.setControl(mainSearchArea);
 		
@@ -82,13 +82,13 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 		
 		Label searchTextLabel = new Label(mainInputArea, SWT.NONE);
 		searchTextLabel.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
-		searchTextLabel.setText(Messages.getString("SearchView.textToSearch")); //$NON-NLS-1$
+		searchTextLabel.setText(Messages.SearchView_textToSearch); //$NON-NLS-1$
 		
 		mainSearchText = new Text(mainInputArea, SWT.BORDER);
 		mainSearchText.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
 		mainCaseCheckbox = new Button(mainInputArea, SWT.CHECK);
-		mainCaseCheckbox.setText(Messages.getString("SearchView.honorCase")); //$NON-NLS-1$
+		mainCaseCheckbox.setText(Messages.SearchView_honorCase); //$NON-NLS-1$
 		
 		// search options
 		Composite mainOptionsArea = new Composite(mainSearchArea, SWT.NONE);
@@ -98,23 +98,23 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 		Group typeGroup = new Group(mainOptionsArea, SWT.SHADOW_OUT);
 		typeGroup.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		typeGroup.setLayout(new RowLayout());
-		typeGroup.setText(Messages.getString("SearchView.dosearch")); //$NON-NLS-1$
+		typeGroup.setText(Messages.SearchView_dosearch); //$NON-NLS-1$
 		
 		consultationRadio = new Button(typeGroup, SWT.RADIO);
-		consultationRadio.setText(Messages.getString("SearchView.consultations")); //$NON-NLS-1$
+		consultationRadio.setText(Messages.SearchView_consultations); //$NON-NLS-1$
 		consultationRadio.setSelection(true);
 		
 		Group optionsGroup = new Group(mainOptionsArea, SWT.SHADOW_OUT);
 		optionsGroup.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		optionsGroup.setLayout(new RowLayout());
-		optionsGroup.setText(Messages.getString("SearchView.limitTo")); //$NON-NLS-1$
+		optionsGroup.setText(Messages.SearchView_limitTo); //$NON-NLS-1$
 		
 		consultationTextRadio = new Button(optionsGroup, SWT.RADIO);
-		consultationTextRadio.setText(Messages.getString("SearchView.entry")); //$NON-NLS-1$
+		consultationTextRadio.setText(Messages.SearchView_entry); //$NON-NLS-1$
 		consultationTextRadio.setSelection(true);
 		
 		Button searchButton = new Button(mainSearchArea, SWT.PUSH);
-		searchButton.setText(Messages.getString("SearchView.searchButtonCaption")); //$NON-NLS-1$
+		searchButton.setText(Messages.SearchView_searchButtonCaption); //$NON-NLS-1$
 		GridData gd = SWTHelper.getFillGridData(1, true, 1, false);
 		gd.horizontalAlignment = GridData.END;
 		searchButton.setLayoutData(gd);
@@ -155,7 +155,7 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 					String type = "?"; //$NON-NLS-1$
 					String label = ""; //$NON-NLS-1$
 					if (po instanceof Konsultation) {
-						type = Messages.getString("SearchView.consultation"); //$NON-NLS-1$
+						type = Messages.SearchView_consultation; //$NON-NLS-1$
 						
 						Konsultation konsultation = (Konsultation) po;
 						Fall fall = konsultation.getFall();
@@ -223,7 +223,7 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 		List<Konsultation> result = new ArrayList<Konsultation>();
 		
 		Query<Konsultation> query = new Query<Konsultation>(Konsultation.class);
-		query.orderBy(false, Messages.getString("SearchView.date")); //$NON-NLS-1$
+		query.orderBy(false, Messages.SearchView_date); //$NON-NLS-1$
 		List<Konsultation> konsultationen = query.execute();
 		if (konsultationen != null) {
 			for (Konsultation konsultation : konsultationen) {

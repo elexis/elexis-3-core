@@ -38,7 +38,7 @@ import ch.rgw.tools.StringTool;
 
 public class LeistungenView extends ViewPart implements IActivationListener, ISaveablePart2 {
 	
-	private static final String CAPTION_ERROR = Messages.getString("LeistungenView.error"); //$NON-NLS-1$
+	private static final String CAPTION_ERROR = Messages.LeistungenView_error; //$NON-NLS-1$
 	public final static String ID = "ch.elexis.LeistungenView"; //$NON-NLS-1$
 	public CTabFolder ctab;
 	CTabItem selected;

@@ -45,10 +45,10 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
 import ch.elexis.core.ui.util.LabeledInputField;
-import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.LabeledInputField.IContentProvider;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
+import ch.elexis.core.ui.util.SWTHelper;
 
 public class Mandanten extends PreferencePage implements IWorkbenchPreferencePage {
 	private LabeledInputField.AutoForm lfa;

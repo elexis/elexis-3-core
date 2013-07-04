@@ -86,7 +86,7 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 		tk = UiDesk.getToolkit();
 		form = tk.createScrolledForm(sash);
 		form.getBody().setLayout(new GridLayout(1, false));
-		form.setText(Messages.getString("BBSView.PleaseEnterSubject")); //$NON-NLS-1$
+		form.setText(Messages.BBSView_PleaseEnterSubject); //$NON-NLS-1$
 		origin = tk.createLabel(form.getBody(), ""); //$NON-NLS-1$
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		origin.setLayoutData(gd);
@@ -95,14 +95,14 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 			new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL
 				| GridData.FILL_VERTICAL);
 		msg.setLayoutData(gd);
-		msg.setColor(Messages.getString("BBSView.rot"), UiDesk.getColor(UiDesk.COL_RED)); //$NON-NLS-1$
-		msg.setColor(Messages.getString("BBSView.gruen"), UiDesk.getColor(UiDesk.COL_GREEN)); //$NON-NLS-1$
-		msg.setColor(Messages.getString("BBSView.blau"), UiDesk.getColor(UiDesk.COL_BLUE)); //$NON-NLS-1$
+		msg.setColor(Messages.BBSView_rot, UiDesk.getColor(UiDesk.COL_RED)); //$NON-NLS-1$
+		msg.setColor(Messages.BBSView_gruen, UiDesk.getColor(UiDesk.COL_GREEN)); //$NON-NLS-1$
+		msg.setColor(Messages.BBSView_blau, UiDesk.getColor(UiDesk.COL_BLUE)); //$NON-NLS-1$
 		input = tk.createText(form.getBody(), "", SWT.WRAP | SWT.MULTI | SWT.BORDER); //$NON-NLS-1$
 		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		input.setLayoutData(gd);
 		Button send =
-			tk.createButton(form.getBody(), Messages.getString("BBSView.DoSend"), SWT.PUSH); //$NON-NLS-1$
+			tk.createButton(form.getBody(), Messages.BBSView_DoSend, SWT.PUSH); //$NON-NLS-1$
 		send.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -148,38 +148,38 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 	public void setDisplay(){
 		Object[] sel = headlines.getSelection();
 		if (sel == null || sel.length == 0) {
-			form.setText(Messages.getString("BBSView.14")); //$NON-NLS-1$
+			form.setText(Messages.BBSView_14); //$NON-NLS-1$
 			return;
 		}
 		BBSEntry en = ((Tree<BBSEntry>) sel[0]).contents;
 		form.setText(en.getTopic());
 		StringBuilder sb = new StringBuilder();
 		sb.append(en.getAuthor().getLabel())
-			.append(Messages.getString("BBSView.15")).append(en.getDate()).append( //$NON-NLS-1$
-				Messages.getString("BBSView.16")).append(en.getTime()).append(Messages.getString("BBSView.17")); //$NON-NLS-1$ //$NON-NLS-2$
+			.append(Messages.BBSView_15).append(en.getDate()).append( //$NON-NLS-1$
+				Messages.BBSView_16).append(en.getTime()).append(Messages.BBSView_17); //$NON-NLS-1$ //$NON-NLS-2$
 		origin.setText(sb.toString());
 		try {
 			msg.setText(
-				Messages.getString("BBSView.18") + en.getText() + Messages.getString("BBSView.19"), true, true); //$NON-NLS-1$ //$NON-NLS-2$
+				Messages.BBSView_18 + en.getText() + Messages.BBSView_19, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			
 		}
-		input.setText(Messages.getString("BBSView.20")); //$NON-NLS-1$
+		input.setText(Messages.BBSView_20); //$NON-NLS-1$
 	}
 	
 	class NewThread implements ViewerConfigurer.ButtonProvider {
 		
 		public Button createButton(Composite parent){
 			Button ret = new Button(parent, SWT.PUSH);
-			ret.setText(Messages.getString("BBSView.21")); //$NON-NLS-1$
+			ret.setText(Messages.BBSView_21); //$NON-NLS-1$
 			ret.addSelectionListener(new SelectionAdapter() {
 				
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					new BBSEntry(
 						headlines.getConfigurer().getControlFieldProvider().getValues()[0],
-						CoreHub.actUser, null, Messages.getString("BBSView.22")); //$NON-NLS-1$
+						CoreHub.actUser, null, Messages.BBSView_22); //$NON-NLS-1$
 					loader.invalidate();
 					headlines.notify(CommonViewer.Message.update);
 					setDisplay();

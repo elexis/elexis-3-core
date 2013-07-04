@@ -48,10 +48,10 @@ public class DBImportFirstPage extends WizardPage {
 
 	public DBImportFirstPage(String pageName) {
 		super(
-				Messages.getString("DBImportFirstPage.connection"), Messages.getString("DBImportFirstPage.typeOfDB"), Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		setMessage(Messages.getString("DBImportFirstPage.selectType") //$NON-NLS-1$
-				+ Messages.getString("DBImportFirstPage.enterNameODBC")); //$NON-NLS-1$
-		setDescription(Messages.getString("DBImportFirstPage.theDesrciption")); //$NON-NLS-1$
+				Messages.DBImportFirstPage_connection, Messages.DBImportFirstPage_typeOfDB, Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		setMessage(Messages.DBImportFirstPage_selectType
+				+ Messages.DBImportFirstPage_enterNameODBC); //$NON-NLS-1$
+		setDescription(Messages.DBImportFirstPage_theDesrciption); //$NON-NLS-1$
 
 	}
 
@@ -66,10 +66,10 @@ public class DBImportFirstPage extends WizardPage {
 
 		FormToolkit tk = UiDesk.getToolkit();
 		Form form = tk.createForm(parent);
-		form.setText(Messages.getString("DBImportFirstPage.Connection")); //$NON-NLS-1$
+		form.setText(Messages.DBImportFirstPage_Connection); //$NON-NLS-1$
 		Composite body = form.getBody();
 		body.setLayout(new TableWrapLayout());
-		tk.createLabel(body, Messages.getString("DBImportFirstPage.EnterType")); //$NON-NLS-1$
+		tk.createLabel(body, Messages.DBImportFirstPage_EnterType); //$NON-NLS-1$
 		dbTypes = new List(body, SWT.BORDER);
 		dbTypes.setItems(supportedDB);
 		dbTypes.addSelectionListener(new SelectionAdapter() {
@@ -109,13 +109,13 @@ public class DBImportFirstPage extends WizardPage {
 
 		tk.adapt(dbTypes, true, true);
 		tk.createLabel(body,
-				Messages.getString("DBImportFirstPage.serverAddress")); //$NON-NLS-1$
+				Messages.DBImportFirstPage_serverAddress); //$NON-NLS-1$
 		server = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
 
 		TableWrapData twr = new TableWrapData(TableWrapData.FILL_GRAB);
 		server.setLayoutData(twr);
 		tk.createLabel(body,
-				Messages.getString("DBImportFirstPage.databaseName")); //$NON-NLS-1$
+				Messages.DBImportFirstPage_databaseName); //$NON-NLS-1$
 		dbName = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twr2 = new TableWrapData(TableWrapData.FILL_GRAB);
 		dbName.setLayoutData(twr2);

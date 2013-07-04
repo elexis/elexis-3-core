@@ -84,7 +84,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		Composite body = form.getBody();
 		body.setBackground(parent.getBackground());
 		body.setLayout(new GridLayout(2, false));
-		tk.createLabel(body, Messages.getString("BlockDetailDisplay.name")).setBackground(parent.getBackground()); //$NON-NLS-1$
+		tk.createLabel(body, Messages.BlockDetailDisplay_name).setBackground(parent.getBackground()); //$NON-NLS-1$
 		tName = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(body, StringConstants.MANDATOR).setBackground(parent.getBackground());
@@ -93,7 +93,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		tk.adapt(cbMandant);
 		Query<Mandant> qm = new Query<Mandant>(Mandant.class);
 		lMandanten = qm.execute();
-		cbMandant.add(Messages.getString("BlockDetailDisplay.all")); //$NON-NLS-1$
+		cbMandant.add(Messages.BlockDetailDisplay_all); //$NON-NLS-1$
 		for (PersistentObject m : lMandanten) {
 			cbMandant.add(m.getLabel());
 		}
@@ -115,7 +115,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			
 		});
 		Group gList = new Group(body, SWT.BORDER);
-		gList.setText(Messages.getString("BlockDetailDisplay.services")); //$NON-NLS-1$
+		gList.setText(Messages.BlockDetailDisplay_services); //$NON-NLS-1$
 		gList.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 		gList.setLayout(new FillLayout());
 		tk.adapt(gList);
@@ -193,7 +193,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		});
 		bNew =
 			tk.createButton(body,
-				Messages.getString("BlockDetailDisplay.addPredefinedServices"), SWT.PUSH); //$NON-NLS-1$
+				Messages.BlockDetailDisplay_addPredefinedServices, SWT.PUSH); //$NON-NLS-1$
 		bNew.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bNew.addSelectionListener(new SelectionAdapter() {
 			
@@ -213,7 +213,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		
 		bEigen =
 			tk.createButton(body,
-				Messages.getString("BlockDetailDisplay.addSelfDefinedServices"), SWT.PUSH); //$NON-NLS-1$
+				Messages.BlockDetailDisplay_addSelfDefinedServices, SWT.PUSH); //$NON-NLS-1$
 		bEigen.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bEigen.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -265,7 +265,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			cbMandant.select(0);
 		} else {
 			Leistungsblock lb = (Leistungsblock) obj;
-			tName.setText(lb.get(Messages.getString("BlockDetailDisplay.name"))); //$NON-NLS-1$
+			tName.setText(lb.get(Messages.BlockDetailDisplay_name)); //$NON-NLS-1$
 			String mId = lb.get(Leistungsblock.MANDANT_ID);
 			int sel = 0;
 			if (!StringTool.isNothing(mId)) {
@@ -279,11 +279,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	}
 	
 	public String getTitle(){
-		return Messages.getString("BlockDetailDisplay.blocks"); //$NON-NLS-1$
+		return Messages.BlockDetailDisplay_blocks; //$NON-NLS-1$
 	}
 	
 	private void makeActions(){
-		removeLeistung = new Action(Messages.getString("BlockDetailDisplay.remove")) { //$NON-NLS-1$
+		removeLeistung = new Action(Messages.BlockDetailDisplay_remove) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					Leistungsblock lb =
@@ -298,22 +298,22 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					}
 				}
 			};
-		moveUpAction = new Action(Messages.getString("BlockDetailDisplay.moveUp")) { //$NON-NLS-1$
+		moveUpAction = new Action(Messages.BlockDetailDisplay_moveUp) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					moveElement(-1);
 				}
 			};
-		moveDownAction = new Action(Messages.getString("BlockDetailDisplay.moveDown")) { //$NON-NLS-1$
+		moveDownAction = new Action(Messages.BlockDetailDisplay_moveDown) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					moveElement(1);
 				}
 			};
-		editAction = new Action(Messages.getString("BlockDetailDisplay.changeAction")) { //$NON-NLS-1$
+		editAction = new Action(Messages.BlockDetailDisplay_changeAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-					setToolTipText(Messages.getString("BlockDetailDisplay.changeActionTooltip")); //$NON-NLS-1$
+					setToolTipText(Messages.BlockDetailDisplay_changeActionTooltip); //$NON-NLS-1$
 				}
 				
 				@Override

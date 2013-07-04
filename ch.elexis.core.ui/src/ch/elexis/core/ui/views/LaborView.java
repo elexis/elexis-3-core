@@ -303,7 +303,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 						DisplayTextDialog dlg =
 							new DisplayTextDialog(
 								getViewSite().getShell(),
-								Messages.getString("LaborView.textResultTitle"), li.getName(), lr.getComment()); //$NON-NLS-1$
+								Messages.LaborView_textResultTitle, li.getName(), lr.getComment()); //$NON-NLS-1$
 						Font font = null;
 						// HL7 Befunde enthalten oft mit Leerzeichen formatierte Bemerkungen,
 						// die nur mit nicht-proportionalen Fonts dargestellt werden können
@@ -333,8 +333,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 							labResultQuery.add(LabResult.ITEM_ID, Query.EQUALS, li.getId());
 							List<LabResult> labResultList = labResultQuery.execute();
 							if (labResultList != null && labResultList.size() > 0) {
-								new DisplayLabDokumenteDialog(getViewSite().getShell(), Messages
-									.getString("LaborView.Documents"), labResultList).open();//$NON-NLS-1$
+								new DisplayLabDokumenteDialog(getViewSite().getShell(), Messages.LaborView_Documents, labResultList).open();//$NON-NLS-1$
 							}
 						}
 					}
@@ -614,7 +613,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 				}
 			}
 		} else {
-			form.setText(Messages.getString("LaborView.NoPatientSelected")); //$NON-NLS-1$
+			form.setText(Messages.LaborView_NoPatientSelected); //$NON-NLS-1$
 		}
 	}
 	
@@ -699,7 +698,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 				continue;
 			}
 			if (LabItem.typ.DOCUMENT.equals(lit.getTyp())) {
-				rows[row].setText(col_display, Messages.getString("LaborView.Open")); //$NON-NLS-1$
+				rows[row].setText(col_display, Messages.LaborView_Open); //$NON-NLS-1$
 			} else {
 				rows[row].setText(col_display, lr.getResult()); // Spalte für die
 			}
@@ -867,18 +866,18 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 		}
 		columns[0].setWidth(200);
 		columns[1].setWidth(70);
-		columns[0].setText(Messages.getString("LaborView.parameter")); //$NON-NLS-1$
-		columns[1].setText(Messages.getString("LaborView.reference")); //$NON-NLS-1$
+		columns[0].setText(Messages.LaborView_parameter); //$NON-NLS-1$
+		columns[1].setText(Messages.LaborView_reference); //$NON-NLS-1$
 	}
 	
 	private void makeActions(){
-		fwdAction = new Action(Messages.getString("LaborView.nextPage")) { //$NON-NLS-1$
+		fwdAction = new Action(Messages.LaborView_nextPage) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					loadPage(actPage + 1);
 				}
 			};
-		backAction = new Action(Messages.getString("LaborView.prevPage")) { //$NON-NLS-1$
+		backAction = new Action(Messages.LaborView_prevPage) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					if (actPage > 0) {
@@ -886,7 +885,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 					}
 				}
 			};
-		printAction = new Action(Messages.getString("LaborView.print")) { //$NON-NLS-1$
+		printAction = new Action(Messages.LaborView_print) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					try {
@@ -905,10 +904,10 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 					}
 				}
 			};
-		importAction = new Action(Messages.getString("LaborView.import")) { //$NON-NLS-1$
+		importAction = new Action(Messages.LaborView_import) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_IMPORT.getImageDescriptor());
-					setToolTipText(Messages.getString("LaborView.importToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.LaborView_importToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -916,13 +915,13 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 					Importer imp =
 						new Importer(getViewSite().getShell(), "ch.elexis.LaborDatenImport"); //$NON-NLS-1$
 					imp.create();
-					imp.setMessage(Messages.getString("LaborView.selectDataSource")); //$NON-NLS-1$
-					imp.getShell().setText(Messages.getString("LaborView.labImporterCaption")); //$NON-NLS-1$
-					imp.setTitle(Messages.getString("LaborView.labImporterText")); //$NON-NLS-1$
+					imp.setMessage(Messages.LaborView_selectDataSource); //$NON-NLS-1$
+					imp.getShell().setText(Messages.LaborView_labImporterCaption); //$NON-NLS-1$
+					imp.setTitle(Messages.LaborView_labImporterText); //$NON-NLS-1$
 					imp.open();
 				}
 			};
-		xmlAction = new Action(Messages.getString("LaborView.xmlExport")) { //$NON-NLS-1$
+		xmlAction = new Action(Messages.LaborView_xmlExport) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					Document doc = makeXML();
@@ -943,14 +942,14 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 								ExHandler.handle(ex);
 								SWTHelper
 									.alert(
-										Messages.getString("LaborView.ErrorCaption"), Messages.getString("LaborView.couldntwrite") + fname); //$NON-NLS-1$ //$NON-NLS-2$
+										Messages.LaborView_ErrorCaption, Messages.LaborView_couldntwrite + fname); //$NON-NLS-1$ //$NON-NLS-2$
 								
 							}
 						}
 					}
 				}
 			};
-		newAction = new Action(Messages.getString("LaborView.newDate")) { //$NON-NLS-1$
+		newAction = new Action(Messages.LaborView_newDate) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					DateSelectorDialog dsd = new DateSelectorDialog(getViewSite().getShell());
@@ -974,7 +973,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 				}
 			};
 		setStateAction =
-			new Action(Messages.getString("LaborView.pathologic"), Action.AS_CHECK_BOX) { //$NON-NLS-1$
+			new Action(Messages.LaborView_pathologic, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					LabResult lr = getSelectedResult();
@@ -982,7 +981,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 					loadPage(getLastPage());
 				}
 			};
-		refreshAction = new Action(Messages.getString("LaborView.Refresh")) { //$NON-NLS-1$
+		refreshAction = new Action(Messages.LaborView_Refresh) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					rebuild();

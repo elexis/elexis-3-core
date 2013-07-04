@@ -46,7 +46,7 @@ import ch.rgw.tools.TimeTool;
 import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 public class EditReminderDialog extends TitleAreaDialog {
-	private static final String TX_ALL = Messages.getString("EditReminderDialog.all"); //$NON-NLS-1$
+	private static final String TX_ALL = Messages.EditReminderDialog_all; //$NON-NLS-1$
 	Reminder mine;
 	Text text;
 	Label pat;
@@ -67,14 +67,14 @@ public class EditReminderDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(2, false));
-		new Label(ret, SWT.NONE).setText(Messages.getString("EditReminderDialog.assigTo")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.EditReminderDialog_assigTo); //$NON-NLS-1$
 		Composite cTopright = new Composite(ret, SWT.NONE);
 		cTopright.setLayout(new RowLayout(SWT.HORIZONTAL));
-		new Label(cTopright, SWT.NONE).setText(Messages.getString("EditReminderDialog.betrifft")); //$NON-NLS-1$
+		new Label(cTopright, SWT.NONE).setText(Messages.EditReminderDialog_betrifft); //$NON-NLS-1$
 		pat = new Label(cTopright, SWT.NONE);
-		pat.setText(Messages.getString("EditReminderDialog.noPatient")); //$NON-NLS-1$
+		pat.setText(Messages.EditReminderDialog_noPatient); //$NON-NLS-1$
 		bNoPatient = new Button(cTopright, SWT.CHECK);
-		bNoPatient.setText(Messages.getString("EditReminderDialog.noPatient")); //$NON-NLS-1$
+		bNoPatient.setText(Messages.EditReminderDialog_noPatient); //$NON-NLS-1$
 		users = Hub.getUserList();
 		lUser = new List(ret, SWT.MULTI | SWT.V_SCROLL);
 		lUser.add(TX_ALL);
@@ -85,7 +85,7 @@ public class EditReminderDialog extends TitleAreaDialog {
 		text = SWTHelper.createText(ret, 5, SWT.NONE);
 		((GridData) lUser.getLayoutData()).heightHint = text.getLineHeight() * 5 + 10;
 		
-		new Label(ret, SWT.NONE).setText(Messages.getString("EditReminderDialog.actionwhenDue")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.EditReminderDialog_actionwhenDue); //$NON-NLS-1$
 		
 		cbType = new Combo(ret, SWT.SINGLE);
 		for (String s : Reminder.TypText) {
@@ -111,9 +111,9 @@ public class EditReminderDialog extends TitleAreaDialog {
 		dates.setLayout(new GridLayout(4, false));
 		dates.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
-		new Label(dates, SWT.NONE).setText(Messages.getString("EditReminderDialog.dueOn")); //$NON-NLS-1$
+		new Label(dates, SWT.NONE).setText(Messages.EditReminderDialog_dueOn); //$NON-NLS-1$
 		Label lbStatus = new Label(dates, SWT.NONE);
-		lbStatus.setText(Messages.getString("EditReminderDialog.state")); //$NON-NLS-1$
+		lbStatus.setText(Messages.EditReminderDialog_state); //$NON-NLS-1$
 		lbStatus.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		dpDue = new DatePickerCombo(dates, SWT.NONE);
 		dpDue.addSelectionListener(new SelectionAdapter() {
@@ -123,11 +123,11 @@ public class EditReminderDialog extends TitleAreaDialog {
 			}
 		});
 		bDue = new Button(dates, SWT.RADIO);
-		bDue.setText(Messages.getString("EditReminderDialog.overDue")); //$NON-NLS-1$
+		bDue.setText(Messages.EditReminderDialog_overDue); //$NON-NLS-1$
 		bDone = new Button(dates, SWT.RADIO);
-		bDone.setText(Messages.getString("EditReminderDialog.fixed")); //$NON-NLS-1$
+		bDone.setText(Messages.EditReminderDialog_fixed); //$NON-NLS-1$
 		bRejected = new Button(dates, SWT.RADIO);
-		bRejected.setText(Messages.getString("EditReminderDialog.wontFix")); //$NON-NLS-1$
+		bRejected.setText(Messages.EditReminderDialog_wontFix); //$NON-NLS-1$
 		
 		initialize();
 		setLabels();
@@ -202,7 +202,7 @@ public class EditReminderDialog extends TitleAreaDialog {
 		}
 		
 		if (actPatient == null) {
-			pat.setText(Messages.getString("EditReminderDialog.noPatientSelected")); //$NON-NLS-1$
+			pat.setText(Messages.EditReminderDialog_noPatientSelected); //$NON-NLS-1$
 		} else {
 			pat.setText("  " + actPatient.getLabel() + "  "); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -214,17 +214,17 @@ public class EditReminderDialog extends TitleAreaDialog {
 	private void setLabels(){
 		if (mine == null) {
 			// new reminder
-			bDue.setText(Messages.getString("EditReminderDialog.scheduled")); //$NON-NLS-1$
+			bDue.setText(Messages.EditReminderDialog_scheduled); //$NON-NLS-1$
 		} else {
 			TimeTool today = new TimeTool();
 			TimeTool tSelected = new TimeTool(dpDue.getDate().getTime());
 			
 			if (today.isSameDay(tSelected)) {
-				bDue.setText(Messages.getString("EditReminderDialog.due")); //$NON-NLS-1$
+				bDue.setText(Messages.EditReminderDialog_due); //$NON-NLS-1$
 			} else if (today.isBefore(tSelected)) {
-				bDue.setText(Messages.getString("EditReminderDialog.open")); //$NON-NLS-1$
+				bDue.setText(Messages.EditReminderDialog_open); //$NON-NLS-1$
 			} else {
-				bDue.setText(Messages.getString("EditReminderDialog.overdue")); //$NON-NLS-1$
+				bDue.setText(Messages.EditReminderDialog_overdue); //$NON-NLS-1$
 			}
 		}
 	}
@@ -232,19 +232,19 @@ public class EditReminderDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		String shelltitle = Messages.getString("EditReminderDialog.reminderShellTitle"); //$NON-NLS-1$
+		String shelltitle = Messages.EditReminderDialog_reminderShellTitle; //$NON-NLS-1$
 		if (mine == null) {
-			setTitle(Messages.getString("EditReminderDialog.createReminder")); //$NON-NLS-1$
+			setTitle(Messages.EditReminderDialog_createReminder); //$NON-NLS-1$
 		} else {
-			setTitle(Messages.getString("EditReminderDialog.editReminder")); //$NON-NLS-1$
+			setTitle(Messages.EditReminderDialog_editReminder); //$NON-NLS-1$
 			Anwender o = mine.getCreator();
 			if (o == null) {
-				shelltitle += Messages.getString("EditReminderDialog.unknown"); //$NON-NLS-1$
+				shelltitle += Messages.EditReminderDialog_unknown; //$NON-NLS-1$
 			} else {
 				shelltitle += " (" + o.getLabel() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
-		setMessage(Messages.getString("EditReminderDialog.enterDataForReminder")); //$NON-NLS-1$
+		setMessage(Messages.EditReminderDialog_enterDataForReminder); //$NON-NLS-1$
 		getShell().setText(shelltitle);
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}

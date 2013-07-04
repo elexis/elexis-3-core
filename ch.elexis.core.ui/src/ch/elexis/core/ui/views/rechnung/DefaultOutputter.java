@@ -55,7 +55,7 @@ public class DefaultOutputter implements IRnOutputter {
 	public Object createSettingsControl(Object parent){
 		Composite parComposite = (Composite) parent;
 		Label lbl = new Label(parComposite, SWT.WRAP);
-		lbl.setText(Messages.getString("DefaultOutputter.useIdividualPlugins")); //$NON-NLS-1$
+		lbl.setText(Messages.DefaultOutputter_useIdividualPlugins); //$NON-NLS-1$
 		return lbl;
 	}
 	
@@ -93,7 +93,7 @@ public class DefaultOutputter implements IRnOutputter {
 	}
 	
 	public String getDescription(){
-		return Messages.getString("DefaultOutputter.defaultOutputForCase"); //$NON-NLS-1$
+		return Messages.DefaultOutputter_defaultOutputForCase; //$NON-NLS-1$
 	}
 	
 	public void saveComposite(){

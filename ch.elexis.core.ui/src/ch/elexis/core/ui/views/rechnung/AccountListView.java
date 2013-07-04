@@ -67,10 +67,10 @@ public class AccountListView extends ViewPart implements IActivationListener, IS
 	private static final int SALDO = 3;
 	
 	private static final String[] COLUMN_TEXT = {
-		Messages.getString("AccountListView.name"), // NAME //$NON-NLS-1$
-		Messages.getString("AccountListView.firstname"), // FIRSTNAME //$NON-NLS-1$
-		Messages.getString("AccountListView.bithdate"), // BIRTHDATE //$NON-NLS-1$
-		Messages.getString("AccountListView.balance"), // SALDO //$NON-NLS-1$
+		Messages.AccountListView_name, // NAME //$NON-NLS-1$
+		Messages.AccountListView_firstname, // FIRSTNAME //$NON-NLS-1$
+		Messages.AccountListView_bithdate, // BIRTHDATE //$NON-NLS-1$
+		Messages.AccountListView_balance, // SALDO //$NON-NLS-1$
 	};
 	
 	private static final int[] COLUMN_WIDTH = {
@@ -91,7 +91,7 @@ public class AccountListView extends ViewPart implements IActivationListener, IS
 		form.getBody().setLayout(new GridLayout(1, false));
 		
 		// account list
-		tk.createLabel(form.getBody(), Messages.getString("AccountListView.accountList")); //$NON-NLS-1$
+		tk.createLabel(form.getBody(), Messages.AccountListView_accountList); //$NON-NLS-1$
 		accountListViewer = new TableViewer(form.getBody(), SWT.SINGLE | SWT.FULL_SELECTION);
 		Table table = accountListViewer.getTable();
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -119,7 +119,7 @@ public class AccountListView extends ViewPart implements IActivationListener, IS
 				} else {
 					loader.schedule();
 					return new Object[] {
-						Messages.getString("AccountListView.loadingData")}; //$NON-NLS-1$
+						Messages.AccountListView_loadingData}; //$NON-NLS-1$
 				}
 			}
 			

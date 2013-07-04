@@ -100,13 +100,13 @@ public class ContactElement extends XChangeElement {
 	
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
-		sb.append(Messages.getString("ContactElement.Name")).append(getAttr(ATTR_LASTNAME)).append(StringTool.lf); //$NON-NLS-1$
-		sb.append(Messages.getString("ContactElement.vorname")).append(getAttr(ATTR_FIRSTNAME)); //$NON-NLS-1$
+		sb.append(Messages.ContactElement_Name).append(getAttr(ATTR_LASTNAME)).append(StringTool.lf); //$NON-NLS-1$
+		sb.append(Messages.ContactElement_vorname).append(getAttr(ATTR_FIRSTNAME)); //$NON-NLS-1$
 		String middle = getAttr(ATTR_MIDDLENAME);
 		if (middle.length() > 0) {
 			sb.append(StringTool.space).append(middle);
 		}
-		sb.append(Messages.getString("ContactElement.gebdat")); //$NON-NLS-1$
+		sb.append(Messages.ContactElement_gebdat); //$NON-NLS-1$
 		TimeTool geb = new TimeTool(getAttr(ATTR_BIRTHDATE));
 		sb.append(geb.toString(TimeTool.DATE_GER)).append(StringTool.lf);
 		sb.append("PID: ").append(getAttr(ATTR_ID)).append(StringTool.lf + StringTool.lf); //$NON-NLS-1$

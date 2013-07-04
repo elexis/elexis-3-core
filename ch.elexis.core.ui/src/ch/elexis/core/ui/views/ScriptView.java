@@ -189,18 +189,18 @@ public class ScriptView extends ViewPart {
 			};
 		newScriptAction =
 			new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
-				Messages.getString("ScriptView.newScriptAction")) { //$NON-NLS-1$
+				Messages.ScriptView_newScriptAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-					setToolTipText(Messages.getString("ScriptView.newScriptTooltip")); //$NON-NLS-1$
+					setToolTipText(Messages.ScriptView_newScriptTooltip); //$NON-NLS-1$
 				}
 				
 				@Override
 				public void doRun(){
 					InputDialog inp =
 						new InputDialog(getSite().getShell(),
-							Messages.getString("ScriptView.enterNameCaption"), //$NON-NLS-1$
-							Messages.getString("ScriptView.enterNameBody"), null, //$NON-NLS-1$
+							Messages.ScriptView_enterNameCaption, //$NON-NLS-1$
+							Messages.ScriptView_enterNameBody, null, //$NON-NLS-1$
 							null);
 					if (inp.open() == Dialog.OK) {
 						try {
@@ -216,10 +216,10 @@ public class ScriptView extends ViewPart {
 			};
 		editScriptAction =
 			new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
-				Messages.getString("ScriptView.editScriptAction")) { //$NON-NLS-1$
+				Messages.ScriptView_editScriptAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-					setToolTipText(Messages.getString("ScriptView.editScriptTooltip")); //$NON-NLS-1$
+					setToolTipText(Messages.ScriptView_editScriptTooltip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -239,10 +239,10 @@ public class ScriptView extends ViewPart {
 			};
 		removeScriptAction =
 			new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
-				Messages.getString("ScriptView.deleteScriptAction")) { //$NON-NLS-1$
+				Messages.ScriptView_deleteScriptAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-					setToolTipText(Messages.getString("ScriptView.deleteScriptTooltip")); //$NON-NLS-1$
+					setToolTipText(Messages.ScriptView_deleteScriptTooltip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -257,10 +257,10 @@ public class ScriptView extends ViewPart {
 			};
 		execScriptAction =
 			new RestrictedAction(AccessControlDefaults.SCRIPT_EXECUTE,
-				Messages.getString("ScriptView.executeScriptAction")) { //$NON-NLS-1$
+				Messages.ScriptView_executeScriptAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_GOFURTHER.getImageDescriptor());
-					setToolTipText(Messages.getString("ScriptView.executeScriptTooltip")); //$NON-NLS-1$
+					setToolTipText(Messages.ScriptView_executeScriptTooltip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -288,7 +288,7 @@ public class ScriptView extends ViewPart {
 							}
 							Object ret = script.execute(varString);
 							SWTHelper.showInfo(
-								Messages.getString("ScriptView.ScriptOutput"), ret.toString()); //$NON-NLS-1$
+								Messages.ScriptView_ScriptOutput, ret.toString()); //$NON-NLS-1$
 						} catch (Exception ex) {
 							ExHandler.handle(ex);
 							SWTHelper.showError("Fehler beim Ausführen des Scripts",

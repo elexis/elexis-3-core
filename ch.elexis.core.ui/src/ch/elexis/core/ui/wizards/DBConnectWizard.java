@@ -29,13 +29,13 @@ import ch.rgw.tools.StringTool;
 
 public class DBConnectWizard extends Wizard {
 	DBConnectFirstPage first = new DBConnectFirstPage(
-		Messages.getString("DBConnectWizard.typeOfDB")); //$NON-NLS-1$
+		Messages.DBConnectWizard_typeOfDB); //$NON-NLS-1$
 	DBConnectSecondPage sec = new DBConnectSecondPage(
-		Messages.getString("DBConnectWizard.Credentials")); //$NON-NLS-1$
+		Messages.DBConnectWizard_Credentials); //$NON-NLS-1$
 	
 	public DBConnectWizard(){
 		super();
-		setWindowTitle(Messages.getString("DBConnectWizard.connectDB")); //$NON-NLS-1$
+		setWindowTitle(Messages.DBConnectWizard_connectDB); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -71,7 +71,7 @@ public class DBConnectWizard extends Wizard {
 		} catch (JdbcLinkException je) {
 			ElexisStatus status =
 				new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NOFEEDBACK,
-					Messages.getString("DBConnectWizard.couldntConnect"), je);
+					Messages.DBConnectWizard_couldntConnect, je);
 			StatusManager.getManager().handle(status, StatusManager.BLOCK);
 			return false;
 		}

@@ -114,7 +114,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 				return doImport(monitor);
 			} catch (Exception e) {
 				return new Status(Status.ERROR, Hub.PLUGIN_ID,
-					Messages.getString("ImporterPage.importError") + " " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.ImporterPage_importError + " " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -133,7 +133,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 			"*"
 		};
 		private String[] filterNames = {
-			Messages.getString("ImporterPage.allFiles")
+			Messages.ImporterPage_allFiles
 		};
 		
 		public FileBasedImporter(final Composite parent, final ImporterPage home){
@@ -144,11 +144,11 @@ public abstract class ImporterPage implements IExecutableExtension {
 			tFname.setText(CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/filename", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			home.results = new String[1];
 			home.results[0] = tFname.getText();
-			lFile.setText(Messages.getString("ImporterPage.file")); //$NON-NLS-1$
+			lFile.setText(Messages.ImporterPage_file); //$NON-NLS-1$
 			lFile.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tFname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			Button bFile = new Button(this, SWT.PUSH);
-			bFile.setText(Messages.getString("ImporterPage.browse")); //$NON-NLS-1$
+			bFile.setText(Messages.ImporterPage_browse); //$NON-NLS-1$
 			// bFile.setLayoutData(SWTHelper.getFillGridData(2,true,1,false));
 			bFile.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -189,14 +189,14 @@ public abstract class ImporterPage implements IExecutableExtension {
 			setLayout(new GridLayout(1, false));
 			final Label lFile = new Label(this, SWT.NONE);
 			tFname = new Text(this, SWT.BORDER);
-			lFile.setText(Messages.getString("ImporterPage.dir")); //$NON-NLS-1$
+			lFile.setText(Messages.ImporterPage_dir); //$NON-NLS-1$
 			lFile.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tFname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tFname.setText(CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/dirname", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			home.results = new String[1];
 			home.results[0] = tFname.getText();
 			Button bFile = new Button(this, SWT.PUSH);
-			bFile.setText(Messages.getString("ImporterPage.browse")); //$NON-NLS-1$
+			bFile.setText(Messages.ImporterPage_browse); //$NON-NLS-1$
 			// bFile.setLayoutData(SWTHelper.getFillGridData(2,true,1,false));
 			bFile.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -230,7 +230,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 			setLayout(new GridLayout());
 			final Label lSource = new Label(this, SWT.NONE);
 			tSource = new Text(this, SWT.BORDER);
-			lSource.setText(Messages.getString("ImporterPage.source")); //$NON-NLS-1$
+			lSource.setText(Messages.ImporterPage_source); //$NON-NLS-1$
 			tSource.setEditable(false);
 			lSource.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tSource.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -239,14 +239,13 @@ public abstract class ImporterPage implements IExecutableExtension {
 			home.results = new String[1];
 			home.results[0] = tSource.getText();
 			Button bSource = new Button(this, SWT.PUSH);
-			bSource.setText(Messages.getString("ImporterPage.enter")); //$NON-NLS-1$
+			bSource.setText(Messages.ImporterPage_enter); //$NON-NLS-1$
 			bSource.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent e){
 					InputDialog in =
-						new InputDialog(parent.getShell(), Messages
-							.getString("ImporterPage.odbcSource"), //$NON-NLS-1$
-							Messages.getString("ImporterPage.pleaseEnterODBC"), null, null); //$NON-NLS-1$
+						new InputDialog(parent.getShell(), Messages.ImporterPage_odbcSource, //$NON-NLS-1$
+							Messages.ImporterPage_pleaseEnterODBC, null, null); //$NON-NLS-1$
 					if (in.open() == Dialog.OK) {
 						tSource.setText(in.getValue());
 						home.results[0] = in.getValue();
@@ -273,7 +272,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 			final String[] preset =
 				CoreHub.localCfg.getStringArray("ImporterPage/" + home.getTitle() + "/database"); //$NON-NLS-1$ //$NON-NLS-2$
 			tSource = new Text(this, SWT.BORDER);
-			lSource.setText(Messages.getString("ImporterPage.source")); //$NON-NLS-1$
+			lSource.setText(Messages.ImporterPage_source); //$NON-NLS-1$
 			tSource.setEditable(false);
 			lSource.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tSource.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -286,7 +285,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 				home.results[i] = null;
 			}
 			Button bSource = new Button(this, SWT.PUSH);
-			bSource.setText(Messages.getString("ImporterPage.selectDB")); //$NON-NLS-1$
+			bSource.setText(Messages.ImporterPage_selectDB); //$NON-NLS-1$
 			bSource.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent e){
@@ -321,7 +320,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 				ret = JdbcLink.createODBCLink(h.results[1]);
 			} else {
 				return new Result<JdbcLink>(Result.SEVERITY.ERROR, 1,
-					Messages.getString("ImporterPage.unknownType"), null, true); //$NON-NLS-1$
+					Messages.ImporterPage_unknownType, null, true); //$NON-NLS-1$
 			}
 			if (ret != null) {
 				try {
@@ -332,7 +331,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 				}
 			}
 			return new Result<JdbcLink>(Result.SEVERITY.ERROR, 2,
-				Messages.getString("ImporterPage.couldntConnect"), ret, true); //$NON-NLS-1$
+				Messages.ImporterPage_couldntConnect, ret, true); //$NON-NLS-1$
 		}
 	}
 }

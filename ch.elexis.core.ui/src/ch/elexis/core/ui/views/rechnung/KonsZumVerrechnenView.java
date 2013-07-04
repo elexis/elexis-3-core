@@ -166,7 +166,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		SashForm sash = new SashForm(parent, SWT.NULL);
 		left = tk.createForm(sash);
 		Composite cLeft = left.getBody();
-		left.setText(Messages.getString("KonsZumVerrechnenView.allOpenCons")); //$NON-NLS-1$
+		left.setText(Messages.KonsZumVerrechnenView_allOpenCons); //$NON-NLS-1$
 		cLeft.setLayout(new GridLayout());
 		cv.create(vc, cLeft, SWT.NONE, tAll);
 		cv.getViewerWidget().setComparator(new KonsZumVerrechnenViewViewerComparator());
@@ -204,7 +204,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		
 		right = tk.createForm(sash);
 		Composite cRight = right.getBody();
-		right.setText(Messages.getString("KonsZumVerrechnenView.selected")); //$NON-NLS-1$
+		right.setText(Messages.KonsZumVerrechnenView_selected); //$NON-NLS-1$
 		cRight.setLayout(new GridLayout());
 		tvSel = new TreeViewer(cRight, SWT.V_SCROLL | SWT.MULTI);
 		// tvSel.getControl().setLayoutData(SWTHelper.getFillGridData(1,true,t,true));
@@ -326,9 +326,8 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 						new IRunnableWithProgress() {
 							public void run(final IProgressMonitor monitor){
 								monitor.beginTask(
-									Messages.getString("KonsZumVerrechnenView.findCons"), 100); //$NON-NLS-1$
-								monitor.subTask(Messages
-									.getString("KonsZumVerrechnenView.databaseRequest")); //$NON-NLS-1$
+									Messages.KonsZumVerrechnenView_findCons, 100); //$NON-NLS-1$
+								monitor.subTask(Messages.KonsZumVerrechnenView_databaseRequest); //$NON-NLS-1$
 								String sql =
 									"SELECT distinct PATIENTID FROM FAELLE " + //$NON-NLS-1$
 										"JOIN BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID WHERE BEHANDLUNGEN.deleted='0' AND BEHANDLUNGEN.RECHNUNGSID is null "; //$NON-NLS-1$
@@ -338,7 +337,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 								}
 								ResultSet rs = stm.query(sql);
 								monitor.worked(10);
-								monitor.subTask(Messages.getString("KonsZumVerrechnenView.readIn")); //$NON-NLS-1$
+								monitor.subTask(Messages.KonsZumVerrechnenView_readIn); //$NON-NLS-1$
 								try {
 									while ((rs != null) && rs.next()) {
 										String s = rs.getString(1);
@@ -507,10 +506,10 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 	}
 	
 	private void makeActions(){
-		billAction = new Action(Messages.getString("KonsZumVerrechnenView.createInvoices")) { //$NON-NLS-1$
+		billAction = new Action(Messages.KonsZumVerrechnenView_createInvoices) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_BILL.getImageDescriptor()); //$NON-NLS-1$
-					setToolTipText(Messages.getString("KonsZumVerrechnenView.createInvoices")); //$NON-NLS-1$
+					setToolTipText(Messages.KonsZumVerrechnenView_createInvoices); //$NON-NLS-1$
 				}
 				
 				@SuppressWarnings("unchecked")
@@ -518,8 +517,8 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 				public void run(){
 					if (((StructuredSelection) tvSel.getSelection()).size() > 0) {
 						if (!SWTHelper.askYesNo(
-							Messages.getString("KonsZumVerrechnenView.RealleCreateBillsCaption"), //$NON-NLS-1$
-							Messages.getString("KonsZumVerrechnenView.ReallyCreateBillsBody"))) { //$NON-NLS-1$
+							Messages.KonsZumVerrechnenView_RealleCreateBillsCaption, //$NON-NLS-1$
+							Messages.KonsZumVerrechnenView_ReallyCreateBillsBody)) { //$NON-NLS-1$
 							return;
 						}
 					}
@@ -545,10 +544,10 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 					tvSel.refresh();
 				}
 			};
-		clearAction = new Action(Messages.getString("KonsZumVerrechnenView.clearSelection")) { //$NON-NLS-1$
+		clearAction = new Action(Messages.KonsZumVerrechnenView_clearSelection) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_REMOVEITEM.getImageDescriptor()); //$NON-NLS-1$
-					setToolTipText(Messages.getString("KonsZumVerrechnenView.deleteList")); //$NON-NLS-1$
+					setToolTipText(Messages.KonsZumVerrechnenView_deleteList); //$NON-NLS-1$
 					
 				}
 				
@@ -558,10 +557,10 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 					tvSel.refresh();
 				}
 			};
-		refreshAction = new Action(Messages.getString("KonsZumVerrechnenView.reloadAction")) { //$NON-NLS-1$
+		refreshAction = new Action(Messages.KonsZumVerrechnenView_reloadAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
-					setToolTipText(Messages.getString("KonsZumVerrechnenView.reloadToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.KonsZumVerrechnenView_reloadToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -571,10 +570,10 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 					tvSel.refresh(true);
 				}
 			};
-		wizardAction = new Action(Messages.getString("KonsZumVerrechnenView.autoAction")) { //$NON-NLS-1$
+		wizardAction = new Action(Messages.KonsZumVerrechnenView_autoAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());
-					setToolTipText(Messages.getString("KonsZumVerrechnenView.autoToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.KonsZumVerrechnenView_autoToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -596,10 +595,10 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 					}
 				}
 			};
-		printAction = new Action(Messages.getString("KonsZumVerrechnenView.printSelection")) { //$NON-NLS-1$
+		printAction = new Action(Messages.KonsZumVerrechnenView_printSelection) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
-					setToolTipText(Messages.getString("KonsZumVerrechnenView.printToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.KonsZumVerrechnenView_printToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -608,7 +607,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 					
 				}
 			};
-		removeAction = new Action(Messages.getString("KonsZumVerrechnenView.removeFromSelection")) { //$NON-NLS-1$
+		removeAction = new Action(Messages.KonsZumVerrechnenView_removeFromSelection) { //$NON-NLS-1$
 				@SuppressWarnings("unchecked")
 				@Override
 				public void run(){
@@ -633,7 +632,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 			};
 		
 		// expand action for tvSel
-		expandSelAction = new Action(Messages.getString("KonsZumVerrechnenView.expand")) { //$NON-NLS-1$
+		expandSelAction = new Action(Messages.KonsZumVerrechnenView_expand) { //$NON-NLS-1$
 				@SuppressWarnings("unchecked")
 				@Override
 				public void run(){
@@ -649,7 +648,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 				}
 			};
 		// expandAll action for tvSel
-		expandSelAllAction = new Action(Messages.getString("KonsZumVerrechnenView.expandAll")) { //$NON-NLS-1$
+		expandSelAllAction = new Action(Messages.KonsZumVerrechnenView_expandAll) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					tvSel.expandAll();
@@ -657,14 +656,13 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 			};
 		
 		selectByDateAction =
-			new Action(Messages.getString("KonsZumVerrechnenView.selectByDateAction")) { //$NON-NLS-1$
+			new Action(Messages.KonsZumVerrechnenView_selectByDateAction) { //$NON-NLS-1$
 				TimeTool fromDate;
 				TimeTool toDate;
 				
 				{
 					setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());
-					setToolTipText(Messages
-						.getString("KonsZumVerrechnenView.selectByDateActionToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.KonsZumVerrechnenView_selectByDateActionToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -695,7 +693,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 			};
 		detailAction =
 			new RestrictedAction(AccessControlDefaults.LSTG_VERRECHNEN,
-				Messages.getString("KonsZumVerrechnenView.billingDetails")) { //$NON-NLS-1$
+				Messages.KonsZumVerrechnenView_billingDetails) { //$NON-NLS-1$
 				@SuppressWarnings("unchecked")
 				@Override
 				public void doRun(){
@@ -725,7 +723,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		
 		List<Tree> lAll = (List<Tree>) tAll.getChildren();
 		monitor.beginTask(
-			Messages.getString("KonsZumVerrechnenView.selectByDateTask"), lAll.size() + 1); //$NON-NLS-1$
+			Messages.KonsZumVerrechnenView_selectByDateTask, lAll.size() + 1); //$NON-NLS-1$
 		for (Tree tP : lAll) {
 			monitor.worked(1);
 			for (Tree tF : (List<Tree>) tP.getChildren()) {
@@ -793,9 +791,9 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		@Override
 		public void create(){
 			super.create();
-			setTitle(Messages.getString("SelectDateDialog.choosePeriodTitle")); //$NON-NLS-1$
-			setMessage(Messages.getString("SelectDateDialog.choosePeriodMessage")); //$NON-NLS-1$
-			getShell().setText(Messages.getString("SelectDateDialog.description")); //$NON-NLS-1$
+			setTitle(Messages.SelectDateDialog_choosePeriodTitle); //$NON-NLS-1$
+			setMessage(Messages.SelectDateDialog_choosePeriodMessage); //$NON-NLS-1$
+			getShell().setText(Messages.SelectDateDialog_description); //$NON-NLS-1$
 		}
 		
 		@Override
@@ -804,8 +802,8 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 			com.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			com.setLayout(new GridLayout(2, false));
 			
-			new Label(com, SWT.NONE).setText(Messages.getString("SelectDateDialog.from")); //$NON-NLS-1$
-			new Label(com, SWT.NONE).setText(Messages.getString("SelectDateDialog.to")); //$NON-NLS-1$
+			new Label(com, SWT.NONE).setText(Messages.SelectDateDialog_from); //$NON-NLS-1$
+			new Label(com, SWT.NONE).setText(Messages.SelectDateDialog_to); //$NON-NLS-1$
 			
 			dpFromDate = new DatePickerCombo(com, SWT.NONE);
 			dpToDate = new DatePickerCombo(com, SWT.NONE);
@@ -864,7 +862,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 			text.getPlugin().showToolbar(false);
 			text.createFromTemplateName(
 				null,
-				"Liste", Brief.UNKNOWN, CoreHub.actUser, Messages.getString("KonsZumVerrechnenView.billsTitle")); //$NON-NLS-1$ //$NON-NLS-2$
+				"Liste", Brief.UNKNOWN, CoreHub.actUser, Messages.KonsZumVerrechnenView_billsTitle); //$NON-NLS-1$ //$NON-NLS-2$
 			Tree[] all = (Tree[]) tSelection.getChildren().toArray(new Tree[0]);
 			String[][] table = new String[all.length][];
 			
@@ -882,10 +880,10 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 				sb.append(p.getLabel());
 				for (Tree tFall : (Tree[]) tr.getChildren().toArray(new Tree[0])) {
 					Fall fall = (Fall) tFall.contents;
-					sb.append(Messages.getString("KonsZumVerrechnenView.case")).append(fall.getLabel()); //$NON-NLS-1$
+					sb.append(Messages.KonsZumVerrechnenView_case).append(fall.getLabel()); //$NON-NLS-1$
 					for (Tree tRn : (Tree[]) tFall.getChildren().toArray(new Tree[0])) {
 						Konsultation k = (Konsultation) tRn.contents;
-						sb.append(Messages.getString("KonsZumVerrechnenView.kons")).append(k.getLabel()); //$NON-NLS-1$
+						sb.append(Messages.KonsZumVerrechnenView_kons).append(k.getLabel()); //$NON-NLS-1$
 					}
 				}
 				table[i][0] = sb.toString();
@@ -900,9 +898,9 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		@Override
 		public void create(){
 			super.create();
-			getShell().setText(Messages.getString("KonsZumVerrechnenView.billsList")); //$NON-NLS-1$
-			setTitle(Messages.getString("KonsZumVerrechnenView.printListCaption")); //$NON-NLS-1$
-			setMessage(Messages.getString("KonsZumVerrechnenView.printListMessage")); //$NON-NLS-1$
+			getShell().setText(Messages.KonsZumVerrechnenView_billsList); //$NON-NLS-1$
+			setTitle(Messages.KonsZumVerrechnenView_printListCaption); //$NON-NLS-1$
+			setMessage(Messages.KonsZumVerrechnenView_printListMessage); //$NON-NLS-1$
 			getShell().setSize(900, 700);
 			SWTHelper.center(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
 				getShell());

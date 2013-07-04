@@ -39,19 +39,17 @@ import ch.rgw.tools.StringTool;
  * 
  */
 public class KontaktDetailDialog extends TitleAreaDialog {
-	private static final String LBL_MAIL = Messages.getString("KontaktDetailDialog.labelMail"); //$NON-NLS-1$
-	private static final String LBL_FAX = Messages.getString("KontaktDetailDialog.labelFax"); //$NON-NLS-1$
-	private static final String LBL_PHONE = Messages.getString("KontaktDetailDialog.labelPhone"); //$NON-NLS-1$
-	private static final String LBL_PLACE = Messages.getString("KontaktDetailDialog.labelPlace"); //$NON-NLS-1$
-	private static final String LBL_ZIP = Messages.getString("KontaktDetailDialog.labelZip"); //$NON-NLS-1$
-	private static final String LBL_STREET = Messages.getString("KontaktDetailDialog.labelStreet"); //$NON-NLS-1$
-	private static final String LBL_ZUSATZ = Messages.getString("KontaktDetailDialog.labelZusatz"); //$NON-NLS-1$
-	private static final String LBL_SEX = Messages.getString("KontaktDetailDialog.labelSex"); //$NON-NLS-1$
-	private static final String LBL_BIRTHDATE = Messages
-		.getString("KontaktDetailDialog.labelBirthdate"); //$NON-NLS-1$
-	private static final String LBL_FIRSTNAME = Messages
-		.getString("KontaktDetailDialog.labelFirstname"); //$NON-NLS-1$
-	private static final String LBL_NAME = Messages.getString("KontaktDetailDialog.labelName"); //$NON-NLS-1$
+	private static final String LBL_MAIL = Messages.KontaktDetailDialog_labelMail; //$NON-NLS-1$
+	private static final String LBL_FAX = Messages.KontaktDetailDialog_labelFax; //$NON-NLS-1$
+	private static final String LBL_PHONE = Messages.KontaktDetailDialog_labelPhone; //$NON-NLS-1$
+	private static final String LBL_PLACE = Messages.KontaktDetailDialog_labelPlace; //$NON-NLS-1$
+	private static final String LBL_ZIP = Messages.KontaktDetailDialog_labelZip; //$NON-NLS-1$
+	private static final String LBL_STREET = Messages.KontaktDetailDialog_labelStreet; //$NON-NLS-1$
+	private static final String LBL_ZUSATZ = Messages.KontaktDetailDialog_labelZusatz; //$NON-NLS-1$
+	private static final String LBL_SEX = Messages.KontaktDetailDialog_labelSex; //$NON-NLS-1$
+	private static final String LBL_BIRTHDATE = Messages.KontaktDetailDialog_labelBirthdate; //$NON-NLS-1$
+	private static final String LBL_FIRSTNAME = Messages.KontaktDetailDialog_labelFirstname; //$NON-NLS-1$
+	private static final String LBL_NAME = Messages.KontaktDetailDialog_labelName; //$NON-NLS-1$
 	Kontakt k;
 	LabeledInputField liName, liVorname, liGebDat, liSex, liStrasse, liPlz, liOrt, liTel, liFax,
 			liMail;
@@ -79,9 +77,9 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 			cType.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 			cType.setLayout(new FillLayout());
 			Button bPerson = new Button(cType, SWT.RADIO);
-			bPerson.setText(Messages.getString("KontaktDetailDialog.textPerson")); //$NON-NLS-1$
+			bPerson.setText(Messages.KontaktDetailDialog_textPerson); //$NON-NLS-1$
 			Button bOrg = new Button(cType, SWT.RADIO);
-			bOrg.setText(Messages.getString("KontaktDetailDialog.textOrganization")); //$NON-NLS-1$
+			bOrg.setText(Messages.KontaktDetailDialog_textOrganization); //$NON-NLS-1$
 			bPerson.addSelectionListener(ba);
 			bOrg.addSelectionListener(ba);
 			liName = SWTHelper.createLabeledField(ret, LBL_NAME, LabeledInputField.Typ.TEXT);
@@ -139,13 +137,13 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		getShell().setText(Messages.getString("KontaktDetailDialog.showDetails")); //$NON-NLS-1$
+		getShell().setText(Messages.KontaktDetailDialog_showDetails); //$NON-NLS-1$
 		if (k != null) {
 			setTitle(k.getLabel());
 		} else {
-			setTitle(Messages.getString("KontaktDetailDialog.newContact")); //$NON-NLS-1$
+			setTitle(Messages.KontaktDetailDialog_newContact); //$NON-NLS-1$
 		}
-		setMessage(Messages.getString("KontaktDetailDialog.enterData")); //$NON-NLS-1$
+		setMessage(Messages.KontaktDetailDialog_enterData); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -154,7 +152,7 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 			if (type == 0) {
 				SWTHelper
 					.showError(
-						Messages.getString("KontaktDetailDialog.typeOfContact"), Messages.getString("KontaktDetailDialog.enterType")); //$NON-NLS-1$ //$NON-NLS-2$
+						Messages.KontaktDetailDialog_typeOfContact, Messages.KontaktDetailDialog_enterType); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			} else if (type == 1) {
 				k =
@@ -191,7 +189,7 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 		@Override
 		public void widgetSelected(SelectionEvent e){
 			if (((Button) e.getSource()).getText().equals(
-				Messages.getString("KontaktDetailDialog.textPerson"))) { //$NON-NLS-1$
+				Messages.KontaktDetailDialog_textPerson)) { //$NON-NLS-1$
 				type = 1;
 				liGebDat.setEnabled(true);
 				liSex.setEnabled(true);

@@ -122,15 +122,15 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 	
 	private final static String[] lbExpandable =
 		{
-			Messages.getString("Patientenblatt2.diagnosesLbl"), //$NON-NLS-1$
-			Messages.getString("Patientenblatt2.persAnamnesisLbl"), //$NON-NLS-1$
-			Messages.getString("Patientenblatt2.allergiesLbl"), Messages.getString("Patientenblatt2.risksLbl"), Messages.getString("Patientenblatt2.remarksLbk")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			Messages.Patientenblatt2_diagnosesLbl, //$NON-NLS-1$
+			Messages.Patientenblatt2_persAnamnesisLbl, //$NON-NLS-1$
+			Messages.Patientenblatt2_allergiesLbl, Messages.Patientenblatt2_risksLbl, Messages.Patientenblatt2_remarksLbk}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	private final Text[] txExpandable = new Text[lbExpandable.length];
 	private final static String[] dfExpandable = {
 		"Diagnosen", "PersAnamnese", //$NON-NLS-1$ //$NON-NLS-2$
 		"Allergien", "Risiken", "Bemerkung"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	private final ExpandableComposite[] ec = new ExpandableComposite[lbExpandable.length];
-	private final static String FIXMEDIKATION = Messages.getString("Patientenblatt2.fixmedication"); //$NON-NLS-1$
+	private final static String FIXMEDIKATION = Messages.Patientenblatt2_fixmedication; //$NON-NLS-1$
 	// private final static String[] lbLists={"Fixmedikation"/*,"Reminders" */};
 	private final FormText inpAdresse;
 	private final ListDisplay<BezugsKontakt> inpZusatzAdresse /* , dlReminder */;
@@ -155,29 +155,29 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 		ArrayList<InputData> fields = new ArrayList<InputData>(20);
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.name"), Patient.FLD_NAME, InputData.Typ.STRING, null)); //$NON-NLS-1$
+				Messages.Patientenblatt2_name, Patient.FLD_NAME, InputData.Typ.STRING, null)); //$NON-NLS-1$
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.firstname"), Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); //$NON-NLS-1$
+				Messages.Patientenblatt2_firstname, Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); //$NON-NLS-1$
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.birthdate"), Patient.BIRTHDATE, InputData.Typ.DATE, null)); //$NON-NLS-1$
+				Messages.Patientenblatt2_birthdate, Patient.BIRTHDATE, InputData.Typ.DATE, null)); //$NON-NLS-1$
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.sex"), Patient.FLD_SEX, null, new String[] { Person.FEMALE, Person.MALE}, false)); //$NON-NLS-1$
+				Messages.Patientenblatt2_sex, Patient.FLD_SEX, null, new String[] { Person.FEMALE, Person.MALE}, false)); //$NON-NLS-1$
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.phone1"), Patient.FLD_PHONE1, InputData.Typ.STRING, null)); //$NON-NLS-1$
+				Messages.Patientenblatt2_phone1, Patient.FLD_PHONE1, InputData.Typ.STRING, null)); //$NON-NLS-1$
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.phone2"), Patient.FLD_PHONE2, InputData.Typ.STRING, null)); //$NON-NLS-1$
+				Messages.Patientenblatt2_phone2, Patient.FLD_PHONE2, InputData.Typ.STRING, null)); //$NON-NLS-1$
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.mobile"), Patient.MOBILE, InputData.Typ.STRING, null)); //$NON-NLS-1$
+				Messages.Patientenblatt2_mobile, Patient.MOBILE, InputData.Typ.STRING, null)); //$NON-NLS-1$
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.fax"), Patient.FLD_FAX, InputData.Typ.STRING, null)); //$NON-NLS-1$
-		fields.add(new InputData(Messages.getString("Patientenblatt2.email"), Patient.FLD_E_MAIL, //$NON-NLS-1$
+				Messages.Patientenblatt2_fax, Patient.FLD_FAX, InputData.Typ.STRING, null)); //$NON-NLS-1$
+		fields.add(new InputData(Messages.Patientenblatt2_email, Patient.FLD_E_MAIL, //$NON-NLS-1$
 			new LabeledInputField.IExecLinkProvider() {
 				@Override
 				public void executeString(InputData ltf){
@@ -201,10 +201,10 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 			}));
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.group"), Patient.FLD_GROUP, InputData.Typ.STRING, null)); //$NON-NLS-1$
+				Messages.Patientenblatt2_group, Patient.FLD_GROUP, InputData.Typ.STRING, null)); //$NON-NLS-1$
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.balance"), Patient.FLD_BALANCE, new LabeledInputField.IContentProvider() { //$NON-NLS-1$
+				Messages.Patientenblatt2_balance, Patient.FLD_BALANCE, new LabeledInputField.IContentProvider() { //$NON-NLS-1$
 				
 					public void displayContent(PersistentObject po, InputData ltf){
 						ltf.setText(actPatient.getKontostand().getAmountAsString());
@@ -219,7 +219,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 				}));
 		fields
 			.add(new InputData(
-				Messages.getString("Patientenblatt2.regularPhysician"), Patient.FLD_EXTINFO_STAMMARZT, new LabeledInputField.IContentProvider() { //$NON-NLS-1$
+				Messages.Patientenblatt2_regularPhysician, Patient.FLD_EXTINFO_STAMMARZT, new LabeledInputField.IContentProvider() { //$NON-NLS-1$
 				
 					public void displayContent(PersistentObject po, InputData ltf){
 						Patient p = (Patient) po;
@@ -230,9 +230,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 					
 					public void reloadContent(PersistentObject po, InputData ltf){
 						KontaktSelektor ks =
-							new KontaktSelektor(getShell(), Kontakt.class, Messages
-								.getString("Patientenblatt2.selectRegularPhysicianTitle"), Messages
-								.getString("Patientenblatt2.selectRegularPhysicianMessage"), null);
+							new KontaktSelektor(getShell(), Kontakt.class, Messages.Patientenblatt2_selectRegularPhysicianTitle, Messages.Patientenblatt2_selectRegularPhysicianMessage, null);
 						if (ks.open() == Dialog.OK) {
 							Kontakt k = (Kontakt) ks.getSelection();
 							((Patient) po).setStammarzt(k);
@@ -274,7 +272,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 		cPersonalien.setLayout(new GridLayout(2, false));
 		cPersonalien.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		hHA =
-			tk.createHyperlink(cPersonalien, Messages.getString("Patientenblatt2.postal"), SWT.NONE); //$NON-NLS-1$
+			tk.createHyperlink(cPersonalien, Messages.Patientenblatt2_postal, SWT.NONE); //$NON-NLS-1$
 		hHA.addHyperlinkListener(hr);
 		hHA.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 		inpAdresse = tk.createFormText(cPersonalien, false);
@@ -292,7 +290,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 		
 		ecZA =
 			WidgetFactory.createExpandableComposite(tk, form,
-				Messages.getString("Patientenblatt2.additionalAdresses")); //$NON-NLS-1$
+				Messages.Patientenblatt2_additionalAdresses); //$NON-NLS-1$
 		UserSettings2.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
 		
 		ecZA.addExpansionListener(ecExpansionListener);
@@ -311,7 +309,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 						new KontaktSelektor(
 							getShell(),
 							Kontakt.class,
-							Messages.getString("Patientenblatt2.contactForAdditionalAddress"), Messages.getString("Patientenblatt2.pleaseSelectardress"), sortFields); //$NON-NLS-1$ //$NON-NLS-2$
+							Messages.Patientenblatt2_contactForAdditionalAddress, Messages.Patientenblatt2_pleaseSelectardress, sortFields); //$NON-NLS-1$ //$NON-NLS-2$
 					if (ksl.open() == Dialog.OK) {
 						Kontakt k = (Kontakt) ksl.getSelection();
 						BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl();
@@ -370,7 +368,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 			});
 		
 		//Hyperlink "Hinzu..." über der Adressliste hinzufügen
-		inpZusatzAdresse.addHyperlinks(Messages.getString("Patientenblatt2.add")); //$NON-NLS-1$
+		inpZusatzAdresse.addHyperlinks(Messages.Patientenblatt2_add); //$NON-NLS-1$
 		
 		//Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
 		
@@ -511,7 +509,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 		ipp.getAutoForm().reload(actPatient);
 		
 		if (actPatient == null) {
-			form.setText(Messages.getString("Patientenblatt2.noPatientSelected")); //$NON-NLS-1$
+			form.setText(Messages.Patientenblatt2_noPatientSelected); //$NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
 			inpZusatzAdresse.clear();
 			return;
@@ -544,10 +542,10 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 	private void makeActions(){
 		lockAction =
 			new RestrictedAction(AccessControlDefaults.PATIENT_MODIFY,
-				Messages.getString("Patientenblatt2.saved"), Action.AS_CHECK_BOX) { //$NON-NLS-1$
+				Messages.Patientenblatt2_saved, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_LOCK_CLOSED.getImageDescriptor());
-					setToolTipText(Messages.getString("Patientenblatt2.savedToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.Patientenblatt2_savedToolTip); //$NON-NLS-1$
 					setChecked(true);
 				}
 				
@@ -558,7 +556,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 				
 			};
 		
-		removeZAAction = new Action(Messages.getString("Patientenblatt2.removeAddress")) {
+		removeZAAction = new Action(Messages.Patientenblatt2_removeAddress) {
 			@Override
 			public void run(){
 				if (!bLocked) {
@@ -571,7 +569,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 		
 		showZAAction =
 			new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
-				Messages.getString("Patientenblatt2.showAddress")) {
+				Messages.Patientenblatt2_showAddress) {
 				@Override
 				public void doRun(){
 					Kontakt a =
@@ -589,10 +587,10 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 			 * it also includes the phone numbers and does not use the postal address, but all the individual data fields.
 			 * Two actions with identical / similar code has also been added to PatientenListeView.java 
 			 */
-			copySelectedContactInfosToClipboardAction = new Action(Messages.getString("KontakteView.copySelectedContactInfosToClipboard")) { //$NON-NLS-1$
+			copySelectedContactInfosToClipboardAction = new Action(Messages.KontakteView_copySelectedContactInfosToClipboard) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_CLIPBOARD.getImageDescriptor());
-					setToolTipText(Messages.getString("KontakteView.copySelectedContactInfosToClipboard")); //$NON-NLS-1$
+					setToolTipText(Messages.KontakteView_copySelectedContactInfosToClipboard); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -652,10 +650,10 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 								String salutation;
 								// TODO default salutation might be configurable (or a "Sex missing!" Info might appear) js 
 								if (p.getGeschlecht().equals(Person.MALE)) {							
-									salutation = Messages.getString("KontakteView.SalutationM"); //$NON-NLS-1$
+									salutation = Messages.KontakteView_SalutationM; //$NON-NLS-1$
 								} else  //We do not use any default salutation for unknown sex to avoid errors!
 								if (p.getGeschlecht().equals(Person.FEMALE)) {							
-									salutation = Messages.getString("KontakteView.SalutationF"); //$NON-NLS-1$
+									salutation = Messages.KontakteView_SalutationF; //$NON-NLS-1$
 								} else { salutation = ""; //$NON-NLS-1$
 								}
 								
@@ -826,10 +824,10 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 			 * Copy selected address(es) to the clipboard, so it/they can be easily pasted into a letter for printing.
 			 * Two actions with identical / similar code has also been added to PatientenListeView.java 
 			 */
-			copySelectedAddressesToClipboardAction = new Action(Messages.getString("KontakteView.copySelectedAddressesToClipboard")) { //$NON-NLS-1$
+			copySelectedAddressesToClipboardAction = new Action(Messages.KontakteView_copySelectedAddressesToClipboard) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_CLIPBOARD.getImageDescriptor());
-					setToolTipText(Messages.getString("KontakteView.copySelectedAddressesToClipboard")); //$NON-NLS-1$
+					setToolTipText(Messages.KontakteView_copySelectedAddressesToClipboard); //$NON-NLS-1$
 				}
 				
 				@Override

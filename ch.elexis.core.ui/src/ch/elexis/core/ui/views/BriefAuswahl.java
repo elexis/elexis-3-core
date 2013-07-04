@@ -87,7 +87,7 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 	@Override
 	public void createPartControl(final Composite parent){
 		StringBuilder sb = new StringBuilder();
-		sb.append(Messages.getString("BriefAuswahlAllLetters")).append(Brief.UNKNOWN).append(",").append(Brief.AUZ) //$NON-NLS-1$
+		sb.append(Messages.BriefAuswahlAllLetters).append(Brief.UNKNOWN).append(",").append(Brief.AUZ) //$NON-NLS-1$
 			.append(",").append(Brief.RP).append(",").append(Brief.LABOR);
 		String cats = CoreHub.globalCfg.get(Preferences.DOC_CATEGORY, sb.toString());
 		parent.setLayout(new GridLayout());
@@ -163,7 +163,7 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 			public void run(){
 				Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 				if (pat == null) {
-					form.setText(Messages.getString("BriefAuswahlNoPatientSelected")); //$NON-NLS-1$
+					form.setText(Messages.BriefAuswahlNoPatientSelected); //$NON-NLS-1$
 				} else {
 					form.setText(pat.getLabel());
 					CTabItem sel = ctab.getSelection();
@@ -200,7 +200,7 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 						if (actPat != null) {
 							Query<Brief> qbe = new Query<Brief>(Brief.class);
 							qbe.add(Brief.FLD_PATIENT_ID, Query.EQUALS, actPat.getId());
-							if (cat.equals(Messages.getString("BriefAuswahlAllLetters2"))) { //$NON-NLS-1$
+							if (cat.equals(Messages.BriefAuswahlAllLetters2)) { //$NON-NLS-1$
 								qbe.add(Brief.FLD_TYPE, Query.NOT_EQUAL, Brief.TEMPLATE);
 							} else {
 								qbe.add(Brief.FLD_TYPE, Query.EQUALS, cat);
@@ -232,7 +232,7 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 			});
 			vc.getContentProvider().startListening();
 			Button bLoad =
-				tk.createButton(this, Messages.getString("BriefAuswahlLoadButtonText"), SWT.PUSH); //$NON-NLS-1$
+				tk.createButton(this, Messages.BriefAuswahlLoadButtonText, SWT.PUSH); //$NON-NLS-1$
 			bLoad.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent e){
@@ -242,8 +242,8 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 						if ((o != null) && (o.length > 0)) {
 							Brief brief = (Brief) o[0];
 							if (tv.openDocument(brief) == false) {
-								SWTHelper.alert(Messages.getString("BriefAuswahlErrorHeading"), //$NON-NLS-1$
-									Messages.getString("BriefAuswahlCouldNotLoadText")); //$NON-NLS-1$
+								SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
+									Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
 							}
 						} else {
 							tv.createDocument(null, null);
@@ -260,14 +260,14 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 	}
 	
 	private void makeActions(){
-		briefNeuAction = new Action(Messages.getString("BriefAuswahlNewButtonText")) { //$NON-NLS-1$
+		briefNeuAction = new Action(Messages.BriefAuswahlNewButtonText) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					Patient pat = ElexisEventDispatcher.getSelectedPatient();
 					if (pat == null) {
 						MessageDialog.openInformation(UiDesk.getTopShell(),
-							Messages.getString("BriefAuswahlNoPatientSelected"),
-							Messages.getString("BriefAuswahlNoPatientSelected"));
+							Messages.BriefAuswahlNoPatientSelected,
+							Messages.BriefAuswahlNoPatientSelected);
 						return;
 					}
 					
@@ -279,10 +279,8 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 							ElexisEventDispatcher.fireSelectionEvent(sfd.result);
 						} else {
 							MessageDialog
-								.openInformation(UiDesk.getTopShell(), Messages
-									.getString("TextView.NoCaseSelected"), //$NON-NLS-1$
-									Messages
-										.getString("TextView.SaveNotPossibleNoCaseAndKonsSelected")); //$NON-NLS-1$
+								.openInformation(UiDesk.getTopShell(), Messages.TextView_NoCaseSelected, //$NON-NLS-1$
+									Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); //$NON-NLS-1$
 							return;
 						}
 					}
@@ -330,7 +328,7 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 					}
 				}
 			};
-		briefLadenAction = new Action(Messages.getString("BriefAuswahlOpenButtonText")) { //$NON-NLS-1$
+		briefLadenAction = new Action(Messages.BriefAuswahlOpenButtonText) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					try {
@@ -342,8 +340,8 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 							if ((o != null) && (o.length > 0)) {
 								Brief brief = (Brief) o[0];
 								if (tv.openDocument(brief) == false) {
-									SWTHelper.alert(Messages.getString("BriefAuswahlErrorHeading"), //$NON-NLS-1$
-										Messages.getString("BriefAuswahlCouldNotLoadText")); //$NON-NLS-1$
+									SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
+										Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
 								}
 							} else {
 								tv.createDocument(null, null);
@@ -356,14 +354,14 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 					
 				}
 			};
-		deleteAction = new Action(Messages.getString("BriefAuswahlDeleteButtonText")) { //$NON-NLS-1$
+		deleteAction = new Action(Messages.BriefAuswahlDeleteButtonText) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					CTabItem sel = ctab.getSelection();
 					if ((sel != null)
 						&& SWTHelper.askYesNo(
-							Messages.getString("BriefAuswahlDeleteConfirmHeading"), //$NON-NLS-1$
-							Messages.getString("BriefAuswahlDeleteConfirmText"))) { //$NON-NLS-1$
+							Messages.BriefAuswahlDeleteConfirmHeading, //$NON-NLS-1$
+							Messages.BriefAuswahlDeleteConfirmText)) { //$NON-NLS-1$
 						CommonViewer cv = (CommonViewer) sel.getData();
 						Object[] o = cv.getSelection();
 						if ((o != null) && (o.length > 0)) {
@@ -375,7 +373,7 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 					
 				}
 			};
-		editNameAction = new Action(Messages.getString("BriefAuswahlRenameButtonText")) { //$NON-NLS-1$
+		editNameAction = new Action(Messages.BriefAuswahlRenameButtonText) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					CTabItem sel = ctab.getSelection();
@@ -386,8 +384,8 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 							Brief brief = (Brief) o[0];
 							InputDialog id =
 								new InputDialog(getViewSite().getShell(),
-									Messages.getString("BriefAuswahlNewSubjectHeading"), //$NON-NLS-1$
-									Messages.getString("BriefAuswahlNewSubjectText"), //$NON-NLS-1$
+									Messages.BriefAuswahlNewSubjectHeading, //$NON-NLS-1$
+									Messages.BriefAuswahlNewSubjectText, //$NON-NLS-1$
 									brief.getBetreff(), null);
 							if (id.open() == Dialog.OK) {
 								brief.setBetreff(id.getValue());
@@ -403,13 +401,13 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 		 * } };
 		 */
 		briefLadenAction.setImageDescriptor(Images.IMG_DOCUMENT_TEXT.getImageDescriptor());
-		briefLadenAction.setToolTipText(Messages.getString("BriefAuswahlOpenLetterForEdit")); //$NON-NLS-1$
+		briefLadenAction.setToolTipText(Messages.BriefAuswahlOpenLetterForEdit); //$NON-NLS-1$
 		briefNeuAction.setImageDescriptor(Images.IMG_DOCUMENT_ADD.getImageDescriptor()); 
-		briefNeuAction.setToolTipText(Messages.getString("BriefAuswahlCreateNewDocument")); //$NON-NLS-1$
+		briefNeuAction.setToolTipText(Messages.BriefAuswahlCreateNewDocument); //$NON-NLS-1$
 		editNameAction.setImageDescriptor(Images.IMG_DOCUMENT_WRITE.getImageDescriptor());
-		editNameAction.setToolTipText(Messages.getString("BriefAuswahlRenameDocument")); //$NON-NLS-1$
+		editNameAction.setToolTipText(Messages.BriefAuswahlRenameDocument); //$NON-NLS-1$
 		deleteAction.setImageDescriptor(Images.IMG_DOCUMENT_REMOVE.getImageDescriptor());
-		deleteAction.setToolTipText(Messages.getString("BriefAuswahlDeleteDocument")); //$NON-NLS-1$
+		deleteAction.setToolTipText(Messages.BriefAuswahlDeleteDocument); //$NON-NLS-1$
 	}
 	
 	public void activation(final boolean mode){

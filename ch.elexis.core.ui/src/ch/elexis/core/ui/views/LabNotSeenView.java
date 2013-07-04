@@ -67,7 +67,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	
 	private static final String[] columnHeaders =
 		{
-			Messages.getString("LabNotSeenView.patient"), Messages.getString("LabNotSeenView.parameter"), Messages.getString("LabNotSeenView.normRange"), Messages.getString("LabNotSeenView.date"), Messages.getString("LabNotSeenView.value") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			Messages.LabNotSeenView_patient, Messages.LabNotSeenView_parameter, Messages.LabNotSeenView_normRange, Messages.LabNotSeenView_date, Messages.LabNotSeenView_value
 		};
 	private static final int[] colWidths = new int[] {
 		250, 100, 60, 70, 50
@@ -206,7 +206,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		public Object[] getElements(final Object inputElement){
 			if (unseen == null) {
 				return new Object[] {
-					Messages.getString("LabNotSeenView.loading") //$NON-NLS-1$
+					Messages.LabNotSeenView_loading
 				};
 			}
 			return unseen;
@@ -254,17 +254,17 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	private void makeActions(){
 		markAllAction =
 			new RestrictedAction(AccessControlDefaults.LAB_SEEN,
-				Messages.getString("LabNotSeenView.markAll")) { //$NON-NLS-1$
+				Messages.LabNotSeenView_markAll) { //$NON-NLS-1$
 				{
-					setToolTipText(Messages.getString("LabNotSeenView.markAllToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.LabNotSeenView_markAllToolTip); //$NON-NLS-1$
 					setImageDescriptor(Images.IMG_TICK.getImageDescriptor());
 				}
 				
 				@Override
 				public void doRun(){
 					if (MessageDialog.openConfirm(getViewSite().getShell(),
-						Messages.getString("LabNotSeenView.reallyMarkCaption"), //$NON-NLS-1$
-						Messages.getString("LabNotSeenView.markAllOfPatientToolTip"))) //$NON-NLS-1$
+						Messages.LabNotSeenView_reallyMarkCaption, //$NON-NLS-1$
+						Messages.LabNotSeenView_markAllOfPatientToolTip)) //$NON-NLS-1$
 						tv.setAllChecked(true);
 					{
 						for (LabResult lr : LabResult.getUnseen()) {
@@ -276,9 +276,9 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 			};
 		markPersonAction =
 			new RestrictedAction(AccessControlDefaults.LAB_SEEN,
-				Messages.getString("LabNotSeenView.markAllofPatient")) { //$NON-NLS-1$
+				Messages.LabNotSeenView_markAllofPatient) { //$NON-NLS-1$
 				{
-					setToolTipText(Messages.getString("LabNotSeenView.markAllOfPatientToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.LabNotSeenView_markAllOfPatientToolTip); //$NON-NLS-1$
 					setImageDescriptor(Images.IMG_PERSON_OK.getImageDescriptor());
 				}
 				

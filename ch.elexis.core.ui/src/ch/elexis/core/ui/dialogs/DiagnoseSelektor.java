@@ -46,7 +46,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 	
 	public DiagnoseSelektor(Shell shell){
 		super(shell);
-		setTitle(Messages.getString("DiagnoseSelektorDialog.Title"));
+		setTitle(Messages.DiagnoseSelektorDialog_Title);
 		
 		// create a list of all diagnoses
 		java.util.List<IConfigurationElement> list =
@@ -112,7 +112,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 	protected Control createDialogArea(Composite parent){
 		String oldListLabel = WorkbenchMessages.FilteredItemsSelectionDialog_listLabel;
 		
-		setMessage(Messages.getString("DiagnoseSelektorDialog.Message"));
+		setMessage(Messages.DiagnoseSelektorDialog_Message);
 		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = ""; //$NON-NLS-1$
 		Control ret = super.createDialogArea(parent);
 		

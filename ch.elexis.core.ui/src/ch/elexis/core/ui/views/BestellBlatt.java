@@ -33,11 +33,9 @@ public class BestellBlatt extends ViewPart implements ICallback {
 	public final static String ID = "ch.elexis.BestellBlatt"; //$NON-NLS-1$
 	TextContainer text;
 	Brief actBest;
-	private final static String TEMPLATENAME = Messages.getString("BestellBlatt.TemplateName"); //$NON-NLS-1$
-	private static final String ERRMSG_CAPTION = Messages
-		.getString("BestellBlatt.CouldNotCreateOrder"); //$NON-NLS-1$
-	private static final String ERRMSG_BODY = Messages
-		.getString("BestellBlatt.CouldNotCreateOrderBody"); //$NON-NLS-1$
+	private final static String TEMPLATENAME = Messages.BestellBlatt_TemplateName; //$NON-NLS-1$
+	private static final String ERRMSG_CAPTION = Messages.BestellBlatt_CouldNotCreateOrder; //$NON-NLS-1$
+	private static final String ERRMSG_BODY = Messages.BestellBlatt_CouldNotCreateOrderBody; //$NON-NLS-1$
 	
 	@Override
 	public void createPartControl(final Composite parent){
@@ -52,7 +50,7 @@ public class BestellBlatt extends ViewPart implements ICallback {
 		Money sum = new Money();
 		tbl[0] =
 			new String[] {
-				Messages.getString("BestellBlatt.Number"), Messages.getString("BestellBlatt.Pharmacode"), Messages.getString("BestellBlatt.Name"), Messages.getString("BestellBlatt.UnitPrice"), Messages.getString("BestellBlatt.LinePrice") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+				Messages.BestellBlatt_Number, Messages.BestellBlatt_Pharmacode, Messages.BestellBlatt_Name, Messages.BestellBlatt_UnitPrice, Messages.BestellBlatt_LinePrice
 			};
 		// DecimalFormat df=new DecimalFormat("\u00a4\u00a4  #.00");
 		for (Item it : items) {
@@ -69,7 +67,7 @@ public class BestellBlatt extends ViewPart implements ICallback {
 		}
 		tbl[i] =
 			new String[] {
-				Messages.getString("BestellBlatt.Sum"), StringTool.leer, StringTool.leer, StringTool.leer, sum.getAmountAsString() //$NON-NLS-1$
+				Messages.BestellBlatt_Sum, StringTool.leer, StringTool.leer, StringTool.leer, sum.getAmountAsString() //$NON-NLS-1$
 			};
 		actBest = text.createFromTemplateName(null, TEMPLATENAME, Brief.BESTELLUNG, adressat, null);
 		if (actBest == null) {

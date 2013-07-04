@@ -60,7 +60,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 	ArrayList<MediAbgabe> mListe = new ArrayList<MediAbgabe>();
 	private static final String[] columns =
 		{
-			Messages.getString("MediVerlaufView.dateFrom"), Messages.getString("MediVerlaufView.dateUntil"), Messages.getString("MediVerlaufView.medicament"), Messages.getString("MediVerlaufView.dosage")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			Messages.MediVerlaufView_dateFrom, Messages.MediVerlaufView_dateUntil, Messages.MediVerlaufView_medicament, Messages.MediVerlaufView_dosage}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private static final int[] colwidth = {
 		90, 90, 300, 200
 	};
@@ -189,14 +189,14 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 							return;
 
 						monitor.beginTask(
-							Messages.getString("MediVerlaufView.reading"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-						monitor.subTask(Messages.getString("MediVerlaufView.findPrescriptions")); //$NON-NLS-1$
+							Messages.MediVerlaufView_reading, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+						monitor.subTask(Messages.MediVerlaufView_findPrescriptions); //$NON-NLS-1$
 						Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
 						qbe.add(Prescription.PATIENT_ID, Query.EQUALS, ElexisEventDispatcher
 							.getSelectedPatient().getId());
 						List<Prescription> list = qbe.execute();
 						mListe.clear();
-						monitor.subTask(Messages.getString("MediVerlaufView.findMedicaments")); //$NON-NLS-1$
+						monitor.subTask(Messages.MediVerlaufView_findMedicaments); //$NON-NLS-1$
 						try {
 							for (Prescription p : list) {
 								Map<TimeTool, String> terms = p.getTerms();

@@ -90,7 +90,7 @@ public class FaelleView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void createPartControl(final Composite parent){
-		setPartName(Messages.getString("FaelleView.partName")); //$NON-NLS-1$
+		setPartName(Messages.FaelleView_partName); //$NON-NLS-1$
 		parent.setLayout(new GridLayout());
 		tv = new TableViewer(parent);
 		tv.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -184,10 +184,10 @@ public class FaelleView extends ViewPart implements IActivationListener {
 	}
 	
 	private void makeActions(){
-		konsFilterAction = new Action(Messages.getString("FaelleView.FilterConsultations"), //$NON-NLS-1$
+		konsFilterAction = new Action(Messages.FaelleView_FilterConsultations, //$NON-NLS-1$
 			Action.AS_CHECK_BOX) {
 			{
-				setToolTipText(Messages.getString("FaelleView.ShowOnlyConsOfThisCase")); //$NON-NLS-1$
+				setToolTipText(Messages.FaelleView_ShowOnlyConsOfThisCase); //$NON-NLS-1$
 				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
 			}
 			

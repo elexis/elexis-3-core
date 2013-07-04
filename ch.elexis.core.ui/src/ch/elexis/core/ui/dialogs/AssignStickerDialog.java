@@ -49,7 +49,7 @@ public class AssignStickerDialog extends TitleAreaDialog {
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout());
 		Label lbl = new Label(ret, SWT.WRAP);
-		lbl.setText(Messages.getString("AssignStickerDialog.PleaseConfirm")); //$NON-NLS-1$
+		lbl.setText(Messages.AssignStickerDialog_PleaseConfirm); //$NON-NLS-1$
 		table = new Table(ret, SWT.CHECK | SWT.SINGLE);
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		// Query<Sticker> qbe = new Query<Sticker>(Sticker.class);
@@ -77,7 +77,7 @@ public class AssignStickerDialog extends TitleAreaDialog {
 		super.create();
 		setTitle("Sticker"); //$NON-NLS-1$
 		setMessage(MessageFormat
-				.format(Messages.getString("AssignStickerDialog.enterStickers"), mine.getLabel())); //$NON-NLS-1$
+				.format(Messages.AssignStickerDialog_enterStickers, mine.getLabel())); //$NON-NLS-1$
 		getShell().setText("Elexis Sticker"); //$NON-NLS-1$
 	}
 

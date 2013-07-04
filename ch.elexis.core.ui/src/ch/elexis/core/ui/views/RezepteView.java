@@ -253,8 +253,8 @@ public class RezepteView extends ViewPart implements IActivationListener,
 				if (actR == null) {
 					SWTHelper
 							.showError(
-									Messages.getString("RezepteView.NoPrescriptionSelected"), //$NON-NLS-1$
-									Messages.getString("RezepteView.PleaseChoosaAPrescription")); //$NON-NLS-1$
+									Messages.RezepteView_NoPrescriptionSelected, //$NON-NLS-1$
+									Messages.RezepteView_PleaseChoosaAPrescription); //$NON-NLS-1$
 					return;
 				}
 				if (o instanceof Artikel) {
@@ -286,7 +286,7 @@ public class RezepteView extends ViewPart implements IActivationListener,
 		lvRpLines.setContentProvider(new RezeptContentProvider());
 		lvRpLines.setLabelProvider(new RezeptLabelProvider());
 		lvRpLines.getControl().setToolTipText(
-				Messages.getString("RezepteView.DragMedicamentsHere")); //$NON-NLS-1$
+				Messages.RezepteView_DragMedicamentsHere); //$NON-NLS-1$
 		/* lvRpLines.addDragSupport(DND.DROP_COPY,types, */
 		new PersistentObjectDragSource(lvRpLines);
 		lvRpLines.setInput(getViewSite());
@@ -348,11 +348,10 @@ public class RezepteView extends ViewPart implements IActivationListener,
 
 	private void makeActions() {
 		newRpAction = new Action(
-				Messages.getString("RezepteView.newPrescriptionAction")) { //$NON-NLS-1$
+				Messages.RezepteView_newPrescriptionAction) { //$NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				setToolTipText(Messages
-						.getString("RezepteView.newPrescriptonTooltip")); //$NON-NLS-1$
+				setToolTipText(Messages.RezepteView_newPrescriptonTooltip); //$NON-NLS-1$
 			}
 
 			@Override
@@ -362,10 +361,8 @@ public class RezepteView extends ViewPart implements IActivationListener,
 				if (act == null) {
 					MessageBox mb = new MessageBox(getViewSite().getShell(),
 							SWT.ICON_INFORMATION | SWT.OK);
-					mb.setText(Messages
-							.getString("RezepteView.newPrescriptionError")); //$NON-NLS-1$
-					mb.setMessage(Messages
-							.getString("RezepteView.noPatientSelected")); //$NON-NLS-1$
+					mb.setText(Messages.RezepteView_newPrescriptionError); //$NON-NLS-1$
+					mb.setMessage(Messages.RezepteView_noPatientSelected); //$NON-NLS-1$
 					mb.open();
 					return;
 				}
@@ -375,9 +372,8 @@ public class RezepteView extends ViewPart implements IActivationListener,
 					Konsultation k = act.getLetzteKons(false);
 					if (k == null) {
 						SWTHelper
-								.alert(Messages
-										.getString("RezepteView.noCaseSelected"), //$NON-NLS-1$
-										Messages.getString("RezepteView.pleaseCreateOrChooseCase")); //$NON-NLS-1$
+								.alert(Messages.RezepteView_noCaseSelected, //$NON-NLS-1$
+										Messages.RezepteView_pleaseCreateOrChooseCase); //$NON-NLS-1$
 						return;
 					} else {
 						fall = k.getFall();
@@ -388,7 +384,7 @@ public class RezepteView extends ViewPart implements IActivationListener,
 			}
 		};
 		deleteRpAction = new Action(
-				Messages.getString("RezepteView.deletePrescriptionActiom")) { //$NON-NLS-1$
+				Messages.RezepteView_deletePrescriptionActiom) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				Rezept rp = (Rezept) ElexisEventDispatcher
@@ -396,9 +392,9 @@ public class RezepteView extends ViewPart implements IActivationListener,
 				if (MessageDialog
 						.openConfirm(
 								getViewSite().getShell(),
-								Messages.getString("RezepteView.deletePrescriptionActiom"), //$NON-NLS-1$
+								Messages.RezepteView_deletePrescriptionActiom, //$NON-NLS-1$
 								MessageFormat.format(
-										Messages.getString("RezepteView.deletePrescriptionConfirm"), rp //$NON-NLS-1$
+										Messages.RezepteView_deletePrescriptionConfirm, rp //$NON-NLS-1$
 												.getDate()))) {
 					rp.delete();
 					tv.refresh();
@@ -406,7 +402,7 @@ public class RezepteView extends ViewPart implements IActivationListener,
 			}
 		};
 		removeLineAction = new Action(
-				Messages.getString("RezepteView.deleteLineAction")) { //$NON-NLS-1$
+				Messages.RezepteView_deleteLineAction) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				Rezept rp = (Rezept) ElexisEventDispatcher
@@ -425,7 +421,7 @@ public class RezepteView extends ViewPart implements IActivationListener,
 			}
 		};
 		addLineAction = new Action(
-				Messages.getString("RezepteView.newLineAction")) { //$NON-NLS-1$
+				Messages.RezepteView_newLineAction) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				try {
@@ -446,7 +442,7 @@ public class RezepteView extends ViewPart implements IActivationListener,
 				}
 			}
 		};
-		printAction = new Action(Messages.getString("RezepteView.printAction")) { //$NON-NLS-1$
+		printAction = new Action(Messages.RezepteView_printAction) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				try {
@@ -462,13 +458,13 @@ public class RezepteView extends ViewPart implements IActivationListener,
 						// Brief for Rezept already exists:
 						// ask if it should be recreated or just shown
 						String[] dialogButtonLabels = {
-								Messages.getString("RezepteView.RecreatePrescription"), Messages.getString("RezepteView.ShowPrescription"), Messages.getString("RezepteView.PrescriptionCancel") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								Messages.RezepteView_RecreatePrescription, Messages.RezepteView_ShowPrescription, Messages.RezepteView_PrescriptionCancel
 						};
 						MessageDialog msg = new MessageDialog(
 								null,
-								Messages.getString("RezepteView.CreatePrescription"), //$NON-NLS-1$
+								Messages.RezepteView_CreatePrescription, //$NON-NLS-1$
 								null,
-								Messages.getString("RezepteView.ReallyWantToRecreatePrescription"), //$NON-NLS-1$
+								Messages.RezepteView_ReallyWantToRecreatePrescription, //$NON-NLS-1$
 								MessageDialog.WARNING, dialogButtonLabels, 2);
 						int result = msg.open();
 						switch (result) {
@@ -489,10 +485,10 @@ public class RezepteView extends ViewPart implements IActivationListener,
 		};
 		changeMedicationAction = new RestrictedAction(
 				AccessControlDefaults.MEDICATION_MODIFY,
-				Messages.getString("RezepteView.ChangeLink")) { //$NON-NLS-1$
+				Messages.RezepteView_ChangeLink) { //$NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-				setToolTipText(Messages.getString("RezepteView.ChangeTooltip")); //$NON-NLS-1$
+				setToolTipText(Messages.RezepteView_ChangeTooltip); //$NON-NLS-1$
 			}
 
 			public void doRun() {

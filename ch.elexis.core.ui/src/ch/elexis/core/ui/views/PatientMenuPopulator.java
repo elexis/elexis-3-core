@@ -63,9 +63,9 @@ public class PatientMenuPopulator implements IMenuPopulator {
 		mine = plv;
 		stickerAction =
 			new RestrictedAction(AccessControlDefaults.KONTAKT_ETIKETTE,
-				Messages.getString("PatientMenuPopulator.StickerAction")) { //$NON-NLS-1$
+				Messages.PatientMenuPopulator_StickerAction) { //$NON-NLS-1$
 				{
-					setToolTipText(Messages.getString("PatientMenuPopulator.StickerToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.PatientMenuPopulator_StickerToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -76,27 +76,23 @@ public class PatientMenuPopulator implements IMenuPopulator {
 				}
 				
 			};
-		delPatAction = new Action(Messages.getString("PatientMenuPopulator.DeletePatientAction")) { //$NON-NLS-1$
+		delPatAction = new Action(Messages.PatientMenuPopulator_DeletePatientAction) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					// access rights guard
 					if (!CoreHub.acl.request(AccessControlDefaults.KONTAKT_DELETE)) {
 						SWTHelper
 							.alert(
-								Messages
-									.getString("PatientMenuPopulator.DeletePatientRefusalCaption"), Messages.getString("PatientMenuPopulator.DeletePatientRefusalBody")); //$NON-NLS-1$ //$NON-NLS-2$
+								Messages.PatientMenuPopulator_DeletePatientRefusalCaption, Messages.PatientMenuPopulator_DeletePatientRefusalBody); //$NON-NLS-1$ //$NON-NLS-2$
 						return;
 					}
 					
 					Patient p = mine.getSelectedPatient();
 					if (p != null) {
-						if (MessageDialog.openConfirm(mine.getViewSite().getShell(), Messages
-							.getString("PatientMenuPopulator.DeletePatientConfirm"), p.getLabel()) == true) { //$NON-NLS-1$
+						if (MessageDialog.openConfirm(mine.getViewSite().getShell(), Messages.PatientMenuPopulator_DeletePatientConfirm, p.getLabel()) == true) { //$NON-NLS-1$
 							if (p.delete(false) == false) {
-								SWTHelper.alert(Messages
-									.getString("PatientMenuPopulator.DeletePatientRejectCaption"), //$NON-NLS-1$
-									Messages
-										.getString("PatientMenuPopulator.DeletePatientRejectBody")); //$NON-NLS-1$
+								SWTHelper.alert(Messages.PatientMenuPopulator_DeletePatientRejectCaption, //$NON-NLS-1$
+									Messages.PatientMenuPopulator_DeletePatientRejectBody); //$NON-NLS-1$
 							} else {
 								mine.reload();
 							}
@@ -107,10 +103,10 @@ public class PatientMenuPopulator implements IMenuPopulator {
 			};
 		exportKGAction =
 			new Action(
-				Messages.getString("PatientMenuPopulator.ExportEMRAction"), Action.AS_DROP_DOWN_MENU) { //$NON-NLS-1$
+				Messages.PatientMenuPopulator_ExportEMRAction, Action.AS_DROP_DOWN_MENU) { //$NON-NLS-1$
 				Menu menu = null;
 				{
-					setToolTipText(Messages.getString("PatientMenuPopulator.ExportEMRToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.PatientMenuPopulator_ExportEMRToolTip); //$NON-NLS-1$
 					setMenuCreator(new IMenuCreator() {
 						
 						public void dispose(){
@@ -163,21 +159,17 @@ public class PatientMenuPopulator implements IMenuPopulator {
 											sender.store(pat);
 											sender.finalizeExport();
 											SWTHelper.showInfo(
-												Messages
-													.getString("PatientMenuPopulator.EMRExported"),//$NON-NLS-1$ 
+												Messages.PatientMenuPopulator_EMRExported,//$NON-NLS-1$ 
 												MessageFormat.format(
-													Messages
-														.getString("PatientMenuPopulator.ExportEmrSuccess"), //$NON-NLS-1$
+													Messages.PatientMenuPopulator_ExportEmrSuccess, //$NON-NLS-1$
 													pat.getLabel()));
 										} catch (CoreException e1) {
 											ExHandler.handle(e1);
 										} catch (XChangeException xx) {
 											SWTHelper.showError(
-												Messages
-													.getString("PatientMenuPopulator.ErrorCaption"), //$NON-NLS-1$ 
+												Messages.PatientMenuPopulator_ErrorCaption, //$NON-NLS-1$ 
 												MessageFormat.format(
-													Messages
-														.getString("PatientMenuPopulator.ExportEmrFailure"), //$NON-NLS-1$
+													Messages.PatientMenuPopulator_ExportEmrFailure, //$NON-NLS-1$
 													pat.getLabel()));
 											
 										}

@@ -79,18 +79,13 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
  * Display detail data of a Fall
  */
 public class FallDetailBlatt2 extends Composite {
-	private static final String SELECT_CONTACT_BODY = Messages
-		.getString("FallDetailBlatt2.PleaseSelectContactFor"); //$NON-NLS-1$
-	private static final String SELECT_CONTACT_CAPTION = Messages
-		.getString("FallDetailBlatt2.PleaseSelectCpntactCaption"); //$NON-NLS-1$
-	private static final String LABEL = Messages.getString("FallDetailBlatt2.Labek"); //$NON-NLS-1$
-	private static final String RECHNUNGSEMPFAENGER = Messages
-		.getString("FallDetailBlatt2.BillAdressee"); //$NON-NLS-1$
-	private static final String VERSICHERUNGSNUMMER = Messages
-		.getString("FallDetailBlatt2.InsuranceNumber"); //$NON-NLS-1$
-	private static final String KOSTENTRAEGER = Messages.getString("FallDetailBlatt2.Guarantor"); //$NON-NLS-1$
-	private static final String ABRECHNUNGSMETHODE = Messages
-		.getString("FallDetailBlatt2.BillingMethod"); //$NON-NLS-1$
+	private static final String SELECT_CONTACT_BODY = Messages.FallDetailBlatt2_PleaseSelectContactFor; //$NON-NLS-1$
+	private static final String SELECT_CONTACT_CAPTION = Messages.FallDetailBlatt2_PleaseSelectCpntactCaption; //$NON-NLS-1$
+	private static final String LABEL = Messages.FallDetailBlatt2_Labek; //$NON-NLS-1$
+	private static final String RECHNUNGSEMPFAENGER = Messages.FallDetailBlatt2_BillAdressee; //$NON-NLS-1$
+	private static final String VERSICHERUNGSNUMMER = Messages.FallDetailBlatt2_InsuranceNumber; //$NON-NLS-1$
+	private static final String KOSTENTRAEGER = Messages.FallDetailBlatt2_Guarantor; //$NON-NLS-1$
+	private static final String ABRECHNUNGSMETHODE = Messages.FallDetailBlatt2_BillingMethod; //$NON-NLS-1$
 	private static final String DEFINITIONSDELIMITER = ";"; //$NON-NLS-1$
 	private static final String ARGUMENTSSDELIMITER = ":"; //$NON-NLS-1$
 	private static final String ITEMDELIMITER = "\t"; //$NON-NLS-1$
@@ -131,7 +126,7 @@ public class FallDetailBlatt2 extends Composite {
 		cAbrechnung = new Combo(cpAbrechnung, SWT.READ_ONLY);
 		autoFill =
 			tk.createHyperlink(cpAbrechnung,
-				Messages.getString("FallDetailBlatt2.ApplyData"), SWT.NONE); //$NON-NLS-1$
+				Messages.FallDetailBlatt2_ApplyData, SWT.NONE); //$NON-NLS-1$
 		autoFill.addHyperlinkListener(new HyperlinkAdapter() {
 			
 			@Override
@@ -145,7 +140,7 @@ public class FallDetailBlatt2 extends Composite {
 				
 				String ktNew = f.getInfoString(KOSTENTRAEGER);
 				String ktOld =
-					f.get(Messages.getString("FallDetailBlatt2.GuarantorNoSpecialChars")); //$NON-NLS-1$
+					f.get(Messages.FallDetailBlatt2_GuarantorNoSpecialChars); //$NON-NLS-1$
 				
 				if (StringTool.isNothing(ktNew)) {
 					Kontakt k = Kontakt.load(ktOld);
@@ -155,7 +150,7 @@ public class FallDetailBlatt2 extends Composite {
 				}
 				String vnNew = f.getInfoString(VERSICHERUNGSNUMMER);
 				// String vnOld=f.getVersNummer();
-				String vnOld = f.get(Messages.getString("FallDetailBlatt2.InsNumber")); //$NON-NLS-1$
+				String vnOld = f.get(Messages.FallDetailBlatt2_InsNumber); //$NON-NLS-1$
 				if (StringTool.isNothing(vnNew)) {
 					f.setRequiredString(VERSICHERUNGSNUMMER, vnOld);
 				}
@@ -172,8 +167,7 @@ public class FallDetailBlatt2 extends Composite {
 							f.setInfoString(RECHNUNGSEMPFAENGER, f0.get("GarantID")); //$NON-NLS-1$
 						}
 						if (f.getInfoString(KOSTENTRAEGER).isEmpty()) {
-							f.setInfoString(KOSTENTRAEGER, f0.get(Messages
-								.getString("FallDetailBlatt2.GuarantorNoSpecialChars"))); //$NON-NLS-1$
+							f.setInfoString(KOSTENTRAEGER, f0.get(Messages.FallDetailBlatt2_GuarantorNoSpecialChars)); //$NON-NLS-1$
 						}
 						if (f.getInfoString(VERSICHERUNGSNUMMER).isEmpty()) {
 							f.setInfoString(VERSICHERUNGSNUMMER,
@@ -202,34 +196,30 @@ public class FallDetailBlatt2 extends Composite {
 				if (fall != null)
 					gesetz = fall.getAbrechnungsSystem();
 				if (ch.rgw.tools.StringTool.isNothing(gesetz))
-					gesetz = Messages.getString("FallDetailBlatt2.free"); //$NON-NLS-1$
+					gesetz = Messages.FallDetailBlatt2_free; //$NON-NLS-1$
 				if (i == separatorPos) {
 					// this is the separator - cannot select - simply reset to previous selection
 					cAbrechnung.select(cAbrechnung.indexOf(gesetz));
 				} else if (isDisabled) {
 					// selection not allowed - reset previous selection after message
 					SWTHelper.alert(
-						Messages.getString("FallDetailBlatt2.ChangeBillingSystemNotAllowedCaption"), //$NON-NLS-1$
-						Messages.getString("FallDetailBlatt2.ChangeBillingSystemNotAllowedBody")); //$NON-NLS-1$
+						Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedCaption, //$NON-NLS-1$
+						Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedBody); //$NON-NLS-1$
 					cAbrechnung.select(cAbrechnung.indexOf(gesetz));
 				} else {
 					if (fall != null) {
 						if (fall.getBehandlungen(false).length > 0) {
 							if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY)) {
-								if (SWTHelper.askYesNo(Messages
-									.getString("FallDetailBlatt2.DontChangeBillingSystemCaption"), //$NON-NLS-1$
-									Messages
-										.getString("FallDetailBlatt2.DontChangeBillingSystemBody"))) { //$NON-NLS-1$
+								if (SWTHelper.askYesNo(Messages.FallDetailBlatt2_DontChangeBillingSystemCaption, //$NON-NLS-1$
+									Messages.FallDetailBlatt2_DontChangeBillingSystemBody)) { //$NON-NLS-1$
 									fall.setAbrechnungsSystem(cAbrechnung.getItem(i));
 									setFall(fall);
 									ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 									return;
 								}
 							} else {
-								SWTHelper.alert(Messages
-									.getString("FallDetailBlatt2.CantChangeBillingSystemCaption"), //$NON-NLS-1$
-									Messages
-										.getString("FallDetailBlatt2.CantChangeBillingSystemBody")); //$NON-NLS-1$
+								SWTHelper.alert(Messages.FallDetailBlatt2_CantChangeBillingSystemCaption, //$NON-NLS-1$
+									Messages.FallDetailBlatt2_CantChangeBillingSystemBody); //$NON-NLS-1$
 							}
 							cAbrechnung.select(cAbrechnung.indexOf(gesetz));
 							
@@ -284,7 +274,7 @@ public class FallDetailBlatt2 extends Composite {
 			}
 		});
 		tBezeichnung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		tk.createLabel(top, Messages.getString("FallDetailBlatt2.ReasonForInsurance")); //$NON-NLS-1$
+		tk.createLabel(top, Messages.FallDetailBlatt2_ReasonForInsurance); //$NON-NLS-1$
 		cReason = new Combo(top, SWT.READ_ONLY);
 		cReason.setItems(Reasons);
 		cReason.addSelectionListener(new SelectionAdapter() {
@@ -299,7 +289,7 @@ public class FallDetailBlatt2 extends Composite {
 			}
 		});
 		cReason.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		tk.createLabel(top, Messages.getString("FallDetailBlatt2.StartDate")); //$NON-NLS-1$
+		tk.createLabel(top, Messages.FallDetailBlatt2_StartDate); //$NON-NLS-1$
 		dpVon = new DatePickerCombo(top, SWT.NONE);
 		dpVon.addSelectionListener(new SelectionAdapter() {
 			
@@ -312,7 +302,7 @@ public class FallDetailBlatt2 extends Composite {
 			}
 			
 		});
-		tk.createLabel(top, Messages.getString("FallDetailBlatt2.EndDate")); //$NON-NLS-1$
+		tk.createLabel(top, Messages.FallDetailBlatt2_EndDate); //$NON-NLS-1$
 		dpBis = new DatePickerCombo(top, SWT.NONE);
 		dpBis.addSelectionListener(new SelectionAdapter() {
 			
@@ -328,7 +318,7 @@ public class FallDetailBlatt2 extends Composite {
 		ddc =
 			new DayDateCombo(
 				top,
-				Messages.getString("FallDetailBlatt2.ProposeForBillingIn"), Messages.getString("FallDetailBlatt2.DaysOrAfter")); //$NON-NLS-1$ //$NON-NLS-2$
+				Messages.FallDetailBlatt2_ProposeForBillingIn, Messages.FallDetailBlatt2_DaysOrAfter); //$NON-NLS-1$ //$NON-NLS-2$
 		ddc.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		ddc.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -349,7 +339,7 @@ public class FallDetailBlatt2 extends Composite {
 		separatorBar.setLayout(gridLayout);
 		Label lbReq = new Label(separatorBar, SWT.NONE);
 		lbReq.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
-		lbReq.setText(ch.elexis.core.ui.preferences.Messages.Leistungscodes_necessaryData);
+		lbReq.setText(Messages.Leistungscodes_necessaryData);
 		
 		Hyperlink hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
 		hlGarant.addHyperlinkListener(new HyperlinkAdapter() {
@@ -359,8 +349,8 @@ public class FallDetailBlatt2 extends Composite {
 					new KontaktSelektor(
 						getShell(),
 						Kontakt.class,
-						Messages.getString("FallDetailBlatt2.SelectGuarantorCaption"), //$NON-NLS-1$
-						Messages.getString("FallDetailBlatt2.SelectGuarantorBody"), true, Kontakt.DEFAULT_SORT); //$NON-NLS-1$
+						Messages.FallDetailBlatt2_SelectGuarantorCaption, //$NON-NLS-1$
+						Messages.FallDetailBlatt2_SelectGuarantorBody, true, Kontakt.DEFAULT_SORT); //$NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
 					Kontakt sel = (Kontakt) ksl.getSelection();
 					Fall fall = getFall();
@@ -537,8 +527,8 @@ public class FallDetailBlatt2 extends Composite {
 		// *** fill billing systems into combo, set current system
 		cAbrechnung.setItems(Abrechnungstypen);
 		if (f == null) {
-			form.setText(Messages.getString("FallDetailBlatt2.NoCaseSelected")); //$NON-NLS-1$
-			tBezeichnung.setText(Messages.getString("FallDetailBlatt2.29")); //$NON-NLS-1$
+			form.setText(Messages.FallDetailBlatt2_NoCaseSelected); //$NON-NLS-1$
+			tBezeichnung.setText(Messages.FallDetailBlatt2_29); //$NON-NLS-1$
 			cReason.select(0);
 			return;
 		}
@@ -585,7 +575,7 @@ public class FallDetailBlatt2 extends Composite {
 		String optionals = f.getOptionals();
 		if ((optionals != null) && (optionals.length() > 0)) {
 			setExtendedFields(f, optionals,
-				Messages.getString("FallDetailBlatt2.optionalData"), false, false); //$NON-NLS-1$
+				Messages.FallDetailBlatt2_optionalData, false, false); //$NON-NLS-1$
 		}
 		
 		// ****** show any other fields from extinfo - ONLY FOR ADMINS, NOT
@@ -690,7 +680,7 @@ public class FallDetailBlatt2 extends Composite {
 		if (otherFieldsList_2.length() > 0) {
 			if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY_SPECIALS) == true) {
 				setExtendedFields(f, otherFieldsList_2,
-					Messages.getString("FallDetailBlatt2.unusedFieldsWithDefinition"), true, true); //$NON-NLS-1$
+					Messages.FallDetailBlatt2_unusedFieldsWithDefinition, true, true); //$NON-NLS-1$
 			}
 		}
 		
@@ -780,7 +770,7 @@ public class FallDetailBlatt2 extends Composite {
 				setExtendedFields(
 					f,
 					otherFieldsList,
-					Messages.getString("FallDetailBlatt2.unusedFieldsWithoutDefinition"), true, true); //$NON-NLS-1$
+					Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true, true); //$NON-NLS-1$
 			}
 		}
 	}
@@ -1297,7 +1287,7 @@ public class FallDetailBlatt2 extends Composite {
 	protected void addDeleteButton(boolean deletable, Composite parent, String[] r, final Fall f){
 		if (deletable) {
 			Button tmpButton = new Button(parent, SWT.NONE);
-			tmpButton.setText(Messages.getString("FallDetailBlatt2.deleteData")); //$NON-NLS-1$
+			tmpButton.setText(Messages.FallDetailBlatt2_deleteData); //$NON-NLS-1$
 			tmpButton.setData("KeyForDataToBeDeleted_Marlovits", r[0]); //$NON-NLS-1$
 			tmpButton.addSelectionListener(new SelectionListener() {
 				@Override
@@ -1310,7 +1300,7 @@ public class FallDetailBlatt2 extends Composite {
 						Map<Object, Object> ht = f.getMap("extinfo"); //$NON-NLS-1$
 						if (SWTHelper.askYesNo(
 							StringTool.leer,
-							Messages.getString("FallDetailBlatt2.DoYouWantToDeleteThisData") + key + "/" + ht.get(key) + Messages.getString("FallDetailBlatt2.reallyFromTheCase"))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							Messages.FallDetailBlatt2_DoYouWantToDeleteThisData + key + "/" + ht.get(key) + Messages.FallDetailBlatt2_reallyFromTheCase)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							ht.remove(key);
 							f.setMap("extinfo", ht); //$NON-NLS-1$
 							setFall(f);

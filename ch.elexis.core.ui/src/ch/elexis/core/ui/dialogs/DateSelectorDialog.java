@@ -39,7 +39,7 @@ public class DateSelectorDialog extends Dialog {
 	protected Control createDialogArea(Composite parent){
 		dp = new DatePicker(parent, SWT.BORDER);
 		dp.setDate(date.getTime());
-		getShell().setText(Messages.getString("DateSelectorDialog.enterDate")); //$NON-NLS-1$
+		getShell().setText(Messages.DateSelectorDialog_enterDate); //$NON-NLS-1$
 		return dp;
 	}
 	

@@ -39,13 +39,13 @@ public class EigenLeistungDialog extends TitleAreaDialog {
 	public void create(){
 		super.create();
 		if (result instanceof Eigenleistung) {
-			setTitle(Messages.getString("BlockDetailDisplay.editServiceCaption")); //$NON-NLS-1$
-			setMessage(Messages.getString("BlockDetailDisplay.editServiceBody")); //$NON-NLS-1$
+			setTitle(Messages.BlockDetailDisplay_editServiceCaption); //$NON-NLS-1$
+			setMessage(Messages.BlockDetailDisplay_editServiceBody); //$NON-NLS-1$
 		} else if (result == null) {
-			setTitle(Messages.getString("BlockDetailDisplay.defineServiceCaption")); //$NON-NLS-1$
-			setMessage(Messages.getString("BlockDetailDisplay.defineServiceBody")); //$NON-NLS-1$
+			setTitle(Messages.BlockDetailDisplay_defineServiceCaption); //$NON-NLS-1$
+			setMessage(Messages.BlockDetailDisplay_defineServiceBody); //$NON-NLS-1$
 		}
-		getShell().setText(Messages.getString("BlockDetailDisplay.SerlfDefinedService")); //$NON-NLS-1$
+		getShell().setText(Messages.BlockDetailDisplay_SerlfDefinedService); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -53,25 +53,25 @@ public class EigenLeistungDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(2, false));
-		new Label(ret, SWT.NONE).setText(Messages.getString("BlockDetailDisplay.name")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_name); //$NON-NLS-1$
 		tName = new Text(ret, SWT.BORDER);
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.getString("BlockDetailDisplay.shortname")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_shortname); //$NON-NLS-1$
 		tKurz = new Text(ret, SWT.BORDER);
 		tKurz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.getString("BlockDetailDisplay.costInCents")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_costInCents); //$NON-NLS-1$
 		tEK = new Text(ret, SWT.BORDER);
 		tEK.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.getString("BlockDetailDisplay.priceInCents")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_priceInCents); //$NON-NLS-1$
 		tVK = new Text(ret, SWT.BORDER);
 		tVK.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.getString("BlockDetailDisplay.timeInMinutes")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_timeInMinutes); //$NON-NLS-1$
 		tTime = new Text(ret, SWT.BORDER);
 		tTime.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		if (result instanceof Eigenleistung) {
 			Eigenleistung el = (Eigenleistung) result;
-			tName.setText(el.get(Messages.getString("BlockDetailDisplay.title"))); //$NON-NLS-1$
-			tKurz.setText(el.get(Messages.getString("BlockDetailDisplay.code"))); //$NON-NLS-1$
+			tName.setText(el.get(Messages.BlockDetailDisplay_title)); //$NON-NLS-1$
+			tKurz.setText(el.get(Messages.BlockDetailDisplay_code)); //$NON-NLS-1$
 			tEK.setText(el.getKosten(new TimeTool()).getCentsAsString());
 			tVK.setText(el.getPreis(new TimeTool(), null).getCentsAsString());
 		}

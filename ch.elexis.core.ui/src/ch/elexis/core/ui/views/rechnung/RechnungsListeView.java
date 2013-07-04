@@ -62,11 +62,11 @@ import ch.rgw.tools.Tree;
  * 
  */
 public class RechnungsListeView extends ViewPart implements ElexisEventListener {
-	private static final String REMINDER_3 = Messages.getString("RechnungsListeView.reminder3"); //$NON-NLS-1$
+	private static final String REMINDER_3 = Messages.RechnungsListeView_reminder3; //$NON-NLS-1$
 	
-	private static final String REMINDER_2 = Messages.getString("RechnungsListeView.reminder2"); //$NON-NLS-1$
+	private static final String REMINDER_2 = Messages.RechnungsListeView_reminder2; //$NON-NLS-1$
 	
-	private static final String REMINDER_1 = Messages.getString("RechnungsListeView.reminder1"); //$NON-NLS-1$
+	private static final String REMINDER_1 = Messages.RechnungsListeView_reminder1; //$NON-NLS-1$
 	
 	public final static String ID = "ch.elexis.RechnungsListeView"; //$NON-NLS-1$
 	
@@ -164,26 +164,26 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		bottom.setLayout(rowLayout);
 		Form fSum = tk.createForm(bottom);
 		Form fWizard = tk.createForm(bottom);
-		fSum.setText(Messages.getString("RechnungsListeView.sum")); //$NON-NLS-1$
-		fWizard.setText(Messages.getString("RechnungsListeView.dunningAutomatics")); //$NON-NLS-1$
+		fSum.setText(Messages.RechnungsListeView_sum); //$NON-NLS-1$
+		fWizard.setText(Messages.RechnungsListeView_dunningAutomatics); //$NON-NLS-1$
 		Composite cSum = fSum.getBody();
 		cSum.setLayout(new GridLayout(2, false));
-		tk.createLabel(cSum, Messages.getString("RechnungsListeView.patInList")); //$NON-NLS-1$
+		tk.createLabel(cSum, Messages.RechnungsListeView_patInList); //$NON-NLS-1$
 		tPat = tk.createText(cSum, "", SWT.BORDER | SWT.READ_ONLY); //$NON-NLS-1$
 		tPat.setLayoutData(new GridData(100, SWT.DEFAULT));
-		tk.createLabel(cSum, Messages.getString("RechnungsListeView.accountsInList")); //$NON-NLS-1$
+		tk.createLabel(cSum, Messages.RechnungsListeView_accountsInList); //$NON-NLS-1$
 		tRn = tk.createText(cSum, "", SWT.BORDER | SWT.READ_ONLY); //$NON-NLS-1$
 		tRn.setLayoutData(new GridData(100, SWT.DEFAULT));
-		tk.createLabel(cSum, Messages.getString("RechnungsListeView.sumInList")); //$NON-NLS-1$
+		tk.createLabel(cSum, Messages.RechnungsListeView_sumInList); //$NON-NLS-1$
 		tSum = SWTHelper.createText(tk, cSum, 1, SWT.BORDER | SWT.READ_ONLY);
 		tSum.setLayoutData(new GridData(100, SWT.DEFAULT));
-		tk.createLabel(cSum, Messages.getString("RechnungsListeView.paidInList")); //$NON-NLS-1$
+		tk.createLabel(cSum, Messages.RechnungsListeView_paidInList); //$NON-NLS-1$
 		tOpen = SWTHelper.createText(tk, cSum, 1, SWT.BORDER | SWT.READ_ONLY);
 		tOpen.setLayoutData(new GridData(100, SWT.DEFAULT));
 		Composite cW = fWizard.getBody();
 		cW.setLayout(new GridLayout(4, true));
 		
-		tk.createLabel(cW, Messages.getString("RechnungsListeView.delayInDays")); //$NON-NLS-1$
+		tk.createLabel(cW, Messages.RechnungsListeView_delayInDays); //$NON-NLS-1$
 		
 		niDaysTo1st = new NumberInput(cW, REMINDER_1);
 		niDaysTo1st.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -197,7 +197,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		niDaysTo3rd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		niDaysTo3rd.getControl().addSelectionListener(mahnWizardListener);
 		niDaysTo3rd.setValue(CoreHub.mandantCfg.get(Preferences.RNN_DAYSUNTIL3RD, 5));
-		tk.createLabel(cW, Messages.getString("RechnungsListeView.fine")); //$NON-NLS-1$
+		tk.createLabel(cW, Messages.RechnungsListeView_fine); //$NON-NLS-1$
 		mi1st = new MoneyInput(cW, REMINDER_1);
 		mi1st.addSelectionListener(mahnWizardListener);
 		mi1st.setMoney(CoreHub.mandantCfg.get(Preferences.RNN_AMOUNT1ST,

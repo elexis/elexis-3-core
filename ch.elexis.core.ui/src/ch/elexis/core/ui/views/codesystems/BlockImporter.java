@@ -55,12 +55,12 @@ public class BlockImporter extends ImporterPage {
 	
 	@Override
 	public String getDescription(){
-		return Messages.getString("BlockImporter.importBlocks"); //$NON-NLS-1$
+		return Messages.BlockImporter_importBlocks; //$NON-NLS-1$
 	}
 	
 	@Override
 	public String getTitle(){
-		return Messages.getString("BlockImporter.Blocks"); //$NON-NLS-1$
+		return Messages.BlockImporter_Blocks; //$NON-NLS-1$
 	}
 	
 }

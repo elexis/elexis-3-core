@@ -81,8 +81,8 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add(Konsultation.FLD_BILL_ID, StringConstants.EMPTY, null);
 		monitor.beginTask(
-			Messages.getString("Rechnungslauf.analyzingConsultations"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-		monitor.subTask(Messages.getString("Rechnungslauf.readingConsultations")); //$NON-NLS-1$
+			Messages.Rechnungslauf_analyzingConsultations, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+		monitor.subTask(Messages.Rechnungslauf_readingConsultations); //$NON-NLS-1$
 		List<Konsultation> dblist = qbe.execute();
 		// filter the list of Konsultationen based on the Rechnungssteller of the current Mandant
 		String rsId = CoreHub.actMandant.getRechnungssteller().getId();
@@ -93,7 +93,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 				ElexisStatus status =
 					new ElexisStatus(ElexisStatus.WARNING, "ch.elexis",
 						ElexisStatus.CODE_NOFEEDBACK,
-						Messages.getString("Rechnungslauf.warnInvalidMandant"),
+						Messages.Rechnungslauf_warnInvalidMandant,
 						ElexisStatus.LOG_ERRORS);
 				StatusManager.getManager().handle(status);
 				continue;
@@ -210,14 +210,14 @@ public class Rechnungslauf implements IRunnableWithProgress {
 				}
 			}
 		}
-		monitor.subTask(Messages.getString("Rechnungslauf.creatingLists")); //$NON-NLS-1$
+		monitor.subTask(Messages.Rechnungslauf_creatingLists); //$NON-NLS-1$
 		Enumeration<Konsultation> en = hKons.keys();
 		while (en.hasMoreElements()) {
 			kzv.selectKonsultation(en.nextElement());
 			monitor.worked(1);
 		}
 		if (bSkip) {
-			monitor.subTask(Messages.getString("Rechnungslauf.creatingBills")); //$NON-NLS-1$
+			monitor.subTask(Messages.Rechnungslauf_creatingBills); //$NON-NLS-1$
 			Handler.executeWithProgress(kzv.getViewSite(), "bill.create", kzv.tSelection, monitor); //$NON-NLS-1$
 		}
 		monitor.done();

@@ -65,9 +65,9 @@ public class SelectFallDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setTitle(Messages.getString("SelectFallDialog.selectFall")); //$NON-NLS-1$
-		setMessage(Messages.getString("SelectFallDialog.pleaseSelectCase")); //$NON-NLS-1$
-		getShell().setText(Messages.getString("SelectFallDialog.Cases")); //$NON-NLS-1$
+		setTitle(Messages.SelectFallDialog_selectFall); //$NON-NLS-1$
+		setMessage(Messages.SelectFallDialog_pleaseSelectCase); //$NON-NLS-1$
+		getShell().setText(Messages.SelectFallDialog_Cases); //$NON-NLS-1$
 	}
 	
 	@Override

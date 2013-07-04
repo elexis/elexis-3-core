@@ -86,12 +86,12 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 	private static final int GARANT = 5;
 	
 	private static final String[] COLUMN_TEXT = {
-		Messages.getString("BillSummary.number"), // NUMBER //$NON-NLS-1$
-		Messages.getString("BillSummary.date"), // DATE //$NON-NLS-1$
-		Messages.getString("BillSummary.amount"), // AMOUNT //$NON-NLS-1$
-		Messages.getString("BillSummary.open"), // AMOUNT_DUE //$NON-NLS-1$
-		Messages.getString("BillSummary.state"), // STATUS //$NON-NLS-1$
-		Messages.getString("BillSummary.receiver"), // GARANT //$NON-NLS-1$
+		Messages.BillSummary_number, // NUMBER //$NON-NLS-1$
+		Messages.BillSummary_date, // DATE //$NON-NLS-1$
+		Messages.BillSummary_amount, // AMOUNT //$NON-NLS-1$
+		Messages.BillSummary_open, // AMOUNT_DUE //$NON-NLS-1$
+		Messages.BillSummary_state, // STATUS //$NON-NLS-1$
+		Messages.BillSummary_receiver, // GARANT //$NON-NLS-1$
 	};
 	
 	private static final int[] COLUMN_WIDTH = {
@@ -157,15 +157,15 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		generalArea.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		generalArea.setLayout(new GridLayout(2, false));
 		
-		tk.createLabel(generalArea, Messages.getString("BillSummary.total")); //$NON-NLS-1$
+		tk.createLabel(generalArea, Messages.BillSummary_total); //$NON-NLS-1$
 		totalLabel = tk.createLabel(generalArea, ""); //$NON-NLS-1$
 		totalLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
-		tk.createLabel(generalArea, Messages.getString("BillSummary.paid")); //$NON-NLS-1$
+		tk.createLabel(generalArea, Messages.BillSummary_paid); //$NON-NLS-1$
 		paidLabel = tk.createLabel(generalArea, ""); //$NON-NLS-1$
 		paidLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
-		tk.createLabel(generalArea, Messages.getString("BillSummary.open2")); //$NON-NLS-1$
+		tk.createLabel(generalArea, Messages.BillSummary_open2); //$NON-NLS-1$
 		openLabel = tk.createLabel(generalArea, ""); //$NON-NLS-1$
 		openLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
@@ -190,7 +190,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 			public Object[] getElements(Object inputElement){
 				if (actPatient == null) {
 					return new Object[] {
-						Messages.getString("BillSummary.NoPatientSelected") //$NON-NLS-1$
+						Messages.BillSummary_NoPatientSelected
 					};
 				}
 				
@@ -291,7 +291,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		if (actPatient != null) {
 			title = actPatient.getLabel();
 		} else {
-			title = Messages.getString("BillSummary.NoPatientSelected2"); //$NON-NLS-1$
+			title = Messages.BillSummary_NoPatientSelected; //$NON-NLS-1$
 		}
 		form.setText(title);
 		
@@ -398,9 +398,9 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 	 */
 	
 	private void makeActions(){
-		exportToClipboardAction = new Action(Messages.getString("BillSummary.exportToClipboard")) { //$NON-NLS-1$
+		exportToClipboardAction = new Action(Messages.BillSummary_exportToClipboard) { //$NON-NLS-1$
 				{
-					setToolTipText(Messages.getString("BillSummary.SummaryToClipboard")); //$NON-NLS-1$
+					setToolTipText(Messages.BillSummary_SummaryToClipboard); //$NON-NLS-1$
 				}
 				
 				public void run(){
@@ -453,7 +453,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 			
 			clipboardText = sbTable.toString();
 		} else {
-			clipboardText = Messages.getString("BillSummary.noBillsAvailable"); //$NON-NLS-1$
+			clipboardText = Messages.BillSummary_noBillsAvailable; //$NON-NLS-1$
 		}
 		
 		Clipboard clipboard = new Clipboard(UiDesk.getDisplay());

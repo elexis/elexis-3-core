@@ -115,7 +115,7 @@ public class MedicalElement extends XChangeElement {
 	public void add(MedicationElement med){
 		if (eMedications == null) {
 			eMedications = new MedicationsElement();
-			getContainer().addChoice(eMedications, Messages.getString("MedicalElement.Medcaments")); //$NON-NLS-1$
+			getContainer().addChoice(eMedications, Messages.MedicalElement_Medcaments); //$NON-NLS-1$
 			add(eMedications);
 		}
 		eMedications.add(med);
@@ -156,7 +156,7 @@ public class MedicalElement extends XChangeElement {
 			eRecords.setWriter(getSender());
 			add(eRecords);
 			getContainer().addChoice(eRecords,
-				Messages.getString("MedicalElement.EMREntries"), eRecords); //$NON-NLS-1$
+				Messages.MedicalElement_EMREntries, eRecords); //$NON-NLS-1$
 		}
 		eRecords.add(rc);
 	}
@@ -174,7 +174,7 @@ public class MedicalElement extends XChangeElement {
 			eAnalyses = new AnalysesElement();
 			add(eAnalyses);
 			getContainer().addChoice(eAnalyses,
-				Messages.getString("MedicalElement.Findings"), eAnalyses); //$NON-NLS-1$
+				Messages.MedicalElement_Findings, eAnalyses); //$NON-NLS-1$
 		}
 		eAnalyses.add(le);
 	}
@@ -187,7 +187,7 @@ public class MedicalElement extends XChangeElement {
 			eAnalyses = new AnalysesElement();
 			add(eAnalyses);
 			getContainer().addChoice(eAnalyses,
-				Messages.getString("MedicalElement.Findings"), eAnalyses); //$NON-NLS-1$
+				Messages.MedicalElement_Findings, eAnalyses); //$NON-NLS-1$
 		}
 		eAnalyses.add(fe);
 	}
@@ -204,7 +204,7 @@ public class MedicalElement extends XChangeElement {
 			eDocuments = new DocumentsElement();
 			add(eDocuments);
 			getContainer().addChoice(eDocuments,
-				Messages.getString("MedicalElement.Documents"), eDocuments); //$NON-NLS-1$
+				Messages.MedicalElement_Documents, eDocuments); //$NON-NLS-1$
 		}
 		List<DocumentElement> lEx =
 			(List<DocumentElement>) eDocuments.getChildren(DocumentElement.XMLNAME,

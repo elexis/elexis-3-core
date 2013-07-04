@@ -52,7 +52,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows){
 		Brief br =
 			text.createFromTemplateName(Konsultation.getAktuelleKons(),
-				Messages.getString("LaborblattView.LabTemplateName"), Brief.LABOR, pat, null); //$NON-NLS-1$
+				Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null); //$NON-NLS-1$
 		if (br == null) {
 			return false;
 		}
@@ -96,11 +96,11 @@ public class LaborblattView extends ViewPart implements ICallback {
 	@SuppressWarnings("unchecked")
 	public boolean createLaborblatt(Patient pat, Document doc){
 		/* Brief br= */text.createFromTemplateName(Konsultation.getAktuelleKons(),
-			Messages.getString("LaborblattView.LabTemplateName"), Brief.LABOR, pat, null); //$NON-NLS-1$
+			Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null); //$NON-NLS-1$
 		
 		ArrayList<String[]> rows = new ArrayList<String[]>();
 		Element root = doc.getRootElement();
-		String druckdat = root.getAttributeValue(Messages.getString("LaborblattView.created")); //$NON-NLS-1$
+		String druckdat = root.getAttributeValue(Messages.LaborblattView_created); //$NON-NLS-1$
 		Element daten = root.getChild("Daten"); //$NON-NLS-1$
 		List datlist = daten.getChildren();
 		int cols = datlist.size() + 1;

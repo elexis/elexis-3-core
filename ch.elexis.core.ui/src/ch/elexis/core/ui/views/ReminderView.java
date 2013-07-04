@@ -85,8 +85,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 							for (Reminder r : list) {
 								sb.append(r.getMessage()).append("\n\n"); //$NON-NLS-1$
 							}
-							SWTHelper.alert(Messages
-								.getString("ReminderView.importantRemindersCaption"), sb.toString()); //$NON-NLS-1$
+							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption, sb.toString()); //$NON-NLS-1$
 						}
 					}
 					
@@ -241,10 +240,10 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	}
 	
 	private void makeActions(){
-		newReminderAction = new Action(Messages.getString("ReminderView.newReminderAction")) { //$NON-NLS-1$
+		newReminderAction = new Action(Messages.ReminderView_newReminderAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-					setToolTipText(Messages.getString("ReminderView.newReminderToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.ReminderView_newReminderToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -254,10 +253,10 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					cv.notify(CommonViewer.Message.update_keeplabels);
 				}
 			};
-		deleteReminderAction = new Action(Messages.getString("ReminderView.deleteAction")) { //$NON-NLS-1$
+		deleteReminderAction = new Action(Messages.ReminderView_deleteAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-					setToolTipText(Messages.getString("ReminderView.deleteToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.ReminderView_deleteToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -271,9 +270,9 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				}
 			};
 		onlyOpenReminderAction =
-			new Action(Messages.getString("ReminderView.onlyDueAction"), Action.AS_CHECK_BOX) { //$NON-NLS-1$
+			new Action(Messages.ReminderView_onlyDueAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
-					setToolTipText(Messages.getString("ReminderView.onlyDueToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.ReminderView_onlyDueToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -284,9 +283,9 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				}
 			};
 		ownReminderAction =
-			new Action(Messages.getString("ReminderView.myRemindersAction"), Action.AS_CHECK_BOX) { //$NON-NLS-1$
+			new Action(Messages.ReminderView_myRemindersAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
-					setToolTipText(Messages.getString("ReminderView.myRemindersToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.ReminderView_myRemindersToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -298,10 +297,10 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			};
 		othersReminderAction =
 			new RestrictedAction(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS,
-				Messages.getString("ReminderView.foreignAction"), //$NON-NLS-1$
+				Messages.ReminderView_foreignAction, //$NON-NLS-1$
 				Action.AS_CHECK_BOX) {
 				{
-					setToolTipText(Messages.getString("ReminderView.foreignTooltip")); //$NON-NLS-1$
+					setToolTipText(Messages.ReminderView_foreignTooltip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -314,11 +313,11 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		
 		selectPatientAction =
 			new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
-				Messages.getString("ReminderView.activatePatientAction"), //$NON-NLS-1$
+				Messages.ReminderView_activatePatientAction, //$NON-NLS-1$
 				Action.AS_UNSPECIFIED) {
 				{
 					setImageDescriptor(Images.IMG_PERSON.getImageDescriptor());
-					setToolTipText(Messages.getString("ReminderView.activatePatientTooltip")); //$NON-NLS-1$
+					setToolTipText(Messages.ReminderView_activatePatientTooltip); //$NON-NLS-1$
 				}
 				
 				public void doRun(){

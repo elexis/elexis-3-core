@@ -30,8 +30,8 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
 public class RnFilterDialog extends TitleAreaDialog {
-	static final String FROM = Messages.getString("RnFilterDialog.fromDate"); //$NON-NLS-1$
-	static final String UNTIL = Messages.getString("RnFilterDialog.untilDate"); //$NON-NLS-1$
+	static final String FROM = Messages.RnFilterDialog_fromDate; //$NON-NLS-1$
+	static final String UNTIL = Messages.RnFilterDialog_untilDate; //$NON-NLS-1$
 	String[] ret;
 	MoneyInput miVon, miBis;
 	DateInput diRnVon, diRnBis, diStatVon, diStatBis;
@@ -45,13 +45,13 @@ public class RnFilterDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(3, false));
-		new Label(ret, SWT.NONE).setText(Messages.getString("RnFilterDialog.amount")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnFilterDialog_amount); //$NON-NLS-1$
 		miVon = new MoneyInput(ret, FROM);
 		miBis = new MoneyInput(ret, UNTIL);
-		new Label(ret, SWT.NONE).setText(Messages.getString("RnFilterDialog.billDate")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnFilterDialog_billDate); //$NON-NLS-1$
 		diRnVon = new DateInput(ret, FROM);
 		diRnBis = new DateInput(ret, UNTIL);
-		new Label(ret, SWT.NONE).setText(Messages.getString("RnFilterDialog.stateDate")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnFilterDialog_stateDate); //$NON-NLS-1$
 		diStatVon = new DateInput(ret, FROM);
 		diStatBis = new DateInput(ret, UNTIL);
 		return ret;
@@ -60,9 +60,9 @@ public class RnFilterDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setTitle(Messages.getString("RnFilterDialog.billsFilterCaption")); //$NON-NLS-1$
-		setMessage(Messages.getString("RnFilterDialog.billsFilterMessage")); //$NON-NLS-1$
-		getShell().setText(Messages.getString("RnFilterDialog.billsList")); //$NON-NLS-1$
+		setTitle(Messages.RnFilterDialog_billsFilterCaption); //$NON-NLS-1$
+		setMessage(Messages.RnFilterDialog_billsFilterMessage); //$NON-NLS-1$
+		getShell().setText(Messages.RnFilterDialog_billsList); //$NON-NLS-1$
 	}
 	
 	@Override

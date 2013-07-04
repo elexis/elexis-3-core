@@ -34,7 +34,6 @@ import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.data.LabItem;
 import ch.elexis.core.data.Labor;
 import ch.elexis.core.data.Query;
-import ch.elexis.core.ui.preferences.Messages;
 import ch.elexis.core.ui.scripting.ScriptEditor;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;

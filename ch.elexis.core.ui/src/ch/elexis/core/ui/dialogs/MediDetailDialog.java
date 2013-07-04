@@ -40,14 +40,14 @@ public class MediDetailDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout());
-		new Label(ret, SWT.NONE).setText(Messages.getString("MediDetailDialog.dosage")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.MediDetailDialog_dosage); //$NON-NLS-1$
 		dosis = new Text(ret, SWT.BORDER);
 		GridData gd_dosis = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_dosis.widthHint = 80;
 		dosis.setLayoutData(gd_dosis);
 		dosis.setText(art.getDosis());
 		dosis.setTextLimit(254);
-		new Label(ret, SWT.NONE).setText(Messages.getString("MediDetailDialog.prescription")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.MediDetailDialog_prescription); //$NON-NLS-1$
 		einnahme = new Text(ret, SWT.MULTI);
 		einnahme.setText(art.getBemerkung());
 		einnahme.setTextLimit(254);
@@ -59,8 +59,8 @@ public class MediDetailDialog extends TitleAreaDialog {
 	public void create(){
 		super.create();
 		setTitle(art.getArtikel().getLabel());
-		setMessage(Messages.getString("MediDetailDialog.pleaseEnterPrescription")); //$NON-NLS-1$
-		getShell().setText(Messages.getString("MediDetailDialog.articleDetail")); //$NON-NLS-1$
+		setMessage(Messages.MediDetailDialog_pleaseEnterPrescription); //$NON-NLS-1$
+		getShell().setText(Messages.MediDetailDialog_articleDetail); //$NON-NLS-1$
 		
 	}
 	

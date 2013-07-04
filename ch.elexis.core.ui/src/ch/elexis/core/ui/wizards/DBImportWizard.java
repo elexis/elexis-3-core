@@ -23,12 +23,12 @@ public class DBImportWizard extends Wizard {
 	private String pwd = null;
 	String[] preset = null;
 	
-	DBImportFirstPage first = new DBImportFirstPage(Messages.getString("DBImportWizard.typeOfDB")); //$NON-NLS-1$
+	DBImportFirstPage first = new DBImportFirstPage(Messages.DBImportWizard_typeOfDB); //$NON-NLS-1$
 	DBImportSecondPage sec = new DBImportSecondPage("Credentials"); //$NON-NLS-1$
 	
 	public DBImportWizard(){
 		super();
-		setWindowTitle(Messages.getString("DBImportWizard.connectDB")); //$NON-NLS-1$
+		setWindowTitle(Messages.DBImportWizard_connectDB); //$NON-NLS-1$
 	}
 	
 	public DBImportWizard(String[] preset){

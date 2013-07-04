@@ -68,7 +68,7 @@ public class PatientDetailView extends ViewPart {
 	
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	
-	private final static String FIXMEDIKATION = Messages.getString("Patientenblatt2.fixmedication");
+	private final static String FIXMEDIKATION = Messages.Patientenblatt2_fixmedication;
 	private static final String KEY_PATIENTENBLATT = "PatientenDetailView/"; //$NON-NLS-1$
 	
 	private ScrolledForm scrldfrm;
@@ -127,7 +127,7 @@ public class PatientDetailView extends ViewPart {
 		scrldfrm = toolkit.createScrolledForm(parent);
 		scrldfrm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		TableWrapLayout td = new TableWrapLayout();
-		scrldfrm.setText(Messages.getString("Patientenblatt2.noPatientSelected"));
+		scrldfrm.setText(Messages.Patientenblatt2_noPatientSelected);
 		scrldfrm.getBody().setLayout(td);
 		Composite scrldfrmComposite = scrldfrm.getBody();
 		
@@ -146,7 +146,7 @@ public class PatientDetailView extends ViewPart {
 		{
 			ExpandableComposite ecZA =
 				WidgetFactory.createExpandableComposite(toolkit, scrldfrm,
-					Messages.getString("Patientenblatt2.additionalAdresses")); //$NON-NLS-1$
+					Messages.Patientenblatt2_additionalAdresses); //$NON-NLS-1$
 			ecZA.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + ecZA.getText(), false));
 			ecZA.addExpansionListener(new SectionExpansionHandler());
 			inpZusatzAdresse =
@@ -163,7 +163,7 @@ public class PatientDetailView extends ViewPart {
 							new KontaktSelektor(
 								PlatformUI.getWorkbench().getDisplay().getActiveShell(),
 								Kontakt.class,
-								Messages.getString("Patientenblatt2.contactForAdditionalAddress"), Messages.getString("Patientenblatt2.pleaseSelectardress"), sortFields); //$NON-NLS-1$ //$NON-NLS-2$
+								Messages.Patientenblatt2_contactForAdditionalAddress, Messages.Patientenblatt2_pleaseSelectardress, sortFields); //$NON-NLS-1$ //$NON-NLS-2$
 						if (ksl.open() == Dialog.OK) {
 							Kontakt k = (Kontakt) ksl.getSelection();
 							BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl();
@@ -222,7 +222,7 @@ public class PatientDetailView extends ViewPart {
 						return "?"; //$NON-NLS-1$
 					}
 				});
-			inpZusatzAdresse.addHyperlinks(Messages.getString("Patientenblatt2.add")); //$NON-NLS-1$
+			inpZusatzAdresse.addHyperlinks(Messages.Patientenblatt2_add); //$NON-NLS-1$
 			// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
 			inpZusatzAdresse.setMenu(removeZAAction, showZAAction);
 			
@@ -447,7 +447,7 @@ public class PatientDetailView extends ViewPart {
 	}
 	
 	private void makeActions(){
-		removeZAAction = new Action(Messages.getString("Patientenblatt2.removeAddress")) {
+		removeZAAction = new Action(Messages.Patientenblatt2_removeAddress) {
 			@Override
 			public void run(){
 				BezugsKontakt a = (BezugsKontakt) inpZusatzAdresse.getSelection();
@@ -458,7 +458,7 @@ public class PatientDetailView extends ViewPart {
 		
 		showZAAction =
 			new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
-				Messages.getString("Patientenblatt2.showAddress")) {
+				Messages.Patientenblatt2_showAddress) {
 				@Override
 				public void doRun(){
 					Kontakt a =

@@ -50,9 +50,9 @@ public class AddMultiplikatorDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setTitle(Messages.getString("MultiplikatorEditor.BeginDate")); //$NON-NLS-1$
-		setMessage(Messages.getString("MultiplikatorEditor.PleaseEnterBeginDate")); //$NON-NLS-1$
-		getShell().setText(Messages.getString("MultiplikatorEditor.NewMultipilcator")); //$NON-NLS-1$
+		setTitle(Messages.MultiplikatorEditor_BeginDate); //$NON-NLS-1$
+		setMessage(Messages.MultiplikatorEditor_PleaseEnterBeginDate); //$NON-NLS-1$
+		getShell().setText(Messages.MultiplikatorEditor_NewMultipilcator); //$NON-NLS-1$
 	}
 	
 	@Override

@@ -39,17 +39,17 @@ public class RnSucheDialog extends TitleAreaDialog {
 	protected Control createDialogArea(Composite parent){
 		LabeledInputField.Tableau tbl = new LabeledInputField.Tableau(parent);
 		tbl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		liNummer = tbl.addComponent(Messages.getString("RnSucheDialog.number")); //$NON-NLS-1$
-		liName = tbl.addComponent(Messages.getString("RnSucheDialog.name")); //$NON-NLS-1$
+		liNummer = tbl.addComponent(Messages.RnSucheDialog_number); //$NON-NLS-1$
+		liName = tbl.addComponent(Messages.RnSucheDialog_name); //$NON-NLS-1$
 		return tbl;
 	}
 	
 	@Override
 	public void create(){
 		super.create();
-		setTitle(Messages.getString("RnSucheDialog.findBill")); //$NON-NLS-1$
-		getShell().setText(Messages.getString("RnSucheDialog.findBill")); //$NON-NLS-1$
-		setMessage(Messages.getString("RnSucheDialog.enterCriteria")); //$NON-NLS-1$
+		setTitle(Messages.RnSucheDialog_findBill); //$NON-NLS-1$
+		getShell().setText(Messages.RnSucheDialog_findBill); //$NON-NLS-1$
+		setMessage(Messages.RnSucheDialog_enterCriteria); //$NON-NLS-1$
 	}
 	
 	@Override

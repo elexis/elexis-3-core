@@ -44,10 +44,10 @@ public class AddElementToBlockDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setTitle(Messages.getString("AddElementToBlockDialog.blockSelection")); //$NON-NLS-1$
-		setMessage(Messages.getString("AddElementToBlockDialog.selectBlock")); //$NON-NLS-1$
+		setTitle(Messages.AddElementToBlockDialog_blockSelection); //$NON-NLS-1$
+		setMessage(Messages.AddElementToBlockDialog_selectBlock); //$NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
-		getShell().setText(Messages.getString("AddElementToBlockDialog.block")); //$NON-NLS-1$
+		getShell().setText(Messages.AddElementToBlockDialog_block); //$NON-NLS-1$
 	}
 	
 	public Leistungsblock getResult(){

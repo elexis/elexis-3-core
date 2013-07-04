@@ -74,7 +74,7 @@ import ch.rgw.tools.StringTool;
  * 
  */
 public abstract class CodeSelectorFactory implements IExecutableExtension {
-	private static final String CAPTION_ERROR = Messages.getString("CodeSelectorFactory.error"); //$NON-NLS-1$
+	private static final String CAPTION_ERROR = Messages.CodeSelectorFactory_error; //$NON-NLS-1$
 	/** Anzahl der in den oberen zwei Listen zu haltenden Elemente */
 	public static int ITEMS_TO_SHOW_IN_MFU_LIST = 15;
 	
@@ -232,20 +232,20 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			}
 			Group gUserMFU = new Group(sash, SWT.NONE);
 			gUserMFU.addControlListener(resizeListener);
-			gUserMFU.setText(Messages.getString("CodeSelectorFactory.yourMostFrequent")); //$NON-NLS-1$
+			gUserMFU.setText(Messages.CodeSelectorFactory_yourMostFrequent); //$NON-NLS-1$
 			gUserMFU.setLayout(new FillLayout());
 			gUserMFU.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			lbUserMFU = new List(gUserMFU, SWT.MULTI | SWT.V_SCROLL);
 			
 			Group gPatientMFU = new Group(sash, SWT.NONE);
 			gPatientMFU.addControlListener(resizeListener);
-			gPatientMFU.setText(Messages.getString("CodeSelectorFactory.patientsMostFrequent")); //$NON-NLS-1$
+			gPatientMFU.setText(Messages.CodeSelectorFactory_patientsMostFrequent); //$NON-NLS-1$
 			gPatientMFU.setLayout(new FillLayout());
 			gPatientMFU.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			lbPatientMFU = new List(gPatientMFU, SWT.MULTI | SWT.V_SCROLL);
 			
 			Group gAll = new Group(sash, SWT.NONE);
-			gAll.setText(Messages.getString("CodeSelectorFactory.all")); //$NON-NLS-1$
+			gAll.setText(Messages.CodeSelectorFactory_all); //$NON-NLS-1$
 			gAll.setLayout(new GridLayout());
 			cv = new CommonViewer();
 			// Add context medu to viewer, if actions are defined
@@ -327,7 +327,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				return;
 			}
 			if (template == null) {
-				log.error(Messages.getString("CodeSelectorFactory.16")); //$NON-NLS-1$
+				log.error(Messages.CodeSelectorFactory_16); //$NON-NLS-1$
 				return;
 			}
 			lUserMFU = CoreHub.actUser.getStatForItem(template.getClass().getName());
@@ -377,7 +377,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		private void addUserPopupMenu(final List list){
 			Menu menu = new Menu(list.getShell(), SWT.POP_UP);
 			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText(Messages.getString("CodeSelectorFactory.resetStatistic"));
+			item.setText(Messages.CodeSelectorFactory_resetStatistic);
 			
 			item.addSelectionListener(new SelectionAdapter() {
 				@SuppressWarnings({
@@ -404,7 +404,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		private void addPatientPopupMenu(final List list){
 			Menu menu = new Menu(list.getShell(), SWT.POP_UP);
 			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText(Messages.getString("CodeSelectorFactory.resetStatistic"));
+			item.setText(Messages.CodeSelectorFactory_resetStatistic);
 			
 			item.addSelectionListener(new SelectionAdapter() {
 				@SuppressWarnings({

@@ -25,8 +25,8 @@ import ch.elexis.core.data.Artikel;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.util.LabeledInputField;
-import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.LabeledInputField.AutoForm;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.artikel.Artikeldetail;
 
 public class ArtikelDetailDialog extends TitleAreaDialog {
@@ -64,9 +64,9 @@ public class ArtikelDetailDialog extends TitleAreaDialog {
 	public void create(){
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		super.create();
-		getShell().setText(Messages.getString("ArtikelDetailDialog.articleDetail")); //$NON-NLS-1$
+		getShell().setText(Messages.ArtikelDetailDialog_articleDetail); //$NON-NLS-1$
 		setTitle(art.getLabel());
-		setMessage(Messages.getString("ArtikelDetailDialog.enterArticleDetails")); //$NON-NLS-1$
+		setMessage(Messages.ArtikelDetailDialog_enterArticleDetails); //$NON-NLS-1$
 	}
 	
 	@Override

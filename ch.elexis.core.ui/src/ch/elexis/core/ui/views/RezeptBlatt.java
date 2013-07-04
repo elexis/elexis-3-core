@@ -87,7 +87,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		for (int i = 0; i < fields.length; i++) {
 			Prescription p = lines.get(i);
 			fields[i] = new String[3];
-			fields[i][0] = p.get(Messages.getString("RezeptBlatt.number")); //$NON-NLS-1$
+			fields[i][0] = p.get(Messages.RezeptBlatt_number); //$NON-NLS-1$
 			String bem = p.getBemerkung();
 			if (StringTool.isNothing(bem)) {
 				fields[i][1] = p.getSimpleLabel();
@@ -113,7 +113,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	public boolean createRezept(Rezept rp){
 		if (createList(
 			rp,
-			Messages.getString("RezeptBlatt.TemplateNamePrescription"), Messages.getString("RezeptBlatt.4"))) { //$NON-NLS-1$ //$NON-NLS-2$
+			Messages.RezeptBlatt_TemplateNamePrescription, Messages.RezeptBlatt_4)) { //$NON-NLS-1$ //$NON-NLS-2$
 			new OutputLog(rp, this);
 			return true;
 		}
@@ -130,7 +130,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			rp.addPrescription(new Prescription(p));
 		}
 		return createList(rp,
-			Messages.getString("RezeptBlatt.TemplateNameList"), Messages.getString("RezeptBlatt.6")); //$NON-NLS-1$ //$NON-NLS-2$
+			Messages.RezeptBlatt_TemplateNameList, Messages.RezeptBlatt_6); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public void save(){
