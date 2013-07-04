@@ -31,7 +31,6 @@ import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Reminder;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.Hub;
-import ch.elexis.core.ui.Messages;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.dialogs.LoginDialog;
@@ -116,7 +115,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 			
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getShell(),
-				ch.elexis.core.ui.views.Messages.getString("ReminderView.importantRemindersOnLogin"),
+				Messages.ReminderView_importantRemindersOnLogin,
 				sb.toString());
 		}
 		
