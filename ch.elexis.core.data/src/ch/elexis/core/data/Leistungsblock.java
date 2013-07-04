@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.datatypes.IActionDefinition;
 import ch.elexis.core.datatypes.ICodeElement;
 import ch.rgw.compress.CompEx;
 import ch.rgw.tools.ExHandler;

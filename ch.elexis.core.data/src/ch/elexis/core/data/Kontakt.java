@@ -22,7 +22,6 @@ import java.util.Map;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.util.MFUList;
 import ch.rgw.tools.StringTool;
-import ch.rgw.tools.TimeTool;
 
 /**
  * Ein Kontakt ist der kleinste gemeinsame Nenner anller Arten von Menschen und Institutionen und
@@ -189,9 +188,9 @@ public class Kontakt extends PersistentObject {
 			// TODO default salutation should be configurable
 			String salutation;
 			if (p.getGeschlecht().equals(Person.MALE)) {
-				salutation = Messages.getString("Kontakt.SalutationM"); //$NON-NLS-1$
+				salutation = Messages.Contact_SalutationM; 
 			} else {
-				salutation = Messages.getString("Kontakt.SalutationF"); //$NON-NLS-1$
+				salutation = Messages.Contact_SalutationF; 
 			}
 			sb.append(salutation);
 			sb.append(StringTool.lf);

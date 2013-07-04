@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.datatypes.IActionDefinition;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;

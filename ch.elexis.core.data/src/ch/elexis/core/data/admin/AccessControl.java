@@ -149,7 +149,7 @@ public class AccessControl {
 				return false;
 			}
 			// Wenn alle dieses Recht haben-> ok
-			if (rights.get(Messages.getString("AccessControl.GroupAll") + right) != null) { //$NON-NLS-1$
+			if (rights.get(Messages.AccessControl_GroupAll + right) != null) { //$NON-NLS-1$
 				return true;
 			}
 			// Wenn gar kein user angegeben ist -> verweigern

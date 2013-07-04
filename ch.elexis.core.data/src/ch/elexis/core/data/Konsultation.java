@@ -23,7 +23,6 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.data.interfaces.events.MessageEvent.MessageType;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.text.model.Samdas;
@@ -899,8 +898,8 @@ public class Konsultation extends PersistentObject implements
 		if (actFall == null) {
 			if (actPatient == null) {
 				MessageEvent.fireError(
-						Messages.getString("GlobalActions.CantCreateKons"),
-						Messages.getString("GlobalActions.DoSelectPatient"));
+						Messages.GlobalActions_CantCreateKons,
+						Messages.GlobalActions_DoSelectPatient);
 				return;
 			}
 			if (actFall == null) {
@@ -909,8 +908,8 @@ public class Konsultation extends PersistentObject implements
 					actFall = k.getFall();
 					if (actFall == null) {
 						MessageEvent.fireError(
-								Messages.getString("GlobalActions.CantCreateKons"),
-								Messages.getString("GlobalActions.DoSelectCase"));
+								Messages.GlobalActions_CantCreateKons,
+								Messages.GlobalActions_DoSelectCase);
 						return;
 					}
 				} else {
@@ -930,8 +929,8 @@ public class Konsultation extends PersistentObject implements
 				Konsultation lk = actPatient.getLetzteKons(false);
 				if (lk == null) {
 					MessageEvent.fireError(
-							Messages.getString("GlobalActions.CantCreateKons"),
-							Messages.getString("GlobalActions.DoSelectCase"));
+							Messages.GlobalActions_CantCreateKons,
+							Messages.GlobalActions_DoSelectCase);
 					return;
 				} else {
 					actFall = lk.getFall();
@@ -940,8 +939,8 @@ public class Konsultation extends PersistentObject implements
 		}
 		if (!actFall.isOpen()) {
 			MessageEvent.fireError(
-					Messages.getString("GlobalActions.casclosed"),
-					Messages.getString("GlobalActions.caseclosedexplanation"));
+					Messages.GlobalActions_casclosed,
+					Messages.GlobalActions_caseclosedexplanation);
 			return;
 		}
 		Konsultation actLetzte = actFall.getLetzteBehandlung();
@@ -950,8 +949,8 @@ public class Konsultation extends PersistentObject implements
 						new TimeTool().toString(TimeTool.DATE_GER))) {
 
 			if (cod.openQuestion(
-					Messages.getString("GlobalActions.SecondForToday"), //$NON-NLS-1$
-					Messages.getString("GlobalActions.SecondForTodayQuestion")) == false) { //$NON-NLS-1$
+					Messages.GlobalActions_SecondForToday, 
+					Messages.GlobalActions_SecondForTodayQuestion) == false) { 
 				return;
 			}
 		}

@@ -64,12 +64,12 @@ public class DatabaseCleaner {
 		for (Konsultation k : list) {
 			Fall fall = k.getFall();
 			if (fall == null) {
-				blame(k, Messages.getString("DatabaseCleaner.NoCaseForKons")); //$NON-NLS-1$
+				blame(k, Messages.DatabaseCleaner_NoCaseForKons); //$NON-NLS-1$
 				continue;
 			}
 			Mandant m = k.getMandant();
 			if (m == null) {
-				blame(k, Messages.getString("DatabaseCleaner.NoMandatorForKons")); //$NON-NLS-1$
+				blame(k, Messages.DatabaseCleaner_NoMandatorForKons); //$NON-NLS-1$
 				continue;
 			}
 		}
@@ -83,14 +83,14 @@ public class DatabaseCleaner {
 				"SELECT ID FROM RECHNUNGEN WHERE FallID is null", new LinkedList<Rechnung>()); //$NON-NLS-1$
 		for (Rechnung rn : list) {
 			if (true) {
-				blame(rn, Messages.getString("DatabaseCleaner.NoCaseForBill")); //$NON-NLS-1$
+				blame(rn, Messages.DatabaseCleaner_NoCaseForBill); //$NON-NLS-1$
 				Query<Konsultation> qk = new Query<Konsultation>(Konsultation.class);
 				qk.add("RechnungsID", "=", rn.getId());
 				List<Konsultation> lk = qk.execute();
 				for (Konsultation k : lk) {
 					Fall f = k.getFall();
 					Patient pat = f.getPatient();
-					note(Messages.getString("DatabaseCleaner.concerning") + pat.getLabel() + ", " + f.getLabel() + ", " + k.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					note(Messages.DatabaseCleaner_concerning + pat.getLabel() + ", " + f.getLabel() + ", " + k.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				if (purge) {
 					PersistentObject

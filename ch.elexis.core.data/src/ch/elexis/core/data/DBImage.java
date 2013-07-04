@@ -12,15 +12,9 @@
 
 package ch.elexis.core.data;
 
-import java.awt.Image;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.List;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.status.ElexisStatus;
-import ch.elexis.core.exceptions.PersistenceException;
 import ch.rgw.tools.StringTool;
 
 /**
