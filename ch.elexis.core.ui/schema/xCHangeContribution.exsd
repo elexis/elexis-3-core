@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="ch.elexis" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="ch.elexis" id="xCHangeContribution" name="xCHange Contribution"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          Description of a capability to handle a certain kind of xChange data. The capability
 is declared by
@@ -13,15 +13,14 @@ is declared by
  (3) declaring a value
 
  If an xChange Element is to be imported, the xChange framework first searches a handler that can handle the given type. If more than one such handler is found, the conditions are checked, and the one meeting the most conditions is chosen. If more than one handler meets the same number of conditions, then the one with the higher value is chosen. If more than one has the same value, then one is chosen randomly.
-
       </documentation>
    </annotation>
 
    <element name="extension">
       <annotation>
-         <appInfo>
+         <appinfo>
             <meta.element />
-         </appInfo>
+         </appinfo>
       </annotation>
       <complexType>
          <sequence>
@@ -46,9 +45,9 @@ is declared by
                <documentation>
                   
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -93,9 +92,9 @@ If an xChange Element is to be imported, the xChange framework first searches a 
                <documentation>
                   Tha class that handles the xCHange process.
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn=":ch.elexis.exchange.IExchangeContributor"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.core.ui.exchange.IExchangeContributor"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="restrictions" type="string">
@@ -116,36 +115,36 @@ If an xChange Element is to be imported, the xChange framework first searches a 
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          2.0
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter extension point usage example here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="apiinfo"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter API information here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="implementation"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
       </documentation>
