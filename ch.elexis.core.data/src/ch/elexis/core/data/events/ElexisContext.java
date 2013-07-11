@@ -22,7 +22,7 @@ import ch.elexis.core.data.Fall;
 import ch.elexis.core.data.Konsultation;
 import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.datatypes.IPersistentObject;
+import ch.elexis.core.model.IPersistentObject;
 
 /**
  * The ElexisContext contains a current set of selected elements. It takes care that at any time, the

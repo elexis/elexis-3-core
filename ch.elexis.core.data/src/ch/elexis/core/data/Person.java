@@ -13,7 +13,7 @@
 package ch.elexis.core.data;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.datatypes.ICodeElement;
+import ch.elexis.core.model.ICodeElement;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;

@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Sticker;
-import ch.elexis.core.datatypes.ISticker;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.data.UiSticker;
 import ch.elexis.core.ui.util.SWTHelper;
 

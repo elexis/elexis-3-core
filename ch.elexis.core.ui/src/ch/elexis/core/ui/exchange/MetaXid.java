@@ -17,9 +17,9 @@ import java.util.List;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Xid;
-import ch.elexis.core.datatypes.IXid;
+import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.model.IXid;
 import ch.elexis.core.ui.exchange.elements.XidElement;
 import ch.rgw.tools.TimeTool;
 
@@ -66,7 +66,7 @@ public class MetaXid {
 	 * 
 	 * @param obj
 	 */
-	public MetaXid(PersistentObject obj){
+	public MetaXid(IPersistentObject obj){
 		List<IXid> xids = obj.getXids();
 		String bestID = obj.getId();
 		int bestQuality = Xid.ASSIGNMENT_LOCAL;

@@ -18,6 +18,7 @@ import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.data.Organisation;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Person;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.rgw.tools.StringTool;
@@ -126,7 +127,7 @@ public class ContactElement extends XChangeElement {
 		XidElement eXid = getXid();
 		Kontakt ret = null;
 		if (eXid != null) {
-			List<PersistentObject> cands = eXid.findObject();
+			List<IPersistentObject> cands = eXid.findObject();
 			if (cands.size() == 0) {
 				AddressElement ae = null;
 				List<AddressElement> lae = getAddresses();

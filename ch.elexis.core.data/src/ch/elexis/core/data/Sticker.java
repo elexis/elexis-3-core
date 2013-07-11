@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import ch.elexis.core.datatypes.ISticker;
+import ch.elexis.core.model.ISticker;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -29,7 +29,7 @@ import ch.rgw.tools.JdbcLink.Stm;
  * 
  * @since 3.0.0 - division between core and Ui, see UiSticker class
  */
-public class Sticker extends PersistentObject implements Comparable<ISticker>,
+public class Sticker extends PersistentObject implements 
 		ISticker {
 	public static final String NAME = "Name";
 	public static final String TABLENAME = "ETIKETTEN";
@@ -202,21 +202,6 @@ public class Sticker extends PersistentObject implements Comparable<ISticker>,
 		return 1;
 	}
 
-	@Override
-	public boolean getVisibility() {
-		if (getWert() >= 0)
-			return true;
-		else
-			return false;
-	}
-
-	@Override
-	public void setVisibility(boolean visibility) {
-		if (getVisibility() == visibility)
-			return;
-		setWert((visibility == true) ? 0 : -1);
-	}
-
 	public void setBackground(String bg) {
 		set(FLD_BACKGROUND, bg);
 	}
@@ -233,6 +218,20 @@ public class Sticker extends PersistentObject implements Comparable<ISticker>,
 	@Override
 	public String getForeground() {
 		return get(FLD_FOREGROUND);
+	}
+
+	@Override
+	public boolean isVisible() {
+		if (getWert() >= 0)
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	public void setVisible(boolean value) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

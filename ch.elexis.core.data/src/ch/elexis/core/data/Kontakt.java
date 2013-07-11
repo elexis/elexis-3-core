@@ -57,6 +57,15 @@ public class Kontakt extends PersistentObject {
 	public static final String FLD_PHONE2 = "Telefon2"; //$NON-NLS-1$
 	public static final String FLD_PHONE1 = "Telefon1"; //$NON-NLS-1$
 	public static final String FLD_REMARK = "Bemerkung"; //$NON-NLS-1$
+	/**
+	 * Contains the following values in the respective instantiations of contact
+	 * isIstPatient():		?
+	 * isIstPerson():		if medic: area of expertise
+	 * isIstMandant():  	username/mandant short name
+	 * isIstAnwender(): 	username/mandant short name
+	 * isIstOrganisation(): contact person
+	 * isIstLabor():		?
+	 */
 	public static final String FLD_NAME3 = "Bezeichnung3"; //$NON-NLS-1$
 	public static final String FLD_NAME2 = "Bezeichnung2"; //$NON-NLS-1$
 	public static final String FLD_NAME1 = "Bezeichnung1"; //$NON-NLS-1$
@@ -76,8 +85,7 @@ public class Kontakt extends PersistentObject {
 			"BezugsKontakte = JOINT:myID:otherID:KONTAKT_ADRESS_JOINT", //$NON-NLS-1$
 			"MyReminders		= LIST:IdentID:REMINDERS", //$NON-NLS-1$
 			FLD_NAME1, FLD_NAME2,
-			FLD_NAME3,
-			"Kuerzel		= PatientNr", //$NON-NLS-1$
+			FLD_NAME3, FLD_SHORT_LABEL+"= PatientNr", //$NON-NLS-1$
 			FLD_REMARK, FLD_PHONE1, FLD_PHONE2, "E-Mail=EMail", FLD_WEBSITE, FLD_EXTINFO, //$NON-NLS-1$
 			FLD_IS_ORGANIZATION, FLD_IS_PERSON, FLD_IS_PATIENT, FLD_IS_USER, FLD_IS_MANDATOR,
 			FLD_IS_LAB, FLD_STREET, FLD_ZIP, FLD_PLACE, FLD_COUNTRY, FLD_FAX, FLD_ANSCHRIFT,
@@ -346,7 +354,7 @@ public class Kontakt extends PersistentObject {
 	}
 	
 	public String getMailAddress(){
-		return checkNull(get("E-Mail")); //$NON-NLS-1$
+		return checkNull(get(FLD_E_MAIL)); //$NON-NLS-1$
 	}
 	
 	/** Die Reminders zu diesem Kontakt holen */
@@ -623,5 +631,4 @@ public class Kontakt extends PersistentObject {
 	public boolean istOrganisation(){
 		return checkNull(get(FLD_IS_ORGANIZATION)).equals(StringConstants.ONE);
 	}
-	
 }

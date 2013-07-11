@@ -27,7 +27,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.data.Leistungsblock;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.datatypes.ICodeElement;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;

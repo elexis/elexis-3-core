@@ -16,8 +16,7 @@ import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.datatypes.IPersistentObject;
-
+import ch.elexis.core.model.IPersistentObject;
 /**
  * A universal event object. Can optionally created with a priority
  * 

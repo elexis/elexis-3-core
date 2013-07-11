@@ -57,7 +57,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.datatypes.ICodeElement;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.text.model.SSDRange;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;

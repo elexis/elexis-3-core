@@ -62,11 +62,11 @@ import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.DBUpdate;
 import ch.elexis.core.data.util.SqlRunner;
-import ch.elexis.core.datatypes.IChangeListener;
-import ch.elexis.core.datatypes.IPersistentObject;
-import ch.elexis.core.datatypes.ISticker;
-import ch.elexis.core.datatypes.IXid;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.model.IChangeListener;
+import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.IXid;
 import ch.rgw.compress.CompEx;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SqlSettings;
@@ -797,7 +797,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		qbe.add(Xid.FLD_DOMAIN, Query.EQUALS, domain);
 		List<Xid> res = qbe.execute();
 		if (res.size() > 0) {
-			return res.get(0).get(Xid.FLD_DOMAIN_ID);
+			return res.get(0).get(Xid.FLD_ID_IN_DOMAIN);
 		}
 		return "";
 	}
@@ -859,7 +859,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		Xid oldXID = Xid.findXID(this, domain);
 		if (oldXID != null) {
 			if (updateIfExists) {
-				oldXID.set(Xid.FLD_DOMAIN_ID, domain_id);
+				oldXID.set(Xid.FLD_ID_IN_DOMAIN, domain_id);
 				return true;
 			}
 			return false;
@@ -1448,7 +1448,6 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return 0 bei Fehler
 	 */
 	@SuppressWarnings("rawtypes")
-	@Override
 	public void setMap(final String field, final Map<Object, Object> map) {
 		if (map == null) {
 			throw new PersistenceException(new ElexisStatus(Status.ERROR,

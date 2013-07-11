@@ -17,8 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.datatypes.IXid;
+import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.model.IXid;
 import ch.rgw.tools.Log;
 import ch.rgw.tools.VersionInfo;
 
@@ -45,11 +47,13 @@ import ch.rgw.tools.VersionInfo;
  * 
  */
 public class Xid extends PersistentObject implements IXid {
-	public static final String QUALITY = "quality";
-	public static final String ID_IN_DOMAIN = "domain_id";
-	private static final String DOMAIN = "domain";
-	private static final String OBJECT = "object";
-	public static final String TYPE = "type";
+
+	public static final String FLD_OBJECT = "object";
+	public static final String FLD_ID_IN_DOMAIN = "domain_id";
+	public static final String FLD_DOMAIN = "domain";
+	public static final String FLD_QUALITY = "quality";
+	public static final String FLD_TYPE = "type";
+	
 	private static final String VERSION = "1.0.0";
 	private static final String TABLENAME = "XID";
 	private static Log log = Log.get("XID");
@@ -84,14 +88,14 @@ public class Xid extends PersistentObject implements IXid {
 	public final static String DOMAIN_OID = "www.xid.ch/id/oid";
 	
 	static {
-		addMapping(TABLENAME, TYPE, OBJECT, DOMAIN, ID_IN_DOMAIN, QUALITY);
+		addMapping(TABLENAME, FLD_TYPE, FLD_OBJECT, FLD_DOMAIN, FLD_ID_IN_DOMAIN, FLD_QUALITY);
 		domains = new HashMap<String, XIDDomain>();
 		domainMap = new HashMap<String, String>();
 		String storedDomains = CoreHub.globalCfg.get("LocalXIDDomains", null);
 		if (storedDomains == null) {
-			domains.put(DOMAIN_ELEXIS, new XIDDomain(DOMAIN_ELEXIS, "UUID", ASSIGNMENT_LOCAL
+			domains.put(XidConstants.ELEXIS, new XIDDomain(XidConstants.ELEXIS, "UUID", XidConstants.ELEXIS_QUALITY
 				| QUALITY_GUID, PersistentObject.class.getCanonicalName()));
-			domains.put(DOMAIN_AHV, new XIDDomain(DOMAIN_AHV, "AHV", ASSIGNMENT_REGIONAL,
+			domains.put(XidConstants.CH_AHV, new XIDDomain(XidConstants.CH_AHV, "AHV", XidConstants.CH_AHV_QUALITY,
 				Person.class.getCanonicalName()));
 			domains.put(DOMAIN_OID, new XIDDomain(DOMAIN_OID, "OID", ASSIGNMENT_GLOBAL
 				| QUALITY_GUID, PersistentObject.class.getCanonicalName()));
@@ -127,9 +131,7 @@ public class Xid extends PersistentObject implements IXid {
 		}
 	}
 	
-	public static final String FLD_OBJECT = "object";
-	public static final String FLD_DOMAIN_ID = "domain_id";
-	public static final String FLD_DOMAIN = "domain";
+
 	
 	/**
 	 * create a new XID. Does nothing if identical XID already exists.
@@ -162,7 +164,7 @@ public class Xid extends PersistentObject implements IXid {
 		}
 		Xid xid = findXID(domain, domain_id);
 		if (xid != null) {
-			if (xid.get(OBJECT).equals(o.getId())) {
+			if (xid.get(FLD_OBJECT).equals(o.getId())) {
 				return;
 			}
 			throw new XIDException("XID " + domain + ":" + domain_id + " is not unique");
@@ -173,7 +175,7 @@ public class Xid extends PersistentObject implements IXid {
 		}
 		create(null);
 		set(new String[] {
-			TYPE, OBJECT, DOMAIN, ID_IN_DOMAIN, QUALITY
+			FLD_TYPE, FLD_OBJECT, FLD_DOMAIN, FLD_ID_IN_DOMAIN, FLD_QUALITY
 		}, new String[] {
 			o.getClass().getName(), o.getId(), domain, domain_id, Integer.toString(val)
 		});
@@ -185,7 +187,7 @@ public class Xid extends PersistentObject implements IXid {
 	 * @return the quality
 	 */
 	public int getQuality(){
-		return checkZero(get(QUALITY));
+		return checkZero(get(FLD_QUALITY));
 	}
 	
 	/**
@@ -203,7 +205,7 @@ public class Xid extends PersistentObject implements IXid {
 	 * @return
 	 */
 	public String getDomain(){
-		return get(DOMAIN);
+		return get(FLD_DOMAIN);
 	}
 	
 	/**
@@ -212,7 +214,7 @@ public class Xid extends PersistentObject implements IXid {
 	 * @return
 	 */
 	public String getDomainId(){
-		return get(ID_IN_DOMAIN);
+		return get(FLD_ID_IN_DOMAIN);
 	}
 	
 	/**
@@ -220,20 +222,20 @@ public class Xid extends PersistentObject implements IXid {
 	 * 
 	 * @return the object or null if it could not be restored.
 	 */
-	public PersistentObject getObject(){
-		PersistentObject po = CoreHub.poFactory.createFromString(get(TYPE) + "::" + get(OBJECT));
+	public IPersistentObject getObject(){
+		PersistentObject po = CoreHub.poFactory.createFromString(get(FLD_TYPE) + "::" + get(FLD_OBJECT));
 		return po;
 	}
 	
 	@Override
 	public String getLabel(){
-		PersistentObject po = getObject();
+		IPersistentObject po = getObject();
 		String text = "unknown object";
 		if (po != null) {
 			text = po.getLabel();
 		}
 		StringBuilder ret = new StringBuilder();
-		ret.append(text).append(": ").append(get(DOMAIN)).append("->").append(get(ID_IN_DOMAIN));
+		ret.append(text).append(": ").append(get(FLD_DOMAIN)).append("->").append(get(FLD_ID_IN_DOMAIN));
 		return ret.toString();
 	}
 	
@@ -257,12 +259,12 @@ public class Xid extends PersistentObject implements IXid {
 			domain = dom;
 		}
 		Query<Xid> qbe = new Query<Xid>(Xid.class);
-		qbe.add(DOMAIN, Query.EQUALS, domain);
-		qbe.add(ID_IN_DOMAIN, Query.EQUALS, id);
+		qbe.add(FLD_DOMAIN, Query.EQUALS, domain);
+		qbe.add(FLD_ID_IN_DOMAIN, Query.EQUALS, id);
 		List<Xid> ret = qbe.execute();
 		if (ret.size() == 1) {
 			Xid result = ret.get(0);
-			PersistentObject po = result.getObject();
+			IPersistentObject po = result.getObject();
 			if (po != null && po.exists()) {
 				return result;
 			} else {
@@ -282,7 +284,7 @@ public class Xid extends PersistentObject implements IXid {
 	 * @return the PersistentObject identified by that id from that domain or null if no such Object
 	 *         was found
 	 */
-	public static PersistentObject findObject(final String domain, final String id){
+	public static IPersistentObject findObject(final String domain, final String id){
 		Xid xid = findXID(domain, id);
 		if (xid != null) {
 			return xid.getObject();
@@ -305,8 +307,8 @@ public class Xid extends PersistentObject implements IXid {
 			domain = dom;
 		}
 		Query<Xid> qbe = new Query<Xid>(Xid.class);
-		qbe.add(DOMAIN, Query.EQUALS, domain);
-		qbe.add(OBJECT, Query.EQUALS, o.getId());
+		qbe.add(FLD_DOMAIN, Query.EQUALS, domain);
+		qbe.add(FLD_OBJECT, Query.EQUALS, o.getId());
 		List<Xid> ret = qbe.execute();
 		if (ret.size() == 1) {
 			return ret.get(0);

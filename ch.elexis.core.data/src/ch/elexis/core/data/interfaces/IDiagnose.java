@@ -12,7 +12,7 @@
 
 package ch.elexis.core.data.interfaces;
 
-import ch.elexis.core.datatypes.ICodeElement;
+import ch.elexis.core.model.ICodeElement;
 
 
 /**

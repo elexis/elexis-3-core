@@ -44,7 +44,7 @@ import ch.elexis.core.data.Person;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.datatypes.ISticker;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -351,7 +351,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 			if (getDontAskForAddresseeSticker() == null) {
 				Sticker newSticker = new Sticker(DONTASKFORADDRESSEE_STICKER, null, null);
 				newSticker.setClassForSticker(Brief.class);
-				newSticker.setVisibility(false);
+				newSticker.setVisible(false);
 			}
 			dontAskForAddresseeStickerCreated = true;
 		}

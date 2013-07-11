@@ -127,7 +127,7 @@ public class Stickers extends PreferencePage implements
 			}
 		});
 		for (Sticker et : lEtiketten) {
-			if (et.getVisibility())
+			if (et.isVisible())
 				combo.add(et.getLabel());
 		}
 		// new Label(ret,SWT.NONE).setText("Anzeige");

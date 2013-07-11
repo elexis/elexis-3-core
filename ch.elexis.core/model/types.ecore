@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="types" nsURI="http://ch.elexis.core/model/types" nsPrefix="ch.elexis.core.types">
+  <eClassifiers xsi:type="ecore:EClass" name="Comparable" instanceClassName="java.lang.Comparable"
+      abstract="true" interface="true">
+    <eTypeParameters name="T"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="List" instanceClassName="java.util.List"
+      abstract="true" interface="true">
+    <eTypeParameters name="E"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Map" instanceClassName="java.util.Map"
+      abstract="true" interface="true">
+    <eTypeParameters name="K"/>
+    <eTypeParameters name="V"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ContactType">
+    <eLiterals name="PERSON"/>
+    <eLiterals name="ORGANIZATION" value="1"/>
+    <eLiterals name="UNKNOWN" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ContactGender">
+    <eLiterals name="MALE"/>
+    <eLiterals name="FEMALE" value="1"/>
+    <eLiterals name="UNDEFINED" value="2"/>
+    <eLiterals name="UNKNOWN" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="CountryCode">
+    <eLiterals name="NDF"/>
+    <eLiterals name="AT" value="40"/>
+    <eLiterals name="CH" value="756"/>
+    <eLiterals name="DE" value="276"/>
+    <eLiterals name="FR" value="250"/>
+    <eLiterals name="LI" value="438"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="RelationshipType">
+    <eLiterals name="A_GENERIC"/>
+    <eLiterals name="BUSINESS_EMPLOYER" value="100"/>
+    <eLiterals name="BUSINESS_EMPLOYEE" value="101"/>
+    <eLiterals name="FAMILY_HUSBAND" value="200"/>
+    <eLiterals name="FAMILY_WIFE" value="201" literal=""/>
+    <eLiterals name="FAMILY_PARENT" value="210"/>
+    <eLiterals name="FAMILY_CHILD" value="211"/>
+    <eLiterals name="WELFARE_GENERAL_PRACTITIONER" value="300"/>
+    <eLiterals name="WELFARE_PATIENT" value="301"/>
+    <eLiterals name="WELFARE_CONSULTANT" value="310"/>
+    <eLiterals name="WELFARE_INSURER" value="410"/>
+    <eLiterals name="WELFARE_INSUREE" value="411"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Money" instanceClassName="ch.rgw.tools.Money"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="TimeTool" instanceClassName="ch.rgw.tools.TimeTool"/>
+</ecore:EPackage>

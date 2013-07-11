@@ -14,8 +14,8 @@ import java.util.List;
 import org.jdom.Element;
 
 import ch.elexis.core.data.Eigenleistung;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.rgw.tools.TimeTool;
@@ -46,8 +46,8 @@ public class ServiceElement extends XChangeElement {
 	
 	public IVerrechenbar createObject(XChangeContainer home, Element el){
 		XidElement xide = (XidElement) getChild(XidElement.XMLNAME, XidElement.class);
-		List<PersistentObject> objs = xide.findObject();
-		for (PersistentObject po : objs) {
+		List<IPersistentObject> objs = xide.findObject();
+		for (IPersistentObject po : objs) {
 			if (po instanceof IVerrechenbar) {
 				return (IVerrechenbar) po;
 			}

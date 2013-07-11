@@ -34,7 +34,7 @@ import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
-import ch.elexis.core.datatypes.ISticker;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.data.UiSticker;
 
 public class StickerComposite extends Composite {

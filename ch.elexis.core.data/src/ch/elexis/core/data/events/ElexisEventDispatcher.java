@@ -29,8 +29,8 @@ import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
-import ch.elexis.core.datatypes.IPersistentObject;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IPersistentObject;
 
 /**
  * The Elexis event dispatcher system manages and distributes the information of

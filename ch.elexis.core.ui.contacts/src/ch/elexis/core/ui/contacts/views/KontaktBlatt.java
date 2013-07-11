@@ -40,7 +40,7 @@ import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
-import ch.elexis.core.datatypes.IXid;
+import ch.elexis.core.model.IXid;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -54,18 +54,18 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.Messages;
 
 public class KontaktBlatt extends Composite implements ElexisEventListener, IActivationListener {
-	private static final String MOBIL = Messages.getString("KontaktBlatt.MobilePhone"); //$NON-NLS-1$
-	private static final String VORNAME = Messages.getString("KontaktBlatt.FirstName"); //$NON-NLS-1$
-	private static final String NAME = Messages.getString("KontaktBlatt.LastName"); //$NON-NLS-1$
-	private static final String TEL_DIREKT = Messages.getString("KontaktBlatt.OhoneDirect"); //$NON-NLS-1$
-	private static final String ANSPRECHPERSON = Messages.getString("KontaktBlatt.ContactPerson"); //$NON-NLS-1$
-	private static final String ZUSATZ = Messages.getString("KontaktBlatt.Addidtional"); //$NON-NLS-1$
-	private static final String BEZEICHNUNG = Messages.getString("KontaktBlatt.Name"); //$NON-NLS-1$
+	private static final String MOBIL = Messages.KontaktBlatt_MobilePhone; //$NON-NLS-1$
+	private static final String VORNAME = Messages.KontaktBlatt_FirstName; //$NON-NLS-1$
+	private static final String NAME = Messages.KontaktBlatt_LastName; //$NON-NLS-1$
+	private static final String TEL_DIREKT = Messages.KontaktBlatt_OhoneDirect; //$NON-NLS-1$
+	private static final String ANSPRECHPERSON = Messages.KontaktBlatt_ContactPerson; //$NON-NLS-1$
+	private static final String ZUSATZ = Messages.KontaktBlatt_Addidtional; //$NON-NLS-1$
+	private static final String BEZEICHNUNG = Messages.KontaktBlatt_Name; //$NON-NLS-1$
 	static final String[] types = {
 		"istOrganisation", "istLabor", "istPerson", "istPatient", "istAnwender", "istMandant"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	static final String[] typLabels =
 		{
-			Messages.getString("KontaktBlatt.Organization"), Messages.getString("KontaktBlatt.Laboratory"), Messages.getString("KontaktBlatt.Person"), Messages.getString("KontaktBlatt.Patient"), Messages.getString("KontaktBlatt.User"), Messages.getString("KontaktBlatt.Mandator")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+			Messages.KontaktBlatt_Organization, Messages.KontaktBlatt_Laboratory, Messages.KontaktBlatt_Person, Messages.KontaktBlatt_Patient, Messages.KontaktBlatt_User, Messages.KontaktBlatt_Mandator}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	private final Button[] bTypes = new Button[types.length];
 	private final TypButtonAdapter tba = new TypButtonAdapter();
 	private final IViewSite site;
@@ -76,36 +76,36 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 	static final InputData[] def =
 		new InputData[] {
 			new InputData(
-				Messages.getString("KontaktBlatt.Bez1"), Kontakt.FLD_NAME1, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.Bez2"), Kontakt.FLD_NAME2, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_Bez2, Kontakt.FLD_NAME2, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.Bez3"), Kontakt.FLD_NAME3, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.getString("KontaktBlatt.Sex"), Person.SEX, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.getString("KontaktBlatt.Street"), "Strasse", Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.getString("KontaktBlatt.Zip"), Kontakt.FLD_ZIP, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null), //$NON-NLS-1$
+			new InputData(Messages.KontaktBlatt_Sex, Person.SEX, Typ.STRING, null), //$NON-NLS-1$
+			new InputData(Messages.KontaktBlatt_Street, "Strasse", Typ.STRING, null), //$NON-NLS-1$
+			new InputData(Messages.KontaktBlatt_Zip, Kontakt.FLD_ZIP, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.Place"), Kontakt.FLD_PLACE, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_Place, Kontakt.FLD_PLACE, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.Country"), Kontakt.FLD_COUNTRY, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.Phone1"), Kontakt.FLD_PHONE1, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.Phone2"), Kontakt.FLD_PHONE2, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.Mobile"), Kontakt.FLD_MOBILEPHONE, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.getString("KontaktBlatt.Fax"), Kontakt.FLD_FAX, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null), //$NON-NLS-1$
+			new InputData(Messages.KontaktBlatt_Fax, Kontakt.FLD_FAX, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.Mail"), Kontakt.FLD_E_MAIL, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.www"), Kontakt.FLD_WEBSITE, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.shortLabel"), Kontakt.FLD_SHORT_LABEL, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.remark"), Kontakt.FLD_REMARK, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.getString("KontaktBlatt.title"), Person.TITLE, Typ.STRING, null), //$NON-NLS-1$
+				Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null), //$NON-NLS-1$
+			new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("KontaktBlatt.extid"), "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
+				Messages.KontaktBlatt_extid, "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 				
 					public void displayContent(PersistentObject po, InputData ltf){
 						StringBuilder sb = new StringBuilder();
@@ -163,7 +163,7 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 		cAnschrift.setLayout(new GridLayout(2, false));
 		cAnschrift.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		Hyperlink hAnschrift =
-			tk.createHyperlink(cAnschrift, Messages.getString("KontaktBlatt.Postal"), SWT.NONE); //$NON-NLS-1$
+			tk.createHyperlink(cAnschrift, Messages.KontaktBlatt_Postal, SWT.NONE); //$NON-NLS-1$
 		hAnschrift.addHyperlinkListener(new HyperlinkAdapter() {
 			
 			@Override
@@ -205,7 +205,7 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 					select("1", "1", "0", "0", "0", "0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					def[0].setLabel(BEZEICHNUNG);
 					def[1].setLabel(ZUSATZ);
-					def[2].setLabel(Messages.getString("KontaktBlatt.LabAdmin")); //$NON-NLS-1$
+					def[2].setLabel(Messages.KontaktBlatt_LabAdmin); //$NON-NLS-1$
 					def[10].setLabel(TEL_DIREKT);
 				} else {
 					def[0].setLabel(NAME);
