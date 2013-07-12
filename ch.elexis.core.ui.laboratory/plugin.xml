@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="ch.elexis.core.ui.KonsExtension">
+      <Link
+            KonsExtension="ch.elexis.core.ui.laboratory.laborlink.LaborLink"
+            name="laborlink">
+      </Link>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="ch.elexis.core.ui.laboratory.preferences.LaborPrefs"
+            id="ch.elexis.LaborPref"
+            name="%elexis.labPrefs">
+      </page>
+      <page
+            category="ch.elexis.LaborPref"
+            class="ch.elexis.core.ui.laboratory.preferences.LaborPrefs2"
+            id="ch.elexis.laborprefs2"
+            name="Laboritems und Gruppen">
+      </page>
+      <page
+            category="ch.elexis.LaborPref"
+            class="ch.elexis.core.ui.laboratory.preferences.LabGroupPrefs"
+            id="ch.elexis.preferences.LabGroupPrefs"
+            name="%elexis.labGroupPrefs">
+      </page>
+      <page
+            category="ch.elexis.LaborPref"
+            class="ch.elexis.core.ui.laboratory.preferences.LabSettings"
+            id="ch.elexis.LaborNeuPrefs"
+            name="%page.name.3">
+      </page>
+   </extension>
+
+</plugin>

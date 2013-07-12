@@ -15,9 +15,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.databinding;bundle-version="1.4.1",
  org.eclipse.jface.databinding;bundle-version="1.6.0",
  ch.rgw.utility;bundle-version="3.0.0",
- ch.elexis.core.ui.icons;bundle-version="2.3.0",
  ch.elexis.core;bundle-version="3.0.0",
- ch.elexis.core.data;bundle-version="3.0.0"
+ ch.elexis.core.data;bundle-version="3.0.0",
+ ch.elexis.core.ui.icons;bundle-version="2.3.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui,
@@ -31,9 +31,7 @@ Export-Package: ch.elexis.core.ui,
  ch.elexis.core.ui.events,
  ch.elexis.core.ui.exchange,
  ch.elexis.core.ui.exchange.elements,
- ch.elexis.core.ui.laborlink,
  ch.elexis.core.ui.optifier,
- ch.elexis.core.ui.perspectives,
  ch.elexis.core.ui.preferences,
  ch.elexis.core.ui.preferences.inputs,
  ch.elexis.core.ui.scripting,

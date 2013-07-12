@@ -77,13 +77,13 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
 import ch.elexis.core.ui.dialogs.EtiketteDruckenDialog;
 import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.elexis.core.ui.dialogs.NeuerFallDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.perspectives.PatientPerspektive;
 import ch.elexis.core.ui.util.Importer;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
@@ -210,7 +210,7 @@ public class GlobalActions {
 					String perspektive =
 						CoreHub.localCfg.get(CoreHub.actUser + DEFAULTPERSPECTIVECFG, null);
 					if (StringTool.isNothing(perspektive)) {
-						perspektive = PatientPerspektive.ID;
+						perspektive = UiResourceConstants.PatientPerspektive_ID;
 					}
 					try {
 						IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();

@@ -26,15 +26,16 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.application.perspectives.PatientPerspektive;
 import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Reminder;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.UiResourceConstants;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.dialogs.LoginDialog;
-import ch.elexis.core.ui.perspectives.PatientPerspektive;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -45,7 +46,6 @@ import ch.rgw.tools.ExHandler;
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
-	private static final String PERSPECTIVE_ID = PatientPerspektive.ID;
 	private Logger log = LoggerFactory.getLogger(ApplicationWorkbenchAdvisor.class.getName());
 	
 	@Override
@@ -123,7 +123,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public String getInitialWindowPerspectiveId(){
-		return PERSPECTIVE_ID;
+		return UiResourceConstants.PatientPerspektive_ID;
 	}
 	
 	@Override

@@ -51,10 +51,6 @@
             id="ch.elexis.preferences.Texterstellung"
             name="%elexis.textPrefs"/>
       <page
-            class="ch.elexis.core.ui.preferences.LaborPrefs"
-            id="ch.elexis.LaborPref"
-            name="%elexis.labPrefs"/>
-      <page
             category="ch.elexis.preferences.UserPreferences"
             class="ch.elexis.core.ui.preferences.SidebarPreferences"
             id="ch.elexis.sidebarPrefs"
@@ -94,11 +90,6 @@
             id="ch.elexis.preferences.usertext"
             name="%page.name.0"/>
       <page
-            category="ch.elexis.LaborPref"
-            class="ch.elexis.core.ui.preferences.LabGroupPrefs"
-            id="ch.elexis.preferences.LabGroupPrefs"
-            name="%elexis.labGroupPrefs"/>
-      <page
             class="ch.elexis.core.ui.preferences.LagerverwaltungPrefs"
             id="ch.elexis.preferences.LagerverwaltungPrefs"
             name="%page.name.1"/>
@@ -107,12 +98,6 @@
             class="ch.elexis.core.ui.preferences.UserSettings2"
             id="ch.elexis.userSetting2"
             name="%page.name.2">
-      </page>
-      <page
-            category="ch.elexis.LaborPref"
-            class="ch.elexis.core.ui.preferences.LabSettings"
-            id="ch.elexis.LaborNeuPrefs"
-            name="%page.name.3">
       </page>
       <page
             category="ch.elexis.preferences.UserPreferences"
@@ -141,12 +126,6 @@
             class="ch.elexis.core.ui.preferences.XIDEdit"
             id="ch.elexis.preferences.xid.edit"
             name="%page.name.6">
-      </page>
-      <page
-            category="ch.elexis.LaborPref"
-            class="ch.elexis.core.ui.preferences.LaborPrefs2"
-            id="ch.elexis.laborprefs2"
-            name="Laboritems und Gruppen">
       </page>
       <page
             class="ch.elexis.core.ui.preferences.CDSSGroup"
@@ -258,15 +237,6 @@
       </coreOperation>
    </extension>
    <extension
-         point="ch.elexis.core.ui.KonsExtension">
-     <Link
-            KonsExtension="ch.elexis.core.ui.text.XrefExtension"
-            name="DocumentLInk"/>
-      <Link
-            KonsExtension="ch.elexis.core.ui.laborlink.LaborLink"
-            name="laborlink"/>
-   </extension>
-   <extension
          point="ch.elexis.core.ui.RechnungsManager">
       <Rechnung
             name="Fall-Standard"
@@ -347,6 +317,10 @@
          <Link
                KonsExtension="ch.elexis.core.ui.util.WikipediaSearchAction"
                name="ch.elexis.core.ui.util.WikipediaSearchAction">
+         </Link>
+         <Link
+               KonsExtension="ch.elexis.core.ui.text.XrefExtension"
+               name="DocumentLink">
          </Link>
       </extension>
 </plugin>
