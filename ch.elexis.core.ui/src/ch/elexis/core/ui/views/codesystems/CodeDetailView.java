@@ -109,7 +109,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 	}
 	
 	private void makeActions(){
-		importAction = new Action(Messages.getString("CodeDetailView.importActionTitle")) { //$NON-NLS-1$
+		importAction = new Action(Messages.CodeDetailView_importActionTitle) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					CTabItem it = ctab.getSelection();
@@ -121,7 +121,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 							dlg.setTitle(top.getTitle());
 							dlg.setMessage(top.getDescription());
 							dlg.getShell().setText(
-								Messages.getString("CodeDetailView.importerCaption")); //$NON-NLS-1$
+								Messages.CodeDetailView_importerCaption); //$NON-NLS-1$
 							if (dlg.open() == Dialog.OK) {
 								top.run(false);
 							}

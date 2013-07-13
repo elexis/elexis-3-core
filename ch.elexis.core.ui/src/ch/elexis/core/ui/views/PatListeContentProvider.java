@@ -89,7 +89,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		}
 		if (pfilter != null) {
 			pats = new String[] {
-				Messages.getString("PatListeContentProvider.LoadingData") //$NON-NLS-1$
+				Messages.PatListeContentProvider_LoadingData
 				};
 			((TableViewer) viewer.getViewerWidget()).setItemCount(1);
 		}
@@ -99,13 +99,13 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 			return new Object[0];
 		}
 		
-		Job job = new Job(Messages.getString("PatListeContentProvider.LoadingPatients")) { //$NON-NLS-1$
+		Job job = new Job(Messages.PatListeContentProvider_LoadingPatients) { //$NON-NLS-1$
 			
 				@Override
 				protected IStatus run(IProgressMonitor monitor){
 					monitor
 						.beginTask(
-							Messages.getString("PatListeContentProvider.LoadPatients"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+							Messages.PatListeContentProvider_LoadPatients, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 					
 					qbe.clear();
 					if (pfilter != null) {

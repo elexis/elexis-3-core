@@ -82,8 +82,8 @@ public class MoneyInput extends Composite {
 						lis.widgetSelected(new SelectionEvent(ev));
 					}
 				} catch (ParseException px) {
-					SWTHelper.alert(Messages.getString("MoneyInput.InvalidAmountCaption"), //$NON-NLS-1$
-						Messages.getString("MoneyInput.InvalidAmountContents")); //$NON-NLS-1$
+					SWTHelper.alert(Messages.MoneyInput_InvalidAmountCaption, //$NON-NLS-1$
+						Messages.MoneyInput_InvalidAmountContents); //$NON-NLS-1$
 				}
 			}
 		});

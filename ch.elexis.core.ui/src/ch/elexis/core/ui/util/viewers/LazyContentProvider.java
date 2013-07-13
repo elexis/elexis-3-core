@@ -65,7 +65,7 @@ public class LazyContentProvider implements ICommonViewerContentProvider, ILazyC
 		}
 		if (dataloader.isValid()) {
 			Object[] res = (Object[]) dataloader.getData();
-			Object nval = Messages.getString("LazyContentProvider.noData"); //$NON-NLS-1$
+			Object nval = Messages.LazyContentProvider_noData; //$NON-NLS-1$
 			if (index < res.length) {
 				nval = res[index];
 			}

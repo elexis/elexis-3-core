@@ -31,9 +31,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 
 import ch.elexis.core.data.Patient;
+import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
-import ch.elexis.core.datatypes.ISticker;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.data.UiSticker;
 
 public class StickerComposite extends Composite {
@@ -108,7 +109,7 @@ public class StickerComposite extends Composite {
 		GridLayout gl = new GridLayout(2, false);
 		gl.marginHeight = 2;
 		ret.setLayout(gl);
-		Image img = ((UiSticker) st).getImage();
+		Image img = new UiSticker((Sticker) st).getImage();
 		
 		GridData gd1 = null;
 		GridData gd2 = null;
@@ -128,8 +129,9 @@ public class StickerComposite extends Composite {
 		lbl.setText(st.getLabel());
 		if (toolkit != null)
 			toolkit.adapt(ret);
-		ret.setBackground(((UiSticker) st).getBackground());
-		lbl.setForeground(((UiSticker) st).getForeground());
+		UiSticker stu = new UiSticker((Sticker) st);
+		ret.setBackground(stu.getBackground());
+		lbl.setForeground(stu.getForeground());
 		return ret;
 	}
 	

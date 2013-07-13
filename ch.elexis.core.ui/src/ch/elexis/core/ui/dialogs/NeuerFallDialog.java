@@ -33,7 +33,7 @@ public class NeuerFallDialog extends TitleAreaDialog {
 			pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 			fall =
 				pat.neuerFall(
-					Messages.getString("NeuerFallDialog.0"), Messages.getString("NeuerFallDialog.1"), Messages.getString("NeuerFallDialog.2")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					Messages.NeuerFallDialog_0, Messages.NeuerFallDialog_1, Messages.NeuerFallDialog_2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			ElexisEventDispatcher.fireSelectionEvent(fall);
 		}
 	}
@@ -47,9 +47,9 @@ public class NeuerFallDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setMessage(Messages.getString("NeuerFallDialog.enterCaseData")); //$NON-NLS-1$
-		setTitle(Messages.getString("NeuerFallDialog.createNewCase")); //$NON-NLS-1$
-		getShell().setText(Messages.getString("NeuerFallDialog.newCase")); //$NON-NLS-1$
+		setMessage(Messages.NeuerFallDialog_enterCaseData); //$NON-NLS-1$
+		setTitle(Messages.NeuerFallDialog_createNewCase); //$NON-NLS-1$
+		getShell().setText(Messages.NeuerFallDialog_newCase); //$NON-NLS-1$
 	}
 	
 	@Override

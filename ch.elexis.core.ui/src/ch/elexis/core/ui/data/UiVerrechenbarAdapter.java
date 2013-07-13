@@ -24,7 +24,7 @@ import ch.elexis.core.data.Leistungsblock;
 import ch.elexis.core.data.VerrechenbarAdapter;
 import ch.elexis.core.data.Verrechnet;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.datatypes.ICodeElement;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AddElementToBlockDialog;
 

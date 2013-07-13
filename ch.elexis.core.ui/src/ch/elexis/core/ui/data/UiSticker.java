@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2008-2010, G. Weirich and Elexis
+ * Copyright (c) 2013 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    G. Weirich - initial implementation
  * 
- *******************************************************************************/
+ * Contributors:
+ *     MEDEVIT <office@medevit.at> - initial API and implementation
+ ******************************************************************************/
 package ch.elexis.core.ui.data;
 
 import org.eclipse.swt.SWT;
@@ -19,38 +18,64 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import ch.elexis.core.data.DBImage;
 import ch.elexis.core.data.Sticker;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.icons.ImageSize;
-import ch.elexis.core.ui.icons.Images;
 
 /**
- * Eine Markierung für im Prinzip beliebige Objekte. Ein Objekt, das eine Etikette hat, kann diese
- * Etikette zur Darstellung verwenden
+ * This is a wrapper class for a {@link Sticker} element. It encapsulates
+ * the basic core sticker and adds the respective graphic dependent elements.
  * 
- * @author gerry
  * @since 3.0.0
  */
-public class UiSticker extends Sticker {
-	public static final String IMAGE_ID = "BildID";
-	public static final String BACKGROUND = "bg";
-	public static final String FOREGROUND = "vg";
+public class UiSticker {
+	private Sticker sticker;
 	
-	public UiSticker(String name, Color fg, Color bg){
-		super(name);
-		if (fg == null) {
-			fg = UiDesk.getColor(UiDesk.COL_BLACK);
-		}
-		if (bg == null) {
-			bg = UiDesk.getColor(UiDesk.COL_WHITE);
-		}
-		set(new String[] {
-			FOREGROUND, BACKGROUND
-		}, new String[] {
-			UiDesk.createColor(fg.getRGB()), UiDesk.createColor(bg.getRGB())
-		});
+	/**
+	 * Instantiate a given {@link Sticker}
+	 * @param sticker
+	 */
+	public UiSticker(Sticker sticker) {
+		this.sticker = sticker;
 	}
 	
+	public Image getImage(){
+		Image ret = null;
+		UiDBImage image = new UiDBImage(DBImage.load(sticker.get(Sticker.FLD_IMAGE_ID)));
+		
+		ret = UiDesk.getImageRegistry().get(image.getName());
+		if(ret==null) {
+			ret = image.getImageScaledTo(16, 16, false);
+			UiDesk.getImageRegistry().put(image.getName(), ret);
+		}
+		
+		return ret;
+	}
+	
+	public void setImage(UiDBImage image){
+		sticker.set(Sticker.FLD_IMAGE_ID, image.getId());
+	}
+	
+	public Color getForeground(){
+		return UiDesk.getColorFromRGB(sticker.getForeground());
+	}
+	
+	public void setForeground(Color fg){
+		if (fg != null) {
+			sticker.setForeground(Sticker.FLD_FOREGROUND);
+		}
+	}
+	
+	public Color getBackground() {
+		return UiDesk.getColorFromRGB(sticker.getBackground());
+	}
+		
+	public void setBackground(Color bg){
+		if (bg != null) {
+			sticker.setBackground(UiDesk.createColor(bg.getRGB()));
+		}
+	}
+
 	public Composite createForm(Composite parent){
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, false));
@@ -58,7 +83,7 @@ public class UiSticker extends Sticker {
 		
 		GridData gd1 = null;
 		GridData gd2 = null;
-
+	
 		Composite cImg = new Composite(ret, SWT.NONE);
 		if (img != null) {
 			cImg.setBackgroundImage(img);
@@ -71,73 +96,10 @@ public class UiSticker extends Sticker {
 		cImg.setLayoutData(gd1);
 		Label lbl = new Label(ret, SWT.NONE);
 		lbl.setLayoutData(gd2);
-		lbl.setText(getLabel());
-		lbl.setForeground(getForeground());
-		lbl.setBackground(getBackground());
+		lbl.setText(sticker.getLabel());
+		lbl.setForeground(UiDesk.getColorFromRGB(sticker.getForeground()));
+		lbl.setBackground(UiDesk.getColorFromRGB(sticker.getBackground()));
 		return ret;
 	}
-	
-	public Image getImage(){
-		Image ret = null;
-		DBImage image = DBImage.load(get(IMAGE_ID));
-		if (image != null) {
-			ret = Images.lookupImage(image.getName(), ImageSize._16x16_DefaultIconSize);
-		}
-		return ret;
-	}
-	
-	public void setImage(DBImage image){
-		set(IMAGE_ID, image.getId());
-	}
-	
-	public void setForeground(String fg){
-		set(FOREGROUND, fg);
-	}
-	
-	public void setForeground(Color fg){
-		if (fg != null) {
-			set(FOREGROUND, UiDesk.createColor(fg.getRGB()));
-		}
-	}
-	
-	public Color getForeground(){
-		String vg = get(FOREGROUND);
-		return UiDesk.getColorFromRGB(vg);
-		
-	}
-	
-	public void setBackground(String bg){
-		set(BACKGROUND, bg);
-	}
-	
-	public void setBackground(Color bg){
-		if (bg != null) {
-			set(BACKGROUND, UiDesk.createColor(bg.getRGB()));
-		}
-	}
-	
-	public void register(){
-		UiDesk.getImageRegistry().put(get(Sticker.NAME), new DBImageDescriptor(get(Sticker.NAME)));
-	}
-	
-	public Color getBackground(){
-		String bg = get(BACKGROUND);
-		return UiDesk.getColorFromRGB(bg);
-	}
-
-	
-	public static UiSticker load(String id){
-		UiSticker ret = new UiSticker(id);
-		if (!ret.exists()) {
-			return null;
-		}
-		return ret;
-	}
-	
-	protected UiSticker(String id){
-		super(id);
-	}
-	
-	protected UiSticker(){}
 	
 }

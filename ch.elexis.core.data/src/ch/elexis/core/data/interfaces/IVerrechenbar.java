@@ -11,18 +11,15 @@
  *******************************************************************************/
 package ch.elexis.core.data.interfaces;
 
-import java.awt.Dialog;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.Fall;
 import ch.elexis.core.data.Konsultation;
 import ch.elexis.core.data.Mandant;
 import ch.elexis.core.data.Verrechnet;
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.datatypes.ICodeElement;
+import ch.elexis.core.model.ICodeElement;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;

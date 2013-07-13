@@ -56,8 +56,9 @@ import ch.elexis.core.ui.data.UiSticker;
 import ch.elexis.core.ui.dialogs.ImageChooser;
 import ch.elexis.core.ui.util.SWTHelper;
 
-public class Stickers extends PreferencePage implements IWorkbenchPreferencePage {
-	
+public class Stickers extends PreferencePage implements
+		IWorkbenchPreferencePage {
+
 	Combo combo;
 	Canvas cImage, cFore, cBack;
 	Sticker act;
@@ -65,8 +66,8 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 	Button bNew, bRemove;
 	Spinner spWert;
 	HashMap<String, Button> classesCheck = new HashMap<String, Button>();
-	
-	void setSticker(Sticker et){
+
+	void setSticker(Sticker et) {
 		act = et;
 		if (et == null) {
 			cImage.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
@@ -74,8 +75,9 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 			cBack.setBackground(UiDesk.getColor(UiDesk.COL_LIGHTGREY));
 			spWert.setSelection(0);
 		} else {
-			cFore.setBackground( ((UiSticker)et).getForeground());
-			cBack.setBackground( ((UiSticker)et).getBackground());
+			UiSticker uist = new UiSticker(et);
+			cFore.setBackground(uist.getForeground());
+			cBack.setBackground(uist.getBackground());
 			spWert.setSelection(act.getWert());
 			List<String> classes = et.getClassesForSticker();
 			for (Entry<String, Button> e : classesCheck.entrySet()) {
@@ -91,41 +93,41 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		cImage.redraw();
 		cFore.redraw();
 		cBack.redraw();
-		
+
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout());
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		combo = new Combo(ret, SWT.SIMPLE);
 		combo.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		combo.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				int i = combo.getSelectionIndex();
 				if (i > -1) {
 					setSticker(lEtiketten.get(i));
 					bRemove.setEnabled(true);
 				}
 			}
-			
+
 		});
 		combo.addModifyListener(new ModifyListener() {
-			
-			public void modifyText(ModifyEvent e){
+
+			public void modifyText(ModifyEvent e) {
 				if (combo.getText().length() == 0) {
 					bNew.setEnabled(false);
 				} else {
 					bNew.setEnabled(true);
 				}
-				
+
 			}
 		});
 		for (Sticker et : lEtiketten) {
-			if (et.getVisibility())
+			if (et.isVisible())
 				combo.add(et.getLabel());
 		}
 		// new Label(ret,SWT.NONE).setText("Anzeige");
@@ -134,21 +136,21 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		bNew = new Button(bottom, SWT.PUSH);
 		bNew.setText(Messages.Stickers_NewSticker);
 		bNew.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				String name = combo.getText();
-				Sticker n = new Sticker(name);
+				Sticker n = new Sticker(name, null, null);
 				lEtiketten.add(n);
 				combo.add(n.getLabel());
 			}
-			
+
 		});
 		bRemove = new Button(bottom, SWT.PUSH);
 		bRemove.setText(Messages.Stickers_DeleteSticker);
 		bRemove.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				int idx = combo.getSelectionIndex();
 				if (idx > -1) {
 					// String n=combo.getItem(idx);
@@ -163,22 +165,25 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		bottomRight.setLayoutData(SWTHelper.getFillGridData(1, true, 5, true));
 		bottomRight.setLayout(new RowLayout(SWT.VERTICAL));
 		bottomRight.setText(Messages.Stickers_useFor);
-		addAssociateButton(Messages.Stickers_patient, Patient.class, bottomRight);
-		addAssociateButton(Messages.Stickers_consultation, Konsultation.class, bottomRight);
+		addAssociateButton(Messages.Stickers_patient, Patient.class,
+				bottomRight);
+		addAssociateButton(Messages.Stickers_consultation, Konsultation.class,
+				bottomRight);
 		addAssociateButton(Messages.Stickers_case, Fall.class, bottomRight);
 		addAssociateButton(Messages.Stickers_document, Brief.class, bottomRight);
 		/*
-		 * new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(2,
-		 * false, 1, false));
+		 * new Label(ret, SWT.SEPARATOR |
+		 * SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(2, false, 1,
+		 * false));
 		 */
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		cImage = new Canvas(bottom, SWT.BORDER);
 		cImage.addPaintListener(new PaintListener() {
-			
-			public void paintControl(PaintEvent e){
+
+			public void paintControl(PaintEvent e) {
 				GC gc = e.gc;
 				if (act != null) {
-					Image img = ((UiSticker)act).getImage();
+					Image img = new UiSticker(act).getImage();
 					if (img != null) {
 						gc.drawImage(img, 0, 0);
 						return;
@@ -194,11 +199,11 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		bNewImage.setText(Messages.Stickers_Image);
 		bNewImage.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (act != null) {
 					ImageChooser imc = new ImageChooser(getShell());
 					if (imc.open() == Dialog.OK) {
-						 ((UiSticker)act).setImage(imc.getSelection());
+						new UiSticker(act).setImage(imc.getSelection());
 						setSticker(act);
 					}
 				}
@@ -210,19 +215,19 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		Button bFore = new Button(bottom, SWT.PUSH);
 		bFore.setText(Messages.Stickers_TextColor);
 		bFore.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (act != null) {
 					ColorDialog cd = new ColorDialog(getShell(), SWT.NONE);
 					RGB rgb = cd.open();
 					if (rgb != null) {
-						 ((UiSticker)act).setForeground(UiDesk.createColor(rgb));
+						act.setForeground(UiDesk.createColor(rgb));
 					}
 					setSticker(act);
 				}
 			}
-			
+
 		});
 		cBack = new Canvas(bottom, SWT.BORDER);
 		GridData gdBack = GridDataFactory.copyData(gdFore);
@@ -230,28 +235,28 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		Button bBack = new Button(bottom, SWT.PUSH);
 		bBack.setText(Messages.Stickers_BackgroundColor);
 		bBack.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (act != null) {
 					ColorDialog cd = new ColorDialog(getShell(), SWT.NONE);
 					RGB rgb = cd.open();
 					if (rgb != null) {
-						 ((UiSticker)act).setBackground(UiDesk.createColor(rgb));
+						act.setBackground(UiDesk.createColor(rgb));
 					}
 					setSticker(act);
 				}
 			}
-			
+
 		});
 		spWert = new Spinner(bottom, SWT.NONE);
 		spWert.addModifyListener(new ModifyListener() {
-			
-			public void modifyText(ModifyEvent e){
+
+			public void modifyText(ModifyEvent e) {
 				if (act != null) {
 					act.setWert(spWert.getSelection());
 				}
-				
+
 			}
 		});
 		new Label(bottom, SWT.NONE).setText(Messages.Stickers_ValueOfSticker);
@@ -259,28 +264,29 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		bRemove.setEnabled(false);
 		return ret;
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		Query<Sticker> qbe = new Query<Sticker>(Sticker.class);
 		lEtiketten = qbe.execute();
- 		if (lEtiketten != null) {
-			
+		if (lEtiketten != null) {
+
 		} else {
 			lEtiketten = new LinkedList<Sticker>();
 		}
-		
+
 	}
-	
-	private void addAssociateButton(final String label, final Class<?> clazz, final Composite parent){
+
+	private void addAssociateButton(final String label, final Class<?> clazz,
+			final Composite parent) {
 		final Button button = new Button(parent, SWT.CHECK);
 		button.setText(label);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				int i = combo.getSelectionIndex();
 				if (i > -1) {
 					Sticker sticker = lEtiketten.get(i);
-					
+
 					if (button.getSelection()) {
 						sticker.setClassForSticker(clazz);
 					} else {

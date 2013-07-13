@@ -56,19 +56,19 @@ public class EditAUFDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, true));
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		new Label(ret, SWT.NONE).setText(Messages.getString("EditAUFDialog.from")); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.getString("EditAUFDialog.until")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_from); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_until); //$NON-NLS-1$
 		dpVon = new DatePicker(ret, SWT.NONE);
 		dpBis = new DatePicker(ret, SWT.NONE);
-		new Label(ret, SWT.NONE).setText(Messages.getString("EditAUFDialog.percent")); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.getString("EditAUFDialog.reason")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_percent); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_reason); //$NON-NLS-1$
 		tProzent = new Text(ret, SWT.BORDER);
 		tGrund = new Text(ret, SWT.BORDER);
 		tProzent.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tGrund.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
 		Label lbZusatz = new Label(ret, SWT.NONE);
-		lbZusatz.setText(Messages.getString("EditAUFDialog.additional")); //$NON-NLS-1$
+		lbZusatz.setText(Messages.EditAUFDialog_additional); //$NON-NLS-1$
 		lbZusatz.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
 		tZusatz = new Text(ret, SWT.MULTI);
 		tZusatz.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
@@ -97,13 +97,13 @@ public class EditAUFDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setTitle(Messages.getString("EditAUFDialog.auf") + " - " + ElexisEventDispatcher.getSelectedPatient().getLabel()); //$NON-NLS-1$
+		setTitle(Messages.EditAUFDialog_auf + " - " + ElexisEventDispatcher.getSelectedPatient().getLabel()); //$NON-NLS-1$
 		if (auf == null) {
-			setMessage(Messages.getString("EditAUFDialog.enterNewAUF")); //$NON-NLS-1$
+			setMessage(Messages.EditAUFDialog_enterNewAUF); //$NON-NLS-1$
 		} else {
-			setMessage(Messages.getString("EditAUFDialog.editAufDetails")); //$NON-NLS-1$
+			setMessage(Messages.EditAUFDialog_editAufDetails); //$NON-NLS-1$
 		}
-		getShell().setText(Messages.getString("EditAUFDialog.auf")); //$NON-NLS-1$
+		getShell().setText(Messages.EditAUFDialog_auf); //$NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}
 	

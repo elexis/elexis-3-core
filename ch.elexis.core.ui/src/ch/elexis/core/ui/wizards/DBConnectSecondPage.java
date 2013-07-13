@@ -26,10 +26,10 @@ public class DBConnectSecondPage extends WizardPage {
 	Text name, pwd;
 	
 	public DBConnectSecondPage(String pageName){
-		super(Messages.getString("DBConnectSecondPage.0")); //$NON-NLS-1$
-		setTitle(Messages.getString("DBConnectSecondPage.Credentials")); //$NON-NLS-1$
-		setMessage(Messages.getString("DBConnectSecondPage.username1") + //$NON-NLS-1$
-			Messages.getString("DBConnectSecondPage.username2")); //$NON-NLS-1$
+		super(Messages.DBConnectSecondPage_0); //$NON-NLS-1$
+		setTitle(Messages.DBConnectSecondPage_Credentials); //$NON-NLS-1$
+		setMessage(Messages.DBConnectSecondPage_username1 + //$NON-NLS-1$
+			Messages.DBConnectSecondPage_username2); //$NON-NLS-1$
 	}
 	
 	public DBConnectSecondPage(String pageName, String title, ImageDescriptor titleImage){
@@ -40,12 +40,10 @@ public class DBConnectSecondPage extends WizardPage {
 	public void createControl(Composite parent){
 		Composite form = new Composite(parent, SWT.NONE);
 		form.setLayout(new GridLayout(1, false));
-		new Label(form, SWT.NONE).setText(Messages
-			.getString("DBConnectSecondPage.databaseUsername")); //$NON-NLS-1$
+		new Label(form, SWT.NONE).setText(Messages.DBConnectSecondPage_databaseUsername); //$NON-NLS-1$
 		name = new Text(form, SWT.BORDER);
 		name.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(form, SWT.NONE).setText(Messages
-			.getString("DBConnectSecondPage.databasePassword")); //$NON-NLS-1$
+		new Label(form, SWT.NONE).setText(Messages.DBConnectSecondPage_databasePassword); //$NON-NLS-1$
 		pwd = new Text(form, SWT.BORDER);
 		pwd.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		setControl(form);

@@ -31,8 +31,7 @@ public class PatientDetailView2 extends ViewPart implements ISaveablePart2 {
 	public void createPartControl(Composite parent) {
 		setTitleImage(Images.IMG_VIEW_PATIENT_DETAIL.getImage());
 
-		setPartName(Messages
-				.getString("PatientDetailView2.patientDetailViewName")); //$NON-NLS-1$
+		setPartName(Messages.PatientDetailView2_patientDetailViewName); //$NON-NLS-1$
 		parent.setLayout(new FillLayout());
 		pb = new Patientenblatt2(parent, getViewSite());
 

@@ -1,16 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="ch.elexis">
+<schema targetNamespace="ch.elexis" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="ch.elexis" id="Verrechnungscode" name="Codesysteme Artikel und Leistungen"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          Dieser Erweiterungspunkt dient zum Einhängen von neuen Artikeln und Leistungen.
       </documentation>
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="Artikel" minOccurs="0" maxOccurs="unbounded"/>
@@ -35,9 +40,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -57,9 +62,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.data.PersistentObjectFactory"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.core.data.PersistentObjectFactory:"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="ImporterClass" type="string">
@@ -67,9 +72,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.util.ImporterPage"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.core.ui.util.ImporterPage:"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="CodeDetailDisplay" type="string" use="required">
@@ -77,9 +82,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.views.IDetailDisplay"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.core.ui.views.IDetailDisplay"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="CodeSelectorFactory" type="string" use="required">
@@ -87,9 +92,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.views.CodeSelectorFactory"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.core.ui.views.codesystems.CodeSelectorFactory:"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="OptifierClass" type="string">
@@ -97,9 +102,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn=":ch.elexis.util.IOptifier"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.core.data.interfaces.IOptifier"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -124,9 +129,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.data.PersistentObjectFactory"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.core.data.PersistentObjectFactory:"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="OptifierClass" type="string">
@@ -134,9 +139,9 @@
                <documentation>
                   &lt;p&gt;Eine Klasse, die Verrechnungen optimieren und verifizieren kann.&lt;/p&gt;
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.util.IOptifier"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.core.data.interfaces.IOptifier"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="ComparatorClass" type="string">
@@ -144,9 +149,9 @@
                <documentation>
                   &lt;p&gt;Eine Klasse, die dazu dient, eine Liste von Einträgen dieser Leistungsart sinnvoll sortiert dazustellen. Was &quot;sinnvoll&quot; ist, bleibt dabei ganz der implementierenden Klasse überlassen. Muss java.util.Comparator implementieren.&lt;/p&gt;
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="java.util.Comparator"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="MandandFilterClass" type="string">
@@ -154,9 +159,9 @@
                <documentation>
                   &lt;p&gt;Eine Klasse, die dazu dient festzustellen, ob ein bestimmtes Element dieses Leistungstyps von einem bestimmten Mandanten angewendet werden kann. muss org.eclipse.jface.viewers.IFilter implementieren&lt;/p&gt;
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.jface.viewers.IFilter"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="CodeDetailDisplay" type="string">
@@ -164,9 +169,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.views.IDetailDisplay"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.core.ui.views.IDetailDisplay"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="ImporterClass" type="string">
@@ -174,9 +179,9 @@
                <documentation>
                   &lt;p&gt;Eine von ch.elexis.util.ImporterPage abgeleitete Klasse, die das Datensubstrat dieser Leistungsklasse nach Elexis importieren kann.&lt;/p&gt;
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.util.ImporterPage"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.core.ui.util.ImporterPage:"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="CodeSelectorFactory" type="string">
@@ -184,56 +189,56 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.views.CodeSelectorFactory"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.core.ui.views.codesystems.CodeSelectorFactory:"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          0.1.5
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Geben Sie hier ein Verwendungsbeispiel für den Erweiterungspunkt ein.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         [Geben Sie hier die API-Informationen ein.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="implementation"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Geben Sie hier Informationen zur bereitgestellten Implementierung dieses Erweiterungspunkts ein.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="copyright"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          (c) 2006 by G. Weirich
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiInfo"/>
+      </appinfo>
+      <documentation>
+         [Geben Sie hier die API-Informationen ein.]
       </documentation>
    </annotation>
 

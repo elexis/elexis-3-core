@@ -68,15 +68,15 @@ public class RnDialogs {
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			new Label(ret, SWT.NONE).setText(Messages.getString("RnDialogs.date")); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); //$NON-NLS-1$
 			dp = new DatePickerCombo(ret, SWT.NONE);
 			dp.setDate(new Date());
-			new Label(ret, SWT.NONE).setText(Messages.getString("RnDialogs.amount")); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); //$NON-NLS-1$
 			// nf=NumberFormat.getCurrencyInstance();
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.getString("RnDialogs.remark")); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); //$NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setFocus();
@@ -86,9 +86,9 @@ public class RnDialogs {
 		@Override
 		public void create(){
 			super.create();
-			setTitle(Messages.getString("RnDialogs.invoice") + rn.getNr()); //$NON-NLS-1$
-			getShell().setText(Messages.getString("RnDialogs.addExpense")); //$NON-NLS-1$
-			setMessage(Messages.getString("RnDialogs.enterAmount")); //$NON-NLS-1$
+			setTitle(Messages.RnDialogs_invoice + rn.getNr()); //$NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_addExpense); //$NON-NLS-1$
+			setMessage(Messages.RnDialogs_enterAmount); //$NON-NLS-1$
 			setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		}
 		
@@ -105,7 +105,7 @@ public class RnDialogs {
 				ErrorDialog
 					.openError(
 						getShell(),
-						Messages.getString("RnDialogs.amountInvalid"), Messages.getString("RnDialogs.invalidFormat"), //$NON-NLS-1$ //$NON-NLS-2$
+						Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, //$NON-NLS-1$ //$NON-NLS-2$
 						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			
@@ -131,15 +131,15 @@ public class RnDialogs {
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.getString("RnDialogs.date")); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); //$NON-NLS-1$
 			dp = new DatePickerCombo(ret, SWT.NONE);
 			dp.setDate(new Date());
-			new Label(ret, SWT.NONE).setText(Messages.getString("RnDialogs.amount")); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); //$NON-NLS-1$
 			// nf=NumberFormat.getCurrencyInstance();
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.getString("RnDialogs.remark")); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); //$NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setText(rn.getOffenerBetrag().getAmountAsString());
@@ -150,9 +150,9 @@ public class RnDialogs {
 		@Override
 		public void create(){
 			super.create();
-			setTitle(Messages.getString("RnDialogs.invoice") + rn.getNr()); //$NON-NLS-1$
-			getShell().setText(Messages.getString("RnDialogs.addTransaction")); //$NON-NLS-1$
-			setMessage(Messages.getString("RnDialogs.enterAmount")); //$NON-NLS-1$
+			setTitle(Messages.RnDialogs_invoice + rn.getNr()); //$NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_addTransaction); //$NON-NLS-1$
+			setMessage(Messages.RnDialogs_enterAmount); //$NON-NLS-1$
 			setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		}
 		
@@ -167,7 +167,7 @@ public class RnDialogs {
 				ErrorDialog
 					.openError(
 						getShell(),
-						Messages.getString("RnDialogs.amountInvalid"), Messages.getString("RnDialogs.invalidFormat"), //$NON-NLS-1$ //$NON-NLS-2$
+						Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, //$NON-NLS-1$ //$NON-NLS-2$
 						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			
@@ -196,19 +196,18 @@ public class RnDialogs {
 			cbStates.setVisibleItemCount(RnStatus.getStatusTexts().length);
 			cbStates.select(rn.getStatus());
 			cbStates.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.WRAP).setText(Messages
-				.getString("RnDialogs.warningDontChangeManually")); //$NON-NLS-1$
+			new Label(ret, SWT.WRAP).setText(Messages.RnDialogs_warningDontChangeManually); //$NON-NLS-1$
 			return ret;
 		}
 		
 		@Override
 		public void create(){
 			super.create();
-			getShell().setText(Messages.getString("RnDialogs.invoiceNumber") + rn.getNr()); //$NON-NLS-1$
-			setTitle(Messages.getString("RnDialogs.modifyInvoiceState")); //$NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_invoiceNumber + rn.getNr()); //$NON-NLS-1$
+			setTitle(Messages.RnDialogs_modifyInvoiceState); //$NON-NLS-1$
 			
 			setMessage(rn.getFall().getPatient().getLabel()
-				+ Messages.getString("RnDialogs.pleaseNewState")); //$NON-NLS-1$
+				+ Messages.RnDialogs_pleaseNewState); //$NON-NLS-1$
 		}
 		
 		@Override
@@ -241,7 +240,7 @@ public class RnDialogs {
 			ret.setLayout(new GridLayout());
 			Label lbLocal = new Label(ret, SWT.NONE);
 			lbLocal.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			lbLocal.setText(Messages.getString("RnDialogs.stornoOnlyLocal")); //$NON-NLS-1$
+			lbLocal.setText(Messages.RnDialogs_stornoOnlyLocal); //$NON-NLS-1$
 			for (IRnOutputter rno : lo) {
 				if (rno.canStorno(null) && hasTrace(rno.getDescription())) {
 					Button cbStorno = new Button(ret, SWT.CHECK);
@@ -253,12 +252,12 @@ public class RnDialogs {
 				}
 			}
 			if (exporters.size() > 0) {
-				lbLocal.setText(Messages.getString("RnDialogs.stornoPropagate")); //$NON-NLS-1$
+				lbLocal.setText(Messages.RnDialogs_stornoPropagate); //$NON-NLS-1$
 			}
 			new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(
 				1, false, 1, false));
 			bReactivate = new Button(ret, SWT.CHECK);
-			bReactivate.setText(Messages.getString("RnDialogs.reactivateConsultations")); //$NON-NLS-1$
+			bReactivate.setText(Messages.RnDialogs_reactivateConsultations); //$NON-NLS-1$
 			bReactivate.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			bReactivate.setSelection(true);
 			/*
@@ -283,8 +282,8 @@ public class RnDialogs {
 		@Override
 		public void create(){
 			super.create();
-			getShell().setText(Messages.getString("RnDialogs.invoice") + rn.getNr()); //$NON-NLS-1$
-			setTitle(Messages.getString("RnDialogs.reallyCancel")); //$NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_invoice + rn.getNr()); //$NON-NLS-1$
+			setTitle(Messages.RnDialogs_reallyCancel); //$NON-NLS-1$
 			//setMessage(Messages.getString("RnDialogs.reactivateConsultations")); //$NON-NLS-1$
 		}
 		

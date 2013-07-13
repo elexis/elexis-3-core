@@ -27,7 +27,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.data.Leistungsblock;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.datatypes.ICodeElement;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -38,7 +38,7 @@ import ch.rgw.tools.StringTool;
 
 public class LeistungenView extends ViewPart implements IActivationListener, ISaveablePart2 {
 	
-	private static final String CAPTION_ERROR = Messages.getString("LeistungenView.error"); //$NON-NLS-1$
+	private static final String CAPTION_ERROR = Messages.LeistungenView_error; //$NON-NLS-1$
 	public final static String ID = "ch.elexis.LeistungenView"; //$NON-NLS-1$
 	public CTabFolder ctab;
 	CTabItem selected;

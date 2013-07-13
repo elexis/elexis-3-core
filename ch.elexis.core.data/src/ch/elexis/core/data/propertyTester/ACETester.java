@@ -13,8 +13,8 @@ package ch.elexis.core.data.propertyTester;
 import java.lang.reflect.Field;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.ACE;

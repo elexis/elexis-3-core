@@ -31,27 +31,17 @@ import ch.rgw.tools.TimeTool;
 
 public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 	private static final String CONFIG = "dialogs/konszumverrechnen/"; //$NON-NLS-1$
-	private static final String ALLMARKED = Messages
-		.getString("KonsZumVerrechnenWizardDialog.selectCasesToCharge"); //$NON-NLS-1$
-	private static final String TAGEN_BZW_DEM = Messages
-		.getString("KonsZumVerrechnenWizardDialog.daysOrDate"); //$NON-NLS-1$
-	private static final String RECHNUNGEN_ERSTELLEN = Messages
-		.getString("KonsZumVerrechnenWizardDialog.createBills"); //$NON-NLS-1$
-	private static final String BEHANDLUNGEN_ZUM_VERRECHNEN_AUTOMATISCH_AUSWAEHLEN = Messages
-		.getString("KonsZumVerrechnenWizardDialog.createProposal"); //$NON-NLS-1$
-	private static final String RECHNUNGS_AUTOMATIK = Messages
-		.getString("KonsZumVerrechnenWizardDialog.billingAUtomation"); //$NON-NLS-1$
-	private static final String TREATMENT_TRIMESTER = Messages
-		.getString("KonsZumVerrechnenWizardDialog.choseAllQuartal"); //$NON-NLS-1$
-	private static final String TREATMENT_AMOUNTHIGHER = Messages
-		.getString("KonsZumVerrechnenWizardDialog.chooseFromAmount"); //$NON-NLS-1$
-	private static final String TREATMENTENDBEFORE = Messages
-		.getString("KonsZumVerrechnenWizardDialog.choseEndeDate"); //$NON-NLS-1$
-	private final static String TREATMENTBEGINBEFORE = Messages
-		.getString("KonsZumVerrechnenWizardDialog.chooseBeginningDate"); //$NON-NLS-1$
+	private static final String ALLMARKED = Messages.KonsZumVerrechnenWizardDialog_selectCasesToCharge; //$NON-NLS-1$
+	private static final String TAGEN_BZW_DEM = Messages.KonsZumVerrechnenWizardDialog_daysOrDate; //$NON-NLS-1$
+	private static final String RECHNUNGEN_ERSTELLEN = Messages.KonsZumVerrechnenWizardDialog_createBills; //$NON-NLS-1$
+	private static final String BEHANDLUNGEN_ZUM_VERRECHNEN_AUTOMATISCH_AUSWAEHLEN = Messages.KonsZumVerrechnenWizardDialog_createProposal; //$NON-NLS-1$
+	private static final String RECHNUNGS_AUTOMATIK = Messages.KonsZumVerrechnenWizardDialog_billingAUtomation; //$NON-NLS-1$
+	private static final String TREATMENT_TRIMESTER = Messages.KonsZumVerrechnenWizardDialog_choseAllQuartal; //$NON-NLS-1$
+	private static final String TREATMENT_AMOUNTHIGHER = Messages.KonsZumVerrechnenWizardDialog_chooseFromAmount; //$NON-NLS-1$
+	private static final String TREATMENTENDBEFORE = Messages.KonsZumVerrechnenWizardDialog_choseEndeDate; //$NON-NLS-1$
+	private final static String TREATMENTBEGINBEFORE = Messages.KonsZumVerrechnenWizardDialog_chooseBeginningDate; //$NON-NLS-1$
 	
-	private static final String SKIPSELECTION = Messages
-		.getString("KonsZumVerrechnenWizardDialog.skipProposal"); //$NON-NLS-1$
+	private static final String SKIPSELECTION = Messages.KonsZumVerrechnenWizardDialog_skipProposal; //$NON-NLS-1$
 	private static final String CFG_SKIP = CONFIG + "skipselection"; //$NON-NLS-1$
 	
 	Button cbMarked, cbBefore, cbAmount, cbTime, cbQuartal, cbSkip;

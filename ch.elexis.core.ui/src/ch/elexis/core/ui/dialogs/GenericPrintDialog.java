@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.Shell;
 import ch.elexis.core.data.Brief;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.Hub;
-import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
+import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.SWTHelper;
 
 /**

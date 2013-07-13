@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.data.preferences;
 
+import static ch.elexis.core.constants.Preferences.SETTINGS_PREFERENCE_STORE_DEFAULT;
+
 import java.io.File;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
@@ -21,7 +23,6 @@ import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.rgw.tools.StringTool;
-import static ch.elexis.core.constants.Preferences.SETTINGS_PREFERENCE_STORE_DEFAULT;
 
 public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 	

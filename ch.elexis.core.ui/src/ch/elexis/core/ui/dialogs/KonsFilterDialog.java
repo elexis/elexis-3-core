@@ -59,24 +59,24 @@ public class KonsFilterDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout());
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		new Label(ret, SWT.NONE).setText(Messages.getString("KonsFilterDialog.onlyForCase")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.KonsFilterDialog_onlyForCase); //$NON-NLS-1$
 		cbFaelle = new Combo(ret, SWT.SINGLE);
 		cbFaelle.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		faelle = pat.getFaelle();
-		cbFaelle.add(Messages.getString("KonsFilterDialog.dontMind")); //$NON-NLS-1$
+		cbFaelle.add(Messages.KonsFilterDialog_dontMind); //$NON-NLS-1$
 		for (Fall f : faelle) {
 			cbFaelle.add(f.getLabel());
 		}
 		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL);
-		new Label(ret, SWT.WRAP).setText(Messages.getString("KonsFilterDialog.enterWords") + //$NON-NLS-1$
-			Messages.getString("KonsFilterDialog.separateFilters")); //$NON-NLS-1$
+		new Label(ret, SWT.WRAP).setText(Messages.KonsFilterDialog_enterWords + //$NON-NLS-1$
+			Messages.KonsFilterDialog_separateFilters); //$NON-NLS-1$
 		
 		tBed = SWTHelper.createText(ret, 4, SWT.BORDER);
 		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL);
 		bCase = new Button(ret, SWT.CHECK);
-		bCase.setText(Messages.getString("KonsFilterDialog.respectCase")); //$NON-NLS-1$
+		bCase.setText(Messages.KonsFilterDialog_respectCase); //$NON-NLS-1$
 		bRegex = new Button(ret, SWT.CHECK);
-		bRegex.setText(Messages.getString("KonsFilterDialog.regExp")); //$NON-NLS-1$
+		bRegex.setText(Messages.KonsFilterDialog_regExp); //$NON-NLS-1$
 		cbFaelle.select(0);
 		bCase.setSelection(true);
 		return ret;
@@ -85,9 +85,9 @@ public class KonsFilterDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setTitle(Messages.getString("KonsFilterDialog.konsFilter")); //$NON-NLS-1$
-		setMessage(Messages.getString("KonsFilterDialog.enterFilterExpressions")); //$NON-NLS-1$
-		getShell().setText(Messages.getString("KonsFilterDialog.filter")); //$NON-NLS-1$
+		setTitle(Messages.KonsFilterDialog_konsFilter); //$NON-NLS-1$
+		setMessage(Messages.KonsFilterDialog_enterFilterExpressions); //$NON-NLS-1$
+		getShell().setText(Messages.KonsFilterDialog_filter); //$NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}
 	

@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="ch.elexis">
+<schema targetNamespace="ch.elexis" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="ch.elexis" id="FremdDatenImport" name="Importer für externe Daten"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          Extensionpoint for plugins that want to import data from
 foreign sources into elexis
@@ -12,6 +12,11 @@ foreign sources into elexis
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="importer" minOccurs="1" maxOccurs="unbounded"/>
@@ -35,9 +40,9 @@ foreign sources into elexis
                <documentation>
                   
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -57,57 +62,41 @@ foreign sources into elexis
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.util.ImporterPage"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.core.ui.util.ImporterPage:"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
+
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          0.1.6
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          Use the plugin elexis-importer as an example
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="implementation"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>

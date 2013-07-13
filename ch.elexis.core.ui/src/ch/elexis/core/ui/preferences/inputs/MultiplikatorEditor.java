@@ -47,7 +47,7 @@ public class MultiplikatorEditor extends Composite {
 		list = new List(this, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
 		list.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		Button bNew = new Button(this, SWT.PUSH);
-		bNew.setText(Messages.getString("MultiplikatorEditor.add")); //$NON-NLS-1$
+		bNew.setText(Messages.MultiplikatorEditor_add); //$NON-NLS-1$
 		bNew.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
@@ -58,7 +58,7 @@ public class MultiplikatorEditor extends Composite {
 					
 					MultiplikatorList multis = new MultiplikatorList("VK_PREISE", typeName);
 					multis.insertMultiplikator(t, mul);
-					list.add(Messages.getString("MultiplikatorEditor.from") + t.toString(TimeTool.DATE_GER) + Messages.getString("MultiplikatorEditor.14") + mul); //$NON-NLS-1$ //$NON-NLS-2$
+					list.add(Messages.MultiplikatorEditor_from + t.toString(TimeTool.DATE_GER) + Messages.MultiplikatorEditor_5 + mul); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		});
@@ -98,7 +98,7 @@ public class MultiplikatorEditor extends Composite {
 			list.removeAll();
 			for (String[] s : daten) {
 				dis.set(s[0]);
-				list.add(Messages.getString("MultiplikatorEditor.from") + dis.toString(TimeTool.DATE_GER) + Messages.getString("MultiplikatorEditor.5") + s[1]); //$NON-NLS-1$ //$NON-NLS-2$
+				list.add(Messages.MultiplikatorEditor_from + dis.toString(TimeTool.DATE_GER) + Messages.MultiplikatorEditor_5 + s[1]); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			
 		} catch (Exception ex) {

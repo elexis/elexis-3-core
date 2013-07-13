@@ -284,8 +284,8 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 	@SuppressWarnings("unchecked")
 	public void reload(final IProgressMonitor monitor){
 		monitor.beginTask(
-			Messages.getString("RnContentProvider.collectInvoices"), Math.round(PREVAL)); //$NON-NLS-1$
-		monitor.subTask(Messages.getString("RnContentProvider.prepare")); //$NON-NLS-1$
+			Messages.RnContentProvider_collectInvoices, Math.round(PREVAL)); //$NON-NLS-1$
+		monitor.subTask(Messages.RnContentProvider_prepare); //$NON-NLS-1$
 		Tree<Patient> root = new Tree<Patient>(null, null);
 		Hashtable<String, Tree<Patient>> hPats = new Hashtable<String, Tree<Patient>>(367, 0.75f);
 		Hashtable<String, Tree<Fall>> hFaelle = new Hashtable<String, Tree<Fall>>(719, 0.75f);
@@ -296,13 +296,13 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		}
 		List<Rechnung> rechnungen = q1.execute();
 		if (rechnungen == null) {
-			log.log(Messages.getString("RnContentProvider.errorRetriveingBillds"), Log.ERRORS); //$NON-NLS-1$
+			log.log(Messages.RnContentProvider_errorRetriveingBillds, Log.ERRORS); //$NON-NLS-1$
 			return;
 		}
 		monitor.worked(100);
-		monitor.subTask(Messages.getString("RnContentProvider.databseRequest")); //$NON-NLS-1$
+		monitor.subTask(Messages.RnContentProvider_databseRequest); //$NON-NLS-1$
 		int multiplyer = Math.round(PREVAL / rechnungen.size());
-		monitor.subTask(Messages.getString("RnContentProvider.load")); //$NON-NLS-1$
+		monitor.subTask(Messages.RnContentProvider_load); //$NON-NLS-1$
 		iPat = 0;
 		iRn = rechnungen.size();
 		mAmount = new Money();
@@ -346,7 +346,7 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 			rlv.tOpen.setText(mOpen.getAmountAsString());
 		}
 		monitor.worked(1);
-		monitor.subTask(Messages.getString("RnContentProvider.prepareSort")); //$NON-NLS-1$
+		monitor.subTask(Messages.RnContentProvider_prepareSort); //$NON-NLS-1$
 		result = root.getChildren().toArray(new Tree[0]);
 		monitor.worked(100);
 		//monitor.subTask(Messages.getString("RnContentProvider.sort")); //$NON-NLS-1$

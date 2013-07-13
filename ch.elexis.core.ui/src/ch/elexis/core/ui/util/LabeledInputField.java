@@ -311,7 +311,7 @@ public class LabeledInputField extends Composite {
 		InputData[] def;
 		Control[] cFields;
 		PersistentObject act;
-		DecimalFormat df = new DecimalFormat(Messages.getString("LabeledInputField.7")); //$NON-NLS-1$
+		DecimalFormat df = new DecimalFormat(Messages.LabeledInputField_7); //$NON-NLS-1$
 		LabeledInputField ltf;
 		
 		public AutoForm(Composite parent, InputData[] fields){

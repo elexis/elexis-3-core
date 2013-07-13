@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?>
-
-<target name="core.dev" sequenceNumber="10">
+<?pde version="3.8"?><target name="core.dev" sequenceNumber="11">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.commons.lang" version="2.6.0.v201205030909"/>
@@ -26,5 +24,9 @@
 <repository location="http://ageto.github.com/gyrex-jaxrs-application/"/>
 </location>
 <location path="${project_loc}/foreign-libraries/target/repository/" type="Directory"/>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.8.3.v20130125-0826"/>
+<repository location="http://download.eclipse.org/releases/juno/"/>
+</location>
 </locations>
 </target>

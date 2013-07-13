@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Elexis Core Laboratory
+Bundle-SymbolicName: ch.elexis.core.ui.laboratory;singleton:=true
+Bundle-Version: 3.0.0.qualifier
+Bundle-Activator: ch.elexis.core.ui.laboratory.Activator
+Bundle-Vendor: elexis.info
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.forms;bundle-version="3.5.200",
+ ch.rgw.utility,
+ ch.elexis.core;bundle-version="3.0.0",
+ ch.elexis.core.data;bundle-version="3.0.0",
+ ch.elexis.core.ui;bundle-version="3.0.0",
+ ch.elexis.core.ui.icons;bundle-version="3.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Import-Package: org.slf4j;version="1.5.8"
+Export-Package: ch.elexis.core.ui.laboratory.laborlink,
+ ch.elexis.core.ui.laboratory.views

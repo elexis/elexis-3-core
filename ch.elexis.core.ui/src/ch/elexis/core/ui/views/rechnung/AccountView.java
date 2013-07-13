@@ -64,8 +64,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 	
 	public static final String ID = "ch.elexis.views.rechnung.AccountView"; //$NON-NLS-1$
 	
-	private static final String ACCOUNT_EXCESS_JOB_NAME = Messages
-		.getString("AccountView.calculateBalance"); //$NON-NLS-1$
+	private static final String ACCOUNT_EXCESS_JOB_NAME = Messages.AccountView_calculateBalance; //$NON-NLS-1$
 	private BackgroundJob accountExcessJob;
 	
 	private FormToolkit tk;
@@ -85,10 +84,10 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 	private static final int REMARKS = 3;
 	
 	private static final String[] COLUMN_TEXT = {
-		Messages.getString("AccountView.date"), // DATE //$NON-NLS-1$
-		Messages.getString("AccountView.amount"), // AMOUNT //$NON-NLS-1$
-		Messages.getString("AccountView.bill"), // BILL //$NON-NLS-1$
-		Messages.getString("AccountView.remarks"), // REMARKS //$NON-NLS-1$
+		Messages.AccountView_date, // DATE //$NON-NLS-1$
+		Messages.AccountView_amount, // AMOUNT //$NON-NLS-1$
+		Messages.AccountView_bill, // BILL //$NON-NLS-1$
+		Messages.AccountView_remarks, // REMARKS //$NON-NLS-1$
 	};
 	
 	private static final int[] COLUMN_WIDTH = {
@@ -130,12 +129,12 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 		Composite accountArea = tk.createComposite(form.getBody());
 		accountArea.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		accountArea.setLayout(new GridLayout(3, false));
-		tk.createLabel(accountArea, Messages.getString("AccountView.account")); //$NON-NLS-1$
-		tk.createLabel(accountArea, Messages.getString("AccountView.accountAmount")); //$NON-NLS-1$
+		tk.createLabel(accountArea, Messages.AccountView_account); //$NON-NLS-1$
+		tk.createLabel(accountArea, Messages.AccountView_accountAmount); //$NON-NLS-1$
 		balanceLabel = tk.createLabel(accountArea, ""); //$NON-NLS-1$
 		balanceLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(accountArea, ""); // dummy //$NON-NLS-1$
-		tk.createLabel(accountArea, Messages.getString("AccountView.goodFromBills")); //$NON-NLS-1$
+		tk.createLabel(accountArea, Messages.AccountView_goodFromBills); //$NON-NLS-1$
 		excessLabel = tk.createLabel(accountArea, ""); //$NON-NLS-1$
 		excessLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
@@ -160,7 +159,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 			public Object[] getElements(Object inputElement){
 				if (actPatient == null) {
 					return new Object[] {
-						Messages.getString("AccountView.NoPatientSelected") //$NON-NLS-1$
+						Messages.AccountView_NoPatientSelected
 					};
 				}
 				Query<AccountTransaction> qa =
@@ -292,7 +291,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 		if (actPatient != null) {
 			title = actPatient.getLabel();
 		} else {
-			title = Messages.getString("AccountView.NoPatientSelected2"); //$NON-NLS-1$
+			title = Messages.AccountView_NoPatientSelected; //$NON-NLS-1$
 		}
 		form.setText(title);
 		
@@ -311,7 +310,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 		}
 		
 		String balanceText = ""; //$NON-NLS-1$
-		String excessText = Messages.getString("AccountView.23"); //$NON-NLS-1$
+		String excessText = Messages.AccountView_23; //$NON-NLS-1$
 		
 		if (actPatient != null) {
 			balanceText = actPatient.getKontostand().getAmountAsString();
@@ -390,9 +389,9 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 	 */
 	
 	private void makeActions(){
-		addPaymentAction = new Action(Messages.getString("AccountView.addBookingCaption")) { //$NON-NLS-1$
+		addPaymentAction = new Action(Messages.AccountView_addBookingCaption) { //$NON-NLS-1$
 				{
-					setToolTipText(Messages.getString("AccountView.addBookingBody")); //$NON-NLS-1$
+					setToolTipText(Messages.AccountView_addBookingBody); //$NON-NLS-1$
 					setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 				}
 				
@@ -403,9 +402,9 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 					}
 				}
 			};
-		removePaymentAction = new Action(Messages.getString("AccountView.deleteBookingAction")) { //$NON-NLS-1$
+		removePaymentAction = new Action(Messages.AccountView_deleteBookingAction) { //$NON-NLS-1$
 				{
-					setToolTipText(Messages.getString("AccountView.deleteBookingTooltip")); //$NON-NLS-1$
+					setToolTipText(Messages.AccountView_deleteBookingTooltip); //$NON-NLS-1$
 					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 				}
 				
@@ -416,8 +415,8 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 							.getSelected(AccountTransaction.class);
 					if (at != null) {
 						if (SWTHelper.askYesNo(
-							Messages.getString("AccountView.deleteBookingConfirmCaption"), //$NON-NLS-1$
-							Messages.getString("AccountView.deleteBookingConfirmBody"))) { //$NON-NLS-1$
+							Messages.AccountView_deleteBookingConfirmCaption, //$NON-NLS-1$
+							Messages.AccountView_deleteBookingConfirmBody)) { //$NON-NLS-1$
 							at.delete();
 							setPatient(actPatient);
 						}

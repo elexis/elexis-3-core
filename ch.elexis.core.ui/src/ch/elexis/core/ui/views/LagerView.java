@@ -215,7 +215,7 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 	class LagerWidgetProvider implements WidgetProvider {
 		String[] columns =
 			{
-				Messages.getString("LagerView.pharmacode"), Messages.getString("LagerView.name"), Messages.getString("LagerView.istBestand"), Messages.getString("LagerView.minBestand"), Messages.getString("LagerView.maxBestand"), Messages.getString("LagerView.controlled"), Messages.getString("LagerView.dealer") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+				Messages.LagerView_pharmacode, Messages.LagerView_name, Messages.LagerView_istBestand, Messages.LagerView_minBestand, Messages.LagerView_maxBestand, Messages.LagerView_controlled, Messages.LagerView_dealer
 			};
 		int[] colwidth = {
 			60, 300, 40, 40, 40, 40, 200
@@ -303,7 +303,7 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 
 		@Override
 		public String getText(){
-			return Messages.getString("BestellView.CheckInCaption");
+			return Messages.BestellView_CheckInCaption;
 		}
 		
 		@Override

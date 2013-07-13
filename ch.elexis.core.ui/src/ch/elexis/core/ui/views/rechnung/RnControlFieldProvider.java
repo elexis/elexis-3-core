@@ -57,10 +57,10 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	// stats={"Alle","Bezahlt","Offen","Offen&Gedruckt","1. Mahnung","2. Mahnung","3. Mahnung","In Betreibung","Teilverlust","Totalverlust"};
 	final static String[] stats =
 		{
-			Messages.getString("RnControlFieldProvider.all"), Messages.getString("RnControlFieldProvider.open"), Messages.getString("RnControlFieldProvider.openAndPrinted"), Messages.getString("RnControlFieldProvider.partlyPaid"), Messages.getString("RnControlFieldProvider.paid"), Messages.getString("RnControlFieldProvider.overpaid"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-			Messages.getString("RnControlFieldProvider.reminder"), Messages.getString("RnControlFieldProvider.reminderPrinted"), Messages.getString("RnControlFieldProvider.reminder2"), Messages.getString("RnControlFieldProvider.reminder2Printed"), Messages.getString("RnControlFieldProvider.reminder3"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			Messages.getString("RnControlFieldProvider.reminder3Printed"), Messages.getString("RnControlFieldProvider.enforcement"), Messages.getString("RnControlFieldProvider.partlyLost"), Messages.getString("RnControlFieldProvider.totallyLost"), Messages.getString("RnControlFieldProvider.storno"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			Messages.getString("RnControlFieldProvider.erroneous"), Messages.getString("RnControlFieldProvider.toPrint"), Messages.getString("RnControlFieldProvider.toBePaid"), Messages.getString("RnControlFieldProvider.dontRemind") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			Messages.RnControlFieldProvider_all, Messages.RnControlFieldProvider_open, Messages.RnControlFieldProvider_openAndPrinted, Messages.RnControlFieldProvider_partlyPaid, Messages.RnControlFieldProvider_paid, Messages.RnControlFieldProvider_overpaid, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+			Messages.RnControlFieldProvider_reminder, Messages.RnControlFieldProvider_reminderPrinted, Messages.RnControlFieldProvider_reminder2, Messages.RnControlFieldProvider_reminder2Printed, Messages.RnControlFieldProvider_reminder3, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			Messages.RnControlFieldProvider_reminder3Printed, Messages.RnControlFieldProvider_enforcement, Messages.RnControlFieldProvider_partlyLost, Messages.RnControlFieldProvider_totallyLost, Messages.RnControlFieldProvider_storno, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			Messages.RnControlFieldProvider_erroneous, Messages.RnControlFieldProvider_toPrint, Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind
 		};
 	
 	final static int[] statInts = {
@@ -73,8 +73,8 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	};
 	
 	final static int STAT_DEFAULT_INDEX = 1;
-	private final static String ALLE = Messages.getString("RnControlFieldProvider.allPatients"); //$NON-NLS-1$
-	private final static String ALL = Messages.getString("RnControlFieldProvider.all"); //$NON-NLS-1$
+	private final static String ALLE = Messages.RnControlFieldProvider_allPatients; //$NON-NLS-1$
+	private final static String ALL = Messages.RnControlFieldProvider_all; //$NON-NLS-1$
 	
 	Combo cbStat;
 	Combo cbZType;
@@ -100,8 +100,8 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 				Patient oldPatient = actPatient;
 				KontaktSelektor ksl =
 					new KontaktSelektor(parent.getShell(), Patient.class,
-						Messages.getString("RnControlFieldProvider.selectPatientCaption"), //$NON-NLS-1$
-						Messages.getString("RnControlFieldProvider.selectPatientMessage"), true); //$NON-NLS-1$
+						Messages.RnControlFieldProvider_selectPatientCaption, //$NON-NLS-1$
+						Messages.RnControlFieldProvider_selectPatientMessage, true); //$NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
 					actPatient = (Patient) ksl.getSelection();
 					if (actPatient != null) {
@@ -122,15 +122,15 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 				}
 			}
 		};
-		new Label(ret, SWT.NONE).setText(Messages.getString("RnControlFieldProvider.state")); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_state); //$NON-NLS-1$
 		Label lbl =
 			SWTHelper.createHyperlink(ret,
-				Messages.getString("RnControlFieldProvider.patient2"), hlPatient); //$NON-NLS-1$
+				Messages.RnControlFieldProvider_patient2, hlPatient); //$NON-NLS-1$
 		lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
 		new Label(ret, SWT.NONE)
-			.setText(Messages.getString("RnControlFieldProvider.PaymentSystem")); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.getString("RnControlFieldProvider.invoideNr")); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.getString("RnControlFieldProvider.amount")); //$NON-NLS-1$
+			.setText(Messages.RnControlFieldProvider_PaymentSystem); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_invoideNr); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_amount); //$NON-NLS-1$
 		// / ^ labels / values
 		cbStat = new Combo(ret, SWT.READ_ONLY);
 		cbStat.setVisibleItemCount(stats.length);
@@ -295,7 +295,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		UiDesk.getDisplay().syncExec(new Runnable() {
 			public void run(){
 				HashMap<String, String> hm = new HashMap<String, String>();
-				hm.put(Messages.getString("RnControlFieldProvider.state"), StringConstants.ZERO); //$NON-NLS-1$
+				hm.put(Messages.RnControlFieldProvider_state, StringConstants.ZERO); //$NON-NLS-1$
 				for (ControlFieldListener lis : listeners) {
 					lis.changed(hm);
 					

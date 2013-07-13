@@ -30,7 +30,7 @@ import ch.rgw.io.Settings;
 public class KontaktFieldEditor extends FieldEditor {
 	private Label contactLabel;
 	private Settings cfg;
-	private String defaultText = Messages.getString("KontaktFieldEditor.PleaseSelect"); //$NON-NLS-1$
+	private String defaultText = Messages.KontaktFieldEditor_PleaseSelect; //$NON-NLS-1$
 	private Kontakt selected;
 	
 	protected KontaktFieldEditor(){
@@ -106,8 +106,8 @@ public class KontaktFieldEditor extends FieldEditor {
 					KontaktSelektor ksl =
 						new KontaktSelektor(parent.getShell(),
 							Kontakt.class,
-							Messages.getString("KontaktFieldEditor.SelectContact"), //$NON-NLS-1$
-							Messages.getString("KontaktFieldEditor.PleaseSelectContact"), Kontakt.DEFAULT_SORT); //$NON-NLS-1$
+							Messages.KontaktFieldEditor_SelectContact, //$NON-NLS-1$
+							Messages.KontaktFieldEditor_PleaseSelectContact, Kontakt.DEFAULT_SORT); //$NON-NLS-1$
 					if (ksl.open() == Dialog.OK) {
 						selected = (Kontakt) ksl.getSelection();
 						contactLabel.setText(selected.getLabel());

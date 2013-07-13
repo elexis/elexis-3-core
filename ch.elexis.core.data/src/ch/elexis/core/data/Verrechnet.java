@@ -24,7 +24,6 @@ import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.IVerrechnetAdjuster;
 import ch.elexis.core.data.util.Extensions;
 import ch.rgw.tools.ExHandler;
-import ch.rgw.tools.Log;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 

@@ -46,8 +46,8 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.Hub;
+import ch.elexis.core.ui.UiDesk;
 import ch.rgw.tools.StringTool;
 
 /** statische Hilfsfunktionen für SWT-Objekte */
@@ -246,8 +246,8 @@ public class SWTHelper {
 				// window
 				// icon
 				message, MessageDialog.QUESTION, new String[] {
-					Messages.getString("SWTHelper.yes"), Messages.getString("SWTHelper.no"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					Messages.getString("SWTHelper.cancel") //$NON-NLS-1$ 
+					Messages.SWTHelper_yes, Messages.SWTHelper_no, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					Messages.SWTHelper_cancel
 				}, 0);
 			// ok is the default
 			int result = dialog.open();
@@ -389,7 +389,7 @@ public class SWTHelper {
 		final IHyperlinkListener lis){
 		final Label ret = new Label(parent, SWT.NONE);
 		ret.setText(text);
-		ret.setForeground(UiDesk.getColorRegistry().get(Messages.getString("SWTHelper.blue"))); //$NON-NLS-1$
+		ret.setForeground(UiDesk.getColorRegistry().get(Messages.SWTHelper_blue)); //$NON-NLS-1$
 		ret.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(final MouseEvent e){
@@ -462,7 +462,7 @@ public class SWTHelper {
 	public static boolean blameEmptyString(final String test, final String name){
 		if (StringTool.isNothing(test)) {
 			showError(
-				Messages.getString("SWTHelper.BadParameter"), name + Messages.getString("SWTHelper.HasNoValidContents")); //$NON-NLS-1$ //$NON-NLS-2$
+				Messages.SWTHelper_BadParameter, name + Messages.SWTHelper_HasNoValidContents); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
 		return true;

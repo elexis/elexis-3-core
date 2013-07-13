@@ -123,20 +123,20 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		form = tk.createForm(parent);
 		form.getBody().setLayout(new GridLayout());
 		SashForm sash = new SashForm(form.getBody(), SWT.VERTICAL);
-		form.setText(Messages.getString("FallListeView.NoPatientSelected")); //$NON-NLS-1$
+		form.setText(Messages.FallListeView_NoPatientSelected); //$NON-NLS-1$
 		sash.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ButtonProvider fallButton = new ButtonProvider() {
 			
 			public Button createButton(Composite parent1){
 				Button ret =
-					tk.createButton(parent1, Messages.getString("FallListeView.NewCase"), SWT.PUSH); //$NON-NLS-1$
+					tk.createButton(parent1, Messages.FallListeView_NewCase, SWT.PUSH); //$NON-NLS-1$
 				ret.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e){
 						String bez = fallCf.getControlFieldProvider().getValues()[0];
 						Fall fall =
 							actPatient.neuerFall(bez,
-								Messages.getString("FallListeView.Illness"), "KVG"); //$NON-NLS-1$ //$NON-NLS-2$
+								Messages.FallListeView_Illness, "KVG"); //$NON-NLS-1$ //$NON-NLS-2$
 						Konsultation b = fall.neueKonsultation();
 						b.setMandant(CoreHub.actMandant);
 						fallCf.getControlFieldProvider().clearValues();
@@ -164,7 +164,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 					} else {
 						IFilter filter = fallCf.getControlFieldProvider().createFilter();
 						List<String> list =
-							actPatient.getList(Messages.getString("FallListeView.Cases"), true); //$NON-NLS-1$
+							actPatient.getList(Messages.FallListeView_Cases, true); //$NON-NLS-1$
 						ArrayList<Fall> arr = new ArrayList<Fall>();
 						for (String s : list) {
 							Fall f = Fall.load(s);
@@ -201,7 +201,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 			}
 			
 		}, new DefaultControlFieldProvider(fallViewer, new String[] {
-			Messages.getString("FallListeView.Label") //$NON-NLS-1$
+			Messages.FallListeView_Label
 			}), fallButton, new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TABLE, SWT.SINGLE,
 			fallViewer));
 		fallViewer.create(fallCf, sash, SWT.NONE, getViewSite());
@@ -211,7 +211,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		ButtonProvider behandlButton = new ButtonProvider() {
 			public Button createButton(Composite parent1){
 				Button ret =
-					tk.createButton(parent1, Messages.getString("FallListeView.NewKons"), SWT.PUSH); //$NON-NLS-1$
+					tk.createButton(parent1, Messages.FallListeView_NewKons, SWT.PUSH); //$NON-NLS-1$
 				ret.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e){
@@ -253,7 +253,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 				}
 			}, new DefaultLabelProvider(), new DefaultControlFieldProvider(behandlViewer,
 				new String[] {
-					Messages.getString("FallListeView.Date") //$NON-NLS-1$
+					Messages.FallListeView_Date
 				}), behandlButton, new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LIST,
 				SWT.SINGLE | SWT.V_SCROLL, behandlViewer));
 		Composite cf = new Composite(sash, SWT.BORDER);
@@ -372,7 +372,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 				ElexisEventDispatcher.clearSelection(Konsultation.class);
 				ElexisEventDispatcher.clearSelection(Fall.class);
 				if (actPatient == null) {
-					form.setText(Messages.getString("FallListeView.NoPatientSelected")); //$NON-NLS-1$
+					form.setText(Messages.FallListeView_NoPatientSelected); //$NON-NLS-1$
 				} else {
 					form.setText(actPatient.getLabel());
 				}

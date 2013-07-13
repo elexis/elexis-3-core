@@ -87,10 +87,10 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	static final InputData[] rndata =
 		{
 			new InputData(
-				Messages.getString("RechnungsBlatt.billNumber"), Rechnung.BILL_NUMBER, Typ.STRING, null), //$NON-NLS-1$
+				Messages.RechnungsBlatt_billNumber, Rechnung.BILL_NUMBER, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("RechnungsBlatt.billDate"), Rechnung.BILL_DATE, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.getString("RechnungsBlatt.billState"), Rechnung.BILL_STATE, //$NON-NLS-1$
+				Messages.RechnungsBlatt_billDate, Rechnung.BILL_DATE, Typ.STRING, null), //$NON-NLS-1$
+			new InputData(Messages.RechnungsBlatt_billState, Rechnung.BILL_STATE, //$NON-NLS-1$
 				new LabeledInputField.IContentProvider() {
 					
 					public void displayContent(PersistentObject po, InputData ltf){
@@ -108,13 +108,13 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					
 				}),
 			new InputData(
-				Messages.getString("RechnungsBlatt.treatmentsFrom"), Rechnung.BILL_DATE_FROM, Typ.STRING, null), //$NON-NLS-1$
+				Messages.RechnungsBlatt_treatmentsFrom, Rechnung.BILL_DATE_FROM, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("RechnungsBlatt.treatmentsUntil"), Rechnung.BILL_DATE_UNTIL, Typ.STRING, null), //$NON-NLS-1$
+				Messages.RechnungsBlatt_treatmentsUntil, Rechnung.BILL_DATE_UNTIL, Typ.STRING, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("RechnungsBlatt.amountTotal"), Rechnung.BILL_AMOUNT_CENTS, Typ.CURRENCY, null), //$NON-NLS-1$
+				Messages.RechnungsBlatt_amountTotal, Rechnung.BILL_AMOUNT_CENTS, Typ.CURRENCY, null), //$NON-NLS-1$
 			new InputData(
-				Messages.getString("RechnungsBlatt.amountOpen"), Rechnung.BILL_AMOUNT_CENTS, //$NON-NLS-1$
+				Messages.RechnungsBlatt_amountOpen, Rechnung.BILL_AMOUNT_CENTS, //$NON-NLS-1$
 				new LabeledInputField.IContentProvider() {
 					
 					public void displayContent(PersistentObject po, InputData ltf){
@@ -201,7 +201,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		
 		ecBuchungen =
 			WidgetFactory.createExpandableComposite(tk, form,
-				Messages.getString("RechnungsBlatt.bookings")); //$NON-NLS-1$
+				Messages.RechnungsBlatt_bookings); //$NON-NLS-1$
 		ecBuchungen.addExpansionListener(ecExpansionListener);
 		// tk.createLabel(body, "Buchungen");
 		buchungen = new ListViewer(ecBuchungen, SWT.V_SCROLL | SWT.BORDER);
@@ -217,7 +217,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					(Rechnung) ElexisEventDispatcher.getInstance().getSelected(Rechnung.class);
 				if (actRn == null) {
 					return new String[] {
-						Messages.getString("RechnungsBlatt.noBillSelected") //$NON-NLS-1$
+						Messages.RechnungsBlatt_noBillSelected
 					};
 				}
 				List<Zahlung> lz = actRn.getZahlungen();
@@ -254,7 +254,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		// new Label(body,SWT.SEPARATOR|SWT.HORIZONTAL);
 		ecBemerkungen =
 			WidgetFactory.createExpandableComposite(tk, form,
-				Messages.getString("RechnungsBlatt.remarks")); //$NON-NLS-1$
+				Messages.RechnungsBlatt_remarks); //$NON-NLS-1$
 		ecBemerkungen.addExpansionListener(ecExpansionListener);
 		tBemerkungen = SWTHelper.createText(tk, ecBemerkungen, 5, SWT.BORDER);
 		tBemerkungen.addFocusListener(new FocusAdapter() {
@@ -268,7 +268,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		// tk.createLabel(body, "Statusänderungen");
 		ecStatus =
 			WidgetFactory.createExpandableComposite(tk, form,
-				Messages.getString("RechnungsBlatt.sateChangements")); //$NON-NLS-1$
+				Messages.RechnungsBlatt_sateChangements); //$NON-NLS-1$
 		ecStatus.addExpansionListener(ecExpansionListener);
 		lbJournal = new org.eclipse.swt.widgets.List(ecStatus, SWT.V_SCROLL | SWT.BORDER);
 		SWTHelper.setGridDataHeight(lbJournal, 4, true);
@@ -277,13 +277,13 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		
 		ecFehler =
 			WidgetFactory.createExpandableComposite(tk, form,
-				Messages.getString("RechnungsBlatt.errorMessages")); //$NON-NLS-1$
+				Messages.RechnungsBlatt_errorMessages); //$NON-NLS-1$
 		ecFehler.addExpansionListener(ecExpansionListener);
 		tRejects = SWTHelper.createText(tk, ecFehler, 4, SWT.READ_ONLY | SWT.V_SCROLL);
 		ecFehler.setClient(tRejects);
 		ecAusgaben =
 			WidgetFactory.createExpandableComposite(tk, form,
-				Messages.getString("RechnungsBlatt.outputs")); //$NON-NLS-1$
+				Messages.RechnungsBlatt_outputs); //$NON-NLS-1$
 		ecAusgaben.addExpansionListener(ecExpansionListener);
 		lbOutputs = new org.eclipse.swt.widgets.List(ecAusgaben, SWT.V_SCROLL | SWT.BORDER);
 		ecAusgaben.setClient(lbOutputs);
@@ -292,7 +292,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		
 		ecKons =
 			WidgetFactory.createExpandableComposite(tk, form,
-				Messages.getString("RechnungsBlatt.consultations")); //$NON-NLS-1$
+				Messages.RechnungsBlatt_consultations); //$NON-NLS-1$
 		ecKons.addExpansionListener(ecExpansionListener);
 		konsultationenViewer = new ListViewer(ecKons, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		ecKons.setClient(konsultationenViewer.getList());
@@ -437,7 +437,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		lbOutputs.removeAll();
 		if (actRn != null) {
 			rnAdressat
-				.setText(Messages.getString("RechnungsBlatt.adressee") + actRn.getFall().getGarant().getLabel()); //$NON-NLS-1$
+				.setText(Messages.RechnungsBlatt_adressee + actRn.getFall().getGarant().getLabel()); //$NON-NLS-1$
 			form.setText(actRn.getLabel());
 			List<String> trace = actRn.getTrace(Rechnung.STATUS_CHANGED);
 			for (String s : trace) {

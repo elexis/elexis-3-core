@@ -64,7 +64,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 		cbLo = new Combo(ret, SWT.SINGLE | SWT.READ_ONLY);
 		cbLo.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bCopy = new Button(ret, SWT.CHECK);
-		bCopy.setText(Messages.getString("RnOutputDialog.markAsCopy")); //$NON-NLS-1$
+		bCopy.setText(Messages.RnOutputDialog_markAsCopy); //$NON-NLS-1$
 		bCopy.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		final Composite bottom = new Composite(ret, SWT.NONE);
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -101,15 +101,15 @@ public class RnOutputDialog extends TitleAreaDialog {
 		super.create();
 		int num = rnn.size();
 		if (num > 1) {
-			getShell().setText(Messages.getString("RnOutputDialog.outputCaption")); //$NON-NLS-1$
-			setTitle(num + Messages.getString("RnOutputDialog.outputTitle")); //$NON-NLS-1$
+			getShell().setText(Messages.RnOutputDialog_outputCaption); //$NON-NLS-1$
+			setTitle(num + Messages.RnOutputDialog_outputTitle); //$NON-NLS-1$
 			setMessage(MessageFormat
-				.format(Messages.getString("RnOutputDialog.outputMessage"), num)); //$NON-NLS-1$
+				.format(Messages.RnOutputDialog_outputMessage, num)); //$NON-NLS-1$
 			
 		} else {
-			getShell().setText(Messages.getString("RnOutputDialog.outputBillCaption")); //$NON-NLS-1$
-			setTitle(Messages.getString("RnOutputDialog.outputBillTitle")); //$NON-NLS-1$
-			setMessage(Messages.getString("RnOutputDialog.outputBillMessage")); //$NON-NLS-1$
+			getShell().setText(Messages.RnOutputDialog_outputBillCaption); //$NON-NLS-1$
+			setTitle(Messages.RnOutputDialog_outputBillTitle); //$NON-NLS-1$
+			setMessage(Messages.RnOutputDialog_outputBillMessage); //$NON-NLS-1$
 		}
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}

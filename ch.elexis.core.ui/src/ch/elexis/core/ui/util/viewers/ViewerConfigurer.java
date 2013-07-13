@@ -242,7 +242,7 @@ public class ViewerConfigurer {
 		Class clazz;
 		CommonViewer vcf;
 		Dialog dlg;
-		private String text = Messages.getString("ViewerConfigurer.createNew"); //$NON-NLS-1$
+		private String text = Messages.ViewerConfigurer_createNew; //$NON-NLS-1$
 		
 		/** Keinen Button erzeugen */
 		public DefaultButtonProvider(){}

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2013 MEDEVIT &lt;office@medevit.at>.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;    MEDEVIT &lt;office@medevit.at> - initial API and implementation"
+    modelDirectory="/ch.elexis.core/src-gen" modelPluginID="ch.elexis.core" modelName="Model"
+    rootExtendsInterface="" rootExtendsClass="" suppressEMFTypes="true" importerID="org.eclipse.emf.importer.java"
+    complianceLevel="6.0" copyrightFields="false" language="">
+  <foreignModel>@model</foreignModel>
+  <genPackages prefix="Model" basePackage="ch.elexis.core" disposableProviderFactory="true"
+      ecorePackage="model.ecore#/">
+    <genDataTypes ecoreDataType="model.ecore#//StringArray"/>
+    <genClasses image="false" ecoreClass="model.ecore#//IContact">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/contactType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/mandator"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/user"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/patient"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/description1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/description2"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/description3"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/gender"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/titel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/titelSuffix"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/dateOfBirth"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/country"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/zip"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/city"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/street"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/phone1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/phone2"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/fax"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/email"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/website"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/mobile"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/allergies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/personalAnamnese"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/comment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/diagnosen"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/risk"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/familyAnamnese"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/username"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/password"/>
+      <genOperations ecoreOperation="model.ecore#//IContact/getPatientLabel"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IPersistentObject">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPersistentObject/deleted"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IPersistentObject/xid"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IPersistentObject/xids"/>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/getId"/>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/getLabel"/>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/getLastUpdate"/>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/isValid"/>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/storeToString"/>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/state"/>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/exists"/>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/isAvailable"/>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/getXid">
+        <genParameters ecoreParameter="model.ecore#//IPersistentObject/getXid/domain"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/addXid">
+        <genParameters ecoreParameter="model.ecore#//IPersistentObject/addXid/domain"/>
+        <genParameters ecoreParameter="model.ecore#//IPersistentObject/addXid/domain_id"/>
+        <genParameters ecoreParameter="model.ecore#//IPersistentObject/addXid/updateIfExists"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/get">
+        <genParameters ecoreParameter="model.ecore#//IPersistentObject/get/fields"/>
+        <genParameters ecoreParameter="model.ecore#//IPersistentObject/get/values"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/get.1">
+        <genParameters ecoreParameter="model.ecore#//IPersistentObject/get.1/field"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IPersistentObject/set">
+        <genParameters ecoreParameter="model.ecore#//IPersistentObject/set/field"/>
+        <genParameters ecoreParameter="model.ecore#//IPersistentObject/set/value"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IXid">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IXid/domain"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IXid/domainId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference model.ecore#//IXid/object"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IXid/quality"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IXid/gUID"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//ICodeElement">
+      <genOperations ecoreOperation="model.ecore#//ICodeElement/getCodeSystemName"/>
+      <genOperations ecoreOperation="model.ecore#//ICodeElement/getCodeSystemCode"/>
+      <genOperations ecoreOperation="model.ecore#//ICodeElement/getId"/>
+      <genOperations ecoreOperation="model.ecore#//ICodeElement/getCode"/>
+      <genOperations ecoreOperation="model.ecore#//ICodeElement/getText"/>
+      <genOperations ecoreOperation="model.ecore#//ICodeElement/getActions">
+        <genParameters ecoreParameter="model.ecore#//ICodeElement/getActions/context"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IChangeListener">
+      <genOperations ecoreOperation="model.ecore#//IChangeListener/valueChanged">
+        <genParameters ecoreParameter="model.ecore#//IChangeListener/valueChanged/object"/>
+        <genParameters ecoreParameter="model.ecore#//IChangeListener/valueChanged/field"/>
+        <genParameters ecoreParameter="model.ecore#//IChangeListener/valueChanged/oldValue"/>
+        <genParameters ecoreParameter="model.ecore#//IChangeListener/valueChanged/newValue"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IChangeListener/objectDisposing">
+        <genParameters ecoreParameter="model.ecore#//IChangeListener/objectDisposing/object"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//ISticker">
+      <genOperations ecoreOperation="model.ecore#//ISticker/getId"/>
+      <genOperations ecoreOperation="model.ecore#//ISticker/getLabel"/>
+      <genOperations ecoreOperation="model.ecore#//ISticker/getWert"/>
+      <genOperations ecoreOperation="model.ecore#//ISticker/setWert">
+        <genParameters ecoreParameter="model.ecore#//ISticker/setWert/w"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ISticker/delete"/>
+      <genOperations ecoreOperation="model.ecore#//ISticker/setClassForSticker">
+        <genParameters ecoreParameter="model.ecore#//ISticker/setClassForSticker/clazz"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ISticker/removeClassForSticker">
+        <genParameters ecoreParameter="model.ecore#//ISticker/removeClassForSticker/clazz"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ISticker/getClassesForSticker"/>
+      <genOperations ecoreOperation="model.ecore#//ISticker/getVisibility"/>
+      <genOperations ecoreOperation="model.ecore#//ISticker/setVisibility">
+        <genParameters ecoreParameter="model.ecore#//ISticker/setVisibility/visibility"/>
+      </genOperations>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Types" basePackage="ch.elexis.core" ecorePackage="types.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//ContactType">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/PERSON"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/ORGANIZATION"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/UNKNOWN"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//ContactGender">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactGender/MALE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactGender/FEMALE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactGender/UNDEFINED"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactGender/UNKNOWN"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//CountryCode">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/NDF"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/AT"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/CH"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/DE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/FR"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/LI"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//RelationshipType">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/A_GENERIC"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/BUSINESS_EMPLOYER"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/BUSINESS_EMPLOYEE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_HUSBAND"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_WIFE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_PARENT"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_CHILD"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/WELFARE_GENERAL_PRACTITIONER"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/WELFARE_PATIENT"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/WELFARE_CONSULTANT"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/WELFARE_INSURER"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/WELFARE_INSUREE"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="types.ecore#//Money"/>
+    <genDataTypes ecoreDataType="types.ecore#//TimeTool"/>
+    <genClasses image="false" ecoreClass="types.ecore#//Comparable">
+      <genTypeParameters ecoreTypeParameter="types.ecore#//Comparable/T"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="types.ecore#//List">
+      <genTypeParameters ecoreTypeParameter="types.ecore#//List/E"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="types.ecore#//Map">
+      <genTypeParameters ecoreTypeParameter="types.ecore#//Map/K"/>
+      <genTypeParameters ecoreTypeParameter="types.ecore#//Map/V"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

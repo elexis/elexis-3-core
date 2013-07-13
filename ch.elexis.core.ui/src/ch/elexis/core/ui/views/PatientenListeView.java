@@ -46,13 +46,14 @@ import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Person;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.data.Reminder;
+import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
-import ch.elexis.core.datatypes.ISticker;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -156,19 +157,19 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		initiated = !("".equals(CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, "")));
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, false)) {
 			fields.add(Patient.FLD_PATID + Query.EQUALS
-				+ Messages.getString("PatientenListeView.PatientNr")); //$NON-NLS-1$
+				+ Messages.PatientenListeView_PatientNr); //$NON-NLS-1$
 		}
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWNAME, true)) {
 			fields.add(Patient.FLD_NAME + Query.EQUALS
-				+ Messages.getString("PatientenListeView.PatientName")); //$NON-NLS-1$
+				+ Messages.PatientenListeView_PatientName); //$NON-NLS-1$
 		}
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
 			fields.add(Patient.FLD_FIRSTNAME + Query.EQUALS
-				+ Messages.getString("PatientenListeView.PantientFirstName")); //$NON-NLS-1$
+				+ Messages.PatientenListeView_PantientFirstName); //$NON-NLS-1$
 		}
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWDOB, true)) {
 			fields.add(Patient.BIRTHDATE + Query.EQUALS
-				+ Messages.getString("PatientenListeView.PatientBirthdate")); //$NON-NLS-1$
+				+ Messages.PatientenListeView_PatientBirthdate); //$NON-NLS-1$
 		}
 		plcp = new PatListeContentProvider(cv, fields.toArray(new String[0]), this);
 		makeActions();
@@ -261,7 +262,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				}
 				ISticker et = pat.getSticker();
 				Image im = null;
-				if (et != null && (im = ((UiSticker) et).getImage()) != null) {
+				if (et != null && (im = new UiSticker((Sticker) et).getImage()) != null) {
 					return im;
 				} else {
 					if (pat.getGeschlecht().equals(Person.MALE)) {
@@ -280,7 +281,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				Patient pat = (Patient) element;
 				ISticker et = pat.getSticker();
 				if (et != null) {
-					return ((UiSticker) et).getBackground();
+					return UiDesk.getColorFromRGB(et.getBackground());
 				}
 			}
 			return null;
@@ -291,7 +292,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				Patient pat = (Patient) element;
 				ISticker et = pat.getSticker();
 				if (et != null) {
-					return ((UiSticker) et).getForeground();
+					return UiDesk.getColorFromRGB(et.getForeground());
 				}
 			}
 			
@@ -307,10 +308,10 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private void makeActions(){
 		
 		filterAction =
-			new Action(Messages.getString("PatientenListeView.FilteList"), Action.AS_CHECK_BOX) { //$NON-NLS-1$
+			new Action(Messages.PatientenListeView_FilteList, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
-					setToolTipText(Messages.getString("PatientenListeView.FilterList")); //$NON-NLS-1$
+					setToolTipText(Messages.PatientenListeView_FilterList); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -331,10 +332,10 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				
 			};
 		
-		newPatAction = new Action(Messages.getString("PatientenListeView.NewPatientAction")) { //$NON-NLS-1$
+		newPatAction = new Action(Messages.PatientenListeView_NewPatientAction) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-					setToolTipText(Messages.getString("PatientenListeView.NewPationtToolTip")); //$NON-NLS-1$
+					setToolTipText(Messages.PatientenListeView_NewPationtToolTip); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -343,7 +344,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 					if (!CoreHub.acl.request(AccessControlDefaults.PATIENT_INSERT)) {
 						SWTHelper
 							.alert(
-								Messages.getString("PatientenListeView.MissingRights"), Messages.getString("PatientenListeView.YouMayNotCreatePatient")); //$NON-NLS-1$ //$NON-NLS-2$
+								Messages.PatientenListeView_MissingRights, Messages.PatientenListeView_YouMayNotCreatePatient); //$NON-NLS-1$ //$NON-NLS-2$
 						return;
 					}
 					HashMap<String, String> ctlFields = new HashMap<String, String>();
@@ -386,10 +387,10 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			 * An action with identical / similar code has also been added above, and to KontakteView.java.
 			 * Detailed comments regarding field access, and output including used newline/cr characters are maintained only there.  
 			 */
-			copySelectedPatInfosToClipboardAction = new Action(Messages.getString("PatientenListeView.copySelectedPatInfosToClipboard")) { //$NON-NLS-1$
+			copySelectedPatInfosToClipboardAction = new Action(Messages.PatientenListeView_copySelectedPatInfosToClipboard) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_CLIPBOARD.getImageDescriptor());
-					setToolTipText(Messages.getString("PatientenListeView.copySelectedPatInfosToClipboard")); //$NON-NLS-1$
+					setToolTipText(Messages.PatientenListeView_copySelectedPatInfosToClipboard); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -447,10 +448,10 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 								// TODO default salutation might be configurable (or a "Sex missing!" Info might appear) js 
 								String salutation;
 								if (k.getGeschlecht().equals(Person.MALE)) {							
-									salutation = Messages.getString("KontakteView.SalutationM"); //$NON-NLS-1$
+									salutation = Messages.KontakteView_SalutationM; //$NON-NLS-1$
 								} else  //We do not use any default salutation for unknown sex to avoid errors!
 								if (k.getGeschlecht().equals(Person.FEMALE)) {							
-									salutation = Messages.getString("KontakteView.SalutationF"); //$NON-NLS-1$
+									salutation = Messages.KontakteView_SalutationF; //$NON-NLS-1$
 								} else { salutation = ""; //$NON-NLS-1$
 								}
 								selectedPatInfosText.append(salutation);
@@ -581,10 +582,10 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			 * An actions with identical / similar code has also been added below, and to KontakteView.java. 
 			 * Detailed comments regarding field access, and output including used newline/cr characters are maintained only there.  
 			 */
-			copySelectedAddressesToClipboardAction = new Action(Messages.getString("PatientenListeView.copySelectedAddressesToClipboard")) { //$NON-NLS-1$
+			copySelectedAddressesToClipboardAction = new Action(Messages.PatientenListeView_copySelectedAddressesToClipboard) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_CLIPBOARD.getImageDescriptor());
-					setToolTipText(Messages.getString("PatientenListeView.copySelectedAddressesToClipboard")); //$NON-NLS-1$
+					setToolTipText(Messages.PatientenListeView_copySelectedAddressesToClipboard); //$NON-NLS-1$
 				}
 				
 				@Override

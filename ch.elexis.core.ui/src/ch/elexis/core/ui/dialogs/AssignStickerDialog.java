@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Sticker;
-import ch.elexis.core.datatypes.ISticker;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.data.UiSticker;
 import ch.elexis.core.ui.util.SWTHelper;
 
@@ -36,20 +36,20 @@ public class AssignStickerDialog extends TitleAreaDialog {
 	Table table;
 	List<Sticker> alleEtiketten;
 	List<ISticker> mineEtiketten;
-	
-	public AssignStickerDialog(Shell shell, PersistentObject obj){
+
+	public AssignStickerDialog(Shell shell, PersistentObject obj) {
 		super(shell);
 		mine = obj;
 		mineEtiketten = mine.getStickers();
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout());
 		Label lbl = new Label(ret, SWT.WRAP);
-		lbl.setText(Messages.getString("AssignStickerDialog.PleaseConfirm")); //$NON-NLS-1$
+		lbl.setText(Messages.AssignStickerDialog_PleaseConfirm); //$NON-NLS-1$
 		table = new Table(ret, SWT.CHECK | SWT.SINGLE);
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		// Query<Sticker> qbe = new Query<Sticker>(Sticker.class);
@@ -61,30 +61,29 @@ public class AssignStickerDialog extends TitleAreaDialog {
 				it.setChecked(true);
 			}
 			it.setText(et.getLabel() + "(" + et.getWert() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
-			if(et instanceof UiSticker) {
-				UiSticker uiet = (UiSticker) et;
-				it.setImage(uiet.getImage());
-				it.setForeground(uiet.getForeground());
-				it.setBackground(uiet.getBackground());
-			}
+			
+			UiSticker uiet = new UiSticker(et);
+			it.setImage(uiet.getImage());
+			it.setForeground(uiet.getForeground());
+			it.setBackground(uiet.getBackground());
 
 			it.setData(et);
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitle("Sticker"); //$NON-NLS-1$
-		setMessage(MessageFormat.format(
-			Messages.getString("AssignStickerDialog.enterStickers"), mine.getLabel())); //$NON-NLS-1$
+		setMessage(MessageFormat
+				.format(Messages.AssignStickerDialog_enterStickers, mine.getLabel())); //$NON-NLS-1$
 		getShell().setText("Elexis Sticker"); //$NON-NLS-1$
 	}
-	
+
 	@Override
-	protected void okPressed(){
-		
+	protected void okPressed() {
+
 		for (TableItem it : table.getItems()) {
 			Sticker et = (Sticker) it.getData();
 			if (it.getChecked()) {
@@ -99,5 +98,5 @@ public class AssignStickerDialog extends TitleAreaDialog {
 		}
 		super.okPressed();
 	}
-	
+
 }

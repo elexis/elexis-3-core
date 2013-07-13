@@ -42,7 +42,7 @@
       </view>
       <view
             category="ch.elexis.messungenKategorie"
-            class="ch.elexis.core.ui.views.LaborView"
+            class="ch.elexis.core.ui.laboratory.views.LaborView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/labor_view.png"
             id="ch.elexis.Labor"
             name="%elexis.labView">
@@ -140,7 +140,7 @@
       </view>
       <view
             category="ch.elexis.textKategorie"
-            class="ch.elexis.core.ui.views.LaborblattView"
+            class="ch.elexis.core.ui.laboratory.views.LaborblattView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/printer.png"
             id="ch.elexis.Laborblatt"
             name="%elexis.labPrintView">
@@ -302,7 +302,7 @@
       </view>
       <view
             category="ch.elexis.messungenKategorie"
-            class="ch.elexis.core.ui.views.LabNotSeenView"
+            class="ch.elexis.core.ui.laboratory.views.LabNotSeenView"
             fastViewWidthRatio="0.4"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/reagensask.ico"
             id="ch.elexis.LabNotSeenView"

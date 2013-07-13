@@ -84,7 +84,7 @@ public class AUF2 extends ViewPart implements IActivationListener {
 	@Override
 	public void createPartControl(Composite parent){
 		// setTitleImage(Desk.getImage(ICON));
-		setPartName(Messages.getString("AUF2.certificate")); //$NON-NLS-1$
+		setPartName(Messages.AUF2_certificate); //$NON-NLS-1$
 		tv = new TableViewer(parent);
 		tv.setLabelProvider(new DefaultLabelProvider());
 		tv.setContentProvider(new AUFContentProvider());
@@ -115,18 +115,18 @@ public class AUF2 extends ViewPart implements IActivationListener {
 	}
 	
 	private void makeActions(){
-		newAUF = new Action(Messages.getString("AUF2.new")) { //$NON-NLS-1$
+		newAUF = new Action(Messages.AUF2_new) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-					setToolTipText(Messages.getString("AUF2.createNewCert")); //$NON-NLS-1$
+					setToolTipText(Messages.AUF2_createNewCert); //$NON-NLS-1$
 				}
 				
 				@Override
 				public void run(){
 					Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 					if (pat == null) {
-						SWTHelper.showError(Messages.getString("AUF2.NoPatientSelected"), //$NON-NLS-1$
-							Messages.getString("AUF2.PleaseDoSelectPatient")); //$NON-NLS-1$
+						SWTHelper.showError(Messages.AUF2_NoPatientSelected, //$NON-NLS-1$
+							Messages.AUF2_PleaseDoSelectPatient); //$NON-NLS-1$
 						return;
 					}
 					Konsultation kons =
@@ -137,7 +137,7 @@ public class AUF2 extends ViewPart implements IActivationListener {
 						if (fall == null) {
 							SWTHelper
 								.showError(
-									Messages.getString("AUF2.noCaseSelected"), Messages.getString("AUF2.selectCase")); //$NON-NLS-1$ //$NON-NLS-2$
+									Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
 							return;
 							
 						}
@@ -150,7 +150,7 @@ public class AUF2 extends ViewPart implements IActivationListener {
 						if (kons == null) {
 							SWTHelper
 								.showError(
-									Messages.getString("AUF2.noCaseSelected"), Messages.getString("AUF2.selectCase")); //$NON-NLS-1$ //$NON-NLS-2$
+									Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
 							return;
 						}
 						fall = kons.getFall();
@@ -159,10 +159,10 @@ public class AUF2 extends ViewPart implements IActivationListener {
 					tv.refresh(false);
 				}
 			};
-		delAUF = new Action(Messages.getString("AUF2.delete")) { //$NON-NLS-1$
+		delAUF = new Action(Messages.AUF2_delete) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-					setToolTipText(Messages.getString("AUF2.deleteCertificate")); //$NON-NLS-1$
+					setToolTipText(Messages.AUF2_deleteCertificate); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -172,17 +172,17 @@ public class AUF2 extends ViewPart implements IActivationListener {
 						if (MessageDialog
 							.openConfirm(
 								getViewSite().getShell(),
-								Messages.getString("AUF2.deleteReally"), Messages.getString("AUF2.doyoywantdeletereally"))) { //$NON-NLS-1$ //$NON-NLS-2$
+								Messages.AUF2_deleteReally, Messages.AUF2_doyoywantdeletereally)) { //$NON-NLS-1$ //$NON-NLS-2$
 							sel.delete();
 							tv.refresh(false);
 						}
 					}
 				}
 			};
-		modAUF = new Action(Messages.getString("AUF2.edit")) { //$NON-NLS-1$
+		modAUF = new Action(Messages.AUF2_edit) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-					setToolTipText(Messages.getString("AUF2.editCertificate")); //$NON-NLS-1$
+					setToolTipText(Messages.AUF2_editCertificate); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -194,10 +194,10 @@ public class AUF2 extends ViewPart implements IActivationListener {
 					}
 				}
 			};
-		printAUF = new Action(Messages.getString("AUF2.print")) { //$NON-NLS-1$
+		printAUF = new Action(Messages.AUF2_print) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
-					setToolTipText(Messages.getString("AUF2.createPrint")); //$NON-NLS-1$
+					setToolTipText(Messages.AUF2_createPrint); //$NON-NLS-1$
 				}
 				
 				@Override

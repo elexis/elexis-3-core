@@ -13,7 +13,7 @@
 package ch.elexis.core.ui.views;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +43,6 @@ import ch.elexis.core.data.Prescription;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
@@ -58,21 +57,23 @@ import ch.rgw.tools.TimeTool;
  */
 public class MediVerlaufView extends ViewPart implements IActivationListener {
 	TableViewer tv;
-	MediAbgabe[] mListe;
+	ArrayList<MediAbgabe> mListe = new ArrayList<MediAbgabe>();
 	private static final String[] columns =
 		{
-			Messages.getString("MediVerlaufView.dateFrom"), Messages.getString("MediVerlaufView.dateUntil"), Messages.getString("MediVerlaufView.medicament"), Messages.getString("MediVerlaufView.dosage")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			Messages.MediVerlaufView_dateFrom, Messages.MediVerlaufView_dateUntil, Messages.MediVerlaufView_medicament, Messages.MediVerlaufView_dosage}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private static final int[] colwidth = {
 		90, 90, 300, 200
 	};
 	
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
+	private ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
 		public void runInUi(ElexisEvent ev){
 			reload();
 		}
 	};
-	int sortCol = 0;
+	private static int sortCol = 0;
+	private static boolean revert = false;
+	public static final String TOOPEN = " ... ";
 	MediSorter sorter = new MediSorter();
 	
 	public MediVerlaufView(){
@@ -94,6 +95,11 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 				@Override
 				public void widgetSelected(final SelectionEvent e){
 					int i = (Integer) ((TableColumn) e.getSource()).getData();
+					if (sortCol == i) {
+						revert = !revert;
+					} else {
+						revert = false;
+					}
 					sortCol = i;
 					reload();
 				}
@@ -124,7 +130,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 	class MediVerlaufContentProvider implements IStructuredContentProvider {
 		
 		public Object[] getElements(final Object inputElement){
-			return mListe == null ? new MediAbgabe[0] : mListe;
+			return mListe.toArray();
 		}
 		
 		public void dispose(){
@@ -179,37 +185,40 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 				new IRunnableWithProgress() {
 					public void run(final IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException{
+						if (ElexisEventDispatcher.getSelectedPatient() == null)
+							return;
+
 						monitor.beginTask(
-							Messages.getString("MediVerlaufView.reading"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-						monitor.subTask(Messages.getString("MediVerlaufView.findPrescriptions")); //$NON-NLS-1$
+							Messages.MediVerlaufView_reading, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+						monitor.subTask(Messages.MediVerlaufView_findPrescriptions); //$NON-NLS-1$
 						Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
 						qbe.add(Prescription.PATIENT_ID, Query.EQUALS, ElexisEventDispatcher
 							.getSelectedPatient().getId());
 						List<Prescription> list = qbe.execute();
-						LinkedList<MediAbgabe> alle = new LinkedList<MediAbgabe>();
-						monitor.subTask(Messages.getString("MediVerlaufView.findMedicaments")); //$NON-NLS-1$
+						mListe.clear();
+						monitor.subTask(Messages.MediVerlaufView_findMedicaments); //$NON-NLS-1$
 						try {
 							for (Prescription p : list) {
 								Map<TimeTool, String> terms = p.getTerms();
 								TimeTool[] tts = terms.keySet().toArray(new TimeTool[0]);
 								for (int i = 0; i < tts.length - 1; i++) {
 									if (i < tts.length - 1) {
-										alle.add(new MediAbgabe(tts[i].toString(TimeTool.DATE_GER),
+										mListe.add(new MediAbgabe(tts[i]
+											.toString(TimeTool.DATE_GER),
 											tts[i + 1].toString(TimeTool.DATE_GER), p));
 									} else {
-										alle.add(new MediAbgabe(tts[i].toString(TimeTool.DATE_GER),
-											" ... ", p)); //$NON-NLS-1$
+										mListe.add(new MediAbgabe(tts[i]
+											.toString(TimeTool.DATE_GER),
+											TOOPEN, p)); //$NON-NLS-1$
 									}
 								}
-								alle.add(new MediAbgabe(tts[tts.length - 1]
-									.toString(TimeTool.DATE_GER), " ... ", p)); //$NON-NLS-1$
+								mListe.add(new MediAbgabe(tts[tts.length - 1]
+									.toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
 							}
 						} catch (Exception ex) {
 							ExHandler.handle(ex);
 						}
-						monitor.subTask(Messages.getString("MediVerlaufView.sorting")); //$NON-NLS-1$
-						mListe = alle.toArray(new MediAbgabe[0]);
-						tv.refresh(false);
+						tv.refresh();
 						monitor.done();
 					}
 				}, null);
@@ -225,36 +234,59 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 		
 	}
 	
-	class MediAbgabe implements Comparable<MediAbgabe> {
-		String orderA;
+	private static class MediAbgabe implements Comparable<MediAbgabe> {
 		String von, bis;
 		String medi;
 		String dosis;
 		
+		private static TimeTool compare = new TimeTool();
+		private static TimeTool compareTo = new TimeTool();
+
 		MediAbgabe(final String v, final String b, final Prescription p){
 			von = v;
 			bis = b;
-			orderA = new TimeTool(v).toString(TimeTool.DATE_COMPACT);
 			medi = p.getSimpleLabel();
 			dosis = p.getDosis();
 		}
 		
 		public int compareTo(final MediAbgabe o){
+			int ret = 0;
 			switch (sortCol) {
 			case 0:
-				int res = orderA.compareTo(o.orderA);
-				if (res == 0) {
-					res = medi.compareTo(o.medi);
+				compare.set(von);
+				compareTo.set(o.von);
+				ret = compare.compareTo(compareTo);
+				break;
+			case 1:
+				if (bis.equals(TOOPEN) && !o.bis.equals(TOOPEN)) {
+					ret = 1;
+					break;
+				} else if (!bis.equals(TOOPEN) && o.bis.equals(TOOPEN)) {
+					ret = -1;
+					break;
+				} else if (bis.equals(TOOPEN) && o.bis.equals(TOOPEN)) {
+					ret = 0;
+					break;
 				}
-				return res;
-			default:
-				res = medi.compareTo(o.medi);
-				if (res == 0) {
-					res = orderA.compareTo(o.orderA);
-				}
-				return res;
+				compare.set(bis);
+				compareTo.set(o.bis);
+				ret = compare.compareTo(compareTo);
+				break;
+			case 2:
+				ret = medi.compareTo(o.medi);
+				break;
+			case 3:
+				ret = dosis.compareTo(o.dosis);
+				break;
 			}
-			
+			if (revert) {
+				if (ret > 0) {
+					ret = -1;
+				} else if (ret < 0) {
+					ret = 1;
+				}
+			}
+			return ret;
 		}
 		
 		@Override

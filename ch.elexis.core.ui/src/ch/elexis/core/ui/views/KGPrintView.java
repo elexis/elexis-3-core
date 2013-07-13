@@ -32,7 +32,7 @@ import ch.elexis.core.ui.text.TextContainer;
 public class KGPrintView extends ViewPart {
 	public static final String ID = "ch.elexis.views.KGPrintView"; //$NON-NLS-1$
 	
-	private static final String TEMPLATE = Messages.getString("KGPrintView.CoverSheet"); //$NON-NLS-1$
+	private static final String TEMPLATE = Messages.KGPrintView_CoverSheet; //$NON-NLS-1$
 	
 	CTabFolder ctab;
 	private int existing;
@@ -60,7 +60,7 @@ public class KGPrintView extends ViewPart {
 		}));
 		Brief actBrief =
 			text.createFromTemplateName(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN,
-				adressat, Messages.getString("KGPrintView.EMR")); //$NON-NLS-1$
+				adressat, Messages.KGPrintView_EMR); //$NON-NLS-1$
 		ret.setData("brief", actBrief); //$NON-NLS-1$
 		ret.setData("text", text); //$NON-NLS-1$
 		ret.setText(title);
@@ -122,7 +122,7 @@ public class KGPrintView extends ViewPart {
 		TextContainer text;
 		
 		if (--existing < 0) {
-			ctKG = addItem(TEMPLATE, Messages.getString("KGPrintView.EMR"), null); //$NON-NLS-1$
+			ctKG = addItem(TEMPLATE, Messages.KGPrintView_EMR, null); //$NON-NLS-1$
 		} else {
 			ctKG = ctab.getItem(0);
 			useItem(0, TEMPLATE, null);

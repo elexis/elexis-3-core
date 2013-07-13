@@ -26,7 +26,8 @@ import ch.elexis.core.data.PersistentObjectFactory;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.datatypes.ICodeElement;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
@@ -91,9 +92,9 @@ public class ServiceBlockElement extends XChangeElement {
 				(List<ServiceElement>) getChildren(ServiceElement.XMLNAME, ServiceElement.class);
 			for (ServiceElement se : lService) {
 				XidElement xid = se.getXid();
-				List<PersistentObject> ls = xid.findObject();
+				List<IPersistentObject> ls = xid.findObject();
 				boolean bFound = false;
-				for (PersistentObject po : ls) {
+				for (IPersistentObject po : ls) {
 					if (po instanceof IVerrechenbar) {
 						ret.addElement((IVerrechenbar) po);
 						bFound = true;

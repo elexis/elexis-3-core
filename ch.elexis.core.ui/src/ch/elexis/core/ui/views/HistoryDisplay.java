@@ -79,7 +79,7 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 			}
 			
 		});
-		text.setText(Messages.getString("HistoryDisplay.NoPatientSelected"), false, false); //$NON-NLS-1$
+		text.setText(Messages.HistoryDisplay_NoPatientSelected, false, false); //$NON-NLS-1$
 		sb = new StringBuilder(1000);
 		addControlListener(new ControlAdapter() {
 			@Override

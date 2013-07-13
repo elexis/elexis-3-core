@@ -73,6 +73,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.text.ReplaceCallback;
 import ch.elexis.core.data.util.ScriptUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
@@ -329,7 +330,7 @@ public class TextContainer {
 		if (q[0].indexOf(":") != -1) { //$NON-NLS-1$
 			return ScriptUtil.loadDataFromPlugin(bl);
 		}
-		PersistentObject o = resolveObject(brief, q[0]);
+		PersistentObject o = (PersistentObject) resolveObject(brief, q[0]);
 		if (o == null) {
 			if (showErrors) {
 				return WARNING_SIGN + bl + WARNING_SIGN;
@@ -393,7 +394,7 @@ public class TextContainer {
 		String valueToken = tokens[tokens.length - 1];
 		
 		// resolve the first field
-		PersistentObject first = resolveObject(brief, firstToken);
+		IPersistentObject first = resolveObject(brief, firstToken);
 		if (first == null) {
 			if (showErrors) {
 				return WARNING_SIGN + fieldl + WARNING_SIGN;
@@ -403,9 +404,9 @@ public class TextContainer {
 		}
 		
 		// resolve intermediate objects
-		PersistentObject current = first;
+		IPersistentObject current = first;
 		for (int i = 1; i < tokens.length - 1; i++) {
-			PersistentObject next = resolveIndirectObject(current, tokens[i]);
+			IPersistentObject next = resolveIndirectObject(current, tokens[i]);
 			if (next == null) {
 				if (showErrors) {
 					return WARNING_SIGN + fieldl + WARNING_SIGN;
@@ -418,7 +419,7 @@ public class TextContainer {
 		
 		// resolve value
 		
-		PersistentObject o = current;
+		IPersistentObject o = current;
 		
 		String value = o.get(valueToken);
 		if ((value == null) || (value.startsWith("**"))) { //$NON-NLS-1$
@@ -437,7 +438,7 @@ public class TextContainer {
 		return value;
 	}
 	
-	private PersistentObject resolveIndirectObject(PersistentObject parent, String field){
+	private IPersistentObject resolveIndirectObject(IPersistentObject parent, String field){
 		if (parent instanceof Fall) {
 			String fieldl = field;
 			if (fieldl.substring(0, 1).equalsIgnoreCase(DONT_SHOW_REPLACEMENT_ERRORS)) {
@@ -490,7 +491,7 @@ public class TextContainer {
 			showErrors = false;
 		}
 		String[] q = inl.split(":"); //$NON-NLS-1$
-		PersistentObject o = resolveObject(brief, q[0]);
+		IPersistentObject o = resolveObject(brief, q[0]);
 		if (o == null) {
 			if (showErrors) {
 				return "???";
@@ -544,12 +545,12 @@ public class TextContainer {
 		}
 	}
 	
-	private PersistentObject resolveObject(final Brief actBrief, final String k){
+	private IPersistentObject resolveObject(final Brief actBrief, final String k){
 		String kl = k;
 		if (kl.substring(0, 1).equalsIgnoreCase(DONT_SHOW_REPLACEMENT_ERRORS)) {
 			kl = kl.substring(1);
 		}
-		PersistentObject ret = null;
+		IPersistentObject ret = null;
 		if (kl.equalsIgnoreCase("Mandant")) { //$NON-NLS-1$
 			ret = CoreHub.actMandant;
 		} else if (kl.equalsIgnoreCase("Anwender")) { //$NON-NLS-1$

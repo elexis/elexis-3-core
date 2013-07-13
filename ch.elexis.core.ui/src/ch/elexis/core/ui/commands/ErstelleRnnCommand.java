@@ -23,6 +23,7 @@ import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -82,8 +83,9 @@ public class ErstelleRnnCommand extends AbstractHandler {
 				}
 				if (!res.isOK()) {
 					ErrorDialog.openError(HandlerUtil.getActiveShell(eev),
-						Messages.getString("KonsZumVerrechnenView.errorInInvoice"), //$NON-NLS-1$
-						Messages.getString("KonsZumVerrechnenView.invoiceForCase", //$NON-NLS-1$
+						Messages.KonsZumVerrechnenView_errorInInvoice,
+						
+						NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase,
 							new Object[] {
 								fall.getLabel(), fall.getPatient().getLabel()
 							}), ResultAdapter.getResultAsStatus(res));
@@ -93,10 +95,10 @@ public class ErstelleRnnCommand extends AbstractHandler {
 			}
 			if (rejected != 0) {
 				SWTHelper.showError(
-					Messages.getString("ErstelleRnnCommand.BadCaseDefinition"), //$NON-NLS-1$
+					Messages.ErstelleRnnCommand_BadCaseDefinition, 
 					Integer.toString(rejected)
-						+ Messages.getString("ErstelleRnnCommand.BillsNotCreatedMissingData") //$NON-NLS-1$
-						+ Messages.getString("ErstelleRnnCommand.ErstelleRnnCheckCaseDetails")); //$NON-NLS-1$
+						+ Messages.ErstelleRnnCommand_BillsNotCreatedMissingData
+						+ Messages.ErstelleRnnCommand_ErstelleRnnCheckCaseDetails); 
 			} else {
 				tSelection.remove(tPat);
 			}

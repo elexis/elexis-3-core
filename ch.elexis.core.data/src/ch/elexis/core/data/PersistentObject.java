@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2011, G. Weirich and Elexis
+ * Copyright (c) 2005-2013, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
+ *    MEDEVIT <office@medevit.at>
  *******************************************************************************/
 
 package ch.elexis.core.data;
@@ -61,11 +62,11 @@ import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.DBUpdate;
 import ch.elexis.core.data.util.SqlRunner;
-import ch.elexis.core.datatypes.IChangeListener;
-import ch.elexis.core.datatypes.IPersistentObject;
-import ch.elexis.core.datatypes.ISticker;
-import ch.elexis.core.datatypes.IXid;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.model.IChangeListener;
+import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.IXid;
 import ch.rgw.compress.CompEx;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SqlSettings;
@@ -796,7 +797,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		qbe.add(Xid.FLD_DOMAIN, Query.EQUALS, domain);
 		List<Xid> res = qbe.execute();
 		if (res.size() > 0) {
-			return res.get(0).get(Xid.FLD_DOMAIN_ID);
+			return res.get(0).get(Xid.FLD_ID_IN_DOMAIN);
 		}
 		return "";
 	}
@@ -858,7 +859,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		Xid oldXID = Xid.findXID(this, domain);
 		if (oldXID != null) {
 			if (updateIfExists) {
-				oldXID.set(Xid.FLD_DOMAIN_ID, domain_id);
+				oldXID.set(Xid.FLD_ID_IN_DOMAIN, domain_id);
 				return true;
 			}
 			return false;
@@ -896,7 +897,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return a List of Sticker objects
 	 */
 	private static String queryStickersString = "SELECT etikette FROM "
-			+ Sticker.LINKTABLE + " WHERE obj=?";
+			+ Sticker.FLD_LINKTABLE + " WHERE obj=?";
 	private static PreparedStatement queryStickers = null;
 
 	/**
@@ -951,7 +952,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			ret.remove(et);
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append("DELETE FROM ").append(Sticker.LINKTABLE)
+		sb.append("DELETE FROM ").append(Sticker.FLD_LINKTABLE)
 				.append(" WHERE obj=").append(getWrappedId())
 				.append(" AND etikette=").append(JdbcLink.wrap(et.getId()));
 		getConnection().exec(sb.toString());
@@ -975,7 +976,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			ret.add(st);
 			Collections.sort(ret);
 			StringBuilder sb = new StringBuilder();
-			sb.append("INSERT INTO ").append(Sticker.LINKTABLE)
+			sb.append("INSERT INTO ").append(Sticker.FLD_LINKTABLE)
 					.append("(obj,etikette) VALUES (").append(getWrappedId())
 					.append(",").append(JdbcLink.wrap(st.getId())).append(");");
 			getConnection().exec(sb.toString());
@@ -1166,7 +1167,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		return res;
 	}
 
-	protected byte[] getBinary(final String field) {
+	public byte[] getBinary(final String field) {
 		String key = getKey(field);
 		Object o = cache.get(key);
 		if (o instanceof byte[]) {
@@ -1447,7 +1448,6 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return 0 bei Fehler
 	 */
 	@SuppressWarnings("rawtypes")
-	@Override
 	public void setMap(final String field, final Map<Object, Object> map) {
 		if (map == null) {
 			throw new PersistenceException(new ElexisStatus(Status.ERROR,
@@ -1474,7 +1474,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		unlock("VersionedResource", lockid);
 	}
 
-	protected void setBinary(final String field, final byte[] value) {
+	public void setBinary(final String field, final byte[] value) {
 		String key = getKey(field);
 		cache.put(key, value, getCacheTime());
 		setBinaryRaw(field, value);
@@ -1686,7 +1686,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				xid.delete();
 			}
 			new DBLog(this, DBLog.TYP.DELETE);
-			PersistentObject sel = ElexisEventDispatcher.getSelected(this
+			IPersistentObject sel = ElexisEventDispatcher.getSelected(this
 					.getClass());
 			if ((sel != null) && sel.equals(this)) {
 				ElexisEventDispatcher.clearSelection(this.getClass());

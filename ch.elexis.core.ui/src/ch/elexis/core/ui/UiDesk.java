@@ -15,7 +15,6 @@ package ch.elexis.core.ui;
 
 import java.util.HashMap;
 
-import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;

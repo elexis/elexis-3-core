@@ -52,9 +52,9 @@ public class DBConnectFirstPage extends WizardPage {
 	
 	public DBConnectFirstPage(String pageName){
 		super(
-			Messages.getString("DBConnectFirstPage.Connection"), Messages.getString("DBConnectFirstPage.typeOfDB"), Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		setMessage(Messages.getString("DBConnectFirstPage.selectType")); //$NON-NLS-1$
-		setDescription(Messages.getString("DBConnectFirstPage.theDescripotion")); //$NON-NLS-1$
+			Messages.DBConnectFirstPage_Connection, Messages.DBConnectFirstPage_typeOfDB, Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		setMessage(Messages.DBConnectFirstPage_selectType); //$NON-NLS-1$
+		setDescription(Messages.DBConnectFirstPage_theDescripotion); //$NON-NLS-1$
 		
 	}
 	
@@ -66,7 +66,7 @@ public class DBConnectFirstPage extends WizardPage {
 	public void createControl(Composite parent){
 		FormToolkit tk = UiDesk.getToolkit();
 		Form form = tk.createForm(parent);
-		form.setText(Messages.getString("DBConnectFirstPage.connectioNDetails")); //$NON-NLS-1$
+		form.setText(Messages.DBConnectFirstPage_connectioNDetails); //$NON-NLS-1$
 		Composite body = form.getBody();
 		body.setLayout(new TableWrapLayout());
 		FormText alt = tk.createFormText(body, false);
@@ -103,7 +103,7 @@ public class DBConnectFirstPage extends WizardPage {
 		TableWrapData twd = new TableWrapData();
 		twd.heightHint = 5;
 		sep.setLayoutData(twd);
-		tk.createLabel(body, Messages.getString("DBConnectFirstPage.enterType")); //$NON-NLS-1$
+		tk.createLabel(body, Messages.DBConnectFirstPage_enterType); //$NON-NLS-1$
 		dbTypes = new Combo(body, SWT.BORDER | SWT.SIMPLE);
 		dbTypes.setItems(supportedDB);
 		dbTypes.addSelectionListener(new SelectionAdapter() {
@@ -135,11 +135,11 @@ public class DBConnectFirstPage extends WizardPage {
 			
 		});
 		tk.adapt(dbTypes, true, true);
-		tk.createLabel(body, Messages.getString("DBConnectFirstPage.serevrAddress")); //$NON-NLS-1$
+		tk.createLabel(body, Messages.DBConnectFirstPage_serevrAddress); //$NON-NLS-1$
 		server = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twr = new TableWrapData(TableWrapData.FILL_GRAB);
 		server.setLayoutData(twr);
-		tk.createLabel(body, Messages.getString("DBConnectFirstPage.databaseName")); //$NON-NLS-1$
+		tk.createLabel(body, Messages.DBConnectFirstPage_databaseName); //$NON-NLS-1$
 		dbName = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twr2 = new TableWrapData(TableWrapData.FILL_GRAB);
 		dbName.setLayoutData(twr2);

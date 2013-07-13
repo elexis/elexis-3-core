@@ -60,7 +60,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 		setLayout(new GridLayout());
 		hDg =
 			UiDesk.getToolkit().createHyperlink(this,
-				Messages.getString("DiagnosenDisplay.Diagnoses"), SWT.NONE); //$NON-NLS-1$
+				Messages.DiagnosenDisplay_Diagnoses, SWT.NONE); //$NON-NLS-1$
 		hDg.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		hDg.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -71,7 +71,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 				} catch (Exception ex) {
 					ElexisStatus status =
 						new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-							Messages.getString("DiagnosenDisplay.ErrorStartingCodeSystem")
+							Messages.DiagnosenDisplay_ErrorStartingCodeSystem
 								+ ex.getMessage(), ex, ElexisStatus.LOG_ERRORS);
 					StatusManager.getManager().handle(status, StatusManager.SHOW);
 				}
@@ -84,7 +84,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 		// new PersistentObjectDragSource()
 		dropTarget =
 			new PersistentObjectDropTarget(
-				Messages.getString("DiagnosenDisplay.DiagnoseTarget"), tDg, new DropReceiver()); //$NON-NLS-1$
+				Messages.DiagnosenDisplay_DiagnoseTarget, tDg, new DropReceiver()); //$NON-NLS-1$
 		new PersistentObjectDragSource(tDg, this);
 		
 	}
@@ -134,7 +134,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 	private Menu createDgMenu(){
 		Menu ret = new Menu(tDg);
 		MenuItem delDg = new MenuItem(ret, SWT.NONE);
-		delDg.setText(Messages.getString("DiagnosenDisplay.RemoveDiagnoses")); //$NON-NLS-1$
+		delDg.setText(Messages.DiagnosenDisplay_RemoveDiagnoses); //$NON-NLS-1$
 		delDg.addSelectionListener(new delDgListener());
 		return ret;
 	}

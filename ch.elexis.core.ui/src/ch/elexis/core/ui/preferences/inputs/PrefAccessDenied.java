@@ -29,6 +29,6 @@ public class PrefAccessDenied extends Composite {
 		super(parent, SWT.NONE);
 		setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		setLayout(new FillLayout());
-		new Label(this, SWT.WRAP).setText(Messages.getString("PrefAccessDenied.PageLocked")); //$NON-NLS-1$
+		new Label(this, SWT.WRAP).setText(Messages.PrefAccessDenied_PageLocked); //$NON-NLS-1$
 	}
 }

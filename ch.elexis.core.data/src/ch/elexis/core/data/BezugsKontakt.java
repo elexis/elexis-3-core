@@ -35,7 +35,7 @@ public class BezugsKontakt extends PersistentObject {
 		if (k.isValid()) {
 			return get(RELATION) + ": " + k.getLabel(); //$NON-NLS-1$
 		} else {
-			return Messages.getString("BezugsKontakt.ContactDoesntExist"); //$NON-NLS-1$
+			return Messages.BezugsKontakt_ContactDoesntExist; 
 		}
 		
 	}

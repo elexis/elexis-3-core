@@ -19,7 +19,8 @@ import ch.elexis.core.data.Labor;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Xid;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.datatypes.IXid;
+import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.model.IXid;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.XMLTool;
@@ -236,9 +237,9 @@ public class XidElement extends XChangeElement {
 	 * @return a List with matching objects that might be empty but will not be null.
 	 */
 	@SuppressWarnings("unchecked")
-	public List<PersistentObject> findObject(){
+	public List<IPersistentObject> findObject(){
 		List<Identity> idents = (List<Identity>) getChildren(ELEMENT_IDENTITY, Identity.class);
-		List<PersistentObject> candidates = new LinkedList<PersistentObject>();
+		List<IPersistentObject> candidates = new LinkedList<IPersistentObject>();
 		boolean lastGuid = false;
 		int lastQuality = 0;
 		for (XChangeElement ident : idents) {
@@ -246,7 +247,7 @@ public class XidElement extends XChangeElement {
 			String domain_id = ident.getAttr(ATTR_IDENTITY_DOMAIN_ID);
 			String quality = ident.getAttr(ATTR_IDENTITY_QUALITY);
 			String isguid = ident.getAttr(XidElement.ATTR_ISGUID);
-			PersistentObject cand = Xid.findObject(domain, domain_id);
+			IPersistentObject cand = Xid.findObject(domain, domain_id);
 			if (cand != null) {
 				boolean actGuid = Boolean.parseBoolean(isguid);
 				int actQuality = StringTool.getIndex(IDENTITY_QUALITIES, quality);

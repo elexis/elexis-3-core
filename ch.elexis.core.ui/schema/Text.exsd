@@ -1,16 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="ch.elexis">
+<schema targetNamespace="ch.elexis" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="ch.elexis" id="Text" name="Text Extension"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          Hier kann ein Textverarbeitungs-Plugin eingebunden werden. Das TextverarbeitungsPlugin wird für Briefe, Rezepte, Laborblätter usw. verwendet. Standardmässig wird OpenOffice verwendet (OOWrapper-Plugin), aber es kann prinzipiell auch etwas anderes eingesetzt werden.
       </documentation>
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="Texterweiterung"/>
@@ -34,9 +39,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -56,57 +61,49 @@
                <documentation>
                   Eine Klasse, die ch.elexis.text.ITextPlugin implementiert
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.text.ITextPlugin"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.core.ui.text.ITextPlugin"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appInfo>
-         <meta.section type="since"/>
-      </appInfo>
-      <documentation>
-         [Geben Sie das erste Release ein, in dem dieser Erweiterungspunkt enthalten ist.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="examples"/>
-      </appInfo>
-      <documentation>
-         [Geben Sie hier ein Verwendungsbeispiel für den Erweiterungspunkt ein.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="apiInfo"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Geben Sie hier die API-Informationen ein.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         [Geben Sie das erste Release ein, in dem dieser Erweiterungspunkt enthalten ist.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Geben Sie hier ein Verwendungsbeispiel für den Erweiterungspunkt ein.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
          <meta.section type="implementation"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Geben Sie hier Informationen zur bereitgestellten Implementierung dieses Erweiterungspunkts ein.]
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>

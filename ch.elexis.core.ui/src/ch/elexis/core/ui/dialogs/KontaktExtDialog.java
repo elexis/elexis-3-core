@@ -70,8 +70,8 @@ public class KontaktExtDialog extends TitleAreaDialog {
 	public void create(){
 		super.create();
 		setTitle(k.getLabel());
-		setMessage(Messages.getString("KontaktExtDialog.pleaseENterDetails")); //$NON-NLS-1$
-		getShell().setText(Messages.getString("KontaktExtDialog.indetityDetails")); //$NON-NLS-1$
+		setMessage(Messages.KontaktExtDialog_pleaseENterDetails); //$NON-NLS-1$
+		getShell().setText(Messages.KontaktExtDialog_indetityDetails); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -142,8 +142,8 @@ public class KontaktExtDialog extends TitleAreaDialog {
 			table.setLinesVisible(true);
 			TableColumn parms = new TableColumn(table, SWT.NONE);
 			TableColumn vals = new TableColumn(table, SWT.NONE);
-			parms.setText(Messages.getString("KontaktExtDialog.parameter")); //$NON-NLS-1$
-			vals.setText(Messages.getString("KontaktExtDialog.value")); //$NON-NLS-1$
+			parms.setText(Messages.KontaktExtDialog_parameter); //$NON-NLS-1$
+			vals.setText(Messages.KontaktExtDialog_value); //$NON-NLS-1$
 			parms.setWidth(150);
 			vals.setWidth(150);
 			table.setHeaderVisible(true);

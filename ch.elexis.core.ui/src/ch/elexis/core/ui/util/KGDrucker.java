@@ -43,13 +43,13 @@ public class KGDrucker {
 			progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
 				new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor){
-						monitor.beginTask(Messages.getString("KGDrucker.printEMR"), 1); //$NON-NLS-1$
+						monitor.beginTask(Messages.KGDrucker_printEMR, 1); //$NON-NLS-1$
 						// gw 23.7.2006 an neues Selectionmodell angepasst
 						Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 						if (kgp.doPrint(actPatient, monitor) == false) {
 							ErrorDialog.openError(
 								null,
-								Messages.getString("KGDrucker.errorPrinting"), Messages.getString("KGDrucker.couldntprint") + patient.getLabel() + Messages.getString("KGDrucker.emr"), null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								Messages.KGDrucker_errorPrinting, Messages.KGDrucker_couldntprint + patient.getLabel() + Messages.KGDrucker_emr, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							
 						}
 						
@@ -62,8 +62,8 @@ public class KGDrucker {
 		} catch (Exception ex) {
 			ElexisStatus status =
 				new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					Messages.getString("KGDrucker.errorPrinting") + ": "
-						+ Messages.getString("KGDrucker.couldntShow"), ex);
+					Messages.KGDrucker_errorPrinting + ": "
+						+ Messages.KGDrucker_couldntShow, ex);
 			StatusManager.getManager().handle(status);
 		}
 	}

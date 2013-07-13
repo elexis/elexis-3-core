@@ -14,7 +14,6 @@ package ch.elexis.core.data;
 
 import java.util.List;
 
-import ch.elexis.core.datatypes.IActionDefinition;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 

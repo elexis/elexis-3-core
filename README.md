@@ -14,6 +14,8 @@ This repository hosts the core forming Elexis 3. It consists of the following pl
 * `ch.elexis.core.releng` Release Engineering specific parts (Build Target, 3rd party ...)
 * `ch.elexis.core.ui.icons` Plug-In for central icon management.
 * `ch.elexis.core.ui.contacts` Plug-In for contact management.
+* `ch.elexis.core.ui.laboratory` Plug-In for laboratory related tasks.
+* `ch.elexis.core.ui.p2` Plug-In to realize client side p2 update tasks
 * `ch.elexis.core.common.feature`	Headless Core Feature.
 * `ch.elexis.core.ui.feature` Core UI Feature.
 * `ch.elexis.core.application.feature` Core Application Feature.

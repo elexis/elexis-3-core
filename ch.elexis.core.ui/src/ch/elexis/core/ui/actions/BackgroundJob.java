@@ -50,7 +50,7 @@ public abstract class BackgroundJob extends Job {
 	}
 	
 	protected String jobname;
-	protected static Log log = Log.get(Messages.getString("BackgroundJob.0")); //$NON-NLS-1$
+	protected static Log log = Log.get(Messages.BackgroundJob_0); //$NON-NLS-1$
 	// private boolean running;
 	private BackgroundJob self;
 	protected LinkedList<BackgroundJobListener> listeners = new LinkedList<BackgroundJobListener>();
@@ -71,7 +71,7 @@ public abstract class BackgroundJob extends Job {
 	@Override
 	protected IStatus run(IProgressMonitor monitor){
 		// running=true;
-		log.log(Messages.getString("BackgroundJob.1") + jobname, Log.INFOS); //$NON-NLS-1$
+		log.log(Messages.BackgroundJob_1 + jobname, Log.INFOS); //$NON-NLS-1$
 		IStatus ret = execute(monitor);
 		if (Status.OK_STATUS.equals(ret)) {
 			valid = true;
@@ -97,7 +97,7 @@ public abstract class BackgroundJob extends Job {
 	}
 	
 	protected void fireFinished(){
-		log.log(Messages.getString("BackgroundJob.2") + jobname, Log.INFOS); //$NON-NLS-1$
+		log.log(Messages.BackgroundJob_2 + jobname, Log.INFOS); //$NON-NLS-1$
 		UiDesk.getDisplay().syncExec(new Runnable() {
 			public void run(){
 				LinkedList<BackgroundJobListener> lCopy =

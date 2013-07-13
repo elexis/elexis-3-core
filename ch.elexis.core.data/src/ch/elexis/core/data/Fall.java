@@ -24,7 +24,6 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.data.interfaces.events.MessageEvent.MessageType;
 import ch.elexis.core.data.util.Extensions;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -40,21 +39,16 @@ import ch.rgw.tools.TimeTool;
  */
 public class Fall extends PersistentObject {
 
-	public static final String VVG_NAME = Messages.getString("Fall.VVG_Name"); //$NON-NLS-1$
-	public static final String PRIVATE_NAME = Messages
-			.getString("Fall.Private_Name"); //$NON-NLS-1$
-	public static final String MV_NAME = Messages.getString("Fall.MV_Name"); //$NON-NLS-1$
-	public static final String IV_NAME = Messages.getString("Fall.IV_Name"); //$NON-NLS-1$
-	private static final String KVG_REQUIREMENTS = Messages
-			.getString("Fall.KVGRequirements"); //$NON-NLS-1$
-	public static final String KVG_NAME = Messages.getString("Fall.KVG_Name"); //$NON-NLS-1$
-	public static final String UVG_NAME = Messages.getString("Fall.UVG_Name"); //$NON-NLS-1$
-	public static final String UVG_REQUIREMENTS = Messages
-			.getString("Fall.UVGRequirements"); //$NON-NLS-1$
-	public static final String CONST_TARMED_DRUCKER = Messages
-			.getString("Fall.TarmedPrinter"); //$NON-NLS-1$
-	public static final String CONST_TARMED_LEISTUNG = Messages
-			.getString("Fall.TarmedLeistung"); //$NON-NLS-1$
+	public static final String VVG_NAME = Messages.Fall_VVG_Name; 
+	public static final String PRIVATE_NAME = Messages.Fall_Private_Name; //$NON-NLS-1$
+	public static final String MV_NAME = Messages.Fall_MV_Name; 
+	public static final String IV_NAME = Messages.Fall_IV_Name; 
+	private static final String KVG_REQUIREMENTS = Messages.Fall_KVGRequirements; //$NON-NLS-1$
+	public static final String KVG_NAME = Messages.Fall_KVG_Name; 
+	public static final String UVG_NAME = Messages.Fall_UVG_Name; 
+	public static final String UVG_REQUIREMENTS = Messages.Fall_UVGRequirements; //$NON-NLS-1$
+	public static final String CONST_TARMED_DRUCKER = Messages.Fall_TarmedPrinter; //$NON-NLS-1$
+	public static final String CONST_TARMED_LEISTUNG = Messages.Fall_TarmedLeistung; //$NON-NLS-1$
 	public static final String FLD_BEHANDLUNGEN = "Behandlungen"; //$NON-NLS-1$
 	public static final String FLD_BILLING = "billing"; //$NON-NLS-1$
 	public static final String FLD_KOSTENTRAEGER = "Kostentraeger"; //$NON-NLS-1$
@@ -69,17 +63,12 @@ public class Fall extends PersistentObject {
 	public static final String FLD_GRUND = "Grund"; //$NON-NLS-1$
 	public static final String PATIENT_ID = "PatientID"; //$NON-NLS-1$
 	static final String TABLENAME = "FAELLE"; //$NON-NLS-1$
-	public static final String TYPE_DISEASE = Messages
-			.getString("Fall.Disease"); //$NON-NLS-1$
-	public static final String TYPE_ACCIDENT = Messages
-			.getString("Fall.Accident"); //$NON-NLS-1$
-	public static final String TYPE_MATERNITY = Messages
-			.getString("Fall.Maternity"); //$NON-NLS-1$
-	public static final String TYPE_PREVENTION = Messages
-			.getString("Fall.Prevention"); //$NON-NLS-1$
-	public static final String TYPE_BIRTHDEFECT = Messages
-			.getString("Fall.Birthdefect"); //$NON-NLS-1$
-	public static final String TYPE_OTHER = Messages.getString("Fall.Other"); //$NON-NLS-1$
+	public static final String TYPE_DISEASE = Messages.Fall_Disease; //$NON-NLS-1$
+	public static final String TYPE_ACCIDENT = Messages.Fall_Accident; //$NON-NLS-1$
+	public static final String TYPE_MATERNITY = Messages.Fall_Maternity; //$NON-NLS-1$
+	public static final String TYPE_PREVENTION = Messages.Fall_Prevention; //$NON-NLS-1$
+	public static final String TYPE_BIRTHDEFECT = Messages.Fall_Birthdefect; //$NON-NLS-1$
+	public static final String TYPE_OTHER = Messages.Fall_Other; 
 
 	@Override
 	protected String getTableName() {
@@ -547,14 +536,14 @@ public class Fall extends PersistentObject {
 	public Konsultation neueKonsultation() {
 		if (isOpen() == false) {
 			MessageEvent.fireError(
-					Messages.getString("Fall.CaseClosedCaption"),
-					Messages.getString("Fall.CaseClosedText"));
+					Messages.Fall_CaseClosedCaption,
+					Messages.Fall_CaseClosedText);
 			return null;
 		}
 		if ((CoreHub.actMandant == null) || (!CoreHub.actMandant.exists())) {
 			MessageEvent.fireError(
-					Messages.getString("Fall.NoMandatorCaption"),
-					Messages.getString("Fall.NoMandatorText"));
+					Messages.Fall_NoMandatorCaption,
+					Messages.Fall_NoMandatorText);
 			return null;
 		}
 		return new Konsultation(this);
@@ -580,14 +569,14 @@ public class Fall extends PersistentObject {
 		get(f, v);
 		StringBuilder ret = new StringBuilder();
 		if (!isOpen()) {
-			ret.append(Messages.getString("Fall.CLOSED")); //$NON-NLS-1$
+			ret.append(Messages.Fall_CLOSED); 
 		}
 		String ges = getAbrechnungsSystem();
 		ret.append(ges).append(": ").append(v[0]).append(" - "); //$NON-NLS-1$ //$NON-NLS-2$
 		ret.append(v[1]).append("("); //$NON-NLS-1$
 		String ed = v[3];
 		if ((ed == null) || StringTool.isNothing(ed.trim())) {
-			ed = Messages.getString("Fall.Open"); //$NON-NLS-1$
+			ed = Messages.Fall_Open; 
 		}
 		ret.append(v[2]).append("-").append(ed).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 		return ret.toString();
@@ -846,7 +835,7 @@ public class Fall extends PersistentObject {
 			ret = CoreHub.globalCfg
 					.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 			if (ret == null) {
-				return new String[] { Messages.getString("Fall.Undefined") }; //$NON-NLS-1$
+				return new String[] { Messages.Fall_Undefined }; 
 			}
 		}
 		return ret;

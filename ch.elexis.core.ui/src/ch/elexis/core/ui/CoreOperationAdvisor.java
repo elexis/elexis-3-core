@@ -25,7 +25,6 @@ import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.dialogs.ErsterMandantDialog;
-import ch.elexis.core.ui.perspectives.PatientPerspektive;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 
@@ -51,7 +50,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		String perspektive = CoreHub.localCfg.get(CoreHub.actUser
 				+ GlobalActions.DEFAULTPERSPECTIVECFG, null);
 		if (perspektive == null) {
-			perspektive = PatientPerspektive.ID;
+			perspektive = UiResourceConstants.PatientPerspektive_ID;
 		}
 		try {
 			UiDesk.updateFont(Preferences.USR_DEFAULTFONT);

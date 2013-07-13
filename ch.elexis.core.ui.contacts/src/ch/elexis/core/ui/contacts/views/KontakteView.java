@@ -65,17 +65,17 @@ public class KontakteView extends ViewPart implements ControlFieldListener,
 
 	private final String[] fields = {
 			Kontakt.FLD_SHORT_LABEL + Query.EQUALS
-					+ Messages.getString("KontakteView.shortLabel"), //$NON-NLS-1$
+					+ Messages.KontakteView_shortLabel, //$NON-NLS-1$
 			Kontakt.FLD_NAME1 + Query.EQUALS
-					+ Messages.getString("KontakteView.text1"), //$NON-NLS-1$
+					+ Messages.KontakteView_text1, //$NON-NLS-1$
 			Kontakt.FLD_NAME2 + Query.EQUALS
-					+ Messages.getString("KontakteView.text2"), //$NON-NLS-1$
+					+ Messages.KontakteView_text2, //$NON-NLS-1$
 			Kontakt.FLD_STREET + Query.EQUALS
-					+ Messages.getString("KontakteView.street"), //$NON-NLS-1$
+					+ Messages.KontakteView_street, //$NON-NLS-1$
 			Kontakt.FLD_ZIP + Query.EQUALS
-					+ Messages.getString("KontakteView.zip"), //$NON-NLS-1$
+					+ Messages.KontakteView_zip, //$NON-NLS-1$
 			Kontakt.FLD_PLACE + Query.EQUALS
-					+ Messages.getString("KontakteView.place") }; //$NON-NLS-1$
+					+ Messages.KontakteView_place }; //$NON-NLS-1$
 	private ViewMenus menu;
 
 	public KontakteView() {
@@ -195,7 +195,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener,
 
 	private void makeActions() {
 		delKontakt = new RestrictedAction(AccessControlDefaults.KONTAKT_DELETE,
-				Messages.getString("KontakteView.delete")) { //$NON-NLS-1$
+				Messages.KontakteView_delete) { //$NON-NLS-1$
 			@Override
 			public void doRun() {
 				Object[] o = cv.getSelection();
@@ -210,7 +210,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener,
 				}
 			}
 		};
-		dupKontakt = new Action(Messages.getString("KontakteView.duplicate")) { //$NON-NLS-1$
+		dupKontakt = new Action(Messages.KontakteView_duplicate) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				Object[] o = cv.getSelection();
@@ -233,7 +233,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener,
 				}
 			}
 		};
-		createKontakt = new Action(Messages.getString("KontakteView.create")) { //$NON-NLS-1$
+		createKontakt = new Action(Messages.KontakteView_create) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				String[] flds = cv.getConfigurer().getControlFieldProvider()

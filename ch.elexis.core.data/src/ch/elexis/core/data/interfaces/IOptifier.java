@@ -13,7 +13,6 @@ package ch.elexis.core.data.interfaces;
 
 import ch.elexis.core.data.Konsultation;
 import ch.elexis.core.data.Verrechnet;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.rgw.tools.Result;
 
 /**

@@ -16,7 +16,7 @@ h2. Requirements
 h2. headless build (aka command line)
 
 * @export JAVA_HOME=/opt/java-oracle/jdk1.7.0_25@ # Set your Java home
-* @cd ch.elexis.core.releng/elexis.3rdpart.librarie && mvn p2:site@ # Builds a p2-site needed to use Eclipse target definition ch.elexis.core.releng/elexis-3.target
+* @cd ch.elexis.core.releng/elexis.3rdpart.libraries && mvn clean p2:site@ # Builds a p2-site needed to use Eclipse target definition ch.elexis.core.releng/elexis-3.target
 * @cd ../../ch.elexis.core.releng && mvn clean install@ # compiles and create packages
 
 h2. problems
