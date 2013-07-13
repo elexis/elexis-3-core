@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ch.elexis</groupId>
   <artifactId>ch.elexis.core.releng</artifactId>
-  <version>3.0.0</version>
+  <version>0.0.0</version>
   <packaging>pom</packaging>
   <modules>
     <module>../ch.elexis.core</module>
@@ -17,10 +17,11 @@
     <module>../ch.elexis.core.ui.contacts</module>
     <module>../ch.elexis.core.ui.feature</module>
     <module>../ch.elexis.core.ui.icons</module>
+    <module>../ch.elexis.core.ui.laboratory</module>
     <module>../ch.elexis.core.ui.p2</module>
     <module>../ch.rgw.utility</module>
-    <module>../ch.elexis.core.releng/p2updatesite</module>
     <module>../ch.elexis.core.releng/product</module>
+    <!--module>../ch.elexis.core.releng/p2updatesite</module -->
   </modules>
   <properties>
     <tycho-version>0.18.0</tycho-version>

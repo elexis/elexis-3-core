@@ -21,8 +21,118 @@
          id="ch.elexis.core.ui.feature"
          version="0.0.0"/>
 
+   <requires>
+      <import plugin="org.eclipse.ui" version="3.8.2" match="greaterOrEqual"/>
+      <import plugin="log4j" version="1.2.17" match="greaterOrEqual"/>
+      <import plugin="ch.rgw.utility" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="ch.elexis.core.data" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="ch.elexis.core.ui" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="ch.elexis.core" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="ch.elexis.core.ui.contacts" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="ch.elexis.core.ui.icons" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="ch.elexis.core.ui.laboratory" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="slf4j.api"/>
+      <import plugin="javax.servlet"/>
+      <import plugin="org.slf4j.api" version="1.6.1" match="equivalent"/>
+      <import plugin="org.eclipse.equinox.common" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.osgi" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.osgi" version="3.7.0" match="compatible"/>
+      <import plugin="org.eclipse.equinox.common" version="3.6.100" match="compatible"/>
+      <import plugin="org.eclipse.core.jobs" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.equinox.registry" version="3.4.0" match="compatible"/>
+      <import plugin="org.eclipse.equinox.preferences" version="3.4.0" match="compatible"/>
+      <import plugin="org.eclipse.core.contenttype" version="3.3.0" match="compatible"/>
+      <import plugin="org.eclipse.equinox.app" version="1.0.0" match="greaterOrEqual"/>
+   </requires>
+
    <plugin
          id="ch.elexis.core.application"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.felix.gogo.command"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.felix.gogo.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.felix.gogo.shell"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.console"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.slf4j.api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.qos.logback.classic"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.qos.logback.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.qos.logback.slf4j"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.update.configurator"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.osgi.services"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.runtime"
          download-size="0"
          install-size="0"
          version="0.0.0"

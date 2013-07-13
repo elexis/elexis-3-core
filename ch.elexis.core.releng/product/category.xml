@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/ch.elexis.core.application.feature_3.0.0.dev-qualifier.jar" id="ch.elexis.core.application.feature" version="3.0.0.dev-qualifier">
+      <category name="elexis_3_core"/>
+   </feature>
+   <category-def name="elexis_3_core" label="elexis_3_core">
+      <description>
+         Elexis 3 Core (ALPHA!!!)
+      </description>
+   </category-def>
+</site>

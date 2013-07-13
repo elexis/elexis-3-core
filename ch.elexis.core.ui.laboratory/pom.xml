@@ -9,7 +9,7 @@
     <relativePath>../ch.elexis.core.releng/</relativePath>
   </parent>
   <groupId>ch.elexis</groupId>
-  <artifactId>ch.elexis.core.ui</artifactId>
-  <version>3.0.0.dev-qualifier</version>
+  <artifactId>ch.elexis.core.ui.laboratory</artifactId>
+  <version>3.0.0.qualifier</version>
   <packaging>eclipse-plugin</packaging>
 </project>
