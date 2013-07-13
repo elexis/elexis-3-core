@@ -5,7 +5,7 @@
    </feature>
    <category-def name="elexis_3_core" label="elexis_3_core">
       <description>
-         Elexis 3 Core (ALPHA!!!)
+         ALPHA Version of upcoming Elexis 3 Core. See also https://github.com/elexis/elexis-3-core
       </description>
    </category-def>
 </site>

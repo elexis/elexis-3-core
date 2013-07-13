@@ -27,6 +27,6 @@
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.8.3.v20130125-0826"/>
 <repository location="http://download.eclipse.org/releases/juno/"/>
 </location>
-<location path="${project_loc}/elexis.3rdpart.libraries/target/repository/" type="Directory"/>
+<location path="${project_loc}/elexis.3rdparty.libraries/target/repository/" type="Directory"/>
 </locations>
 </target>

@@ -5,7 +5,7 @@ require 'pp'
 TychoVersion  = '0.18.0'
 ElexisVersion = '3.0.0-SNAPSHOT'
     
-LibDirectory = File.expand_path(File.join(File.dirname(__FILE__), 'ch.elexis.core.releng', 'elexis.3rdpart.libraries'))
+LibDirectory = File.expand_path(File.join(File.dirname(__FILE__), 'ch.elexis.core.releng', 'elexis.3rdparty.libraries'))
 JettyPort    = 8753
 
 desc "Create p2-site with libraries needed for Elexis 3"

@@ -16,21 +16,21 @@ h2. Requirements
 h2. headless build (aka command line)
 
 * @export JAVA_HOME=/opt/java-oracle/jdk1.7.0_25@ # Set your Java home
-* @cd ch.elexis.core.releng/elexis.3rdpart.libraries && mvn clean p2:site@ # Builds a p2-site needed to use Eclipse target definition ch.elexis.core.releng/elexis-3.target
+* @cd ch.elexis.core.releng/elexis.3rdparty.libraries && mvn clean p2:site@ # Builds a p2-site needed to use Eclipse target definition ch.elexis.core.releng/elexis-3.target
 * @cd ../../ch.elexis.core.releng && mvn clean install@ # compiles and create packages
+
+This creates directories like @ch.elexis.core.releng/product/target/products/ch.elexis.core.application.product/linux/gtk/x86_64@ where you find the executable @Elexis 3.0@ application.
+
+The directory @ch.elexis.core.releng/product/target/repository/@ contains a simple P2 update-site for Elexis.
+
+To deploy this site have a look at the excellent "Eclipse Tycho - Tutorial for building Eclipse Plugins and RCP applications":http://www.vogella.com/articles/EclipseTycho/article.html#deploy. Or https://github.com/intalio/tycho-p2-scripts/wiki
 
 h2. problems
 
-At the moment mvn install does not work. The plug-Ins ch.elexis.core.ui and ch.elexis.core.data don't compile.
-E.g.
-bc.cd ch.elexis.core.ui
-mvn clean install
-<..>
-ERROR] Failed to execute goal org.eclipse.tycho:tycho-compiler-plugin:0.18.0:compile (default-compile) on project ch.elexis.core.ui: Compilation failure: Compilation failure:
-[ERROR] /opt/elexis-3-core-ngiger/ch.elexis.core.ui/src/ch/elexis/core/ui/exchange/elements/InsuranceElement.java:[15,0]
-[ERROR] import ch.elexis.core.data.Fall;
-[ERROR] ^^^^^^^^^^^^^^^^^^^
-[ERROR] The import ch.elexis.core.data cannot be resolved
+* How to keep MANIFEST.MF and pom.xml in sync
+	See also https://bugs.eclipse.org/bugs/show_bug.cgi?id=387802
+	mvn org.eclipse.tycho:tycho-versions-plugin:update-pom -Dtycho.mode=maven
+	mvn clean install
 
 h2. Eclipse IDE
 
@@ -40,11 +40,6 @@ h2. Eclipse IDE
 
 h2. TODO
 
-* Build more target like
-** ch.elexis.core.console.application
-** ch.elexis.core.application, the core UI Elexis application.
-
-h2. Open questions
-
-* @rake p2-libs@  # Builds a p2-site and starts a jetty p2-server at http://localhost:8753
-** Is this target needed or is this simply a Tycho bug?
+* Investigate why the created app does not start
+* Fix problem with missing icons
+* Add deploy to scp/sftp
