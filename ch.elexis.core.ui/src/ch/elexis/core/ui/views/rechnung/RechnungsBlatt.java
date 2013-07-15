@@ -52,7 +52,6 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
-import ch.elexis.core.ui.preferences.UserSettings2;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
@@ -61,6 +60,7 @@ import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
+import static ch.elexis.core.ui.constants.UiPreferenceConstants.*;
 
 public class RechnungsBlatt extends Composite implements IActivationListener {
 	
@@ -373,22 +373,22 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	
 	private void saveExpandedState(String field, boolean state){
 		if (state) {
-			CoreHub.userCfg.set(UserSettings2.STATES + field, UserSettings2.OPEN);
+			CoreHub.userCfg.set(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field, USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN);
 		} else {
-			CoreHub.userCfg.set(UserSettings2.STATES + field, UserSettings2.CLOSED);
+			CoreHub.userCfg.set(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field, USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
 		}
 	}
 	
 	private void setExpandedState(ExpandableComposite ec, String field){
 		String mode =
-			CoreHub.userCfg.get(UserSettings2.EXPANDABLE_COMPOSITES, UserSettings2.REMEMBER_STATE);
-		if (mode.equals(UserSettings2.OPEN)) {
+			CoreHub.userCfg.get(USERSETTINGS2_EXPANDABLE_COMPOSITES, USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_REMEMBER_STATE);
+		if (mode.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN)) {
 			ec.setExpanded(true);
-		} else if (mode.equals(UserSettings2.CLOSED)) {
+		} else if (mode.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 			ec.setExpanded(false);
 		} else {
-			String state = CoreHub.userCfg.get(UserSettings2.STATES + field, UserSettings2.CLOSED);
-			if (state.equals(UserSettings2.CLOSED)) {
+			String state = CoreHub.userCfg.get(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field, USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
+			if (state.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 				ec.setExpanded(false);
 			} else {
 				ec.setExpanded(true);

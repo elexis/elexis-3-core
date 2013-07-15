@@ -33,8 +33,8 @@ import ch.elexis.core.data.Reminder;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.UiResourceConstants;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.rgw.tools.ExHandler;
 

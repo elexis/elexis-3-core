@@ -10,7 +10,7 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.core.ui.views;
+package ch.elexis.core.ui.contacts.views;
 
 import java.util.ArrayList;
 
@@ -40,6 +40,9 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.views.IPatFilter;
+import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.ui.views.PatFilterImpl;
 import ch.rgw.tools.IFilter;
 
 /**
@@ -191,33 +194,6 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 	
 	public void removeFilter(IPatFilter filter){
 		filters.remove(filter);
-	}
-	
-	public interface IPatFilter {
-		/** The Patient is not selected with the filter object */
-		public static final int REJECT = -1;
-		/** The Patient is selected with the filter objct */
-		public static final int ACCEPT = 1;
-		/** We do not handle this type of filter object */
-		public static final int DONT_HANDLE = 0;
-		/** We encountered an error while trying to filter */
-		public static final int FILTER_FAULT = -2;
-		
-		/**
-		 * Will the Patient be accepted for the Filter depending on the Object?
-		 * 
-		 * @param p
-		 *            The Patient to consider
-		 * @param o
-		 *            The Object to check
-		 * @return one of REJECT, ACCEPT, DONT_HANDLE
-		 * @throws Exception
-		 */
-		public int accept(Patient p, PersistentObject o);
-		
-		public boolean aboutToStart(PersistentObject o);
-		
-		public boolean finished(PersistentObject o);
 	}
 	
 	class EtikettenAuswahl extends Dialog {

@@ -30,7 +30,6 @@ import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.PatListFilterBox.IPatFilter;
 import ch.rgw.tools.ExHandler;
 
 /**

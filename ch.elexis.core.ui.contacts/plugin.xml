@@ -35,5 +35,14 @@
             name="%sidebar.contacts">
       </Perspektive>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="ch.elexis.preferences.UserPreferences"
+            class="ch.elexis.core.ui.contacts.preferences.UserSettings2"
+            id="ch.elexis.userSetting2"
+            name="%page.name.2">
+      </page>
+   </extension>
 
 </plugin>

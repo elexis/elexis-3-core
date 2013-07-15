@@ -42,12 +42,12 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.commands.Handler;
 import ch.elexis.core.ui.commands.MahnlaufCommand;
+import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FallDetailView;
-import ch.elexis.core.ui.views.PatientDetailView2;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
@@ -120,7 +120,7 @@ public class RnActions {
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					try {
 						/* PatientDetailView fdv=(PatientDetailView) */rnPage
-							.showView(PatientDetailView2.ID);
+							.showView(UiResourceConstants.PatientDetailView2_ID);
 					} catch (Exception ex) {
 						ExHandler.handle(ex);
 					}

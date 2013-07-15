@@ -17,10 +17,10 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
+import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.core.ui.views.KonsDetailView;
 import ch.elexis.core.ui.views.PatHeuteView;
-import ch.elexis.core.ui.views.PatientDetailView2;
 import ch.elexis.core.ui.views.rechnung.KonsZumVerrechnenView;
 import ch.elexis.core.ui.views.rechnung.RechnungsListeView;
 import ch.elexis.core.ui.views.rechnung.RnDetailView;
@@ -47,7 +47,7 @@ public class AbrechnungsPerspektive implements IPerspectiveFactory {
 		frd.addView(RnDetailView.ID);
 		frd.addView(KonsDetailView.ID);
 		frd.addPlaceholder(FallDetailView.ID);
-		frd.addPlaceholder(PatientDetailView2.ID);
+		frd.addPlaceholder(UiResourceConstants.PatientDetailView2_ID);
 		layout.addShowViewShortcut(PatHeuteView.ID);
 		layout.addShowViewShortcut(KonsZumVerrechnenView.ID);
 		layout.addShowViewShortcut(RnDetailView.ID);

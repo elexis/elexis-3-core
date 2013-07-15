@@ -10,7 +10,7 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.core.ui.views;
+package ch.elexis.core.ui.contacts.views;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.layout.FillLayout;
@@ -22,6 +22,7 @@ import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.views.Messages;
 
 public class PatientDetailView2 extends ViewPart implements ISaveablePart2 {
 	public static final String ID = "ch.elexis.PatDetail_v2"; //$NON-NLS-1$

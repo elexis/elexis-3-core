@@ -13,7 +13,7 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.core.ui.views;
+package ch.elexis.core.ui.contacts.views;
 
 
 import java.awt.Desktop;
@@ -72,14 +72,14 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
+import ch.elexis.core.ui.contacts.preferences.UserSettings2;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
-import ch.elexis.core.ui.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.preferences.UserSettings2;
 import ch.elexis.core.ui.util.InputPanel;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
@@ -87,6 +87,8 @@ import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.WidgetFactory;
+import ch.elexis.core.ui.views.FixMediDisplay;
+import ch.elexis.core.ui.views.Messages;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 

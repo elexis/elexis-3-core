@@ -27,8 +27,8 @@ import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.data.Sticker;
 import ch.elexis.core.text.model.Samdas;
+import ch.elexis.core.ui.views.IPatFilter;
 import ch.elexis.core.ui.views.PatFilterImpl;
-import ch.elexis.core.ui.views.PatListFilterBox.IPatFilter;
 import ch.rgw.tools.IFilter;
 
 public class ConsultationExport {

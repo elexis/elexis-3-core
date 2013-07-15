@@ -8,7 +8,7 @@
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
-package ch.elexis.core.ui.views;
+package ch.elexis.core.ui.contacts.views;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +51,15 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
-import ch.elexis.core.ui.dialogs.BezugsKontaktAuswahl;
+import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.WidgetFactory;
+import ch.elexis.core.ui.views.FixMediDisplay;
+import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.controls.ClientCustomTextComposite;
 import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.rgw.tools.StringTool;

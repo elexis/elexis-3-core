@@ -95,12 +95,6 @@
             name="%page.name.1"/>
       <page
             category="ch.elexis.preferences.UserPreferences"
-            class="ch.elexis.core.ui.preferences.UserSettings2"
-            id="ch.elexis.userSetting2"
-            name="%page.name.2">
-      </page>
-      <page
-            category="ch.elexis.preferences.UserPreferences"
             class="ch.elexis.core.ui.preferences.UserCasePreferences"
             id="ch.elexis.preferences.UserCasePreferences"
             name="%elexis.userCasePrefs">

@@ -41,6 +41,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.NumberInput;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -50,7 +51,6 @@ import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FallDetailView;
-import ch.elexis.core.ui.views.PatientDetailView2;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Tree;
 
@@ -107,7 +107,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 					try {
 						ElexisEventDispatcher.fireSelectionEvent((Patient) obj);
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-							.showView(PatientDetailView2.ID);
+							.showView(UiResourceConstants.PatientDetailView2_ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}

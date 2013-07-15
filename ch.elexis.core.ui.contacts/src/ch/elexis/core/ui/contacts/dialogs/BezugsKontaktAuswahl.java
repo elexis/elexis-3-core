@@ -8,7 +8,7 @@
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
-package ch.elexis.core.ui.dialogs;
+package ch.elexis.core.ui.contacts.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
@@ -19,8 +19,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.Patientenblatt2;
 import ch.rgw.tools.StringTool;
 
 public class BezugsKontaktAuswahl extends Dialog {

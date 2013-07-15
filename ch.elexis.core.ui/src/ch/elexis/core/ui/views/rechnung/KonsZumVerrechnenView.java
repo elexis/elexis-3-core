@@ -70,6 +70,7 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.commands.ErstelleRnnCommand;
+import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.KonsZumVerrechnenWizardDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
@@ -83,7 +84,6 @@ import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.core.ui.views.KonsDetailView;
-import ch.elexis.core.ui.views.PatientDetailView2;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.LazyTree;
@@ -178,7 +178,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 					try {
 						ElexisEventDispatcher.fireSelectionEvent((Patient) obj);
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-							.showView(PatientDetailView2.ID);
+							.showView(UiResourceConstants.PatientDetailView2_ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}
@@ -279,7 +279,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 				String viewID = "";
 				if (parent == null) {
 					// no parent at all -> must be patient
-					viewID = PatientDetailView2.ID;
+					viewID = UiResourceConstants.PatientDetailView2_ID;
 				} else {
 					// may be case or cons
 					TreeItem grandpa = parent.getParentItem();

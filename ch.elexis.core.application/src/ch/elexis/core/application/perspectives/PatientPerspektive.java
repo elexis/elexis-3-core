@@ -16,7 +16,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
-import ch.elexis.core.ui.UiResourceConstants;
+import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.views.AUF2;
 import ch.elexis.core.ui.views.FaelleView;
 import ch.elexis.core.ui.views.FallDetailView;
@@ -24,8 +24,6 @@ import ch.elexis.core.ui.views.KompendiumView;
 import ch.elexis.core.ui.views.KonsDetailView;
 import ch.elexis.core.ui.views.KonsListe;
 import ch.elexis.core.ui.views.PatHeuteView;
-import ch.elexis.core.ui.views.PatientDetailView2;
-import ch.elexis.core.ui.views.PatientenListeView;
 import ch.elexis.core.ui.views.RezepteView;
 import ch.elexis.core.ui.views.TextView;
 import ch.elexis.core.ui.views.codesystems.DiagnosenView;
@@ -49,8 +47,8 @@ public class PatientPerspektive implements IPerspectiveFactory {
 		IFolderLayout right =
 			layout.createFolder("Rechts.folder", IPageLayout.RIGHT, 0.7f, "Haupt.Folder");
 		
-		main.addView(PatientDetailView2.ID);
-		left.addView(PatientenListeView.ID);
+		main.addView(UiResourceConstants.PatientDetailView2_ID);
+		left.addView(UiResourceConstants.PatientDetailView2_ID);
 		leftbottom.addView(FaelleView.ID);
 		left.addView(PatHeuteView.ID);
 		main.addView(KonsDetailView.ID);
@@ -67,8 +65,8 @@ public class PatientPerspektive implements IPerspectiveFactory {
 		layout.addFastView(LeistungenView.ID, 0.5f);
 		layout.addFastView(DiagnosenView.ID, 0.5f);
 		layout.addPerspectiveShortcut(UiResourceConstants.PatientPerspektive_ID);
-		layout.addShowViewShortcut(PatientDetailView2.ID);
-		layout.addShowViewShortcut(PatientenListeView.ID);
+		layout.addShowViewShortcut(UiResourceConstants.PatientDetailView2_ID);
+		layout.addShowViewShortcut(UiResourceConstants.PatientenListeView_ID);
 		// layout.addShowViewShortcut(FallListeView.ID);
 		layout.addPerspectiveShortcut(FaelleView.ID);
 		layout.addShowViewShortcut(KonsListe.ID);

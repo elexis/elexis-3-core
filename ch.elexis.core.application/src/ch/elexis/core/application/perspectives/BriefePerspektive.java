@@ -17,9 +17,9 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
+import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.views.BriefAuswahl;
 import ch.elexis.core.ui.views.KonsDetailView;
-import ch.elexis.core.ui.views.PatientDetailView2;
 import ch.elexis.core.ui.views.TextView;
 
 public class BriefePerspektive implements IPerspectiveFactory {
@@ -34,10 +34,10 @@ public class BriefePerspektive implements IPerspectiveFactory {
 		left.addView(BriefAuswahl.ID);
 		main.addView(TextView.ID);
 		// layout.addFastView(BriefErstellen.ID);
-		layout.addFastView(PatientDetailView2.ID);
+		layout.addFastView(UiResourceConstants.PatientDetailView2_ID);
 		layout.addFastView(KonsDetailView.ID);
 		layout.addPerspectiveShortcut(ID);
-		layout.addShowViewShortcut(PatientDetailView2.ID);
+		layout.addShowViewShortcut(UiResourceConstants.PatientDetailView2_ID);
 		layout.addShowViewShortcut(KonsDetailView.ID);
 		layout.addShowViewShortcut(BriefAuswahl.ID);
 		layout.addShowViewShortcut(TextView.ID);

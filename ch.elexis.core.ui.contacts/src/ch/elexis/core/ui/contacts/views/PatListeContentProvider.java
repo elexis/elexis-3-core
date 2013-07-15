@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  *    
  *******************************************************************************/
-package ch.elexis.core.ui.views;
+package ch.elexis.core.ui.contacts.views;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +33,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
+import ch.elexis.core.ui.views.Messages;
 import ch.rgw.tools.StringTool;
 
 public class PatListeContentProvider implements ICommonViewerContentProvider, ILazyContentProvider {

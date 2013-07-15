@@ -11,7 +11,7 @@
  *    M. Descher - Declarative access to the contextMenu
  *******************************************************************************/
 
-package ch.elexis.core.ui.views;
+package ch.elexis.core.ui.contacts.views;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,8 +58,9 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.constants.UiResourceConstants;
+import ch.elexis.core.ui.contacts.dialogs.PatientErfassenDialog;
 import ch.elexis.core.ui.data.UiSticker;
-import ch.elexis.core.ui.dialogs.PatientErfassenDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -70,6 +71,7 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
+import ch.elexis.core.ui.views.Messages;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 //Hier ist mglw. nicht data.Messages, sondern views.Messages nötig.
@@ -93,7 +95,6 @@ import ch.rgw.tools.TimeTool;
  */
 public class PatientenListeView extends ViewPart implements IActivationListener, ISaveablePart2,
 		HeartListener {
-	public static final String ID = "ch.elexis.PatListView"; //$NON-NLS-1$
 	private CommonViewer cv;
 	private ViewerConfigurer vc;
 	private ViewMenus menus;
@@ -765,7 +766,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	
 	public void UserChanged(){
 		if (!initiated)
-			SWTHelper.reloadViewPart(PatientenListeView.ID);
+			SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID);
 		if (!cv.getViewerWidget().getControl().isDisposed()) {
 			cv.getViewerWidget().getControl()
 				.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));

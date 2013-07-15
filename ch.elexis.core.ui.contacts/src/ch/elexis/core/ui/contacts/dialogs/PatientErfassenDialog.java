@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  *******************************************************************************/
 
-package ch.elexis.core.ui.dialogs;
+package ch.elexis.core.ui.contacts.dialogs;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +32,7 @@ import ch.elexis.core.data.Person;
 import ch.elexis.core.data.Person.PersonDataException;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.ui.dialogs.Messages;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;

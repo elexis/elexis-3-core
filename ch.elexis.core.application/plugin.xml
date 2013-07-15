@@ -56,7 +56,7 @@
       </view>
       <view
             category="ch.elexis.datenKategorie"
-            class="ch.elexis.core.ui.views.PatientenListeView"
+            class="ch.elexis.core.ui.contacts.views.PatientenListeView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/group.png"
             id="ch.elexis.PatListView"
             name="%elexis.patListView">
@@ -325,14 +325,14 @@
       </view>
       <view
             category="ch.elexis.datenKategorie"
-            class="ch.elexis.core.ui.views.PatientDetailView"
+            class="ch.elexis.core.ui.contacts.views.PatientDetailView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/person.ico"
             id="ch.elexis.PatientDetailView"
             name="%elexis.patDetailView">
       </view>
       <view
             category="ch.elexis.datenKategorie"
-            class="ch.elexis.core.ui.views.PatientDetailView2"
+            class="ch.elexis.core.ui.contacts.views.PatientDetailView2"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/person.ico"
             id="ch.elexis.PatDetail_v2"
             name="%elexis.patDetailView">

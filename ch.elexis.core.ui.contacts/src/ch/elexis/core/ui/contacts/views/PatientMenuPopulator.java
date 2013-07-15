@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  *    
  *******************************************************************************/
-package ch.elexis.core.ui.views;
+package ch.elexis.core.ui.contacts.views;
 
 import java.text.MessageFormat;
 import java.util.LinkedList;
@@ -39,6 +39,7 @@ import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus.IMenuPopulator;
+import ch.elexis.core.ui.views.Messages;
 import ch.rgw.tools.ExHandler;
 
 public class PatientMenuPopulator implements IMenuPopulator {

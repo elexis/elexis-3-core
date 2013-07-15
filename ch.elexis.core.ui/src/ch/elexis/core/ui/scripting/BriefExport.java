@@ -26,8 +26,8 @@ import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.views.IPatFilter;
 import ch.elexis.core.ui.views.PatFilterImpl;
-import ch.elexis.core.ui.views.PatListFilterBox.IPatFilter;
 import ch.rgw.io.FileTool;
 
 public class BriefExport {

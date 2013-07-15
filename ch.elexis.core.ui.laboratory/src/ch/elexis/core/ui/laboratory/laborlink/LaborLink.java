@@ -52,7 +52,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.UiResourceConstants;
+import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.laboratory.views.LaborView;
 import ch.elexis.core.ui.text.IRichTextDisplay;
 import ch.elexis.core.ui.util.IKonsExtension;
