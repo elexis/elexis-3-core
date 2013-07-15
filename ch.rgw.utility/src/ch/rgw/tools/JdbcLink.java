@@ -246,6 +246,7 @@ public class JdbcLink {
 		int retryCount = 5;
 		do {
 			try {
+				DriverManager.setLoginTimeout(15);
 				return DriverManager.getConnection(sConn, user, password);
 			} catch (SQLException sqlEx) {
 				lastException = sqlEx;
