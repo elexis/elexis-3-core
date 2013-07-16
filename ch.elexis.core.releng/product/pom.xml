@@ -19,7 +19,7 @@
         <artifactId>tycho-p2-repository-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-          <includeAllDependencies>true</includeAllDependencies>
+          <includeAllDependencies>false</includeAllDependencies>
         <products>
           <product>
             <id>ch.elexis.core.application.product.executable.gtk.linux.x86_64</id>

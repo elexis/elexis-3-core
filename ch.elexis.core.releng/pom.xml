@@ -13,6 +13,8 @@
     <module>../ch.elexis.core.common.feature</module>
     <module>../ch.elexis.core.console.application</module>
     <module>../ch.elexis.core.data</module>
+    <!--module>../ch.elexis.core.logging</module-->
+    <!--module>../ch.elexis.core.logging.default_configuration</module-->
     <module>../ch.elexis.core.ui</module>
     <module>../ch.elexis.core.ui.contacts</module>
     <module>../ch.elexis.core.ui.feature</module>
@@ -31,6 +33,7 @@
     <!-- juno-repo.url>http://download.eclipse.org/releases/juno</juno-repo.url>
     <!- - does not work local.url>file:///opt/elexis-next-github/elexis.3rdparty.libraries/target/repository/plugins/</local.url-->
     <local.url>http://localhost:8753/site/</local.url>
+    <platform.version>[3.8,3.9)</platform.version>
   </properties>
 
   <repositories>
@@ -113,17 +116,44 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
         <configuration>
+          <filters>
+            <!-- example 1: restrict version of a bundle -->
+            <!--filter>
+                <type>eclipse-plugin</type>
+                <id>org.eclipse.ui</id>
+                <restrictTo>
+                  <versionRange>[3.8,3.9)</versionRange>
+                </restrictTo>
+            </filter-->
+            <!-- example 2: remove all providers of the package javax except the bundle javax.persistence -->
+            <filter>
+                <type>java-package</type>
+                <id>javax</id>
+                <restrictTo>
+                  <type>eclipse-plugin</type>
+                  <id>javax.persistence</id>
+                </restrictTo>
+            </filter>
+            <!-- example 3: work around Equinox bug 348045 -->
+            <filter>
+                <type>p2-installable-unit</type>
+                <id>org.eclipse.equinox.servletbridge.extensionbundle</id>
+                <removeAll />
+            </filter>
+          </filters>        
+          <pomDependencies>consider</pomDependencies>
           <environments>
             <environment>
               <os>linux</os>
               <ws>gtk</ws>
-              <arch>x86</arch>
+              <arch>x86_64</arch>
             </environment>
-            <environment>
+            <!--environment>
               <os>linux</os>
               <ws>gtk</ws>
-              <arch>x86_64</arch>
+              <arch>x86</arch>
             </environment>
             <environment>
               <os>win32</os>
@@ -139,7 +169,7 @@
               <os>macosx</os>
               <ws>cocoa</ws>
               <arch>x86_64</arch>
-            </environment>
+            </environment-->
           </environments>
         </configuration>
       </plugin>
@@ -160,11 +190,6 @@
 
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>target-platform-configuration</artifactId>
-          <version>${tycho-version}</version>
-        </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-compiler-plugin</artifactId>
@@ -229,20 +254,6 @@
           <groupId>org.eclipse.tycho.extras</groupId>
           <artifactId>tycho-custom-bundle-plugin</artifactId>
           <version>${tycho-extras.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-p2-plugin</artifactId>
-          <version>${tycho-version}</version>
-          <configuration>
-            <baselineMode>warn</baselineMode>
-            <baselineReplace>none</baselineReplace>
-            <baselineRepositories>
-              <repository>
-                <url>http://download.eclipse.org/eclipse/updates/3.8</url>
-              </repository>
-            </baselineRepositories>
-          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>

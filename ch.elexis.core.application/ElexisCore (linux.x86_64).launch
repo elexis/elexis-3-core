@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
-<setAttribute key="additional_plugins"/>
+<setAttribute key="additional_plugins">
+<setEntry value="ch.elexis.core.logging:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.qos.logback.classic:1.0.7:default:true"/>
+<setEntry value="ch.qos.logback.core:1.0.7:default:true"/>
+<setEntry value="log4j:1.2.17:default:true"/>
+<setEntry value="org.apache.felix.gogo.command:0.8.0.v201108120515:default:true"/>
+<setEntry value="org.apache.felix.gogo.runtime:0.8.0.v201108120515:default:true"/>
+<setEntry value="org.apache.felix.gogo.shell:0.8.0.v201110170705:default:true"/>
+<setEntry value="org.eclipse.equinox.console:1.0.0.v20120522-1841:default:true"/>
+</setAttribute>
 <booleanAttribute key="append.args" value="true"/>
 <stringAttribute key="application" value="ch.elexis.core.application.ElexisApp"/>
 <booleanAttribute key="askclear" value="true"/>
@@ -23,7 +32,7 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dorg.eclipse.swt.internal.carbon.smallFonts"/>
 <stringAttribute key="pde.version" value="3.3"/>

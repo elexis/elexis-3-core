@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!-- $Id: plugin.xml 6378 2010-05-18 11:06:26Z rgw_ch $ 
+ * Copyright (c) 2005-2020, G. Weirich and Elexis
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    G. Weirich - initial implementation
+-->
+<plugin>
+	<extension-point id="coreOperation" name="coreOperation" schema="schema/coreOperation.exsd"/>
+	<extension-point id="ACLContribution" name="Definition of ACLs" schema="schema/ACLContribution.exsd"/>
+	<extension-point id="PersistentReference" name="%elexis.persistency" schema="schema/PersistentReference.exsd"/>
+	<extension-point id="DataAccess" name="DataAccess" schema="schema/DataAccess.exsd"/>
+	 <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="ch.elexis.core.data.propertyTester.ACETester"
+            id="ch.elexis.commands.propertyTester.ACETester"
+            namespace="ch.elexis.commands.propertyTester"
+            properties="ACE"
+            type="java.lang.Object">
+      </propertyTester>
+   </extension>
+  <extension
+        point="ch.elexis.core.data.ACLContribution">
+     <ACLContribution
+           ACLContributor="ch.elexis.core.data.admin.ACLContributor"
+           name="Elexis.ACLContribution">
+     </ACLContribution>
+  </extension>
+  <extension
+        point="ch.elexis.core.data.DataAccess">
+     <DataAccess
+           class="ch.elexis.core.data.util.AllDataAccessor"
+           name="Alle">
+     </DataAccess>
+  </extension>
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+     <initializer
+           class="ch.elexis.core.data.preferences.CorePreferenceInitializer">
+     </initializer>
+  </extension>
+</plugin>

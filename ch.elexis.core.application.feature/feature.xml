@@ -22,8 +22,6 @@
          version="0.0.0"/>
 
    <requires>
-      <import plugin="org.eclipse.ui" version="3.8.2" match="greaterOrEqual"/>
-      <import plugin="log4j" version="1.2.17" match="greaterOrEqual"/>
       <import plugin="ch.rgw.utility" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="ch.elexis.core.data" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="ch.elexis.core.ui" version="3.0.0" match="greaterOrEqual"/>
@@ -35,9 +33,6 @@
       <import plugin="slf4j.api"/>
       <import plugin="javax.servlet"/>
       <import plugin="org.slf4j.api" version="1.6.1" match="equivalent"/>
-      <import plugin="org.eclipse.equinox.common" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.osgi" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.osgi" version="3.7.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.common" version="3.6.100" match="compatible"/>
       <import plugin="org.eclipse.core.jobs" version="3.2.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.registry" version="3.4.0" match="compatible"/>
@@ -133,6 +128,20 @@
 
    <plugin
          id="org.eclipse.core.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.workbench"
          download-size="0"
          install-size="0"
          version="0.0.0"
