@@ -21,36 +21,15 @@
     <module>../ch.elexis.core.ui.medication</module>
     <module>../ch.elexis.core.ui.p2</module>
     <module>../ch.rgw.utility</module>
-    <module>../ch.elexis.core.releng/product</module>
-    <!--module>../ch.elexis.core.releng/p2updatesite</module -->
+    <!-- the product creates an zipped installable application and a p2 update site -->
+    <module>../ch.elexis.core.releng/product</module> 
   </modules>
   <properties>
     <tycho-version>0.18.0</tycho-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tycho-extras.version>0.18.0</tycho-extras.version>
 
-    <!-- juno-repo.url>http://download.eclipse.org/releases/juno</juno-repo.url>
-    <!- - does not work local.url>file:///opt/elexis-next-github/elexis.3rdparty.libraries/target/repository/plugins/</local.url-->
-    <local.url>http://localhost:8753/site/</local.url>
   </properties>
-
-  <repositories>
-    <repository>
-      <id>elexis.3rdparty.libraries</id>
-      <layout>p2</layout>
-            <url>http://download.elexis.info/elexis.3rdparty.libraries</url> 
-    </repository>
-    <repository>
-      <id>orbit-R20120526062928</id>
-      <layout>p2</layout>
-            <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository</url> 
-    </repository>
-    <repository>
-      <id>juno</id>
-      <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/juno</url>
-    </repository>
-  </repositories>
 
   <pluginRepositories>
     <pluginRepository>
@@ -86,19 +65,6 @@
           </dependency>
         </dependencies>
       </plugin>
-      <!--plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <verbose>true</verbose>
-          <fork>true</fork>
-          <source>1.7</source>
-          <target>1.7</target>          
-          <executable>${env.JAVA_7_HOME}/bin/javac</executable>
-          <compilerVersion>1.7</compilerVersion>
-        </configuration>
-      </plugin-->
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-maven-plugin</artifactId>
@@ -109,7 +75,22 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
         <configuration>
+          <!-- see http://wiki.eclipse.org/Tycho/Target_Platform
+            we want to use the first alternative:
+            If you are already using a target file in Eclipse, and that target file only contains "Software Site" locations
+            (i.e. location elements with type="InstallableUnit"), use that target file for the Tycho build. 
+            This approach is the only way to share the same target platform configuration between Tycho and Eclipse. 
+            -->
+          <target>
+            <artifact>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>ch.elexis.core.releng</artifactId>
+              <version>3.0.0-SNAPSHOT</version>
+              <classifier>../ch.elexis.core.releng/elexis-3</classifier>
+            </artifact>
+          </target>
           <environments>
             <environment>
               <os>linux</os>
