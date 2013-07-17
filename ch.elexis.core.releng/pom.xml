@@ -38,7 +38,7 @@
     <repository>
       <id>elexis.3rdparty.libraries</id>
       <layout>p2</layout>
-            <url>file:../ch.elexis.core.releng/elexis.3rdparty.libraries/target/repository</url> 
+            <url>http://download.elexis.info/elexis.3rdparty.libraries</url> 
     </repository>
     <repository>
       <id>orbit-R20120526062928</id>
@@ -50,11 +50,6 @@
       <layout>p2</layout>
       <url>http://download.eclipse.org/releases/juno</url>
     </repository>
-    <!--repository>
-      <id>ch.elexis.3rdparty.libraries</id>
-      <url>${local.url}</url>
-      <layout>p2</layout>
-    </repository-->
   </repositories>
 
   <pluginRepositories>
