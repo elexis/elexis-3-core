@@ -8,7 +8,7 @@
     <relativePath>../</relativePath>
   </parent>
   <groupId>ch.elexis</groupId>
-  <artifactId>ch.elexis.core.product</artifactId>
+  <artifactId>ch.elexis.core.releng.product</artifactId>
   <version>3.0.0-SNAPSHOT</version>
   <packaging>eclipse-repository</packaging>
 
@@ -19,20 +19,7 @@
         <artifactId>tycho-p2-repository-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-          <includeAllDependencies>false</includeAllDependencies>
-        <products>
-          <product>
-            <id>ch.elexis.core.application.product.executable.gtk.linux.x86_64</id>
-            <attachId>other</attachId>
-            <!-- optional parameters (with default values) -->
-            <rootFolder>/tmp/niklaus</rootFolder>
-          </product>
-          <!--product>
-            <id>ch.elexis.core.application.product.executable.gtk.linux.x86</id>
-            <attachId>niklaus_x86</attachId>
-            <rootFolder>/tmp/niklaus2</rootFolder>
-          </product failed!!-->
-        </products>
+          <includeAllDependencies>true</includeAllDependencies>
         </configuration>
       </plugin>
       <plugin>
