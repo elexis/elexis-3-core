@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  *    
  *******************************************************************************/
-package ch.elexis.core.ui.views;
+package ch.elexis.core.ui.medication.views;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;

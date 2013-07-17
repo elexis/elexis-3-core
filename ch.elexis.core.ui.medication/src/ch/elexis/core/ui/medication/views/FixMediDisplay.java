@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  * 
  *******************************************************************************/
-package ch.elexis.core.ui.views;
+package ch.elexis.core.ui.medication.views;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +46,7 @@ import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.core.ui.views.RezeptBlatt;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
