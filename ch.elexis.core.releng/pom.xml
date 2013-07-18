@@ -47,6 +47,20 @@
   <build>
     <plugins>
       <plugin>
+        <!-- we want to ensure that the bin directory created by the Eclipse gets cleaned, too. 
+             Without it Maven would put two versions of each class file into the jars
+             -->
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>bin</directory>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
         <!-- Use compiler plugin with tycho as the adapter to the JDT compiler. -->
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
