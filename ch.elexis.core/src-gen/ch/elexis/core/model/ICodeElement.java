@@ -66,4 +66,22 @@ public interface ICodeElement {
 	 */
 	String getText();
 
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * 
+	 * Kontext-Aktionen für dieses Code-Element
+	 * 
+	 * @param kontext
+	 * @return a list castable to IAction using <code>(Iterable<IAction>)(Iterable<?>)</code>
+	 * @deprecated
+	 * @since 3.0.0 method is bound for removal, please refactor
+	 *
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated not
+	 */
+	List<Object> getActions(Object context);
+
+
 } // ICodeElement

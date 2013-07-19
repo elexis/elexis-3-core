@@ -201,4 +201,10 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	public boolean isDragOK(){
 		return true;
 	}
+
+	@Override
+	public List<Object> getActions(Object kontext) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
