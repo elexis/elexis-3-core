@@ -1,0 +1,26 @@
+h1. Wiki
+
+See also our "Wiki":https://bitbucket.org/ngiger/jubula-elexis/wiki/Home
+
+h2. Using the Jubula GUI
+
+* Install Jubula Standalone Version 7.1 from "Bredex":http://testing.bredex.de/ (Subscribe necessary, no costs involved)
+* @cd ch.elexis.core.releng/ && mvn clean install && cd jubula@
+* @export WORKSPACE=${PWD}@
+* @jubula -data workspace/ &@  # Launch jubula
+* unzip the needed rcp-plugins 
+* Launch Jubulas auxillary program @autagent@
+* @jubula -data workspace/ &@ Start the Jubula GUI
+
+# In Jubula select Test..Import and select the @ElexisDemo1.0.xml@ file.
+# Connect to the agent
+# Enter in "Test..Properties" the correct path for the AUT (elexis)
+!images/jubula_2.png!
+!images/jubula_3.png!
+!images/jubula_4.png!
+# Start the AUT
+# Skip the dialog about warning
+!images/jubula_2.png!
+# Run the test-suite @sample@
+
+Tested under Debian Squeeze

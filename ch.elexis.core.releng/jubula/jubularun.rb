@@ -1,0 +1,235 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+# License: Eclipse Public License 1.0
+# Copyright Niklaus Giger, 2011, niklaus.giger@member.fsf.org
+
+require 'fileutils'
+require 'tempfile'
+require "#{File.dirname(__FILE__)}/helpers"
+require 'rexml/document'
+require 'pp'
+require "#{File.dirname(__FILE__)}/jubulaoptions"
+include REXML
+
+if $0.index(File.basename(__FILE__))
+  puts "Please call run_jenkins.rb to parse the options!"
+  exit 2
+end
+
+class JubulaRun
+
+public
+    JubulaOptions::Fields.each { 
+      |x|
+    eval(
+      %(
+      def #{x}
+	@#{x}
+      end
+	)
+    )
+  }
+    
+  @@myFail = true
+
+  # pass JubulaOptions like this: :autid = 'myAutId', :instDest = '/opt/myInstallation'
+  def initialize(options = nil) 
+    unless JubulaOptions::jubulaHome
+      puts("JubulaOptions::jubulaHome not defined!")
+      exit 1
+    end
+    JubulaOptions::Fields.each { |x| eval("@#{x} = JubulaOptions::#{x}") }
+    options.each { |opt, val| eval( "@#{opt} = '#{val}'") } if options
+	["#{JubulaOptions::jubulaHome}/server/autagent*",
+	"#{JubulaOptions::jubulaHome}/#{@application}/#{@application}*",
+	"#{JubulaOptions::jubulaHome}/#{@application}/testexec*",
+	"#{JubulaOptions::jubulaHome}/#{@application}/dbtool*",
+	].each { 
+	  |file|
+		if Dir.glob(file.gsub('"','')).size == 0
+			puts("Jubula not correctly installed in #{JubulaOptions::jubulaHome}")
+			puts("We could not find the needed application: #{file}")
+			exit 1
+                end
+	}
+    [@testResults, @dataDir].each { #  @data,
+      |x|
+	FileUtils.rm_rf(x, :verbose => true, :noop => @dryRun)
+	FileUtils.makedirs(x, :verbose => true, :noop => @dryRun)
+    }
+    ENV['TEST_UPV_WORKSPACE'] = @workspace
+  end
+
+  def autoInstall
+    FileUtils.rm_rf(@instDest, :verbose => true, :noop => @dryRun)
+    if /2\.1\.6/.match(@installer) and MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
+      # Elexis 2.1.6 used a zip file for the mac installer
+      short = wgetIfNotExists(@installer.sub('.jar','.zip'))
+      saved = Dir.pwd
+      FileUtils.makedirs(@instDest)
+      Dir.chdir(@instDest)
+      system("unzip -q #{saved}/#{short}")
+      Dir.chdir(saved)
+    else
+      short = wgetIfNotExists(@installer)
+      doc   = Document.new(File.new(@auto_xml))
+      path  = XPath.first(doc, "//installpath" )
+      path.text= @instDest
+      file = Tempfile.new('auto_inst.xml')
+      file.write(doc.to_s)
+      file.rewind
+      file.close
+      system("java -jar #{short} #{file.path}")
+      # file.unlink    # deletes the temp file
+    end
+  end
+  
+ def dbSpec
+    "-dburl '#{@dburl}' -dbuser '#{@dbuser}' -dbpw '#{@dbpw}' "
+ end
+ 
+ def useH2(where = @data)
+  @data     = where
+  @dbscheme = 'Default Embedded (H2)'
+  @dburl    = "jdbc:h2:#{where}/database/embedded;MVCC=TRUE;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE"
+  @dbuser   = 'sa'
+  @dbpw     = ''
+ end
+ 
+  def prepareRcpSupport
+    savedDir = Dir.pwd
+    pp @instDest
+    unless @dryRun
+      FileUtils.makedirs(@instDest)
+      Dir.chdir(@instDest)
+    end
+	cmd = "#{JubulaOptions::jubulaHome}/rcp-support.zip"
+	if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
+	  cmd = "#{File.expand_path(File.dirname(__FILE__))}/7z x -y #{cmd} > test-unzip.log"
+	  cmd.gsub!('\\', '\\\\')
+	else 
+	  cmd = "unzip -q #{cmd}"
+	end
+    system(cmd) if Dir.glob("#{@instDest}/plugins/org.eclipse.jubula.rc.rcp_*/*").size == 0
+    Dir.chdir(savedDir) if !@dryRun
+  end
+  
+  def rmTestcases(tc = @project, version = @version)
+    if /jdbc:h2/i.match(@dburl)
+      # Just remove the directory where the h2 database is stored. Is a lot faster then the other
+     dbDir = File.dirname(@dburl.split(';')[0].split(':')[-1])
+      FileUtils.rm_rf(dbDir, :verbose => true, :noop => @dryRun)
+    else
+      system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -delete #{project} #{version} #{dbSpec}", @@myFail)
+    end
+  end
+  
+  def loadTestcases(xmlFile = "#{project}_#{version}.xml")
+    ["unbound_modules_swt", "unbound_modules_concrete",  "unbound_modules_rcp"].each{ 
+      |tcModule|
+      tcs = Dir.glob("#{JubulaOptions::jubulaHome}/examples/testCaseLibrary/#{tcModule}_*.xml")
+      if tcs.size != 1
+	puts "Should have found exactly 1 one file. Got #{tcs.inspect}"
+	exit 1
+      end
+      system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{tcs[0]} #{dbSpec}", @@myFail)
+      } if false
+    system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{xmlFile} #{dbSpec}")
+  end
+
+  def adaptCmdForMacOSx(cmd)
+    [ '.app/Contents/MacOS/JavaApplicationStub',
+      '.app/Contents/MacOS/autagent'].each {
+	|tst|
+	return cmd+tst if Dir.glob(cmd+tst).size == 1
+      }
+    return cmd
+  end
+  
+  def startAgent(sleepTime = 15)
+	cmd = adaptCmdForMacOSx("#{JubulaOptions::jubulaHome}/server/autagent")
+	cmd = "#{cmd} -p #{portNumber}"
+	if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
+		res = system("start #{cmd}")
+	else
+		res = system("#{cmd} &")
+	end
+	if !res then puts "failed. exiting"; exit(3); end
+    sleep(sleepTime) # give the agent time to start up (sometimes two seconds were okay)
+  end
+  
+  def startAUT(sleepTime = 30)
+	@@nrRun ||= 0
+	@@nrRun += 1
+	log = "#{@testResults}/test-console-#{@@nrRun}.log"
+	cmd = "#{JubulaOptions::jubulaHome}/server/autrun --workingdir #{@testResults} -rcp --kblayout #{@kblayout} -i #{@autid} --exec #{@wrapper} --generatename true --autagentport #{@portNumber}"
+	if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
+	   cmd = "start #{cmd}"
+	else 
+	  cmd += " 2>&1 | tee #{log} &"
+	end
+        p cmd
+    res = system(cmd)
+    if !res then puts "failed. exiting"; exit(3); end
+    puts("# Sleeping for #{sleepTime} after startAUT" )
+    sleep(sleepTime)
+  end
+  
+  def stopAgent(sleepTime = 3)
+    cmd = adaptCmdForMacOSx("#{JubulaOptions::jubulaHome}/server/stopautagent")
+    system("#{cmd} -p #{@portNumber} -stop", @@myFail)
+    sleep(sleepTime)
+  end
+
+  def runTestsuite(testsuite = @testsuite)
+    res = system("#{JubulaOptions::jubulaHome}/#{@application}/testexec -project  #{project} -port #{@portNumber} " +
+	  "-version #{@version} -testsuite '#{testsuite}' -server #{server} -autid #{@autid} "+
+	  "-resultdir #{@testResults} -language  #{@kblayout} #{dbSpec} " +
+	  "-datadir #{@dataDir} -data #{@data}")
+    puts "runTestsuite  #{testsuite} returned #{res.inspect}"
+#    system("import #{testsuite}_#{res.to_s}.png", @@myFail)
+    res
+  end
+  
+  def runOneTestcase(testcase, sleepTime = 30)
+    startAgent
+    startAUT(sleepTime)
+    okay = runTestsuite(testcase)
+    stopAgent(10)
+    okay
+  end
+
+  def run(testsuite=@testsuite)
+    genWrapper
+    autoInstall
+    prepareRcpSupport
+    useH2
+    loadTestcases
+    startAgent
+    startAUT
+    res = runTestsuite(testsuite)
+    stopAgent
+    res
+  end
+
+  def genWrapper
+    wrapper = "#{JubulaOptions.wrapper}"
+    exe  = File.expand_path(exeFile)
+    exe += '.app/Contents/MacOS/elexis' if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
+    doc = "'#{exe}' #{vm.eql?('java') ? "" : " -vm #{vm}"} -clean -data #{@dataDir} -vmargs #{vmargs}"
+    File.open(wrapper, 'w') {|f| f.puts(doc) }
+    FileUtils.chmod(0744, wrapper)
+    puts "#{dryRun ? 'Would create' : 'Created'} wrapper script #{wrapper} with content"
+    puts doc
+  end
+  
+end
+
+if $0 == __FILE__
+  JubulaOptions::parseArgs
+  JubulaOptions::dryRun == true ? @dryRun = true : @dryRun = false
+
+  # run with defaults
+  jubula = JubulaRun.new
+  jubula.run
+end
