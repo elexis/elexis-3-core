@@ -228,12 +228,5 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		protected String getTableName(){
 			return "";
 		}
-
-		@Override
-		public List<Object> getActions(Object kontext) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
 	}
 }

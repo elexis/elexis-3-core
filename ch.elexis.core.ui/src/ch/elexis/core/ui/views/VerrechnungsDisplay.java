@@ -216,15 +216,7 @@ public class VerrechnungsDisplay extends Composite {
 					manager.add(chPriceAction);
 					manager.add(chCountAction);
 					IVerrechenbar vbar = v.getVerrechenbar();
-					List<IAction> itemActions = (List<IAction>)(List<?>)vbar.getActions(v);
-					if ((itemActions != null) && (itemActions.size() > 0)) {
-						manager.add(new Separator());
-						for (IAction a : itemActions) {
-							if (a != null) {
-								manager.add(a);
-							}
-						}
-					}
+
 					manager.add(new Separator());
 					manager.add(chTextAction);
 					manager.add(removeAction);

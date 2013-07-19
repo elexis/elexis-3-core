@@ -618,10 +618,4 @@ public class Artikel extends VerrechenbarAdapter {
 		String ean = get(FLD_EAN);
 		return ean + "_" + pharmacode;
 	}
-
-	@Override
-	public List<Object> getActions(Object kontext) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
