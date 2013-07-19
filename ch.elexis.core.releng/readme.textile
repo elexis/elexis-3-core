@@ -16,7 +16,7 @@ h2. Requirements
 h2. headless build (aka command line)
 
 * @export JAVA_HOME=/opt/java-oracle/jdk1.7.0_25@ # Set your Java home
-* @cd ch.elexis.core.releng/elexis.3rdparty.libraries && mvn clean p2:site@ # Builds a p2-site needed to use Eclipse target definition ch.elexis.core.releng/elexis-3.target
+* @cd ch.elexis.core.releng/elexis.3rdparty.libraries && mvn clean p2:site@ # Builds a p2-site needed to use Eclipse target definition ch.elexis.core.releng/juno/juno.target
 * @cd ../../ch.elexis.core.releng && mvn clean install@ # compiles and create packages
 
 This creates directories like @ch.elexis.core.releng/product/target/products/ch.elexis.core.application.product/linux/gtk/x86_64@ where you find the executable @Elexis 3.0@ application.
@@ -24,6 +24,8 @@ This creates directories like @ch.elexis.core.releng/product/target/products/ch.
 The directory @ch.elexis.core.releng/product/target/repository/@ contains a simple P2 update-site for Elexis.
 
 To deploy this site have a look at the excellent "Eclipse Tycho - Tutorial for building Eclipse Plugins and RCP applications":http://www.vogella.com/articles/EclipseTycho/article.html#deploy. Or https://github.com/intalio/tycho-p2-scripts/wiki
+
+* it is possible to compile a single project, which can be a lot faster, especially if you are working offline. E.g @cd ch.rgw.utility && mvn clean compile --offline@ takes only about 10 seconds here.
 
 h2. problems
 
@@ -33,7 +35,7 @@ h2. problems
 h2. Eclipse IDE
 
 * build the project foreign-libraries
-* open  foreign-libraries/elexis-3.target and click on "Set as Target Platform"
+* open ch.elexis.core.releng/juno/juno.target and click on "Set as Target Platform"
 * build your plug-ins
 
 h2. TODO
@@ -42,4 +44,3 @@ h2. TODO
 * Run Jubula tests
 * Fix problem with missing icons
 * Create a tag (but with a good name not @jenkins-Elexis-3.0-Core-18@ and pushing it to github each time, all tests (JUnit, PDE-Test, Jubula) have passed on one/all architecture. The tag name should be something like @I_YEAR_MONTH_DAY_HOUR_MINUTE@, see example "eclipse.e4.tools":http://git.eclipse.org/c/e4/org.eclipse.e4.tools.git/
-* It should be possible to call @mvn clean install@ in an project, e.g. @ch.rgw.utility@ to speed up building a single project.

@@ -22,8 +22,9 @@
     <module>../ch.elexis.core.ui.p2</module>
     <module>../ch.elexis.core.ui.importer.div</module>
     <module>../ch.rgw.utility</module>
+    <module>juno</module> 
     <!-- the product creates an zipped installable application and a p2 update site -->
-    <module>../ch.elexis.core.releng/product</module> 
+    <module>product</module> 
   </modules>
   <properties>
     <tycho-version>0.18.0</tycho-version>
@@ -101,9 +102,9 @@
           <target>
             <artifact>
               <groupId>${project.groupId}</groupId>
-              <artifactId>ch.elexis.core.releng</artifactId>
+              <artifactId>juno</artifactId>
               <version>3.0.0-SNAPSHOT</version>
-              <classifier>../ch.elexis.core.releng/elexis-3</classifier>
+              <!-- we cannot use a classifier here, or mvn compile would file in any other project!! classifier>elexis-3</classifier-->
             </artifact>
           </target>
           <environments>
@@ -135,7 +136,6 @@
           </environments>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-source-plugin</artifactId>
@@ -152,11 +152,6 @@
 
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>target-platform-configuration</artifactId>
-          <version>${tycho-version}</version>
-        </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-compiler-plugin</artifactId>
