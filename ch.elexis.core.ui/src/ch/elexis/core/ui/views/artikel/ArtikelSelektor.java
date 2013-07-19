@@ -45,6 +45,7 @@ import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
+import ch.elexis.core.ui.constants.ExtensionPointConstants;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -64,7 +65,7 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 		ctab = new CTabFolder(parent, SWT.NONE);
 		ctab.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		java.util.List<IConfigurationElement> list =
-			Extensions.getExtensions("ch.elexis.Verrechnungscode"); //$NON-NLS-1$
+			Extensions.getExtensions(ExtensionPointConstants.VERRECHNUNGSCODE); //$NON-NLS-1$
 		ctab.addSelectionListener(new TabSelectionListener());
 		for (IConfigurationElement ice : list) {
 			if ("Artikel".equals(ice.getName())) { //$NON-NLS-1$

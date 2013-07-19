@@ -66,6 +66,7 @@ import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.MultiplikatorList;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.constants.ExtensionPointConstants;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.MultiplikatorEditor;
 import ch.elexis.core.ui.util.ListDisplay;
@@ -81,7 +82,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	private static final String ITEMDELIMITER = "\t"; //$NON-NLS-1$
 	private static final String FOURLINESPLACEHOLDER = "\n\n\n\nd"; //$NON-NLS-1$
 	List<IConfigurationElement> lo = Extensions.getExtensions("ch.elexis.RechnungsManager"); //$NON-NLS-1$
-	List<IConfigurationElement> ll = Extensions.getExtensions("ch.elexis.Verrechnungscode"); //$NON-NLS-1$
+	List<IConfigurationElement> ll = Extensions.getExtensions(ExtensionPointConstants.VERRECHNUNGSCODE); //$NON-NLS-1$
 	String[] systeme = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 	Table table;
 	String[] tableCols = {

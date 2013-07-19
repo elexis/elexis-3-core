@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.internal.ExtensionPointConstants;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.PersistenceException;
@@ -45,7 +46,7 @@ public class PersistentObjectFactory implements IExecutableExtension {
 			return (PersistentObject) typ.newInstance();
 		} catch (IllegalAccessException ex) {
 			List<PersistentObjectFactory> exts =
-				Extensions.getClasses("ch.elexis.PersistentReference", "Class");
+				Extensions.getClasses(ExtensionPointConstants.PERSISTENT_REFERENCE, "Class");
 			for (PersistentObjectFactory po : exts) {
 				PersistentObject ret = po.doCreateTemplate(typ);
 				if (ret != null) {
@@ -121,7 +122,7 @@ public class PersistentObjectFactory implements IExecutableExtension {
 			}));
 		} catch (ClassNotFoundException ex) {
 			List<PersistentObjectFactory> exts =
-				Extensions.getClasses("ch.elexis.PersistentReference", "Class");
+				Extensions.getClasses(ExtensionPointConstants.PERSISTENT_REFERENCE, "Class");
 			for (PersistentObjectFactory po : exts) {
 				PersistentObject ret = po.createFromString(code);
 				if (ret != null) {
