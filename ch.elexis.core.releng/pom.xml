@@ -20,6 +20,7 @@
     <module>../ch.elexis.core.ui.laboratory</module>
     <module>../ch.elexis.core.ui.medication</module>
     <module>../ch.elexis.core.ui.p2</module>
+    <module>../ch.elexis.core.ui.importer.div</module>
     <module>../ch.rgw.utility</module>
     <!-- the product creates an zipped installable application and a p2 update site -->
     <module>../ch.elexis.core.releng/product</module> 

@@ -1,0 +1,145 @@
+h1. Import
+
+Dieses Dokument wurde anfangs Juli 2010 von Niklaus Giger (niklaus.giger@member.fsf.org) erstellt.
+
+Im Plug-In "Elexis-Importer" sind mehrere Möglichkeiten definiert, um schon vorhandene Daten einzubinden. Diese Funktionen werden vor allem beim Umstieg auf Elexis gebraucht. Falls Sie als Arzt hier nur Chinesisch verstehen, aber Ihre vorhandnen Daten gerne übernehmen möchten, wenden Sie sich am besten an einen der zahlreichen "Dienstleister":http://www.medelexis.ch/elexis-supporter.html.
+
+Gerry hat unter ch.elexis.importers einen nicht benutzten AccessWrapper programmiert, damit man leicht ACCESS-Dateien einlesen kann (z.B. für TARMED). 
+
+Deswegen ich auch die gesamte Jackcess Bibliothek drin. Diese wird auch von den Keycab und ICPC-Importer verwendet.
+
+Es gibt keine echte Unterstützung für mehrsprachigkeit. Für Französisch ist es okay, da "masculin" und "männlich" mit dem gleichen Buchstaben beginnen.
+
+Für folgende Datenformate wählen Sie besser das entsprechende Plugin:
+* Aeskulap
+* Ärztekasse
+* Keycab
+* PraxiStar
+
+Folgende Möglichkeiten bestehen:
+* XLS-Import (Universal, Hertel, Russi) 
+* CSV/XML/vCard werden z.Z. nicht unterstützt.
+
+h2. Importieren
+
+Wählen Sie Datei..Datenimport. Im Dialog !rsc/doc/import_1.png! wählen Sie unten Kontakt, dann den gewünschten Dateityp. Wählen Sie mit Hilfe von "Datei wählen" die gewünschte Datei aus. Nach dem Drücken auf "Okay" startet der Import, der je nach Grösse auch länger dauern kann.
+
+
+h2. Import von Krankenkassen
+
+Die mit "*" markierten Spalten werden ignoriert. Dieser Import erwartet eine Excel-Datei mit 7 Spalten, welche folgende Informationen enthalten:
+|_. Nr|_. Excel-Spalte|_. Inhalt|
+|0|A|BAG-Nummer|
+|2|B|Name der Krankenkasse|
+|2|C|Zweigstelle|
+|3|D|Adresse|
+|*4|E|Typ|
+|5|F|EAN-Versicherung|
+|*6|G|EAN-Empfänger|
+
+h2. Import von XLS-Dateien
+
+Beim XLS-Import gilt:
+# Alle Felder werden als Strings behandelt
+# Beim Import einer XLS-Datei wird die erste Spalte mit Namen der Felder analysiert und deren SHA1-Wert ermittelt. Falls sie einem der drei Schemas (Universal, Hertel, Russi) entsprechen, wird der Import gestartet. 
+# Je nach Schema werden einzelne Felder ignoriert und nicht importiert. Diese Felder sind unten mit einem "*" markiert. 
+# Universal:Import:Feld istPerson, falls dieses Feld leer oder "0" ist, hat es den logischen Wert "falsch"
+# Universal:Import:Feld istPatient, falls dieses Feld leer oder "0" ist, hat es den logischen Wert "falsch"
+
+h3. Universal
+
+Dieses Format braucht genau 18 Felder/Spalten mit unten genannten Bezeichungen.
+Getestet mit den Dateien rsc/universal_krankenkasse.xls und rsc/universal_patienten.xls
+
+|_. Nr|_. Excel-Spalte|_. Bezeichnung|_. Erläuterung
+|0|A|ID|
+|2|B|IstPerson|Natürliche Person oder Organisation
+|2|C|IstPatient|
+|3|D|Titel|
+|4|E|Bezeichnung1|
+|5|F|Bezeichnung2|
+|6|G|Zusatz|
+|7|H|Geburtsdatum|
+|8|I|Geschlecht|m oder M -> männlich, sonst weiblich
+|9|J|E-Mail|
+|10|K|Website|
+|11|L|Telefon 1|
+|12|M|Telefon 2|
+|13|N|Mobil|
+|14|O|Strasse|
+|15|P|Plz|
+|16|Q|Ort|
+|17|R|Postadresse|
+|18|S|EAN|
+
+
+h3. Hertel
+
+Dieses Format braucht genau 37 Felder/Spalten. Mangels Bespielen weiss der Schreiber nicht, wie die Spalten genau bezeichnet werden müssen. Die mit "*" markierten Spalten werden ignoriert.
+
+|_. Nr|_. Excel-Spalte|_. Bezeichnung|
+|0|A|ID|
+|1|B|Name|
+|2|C|Vorname|
+|3|D|Geschlecht|
+|*4|E|Anrede|
+|*5|F|Zivilstand|
+|6|G|Titel|
+|7|H|Geburtsdatum|
+|*8|I|Arzt|
+|9|J|Strasse|
+|10|K|Telefon 1|
+|11|L|Telefon 2|
+|12|M|Telefon 3|
+|13|N|Telefon 4|
+|14|O|E-Mail|
+|15|P|Zusatz|
+|*16|Q|patsel|
+|*17|R|Brief-Anrede|
+|*18|S|letzerk|
+|*19|T|Frei 1|
+|*20|U|Frei 2|
+|*21|V|Frei 3|
+|*22|W|Reiter|
+|23|X|Ort|
+|24|Y|Postleitzahl|
+|25|Z|Land|
+|26|AA|Unfall-Nummer|
+|27|AB|Krankenkassen-Nummer|
+|*28|AC|IV-Nummer|
+|*29|AD|Zusatz-Nummer|
+|*30|AE|AHV-Nummer|
+|*31|AF|CoverCard-Nummer|
+|*32|AG|CoverCart-Zusatz|
+|33|AH|Erfasst am|
+|34|AI|Artz-Nummer|
+|35|AK|Unfall-Versicherung|
+|36|AL|Krankenkasse|
+|*37|AM|IV|
+
+h3. Russi
+
+Dieses Format verwendet 9 Felder/Spalten.
+Mangels Bespielen weiss der Schreiber nicht, wie die Spalten genau bezeichnet werden müssen.
+
+|_. Nr|_. Excel-Spalte|_. Bezeichnung|
+|0|A|ID|
+|1|B|Name|
+|2|C|Geburtsdatum|
+|3|D|Strasse|
+|4|E|PLZ|
+|5|F|Ort|
+|6|G|Telefon1|
+|7|H|Natel|
+|8|I|Telefon1|
+|9|J|Geschlecht|
+|10|K|Organisation|
+
+h2. Import von CSV-Dateien
+
+Dieser Type wird im Moment nicht unterstützt. Im Quellcode nicht unterstützt.
+
+h2. Import von vCard-Dateien
+
+Dieser Type wird im Moment nicht unterstützt. Im Quellcode implementiert, nicht via UI erreichbar.
+
