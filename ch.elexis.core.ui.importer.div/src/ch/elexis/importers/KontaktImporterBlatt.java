@@ -16,7 +16,8 @@ package ch.elexis.importers;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -52,7 +53,7 @@ public class KontaktImporterBlatt extends Composite {
 	Combo cbMethods;
 	boolean bKeepID;
 	int method;
-	private final Logger log = Logger.getLogger(this.getClass().getName());
+	private final Logger log = LoggerFactory.getLogger(this.getClass().getName());
 	static final String[] methods = new String[] {
 		"XLS", "CSV", Messages.KontaktImporterBlatt_kklistHeading}; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String PRESET_RUSSI = "e3ad14dc49e27dbcc4771b41b34cdd902f9cfcc6"; //$NON-NLS-1$

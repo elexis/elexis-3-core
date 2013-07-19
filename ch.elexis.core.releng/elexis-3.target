@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?>
-
-<target name="core.dev" sequenceNumber="14">
+<?pde version="3.8"?><target name="elexis-3" sequenceNumber="15">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.8.3.v20130125-0826"/>
@@ -112,6 +110,7 @@
 <unit id="com.wutka.dtdparser" version="1.21.0"/>
 <unit id="slf4j.api" version="1.6.6"/>
 <unit id="cal10n.api" version="0.7.4"/>
+<unit id="com.healthmarketscience.jackcess" version="1.2.13"/>
 <repository location="http://download.elexis.info/elexis.3rdparty.libraries/"/>
 </location>
 </locations>

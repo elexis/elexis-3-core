@@ -30,9 +30,8 @@ import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.KontaktMatcher.CreateMode;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
-
-import com.sun.istack.internal.logging.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Some statically defined import methods (all from Excel-files)
@@ -44,7 +43,7 @@ public class Presets {
 	// we'll use these local XID's to reference the external data
 	private final static String IMPORT_XID = "elexis.ch/importPresets"; //$NON-NLS-1$
 	private final static String KONTAKTID = IMPORT_XID + "/KID"; //$NON-NLS-1$
-	private static Logger log = Logger.getLogger(Presets.class);
+	private static Logger log = LoggerFactory.getLogger(Presets.class);
 	public static final String INSURANCE = Messages.Presets_Insurance;
 	public static final String INSURANCE_NUMBER = Messages.Presets_InsuranceNumber;
 	

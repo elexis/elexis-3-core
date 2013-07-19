@@ -15,7 +15,8 @@ package ch.elexis.importers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -91,7 +92,7 @@ public class GenericImporterBlatt extends Composite {
 	Label lbFileName;
 	Combo cbMethods;
 	
-	private Logger log = Logger.getLogger(this.getClass().getName());
+	private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 	
 	public GenericImporterBlatt(Composite parent){
 		super(parent, SWT.NONE);
