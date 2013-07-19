@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  *    
  *******************************************************************************/
-package ch.elexis.importers;
+package ch.elexis.core.ui.importer.div.importers;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.widgets.Composite;

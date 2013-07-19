@@ -10,7 +10,7 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.matchers;
+package ch.elexis.core.ui.importer.div.matchers;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;

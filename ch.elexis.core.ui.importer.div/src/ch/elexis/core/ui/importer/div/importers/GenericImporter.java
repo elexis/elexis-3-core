@@ -9,7 +9,7 @@
  *    D. Lutz - initial implementation
  *    
  *******************************************************************************/
-package ch.elexis.importers;
+package ch.elexis.core.ui.importer.div.importers;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;

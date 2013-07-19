@@ -11,7 +11,7 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.rs232;
+package ch.elexis.core.ui.importer.div.rs232;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;

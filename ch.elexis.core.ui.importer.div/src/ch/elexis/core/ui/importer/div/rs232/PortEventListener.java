@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  * 
  *******************************************************************************/
-package ch.elexis.rs232;
+package ch.elexis.core.ui.importer.div.rs232;
 
 import gnu.io.SerialPortEventListener;
 

@@ -5,7 +5,7 @@ Bundle-SymbolicName: ch.elexis.core.ui.importer.div;singleton:=true
 Bundle-Version: 3.0.0.qualifier
 Bundle-Vendor: elexis.info
 Bundle-ClassPath: .
-Export-Package: ch.elexis.importers;
+Export-Package: ch.elexis.core.ui.importer.div.importers;
   uses:="org.eclipse.jface.wizard,
    org.eclipse.core.runtime,
    ch.rgw.tools,
@@ -19,12 +19,12 @@ Export-Package: ch.elexis.importers;
    org.eclipse.jface.viewers,
    org.eclipse.swt.widgets,
    org.eclipse.jface.dialogs",
- ch.elexis.matchers;
+ ch.elexis.core.ui.importer.div.matchers;
   uses:="org.eclipse.osgi.util,
    ch.elexis.data,
    org.eclipse.swt.widgets,
    org.eclipse.jface.dialogs",
- ch.elexis.rs232;uses:="org.eclipse.osgi.util,org.eclipse.swt.widgets"
+ ch.elexis.core.ui.importer.div.rs232;uses:="org.eclipse.osgi.util,org.eclipse.swt.widgets"
 Require-Bundle: org.eclipse.ui;bundle-version="3.8.2",
  org.eclipse.core.runtime;bundle-version="3.8.0",
  ch.rgw.utility;bundle-version="3.0.0",

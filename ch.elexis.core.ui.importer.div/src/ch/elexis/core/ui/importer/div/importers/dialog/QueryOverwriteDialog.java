@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  * 
  *******************************************************************************/
-package ch.elexis.importers.dialog;
+package ch.elexis.core.ui.importer.div.importers.dialog;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;

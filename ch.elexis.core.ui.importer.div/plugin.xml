@@ -4,11 +4,11 @@
    <extension
          point="ch.elexis.core.ui.FremdDatenImport">
       <importer
-            Class="ch.elexis.importers.KontaktImporter"
+            Class="ch.elexis.core.ui.importer.div.importers.KontaktImporter"
             name="Kontakte">
       </importer>
       <importer
-            Class="ch.elexis.importers.GenericImporter"
+            Class="ch.elexis.core.ui.importer.div.importers.GenericImporter"
             name="Allgemein">
       </importer>
    </extension>

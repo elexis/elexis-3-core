@@ -10,7 +10,7 @@
  * 
  *******************************************************************************/
 
-package ch.elexis.importers;
+package ch.elexis.core.ui.importer.div.importers;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -27,8 +27,8 @@ import ch.elexis.core.data.Query;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.importer.div.importers.dialog.QueryOverwriteDialog;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.importers.dialog.QueryOverwriteDialog;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;

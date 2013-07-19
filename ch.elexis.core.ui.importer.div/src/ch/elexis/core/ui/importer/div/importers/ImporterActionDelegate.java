@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  * 
  *******************************************************************************/
-package ch.elexis.importers;
+package ch.elexis.core.ui.importer.div.importers;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;

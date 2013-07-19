@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  * 
  *******************************************************************************/
-package ch.elexis.matchers;
+package ch.elexis.core.ui.importer.div.matchers;
 
 import java.util.List;
 

@@ -10,7 +10,7 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.importers;
+package ch.elexis.core.ui.importer.div.importers;
 
 import java.util.ArrayList;
 import java.util.HashMap;

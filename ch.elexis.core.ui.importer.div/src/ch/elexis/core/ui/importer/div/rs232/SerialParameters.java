@@ -1,4 +1,4 @@
-package ch.elexis.rs232;
+package ch.elexis.core.ui.importer.div.rs232;
 
 /* @(#)SerialParameters.java	1.5 98/07/17 SMI
  *
