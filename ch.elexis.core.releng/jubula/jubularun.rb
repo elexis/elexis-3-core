@@ -97,10 +97,10 @@ public
  end
  
   def prepareRcpSupport
-    savedDir = Dir.pwd
+    savedDir = Dir.pwd    
     unless @dryRun
-      FileUtils.makedirs(@instDest)
-      Dir.chdir(@instDest)
+      FileUtils.makedirs(File.join(@instDest, 'plugins'))
+      Dir.chdir(File.join(@instDest, 'plugins'))
     end
     cmd = "#{JubulaOptions::jubulaHome}/development/rcp-support.zip"
     if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
