@@ -10,8 +10,8 @@ h2. Requirements
 
 * Java 7
 * Maven 3
-* Rake
 * Eclipse Juno (3.8.2)
+* Ruby/Rake/Jubula
 
 h2. headless build (aka command line)
 
@@ -27,10 +27,8 @@ To deploy this site have a look at the excellent "Eclipse Tycho - Tutorial for b
 
 h2. problems
 
-* How to keep MANIFEST.MF and pom.xml in sync
-	See also https://bugs.eclipse.org/bugs/show_bug.cgi?id=387802
-	mvn org.eclipse.tycho:tycho-versions-plugin:update-pom -Dtycho.mode=maven
-	mvn clean install
+* We see quite often the error @Failed to execute goal org.eclipse.tycho:tycho-p2-publisher-plugin:0.18.0:publish-products (default-publish-products) on project ch.elexis.core.releng.product: Unable to locate the equinox launcher feature (aka delta-pack)@. It seems that a server (don't know which one) is quite often offline. In this case just call @mvn clean install --offline@ and the build will succeed, if you don't need to download any new dependency.
+* How to keep MANIFEST.MF and pom.xml in sync. A "bug report":https://bugs.eclipse.org/bugs/show_bug.cgi?id=387802 recommends running @mvn org.eclipse.tycho:tycho-versions-plugin:update-pom -Dtycho.mode=maven && mvn clean install@
 
 h2. Eclipse IDE
 
@@ -41,5 +39,7 @@ h2. Eclipse IDE
 h2. TODO
 
 * Investigate why the created app does not start
+* Run Jubula tests
 * Fix problem with missing icons
-* Add deploy to scp/sftp
+* Create a tag (but with a good name not @jenkins-Elexis-3.0-Core-18@ and pushing it to github each time, all tests (JUnit, PDE-Test, Jubula) have passed on one/all architecture. The tag name should be something like @I_YEAR_MONTH_DAY_HOUR_MINUTE@, see example "eclipse.e4.tools":http://git.eclipse.org/c/e4/org.eclipse.e4.tools.git/
+* It should be possible to call @mvn clean install@ in an project, e.g. @ch.rgw.utility@ to speed up building a single project.
