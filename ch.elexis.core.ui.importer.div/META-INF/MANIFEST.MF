@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Import für verschiedene Dateien
 Bundle-SymbolicName: ch.elexis.core.ui.importer.div;singleton:=true
-Bundle-Version: 3.0.0
+Bundle-Version: 3.0.0.qualifier
 Bundle-Vendor: elexis.info
 Bundle-ClassPath: .,
  lib/jackcess-1.2.13.jar,
