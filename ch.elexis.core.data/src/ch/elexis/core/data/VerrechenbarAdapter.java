@@ -12,7 +12,9 @@
 
 package ch.elexis.core.data;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IVerrechenbar;

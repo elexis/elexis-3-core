@@ -123,11 +123,24 @@ import ch.rgw.tools.net.NetTool;
 public abstract class PersistentObject implements IPersistentObject {
 	protected static final String MAPPING_ERROR_MARKER = "**ERROR:";
 
+	/** predefined field name for the GUID */
+	public static final String FLD_ID = "id";
+	/** predefined property to handle a field that is a compressed HashMap */
 	public static final String FLD_EXTINFO = "ExtInfo";
+	/** predefined property to hande a field that marks the Object as deleted */
 	public static final String FLD_DELETED = "deleted";
+	/**
+	 * predefined property that holds an automatically updated field containing the last update of
+	 * this object as long value (milliseconds as in Date())
+	 */
 	public static final String FLD_LASTUPDATE = "lastupdate";
-	protected static final String DATE_COMPOUND = "Datum=S:D:Datum";
+	/**
+	 * predefined property that holds the date of creation of this object in the form YYYYMMDD
+	 */
 	public static final String FLD_DATE = "Datum";
+	
+	protected static final String DATE_COMPOUND = "Datum=S:D:Datum";
+
 	public static final int CACHE_DEFAULT_LIFETIME = 15;
 	public static final int CACHE_MIN_LIFETIME = 5;
 

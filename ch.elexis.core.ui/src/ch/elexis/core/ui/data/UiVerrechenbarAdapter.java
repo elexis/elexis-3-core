@@ -29,8 +29,6 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AddElementToBlockDialog;
 
 /**
- * 
- * @author marco
  *@since 3.0.0
  */
 public abstract class UiVerrechenbarAdapter extends VerrechenbarAdapter {
@@ -46,8 +44,9 @@ public abstract class UiVerrechenbarAdapter extends VerrechenbarAdapter {
 		makeActions(this);
 	}
 	
-	public List<IAction> getActions(Verrechnet kontext){
-		ArrayList<IAction> actions = new ArrayList<IAction>(1);
+	@Override
+	public List<Object> getActions(Object kontext){
+		List<Object> actions = new ArrayList<Object>(1);
 		if (addToBlockAction == null) {
 			makeActions(this);
 		}
