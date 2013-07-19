@@ -98,19 +98,39 @@ public
  
   def prepareRcpSupport
     savedDir = Dir.pwd
-    pp @instDest
     unless @dryRun
       FileUtils.makedirs(@instDest)
       Dir.chdir(@instDest)
     end
-	cmd = "#{JubulaOptions::jubulaHome}/rcp-support.zip"
-	if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
-	  cmd = "#{File.expand_path(File.dirname(__FILE__))}/7z x -y #{cmd} > test-unzip.log"
-	  cmd.gsub!('\\', '\\\\')
-	else 
-	  cmd = "unzip -q #{cmd}"
-	end
-    system(cmd) if Dir.glob("#{@instDest}/plugins/org.eclipse.jubula.rc.rcp_*/*").size == 0
+    cmd = "#{JubulaOptions::jubulaHome}/development/rcp-support.zip"
+    if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
+      cmd = "#{File.expand_path(File.dirname(__FILE__))}/7z x -y #{cmd} > test-unzip.log"
+      cmd.gsub!('\\', '\\\\')
+    else 
+      cmd = "unzip -q #{cmd}"
+    end
+    fileName = File.expand_path("#{@instDest}/plugins/org.eclipse.jubula.rc.rcp_**")
+    system(cmd) if Dir.glob(fileName).size == 0
+    ini_name = File.join(@instDest, 'configuration', 'config.ini')
+    config_ini = IO.readlines(ini_name)
+    needsJubulaRcpSupport = true
+    rcpStart = ',org.eclipse.jubula.rc.rcp@start'
+    config_ini.each{ 
+      |line|
+        needsJubulaRcpSupport = false if /^osgi.bundles=/.match(line) and /#{rcpStart}/.match(line)
+    }   
+    puts "#{File.basename(ini_name)}: #{needsJubulaRcpSupport ? 'must be patched to add ' : ' already was already patched to '} start jubula.rc.rcp"
+    if needsJubulaRcpSupport
+      config_ini.each{ 
+        |line|
+          if /^osgi.bundles=/.match(line)
+            puts "must patch #{ini_name}\n#{line.inspect}"
+            line.sub!(/\n/, rcpStart + "\n")
+            break
+          end
+      }
+      File.open(ini_name, 'w') { |file| file.write config_ini.join('') }
+    end
     Dir.chdir(savedDir) if !@dryRun
   end
   
@@ -133,7 +153,7 @@ public
 	exit 1
       end
       system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{tcs[0]} #{dbSpec}", @@myFail)
-      } if false
+      } # if false
     system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{xmlFile} #{dbSpec}")
   end
 
@@ -159,16 +179,15 @@ public
   end
   
   def startAUT(sleepTime = 30)
-	@@nrRun ||= 0
-	@@nrRun += 1
-	log = "#{@testResults}/test-console-#{@@nrRun}.log"
-	cmd = "#{JubulaOptions::jubulaHome}/server/autrun --workingdir #{@testResults} -rcp --kblayout #{@kblayout} -i #{@autid} --exec #{@wrapper} --generatename true --autagentport #{@portNumber}"
-	if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
-	   cmd = "start #{cmd}"
-	else 
-	  cmd += " 2>&1 | tee #{log} &"
-	end
-        p cmd
+    @@nrRun ||= 0
+    @@nrRun += 1
+    log = "#{@testResults}/test-console-#{@@nrRun}.log"
+    cmd = "#{JubulaOptions::jubulaHome}/server/autrun --workingdir #{@testResults} -rcp --kblayout #{@kblayout} -i #{@autid} --exec #{@wrapper} --generatename true --autagentport #{@portNumber}"
+    if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
+      cmd = "start #{cmd}"
+    else 
+      cmd += " 2>&1 | tee #{log} &"
+    end
     res = system(cmd)
     if !res then puts "failed. exiting"; exit(3); end
     puts("# Sleeping for #{sleepTime} after startAUT" )
@@ -187,7 +206,6 @@ public
 	  "-resultdir #{@testResults} -language  #{@kblayout} #{dbSpec} " +
 	  "-datadir #{@dataDir} -data #{@data}")
     puts "runTestsuite  #{testsuite} returned #{res.inspect}"
-#    system("import #{testsuite}_#{res.to_s}.png", @@myFail)
     res
   end
   

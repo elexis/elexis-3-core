@@ -7,6 +7,7 @@
 
 require "#{File.dirname(__FILE__)}/jubulaoptions"
 require "#{File.dirname(__FILE__)}/jubularun"
+$stdout.sync=true
 
 opts = JubulaOptions::parseArgs
 opts.parse!(ARGV)
@@ -24,16 +25,11 @@ wsDir = "#{jubula.workspace}/test-ws"
 FileUtils.rm_rf(wsDir, :verbose => true, :noop => DryRun)
 
 jubula.useH2(Dir.pwd)
-# jubula.rmTestcases 	# only if using h2 
-# jubula.loadTestcases    # only if using h2
+jubula.rmTestcases 	# only if using h2 
+jubula.loadTestcases    # only if using h2
 jubula.prepareRcpSupport
 jubula.genWrapper
-
-okay1 = true	
-okay1 = jubula.runOneTestcase('sample', 60) if false
-puts "okay1 ist #{okay1}"
-okay2 = true
-okay2 = jubula.runOneTestcase('FULLTEST', 60) # 30 Sekunden waren nicht genug auf Windows bis Elexis aufgestartet war
+okay2 = jubula.runOneTestcase('FULLTEST', 15) # 30 Sekunden waren nicht genug auf Windows bis Elexis aufgestartet war
 puts "okay2 ist #{okay2}"
 
 Dir.glob("**/*shot*/*.png").each{ 
@@ -43,10 +39,10 @@ Dir.glob("**/*shot*/*.png").each{
       next if /#{File.basename(jubula.testResults)}/.match(x)
       FileUtils.cp(x, "#{jubula.testResults}", :verbose => true, :noop => DryRun)
 }
-if okay1 and okay2 
-  puts "Sample and FULLTEST were okay!"
+if okay2 
+  puts "FULLTEST was okay!"
   exit(0);
 else
-  puts "Sample #{okay1} or FULLTEST #{okay2} failed"
+  puts "FULLTEST #{okay2} failed"
   exit(2)
 end

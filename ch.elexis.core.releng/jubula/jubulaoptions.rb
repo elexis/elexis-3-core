@@ -100,7 +100,7 @@ module JubulaOptions
   }
   @kblayout    ||= 'de_DE'
   @portNumber  ||= 60011
-  @project     ||= 'ElexisDemo'
+  @project     ||= 'ElexisCore'
   @testResults ||= "#{@workspace}/test-results"
   @server      ||= 'localhost'
   @testsuite   ||= 'sample'
@@ -158,7 +158,13 @@ module JubulaOptions
 	@os = v
       end
       opts.on("-p", "--portNumber portNumber", "portNumber for autagent to use. Defaults to '#{@portNumber}'") do |v|
-	@portNumber = v
+  @portNumber = v
+      end
+      opts.on("--project", "project to use. Defaults to '#{@project}'") do |v|
+  @project = v
+      end
+      opts.on("--projectVersion", "version of project to use. Defaults to '#{@version}'") do |v|
+  @version = v
       end
       opts.on("-i", "--installer file_or_http_link", "installer to use (either a file or a http-link). Defaults to '#{@installer}'") do |v|
 	@installer = v

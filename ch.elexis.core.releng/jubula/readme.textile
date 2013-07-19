@@ -23,4 +23,8 @@ h2. Using the Jubula GUI
 !images/jubula_2.png!
 # Run the test-suite @sample@
 
-Tested under Debian Squeeze
+I recommend installing the "Jubula database drivers" (via the Marketplace) and use either MySQL or PostgreSQL as the database for development.
+
+The automated tests (via Ruby) use the embedded H2 in the subdirectory database of the workspace.
+
+Tested under Debian Wheezy
