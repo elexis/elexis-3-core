@@ -2475,7 +2475,7 @@
               <comment xsi:nil="true"/>
               <GUID>045f774c837c449488bb39a43f30b213</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364afe807c1</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
@@ -2494,7 +2494,7 @@
                   <data columnCount="1">
                     <data>
                       <language>de_DE</language>
-                      <value>Elexis.*</value>
+                      <value>Datei.*Bearbeiten.*|Elexi.*</value>
                     </data>
                   </data>
                   <data columnCount="2">
@@ -2506,7 +2506,7 @@
                   <data columnCount="3">
                     <data>
                       <language>de_DE</language>
-                      <value>30000</value>
+                      <value>60000</value>
                     </data>
                   </data>
                   <data columnCount="4">
@@ -3274,7 +3274,7 @@
             <comment xsi:nil="true"/>
             <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <datafile xsi:nil="true"/>
             <referencedTestData>PERSPECTIVES</referencedTestData>
             <testcaseGuid>081896a0ebde4f64b918d0750b0b52fd</testcaseGuid>
@@ -3287,7 +3287,7 @@
             <comment xsi:nil="true"/>
             <GUID>0066bb4b73dd4c888e3b334b18ae0940</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <testdata/>
             <datafile xsi:nil="true"/>
             <referencedTestData>VIEWS</referencedTestData>
@@ -3301,7 +3301,7 @@
             <comment xsi:nil="true"/>
             <GUID>248758863ac04562aa9692ce13d4062f</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <testdata/>
             <datafile xsi:nil="true"/>
             <referencedTestData>PREFERENCES</referencedTestData>
@@ -3316,7 +3316,7 @@
             <comment xsi:nil="true"/>
             <GUID>f4d7fd6464ad42798e0623033f31003a</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <testdata>
               <row rowCount="1">
                 <data columnCount="1">
@@ -3339,7 +3339,7 @@
             <comment xsi:nil="true"/>
             <GUID>598431b3ac0f4adcaa53dee907ec336b</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <testdata>
               <row rowCount="1">
                 <data columnCount="1">
