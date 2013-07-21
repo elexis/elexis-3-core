@@ -392,7 +392,7 @@
         </confAttrMapEntry>
         <confAttrMapEntry>
           <key>ACTIVATION_METHOD</key>
-          <value>NONE</value>
+          <value>TITLEBAR</value>
         </confAttrMapEntry>
         <confAttrMapEntry>
           <key>AGENT_CLASS</key>
@@ -416,7 +416,7 @@
         </confAttrMapEntry>
         <confAttrMapEntry>
           <key>INSTALL_DIR</key>
-          <value>/opt/jubula-elexis/elexis-2.1.5.x</value>
+          <value>/opt/elexis-3-core/ch.elexis.core.releng/product/target/products/ch.elexis.core.application.product/linux/gtk/x86_64/plugins</value>
         </confAttrMapEntry>
         <confAttrMapEntry>
           <key>JAR_FILE_PATH</key>
@@ -441,6 +441,10 @@
         <confAttrMapEntry>
           <key>SERVER</key>
           <value>localhost</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>SOURCE_DIR</key>
+          <value>/opt/elexis-3-core/ch.elexis.core.releng</value>
         </confAttrMapEntry>
         <confAttrMapEntry>
           <key>WORKING_DIR</key>
@@ -2025,6 +2029,89 @@
           <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
+              <name>Wait for window 'Elexis'</name>
+              <comment xsi:nil="true"/>
+              <GUID>cf0397c5596148da8252968920258f1c</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Elexis.*</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>matches</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>10</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d9da432008d</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9db72e008e</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9dd5d2008f</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9df0db0090</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807b1</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Wait for window 'Elexis'</name>
+              <comment xsi:nil="true"/>
+              <GUID>e7ba42b1d55d42f99bd1015354532e68</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Elexis</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>100</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d9bb65c0089</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9bdbc6008a</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9bf9dd008b</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807bb</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Snapshot</name>
               <comment xsi:nil="true"/>
               <GUID>7ab7bb27086946dfac81e94172d50014</GUID>
@@ -3373,6 +3460,19 @@
         </teststep>
         <teststep>
           <usedTestcase>
+            <name xsi:nil="true"/>
+            <comment xsi:nil="true"/>
+            <GUID>9fd5f59690424fe2b127c312105ab794</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
             <name>Take Screenshot after startup</name>
             <comment xsi:nil="true"/>
             <GUID>b63a87330ef347b39c7436924d3b7482</GUID>
@@ -3947,29 +4047,6 @@
         <datafile xsi:nil="true"/>
         <teststep>
           <usedTestcase>
-            <name>Screenshot to see the first window</name>
-            <comment xsi:nil="true"/>
-            <GUID>c045c6d4400a4c17b8c7fd10d86fae81</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <testdata>
-              <row rowCount="1">
-                <data columnCount="1">
-                  <data>
-                    <language>de_DE</language>
-                    <value>elexis-screenshots/startup_1.png</value>
-                  </data>
-                </data>
-              </row>
-              <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
-            </testdata>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
             <name>Avoid multiple problems</name>
             <comment xsi:nil="true"/>
             <GUID>b9e8075dc4d84338918c8bf6aaef965a</GUID>
@@ -4022,7 +4099,7 @@
             <comment xsi:nil="true"/>
             <GUID>ad122853a5374b2480bd41a6573bcf8d</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <testdata/>
             <datafile xsi:nil="true"/>
             <referencedTestData>PATIENTEN</referencedTestData>
@@ -4036,7 +4113,7 @@
             <comment xsi:nil="true"/>
             <GUID>6444b15f43c34f8c858c07d7833a3ed5</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
@@ -4055,7 +4132,7 @@
             <comment xsi:nil="true"/>
             <GUID>f5ca7acaf31b446a81f199872371e1d8</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364afe807c9</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
@@ -4068,7 +4145,7 @@
             <comment xsi:nil="true"/>
             <GUID>ac21e9fa2094497e9b0393f323bbc776</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <testdata>
               <row rowCount="1">
                 <data columnCount="1">
@@ -4096,7 +4173,8 @@
           <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <eventType>TestErrorEvent.Action</eventType>
-          <reentryProperty>break</reentryProperty>
+          <reentryProperty>retry</reentryProperty>
+          <maxRetries>1</maxRetries>
         </eventTestcase>
         <interfaceLocked>false</interfaceLocked>
       </testcase>
@@ -4631,25 +4709,25 @@
               <data columnCount="6">
                 <data>
                   <language>de_DE</language>
-                  <value>0</value>
+                  <value>30</value>
                 </data>
               </data>
               <data columnCount="7">
                 <data>
                   <language>de_DE</language>
-                  <value>0</value>
+                  <value>30</value>
                 </data>
               </data>
               <data columnCount="8">
                 <data>
                   <language>de_DE</language>
-                  <value>0</value>
+                  <value>30</value>
                 </data>
               </data>
               <data columnCount="9">
                 <data>
                   <language>de_DE</language>
-                  <value>0</value>
+                  <value>30</value>
                 </data>
               </data>
             </row>
