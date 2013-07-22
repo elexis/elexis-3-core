@@ -88,7 +88,7 @@ module JubulaOptions
   @dryRun      ||= false
   @exeFile     ||= "#{File.expand_path(File.dirname(__FILE__))}/../product/target/products/ch.elexis.core.application.product/#{@os}/#{@winType}/#{@cpu}/Elexis 3.0"
 
-  version = '#{version}'
+  version = '7.1.00054'
   ["/opt/jubula_#{version}", "c:/Program Files/jubula_#{version}", "E:/jubula_#{version}", "/Applications/jubula_#{version}", ].each {
      |default|
       if File.exists?(default) # File.directory? chokes under Windows
