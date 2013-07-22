@@ -29,8 +29,8 @@ jubula.rmTestcases 	# only if using h2
 jubula.loadTestcases    # only if using h2
 jubula.prepareRcpSupport
 jubula.genWrapper
-okay2 = jubula.runOneTestcase('FULLTEST', 15) # 30 Sekunden waren nicht genug auf Windows bis Elexis aufgestartet war
-puts "okay2 ist #{okay2}"
+res_FULLTEST = jubula.runOneTestcase('FULLTEST', 15) # 30 Sekunden waren nicht genug auf Windows bis Elexis aufgestartet war
+puts "res_FULLTEST ist #{res_FULLTEST}"
 
 Dir.glob("**/*shot*/*.png").each{ 
   |x|
@@ -39,10 +39,10 @@ Dir.glob("**/*shot*/*.png").each{
       next if /#{File.basename(jubula.testResults)}/.match(x)
       FileUtils.cp(x, "#{jubula.testResults}", :verbose => true, :noop => DryRun)
 }
-if okay2 
-  puts "FULLTEST was okay!"
+if res_FULLTEST 
+  puts "FULLTEST completed successfully"
   exit(0);
 else
-  puts "FULLTEST #{okay2} failed"
+  puts "FULLTEST #{res_FULLTEST} failed"
   exit(2)
 end

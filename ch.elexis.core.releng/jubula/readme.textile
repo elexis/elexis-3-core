@@ -28,3 +28,7 @@ I recommend installing the "Jubula database drivers" (via the Marketplace) and u
 The automated tests (via Ruby) use the embedded H2 in the subdirectory database of the workspace.
 
 Tested under Debian Wheezy
+
+h2. contributor hints
+
+* After installing xmllint I added in my .git/commit/pre-commit the line @@exec ch.elexis.core.releng/jubula/format_xml.rb ch.elexis.core.releng/jubula/*.xml@@ to prettify the test.xml
