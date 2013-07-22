@@ -4,6 +4,7 @@
 # Copyright Niklaus Giger, 2011, niklaus.giger@member.fsf.org
 
 require 'optparse'
+require 'fileutils'
 require "#{File.dirname(__FILE__)}/helpers"
 
 module JubulaOptions
@@ -54,6 +55,7 @@ module JubulaOptions
     when WINDOWS_REGEXP
       @os='windows'
       @winType = 'win32'
+      @cpu = 'x86' if /i.86/.match(@cpu)
     when /linux/i
       @os = 'linux'
       @winType = 'gtk'
@@ -85,13 +87,9 @@ module JubulaOptions
   @dbpw        ||= "elexisTest"
   @dryRun      ||= false
   @exeFile     ||= "#{File.expand_path(File.dirname(__FILE__))}/../product/target/products/ch.elexis.core.application.product/#{@os}/#{@winType}/#{@cpu}/Elexis 3.0"
-  if Dir.glob(@exeFile).size == 0
-    puts "Could not find exeFile #{@exeFile}"
-    exit 1
-  end
-  @instDest    ||= File.dirname(@exeFile)
 
-  ['/opt/jubula_7.1.00054', '"c:/Program Files/jubula_7.1.00054"', ].each {
+  version = '#{version}'
+  ["/opt/jubula_#{version}", "c:/Program Files/jubula_#{version}", "E:/jubula_#{version}", "/Applications/jubula_#{version}", ].each {
      |default|
       if File.exists?(default) # File.directory? chokes under Windows
         @jubulaHome  ||= default
@@ -116,7 +114,15 @@ module JubulaOptions
     end if false
     @vm = debian_32bit_vm
     @vm = 'java'
+  elsif /win/.match(RbConfig::CONFIG['host_os'])
+	@exeFile.sub!('windows', 'win32')
+	@exeFile += '.exe'
   end
+  if Dir.glob(@exeFile).size == 0
+    puts "Could not find exeFile #{@exeFile}"
+    exit 1
+  end
+  @instDest    ||= File.dirname(@exeFile)
   
   def JubulaOptions::parseArgs
     options = OptionParser.new do |opts|

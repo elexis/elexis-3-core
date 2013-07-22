@@ -54,14 +54,14 @@ public
 	}
     [@testResults, @dataDir].each { #  @data,
       |x|
-	FileUtils.rm_rf(x, :verbose => true, :noop => @dryRun)
+	FileUtils.rm_rf(File.expand_path(x), :verbose => true, :noop => @dryRun)
 	FileUtils.makedirs(x, :verbose => true, :noop => @dryRun)
     }
     ENV['TEST_UPV_WORKSPACE'] = @workspace
   end
 
   def autoInstall
-    FileUtils.rm_rf(@instDest, :verbose => true, :noop => @dryRun)
+    FileUtils.rm_rf(File.expand_path(@instDest), :verbose => true, :noop => @dryRun)
     if /2\.1\.6/.match(@installer) and MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
       # Elexis 2.1.6 used a zip file for the mac installer
       short = wgetIfNotExists(@installer.sub('.jar','.zip'))
@@ -137,8 +137,8 @@ public
   def rmTestcases(tc = @project, version = @version)
     if /jdbc:h2/i.match(@dburl)
       # Just remove the directory where the h2 database is stored. Is a lot faster then the other
-     dbDir = File.dirname(@dburl.split(';')[0].split(':')[-1])
-      FileUtils.rm_rf(dbDir, :verbose => true, :noop => @dryRun)
+      dbDir = File.dirname(@dburl.split(';')[0].split(':')[-1])
+      FileUtils.rm_rf(File.expand_path(dbDir), :verbose => true, :noop => @dryRun)
     else
       system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -delete #{project} #{version} #{dbSpec}", @@myFail)
     end
