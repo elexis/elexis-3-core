@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.application.feature"
       label="Elexis OpenSource Application Feature"
-      version="3.0.0.dev-qualifier"
+      version="3.0.0.qualifier"
       provider-name="elexis.info">
 
    <description url="http://www.example.com/description">
