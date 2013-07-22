@@ -31,7 +31,6 @@
       </win>
    </launcher>
 
-
    <vm>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</macos>
    </vm>
@@ -45,6 +44,7 @@
 
    <features>
       <feature id="ch.elexis.core.application.feature" version="3.0.0.dev-qualifier"/>
+      <feature id="ch.elexis.core.ui.feature" version="3.0.0.dev-qualifier"/>
    </features>
 
    <configurations>
