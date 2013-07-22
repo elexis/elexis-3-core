@@ -10,6 +10,6 @@
   </parent>
   <groupId>ch.elexis</groupId>
   <artifactId>ch.elexis.core.application.feature</artifactId>
-  <version>3.0.0.qualifier</version>
+  <version>3.0.0.dev-qualifier</version>
   <packaging>eclipse-feature</packaging>
 </project>
