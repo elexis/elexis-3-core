@@ -106,20 +106,21 @@ module JubulaOptions
   @vmargs      ||= ""  
   @wrapper     ||= "#{@workspace}/test-runner.bat" # use bat for windows!
   @vm          ||= 'java'
-  if /x86_64-linux/.match(RbConfig::CONFIG['host_os'])
-    debian_32bit_vm = "/usr/lib/jvm/ia32-java-6-sun/jre/bin/java"
-    if !File.executable?(debian_32bit_vm)
-      puts "No 32-bit Java virtual machine found at #{debian_32bit_vm}"
-      exit 32
-    end if false
-    @vm = debian_32bit_vm
-    @vm = 'java'
-  elsif /win/.match(RbConfig::CONFIG['host_os'])
-	@exeFile.sub!('windows', 'win32')
-	@exeFile += '.exe'
+  host_os = RbConfig::CONFIG['host_os']
+  case RbConfig::CONFIG['host_os']
+    when WINDOWS_REGEXP
+      @exeFile = File.expand_path(@exeFile.sub('/windows/', '/win32/') + '.exe')
+    when /linux/i
+      @vm = 'java'
+    when /sunos|solaris/i
+        # Solaris
+    when MACOSX_REGEXP
+    else
+      puts "unknown RbConfig::CONFIG['host_os'] #{RbConfig::CONFIG['host_os']}"
+      exit 3
   end
   if Dir.glob(@exeFile).size == 0
-    puts "Could not find exeFile #{@exeFile}"
+    puts "Could not find exeFile #{@exeFile}. host_os is #{host_os}"
     exit 1
   end
   @instDest    ||= File.dirname(@exeFile)

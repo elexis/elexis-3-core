@@ -76,7 +76,9 @@ class EclipseJar
     all = []
     @@preferencePages.each{
       |id, content| 
-        next if /page.name/.match(id)
+        unless content.category
+          next if @@preferencePages.find { |sub_id, x| x.category.eql?(content.id) }
+        end
         category =  content.category
         cat_trans = content.translation
         text = nil
@@ -89,13 +91,14 @@ class EclipseJar
         end
         all << text
     }
-    all.sort.uniq
+    all.sort.uniq if all and all.size > 0
   end
   
   def EclipseJar.getTranslatedViews
     all = []
     @@views.each{
       |id, content| 
+        next unless content.category
         category =  content.category
         cat_trans = content.translation
         text = nil
@@ -217,20 +220,14 @@ class EclipseJar
     puts "#{sprintf("%-40s", File.basename(File.dirname(plugin_xml)))}: now #{@@preferencePages.size} preferencePages" if $VERBOSE
   end
   
+  def EclipseJar.parsePluginDir(plugins_dir =  "/opt/elexis-3-core/ch.elexis.core.releng/product/target/products/ch.elexis.core.application.product/win32/win32/x86_64/plugins")
+    name = "#{plugins_dir}/*.jar"
+    Dir.glob(name).each{
+      |jarname|
+        puts "Adding: #{jarname}" if $VERBOSE
+        EclipseJar.new(jarname)
+    }
+    plugins_dir
+  end
 end
 
-# default plugins_dir
-plugins_dir = ARGV[0] ? ARGV[0] : "/opt/elexis-3-core/ch.elexis.core.releng/product/target/products/ch.elexis.core.application.product/win32/win32/x86_64/plugins"
-
-name = "#{plugins_dir}/*elexis*.jar"
-name = "#{plugins_dir}/*.jar"
-$perspectives = []
-$views = []
-$prefPages = []
-$allPrefCategories = Hash.new
-
-Dir.glob(name).each{
-  |jarname|
-  puts "Adding: #{jarname}" if $VERBOSE
-    x = EclipseJar.new(jarname)
-}

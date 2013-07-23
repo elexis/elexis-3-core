@@ -2,7 +2,6 @@
 # coding: utf-8
 # License: Eclipse Public License 1.0
 # Copyright Niklaus Giger, 2011, niklaus.giger@member.fsf.org
-
 require 'fileutils'
 require 'tempfile'
 require "#{File.dirname(__FILE__)}/helpers"
@@ -109,9 +108,16 @@ public
     else 
       cmd = "unzip -q #{cmd}"
     end
-    fileName = File.expand_path("#{@instDest}/plugins/org.eclipse.jubula.rc.rcp_**")
-    system(cmd) if Dir.glob(fileName).size == 0
+    fileName = File.expand_path("#{@instDest}/plugins/org.eclipse.jubula.rc.rcp_*.jar")
+    if Dir.glob(fileName).size != 1 or File.size(Dir.glob(fileName)[0]) < 4000
+      FileUtils.rm_f(Dir.glob(fileName)[0]) if Dir.glob(fileName).size > 0
+      system(cmd)
+    end
     ini_name = File.join(@instDest, 'configuration', 'config.ini')
+    if Dir.glob(@exeFile).size == 0
+      puts "prepareRcpSupport: Could not find ini_name #{ini_name}. host_os is #{RbConfig::CONFIG['host_os']}"
+      exit 1
+    end
     config_ini = IO.readlines(ini_name)
     needsJubulaRcpSupport = true
     rcpStart = ',org.eclipse.jubula.rc.rcp@start'
@@ -142,6 +148,12 @@ public
     else
       system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -delete #{project} #{version} #{dbSpec}", @@myFail)
     end
+  end
+  
+  def patchXML
+    xmlFile = "#{project}_#{version}.xml"
+    cmd = "ruby patch_views_pref_persp.rb --xml #{xmlFile} --plugins #{@instDest}"
+    exit 1 unless system(cmd)
   end
   
   def loadTestcases(xmlFile = "#{project}_#{version}.xml")
@@ -233,14 +245,14 @@ public
   def genWrapper
     wrapper = "#{JubulaOptions.wrapper}"
     exe  = File.expand_path(exeFile)
-    exe += '.app/Contents/MacOS/elexis' if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
-    doc = "'#{exe}' #{vm.eql?('java') ? "" : " -vm #{vm}"} -clean -data #{@dataDir} -vmargs #{vmargs}"
+    exe += '.app/Contents/MacOS/' + File.basename(exe) if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
+    doc = "'#{exe}' #{vm.eql?('java') ? "" : " -vm #{vm}"} -clean -consoleLog -debug -data #{@dataDir} -vmargs #{vmargs}"
     File.open(wrapper, 'w') {|f| f.puts(doc) }
     FileUtils.chmod(0744, wrapper)
     puts "#{dryRun ? 'Would create' : 'Created'} wrapper script #{wrapper} with content"
     puts doc
   end
-  
+
 end
 
 if $0 == __FILE__

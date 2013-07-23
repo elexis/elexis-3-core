@@ -26,6 +26,7 @@ FileUtils.rm_rf(wsDir, :verbose => true, :noop => DryRun)
 
 jubula.useH2(Dir.pwd)
 jubula.rmTestcases 	# only if using h2 
+jubula.patchXML
 jubula.loadTestcases    # only if using h2
 jubula.prepareRcpSupport
 jubula.genWrapper
