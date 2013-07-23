@@ -33,21 +33,13 @@
 
   </properties>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>tycho</id>
-      <url>${local.url}</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-versions-plugin</artifactId>
+        <version>${tycho-version}</version>
+      </plugin>
       <plugin>
         <!-- we want to ensure that the bin directory created by the Eclipse gets cleaned, too. 
              Without it Maven would put two versions of each class file into the jars
@@ -152,6 +144,11 @@
 
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-versions-plugin</artifactId>
+          <version>${tycho-version}</version>
+        </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-compiler-plugin</artifactId>
