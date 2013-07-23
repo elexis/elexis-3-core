@@ -55,11 +55,7 @@ def patchJubulaXML(xml_name, plugin_dir = nil)
     puts "Could not find file #{xml_name}"
     exit 1
   end
-  f = File.open(xml_name)
-  doc = Nokogiri::XML(f)
-  node_set = Nokogiri::XML::NodeSet.new(doc)
-  doc = Nokogiri::Slop(f)
-  ref = XmlSimple.xml_in(xml_name)
+  ref = XmlSimple.xml_in(File.open(xml_name))
 
   plugin_dir ? EclipseJar.parsePluginDir(plugin_dir) : plugin_dir = EclipseJar.parsePluginDir()
   pageNames         = EclipseJar.getTranslatedPreferencePages

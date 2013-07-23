@@ -55,7 +55,6 @@ module JubulaOptions
     when WINDOWS_REGEXP
       @os='windows'
       @winType = 'win32'
-      @cpu = 'x86' if /i.86/.match(@cpu)
     when /linux/i
       @os = 'linux'
       @winType = 'gtk'
@@ -68,6 +67,7 @@ module JubulaOptions
     puts "unknown RbConfig::CONFIG['host_os'] #{RbConfig::CONFIG['host_os']}"
     exit 3
   end
+  @cpu = 'x86' if /i.86/.match(@cpu) # needed for i486 on Windows/linux-x86
 
   # default values for remaining variable. Adapt it to your Jubula Installation
   @application ||= 'jubula' # or guidancer
@@ -86,7 +86,6 @@ module JubulaOptions
   @dbuser      ||= "elexis"
   @dbpw        ||= "elexisTest"
   @dryRun      ||= false
-  @exeFile     ||= "#{File.expand_path(File.dirname(__FILE__))}/../product/target/products/ch.elexis.core.application.product/#{@os}/#{@winType}/#{@cpu}/Elexis 3.0"
 
   version = '7.1.00054'
   ["/opt/jubula_#{version}", "c:/Program Files/jubula_#{version}", "E:/jubula_#{version}", "/Applications/jubula_#{version}", ].each {
@@ -106,6 +105,7 @@ module JubulaOptions
   @vmargs      ||= ""  
   @wrapper     ||= "#{@workspace}/test-runner.bat" # use bat for windows!
   @vm          ||= 'java'
+  @exeFile     ||= "#{File.expand_path(File.dirname(__FILE__))}/../product/target/products/ch.elexis.core.application.product/#{@os}/#{@winType}/#{@cpu}/Elexis 3.0"
   host_os = RbConfig::CONFIG['host_os']
   case RbConfig::CONFIG['host_os']
     when WINDOWS_REGEXP
