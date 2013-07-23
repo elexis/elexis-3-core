@@ -49,10 +49,14 @@ def genScreenshotElement(rowCount = 1, name='dummy', prefix = '', language= 'de_
   s
 end
 
-def patchJubulaXML(xml_name, plugin_dir = nil)
+def patchJubulaXML(xml_name, plugin_dir)
   xml_name ||= "ElexisCore_1.0.xml"
   unless File.exists?(xml_name)
-    puts "Could not find file #{xml_name}"
+    puts "#{File.basename(__FILE__)}: Could not find file #{xml_name}"
+    exit 1
+  end
+  unless File.exists?(plugin_dir)
+    puts "#{File.basename(__FILE__)}: Could not find plugin_dir #{plugin_dir}"
     exit 1
   end
   ref = XmlSimple.xml_in(File.open(xml_name))
@@ -63,7 +67,7 @@ def patchJubulaXML(xml_name, plugin_dir = nil)
   perspectiveNames  = EclipseJar.getTranslatedPerspectives
   unless pageNames and viewNames and perspectiveNames
     puts "Could not find view, preference pages or perspectives in #{plugin_dir}"
-    exit
+    exit 1
   end
   counter = 0; pages = []
   pageNames.each{|name|
@@ -111,23 +115,23 @@ end
 @xml = nil
 @plugins_dir = nil
 options = OptionParser.new do |opts|
-      opts.banner = %(Usage: #{File.basename($0)} [@options]
-  Patches a Jubula XML file like this
+      opts.banner = %(Usage: #{File.basename($0)} xml_file plugin_dir
+Patches a Jubula XML file like this
     * Collect info from all jar file inside the plugin directory (jubula_plugin_info)
     * then the following changes are performed
     ** DataSet PERSPECTIVES is replaced with all perspectives found
     ** DataSet VIEWS is replaced with all view names found
     ** DataSet PREFERENCES is replaced with all preferences pages found
     )
-      opts.on("--xml xml_file", "XML-File to patch") do |v|
-  @xml = v
-      end
-      opts.on("--plugins plugin_dir", "Plugins directory of the installed eclipse application") do |v|
-  @plugins_dir = v
-      end
       opts.on("-h", "--help", "Show this help") do |v|
   puts opts
   exit
       end
 end
-patchJubulaXML(@xml, @plugins_dir)
+
+unless ARGV.size == 2
+  puts options.help
+  exit 1
+end
+  
+patchJubulaXML(File.expand_path(ARGV[0]), File.expand_path(ARGV[1]))

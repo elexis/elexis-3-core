@@ -152,8 +152,8 @@ public
   
   def patchXML
     xmlFile = "#{project}_#{version}.xml"
-    cmd = "ruby patch_views_pref_persp.rb --xml #{xmlFile} --plugins #{@instDest}/plugins"
-    exit 1 unless system(cmd)
+    cmd = "ruby patch_views_pref_persp.rb #{xmlFile} #{@instDest}/plugins"
+    exit 1 unless system(cmd, false)
   end
   
   def loadTestcases(xmlFile = "#{project}_#{version}.xml")
