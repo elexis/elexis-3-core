@@ -152,7 +152,7 @@ public
   
   def patchXML
     xmlFile = "#{project}_#{version}.xml"
-    cmd = "ruby patch_views_pref_persp.rb --xml #{xmlFile} --plugins #{@instDest}"
+    cmd = "ruby patch_views_pref_persp.rb --xml #{xmlFile} --plugins #{@instDest}/plugins"
     exit 1 unless system(cmd)
   end
   
