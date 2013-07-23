@@ -9,7 +9,6 @@
 # http://stackoverflow.com/questions/10300095/how-to-add-child-nodes-in-nodeset-using-nokogiri
 
 require 'pp'
-require 'nokogiri'
 require 'ostruct'
 require 'xmlsimple'
 require 'optparse'
