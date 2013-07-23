@@ -32,3 +32,10 @@ Tested under Debian Wheezy
 h2. contributor hints
 
 * After installing xmllint I added in my .git/commit/pre-commit the line @@exec ch.elexis.core.releng/jubula/format_xml.rb ch.elexis.core.releng/jubula/*.xml@@ to prettify the test.xml
+
+h3. requirements
+
+* Jubula 7.1.00054
+* Java7
+* Ruby >= 1.9.0
+** gem xml-simple
