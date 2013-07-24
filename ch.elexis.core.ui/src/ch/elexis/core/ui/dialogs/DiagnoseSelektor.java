@@ -35,6 +35,7 @@ import ch.elexis.core.data.PersistentObjectFactory;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.ui.constants.ExtensionPointConstants;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
@@ -50,7 +51,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		
 		// create a list of all diagnoses
 		java.util.List<IConfigurationElement> list =
-			Extensions.getExtensions("ch.elexis.Diagnosecode");
+			Extensions.getExtensions(ExtensionPointConstants.DIAGNOSECODE);
 		
 		diagnoses.add(new NoDiagnose());
 		

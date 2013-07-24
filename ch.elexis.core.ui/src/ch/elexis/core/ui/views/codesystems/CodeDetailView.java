@@ -66,8 +66,8 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		addCustomBlocksPage();
 		importers.put(ctab.getItem(0).getText(), new BlockImporter());
 		
-		addPagesFor("ch.elexis.Diagnosecode"); //$NON-NLS-1$
-		addPagesFor(ExtensionPointConstants.VERRECHNUNGSCODE); //$NON-NLS-1$
+		addPagesFor(ExtensionPointConstants.DIAGNOSECODE);
+		addPagesFor(ExtensionPointConstants.VERRECHNUNGSCODE);
 		if (ctab.getItemCount() > 0) {
 			ctab.setSelection(0);
 			
