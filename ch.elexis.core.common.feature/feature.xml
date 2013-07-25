@@ -1,73 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<feature
-      id="ch.elexis.core.common.feature"
-      label="Elexis OpenSource Common Bundles Feature"
-      version="3.0.0.qualifier"
-      provider-name="elexis.info">
-
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
-   </description>
-
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
-   </copyright>
-
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
-   </license>
-
-   <requires>
-      <import plugin="org.eclipse.core.runtime" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="ch.qos.logback.classic" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="ch.qos.logback.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="slf4j.api"/>
-      <import plugin="org.eclipse.core.runtime" version="3.8.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.commands" version="3.6.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.expressions" version="3.4.400" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi"/>
-   </requires>
-
-   <plugin
-         id="ch.elexis.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="ch.rgw.utility"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="ch.elexis.core.data"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.h2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.mysql.jdbc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.postgresql"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
+<?xml version='1.0' encoding='UTF-8'?> 
+<feature id='ch.elexis.core.common.feature' label='Elexis OpenSource Common Bundles Feature' version='3.0.0.qualifier' provider-name='elexis.info'>
+ <description url='http://www.example.com/description'>
+   [Enter Feature Description here.] 
+ </description>
+ <copyright url='http://www.example.com/copyright'>
+   [Enter Copyright Description here.] 
+ </copyright>
+ <license url='http://www.example.com/license'>
+   [Enter License Description here.] 
+ </license>
+ <requires>
+  <import plugin='org.eclipse.core.runtime' version='3.5.0' match='greaterOrEqual'/>
+  <import plugin='ch.qos.logback.classic' version='1.0.0' match='greaterOrEqual'/>
+  <import plugin='ch.qos.logback.core' version='1.0.0' match='greaterOrEqual'/>
+  <import plugin='slf4j.api'/>
+  <import plugin='org.eclipse.core.runtime' version='3.8.0' match='greaterOrEqual'/>
+  <import plugin='org.eclipse.core.commands' version='3.6.1' match='greaterOrEqual'/>
+  <import plugin='org.eclipse.core.expressions' version='3.4.400' match='greaterOrEqual'/>
+  <import plugin='ch.elexis.core' version='3.0.0' match='greaterOrEqual'/>
+  <import plugin='org.eclipse.osgi'/>
+ </requires>
+ <plugin id='ch.elexis.core' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
+ <plugin id='ch.rgw.utility' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
+ <plugin id='ch.elexis.core.data' download-size='0' install-size='0' version='0.0.0'/>
+ <plugin id='org.h2' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
+ <plugin id='com.mysql.jdbc' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
+ <plugin id='org.postgresql' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
 </feature>

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core Icons
 Bundle-SymbolicName: ch.elexis.core.ui.icons
-Bundle-Version: 3.0.0.dev-qualifier
+Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.icons.Activator
 Bundle-Vendor: elexis.info
 Require-Bundle: org.eclipse.core.runtime,

@@ -54,7 +54,7 @@ import ch.rgw.tools.VersionInfo;
  */
 public class CoreHub implements BundleActivator {
 	public static final String PLUGIN_ID = "ch.elexis.core.data";
-	public static final String Version = "3.0.0.dev-qualifier"; //$NON-NLS-1$
+	public static final String Version = "3.0.0.qualifier"; //$NON-NLS-1$
 	public static final String APPLICATION_NAME = "Elexis Core"; //$NON-NLS-1$
 	static final String neededJRE = "1.7.0"; //$NON-NLS-1$
 	public static final String DBVersion = "1.8.16"; //$NON-NLS-1$

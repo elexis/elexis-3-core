@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core p2 Update
 Bundle-SymbolicName: ch.elexis.core.ui.p2;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.p2.Activator
 Bundle-Vendor: elexis.info
 Bundle-Localization: plugin
