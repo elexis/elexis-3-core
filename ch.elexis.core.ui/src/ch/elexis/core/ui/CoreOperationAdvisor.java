@@ -13,6 +13,7 @@ package ch.elexis.core.ui;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -33,7 +34,9 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 
 	@Override
 	public void requestDatabaseConnectionConfiguration() {
-		WizardDialog wd = new WizardDialog(Hub.getActiveShell(),
+		Display disp = new Display();
+		Shell shell = new Shell(disp);	
+		WizardDialog wd = new WizardDialog(shell,
 				new DBConnectWizard());
 		wd.create();
 		SWTHelper.center(wd.getShell());
