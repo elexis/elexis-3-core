@@ -27,6 +27,23 @@ To deploy this site have a look at the excellent "Eclipse Tycho - Tutorial for b
 
 * it is possible to compile a single project, which can be a lot faster, especially if you are working offline. E.g @cd ch.rgw.utility && mvn clean compile --offline@ takes only about 10 seconds here.
 
+h3. Creating builds with a specific version
+
+We used tycho-versions-plugin to ensure that all jar files of the built products (when built using with a Maven -SNAPSHOT, aka Eclipse qualifier version inside the pom.xml/MANIFEST.MF) look like @ch.rgw.utility_3.0.0.v20130725-1957.jar@. The timestamp corresponds to the last committed change inside the project.
+
+* Update all projects to a new version.
+Can be done easily using @./prepare_release.rb .. --version 3.0.0.qualifier@
+* Building Beta/Release versions
+If you want to build a specify a context to the version of the jar files in the build products with DforceContextQualifier=beta. In the individual project the jar file would 
+still have the usual name e.g. ch.rgw.utility-3.0.0-SNAPSHOT.jar. Details are found "here":http://eclipse.org/tycho/sitedocs/tycho-packaging-plugin/build-qualifier-mojo.html
+Using -DforceContextQualifier=beta1 and you target jar files will be named like
+# ch.rgw.utility_3.0.0.beta1.jar
+# ch.elexis.core_3.0.0.beta1.jar
+Using -DforceContextQualifier=beta and you target jar files will be named like
+# ch.rgw.utility_3.0.0.jar
+# ch.elexis.core_3.0.0.jar
+
+
 h2. problems
 
 * We see quite often the error @Failed to execute goal org.eclipse.tycho:tycho-p2-publisher-plugin:0.18.0:publish-products (default-publish-products) on project ch.elexis.core.releng.product: Unable to locate the equinox launcher feature (aka delta-pack)@. It seems that a server (don't know which one) is quite often offline. In this case just call @mvn clean install --offline@ and the build will succeed, if you don't need to download any new dependency.
@@ -40,7 +57,5 @@ h2. Eclipse IDE
 
 h2. TODO
 
-* Investigate why the created app does not start
-* Run Jubula tests
 * Fix problem with missing icons
 * Create a tag (but with a good name not @jenkins-Elexis-3.0-Core-18@ and pushing it to github each time, all tests (JUnit, PDE-Test, Jubula) have passed on one/all architecture. The tag name should be something like @I_YEAR_MONTH_DAY_HOUR_MINUTE@, see example "eclipse.e4.tools":http://git.eclipse.org/c/e4/org.eclipse.e4.tools.git/

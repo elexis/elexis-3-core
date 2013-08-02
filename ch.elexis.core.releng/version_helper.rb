@@ -22,8 +22,8 @@ class VersionUpdater
       puts "Could not read file #{filename} to update version to #{newVersion}"
       exit 1
     end
-    @mavenVersion   = newVersion.sub('.qualifier', '-SNAPSHOT')
-    @eclipseVersion = newVersion.sub('-SNAPSHOT', '.qualifier')
+    @mavenVersion   = newVersion.sub(/([\.\-_]qualifier)/, '-SNAPSHOT').sub('.-','-')
+    @eclipseVersion = newVersion.sub('-SNAPSHOT', 'qualifier')
     @filename       = filename
     @newVersion     = newVersion
     @dryRun         = dryRun
@@ -33,6 +33,10 @@ class VersionUpdater
     return if reportDryRun(@mavenVersion)
     doc = Document.new File.new (@filename)
     root = doc.root
+    if /qualifier/.match(@mavenVersion) 
+      puts "Illegal maven version #{@mavenVersion}. Defined using #{@newVersion}. eclipseVersion #{@eclipseVersion}"
+      exit 2
+    end
     root.elements["version"].text = @mavenVersion if root.elements["version"]
     root.elements["parent/version"].text = @mavenVersion if root.elements["parent/version"]
     writeXmlOutput(doc)
@@ -117,7 +121,7 @@ class VersionUpdater
 private
   def writeXmlOutput(doc)
     ausgabe = File.open("#{@filename}", 'w+')
-    doc.write( ausgabe, 1 )
+    doc.write( ausgabe, 2 )
   end
 
   def writeOutput(content)
