@@ -1,2 +1,74 @@
 h1. Elexis logging
 
+The whole logging can be quite tricky as you must combine and start a very specific set of logging plugins.
+
+Inspired by "http://www.slf4j.org/legacy.html":http://www.slf4j.org/legacy.html we use the following jars:
+
+# org.slf4j.jcl replaces commons-logging.jar
+# org.slf4j.log4j replaces log4j.jar
+# SLF4JBridgeHandle is installed (requires org.slf4j.jul). This is done at start level 2 in the activator of ch.elexis.core.logging
+# ch.qos.logback.classic does the real logging and is configured via
+## ch.elexis.logging.default_configuration/rsc/logback.xml
+# ch.qos.logback.slf4j is needed by ch.qos.logback.classic
+# ch.qos.logback.core is needed by ch.qos.logback.classic
+# org.slf4j.api defines the interface and should be always referenced via "import-package" to allow another implementation
+
+ch.elexis.core.logging.feature defines the dependency to all needed plug-ins. It could be (probably) easily replaced by another (slf4j-conformant) implementation if need arises. 
+
+
+h2. Howto handle dependencies on slf4j
+
+I (Niklaus) lost many hours to figure out the correct way to handle the dependencies on the various org.slf4j* components. The trick is to find a solution which works under Maven and the IDE eclipse which handle the dependencies in different way.
+
+h3. Howto avoid name clashes between slf4j-api and org.slf4j.api
+
+*Very nasty things* can happen *if you mix* the org.slf4j-plugins from the Orbit repository with Maven generated plugins called e.g. slf4j-api! Use only the org.slf4j-plugins from the "Orbit repository":http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/. Also be aware that in the Orbit repository the ch.qos.logback.classic is split in two plugins ch.qos.logback.classic and ch.qos.logback.slf4j.
+
+
+h3. How to run/export the Elexis application from the Eclipse IDE
+
+The following rules helped me to achieve a good result:
+
+* Don't import the following plug-ins from the Elexis 3rd-party repository
+** apache-commons
+** any slf4j*
+* Import uk.org.lidalia.sysout-over-slf4j from  the Elexis 3rd-party repository
+* Ensure that the following plugins are manually added to the application being launched by the Eclipse ID (For some unkown reason it seems that for Eclipse it is not enough that they are specifified in the ch.elexis.core.logging.feature.
+** @org.apache.felix.gogo.command@
+** @org.apache.felix.gogo.shell@
+** @org.apache.felix.gogo.runtime@
+** @ch.qos.logback.classic@
+** @ch.qos.logback.slf4j@
+** @ch.qos.logback.core@
+** @ch.elexis.core.logging@
+** @org.slf4j.api@
+** @org.slf4j.jcl@
+** @org.slf4j.jul@
+** @org.slf4j.log4j@
+** @uk.org.lidalia.sysout-over-slf4j@
+* Assure that in your product definition (see @ch.elexis.core.application/Elexis.product@) the following plugins are specified with the correct run level
+** @org.slf4j.api@ run-level 1, start = false
+** @ch.qos.logback.classic@ run-level 2, start = true
+** @ch.qos.logback.core@ run-level 2, start = true
+** @ch.elexis.core.logging@ run-level 2, start = true
+
+* Ensure that other logging frameworks like commons-logging are absent from the built target!
+
+
+h3. Use cases
+
+The following three use cases were my acceptance tests (unfortunatly not all are tested via using our Jenkins CI setup).
+
+# @cd ch.elexis.core.releng && mvn clean install@ must work
+# You must be able to launch the *.launch definitions placed inside @ch.elexis.core.application@. (I only test with linux.x86_64 using an Eclipse Juno-IDE).
+#  Using the Eclipse (Juno-)IDE you must be able to export the @ch.elexis.core.application/Elexis.product@. At the moment this does not work (neither under Juno nor Kepler) but gives the following error output:
+
+bc. Cannot complete the install because one or more required items could not be found.
+ Software being installed: Elexis OpenSource 3.0.0.201308031201 (ch.elexis.core.application.product 3.0.0.201308031201)
+ Missing requirement: Elexis OpenSource Common Bundles Feature 3.0.0.201308031201 (ch.elexis.core.logging.feature.feature.group 3.0.0.201308031201) requires 'uk.org.lidalia.sysout-over-slf4j 1.0.2' but it could not be found
+ Cannot satisfy dependency:
+
+
+h2. TODO
+
+Add watcher to start/stopping bundles. Will come after the master branch starts all stuff correctly.
