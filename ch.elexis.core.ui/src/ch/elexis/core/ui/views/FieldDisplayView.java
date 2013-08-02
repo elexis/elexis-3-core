@@ -143,7 +143,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	
 	public void catchElexisEvent(final ElexisEvent ev){
 		final PersistentObject po = ev.getObject();
-		if (ev.getObjectClass().equals(myClass) && po != null) {
+		if (po != null && ev.getObjectClass().equals(myClass)) {
 			UiDesk.asyncExec(new Runnable() {
 				public void run(){
 					if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
@@ -219,7 +219,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 			ret = Anwender.class;
 		} else {
 			try {
-				String fqname = "ch.elexis.data." + k; //$NON-NLS-1$
+				String fqname = "ch.elexis.core.data." + k; //$NON-NLS-1$
 				ret = Class.forName(fqname);
 			} catch (java.lang.Exception ex) {
 				SWTHelper.showError(Messages.FieldDisplayView_WrongTypeCaption, //$NON-NLS-1$

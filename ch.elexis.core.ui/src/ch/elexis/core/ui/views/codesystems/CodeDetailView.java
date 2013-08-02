@@ -43,6 +43,7 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.constants.ExtensionPointConstants;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -65,8 +66,8 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		addCustomBlocksPage();
 		importers.put(ctab.getItem(0).getText(), new BlockImporter());
 		
-		addPagesFor("ch.elexis.Diagnosecode"); //$NON-NLS-1$
-		addPagesFor("ch.elexis.Verrechnungscode"); //$NON-NLS-1$
+		addPagesFor(ExtensionPointConstants.DIAGNOSECODE);
+		addPagesFor(ExtensionPointConstants.VERRECHNUNGSCODE);
 		if (ctab.getItemCount() > 0) {
 			ctab.setSelection(0);
 			

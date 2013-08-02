@@ -28,6 +28,7 @@ import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.constants.ExtensionPointConstants;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
 
 public class DiagnosenView extends ViewPart implements IActivationListener, ISaveablePart2 {
@@ -64,7 +65,7 @@ public class DiagnosenView extends ViewPart implements IActivationListener, ISav
 			
 		});
 		
-		CodeSelectorFactory.makeTabs(ctab, getViewSite(), "ch.elexis.Diagnosecode"); //$NON-NLS-1$
+		CodeSelectorFactory.makeTabs(ctab, getViewSite(), ExtensionPointConstants.DIAGNOSECODE);
 		
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}

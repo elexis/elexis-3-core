@@ -81,6 +81,7 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.medication.views.FixMediDisplay;
+import ch.elexis.core.ui.settings.UserSettings;
 import ch.elexis.core.ui.util.InputPanel;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
@@ -285,7 +286,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 			@Override
 			public void expansionStateChanging(final ExpansionEvent e){
 				ExpandableComposite src = (ExpandableComposite) e.getSource();
-				UserSettings2.saveExpandedState(KEY_PATIENTENBLATT + src.getText(), e.getState());
+				UserSettings.saveExpandedState(KEY_PATIENTENBLATT + src.getText(), e.getState());
 			}
 			
 		};
@@ -293,7 +294,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 		ecZA =
 			WidgetFactory.createExpandableComposite(tk, form,
 				Messages.Patientenblatt2_additionalAdresses); //$NON-NLS-1$
-		UserSettings2.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
+		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
 		
 		ecZA.addExpansionListener(ecExpansionListener);
 		
@@ -383,7 +384,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 		ecZA.setClient(inpZusatzAdresse);
 		for (int i = 0; i < lbExpandable.length; i++) {
 			ec[i] = WidgetFactory.createExpandableComposite(tk, form, lbExpandable[i]);
-			UserSettings2.setExpandedState(ec[i], KEY_PATIENTENBLATT + lbExpandable[i]);
+			UserSettings.setExpandedState(ec[i], KEY_PATIENTENBLATT + lbExpandable[i]);
 			txExpandable[i] = tk.createText(ec[i], "", SWT.MULTI); //$NON-NLS-1$
 			txExpandable[i].addFocusListener(new Focusreact(dfExpandable[i]));
 			ec[i].setData(KEY_DBFIELD, dfExpandable[i]);
@@ -400,7 +401,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 							tx.setText(""); //$NON-NLS-1$
 						}
 					}
-					UserSettings2.saveExpandedState(KEY_PATIENTENBLATT + src.getText(),
+					UserSettings.saveExpandedState(KEY_PATIENTENBLATT + src.getText(),
 						e.getState());
 				}
 				
@@ -419,7 +420,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 			ec[i].setClient(txExpandable[i]);
 		}
 		ecdm = WidgetFactory.createExpandableComposite(tk, form, FIXMEDIKATION);
-		UserSettings2.setExpandedState(ecdm, KEY_PATIENTENBLATT + FIXMEDIKATION);
+		UserSettings.setExpandedState(ecdm, KEY_PATIENTENBLATT + FIXMEDIKATION);
 		ecdm.addExpansionListener(ecExpansionListener);
 		dmd = new FixMediDisplay(ecdm, site);
 		ecdm.setClient(dmd);
@@ -520,14 +521,14 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 		form.setText(StringTool.unNull(p.getName()) + StringConstants.SPACE
 			+ StringTool.unNull(p.getVorname()) + " (" + p.getPatCode() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		inpAdresse.setText(p.getPostAnschrift(false), false, false);
-		UserSettings2.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
+		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
 		inpZusatzAdresse.clear();
 		for (BezugsKontakt za : p.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);
 		}
 		
 		for (int i = 0; i < dfExpandable.length; i++) {
-			UserSettings2.setExpandedState(ec[i], KEY_PATIENTENBLATT + ec[i].getText());
+			UserSettings.setExpandedState(ec[i], KEY_PATIENTENBLATT + ec[i].getText());
 			if (ec[i].isExpanded() == true) {
 				txExpandable[i].setText(p.get(dfExpandable[i]));
 			}

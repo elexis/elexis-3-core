@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="ch.elexis.core.ui.Verrechnungscode">
+      <Artikel
+            CodeDetailDisplay="ch.elexis.core.ui.eigenartikel.EigenartikelDetailDisplay"
+            CodeSelectorFactory="ch.elexis.core.ui.eigenartikel.EigenartikelSelector"
+            ElementFactory="ch.elexis.core.ui.eigenartikel.EigenartikelPersistentObjectFactory"
+            name="Eigenartikel">
+      </Artikel>
+   </extension>
+
+</plugin>

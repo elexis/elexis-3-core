@@ -1,0 +1,10 @@
+h1. Elexis Eigenartikel UI Part
+
+This plug-in allows for self-managed articles within Elexis. This is the UI part of the plug-in, the core part defining
+the datatype itself can be found in @ch.elexis.core.eigenartikel@.
+
+h2. Updates auf bestehende Artikel
+
+Nach dem Update auf dieses System werden Referenzen innerhalb von Verschreibungen ungültig, da sich die der Datentyp
+von @ch.elexis.data.Eigenartikel@ auf @ch.elexis.eigenartikel.Eigenartikel@ ändert. In Kombination mit dem DB-Check
+Tool kann dieser Fehler automatisiert durch Aufruf von @Fix references for Eigenartikel in Prescriptions@ behoben werden.

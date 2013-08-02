@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
+<setAttribute key="additional_plugins"/>
 <booleanAttribute key="append.args" value="true"/>
 <stringAttribute key="application" value="ch.elexis.core.console.application.ConsoleApplication"/>
 <booleanAttribute key="askclear" value="true"/>
@@ -12,6 +13,8 @@
 <booleanAttribute key="clearwslog" value="false"/>
 <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/ConsoleWithCoreDataOnly (OSX)"/>
 <booleanAttribute key="default" value="false"/>
+<stringAttribute key="featureDefaultLocation" value="workspace"/>
+<stringAttribute key="featurePluginResolution" value="workspace"/>
 <booleanAttribute key="includeOptional" value="true"/>
 <stringAttribute key="location" value="${workspace_loc}/../runtime-coredataonly"/>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
@@ -25,12 +28,15 @@
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dch.elexis.username=test -Dch.elexis.password=test"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <stringAttribute key="product" value="org.eclipse.platform.ide"/>
+<setAttribute key="selected_features">
+<setEntry value="ch.elexis.core.common.feature:default"/>
+</setAttribute>
 <stringAttribute key="selected_target_plugins" value="bcprov@default:default,ch.qos.logback.classic*1.0.7@default:default,ch.qos.logback.core*1.0.7@default:default,com.ibm.icu@default:default,com.mysql.jdbc@default:default,javax.servlet@default:default,log4j@default:default,org.apache.commons.logging@default:default,org.eclipse.core.commands@default:default,org.eclipse.core.contenttype@default:default,org.eclipse.core.databinding.observable@default:default,org.eclipse.core.databinding.property@default:default,org.eclipse.core.databinding@default:default,org.eclipse.core.expressions@default:default,org.eclipse.core.jobs@default:default,org.eclipse.core.runtime.compatibility.auth@default:default,org.eclipse.core.runtime.compatibility.registry@default:false,org.eclipse.core.runtime@default:true,org.eclipse.emf.common@default:default,org.eclipse.emf.ecore@default:default,org.eclipse.equinox.app@default:default,org.eclipse.equinox.common@2:true,org.eclipse.equinox.preferences@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.help@default:default,org.eclipse.jface.databinding@default:default,org.eclipse.jface@default:default,org.eclipse.osgi.services@default:default,org.eclipse.osgi@-1:true,org.eclipse.swt.cocoa.macosx.x86_64@default:false,org.eclipse.swt@default:default,org.eclipse.ui.workbench@default:default,org.h2@default:default,org.jdom@default:default,org.postgresql@default:default,slf4j.api@default:default,slf4j.jcl@default:false,slf4j.log4j12@default:false"/>
 <stringAttribute key="selected_workspace_plugins" value="ch.elexis.core.console.application@default:default,ch.elexis.core.data@default:default,ch.elexis.core@default:default,ch.rgw.utility@default:default"/>
 <booleanAttribute key="show_selected_only" value="false"/>
 <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
 <booleanAttribute key="tracing" value="false"/>
-<booleanAttribute key="useCustomFeatures" value="false"/>
+<booleanAttribute key="useCustomFeatures" value="true"/>
 <booleanAttribute key="useDefaultConfig" value="true"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
 <booleanAttribute key="useProduct" value="false"/>

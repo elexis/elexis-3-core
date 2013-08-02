@@ -18,6 +18,7 @@ import java.util.HashMap;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -25,6 +26,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -68,6 +70,29 @@ public class UiDesk {
 		return theImageRegistry;
 	}
 
+	/**
+	 * Return an image with a specified name. This method is applicable for
+	 * images only, that has been registered beforehand. The default images
+	 * resp. icons are delivered by a separate plugin (in the core this is
+	 * ch.elexis.core.ui.icons)
+	 * 
+	 * @param name
+	 *            the name of the image to retrieve
+	 * @return the Image or null if no such image was found
+	 * 
+	 * @since 3.0.0 will only serve pre-registered icons, <b>default icons have
+	 *        been outsourced</b>
+	 */
+	public static Image getImage(String name) {
+		Image ret = getImageRegistry().get(name);
+		if (ret == null) {
+			ImageDescriptor id = getImageRegistry().getDescriptor(name);
+			if (id != null) {
+				ret = id.createImage();
+			}
+		}
+		return ret;
+	}
 
 	/** shortcut for getColorRegistry().get(String col) */
 	public static Color getColor(String desc) {

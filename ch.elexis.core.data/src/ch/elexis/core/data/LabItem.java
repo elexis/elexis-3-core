@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.constants.TextContainer;
+import ch.elexis.core.constants.TextContainerConstants;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.rgw.tools.StringTool;
@@ -45,7 +45,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 	public static final String SHORTNAME = "kuerzel";
 	public static final String EXPORT = "export";
 	private static final String LABITEMS = "LABORITEMS";
-	private static final Pattern varPattern = Pattern.compile(TextContainer.MATCH_TEMPLATE);
+	private static final Pattern varPattern = Pattern.compile(TextContainerConstants.MATCH_TEMPLATE);
 	
 	@Override
 	protected String getTableName(){

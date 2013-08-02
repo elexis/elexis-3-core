@@ -1,60 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?pde version="3.5"?>
-
-<product name="Elexis OpenSource" uid="ch.elexis.core.application.product" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.0.0.dev-alpha" useFeatures="true" includeLaunchers="true">
-
-   <aboutInfo>
-      <text>
-         Elexis 3.0 Development Version - www.elexis.info
-      </text>
-   </aboutInfo>
-
-   <configIni use="default">
-   </configIni>
-
-   <launcherArgs>
-      <vmArgs>-Dosgi.console.enable.builtin=true</vmArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
-   </launcherArgs>
-
-   <windowImages i16="/ch.elexis.core.application/rsc/elexis2_16.gif" i32="/ch.elexis.core.application/rsc/elexis32_2.gif" i48="/ch.elexis.core.application/rsc/elexis48.gif"/>
-
-   <splash
-      location="ch.elexis.core.application" />
-   <launcher name="Elexis 3.0">
-      <linux icon="/ch.elexis.core.application/rsc/elexis48.xpm"/>
-      <macosx icon="/ch.elexis.core.application/rsc/elexis-mac.icns"/>
-      <solaris/>
-      <win useIco="true">
-         <ico path="/ch.elexis.core.application/rsc/elexis.ico"/>
-         <bmp/>
-      </win>
-   </launcher>
-
-
-   <vm>
-      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</macos>
-   </vm>
-
-   <license>
-        <url>http://www.eclipse.org/legal/epl-v10.html</url>
-   </license>
-
-   <plugins>
-   </plugins>
-
-   <features>
-      <feature id="ch.elexis.core.application.feature" version="3.0.0.dev-qualifier"/>
-   </features>
-
-   <configurations>
-      <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="2" />
-      <plugin id="ch.qos.logback.core" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="3" />
-      <plugin id="org.slf4j.api" autoStart="true" startLevel="2" />
-   </configurations>
-
+<?xml version='1.0' encoding='UTF-8'?> 
+<?pde version="3.5"?> 
+<product name='Elexis OpenSource' uid='ch.elexis.core.application.product' id='ch.elexis.core.application.product' application='ch.elexis.core.application.ElexisApp' version='3.0.0.qualifier' useFeatures='true' includeLaunchers='true'>
+ <aboutInfo>
+  <text>
+    Elexis 3.0 Development Version - www.elexis.info 
+  </text>
+ </aboutInfo>
+ <configIni use='default'>
+ </configIni>
+ <launcherArgs>
+  <vmArgs>
+    -Dosgi.console.enable.builtin=true 
+  </vmArgs>
+  <vmArgsMac>
+    -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts 
+  </vmArgsMac>
+ </launcherArgs>
+ <windowImages i16='/ch.elexis.core.application/rsc/elexis2_16.gif' i32='/ch.elexis.core.application/rsc/elexis32_2.gif' i48='/ch.elexis.core.application/rsc/elexis48.gif'/>
+ <splash location='ch.elexis.core.application'/>
+ <launcher name='Elexis 3.0'>
+  <linux icon='/ch.elexis.core.application/rsc/elexis48.xpm'/>
+  <macosx icon='/ch.elexis.core.application/rsc/elexis-mac.icns'/>
+  <solaris/>
+  <win useIco='true'>
+   <ico path='/ch.elexis.core.application/rsc/elexis.ico'/>
+   <bmp/>
+  </win>
+ </launcher>
+ <vm>
+  <macos include='false'>
+   
+   org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7 
+  </macos>
+ </vm>
+ <license>
+  <url>
+    http://www.eclipse.org/legal/epl-v10.html 
+  </url>
+ </license>
+ <plugins>
+ </plugins>
+ <features>
+  <feature id='ch.elexis.core.application.feature' version='3.0.0.qualifier'/>
+  <feature id='ch.elexis.core.ui.feature' version='3.0.0.qualifier'/>
+ </features>
+ <configurations>
+  <plugin id='ch.qos.logback.classic' autoStart='true' startLevel='2'/>
+  <plugin id='ch.qos.logback.core' autoStart='true' startLevel='2'/>
+  <plugin id='org.eclipse.core.runtime' autoStart='true' startLevel='0'/>
+  <plugin id='org.eclipse.equinox.common' autoStart='true' startLevel='2'/>
+  <plugin id='org.eclipse.equinox.ds' autoStart='true' startLevel='2'/>
+  <plugin id='org.eclipse.osgi.services' autoStart='true' startLevel='2'/>
+  <plugin id='org.eclipse.update.configurator' autoStart='true' startLevel='3'/>
+  <plugin id='org.slf4j.api' autoStart='true' startLevel='2'/>
+ </configurations>
 </product>

@@ -1,0 +1,4 @@
+h1. Elexis Eigenartikel Core Part
+
+This plug-in allows for self-managed articles within Elexis. This is the core part defining the datatype and the factory
+to create the @Eigenartikel@ (self-managed article) in Elexis.

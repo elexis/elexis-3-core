@@ -65,7 +65,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		// Texterstellung
 		if (System.getProperty("os.name").toLowerCase().startsWith("win")) { //$NON-NLS-1$ //$NON-NLS-2$
 			CoreHub.localCfg.set(Preferences.P_TEXTMODUL, "NOA-Text"); //$NON-NLS-1$
-			if (CoreHub.localCfg.get(Preferences.P_TEXTMODUL).equals(StringTool.leer)) {
+			if (CoreHub.localCfg.get(Preferences.P_TEXTMODUL) == null  || CoreHub.localCfg.get(Preferences.P_TEXTMODUL).equals(StringTool.leer)) {
 				CoreHub.localCfg.set(Preferences.P_TEXTMODUL, "NOA-Text"); //$NON-NLS-1$
 			}
 		} else {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="ch.elexis.core.ui.feature"
-      label="Elexis 3.0 Core UI Feature"
-      version="3.0.0.dev-qualifier"
+      label="Elexis 3.0.0.qualifier Core UI Feature"
+      version="3.0.0.qualifier"
       provider-name="elexis.info">
 
    <description url="http://www.example.com/description">
@@ -58,6 +58,20 @@
 
    <plugin
          id="ch.elexis.core.ui.medication"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.importer.div"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.eigenartikel"
          download-size="0"
          install-size="0"
          version="0.0.0"

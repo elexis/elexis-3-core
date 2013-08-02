@@ -32,6 +32,7 @@ import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.constants.ExtensionPointConstants;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
 import ch.rgw.tools.StringTool;
@@ -97,7 +98,7 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 		getSite().registerContextMenu(cs.getMgr(), cs.getCv().getViewerWidget());
 		getSite().setSelectionProvider(cs.getCv().getViewerWidget());
 		
-		CodeSelectorFactory.makeTabs(ctab, getViewSite(), "ch.elexis.Verrechnungscode"); //$NON-NLS-1$
+		CodeSelectorFactory.makeTabs(ctab, getViewSite(), ExtensionPointConstants.VERRECHNUNGSCODE); //$NON-NLS-1$
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 	

@@ -7,12 +7,20 @@
             id="ch.elexis.core.ui.p2.command.update"
             name="%Update.command">
       </command>
+      <command
+            id="ch.elexis.core.ui.p2.command.install"
+            name="%Install.command">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
             class="ch.elexis.core.ui.p2.handlers.UpdateHandler"
             commandId="ch.elexis.core.ui.p2.command.update">
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.p2.handlers.InstallNewSoftwareHandler"
+            commandId="ch.elexis.core.ui.p2.command.install">
       </handler>
    </extension>
    <extension
@@ -24,6 +32,10 @@
                commandId="ch.elexis.core.ui.p2.command.update"
                style="push">
          </command>
+         <command
+               commandId="ch.elexis.core.ui.p2.command.install"
+               style="push">
+         </command>
       </menuContribution>
    </extension>
    <extension
@@ -31,6 +43,28 @@
       <initializer
             class="ch.elexis.core.ui.p2.internal.PreferenceInitializer">
       </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="ch.elexis.preferences.onlineservices"
+            class="org.eclipse.equinox.p2.ui.RepositoryManipulationPage"
+            id="org.eclipse.equinox.internal.p2.ui.sdk.SitesPreferencePage"
+            name="Elexis Update">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.installationPages">
+      <page
+            class="org.eclipse.equinox.p2.ui.InstalledSoftwarePage"
+            id="10.org.eclipse.equinox.internal.p2.ui.sdk.InstalledSoftwarePage"
+            name="%installedSoftwarePage">
+      </page>
+      <page
+            class="org.eclipse.equinox.internal.p2.ui.sdk.RevertProfilePageExtensionFactory"
+            id="11.org.eclipse.equinox.internal.p2.ui.sdk.RevertProfilePage"
+            name="%installHistoryPage">
+      </page>
    </extension>
 
 </plugin>
