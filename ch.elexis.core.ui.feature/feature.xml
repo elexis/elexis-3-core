@@ -1,20 +1,80 @@
-<?xml version='1.0' encoding='UTF-8'?> 
-<feature id='ch.elexis.core.ui.feature' label='Elexis 3.0.0.qualifier Core UI Feature' version='3.0.0.qualifier' provider-name='elexis.info'>
- <description url='http://www.example.com/description'>
-   [Enter Feature Description here.] 
- </description>
- <copyright url='http://www.example.com/copyright'>
-   [Enter Copyright Description here.] 
- </copyright>
- <license url='http://www.example.com/license'>
-   [Enter License Description here.] 
- </license>
- <includes id='ch.elexis.core.common.feature' version='0.0.0'/>
- <plugin id='ch.elexis.core.ui' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='ch.elexis.core.ui.contacts' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='ch.elexis.core.ui.icons' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='ch.elexis.core.ui.p2' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='ch.elexis.core.ui.laboratory' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='ch.elexis.core.ui.medication' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='ch.elexis.core.ui.importer.div' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="ch.elexis.core.ui.feature"
+      label="Elexis 3.0.0.qualifier Core UI Feature"
+      version="3.0.0.qualifier"
+      provider-name="elexis.info">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <includes
+         id="ch.elexis.core.common.feature"
+         version="0.0.0"/>
+
+   <plugin
+         id="ch.elexis.core.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.contacts"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.icons"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.p2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.laboratory"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.medication"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.importer.div"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.eigenartikel"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
