@@ -1,103 +1,614 @@
-<?xml version='1.0' encoding='UTF-8'?> 
-<feature id='ch.elexis.core.application.feature' label='Elexis OpenSource Application Feature' version='3.0.0.qualifier' provider-name='elexis.info'>
- <description url='http://www.example.com/description'>
-   [Enter Feature Description here.] 
- </description>
- <copyright url='http://www.example.com/copyright'>
-   [Enter Copyright Description here.] 
- </copyright>
- <license url='http://www.example.com/license'>
-   [Enter License Description here.] 
- </license>
- <includes id='ch.elexis.core.ui.feature' version='0.0.0'/>
- <plugin id='ch.elexis.core.application' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.apache.felix.gogo.command' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.apache.felix.gogo.runtime' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.apache.felix.gogo.shell' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.console' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.slf4j.api' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='ch.qos.logback.classic' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='ch.qos.logback.core' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='ch.qos.logback.slf4j' download-size='0' install-size='0' version='0.0.0' fragment='true' unpack='false'/>
- <plugin id='org.eclipse.equinox.common' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.update.configurator' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.osgi.services' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.core.runtime' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.apache.commons.logging' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='log4j' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.ui' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.emf.ecore' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.jdom' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='slf4j.api' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.osgi' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='javax.servlet' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.core.jobs' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.swt' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.registry' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.preferences' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.core.contenttype' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.app' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.emf.common' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.core.commands' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.core.databinding' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.core.databinding.beans' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.core.databinding.observable' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.core.expressions' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.artifact.repository' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.core' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.director' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.engine' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.jarprocessor' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.metadata' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.metadata.repository' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.operations' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.repository' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.ui' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.updatechecker' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.security' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.security.ui' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.simpleconfigurator' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.jface' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.jface.databinding' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.ui.browser' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.ui.forms' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.ui.workbench' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='bcprov' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.core.databinding.property' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='com.ibm.icu' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='com.mysql.jdbc' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.h2' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.postgresql' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.sat4j.core' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.sat4j.pb' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='slf4j.jcl' download-size='0' install-size='0' version='0.0.0' fragment='true' unpack='false'/>
- <plugin id='slf4j.log4j12' download-size='0' install-size='0' version='0.0.0' fragment='true' unpack='false'/>
- <plugin id='org.eclipse.help' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.swt.gtk.linux.x86' os='linux' arch='x86' download-size='0' install-size='0' version='0.0.0' fragment='true' unpack='false'/>
- <plugin id='org.eclipse.swt.gtk.linux.x86_64' os='linux' arch='x86_64' download-size='0' install-size='0' version='0.0.0' fragment='true' unpack='false'/>
- <plugin id='org.eclipse.equinox.launcher.cocoa.macosx.x86_64' os='macosx' arch='x86_64' download-size='0' install-size='0' version='0.0.0' fragment='true'/>
- <plugin id='org.eclipse.swt.cocoa.macosx.x86_64' os='macosx' arch='x86_64' download-size='0' install-size='0' version='0.0.0' fragment='true' unpack='false'/>
- <plugin id='org.eclipse.swt.win32.win32.x86' os='win32' arch='x86' download-size='0' install-size='0' version='0.0.0' fragment='true' unpack='false'/>
- <plugin id='org.eclipse.swt.win32.win32.x86_64' os='win32' arch='x86_64' download-size='0' install-size='0' version='0.0.0' fragment='true' unpack='false'/>
- <plugin id='org.eclipse.equinox.launcher.gtk.linux.x86' os='linux' arch='x86' download-size='0' install-size='0' version='0.0.0' fragment='true'/>
- <plugin id='org.eclipse.equinox.launcher.gtk.linux.x86_64' os='linux' arch='x86_64' download-size='0' install-size='0' version='0.0.0' fragment='true'/>
- <plugin id='com.healthmarketscience.jackcess' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='net.sf.opencsv' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.rxtx' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.apache.poi' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.ds' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.apache.commons.lang' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.launcher' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.util' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.equinox.p2.transport.ecf' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.core.net' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.ecf.filetransfer' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.ecf.provider.filetransfer' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.ecf' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.ecf.identity' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.ecf.provider.filetransfer.httpclient' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.eclipse.ecf.provider.filetransfer.httpclient.ssl' download-size='0' install-size='0' version='0.0.0' fragment='true' unpack='false'/>
- <plugin id='org.eclipse.ecf.provider.filetransfer.ssl' download-size='0' install-size='0' version='0.0.0' fragment='true' unpack='false'/>
- <plugin id='org.apache.commons.httpclient' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
- <plugin id='org.apache.commons.codec' download-size='0' install-size='0' version='0.0.0' unpack='false'/>
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="ch.elexis.core.application.feature"
+      label="Elexis OpenSource Application Feature"
+      version="3.0.0.qualifier"
+      provider-name="elexis.info">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <includes
+         id="ch.elexis.core.ui.feature"
+         version="0.0.0"/>
+
+   <plugin
+         id="ch.elexis.core.application"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.felix.gogo.command"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.felix.gogo.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.felix.gogo.shell"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.console"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.update.configurator"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.osgi.services"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecore"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.jdom"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.osgi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.servlet"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.jobs"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.registry"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.preferences"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.contenttype"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.app"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.commands"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.databinding"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.databinding.beans"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.databinding.observable"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.expressions"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.artifact.repository"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.director"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.engine"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.jarprocessor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.metadata"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.metadata.repository"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.operations"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.repository"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.updatechecker"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.security"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.security.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.simpleconfigurator"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jface"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jface.databinding"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.browser"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.forms"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.workbench"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="bcprov"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.databinding.property"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.ibm.icu"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.mysql.jdbc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.h2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.postgresql"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sat4j.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sat4j.pb"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.help"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swt.gtk.linux.x86"
+         os="linux"
+         arch="x86"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swt.gtk.linux.x86_64"
+         os="linux"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.launcher.cocoa.macosx.x86_64"
+         os="macosx"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.eclipse.swt.cocoa.macosx.x86_64"
+         os="macosx"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swt.win32.win32.x86"
+         os="win32"
+         arch="x86"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swt.win32.win32.x86_64"
+         os="win32"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.launcher.gtk.linux.x86"
+         os="linux"
+         arch="x86"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.eclipse.equinox.launcher.gtk.linux.x86_64"
+         os="linux"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="com.healthmarketscience.jackcess"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.sf.opencsv"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.rxtx"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.poi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.ds"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.lang"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.launcher"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.transport.ecf"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.core.net"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.filetransfer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.provider.filetransfer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.identity"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.provider.filetransfer.httpclient"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.provider.filetransfer.httpclient.ssl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.provider.filetransfer.ssl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.httpclient"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.codec"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
