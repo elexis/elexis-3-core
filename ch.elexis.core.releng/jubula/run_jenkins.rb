@@ -25,10 +25,10 @@ wsDir = "#{jubula.workspace}/test-ws"
 FileUtils.rm_rf(wsDir, :verbose => true, :noop => DryRun)
 
 jubula.useH2(Dir.pwd)
+jubula.prepareRcpSupport
 jubula.rmTestcases 	# only if using h2 
 jubula.patchXML
 jubula.loadTestcases    # only if using h2
-jubula.prepareRcpSupport
 jubula.genWrapper
 res_FULLTEST = jubula.runOneTestcase('FULLTEST', 15) # 30 Sekunden waren nicht genug auf Windows bis Elexis aufgestartet war
 puts "res_FULLTEST ist #{res_FULLTEST}"

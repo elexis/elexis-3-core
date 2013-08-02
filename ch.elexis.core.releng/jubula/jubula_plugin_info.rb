@@ -53,7 +53,8 @@ class EclipseJar
   @@view_categories           = Hash.new
   @@preferencePages           = Hash.new
   @@perspectives              = Hash.new
-  @@categories                = Hash.new
+  @@prefPage_categories       = Hash.new
+  @@view_categories           = Hash.new
   attr_reader :views, :view_categories, :preferencePages, :perspectives
   
   def initialize(jarname, iso='de')
@@ -64,12 +65,12 @@ class EclipseJar
     readPluginXML('xx')
   end
   
-  def addCategory(id, name = nil)
-    return if @@categories[id] and @@categories[id].translation
-    @@categories[id] = Category.new(id, name) unless @@categories[id]
+  def addCategory(hash, id, name = nil)
+    return if hash[id] and hash[id].translation
+    hash[id] = Category.new(id, name) unless hash[id]
     translation = getTranslationForPlugin(name, @iso) if name
-    @@categories[id].translation = translation if name and translation
-    puts "#{File.basename(@jarname)}: Added Category #{id} name #{name} tr '#{translation}'" if $VERBOSE
+    hash[id].translation = translation if name and translation
+    puts "#{File.basename(@jarname)}: Added category #{id} name #{name} tr '#{translation}'" if $VERBOSE
   end
   
   def EclipseJar.getTranslatedPreferencePages
@@ -82,8 +83,8 @@ class EclipseJar
         category =  content.category
         cat_trans = content.translation
         text = nil
-        if @@categories[category]
-          text = "#{@@categories[category].translation}/#{content.translation}"
+        if @@prefPage_categories[category]
+          text = "#{@@prefPage_categories[category].translation}/#{content.translation}"
           puts "preferencePages #{id} category #{category.inspect} text #{cat_trans}" if $VERBOSE
         else
           text = content.translation
@@ -98,18 +99,15 @@ class EclipseJar
     all = []
     @@views.each{
       |id, content| 
-        next unless content.category
         category =  content.category
         cat_trans = content.translation
         text = nil
         if category
-          text = "#{@@views[category].translation}/#{content.translation}"
-          puts "views #{id} category #{category.inspect} text #{cat_trans}" if $VERBOSE
+          text = "#{@@view_categories[category].translation}/#{content.translation}"
         else
-          text = content.translation
-          puts "views #{id} categories #{category} text #{text}" if $VERBOSE
+          text = "Other/#{content.translation}"
         end
-        all << text
+        all << text if text
     }
     all.sort.uniq if all and all.size > 0
   end
@@ -185,21 +183,23 @@ class EclipseJar
     root.elements.collect { |x| res << x if /org.eclipse.ui.views/.match(x.attributes['point']) }
     res[0].elements.each{
       |x|
-      next unless x.attributes['name']
-      name     = x.attributes['name'].sub(/^%/,'')
+      name     = x.attributes['name'].sub(/^%/,'') if  x.attributes['name']
       id       = x.attributes['id'].sub(/^%/,'')
-      category = x.attributes['category']
-#      addCategory(id, name) unless category
-      translation =  getTranslationForPlugin(name, @iso)
-      puts "#{File.basename(@jarname, '.jar')}: Adding view: id #{id} category #{category.inspect} translation #{translation}" if $VERBOSE
-      unless category
-        @@views[id]           = UI_View.new(id, nil, translation)
-      else
-        @@views[id]           = UI_View.new(id, category, translation)
+      if x.name.eql?('category')
+        addCategory(@@view_categories, id, name)
+      elsif x.attributes['name']
+        category = x.attributes['category']
+        translation =  getTranslationForPlugin(name, @iso)
+        puts "#{File.basename(@jarname, '.jar')}: Adding view: id #{id} category #{category.inspect} translation #{translation}" if $VERBOSE
+        unless category
+          @@views[id]           = UI_View.new(id, nil, translation)
+        else
+          @@views[id]           = UI_View.new(id, category, translation)
+        end
       end
     } if res and res[0] and res[0].elements
     puts "found #{@@views.size} views and #{@@view_categories.size} categories" if $VERBOSE
-
+    
      # Get all preferencePages
     res = []
     root.elements.collect { |x| res << x if /org.eclipse.ui.preferencePages/.match(x.attributes['point']) }
@@ -208,7 +208,7 @@ class EclipseJar
       name     = x.attributes['name'].sub(/^%/,'')
       id       = x.attributes['id'].sub(/^%/,'')
       category = x.attributes['category']
-      addCategory(id, name) unless category
+      addCategory(@@prefPage_categories, id, name) unless category
       translation =  getTranslationForPlugin(name, @iso)
       puts "Adding preferences: id #{id} category #{category.inspect} translation #{translation}" if $VERBOSE
       unless category
