@@ -214,13 +214,6 @@
             name="%elexis.emrPrintView">
       </view>
       <view
-            category="ch.elexis.textKategorie"
-            class="ch.elexis.core.ui.views.TemplatePrintView"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/printer.png"
-            id="ch.elexis.views.TemplatePrintView"
-            name="%elexis.templatePrintView">
-      </view>
-      <view
             category="ch.elexis.konsultationKategorie"
             class="ch.elexis.core.ui.views.AUF2"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/auf.png"
