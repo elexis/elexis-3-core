@@ -49,6 +49,7 @@ public class Activator extends AbstractUIPlugin {
 		this.context = context;
 		
 		// route java.util.logging to slf4j
+/*
 		SLF4JBridgeHandler.install();
 		if (System.getProperty("osgi.console") == null && System.getProperty("eclipse.consoleLog") == null)
 		{
@@ -66,7 +67,6 @@ public class Activator extends AbstractUIPlugin {
 		logger.info(PLUGIN_ID+": printed internal state");
 		
 		// log BundleEvents
-		/*
 		context.addBundleListener(new BundleListener() {
 			
 			public void bundleChanged(BundleEvent event){
@@ -142,7 +142,7 @@ public class Activator extends AbstractUIPlugin {
 			}
 			
 		});
-			*/
+		*/
 	}
 
 	/*

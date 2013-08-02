@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Default_configuration
 Bundle-SymbolicName: ch.elexis.core.logging.default_configuration
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.0.0.qualifier
 Fragment-Host: ch.qos.logback.classic
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: rsc/

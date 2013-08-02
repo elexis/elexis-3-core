@@ -21,6 +21,10 @@
          id="ch.elexis.core.common.feature"
          version="0.0.0"/>
 
+   <includes
+         id="ch.elexis.core.logging.feature"
+         version="0.0.0"/>
+
    <plugin
          id="ch.elexis.core.ui"
          download-size="0"
