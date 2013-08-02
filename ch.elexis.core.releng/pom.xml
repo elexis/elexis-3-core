@@ -34,8 +34,14 @@
   <module>
     ../ch.elexis.core.data 
   </module>
+   <module>
+    ../ch.elexis.core.eigenartikel
+  </module>
   <module>
     ../ch.elexis.core.ui 
+  </module>
+   <module>
+    ../ch.elexis.core.ui.eigenartikel 
   </module>
   <module>
     ../ch.elexis.core.ui.contacts 
