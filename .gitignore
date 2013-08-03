@@ -8,3 +8,5 @@ rebel.xml
 bin/
 target/
 jetty.log
+workspace/
+
