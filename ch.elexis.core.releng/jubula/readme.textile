@@ -39,3 +39,4 @@ h3. requirements
 * Java7
 * Ruby >= 1.9.0
 ** gem xml-simple
+** gem zip
