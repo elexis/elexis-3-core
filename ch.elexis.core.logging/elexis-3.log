@@ -1,0 +1,69 @@
+12:41:01.717 [Start Level Event Dispatcher] DEBUG c.elexis.core.data.activator.CoreHub - Starting ch.elexis.core.data.activator.CoreHub
+12:41:02.109 [Start Level Event Dispatcher] DEBUG ch.elexis.core.ui.Hub - Starting ch.elexis.core.ui.Hub
+12:41:02.112 [Start Level Event Dispatcher] INFO  c.e.c.d.e.CoreOperationExtensionPoint - CoreOperationExtensionPoint found @ ch.elexis.core.ui: ch.elexis.core.ui.CoreOperationAdvisor
+12:41:02.116 [Start Level Event Dispatcher] DEBUG c.elexis.core.data.activator.CoreHub - Loading branch default from /home/niklaus/elexis/localCfg_default.xml as localCfg
+12:41:02.171 [Start Level Event Dispatcher] INFO  c.elexis.core.data.activator.CoreHub - Elexis Core v.3.0.0.qualifier
+[Bundle info: 3.0.0.qualifier; 2013-08-03]
+Linux/3.2.0-4-amd64/amd64; Java: 1.7.0_25
+encoding: UTF-8
+12:41:02.172 [Start Level Event Dispatcher] INFO  c.elexis.core.data.activator.CoreHub - Basepath: /opt/elexis-3-core-ngiger/ch.elexis.core.data
+12:41:02.209 [Start Level Event Dispatcher] INFO  ch.elexis.core.logging.Activator - ch.elexis.core.logging: started SLF4JBridgeHandler
+12:41:02.210 [Start Level Event Dispatcher] INFO  ch.elexis.core.logging.Activator - ch.elexis.core.logging: printed internal state
+12:41:02.552 [main] DEBUG ch.elexis.core.application.Desk - Registering ch.elexis.core.application.CoreEventListenerRegistrar
+12:41:02.556 [main] INFO  ch.elexis.core.data.PersistentObject - Cache setup: default_lifetime 6
+12:41:02.556 [main] INFO  ch.elexis.core.data.PersistentObject - Verzeichnis Demo-Datenbank via Hub.getBasePath(): /opt/demoDB
+12:41:02.556 [main] INFO  ch.elexis.core.data.PersistentObject - osgi.install.area: file:/opt/workspace/elexis-3-core-ngiger-juno/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/
+12:41:02.556 [main] INFO  ch.elexis.core.data.PersistentObject - Verzeichnis Demo-Datenbank via osgi.install.area: /opt/workspace/elexis-3-core-ngiger-juno/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/demoDB
+12:41:02.556 [main] DEBUG ch.elexis.core.data.PersistentObject - Read connection string from localCfg
+12:41:02.560 [main] INFO  ch.elexis.core.data.PersistentObject - Driver is com.mysql.jdbc.Driver
+12:41:02.560 [main] INFO  ch.elexis.core.data.PersistentObject - Current work directory is /home/niklaus/EigeneDateien/giger_electronique/Korrespondenz/2013
+12:41:02.563 [main] INFO  jdbcLink - Loading database driver com.mysql.jdbc.Driver
+12:41:02.563 [main] INFO  jdbcLink - Connecting with database jdbc:mysql://localhost:3306/rgw
+12:41:02.719 [main] DEBUG jdbcLink - Connect successful
+12:41:02.719 [main] DEBUG ch.elexis.core.data.PersistentObject - Verbunden mit com.mysql.jdbc.Driver, jdbc:mysql://localhost:3306/rgw
+12:41:02.738 [main] DEBUG ch.elexis.core.data.PersistentObject - Database version 02.04.2006, 23:33:15
+12:41:02.753 [main] INFO  jdbcLink - loaded AccessControl
+12:41:02.753 [main] DEBUG jdbcLink - AlleLoadInfoStore
+12:41:02.753 [main] DEBUG jdbcLink - AnwenderKonsultation
+12:41:02.754 [main] DEBUG jdbcLink - AlleAktionen/Anmelden
+12:41:02.754 [main] DEBUG jdbcLink - AnwenderAktionen
+12:41:02.754 [main] DEBUG jdbcLink - AlleAktionen/Hilfe
+12:41:02.754 [main] DEBUG jdbcLink - AlleAktionen/Beenden
+12:41:02.754 [main] DEBUG jdbcLink - AnwenderDokumente
+12:41:02.754 [main] DEBUG jdbcLink - AnwenderLeistungen
+12:41:02.754 [main] DEBUG jdbcLink - AnwenderDaten
+12:41:02.754 [main] DEBUG jdbcLink - AnwenderRechnungen
+12:41:02.754 [main] DEBUG jdbcLink - AlleAktionen/Über
+12:41:02.754 [main] INFO  jdbcLink - loaded ACLs
+12:41:02.754 [main] DEBUG jdbcLink - Aktionen
+12:41:02.754 [main] DEBUG jdbcLink - dbUID
+12:41:02.754 [main] DEBUG jdbcLink - Aktionen/Beenden
+12:41:02.754 [main] DEBUG jdbcLink - Aktionen/Über
+12:41:02.755 [main] DEBUG jdbcLink - Aktionen/Hilfe
+12:41:02.755 [main] DEBUG jdbcLink - Rechnungen
+12:41:02.755 [main] DEBUG jdbcLink - LoadInfoStore
+12:41:02.755 [main] DEBUG jdbcLink - Konsultation
+12:41:02.755 [main] DEBUG jdbcLink - Dokumente
+12:41:02.755 [main] DEBUG jdbcLink - Leistungen
+12:41:02.755 [main] DEBUG jdbcLink - Aktionen/Anmelden
+12:41:02.755 [main] DEBUG jdbcLink - Daten
+12:41:02.755 [main] INFO  ch.elexis.core.data.PersistentObject - Verlangte Datenbankversion: 1.8.16
+12:41:02.755 [main] INFO  ch.elexis.core.data.PersistentObject - Gefundene Datenbankversion: 1.8.16
+12:41:02.755 [main] INFO  ch.elexis.core.data.PersistentObject - Verlangte Elexis-Version: 2.1.7.dev-qualifier
+12:41:02.756 [main] INFO  ch.elexis.core.data.PersistentObject - Vorhandene Elexis-Version: 3.0.0.qualifier
+12:41:03.452 [main] DEBUG ch.elexis.core.data.Query - Executed SELECT ID FROM KONTAKT WHERE istMandant='1' AND deleted='0'
+12:41:03.461 [main] DEBUG ch.elexis.core.data.Query - Executed SELECT ID FROM KONTAKT WHERE istMandant='1' AND deleted='0'
+12:41:04.039 [main] DEBUG ch.elexis.core.data.Query - Executed SELECT ID FROM KONTAKT WHERE istAnwender='1' AND deleted='0'
+12:41:07.785 [main] DEBUG ch.elexis.core.data.Query - suspending
+12:41:07.786 [main] DEBUG ch.elexis.core.data.Query - Executed SELECT ID FROM KONTAKT WHERE istAnwender='1' AND deleted='0' AND  Bezeichnung3 = 'test'
+12:41:10.239 [main] WARN  c.e.c.a.a.ApplicationWorkbenchAdvisor - Exit because no valid user logged-in
+12:41:10.240 [main] INFO  ch.elexis.core.data.Query - Disconnected
+12:41:10.241 [main] INFO  ch.elexis.core.data.PersistentObject - Verbindung zur Datenbank getrennt.
+12:41:10.241 [main] INFO  ch.elexis.core.data.Query - --------- cache statistics ------
+Total read:	38
+cache hits:	19 (50%)
+object expired:	0 (0%)
+cache missed:	19 (50%)
+object removed:	0 (0%)
+Object inserts:	19
+

@@ -19,14 +19,17 @@
 
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="ch.qos.logback.classic" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="ch.qos.logback.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="slf4j.api"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="ch.rgw.utility" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.jdom"/>
+      <import plugin="bcprov"/>
       <import plugin="org.eclipse.core.runtime" version="3.8.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.commands" version="3.6.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.expressions" version="3.4.400" match="greaterOrEqual"/>
       <import plugin="ch.elexis.core" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
+      <import plugin="javax.servlet"/>
+      <import plugin="ch.elexis.core.data" version="3.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -85,59 +88,14 @@
          unpack="false"/>
 
    <plugin
-         id="ch.qos.logback.slf4j"
+         id="ch.elexis.core.eigenartikel"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="log4j"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="slf4j.api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="slf4j.jcl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="slf4j.log4j12"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
          unpack="false"/>
 
    <plugin
          id="org.slf4j.api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.logging"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="ch.elexis.core.eigenartikel"
          download-size="0"
          install-size="0"
          version="0.0.0"

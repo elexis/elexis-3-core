@@ -30,11 +30,11 @@ import ch.elexis.core.exceptions.PersistenceException;
 public class Application implements IApplication {
 
 	private Logger log = LoggerFactory.getLogger(Application.class);
-
+	private static final String ID = "ch.elexis.core.console.application";
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		// register ElexisEvent and MessageEvent listeners
-		log.debug("Registering " + CoreEventListenerRegistrar.class.getName());
+		log.debug("Registering " + ID);
 		new CoreEventListenerRegistrar();
 
 		// connect to the database

@@ -1,0 +1,56 @@
+<!--
+  Copyright (c) 2012 Niklaus Giger <niklaus.giger@member.fsf.org>.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+  
+  Contributors:
+      Niklaus Giger <niklaus.giger@member.fsf.org> - initial API and implementation
+
+  See also http://logback.qos.ch/documentation.html especially
+  http://logback.qos.ch/manual/configuration.html
+  
+-->
+<configuration scan="true" debug="true">
+  <contextName>elexis</contextName> 
+  <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>  
+   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${user.home}/elexis/logs/elexis-3.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <maxHistory>10</maxHistory>
+      <cleanHistoryOnStart>true</cleanHistoryOnStart>
+      <!-- rollover daily -->
+      <fileNamePattern>${user.home}/elexis/logs/elexis-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+            class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- or whenever the file size reaches 10MB -->
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  
+ <logger name="at.medevit.elexis.dbcheck.syntactic.SyntacticCheckMySQL" level="debug" />
+ <logger name="ch.qos.logback" level="INFO"/>
+ <logger name="AccessControl" level="DEBUG"/>
+ <logger name="net.kornr.log.LogbackAdaptor" level="DEBUG"/>
+ <logger name="Framework Event Dispatcher" level="DEBUG"/>
+ <logger name="Elexis startup" level="DEBUG"/>
+ <logger name="SoftCache" level="DEBUG">
+    <appender-ref ref="STDOUT" />
+ </logger>
+ 
+ <root level="DEBUG">
+    <appender-ref ref="ROLLING" />
+ </root>
+ 
+</configuration>

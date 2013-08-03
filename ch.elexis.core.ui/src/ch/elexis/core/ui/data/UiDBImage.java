@@ -68,6 +68,8 @@ public class UiDBImage  {
 	}
 
 	public Image getImageScaledTo(int width, int height, boolean bShrinkOnly) {
+		if (dbImage == null)
+			return null;
 		byte[] in = dbImage.getBinary(DBImage.FLD_IMAGE);
 		ByteArrayInputStream bais = new ByteArrayInputStream(in);
 		try {
@@ -89,6 +91,8 @@ public class UiDBImage  {
 	 * @see {@link DBImage#getId()}
 	 */
 	public String getId() {
+		if (dbImage == null)
+			return null;
 		return dbImage.getId();
 	}
 
@@ -96,6 +100,8 @@ public class UiDBImage  {
 	 * @see {@link DBImage#getName()}
 	 */
 	public String getName() {
+		if (dbImage == null)
+			return null;
 		return dbImage.getName();
 	}
 }
