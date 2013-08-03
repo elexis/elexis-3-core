@@ -1,0 +1,6 @@
+database/
+test-results/
+test-data/
+workspace/
+test-runner.bat
+

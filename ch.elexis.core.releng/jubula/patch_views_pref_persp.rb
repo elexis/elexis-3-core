@@ -78,7 +78,7 @@ def patchJubulaXML(xml_name, plugin_dir)
   counter = 0; views = []
   viewNames.each{|name|
     counter += 1
-    views << eval(genScreenshotElement(counter, name))
+    views << eval(genScreenshotElement(counter, name)) unless /Welcome/.match(name)
   }
 
   counter = 0; perspectives = []
