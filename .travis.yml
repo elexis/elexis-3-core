@@ -1,0 +1,14 @@
+---
+language: java
+script: mvn clean install ch.elexis.core.releng/pom.xml
+notifications:
+  email:
+  - niklaus.giger@member.fsf.org
+jdk:
+  - oraclejdk7
+  - openjdk7
+
+# whitelist of branches to build
+branches:
+  only:
+    - master
