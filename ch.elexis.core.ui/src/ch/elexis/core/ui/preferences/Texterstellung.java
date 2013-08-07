@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.ui.constants.ExtensionPointConstants;
 
 /**
  * Einstellungen zur Verknüpfung mit einem externen Texterstellungs-Modul
@@ -39,7 +40,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 	@Override
 	protected void createFieldEditors(){
 		
-		List<IConfigurationElement> list = Extensions.getExtensions("ch.elexis.Text"); //$NON-NLS-1$
+		List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstants.TEXTPROCESSINGPLUGIN);
 		String[][] rows = new String[list.size()][];
 		int i = 0;
 		for (IConfigurationElement ice : list) {

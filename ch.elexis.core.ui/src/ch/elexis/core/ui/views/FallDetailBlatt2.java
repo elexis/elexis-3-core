@@ -61,6 +61,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.constants.ExtensionPointConstants;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.preferences.Leistungscodes;
 import ch.elexis.core.ui.preferences.UserCasePreferences;
@@ -983,7 +984,7 @@ public class FallDetailBlatt2 extends Composite {
 					// get the extension for styled text
 					String extensionToUse = "Interner Text"; //$NON-NLS-1$
 					IExtensionRegistry exr = Platform.getExtensionRegistry();
-					IExtensionPoint exp = exr.getExtensionPoint("ch.elexis.Text"); //$NON-NLS-1$
+					IExtensionPoint exp = exr.getExtensionPoint(ExtensionPointConstants.TEXTPROCESSINGPLUGIN);
 					ITextPlugin plugin = null;
 					if (exp != null) {
 						IExtension[] extensions = exp.getExtensions();

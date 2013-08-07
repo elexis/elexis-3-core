@@ -77,6 +77,7 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.constants.ExtensionPointConstants;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.preferences.TextTemplatePreferences;
@@ -89,7 +90,6 @@ import ch.rgw.tools.TimeTool;
 
 public class TextContainer {
 	private static final String WARNING_SIGN = "??"; //$NON-NLS-1$
-	private static final String EXTENSION_POINT_TEXT = "ch.elexis.Text"; //$NON-NLS-1$
 	public static final String MATCH_SQUARE_BRACKET = "[\\[\\]]"; //$NON-NLS-1$
 	private static final String TEMPLATE_NOT_FOUND_HEADER =
 		Messages.TextContainer_TemplateNotFoundHeader;
@@ -124,7 +124,7 @@ public class TextContainer {
 		if (plugin == null) {
 			String ExtensionToUse = CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null);
 			IExtensionRegistry exr = Platform.getExtensionRegistry();
-			IExtensionPoint exp = exr.getExtensionPoint(EXTENSION_POINT_TEXT);
+			IExtensionPoint exp = exr.getExtensionPoint(ExtensionPointConstants.TEXTPROCESSINGPLUGIN);
 			if (exp != null) {
 				IExtension[] extensions = exp.getExtensions();
 				for (IExtension ex : extensions) {

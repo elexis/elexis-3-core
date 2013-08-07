@@ -16,4 +16,5 @@ package ch.elexis.core.ui.constants;
 public class ExtensionPointConstants {
 	public static final String VERRECHNUNGSCODE = "ch.elexis.core.ui.Verrechnungscode";
 	public static final String DIAGNOSECODE = "ch.elexis.core.ui.Diagnosecode";
+	public static final String TEXTPROCESSINGPLUGIN = "ch.elexis.core.ui.Text";
 }
