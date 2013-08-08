@@ -28,6 +28,9 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130118183705/repository/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="ag.ion.noa" version="2.2.3"/>
+<unit id="ag.ion.noa4e.ui" version="2.0.14"/>
+<unit id="ag.ion.bion.workbench.office.editor.core" version="2.0.14"/>
 <unit id="org.rxtx" version="2.1.7"/>
 <unit id="org.milyn.commons" version="1.4.0"/>
 <unit id="org.milyn.smooks-templating" version="1.4.0"/>
