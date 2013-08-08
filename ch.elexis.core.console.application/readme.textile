@@ -2,12 +2,22 @@ h1. Elexis Console Application
 
 **Initial implementation by**  "MEDEVIT":www.medevit.at
 
-This application runs a bare Elexis on the console. It demonstrates the headless running
-capabilities of @ch.elexis.core.data@. This allows to access an Elexis database without
-starting a full graphical system.
+This application runs a bare Elexis on the console. It demonstrates the headless running capabilities of @ch.elexis.core.data@. 
+This allows to access an Elexis database without starting a full graphical system.
 
- In order to use this plugin as unit test starting point for the core, please add your 
- testing code to @ch.elexis.core.console.application.test@.
+In order to use this plugin as unit test starting point for the core, please add your 
+testing code to @ch.elexis.core.console.application.test@.
  
- To start the application right click on @ConsoleWithCoreDataOnly.launch@ and 
- select @Run As@.
+To start the application right click on @ConsoleWithCoreDataOnly.launch@ and select @Run As@.
+
+h2. Start parameters
+
+The following start parameters are supported within @Run Configuration / Arguments / VM Arguments@:
+
+
+|_. Mode Description |_. Parameter Combination |
+| Pass Login Params | @-Dch.elexis.username=007 -Dch.elexis.password=topsecret@ |
+| Run From Scratch | @-Delexis-run-mode=RunFromScratch -Dch.elexis.username=007 -Dch.elexis.password=topsecret@ |
+| Set Database Connection | @-Dch.elexis.dbFlavor=postgresql -Dch.elexis.dbSpec=jdbc:postgresql://192.168.0.3:5432/elexis -Dch.elexis.dbUser=elexisuser -Dch.elexis.dbPw=elexis@ |
+
+
