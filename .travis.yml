@@ -8,6 +8,7 @@ notifications:
   email:
   - niklaus.giger@member.fsf.org
 jdk:
+  - openjdk6
   - oraclejdk7
   - openjdk7
 
