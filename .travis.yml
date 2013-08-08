@@ -1,6 +1,6 @@
 ---
 language: java
-script: mvn clean install ch.elexis.core.releng/pom.xml
+script: mvn clean install -f ch.elexis.core.releng/pom.xml
 notifications:
   email:
   - niklaus.giger@member.fsf.org
