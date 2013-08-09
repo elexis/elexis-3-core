@@ -452,6 +452,17 @@
       <artifactId>maven-release-plugin</artifactId>
       <version>2.4.1</version>
     </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <configuration>
+          <aggregate>true</aggregate>
+          <doctitle>Dokumentation der Java Schnittstellen für Elexis ${project.version}.</doctitle>
+          <header><![CDATA[Elexis ${project.version}. See also <a href="http://elexis.info">http://elexis.info</a>]]></header>
+          <bottom><![CDATA[Copyright 2006-2013 Gerry Weirich and many more. See also <a href="http://elexis.info">Elexis</a>: eine freie Software von Ärzten für Ärzte]]></bottom>
+        </configuration>
+      </plugin>
    </plugins>
   </pluginManagement>
  </build>  
