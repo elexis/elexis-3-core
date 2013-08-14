@@ -272,7 +272,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		} else if (dbFlavor != null && dbFlavor.length() >= 2 && dbSpec != null
 				&& dbSpec.length() > 5 && dbUser != null && dbPw != null) {
-			return PersistentObject.connect(dbFlavor, dbSpec, dbUser, dbPw);
+			return PersistentObject.connect(dbFlavor, dbSpec, dbUser, dbPw, true);
 		} else if (runningAsTest) {
 			try {
 				File dbFile = File.createTempFile("elexis", "db");
@@ -360,11 +360,12 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            the <code>username</code> to connect to the database with
 	 * @param dbPw
 	 *            the <code>password</code> to connect to the database with
+	 * @param exitOnFail
 	 * @return
 	 * @since 3.0.0
 	 */
 	public static boolean connect(String dbFlavor, String dbSpec,
-			String dbUser, String dbPw) {
+			String dbUser, String dbPw, boolean exitOnFail) {
 		log.info("Using " + dbFlavor + " " + dbSpec + " " + dbUser);
 		String driver;
 
@@ -392,7 +393,9 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		}
 		log.error("can't connect to test database. invalid dbFlavor" + dbFlavor);
-		System.exit(-7);
+		if(exitOnFail) {
+			System.exit(-7);
+		}
 		return false;
 	}
 
