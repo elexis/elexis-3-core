@@ -130,15 +130,16 @@ public abstract class PersistentObject implements IPersistentObject {
 	/** predefined property to hande a field that marks the Object as deleted */
 	public static final String FLD_DELETED = "deleted";
 	/**
-	 * predefined property that holds an automatically updated field containing the last update of
-	 * this object as long value (milliseconds as in Date())
+	 * predefined property that holds an automatically updated field containing
+	 * the last update of this object as long value (milliseconds as in Date())
 	 */
 	public static final String FLD_LASTUPDATE = "lastupdate";
 	/**
-	 * predefined property that holds the date of creation of this object in the form YYYYMMDD
+	 * predefined property that holds the date of creation of this object in the
+	 * form YYYYMMDD
 	 */
 	public static final String FLD_DATE = "Datum";
-	
+
 	protected static final String DATE_COMPOUND = "Datum=S:D:Datum";
 
 	public static final int CACHE_DEFAULT_LIFETIME = 15;
@@ -271,34 +272,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		} else if (dbFlavor != null && dbFlavor.length() >= 2 && dbSpec != null
 				&& dbSpec.length() > 5 && dbUser != null && dbPw != null) {
-			log.info("Using " + dbFlavor + " " + dbSpec + " " + dbUser);
-			String driver;
-			if (dbFlavor.equalsIgnoreCase("mysql"))
-				driver = "com.mysql.jdbc.Driver";
-			else if (dbFlavor.equalsIgnoreCase("postgresql"))
-				driver = "org.postgresql.Driver";
-			else if (dbFlavor.equalsIgnoreCase("h2"))
-				driver = "org.h2.Driver";
-			else
-				driver = "invalid";
-			if (!driver.equalsIgnoreCase("invalid")) {
-				try {
-					j = new JdbcLink(driver, dbSpec, dbFlavor);
-					if (getConnection().connect(dbUser, dbPw)) {
-						testJdbcLink = j;
-						return connect(getConnection());
-					} else {
-						log.error("can't connect to test database" + dbSpec);
-						System.exit(-6);
-					}
-				} catch (Exception ex) {
-					log.error("can't connect to test database" + dbSpec);
-					System.exit(-7);
-				}
-			}
-			log.error("can't connect to test database. invalid dbFlavor"
-					+ dbFlavor);
-			System.exit(-7);
+			return PersistentObject.connect(dbFlavor, dbSpec, dbUser, dbPw);
 		} else if (runningAsTest) {
 			try {
 				File dbFile = File.createTempFile("elexis", "db");
@@ -326,16 +300,22 @@ public abstract class PersistentObject implements IPersistentObject {
 		String typ = "";
 		String connectstring = "";
 		Hashtable<Object, Object> hConn = null;
-		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
+		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION,
+				null);
 		if (cnt != null) {
 			log.debug("Read connection string from localCfg");
 			hConn = fold(StringTool.dePrintable(cnt));
 			if (hConn != null) {
-				driver = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
-				user = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
-				pwd = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS));
-				typ = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
-				connectstring = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
+				driver = checkNull((String) hConn
+						.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
+				user = checkNull((String) hConn
+						.get(Preferences.CFG_FOLDED_CONNECTION_USER));
+				pwd = checkNull((String) hConn
+						.get(Preferences.CFG_FOLDED_CONNECTION_PASS));
+				typ = checkNull((String) hConn
+						.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
+				connectstring = checkNull((String) hConn
+						.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
 			}
 		}
 		log.info("Driver is " + driver);
@@ -364,6 +344,56 @@ public abstract class PersistentObject implements IPersistentObject {
 		log.debug("Verbunden mit " + getConnection().dbDriver() + ", "
 				+ connectstring);
 		return connect(getConnection());
+	}
+
+	/**
+	 * Directly connect to the database using the combined connection
+	 * information.
+	 * 
+	 * @param dbFlavor
+	 *            either <code>mysql</code>, <code>postgresql</code> or
+	 *            <code>h2</code>
+	 * @param dbSpec
+	 *            connection string fitting to dbFlavor, e.g.
+	 *            <code>jdbc:postgresql://192.168.0.3:5432/elexis</code>
+	 * @param dbUser
+	 *            the <code>username</code> to connect to the database with
+	 * @param dbPw
+	 *            the <code>password</code> to connect to the database with
+	 * @return
+	 * @since 3.0.0
+	 */
+	public static boolean connect(String dbFlavor, String dbSpec,
+			String dbUser, String dbPw) {
+		log.info("Using " + dbFlavor + " " + dbSpec + " " + dbUser);
+		String driver;
+
+		if (dbFlavor.equalsIgnoreCase("mysql"))
+			driver = "com.mysql.jdbc.Driver";
+		else if (dbFlavor.equalsIgnoreCase("postgresql"))
+			driver = "org.postgresql.Driver";
+		else if (dbFlavor.equalsIgnoreCase("h2"))
+			driver = "org.h2.Driver";
+		else
+			driver = "invalid";
+		if (!driver.equalsIgnoreCase("invalid")) {
+			try {
+				j = new JdbcLink(driver, dbSpec, dbFlavor);
+				if (getConnection().connect(dbUser, dbPw)) {
+					testJdbcLink = j;
+					return connect(getConnection());
+				} else {
+					log.error("can't connect to test database" + dbSpec);
+					System.exit(-6);
+				}
+			} catch (Exception ex) {
+				log.error("can't connect to test database" + dbSpec);
+				System.exit(-7);
+			}
+		}
+		log.error("can't connect to test database. invalid dbFlavor" + dbFlavor);
+		System.exit(-7);
+		return false;
 	}
 
 	public static boolean connect(final JdbcLink jd) {
@@ -1147,8 +1177,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING,
 						CoreHub.PLUGIN_ID, ElexisStatus.CODE_NOFEEDBACK,
 						"Fehler bei Felddefinition", nmex);
-				ElexisEventDispatcher.fireElexisStatusEvent(
-						status);
+				ElexisEventDispatcher.fireElexisStatusEvent(status);
 				return mapped;
 			} catch (Exception ex) {
 				// ignore the exceptions calling functions look for
@@ -2543,8 +2572,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				// (this is executed in a Runnable where Exception handling is
 				// not blocking UI
 				// thread)
-				ElexisEventDispatcher.fireElexisStatusEvent(
-						status);
+				ElexisEventDispatcher.fireElexisStatusEvent(status);
 			} else {
 				status.setLogLevel(ElexisStatus.LOG_FATALS);
 				throw new PersistenceException(status);
