@@ -385,11 +385,13 @@ public abstract class PersistentObject implements IPersistentObject {
 					return connect(getConnection());
 				} else {
 					log.error("can't connect to test database" + dbSpec);
-					System.exit(-6);
+					if(exitOnFail) System.exit(-6);
+					return false;
 				}
 			} catch (Exception ex) {
 				log.error("can't connect to test database" + dbSpec);
-				System.exit(-7);
+				if(exitOnFail) System.exit(-7);
+				return false;
 			}
 		}
 		log.error("can't connect to test database. invalid dbFlavor" + dbFlavor);
