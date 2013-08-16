@@ -1,0 +1,33 @@
+h1. Elexis 3 Core Repository
+
+
+__*ALPHA STATE*__
+
+This repository hosts the core forming Elexis 3. It consists of the following plug-ins and features:
+
+* @ch.rgw.utility@ Utilities required to drive Elexis.
+* @ch.elexis.core@ Core concepts and interface definitions.
+* @ch.elexis.core.data@ Core persistence and functionality packages and classes.
+* @ch.elexis.core.console.application@ Headless Elexis application.
+* @ch.elexis.core.ui@ User Interface dependent portions. Dependent on Eclipse RCP 3.x.
+* @ch.elexis.core.application@ Core UI Elexis Application.
+
+* @ch.elexis.core.releng@ Release Engineering specific parts (Build Target, 3rd party ...)
+
+* @ch.elexis.core.logging@ Plug-In for starting ch.qos.logback logging (via slf4j interface)
+* @ch.elexis.core.logging.feature@ Feature for logging and Felix-gogo console
+* @ch.elexis.core.logging.default_configuration@ Default logging configuration (logback.xml)
+
+* @ch.elexis.core.ui.icons@ Plug-In for central icon management.
+* @ch.elexis.core.ui.contacts@ Plug-In for contact management.
+* @ch.elexis.core.ui.laboratory@ Plug-In for laboratory related tasks.
+* @ch.elexis.core.ui.p2@ Plug-In to realize client side p2 update tasks
+* @ch.elexis.core.common.feature@	Headless Core Feature.
+* @ch.elexis.core.ui.feature@ Core UI Feature.
+* @ch.elexis.core.application.feature@ Core Application Feature.
+
+For details about the resp. plug-ins/features switch to the respective directory. The plug-ins and features
+are contained and inter-dependent as follows:
+
+!FeatureStructure.png!
+
