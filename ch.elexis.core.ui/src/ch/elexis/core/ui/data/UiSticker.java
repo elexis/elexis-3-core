@@ -46,7 +46,8 @@ public class UiSticker {
 		ret = UiDesk.getImageRegistry().get(image.getName());
 		if(ret==null) {
 			ret = image.getImageScaledTo(16, 16, false);
-			UiDesk.getImageRegistry().put(image.getName(), ret);
+			if (ret!= null)
+				UiDesk.getImageRegistry().put(image.getName(), ret);
 		}
 		
 		return ret;
