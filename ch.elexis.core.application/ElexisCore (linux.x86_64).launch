@@ -2,6 +2,30 @@
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
 <setAttribute key="additional_plugins">
 <setEntry value="ch.elexis.core.application:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.data:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.eigenartikel:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.logging:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.ui.contacts:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.ui.eigenartikel:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.ui.icons:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.ui.importer.div:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.ui.laboratory:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.ui.medication:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.ui.p2:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core.ui:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.elexis.core:3.0.0.qualifier:default:true"/>
+<setEntry value="ch.qos.logback.classic:1.0.7.v20121108-1250:default:true"/>
+<setEntry value="ch.qos.logback.core:1.0.7.v20121108-1250:default:true"/>
+<setEntry value="log4j:1.2.13:default:false"/>
+<setEntry value="org.apache.felix.gogo.command:0.8.0.v201108120515:default:true"/>
+<setEntry value="org.apache.felix.gogo.runtime:0.8.0.v201108120515:default:true"/>
+<setEntry value="org.apache.felix.gogo.shell:0.8.0.v201110170705:default:true"/>
+<setEntry value="org.eclipse.equinox.console:1.0.0.v20120522-1841:default:true"/>
+<setEntry value="org.slf4j.api:1.7.2.v20121108-1250:default:true"/>
+<setEntry value="org.slf4j.jcl:1.7.2.v20130115-1340:default:true"/>
+<setEntry value="org.slf4j.jul:1.7.2.v20121108-1250:default:true"/>
+<setEntry value="org.slf4j.log4j:1.7.2.v20130115-1340:default:true"/>
+<setEntry value="uk.org.lidalia.sysout-over-slf4j:1.0.2:default:true"/>
 </setAttribute>
 <booleanAttribute key="append.args" value="true"/>
 <stringAttribute key="application" value="ch.elexis.core.application.ElexisApp"/>
@@ -24,6 +48,7 @@
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;runtimeClasspathEntry containerPath=&quot;org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7&quot; path=&quot;1&quot; type=&quot;4&quot;/&gt;&#10;"/>
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.JAVA_COMMAND" value="java"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -debug -console"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
@@ -32,7 +57,9 @@
 <stringAttribute key="product" value="ch.elexis.core.application.product"/>
 <stringAttribute key="productFile" value="/ch.elexis.core.application/Elexis.product"/>
 <setAttribute key="selected_features">
+<setEntry value="ch.elexis.core.application.feature:default"/>
 <setEntry value="ch.elexis.core.common.feature:default"/>
+<setEntry value="ch.elexis.core.logging.feature:default"/>
 <setEntry value="ch.elexis.core.ui.feature:default"/>
 </setAttribute>
 <stringAttribute key="selected_target_plugins" value="ch.qos.logback.classic*1.0.7@default:default,ch.qos.logback.core*1.0.7@default:default,com.ibm.icu@default:default,com.mysql.jdbc@default:default,javax.servlet@default:default,log4j*1.2.17@default:default,org.eclipse.core.commands@default:default,org.eclipse.core.contenttype@default:default,org.eclipse.core.databinding.beans@default:default,org.eclipse.core.databinding.observable@default:default,org.eclipse.core.databinding.property@default:default,org.eclipse.core.databinding@default:default,org.eclipse.core.expressions@default:default,org.eclipse.core.jobs@default:default,org.eclipse.core.runtime.compatibility.auth@default:default,org.eclipse.core.runtime.compatibility.registry@default:false,org.eclipse.core.runtime@default:true,org.eclipse.equinox.app@default:default,org.eclipse.equinox.common@2:true,org.eclipse.equinox.preferences@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.help@default:default,org.eclipse.jface.databinding@default:default,org.eclipse.jface@default:default,org.eclipse.osgi.services@default:default,org.eclipse.osgi@-1:true,org.eclipse.swt.cocoa.macosx.x86_64@default:false,org.eclipse.swt@default:default,org.eclipse.ui.cocoa@default:false,org.eclipse.ui.forms@default:default,org.eclipse.ui.workbench@default:default,org.eclipse.ui@default:default,org.h2@default:default,org.postgresql@default:default,org.slf4j.api@default:default,slf4j.api*1.6.6@default:default,slf4j.log4j12@default:false"/>

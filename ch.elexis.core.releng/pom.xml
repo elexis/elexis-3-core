@@ -15,69 +15,64 @@
  <packaging>
    pom 
  </packaging>
- <modules>
-  <module>
-    ../ch.elexis.core 
-  </module>
-  <module>
-    ../ch.elexis.core.application 
-  </module>
-  <module>
-    ../ch.elexis.core.application.feature 
-  </module>
-  <module>
-    ../ch.elexis.core.common.feature 
-  </module>
-  <module>
-    ../ch.elexis.core.console.application 
-  </module>
-  <module>
-    ../ch.elexis.core.data 
-  </module>
-   <module>
-    ../ch.elexis.core.eigenartikel
-  </module>
-  <module>
-    ../ch.elexis.core.ui 
-  </module>
-   <module>
-    ../ch.elexis.core.ui.eigenartikel 
-  </module>
-  <module>
-    ../ch.elexis.core.ui.contacts 
-  </module>
-  <module>
-    ../ch.elexis.core.ui.feature 
-  </module>
-  <module>
-    ../ch.elexis.core.ui.icons 
-  </module>
-  <module>
-    ../ch.elexis.core.ui.laboratory 
-  </module>
-  <module>
-    ../ch.elexis.core.ui.medication 
-  </module>
-  <module>
-    ../ch.elexis.core.ui.p2 
-  </module>
-  <module>
-    ../ch.elexis.core.ui.importer.div 
-  </module>
-  <module>
-    ../ch.rgw.utility 
-  </module>
-  <module>
-    juno 
-  </module>
-  <!-- the product creates an zipped installable application and a p2 update site -->
-  <module>
-    product 
-  </module>
- </modules>
- <properties>
+<!--build>
+  <profiles>
+    <profile>
+      <id>all</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation-->
+      <modules>
+        <module>../ch.elexis.core</module>
+        <module>../ch.elexis.core.application</module>
+        <module>../ch.elexis.core.application.feature</module>
+        <module>../ch.elexis.core.common.feature</module>
+        <module>../ch.elexis.core.console.application</module>
+        <module>../ch.elexis.core.data</module>
+        <module>../ch.elexis.core.eigenartikel</module>
+        <module>../ch.elexis.core.logging.feature</module>
+        <module>../ch.elexis.core.logging.default_configuration</module>
+        <module>../ch.elexis.core.logging</module>
+         <module>../ch.elexis.core.ui</module>
+        <module>../ch.elexis.core.ui.eigenartikel</module>
+        <module>../ch.elexis.core.ui.contacts</module>
+        <module>../ch.elexis.core.ui.feature</module>
+        <module>../ch.elexis.core.ui.icons</module>
+        <module>../ch.elexis.core.ui.laboratory</module>
+        <module>../ch.elexis.core.ui.medication</module>
+        <module>../ch.elexis.core.ui.p2</module>
+        <module>../ch.elexis.core.ui.importer.div</module>
+        <module>../ch.rgw.utility</module>
+        <module>juno</module>
+        <!-- the product creates an zipped installable application and a p2 update site -->
+        <module>product</module>
+      </modules>
+  <!--/profile>
+    <profile>
+      <id>javadoc</id>
+      <modules>
+        <module>../ch.elexis.core</module>
+        <module>../ch.elexis.core.application</module>
+        <module>../ch.elexis.core.common.feature</module>
+        <module>../ch.elexis.core.console.application</module>
+        <module>../ch.elexis.core.data</module>
+        <module>../ch.elexis.core.eigenartikel</module>
+        <module>../ch.elexis.core.ui</module>
+        <module>../ch.elexis.core.ui.eigenartikel</module>
+        <module>../ch.elexis.core.ui.contacts</module>
+        <module>../ch.elexis.core.ui.icons</module>
+        <module>../ch.elexis.core.ui.laboratory</module>
+        <module>../ch.elexis.core.ui.medication</module>
+        <module>../ch.elexis.core.ui.importer.div</module>
+        <module>../ch.rgw.utility</module>
+      </modules>
+    </profile>
+  <profiles-->
+
+  <properties>
    <scm_url>git@github.com:elexis/elexis-3-core.git</scm_url>
-  <tycho-version>0.18.1</tycho-version>
+    <forceContextQualifier>20090527-1635</forceContextQualifier>
+    <tycho-version>0.18.1</tycho-version>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   <tycho-extras.version>${tycho-version}</tycho-extras.version>
  </properties>
@@ -346,8 +341,8 @@
       <timestampProvider>
         jgit 
       </timestampProvider>
-      <jgit.ignore>
-      </jgit.ignore>
+      <jgit.ignore/>
+      
      </configuration>
     </plugin>
     <plugin>

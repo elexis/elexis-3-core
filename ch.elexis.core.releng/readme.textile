@@ -59,3 +59,6 @@ h2. TODO
 
 * Fix problem with missing icons
 * Create a tag (but with a good name not @jenkins-Elexis-3.0-Core-18@ and pushing it to github each time, all tests (JUnit, PDE-Test, Jubula) have passed on one/all architecture. The tag name should be something like @I_YEAR_MONTH_DAY_HOUR_MINUTE@, see example "eclipse.e4.tools":http://git.eclipse.org/c/e4/org.eclipse.e4.tools.git/
+* Howto build release here some hints
+** http://de.slideshare.net/matthiaskoester/release-enginnering-with-tycho-and-p2 (Linux Version 1.0.0 < 1.0.1.snapshot < 1.0.2)
+** "OSGi release procedures and best practices":https://issues.sonatype.org/browse/TYCHO-214  

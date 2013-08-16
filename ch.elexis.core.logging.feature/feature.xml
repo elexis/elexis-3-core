@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ch.elexis.core.common.feature"
+      id="ch.elexis.core.logging.feature"
       label="Elexis OpenSource Common Bundles Feature"
       version="3.0.0.qualifier"
       provider-name="elexis.info">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="http://elexis.info">
+      Provides logback based logging for Elexis.
    </description>
 
    <copyright url="http://www.example.com/copyright">
@@ -18,56 +18,18 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.core.runtime" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="ch.rgw.utility" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.jdom"/>
-      <import plugin="bcprov"/>
-      <import plugin="org.eclipse.core.runtime" version="3.8.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.commands" version="3.6.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.expressions" version="3.4.400" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="javax.servlet"/>
-      <import plugin="ch.elexis.core.data" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.osgi.services" version="3.3.100" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="uk.org.lidalia.sysout-over-slf4j"/>
+      <import plugin="ch.qos.logback.core"/>
+      <import plugin="ch.qos.logback.classic"/>
+      <import plugin="org.slf4j.api"/>
    </requires>
 
    <plugin
-         id="ch.elexis.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="ch.rgw.utility"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="ch.elexis.core.data"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.h2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.mysql.jdbc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.postgresql"
+         id="ch.qos.logback.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -81,14 +43,42 @@
          unpack="false"/>
 
    <plugin
-         id="ch.qos.logback.core"
+         id="org.eclipse.equinox.console"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="ch.elexis.core.eigenartikel"
+         id="org.apache.felix.gogo.command"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.felix.gogo.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.felix.gogo.shell"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.logging.default_configuration"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="ch.elexis.core.logging"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -99,6 +89,35 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.slf4j.jcl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.slf4j.jul"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.slf4j.log4j"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.qos.logback.slf4j"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>
