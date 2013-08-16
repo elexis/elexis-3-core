@@ -34,6 +34,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.ILoginNews;
+import ch.elexis.core.ui.constants.ExtensionPointConstants;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.ExHandler;
 
@@ -67,21 +68,15 @@ public class LoginDialog extends TitleAreaDialog {
 			usr.setText("Administrator"); //$NON-NLS-1$
 			pwd.setText("admin"); //$NON-NLS-1$
 		}
-		// usr.addModifyListener(be);
-		// pwd.addModifyListener(be);
-		/*
-		 * List<IConfigurationElement> newsModules =
-		 * Extensions.getExtensions("ch.elexis.LoginNews"); for(IConfigurationElement
-		 * ice:newsModules){ System.out.println(ice.getAttribute("name"));
-		 * System.out.println(ice.getAttribute("class")); }
-		 */
-		List newsModules = Extensions.getClasses("ch.elexis.LoginNews", "class");
+
+		@SuppressWarnings("unchecked")
+		List<ILoginNews> newsModules = Extensions.getClasses(ExtensionPointConstants.LOGIN_NEWS, "class");
 		
 		if (newsModules.size() > 0) {
 			Composite cNews = new Composite(ret, SWT.NONE);
 			cNews.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 			cNews.setLayout(new GridLayout());
-			for (ILoginNews lm : (List<ILoginNews>) newsModules) {
+			for (ILoginNews lm : newsModules) {
 				try {
 					Composite comp = lm.getComposite(cNews);
 					comp.setLayoutData(SWTHelper.getFillGridData());
