@@ -62,7 +62,9 @@ class EclipseJar
     @jarname                   = jarname
     @jarfile                   = Zip::ZipFile.open(jarname) 
     # we use hashes to be able to find the categories fast
-    readPluginXML('xx')
+    readPluginXML(File.basename(jarname))
+  rescue # HACK: we need this to handle org.apache.commons.lang under Windows-7
+    puts "Skipped plugin #{File.expand_path(jarname)}"
   end
   
   def addCategory(hash, id, name = nil)
