@@ -246,7 +246,7 @@ public
     wrapper = "#{JubulaOptions.wrapper}"
     exe  = File.expand_path(exeFile)
     exe += '.app/Contents/MacOS/' + File.basename(exe) if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
-    doc = "'#{exe}' #{vm.eql?('java') ? "" : " -vm #{vm}"} -clean -consoleLog -debug -data #{@dataDir} -vmargs #{vmargs}"
+    doc = "\"#{exe}\" #{vm.eql?('java') ? "" : " -vm #{vm}"} -clean -consoleLog -debug -data #{@dataDir} -vmargs #{vmargs}"
     File.open(wrapper, 'w') {|f| f.puts(doc) }
     FileUtils.chmod(0744, wrapper)
     puts "#{dryRun ? 'Would create' : 'Created'} wrapper script #{wrapper} with content"
