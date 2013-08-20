@@ -10,11 +10,19 @@
  ******************************************************************************/
 package ch.elexis.core.data.activator;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -42,6 +50,7 @@ import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.rgw.io.LockFile;
+import ch.rgw.io.Resource;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SqlSettings;
 import ch.rgw.io.SysSettings;
@@ -54,7 +63,10 @@ import ch.rgw.tools.VersionInfo;
  */
 public class CoreHub implements BundleActivator {
 	public static final String PLUGIN_ID = "ch.elexis.core.data";
-	public static final String Version = "3.0.0.qualifier"; //$NON-NLS-1$
+	/*
+	 * This version is needed to compare the DB
+	 */
+	public static String Version = "3.0.0.qualifier"; //$NON-NLS-1$
 	public static final String APPLICATION_NAME = "Elexis Core"; //$NON-NLS-1$
 	static final String neededJRE = "1.7.0"; //$NON-NLS-1$
 	public static final String DBVersion = "1.8.16"; //$NON-NLS-1$
@@ -208,9 +220,38 @@ public class CoreHub implements BundleActivator {
 		});	
 	}
 
+	/*
+	 * We use maven resources filtering replace in rsc/version.properties the
+	 * property ${pom.version} by the current build version and place it into
+	 * the file /version.properties of each jar file.
+	 * 
+	 * See http://maven.apache.org
+	 * /plugins/maven-resources-plugin/examples/filter.html
+	 */
+	public static String readElexisBuildVersion() {
+		Properties prop = new Properties();
+		String elexis_version = "Developer";
+		String qualifier = " ?? ";
+		try {
+			URL url;
+			url = new URL(
+					"platform:/plugin/ch.elexis.core.data/version.properties");
+			InputStream inputStream = url.openConnection().getInputStream();
+			if (inputStream != null) {
+				prop.load(inputStream);
+				elexis_version = prop.getProperty("elexis.version");
+				qualifier = prop.getProperty("elexis.qualifier");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return elexis_version.replace("-SNAPSHOT", "") + " " + qualifier;
+	}
+
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		log.debug("Stopping "+CoreHub.class.getName());
+		log.debug("Stopping " + CoreHub.class.getName());
 		if (CoreHub.actUser != null) {
 			Anwender.logoff();
 		}

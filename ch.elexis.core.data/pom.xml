@@ -29,4 +29,12 @@
  <packaging>
    eclipse-plugin 
  </packaging>
+  <build>
+    <resources>
+        <resource>
+          <directory>rsc</directory> <!-- where we have there our version.properties -->
+            <filtering>true</filtering>
+        </resource>
+    </resources>
+  </build>
 </project>

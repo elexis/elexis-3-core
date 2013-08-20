@@ -48,7 +48,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(true);
 		configurer.setShowProgressIndicator(true);
-		configurer.setTitle(Hub.APPLICATION_NAME);
+		configurer.setTitle(Hub.APPLICATION_NAME + " " + CoreHub.readElexisBuildVersion());
 		configurer.setShowFastViewBars(true);
 		if (CoreHub.localCfg.get(Preferences.SHOWPERSPECTIVESELECTOR, Boolean.toString(false))
 			.equals(Boolean.toString(true))) {
