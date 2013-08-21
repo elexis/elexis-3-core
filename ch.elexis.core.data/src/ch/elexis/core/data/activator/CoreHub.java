@@ -243,8 +243,7 @@ public class CoreHub implements BundleActivator {
 				qualifier = prop.getProperty("elexis.qualifier");
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn("Error reading build version information. ", e);
 		}
 		return elexis_version.replace("-SNAPSHOT", "") + " " + qualifier;
 	}
