@@ -1,12 +1,11 @@
-<?xml version='1.0' encoding='UTF-8'?>
 <site>
- <feature url='features/ch.elexis.core.application.feature_3.0.0.qualifier.jar' id='ch.elexis.core.application.feature' version='3.0.0.qualifier'>
-  <category name='elexis_3_core'/>
- </feature>
- <category-def name='elexis_3_core' label='elexis_3_core'>
-  <description>
-    ALPHA Version of upcoming Elexis 3 Core. See also
-   https://github.com/elexis/elexis-3-core 
-  </description>
- </category-def>
+  <feature url='features/ch.elexis.core.application.feature_3.0.0.qualifier.jar' id='ch.elexis.core.application.feature' version='3.0.0.qualifier'>
+    <category name='elexis_3_core'/>
+  </feature>
+  <category-def name='elexis_3_core' label='elexis_3_core'>
+    <description>
+       ALPHA Version of upcoming Elexis 3 Core. See also
+      https://github.com/elexis/elexis-3-core 
+    </description>
+  </category-def>
 </site>
