@@ -17,10 +17,6 @@ end
 
 def updateAll(rootDir, newVersion)
   variant = /snapshot|qualifier/i.match(newVersion) ? 'snapshot' : 'release'
-  Dir.glob("#{rootDir}/**/ch/elexis/core/data/activator/CoreHub.java").sort.uniq.each {
-    |file|
-    VersionUpdater.new(file, newVersion, @dryRun).update_using_regexp(/String Version = "([^"]+)/) 
-  }
   Dir.glob("#{rootDir}/**/pom.xml").sort.uniq.each              { |file| VersionUpdater.new(file, newVersion, @dryRun).update_pom }
   Dir.glob("#{rootDir}/**/META-INF/MANIFEST.MF").sort.uniq.each { |file| VersionUpdater.new(file, newVersion, @dryRun).update_mf }
   Dir.glob("#{rootDir}/**/feature.mf").sort.uniq.each           { |file| VersionUpdater.new(file, newVersion, @dryRun).update_feature }
@@ -49,7 +45,6 @@ Prepares for an Elexis release
    ** category.xml
    ** p2.inf
    ** Elexis.product
-   ** CoreHub.java
 TODO:   ** Rakefile
     )
       opts.on("--version version", "new version to use") do |v|
@@ -65,6 +60,9 @@ TODO:   ** Rakefile
 end
 
 args = options.parse!
+pp args
+pp ARGV.size
+pp @newVersion
 unless ARGV.size == 1 and @newVersion
   puts options.help
   exit 1

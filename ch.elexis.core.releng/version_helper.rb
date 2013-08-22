@@ -22,8 +22,9 @@ class VersionUpdater
       puts "Could not read file #{filename} to update version to #{newVersion}"
       exit 1
     end
+    # puts "Updating #{filename}"
     @mavenVersion   = newVersion.sub(/([\.\-_]qualifier)/, '-SNAPSHOT').sub('.-','-')
-    @eclipseVersion = newVersion.sub('-SNAPSHOT', 'qualifier')
+    @eclipseVersion = newVersion.sub('-SNAPSHOT', '.qualifier')
     @filename       = filename
     @newVersion     = newVersion
     @dryRun         = dryRun
@@ -120,8 +121,10 @@ class VersionUpdater
   
 private
   def writeXmlOutput(doc)
+    formatter = REXML::Formatters::Pretty.new
+    formatter.compact = true # This is the magic line that does what you need!
     ausgabe = File.open("#{@filename}", 'w+')
-    doc.write( ausgabe, 2 )
+    formatter.write(doc.root, ausgabe,)
   end
 
   def writeOutput(content)
