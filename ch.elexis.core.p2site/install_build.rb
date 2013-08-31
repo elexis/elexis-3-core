@@ -194,7 +194,7 @@ class CompositeRepository
     children_repos.sort!
   end
   
-  def emit(symlink_name = 'current')
+  def emit
     current_dir=File.expand_path(File.dirname(__FILE__))
     #Generate the Artifact Repository
     template=ERB.new File.new(File.join(current_dir,"composite.xml.rhtml")).read, nil, "%"
@@ -226,14 +226,7 @@ artifact.repository.factory.order = compositeArtifacts.xml,\!
       File.open(File.join(out_dir,"compositeContent.xml"), 'w') {|f| f.puts(metadataRes) }
       File.open(File.join(out_dir,"index.html"), 'w') {|f| f.puts(htmlRes) }
       File.open(File.join(out_dir,"p2.index"), 'w') {|f| f.puts(p2_index) }
-      current_symlink=File.expand_path(File.join(out_dir, '..', symlink_name))
-      if File.symlink?(current_symlink) || File.exists?(current_symlink)
-        File.delete current_symlink
-      end
-      Dir.chdir "#{out_dir}/.."
-      File.symlink(out_dir,symlink_name)
-      Dir.chdir "#{current_dir}"
-      puts "Wrote the composite repository in #{out_dir} symlink #{current_symlink}"      
+      puts "Wrote the composite repository in #{out_dir}"
     end
   end
 end  
@@ -263,4 +256,4 @@ Dir.glob('/srv/www/download.elexis.info/elexis.3.core/versions_4_release/').each
   |x|
   compositeRepository.add_childrepo(File.new(x))
 } if false
-compositeRepository.emit('latest')
+compositeRepository.emit
