@@ -1,0 +1,134 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>ch.elexis</groupId>
+    <artifactId>ch.elexis.core.releng</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+    <relativePath>../ch.elexis.core.releng</relativePath>
+  </parent>
+  <groupId>ch.elexis </groupId>
+  <artifactId>ch.elexis.core.p2site</artifactId>
+  <version>3.0.0-SNAPSHOT</version>
+  <packaging>eclipse-repository</packaging>
+  <build>
+    <plugins>
+        <plugin>
+           <groupId>com.google.code.maven-replacer-plugin</groupId>
+           <artifactId>replacer</artifactId>
+           <version>1.5.2</version>
+           <executions>
+               <execution>
+                   <phase>generate-sources</phase>
+                   <goals>
+                       <goal>replace</goal>
+                   </goals>                  
+               </execution>
+           </executions>
+           <configuration>
+               <outputDir>../ch.elexis.core.p2site</outputDir>
+               <basedir>../ch.elexis.core.application</basedir>
+               <filesToInclude>repo.properties,Elexis.p2.inf</filesToInclude>
+               <replacements>
+                   <replacement>
+                       <token>project_name</token>
+                       <value>${project.name}</value>
+                   </replacement>          
+                   <replacement>
+                       <token>project_version</token>
+                       <value>${project.version}</value>
+                   </replacement>        
+                   <replacement>
+                       <token>buildQualifier</token>
+                       <value>${buildQualifier}</value>
+                   </replacement>        
+                   <replacement>
+                       <token>unqualifiedVersion</token>
+                       <value>${unqualifiedVersion}</value>
+                   </replacement>        
+                   <replacement>
+                       <token>repo_name</token>
+                       <value>${repo_name}</value>
+                   </replacement>        
+                   <replacement>
+                       <token>repo_variant</token>
+                       <value>${repo_variant}</value>
+                   </replacement>        
+               </replacements>
+           </configuration>
+        </plugin>
+      <plugin>
+        <groupId>com.github.goldin </groupId>
+        <!-- see http://evgeny-goldin.com/wiki/Copy-maven-plugin -->
+        <artifactId>copy-maven-plugin</artifactId>
+        <version>0.2.5 </version>
+        <executions>
+          <execution>
+            <id>create-archive</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <!-- We have to copy the Elexis.product, as we cannot build a plug-in and a target inside the same Maven project
+                    (or at least don't know howto)
+                    Under Linux a symbolic link would suffice. But this did not work under Windows
+                  -->
+                <resource>
+                  <targetPath>${basedir}</targetPath>
+                  <directory>../ch.elexis.core.application</directory>
+                  <includes>
+                    <include>Elexis.product</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- Remove Elexis.product on clean -->
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5 </version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${basedir}</directory>
+              <includes>
+                <include>Elexis.product</include>
+                <include>repo.properties</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho </groupId>
+        <artifactId>tycho-p2-repository-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <includeAllDependencies>true</includeAllDependencies>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho </groupId>
+        <artifactId>tycho-p2-director-plugin</artifactId>
+        <version>${tycho-version} </version>
+        <executions>
+          <execution>
+            <id>materialize-products</id>
+            <goals>
+              <goal>materialize-products</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>archive-products</id>
+            <goals>
+              <goal>archive-products</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

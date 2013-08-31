@@ -1,16 +1,22 @@
 <project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'>
-  <modelVersion> 4.0.0 </modelVersion>
-  <groupId> ch.elexis </groupId>
-  <artifactId> ch.elexis.core.releng </artifactId>
+  <modelVersion>4.0.0 </modelVersion>
+  <groupId>ch.elexis</groupId>
+  <artifactId>ch.elexis.core.releng </artifactId>
   <version>3.0.0-SNAPSHOT</version>
-  <packaging> pom </packaging>
-  <!--build>
-<profiles>
-<profile>
-  <id>all</id>
-  <activation>
-    <activeByDefault>true</activeByDefault>
-  </activation-->
+  <packaging>pom </packaging>
+  <profiles>
+    <profile>
+      <id>release</id>
+      <activation>
+        <property>
+          <name>forceContextQualifier</name>
+        </property>
+      </activation>
+      <properties>
+        <p2.inf_extension>release</p2.inf_extension>
+      </properties>
+    </profile>
+  </profiles>
   <modules>
     <module>../ch.elexis.core</module>
     <module>../ch.elexis.core.application</module>
@@ -33,88 +39,91 @@
     <module>../ch.elexis.core.ui.importer.div</module>
     <module>../ch.rgw.utility</module>
     <module>../ch.elexis.target</module>
-    <!-- the product creates an zipped installable application and a p2 update site -->
-    <module>product</module>
+    <!-- the ch.elexis.core.p2site creates an zipped installable application and a p2 update site -->
+    <module>../ch.elexis.core.p2site</module>
   </modules>
-  <!--/profile>
-<profile>
-  <id>javadoc</id>
-  <modules>
-    <module>../ch.elexis.core</module>
-    <module>../ch.elexis.core.application</module>
-    <module>../ch.elexis.core.common.feature</module>
-    <module>../ch.elexis.core.console.application</module>
-    <module>../ch.elexis.core.data</module>
-    <module>../ch.elexis.core.eigenartikel</module>
-    <module>../ch.elexis.core.ui</module>
-    <module>../ch.elexis.core.ui.eigenartikel</module>
-    <module>../ch.elexis.core.ui.contacts</module>
-    <module>../ch.elexis.core.ui.icons</module>
-    <module>../ch.elexis.core.ui.laboratory</module>
-    <module>../ch.elexis.core.ui.medication</module>
-    <module>../ch.elexis.core.ui.importer.div</module>
-    <module>../ch.rgw.utility</module>
-  </modules>
-</profile>
-<profiles-->
   <properties>
     <scm_url>git@github.com:elexis/elexis-3-core.git</scm_url>
-    <forceContextQualifier>20090527-1635</forceContextQualifier>
     <tycho-version>0.18.1</tycho-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tycho-extras.version>${tycho-version}</tycho-extras.version>
+    <repo_name>elexis.3.core</repo_name>
+    <repo_variant>snapshot</repo_variant>
   </properties>
   <build>
     <plugins>
       <plugin>
-        <groupId> org.eclipse.tycho </groupId>
-        <artifactId> tycho-versions-plugin </artifactId>
-        <version> ${tycho-version} </version>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-p2-plugin </artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <baselineMode>warn </baselineMode>
+          <baselineReplace>none </baselineReplace>
+          <baselineRepositories>
+            <repository>
+              <url>http://download.eclipse.org/eclipse/updates/3.8 </url>
+            </repository>
+          </baselineRepositories>
+          <executions>
+            <execution>
+              <id>attach-p2-metadata</id>
+              <phase>package</phase>
+              <goals>
+                <goal>p2-metadata</goal>
+              </goals>
+            </execution>
+          </executions>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-versions-plugin </artifactId>
+        <version>${tycho-version}</version>
       </plugin>
       <plugin>
         <!-- we want to ensure that the bin directory created by the Eclipse gets cleaned, too. 
          Without it Maven would put two versions of each class file into the jars
          -->
-        <artifactId> maven-clean-plugin </artifactId>
-        <version> 2.5 </version>
+        <artifactId>maven-clean-plugin </artifactId>
+        <version>2.5</version>
         <configuration>
           <filesets>
             <fileset>
-              <directory> bin </directory>
+              <directory>bin </directory>
             </fileset>
           </filesets>
         </configuration>
       </plugin>
       <plugin>
         <!-- Use compiler plugin with tycho as the adapter to the JDT compiler. -->
-        <artifactId> maven-compiler-plugin </artifactId>
-        <version> 3.1 </version>
+        <artifactId>maven-compiler-plugin </artifactId>
+        <version>3.1</version>
         <configuration>
-          <source> 1.7 </source>
-          <target> 1.7 </target>
-          <compilerId> jdt </compilerId>
-          <compilerArgument> -err:nullAnnot,null </compilerArgument>
+          <source>1.7 </source>
+          <target>1.7 </target>
+          <compilerId>jdt </compilerId>
+          <compilerArgument>-err:nullAnnot,null </compilerArgument>
           <!-- insert your warn/err configuration here -->
         </configuration>
         <dependencies>
           <!-- This dependency provides the implementation of compiler "jdt": -->
           <dependency>
-            <groupId> org.eclipse.tycho </groupId>
-            <artifactId> tycho-compiler-jdt </artifactId>
-            <version> ${tycho-version} </version>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-compiler-jdt </artifactId>
+            <version>${tycho-version}</version>
           </dependency>
         </dependencies>
       </plugin>
       <plugin>
-        <groupId> org.eclipse.tycho </groupId>
-        <artifactId> tycho-maven-plugin </artifactId>
-        <version> ${tycho-version} </version>
-        <extensions> true </extensions>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <extensions>true </extensions>
       </plugin>
       <plugin>
-        <groupId> org.eclipse.tycho </groupId>
-        <artifactId> target-platform-configuration </artifactId>
-        <version> ${tycho-version} </version>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration </artifactId>
+        <version>${tycho-version}</version>
         <configuration>
           <!-- see http://wiki.eclipse.org/Tycho/Target_Platform
         we want to use the first alternative:
@@ -124,49 +133,49 @@
         -->
           <target>
             <artifact>
-              <groupId> ch.elexis </groupId>
-              <artifactId> juno-target </artifactId>
-              <version> 3.0.0-SNAPSHOT </version>
+              <groupId>ch.elexis</groupId>
+              <artifactId>juno-target </artifactId>
+              <version>3.0.0-SNAPSHOT</version>
               <!-- we cannot use a classifier here, or mvn compile would file in any other project!! classifier>elexis-3</classifier-->
             </artifact>
           </target>
           <environments>
             <environment>
-              <os> linux </os>
-              <ws> gtk </ws>
-              <arch> x86 </arch>
+              <os>linux </os>
+              <ws>gtk </ws>
+              <arch>x86 </arch>
             </environment>
             <environment>
-              <os> linux </os>
-              <ws> gtk </ws>
-              <arch> x86_64 </arch>
+              <os>linux </os>
+              <ws>gtk </ws>
+              <arch>x86_64 </arch>
             </environment>
             <environment>
-              <os> win32 </os>
-              <ws> win32 </ws>
-              <arch> x86 </arch>
+              <os>win32 </os>
+              <ws>win32 </ws>
+              <arch>x86 </arch>
             </environment>
             <environment>
-              <os> win32 </os>
-              <ws> win32 </ws>
-              <arch> x86_64 </arch>
+              <os>win32 </os>
+              <ws>win32 </ws>
+              <arch>x86_64 </arch>
             </environment>
             <environment>
-              <os> macosx </os>
-              <ws> cocoa </ws>
-              <arch> x86_64 </arch>
+              <os>macosx </os>
+              <ws>cocoa </ws>
+              <arch>x86_64 </arch>
             </environment>
           </environments>
         </configuration>
       </plugin>
       <plugin>
-        <groupId> org.eclipse.tycho </groupId>
-        <artifactId> tycho-source-plugin </artifactId>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin </artifactId>
         <executions>
           <execution>
-            <id> plugin-source </id>
+            <id>plugin-source </id>
             <goals>
-              <goal> plugin-source </goal>
+              <goal>plugin-source </goal>
             </goals>
           </execution>
         </executions>
@@ -175,87 +184,68 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId> org.eclipse.tycho </groupId>
-          <artifactId> tycho-versions-plugin </artifactId>
-          <version> ${tycho-version} </version>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-versions-plugin </artifactId>
+          <version>${tycho-version}</version>
         </plugin>
         <plugin>
-          <groupId> org.eclipse.tycho </groupId>
-          <artifactId> tycho-compiler-plugin </artifactId>
-          <version> ${tycho-version} </version>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-compiler-plugin </artifactId>
+          <version>${tycho-version}</version>
           <configuration>
-            <optionalDependencies> ignore </optionalDependencies>
+            <optionalDependencies>ignore </optionalDependencies>
             <compilerArguments>
               <inlineJSR/>
               <enableJavadoc/>
-              <encoding> UTF-8 </encoding>
+              <encoding>UTF-8 </encoding>
             </compilerArguments>
           </configuration>
         </plugin>
         <plugin>
-          <groupId> org.eclipse.tycho </groupId>
-          <artifactId> tycho-packaging-plugin </artifactId>
-          <version> ${tycho-version} </version>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-packaging-plugin </artifactId>
+          <version>${tycho-version}</version>
           <dependencies>
             <dependency>
-              <groupId> org.eclipse.tycho.extras </groupId>
-              <artifactId> tycho-buildtimestamp-jgit </artifactId>
-              <version> ${tycho-extras.version} </version>
+              <groupId>org.eclipse.tycho.extras</groupId>
+              <artifactId>tycho-buildtimestamp-jgit </artifactId>
+              <version>${tycho-extras.version}</version>
             </dependency>
           </dependencies>
           <configuration>
-            <strictBinIncludes> false </strictBinIncludes>
-            <format> 'v'yyyyMMdd-HHmm </format>
-            <timestampProvider> jgit </timestampProvider>
+            <strictBinIncludes>false </strictBinIncludes>
+            <format>'v'yyyyMMdd-HHmm </format>
+            <timestampProvider>jgit </timestampProvider>
             <jgit.ignore/>
           </configuration>
         </plugin>
         <plugin>
-          <groupId> org.eclipse.tycho </groupId>
-          <artifactId> tycho-surefire-plugin </artifactId>
-          <version> ${tycho-version} </version>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-surefire-plugin </artifactId>
+          <version>${tycho-version}</version>
         </plugin>
         <plugin>
-          <groupId> org.eclipse.tycho </groupId>
-          <artifactId> tycho-source-plugin </artifactId>
-          <version> ${tycho-version} </version>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-source-plugin </artifactId>
+          <version>${tycho-version}</version>
           <configuration>
-            <strictSrcIncludes> false </strictSrcIncludes>
+            <strictSrcIncludes>false </strictSrcIncludes>
           </configuration>
         </plugin>
         <plugin>
-          <groupId> org.eclipse.tycho </groupId>
-          <artifactId> tycho-p2-director-plugin </artifactId>
-          <version> ${tycho-version} </version>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-p2-director-plugin </artifactId>
+          <version>${tycho-version}</version>
         </plugin>
         <plugin>
-          <groupId> org.eclipse.tycho </groupId>
-          <artifactId> tycho-p2-repository-plugin </artifactId>
-          <version> ${tycho-version} </version>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-p2-repository-plugin </artifactId>
+          <version>${tycho-version}</version>
         </plugin>
         <plugin>
-          <groupId> org.eclipse.tycho.extras </groupId>
-          <artifactId> tycho-source-feature-plugin </artifactId>
-          <version> ${tycho-extras.version} </version>
-        </plugin>
-        <plugin>
-          <groupId> org.eclipse.tycho.extras </groupId>
-          <artifactId> tycho-custom-bundle-plugin </artifactId>
-          <version> ${tycho-extras.version} </version>
-        </plugin>
-        <plugin>
-          <groupId> org.eclipse.tycho </groupId>
-          <artifactId> tycho-p2-plugin </artifactId>
-          <version> ${tycho-version} </version>
-          <configuration>
-            <baselineMode> warn </baselineMode>
-            <baselineReplace> none </baselineReplace>
-            <baselineRepositories>
-              <repository>
-                <url> http://download.eclipse.org/eclipse/updates/3.8 </url>
-              </repository>
-            </baselineRepositories>
-          </configuration>
+          <groupId>org.eclipse.tycho.extras</groupId>
+          <artifactId>tycho-custom-bundle-plugin </artifactId>
+          <version>${tycho-extras.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -280,6 +270,12 @@
       </plugins>
     </pluginManagement>
   </build>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>tycho-snapshots</id>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
   <scm>
     <developerConnection>scm:git:${scm_url}</developerConnection>
   </scm>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?composite<%=@ArtifactOrMetadata%>Repository version="1.0.0"?>
+<repository name="&quot;<%=@name%>-<%=@version%>&quot;"
+    type="org.eclipse.equinox.internal.p2.metadata.repository.Composite<%=@ArtifactOrMetadata%>Repository" version="1.0.0">
+  <properties size="1">
+    <property name="p2.timestamp" value="<%=@timestamp%>"/>
+  </properties>
+  <children size="<%=@children_repo.size%>">
+    <%@children_repo.each do |child_repo| %><child location="<%=child_repo%>"/>
+    <%end%>
+  </children>
+</repository>
