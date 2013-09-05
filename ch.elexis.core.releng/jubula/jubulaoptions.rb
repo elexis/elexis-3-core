@@ -105,7 +105,7 @@ module JubulaOptions
   @vmargs      ||= ""  
   @wrapper     ||= "#{@workspace}/test-runner.bat" # use bat for windows!
   @vm          ||= 'java'
-  @exeFile     ||= "#{File.expand_path(File.dirname(__FILE__))}/../product/target/products/ch.elexis.core.application.product/#{@os}/#{@winType}/#{@cpu}/Elexis 3.0"
+  @exeFile     ||= "#{File.expand_path(File.dirname(__FILE__))}/../../ch.elexis.core.p2site/target/products/ch.elexis.core.application.product/#{@os}/#{@winType}/#{@cpu}/Elexis 3.0"
   host_os = RbConfig::CONFIG['host_os']
   case RbConfig::CONFIG['host_os']
     when WINDOWS_REGEXP
@@ -118,10 +118,6 @@ module JubulaOptions
     else
       puts "unknown RbConfig::CONFIG['host_os'] #{RbConfig::CONFIG['host_os']}"
       exit 3
-  end
-  if Dir.glob(@exeFile).size == 0
-    puts "Could not find exeFile #{@exeFile}. host_os is #{host_os}"
-    exit 1
   end
   @instDest    ||= File.dirname(@exeFile)
   
@@ -156,7 +152,9 @@ module JubulaOptions
 	@dbpw = v
       end
       opts.on("-e", "--exeFile exeFile", "exeFile to use. Defaults to '#{@exeFile}'") do |v|
-	@os = v
+        puts "@exeFile ist jetzt #{v}"
+	@exeFile = v
+  @instDest = File.dirname(@exeFile)
       end
       opts.on("--jubulaHome jubulaHome", "Home of Jubula installation. Defaults to '#{@vmargs}'") do |v|
 	@jubulaHome = v
@@ -170,7 +168,7 @@ module JubulaOptions
       opts.on("--project", "project to use. Defaults to '#{@project}'") do |v|
   @project = v
       end
-      opts.on("--projectVersion", "version of project to use. Defaults to '#{@version}'") do |v|
+      opts.on("--projectVersion version", "version of project to use. Defaults to '#{@version}'") do |v|
   @version = v
       end
       opts.on("-i", "--installer file_or_http_link", "installer to use (either a file or a http-link). Defaults to '#{@installer}'") do |v|

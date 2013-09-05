@@ -97,7 +97,7 @@ public
  
   def prepareRcpSupport
     savedDir = Dir.pwd    
-    unless @dryRun
+    unless @dryRun and not File.directory?(@instDest)
       FileUtils.makedirs(File.join(@instDest, 'plugins'))
       Dir.chdir(File.join(@instDest, 'plugins'))
     end
@@ -137,7 +137,7 @@ public
       }
       File.open(ini_name, 'w') { |file| file.write config_ini.join('') }
     end
-    Dir.chdir(savedDir) if !@dryRun
+    Dir.chdir(savedDir)
   end
   
   def rmTestcases(tc = @project, version = @version)
