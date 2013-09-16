@@ -45,6 +45,7 @@ public class Application implements IApplication {
 		} catch (PersistenceException pe) {
 			log.error("Initialization error", pe);
 			pe.printStackTrace();
+			System.exit(1);
 		}
 
 		// check connection by logging number of contact entries
