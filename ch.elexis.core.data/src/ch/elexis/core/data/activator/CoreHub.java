@@ -346,7 +346,9 @@ public class CoreHub implements BundleActivator {
 	private void loadLocalCfg(String branch) {
 		LocalCfgFile = CoreHubHelper.getWritableUserDir() + "/localCfg_"
 				+ branch + ".xml";
-		log.debug("Loading branch "+branch+" from " +LocalCfgFile +" as localCfg");
+		String msg = "loadLocalCfg: Loading branch "+branch+" from " +LocalCfgFile;
+		System.out.println(msg);
+		log.debug(msg);
 		SysSettings cfg = new SysSettings(SysSettings.USER_SETTINGS, Desk.class);
 		cfg.read_xml(LocalCfgFile);
 		CoreHub.localCfg = cfg;

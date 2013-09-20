@@ -366,7 +366,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public static boolean connect(String dbFlavor, String dbSpec,
 			String dbUser, String dbPw, boolean exitOnFail) {
-		log.info("Using " + dbFlavor + " " + dbSpec + " " + dbUser);
+		String msg = "Connecting to DB using " + dbFlavor + " " + dbSpec + " " + dbUser;
+		System.out.println(msg);
+		log.info(msg);
 		String driver;
 
 		if (dbFlavor.equalsIgnoreCase("mysql"))
@@ -384,17 +386,23 @@ public abstract class PersistentObject implements IPersistentObject {
 					testJdbcLink = j;
 					return connect(getConnection());
 				} else {
-					log.error("can't connect to test database" + dbSpec);
+					msg = "can't connect to test database: " + dbSpec + " using " + dbFlavor;
+					log.error(msg);
+					System.out.println(msg);
 					if(exitOnFail) System.exit(-6);
 					return false;
 				}
 			} catch (Exception ex) {
-				log.error("can't connect to test database" + dbSpec);
+				msg = "Exception connecting to test database:" + dbSpec + " using " + dbFlavor;
+				log.error(msg);
+				System.out.println(msg);
 				if(exitOnFail) System.exit(-7);
 				return false;
 			}
 		}
-		log.error("can't connect to test database. invalid dbFlavor" + dbFlavor);
+		msg = "can't connect to test database invalid. dbFlavor" + dbFlavor;
+		log.error(msg);
+		System.out.println(msg);
 		if(exitOnFail) {
 			System.exit(-7);
 		}
