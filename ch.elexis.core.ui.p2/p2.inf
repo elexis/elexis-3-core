@@ -1,7 +1,3 @@
 instructions.configure=\
-  addRepository(type:0,location:http${#58}//download.elexis.info/elexis.3.snapshot);\
-  addRepository(type:1,location:http${#58}//download.elexis.info/elexis.3.snapshot);
-  
-instructions.configure=\
-  addRepository(type:0,location:http${#58}//download.elexis.info/elexis.3rdparty.libraries);\
-  addRepository(type:1,location:http${#58}//download.elexis.info/elexis.3rdparty.libraries);
+  addRepository(type:0,location:http${#58}//download.elexis.info/elexis.3.core/snapshot);\
+  addRepository(type:1,location:http${#58}//download.elexis.info/elexis.3.core/snapshot);
