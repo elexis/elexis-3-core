@@ -25,13 +25,19 @@ def wgetIfNotExists(src)
 end
 
 def system(cmd, mayFail=false)
-  if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
-  #  cmd.gsub!("/", "\\")
-	if cmd[-1..-1].eql?("&")
-		cmd = "start "+cmd[0..-2]
-	end
+  unless WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
+    myRuby = `which ruby`.chomp
+    if /^ruby$/.match(cmd.split(' ')[0])
+      cmd.sub!(/^ruby/, myRuby)
+    elsif /.rb$/.match(cmd.split(' ')[0])
+      cmd = myRuby + ' ' + cmd
+    end
+  else
+    #  cmd.gsub!("/", "\\")
+    if cmd[-1..-1].eql?("&")
+      cmd = "start "+cmd[0..-2]
+    end
   end
-
   cmd2history =  "date && cd #{Dir.pwd} && #{cmd} # mayFail #{mayFail} #{DryRun ? 'DryRun' : ''}"
   puts cmd2history
   if DryRun then return true
