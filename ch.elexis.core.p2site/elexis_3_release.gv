@@ -1,0 +1,53 @@
+digraph Elexis_Release {
+  top [ shape=box,
+        style=filled,color="cornsilk"
+        label="Übersicht, wie eine Elexis 3 Version erstellt wird", fontsize = 24];
+        
+  repo_properties   [  label="Aus *.application/repo.properties.\nfüllen Maven/Tycho Version,\nProjektnamen, Qualifier,\nVariante=[release|snapshot]->\nin *.p2site/repo.properties ab" , shape=rectangle];
+
+  top -> snapshot              [ style=invis]
+  top -> release              [ style=invis]
+ 
+  snapshot                            [ label = "Snapshot", shape=Mrecord, fontsize = 18, style=bold,rounded];
+  release                             [ label = "Release", shape=diamond, fontsize = 18, style=filled,color="gold",rounded];
+  
+  snapshot -> jenkins_snapshot        [ style=dotted ];
+  release  -> jenkins_release         [ style=dotted ];
+  
+  jenkins_snapshot                [ label="Jenkins-CI\nKonvention für Namen ist\lElexis-major.minor-Project\lzB. Elexis-3.0-Base\n" , shape=tab];
+  jenkins_release                 [ label="Jenkins-CI\nSeparate Projekte\nz.B. Elexis-3.0-Base-Releases\nBuild von Hand angestossen\n", style=filled,color="gold", shape=tab];
+
+  jenkins_snapshot -> repo_properties [ style=dotted ];
+  jenkins_release ->  repo_properties [ style=dotted ];
+
+  repo_properties ->  install_build_snapshot [ style=dotted ];
+  repo_properties ->  install_build_release  [ style=dotted ];
+  
+  install_build_snapshot          [ label="wget install_build.rb &&\\\lROOT=/to/p2repo/snapshot ruby install_build.rb\l" , shape=note];
+  install_build_release           [  label="wget install_build.rb &&\\\lROOT=/to/p2repo/release ruby install_build.rb\l"  style=filled,color="gold", shape=note];
+  
+  install_build_snapshot -> install_build_rb [ style=dotted ];
+  install_build_release -> install_build_rb [ style=dotted ];
+
+  install_build_rb -> snapshot_repository [ style=dotted ];
+  install_build_rb -> release_repository [ style=dotted ];
+
+  snapshot_repository[ label="Snapshot P2-Repository:\lEs werden nur die\lletzten <n> Builds aufbewahrt" ,  shape=folder];
+  release_repository [ label="Release P2-Repository:\lBuilds werden ewig aufbewahrt" , style=filled,color="gold", shape=folder ];
+
+  snapshot_repository -> install_build_rb          [ style=invis];
+  release_repository -> install_build_rb         [ style=invis];
+  
+  install_build_rb [ label="https://raw.github.com/elexis/elexis-3-core/release/[known_good_tag]/ch.elexis.core.p2site/install_build.rb\r" +
+  "1. Kopiert erzeugte p2site nach =/to/p2repo/snapshot/<project>/version_4_[release|snapshot]/<version>\l"+
+  "2. Erzeugt ein composite repository. Dieses enthält nur Verweise auf abgelegte Versionen.\l" , shape=box ]
+  release_repository -> bottom
+  snapshot_repository -> bottom
+  bottom [ shape=box,
+        style=filled,color="darkolivegreen1"
+        label="P2-Repositories werden nun\nfür Updates von Elexis benutzt\nWechsel von release <> snapshot möglich\nDavon wird jedoch abgeraten!"];
+     
+  bottom -> autor [ style=invis];
+  autor [ label = "Erstellt am 23. September 2012 von\nNiklaus Giger <niklaus.giger@member.fsf.org>", shape = none, fontsize = 10, tailURL]
+}
+ 
