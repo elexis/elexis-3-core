@@ -1,10 +1,18 @@
+# to create various pages see http://marc.info/?l=graphviz-interest&m=114421922704873&w=2
+# What could be added is
+# http://wiki.eclipse.org/Equinox/p2/Customizing_Metadata
+# ch.elexis.core.application/Elexis.p2.inf contains definition using repo.properties
+# ch.elexis.core.p2site/Elexis.p2.inf will be generated
+# ch.medelexis.application.p2site/Medelexis.p2.inf
+# Definieren Update sites for Elexis OpenSource/resp. Medelexis
 digraph Elexis_Release {
   top [ shape=box,
         style=filled,color="cornsilk"
         label="Übersicht, wie eine Elexis 3 Version erstellt wird", fontsize = 24];
         
   repo_properties   [  label="Aus *.application/repo.properties.\nfüllen Maven/Tycho Version,\nProjektnamen, Qualifier,\nVariante=[release|snapshot]->\nin *.p2site/repo.properties ab" , shape=rectangle];
-
+  application_p2_inf [ label="* Maven erzeugt *.p2site/<Produkt>.p2.inf aus *.Applikation/<Produkt>.p2.inf\l* <Produkt>.p2.inf definiert die P2-Update-Seiten\l* Im installierten Produkt sind sie im Ordner p2\l" , shape=rectangle];
+  
   top -> snapshot              [ style=invis]
   top -> release              [ style=invis]
  
@@ -19,9 +27,10 @@ digraph Elexis_Release {
 
   jenkins_snapshot -> repo_properties [ style=dotted ];
   jenkins_release ->  repo_properties [ style=dotted ];
+  repo_properties ->  application_p2_inf [ style=dotted ];
 
-  repo_properties ->  install_build_snapshot [ style=dotted ];
-  repo_properties ->  install_build_release  [ style=dotted ];
+  application_p2_inf ->  install_build_snapshot [ style=dotted ];
+  application_p2_inf ->  install_build_release  [ style=dotted ];
   
   install_build_snapshot          [ label="wget install_build.rb &&\\\lROOT=/to/p2repo/snapshot ruby install_build.rb\l" , shape=note];
   install_build_release           [  label="wget install_build.rb &&\\\lROOT=/to/p2repo/release ruby install_build.rb\l"  style=filled,color="gold", shape=note];
@@ -38,7 +47,7 @@ digraph Elexis_Release {
   snapshot_repository -> install_build_rb          [ style=invis];
   release_repository -> install_build_rb         [ style=invis];
   
-  install_build_rb [ label="https://raw.github.com/elexis/elexis-3-core/release/[known_good_tag]/ch.elexis.core.p2site/install_build.rb\r" +
+  install_build_rb [ label="https://raw.github.com/elexis/elexis-3-core/release/Alpha0/ch.elexis.core.p2site/install_build.rb\r" +
   "1. Kopiert erzeugte p2site nach =/to/p2repo/snapshot/<project>/version_4_[release|snapshot]/<version>\l"+
   "2. Erzeugt ein composite repository. Dieses enthält nur Verweise auf abgelegte Versionen.\l" , shape=box ]
   release_repository -> bottom
@@ -48,6 +57,5 @@ digraph Elexis_Release {
         label="P2-Repositories werden nun\nfür Updates von Elexis benutzt\nWechsel von release <> snapshot möglich\nDavon wird jedoch abgeraten!"];
      
   bottom -> autor [ style=invis];
-  autor [ label = "Erstellt am 23. September 2012 von\nNiklaus Giger <niklaus.giger@member.fsf.org>", shape = none, fontsize = 10, tailURL]
+  autor [ label = "Erstellt am 24. September 2012 von\nNiklaus Giger <niklaus.giger@member.fsf.org>", shape = none, fontsize = 10, tailURL]
 }
- 
