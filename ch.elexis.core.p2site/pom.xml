@@ -24,7 +24,7 @@
                </execution>
            </executions>
            <configuration>
-               <outputDir>ch.elexis.core.p2site</outputDir>
+               <outputDir>../ch.elexis.core.p2site</outputDir>
                <basedir>ch.elexis.core.application</basedir>
                <filesToInclude>repo.properties,Elexis.p2.inf</filesToInclude>
                <replacements>
