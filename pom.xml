@@ -1,7 +1,7 @@
 <project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'>
   <modelVersion>4.0.0 </modelVersion>
   <groupId>ch.elexis</groupId>
-  <artifactId>ch.elexis.core.releng </artifactId>
+  <artifactId> ch.elexis.core.releng </artifactId>
   <version>3.0.0-SNAPSHOT</version>
   <packaging>pom </packaging>
   <profiles>
@@ -18,29 +18,29 @@
     </profile>
   </profiles>
   <modules>
-    <module>../ch.elexis.core</module>
-    <module>../ch.elexis.core.application</module>
-    <module>../ch.elexis.core.application.feature</module>
-    <module>../ch.elexis.core.common.feature</module>
-    <module>../ch.elexis.core.console.application</module>
-    <module>../ch.elexis.core.data</module>
-    <module>../ch.elexis.core.eigenartikel</module>
-    <module>../ch.elexis.core.logging.feature</module>
-    <module>../ch.elexis.core.logging.default_configuration</module>
-    <module>../ch.elexis.core.logging</module>
-    <module>../ch.elexis.core.ui</module>
-    <module>../ch.elexis.core.ui.eigenartikel</module>
-    <module>../ch.elexis.core.ui.contacts</module>
-    <module>../ch.elexis.core.ui.feature</module>
-    <module>../ch.elexis.core.ui.icons</module>
-    <module>../ch.elexis.core.ui.laboratory</module>
-    <module>../ch.elexis.core.ui.medication</module>
-    <module>../ch.elexis.core.ui.p2</module>
-    <module>../ch.elexis.core.ui.importer.div</module>
-    <module>../ch.rgw.utility</module>
-    <module>../ch.elexis.target</module>
+    <module>ch.elexis.core</module>
+    <module>ch.elexis.core.application</module>
+    <module>ch.elexis.core.application.feature</module>
+    <module>ch.elexis.core.common.feature</module>
+    <module>ch.elexis.core.console.application</module>
+    <module>ch.elexis.core.data</module>
+    <module>ch.elexis.core.eigenartikel</module>
+    <module>ch.elexis.core.logging.feature</module>
+    <module>ch.elexis.core.logging.default_configuration</module>
+    <module>ch.elexis.core.logging</module>
+    <module>ch.elexis.core.ui</module>
+    <module>ch.elexis.core.ui.eigenartikel</module>
+    <module>ch.elexis.core.ui.contacts</module>
+    <module>ch.elexis.core.ui.feature</module>
+    <module>ch.elexis.core.ui.icons</module>
+    <module>ch.elexis.core.ui.laboratory</module>
+    <module>ch.elexis.core.ui.medication</module>
+    <module>ch.elexis.core.ui.p2</module>
+    <module>ch.elexis.core.ui.importer.div</module>
+    <module>ch.rgw.utility</module>
+    <module>ch.elexis.target</module>
     <!-- the ch.elexis.core.p2site creates an zipped installable application and a p2 update site -->
-    <module>../ch.elexis.core.p2site</module>
+    <module>ch.elexis.core.p2site</module>
   </modules>
   <properties>
     <scm_url>git@github.com:elexis/elexis-3-core.git</scm_url>
