@@ -94,8 +94,9 @@
             <fileset>
               <directory>${basedir}</directory>
               <includes>
-                <include>Elexis.product</include>
                 <include>repo.properties</include>
+                <include>Elexis.product</include>
+                <include>Elexis.p2.inf</include>
               </includes>
             </fileset>
           </filesets>
