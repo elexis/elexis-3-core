@@ -149,7 +149,6 @@ class CompositeRepository
   def compute_versioned_output()
     compute_version
     @versionned_output_dir = "#{@outputPath}/#{@version}"
-    pp @versionned_output_dir
     if @test != "true"
       if File.exist? @versionned_output_dir
         puts "warning: removing the existing directory #{@versionned_output_dir}"
@@ -194,10 +193,63 @@ class CompositeRepository
     children_repos.sort!
   end
   
+  COMPOSITE_XML_RHTML = %(
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+  <head><title>Composite Repository <%= @name %>-<%= @version %></title></head>
+  <body>
+    <p>This the P2-update site for the <%= @name %> plugins. Currently it is totally unusable in a productive environment!</p>
+    <h3>For more info see <a  href="http://download.elexis.info/">http://download.elexis.info/</a></h3>
+    <p>A release is planned for end of 2013.</p>
+    <p>The p2-update site service is sponsored by Medelexis AG. Thanks a lot!</p>
+    <p>For questions and suggestions send an e-mail to the <a  href="mailto:elexis-develop@lists.sourceforge.net">elexis developer</a></p>
+    <h3>Content of <%= @name %>-<%= @version %> built on <%= @date %></h2>
+    <ul>
+      <%@children_repo.each do |child_repo| %><li><a href="<%= child_repo %>"><%= child_repo %></a></li>
+      <% end %>
+    </ul>
+    <p>Link to the actual sources of the composite repository:
+    <ul>
+      <li><a href="compositeArtifacts.xml">compositeArtifacts.xml</a></li>
+      <li><a href="compositeArtifacts.xml">compositeContent.xml</a></li>
+    </ul>
+    </p>
+  </body>
+</html>  
+)
+  COMPOSITE_INDEX_XML_RHTML = %(
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+  <head><title>Composite Repository <%= @name %>-<%= @version %></title></head>
+  <body>
+    <p>This the P2-update site for the <%= @name %> plugins. Currently it is totally unusable in a productive environment!</p>
+    <h3>For more info see <a  href="http://download.elexis.info/">http://download.elexis.info/</a></h3>
+    <p>A release is planned for end of 2013.</p>
+    <p>The p2-update site service is sponsored by Medelexis AG. Thanks a lot!</p>
+    <p>For questions and suggestions send an e-mail to the <a  href="mailto:elexis-develop@lists.sourceforge.net">elexis developer</a></p>
+    <h3>Content of <%= @name %>-<%= @version %> built on <%= @date %></h2>
+    <ul>
+      <%@children_repo.each do |child_repo| %><li><a href="<%= child_repo %>"><%= child_repo %></a></li>
+      <% end %>
+    </ul>
+    <p>Link to the actual sources of the composite repository:
+    <ul>
+      <li><a href="compositeArtifacts.xml">compositeArtifacts.xml</a></li>
+      <li><a href="compositeArtifacts.xml">compositeContent.xml</a></li>
+    </ul>
+    </p>
+  </body>
+</html>
+  )
   def emit
     current_dir=File.expand_path(File.dirname(__FILE__))
     #Generate the Artifact Repository
-    template=ERB.new File.new(File.join(current_dir,"composite.xml.rhtml")).read, nil, "%"
+    composite_rhtml = File.join(current_dir,"composite.xml.rhtml")
+    if File.exists?(composite_rhtml)
+      template = ERB.new(File.new(composite_rhtml).read, nil, "%")
+    else
+      template = ERB.new(COMPOSITE_XML_RHTML, nil, "%")
+    end
     artifactsRes=template.result(self.get_binding)
 
     #Generate the Metadata Repository
@@ -205,7 +257,12 @@ class CompositeRepository
     metadataRes=template.result(self.get_binding)
 
     #Generate the HTML page.
-    html_template=ERB.new File.new(File.join(current_dir,"composite_index_html.rhtml")).read, nil, "%"
+    composite__index_rhtml = File.join(current_dir,"composite_index_html.rhtml")
+    if File.exists?(composite__index_rhtml)
+      html_template = ERB.new(File.new(composite__index_rhtml).read, nil, "%")
+    else
+      html_template = ERB.new(COMPOSITE_INDEX_XML_RHTML, nil, '%')
+    end
     htmlRes=html_template.result(self.get_binding)
 
     p2_index = "version = 1
@@ -231,7 +288,9 @@ artifact.repository.factory.order = compositeArtifacts.xml,\!
   end
 end  
 
-ini_lines = IO.readlines(File.join(File.dirname(__FILE__), 'repo.properties'))
+property_file = File.join(File.dirname(__FILE__), 'repo.properties')
+ini_lines = IO.readlines(property_file)
+puts "Read repo.properties from #{property_file}"
 ini = {}
 ini_lines.each{ |line| splitted = line.strip.split('='); ini[splitted[0]] = splitted[1] }
 fullVersion = "#{ini['version']}.#{ini['qualifier']}"
