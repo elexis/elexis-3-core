@@ -203,7 +203,7 @@ class CompositeRepository
     <p>A release is planned for end of 2013.</p>
     <p>The p2-update site service is sponsored by Medelexis AG. Thanks a lot!</p>
     <p>For questions and suggestions send an e-mail to the <a  href="mailto:elexis-develop@lists.sourceforge.net">elexis developer</a></p>
-    <h3>Content of <%= @name %>-<%= @version %> built on <%= @date %></h2>
+    <h3>Content of <%= @name %>-<%= @version %> built on <%= @date %></h3>
     <ul>
       <%@children_repo.each do |child_repo| %><li><a href="<%= child_repo %>"><%= child_repo %></a></li>
       <% end %>
@@ -227,7 +227,7 @@ class CompositeRepository
     <p>A release is planned for end of 2013.</p>
     <p>The p2-update site service is sponsored by Medelexis AG. Thanks a lot!</p>
     <p>For questions and suggestions send an e-mail to the <a  href="mailto:elexis-develop@lists.sourceforge.net">elexis developer</a></p>
-    <h3>Content of <%= @name %>-<%= @version %> built on <%= @date %></h2>
+    <h3>Content of <%= @name %>-<%= @version %> built on <%= @date %></h3>
     <ul>
       <%@children_repo.each do |child_repo| %><li><a href="<%= child_repo %>"><%= child_repo %></a></li>
       <% end %>
@@ -311,8 +311,4 @@ artifact.repository.factory.order = artifacts.xml,\!
 end
 
 compositeRepository=CompositeRepository.new root, ini['repoVariant'], destBaseDir, ini['repoName'], 'otherurls'
-Dir.glob('/srv/www/download.elexis.info/elexis.3.core/versions_4_release/').each{
-  |x|
-  compositeRepository.add_childrepo(File.new(x))
-} if false
 compositeRepository.emit
