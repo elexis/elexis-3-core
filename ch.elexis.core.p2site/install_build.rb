@@ -193,8 +193,7 @@ class CompositeRepository
     children_repos.sort!
   end
   
-  COMPOSITE_XML_RHTML = %(
-<?xml version="1.0" encoding="UTF-8"?>
+  COMPOSITE_XML_RHTML = %(<?xml version="1.0" encoding="UTF-8"?>
 <html>
   <head><title>Composite Repository <%= @name %>-<%= @version %></title></head>
   <body>
@@ -217,8 +216,7 @@ class CompositeRepository
   </body>
 </html>  
 )
-  COMPOSITE_INDEX_XML_RHTML = %(
-<?xml version="1.0" encoding="UTF-8"?>
+  COMPOSITE_INDEX_XML_RHTML = %(<?xml version="1.0" encoding="UTF-8"?>
 <html>
   <head><title>Composite Repository <%= @name %>-<%= @version %></title></head>
   <body>
