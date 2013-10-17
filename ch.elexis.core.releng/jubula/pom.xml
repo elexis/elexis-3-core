@@ -1,11 +1,5 @@
 <project>
   <modelVersion> 4.0.0 </modelVersion>
-  <!--parent>
-    <groupId>ch.elexis</groupId>
-    <artifactId>ch.elexis.core.releng</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
-    <relativePath>../</relativePath>
-  </parent-->
   <groupId> ch.elexis </groupId>
   <artifactId> ch.elexis.core.releng.jubula </artifactId>
   <version>3.0.0-SNAPSHOT</version>
