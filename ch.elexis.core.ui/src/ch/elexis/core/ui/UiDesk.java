@@ -118,7 +118,6 @@ public class UiDesk {
 		if (theDisplay == null) {
 			if (PlatformUI.isWorkbenchRunning()) {
 				theDisplay = PlatformUI.getWorkbench().getDisplay();
-				// theDisplay = PlatformUI.createDisplay();
 			}
 		}
 		if (theDisplay == null) {

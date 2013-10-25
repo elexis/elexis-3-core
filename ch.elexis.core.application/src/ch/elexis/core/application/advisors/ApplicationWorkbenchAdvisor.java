@@ -31,6 +31,8 @@ import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Reminder;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
+import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -47,6 +49,9 @@ import ch.rgw.tools.ExHandler;
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	private Logger log = LoggerFactory.getLogger(ApplicationWorkbenchAdvisor.class.getName());
+	
+	protected static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
+			.getCoreOperationAdvisor();
 	
 	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
@@ -75,37 +80,11 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public IAdaptable getDefaultPageInput() {
-		// TODO Auto-generated method stub
 		return super.getDefaultPageInput();
 	}
 	
 	@Override
 	public void postStartup(){
-		Shell shell = getWorkbenchConfigurer().getWorkbench().getActiveWorkbenchWindow().getShell();
-		String username = System.getProperty("ch.elexis.username");
-		String password = System.getProperty("ch.elexis.password");
-		if (username != null && password != null) {
-			log.error("Bypassing LoginDialog with username " + username);
-			if (!Anwender.login(username, password)) {
-				log.error("Authentication failed. Exiting");
-			}
-		} else {
-			LoginDialog dlg = new LoginDialog(shell);
-			dlg.create();
-			dlg.getShell().setText(Messages.ApplicationWorkbenchAdvisor_7);
-			dlg.setTitle(Messages.ApplicationWorkbenchAdvisor_8);
-			dlg.setMessage(Messages.ApplicationWorkbenchAdvisor_9);
-			dlg.open();
-		}
-		
-		// check if there is a valid user
-		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
-			// no valid user, exit (don't consider this as an error)
-			log.warn("Exit because no valid user logged-in"); //$NON-NLS-1$
-			PersistentObject.disconnect();
-			System.exit(0);
-		}
-		
 		List<Reminder> reminderList = Reminder.findToShowOnStartup(CoreHub.actUser);
 		if (reminderList.size() > 0) {
 			StringBuilder sb = new StringBuilder();
@@ -118,12 +97,11 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 				Messages.ReminderView_importantRemindersOnLogin,
 				sb.toString());
 		}
-		
 	}
 	
 	@Override
 	public String getInitialWindowPerspectiveId(){
-		return UiResourceConstants.PatientPerspektive_ID;
+		return cod.getInitialPerspective();
 	}
 	
 	@Override

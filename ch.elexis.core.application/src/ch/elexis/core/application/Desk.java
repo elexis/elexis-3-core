@@ -14,14 +14,16 @@ import java.util.Map;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.application.advisors.ApplicationWorkbenchAdvisor;
+import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
+import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.ui.UiDesk;
@@ -31,8 +33,13 @@ public class Desk implements IApplication {
 
 	private Logger log = LoggerFactory.getLogger(Desk.class);
 	private static Map<String, String> args = null;
-	private static Display theDisplay;
 
+	protected static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
+			.getCoreOperationAdvisor();
+
+	/**
+	 * @since 3.0.0 log-in has been moved from ApplicationWorkbenchAdvisor to this method
+	 */
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		// register ElexisEvent and MessageEvent listeners
@@ -49,6 +56,7 @@ public class Desk implements IApplication {
 			pe.printStackTrace();
 		}
 
+		// check for initialization parameters
 		args = context.getArguments();
 		if (args.containsKey("--clean-all")) { //$NON-NLS-1$
 			String p = CorePreferenceInitializer.getDefaultDBPath();
@@ -57,9 +65,30 @@ public class Desk implements IApplication {
 			CoreHub.localCfg.flush();
 		}
 
+		// care for log-in
+		String username = System.getProperty("ch.elexis.username");
+		String password = System.getProperty("ch.elexis.password");
+		if (username != null && password != null) {
+			log.error("Bypassing LoginDialog with username " + username);
+			if (!Anwender.login(username, password)) {
+				log.error("Authentication failed. Exiting");
+			}
+		} else {
+			cod.performLogin(UiDesk.getDisplay().getActiveShell());
+		}
+		
+		// check if there is a valid user
+		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
+			// no valid user, exit (don't consider this as an error)
+			log.warn("Exit because no valid user logged-in"); //$NON-NLS-1$
+			PersistentObject.disconnect();
+			System.exit(0);
+		}
+
+		// start the workbench
 		try {
-			int returnCode = PlatformUI.createAndRunWorkbench(UiDesk.getDisplay(),
-					new ApplicationWorkbenchAdvisor());
+			int returnCode = PlatformUI.createAndRunWorkbench(
+					UiDesk.getDisplay(), new ApplicationWorkbenchAdvisor());
 			// Die Funktion kehrt erst beim Programmende zurück.
 			CoreHub.heart.suspend();
 			CoreHub.localCfg.flush();

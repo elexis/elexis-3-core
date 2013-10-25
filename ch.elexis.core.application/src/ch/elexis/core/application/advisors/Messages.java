@@ -19,9 +19,6 @@ public class Messages extends NLS {
 	public static String ApplicationActionBarAdvisor_6;
 	public static String ApplicationActionBarAdvisor_7;
 	public static String ApplicationActionBarAdvisor_9;
-	public static String ApplicationWorkbenchAdvisor_7;
-	public static String ApplicationWorkbenchAdvisor_8;
-	public static String ApplicationWorkbenchAdvisor_9;
 	public static String ApplicationActionBarAdvisor_10;
 	public static String ApplicationWorkbenchAdvisor_10;
 	public static String Hub_message_birthday;

@@ -12,6 +12,7 @@ package ch.elexis.core.data.extension;
 
 import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.PersistentObject;
+import ch.elexis.core.data.activator.CoreHub;
 
 /**
  * @since 3.0.0
@@ -57,4 +58,18 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * @return <code>true</code> if the user said yes, else <code>false</code>
 	 */
 	public abstract boolean openQuestion(String title, String message);
+	
+	/**
+	 * Perform the login. May use {@link Anwender#login(String, String)} to initialize
+	 * the log-in. Required Post-Condition: {@link CoreHub#actUser} and {@link CoreHub#actMandant}
+	 * have to contain valid elements.
+	 * @param shell and object castable to org.eclipse.swt.widgets.Shell
+	 */
+	public abstract void performLogin(Object shell);
+	
+	/**
+	 * UI only
+	 * @return the initial perspective to be opened to the user
+	 */
+	public abstract String getInitialPerspective();
 }

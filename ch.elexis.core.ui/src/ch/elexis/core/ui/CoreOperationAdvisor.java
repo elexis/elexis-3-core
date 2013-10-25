@@ -27,17 +27,19 @@ import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.ErsterMandantDialog;
+import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 
+	public String initialPerspectiveString;
+
 	@Override
 	public void requestDatabaseConnectionConfiguration() {
 		Display disp = new Display();
-		Shell shell = new Shell(disp);	
-		WizardDialog wd = new WizardDialog(shell,
-				new DBConnectWizard());
+		Shell shell = new Shell(disp);
+		WizardDialog wd = new WizardDialog(shell, new DBConnectWizard());
 		wd.create();
 		SWTHelper.center(wd.getShell());
 		wd.open();
@@ -51,29 +53,41 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 
 	@Override
 	public void adaptForUser() {
-		String perspektive = CoreHub.localCfg.get(CoreHub.actUser
+		initialPerspectiveString = CoreHub.localCfg.get(CoreHub.actUser
 				+ GlobalActions.DEFAULTPERSPECTIVECFG, null);
-		if (perspektive == null) {
-			perspektive = UiResourceConstants.PatientPerspektive_ID;
-		}
-		try {
-			UiDesk.updateFont(Preferences.USR_DEFAULTFONT);
-			IWorkbenchWindow win = PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow();
-			PlatformUI.getWorkbench().showPerspective(perspektive, win);
-			ElexisEventDispatcher.getInstance().fire(
-					new ElexisEvent(CoreHub.actUser, Anwender.class,
-							ElexisEvent.EVENT_USER_CHANGED));
-		} catch (Exception ex) {
-			MessageEvent.fireLoggedError("Perspektive nicht gefunden",
-					"Konnte die eingestellte Startperspektive " + perspektive
-							+ " nicht laden.", ex);
-		}
+
+		UiDesk.updateFont(Preferences.USR_DEFAULTFONT);
+
+		ElexisEventDispatcher.getInstance().fire(
+				new ElexisEvent(CoreHub.actUser, Anwender.class,
+						ElexisEvent.EVENT_USER_CHANGED));
+		// } catch (Exception ex) {
+		// MessageEvent.fireLoggedError("Perspektive nicht gefunden",
+		// "Konnte die eingestellte Startperspektive " + perspektive
+		// + " nicht laden.", ex);
+		// ex.printStackTrace();
+		// }
+	}
+
+	@Override
+	public String getInitialPerspective() {
+		return (initialPerspectiveString == null) ? GlobalActions.DEFAULTPERSPECTIVECFG
+				: initialPerspectiveString;
 	}
 
 	@Override
 	public boolean openQuestion(String title, String message) {
 		Display d = Display.getDefault();
 		return MessageDialog.openQuestion(d.getActiveShell(), title, message);
+	}
+
+	@Override
+	public void performLogin(Object shell) {
+		LoginDialog dlg = new LoginDialog((Shell) shell);
+		dlg.create();
+		dlg.getShell().setText(Messages.LoginDialog_loginHeader);
+		dlg.setTitle(Messages.LoginDialog_notLoggedIn);
+		dlg.setMessage(Messages.LoginDialog_enterUsernamePass);
+		dlg.open();
 	}
 }

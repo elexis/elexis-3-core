@@ -21,6 +21,9 @@ public class Messages extends NLS {
 	public static String Hub_nopatientselected;
 	public static String Hub_nouserloggedin;
 	public static String Hub_title_configuration;
+	public static String LoginDialog_loginHeader;
+	public static String LoginDialog_notLoggedIn;
+	public static String LoginDialog_enterUsernamePass;
 
 	static {
 		// load message values from bundle file
