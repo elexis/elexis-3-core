@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -26,9 +25,6 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.application.perspectives.PatientPerspektive;
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.Reminder;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
@@ -36,8 +32,6 @@ import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.constants.UiResourceConstants;
-import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -72,12 +66,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		super.initialize(configurer);
 	}
 	
-	@Override
-	public void preStartup() {
-		System.out.println("Reaching preStartup()");
-		super.preStartup();
-	}
-	
+
 	@Override
 	public IAdaptable getDefaultPageInput() {
 		return super.getDefaultPageInput();

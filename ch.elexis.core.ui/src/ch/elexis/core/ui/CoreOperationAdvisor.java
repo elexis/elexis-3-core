@@ -14,8 +14,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.Anwender;
@@ -23,7 +21,6 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.ErsterMandantDialog;
@@ -53,25 +50,21 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 
 	@Override
 	public void adaptForUser() {
-		initialPerspectiveString = CoreHub.localCfg.get(CoreHub.actUser
-				+ GlobalActions.DEFAULTPERSPECTIVECFG, null);
-
+		if(CoreHub.actUser!=null) {
+			initialPerspectiveString = CoreHub.localCfg.get(CoreHub.actUser
+					+ GlobalActions.DEFAULTPERSPECTIVECFG, null);
+		}
+		
 		UiDesk.updateFont(Preferences.USR_DEFAULTFONT);
 
 		ElexisEventDispatcher.getInstance().fire(
 				new ElexisEvent(CoreHub.actUser, Anwender.class,
 						ElexisEvent.EVENT_USER_CHANGED));
-		// } catch (Exception ex) {
-		// MessageEvent.fireLoggedError("Perspektive nicht gefunden",
-		// "Konnte die eingestellte Startperspektive " + perspektive
-		// + " nicht laden.", ex);
-		// ex.printStackTrace();
-		// }
 	}
 
 	@Override
 	public String getInitialPerspective() {
-		return (initialPerspectiveString == null) ? GlobalActions.DEFAULTPERSPECTIVECFG
+		return (initialPerspectiveString == null) ? UiResourceConstants.PatientPerspektive_ID
 				: initialPerspectiveString;
 	}
 
