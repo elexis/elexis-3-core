@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Iatrix Help Wiki
+Bundle-SymbolicName: org.iatrix.help.wiki; singleton:=true
+Bundle-Version: 1.4.1
+Bundle-Activator: org.iatrix.help.wiki.Activator
+Bundle-Vendor: org.iatrix
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ ch.elexis,
+ ch.rgw.utility
+Eclipse-LazyStart: true
