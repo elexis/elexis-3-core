@@ -20,8 +20,8 @@ import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 import org.iatrix.help.wiki.Constants;
 
-import ch.elexis.Hub;
-import ch.elexis.actions.GlobalActions;
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.actions.GlobalActions;
 import ch.rgw.tools.StringTool;
 
 /**
@@ -82,16 +82,15 @@ public class WikiView extends ViewPart implements ISaveablePart2 {
 		}
 		
 		String wikiName = StringTool.join(tokens, "");
-		
 		return wikiName;
 	}
 	
 	private String getBaseUrl(){
-		return Hub.globalCfg.get(Constants.CFG_BASE_URL, Constants.DEFAULT_BASE_URL);
+		return CoreHub.globalCfg.get(Constants.CFG_BASE_URL, Constants.DEFAULT_BASE_URL);
 	}
 	
 	private String getStartPage(){
-		return Hub.globalCfg.get(Constants.CFG_START_PAGE, Constants.DEFAULT_START_PAGE);
+		return CoreHub.globalCfg.get(Constants.CFG_START_PAGE, Constants.DEFAULT_START_PAGE);
 	}
 	
 	/**

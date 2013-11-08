@@ -19,10 +19,10 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.iatrix.help.wiki.views.WikiView;
 
-import ch.elexis.Hub;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -50,7 +50,7 @@ public class HelpHandler extends AbstractHandler {
 		if (activePage != null) {
 			IWorkbenchPart activePart = activePage.getActivePart();
 			if (activePart != null) {
-				contextId = activePart.getClass().getName();
+				contextId = activePart.getTitle();
 			}
 		}
 		
@@ -61,7 +61,7 @@ public class HelpHandler extends AbstractHandler {
 			// activate view
 			try {
 				IViewPart view =
-					Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 						.showView(WikiView.ID);
 				if (view != null && view instanceof WikiView) {
 					WikiView wikiView = (WikiView) view;
