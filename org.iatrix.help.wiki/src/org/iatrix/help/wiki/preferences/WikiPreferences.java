@@ -18,12 +18,12 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.iatrix.help.wiki.Constants;
 
-import ch.elexis.Hub;
-import ch.elexis.preferences.SettingsPreferenceStore;
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
 
 public class WikiPreferences extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	
-	private SettingsPreferenceStore prefs = new SettingsPreferenceStore(Hub.globalCfg);
+	private SettingsPreferenceStore prefs = new SettingsPreferenceStore(CoreHub.globalCfg);
 	
 	public WikiPreferences(){
 		super(GRID);
