@@ -1258,6 +1258,12 @@ public class TextContainer {
 		public boolean isDirectOutput(){
 			return false;
 		}
+
+		@Override
+		public void setParameter(Parameter parameter){
+			// TODO Auto-generated method stub
+			
+		}
 	}
 	
 }
