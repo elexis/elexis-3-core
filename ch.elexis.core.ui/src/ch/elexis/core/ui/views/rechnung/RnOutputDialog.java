@@ -58,6 +58,11 @@ public class RnOutputDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent){
 		lo = Extensions.getClasses("ch.elexis.RechnungsManager", "outputter"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (lo.isEmpty()) {
+			String msg = "Elexis has no textplugin configured for outputting bills!"; //$NON-NLS-1$ 
+			SWTHelper.alert(msg, msg);
+			return null;
+		}
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout());
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -103,8 +108,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 		if (num > 1) {
 			getShell().setText(Messages.RnOutputDialog_outputCaption); //$NON-NLS-1$
 			setTitle(num + Messages.RnOutputDialog_outputTitle); //$NON-NLS-1$
-			setMessage(MessageFormat
-				.format(Messages.RnOutputDialog_outputMessage, num)); //$NON-NLS-1$
+			setMessage(MessageFormat.format(Messages.RnOutputDialog_outputMessage, num)); //$NON-NLS-1$
 			
 		} else {
 			getShell().setText(Messages.RnOutputDialog_outputBillCaption); //$NON-NLS-1$

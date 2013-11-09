@@ -102,11 +102,9 @@ public class RnDialogs {
 				rn.addZahlung(ret, bemerkung.getText(), new TimeTool(dp.getDate().getTime()));
 				super.okPressed();
 			} else {
-				ErrorDialog
-					.openError(
-						getShell(),
-						Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, //$NON-NLS-1$ //$NON-NLS-2$
-						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid,
+					Messages.RnDialogs_invalidFormat, //$NON-NLS-1$ //$NON-NLS-2$
+					new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			
 		}
@@ -164,11 +162,9 @@ public class RnDialogs {
 				rn.addZahlung(ret, bemerkung.getText(), new TimeTool(dp.getDate().getTime()));
 				super.okPressed();
 			} else {
-				ErrorDialog
-					.openError(
-						getShell(),
-						Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, //$NON-NLS-1$ //$NON-NLS-2$
-						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid,
+					Messages.RnDialogs_invalidFormat, //$NON-NLS-1$ //$NON-NLS-2$
+					new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			
 		}
@@ -206,8 +202,7 @@ public class RnDialogs {
 			getShell().setText(Messages.RnDialogs_invoiceNumber + rn.getNr()); //$NON-NLS-1$
 			setTitle(Messages.RnDialogs_modifyInvoiceState); //$NON-NLS-1$
 			
-			setMessage(rn.getFall().getPatient().getLabel()
-				+ Messages.RnDialogs_pleaseNewState); //$NON-NLS-1$
+			setMessage(rn.getFall().getPatient().getLabel() + Messages.RnDialogs_pleaseNewState); //$NON-NLS-1$
 		}
 		
 		@Override
@@ -236,6 +231,12 @@ public class RnDialogs {
 		@Override
 		protected Control createDialogArea(Composite parent){
 			lo = Extensions.getClasses("ch.elexis.RechnungsManager", "outputter"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (lo.isEmpty())
+			{
+				String msg = "Elexis has no textplugin configured for outputting bills!"; //$NON-NLS-1$ 
+				SWTHelper.alert(msg, msg);
+				return null;
+			}
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new GridLayout());
 			Label lbLocal = new Label(ret, SWT.NONE);
