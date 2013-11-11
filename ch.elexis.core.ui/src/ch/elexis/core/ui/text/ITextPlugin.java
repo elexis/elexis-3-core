@@ -35,6 +35,18 @@ public interface ITextPlugin extends IExecutableExtension {
 	/** Set Format of the page */
 	public void setFormat(PageFormat f);
 	
+	public static enum Parameter {
+		NOUI
+	};
+	
+	/**
+	 * Pass parameters to the plugin instance. If the plugin considers the parameter depends on the
+	 * specific implementations.
+	 * 
+	 * @param parameter
+	 */
+	public void setParameter(Parameter parameter);
+	
 	/**
 	 * Create and return an SWT Coomposite that holds the editor
 	 * 
@@ -144,11 +156,14 @@ public interface ITextPlugin extends IExecutableExtension {
 		int[] columnSizes);
 	
 	// Properties for tables
-	public final static int FIRST_ROW_IS_HEADER = 0x0001; // If set, the first row will be formatted differently
+	public final static int FIRST_ROW_IS_HEADER = 0x0001; // If set, the first row will be formatted
+// differently
 	
-	//TODO make grid lines invisible for tables - Für die Rezept-Tabellen die Linien unsichtbar machen
-	//public final static int GRID_VISIBLE = 0x0002; // If set, Grid Lines will be visible
-	//Nein, auf 0 setzen geht nicht, mit 1 oder 0 kommt lediglich die RP Erzeugung durcheinander und frägt 2x nach der Adresse, mit 0 bringt sie keinen Inhalt, 
+	// TODO make grid lines invisible for tables - Für die Rezept-Tabellen die Linien unsichtbar
+// machen
+	// public final static int GRID_VISIBLE = 0x0002; // If set, Grid Lines will be visible
+	// Nein, auf 0 setzen geht nicht, mit 1 oder 0 kommt lediglich die RP Erzeugung durcheinander
+// und frägt 2x nach der Adresse, mit 0 bringt sie keinen Inhalt,
 	public final static int GRID_VISIBLE = 0x0002; // If set, Grid Lines will be visible
 	public final static String ENTRY_TYPE_TABLE = "TypeTable";
 	public final static String ENTRY_TYPE_TEXT = "TypeText";
