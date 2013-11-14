@@ -34,7 +34,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.ILoginNews;
-import ch.elexis.core.ui.constants.ExtensionPointConstants;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.ExHandler;
 
@@ -70,7 +70,7 @@ public class LoginDialog extends TitleAreaDialog {
 		}
 
 		@SuppressWarnings("unchecked")
-		List<ILoginNews> newsModules = Extensions.getClasses(ExtensionPointConstants.LOGIN_NEWS, "class");
+		List<ILoginNews> newsModules = Extensions.getClasses(ExtensionPointConstantsUi.LOGIN_NEWS, "class");
 		
 		if (newsModules.size() > 0) {
 			Composite cNews = new Composite(ret, SWT.NONE);

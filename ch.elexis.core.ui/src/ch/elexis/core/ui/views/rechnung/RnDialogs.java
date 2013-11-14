@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.data.Rechnung;
 import ch.elexis.core.data.RnStatus;
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
@@ -230,9 +231,8 @@ public class RnDialogs {
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Control createDialogArea(Composite parent){
-			lo = Extensions.getClasses("ch.elexis.RechnungsManager", "outputter"); //$NON-NLS-1$ //$NON-NLS-2$
-			if (lo.isEmpty())
-			{
+			lo = Extensions.getClasses(ExtensionPointConstantsData.RECHNUNGS_MANAGER, "outputter"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (lo.isEmpty()) {
 				String msg = "Elexis has no textplugin configured for outputting bills!"; //$NON-NLS-1$ 
 				SWTHelper.alert(msg, msg);
 				return null;

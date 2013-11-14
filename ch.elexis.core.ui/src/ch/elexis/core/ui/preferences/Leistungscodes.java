@@ -63,10 +63,11 @@ import ch.elexis.core.data.Fall;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.MultiplikatorList;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.constants.ExtensionPointConstants;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.MultiplikatorEditor;
 import ch.elexis.core.ui.util.ListDisplay;
@@ -81,8 +82,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	private static final String ARGUMENTSSDELIMITER = ":"; //$NON-NLS-1$
 	private static final String ITEMDELIMITER = "\t"; //$NON-NLS-1$
 	private static final String FOURLINESPLACEHOLDER = "\n\n\n\nd"; //$NON-NLS-1$
-	List<IConfigurationElement> lo = Extensions.getExtensions("ch.elexis.RechnungsManager"); //$NON-NLS-1$
-	List<IConfigurationElement> ll = Extensions.getExtensions(ExtensionPointConstants.VERRECHNUNGSCODE); //$NON-NLS-1$
+	List<IConfigurationElement> lo = Extensions
+		.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); //$NON-NLS-1$
+	List<IConfigurationElement> ll = Extensions
+		.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
 	String[] systeme = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 	Table table;
 	String[] tableCols = {
@@ -177,7 +180,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 								CoreHub.globalCfg.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
 								CoreHub.globalCfg.set(key + "/unused", result[5]); //$NON-NLS-1$
 								CoreHub.globalCfg.set(key + "/disabled", result[6]); //$NON-NLS-1$
-								systeme = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
+								systeme =
+									CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 								reload();
 							}
 						}
@@ -193,10 +197,12 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bCheckZero.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, bCheckZero.getSelection());
+				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK,
+					bCheckZero.getSelection());
 			}
 		});
-		bCheckZero.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false));
+		bCheckZero.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK,
+			false));
 		bCheckZero.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		bStrictCheck = new Button(ret, SWT.CHECK);
@@ -204,10 +210,12 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bStrictCheck.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_STRICT, bStrictCheck.getSelection());
+				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_STRICT,
+					bStrictCheck.getSelection());
 			}
 		});
-		bStrictCheck.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true));
+		bStrictCheck.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT,
+			true));
 		bStrictCheck.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		final Button bOptify = new Button(ret, SWT.CHECK);
@@ -228,7 +236,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bObligation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_OBLIGATION, bObligation.getSelection());
+				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_OBLIGATION,
+					bObligation.getSelection());
 			}
 			
 		});
@@ -854,9 +863,11 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				ldUnused = fdUnused.getListDisplay();
 				// *** adding action items for unused fields list
 				fdUnused.addMoveToAction(ldRequirements,
-					Messages.Leistungscodes_moveItemToRequiredData, Images.IMG_MOVETOUPPERLIST.getImageDescriptor(), true);
+					Messages.Leistungscodes_moveItemToRequiredData,
+					Images.IMG_MOVETOUPPERLIST.getImageDescriptor(), true);
 				fdUnused.addMoveToAction(ldOptional,
-					Messages.Leistungscodes_moveItemToOptionalData, Images.IMG_MOVETOLOWERLIST.getImageDescriptor(), true);
+					Messages.Leistungscodes_moveItemToOptionalData,
+					Images.IMG_MOVETOLOWERLIST.getImageDescriptor(), true);
 				fdUnused.setNoDuplicatesList(ldRequirements, ldOptional);
 				fdUnused.setNoDuplicatesCreateList(ldRequirements, ldOptional);
 			}
@@ -1142,29 +1153,34 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			toolBar.setData("listDisplay", listDisplay); //$NON-NLS-1$
 			listDisplay.setData("toolbar", toolBar); //$NON-NLS-1$
 			
-			addToolItem(toolBar, Images.IMG_ARROWUP.getImage(), Messages.Leistungscodes_moveItemUp, MOVEITEMUP,
-				true);
-			addToolItem(toolBar, Images.IMG_ARROWDOWN.getImage(), Messages.Leistungscodes_moveItemDown,
-				MOVEITEMDOWN, true);
+			addToolItem(toolBar, Images.IMG_ARROWUP.getImage(), Messages.Leistungscodes_moveItemUp,
+				MOVEITEMUP, true);
+			addToolItem(toolBar, Images.IMG_ARROWDOWN.getImage(),
+				Messages.Leistungscodes_moveItemDown, MOVEITEMDOWN, true);
 			addToolItem(toolBar, null, Messages.Leistungscodes_moveItemDown, -1, false);
-			addToolItem(toolBar, Images.IMG_REMOVEITEM.getImage(), Messages.Leistungscodes_deleteItem,
-				DELETEITEM, true);
-			addToolItem(toolBar, Images.IMG_EDIT.getImage(), Messages.Leistungscodes_editItem, EDITITEM, true);
+			addToolItem(toolBar, Images.IMG_REMOVEITEM.getImage(),
+				Messages.Leistungscodes_deleteItem, DELETEITEM, true);
+			addToolItem(toolBar, Images.IMG_EDIT.getImage(), Messages.Leistungscodes_editItem,
+				EDITITEM, true);
 			addToolItem(toolBar, null, Messages.Leistungscodes_moveItemDown, -1, false);
 			
 			// ****** create popupmenu for this list (same actions)
 			ListPopUpMenuAction moveItemUpAction =
-				new ListPopUpMenuAction(Messages.Leistungscodes_moveItemUp, Images.IMG_ARROWUP.getImageDescriptor(),
-					Messages.Leistungscodes_moveItemUp, MOVEITEMUP, listDisplay, true);
+				new ListPopUpMenuAction(Messages.Leistungscodes_moveItemUp,
+					Images.IMG_ARROWUP.getImageDescriptor(), Messages.Leistungscodes_moveItemUp,
+					MOVEITEMUP, listDisplay, true);
 			ListPopUpMenuAction moveItemDownAction =
-				new ListPopUpMenuAction(Messages.Leistungscodes_moveItemDown, Images.IMG_ARROWDOWN.getImageDescriptor(),
+				new ListPopUpMenuAction(Messages.Leistungscodes_moveItemDown,
+					Images.IMG_ARROWDOWN.getImageDescriptor(),
 					Messages.Leistungscodes_moveItemDown, MOVEITEMDOWN, listDisplay, true);
 			ListPopUpMenuAction delItemAction =
-				new ListPopUpMenuAction(Messages.Leistungscodes_deleteAction, Images.IMG_REMOVEITEM.getImageDescriptor(),
+				new ListPopUpMenuAction(Messages.Leistungscodes_deleteAction,
+					Images.IMG_REMOVEITEM.getImageDescriptor(),
 					Messages.Leistungscodes_removeConstraintTT, DELETEITEM, listDisplay, true);
 			ListPopUpMenuAction changeItemAction =
-				new ListPopUpMenuAction(Messages.Leistungscodes_editItem, Images.IMG_EDIT.getImageDescriptor(),
-					Messages.Leistungscodes_editItem, EDITITEM, listDisplay, true);
+				new ListPopUpMenuAction(Messages.Leistungscodes_editItem,
+					Images.IMG_EDIT.getImageDescriptor(), Messages.Leistungscodes_editItem,
+					EDITITEM, listDisplay, true);
 			actions[MOVEITEMUP] = moveItemUpAction;
 			actions[MOVEITEMDOWN] = moveItemDownAction;
 			actions[2] = null;
@@ -1220,7 +1236,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		 * 
 		 * @param parent
 		 *            the toolBar/navigator
-		 * @param image the image to be used
+		 * @param image
+		 *            the image to be used
 		 * @param toolTipText
 		 *            the tooltip to be shown
 		 * @param actionType
@@ -1432,15 +1449,15 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			 * @param enabled
 			 * @since 3.0.0 constructor signature changed to ImageDescriptor
 			 */
-			public ListPopUpMenuAction(String actionName, ImageDescriptor imageDescriptor, String toolTipText,
-				int actionType, ListDisplay<String> listDisplay, boolean enabled){
+			public ListPopUpMenuAction(String actionName, ImageDescriptor imageDescriptor,
+				String toolTipText, int actionType, ListDisplay<String> listDisplay, boolean enabled){
 				super(actionName);
 				this.actionType = actionType;
 				setImageDescriptor(imageDescriptor);
 				setToolTipText(toolTipText);
 				this.setEnabled(enabled);
 			}
-
+			
 			@Override
 			public void run(){
 				// this.setEnabled(false);

@@ -77,7 +77,7 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.constants.ExtensionPointConstants;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.preferences.TextTemplatePreferences;
@@ -124,7 +124,7 @@ public class TextContainer {
 		if (plugin == null) {
 			String ExtensionToUse = CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null);
 			IExtensionRegistry exr = Platform.getExtensionRegistry();
-			IExtensionPoint exp = exr.getExtensionPoint(ExtensionPointConstants.TEXTPROCESSINGPLUGIN);
+			IExtensionPoint exp = exr.getExtensionPoint(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
 			if (exp != null) {
 				IExtension[] extensions = exp.getExtensions();
 				for (IExtension ex : extensions) {

@@ -43,7 +43,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
-import ch.elexis.core.ui.constants.ExtensionPointConstants;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -67,7 +67,7 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 		parent.setLayout(new FillLayout());
 		ctab = new CTabFolder(parent, SWT.NONE);
 		importers = new Hashtable<String, ImporterPage>();
-		addPagesFor(ExtensionPointConstants.VERRECHNUNGSCODE); //$NON-NLS-1$
+		addPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
 		if (ctab.getItemCount() > 0) {
 			ctab.setSelection(0);
 			

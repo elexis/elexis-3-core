@@ -28,7 +28,7 @@ import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.core.ui.constants.ExtensionPointConstants;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
@@ -45,7 +45,7 @@ public class ServiceBlockElement extends XChangeElement {
 	static HashMap<ICodeElement, CodeSelectorFactory> factories;
 	
 	static {
-		codesystems = Extensions.getExtensions(ExtensionPointConstants.VERRECHNUNGSCODE);
+		codesystems = Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
 		codeElements = new ArrayList<ICodeElement>(codesystems.size());
 		factories = new HashMap<ICodeElement, CodeSelectorFactory>(codesystems.size());
 		for (IConfigurationElement ic : codesystems) {

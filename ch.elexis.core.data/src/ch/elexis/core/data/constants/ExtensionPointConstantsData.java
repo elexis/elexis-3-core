@@ -8,14 +8,12 @@
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
-package ch.elexis.core.ui.constants;
+package ch.elexis.core.data.constants;
 
 /**
  * @since 3.0.0
  */
-public class ExtensionPointConstants {
-	public static final String VERRECHNUNGSCODE = "ch.elexis.core.ui.Verrechnungscode";
-	public static final String DIAGNOSECODE = "ch.elexis.core.ui.Diagnosecode";
-	public static final String TEXTPROCESSINGPLUGIN = "ch.elexis.core.ui.Text";
-	public static final String LOGIN_NEWS = "ch.elexis.core.ui.LoginNews";
+public class ExtensionPointConstantsData {
+	public static final String PERSISTENT_REFERENCE = "ch.elexis.core.data.PersistentReference";
+	public static final String RECHNUNGS_MANAGER = "ch.elexis.core.ui.RechnungsManager";
 }
