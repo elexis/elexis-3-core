@@ -29,6 +29,11 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -166,6 +171,24 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			}
 			
 		});
+		
+		int operations = DND.DROP_COPY;
+		Transfer[] transferTypes = new Transfer[] {
+			TextTransfer.getInstance()
+		};
+		tableViewer.addDragSupport(operations, transferTypes, new DragSourceAdapter() {
+			
+			@Override
+			public void dragSetData(DragSourceEvent event){
+				IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
+				LabItem labItem = (LabItem) selection.getFirstElement();
+				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
+					event.data =
+						labItem.getKuerzel() + "," + labItem.getName() + "," + labItem.getId();
+				}
+			}
+		});
+		
 		tableViewer.setInput(this);
 		return tableComposite;
 	}
