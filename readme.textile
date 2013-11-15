@@ -1,7 +1,11 @@
 h1. Elexis 3 Core Repository
 
+*IMPORTANT* Please employ the @3lexisFormatterProfile.xml@ as Eclipse default formatter prior to development and pull requests.
+This accounts for all Elexis 3 related development.
+
 
 __*ALPHA STATE*__
+
 
 This repository hosts the core forming Elexis 3. It consists of the following plug-ins and features:
 
