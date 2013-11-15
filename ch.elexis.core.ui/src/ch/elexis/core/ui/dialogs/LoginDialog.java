@@ -32,7 +32,6 @@ import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.ILoginNews;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -108,7 +107,6 @@ public class LoginDialog extends TitleAreaDialog {
 	protected void cancelPressed(){
 		CoreHub.actUser = null;
 		CoreHub.actMandant = null;
-		Hub.mainActions.adaptForUser();
 		super.cancelPressed();
 	}
 	
