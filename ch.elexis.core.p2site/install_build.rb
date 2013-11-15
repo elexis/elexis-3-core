@@ -84,7 +84,7 @@ class CompositeRepository
     if last_version.nil?
       raise "Could not locate a version directory in #{compositeRepoParentFolder.to_s}/#{version_glob}"
     end
-    all.each{|version| 
+    all.sort.reverse[0..2].each{|version| 
               newVersion = File.join(relative.to_s, version)
               next if @children_repo.index(newVersion)
               puts "Adding #{newVersion}"
