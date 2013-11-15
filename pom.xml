@@ -1,9 +1,9 @@
 <project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'>
   <modelVersion>4.0.0 </modelVersion>
   <groupId>ch.elexis</groupId>
-  <artifactId> ch.elexis.core.releng </artifactId>
+  <artifactId>ch.elexis.core.releng</artifactId>
   <version>3.0.0-SNAPSHOT</version>
-  <packaging>pom </packaging>
+  <packaging>pom</packaging>
   <profiles>
     <profile>
       <id>release</id>
@@ -38,6 +38,7 @@
     <module>ch.elexis.core.ui.p2</module>
     <module>ch.elexis.core.ui.importer.div</module>
     <module>ch.rgw.utility</module>
+    <module>ch.rgw.utility_test</module>
     <module>ch.elexis.target</module>
     <!-- the ch.elexis.core.p2site creates an zipped installable application and a p2 update site -->
     <module>ch.elexis.core.p2site</module>
@@ -217,6 +218,7 @@
             <format>'v'yyyyMMdd-HHmm </format>
             <timestampProvider>jgit </timestampProvider>
             <jgit.ignore/>
+            <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
           </configuration>
         </plugin>
         <plugin>
