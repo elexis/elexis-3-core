@@ -31,32 +31,30 @@ import ch.rgw.io.Settings;
 import ch.rgw.tools.JdbcLink;
 
 /**
- * Datenbankspezifische Einstellungen. Datenbanktyp, Connect-String, Jdbc-Klasse
- * usw.
+ * Datenbankspezifische Einstellungen. Datenbanktyp, Connect-String, Jdbc-Klasse usw.
  */
-public class Datenbank extends PreferencePage implements
-		IWorkbenchPreferencePage {
-
+public class Datenbank extends PreferencePage implements IWorkbenchPreferencePage {
+	
 	Button bKons, bRn, bRepair;
 	Label lOutputFile;
 	Button bOutputFile, bCheck;
 	Settings cfg;
-
-	public Datenbank() {
-
+	
+	public Datenbank(){
+		
 		noDefaultAndApplyButton();
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.localCfg));
 		cfg = CoreHub.localCfg;
 		setDescription(Messages.Datenbank_databaseConnectionHeading);
 	}
-
+	
 	@Override
-	protected Control createContents(Composite parent) {
+	protected Control createContents(Composite parent){
 		final Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, false));
-
+		
 		JdbcLink jdbcl = PersistentObject.getConnection();
-
+		
 		String driver = jdbcl.getDriverName();
 		String user;
 		try {
@@ -66,24 +64,23 @@ public class Datenbank extends PreferencePage implements
 		}
 		String typ = jdbcl.dbDriver();
 		String connectstring = jdbcl.getConnectString();
-
+		
 		new Label(ret, SWT.NONE).setText(Messages.Datenbank_databaseConnection);
 		new Text(ret, SWT.READ_ONLY).setText(driver); //$NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Datenbank_connectString);
 		new Text(ret, SWT.READ_ONLY).setText(connectstring); //$NON-NLS-1$
-		new Label(ret, SWT.NONE)
-				.setText(Messages.Datenbank_usernameForDatabase);
+		new Label(ret, SWT.NONE).setText(Messages.Datenbank_usernameForDatabase);
 		new Text(ret, SWT.READ_ONLY).setText(user); //$NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Datenbank_typeOfDatabase);
 		new Text(ret, SWT.READ_ONLY).setText(typ); //$NON-NLS-1$
-
+		
 		return ret;
 	}
-
+	
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(IWorkbench workbench){
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 }

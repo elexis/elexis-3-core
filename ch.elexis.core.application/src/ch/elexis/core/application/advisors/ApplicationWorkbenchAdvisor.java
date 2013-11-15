@@ -45,7 +45,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	private Logger log = LoggerFactory.getLogger(ApplicationWorkbenchAdvisor.class.getName());
 	
 	protected static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
-			.getCoreOperationAdvisor();
+		.getCoreOperationAdvisor();
 	
 	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
@@ -66,9 +66,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		super.initialize(configurer);
 	}
 	
-
 	@Override
-	public IAdaptable getDefaultPageInput() {
+	public IAdaptable getDefaultPageInput(){
 		return super.getDefaultPageInput();
 	}
 	
@@ -82,9 +81,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 			}
 			
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getShell(),
-				Messages.ReminderView_importantRemindersOnLogin,
-				sb.toString());
+				.getShell(), Messages.ReminderView_importantRemindersOnLogin, sb.toString());
 		}
 	}
 	

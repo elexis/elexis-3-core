@@ -521,7 +521,7 @@ public class Query<T> {
 			 * ().getSimpleName(),Log.ERRORS); return null; }
 			 */
 			ResultSet res = stm.query(expr);
-			log.log("Executed "+expr, Log.DEBUGMSG);
+			log.log("Executed " + expr, Log.DEBUGMSG);
 			while ((res != null) && (res.next() == true)) {
 				String id = res.getString(1);
 				T o = (T) load.invoke(null, new Object[] {

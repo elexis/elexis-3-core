@@ -71,50 +71,49 @@ public class CoreHub implements BundleActivator {
 	static final String neededJRE = "1.7.0"; //$NON-NLS-1$
 	public static final String DBVersion = "1.8.16"; //$NON-NLS-1$
 	
-	protected static Logger log = LoggerFactory.getLogger(CoreHub.class
-			.getName());
-
+	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
+	
 	private static String LocalCfgFile = null;
-
+	
 	private BundleContext context;
-
+	
 	/** Das Singleton-Objekt dieser Klasse */
 	public static CoreHub plugin;
 	
 	private static List<ShutdownJob> shutdownJobs = new LinkedList<ShutdownJob>();
-
+	
 	/** Factory für interne PersistentObjects */
 	public static final PersistentObjectFactory poFactory = new PersistentObjectFactory();
-
+	
 	/** Heartbeat */
 	public static Heartbeat heart;
-
+	
 	/**
-	 * Beschreibbares Verzeichnis für userspezifische Konfigurationsdaten etc.
-	 * Achtung: "User" meint hier: den eingeloggten Betriebssystem-User, nicht
-	 * den Elexis-User. In Windows wird userDir meist %USERPROFILE%\elexis sein,
-	 * in Linux ~./elexis. Es kann mit getWritableUserDir() geholt werden.
+	 * Beschreibbares Verzeichnis für userspezifische Konfigurationsdaten etc. Achtung: "User" meint
+	 * hier: den eingeloggten Betriebssystem-User, nicht den Elexis-User. In Windows wird userDir
+	 * meist %USERPROFILE%\elexis sein, in Linux ~./elexis. Es kann mit getWritableUserDir() geholt
+	 * werden.
 	 * */
 	static File userDir;
-
+	
 	/** Globale Einstellungen (Werden in der Datenbank gespeichert) */
 	public static Settings globalCfg;
-
+	
 	/** Lokale Einstellungen (Werden in der Registry bzw. ~/.java gespeichert) */
 	public static Settings localCfg;
-
+	
 	/** Anwenderspezifische Einstellungen (Werden in der Datenbank gespeichert) */
 	public static Settings userCfg;
-
+	
 	/** Mandantspezifische EInstellungen (Werden in der Datenbank gespeichert) */
 	public static Settings mandantCfg;
-
+	
 	public static Anwender actUser; // TODO set
 	public static Mandant actMandant; // TODO set
-
+	
 	/** Der Initialisierer für die Voreinstellungen */
 	public static final CorePreferenceInitializer pin = new CorePreferenceInitializer();
-
+	
 	/** Die zentrale Zugriffskontrolle */
 	public static final AccessControl acl = new AccessControl();
 	
@@ -122,26 +121,24 @@ public class CoreHub implements BundleActivator {
 	 * The listener for patient events
 	 */
 	private final PatientEventListener eeli_pat = new PatientEventListener();
-
-
+	
 	/**
 	 * get the base directory of this currently running elexis application
 	 * 
-	 * @return the topmost directory of this application or null if this
-	 *         information could not be retrieved
+	 * @return the topmost directory of this application or null if this information could not be
+	 *         retrieved
 	 */
-	public static String getBasePath() {
+	public static String getBasePath(){
 		return PlatformHelper.getBasePath(PLUGIN_ID);
 	}
-
+	
 	/**
-	 * Return a directory suitable for temporary files. Most probably this will
-	 * be a default tempdir provided by the os. If none such exists, it will be
-	 * the user dir.
+	 * Return a directory suitable for temporary files. Most probably this will be a default tempdir
+	 * provided by the os. If none such exists, it will be the user dir.
 	 * 
 	 * @return always a valid and writable directory.
 	 */
-	public static File getTempDir() {
+	public static File getTempDir(){
 		File ret = null;
 		String temp = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
 		if (!StringTool.isNothing(temp)) {
@@ -156,22 +153,20 @@ public class CoreHub implements BundleActivator {
 		}
 		return getWritableUserDir();
 	}
-
+	
 	/**
-	 * return a directory suitable for plugin specific configuration data. If no
-	 * such dir exists, it will be created. If it could not be created, the
-	 * application will refuse to start.
+	 * return a directory suitable for plugin specific configuration data. If no such dir exists, it
+	 * will be created. If it could not be created, the application will refuse to start.
 	 * 
-	 * @return a directory that exists always and is always writable and
-	 *         readable for plugins of the currently running elexis instance.
-	 *         Caution: this directory is not necessarily shared among different
-	 *         OS-Users. In Windows it is normally %USERPROFILE%\elexis, in
-	 *         Linux ~./elexis
+	 * @return a directory that exists always and is always writable and readable for plugins of the
+	 *         currently running elexis instance. Caution: this directory is not necessarily shared
+	 *         among different OS-Users. In Windows it is normally %USERPROFILE%\elexis, in Linux
+	 *         ~./elexis
 	 */
-	public static File getWritableUserDir() {
+	public static File getWritableUserDir(){
 		if (userDir == null) {
 			String userhome = null;
-
+			
 			if (localCfg != null) {
 				userhome = localCfg.get("elexis-userDir", null); //$NON-NLS-1$
 			}
@@ -186,26 +181,23 @@ public class CoreHub implements BundleActivator {
 		if (!userDir.exists()) {
 			if (!userDir.mkdirs()) {
 				System.err.print("fatal: could not create Userdir"); //$NON-NLS-1$
-				MessageEvent
-						.fireLoggedError(
-								"Panic exit",
-								"could not create userdir "
-										+ userDir.getAbsolutePath());
+				MessageEvent.fireLoggedError("Panic exit",
+					"could not create userdir " + userDir.getAbsolutePath());
 				System.exit(-5);
 			}
 		}
 		return userDir;
 	}
-
+	
 	@Override
-	public void start(BundleContext context) throws Exception {
+	public void start(BundleContext context) throws Exception{
 		this.context = context;
-		log.debug("Starting "+CoreHub.class.getName());
+		log.debug("Starting " + CoreHub.class.getName());
 		plugin = this;
-
+		
 		// Check if we "are complete" - throws Error if not
 		CoreOperationExtensionPoint.getCoreOperationAdvisor();
-
+		
 		startUpBundle();
 		setUserDir(userDir);
 		heart = Heartbeat.getInstance();
@@ -217,25 +209,23 @@ public class CoreHub implements BundleActivator {
 				SysSettings localCfg = (SysSettings) CoreHub.localCfg;
 				localCfg.write_xml(LocalCfgFile);
 			}
-		});	
+		});
 	}
-
+	
 	/*
-	 * We use maven resources filtering replace in rsc/version.properties the
-	 * property ${pom.version} by the current build version and place it into
-	 * the file /version.properties of each jar file.
+	 * We use maven resources filtering replace in rsc/version.properties the property
+	 * ${pom.version} by the current build version and place it into the file /version.properties of
+	 * each jar file.
 	 * 
-	 * See http://maven.apache.org
-	 * /plugins/maven-resources-plugin/examples/filter.html
+	 * See http://maven.apache.org /plugins/maven-resources-plugin/examples/filter.html
 	 */
-	public static String readElexisBuildVersion() {
+	public static String readElexisBuildVersion(){
 		Properties prop = new Properties();
 		String elexis_version = "Developer";
 		String qualifier = " ?? ";
 		try {
 			URL url;
-			url = new URL(
-					"platform:/plugin/ch.elexis.core.data/version.properties");
+			url = new URL("platform:/plugin/ch.elexis.core.data/version.properties");
 			InputStream inputStream = url.openConnection().getInputStream();
 			if (inputStream != null) {
 				prop.load(inputStream);
@@ -247,14 +237,14 @@ public class CoreHub implements BundleActivator {
 		}
 		return elexis_version.replace("-SNAPSHOT", "") + " " + qualifier;
 	}
-
+	
 	@Override
-	public void stop(BundleContext context) throws Exception {
+	public void stop(BundleContext context) throws Exception{
 		log.debug("Stopping " + CoreHub.class.getName());
 		if (CoreHub.actUser != null) {
 			Anwender.logoff();
 		}
-
+		
 		PersistentObject.disconnect();
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
 		ElexisEventDispatcher.getInstance().dump();
@@ -265,15 +255,15 @@ public class CoreHub implements BundleActivator {
 		plugin = null;
 		this.context = null;
 	}
-
-	private void startUpBundle() {
+	
+	private void startUpBundle(){
 		String[] args = Platform.getApplicationArgs();
 		String config = "default"; //$NON-NLS-1$
 		for (String s : args) {
 			if (s.startsWith("--use-config=")) { //$NON-NLS-1$
 				String[] c = s.split("="); //$NON-NLS-1$
 				config = c[1];
-			} 
+			}
 		}
 		loadLocalCfg(config);
 		
@@ -281,42 +271,38 @@ public class CoreHub implements BundleActivator {
 		// keine NPE werfen
 		userCfg = localCfg;
 		mandantCfg = localCfg;
-
+		
 		// Java Version prüfen
-		VersionInfo vI = new VersionInfo(System.getProperty(
-				"java.version", "0.0.0")); //$NON-NLS-1$ //$NON-NLS-2$
+		VersionInfo vI = new VersionInfo(System.getProperty("java.version", "0.0.0")); //$NON-NLS-1$ //$NON-NLS-2$
 		log.info(getId() + "; Java: " + vI.version() + "\nencoding: "
-				+ System.getProperty("file.encoding"));
-
+			+ System.getProperty("file.encoding"));
+		
 		if (vI.isOlder(neededJRE)) {
-			MessageEvent.fireLoggedError("Invalid Java version",
-					"Your Java version is older than " + neededJRE
-							+ ", please update.");
+			MessageEvent.fireLoggedError("Invalid Java version", "Your Java version is older than "
+				+ neededJRE + ", please update.");
 		}
 		log.info("Basepath: " + getBasePath());
 		pin.initializeDefaultPreferences();
-
+		
 		heart = Heartbeat.getInstance();
 		initializeLock();
 	}
-
-	private static void initializeLock() {
+	
+	private static void initializeLock(){
 		final int timeoutSeconds = 600;
 		try {
-			final LockFile lockfile = new LockFile(userDir,
-					"elexislock", 4, timeoutSeconds); //$NON-NLS-1$
+			final LockFile lockfile = new LockFile(userDir, "elexislock", 4, timeoutSeconds); //$NON-NLS-1$
 			final int n = lockfile.lock();
 			if (n == 0) {
-				MessageEvent
-						.fireLoggedError("Too many instances",
-								"Too many concurrent instances of Elexis running. Will exit.");
+				MessageEvent.fireLoggedError("Too many instances",
+					"Too many concurrent instances of Elexis running. Will exit.");
 				log.error("Too many concurent instances. Check elexis.lock files");
 				System.exit(2);
 			} else {
 				HeartListener lockListener = new HeartListener() {
 					long timeSet;
-
-					public void heartbeat() {
+					
+					public void heartbeat(){
 						long now = System.currentTimeMillis();
 						if ((now - timeSet) > timeoutSeconds) {
 							lockfile.updateLock(n);
@@ -330,49 +316,46 @@ public class CoreHub implements BundleActivator {
 			log.error("Can not aquire lock file in " + userDir + "; " + ex.getMessage()); //$NON-NLS-1$
 		}
 	}
-
-	public static String getId() {
+	
+	public static String getId(){
 		StringBuilder sb = new StringBuilder();
 		sb.append(APPLICATION_NAME).append(" v.").append(Version).append("\n")
-				.append(CoreHubHelper.getRevision(true, plugin)).append("\n")
-				.append(System.getProperty("os.name"))
-				.append(StringConstants.SLASH)
-				.append(System.getProperty("os.version"))
-				.append(StringConstants.SLASH)
-				.append(System.getProperty("os.arch")); //$NON-NLS-1$
+			.append(CoreHubHelper.getRevision(true, plugin)).append("\n")
+			.append(System.getProperty("os.name")).append(StringConstants.SLASH)
+			.append(System.getProperty("os.version")).append(StringConstants.SLASH)
+			.append(System.getProperty("os.arch")); //$NON-NLS-1$
 		return sb.toString();
 	}
-
-	private void loadLocalCfg(String branch) {
-		LocalCfgFile = CoreHubHelper.getWritableUserDir() + "/localCfg_"
-				+ branch + ".xml";
-		String msg = "loadLocalCfg: Loading branch "+branch+" from " +LocalCfgFile;
+	
+	private void loadLocalCfg(String branch){
+		LocalCfgFile = CoreHubHelper.getWritableUserDir() + "/localCfg_" + branch + ".xml";
+		String msg = "loadLocalCfg: Loading branch " + branch + " from " + LocalCfgFile;
 		System.out.println(msg);
 		log.debug(msg);
 		SysSettings cfg = new SysSettings(SysSettings.USER_SETTINGS, Desk.class);
 		cfg.read_xml(LocalCfgFile);
 		CoreHub.localCfg = cfg;
 	}
-
-	public static void setMandant(Mandant newMandant) {
+	
+	public static void setMandant(Mandant newMandant){
 		if (actMandant != null) {
 			mandantCfg.flush();
 		}
-		if(newMandant == null) {
+		if (newMandant == null) {
 			mandantCfg = userCfg;
 		} else {
 			mandantCfg =
-					new SqlSettings(PersistentObject.getConnection(),
-						"USERCONFIG", "Param", "Value", "UserID=" + newMandant.getWrappedId());
+				new SqlSettings(PersistentObject.getConnection(), "USERCONFIG", "Param", "Value",
+					"UserID=" + newMandant.getWrappedId());
 		}
 		
 		actMandant = newMandant;
 		
 		ElexisEventDispatcher.getInstance().fire(
-				new ElexisEvent(CoreHub.actMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
+			new ElexisEvent(CoreHub.actMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
 	}
-
-	public Bundle getBundle() {
+	
+	public Bundle getBundle(){
 		return context.getBundle();
 	}
 	
@@ -383,7 +366,7 @@ public class CoreHub implements BundleActivator {
 		Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
 		return qbe.execute();
 	}
-
+	
 	/**
 	 * get a list of all users known to this system
 	 */

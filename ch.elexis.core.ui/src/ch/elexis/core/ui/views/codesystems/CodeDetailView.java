@@ -121,8 +121,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 							dlg.create();
 							dlg.setTitle(top.getTitle());
 							dlg.setMessage(top.getDescription());
-							dlg.getShell().setText(
-								Messages.CodeDetailView_importerCaption); //$NON-NLS-1$
+							dlg.getShell().setText(Messages.CodeDetailView_importerCaption); //$NON-NLS-1$
 							if (dlg.open() == Dialog.OK) {
 								top.run(false);
 							}

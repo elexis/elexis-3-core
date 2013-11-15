@@ -26,7 +26,6 @@ import ch.elexis.core.data.Query;
 import ch.elexis.core.data.Rechnung;
 import ch.rgw.tools.ExHandler;
 
-
 /**
  * Die Datenbank aufräumen, ungültige Datensätze finden, ggf. Indices aufbauen
  * 
@@ -90,7 +89,8 @@ public class DatabaseCleaner {
 				for (Konsultation k : lk) {
 					Fall f = k.getFall();
 					Patient pat = f.getPatient();
-					note(Messages.DatabaseCleaner_concerning + pat.getLabel() + ", " + f.getLabel() + ", " + k.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					note(Messages.DatabaseCleaner_concerning + pat.getLabel()
+						+ ", " + f.getLabel() + ", " + k.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				if (purge) {
 					PersistentObject

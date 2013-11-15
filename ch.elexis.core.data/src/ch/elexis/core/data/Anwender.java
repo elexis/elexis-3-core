@@ -28,51 +28,51 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
 /**
- * Ein Anwender ist eine Person (und damit auch ein Kontakt), die zusätzlich das
- * Recht hat, diese Software zu benützen. Ein Anwender hat Username und
- * Passwort, sowie ein AgendaLabel. Jeder Anwender gehört zu mindestens einer
- * Gruppe.
+ * Ein Anwender ist eine Person (und damit auch ein Kontakt), die zusätzlich das Recht hat, diese
+ * Software zu benützen. Ein Anwender hat Username und Passwort, sowie ein AgendaLabel. Jeder
+ * Anwender gehört zu mindestens einer Gruppe.
  * 
- * Diese Klasse enthält ausserdem die statische Methode "login", mit der ein
- * Anwender sich anmelden kann.
+ * Diese Klasse enthält ausserdem die statische Methode "login", mit der ein Anwender sich anmelden
+ * kann.
  * 
  * @author Gerry
  * 
  */
 public class Anwender extends Person {
-
+	
 	public static final String ADMINISTRATOR = "Administrator";
 	public static final String LABEL = "Label";
-
+	
 	static {
-		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER,
-				"Label=Bezeichnung3",
-				"Reminders=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
+		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER, "Label=Bezeichnung3",
+			"Reminders=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
 	}
-
-	public Anwender(final String Username, final String Password) {
+	
+	public Anwender(final String Username, final String Password){
 		create(null);
-		set(new String[] { Person.NAME }, Username);
+		set(new String[] {
+			Person.NAME
+		}, Username);
 		setLabel(Username);
 		setPwd(Password);
 		setInfoElement("Groups", "Anwender");
 		super.setConstraint();
 	}
-
-	public Anwender(final String Name, final String Vorname,
-			final String Geburtsdatum, final String s) {
+	
+	public Anwender(final String Name, final String Vorname, final String Geburtsdatum,
+		final String s){
 		super(Name, Vorname, Geburtsdatum, s);
 	}
-
+	
 	/**
 	 * Check if this Anwender is valid.
 	 * <p>
-	 * We check wheter the object exists in the database and whether the login
-	 * name ("Label") is available.
+	 * We check wheter the object exists in the database and whether the login name ("Label") is
+	 * available.
 	 * </p>
 	 */
 	@Override
-	public boolean isValid() {
+	public boolean isValid(){
 		String label = get(LABEL);
 		if (StringTool.isNothing(label)) {
 			return false;
@@ -82,7 +82,7 @@ public class Anwender extends Person {
 		}
 		return super.isValid();
 	}
-
+	
 	/**
 	 * Return a short or long label for this Anwender
 	 * 
@@ -91,34 +91,33 @@ public class Anwender extends Person {
 	 * @return a label describing this Person
 	 */
 	@Override
-	public String getLabel(final boolean shortLabel) {
+	public String getLabel(final boolean shortLabel){
 		String l = get(LABEL);
 		if (StringTool.isNothing(l)) {
-			l = checkNull(get(Person.NAME)) + StringTool.space
-					+ checkNull(get(Person.FIRSTNAME));
+			l = checkNull(get(Person.NAME)) + StringTool.space + checkNull(get(Person.FIRSTNAME));
 			if (StringTool.isNothing(l)) {
 				l = "unbekannt";
 			}
 		}
 		return l;
 	}
-
+	
 	/**
-	 * Kurzname setzen. Zuerst prüfen, ob es wirklich ein neuer Name ist, um
-	 * unnötigen Netzwerkverkehr zu vermeiden
+	 * Kurzname setzen. Zuerst prüfen, ob es wirklich ein neuer Name ist, um unnötigen
+	 * Netzwerkverkehr zu vermeiden
 	 */
-	public void setLabel(final String label) {
+	public void setLabel(final String label){
 		String oldlabel = getLabel();
 		if (!label.equals(oldlabel)) {
 			set(LABEL, label);
 		}
 	}
-
+	
 	/** Passwort setzen */
-	public void setPwd(final String pwd) {
+	public void setPwd(final String pwd){
 		setInfoElement("UsrPwd", pwd);
 	}
-
+	
 	/**
 	 * Get Reminders for this user, related to a specific Kontakt
 	 * 
@@ -126,7 +125,7 @@ public class Anwender extends Person {
 	 *            related kontakt or null: all Reminders
 	 * @return a List sorted by date
 	 */
-	public SortedSet<Reminder> getReminders(final Kontakt k) {
+	public SortedSet<Reminder> getReminders(final Kontakt k){
 		TreeSet<Reminder> ret = new TreeSet<Reminder>();
 		List<String[]> rem = getList("Reminders", (String[]) null);
 		if (rem != null) {
@@ -143,74 +142,73 @@ public class Anwender extends Person {
 		}
 		return ret;
 	}
-
-	public static Anwender load(final String id) {
+	
+	public static Anwender load(final String id){
 		Anwender ret = new Anwender(id);
 		if (ret.state() > PersistentObject.INVALID_ID) {
 			return ret;
 		}
 		return null;
 	}
-
+	
 	@Override
-	protected String getConstraint() {
-		return Kontakt.FLD_IS_USER + StringTool.equals
-				+ JdbcLink.wrap(StringConstants.ONE);
+	protected String getConstraint(){
+		return Kontakt.FLD_IS_USER + StringTool.equals + JdbcLink.wrap(StringConstants.ONE);
 	}
-
+	
 	@Override
-	protected void setConstraint() {
+	protected void setConstraint(){
 		set(Kontakt.FLD_IS_USER, StringConstants.ONE);
 	}
-
-	protected Anwender() {/* leer */
+	
+	protected Anwender(){/* leer */
 	}
-
-	protected Anwender(final String id) {
+	
+	protected Anwender(final String id){
 		super(id);
 	}
-
+	
 	/**
-	 * Den ersten Benutzer anlegen und initiale Zugriffsrechte setzen Wird von
-	 * PersistentObject() aufgerufen, wenn die Datenbank neu angelegt wurde.
+	 * Den ersten Benutzer anlegen und initiale Zugriffsrechte setzen Wird von PersistentObject()
+	 * aufgerufen, wenn die Datenbank neu angelegt wurde.
 	 */
 	@SuppressWarnings("unchecked")
-	protected static void init() {
+	protected static void init(){
 		// Administrator muss "zu fuss" erstellt werden, da noch keine
 		// Rechteverwaltung vorhanden ist
 		Anwender admin = new Anwender();
 		admin.create(null);
-		admin.set(new String[] { Person.NAME, LABEL, Kontakt.FLD_IS_USER },
-				ADMINISTRATOR, ADMINISTRATOR, StringConstants.ONE);
+		admin.set(new String[] {
+			Person.NAME, LABEL, Kontakt.FLD_IS_USER
+		}, ADMINISTRATOR, ADMINISTRATOR, StringConstants.ONE);
 		CoreHub.actUser = admin;
-		CoreHub.acl.grant(admin, new ACE(ACE.ACE_IMPLICIT, "WriteInfoStore"),
-				new ACE(ACE.ACE_IMPLICIT, "LoadInfoStore"), new ACE(
-						ACE.ACE_IMPLICIT, "WriteGroups"), new ACE(
-						ACE.ACE_IMPLICIT, "ReadGroups"));
+		CoreHub.acl.grant(admin, new ACE(ACE.ACE_IMPLICIT, "WriteInfoStore"), new ACE(
+			ACE.ACE_IMPLICIT, "LoadInfoStore"), new ACE(ACE.ACE_IMPLICIT, "WriteGroups"), new ACE(
+			ACE.ACE_IMPLICIT, "ReadGroups"));
 		Map hash = admin.getInfoStore();
 		hash.put("UsrPwd", "admin");
 		hash.put("Groups", "Admin,Anwender");
 		admin.flushInfoStore(hash);
-		CoreHub.acl.grant("Admin", new ACE(ACE.ACE_IMPLICIT, "ReadUsrPwd"),
-				new ACE(ACE.ACE_IMPLICIT, "WriteUsrPwd"), new ACE(
-						ACE.ACE_IMPLICIT, "CreateAndDelete"), new ACE(
-						ACE.ACE_IMPLICIT, "WriteGroups"));
+		CoreHub.acl.grant("Admin", new ACE(ACE.ACE_IMPLICIT, "ReadUsrPwd"), new ACE(
+			ACE.ACE_IMPLICIT, "WriteUsrPwd"), new ACE(ACE.ACE_IMPLICIT, "CreateAndDelete"),
+			new ACE(ACE.ACE_IMPLICIT, "WriteGroups"));
 		CoreHub.acl.grant("System", new ACE(ACE.ACE_IMPLICIT, "ReadUsrPwd"));
-
+		
 	}
-
+	
 	/**
-	 * Login: Anwender anmelden, passenden Mandanten anmelden. (Jeder Anwender
-	 * ist entweder selber ein Mandant oder ist einem Mandanten zugeordnet)
+	 * Login: Anwender anmelden, passenden Mandanten anmelden. (Jeder Anwender ist entweder selber
+	 * ein Mandant oder ist einem Mandanten zugeordnet)
 	 * 
 	 * @param username
 	 *            Kurzname
 	 * @param password
 	 *            Passwort
-	 * @return <code>true</code> erfolgreich angemeldet, CoreHub.actUser gesetzt, else <code>false</code>
+	 * @return <code>true</code> erfolgreich angemeldet, CoreHub.actUser gesetzt, else
+	 *         <code>false</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public static boolean login(final String username, final String password) {
+	public static boolean login(final String username, final String password){
 		logoff();
 		CoreHub.actUser = null;
 		cod.adaptForUser();
@@ -224,13 +222,11 @@ public class Anwender extends Person {
 		Map<Object, Object> km = a.getMap(FLD_EXTINFO);
 		if (km == null) {
 			MessageEvent.fireLoggedError("Interner Fehler",
-					"Die Datenstruktur ExtInfo von " + a.getLabel()
-							+ " ist beschädigt.");
+				"Die Datenstruktur ExtInfo von " + a.getLabel() + " ist beschädigt.");
 			try {
 				a.setMap("ExtInfo", new HashMap<Object, Object>());
 			} catch (PersistenceException e) {
-				MessageEvent.fireLoggedError("Fatal error",
-						"Can't store user map", e);
+				MessageEvent.fireLoggedError("Fatal error", "Can't store user map", e);
 			}
 		}
 		String pwd = (String) km.get("UsrPwd");
@@ -242,8 +238,9 @@ public class Anwender extends Person {
 			String MandantLabel = (String) km.get("Mandant");
 			String MandantID = null;
 			if (!StringTool.isNothing(MandantLabel)) {
-				MandantID = new Query<Mandant>(Mandant.class).findSingle(LABEL,
-						StringTool.equals, MandantLabel);
+				MandantID =
+					new Query<Mandant>(Mandant.class).findSingle(LABEL, StringTool.equals,
+						MandantLabel);
 			}
 			if (MandantID != null) {
 				CoreHub.setMandant(Mandant.load(MandantID));
@@ -252,32 +249,31 @@ public class Anwender extends Person {
 				if ((m != null) && m.isValid()) {
 					CoreHub.setMandant(m);
 				} else {
-					List<Mandant> ml = new Query<Mandant>(Mandant.class)
-							.execute();
+					List<Mandant> ml = new Query<Mandant>(Mandant.class).execute();
 					if ((ml != null) && (ml.size() > 0)) {
 						m = ml.get(0);
 						CoreHub.setMandant(m);
-
+						
 					} else {
 						MessageEvent
-								.fireError(
-										"Kein Mandant definiert",
-										"Sie können Elexis erst normal benutzen, wenn Sie mindestens einen Mandanten definiert haben");
+							.fireError("Kein Mandant definiert",
+								"Sie können Elexis erst normal benutzen, wenn Sie mindestens einen Mandanten definiert haben");
 					}
 				}
 			}
-
-			CoreHub.userCfg = new SqlSettings(getConnection(), "USERCONFIG",
-					"Param", "Value", "UserID=" + a.getWrappedId());
-
+			
+			CoreHub.userCfg =
+				new SqlSettings(getConnection(), "USERCONFIG", "Param", "Value", "UserID="
+					+ a.getWrappedId());
+			
 			cod.adaptForUser();
 			CoreHub.heart.resume(true);
 			return true;
 		}
 		return false;
 	}
-
-	public static void logoff() {
+	
+	public static void logoff(){
 		if (CoreHub.userCfg != null) {
 			CoreHub.userCfg.flush();
 		}
@@ -285,8 +281,7 @@ public class Anwender extends Person {
 		CoreHub.heart.suspend();
 		CoreHub.actUser = null;
 		ElexisEventDispatcher.getInstance().fire(
-				new ElexisEvent(CoreHub.actUser, Anwender.class,
-						ElexisEvent.EVENT_USER_CHANGED));
+			new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 		CoreHub.userCfg = CoreHub.localCfg;
 	}
 }

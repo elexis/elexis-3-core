@@ -130,7 +130,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 				}
 			}
 		});
-
+		
 		Composite bottom = new Composite(comp, SWT.NONE);
 		
 		RowLayout rowLayout = new RowLayout();

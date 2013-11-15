@@ -303,7 +303,7 @@ public class Messages extends NLS {
 	public static String Leistungscodes_checkPositions;
 	
 	public static String Leistungscodes_checkZero;
-
+	
 	public static String Leistungscodes_combo;
 	
 	public static String Leistungscodes_comboHL;

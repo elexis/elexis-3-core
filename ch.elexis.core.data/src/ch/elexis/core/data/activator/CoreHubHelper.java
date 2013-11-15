@@ -30,8 +30,9 @@ public class CoreHubHelper {
 	 * wurde, handelt es sich um eine Entwicklerversion, welche unter Eclipse-Kontrolle abläuft.
 	 * 
 	 * Note: Obsoleted with change to mercurial
-	 * @param plugin 
-	 */	
+	 * 
+	 * @param plugin
+	 */
 	public static String getRevision(final boolean withDate, CoreHub plugin){
 		StringBuilder sb = new StringBuilder();
 		Bundle bundle = plugin.getBundle();
@@ -49,7 +50,7 @@ public class CoreHubHelper {
 		sb.append("]");
 		return sb.toString();
 	}
-
+	
 	/**
 	 * return a directory suitable for plugin specific configuration data. If no such dir exists, it
 	 * will be created. If it could not be created, the application will refuse to start.
@@ -84,5 +85,5 @@ public class CoreHubHelper {
 		}
 		return CoreHub.userDir;
 	}
-
+	
 }

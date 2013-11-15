@@ -25,7 +25,7 @@ public interface IPatFilter {
 	public static final int DONT_HANDLE = 0;
 	/** We encountered an error while trying to filter */
 	public static final int FILTER_FAULT = -2;
-
+	
 	/**
 	 * Will the Patient be accepted for the Filter depending on the Object?
 	 * 
@@ -37,8 +37,8 @@ public interface IPatFilter {
 	 * @throws Exception
 	 */
 	public int accept(Patient p, PersistentObject o);
-
+	
 	public boolean aboutToStart(PersistentObject o);
-
+	
 	public boolean finished(PersistentObject o);
 }

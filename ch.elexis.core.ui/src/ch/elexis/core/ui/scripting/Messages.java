@@ -15,7 +15,7 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.scripting.messages";//$NON-NLS-1$
 	public static String ScriptEditor_editScript;
 	public static String ScriptEditor_ScriptTitle;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

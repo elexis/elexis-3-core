@@ -80,8 +80,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		
 		Composite cTypes = UiDesk.getToolkit().createComposite(typeComp, SWT.BORDER);
 		bOrganisation =
-			UiDesk.getToolkit().createButton(cTypes,
-				Messages.KontaktErfassenDialog_organization, //$NON-NLS-1$
+			UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_organization, //$NON-NLS-1$
 				SWT.CHECK);
 		bOrganisation.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e){
@@ -89,16 +88,16 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			}
 		});
 		bLabor =
-			UiDesk.getToolkit().createButton(cTypes,
-				Messages.KontaktErfassenDialog_labor, SWT.CHECK); //$NON-NLS-1$
+			UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_labor,
+				SWT.CHECK); //$NON-NLS-1$
 		bLabor.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e){
 				bLaborChanged(bLabor.getSelection());
 			}
 		});
 		bPerson =
-			UiDesk.getToolkit().createButton(cTypes,
-				Messages.KontaktErfassenDialog_person, SWT.CHECK); //$NON-NLS-1$
+			UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_person,
+				SWT.CHECK); //$NON-NLS-1$
 		bPerson.setSelection(true);
 		bPerson.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e){
@@ -106,8 +105,8 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			}
 		});
 		bPatient =
-			UiDesk.getToolkit().createButton(cTypes,
-				Messages.KontaktErfassenDialog_patient, SWT.CHECK); //$NON-NLS-1$
+			UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_patient,
+				SWT.CHECK); //$NON-NLS-1$
 		bPatient.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e){
 				bPatientChanged(bPatient.getSelection());
@@ -119,16 +118,16 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			}
 		}
 		bAnwender =
-			UiDesk.getToolkit().createButton(cTypes,
-				Messages.KontaktErfassenDialog_user, SWT.CHECK); //$NON-NLS-1$
+			UiDesk.getToolkit()
+				.createButton(cTypes, Messages.KontaktErfassenDialog_user, SWT.CHECK); //$NON-NLS-1$
 		bAnwender.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e){
 				bAnwenderChanged(bAnwender.getSelection());
 			}
 		});
 		bMandant =
-			UiDesk.getToolkit().createButton(cTypes,
-				Messages.KontaktErfassenDialog_mandant, SWT.CHECK); //$NON-NLS-1$
+			UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_mandant,
+				SWT.CHECK); //$NON-NLS-1$
 		bMandant.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e){
 				bMandantChanged(bMandant.getSelection());
@@ -170,9 +169,9 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		
 		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_sex);//$NON-NLS-1$
 		cbSex = new Combo(ret, SWT.SINGLE);
-		cbSex
-			.setItems(new String[] {
-				Messages.KontaktErfassenDialog_male, Messages.KontaktErfassenDialog_female}); //$NON-NLS-1$ //$NON-NLS-2$
+		cbSex.setItems(new String[] {
+			Messages.KontaktErfassenDialog_male, Messages.KontaktErfassenDialog_female
+		}); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if (fld.length <= KontaktSelektor.HINT_SEX || fld[KontaktSelektor.HINT_SEX].length() == 0) {
 			if (StringTool.isNothing(fld[KontaktSelektor.HINT_FIRSTNAME])) {
@@ -230,8 +229,8 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		tEmail.setTextLimit(80);
 		new Label(ret, SWT.NONE).setText(Messages.KontaktErfassenDialog_postanschrift); //$NON-NLS-1$
 		hlAnschrift =
-			UiDesk.getToolkit().createHyperlink(ret,
-				Messages.KontaktErfassenDialog_postalempty, SWT.NONE); //$NON-NLS-1$
+			UiDesk.getToolkit().createHyperlink(ret, Messages.KontaktErfassenDialog_postalempty,
+				SWT.NONE); //$NON-NLS-1$
 		hlAnschrift.addHyperlinkListener(new HyperlinkAdapter() {
 			
 			@Override
@@ -353,9 +352,9 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 						if (bLabor.getSelection()) {
 							k.set("istOrganisation", "1"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
-						if (MessageDialog
-							.openConfirm(getShell(), Messages.KontaktErfassenDialog_organisationExistiert_title, //$NON-NLS-1$
-								Messages.KontaktErfassenDialog_organisationExistiert_msg) == false) { //$NON-NLS-1$
+						if (MessageDialog.openConfirm(getShell(),
+							Messages.KontaktErfassenDialog_organisationExistiert_title, //$NON-NLS-1$
+							Messages.KontaktErfassenDialog_organisationExistiert_msg) == false) { //$NON-NLS-1$
 							super.okPressed();
 							return;
 						}

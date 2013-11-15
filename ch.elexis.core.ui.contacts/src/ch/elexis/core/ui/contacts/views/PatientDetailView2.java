@@ -27,55 +27,53 @@ import ch.elexis.core.ui.views.Messages;
 public class PatientDetailView2 extends ViewPart implements ISaveablePart2 {
 	public static final String ID = "ch.elexis.PatDetail_v2"; //$NON-NLS-1$
 	Patientenblatt2 pb;
-
+	
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(Composite parent){
 		setTitleImage(Images.IMG_VIEW_PATIENT_DETAIL.getImage());
-
+		
 		setPartName(Messages.PatientDetailView2_patientDetailViewName); //$NON-NLS-1$
 		parent.setLayout(new FillLayout());
 		pb = new Patientenblatt2(parent, getViewSite());
-
+		
 	}
-
-	public void refresh() {
-		pb.setPatient((Patient) ElexisEventDispatcher
-				.getSelected(Patient.class));
+	
+	public void refresh(){
+		pb.setPatient((Patient) ElexisEventDispatcher.getSelected(Patient.class));
 		pb.refresh();
 	}
-
+	
 	@Override
-	public void setFocus() {
+	public void setFocus(){
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	/*
-	 * ****** Die folgenden 6 Methoden implementieren das Interface
-	 * ISaveablePart2 Wir benötigen das Interface nur, um das Schliessen einer
-	 * View zu verhindern, wenn die Perspektive fixiert ist. Gibt es da keine
-	 * einfachere Methode?
+	 * ****** Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
+	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
+	 * Gibt es da keine einfachere Methode?
 	 */
-	public int promptToSaveOnClose() {
+	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
-
-	public void doSave(IProgressMonitor monitor) { /* leer */
+	
+	public void doSave(IProgressMonitor monitor){ /* leer */
 	}
-
-	public void doSaveAs() { /* leer */
+	
+	public void doSaveAs(){ /* leer */
 	}
-
-	public boolean isDirty() {
+	
+	public boolean isDirty(){
 		return true;
 	}
-
-	public boolean isSaveAsAllowed() {
+	
+	public boolean isSaveAsAllowed(){
 		return false;
 	}
-
-	public boolean isSaveOnCloseNeeded() {
+	
+	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}
 }

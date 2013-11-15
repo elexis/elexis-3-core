@@ -155,8 +155,7 @@ public class MedicalElement extends XChangeElement {
 			eRecords.setReader(getReader());
 			eRecords.setWriter(getSender());
 			add(eRecords);
-			getContainer().addChoice(eRecords,
-				Messages.MedicalElement_EMREntries, eRecords); //$NON-NLS-1$
+			getContainer().addChoice(eRecords, Messages.MedicalElement_EMREntries, eRecords); //$NON-NLS-1$
 		}
 		eRecords.add(rc);
 	}
@@ -173,8 +172,7 @@ public class MedicalElement extends XChangeElement {
 		if (eAnalyses == null) {
 			eAnalyses = new AnalysesElement();
 			add(eAnalyses);
-			getContainer().addChoice(eAnalyses,
-				Messages.MedicalElement_Findings, eAnalyses); //$NON-NLS-1$
+			getContainer().addChoice(eAnalyses, Messages.MedicalElement_Findings, eAnalyses); //$NON-NLS-1$
 		}
 		eAnalyses.add(le);
 	}
@@ -186,8 +184,7 @@ public class MedicalElement extends XChangeElement {
 		if (eAnalyses == null) {
 			eAnalyses = new AnalysesElement();
 			add(eAnalyses);
-			getContainer().addChoice(eAnalyses,
-				Messages.MedicalElement_Findings, eAnalyses); //$NON-NLS-1$
+			getContainer().addChoice(eAnalyses, Messages.MedicalElement_Findings, eAnalyses); //$NON-NLS-1$
 		}
 		eAnalyses.add(fe);
 	}
@@ -203,8 +200,7 @@ public class MedicalElement extends XChangeElement {
 		if (eDocuments == null) {
 			eDocuments = new DocumentsElement();
 			add(eDocuments);
-			getContainer().addChoice(eDocuments,
-				Messages.MedicalElement_Documents, eDocuments); //$NON-NLS-1$
+			getContainer().addChoice(eDocuments, Messages.MedicalElement_Documents, eDocuments); //$NON-NLS-1$
 		}
 		List<DocumentElement> lEx =
 			(List<DocumentElement>) eDocuments.getChildren(DocumentElement.XMLNAME,

@@ -175,7 +175,7 @@ abstract public class RestrictedAction extends Action {
 		
 		public void catchElexisEvent(ElexisEvent ev){
 			final ArrayList<RestrictedAction> copy = new ArrayList<RestrictedAction>(this);
-			System.out.println("ElexisEvent "+ev.getType()+" "+ev.getGenericObject());
+			System.out.println("ElexisEvent " + ev.getType() + " " + ev.getGenericObject());
 			UiDesk.asyncExec(new Runnable() {
 				public void run(){
 					for (RestrictedAction ra : copy) {

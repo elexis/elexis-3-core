@@ -12,7 +12,6 @@
 
 package ch.elexis.core.data;
 
-
 public class BezugsKontakt extends PersistentObject {
 	public static final String RELATION = "Bezug"; //$NON-NLS-1$
 	public static final String OTHER_ID = "otherID"; //$NON-NLS-1$
@@ -35,7 +34,7 @@ public class BezugsKontakt extends PersistentObject {
 		if (k.isValid()) {
 			return get(RELATION) + ": " + k.getLabel(); //$NON-NLS-1$
 		} else {
-			return Messages.BezugsKontakt_ContactDoesntExist; 
+			return Messages.BezugsKontakt_ContactDoesntExist;
 		}
 		
 	}

@@ -32,38 +32,36 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
 public class DBImportFirstPage extends WizardPage {
-
+	
 	List dbTypes;
 	Text server, dbName;
 	String defaultUser, defaultPassword;
 	JdbcLink j = null;
-
+	
 	static final String[] supportedDB = new String[] {
-			"mySQl", "PostgreSQL", "H2", "ODBC" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		"mySQl", "PostgreSQL", "H2", "ODBC" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	};
 	static final int MYSQL = 0;
 	static final int POSTGRESQL = 1;
 	static final int ODBC = 3;
 	static final int H2 = 2;
-
-	public DBImportFirstPage(String pageName) {
-		super(
-				Messages.DBImportFirstPage_connection, Messages.DBImportFirstPage_typeOfDB, Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		setMessage(Messages.DBImportFirstPage_selectType
-				+ Messages.DBImportFirstPage_enterNameODBC); //$NON-NLS-1$
+	
+	public DBImportFirstPage(String pageName){
+		super(Messages.DBImportFirstPage_connection, Messages.DBImportFirstPage_typeOfDB,
+			Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		setMessage(Messages.DBImportFirstPage_selectType + Messages.DBImportFirstPage_enterNameODBC); //$NON-NLS-1$
 		setDescription(Messages.DBImportFirstPage_theDesrciption); //$NON-NLS-1$
-
+		
 	}
-
-	public DBImportFirstPage(String pageName, String title,
-			ImageDescriptor titleImage) {
+	
+	public DBImportFirstPage(String pageName, String title, ImageDescriptor titleImage){
 		super(pageName, title, titleImage);
 		// TODO Automatisch erstellter Konstruktoren-Stub
 	}
-
-	public void createControl(Composite parent) {
+	
+	public void createControl(Composite parent){
 		DBImportWizard wiz = (DBImportWizard) getWizard();
-
+		
 		FormToolkit tk = UiDesk.getToolkit();
 		Form form = tk.createForm(parent);
 		form.setText(Messages.DBImportFirstPage_Connection); //$NON-NLS-1$
@@ -74,7 +72,7 @@ public class DBImportFirstPage extends WizardPage {
 		dbTypes.setItems(supportedDB);
 		dbTypes.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e){
 				int it = dbTypes.getSelectionIndex();
 				switch (it) {
 				case MYSQL:
@@ -102,20 +100,18 @@ public class DBImportFirstPage extends WizardPage {
 				DBImportSecondPage sec = (DBImportSecondPage) getNextPage();
 				sec.name.setText(defaultUser);
 				sec.pwd.setText(defaultPassword);
-
+				
 			}
-
+			
 		});
-
+		
 		tk.adapt(dbTypes, true, true);
-		tk.createLabel(body,
-				Messages.DBImportFirstPage_serverAddress); //$NON-NLS-1$
+		tk.createLabel(body, Messages.DBImportFirstPage_serverAddress); //$NON-NLS-1$
 		server = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
-
+		
 		TableWrapData twr = new TableWrapData(TableWrapData.FILL_GRAB);
 		server.setLayoutData(twr);
-		tk.createLabel(body,
-				Messages.DBImportFirstPage_databaseName); //$NON-NLS-1$
+		tk.createLabel(body, Messages.DBImportFirstPage_databaseName); //$NON-NLS-1$
 		dbName = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twr2 = new TableWrapData(TableWrapData.FILL_GRAB);
 		dbName.setLayoutData(twr2);

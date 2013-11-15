@@ -325,8 +325,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 					progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
 						new IRunnableWithProgress() {
 							public void run(final IProgressMonitor monitor){
-								monitor.beginTask(
-									Messages.KonsZumVerrechnenView_findCons, 100); //$NON-NLS-1$
+								monitor.beginTask(Messages.KonsZumVerrechnenView_findCons, 100); //$NON-NLS-1$
 								monitor.subTask(Messages.KonsZumVerrechnenView_databaseRequest); //$NON-NLS-1$
 								String sql =
 									"SELECT distinct PATIENTID FROM FAELLE " + //$NON-NLS-1$
@@ -367,7 +366,8 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 								"WHERE BEHANDLUNGEN.RECHNUNGSID is null AND BEHANDLUNGEN.DELETED='0' AND FAELLE.PATIENTID=" //$NON-NLS-1$
 								+ cont.getWrappedId(); //$NON-NLS-1$
 						if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
-							sql += " AND BEHANDLUNGEN.MANDANTID=" + CoreHub.actMandant.getWrappedId(); //$NON-NLS-1$
+							sql +=
+								" AND BEHANDLUNGEN.MANDANTID=" + CoreHub.actMandant.getWrappedId(); //$NON-NLS-1$
 						}
 						rs = stm.query(sql);
 						while ((rs != null) && rs.next()) {
@@ -655,8 +655,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 				}
 			};
 		
-		selectByDateAction =
-			new Action(Messages.KonsZumVerrechnenView_selectByDateAction) { //$NON-NLS-1$
+		selectByDateAction = new Action(Messages.KonsZumVerrechnenView_selectByDateAction) { //$NON-NLS-1$
 				TimeTool fromDate;
 				TimeTool toDate;
 				
@@ -722,8 +721,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		date2.chop(3);
 		
 		List<Tree> lAll = (List<Tree>) tAll.getChildren();
-		monitor.beginTask(
-			Messages.KonsZumVerrechnenView_selectByDateTask, lAll.size() + 1); //$NON-NLS-1$
+		monitor.beginTask(Messages.KonsZumVerrechnenView_selectByDateTask, lAll.size() + 1); //$NON-NLS-1$
 		for (Tree tP : lAll) {
 			monitor.worked(1);
 			for (Tree tF : (List<Tree>) tP.getChildren()) {
@@ -860,8 +858,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 			text.getPlugin().createContainer(ret, this);
 			text.getPlugin().showMenu(false);
 			text.getPlugin().showToolbar(false);
-			text.createFromTemplateName(
-				null,
+			text.createFromTemplateName(null,
 				"Liste", Brief.UNKNOWN, CoreHub.actUser, Messages.KonsZumVerrechnenView_billsTitle); //$NON-NLS-1$ //$NON-NLS-2$
 			Tree[] all = (Tree[]) tSelection.getChildren().toArray(new Tree[0]);
 			String[][] table = new String[all.length][];

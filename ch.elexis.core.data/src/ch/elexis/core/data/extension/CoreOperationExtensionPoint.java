@@ -21,46 +21,43 @@ import org.slf4j.LoggerFactory;
  */
 public class CoreOperationExtensionPoint {
 	private static Logger log = LoggerFactory
-			.getLogger(CoreOperationExtensionPoint.class.getName());
-
+		.getLogger(CoreOperationExtensionPoint.class.getName());
+	
 	private AbstractCoreOperationAdvisor coa = null;
 	private static CoreOperationExtensionPoint instance = null;
-
-	private CoreOperationExtensionPoint() {
-		IConfigurationElement[] config = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(
-						"ch.elexis.core.data.coreOperation");
+	
+	private CoreOperationExtensionPoint(){
+		IConfigurationElement[] config =
+			Platform.getExtensionRegistry().getConfigurationElementsFor(
+				"ch.elexis.core.data.coreOperation");
 		if (config.length != 1)
 			throw new Error(
-					"Error at CoreOperationExtensionPoint initialization, not exactly one extension point found. Exiting.");
+				"Error at CoreOperationExtensionPoint initialization, not exactly one extension point found. Exiting.");
 		try {
 			IConfigurationElement e = ((IConfigurationElement) config[0]);
 			final Object o = e.createExecutableExtension("advisor");
 			if (o instanceof AbstractCoreOperationAdvisor) {
 				coa = (AbstractCoreOperationAdvisor) o;
-				log.info("CoreOperationExtensionPoint found @ "
-						+ e.getContributor().getName() + ": "
-						+ o.getClass().getName());
+				log.info("CoreOperationExtensionPoint found @ " + e.getContributor().getName()
+					+ ": " + o.getClass().getName());
 			}
 			return;
 		} catch (CoreException ex) {
-			log.error(
-					"Error at CoreOperationExtensionPoint extension initialization",
-					ex);
+			log.error("Error at CoreOperationExtensionPoint extension initialization", ex);
 		}
 	}
-
+	
 	/**
 	 * 
 	 * @return
 	 */
-	public static AbstractCoreOperationAdvisor getCoreOperationAdvisor() {
+	public static AbstractCoreOperationAdvisor getCoreOperationAdvisor(){
 		if (instance == null) {
 			instance = new CoreOperationExtensionPoint();
 		}
 		if (instance.coa == null)
 			throw new Error(
-					"Error at CoreOperationExtensionPoint initialization, no extension point found. Exiting.");
+				"Error at CoreOperationExtensionPoint initialization, no extension point found. Exiting.");
 		return instance.coa;
 	}
 }

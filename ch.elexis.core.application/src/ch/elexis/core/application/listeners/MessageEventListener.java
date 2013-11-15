@@ -20,23 +20,20 @@ import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.ui.UiDesk;
 
 /**
- * Listens to generic MessageEvents thrown by the core that should be presented
- * to the user.
+ * Listens to generic MessageEvents thrown by the core that should be presented to the user.
  */
 public class MessageEventListener extends ElexisEventListenerImpl {
-
-	private Logger log = LoggerFactory.getLogger(MessageEventListener.class
-			.getName());
 	
-	public MessageEventListener() {
-		super(null, MessageEvent.class, ElexisEvent.EVENT_NOTIFICATION,
-				ElexisEvent.PRIORITY_SYNC);
+	private Logger log = LoggerFactory.getLogger(MessageEventListener.class.getName());
+	
+	public MessageEventListener(){
+		super(null, MessageEvent.class, ElexisEvent.EVENT_NOTIFICATION, ElexisEvent.PRIORITY_SYNC);
 	}
-
+	
 	@Override
-	public void run(ElexisEvent ev) {
+	public void run(ElexisEvent ev){
 		MessageEvent me = (MessageEvent) ev.getGenericObject();
-		log.debug("MessageEvent [TITLE] "+me.title);
+		log.debug("MessageEvent [TITLE] " + me.title);
 		switch (me.mt) {
 		case ERROR:
 			MessageDialog.openError(UiDesk.getTopShell(), me.title, me.message);

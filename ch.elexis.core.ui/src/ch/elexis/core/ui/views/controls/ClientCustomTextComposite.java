@@ -179,8 +179,8 @@ public class ClientCustomTextComposite extends Composite {
 		tokenMap.clear();
 		styleList.clear();
 		String outputParsed =
-			findAndReplaceTemplates(CoreHub.globalCfg
-				.get(ClientCustomTextComposite.class.getName(), ""));
+			findAndReplaceTemplates(CoreHub.globalCfg.get(
+				ClientCustomTextComposite.class.getName(), ""));
 		String output = initializeStyleRanges(outputParsed);
 		txtClientCustomText.setText(output);
 		txtClientCustomText.setStyleRanges(styleList.toArray(new StyleRange[0]));

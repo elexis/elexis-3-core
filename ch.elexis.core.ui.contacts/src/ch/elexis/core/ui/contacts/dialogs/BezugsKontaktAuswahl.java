@@ -40,7 +40,8 @@ public class BezugsKontaktAuswahl extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent){
 		Composite ret = (Composite) super.createDialogArea(parent);
-		new Label(ret, SWT.NONE).setText(ch.elexis.core.ui.views.Messages.Patientenblatt2_pleaseEnterKindOfRelationship); //$NON-NLS-1$
+		new Label(ret, SWT.NONE)
+			.setText(ch.elexis.core.ui.views.Messages.Patientenblatt2_pleaseEnterKindOfRelationship); //$NON-NLS-1$
 		cbType = new Combo(ret, SWT.NONE);
 		cbType.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		String bez = CoreHub.globalCfg.get(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, ""); //$NON-NLS-1$

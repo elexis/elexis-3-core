@@ -82,17 +82,18 @@ public class PatientMenuPopulator implements IMenuPopulator {
 				public void run(){
 					// access rights guard
 					if (!CoreHub.acl.request(AccessControlDefaults.KONTAKT_DELETE)) {
-						SWTHelper
-							.alert(
-								Messages.PatientMenuPopulator_DeletePatientRefusalCaption, Messages.PatientMenuPopulator_DeletePatientRefusalBody); //$NON-NLS-1$ //$NON-NLS-2$
+						SWTHelper.alert(Messages.PatientMenuPopulator_DeletePatientRefusalCaption,
+							Messages.PatientMenuPopulator_DeletePatientRefusalBody); //$NON-NLS-1$ //$NON-NLS-2$
 						return;
 					}
 					
 					Patient p = mine.getSelectedPatient();
 					if (p != null) {
-						if (MessageDialog.openConfirm(mine.getViewSite().getShell(), Messages.PatientMenuPopulator_DeletePatientConfirm, p.getLabel()) == true) { //$NON-NLS-1$
+						if (MessageDialog.openConfirm(mine.getViewSite().getShell(),
+							Messages.PatientMenuPopulator_DeletePatientConfirm, p.getLabel()) == true) { //$NON-NLS-1$
 							if (p.delete(false) == false) {
-								SWTHelper.alert(Messages.PatientMenuPopulator_DeletePatientRejectCaption, //$NON-NLS-1$
+								SWTHelper.alert(
+									Messages.PatientMenuPopulator_DeletePatientRejectCaption, //$NON-NLS-1$
 									Messages.PatientMenuPopulator_DeletePatientRejectBody); //$NON-NLS-1$
 							} else {
 								mine.reload();
@@ -103,8 +104,7 @@ public class PatientMenuPopulator implements IMenuPopulator {
 				
 			};
 		exportKGAction =
-			new Action(
-				Messages.PatientMenuPopulator_ExportEMRAction, Action.AS_DROP_DOWN_MENU) { //$NON-NLS-1$
+			new Action(Messages.PatientMenuPopulator_ExportEMRAction, Action.AS_DROP_DOWN_MENU) { //$NON-NLS-1$
 				Menu menu = null;
 				{
 					setToolTipText(Messages.PatientMenuPopulator_ExportEMRToolTip); //$NON-NLS-1$

@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.medication.views.messages";//$NON-NLS-1$
-
+	
 	public static String DauerMediView_copy;
 	public static String DauerMediView_copyToClipboard;
 	public static String FixMediDisplay_AddItem;

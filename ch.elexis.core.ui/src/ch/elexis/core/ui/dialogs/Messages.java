@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.dialogs.messages";//$NON-NLS-1$
-
+	
 	public static String AddBuchungDialog_CannotInterpretAmount;
 	public static String AddBuchungDialog_ErrorInAmount;
 	public static String AddBuchungDialog_amountAs000;
@@ -233,7 +233,7 @@ public class Messages extends NLS {
 	public static String LoginDialog_4;
 	public static String LoginDialog_login;
 	public static String LoginDialog_terminate;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

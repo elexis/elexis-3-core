@@ -59,14 +59,15 @@ public class FaelleView extends ViewPart implements IActivationListener {
 	private IAction konsFilterAction;
 	private final FallKonsFilter filter = new FallKonsFilter();
 	
-	private final ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		public void runInUi(ElexisEvent ev){
-			tv.refresh();
-			Fall currentFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-			if (currentFall != null)
-				tv.setSelection(new StructuredSelection(currentFall));
-		}
-	};
+	private final ElexisUiEventListenerImpl eeli_pat =
+		new ElexisUiEventListenerImpl(Patient.class) {
+			public void runInUi(ElexisEvent ev){
+				tv.refresh();
+				Fall currentFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+				if (currentFall != null)
+					tv.setSelection(new StructuredSelection(currentFall));
+			}
+		};
 	
 	private final ElexisUiEventListenerImpl eeli_fall = new ElexisUiEventListenerImpl(Fall.class,
 		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_RELOAD

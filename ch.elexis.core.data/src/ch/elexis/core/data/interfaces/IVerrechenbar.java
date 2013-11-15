@@ -174,6 +174,6 @@ public interface IVerrechenbar extends ICodeElement {
 			old.remove(v);
 			v.delete();
 			return new Result<Verrechnet>(null);
-		}	
+		}
 	}
 }

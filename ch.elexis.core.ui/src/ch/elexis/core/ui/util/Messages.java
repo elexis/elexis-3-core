@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.util.messages";//$NON-NLS-1$
-
+	
 	public static String DatabaseCleaner_NoCaseForBill;
 	public static String DatabaseCleaner_NoCaseForKons;
 	public static String DatabaseCleaner_NoMandatorForKons;
@@ -57,7 +57,7 @@ public class Messages extends NLS {
 	public static String TreeContentProvider_loadData;
 	public static String ViewerConfigurer_createNew;
 	public static String WikipediaSearchAction_DisplayName;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -85,10 +85,8 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	}
 	
 	public void init(IWorkbench workbench){
-		getPreferenceStore().setValue(Preferences.USR_DEFCASELABEL,
-			Fall.getDefaultCaseLabel());
-		getPreferenceStore().setValue(Preferences.USR_DEFCASEREASON,
-			Fall.getDefaultCaseReason());
+		getPreferenceStore().setValue(Preferences.USR_DEFCASELABEL, Fall.getDefaultCaseLabel());
+		getPreferenceStore().setValue(Preferences.USR_DEFCASEREASON, Fall.getDefaultCaseReason());
 		getPreferenceStore().setValue(Preferences.USR_DEFLAW, Fall.getDefaultCaseLaw());
 		// read the sorting for this user form prefs, convert to LinkedList for editing
 		String topItemsSortingStr = CoreHub.userCfg.get(Preferences.USR_TOPITEMSSORTING, "");
@@ -145,8 +143,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 					Object[] sel = dsl.getResult();
 					if (sel != null && sel.length > 0) {
 						PersistentObject diagnose = (PersistentObject) sel[0];
-						CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE,
-							diagnose.storeToString());
+						CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, diagnose.storeToString());
 						diagnoseTxt.setText(diagnose.getLabel());
 					} else {
 						CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, "");
@@ -178,8 +175,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		
 		Label infoTxt = new Label(getFieldEditorParent(), SWT.NONE);
 		infoTxt.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
-		infoTxt
-			.setText(Messages.UserCasePreferences_InfoLabelForSortingBillingSystems);
+		infoTxt.setText(Messages.UserCasePreferences_InfoLabelForSortingBillingSystems);
 		
 		Label lllabel2 = new Label(getFieldEditorParent(), SWT.NONE);
 		lllabel2.setText(""); //$NON-NLS-1$
@@ -222,8 +218,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		sorterListCompButtons.setLayoutData(sorterGridData);
 		
 		btnUp = new Button(sorterListCompButtons, SWT.NONE);
-		btnUp
-			.setToolTipText(Messages.UserCasePreferences_MoveItemUpInList);
+		btnUp.setToolTipText(Messages.UserCasePreferences_MoveItemUpInList);
 		btnUp.setImage(Images.IMG_ARROWUP.getImage());
 		btnUp.addSelectionListener(new SelectionListener() {
 			@Override
@@ -236,8 +231,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		});
 		
 		btnDown = new Button(sorterListCompButtons, SWT.NONE);
-		btnDown
-			.setToolTipText(Messages.UserCasePreferences_MoveItemDownInList);
+		btnDown.setToolTipText(Messages.UserCasePreferences_MoveItemDownInList);
 		btnDown.setImage(Images.IMG_ARROWDOWN.getImage());
 		btnDown.addSelectionListener(new SelectionListener() {
 			@Override
@@ -250,8 +244,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		});
 		
 		btnToManual = new Button(sorterListCompButtons, SWT.NONE);
-		btnToManual
-			.setToolTipText(Messages.UserCasePreferences_MoveItemToManualSortedList);
+		btnToManual.setToolTipText(Messages.UserCasePreferences_MoveItemToManualSortedList);
 		btnToManual.setImage(Images.IMG_MOVETOLOWERLIST.getImage());
 		btnToManual.addSelectionListener(new SelectionListener() {
 			@Override
@@ -285,7 +278,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	void moveItemToPresorted(){
 		String[] selStr = sorterList2.getSelection();
 		topItemsLinkedList.add(selStr[0]);
-		topItemsLinkedList.remove("");  //$NON-NLS-1$ // remove any empty items
+		topItemsLinkedList.remove(""); //$NON-NLS-1$ // remove any empty items
 		sorterList2.setItems(sortBillingSystems(Fall.getAbrechnungsSysteme(), topItemsLinkedList,
 			true));
 		sorterList2.select(topItemsLinkedList.size() - 1);
@@ -295,7 +288,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	void moveItemToNotPresorted(){
 		String[] selStr = sorterList2.getSelection();
 		topItemsLinkedList.remove(selStr[0]);
-		topItemsLinkedList.remove("");  //$NON-NLS-1$ // remove any empty items
+		topItemsLinkedList.remove(""); //$NON-NLS-1$ // remove any empty items
 		sorterList2.setItems(sortBillingSystems(Fall.getAbrechnungsSysteme(), topItemsLinkedList,
 			true));
 		int newSel = sorterList2.indexOf(selStr[0]);
@@ -319,7 +312,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		int newIx = selIx + step;
 		topItemsLinkedList.remove(selIx);
 		topItemsLinkedList.add(newIx, selStr[0]);
-		topItemsLinkedList.remove("");  //$NON-NLS-1$ // remove any empty items
+		topItemsLinkedList.remove(""); //$NON-NLS-1$ // remove any empty items
 		sorterList2.setItems(sortBillingSystems(Fall.getAbrechnungsSysteme(), topItemsLinkedList,
 			true));
 		sorterList2.select(newIx);

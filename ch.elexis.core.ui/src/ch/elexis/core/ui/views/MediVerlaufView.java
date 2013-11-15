@@ -58,9 +58,10 @@ import ch.rgw.tools.TimeTool;
 public class MediVerlaufView extends ViewPart implements IActivationListener {
 	TableViewer tv;
 	ArrayList<MediAbgabe> mListe = new ArrayList<MediAbgabe>();
-	private static final String[] columns =
-		{
-			Messages.MediVerlaufView_dateFrom, Messages.MediVerlaufView_dateUntil, Messages.MediVerlaufView_medicament, Messages.MediVerlaufView_dosage}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String[] columns = {
+		Messages.MediVerlaufView_dateFrom, Messages.MediVerlaufView_dateUntil,
+		Messages.MediVerlaufView_medicament, Messages.MediVerlaufView_dosage
+	}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private static final int[] colwidth = {
 		90, 90, 300, 200
 	};
@@ -187,9 +188,9 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 						throws InvocationTargetException, InterruptedException{
 						if (ElexisEventDispatcher.getSelectedPatient() == null)
 							return;
-
-						monitor.beginTask(
-							Messages.MediVerlaufView_reading, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+						
+						monitor.beginTask(Messages.MediVerlaufView_reading,
+							IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 						monitor.subTask(Messages.MediVerlaufView_findPrescriptions); //$NON-NLS-1$
 						Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
 						qbe.add(Prescription.PATIENT_ID, Query.EQUALS, ElexisEventDispatcher
@@ -204,12 +205,11 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 								for (int i = 0; i < tts.length - 1; i++) {
 									if (i < tts.length - 1) {
 										mListe.add(new MediAbgabe(tts[i]
-											.toString(TimeTool.DATE_GER),
-											tts[i + 1].toString(TimeTool.DATE_GER), p));
+											.toString(TimeTool.DATE_GER), tts[i + 1]
+											.toString(TimeTool.DATE_GER), p));
 									} else {
 										mListe.add(new MediAbgabe(tts[i]
-											.toString(TimeTool.DATE_GER),
-											TOOPEN, p)); //$NON-NLS-1$
+											.toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
 									}
 								}
 								mListe.add(new MediAbgabe(tts[tts.length - 1]
@@ -241,7 +241,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 		
 		private static TimeTool compare = new TimeTool();
 		private static TimeTool compareTo = new TimeTool();
-
+		
 		MediAbgabe(final String v, final String b, final Prescription p){
 			von = v;
 			bis = b;

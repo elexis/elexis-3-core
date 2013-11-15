@@ -13,7 +13,6 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.laboratory.dialogs.messages";//$NON-NLS-1$
-
 	
 	public static String LaborPrefs_34;
 	public static String LaborPrefs_35;
@@ -61,7 +60,7 @@ public class Messages extends NLS {
 	public static String LaborPrefs_type;
 	public static String LaborPrefs_unit;
 	public static String LaborPrefs_unkown;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

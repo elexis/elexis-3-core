@@ -79,9 +79,9 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		tVorname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_sex); //$NON-NLS-1$
 		cbSex = new Combo(ret, SWT.SINGLE);
-		cbSex
-			.setItems(new String[] {
-				Messages.PatientErfassenDialog_male, Messages.PatientErfassenDialog_female}); //$NON-NLS-1$ //$NON-NLS-2$
+		cbSex.setItems(new String[] {
+			Messages.PatientErfassenDialog_male, Messages.PatientErfassenDialog_female
+		}); //$NON-NLS-1$ //$NON-NLS-2$
 		if (StringTool.isNothing(getField(Patient.FLD_SEX))) {
 			cbSex.select(0);
 		} else {
@@ -163,10 +163,9 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 				Kontakt k = list.get(0);
 				if (k.istPerson()) {
 					k.set(Kontakt.FLD_IS_PATIENT, StringConstants.ONE);
-					if (MessageDialog
-						.openConfirm(
-							getShell(),
-							Messages.PatientErfassenDialog_personExists, Messages.PatientErfassenDialog_personWithThisNameExists) == false) { //$NON-NLS-1$ //$NON-NLS-2$
+					if (MessageDialog.openConfirm(getShell(),
+						Messages.PatientErfassenDialog_personExists,
+						Messages.PatientErfassenDialog_personWithThisNameExists) == false) { //$NON-NLS-1$ //$NON-NLS-2$
 						// abort dialog
 						super.cancelPressed();
 						return;

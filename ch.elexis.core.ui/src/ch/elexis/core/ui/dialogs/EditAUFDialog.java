@@ -97,7 +97,8 @@ public class EditAUFDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setTitle(Messages.EditAUFDialog_auf + " - " + ElexisEventDispatcher.getSelectedPatient().getLabel()); //$NON-NLS-1$
+		setTitle(Messages.EditAUFDialog_auf
+			+ " - " + ElexisEventDispatcher.getSelectedPatient().getLabel()); //$NON-NLS-1$
 		if (auf == null) {
 			setMessage(Messages.EditAUFDialog_enterNewAUF); //$NON-NLS-1$
 		} else {

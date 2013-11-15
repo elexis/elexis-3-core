@@ -12,7 +12,6 @@
 
 package ch.elexis.core.data.events;
 
-
 /**
  * An IElexisEventDispatcher can be authoritative for a specific kind of originating Object and/or
  * for a specific EventType. It does so by registering with

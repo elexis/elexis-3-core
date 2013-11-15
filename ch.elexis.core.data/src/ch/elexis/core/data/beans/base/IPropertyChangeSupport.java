@@ -15,14 +15,12 @@ import java.beans.PropertyChangeListener;
 import org.eclipse.emf.ecore.EObject;
 
 public interface IPropertyChangeSupport extends EObject {
-
+	
 	public void addPropertyChangeListener(PropertyChangeListener listener);
-
-	public void addPropertyChangeListener(String propertyName,
-			PropertyChangeListener listener);
-
+	
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);
+	
 	public void removePropertyChangeListener(PropertyChangeListener listener);
-
-	public void removePropertyChangeListener(String propertyName,
-			PropertyChangeListener listener);
+	
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener);
 }

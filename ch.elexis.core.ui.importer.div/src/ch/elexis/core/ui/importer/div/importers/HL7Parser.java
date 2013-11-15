@@ -51,10 +51,10 @@ public class HL7Parser {
 	 * 
 	 * @param value
 	 */
-	public void setTestMode(boolean value) {
+	public void setTestMode(boolean value){
 		testMode = value;
 	}
-
+	
 	public Result<Object> parse(final HL7 hl7, boolean createPatientIfNotFound){
 		Result<Kontakt> res = hl7.getLabor();
 		if (!res.isOK()) {
@@ -219,8 +219,9 @@ public class HL7Parser {
 		@Override
 		public void run(){
 			QueryOverwriteDialog qod =
-				new QueryOverwriteDialog(UiDesk.getTopShell(), Messages.HL7Parser_LabAlreadyImported
-					+ pat.getLabel(), lrr.getLabel() + Messages.HL7Parser_AskOverwrite);
+				new QueryOverwriteDialog(UiDesk.getTopShell(),
+					Messages.HL7Parser_LabAlreadyImported + pat.getLabel(), lrr.getLabel()
+						+ Messages.HL7Parser_AskOverwrite);
 			result = qod.open();
 		}
 	}
@@ -236,7 +237,7 @@ public class HL7Parser {
 			if (obx.getResultValue().length() < 20)
 				importAsLongText = false;
 		}
-
+		
 		if (importAsLongText) {
 			labResult.set(LabResult.COMMENT, obx.getResultValue() + "\n" + obx.getComment());
 		} else {
@@ -248,7 +249,7 @@ public class HL7Parser {
 			labResult.setFlag(LabResult.PATHOLOGIC, true);
 		}
 	}
-
+	
 	/**
 	 * Import the given HL7 file. Optionally, move the file into the given archive directory
 	 * 

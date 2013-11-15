@@ -60,17 +60,17 @@ public class TemplateDrucker {
 			progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
 				new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor){
-						monitor.beginTask(
-							Messages.TemplateDrucker_printing + template + "...", 1); //$NON-NLS-1$
+						monitor.beginTask(Messages.TemplateDrucker_printing + template + "...", 1); //$NON-NLS-1$
 						
 						Patient actPatient =
 							(Patient) ElexisEventDispatcher.getSelected(Patient.class);
 						if (tpw.doPrint(actPatient, template, printer, tray, monitor) == false) {
 							Status status =
-								new Status(Status.ERROR, "ch.elexis", Status.ERROR, Messages.TemplateDrucker_errorPrinting, null);
-							ErrorDialog.openError(
-								null,
-								Messages.TemplateDrucker_errorPrinting, Messages.TemplateDrucker_docname + template + Messages.TemplateDrucker_couldntPrint, status); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								new Status(Status.ERROR, "ch.elexis", Status.ERROR,
+									Messages.TemplateDrucker_errorPrinting, null);
+							ErrorDialog.openError(null, Messages.TemplateDrucker_errorPrinting,
+								Messages.TemplateDrucker_docname + template
+									+ Messages.TemplateDrucker_couldntPrint, status); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							
 						}
 						

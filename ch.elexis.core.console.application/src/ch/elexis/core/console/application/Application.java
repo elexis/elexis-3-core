@@ -24,34 +24,33 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.exceptions.PersistenceException;
 
 /**
- * The main application class as referenced by the
- * org.eclipse.core.runtime.applications extension point.
+ * The main application class as referenced by the org.eclipse.core.runtime.applications extension
+ * point.
  */
 public class Application implements IApplication {
-
+	
 	private Logger log = LoggerFactory.getLogger(Application.class);
-
+	
 	@Override
-	public Object start(IApplicationContext context) throws Exception {
+	public Object start(IApplicationContext context) throws Exception{
 		// register ElexisEvent and MessageEvent listeners
 		log.debug("Registering " + CoreEventListenerRegistrar.class.getName());
 		new CoreEventListenerRegistrar();
-
+		
 		// connect to the database
 		try {
 			if (PersistentObject.connect(CoreHub.localCfg) == false)
-				log.error(PersistentObject.class.getName()
-						+ " initialization failed.");
+				log.error(PersistentObject.class.getName() + " initialization failed.");
 		} catch (PersistenceException pe) {
 			log.error("Initialization error", pe);
 			pe.printStackTrace();
 			System.exit(1);
 		}
-
+		
 		// check connection by logging number of contact entries
 		Query<Kontakt> qbe = new Query<>(Kontakt.class);
 		log.debug("Number of contacts in DB: " + qbe.execute().size());
-
+		
 		// log-in
 		String username = System.getProperty("ch.elexis.username");
 		String password = System.getProperty("ch.elexis.password");
@@ -65,7 +64,7 @@ public class Application implements IApplication {
 			log.error("Does not support interactive log-in, please use system properties");
 			System.exit(1);
 		}
-
+		
 		// check if there is a valid user
 		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
 			// no valid user, exit (don't consider this as an error)
@@ -73,16 +72,15 @@ public class Application implements IApplication {
 			PersistentObject.disconnect();
 			System.exit(0);
 		}
-
+		
 		// call the static test method to perform tasks, after return program
 		// exits
 		ApplicationTestCode.performApplicationTest();
-
+		
 		log.debug("Exiting");
 		return null;
 	}
-
+	
 	@Override
-	public void stop() {
-	}
+	public void stop(){}
 }

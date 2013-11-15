@@ -13,8 +13,8 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.wizards.messages";//$NON-NLS-1$
-	//Created by JInto - www.guh-software.de
-	//Mon Jun 21 15:42:04 CEST 2010
+	// Created by JInto - www.guh-software.de
+	// Mon Jun 21 15:42:04 CEST 2010
 	public static String DBConnectFirstPage_Connection;
 	public static String DBConnectFirstPage_connectioNDetails;
 	public static String DBConnectFirstPage_databaseName;
@@ -48,7 +48,7 @@ public class Messages extends NLS {
 	public static String DBImportSecondPage_userDetails;
 	public static String DBImportWizard_connectDB;
 	public static String DBImportWizard_typeOfDB;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

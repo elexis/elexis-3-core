@@ -12,7 +12,6 @@
 
 package ch.elexis.core.ui.actions;
 
-
 public class CodeSelectorHandler {
 	private static CodeSelectorHandler theInstance;
 	private ICodeSelectorTarget codeSelectorTarget;

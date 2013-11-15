@@ -40,7 +40,7 @@ public class Messages extends NLS {
 	public static String ArtikelView_errorText;
 	public static String ArtikelView_importAction;
 	public static String ArtikelView_importCaption;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

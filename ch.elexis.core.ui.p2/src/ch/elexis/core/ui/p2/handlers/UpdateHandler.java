@@ -22,10 +22,10 @@ import org.eclipse.jface.wizard.WizardDialog;
  * @since 3.4
  */
 public class UpdateHandler extends PreloadingRepositoryHandler {
-
+	
 	boolean hasNoRepos = false;
-
-	protected void doExecute(LoadMetadataRepositoryJob job) {
+	
+	protected void doExecute(LoadMetadataRepositoryJob job){
 		if (hasNoRepos) {
 			return;
 		}
@@ -35,7 +35,8 @@ public class UpdateHandler extends PreloadingRepositoryHandler {
 		if (getProvisioningUI().getPolicy().continueWorkingWithOperation(operation, getShell())) {
 			if (UpdateSingleIUWizard.validFor(operation)) {
 				// Special case for only updating a single root
-				UpdateSingleIUWizard wizard = new UpdateSingleIUWizard(getProvisioningUI(), operation);
+				UpdateSingleIUWizard wizard =
+					new UpdateSingleIUWizard(getProvisioningUI(), operation);
 				WizardDialog dialog = new WizardDialog(getShell(), wizard);
 				dialog.create();
 				dialog.open();
@@ -45,8 +46,8 @@ public class UpdateHandler extends PreloadingRepositoryHandler {
 			}
 		}
 	}
-
-	protected boolean preloadRepositories() {
+	
+	protected boolean preloadRepositories(){
 		hasNoRepos = false;
 		RepositoryTracker repoMan = getProvisioningUI().getRepositoryTracker();
 		if (repoMan.getKnownRepositories(getProvisioningUI().getSession()).length == 0) {

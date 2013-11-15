@@ -20,22 +20,21 @@ public class UserSettings {
 	 * save the state of an expandable composite
 	 * 
 	 * @param field
-	 *            name of the composite (any unique string, preferably derived
-	 *            from view name)
+	 *            name of the composite (any unique string, preferably derived from view name)
 	 * @param state
 	 *            the state to save
 	 * @since 3.0.0 extracted from UserSettings2
 	 */
-	public static void saveExpandedState(final String field, final boolean state) {
+	public static void saveExpandedState(final String field, final boolean state){
 		if (state) {
-			CoreHub.userCfg.set(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES
-					+ field, USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN);
+			CoreHub.userCfg.set(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN);
 		} else {
-			CoreHub.userCfg.set(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES
-					+ field, USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
+			CoreHub.userCfg.set(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
 		}
 	}
-
+	
 	/**
 	 * Set the state of an expandable Composite to the previously saved state.
 	 * 
@@ -45,17 +44,17 @@ public class UserSettings {
 	 *            the unique name
 	 * @since 3.0.0 extracted from UserSettings2
 	 */
-	public static void setExpandedState(final ExpandableComposite ec,
-			final String field) {
-		String mode = CoreHub.userCfg.get(USERSETTINGS2_EXPANDABLE_COMPOSITES,
+	public static void setExpandedState(final ExpandableComposite ec, final String field){
+		String mode =
+			CoreHub.userCfg.get(USERSETTINGS2_EXPANDABLE_COMPOSITES,
 				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_REMEMBER_STATE);
 		if (mode.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN)) {
 			ec.setExpanded(true);
 		} else if (mode.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 			ec.setExpanded(false);
 		} else {
-			String state = CoreHub.userCfg.get(
-					USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+			String state =
+				CoreHub.userCfg.get(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
 					USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
 			if (state.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 				ec.setExpanded(false);

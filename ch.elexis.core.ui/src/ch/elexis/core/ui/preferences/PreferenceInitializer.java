@@ -68,7 +68,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	}
 	
 	@Override
-	public void initializeDefaultPreferences() {
+	public void initializeDefaultPreferences(){
 		// TODO Auto-generated method stub
 		
 	}

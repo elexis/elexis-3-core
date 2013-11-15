@@ -19,7 +19,7 @@ public class Messages extends NLS {
 	public static String PlatzhalterProperties_tooltip_no_category;
 	public static String PlatzhalterView_menu_copy;
 	public static String PlatzhalterView_message_Info;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

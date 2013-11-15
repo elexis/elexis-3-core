@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.preferences.inputs.messages";//$NON-NLS-1$
-
+	
 	public static String DecoratedStringChooser_howToChange;
 	public static String KontaktFieldEditor_PleaseSelect;
 	public static String KontaktFieldEditor_PleaseSelectContact;
@@ -25,7 +25,7 @@ public class Messages extends NLS {
 	public static String MultiplikatorEditor_add;
 	public static String MultiplikatorEditor_from;
 	public static String PrefAccessDenied_PageLocked;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

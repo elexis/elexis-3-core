@@ -257,8 +257,11 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 			@Override
 			public void run(){
 				Brief sel = (Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
-				if (MessageDialog.openConfirm(getShell(), DELETE_TEMPLATE,
-					MessageFormat.format(Messages.DocumentSelectDialog_reallyDeleteTemplate, sel.getBetreff())) //$NON-NLS-1$
+				if (MessageDialog.openConfirm(
+					getShell(),
+					DELETE_TEMPLATE,
+					MessageFormat.format(Messages.DocumentSelectDialog_reallyDeleteTemplate,
+						sel.getBetreff())) //$NON-NLS-1$
 				== true) {
 					sel.delete();
 					tv.refresh();
@@ -269,16 +272,18 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 			@Override
 			public void run(){
 				Brief sel = (Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
-				if (MessageDialog.openConfirm(getShell(), DELETE_DOCUMENT,
-					MessageFormat.format(Messages.DocumentSelectDialog_reallyDeleteDocument, sel.getBetreff())) //$NON-NLS-1$
+				if (MessageDialog.openConfirm(
+					getShell(),
+					DELETE_DOCUMENT,
+					MessageFormat.format(Messages.DocumentSelectDialog_reallyDeleteDocument,
+						sel.getBetreff())) //$NON-NLS-1$
 				== true) {
 					sel.set("geloescht", StringConstants.ONE); //$NON-NLS-1$
 					tv.refresh();
 				}
 			}
 		};
-		editNameAction =
-			new Action(Messages.DocumentSelectDialog_changeSubjectAction) { //$NON-NLS-1$
+		editNameAction = new Action(Messages.DocumentSelectDialog_changeSubjectAction) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					Brief sel =
@@ -295,13 +300,13 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 					}
 				}
 			};
-		editDontAskForAddressee =
-			new Action(Messages.DocumentSelectDialog_askForAddressee) { //$NON-NLS-1$
+		editDontAskForAddressee = new Action(Messages.DocumentSelectDialog_askForAddressee) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					Brief sel =
 						(Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
-					setDontAskForAddresseeForThisTemplate(sel, !getDontAskForAddresseeForThisTemplate(sel));
+					setDontAskForAddresseeForThisTemplate(sel,
+						!getDontAskForAddresseeForThisTemplate(sel));
 					tv.refresh();
 				}
 			};
@@ -399,6 +404,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		}
 		return false;
 	}
+	
 	/**
 	 * test if the user should be asked for an addressee when creating a document. The flag is saved
 	 * as a sticker for the template-document.
@@ -410,7 +416,8 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 * 
 	 * @author marlovitsh
 	 */
-	public static void setDontAskForAddresseeForThisTemplate(Brief template, boolean dontAskForAddressee){
+	public static void setDontAskForAddresseeForThisTemplate(Brief template,
+		boolean dontAskForAddressee){
 		createDontAskForAddresseeSticker();
 		if (dontAskForAddressee) {
 			// find our sticker by name, set it

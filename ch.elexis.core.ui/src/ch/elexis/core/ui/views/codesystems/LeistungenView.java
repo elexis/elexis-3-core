@@ -98,7 +98,8 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 		getSite().registerContextMenu(cs.getMgr(), cs.getCv().getViewerWidget());
 		getSite().setSelectionProvider(cs.getCv().getViewerWidget());
 		
-		CodeSelectorFactory.makeTabs(ctab, getViewSite(), ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
+		CodeSelectorFactory.makeTabs(ctab, getViewSite(),
+			ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 	

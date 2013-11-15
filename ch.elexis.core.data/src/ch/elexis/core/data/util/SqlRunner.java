@@ -31,35 +31,34 @@ import ch.rgw.tools.JdbcLinkException;
 
 public class SqlRunner {
 	static Logger log = LoggerFactory.getLogger(SqlRunner.class.getName());
-
+	
 	enum SqlStatus {
 		NONE, EXECUTE, SUCCESS, FAIL
 	};
-
+	
 	private List<String> sqlStrings;
 	private List<UpdateDbSql> sql;
 	private String pluginId;
-
-	public SqlRunner(String[] sql, String pluginId) {
+	
+	public SqlRunner(String[] sql, String pluginId){
 		sqlStrings = new ArrayList<String>();
 		for (int i = 0; i < sql.length; i++) {
 			sqlStrings.add(sql[i]);
 		}
 		this.pluginId = pluginId;
 	}
-
-	public boolean runSql() {
+	
+	public boolean runSql(){
 		sql = new ArrayList<UpdateDbSql>();
 		// create UpdateDbSql objects from input list
 		for (String sqlString : sqlStrings) {
 			sql.add(new UpdateDbSql(sqlString));
 		}
-
+		
 		// this code should only be reached during tests!
-		IProgressMonitor ipm = new ElexisStatusProgressMonitor(
-				"Running DB Script", sql.size());
-		ElexisEvent progress = new ElexisEvent(ipm,
-				ElexisStatusProgressMonitor.class,
+		IProgressMonitor ipm = new ElexisStatusProgressMonitor("Running DB Script", sql.size());
+		ElexisEvent progress =
+			new ElexisEvent(ipm, ElexisStatusProgressMonitor.class,
 				ElexisEvent.EVENT_OPERATION_PROGRESS, ElexisEvent.PRIORITY_HIGH);
 		ElexisEventDispatcher.getInstance().fire(progress);
 		for (UpdateDbSql update : sql) {
@@ -68,7 +67,7 @@ public class SqlRunner {
 			ipm.worked(1);
 		}
 		ipm.done();
-
+		
 		// determine if all updates were successful
 		for (UpdateDbSql update : sql) {
 			if (update.getStatus() == SqlStatus.FAIL)
@@ -76,7 +75,7 @@ public class SqlRunner {
 		}
 		return true;
 	}
-
+	
 	/**
 	 * Class holding information about one sql and its execution
 	 * 
@@ -85,14 +84,14 @@ public class SqlRunner {
 	protected class UpdateDbSql implements Runnable {
 		private String sql;
 		private SqlStatus status;
-
-		protected UpdateDbSql(String sql) {
+		
+		protected UpdateDbSql(String sql){
 			this.sql = sql;
 			status = SqlStatus.NONE;
 		}
-
+		
 		@Override
-		public void run() {
+		public void run(){
 			JdbcLink link = null;
 			Stm statement = null;
 			try {
@@ -101,8 +100,8 @@ public class SqlRunner {
 				setStatus(SqlStatus.EXECUTE);
 				// do not use execScript method here as it will catch the
 				// exceptions
-				ByteArrayInputStream scriptStream = new ByteArrayInputStream(
-						this.sql.getBytes("UTF-8"));
+				ByteArrayInputStream scriptStream =
+					new ByteArrayInputStream(this.sql.getBytes("UTF-8"));
 				String sqlString;
 				while ((sqlString = JdbcLink.readStatement(scriptStream)) != null) {
 					try {
@@ -110,30 +109,25 @@ public class SqlRunner {
 					} catch (JdbcLinkException e) {
 						setStatus(SqlStatus.FAIL);
 						try {
-							ElexisStatus status = new ElexisStatus(
-									ElexisStatus.ERROR, pluginId,
-									ElexisStatus.CODE_NONE, "Error "
-											+ e.getMessage()
-											+ " during db update", e);
-							ElexisEventDispatcher.getInstance()
-									.fireElexisStatusEvent(status);
+							ElexisStatus status =
+								new ElexisStatus(ElexisStatus.ERROR, pluginId,
+									ElexisStatus.CODE_NONE, "Error " + e.getMessage()
+										+ " during db update", e);
+							ElexisEventDispatcher.getInstance().fireElexisStatusEvent(status);
 						} catch (AssertionFailedException appnotinit) {
-							log.error("Error " + e.getMessage()
-									+ " during db update", e);
+							log.error("Error " + e.getMessage() + " during db update", e);
 						}
 					}
 				}
 			} catch (UnsupportedEncodingException e) {
 				setStatus(SqlStatus.FAIL);
 				try {
-					ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR,
-							pluginId, ElexisStatus.CODE_NONE, "Error "
-									+ e.getMessage() + " during db update", e);
-					ElexisEventDispatcher.fireElexisStatusEvent(
-							status);
+					ElexisStatus status =
+						new ElexisStatus(ElexisStatus.ERROR, pluginId, ElexisStatus.CODE_NONE,
+							"Error " + e.getMessage() + " during db update", e);
+					ElexisEventDispatcher.fireElexisStatusEvent(status);
 				} catch (AssertionFailedException appnotinit) {
-					log.error("Error " + e.getMessage() + " during db update",
-							appnotinit);
+					log.error("Error " + e.getMessage() + " during db update", appnotinit);
 				}
 				return;
 			} finally {
@@ -143,16 +137,16 @@ public class SqlRunner {
 			if (getStatus() == SqlStatus.EXECUTE)
 				setStatus(SqlStatus.SUCCESS);
 		}
-
-		public void setStatus(SqlStatus status) {
+		
+		public void setStatus(SqlStatus status){
 			this.status = status;
 		}
-
-		public SqlStatus getStatus() {
+		
+		public SqlStatus getStatus(){
 			return status;
 		}
-
-		public String getSql() {
+		
+		public String getSql(){
 			return sql;
 		}
 	}

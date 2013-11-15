@@ -13,17 +13,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.laboratory.views.messages";//$NON-NLS-1$
-
-
 	
-	
-
-	
-	
-	
-	
-	
-
 	public static String LabNotSeenView_date;
 	public static String LabNotSeenView_loading;
 	public static String LabNotSeenView_markAll;
@@ -58,7 +48,7 @@ public class Messages extends NLS {
 	public static String LaborView_xmlExport;
 	public static String LaborblattView_LabTemplateName;
 	public static String LaborblattView_created;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

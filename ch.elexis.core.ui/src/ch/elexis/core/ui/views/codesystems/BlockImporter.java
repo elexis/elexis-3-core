@@ -41,7 +41,8 @@ public class BlockImporter extends ImporterPage {
 		
 		try {
 			FileInputStream fips = new FileInputStream(filename);
-			ch.elexis.core.ui.exchange.BlockImporter blc = new ch.elexis.core.ui.exchange.BlockImporter(fips);
+			ch.elexis.core.ui.exchange.BlockImporter blc =
+				new ch.elexis.core.ui.exchange.BlockImporter(fips);
 			if (blc.finalizeImport().isOK()) {
 				return Status.OK_STATUS;
 			} else {

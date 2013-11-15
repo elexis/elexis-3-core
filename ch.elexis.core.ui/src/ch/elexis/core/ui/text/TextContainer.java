@@ -124,7 +124,8 @@ public class TextContainer {
 		if (plugin == null) {
 			String ExtensionToUse = CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null);
 			IExtensionRegistry exr = Platform.getExtensionRegistry();
-			IExtensionPoint exp = exr.getExtensionPoint(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
+			IExtensionPoint exp =
+				exr.getExtensionPoint(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
 			if (exp != null) {
 				IExtension[] extensions = exp.getExtensions();
 				for (IExtension ex : extensions) {
@@ -260,8 +261,8 @@ public class TextContainer {
 		} else {
 			if (plugin.loadFromByteArray(template.loadBinary(), true) == true) {
 				final Brief ret =
-					new Brief(subject == null ? template.getBetreff() : subject, null, CoreHub.actUser,
-						adressat, kons, typ);
+					new Brief(subject == null ? template.getBetreff() : subject, null,
+						CoreHub.actUser, adressat, kons, typ);
 				
 				plugin.findOrReplace(MATCH_TEMPLATE, new ReplaceCallback() {
 					public Object replace(final String in){
@@ -1258,7 +1259,7 @@ public class TextContainer {
 		public boolean isDirectOutput(){
 			return false;
 		}
-
+		
 		@Override
 		public void setParameter(Parameter parameter){
 			// TODO Auto-generated method stub

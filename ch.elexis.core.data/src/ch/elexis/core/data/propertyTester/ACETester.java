@@ -21,22 +21,18 @@ import ch.elexis.core.data.admin.ACE;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 
 public class ACETester extends PropertyTester {
-
-	private static Logger log = LoggerFactory.getLogger(ACETester.class
-			.getName());
-
-	public ACETester() {
-	}
-
+	
+	private static Logger log = LoggerFactory.getLogger(ACETester.class.getName());
+	
+	public ACETester(){}
+	
 	@Override
-	public boolean test(Object receiver, String property, Object[] args,
-			Object expectedValue) {
+	public boolean test(Object receiver, String property, Object[] args, Object expectedValue){
 		if ("ACE".equals(property)) {
 			if (args.length > 0) {
 				String right = ((String) args[0]);
 				try {
-					Field ACEfield = AccessControlDefaults.class
-							.getField(right);
+					Field ACEfield = AccessControlDefaults.class.getField(right);
 					if (ACEfield.getType().equals(ACE.class)) {
 						return CoreHub.acl.request((ACE) ACEfield.get(null));
 					}
@@ -55,8 +51,8 @@ public class ACETester extends PropertyTester {
 				}
 			}
 		}
-
+		
 		return false;
 	}
-
+	
 }

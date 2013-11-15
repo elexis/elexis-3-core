@@ -54,7 +54,6 @@ import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.MimeTool;
 
-
 public class TextView extends ViewPart implements IActivationListener {
 	public final static String ID = "ch.elexis.TextView"; //$NON-NLS-1$
 	TextContainer txt;
@@ -74,9 +73,8 @@ public class TextView extends ViewPart implements IActivationListener {
 		txt = new TextContainer(getViewSite());
 		textContainer = txt.getPlugin().createContainer(parent, new SaveHandler());
 		if (textContainer == null) {
-			SWTHelper
-				.showError(
-					Messages.TextView_couldNotCreateTextView, Messages.TextView_couldNotLoadTextPlugin); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.TextView_couldNotCreateTextView,
+				Messages.TextView_couldNotLoadTextPlugin); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			makeActions();
 			menus = new ViewMenus(getViewSite());
@@ -152,9 +150,8 @@ public class TextView extends ViewPart implements IActivationListener {
 	public boolean createDocument(Brief template, String subject){
 		log.debug("TextView.createDocument: " + subject); //$NON-NLS-1$		
 		if (template == null) {
-			SWTHelper
-				.showError(
-					Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.TextView_noTemplateSelected,
+				Messages.TextView_pleaseSelectTemplate); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
 		actBrief =
@@ -181,9 +178,8 @@ public class TextView extends ViewPart implements IActivationListener {
 	public boolean createDocument(Brief template, String subject, Kontakt adressat){
 		log.debug("TextView.createDocument: " + subject + " Kontakt"); //$NON-NLS-1$ //$NON-NLS-2$		
 		if (template == null) {
-			SWTHelper
-				.showError(
-					Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.TextView_noTemplateSelected,
+				Messages.TextView_pleaseSelectTemplate); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
 		actBrief =
@@ -250,8 +246,7 @@ public class TextView extends ViewPart implements IActivationListener {
 				}
 			};
 		
-		showToolbarAction =
-			new Action(Messages.TextView_Toolbar, Action.AS_CHECK_BOX) { //$NON-NLS-1$
+		showToolbarAction = new Action(Messages.TextView_Toolbar, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				public void run(){
 					txt.getPlugin().showToolbar(isChecked());
 				}
@@ -330,10 +325,9 @@ public class TextView extends ViewPart implements IActivationListener {
 							if (sfd.result != null) {
 								ElexisEventDispatcher.fireSelectionEvent(sfd.result);
 							} else {
-								MessageDialog
-									.openInformation(UiDesk.getTopShell(),
-										Messages.TextView_NoCaseSelected, //$NON-NLS-1$
-										Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); //$NON-NLS-1$
+								MessageDialog.openInformation(UiDesk.getTopShell(),
+									Messages.TextView_NoCaseSelected, //$NON-NLS-1$
+									Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); //$NON-NLS-1$
 								return;
 							}
 						}
@@ -384,9 +378,8 @@ public class TextView extends ViewPart implements IActivationListener {
 		public boolean saveAs(){
 			log.debug("TextView.saveAs"); //$NON-NLS-1$
 			InputDialog il =
-				new InputDialog(
-					getViewSite().getShell(),
-					Messages.TextView_saveText, Messages.TextView_enterTitle, "", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				new InputDialog(getViewSite().getShell(), Messages.TextView_saveText,
+					Messages.TextView_enterTitle, "", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if (il.open() == Dialog.OK) {
 				actBrief.setBetreff(il.getValue());
 				return actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin()
@@ -406,7 +399,8 @@ public class TextView extends ViewPart implements IActivationListener {
 		} else {
 			loadSysTemplateAction.setEnabled(CoreHub.acl
 				.request(AccessControlDefaults.DOCUMENT_SYSTEMPLATE));
-			saveTemplateAction.setEnabled(CoreHub.acl.request(AccessControlDefaults.DOCUMENT_TEMPLATE));
+			saveTemplateAction.setEnabled(CoreHub.acl
+				.request(AccessControlDefaults.DOCUMENT_TEMPLATE));
 		}
 	}
 	

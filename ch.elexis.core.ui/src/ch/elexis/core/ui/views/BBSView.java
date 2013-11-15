@@ -101,8 +101,7 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 		input = tk.createText(form.getBody(), "", SWT.WRAP | SWT.MULTI | SWT.BORDER); //$NON-NLS-1$
 		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		input.setLayoutData(gd);
-		Button send =
-			tk.createButton(form.getBody(), Messages.BBSView_DoSend, SWT.PUSH); //$NON-NLS-1$
+		Button send = tk.createButton(form.getBody(), Messages.BBSView_DoSend, SWT.PUSH); //$NON-NLS-1$
 		send.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -154,13 +153,12 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 		BBSEntry en = ((Tree<BBSEntry>) sel[0]).contents;
 		form.setText(en.getTopic());
 		StringBuilder sb = new StringBuilder();
-		sb.append(en.getAuthor().getLabel())
-			.append(Messages.BBSView_15).append(en.getDate()).append( //$NON-NLS-1$
+		sb.append(en.getAuthor().getLabel()).append(Messages.BBSView_15).append(en.getDate())
+			.append( //$NON-NLS-1$
 				Messages.BBSView_16).append(en.getTime()).append(Messages.BBSView_17); //$NON-NLS-1$ //$NON-NLS-2$
 		origin.setText(sb.toString());
 		try {
-			msg.setText(
-				Messages.BBSView_18 + en.getText() + Messages.BBSView_19, true, true); //$NON-NLS-1$ //$NON-NLS-2$
+			msg.setText(Messages.BBSView_18 + en.getText() + Messages.BBSView_19, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			

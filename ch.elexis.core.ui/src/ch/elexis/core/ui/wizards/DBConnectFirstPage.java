@@ -51,8 +51,8 @@ public class DBConnectFirstPage extends WizardPage {
 	};
 	
 	public DBConnectFirstPage(String pageName){
-		super(
-			Messages.DBConnectFirstPage_Connection, Messages.DBConnectFirstPage_typeOfDB, Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		super(Messages.DBConnectFirstPage_Connection, Messages.DBConnectFirstPage_typeOfDB,
+			Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		setMessage(Messages.DBConnectFirstPage_selectType); //$NON-NLS-1$
 		setDescription(Messages.DBConnectFirstPage_theDescripotion); //$NON-NLS-1$
 		
@@ -81,10 +81,13 @@ public class DBConnectFirstPage extends WizardPage {
 		if (cnt != null) {
 			hConn = PersistentObject.fold(StringTool.dePrintable(cnt));
 			if (hConn != null) {
-				driver = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
+				driver =
+					PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
 				connectString =
-					PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
-				user = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
+					PersistentObject.checkNull(hConn
+						.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
+				user =
+					PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
 				typ = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
 			}
 		}

@@ -20,31 +20,30 @@ import ch.elexis.core.ui.UiDesk;
  * @since 3.0.0
  */
 public class ElexisUiEventListenerImpl extends ElexisEventListenerImpl {
-
-	public ElexisUiEventListenerImpl(Class<?> clazz) {
+	
+	public ElexisUiEventListenerImpl(Class<?> clazz){
 		super(clazz);
 	}
-
-	public ElexisUiEventListenerImpl(Class<?> clazz, int mode) {
+	
+	public ElexisUiEventListenerImpl(Class<?> clazz, int mode){
 		super(clazz, mode);
 	}
-
+	
 	@Override
-	public void catchElexisEvent(final ElexisEvent ev) {
+	public void catchElexisEvent(final ElexisEvent ev){
 		if (!isStopped()) {
 			UiDesk.asyncExec(new Runnable() {
-				public void run() {
+				public void run(){
 					runInUi(ev);
 				}
 			});
 		}
 	}
-
+	
 	/**
 	 * to override
 	 * 
 	 * @param ev
 	 */
-	public void runInUi(ElexisEvent ev) {
-	}
+	public void runInUi(ElexisEvent ev){}
 }

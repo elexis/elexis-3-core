@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.preferences.messages";//$NON-NLS-1$
-
+	
 	public static String Ablauf_0;
 	public static String Ablauf_10;
 	public static String Ablauf_12;
@@ -333,7 +333,7 @@ public class Messages extends NLS {
 	public static String XIDEdit_ShowWith;
 	public static String XIDEdit_XidOpetions;
 	public static String Zugriff_AccessRights;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

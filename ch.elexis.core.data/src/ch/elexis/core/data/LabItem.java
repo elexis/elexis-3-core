@@ -45,7 +45,8 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 	public static final String SHORTNAME = "kuerzel";
 	public static final String EXPORT = "export";
 	private static final String LABITEMS = "LABORITEMS";
-	private static final Pattern varPattern = Pattern.compile(TextContainerConstants.MATCH_TEMPLATE);
+	private static final Pattern varPattern = Pattern
+		.compile(TextContainerConstants.MATCH_TEMPLATE);
 	
 	@Override
 	protected String getTableName(){

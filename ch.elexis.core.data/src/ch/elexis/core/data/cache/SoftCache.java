@@ -148,13 +148,13 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 				it.remove();
 			}
 			// TODO change logging for debug mode
-//			if (Hub.plugin.DEBUGMODE) {
-//				long freeAfter = Runtime.getRuntime().freeMemory();
-//				StringBuilder sb = new StringBuilder();
-//				sb.append("Cache purge: Free memore before: ").append(freeBefore)
-//					.append(", free memory after: ").append(freeAfter).append("\n");
-//				Hub.log.log(sb.toString(), Log.INFOS);
-//			}
+// if (Hub.plugin.DEBUGMODE) {
+// long freeAfter = Runtime.getRuntime().freeMemory();
+// StringBuilder sb = new StringBuilder();
+// sb.append("Cache purge: Free memore before: ").append(freeBefore)
+// .append(", free memory after: ").append(freeAfter).append("\n");
+// Hub.log.log(sb.toString(), Log.INFOS);
+// }
 		}
 	}
 	

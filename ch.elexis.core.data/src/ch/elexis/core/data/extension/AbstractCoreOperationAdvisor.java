@@ -18,38 +18,36 @@ import ch.elexis.core.data.activator.CoreHub;
  * @since 3.0.0
  */
 public abstract class AbstractCoreOperationAdvisor {
-
+	
 	/**
-	 * Configure the database connection, originally done by DBConnectWizard.
-	 * Has to CoreHub.localCfg.set(PersistentObject.CFG_FOLDED_CONNECTION, conn);
+	 * Configure the database connection, originally done by DBConnectWizard. Has to
+	 * CoreHub.localCfg.set(PersistentObject.CFG_FOLDED_CONNECTION, conn);
 	 * 
-	 * Elexis will shutdown after this connection is configured and will have to
-	 * be restarted. Called by
-	 * {@link PersistentObject#connect(ch.rgw.io.Settings)}
+	 * Elexis will shutdown after this connection is configured and will have to be restarted.
+	 * Called by {@link PersistentObject#connect(ch.rgw.io.Settings)}
 	 */
 	public abstract void requestDatabaseConnectionConfiguration();
-
+	
 	/**
-	 * Has to create the initial mandator for the system. This was originally
-	 * done in ErsterMandantDialog. Has to set the required access control.
+	 * Has to create the initial mandator for the system. This was originally done in
+	 * ErsterMandantDialog. Has to set the required access control.
 	 * 
 	 * Elexis will continue operation after the initialization. Called by
 	 * {@link PersistentObject#connect(ch.rgw.tools.JdbcLink)}
 	 */
 	public abstract void requestInitialMandatorConfiguration();
-
+	
 	/**
-	 * Adapt the context to the change of a user login. That is e.g.
-	 * de-/activate menus according to user rights etc. This was originally done
-	 * in GlobalActions#adaptForUser()
+	 * Adapt the context to the change of a user login. That is e.g. de-/activate menus according to
+	 * user rights etc. This was originally done in GlobalActions#adaptForUser()
 	 * 
 	 * Called within {@link Anwender#login(String, String)}
 	 */
 	public abstract void adaptForUser();
-
+	
 	/**
-	 * Ask the user a question to be answered with yes or no. This is analogous
-	 * to org.eclipse.jface.MessageDialog#openQuestion
+	 * Ask the user a question to be answered with yes or no. This is analogous to
+	 * org.eclipse.jface.MessageDialog#openQuestion
 	 * 
 	 * @param title
 	 *            the dialog's title, or <code>null</code> if none
@@ -60,15 +58,18 @@ public abstract class AbstractCoreOperationAdvisor {
 	public abstract boolean openQuestion(String title, String message);
 	
 	/**
-	 * Perform the login. May use {@link Anwender#login(String, String)} to initialize
-	 * the log-in. Required Post-Condition: {@link CoreHub#actUser} and {@link CoreHub#actMandant}
-	 * have to contain valid elements.
-	 * @param shell and object castable to org.eclipse.swt.widgets.Shell
+	 * Perform the login. May use {@link Anwender#login(String, String)} to initialize the log-in.
+	 * Required Post-Condition: {@link CoreHub#actUser} and {@link CoreHub#actMandant} have to
+	 * contain valid elements.
+	 * 
+	 * @param shell
+	 *            and object castable to org.eclipse.swt.widgets.Shell
 	 */
 	public abstract void performLogin(Object shell);
 	
 	/**
 	 * UI only
+	 * 
 	 * @return the initial perspective to be opened to the user
 	 */
 	public abstract String getInitialPerspective();

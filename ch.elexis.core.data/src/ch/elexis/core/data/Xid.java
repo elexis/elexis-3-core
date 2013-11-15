@@ -47,7 +47,7 @@ import ch.rgw.tools.VersionInfo;
  * 
  */
 public class Xid extends PersistentObject implements IXid {
-
+	
 	public static final String FLD_OBJECT = "object";
 	public static final String FLD_ID_IN_DOMAIN = "domain_id";
 	public static final String FLD_DOMAIN = "domain";
@@ -93,10 +93,11 @@ public class Xid extends PersistentObject implements IXid {
 		domainMap = new HashMap<String, String>();
 		String storedDomains = CoreHub.globalCfg.get("LocalXIDDomains", null);
 		if (storedDomains == null) {
-			domains.put(XidConstants.ELEXIS, new XIDDomain(XidConstants.ELEXIS, "UUID", XidConstants.ELEXIS_QUALITY
-				| QUALITY_GUID, PersistentObject.class.getCanonicalName()));
-			domains.put(XidConstants.CH_AHV, new XIDDomain(XidConstants.CH_AHV, "AHV", XidConstants.CH_AHV_QUALITY,
-				Person.class.getCanonicalName()));
+			domains.put(XidConstants.ELEXIS,
+				new XIDDomain(XidConstants.ELEXIS, "UUID", XidConstants.ELEXIS_QUALITY
+					| QUALITY_GUID, PersistentObject.class.getCanonicalName()));
+			domains.put(XidConstants.CH_AHV, new XIDDomain(XidConstants.CH_AHV, "AHV",
+				XidConstants.CH_AHV_QUALITY, Person.class.getCanonicalName()));
 			domains.put(DOMAIN_OID, new XIDDomain(DOMAIN_OID, "OID", ASSIGNMENT_GLOBAL
 				| QUALITY_GUID, PersistentObject.class.getCanonicalName()));
 			domains.put(DOMAIN_EAN, new XIDDomain(DOMAIN_EAN, "EAN", ASSIGNMENT_REGIONAL,
@@ -130,8 +131,6 @@ public class Xid extends PersistentObject implements IXid {
 			xd.addDisplayOption(Person.class);
 		}
 	}
-	
-
 	
 	/**
 	 * create a new XID. Does nothing if identical XID already exists.
@@ -223,7 +222,8 @@ public class Xid extends PersistentObject implements IXid {
 	 * @return the object or null if it could not be restored.
 	 */
 	public IPersistentObject getObject(){
-		PersistentObject po = CoreHub.poFactory.createFromString(get(FLD_TYPE) + "::" + get(FLD_OBJECT));
+		PersistentObject po =
+			CoreHub.poFactory.createFromString(get(FLD_TYPE) + "::" + get(FLD_OBJECT));
 		return po;
 	}
 	
@@ -235,7 +235,8 @@ public class Xid extends PersistentObject implements IXid {
 			text = po.getLabel();
 		}
 		StringBuilder ret = new StringBuilder();
-		ret.append(text).append(": ").append(get(FLD_DOMAIN)).append("->").append(get(FLD_ID_IN_DOMAIN));
+		ret.append(text).append(": ").append(get(FLD_DOMAIN)).append("->")
+			.append(get(FLD_ID_IN_DOMAIN));
 		return ret.toString();
 	}
 	

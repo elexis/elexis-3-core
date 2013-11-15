@@ -50,7 +50,9 @@ public class BestellBlatt extends ViewPart implements ICallback {
 		Money sum = new Money();
 		tbl[0] =
 			new String[] {
-				Messages.BestellBlatt_Number, Messages.BestellBlatt_Pharmacode, Messages.BestellBlatt_Name, Messages.BestellBlatt_UnitPrice, Messages.BestellBlatt_LinePrice
+				Messages.BestellBlatt_Number, Messages.BestellBlatt_Pharmacode,
+				Messages.BestellBlatt_Name, Messages.BestellBlatt_UnitPrice,
+				Messages.BestellBlatt_LinePrice
 			};
 		// DecimalFormat df=new DecimalFormat("\u00a4\u00a4  #.00");
 		for (Item it : items) {
@@ -67,7 +69,9 @@ public class BestellBlatt extends ViewPart implements ICallback {
 		}
 		tbl[i] =
 			new String[] {
-				Messages.BestellBlatt_Sum, StringTool.leer, StringTool.leer, StringTool.leer, sum.getAmountAsString() //$NON-NLS-1$
+				Messages.BestellBlatt_Sum, StringTool.leer, StringTool.leer, StringTool.leer,
+				sum.getAmountAsString()
+			//$NON-NLS-1$
 			};
 		actBest = text.createFromTemplateName(null, TEMPLATENAME, Brief.BESTELLUNG, adressat, null);
 		if (actBest == null) {

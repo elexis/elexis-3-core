@@ -128,15 +128,13 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		ButtonProvider fallButton = new ButtonProvider() {
 			
 			public Button createButton(Composite parent1){
-				Button ret =
-					tk.createButton(parent1, Messages.FallListeView_NewCase, SWT.PUSH); //$NON-NLS-1$
+				Button ret = tk.createButton(parent1, Messages.FallListeView_NewCase, SWT.PUSH); //$NON-NLS-1$
 				ret.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e){
 						String bez = fallCf.getControlFieldProvider().getValues()[0];
 						Fall fall =
-							actPatient.neuerFall(bez,
-								Messages.FallListeView_Illness, "KVG"); //$NON-NLS-1$ //$NON-NLS-2$
+							actPatient.neuerFall(bez, Messages.FallListeView_Illness, "KVG"); //$NON-NLS-1$ //$NON-NLS-2$
 						Konsultation b = fall.neueKonsultation();
 						b.setMandant(CoreHub.actMandant);
 						fallCf.getControlFieldProvider().clearValues();
@@ -154,64 +152,64 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 			}
 		};
 		fallViewer = new CommonViewer();
-		fallCf = new ViewerConfigurer(new DefaultContentProvider(fallViewer, Fall.class) {
-			@Override
-			public Object[] getElements(Object inputElement){
-				
-				if (actPatient != null) {
-					if (fallCf.getControlFieldProvider().isEmpty()) {
-						return actPatient.getFaelle();
-					} else {
-						IFilter filter = fallCf.getControlFieldProvider().createFilter();
-						List<String> list =
-							actPatient.getList(Messages.FallListeView_Cases, true); //$NON-NLS-1$
-						ArrayList<Fall> arr = new ArrayList<Fall>();
-						for (String s : list) {
-							Fall f = Fall.load(s);
-							if (filter.select(f)) {
-								arr.add(f);
-							}
-						}
-						return arr.toArray();
-					}
-				}
-				return new Object[0];
-			}
-		}, new LabelProvider() {
-			@Override
-			public Image getImage(Object element){
-				if (element instanceof Fall) {
-					if (((Fall) element).isOpen()) {
-						// show red/green dot is case invalid/valid
-						if (((Fall) element).isValid()) {
-							return Images.IMG_OK.getImage();
+		fallCf =
+			new ViewerConfigurer(new DefaultContentProvider(fallViewer, Fall.class) {
+				@Override
+				public Object[] getElements(Object inputElement){
+					
+					if (actPatient != null) {
+						if (fallCf.getControlFieldProvider().isEmpty()) {
+							return actPatient.getFaelle();
 						} else {
-							return Images.IMG_FEHLER.getImage();
+							IFilter filter = fallCf.getControlFieldProvider().createFilter();
+							List<String> list =
+								actPatient.getList(Messages.FallListeView_Cases, true); //$NON-NLS-1$
+							ArrayList<Fall> arr = new ArrayList<Fall>();
+							for (String s : list) {
+								Fall f = Fall.load(s);
+								if (filter.select(f)) {
+									arr.add(f);
+								}
+							}
+							return arr.toArray();
 						}
-					} else {
-						return Images.IMG_LOCK_CLOSED.getImage();
 					}
+					return new Object[0];
 				}
-				return super.getImage(element);
-			}
-			
-			@Override
-			public String getText(Object element){
-				return (((Fall) element).getLabel());
-			}
-			
-		}, new DefaultControlFieldProvider(fallViewer, new String[] {
-			Messages.FallListeView_Label
+			}, new LabelProvider() {
+				@Override
+				public Image getImage(Object element){
+					if (element instanceof Fall) {
+						if (((Fall) element).isOpen()) {
+							// show red/green dot is case invalid/valid
+							if (((Fall) element).isValid()) {
+								return Images.IMG_OK.getImage();
+							} else {
+								return Images.IMG_FEHLER.getImage();
+							}
+						} else {
+							return Images.IMG_LOCK_CLOSED.getImage();
+						}
+					}
+					return super.getImage(element);
+				}
+				
+				@Override
+				public String getText(Object element){
+					return (((Fall) element).getLabel());
+				}
+				
+			}, new DefaultControlFieldProvider(fallViewer, new String[] {
+				Messages.FallListeView_Label
 			}), fallButton, new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TABLE, SWT.SINGLE,
-			fallViewer));
+				fallViewer));
 		fallViewer.create(fallCf, sash, SWT.NONE, getViewSite());
 		fallViewer.getViewerWidget().addSelectionChangedListener(
 			GlobalEventDispatcher.getInstance().getDefaultListener());
 		behandlViewer = new CommonViewer();
 		ButtonProvider behandlButton = new ButtonProvider() {
 			public Button createButton(Composite parent1){
-				Button ret =
-					tk.createButton(parent1, Messages.FallListeView_NewKons, SWT.PUSH); //$NON-NLS-1$
+				Button ret = tk.createButton(parent1, Messages.FallListeView_NewKons, SWT.PUSH); //$NON-NLS-1$
 				ret.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e){

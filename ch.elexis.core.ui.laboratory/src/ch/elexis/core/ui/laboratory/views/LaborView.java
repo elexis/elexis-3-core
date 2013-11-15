@@ -155,7 +155,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 	private final HashMap<String, List<LabItem>> formulaRelations =
 		new HashMap<String, List<LabItem>>();
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		public void runInUi(ElexisEvent ev) {
+		public void runInUi(ElexisEvent ev){
 			selectPatient((Patient) ev.getObject());
 		};
 	};
@@ -300,8 +300,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 					LabItem li = lr.getItem();
 					if (li.getTyp().equals(LabItem.typ.TEXT) || (lr.getComment().length() > 0)) {
 						DisplayTextDialog dlg =
-							new DisplayTextDialog(
-								getViewSite().getShell(),
+							new DisplayTextDialog(getViewSite().getShell(),
 								Messages.LaborView_textResultTitle, li.getName(), lr.getComment()); //$NON-NLS-1$
 						Font font = null;
 						// HL7 Befunde enthalten oft mit Leerzeichen formatierte Bemerkungen,
@@ -332,7 +331,8 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 							labResultQuery.add(LabResult.ITEM_ID, Query.EQUALS, li.getId());
 							List<LabResult> labResultList = labResultQuery.execute();
 							if (labResultList != null && labResultList.size() > 0) {
-								new DisplayLabDokumenteDialog(getViewSite().getShell(), Messages.LaborView_Documents, labResultList).open();//$NON-NLS-1$
+								new DisplayLabDokumenteDialog(getViewSite().getShell(),
+									Messages.LaborView_Documents, labResultList).open();//$NON-NLS-1$
 							}
 						}
 					}
@@ -889,7 +889,8 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 					try {
 						LaborblattView lb =
 							(LaborblattView) getViewSite().getPage().showView(LaborblattView.ID);
-						Patient pat = ElexisEventDispatcher.getSelectedPatient();;
+						Patient pat = ElexisEventDispatcher.getSelectedPatient();
+						;
 						String[] headers = new String[columns.length];
 						for (int i = 0; i < headers.length; i++) {
 							headers[i] = columns[i].getText();
@@ -936,9 +937,8 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 								fout.close();
 							} catch (Exception ex) {
 								ExHandler.handle(ex);
-								SWTHelper
-									.alert(
-										Messages.LaborView_ErrorCaption, Messages.LaborView_couldntwrite + fname); //$NON-NLS-1$ //$NON-NLS-2$
+								SWTHelper.alert(Messages.LaborView_ErrorCaption,
+									Messages.LaborView_couldntwrite + fname); //$NON-NLS-1$ //$NON-NLS-2$
 								
 							}
 						}
@@ -968,8 +968,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 					
 				}
 			};
-		setStateAction =
-			new Action(Messages.LaborView_pathologic, Action.AS_CHECK_BOX) { //$NON-NLS-1$
+		setStateAction = new Action(Messages.LaborView_pathologic, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				@Override
 				public void run(){
 					LabResult lr = getSelectedResult();

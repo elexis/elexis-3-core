@@ -17,51 +17,50 @@ import ch.elexis.core.data.Query;
 import ch.rgw.tools.JdbcLink;
 
 public class Eigenartikel extends Artikel {
-
+	
 	public static final String TYPNAME = "Eigenartikel";
-
+	
 	@Override
-	protected String getConstraint() {
+	protected String getConstraint(){
 		return new StringBuilder(Artikel.FLD_TYP).append(Query.EQUALS)
-				.append(JdbcLink.wrap(TYPNAME)).toString();
+			.append(JdbcLink.wrap(TYPNAME)).toString();
 	}
-
-	protected void setConstraint() {
+	
+	protected void setConstraint(){
 		set(Artikel.FLD_TYP, TYPNAME);
 	}
-
+	
 	@Override
-	public String getCodeSystemName() {
+	public String getCodeSystemName(){
 		return TYPNAME;
 	}
-
+	
 	@Override
-	public String getLabel() {
+	public String getLabel(){
 		return get(Artikel.FLD_NAME);
 	}
-
+	
 	@Override
-	public String getCode() {
+	public String getCode(){
 		return get(Artikel.FLD_SUB_ID);
 	}
-
-	public String getGroup() {
+	
+	public String getGroup(){
 		return checkNull(get(Artikel.FLD_CODECLASS));
 	}
-
-	public static Eigenartikel load(String id) {
+	
+	public static Eigenartikel load(String id){
 		return new Eigenartikel(id);
 	}
-
-	protected Eigenartikel() {
-	}
-
-	protected Eigenartikel(String id) {
+	
+	protected Eigenartikel(){}
+	
+	protected Eigenartikel(String id){
 		super(id);
 	}
-
+	
 	@Override
-	public boolean isDragOK() {
+	public boolean isDragOK(){
 		return true;
 	}
 }

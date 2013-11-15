@@ -36,7 +36,8 @@ import ch.rgw.tools.StringTool;
  * 
  */
 public class Kontakt extends PersistentObject {
-	// If you add new fields, please be sure to update KontakteView.java tidySelectedAddressesAction (and, most probably, other places)
+	// If you add new fields, please be sure to update KontakteView.java tidySelectedAddressesAction
+// (and, most probably, other places)
 	// public static final String FLD_KUERZEL = "Kuerzel";
 	public static final String FLD_E_MAIL = "E-Mail";
 	public static final String FLD_WEBSITE = "Website";
@@ -58,13 +59,10 @@ public class Kontakt extends PersistentObject {
 	public static final String FLD_PHONE1 = "Telefon1"; //$NON-NLS-1$
 	public static final String FLD_REMARK = "Bemerkung"; //$NON-NLS-1$
 	/**
-	 * Contains the following values in the respective instantiations of contact
-	 * isIstPatient():		?
-	 * isIstPerson():		if medic: area of expertise
-	 * isIstMandant():  	username/mandant short name
-	 * isIstAnwender(): 	username/mandant short name
-	 * isIstOrganisation(): contact person
-	 * isIstLabor():		?
+	 * Contains the following values in the respective instantiations of contact isIstPatient(): ?
+	 * isIstPerson(): if medic: area of expertise isIstMandant(): username/mandant short name
+	 * isIstAnwender(): username/mandant short name isIstOrganisation(): contact person
+	 * isIstLabor(): ?
 	 */
 	public static final String FLD_NAME3 = "Bezeichnung3"; //$NON-NLS-1$
 	public static final String FLD_NAME2 = "Bezeichnung2"; //$NON-NLS-1$
@@ -85,7 +83,8 @@ public class Kontakt extends PersistentObject {
 			"BezugsKontakte = JOINT:myID:otherID:KONTAKT_ADRESS_JOINT", //$NON-NLS-1$
 			"MyReminders		= LIST:IdentID:REMINDERS", //$NON-NLS-1$
 			FLD_NAME1, FLD_NAME2,
-			FLD_NAME3, FLD_SHORT_LABEL+"= PatientNr", //$NON-NLS-1$
+			FLD_NAME3,
+			FLD_SHORT_LABEL + "= PatientNr", //$NON-NLS-1$
 			FLD_REMARK, FLD_PHONE1, FLD_PHONE2, "E-Mail=EMail", FLD_WEBSITE, FLD_EXTINFO, //$NON-NLS-1$
 			FLD_IS_ORGANIZATION, FLD_IS_PERSON, FLD_IS_PATIENT, FLD_IS_USER, FLD_IS_MANDATOR,
 			FLD_IS_LAB, FLD_STREET, FLD_ZIP, FLD_PLACE, FLD_COUNTRY, FLD_FAX, FLD_ANSCHRIFT,
@@ -196,9 +195,9 @@ public class Kontakt extends PersistentObject {
 			// TODO default salutation should be configurable
 			String salutation;
 			if (p.getGeschlecht().equals(Person.MALE)) {
-				salutation = Messages.Contact_SalutationM; 
+				salutation = Messages.Contact_SalutationM;
 			} else {
-				salutation = Messages.Contact_SalutationF; 
+				salutation = Messages.Contact_SalutationF;
 			}
 			sb.append(salutation);
 			sb.append(StringTool.lf);
@@ -233,98 +232,100 @@ public class Kontakt extends PersistentObject {
 	}
 	
 	/**
-	 * Synthesize the address lines to output from the entries in Kontakt k.
-	 * added to implement the output format desired for the copyAddressToClipboard()
-	 * buttons.
- 	 *
- 	 * @param multiline or single line output
- 	 * @param including_phone controls whether the phone numbers shall be
-	 *
+	 * Synthesize the address lines to output from the entries in Kontakt k. added to implement the
+	 * output format desired for the copyAddressToClipboard() buttons.
+	 * 
+	 * @param multiline
+	 *            or single line output
+	 * @param including_phone
+	 *            controls whether the phone numbers shall be
+	 * 
 	 * @return string containing the needed information
 	 */
 	
-	/* 
-	 * getPostAnschrift() does NOT use the System.getProperty("line.separator");
-	 * which I use bwlow after the Fax number (and also in the calling code, before a possibly
-	 * succeeding addresses.
-	 * getPostAnschrift() instead replaces all line separators by either \\n or space
-	 * at the end of its run; and I keep that code, +-multiline support herein as well
-	 * to maintain similar usage of both methods.
+	/*
+	 * getPostAnschrift() does NOT use the System.getProperty("line.separator"); which I use bwlow
+	 * after the Fax number (and also in the calling code, before a possibly succeeding addresses.
+	 * getPostAnschrift() instead replaces all line separators by either \\n or space at the end of
+	 * its run; and I keep that code, +-multiline support herein as well to maintain similar usage
+	 * of both methods.
 	 * 
-	 * On a Win2K system, `that has the following effects when pasting the address(es) into various targets:
-	 * notepad:				All elements of an address in one line, box characters instead of the newline (or cr?) character.
-	 * textpad:				New line after each line within an address and between addresses.
-	 * winword 97:			"new paragraph" after each line within an address, and before a succeeding address.
-	 * openoffice 2.0.3:	"new line" after each line within an address;
-	 * 						"new paragraph" after the Fax number and before a succeeding address.
-	 * 
-	 */ 
-	public String getPostAnschriftPhoneFaxEmail(boolean multiline,boolean including_phone){		
-	
+	 * On a Win2K system, `that has the following effects when pasting the address(es) into various
+	 * targets: notepad: All elements of an address in one line, box characters instead of the
+	 * newline (or cr?) character. textpad: New line after each line within an address and between
+	 * addresses. winword 97: "new paragraph" after each line within an address, and before a
+	 * succeeding address. openoffice 2.0.3: "new line" after each line within an address;
+	 * "new paragraph" after the Fax number and before a succeeding address.
+	 */
+	public String getPostAnschriftPhoneFaxEmail(boolean multiline, boolean including_phone){
+		
 		StringBuffer thisAddress = new StringBuffer();
-	
-		//getPostAnschrift() already returns a line separator after the address;
-		//processing of the multiline flag is implemented further below as well,
-		//so it suffices if we call getPostAnschrift(true) and not pass the flag there.
-		//this also ensures that new-lines inserted in getPostAnschrift() and below,
-		//will finally be processed the same way, no matter what we might change below.
+		
+		// getPostAnschrift() already returns a line separator after the address;
+		// processing of the multiline flag is implemented further below as well,
+		// so it suffices if we call getPostAnschrift(true) and not pass the flag there.
+		// this also ensures that new-lines inserted in getPostAnschrift() and below,
+		// will finally be processed the same way, no matter what we might change below.
 		//
-		//Wenn die in 2.1.7 eingeführte Funktion zum Putzen von Kontakt-Daten benutzt wurde,
-		//dann fehlt der Postanschrift der früher vorhandene trailende LineSeparator.
-		//Damit die Telefonnummer in dem Fall nicht direkt am Ort klebt,
-		//muss man ihn hier wieder ergänzen. Aber vorher ausschliessen, dass 
-		//PostAnschrift nicht leer ist, oder dass doch schon ein lineSeparator dran hängt.		
+		// Wenn die in 2.1.7 eingeführte Funktion zum Putzen von Kontakt-Daten benutzt wurde,
+		// dann fehlt der Postanschrift der früher vorhandene trailende LineSeparator.
+		// Damit die Telefonnummer in dem Fall nicht direkt am Ort klebt,
+		// muss man ihn hier wieder ergänzen. Aber vorher ausschliessen, dass
+		// PostAnschrift nicht leer ist, oder dass doch schon ein lineSeparator dran hängt.
 		thisAddress.append(getPostAnschrift(true).trim());
 		thisAddress.append(System.getProperty("line.separator"));
 		
-		//&& !k.FLD_FAX.isEmpty() is NOT sufficient to prevent empty lines, or lines with just the Labels "Fax" and "E-Mail".
-		//Apparently, the entries "Fax" or "E-Mail" exist in the respective fields instead of proper content.
+		// && !k.FLD_FAX.isEmpty() is NOT sufficient to prevent empty lines, or lines with just the
+// Labels "Fax" and "E-Mail".
+		// Apparently, the entries "Fax" or "E-Mail" exist in the respective fields instead of
+// proper content.
 		//
-		//THIS DOES NOT WORK:
+		// THIS DOES NOT WORK:
 		//
-		//if (k.FLD_FAX != null && k.FLD_FAX.length()>0 && !k.FLD_FAX.equals("Fax")) {
-		//	selectedAddressesText.append(k.FLD_FAX+System.getProperty("line.separator"));
-		//}
-		//if (k.FLD_E_MAIL != null && k.FLD_E_MAIL.length()>0 && !k.FLD_E_MAIL.equals("E-Mail")) {
-		//	selectedAddressesText.append(k.FLD_E_MAIL+System.getProperty("line.separator"));
-		//}
+		// if (k.FLD_FAX != null && k.FLD_FAX.length()>0 && !k.FLD_FAX.equals("Fax")) {
+		// selectedAddressesText.append(k.FLD_FAX+System.getProperty("line.separator"));
+		// }
+		// if (k.FLD_E_MAIL != null && k.FLD_E_MAIL.length()>0 && !k.FLD_E_MAIL.equals("E-Mail")) {
+		// selectedAddressesText.append(k.FLD_E_MAIL+System.getProperty("line.separator"));
+		// }
 		//
 		if (including_phone) {
 			String thisAddressFLD_PHONE1 = (String) get(FLD_PHONE1);
 			if (!StringTool.isNothing(thisAddressFLD_PHONE1)) {
-				thisAddress.append(thisAddressFLD_PHONE1+System.getProperty("line.separator"));
+				thisAddress.append(thisAddressFLD_PHONE1 + System.getProperty("line.separator"));
 			}
-		
+			
 			String thisAddressFLD_PHONE2 = (String) get(FLD_PHONE2);
 			if (!StringTool.isNothing(thisAddressFLD_PHONE2)) {
-				thisAddress.append(thisAddressFLD_PHONE2+System.getProperty("line.separator"));
+				thisAddress.append(thisAddressFLD_PHONE2 + System.getProperty("line.separator"));
 			}
-		
+			
 			String thisAddressFLD_MOBILEPHONE = (String) get(FLD_MOBILEPHONE);
 			if (!StringTool.isNothing(thisAddressFLD_MOBILEPHONE)) {
-				//With a colon after the label:
-				thisAddress.append(FLD_MOBILEPHONE+":"+StringTool.space+thisAddressFLD_MOBILEPHONE+System.getProperty("line.separator"));
-				//Without a colon after the label:
-				//selectedPatInfosText.append(","+StringTool.space+k.FLD_MOBILEPHONE+StringTool.space+thisAddressFLD_MOBILEPHONE);
+				// With a colon after the label:
+				thisAddress.append(FLD_MOBILEPHONE + ":" + StringTool.space
+					+ thisAddressFLD_MOBILEPHONE + System.getProperty("line.separator"));
+				// Without a colon after the label:
+				// selectedPatInfosText.append(","+StringTool.space+k.FLD_MOBILEPHONE+StringTool.space+thisAddressFLD_MOBILEPHONE);
 			}
 		}
-
+		
 		String thisAddressFLD_FAX = (String) get(FLD_FAX);
 		if (!StringTool.isNothing(thisAddressFLD_FAX)) {
-			thisAddress.append("Fax:"+StringTool.space+thisAddressFLD_FAX+System.getProperty("line.separator"));
+			thisAddress.append("Fax:" + StringTool.space + thisAddressFLD_FAX
+				+ System.getProperty("line.separator"));
 		}
 		String thisAddressFLD_E_MAIL = (String) get(FLD_E_MAIL);
 		if (!StringTool.isNothing(thisAddressFLD_E_MAIL)) {
-			thisAddress.append(thisAddressFLD_E_MAIL+System.getProperty("line.separator"));
-		}							
-
+			thisAddress.append(thisAddressFLD_E_MAIL + System.getProperty("line.separator"));
+		}
+		
 		String an = thisAddress.toString();
 		an = an.replaceAll("[\\r\\n]\\n", StringTool.lf); //$NON-NLS-1$
 		return multiline == true ? an : an.replaceAll("\\n", StringTool.space); //$NON-NLS-1$
 	}
-
 	
-	/**	
+	/**
 	 * Eine neue Zusatzadresse zu diesem Kontakt zufügen
 	 * 
 	 * @param adr

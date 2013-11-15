@@ -106,7 +106,7 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 				manager.add(new CheckInOrderedAction(cv.getViewerWidget()));
 			}
 		});
-
+		
 		cv.setContextMenu(contextMenu);
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
@@ -213,10 +213,11 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 	}
 	
 	class LagerWidgetProvider implements WidgetProvider {
-		String[] columns =
-			{
-				Messages.LagerView_pharmacode, Messages.LagerView_name, Messages.LagerView_istBestand, Messages.LagerView_minBestand, Messages.LagerView_maxBestand, Messages.LagerView_controlled, Messages.LagerView_dealer
-			};
+		String[] columns = {
+			Messages.LagerView_pharmacode, Messages.LagerView_name, Messages.LagerView_istBestand,
+			Messages.LagerView_minBestand, Messages.LagerView_maxBestand,
+			Messages.LagerView_controlled, Messages.LagerView_dealer
+		};
 		int[] colwidth = {
 			60, 300, 40, 40, 40, 40, 200
 		};
@@ -282,7 +283,7 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 	public static class CheckInOrderedAction extends Action {
 		private Viewer viewer;
 		private Artikel artikel;
-
+		
 		public CheckInOrderedAction(Viewer viewer){
 			this.viewer = viewer;
 		}
@@ -300,7 +301,7 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 			}
 			return false;
 		}
-
+		
 		@Override
 		public String getText(){
 			return Messages.BestellView_CheckInCaption;
@@ -323,7 +324,7 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 			}
 		}
 	}
-
+	
 	/***********************************************************************************************
 	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.

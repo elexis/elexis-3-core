@@ -30,32 +30,31 @@ import ch.elexis.core.ui.UiDesk;
 import ch.rgw.io.FileTool;
 
 public class Desk implements IApplication {
-
+	
 	private Logger log = LoggerFactory.getLogger(Desk.class);
 	private static Map<String, String> args = null;
-
+	
 	protected static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
-			.getCoreOperationAdvisor();
-
+		.getCoreOperationAdvisor();
+	
 	/**
 	 * @since 3.0.0 log-in has been moved from ApplicationWorkbenchAdvisor to this method
 	 */
 	@Override
-	public Object start(IApplicationContext context) throws Exception {
+	public Object start(IApplicationContext context) throws Exception{
 		// register ElexisEvent and MessageEvent listeners
 		log.debug("Registering " + CoreEventListenerRegistrar.class.getName());
 		new CoreEventListenerRegistrar();
-
+		
 		// connect to the database
 		try {
 			if (PersistentObject.connect(CoreHub.localCfg) == false)
-				log.error(PersistentObject.class.getName()
-						+ " initialization failed.");
+				log.error(PersistentObject.class.getName() + " initialization failed.");
 		} catch (PersistenceException pe) {
 			log.error("Initialization error", pe);
 			pe.printStackTrace();
 		}
-
+		
 		// check for initialization parameters
 		args = context.getArguments();
 		if (args.containsKey("--clean-all")) { //$NON-NLS-1$
@@ -64,7 +63,7 @@ public class Desk implements IApplication {
 			CoreHub.localCfg.clear();
 			CoreHub.localCfg.flush();
 		}
-
+		
 		// care for log-in
 		String username = System.getProperty("ch.elexis.username");
 		String password = System.getProperty("ch.elexis.password");
@@ -84,11 +83,12 @@ public class Desk implements IApplication {
 			PersistentObject.disconnect();
 			System.exit(0);
 		}
-
+		
 		// start the workbench
 		try {
-			int returnCode = PlatformUI.createAndRunWorkbench(
-					UiDesk.getDisplay(), new ApplicationWorkbenchAdvisor());
+			int returnCode =
+				PlatformUI.createAndRunWorkbench(UiDesk.getDisplay(),
+					new ApplicationWorkbenchAdvisor());
 			// Die Funktion kehrt erst beim Programmende zurück.
 			CoreHub.heart.suspend();
 			CoreHub.localCfg.flush();
@@ -105,8 +105,7 @@ public class Desk implements IApplication {
 			return -1;
 		}
 	}
-
+	
 	@Override
-	public void stop() {
-	}
+	public void stop(){}
 }

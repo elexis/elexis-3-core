@@ -91,7 +91,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		if (pfilter != null) {
 			pats = new String[] {
 				Messages.PatListeContentProvider_LoadingData
-				};
+			};
 			((TableViewer) viewer.getViewerWidget()).setItemCount(1);
 		}
 		
@@ -104,9 +104,8 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 			
 				@Override
 				protected IStatus run(IProgressMonitor monitor){
-					monitor
-						.beginTask(
-							Messages.PatListeContentProvider_LoadPatients, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+					monitor.beginTask(Messages.PatListeContentProvider_LoadPatients,
+						IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 					
 					qbe.clear();
 					if (pfilter != null) {

@@ -118,14 +118,14 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	// private double sumSelected;
 	private final Query<Konsultation> qbe;
 	Composite parent;
-	private final ElexisEventListener eeli_kons = new ElexisUiEventListenerImpl(
-		Konsultation.class) {
-		
-		public void runInUi(ElexisEvent ev){
-			selection((Konsultation) ev.getObject());
+	private final ElexisEventListener eeli_kons =
+		new ElexisUiEventListenerImpl(Konsultation.class) {
 			
-		}
-	};
+			public void runInUi(ElexisEvent ev){
+				selection((Konsultation) ev.getObject());
+				
+			}
+		};
 	
 	public PatHeuteView(){
 		super();
@@ -213,36 +213,38 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		bOpenKons.setSelection(bOpen);
 		bClosedKons.setSelection(bClosed);
 		cv = new CommonViewer();
-		vc = new ViewerConfigurer(new DefaultContentProvider(cv, Patient.class) {
-			@Override
-			public Object[] getElements(final Object inputElement){
-				if (!CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_STATS)) {
-					return new Konsultation[0];
+		vc =
+			new ViewerConfigurer(new DefaultContentProvider(cv, Patient.class) {
+				@Override
+				public Object[] getElements(final Object inputElement){
+					if (!CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_STATS)) {
+						return new Konsultation[0];
+					}
+					if (kons == null) {
+						kons = new Konsultation[0];
+						kload.schedule();
+					}
+					
+					return kons;
 				}
-				if (kons == null) {
-					kons = new Konsultation[0];
-					kload.schedule();
+			}, new DefaultLabelProvider() {
+				
+				@Override
+				public String getText(final Object element){
+					if (element instanceof Konsultation) {
+						Fall fall = ((Konsultation) element).getFall();
+						if (fall == null) {
+							return Messages.PatHeuteView_noCase
+								+ ((Konsultation) element).getLabel(); //$NON-NLS-1$
+						}
+						Patient pat = fall.getPatient();
+						return pat.getLabel();
+					}
+					return super.getText(element);
 				}
 				
-				return kons;
-			}
-		}, new DefaultLabelProvider() {
-			
-			@Override
-			public String getText(final Object element){
-				if (element instanceof Konsultation) {
-					Fall fall = ((Konsultation) element).getFall();
-					if (fall == null) {
-						return Messages.PatHeuteView_noCase + ((Konsultation) element).getLabel(); //$NON-NLS-1$
-					}
-					Patient pat = fall.getPatient();
-					return pat.getLabel();
-				}
-				return super.getText(element);
-			}
-			
-		}, null, new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
-			SimpleWidgetProvider.TYPE_LIST, SWT.V_SCROLL, cv));
+			}, null, new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
+				SimpleWidgetProvider.TYPE_LIST, SWT.V_SCROLL, cv));
 		cv.create(vc, parent, SWT.BORDER, getViewSite());
 		
 		form = tk.createForm(parent);
@@ -479,8 +481,9 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		IVerrechenbar[] lfiltered;
 		
 		KonsLoader(final Query<Konsultation> qbe){
-			super(
-				Messages.PatHeuteView_loadConsultations, qbe, new String[] { Messages.PatHeuteView_date}); //$NON-NLS-1$ //$NON-NLS-2$
+			super(Messages.PatHeuteView_loadConsultations, qbe, new String[] {
+				Messages.PatHeuteView_date
+			}); //$NON-NLS-1$ //$NON-NLS-2$
 			setPriority(Job.LONG);
 			setUser(true);
 		}
@@ -697,8 +700,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				}
 			};
 		
-		filterAction =
-			new Action(Messages.PatHeuteView_filterAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
+		filterAction = new Action(Messages.PatHeuteView_filterAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
 					setToolTipText(Messages.PatHeuteView_filterToolTip); //$NON-NLS-1$
@@ -792,8 +794,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 					table[kons.length + 2 + i][0] = lfiltered[i].getCode();
 					StringBuilder sb = new StringBuilder();
 					sb.append(Messages.PatHeuteView_billedTotal).append(numLeistung[i]).append( //$NON-NLS-1$
-							Messages.PatHeuteView_times).append( //$NON-NLS-1$
-							perLeistung[i].getAmountAsString());
+						Messages.PatHeuteView_times).append( //$NON-NLS-1$
+						perLeistung[i].getAmountAsString());
 					table[kons.length + 2 + i][1] = sb.toString();
 				}
 			}

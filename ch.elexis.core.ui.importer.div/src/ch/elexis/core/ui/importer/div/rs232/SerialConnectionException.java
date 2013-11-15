@@ -39,7 +39,7 @@ public class SerialConnectionException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = -3576687247807264427L;
-
+	
 	/**
 	 * Constructs a <code>SerialConnectionException</code> with the specified detail message.
 	 * 

@@ -141,7 +141,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 			}
 		};
 		// TODO
-//		ApplicationActionBarAdvisor.editMenu.addMenuListener(globalMenuListener);
+// ApplicationActionBarAdvisor.editMenu.addMenuListener(globalMenuListener);
 		ElexisEventDispatcher.getInstance().addListeners(eeli_user);
 	}
 	
@@ -151,7 +151,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(), null);
 		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), null);
 		// TODO
-//		ApplicationActionBarAdvisor.editMenu.removeMenuListener(globalMenuListener);
+// ApplicationActionBarAdvisor.editMenu.removeMenuListener(globalMenuListener);
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_user);
 		
 	}
@@ -748,9 +748,9 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		gr.setEnd(pt.y);
 		return gr;
 	}
-
+	
 	@Override
-	public void insertRange(SSDRange range) {
+	public void insertRange(SSDRange range){
 		// TODO Auto-generated method stub
 		
 	}

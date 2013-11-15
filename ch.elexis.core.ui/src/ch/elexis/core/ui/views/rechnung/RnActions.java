@@ -271,8 +271,7 @@ public class RnActions {
 					}
 				}
 			};
-		increaseLevelAction =
-			new Action(Messages.RnActions_increaseReminderLevelAction) { //$NON-NLS-1$
+		increaseLevelAction = new Action(Messages.RnActions_increaseReminderLevelAction) { //$NON-NLS-1$
 				{
 					setToolTipText(Messages.RnActions_increadeReminderLevelTooltip); //$NON-NLS-1$
 				}
@@ -293,8 +292,7 @@ public class RnActions {
 							actRn.setStatus(RnStatus.MAHNUNG_3);
 							break;
 						default:
-							SWTHelper.showInfo(
-								Messages.RnActions_changeStateErrorCaption, //$NON-NLS-1$
+							SWTHelper.showInfo(Messages.RnActions_changeStateErrorCaption, //$NON-NLS-1$
 								Messages.RnActions_changeStateErrorMessage); //$NON-NLS-1$
 						}
 					}
@@ -348,8 +346,7 @@ public class RnActions {
 					}
 				}
 			};
-		rnFilterAction =
-			new Action(Messages.RnActions_filterListAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
+		rnFilterAction = new Action(Messages.RnActions_filterListAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
 					setToolTipText(Messages.RnActions_filterLIstTooltip); //$NON-NLS-1$
@@ -414,11 +411,11 @@ public class RnActions {
 			text.getPlugin().showToolbar(false);
 			text.createFromTemplateName(null,
 				"Liste", Brief.UNKNOWN, CoreHub.actUser, Messages.RnActions_bills); //$NON-NLS-1$ //$NON-NLS-2$
-			text.getPlugin()
-				.insertText(
-					"[Titel]", //$NON-NLS-1$
-					Messages.RnActions_billsListPrintetAt + new TimeTool().toString(TimeTool.DATE_GER) + "\n", //$NON-NLS-1$ //$NON-NLS-2$
-					SWT.CENTER);
+			text.getPlugin().insertText(
+				"[Titel]", //$NON-NLS-1$
+				Messages.RnActions_billsListPrintetAt + new TimeTool().toString(TimeTool.DATE_GER)
+					+ "\n", //$NON-NLS-1$ //$NON-NLS-2$
+				SWT.CENTER);
 			String[][] table = new String[rnn.size() + 1][];
 			Money sum = new Money();
 			int i;

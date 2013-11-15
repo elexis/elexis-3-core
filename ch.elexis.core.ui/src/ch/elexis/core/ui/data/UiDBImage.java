@@ -27,12 +27,12 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.SWTHelper;
 
 /**
- * This is a wrapper class for a {@link DBImage} element. It encapsulates
- * the basic core sticker and adds the respective graphic dependent elements.
+ * This is a wrapper class for a {@link DBImage} element. It encapsulates the basic core sticker and
+ * adds the respective graphic dependent elements.
  * 
  * @since 3.0.0
  */
-public class UiDBImage  {
+public class UiDBImage {
 	private Logger log = LoggerFactory.getLogger(UiDBImage.class);
 	private DBImage dbImage;
 	
@@ -41,7 +41,7 @@ public class UiDBImage  {
 	}
 	
 	public UiDBImage(String prefix, final String name, final InputStream source){
-		this.dbImage = new DBImage(prefix, name);		
+		this.dbImage = new DBImage(prefix, name);
 		try {
 			ImageLoader iml = new ImageLoader();
 			iml.load(source);
@@ -49,11 +49,11 @@ public class UiDBImage  {
 			iml.save(baos, SWT.IMAGE_PNG);
 			dbImage.setBinary(DBImage.FLD_IMAGE, baos.toByteArray());
 		} catch (IllegalArgumentException | SWTException e) {
-			log.error("Error setting image object on DBImage "+dbImage.getLabel(), e);
+			log.error("Error setting image object on DBImage " + dbImage.getLabel(), e);
 		}
 	}
 	
-	public Image getImage() {
+	public Image getImage(){
 		byte[] in = dbImage.getBinary(DBImage.FLD_IMAGE);
 		ByteArrayInputStream bais = new ByteArrayInputStream(in);
 		try {
@@ -62,12 +62,12 @@ public class UiDBImage  {
 			return ret;
 		} catch (Exception ex) {
 			SWTHelper.showError("Image Error", "Ungültiges Bild",
-					"Das Bild ist ungültig " + ex.getMessage());
+				"Das Bild ist ungültig " + ex.getMessage());
 			return null;
 		}
 	}
-
-	public Image getImageScaledTo(int width, int height, boolean bShrinkOnly) {
+	
+	public Image getImageScaledTo(int width, int height, boolean bShrinkOnly){
 		if (dbImage == null)
 			return null;
 		byte[] in = dbImage.getBinary(DBImage.FLD_IMAGE);
@@ -81,25 +81,25 @@ public class UiDBImage  {
 			return ret;
 		} catch (Exception ex) {
 			SWTHelper.showError("Image Error", "Ungültiges Bild",
-					"Das Bild ist ungültig " + ex.getMessage());
+				"Das Bild ist ungültig " + ex.getMessage());
 			return null;
 		}
-
+		
 	}
-
+	
 	/**
 	 * @see {@link DBImage#getId()}
 	 */
-	public String getId() {
+	public String getId(){
 		if (dbImage == null)
 			return null;
 		return dbImage.getId();
 	}
-
+	
 	/**
 	 * @see {@link DBImage#getName()}
 	 */
-	public String getName() {
+	public String getName(){
 		if (dbImage == null)
 			return null;
 		return dbImage.getName();

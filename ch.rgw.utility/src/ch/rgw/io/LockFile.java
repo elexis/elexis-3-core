@@ -10,7 +10,6 @@
  *    
  *******************************************************************************/
 
-
 package ch.rgw.io;
 
 import java.io.DataInputStream;
@@ -87,10 +86,10 @@ public class LockFile {
 		if (!file.exists()) {
 			return false;
 		}
-		if(!file.canWrite()){
-			throw new IOException(("Can't write "+file.getAbsolutePath()));
+		if (!file.canWrite()) {
+			throw new IOException(("Can't write " + file.getAbsolutePath()));
 		}
-
+		
 		TimeTool now = new TimeTool();
 		DataInputStream dais = new DataInputStream(new FileInputStream(file));
 		String ts = dais.readUTF();

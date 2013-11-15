@@ -13,13 +13,13 @@ package ch.elexis.core.data;
 import org.eclipse.osgi.util.NLS;
 
 public final class Messages extends NLS {
-
+	
 	private static final String BUNDLE_NAME = "ch.elexis.core.data.messages";//$NON-NLS-1$
-
-	private Messages() {
+	
+	private Messages(){
 		// Do not instantiate
 	}
-
+	
 	public static String BezugsKontakt_ContactDoesntExist;
 	public static String Contact_SalutationF;
 	public static String Contact_SalutationM;
@@ -53,7 +53,7 @@ public final class Messages extends NLS {
 	public static String GlobalActions_caseclosedexplanation;
 	public static String GlobalActions_SecondForToday;
 	public static String GlobalActions_SecondForTodayQuestion;
-
+	
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

@@ -16,6 +16,7 @@ import ch.elexis.core.data.PersistentObject;
 
 /**
  * For compatibility reasons only, avoids unfolding errors in {@link PersistentObject#fold}
+ * 
  * @since 3.0.0
  * @deprecated
  */

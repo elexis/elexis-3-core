@@ -142,7 +142,8 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				String[] dl = drp.split(","); //$NON-NLS-1$
 				if (actBestellung == null) {
 					InputDialog dlg =
-						new InputDialog(getViewSite().getShell(), Messages.BestellView_CreateNewOrder, //$NON-NLS-1$
+						new InputDialog(getViewSite().getShell(),
+							Messages.BestellView_CreateNewOrder, //$NON-NLS-1$
 							Messages.BestellView_EnterOrderTitle, //$NON-NLS-1$
 							StringTool.leer, null);
 					if (dlg.open() == Dialog.OK) {
@@ -166,8 +167,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		viewmenus.createToolbar(newAction, wizardAction, saveAction, loadAction, printAction,
 			sendAction);
 		viewmenus.createMenu(newAction, wizardAction, saveAction, loadAction, printAction,
-			sendAction,
-			exportClipboardAction);
+			sendAction, exportClipboardAction);
 		viewmenus.createViewerContextMenu(tv, new IAction[] {
 			removeAction, countAction
 		});
@@ -252,8 +252,8 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				@Override
 				public void run(){
 					if (actBestellung == null) {
-						setBestellung(new Bestellung(
-							Messages.BestellView_Automatic, CoreHub.actUser)); //$NON-NLS-1$
+						setBestellung(new Bestellung(Messages.BestellView_Automatic,
+							CoreHub.actUser)); //$NON-NLS-1$
 					}
 					/*
 					 * Query<Artikel> qbe=new Query<Artikel>(Artikel.class);
@@ -405,8 +405,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 								
 								sender.store(actBestellung);
 								sender.finalizeExport();
-								SWTHelper.showInfo(
-									Messages.BestellView_OrderSentCaption, //$NON-NLS-1$
+								SWTHelper.showInfo(Messages.BestellView_OrderSentCaption, //$NON-NLS-1$
 									Messages.BestellView_OrderSentBody); //$NON-NLS-1$
 								tv.refresh();
 								// mark ordered articles
@@ -414,10 +413,10 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 							} catch (CoreException ex) {
 								ExHandler.handle(ex);
 							} catch (XChangeException xx) {
-								SWTHelper
-									.showError(
-										Messages.BestellView_OrderNotPossible, //$NON-NLS-1$
-										Messages.BestellView_NoAutomaticOrderAvailable + xx.getLocalizedMessage()); //$NON-NLS-1$
+								SWTHelper.showError(
+									Messages.BestellView_OrderNotPossible, //$NON-NLS-1$
+									Messages.BestellView_NoAutomaticOrderAvailable
+										+ xx.getLocalizedMessage()); //$NON-NLS-1$
 								
 							}
 						}
@@ -432,7 +431,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 						new SelectBestellungDialog(getViewSite().getShell());
 					dlg.setMessage(Messages.BestellView_SelectOrder); //$NON-NLS-1$
 					dlg.setTitle(Messages.BestellView_ReadOrder); //$NON-NLS-1$
-
+					
 					if (dlg.open() == Dialog.OK) {
 						// js: Only a non-empty result should be used any further.
 						if (dlg.getResult().length > 0) {

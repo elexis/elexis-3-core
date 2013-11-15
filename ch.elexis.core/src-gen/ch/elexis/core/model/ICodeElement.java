@@ -13,60 +13,56 @@ package ch.elexis.core.model;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>ICode Element</b></em>'.
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>ICode Element</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
+ * 
  * @see ch.elexis.core.model.ModelPackage#getICodeElement()
  * @model interface="true" abstract="true"
  * @generated
  */
 public interface ICodeElement {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getCodeSystemName();
 	
-	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
-	 String getCodeSystemCode();
+	String getCodeSystemCode();
 	
-	 /**
-	 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getId();
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getCode();
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getText();
-
-
+	
 	/**
 	 * <!-- begin-user-doc -->
 	 * 
@@ -76,12 +72,11 @@ public interface ICodeElement {
 	 * @return a list castable to IAction using <code>(Iterable<IAction>)(Iterable<?>)</code>
 	 * @deprecated
 	 * @since 3.0.0 method is bound for removal, please refactor
-	 *
-	 * <!-- end-user-doc -->
+	 * 
+	 *        <!-- end-user-doc -->
 	 * @model
 	 * @generated not
 	 */
 	List<Object> getActions(Object context);
-
-
+	
 } // ICodeElement

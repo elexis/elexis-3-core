@@ -33,24 +33,20 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IPersistentObject;
 
 /**
- * The Elexis event dispatcher system manages and distributes the information of
- * changing, creating, deleting and selecting PersistentObjects. An event is
- * fired when such an action occures. This might be due to a user interaction or
- * to an non-interactive job.
+ * The Elexis event dispatcher system manages and distributes the information of changing, creating,
+ * deleting and selecting PersistentObjects. An event is fired when such an action occures. This
+ * might be due to a user interaction or to an non-interactive job.
  * 
- * A view that handles user selection of PersistentObjects MUST fire an
- * appropriate Event through
- * ElexisEventdispatcher.getinstance().fire(ElexisEvent ee) Notification of
- * deletion, modification and creation of PeristentObjects occurs transparently
- * via the PersistentObject base class.
+ * A view that handles user selection of PersistentObjects MUST fire an appropriate Event through
+ * ElexisEventdispatcher.getinstance().fire(ElexisEvent ee) Notification of deletion, modification
+ * and creation of PeristentObjects occurs transparently via the PersistentObject base class.
  * 
- * A client that wishes to be informed on such events must register an
- * ElexisEventListener. The catchElexisEvent() Method of this listener is called
- * in a non-UI-thread an should be finished as fast as possible. If lengthy
- * operations are neccessary, these must be sheduled in a separate thread, The
- * Listener can specify objects, classes and event types it wants to be
- * informed. If no such filter is given, it will be informed about all events.
- *
+ * A client that wishes to be informed on such events must register an ElexisEventListener. The
+ * catchElexisEvent() Method of this listener is called in a non-UI-thread an should be finished as
+ * fast as possible. If lengthy operations are neccessary, these must be sheduled in a separate
+ * thread, The Listener can specify objects, classes and event types it wants to be informed. If no
+ * such filter is given, it will be informed about all events.
+ * 
  * @since 3.0.0 major changes, switch to {@link ElexisContext}
  */
 public final class ElexisEventDispatcher extends Job {
@@ -59,20 +55,19 @@ public final class ElexisEventDispatcher extends Job {
 	private final Map<Class<?>, IElexisEventDispatcher> dispatchers;
 	private final PriorityQueue<ElexisEvent> eventQueue;
 	private transient boolean bStop = false;
-	private final Logger log = LoggerFactory
-			.getLogger(ElexisEventDispatcher.class.getName());
-
+	private final Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class.getName());
+	
 	private final ElexisContext elexisUIContext;
-
-	public static ElexisEventDispatcher getInstance() {
+	
+	public static ElexisEventDispatcher getInstance(){
 		if (theInstance == null) {
 			theInstance = new ElexisEventDispatcher();
 			theInstance.schedule();
 		}
 		return theInstance;
 	}
-
-	private ElexisEventDispatcher() {
+	
+	private ElexisEventDispatcher(){
 		super(ElexisEventDispatcher.class.getName());
 		setSystem(true);
 		setUser(false);
@@ -80,37 +75,33 @@ public final class ElexisEventDispatcher extends Job {
 		listeners = new LinkedList<ElexisEventListener>();
 		dispatchers = new HashMap<Class<?>, IElexisEventDispatcher>();
 		eventQueue = new PriorityQueue<ElexisEvent>(50);
-
+		
 		elexisUIContext = new ElexisContext();
 	}
-
+	
 	/**
-	 * It is possible to register a dispatcher for a given class. If such a
-	 * dispatcher exists, as an event of this class is fired, the event will be
-	 * routed through that dispatcher. Only one dispatcher can be registered for
-	 * a given class. The main purpose of this feature is to allow plugins to
-	 * take care of their data classes by themselves.
+	 * It is possible to register a dispatcher for a given class. If such a dispatcher exists, as an
+	 * event of this class is fired, the event will be routed through that dispatcher. Only one
+	 * dispatcher can be registered for a given class. The main purpose of this feature is to allow
+	 * plugins to take care of their data classes by themselves.
 	 * 
 	 * @param eventClass
-	 *            A Subclass of PersistentObject the dispatcher will take care
-	 *            of
+	 *            A Subclass of PersistentObject the dispatcher will take care of
 	 * @param ied
 	 *            the dispatcher to register
 	 * @throws ElexisException
 	 *             if there is already a dispatcher registered for that class.
 	 */
-
-	public void registerDispatcher(
-			final Class<? extends PersistentObject> eventClass,
-			final IElexisEventDispatcher ied) throws ElexisException {
+	
+	public void registerDispatcher(final Class<? extends PersistentObject> eventClass,
+		final IElexisEventDispatcher ied) throws ElexisException{
 		if (dispatchers.get(eventClass) != null) {
 			throw new ElexisException(getClass(), "Duplicate dispatcher for "
-					+ eventClass.getName(),
-					ElexisException.EE_DUPLICATE_DISPATCHER);
+				+ eventClass.getName(), ElexisException.EE_DUPLICATE_DISPATCHER);
 		}
 		dispatchers.put(eventClass, ied);
 	}
-
+	
 	/**
 	 * Unregister a previously registered dispatcher
 	 * 
@@ -119,30 +110,27 @@ public final class ElexisEventDispatcher extends Job {
 	 * @param ied
 	 *            the dispatcher to unregister
 	 * @throws ElexisException
-	 *             if the dispatcher was not registered, or if the class was
-	 *             registered with a different dispatcher
+	 *             if the dispatcher was not registered, or if the class was registered with a
+	 *             different dispatcher
 	 */
-	public void unregisterDispatcher(
-			final Class<? extends PersistentObject> ec,
-			final IElexisEventDispatcher ied) throws ElexisException {
+	public void unregisterDispatcher(final Class<? extends PersistentObject> ec,
+		final IElexisEventDispatcher ied) throws ElexisException{
 		if (ied != dispatchers.get(ec)) {
-			throw new ElexisException(getClass(),
-					"Tried to remove unowned dispatcher " + ec.getName(),
-					ElexisException.EE_BAD_DISPATCHER);
+			throw new ElexisException(getClass(), "Tried to remove unowned dispatcher "
+				+ ec.getName(), ElexisException.EE_BAD_DISPATCHER);
 		}
 	}
-
+	
 	/**
-	 * Add listeners for ElexisEvents. The listener tells the system via its
-	 * getElexisEventFilter method, what classes it will catch. If a dispatcher
-	 * for that class was registered, the call will be routed to that
-	 * dispatcher.
+	 * Add listeners for ElexisEvents. The listener tells the system via its getElexisEventFilter
+	 * method, what classes it will catch. If a dispatcher for that class was registered, the call
+	 * will be routed to that dispatcher.
 	 * 
 	 * @param el
-	 *            one ore more ElexisEventListeners that have to return valid
-	 *            values on el.getElexisEventFilter()
+	 *            one ore more ElexisEventListeners that have to return valid values on
+	 *            el.getElexisEventFilter()
 	 */
-	public void addListeners(final ElexisEventListener... els) {
+	public void addListeners(final ElexisEventListener... els){
 		synchronized (listeners) {
 			for (ElexisEventListener el : els) {
 				ElexisEvent event = el.getElexisEventFilter();
@@ -156,15 +144,15 @@ public final class ElexisEventDispatcher extends Job {
 			}
 		}
 	}
-
+	
 	/**
-	 * remove listeners. If a listener was added before, it will be removed.
-	 * Otherwise nothing will happen
+	 * remove listeners. If a listener was added before, it will be removed. Otherwise nothing will
+	 * happen
 	 * 
 	 * @param el
 	 *            The Listener to remove
 	 */
-	public void removeListeners(ElexisEventListener... els) {
+	public void removeListeners(ElexisEventListener... els){
 		synchronized (listeners) {
 			for (ElexisEventListener el : els) {
 				final ElexisEvent ev = el.getElexisEventFilter();
@@ -178,80 +166,77 @@ public final class ElexisEventDispatcher extends Job {
 			}
 		}
 	}
-
+	
 	/**
 	 * 
 	 * @param me
 	 * @since 3.0.0
 	 */
-	public void fireMessageEvent(MessageEvent me) {
-		ElexisEvent ev = new ElexisEvent(me, MessageEvent.class,
-				ElexisEvent.EVENT_NOTIFICATION, ElexisEvent.PRIORITY_SYNC);
+	public void fireMessageEvent(MessageEvent me){
+		ElexisEvent ev =
+			new ElexisEvent(me, MessageEvent.class, ElexisEvent.EVENT_NOTIFICATION,
+				ElexisEvent.PRIORITY_SYNC);
 		fire(ev);
 	}
-
+	
 	/**
-	 * Fire an ElexisEvent. The class concerned is named in ee.getObjectClass.
-	 * If a dispatcher for that class was registered, the event will be
-	 * forwarded to that dispatcher. Otherwise, it will be sent to all
-	 * registered listeners. The call to the dispatcher or the listener will
-	 * always be in a separate thread and not in the UI thread.So care has to be
-	 * taken if the callee has to change the UI Note: Only one Event is
-	 * dispatched at a given time. If more events arrive, they will be pushed
-	 * into a FIFO-Queue. If more than one equivalent event is pushed into the
-	 * queue, only the last entered will be dispatched.
+	 * Fire an ElexisEvent. The class concerned is named in ee.getObjectClass. If a dispatcher for
+	 * that class was registered, the event will be forwarded to that dispatcher. Otherwise, it will
+	 * be sent to all registered listeners. The call to the dispatcher or the listener will always
+	 * be in a separate thread and not in the UI thread.So care has to be taken if the callee has to
+	 * change the UI Note: Only one Event is dispatched at a given time. If more events arrive, they
+	 * will be pushed into a FIFO-Queue. If more than one equivalent event is pushed into the queue,
+	 * only the last entered will be dispatched.
 	 * 
 	 * @param ee
 	 *            the event to fire.
 	 */
-	public void fire(final ElexisEvent... ees) {
+	public void fire(final ElexisEvent... ees){
 		for (ElexisEvent ee : ees) {
-
+			
 			// Those are single events
 			if (ee.getPriority() == ElexisEvent.PRIORITY_SYNC
-					&& ee.getType() != ElexisEvent.EVENT_SELECTED) {
+				&& ee.getType() != ElexisEvent.EVENT_SELECTED) {
 				doDispatch(ee);
 				continue;
 			}
-
+			
 			int eventType = ee.getType();
-
+			
 			if (eventType == ElexisEvent.EVENT_SELECTED
-					|| eventType == ElexisEvent.EVENT_DESELECTED) {
+				|| eventType == ElexisEvent.EVENT_DESELECTED) {
 				
 				List<ElexisEvent> eventsToThrow = null;
-				eventsToThrow = elexisUIContext.setSelection(
-						ee.getObjectClass(),
-						(eventType == ElexisEvent.EVENT_SELECTED) ? ee
-								.getObject() : null);
-
+				eventsToThrow =
+					elexisUIContext.setSelection(ee.getObjectClass(),
+						(eventType == ElexisEvent.EVENT_SELECTED) ? ee.getObject() : null);
+				
 				for (ElexisEvent elexisEvent : eventsToThrow) {
-					IElexisEventDispatcher ied = dispatchers.get(elexisEvent
-							.getObjectClass());
+					IElexisEventDispatcher ied = dispatchers.get(elexisEvent.getObjectClass());
 					if (ied != null) {
 						ied.fire(elexisEvent);
 					}
-
+					
 					synchronized (eventQueue) {
 						eventQueue.offer(elexisEvent);
 					}
-
+					
 				}
 				continue;
 			}
-
+			
 			IElexisEventDispatcher ied = dispatchers.get(ee.getObjectClass());
 			if (ied != null) {
 				ied.fire(ee);
 			}
-
+			
 			synchronized (eventQueue) {
 				eventQueue.offer(ee);
 			}
-
+			
 		}
 	}
-
+	
 	/**
 	 * Synchronously fire an {@link ElexisStatus} event.
 	 * 
@@ -259,108 +244,99 @@ public final class ElexisEventDispatcher extends Job {
 	 *            an {@link ElexisStatus} describing the problem
 	 * @since 3.0.0
 	 */
-	public static void fireElexisStatusEvent(ElexisStatus es) {
-		ElexisEvent statusEvent = new ElexisEvent(es, ElexisStatus.class,
-				ElexisEvent.EVENT_ELEXIS_STATUS, ElexisEvent.PRIORITY_SYNC);
+	public static void fireElexisStatusEvent(ElexisStatus es){
+		ElexisEvent statusEvent =
+			new ElexisEvent(es, ElexisStatus.class, ElexisEvent.EVENT_ELEXIS_STATUS,
+				ElexisEvent.PRIORITY_SYNC);
 		getInstance().doDispatch(statusEvent);
 	}
-
+	
 	/**
 	 * find the last selected object of a given type
 	 * 
 	 * @param template
 	 *            tha class defining the object to find
-	 * @return the last object of the given type or null if no such object is
-	 *         selected
+	 * @return the last object of the given type or null if no such object is selected
 	 */
-	public static IPersistentObject getSelected(final Class<?> template) {
+	public static IPersistentObject getSelected(final Class<?> template){
 		return getInstance().elexisUIContext.getSelected(template);
 	}
-
+	
 	/**
 	 * inform the system that an object has been selected
 	 * 
 	 * @param po
 	 *            the object that is selected now
 	 */
-	public static void fireSelectionEvent(PersistentObject po) {
+	public static void fireSelectionEvent(PersistentObject po){
 		if (po != null) {
-			getInstance().fire(
-					new ElexisEvent(po, po.getClass(),
-							ElexisEvent.EVENT_SELECTED));
+			getInstance().fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_SELECTED));
 		}
 	}
-
+	
 	/**
 	 * inform the system, that several objects have been selected
 	 * 
 	 * @param objects
 	 */
-	public static void fireSelectionEvents(PersistentObject... objects) {
+	public static void fireSelectionEvents(PersistentObject... objects){
 		if (objects != null) {
 			ElexisEvent[] ees = new ElexisEvent[objects.length];
 			for (int i = 0; i < objects.length; i++) {
-				ees[i] = new ElexisEvent(objects[i], objects[i].getClass(),
-						ElexisEvent.EVENT_SELECTED);
+				ees[i] =
+					new ElexisEvent(objects[i], objects[i].getClass(), ElexisEvent.EVENT_SELECTED);
 			}
 			getInstance().fire(ees);
 		}
 	}
-
+	
 	/**
-	 * inform the system, that no object of the specified type is selected
-	 * anymore
+	 * inform the system, that no object of the specified type is selected anymore
 	 * 
 	 * @param clazz
 	 *            the class of which selection was removed
 	 */
-	public static void clearSelection(Class<?> clazz) {
+	public static void clearSelection(Class<?> clazz){
 		if (clazz != null) {
-			getInstance().fire(
-					new ElexisEvent(null, clazz, ElexisEvent.EVENT_DESELECTED));
+			getInstance().fire(new ElexisEvent(null, clazz, ElexisEvent.EVENT_DESELECTED));
 		}
 	}
-
+	
 	/**
-	 * inform the system, that all object of a specified class have to be
-	 * reloaded from storage
+	 * inform the system, that all object of a specified class have to be reloaded from storage
 	 * 
 	 * @param clazz
 	 *            the clazz whose objects are invalidated
 	 */
-	public static void reload(Class<?> clazz) {
+	public static void reload(Class<?> clazz){
 		if (clazz != null) {
-			getInstance().fire(
-					new ElexisEvent(null, clazz, ElexisEvent.EVENT_RELOAD));
+			getInstance().fire(new ElexisEvent(null, clazz, ElexisEvent.EVENT_RELOAD));
 		}
 	}
-
+	
 	/**
-	 * inform the system, that the specified object has changed some values or
-	 * properties
+	 * inform the system, that the specified object has changed some values or properties
 	 * 
 	 * @param po
 	 *            the object that was modified
 	 */
-	public static void update(PersistentObject po) {
+	public static void update(PersistentObject po){
 		if (po != null) {
-			getInstance()
-					.fire(new ElexisEvent(po, po.getClass(),
-							ElexisEvent.EVENT_UPDATE));
+			getInstance().fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_UPDATE));
 		}
 	}
-
+	
 	/** shortcut */
-	public static Patient getSelectedPatient() {
+	public static Patient getSelectedPatient(){
 		return (Patient) getSelected(Patient.class);
 	}
-
-	public void shutDown() {
+	
+	public void shutDown(){
 		bStop = true;
 	}
-
+	
 	@Override
-	protected IStatus run(IProgressMonitor monitor) {
+	protected IStatus run(IProgressMonitor monitor){
 		synchronized (eventQueue) {
 			while (!eventQueue.isEmpty()) {
 				doDispatch(eventQueue.poll());
@@ -372,8 +348,8 @@ public final class ElexisEventDispatcher extends Job {
 		}
 		return Status.OK_STATUS;
 	}
-
-	private void doDispatch(final ElexisEvent ee) {
+	
+	private void doDispatch(final ElexisEvent ee){
 		if (ee != null) {
 			synchronized (listeners) {
 				for (final ElexisEventListener l : listeners) {
@@ -384,17 +360,17 @@ public final class ElexisEventDispatcher extends Job {
 			}
 		}
 	}
-
+	
 	/**
-	 * Let the dispatcher Thread empty the queue. If the queue is empty, this
-	 * method returns immediately. Otherwise, the current thread waits until it
-	 * is empty or the provided wasit time has expired.
+	 * Let the dispatcher Thread empty the queue. If the queue is empty, this method returns
+	 * immediately. Otherwise, the current thread waits until it is empty or the provided wasit time
+	 * has expired.
 	 * 
 	 * @param millis
 	 *            The time to wait bevor returning
 	 * @return false if waiting was interrupted
 	 */
-	public boolean waitUntilEventQueueIsEmpty(long millis) {
+	public boolean waitUntilEventQueueIsEmpty(long millis){
 		synchronized (eventQueue) {
 			if (!eventQueue.isEmpty()) {
 				try {
@@ -407,20 +383,19 @@ public final class ElexisEventDispatcher extends Job {
 		}
 		return false;
 	}
-
-	public void dump() {
+	
+	public void dump(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("ElexisEventDispatcher dump: \n");
 		for (ElexisEventListener el : listeners) {
 			ElexisEvent filter = el.getElexisEventFilter();
 			sb.append(el.getClass().getName()).append(": ");
 			if (filter != null && filter.getObjectClass() != null
-					&& filter.getObjectClass().getName() != null) {
-				sb.append(filter.type).append(" / ")
-						.append(filter.getObjectClass().getName());
+				&& filter.getObjectClass().getName() != null) {
+				sb.append(filter.type).append(" / ").append(filter.getObjectClass().getName());
 			}
 			sb.append("\n");
-
+			
 		}
 		sb.append("\n--------------\n");
 		log.debug(sb.toString());

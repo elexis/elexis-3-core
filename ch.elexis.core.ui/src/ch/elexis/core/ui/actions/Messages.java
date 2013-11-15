@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.actions.messages";//$NON-NLS-1$
-
+	
 	public static String BackgroundJob_0;
 	public static String BackgroundJob_1;
 	public static String BackgroundJob_2;
@@ -89,7 +89,7 @@ public class Messages extends NLS {
 	public static String HistoryLoader_Sorting;
 	public static String ListLoader_CouldntLoadData;
 	public static String PersistentObjectLoader_LoadingData;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -16,14 +16,14 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 
 public class CoreEventListenerRegistrar {
-
+	
 	private ElexisEventListener eeli_messageEvent;
 	private ElexisEventListener eeli_elexisEvent;
 	
-	public CoreEventListenerRegistrar() {
+	public CoreEventListenerRegistrar(){
 		eeli_messageEvent = new MessageEventListener();
 		eeli_elexisEvent = new ElexisStatusEventEventListener();
-				
+		
 		ElexisEventDispatcher.getInstance().addListeners(eeli_messageEvent, eeli_elexisEvent);
 	}
 }

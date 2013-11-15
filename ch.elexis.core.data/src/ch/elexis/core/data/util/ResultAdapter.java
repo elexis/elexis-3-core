@@ -28,50 +28,46 @@ import ch.rgw.tools.Result;
  * 
  */
 public class ResultAdapter {
-
+	
 	private static final String PLUGIN_ID = "ch.elexis"; //$NON-NLS-1$
-
+	
 	/**
 	 * Den Status als Eclipse IStatus bzw. MultiStatus abholen
 	 * 
 	 * @return
 	 */
-
+	
 	@SuppressWarnings("unchecked")
-	public static IStatus getResultAsStatus(Result result) {
+	public static IStatus getResultAsStatus(Result result){
 		if (result.isOK()) {
 			return org.eclipse.core.runtime.Status.OK_STATUS;
 		} else {
 			List<Result.msg> list = result.getMessages();
 			if (list.size() == 1) {
 				Result.msg r = list.get(0);
-				return new org.eclipse.core.runtime.Status(
-						getSeverityAsStatus(r.getSeverity()), PLUGIN_ID,
-						r.getCode(),
-						r.getText() == null ? "?" : r.getText(), null); //$NON-NLS-1$
+				return new org.eclipse.core.runtime.Status(getSeverityAsStatus(r.getSeverity()),
+					PLUGIN_ID, r.getCode(), r.getText() == null ? "?" : r.getText(), null); //$NON-NLS-1$
 			} else {
 				ArrayList<IStatus> as = new ArrayList<IStatus>();
 				Result.msg r = list.get(0);
 				for (Result.msg m : list) {
 					as.add(new org.eclipse.core.runtime.Status(
-							getSeverityAsStatus(m.getSeverity()), PLUGIN_ID, m
-									.getCode(), m.getText(), null)); //$NON-NLS-1$
+						getSeverityAsStatus(m.getSeverity()), PLUGIN_ID, m.getCode(), m.getText(),
+						null)); //$NON-NLS-1$
 					if (m.getSeverity().ordinal() > r.getSeverity().ordinal()) {
 						r = m;
 					}
 				}
-				return new MultiStatus(PLUGIN_ID, r.getCode(),
-						as.toArray(new IStatus[0]),
-						r.getText() == null ? "?" : r.getText(), null); //$NON-NLS-1$
+				return new MultiStatus(PLUGIN_ID, r.getCode(), as.toArray(new IStatus[0]),
+					r.getText() == null ? "?" : r.getText(), null); //$NON-NLS-1$
 			}
 		}
 	}
-
+	
 	/**
-	 * Mapping zwischen Severity und RCP Status Severity (Status.OK,
-	 * Stauts.INFO, usw)
+	 * Mapping zwischen Severity und RCP Status Severity (Status.OK, Stauts.INFO, usw)
 	 */
-	public static int getSeverityAsStatus(final Result.SEVERITY severity) {
+	public static int getSeverityAsStatus(final Result.SEVERITY severity){
 		switch (severity.ordinal()) {
 		case 0:
 			return Status.OK;
@@ -84,8 +80,8 @@ public class ResultAdapter {
 		}
 		return Status.ERROR;
 	}
-
-	public static void displayResult(final Result result, final String title) {
+	
+	public static void displayResult(final Result result, final String title){
 		MessageEvent.fireError(title, result.toString());
 	}
 }

@@ -40,12 +40,12 @@ import ch.rgw.tools.StringTool;
 
 public class UiDesk {
 	private static FormToolkit theToolkit = null;
-
+	
 	private static Display theDisplay = null;
 	private static ImageRegistry theImageRegistry = null;
 	private static ColorRegistry theColorRegistry = null;
 	private static HashMap<String, Cursor> cursors = null;
-
+	
 	public static final String COL_RED = "rot"; //$NON-NLS-1$
 	public static final String COL_GREEN = "gruen"; //$NON-NLS-1$
 	public static final String COL_BLUE = "blau"; //$NON-NLS-1$
@@ -58,32 +58,29 @@ public class UiDesk {
 	public static final String COL_LIGHTGREY = "hellgrau"; //$NON-NLS-1$
 	public static final String COL_GREY60 = "grau60"; //$NON-NLS-1$
 	public static final String COL_GREY20 = "grau20"; //$NON-NLS-1$
-
+	
 	public static final String CUR_HYPERLINK = "cursor_hyperlink"; //$NON-NLS-1$
-
-	public static ImageRegistry getImageRegistry() {
+	
+	public static ImageRegistry getImageRegistry(){
 		if (theImageRegistry == null) {
 			theImageRegistry = new ImageRegistry(getDisplay());
-			synchronized (theImageRegistry) {
-			}
+			synchronized (theImageRegistry) {}
 		}
 		return theImageRegistry;
 	}
-
+	
 	/**
-	 * Return an image with a specified name. This method is applicable for
-	 * images only, that has been registered beforehand. The default images
-	 * resp. icons are delivered by a separate plugin (in the core this is
-	 * ch.elexis.core.ui.icons)
+	 * Return an image with a specified name. This method is applicable for images only, that has
+	 * been registered beforehand. The default images resp. icons are delivered by a separate plugin
+	 * (in the core this is ch.elexis.core.ui.icons)
 	 * 
 	 * @param name
 	 *            the name of the image to retrieve
 	 * @return the Image or null if no such image was found
 	 * 
-	 * @since 3.0.0 will only serve pre-registered icons, <b>default icons have
-	 *        been outsourced</b>
+	 * @since 3.0.0 will only serve pre-registered icons, <b>default icons have been outsourced</b>
 	 */
-	public static Image getImage(String name) {
+	public static Image getImage(String name){
 		Image ret = getImageRegistry().get(name);
 		if (ret == null) {
 			ImageDescriptor id = getImageRegistry().getDescriptor(name);
@@ -93,28 +90,28 @@ public class UiDesk {
 		}
 		return ret;
 	}
-
+	
 	/** shortcut for getColorRegistry().get(String col) */
-	public static Color getColor(String desc) {
+	public static Color getColor(String desc){
 		return getColorRegistry().get(desc);
 	}
-
-	public static ColorRegistry getColorRegistry() {
-
+	
+	public static ColorRegistry getColorRegistry(){
+		
 		if (theColorRegistry == null) {
 			theColorRegistry = new ColorRegistry(getDisplay(), true);
 		}
 		return theColorRegistry;
 	}
-
-	public static FormToolkit getToolkit() {
+	
+	public static FormToolkit getToolkit(){
 		if (theToolkit == null) {
 			theToolkit = new FormToolkit(getDisplay());
 		}
 		return theToolkit;
 	}
-
-	public static Display getDisplay() {
+	
+	public static Display getDisplay(){
 		if (theDisplay == null) {
 			if (PlatformUI.isWorkbenchRunning()) {
 				theDisplay = PlatformUI.getWorkbench().getDisplay();
@@ -125,36 +122,39 @@ public class UiDesk {
 		}
 		return theDisplay;
 	}
-
-	public static void updateFont(String cfgName) {
+	
+	public static void updateFont(String cfgName){
 		FontRegistry fr = JFaceResources.getFontRegistry();
-		FontData[] fd = PreferenceConverter.getFontDataArray(
-				new SettingsPreferenceStore(CoreHub.userCfg), cfgName);
+		FontData[] fd =
+			PreferenceConverter.getFontDataArray(new SettingsPreferenceStore(CoreHub.userCfg),
+				cfgName);
 		fr.put(cfgName, fd);
 	}
-
-	public static Font getFont(String cfgName) {
+	
+	public static Font getFont(String cfgName){
 		FontRegistry fr = JFaceResources.getFontRegistry();
 		if (!fr.hasValueFor(cfgName)) {
-			FontData[] fd = PreferenceConverter.getFontDataArray(
-					new SettingsPreferenceStore(CoreHub.userCfg), cfgName);
+			FontData[] fd =
+				PreferenceConverter.getFontDataArray(new SettingsPreferenceStore(CoreHub.userCfg),
+					cfgName);
 			fr.put(cfgName, fd);
 		}
 		return fr.get(cfgName);
 	}
-
-	public static Font getFont(String name, int height, int style) {
-		String key = name
-				+ ":" + Integer.toString(height) + ":" + Integer.toString(style); //$NON-NLS-1$ //$NON-NLS-2$
+	
+	public static Font getFont(String name, int height, int style){
+		String key = name + ":" + Integer.toString(height) + ":" + Integer.toString(style); //$NON-NLS-1$ //$NON-NLS-2$
 		FontRegistry fr = JFaceResources.getFontRegistry();
 		if (!fr.hasValueFor(key)) {
-			FontData[] fd = new FontData[] { new FontData(name, height, style) };
+			FontData[] fd = new FontData[] {
+				new FontData(name, height, style)
+			};
 			fr.put(key, fd);
 		}
 		return fr.get(key);
 	}
-
-	public static Cursor getCursor(String name) {
+	
+	public static Cursor getCursor(String name){
 		if (cursors == null) {
 			cursors = new HashMap<String, Cursor>();
 		}
@@ -167,7 +167,7 @@ public class UiDesk {
 		}
 		return ret;
 	}
-
+	
 	/**
 	 * Eine Color aus einer RGB-Beschreibung als Hex-String herstellen
 	 * 
@@ -175,14 +175,14 @@ public class UiDesk {
 	 *            Die Farbe als Beschreibung in Hex-Form
 	 * @return die Farbe als Color, ist in Regisry gespeichert
 	 */
-	public static Color getColorFromRGB(final String coldesc) {
+	public static Color getColorFromRGB(final String coldesc){
 		String col = StringTool.pad(StringTool.LEFT, '0', coldesc, 6);
 		if (!getColorRegistry().hasValueFor(col)) {
 			RGB rgb;
 			try {
-				rgb = new RGB(Integer.parseInt(col.substring(0, 2), 16),
-						Integer.parseInt(col.substring(2, 4), 16),
-						Integer.parseInt(col.substring(4, 6), 16));
+				rgb =
+					new RGB(Integer.parseInt(col.substring(0, 2), 16), Integer.parseInt(
+						col.substring(2, 4), 16), Integer.parseInt(col.substring(4, 6), 16));
 			} catch (NumberFormatException nex) {
 				ExHandler.handle(nex);
 				rgb = new RGB(100, 100, 100);
@@ -191,7 +191,7 @@ public class UiDesk {
 		}
 		return getColorRegistry().get(col);
 	}
-
+	
 	/**
 	 * Eine Hex-String Beschreibung einer Farbe liefern
 	 * 
@@ -199,16 +199,12 @@ public class UiDesk {
 	 *            Die Farbe in RGB-Form
 	 * @return
 	 */
-	public static String createColor(final RGB rgb) {
+	public static String createColor(final RGB rgb){
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(
-					StringTool.pad(StringTool.LEFT, '0',
-							Integer.toHexString(rgb.red), 2))
-					.append(StringTool.pad(StringTool.LEFT, '0',
-							Integer.toHexString(rgb.green), 2))
-					.append(StringTool.pad(StringTool.LEFT, '0',
-							Integer.toHexString(rgb.blue), 2));
+			sb.append(StringTool.pad(StringTool.LEFT, '0', Integer.toHexString(rgb.red), 2))
+				.append(StringTool.pad(StringTool.LEFT, '0', Integer.toHexString(rgb.green), 2))
+				.append(StringTool.pad(StringTool.LEFT, '0', Integer.toHexString(rgb.blue), 2));
 			String srgb = sb.toString();
 			getColorRegistry().put(srgb, rgb);
 			return srgb;
@@ -217,27 +213,27 @@ public class UiDesk {
 			return "A0A0A0";
 		}
 	}
-
-	public static Shell getTopShell() {
+	
+	public static Shell getTopShell(){
 		return getDisplay().getActiveShell();
 	}
-
+	
 	/**
-	 * Run a runnable asynchroneously in the UI Thread The method will
-	 * immediately return (not wait for the runnable to exit)
+	 * Run a runnable asynchroneously in the UI Thread The method will immediately return (not wait
+	 * for the runnable to exit)
 	 */
-	public static void asyncExec(Runnable runnable) {
+	public static void asyncExec(Runnable runnable){
 		Display disp = getDisplay();
 		disp.asyncExec(runnable);
 	}
-
+	
 	/**
-	 * Run a runnable synchroneously in the UI Thread. The method will not
-	 * return until the runnable exited
+	 * Run a runnable synchroneously in the UI Thread. The method will not return until the runnable
+	 * exited
 	 * 
 	 * @param runnable
 	 */
-	public static void syncExec(Runnable runnable) {
+	public static void syncExec(Runnable runnable){
 		getDisplay().syncExec(runnable);
 		// BusyIndicator.showWhile(getDisplay(), runnable);
 	}

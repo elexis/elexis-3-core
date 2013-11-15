@@ -48,7 +48,7 @@ public class Messages extends NLS {
 	public static String CodeSelectorFactory_yourMostFrequent;
 	public static String CodeSelectorFactory_resetStatistic;
 	public static String LeistungenView_error;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -25,11 +25,11 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 /**
- * Eine Verordnung. Also ein Artikel zusmamen mit einer Einnahmevorschrift,
- * verkn√ºpft mit einem Patienten.
+ * Eine Verordnung. Also ein Artikel zusmamen mit einer Einnahmevorschrift, verkn√ºpft mit einem
+ * Patienten.
  */
 public class Prescription extends PersistentObject {
-
+	
 	public static final String TERMS = "terms";
 	public static final String DATE_UNTIL = "DatumBis";
 	public static final String DATE_FROM = "DatumVon";
@@ -42,22 +42,22 @@ public class Prescription extends PersistentObject {
 	public static final String PATIENT_ID = "PatientID";
 	private static final String TABLENAME = "PATIENT_ARTIKEL_JOINT";
 	static {
-		addMapping(TABLENAME, PATIENT_ID, ARTICLE, ARTICLE_ID, REZEPT_ID,
-				"DatumVon=S:D:DateFrom", "DatumBis=S:D:DateUntil", DOSAGE,
-				REMARK, COUNT, FLD_EXTINFO);
+		addMapping(TABLENAME, PATIENT_ID, ARTICLE, ARTICLE_ID, REZEPT_ID, "DatumVon=S:D:DateFrom",
+			"DatumBis=S:D:DateUntil", DOSAGE, REMARK, COUNT, FLD_EXTINFO);
 	}
-
-	public Prescription(Artikel a, Patient p, String dosage, String remark) {
+	
+	public Prescription(Artikel a, Patient p, String dosage, String remark){
 		create(null);
 		String article = a.storeToString();
-		set(new String[] { ARTICLE, PATIENT_ID, DOSAGE, REMARK, DATE_FROM },
-				article, p.getId(), dosage, remark,
-				new TimeTool().toString(TimeTool.DATE_GER));
+		set(new String[] {
+			ARTICLE, PATIENT_ID, DOSAGE, REMARK, DATE_FROM
+		}, article, p.getId(), dosage, remark, new TimeTool().toString(TimeTool.DATE_GER));
 	}
-
-	public Prescription(Prescription other) {
-		String[] fields = new String[] { ARTICLE, PATIENT_ID, DOSAGE, REMARK,
-				ARTICLE_ID };
+	
+	public Prescription(Prescription other){
+		String[] fields = new String[] {
+			ARTICLE, PATIENT_ID, DOSAGE, REMARK, ARTICLE_ID
+		};
 		String[] vals = new String[fields.length];
 		if (other.get(fields, vals)) {
 			create(null);
@@ -65,50 +65,45 @@ public class Prescription extends PersistentObject {
 			addTerm(new TimeTool(), vals[2]);
 		}
 	}
-
-	public static Prescription load(String id) {
+	
+	public static Prescription load(String id){
 		return new Prescription(id);
 	}
-
-	protected Prescription() {
-	}
-
-	protected Prescription(String id) {
+	
+	protected Prescription(){}
+	
+	protected Prescription(String id){
 		super(id);
 	}
-
+	
 	/**
 	 * Set the begin date of this prescription
 	 * 
 	 * @param date
 	 *            may be null to set it as today
 	 */
-	public void setBeginDate(String date) {
-		set(DATE_FROM,
-				date == null ? new TimeTool().toString(TimeTool.DATE_GER)
-						: date);
+	public void setBeginDate(String date){
+		set(DATE_FROM, date == null ? new TimeTool().toString(TimeTool.DATE_GER) : date);
 	}
-
-	public String getBeginDate() {
+	
+	public String getBeginDate(){
 		return checkNull(get(DATE_FROM));
 	}
-
-	public void setEndDate(String date) {
-		set(DATE_UNTIL,
-				date == null ? new TimeTool().toString(TimeTool.DATE_GER)
-						: date);
+	
+	public void setEndDate(String date){
+		set(DATE_UNTIL, date == null ? new TimeTool().toString(TimeTool.DATE_GER) : date);
 	}
-
-	public String getEndDate() {
+	
+	public String getEndDate(){
 		return checkNull(get(DATE_UNTIL));
 	}
-
+	
 	@Override
-	public String getLabel() {
+	public String getLabel(){
 		return getSimpleLabel() + " " + getDosis();
 	}
-
-	public String getSimpleLabel() {
+	
+	public String getSimpleLabel(){
 		Artikel art = getArtikel();
 		if (art != null) {
 			return getArtikel().getLabel();
@@ -116,50 +111,50 @@ public class Prescription extends PersistentObject {
 			return "Fehler";
 		}
 	}
-
+	
 	/**
-	 * return the article contained in this prescription. In earlier versions of
-	 * elexis, this was the Article ID, now it is a String representation of the
-	 * Article itself (which allows for reconstruction of the subclass used).
-	 * For compatibility reasons we use the old technique for old prescriptions.
+	 * return the article contained in this prescription. In earlier versions of elexis, this was
+	 * the Article ID, now it is a String representation of the Article itself (which allows for
+	 * reconstruction of the subclass used). For compatibility reasons we use the old technique for
+	 * old prescriptions.
 	 * 
 	 * @return
 	 */
-	public Artikel getArtikel() {
+	public Artikel getArtikel(){
 		// compatibility layer
 		String art = get(ARTICLE);
 		if (StringTool.isNothing(art)) {
 			return Artikel.load(get(ARTICLE_ID));
 		}
 		return (Artikel) CoreHub.poFactory.createFromString(art);
-
+		
 	}
-
-	public String getDosis() {
+	
+	public String getDosis(){
 		return checkNull(get(DOSAGE));
 	}
-
-	public void setDosis(String newDose) {
+	
+	public void setDosis(String newDose){
 		String oldDose = getDosis();
 		if (!oldDose.equals(newDose)) {
 			addTerm(new TimeTool(), newDose);
 		}
 	}
-
-	public String getBemerkung() {
+	
+	public String getBemerkung(){
 		return checkNull(get(REMARK));
-
+		
 	}
-
-	public void setBemerkung(String value) {
+	
+	public void setBemerkung(String value){
 		set(REMARK, checkNull(value));
 	}
-
+	
 	/**
 	 * Ein Medikament stoppen
 	 */
 	@Override
-	public boolean delete() {
+	public boolean delete(){
 		if (CoreHub.acl.request(AccessControlDefaults.MEDICATION_MODIFY)) {
 			TimeTool today = new TimeTool();
 			today.addHours(-24);
@@ -168,29 +163,28 @@ public class Prescription extends PersistentObject {
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Ein Medikament aus der Datenbank l√∂schen
 	 * 
 	 * @return
 	 */
-	public boolean remove() {
+	public boolean remove(){
 		if (CoreHub.acl.request(AccessControlDefaults.DELETE_MEDICATION)) {
 			return super.delete();
 		}
 		return false;
 	}
-
+	
 	/**
-	 * Insert a new dosage term, defined by a beginning date and a dose We store
-	 * the old dose and its beginning date in the field "terms".
+	 * Insert a new dosage term, defined by a beginning date and a dose We store the old dose and
+	 * its beginning date in the field "terms".
 	 * 
 	 * @param dose
-	 *            a dosage definition of the form "1-0-0-0" or "0" to stop the
-	 *            article
+	 *            a dosage definition of the form "1-0-0-0" or "0" to stop the article
 	 */
 	@SuppressWarnings("unchecked")
-	public void addTerm(TimeTool begin, String dose) {
+	public void addTerm(TimeTool begin, String dose){
 		Map extInfo = getMap(FLD_EXTINFO);
 		String raw = (String) extInfo.get(TERMS);
 		if (raw == null) {
@@ -199,8 +193,7 @@ public class Prescription extends PersistentObject {
 		String lastBegin = get(DATE_FROM);
 		String lastDose = get(DOSAGE);
 		StringBuilder line = new StringBuilder();
-		line.append(StringTool.flattenSeparator).append(lastBegin).append("::")
-				.append(lastDose);
+		line.append(StringTool.flattenSeparator).append(lastBegin).append("::").append(lastDose);
 		raw += line.toString();
 		extInfo.put(TERMS, raw);
 		setMap(FLD_EXTINFO, extInfo);
@@ -210,14 +203,14 @@ public class Prescription extends PersistentObject {
 			set(DATE_UNTIL, begin.toString(TimeTool.DATE_GER));
 		}
 	}
-
+	
 	/**
-	 * A listing of all adinistration periods of this prescription. This is to
-	 * retrieve later when and how the article was prescribed
+	 * A listing of all adinistration periods of this prescription. This is to retrieve later when
+	 * and how the article was prescribed
 	 * 
 	 * @return a Map of TimeTools and Doses (Sorted by date)
 	 */
-	public SortedMap<TimeTool, String> getTerms() {
+	public SortedMap<TimeTool, String> getTerms(){
 		TreeMap<TimeTool, String> ret = new TreeMap<TimeTool, String>();
 		Map extInfo = getMap(FLD_EXTINFO);
 		String raw = (String) extInfo.get(TERMS);
@@ -240,9 +233,8 @@ public class Prescription extends PersistentObject {
 		ret.put(new TimeTool(get(DATE_FROM)), get(DOSAGE));
 		return ret;
 	}
-
-	public static float calculateTagesDosis(String dosis)
-			throws NumberFormatException {
+	
+	public static float calculateTagesDosis(String dosis) throws NumberFormatException{
 		float num = 0f;
 		if (dosis != null) {
 			if (dosis.matches("[0-9]+[xX][0-9]+(/[0-9]+)?")) { //$NON-NLS-1$
@@ -266,8 +258,8 @@ public class Prescription extends PersistentObject {
 		}
 		return num;
 	}
-
-	private static float getNum(String num) {
+	
+	private static float getNum(String num){
 		try {
 			String n = num.trim();
 			if (n.equalsIgnoreCase("½"))
@@ -276,7 +268,7 @@ public class Prescription extends PersistentObject {
 				return 0.25F;
 			if (n.equalsIgnoreCase("1½"))
 				return 1.5F;
-
+			
 			if (n.indexOf('/') != -1) {
 				String[] bruch = n.split(StringConstants.SLASH);
 				float zaehler = Float.parseFloat(bruch[0]);
@@ -286,21 +278,21 @@ public class Prescription extends PersistentObject {
 				return Float.parseFloat(n);
 			}
 		} catch (NumberFormatException e) {
-			ElexisStatus status = new ElexisStatus(ElexisStatus.INFO,
-					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+			ElexisStatus status =
+				new ElexisStatus(ElexisStatus.INFO, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					e.getLocalizedMessage(), e);
 			ElexisEventDispatcher.fireElexisStatusEvent(status);
 			return 0.0F;
 		}
 	}
-
+	
 	@Override
-	protected String getTableName() {
+	protected String getTableName(){
 		return TABLENAME;
 	}
-
+	
 	@Override
-	public boolean isDragOK() {
+	public boolean isDragOK(){
 		return true;
 	}
 }

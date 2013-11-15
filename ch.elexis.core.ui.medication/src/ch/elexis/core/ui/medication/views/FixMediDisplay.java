@@ -86,55 +86,51 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 		menu.createControlContextMenu(list, stopMedicationAction, changeMedicationAction, null,
 			removeMedicationAction);
 		setDLDListener(dlisten);
-		target =
-			new PersistentObjectDropTarget(
-				Messages.FixMediDisplay_FixMedikation, this, //$NON-NLS-1$
-				new PersistentObjectDropTarget.IReceiver() {
-					
-					public boolean accept(PersistentObject o){
-						if (o instanceof Prescription) {
-							return true;
-						}
-						if (o instanceof Artikel) {
-							return true;
-						}
-						return false;
+		target = new PersistentObjectDropTarget(Messages.FixMediDisplay_FixMedikation, this, //$NON-NLS-1$
+			new PersistentObjectDropTarget.IReceiver() {
+				
+				public boolean accept(PersistentObject o){
+					if (o instanceof Prescription) {
+						return true;
 					}
+					if (o instanceof Artikel) {
+						return true;
+					}
+					return false;
+				}
+				
+				public void dropped(PersistentObject o, DropTargetEvent e){
 					
-					public void dropped(PersistentObject o, DropTargetEvent e){
-						
-						if (o instanceof Artikel) {
-							Prescription pre =
-								new Prescription((Artikel) o, (Patient) ElexisEventDispatcher
-									.getSelected(Patient.class), StringTool.leer, StringTool.leer);
-							pre.set(Prescription.DATE_FROM,
-								new TimeTool().toString(TimeTool.DATE_GER));
-							MediDetailDialog dlg = new MediDetailDialog(getShell(), pre);
-							if (dlg.open() == Window.OK) {
-								// self.add(pre);
-								reload();
-							}
-							
-						} else if (o instanceof Prescription) {
-							Prescription[] existing =
-								((Patient) ElexisEventDispatcher.getSelected(Patient.class))
-									.getFixmedikation();
-							Prescription pre = (Prescription) o;
-							for (Prescription pe : existing) {
-								if (pe.equals(pre)) {
-									return;
-								}
-							}
-							Prescription now =
-								new Prescription(pre.getArtikel(), ElexisEventDispatcher
-									.getSelectedPatient(), pre.getDosis(), pre.getBemerkung());
-							now.set(Prescription.DATE_FROM,
-								new TimeTool().toString(TimeTool.DATE_GER));
-							// self.add(now);
+					if (o instanceof Artikel) {
+						Prescription pre =
+							new Prescription((Artikel) o, (Patient) ElexisEventDispatcher
+								.getSelected(Patient.class), StringTool.leer, StringTool.leer);
+						pre.set(Prescription.DATE_FROM, new TimeTool().toString(TimeTool.DATE_GER));
+						MediDetailDialog dlg = new MediDetailDialog(getShell(), pre);
+						if (dlg.open() == Window.OK) {
+							// self.add(pre);
 							reload();
 						}
+						
+					} else if (o instanceof Prescription) {
+						Prescription[] existing =
+							((Patient) ElexisEventDispatcher.getSelected(Patient.class))
+								.getFixmedikation();
+						Prescription pre = (Prescription) o;
+						for (Prescription pe : existing) {
+							if (pe.equals(pre)) {
+								return;
+							}
+						}
+						Prescription now =
+							new Prescription(pre.getArtikel(), ElexisEventDispatcher
+								.getSelectedPatient(), pre.getDosis(), pre.getBemerkung());
+						now.set(Prescription.DATE_FROM, new TimeTool().toString(TimeTool.DATE_GER));
+						// self.add(now);
+						reload();
 					}
-				});
+				}
+			});
 		new PersistentObjectDragSource(list, new PersistentObjectDragSource.ISelectionRenderer() {
 			
 			public List<PersistentObject> getSelection(){

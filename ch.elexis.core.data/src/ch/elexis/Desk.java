@@ -14,6 +14,7 @@ import ch.elexis.core.data.activator.CoreHub;
 
 /**
  * Used by {@link CoreHub#loadLocalCfg} to refer to the correct XML configuration node
+ * 
  * @since 3.0.0
  * 
  */

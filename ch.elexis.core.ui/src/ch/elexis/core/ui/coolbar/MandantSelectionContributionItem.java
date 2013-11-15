@@ -107,7 +107,7 @@ public class MandantSelectionContributionItem extends ContributionItem {
 		if (menu != null) {
 			menu.dispose();
 		}
-
+		
 		fParent = parent;
 		menu = new Menu(fParent);
 		rightToChange = CoreHub.acl.request(AccessControlDefaults.AC_CHANGEMANDANT);
@@ -182,7 +182,7 @@ public class MandantSelectionContributionItem extends ContributionItem {
 			}
 		}
 	}
-
+	
 	private Image getBoxSWTColorImage(Color color){
 		Display display = Display.getCurrent();
 		Image image = new Image(display, 16, 16);
@@ -195,8 +195,8 @@ public class MandantSelectionContributionItem extends ContributionItem {
 	}
 	
 	private Color getColorForMandator(Mandant m){
-		return UiDesk.getColorFromRGB(CoreHub.globalCfg.get(
-			Preferences.USR_MANDATOR_COLORS_PREFIX + m.getLabel(), UiDesk.COL_GREY60));
+		return UiDesk.getColorFromRGB(CoreHub.globalCfg.get(Preferences.USR_MANDATOR_COLORS_PREFIX
+			+ m.getLabel(), UiDesk.COL_GREY60));
 	}
 	
 	@Override

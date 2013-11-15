@@ -249,13 +249,15 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			gAll.setLayout(new GridLayout());
 			cv = new CommonViewer();
 			// Add context medu to viewer, if actions are defined
-			Iterable<IAction> actions = (Iterable<IAction>)(Iterable<?>)codeElement.getActions(null);
+			Iterable<IAction> actions =
+				(Iterable<IAction>) (Iterable<?>) codeElement.getActions(null);
 			if (actions != null) {
 				MenuManager menu = new MenuManager();
 				menu.setRemoveAllWhenShown(true);
 				menu.addMenuListener(new IMenuListener() {
 					public void menuAboutToShow(IMenuManager manager){
-						Iterable<IAction> actions = (Iterable<IAction>)(Iterable<?>)codeElement.getActions(null);
+						Iterable<IAction> actions =
+							(Iterable<IAction>) (Iterable<?>) codeElement.getActions(null);
 						for (IAction ac : actions) {
 							manager.add(ac);
 						}

@@ -47,9 +47,9 @@ public class KGDrucker {
 						// gw 23.7.2006 an neues Selectionmodell angepasst
 						Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 						if (kgp.doPrint(actPatient, monitor) == false) {
-							ErrorDialog.openError(
-								null,
-								Messages.KGDrucker_errorPrinting, Messages.KGDrucker_couldntprint + patient.getLabel() + Messages.KGDrucker_emr, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							ErrorDialog.openError(null, Messages.KGDrucker_errorPrinting,
+								Messages.KGDrucker_couldntprint + patient.getLabel()
+									+ Messages.KGDrucker_emr, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							
 						}
 						
@@ -62,8 +62,7 @@ public class KGDrucker {
 		} catch (Exception ex) {
 			ElexisStatus status =
 				new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					Messages.KGDrucker_errorPrinting + ": "
-						+ Messages.KGDrucker_couldntShow, ex);
+					Messages.KGDrucker_errorPrinting + ": " + Messages.KGDrucker_couldntShow, ex);
 			StatusManager.getManager().handle(status);
 		}
 	}

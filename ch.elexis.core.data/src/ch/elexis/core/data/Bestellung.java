@@ -71,9 +71,9 @@ public class Bestellung extends PersistentObject {
 	static {
 		addMapping(TABLENAME, "Liste=S:C:Contents"); //$NON-NLS-1$
 		
-			// Starting with 2.1.7.rc0 orders are excavated from the HEAP2 table, here
-			// we check whether the table is existing (new method), else we need to call
-			// the merge code
+		// Starting with 2.1.7.rc0 orders are excavated from the HEAP2 table, here
+		// we check whether the table is existing (new method), else we need to call
+		// the merge code
 		if (!PersistentObject.tableExists(TABLENAME))
 			initialize();
 	}
@@ -157,7 +157,7 @@ public class Bestellung extends PersistentObject {
 			load();
 		}
 	}
-
+	
 	public void load(){
 		String[] it = checkNull(get(FLD_ITEMS)).split(";"); //$NON-NLS-1$
 		if (alItems == null) {
@@ -230,7 +230,7 @@ public class Bestellung extends PersistentObject {
 	public static class BestellungDateComparator implements Comparator<Bestellung> {
 		private TimeTool t1 = new TimeTool();
 		private TimeTool t2 = new TimeTool();
-
+		
 		@Override
 		public int compare(Bestellung b1, Bestellung b2){
 			setTimeTool((Bestellung) b1, t1);
@@ -250,6 +250,6 @@ public class Bestellung extends PersistentObject {
 				timeTool.set("1.1.1970");
 			}
 		}
-
+		
 	}
 }

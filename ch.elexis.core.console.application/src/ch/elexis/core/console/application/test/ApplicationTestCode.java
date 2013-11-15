@@ -19,22 +19,22 @@ import ch.elexis.core.data.Prescription;
 import ch.elexis.core.data.Query;
 
 /**
- * This class contains a the static method {@link #performApplicationTest()}, which is being
- * called after startup and login. It may contain test code to be executed. Elexis is closed
- * after this method returns.
+ * This class contains a the static method {@link #performApplicationTest()}, which is being called
+ * after startup and login. It may contain test code to be executed. Elexis is closed after this
+ * method returns.
  */
 public class ApplicationTestCode {
-
+	
 	static Logger log = LoggerFactory.getLogger(ApplicationTestCode.class.getName());
 	
-	public static void performApplicationTest() {
+	public static void performApplicationTest(){
 		
 		// Trigger a MessageEvent
 		Query<Patient> qbe = new Query<>(Patient.class);
 		Patient p = qbe.execute().get(0);
-		log.info("Patient "+p);
+		log.info("Patient " + p);
 		Konsultation kons = p.getLetzteKons(false);
-		log.info("Konsultation "+kons);
+		log.info("Konsultation " + kons);
 		
 		// Trigger an ElexisStatus event
 		Prescription.calculateTagesDosis("1-gnampf-3");
@@ -49,5 +49,5 @@ public class ApplicationTestCode {
 			}
 		}
 	}
-
+	
 }

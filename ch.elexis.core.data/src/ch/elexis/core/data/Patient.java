@@ -30,8 +30,8 @@ import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.TimeTool.TimeFormatException;
 
 /**
- * Ein Patient ist eine Person (und damit auch ein Kontakt), mit folgenden
- * zusätzlichen Eigenschaften
+ * Ein Patient ist eine Person (und damit auch ein Kontakt), mit folgenden zusätzlichen
+ * Eigenschaften
  * <ul>
  * <li>Anamnesen : PA, SA, FA</li>
  * <li>Fixe Diagnosen</li>
@@ -39,8 +39,7 @@ import ch.rgw.tools.TimeTool.TimeFormatException;
  * <li>Risiken</li>
  * <li>Einer Liste der Fälle, die zu diesem Patienten existieren</li>
  * <li>Einer Liste der Garanten, die diesem Patienten zugeordnet wurden</li>
- * <li>Einer Liste aller Forderungen und Zahlungen im Verkehr mit diesem
- * Patienten</li>
+ * <li>Einer Liste aller Forderungen und Zahlungen im Verkehr mit diesem Patienten</li>
  * </ul>
  * 
  * @author gerry
@@ -67,41 +66,45 @@ public class Patient extends Person {
 	public static final String FLD_SYS_ANAMNESE = "SysAnamnese";
 	public static final String FLD_FAM_ANAMNESE = "FamilienAnamnese";
 	public static final String FLD_EXTINFO_STAMMARZT = "Stammarzt";
-
-	public static final String[] DEFAULT_SORT = { FLD_NAME, FLD_FIRSTNAME,
-			FLD_DOB };
-
+	
+	public static final String[] DEFAULT_SORT = {
+		FLD_NAME, FLD_FIRSTNAME, FLD_DOB
+	};
+	
 	static {
-		addMapping(Kontakt.TABLENAME, "Diagnosen       	=S:C:Diagnosen",
-				"PersAnamnese   	=S:C:PersAnamnese",
-				"SystemAnamnese	 	=S:C:SysAnamnese",
-				"FamilienAnamnese	=S:C:FamAnamnese", FLD_RISKS, FLD_ALLERGIES,
-				"Faelle				=LIST:PatientID:FAELLE:DatumVon",
-				"Garanten			=JOINT:GarantID:PatientID:PATIENT_GARANT_JOINT:"
-						+ Kontakt.class.getCanonicalName(),
-				"Dauermedikation	=JOINT:ArtikelID:PatientID:PATIENT_ARTIKEL_JOINT:"
-						+ Artikel.class.getCanonicalName(), FLD_BALANCE
-						+ "			=LIST:PatientID:KONTO", FLD_GROUP, "PatientNr",
-				"istPatient");
+		addMapping(
+			Kontakt.TABLENAME,
+			"Diagnosen       	=S:C:Diagnosen",
+			"PersAnamnese   	=S:C:PersAnamnese",
+			"SystemAnamnese	 	=S:C:SysAnamnese",
+			"FamilienAnamnese	=S:C:FamAnamnese",
+			FLD_RISKS,
+			FLD_ALLERGIES,
+			"Faelle				=LIST:PatientID:FAELLE:DatumVon",
+			"Garanten			=JOINT:GarantID:PatientID:PATIENT_GARANT_JOINT:"
+				+ Kontakt.class.getCanonicalName(),
+			"Dauermedikation	=JOINT:ArtikelID:PatientID:PATIENT_ARTIKEL_JOINT:"
+				+ Artikel.class.getCanonicalName(), FLD_BALANCE + "			=LIST:PatientID:KONTO",
+			FLD_GROUP, "PatientNr", "istPatient");
 	}
-
-	public String getDiagnosen() {
+	
+	public String getDiagnosen(){
 		return get(FLD_DIAGNOSES);
 	}
-
-	public String getPersAnamnese() {
+	
+	public String getPersAnamnese(){
 		return get("PersAnamnese");
 	}
-
-	public String getSystemAnamnese() {
+	
+	public String getSystemAnamnese(){
 		return get("Systemanamnese");
 	}
-
-	protected Patient() {/* leer */
+	
+	protected Patient(){/* leer */
 	}
-
+	
 	@Override
-	public boolean isValid() {
+	public boolean isValid(){
 		if (!super.isValid()) {
 			return false;
 		}
@@ -115,11 +118,10 @@ public class Patient extends Person {
 		}
 		return false;
 	}
-
+	
 	/**
-	 * Dieser oder der folgende Konstruktor sollte normalerweise verwendet
-	 * werden, um einen neuen, bisher noch nicht in der Datenbank vorhandenen
-	 * Patienten anzulegen.
+	 * Dieser oder der folgende Konstruktor sollte normalerweise verwendet werden, um einen neuen,
+	 * bisher noch nicht in der Datenbank vorhandenen Patienten anzulegen.
 	 * 
 	 * @param Name
 	 * @param Vorname
@@ -128,11 +130,11 @@ public class Patient extends Person {
 	 * @param s
 	 *            Geschlecht m oder w
 	 */
-	public Patient(final String Name, final String Vorname,
-			final String Geburtsdatum, final String s) {
+	public Patient(final String Name, final String Vorname, final String Geburtsdatum,
+		final String s){
 		super(Name, Vorname, Geburtsdatum, s);
 	}
-
+	
 	/**
 	 * This constructor is more critical than the previous one
 	 * 
@@ -146,17 +148,17 @@ public class Patient extends Person {
 	 *            will be checked for undefined values
 	 * @throws TimeFormatException
 	 */
-	public Patient(final String name, final String vorname,
-			final TimeTool gebDat, final String s) throws PersonDataException {
+	public Patient(final String name, final String vorname, final TimeTool gebDat, final String s)
+		throws PersonDataException{
 		super(name, vorname, gebDat, s);
 	}
-
+	
 	/**
 	 * Eine Liste aller zu diesem Patient gehörenden Fälle liefern
 	 * 
 	 * @return Array mit allen Fällen (das die Länge null haben kann)
 	 */
-	public Fall[] getFaelle() {
+	public Fall[] getFaelle(){
 		List<String> cas = getList("Faelle", true);
 		Fall[] ret = new Fall[cas.size()];
 		int i = 0;
@@ -165,13 +167,13 @@ public class Patient extends Person {
 		}
 		return ret;
 	}
-
+	
 	/**
 	 * Fixmedikation dieses Patienten einlesen
 	 * 
 	 * @return ein Array aus {@link Prescription.java}Prescriptions
 	 */
-	public Prescription[] getFixmedikation() {
+	public Prescription[] getFixmedikation(){
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
 		qbe.add(Prescription.PATIENT_ID, Query.EQUALS, getId());
 		qbe.add(Prescription.REZEPT_ID, StringTool.leer, null);
@@ -184,13 +186,13 @@ public class Patient extends Person {
 		List<Prescription> l = qbe.execute();
 		return l.toArray(new Prescription[0]);
 	}
-
+	
 	/**
 	 * Fixmedikation als Text
 	 * 
 	 * @return
 	 */
-	public String getMedikation() {
+	public String getMedikation(){
 		Prescription[] pre = getFixmedikation();
 		StringBuilder sb = new StringBuilder();
 		for (Prescription p : pre) {
@@ -198,7 +200,7 @@ public class Patient extends Person {
 		}
 		return sb.toString();
 	}
-
+	
 	/**
 	 * Die neueste Konsultation dieses Patienten holen, soweit eruierbar
 	 * 
@@ -206,19 +208,17 @@ public class Patient extends Person {
 	 *            : eine Kons erstellen, falls keine existiert
 	 * @return die letzte Konsultation oder null
 	 */
-
-	public Konsultation getLetzteKons(final boolean create) {
+	
+	public Konsultation getLetzteKons(final boolean create){
 		if (CoreHub.actMandant == null) {
-			MessageEvent.fireError("Kein Mandant angemeldet",
-					"Es ist kein Mandant angemeldet.");
+			MessageEvent.fireError("Kein Mandant angemeldet", "Es ist kein Mandant angemeldet.");
 			return null;
 		}
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
-		qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS,
-				CoreHub.actMandant.getId());
+		qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
 		// qbe.add("Datum", "=", new
 		// TimeTool().toString(TimeTool.DATE_COMPACT));
-
+		
 		Fall[] faelle = getFaelle();
 		if ((faelle == null) || (faelle.length == 0)) {
 			return create ? createFallUndKons() : null;
@@ -244,38 +244,38 @@ public class Patient extends Person {
 			return list.get(0);
 		}
 	}
-
-	public Konsultation createFallUndKons() {
-		Fall fall = neuerFall(Fall.getDefaultCaseLabel(),
-				Fall.getDefaultCaseReason(), Fall.getDefaultCaseLaw());
+	
+	public Konsultation createFallUndKons(){
+		Fall fall =
+			neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
+				Fall.getDefaultCaseLaw());
 		Konsultation k = fall.neueKonsultation();
 		k.setMandant(CoreHub.actMandant);
 		return k;
 	}
-
+	
 	/**
 	 * Einen neuen Fall erstellen und an den Patienten binden
 	 * 
 	 * @return der eben erstellte Fall oder null bei Fehler
 	 * */
 	public Fall neuerFall(final String Bezeichnung, final String grund,
-			final String Abrechnungsmethode) {
+		final String Abrechnungsmethode){
 		Fall fall = new Fall(getId(), Bezeichnung, grund, Abrechnungsmethode);
 		ElexisEventDispatcher.reload(Fall.class);
 		return fall;
 	}
-
+	
 	/**
-	 * Einen Kurzcode, der diesen Patienten identifiziert, zurückliefern. Der
-	 * Kurzcode kann je nach Voreinstellung eine eindeutige, jeweils nur einmal
-	 * vergebene Nummer sein, oder ein aus den Personalien gebildetes Kürzel.
-	 * Dieser Code kann beispielsweise als Index für die Archivierung der KG's
-	 * in Papierform verwendet werden.
+	 * Einen Kurzcode, der diesen Patienten identifiziert, zurückliefern. Der Kurzcode kann je nach
+	 * Voreinstellung eine eindeutige, jeweils nur einmal vergebene Nummer sein, oder ein aus den
+	 * Personalien gebildetes Kürzel. Dieser Code kann beispielsweise als Index für die Archivierung
+	 * der KG's in Papierform verwendet werden.
 	 * 
-	 * @return einen String, (der eine Zahl sein kann), und der innerhalb dieser
-	 *         Installation eindeutig ist.
+	 * @return einen String, (der eine Zahl sein kann), und der innerhalb dieser Installation
+	 *         eindeutig ist.
 	 */
-	public String getPatCode() {
+	public String getPatCode(){
 		String rc = get(FLD_PATID);
 		if (!StringTool.isNothing(rc)) {
 			return rc;
@@ -283,28 +283,26 @@ public class Patient extends Person {
 		if (CoreHub.globalCfg.get("PatIDMode", "number").equals("number")) {
 			while (true) {
 				String lockid = PersistentObject.lock("PatNummer", true);
-				String pid = j
-						.queryString("SELECT WERT FROM CONFIG WHERE PARAM='PatientNummer'");
+				String pid = j.queryString("SELECT WERT FROM CONFIG WHERE PARAM='PatientNummer'");
 				if (StringTool.isNothing(pid)) {
 					pid = "0";
 					j.exec("INSERT INTO CONFIG (PARAM,WERT) VALUES ('PatientNummer','0')");
 				}
 				int lastNum = Integer.parseInt(pid) + 1;
 				rc = Integer.toString(lastNum);
-				j.exec("UPDATE CONFIG set wert='" + rc
-						+ "' where param='PatientNummer'");
+				j.exec("UPDATE CONFIG set wert='" + rc + "' where param='PatientNummer'");
 				PersistentObject.unlock("PatNummer", lockid);
-				String exists = j
-						.queryString("SELECT ID FROM KONTAKT WHERE PatientNr="
-								+ JdbcLink.wrap(rc));
+				String exists =
+					j.queryString("SELECT ID FROM KONTAKT WHERE PatientNr=" + JdbcLink.wrap(rc));
 				if (exists == null) {
 					break;
 				}
 			}
 		} else {
 			String[] ret = new String[3];
-			if (get(new String[] { Person.NAME, Person.FIRSTNAME,
-					Person.BIRTHDATE }, ret) == true) {
+			if (get(new String[] {
+				Person.NAME, Person.FIRSTNAME, Person.BIRTHDATE
+			}, ret) == true) {
 				StringBuffer code = new StringBuffer(12);
 				if ((ret[0] != null) && (ret[0].length() > 1)) {
 					code.append(ret[0].substring(0, 2));
@@ -333,11 +331,10 @@ public class Patient extends Person {
 		set(FLD_PATID, rc);
 		return rc;
 	}
-
-	public Money getKontostand() {
+	
+	public Money getKontostand(){
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT betrag FROM KONTO WHERE PatientID=").append(
-				getWrappedId());
+		sql.append("SELECT betrag FROM KONTO WHERE PatientID=").append(getWrappedId());
 		Stm stm = j.getStatement();
 		Money konto = new Money();
 		try {
@@ -354,43 +351,41 @@ public class Patient extends Person {
 			j.releaseStatement(stm);
 		}
 	}
-
+	
 	/**
-	 * to be used by the platzhalter system, allows for presentation of the
-	 * current balance of this patient by using [Patient.Konto]
+	 * to be used by the platzhalter system, allows for presentation of the current balance of this
+	 * patient by using [Patient.Konto]
 	 * 
 	 * @return the current balance of the patient
 	 */
-	public String getBalance() {
+	public String getBalance(){
 		return getKontostand().getAmountAsString();
 	}
-
+	
 	/**
-	 * Calculates a possibly available account excess. (This value may be added
-	 * to a bill as prepayment.)
+	 * Calculates a possibly available account excess. (This value may be added to a bill as
+	 * prepayment.)
 	 * <p>
-	 * Considers all overpaid bills and account transactions not bound to a
-	 * bill. The garant of the bill must be the patient itself. (Bills not yet
-	 * paid or partly paid are not considered.)
+	 * Considers all overpaid bills and account transactions not bound to a bill. The garant of the
+	 * bill must be the patient itself. (Bills not yet paid or partly paid are not considered.)
 	 * <p>
-	 * This value is not the same as the current account balance, since we
-	 * ignore outstanding debts of not yet paid bills.
+	 * This value is not the same as the current account balance, since we ignore outstanding debts
+	 * of not yet paid bills.
 	 * 
 	 * @return the account excess (may be zero or positive)
 	 */
-	public Money getAccountExcess() {
+	public Money getAccountExcess(){
 		Money prepayment = new Money();
-
+		
 		// overpaid bills of this patient
 		// TODO do an optimized query over KONTAKT/FALL/RECHNUNG
 		Query<Rechnung> rQuery = new Query<Rechnung>(Rechnung.class);
-
+		
 		// normally do not display other mandator's balance
 		if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
-			rQuery.add(Rechnung.MANDATOR_ID, Query.EQUALS,
-					CoreHub.actMandant.getId());
+			rQuery.add(Rechnung.MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
 		}
-
+		
 		// let the database engine do the filtering
 		Fall[] faelle = getFaelle();
 		if ((faelle != null) && (faelle.length > 0)) {
@@ -401,19 +396,17 @@ public class Patient extends Person {
 			}
 			rQuery.endGroup();
 		}
-
+		
 		List<Rechnung> rechnungen = rQuery.execute();
 		if (rechnungen != null) {
 			for (Rechnung rechnung : rechnungen) {
 				Fall fall = rechnung.getFall();
 				if (fall != null) { // of course this should never happen
-					Query<AccountTransaction> atQuery = new Query<AccountTransaction>(
-							AccountTransaction.class);
-					atQuery.add(AccountTransaction.FLD_PATIENT_ID,
-							Query.EQUALS, getId());
-					atQuery.add(AccountTransaction.FLD_BILL_ID, Query.EQUALS,
-							rechnung.getId());
-
+					Query<AccountTransaction> atQuery =
+						new Query<AccountTransaction>(AccountTransaction.class);
+					atQuery.add(AccountTransaction.FLD_PATIENT_ID, Query.EQUALS, getId());
+					atQuery.add(AccountTransaction.FLD_BILL_ID, Query.EQUALS, rechnung.getId());
+					
 					List<AccountTransaction> transactions = atQuery.execute();
 					if (transactions != null) {
 						Money sum = new Money();
@@ -427,10 +420,9 @@ public class Patient extends Person {
 				}
 			}
 		}
-
+		
 		// account (sum over all account transactions not assigned to a bill)
-		Query<AccountTransaction> atQuery = new Query<AccountTransaction>(
-				AccountTransaction.class);
+		Query<AccountTransaction> atQuery = new Query<AccountTransaction>(AccountTransaction.class);
 		atQuery.add(AccountTransaction.FLD_PATIENT_ID, Query.EQUALS, getId());
 		List<AccountTransaction> transactions = atQuery.execute();
 		if (transactions != null) {
@@ -443,85 +435,85 @@ public class Patient extends Person {
 			}
 			prepayment.addMoney(sum);
 		}
-
+		
 		return prepayment;
 	}
-
+	
 	/** Einen Patienten mit gegebener ID aus der Datenbank einlesen */
-	public static Patient load(final String id) {
+	public static Patient load(final String id){
 		Patient ret = new Patient(id);
 		return ret;
 	}
-
+	
 	/**
 	 * Einen Patienten aufgrund seiner PatientenNr laden
 	 * 
 	 * @param patientNr
 	 * @return Patient falls gefunden, <code>null</code> wenn nicht gefunden
 	 */
-	public static Patient loadByPatientID(String patientNr) {
-		String patID = new Query<Patient>(Patient.class).findSingle(
-				Patient.FLD_PATID, Query.EQUALS, patientNr);
+	public static Patient loadByPatientID(String patientNr){
+		String patID =
+			new Query<Patient>(Patient.class)
+				.findSingle(Patient.FLD_PATID, Query.EQUALS, patientNr);
 		return Patient.load(patID);
 	}
-
-	private Patient(final String id) {
+	
+	private Patient(final String id){
 		super(id);
 	}
-
+	
 	@Override
-	protected String getConstraint() {
+	protected String getConstraint(){
 		return new StringBuilder(Kontakt.FLD_IS_PATIENT).append(Query.EQUALS)
-				.append(JdbcLink.wrap(StringConstants.ONE)).toString();
+			.append(JdbcLink.wrap(StringConstants.ONE)).toString();
 	}
-
+	
 	@Override
-	protected void setConstraint() {
-		set(new String[] { Kontakt.FLD_IS_PATIENT, Kontakt.FLD_IS_PERSON },
-				StringConstants.ONE, StringConstants.ONE);
+	protected void setConstraint(){
+		set(new String[] {
+			Kontakt.FLD_IS_PATIENT, Kontakt.FLD_IS_PERSON
+		}, StringConstants.ONE, StringConstants.ONE);
 	}
-
+	
 	@Override
 	/*
 	 * * Return a short or long label for this Patient
 	 * 
-	 * This implementation returns "<Vorname> <Name>" for the sort label, and
-	 * calls getPersonalia() for the long label.
+	 * This implementation returns "<Vorname> <Name>" for the sort label, and calls getPersonalia()
+	 * for the long label.
 	 * 
 	 * @return a label describing this Patient
 	 */
-	public String getLabel(final boolean shortLabel) {
+	public String getLabel(final boolean shortLabel){
 		if (shortLabel) {
 			return super.getLabel(true);
 		} else {
 			return getPersonalia();
 		}
 	}
-
+	
 	/**
 	 * We do not allow direct deletion -> use remove instead
 	 */
 	@Override
-	public boolean delete() {
+	public boolean delete(){
 		return delete(false);
 	}
-
+	
 	/**
-	 * Einen Patienten aus der Datenbank entfernen. Dabei werden auch alle
-	 * verknüpften Daten gelöscht (Labor, Rezepte, AUF, Rechnungen etc.)
-	 * Plugins, welche patientenspezifische Daten speichern, sollten diese
-	 * ebenfalls löschen (sie erhalten einen ObjectEvent)
+	 * Einen Patienten aus der Datenbank entfernen. Dabei werden auch alle verknüpften Daten
+	 * gelöscht (Labor, Rezepte, AUF, Rechnungen etc.) Plugins, welche patientenspezifische Daten
+	 * speichern, sollten diese ebenfalls löschen (sie erhalten einen ObjectEvent)
 	 * 
 	 * @param force
-	 *            bei true wird der Patient auf jeden Faöll gelöscht, bei false
-	 *            nur, wenn keine Fälle von ihm existieren.
+	 *            bei true wird der Patient auf jeden Faöll gelöscht, bei false nur, wenn keine
+	 *            Fälle von ihm existieren.
 	 * @return false wenn der Patient nicht gelöscht werden konnte.
 	 */
-	public boolean delete(final boolean force) {
+	public boolean delete(final boolean force){
 		Fall[] fl = getFaelle();
 		if ((fl.length == 0)
-				|| ((force == true) && (CoreHub.acl
-						.request(AccessControlDefaults.DELETE_FORCED) == true))) {
+			|| ((force == true) && (CoreHub.acl.request(AccessControlDefaults.DELETE_FORCED) == true))) {
 			for (Fall f : fl) {
 				f.delete(true);
 			}
@@ -530,52 +522,48 @@ public class Patient extends Person {
 		}
 		return false;
 	}
-
-	private boolean delete_dependent() {
-		for (LabResult lr : new Query<LabResult>(LabResult.class,
-				LabResult.PATIENT_ID, getId()).execute()) {
+	
+	private boolean delete_dependent(){
+		for (LabResult lr : new Query<LabResult>(LabResult.class, LabResult.PATIENT_ID, getId())
+			.execute()) {
 			lr.delete();
 		}
-		for (Rezept rp : new Query<Rezept>(Rezept.class, Rezept.PATIENT_ID,
-				getId()).execute()) {
+		for (Rezept rp : new Query<Rezept>(Rezept.class, Rezept.PATIENT_ID, getId()).execute()) {
 			rp.delete();
 		}
-		for (Brief br : new Query<Brief>(Brief.class, Brief.FLD_PATIENT_ID,
-				getId()).execute()) {
+		for (Brief br : new Query<Brief>(Brief.class, Brief.FLD_PATIENT_ID, getId()).execute()) {
 			br.delete();
 		}
-		for (AccountTransaction at : new Query<AccountTransaction>(
-				AccountTransaction.class, AccountTransaction.FLD_PATIENT_ID,
-				getId()).execute()) {
+		for (AccountTransaction at : new Query<AccountTransaction>(AccountTransaction.class,
+			AccountTransaction.FLD_PATIENT_ID, getId()).execute()) {
 			at.delete();
 		}
 		return true;
 	}
-
+	
 	@Override
-	public boolean isDragOK() {
+	public boolean isDragOK(){
 		return true;
 	}
-
+	
 	/**
-	 * Eine Auftragsnummer erstellen. Diese enthält die Patientennummer ergänzt
-	 * mit der Modulo10-Prüfsumme über diese Nummer, plus die aktuelle Uhrzeit
-	 * als -hhmm
+	 * Eine Auftragsnummer erstellen. Diese enthält die Patientennummer ergänzt mit der
+	 * Modulo10-Prüfsumme über diese Nummer, plus die aktuelle Uhrzeit als -hhmm
 	 * 
 	 * @return eine verifizierbare Auftragsnummer.
 	 */
-	public String getAuftragsnummer() {
+	public String getAuftragsnummer(){
 		String pid = StringTool.addModulo10(getPatCode()) + "-" //$NON-NLS-1$
-				+ new TimeTool().toString(TimeTool.TIME_COMPACT);
+			+ new TimeTool().toString(TimeTool.TIME_COMPACT);
 		return pid;
 	}
-
+	
 	/**
 	 * Das Alter des Patienten in Jahren errechnen
 	 * 
 	 * @return Das Alter in ganzen Jahren als String
 	 */
-	public String getAlter() {
+	public String getAlter(){
 		TimeTool now = new TimeTool();
 		TimeTool bd = new TimeTool(getGeburtsdatum());
 		int jahre = now.get(TimeTool.YEAR) - bd.get(TimeTool.YEAR);
@@ -585,15 +573,15 @@ public class Patient extends Person {
 		}
 		return Integer.toString(jahre);
 	}
-
+	
 	/**
 	 * Return all bills of this patient
 	 * 
 	 * @return a list of bills of this patient
 	 */
-	public List<Rechnung> getRechnungen() {
+	public List<Rechnung> getRechnungen(){
 		List<Rechnung> rechnungen = new ArrayList<Rechnung>();
-
+		
 		Fall[] faelle = getFaelle();
 		if ((faelle != null) && (faelle.length > 0)) {
 			Query<Rechnung> query = new Query<Rechnung>(Rechnung.class);
@@ -604,79 +592,78 @@ public class Patient extends Person {
 				query.or();
 			}
 			query.endGroup();
-
+			
 			List<Rechnung> rnList = query.execute();
 			if (rnList != null) {
 				rechnungen.addAll(rnList);
 			}
 		}
-
+		
 		return rechnungen;
 	}
-
+	
 	// PatientDetailView backport from 2.2 - databinding bean compatibility
-	public String getAllergies() {
+	public String getAllergies(){
 		return get(FLD_ALLERGIES);
 	}
-
-	public void setAllergies(String allergien) {
+	
+	public void setAllergies(String allergien){
 		set(FLD_ALLERGIES, allergien);
 	}
-
-	public String getPersonalAnamnese() {
+	
+	public String getPersonalAnamnese(){
 		return get(FLD_PERS_ANAMNESE);
 	}
-
-	public void setPersonalAnamnese(String anamnese) {
+	
+	public void setPersonalAnamnese(String anamnese){
 		set(FLD_PERS_ANAMNESE, anamnese);
 	}
-
-	public String getComment() {
+	
+	public String getComment(){
 		return get(FLD_REMARK);
 	}
-
-	public void setComment(String bemerkungen) {
+	
+	public void setComment(String bemerkungen){
 		set(FLD_REMARK, bemerkungen);
 	}
-
-	public String getFamilyAnamnese() {
+	
+	public String getFamilyAnamnese(){
 		return get(FLD_FAM_ANAMNESE);
 	}
-
-	public void setFamilyAnamnese(String anamnese) {
+	
+	public void setFamilyAnamnese(String anamnese){
 		set(FLD_FAM_ANAMNESE, anamnese);
 	}
-
-	public void setDiagnosen(String diagnosen) {
+	
+	public void setDiagnosen(String diagnosen){
 		set(FLD_DIAGNOSES, diagnosen);
 	}
-
-	public String getRisk() {
+	
+	public String getRisk(){
 		return get(FLD_RISKS);
 	}
-
-	public void setRisk(String risk) {
+	
+	public void setRisk(String risk){
 		set(FLD_RISKS, risk);
 	}
-
-	public void setStammarzt(Kontakt stammarzt) {
+	
+	public void setStammarzt(Kontakt stammarzt){
 		if (stammarzt == null)
 			return;
 		// we override the name to force PersistentObject#get(String) to revert
 		// to the method getStammarzt to fetch the entry
 		setInfoElement(FLD_EXTINFO_STAMMARZT + "_", stammarzt.getId());
 	}
-
+	
 	/**
 	 * @return Stammarzt for the patient if defined, else <code>null</code>
 	 */
-	public Kontakt getStammarzt() {
+	public Kontakt getStammarzt(){
 		// we override the name to force PersistentObject#get(String) to revert
 		// to the method getStammarzt to fetch the entry
 		// unfortunately lots of PersistentObject: field is not mapped Stammarzt
 		// will be thrown ..
 		return (getInfoElement(FLD_EXTINFO_STAMMARZT + "_") != null) ? Kontakt
-				.load((String) getInfoElement(FLD_EXTINFO_STAMMARZT + "_"))
-				: null;
+			.load((String) getInfoElement(FLD_EXTINFO_STAMMARZT + "_")) : null;
 	}
 }

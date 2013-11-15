@@ -14,11 +14,10 @@ package ch.elexis.core.text.model;
 import org.jdom.Element;
 
 /**
- * An SSDRange is some part of a SimpleStructuredDocument. It has a position and
- * a length within the text Optionally, it can be placed outside the text flow.
- * In that case, it must provide a viewport position relative to the character
- * indicated by position. The contents of the Range is totally implementation
- * specific. It might be some text or some graphics or both.
+ * An SSDRange is some part of a SimpleStructuredDocument. It has a position and a length within the
+ * text Optionally, it can be placed outside the text flow. In that case, it must provide a viewport
+ * position relative to the character indicated by position. The contents of the Range is totally
+ * implementation specific. It might be some text or some graphics or both.
  * 
  * @author gerry
  * 
@@ -26,7 +25,7 @@ import org.jdom.Element;
 public class SSDRange {
 	public static final String TYPE_MARKUP = "markup";
 	public static final String TYPE_XREF = "xref";
-
+	
 	public static final String ELEM_NAME = "range";
 	/** It is not possible to set the cursor within this range */
 	private static final String ATTR_LOCKED = "locked";
@@ -35,8 +34,8 @@ public class SSDRange {
 	/** ID of this range. Hint for the renderer */
 	private static final String ATTR_ID = "ID";
 	/**
-	 * Some range types are displayed off the text flow. This is a hint in wich
-	 * region of the screen to display
+	 * Some range types are displayed off the text flow. This is a hint in wich region of the screen
+	 * to display
 	 */
 	public static final String ATTR_VIEWPORT = "viewport";
 	/**
@@ -48,11 +47,11 @@ public class SSDRange {
 	 */
 	private static final String ATTR_START_OFFSET = "startOffset";
 	/**
-	 * Hint what to to if an application does not know this type of Range one
-	 * of: prefix:(prefix), append:(append), replace:replace
+	 * Hint what to to if an application does not know this type of Range one of: prefix:(prefix),
+	 * append:(append), replace:replace
 	 */
 	private static final String ATTR_HINT = "hint";
-
+	
 	public static final String STYLE_BOLD = "bold";
 	public static final String STYLE_ITALIC = "italic";
 	public static final String STYLE_UNDERLINE = "underline";
@@ -67,8 +66,8 @@ public class SSDRange {
 	boolean bLocked;
 	String hint;
 	String contents;
-
-	public SSDRange(Element el) {
+	
+	public SSDRange(Element el){
 		id = el.getAttributeValue(ATTR_ID);
 		typename = el.getAttributeValue(ATTR_TYPENAME);
 		position = Integer.parseInt(el.getAttributeValue(ATTR_START_OFFSET));
@@ -78,102 +77,101 @@ public class SSDRange {
 		String v = el.getAttributeValue(ATTR_VIEWPORT);
 		if (v != null && v.matches("\\d+,\\d+,\\d+,\\d+")) {
 			String[] koor = v.split(",");
-			viewport = new Rectangle(Integer.parseInt(koor[0]),
-					Integer.parseInt(koor[1]), Integer.parseInt(koor[2]),
-					Integer.parseInt(koor[3]));
+			viewport =
+				new Rectangle(Integer.parseInt(koor[0]), Integer.parseInt(koor[1]),
+					Integer.parseInt(koor[2]), Integer.parseInt(koor[3]));
 		}
 		contents = el.getText();
 	}
-
-	public SSDRange(final int start, final int len, String typename, String id) {
+	
+	public SSDRange(final int start, final int len, String typename, String id){
 		length = len;
 		position = start;
 		this.typename = typename;
 		this.id = id;
 	}
-
-	public boolean isLocked() {
+	
+	public boolean isLocked(){
 		return bLocked;
 	}
-
-	public int getLength() {
+	
+	public int getLength(){
 		return length;
 	}
-
-	public int getPosition() {
+	
+	public int getPosition(){
 		return position;
 	}
-
-	public String getType() {
+	
+	public String getType(){
 		return typename;
 	}
-
-	public String getID() {
+	
+	public String getID(){
 		return id;
 	}
-
-	public void setLength(final int pos) {
+	
+	public void setLength(final int pos){
 		length = pos;
 	}
-
-	public void setPosition(final int pos) {
+	
+	public void setPosition(final int pos){
 		position = pos;
 	}
-
-	public Rectangle getViewPort() {
+	
+	public Rectangle getViewPort(){
 		return viewport;
 	}
-
-	public void setViewPort(Rectangle r) {
+	
+	public void setViewPort(Rectangle r){
 		this.viewport = r;
 	}
-
-	public String getHint() {
+	
+	public String getHint(){
 		return hint;
 	}
-
-	public String getContents() {
+	
+	public String getContents(){
 		return contents;
 	}
-
-	public void setContents(String c) {
+	
+	public void setContents(String c){
 		contents = c;
 	}
-
-	private void setAttributeIfExists(Element e, String attr, String value) {
+	
+	private void setAttributeIfExists(Element e, String attr, String value){
 		if (attr != null && value != null) {
 			e.setAttribute(attr, value);
 		}
 	}
-
+	
 	/**
 	 * Link some user defined data to the object
 	 * 
 	 * @param data
 	 */
-	public void setData(Object data) {
+	public void setData(Object data){
 		this.data = data;
 	}
-
+	
 	/**
 	 * return user defined fata
 	 * 
 	 * @return data as perviously set by setData()
 	 */
-	public Object getData() {
+	public Object getData(){
 		return data;
 	}
-
+	
 	/**
 	 * @since 3.0.0 trimmed down copy of org.eclipse.swt.graphics.Rectangle to satisfy dependency
 	 */
 	public class Rectangle {
 		int x, y;
 		int width, height;
-
+		
 		/**
-		 * Construct a new instance of this class given the x, y, width and
-		 * height values.
+		 * Construct a new instance of this class given the x, y, width and height values.
 		 * 
 		 * @param x
 		 *            the x coordinate of the origin of the rectangle
@@ -184,7 +182,7 @@ public class SSDRange {
 		 * @param height
 		 *            the height of the rectangle
 		 */
-		public Rectangle(int x, int y, int width, int height) {
+		public Rectangle(int x, int y, int width, int height){
 			this.x = x;
 			this.y = y;
 			this.width = width;

@@ -59,8 +59,8 @@ public class DBImage extends PersistentObject {
 		}
 		
 		set(new String[] {
-				FLD_PREFIX, FLD_TITLE
-			}, prefix, name);
+			FLD_PREFIX, FLD_TITLE
+		}, prefix, name);
 	}
 	
 	public static DBImage find(String prefix, String name){

@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.views.rechnung.messages";//$NON-NLS-1$
-
+	
 	public static String AccountListView_accountList;
 	public static String AccountListView_balance;
 	public static String AccountListView_bithdate;
@@ -256,7 +256,7 @@ public class Messages extends NLS {
 	public static String VerrDetailDialog_NoPatientSelected;
 	public static String VerrDetailDialog_billingData;
 	public static String VerrDetailDialog_detailsOfOpenKons;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -61,7 +61,7 @@ public class Messages extends NLS {
 	public static String TextContainer_TemplateTitleEmptyBody;
 	public static String TextContainer_TemplateTitleEmptyCaption;
 	public static String TextContainer_UnrecognizedFieldType;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

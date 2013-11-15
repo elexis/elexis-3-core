@@ -21,41 +21,42 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * PreloadingRepositoryHandler provides background loading of
- * repositories before executing the provisioning handler.
+ * PreloadingRepositoryHandler provides background loading of repositories before executing the
+ * provisioning handler.
  * 
  * @since 3.5
  */
 abstract class PreloadingRepositoryHandler extends AbstractHandler {
-
+	
 	/**
 	 * The constructor.
 	 */
-	public PreloadingRepositoryHandler() {
+	public PreloadingRepositoryHandler(){
 		// constructor
 	}
-
+	
 	/**
 	 * Execute the command.
 	 */
-	public Object execute(ExecutionEvent event) {
+	public Object execute(ExecutionEvent event){
 		doExecuteAndLoad();
 		return null;
 	}
-
-	void doExecuteAndLoad() {
+	
+	void doExecuteAndLoad(){
 		if (preloadRepositories()) {
-			//cancel any load that is already running
+			// cancel any load that is already running
 			Job.getJobManager().cancel(LoadMetadataRepositoryJob.LOAD_FAMILY);
-			final LoadMetadataRepositoryJob loadJob = new LoadMetadataRepositoryJob(getProvisioningUI());
+			final LoadMetadataRepositoryJob loadJob =
+				new LoadMetadataRepositoryJob(getProvisioningUI());
 			setLoadJobProperties(loadJob);
 			if (waitForPreload()) {
 				loadJob.addJobChangeListener(new JobChangeAdapter() {
-					public void done(IJobChangeEvent event) {
+					public void done(IJobChangeEvent event){
 						if (PlatformUI.isWorkbenchRunning())
 							if (event.getResult().isOK()) {
 								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-									public void run() {
+									public void run(){
 										doExecute(loadJob);
 									}
 								});
@@ -64,7 +65,7 @@ abstract class PreloadingRepositoryHandler extends AbstractHandler {
 				});
 				loadJob.setUser(true);
 				loadJob.schedule();
-
+				
 			} else {
 				loadJob.setSystem(true);
 				loadJob.setUser(false);
@@ -75,30 +76,32 @@ abstract class PreloadingRepositoryHandler extends AbstractHandler {
 			doExecute(null);
 		}
 	}
-
+	
 	protected abstract void doExecute(LoadMetadataRepositoryJob job);
-
-	protected boolean preloadRepositories() {
+	
+	protected boolean preloadRepositories(){
 		return true;
 	}
-
-	protected boolean waitForPreload() {
+	
+	protected boolean waitForPreload(){
 		return true;
 	}
-
-	protected void setLoadJobProperties(Job loadJob) {
-		loadJob.setProperty(LoadMetadataRepositoryJob.ACCUMULATE_LOAD_ERRORS, Boolean.toString(true));
+	
+	protected void setLoadJobProperties(Job loadJob){
+		loadJob.setProperty(LoadMetadataRepositoryJob.ACCUMULATE_LOAD_ERRORS,
+			Boolean.toString(true));
 	}
-
-	protected ProvisioningUI getProvisioningUI() {
+	
+	protected ProvisioningUI getProvisioningUI(){
 		return ProvisioningUI.getDefaultUI();
 	}
-
+	
 	/**
 	 * Return a shell appropriate for parenting dialogs of this handler.
+	 * 
 	 * @return a Shell
 	 */
-	protected Shell getShell() {
+	protected Shell getShell(){
 		return PlatformUI.getWorkbench().getModalDialogShellProvider().getShell();
 	}
 }

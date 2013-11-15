@@ -50,12 +50,12 @@ public class PersistenceException extends RuntimeException {
 	 * @param errCode
 	 * @since 3.0.0
 	 */
-	public PersistenceException(int errCode) {
+	public PersistenceException(int errCode){
 		super();
 		this.status = null;
 		this.errCode = errCode;
 	}
-
+	
 	/**
 	 * Returns the cause of this exception, or <code>null</code> if none.
 	 * 

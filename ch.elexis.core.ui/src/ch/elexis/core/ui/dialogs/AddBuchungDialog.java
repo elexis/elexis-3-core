@@ -74,9 +74,8 @@ public class AddBuchungDialog extends TitleAreaDialog {
 			Money mBetrag = MoneyInput.getFromTextField(betrag);
 			new AccountTransaction(pat, null, mBetrag, null, text.getText());
 		} catch (Exception ex) {
-			SWTHelper
-				.showError(
-					Messages.AddBuchungDialog_ErrorInAmount, Messages.AddBuchungDialog_CannotInterpretAmount); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.AddBuchungDialog_ErrorInAmount,
+				Messages.AddBuchungDialog_CannotInterpretAmount); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		super.okPressed();
 	}

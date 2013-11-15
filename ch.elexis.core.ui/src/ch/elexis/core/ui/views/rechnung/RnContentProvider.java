@@ -283,8 +283,7 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 	
 	@SuppressWarnings("unchecked")
 	public void reload(final IProgressMonitor monitor){
-		monitor.beginTask(
-			Messages.RnContentProvider_collectInvoices, Math.round(PREVAL)); //$NON-NLS-1$
+		monitor.beginTask(Messages.RnContentProvider_collectInvoices, Math.round(PREVAL)); //$NON-NLS-1$
 		monitor.subTask(Messages.RnContentProvider_prepare); //$NON-NLS-1$
 		Tree<Patient> root = new Tree<Patient>(null, null);
 		Hashtable<String, Tree<Patient>> hPats = new Hashtable<String, Tree<Patient>>(367, 0.75f);
@@ -369,7 +368,7 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		}
 		return total;
 	}
-
+	
 	private static class PatientComparator implements Comparator {
 		public int compare(final Object o1, final Object o2){
 			Patient p1 = (Patient) o1;

@@ -55,13 +55,25 @@ import ch.rgw.tools.StringTool;
 class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	// final String[]
 	// stats={"Alle","Bezahlt","Offen","Offen&Gedruckt","1. Mahnung","2. Mahnung","3. Mahnung","In Betreibung","Teilverlust","Totalverlust"};
-	final static String[] stats =
-		{
-			Messages.RnControlFieldProvider_all, Messages.RnControlFieldProvider_open, Messages.RnControlFieldProvider_openAndPrinted, Messages.RnControlFieldProvider_partlyPaid, Messages.RnControlFieldProvider_paid, Messages.RnControlFieldProvider_overpaid, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-			Messages.RnControlFieldProvider_reminder, Messages.RnControlFieldProvider_reminderPrinted, Messages.RnControlFieldProvider_reminder2, Messages.RnControlFieldProvider_reminder2Printed, Messages.RnControlFieldProvider_reminder3, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			Messages.RnControlFieldProvider_reminder3Printed, Messages.RnControlFieldProvider_enforcement, Messages.RnControlFieldProvider_partlyLost, Messages.RnControlFieldProvider_totallyLost, Messages.RnControlFieldProvider_storno, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			Messages.RnControlFieldProvider_erroneous, Messages.RnControlFieldProvider_toPrint, Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind
-		};
+	final static String[] stats = {
+		Messages.RnControlFieldProvider_all,
+		Messages.RnControlFieldProvider_open,
+		Messages.RnControlFieldProvider_openAndPrinted,
+		Messages.RnControlFieldProvider_partlyPaid,
+		Messages.RnControlFieldProvider_paid,
+		Messages.RnControlFieldProvider_overpaid, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		Messages.RnControlFieldProvider_reminder,
+		Messages.RnControlFieldProvider_reminderPrinted,
+		Messages.RnControlFieldProvider_reminder2,
+		Messages.RnControlFieldProvider_reminder2Printed,
+		Messages.RnControlFieldProvider_reminder3, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		Messages.RnControlFieldProvider_reminder3Printed,
+		Messages.RnControlFieldProvider_enforcement, Messages.RnControlFieldProvider_partlyLost,
+		Messages.RnControlFieldProvider_totallyLost,
+		Messages.RnControlFieldProvider_storno, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		Messages.RnControlFieldProvider_erroneous, Messages.RnControlFieldProvider_toPrint,
+		Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind
+	};
 	
 	final static int[] statInts = {
 		RnStatus.UNBEKANNT, RnStatus.OFFEN, RnStatus.OFFEN_UND_GEDRUCKT, RnStatus.TEILZAHLUNG,
@@ -124,11 +136,9 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		};
 		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_state); //$NON-NLS-1$
 		Label lbl =
-			SWTHelper.createHyperlink(ret,
-				Messages.RnControlFieldProvider_patient2, hlPatient); //$NON-NLS-1$
+			SWTHelper.createHyperlink(ret, Messages.RnControlFieldProvider_patient2, hlPatient); //$NON-NLS-1$
 		lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
-		new Label(ret, SWT.NONE)
-			.setText(Messages.RnControlFieldProvider_PaymentSystem); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_PaymentSystem); //$NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_invoideNr); //$NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_amount); //$NON-NLS-1$
 		// / ^ labels / values

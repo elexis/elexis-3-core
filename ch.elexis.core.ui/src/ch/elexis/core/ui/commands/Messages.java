@@ -20,7 +20,7 @@ public class Messages extends NLS {
 	public static String MahnlaufCommand_Mahngebuehr2;
 	public static String MahnlaufCommand_Mahngebuehr1;
 	public static String MahnlaufCommand_Mahngebuehr3;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

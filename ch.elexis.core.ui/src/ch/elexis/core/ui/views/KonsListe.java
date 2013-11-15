@@ -131,8 +131,7 @@ public class KonsListe extends ViewPart implements IActivationListener, ISaveabl
 	}
 	
 	private void makeActions(){
-		filterAction =
-			new Action(Messages.KonsListe_FilterListAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
+		filterAction = new Action(Messages.KonsListe_FilterListAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
 					setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
 					setToolTipText(Messages.KonsListe_FilterListToolTip); //$NON-NLS-1$

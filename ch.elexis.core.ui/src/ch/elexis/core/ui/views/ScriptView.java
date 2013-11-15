@@ -84,7 +84,7 @@ public class ScriptView extends ViewPart {
 			public Object[] getElements(Object inputElement){
 				SortedList<Script> sortedScripts = new SortedList<Script>(new ScriptComparator());
 				List<Script> scripts = Script.getScripts();
-				for (int i = 0; i < scripts.size(); i++)	{
+				for (int i = 0; i < scripts.size(); i++) {
 					Script script = scripts.get(i);
 					sortedScripts.add(script);
 				}
@@ -117,11 +117,11 @@ public class ScriptView extends ViewPart {
 		tv.setInput(this);
 	}
 	
-	class ScriptComparator implements Comparator<Script>	{
+	class ScriptComparator implements Comparator<Script> {
 		@Override
-		public int compare(Script script0, Script script1) {
-			String script0_ID = ((ch.elexis.core.data.Script)script0).getId().toUpperCase();
-			String script1_ID = ((ch.elexis.core.data.Script)script1).getId().toUpperCase();
+		public int compare(Script script0, Script script1){
+			String script0_ID = ((ch.elexis.core.data.Script) script0).getId().toUpperCase();
+			String script1_ID = ((ch.elexis.core.data.Script) script1).getId().toUpperCase();
 			return script0_ID.compareTo(script1_ID);
 		}
 	}
@@ -198,8 +198,7 @@ public class ScriptView extends ViewPart {
 				@Override
 				public void doRun(){
 					InputDialog inp =
-						new InputDialog(getSite().getShell(),
-							Messages.ScriptView_enterNameCaption, //$NON-NLS-1$
+						new InputDialog(getSite().getShell(), Messages.ScriptView_enterNameCaption, //$NON-NLS-1$
 							Messages.ScriptView_enterNameBody, null, //$NON-NLS-1$
 							null);
 					if (inp.open() == Dialog.OK) {
@@ -287,8 +286,7 @@ public class ScriptView extends ViewPart {
 								}
 							}
 							Object ret = script.execute(varString);
-							SWTHelper.showInfo(
-								Messages.ScriptView_ScriptOutput, ret.toString()); //$NON-NLS-1$
+							SWTHelper.showInfo(Messages.ScriptView_ScriptOutput, ret.toString()); //$NON-NLS-1$
 						} catch (Exception ex) {
 							ExHandler.handle(ex);
 							SWTHelper.showError("Fehler beim Ausführen des Scripts",

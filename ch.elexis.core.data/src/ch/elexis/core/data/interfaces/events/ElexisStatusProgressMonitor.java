@@ -13,56 +13,56 @@ package ch.elexis.core.data.interfaces.events;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class ElexisStatusProgressMonitor implements IProgressMonitor {
-
-	public ElexisStatusProgressMonitor(String string, int size) {
+	
+	public ElexisStatusProgressMonitor(String string, int size){
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	@Override
-	public void beginTask(String name, int totalWork) {
+	public void beginTask(String name, int totalWork){
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
-	public void done() {
+	public void done(){
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
-	public void internalWorked(double work) {
+	public void internalWorked(double work){
 		// TODO Auto-generated method stub
 	}
-
+	
 	@Override
-	public boolean isCanceled() {
+	public boolean isCanceled(){
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
 	@Override
-	public void setCanceled(boolean value) {
+	public void setCanceled(boolean value){
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
-	public void setTaskName(String name) {
+	public void setTaskName(String name){
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
-	public void subTask(String name) {
+	public void subTask(String name){
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
-	public void worked(int work) {
+	public void worked(int work){
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 }

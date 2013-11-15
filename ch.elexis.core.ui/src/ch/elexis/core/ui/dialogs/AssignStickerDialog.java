@@ -36,15 +36,15 @@ public class AssignStickerDialog extends TitleAreaDialog {
 	Table table;
 	List<Sticker> alleEtiketten;
 	List<ISticker> mineEtiketten;
-
-	public AssignStickerDialog(Shell shell, PersistentObject obj) {
+	
+	public AssignStickerDialog(Shell shell, PersistentObject obj){
 		super(shell);
 		mine = obj;
 		mineEtiketten = mine.getStickers();
 	}
-
+	
 	@Override
-	protected Control createDialogArea(Composite parent) {
+	protected Control createDialogArea(Composite parent){
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout());
@@ -66,24 +66,24 @@ public class AssignStickerDialog extends TitleAreaDialog {
 			it.setImage(uiet.getImage());
 			it.setForeground(uiet.getForeground());
 			it.setBackground(uiet.getBackground());
-
+			
 			it.setData(et);
 		}
 		return ret;
 	}
-
+	
 	@Override
-	public void create() {
+	public void create(){
 		super.create();
 		setTitle("Sticker"); //$NON-NLS-1$
 		setMessage(MessageFormat
-				.format(Messages.AssignStickerDialog_enterStickers, mine.getLabel())); //$NON-NLS-1$
+			.format(Messages.AssignStickerDialog_enterStickers, mine.getLabel())); //$NON-NLS-1$
 		getShell().setText("Elexis Sticker"); //$NON-NLS-1$
 	}
-
+	
 	@Override
-	protected void okPressed() {
-
+	protected void okPressed(){
+		
 		for (TableItem it : table.getItems()) {
 			Sticker et = (Sticker) it.getData();
 			if (it.getChecked()) {
@@ -98,5 +98,5 @@ public class AssignStickerDialog extends TitleAreaDialog {
 		}
 		super.okPressed();
 	}
-
+	
 }

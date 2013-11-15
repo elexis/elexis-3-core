@@ -125,7 +125,8 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		new Label(ret, SWT.NONE);
 		
 		tEtiketten.setText(CoreHub.localCfg.get("Drucker/Etiketten/Name", StringTool.leer)); //$NON-NLS-1$
-		tEtikettenschacht.setText(CoreHub.localCfg.get("Drucker/Etiketten/Schacht", StringTool.leer)); //$NON-NLS-1$
+		tEtikettenschacht.setText(CoreHub.localCfg
+			.get("Drucker/Etiketten/Schacht", StringTool.leer)); //$NON-NLS-1$
 		boolean selection = CoreHub.localCfg.get("Drucker/Etiketten/Choose", false); //$NON-NLS-1$
 		cEtiketten.setSelection(selection); //$NON-NLS-1$
 		setEtikettenSelection(selection);
@@ -136,8 +137,8 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		tA5.setText(CoreHub.localCfg.get("Drucker/A5/Name", StringTool.leer)); //$NON-NLS-1$
 		tA5Schacht.setText(CoreHub.localCfg.get("Drucker/A5/Schacht", StringTool.leer)); //$NON-NLS-1$
 		tEinzelblatt.setText(CoreHub.localCfg.get("Drucker/Einzelblatt/Name", StringTool.leer)); //$NON-NLS-1$
-		tEinzelblattSchacht.setText(CoreHub.localCfg
-			.get("Drucker/Einzelblatt/Schacht", StringTool.leer)); //$NON-NLS-1$
+		tEinzelblattSchacht.setText(CoreHub.localCfg.get(
+			"Drucker/Einzelblatt/Schacht", StringTool.leer)); //$NON-NLS-1$
 		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(3,
 			true, 1, false));
 		bClear = new Button(ret, SWT.PUSH);

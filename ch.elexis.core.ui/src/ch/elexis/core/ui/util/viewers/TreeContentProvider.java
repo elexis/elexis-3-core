@@ -78,7 +78,8 @@ public class TreeContentProvider implements ITreeContentProvider, BackgroundJobL
 		if (result == null) {
 			JobPool.getJobPool().activate(job.getJobname(), Job.SHORT);
 			return new String[] {
-				Messages.TreeContentProvider_loadData}; //$NON-NLS-1$
+				Messages.TreeContentProvider_loadData
+			}; //$NON-NLS-1$
 		} else {
 			if (viewer.getConfigurer().getControlFieldProvider().isEmpty()) {
 				result.setFilter(null);

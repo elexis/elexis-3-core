@@ -63,9 +63,11 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 	private static final String BEZEICHNUNG = Messages.KontaktBlatt_Name; //$NON-NLS-1$
 	static final String[] types = {
 		"istOrganisation", "istLabor", "istPerson", "istPatient", "istAnwender", "istMandant"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-	static final String[] typLabels =
-		{
-			Messages.KontaktBlatt_Organization, Messages.KontaktBlatt_Laboratory, Messages.KontaktBlatt_Person, Messages.KontaktBlatt_Patient, Messages.KontaktBlatt_User, Messages.KontaktBlatt_Mandator}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	static final String[] typLabels = {
+		Messages.KontaktBlatt_Organization, Messages.KontaktBlatt_Laboratory,
+		Messages.KontaktBlatt_Person, Messages.KontaktBlatt_Patient, Messages.KontaktBlatt_User,
+		Messages.KontaktBlatt_Mandator
+	}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	private final Button[] bTypes = new Button[types.length];
 	private final TypButtonAdapter tba = new TypButtonAdapter();
 	private final IViewSite site;
@@ -73,67 +75,54 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 	private final FormToolkit tk;
 	AutoForm afDetails;
 	
-	static final InputData[] def =
-		new InputData[] {
-			new InputData(
-				Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_Bez2, Kontakt.FLD_NAME2, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.KontaktBlatt_Sex, Person.SEX, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.KontaktBlatt_Street, "Strasse", Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.KontaktBlatt_Zip, Kontakt.FLD_ZIP, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_Place, Kontakt.FLD_PLACE, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.KontaktBlatt_Fax, Kontakt.FLD_FAX, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null), //$NON-NLS-1$
-			new InputData(
-				Messages.KontaktBlatt_extid, "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
+	static final InputData[] def = new InputData[] {
+	new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Bez2, Kontakt.FLD_NAME2, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Sex, Person.SEX, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Street, "Strasse", Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Zip, Kontakt.FLD_ZIP, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Place, Kontakt.FLD_PLACE, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Fax, Kontakt.FLD_FAX, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_extid,
+			"UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
+			
+				public void displayContent(PersistentObject po, InputData ltf){
+					StringBuilder sb = new StringBuilder();
+					IXid xid = po.getXid();
+					String dom = Xid.getSimpleNameForXIDDomain(xid.getDomain());
+					sb.append(dom).append(": ").append(xid.getDomainId()); //$NON-NLS-1$
+					ltf.setText(sb.toString());
+				}
 				
-					public void displayContent(PersistentObject po, InputData ltf){
-						StringBuilder sb = new StringBuilder();
-						IXid xid = po.getXid();
-						String dom = Xid.getSimpleNameForXIDDomain(xid.getDomain());
-						sb.append(dom).append(": ").append(xid.getDomainId()); //$NON-NLS-1$
-						ltf.setText(sb.toString());
-					}
-					
-					public void reloadContent(PersistentObject po, InputData ltf){
-						ArrayList<String> extFlds = new ArrayList<String>();
-						Kontakt k = (Kontakt) po;
-						for (String dom : Xid.getXIDDomains()) {
-							XIDDomain xd = Xid.getDomain(dom);
-							if ((k.istPerson() && xd.isDisplayedFor(Person.class))
-								|| (k.istOrganisation() && xd.isDisplayedFor(Organisation.class))) {
-								extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
-							}
+				public void reloadContent(PersistentObject po, InputData ltf){
+					ArrayList<String> extFlds = new ArrayList<String>();
+					Kontakt k = (Kontakt) po;
+					for (String dom : Xid.getXIDDomains()) {
+						XIDDomain xd = Xid.getDomain(dom);
+						if ((k.istPerson() && xd.isDisplayedFor(Person.class))
+							|| (k.istOrganisation() && xd.isDisplayedFor(Organisation.class))) {
+							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
 						}
-						KontaktExtDialog dlg =
-							new KontaktExtDialog(UiDesk.getTopShell(), (Kontakt) po, extFlds
-								.toArray(new String[0]));
-						dlg.open();
-						
 					}
+					KontaktExtDialog dlg =
+						new KontaktExtDialog(UiDesk.getTopShell(), (Kontakt) po, extFlds
+							.toArray(new String[0]));
+					dlg.open();
 					
-				}),
-		};
+				}
+				
+			}),
+	};
 	private Kontakt actKontakt;
 	private final Label lbAnschrift;
 	

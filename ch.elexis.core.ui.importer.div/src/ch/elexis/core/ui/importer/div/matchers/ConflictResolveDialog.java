@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.data.Kontakt;
 
-
 public class ConflictResolveDialog extends TitleAreaDialog {
 	private Kontakt res;
 	private Kontakt mine;

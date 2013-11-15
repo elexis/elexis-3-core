@@ -461,8 +461,7 @@ public class SWTHelper {
 	 */
 	public static boolean blameEmptyString(final String test, final String name){
 		if (StringTool.isNothing(test)) {
-			showError(
-				Messages.SWTHelper_BadParameter, name + Messages.SWTHelper_HasNoValidContents); //$NON-NLS-1$ //$NON-NLS-2$
+			showError(Messages.SWTHelper_BadParameter, name + Messages.SWTHelper_HasNoValidContents); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
 		return true;

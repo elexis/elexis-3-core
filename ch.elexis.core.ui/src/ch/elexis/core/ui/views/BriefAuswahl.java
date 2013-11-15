@@ -66,8 +66,8 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.TimeTool;
 
-public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events.ElexisEventListener, IActivationListener,
-		ISaveablePart2 {
+public class BriefAuswahl extends ViewPart implements
+		ch.elexis.core.data.events.ElexisEventListener, IActivationListener, ISaveablePart2 {
 	
 	public final static String ID = "ch.elexis.BriefAuswahlView"; //$NON-NLS-1$
 	private final FormToolkit tk;
@@ -87,7 +87,8 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 	@Override
 	public void createPartControl(final Composite parent){
 		StringBuilder sb = new StringBuilder();
-		sb.append(Messages.BriefAuswahlAllLetters).append(Brief.UNKNOWN).append(",").append(Brief.AUZ) //$NON-NLS-1$
+		sb.append(Messages.BriefAuswahlAllLetters).append(Brief.UNKNOWN)
+			.append(",").append(Brief.AUZ) //$NON-NLS-1$
 			.append(",").append(Brief.RP).append(",").append(Brief.LABOR);
 		String cats = CoreHub.globalCfg.get(Preferences.DOC_CATEGORY, sb.toString());
 		parent.setLayout(new GridLayout());
@@ -231,8 +232,7 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 				}
 			});
 			vc.getContentProvider().startListening();
-			Button bLoad =
-				tk.createButton(this, Messages.BriefAuswahlLoadButtonText, SWT.PUSH); //$NON-NLS-1$
+			Button bLoad = tk.createButton(this, Messages.BriefAuswahlLoadButtonText, SWT.PUSH); //$NON-NLS-1$
 			bLoad.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent e){
@@ -278,9 +278,9 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 						if (sfd.result != null) {
 							ElexisEventDispatcher.fireSelectionEvent(sfd.result);
 						} else {
-							MessageDialog
-								.openInformation(UiDesk.getTopShell(), Messages.TextView_NoCaseSelected, //$NON-NLS-1$
-									Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); //$NON-NLS-1$
+							MessageDialog.openInformation(UiDesk.getTopShell(),
+								Messages.TextView_NoCaseSelected, //$NON-NLS-1$
+								Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); //$NON-NLS-1$
 							return;
 						}
 					}
@@ -312,7 +312,8 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 						if (bs.open() == Dialog.OK) {
 							// trick: just supply a dummy address for creating the doc
 							Kontakt address = null;
-							if (DocumentSelectDialog.getDontAskForAddresseeForThisTemplate(bs.getSelectedDocument()))
+							if (DocumentSelectDialog.getDontAskForAddresseeForThisTemplate(bs
+								.getSelectedDocument()))
 								address = Kontakt.load("-1");
 							tv.createDocument(bs.getSelectedDocument(), bs.getBetreff(), address);
 							tv.setName();
@@ -359,8 +360,7 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 				public void run(){
 					CTabItem sel = ctab.getSelection();
 					if ((sel != null)
-						&& SWTHelper.askYesNo(
-							Messages.BriefAuswahlDeleteConfirmHeading, //$NON-NLS-1$
+						&& SWTHelper.askYesNo(Messages.BriefAuswahlDeleteConfirmHeading, //$NON-NLS-1$
 							Messages.BriefAuswahlDeleteConfirmText)) { //$NON-NLS-1$
 						CommonViewer cv = (CommonViewer) sel.getData();
 						Object[] o = cv.getSelection();
@@ -402,7 +402,7 @@ public class BriefAuswahl extends ViewPart implements ch.elexis.core.data.events
 		 */
 		briefLadenAction.setImageDescriptor(Images.IMG_DOCUMENT_TEXT.getImageDescriptor());
 		briefLadenAction.setToolTipText(Messages.BriefAuswahlOpenLetterForEdit); //$NON-NLS-1$
-		briefNeuAction.setImageDescriptor(Images.IMG_DOCUMENT_ADD.getImageDescriptor()); 
+		briefNeuAction.setImageDescriptor(Images.IMG_DOCUMENT_ADD.getImageDescriptor());
 		briefNeuAction.setToolTipText(Messages.BriefAuswahlCreateNewDocument); //$NON-NLS-1$
 		editNameAction.setImageDescriptor(Images.IMG_DOCUMENT_WRITE.getImageDescriptor());
 		editNameAction.setToolTipText(Messages.BriefAuswahlRenameDocument); //$NON-NLS-1$

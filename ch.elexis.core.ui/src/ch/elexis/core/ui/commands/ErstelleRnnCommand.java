@@ -85,20 +85,18 @@ public class ErstelleRnnCommand extends AbstractHandler {
 					ErrorDialog.openError(HandlerUtil.getActiveShell(eev),
 						Messages.KonsZumVerrechnenView_errorInInvoice,
 						
-						NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase,
-							new Object[] {
-								fall.getLabel(), fall.getPatient().getLabel()
-							}), ResultAdapter.getResultAsStatus(res));
+						NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase, new Object[] {
+							fall.getLabel(), fall.getPatient().getLabel()
+						}), ResultAdapter.getResultAsStatus(res));
 				} else {
 					tPat.remove(tFall);
 				}
 			}
 			if (rejected != 0) {
-				SWTHelper.showError(
-					Messages.ErstelleRnnCommand_BadCaseDefinition, 
+				SWTHelper.showError(Messages.ErstelleRnnCommand_BadCaseDefinition,
 					Integer.toString(rejected)
 						+ Messages.ErstelleRnnCommand_BillsNotCreatedMissingData
-						+ Messages.ErstelleRnnCommand_ErstelleRnnCheckCaseDetails); 
+						+ Messages.ErstelleRnnCommand_ErstelleRnnCheckCaseDetails);
 			} else {
 				tSelection.remove(tPat);
 			}

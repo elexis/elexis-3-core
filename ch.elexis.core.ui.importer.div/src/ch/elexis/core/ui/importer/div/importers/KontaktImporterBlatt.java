@@ -145,7 +145,8 @@ public class KontaktImporterBlatt extends Composite {
 			String EANReceiver = StringTool.getSafe(row, 6);
 			String[] adr = splitAdress(adresse);
 			Organisation kk =
-				KontaktMatcher.findOrganisation(name, null, adr[0], adr[1], adr[2], CreateMode.CREATE);
+				KontaktMatcher.findOrganisation(name, null, adr[0], adr[1], adr[2],
+					CreateMode.CREATE);
 			if (kk == null) {
 				return false;
 			}

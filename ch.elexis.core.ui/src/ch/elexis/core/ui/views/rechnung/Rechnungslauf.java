@@ -80,8 +80,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		String kMandantID = CoreHub.actMandant.getId();
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add(Konsultation.FLD_BILL_ID, StringConstants.EMPTY, null);
-		monitor.beginTask(
-			Messages.Rechnungslauf_analyzingConsultations, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+		monitor.beginTask(Messages.Rechnungslauf_analyzingConsultations, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 		monitor.subTask(Messages.Rechnungslauf_readingConsultations); //$NON-NLS-1$
 		List<Konsultation> dblist = qbe.execute();
 		// filter the list of Konsultationen based on the Rechnungssteller of the current Mandant
@@ -92,8 +91,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			if (kons.getMandant() == null) {
 				ElexisStatus status =
 					new ElexisStatus(ElexisStatus.WARNING, "ch.elexis",
-						ElexisStatus.CODE_NOFEEDBACK,
-						Messages.Rechnungslauf_warnInvalidMandant,
+						ElexisStatus.CODE_NOFEEDBACK, Messages.Rechnungslauf_warnInvalidMandant,
 						ElexisStatus.LOG_ERRORS);
 				StatusManager.getManager().handle(status);
 				continue;

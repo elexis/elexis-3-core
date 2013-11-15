@@ -32,16 +32,17 @@ public class Ablauf extends FieldEditorPreferencePage implements IWorkbenchPrefe
 	public Ablauf(){
 		super(GRID);
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.localCfg));
-		String logbackPlace = System.getProperty("logback.configurationFile",
-			"logback.xml im plugin \norg.ekkescorner.logging.osgi");
+		String logbackPlace =
+			System.getProperty("logback.configurationFile",
+				"logback.xml im plugin \norg.ekkescorner.logging.osgi");
 		String msg = String.format(Messages.Ablauf_0, logbackPlace);
 		setDescription(msg);
 	}
 	
 	@Override
 	protected void createFieldEditors(){
-		addField(new RadioGroupFieldEditor(Preferences.ABL_LANGUAGE,
-			Messages.Ablauf_preferredLang, 1, new String[][] {
+		addField(new RadioGroupFieldEditor(Preferences.ABL_LANGUAGE, Messages.Ablauf_preferredLang,
+			1, new String[][] {
 				{
 					Messages.Ablauf_german, "d" //$NON-NLS-1$
 				}, {
@@ -54,8 +55,8 @@ public class Ablauf extends FieldEditorPreferencePage implements IWorkbenchPrefe
 		addField(new IntegerFieldEditor(Preferences.ABL_CACHELIFETIME,
 			Messages.Ablauf_cachelifetime, getFieldEditorParent()));
 		
-		addField(new IntegerFieldEditor(Preferences.ABL_HEARTRATE,
-			Messages.Ablauf_heartrate, getFieldEditorParent()));
+		addField(new IntegerFieldEditor(Preferences.ABL_HEARTRATE, Messages.Ablauf_heartrate,
+			getFieldEditorParent()));
 	}
 	
 	public void init(final IWorkbench workbench){

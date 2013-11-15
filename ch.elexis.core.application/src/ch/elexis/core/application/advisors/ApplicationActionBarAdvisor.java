@@ -51,21 +51,21 @@ import ch.rgw.tools.StringTool;
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	public static final String IMPORTER_GROUP = "elexis.FileImports"; //$NON-NLS-1$
 	public static final String ADDITIONS = "elexis.fileAdditions"; //$NON-NLS-1$
-
+	
 	// Actions - important to allocate these only in makeActions, and then use
 	// them
 	// in the fill methods. This ensures that the actions aren't recreated
 	// when fillActionBars is called with FILL_PROXY.
-
+	
 	private IWorkbenchWindow window;
 	private IAction[] openPerspectiveActions = null;
 	public static MenuManager fileMenu, editMenu, windowMenu, helpMenu;
-
-	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
+	
+	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer){
 		super(configurer);
 	}
-
-	protected void makeActions(final IWorkbenchWindow win) {
+	
+	protected void makeActions(final IWorkbenchWindow win){
 		// Creates the actions and registers them.
 		// Registering is needed to ensure that key bindings work.
 		// The corresponding commands keybindings are defined in the plugin.xml
@@ -77,16 +77,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(GlobalActions.exitAction);
 		// register(GlobalActions.updateAction);
 		/*
-		 * register(GlobalActions.newWindowAction);
-		 * register(GlobalActions.copyAction);
-		 * register(GlobalActions.cutAction);
-		 * register(GlobalActions.pasteAction);
-		 * register(GlobalActions.loginAction);
-		 * register(GlobalActions.importAction);
-		 * register(GlobalActions.aboutAction);
-		 * register(GlobalActions.helpAction);
-		 * register(GlobalActions.prefsAction);
-		 * register(GlobalActions.connectWizardAction);
+		 * register(GlobalActions.newWindowAction); register(GlobalActions.copyAction);
+		 * register(GlobalActions.cutAction); register(GlobalActions.pasteAction);
+		 * register(GlobalActions.loginAction); register(GlobalActions.importAction);
+		 * register(GlobalActions.aboutAction); register(GlobalActions.helpAction);
+		 * register(GlobalActions.prefsAction); register(GlobalActions.connectWizardAction);
 		 */
 		// register(GlobalActions.changeMandantAction);
 		// register(GlobalActions.savePerspectiveAction);
@@ -95,48 +90,49 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		// register(savePerspectiveAsDefaultAction);
 		// register(MainMenuActions.showViewAction);
 		// register(MainMenuActions.showPerspectiveAction);
-
+		
 		// create open perspective actions according to the list of Sidebar
-		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS,
-				Boolean.toString(true))
-				.equalsIgnoreCase(Boolean.toString(true))) {
-			List<IConfigurationElement> ex = Extensions
-					.getExtensions("ch.elexis.Sidebar"); //$NON-NLS-1$
+		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS, Boolean.toString(true))
+			.equalsIgnoreCase(Boolean.toString(true))) {
+			List<IConfigurationElement> ex = Extensions.getExtensions("ch.elexis.Sidebar"); //$NON-NLS-1$
 			openPerspectiveActions = new IAction[ex.size()];
 			int i = 0;
 			for (IConfigurationElement ice : ex) {
 				String name = ice.getAttribute("name"); //$NON-NLS-1$
 				String id = ice.getAttribute("ID"); //$NON-NLS-1$
 				String icon = ice.getAttribute("icon"); //$NON-NLS-1$
-				IPerspectiveDescriptor perspectiveDescriptor = PlatformUI
-						.getWorkbench().getPerspectiveRegistry()
-						.findPerspectiveWithId(id);
+				IPerspectiveDescriptor perspectiveDescriptor =
+					PlatformUI.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId(id);
 				if (perspectiveDescriptor != null) {
-					openPerspectiveActions[i] = new OpenPerspectiveAction(
-							perspectiveDescriptor, name, icon);
+					openPerspectiveActions[i] =
+						new OpenPerspectiveAction(perspectiveDescriptor, name, icon);
 				}
-
+				
 				i++;
 			}
 		}
-
+		
 	}
-
-	protected void fillMenuBar(IMenuManager menuBar) {
-
-		fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_3,
+	
+	protected void fillMenuBar(IMenuManager menuBar){
+		
+		fileMenu =
+			new MenuManager(Messages.ApplicationActionBarAdvisor_3,
 				IWorkbenchActionConstants.M_FILE);
-		editMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_4,
+		editMenu =
+			new MenuManager(Messages.ApplicationActionBarAdvisor_4,
 				IWorkbenchActionConstants.M_EDIT);
-		windowMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_5,
+		windowMenu =
+			new MenuManager(Messages.ApplicationActionBarAdvisor_5,
 				IWorkbenchActionConstants.M_WINDOW);
-		helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_6,
+		helpMenu =
+			new MenuManager(Messages.ApplicationActionBarAdvisor_6,
 				IWorkbenchActionConstants.M_HELP);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
 		menuBar.add(windowMenu);
 		menuBar.add(helpMenu);
-
+		
 		fileMenu.add(GlobalActions.loginAction);
 		fileMenu.add(GlobalActions.changeMandantAction);
 		fileMenu.add(GlobalActions.connectWizardAction);
@@ -149,16 +145,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		fileMenu.add(new GroupMarker(ADDITIONS));
 		fileMenu.add(new Separator());
 		fileMenu.add(GlobalActions.exitAction);
-
+		
 		editMenu.add(GlobalActions.copyAction);
 		editMenu.add(GlobalActions.cutAction);
 		editMenu.add(GlobalActions.pasteAction);
-
+		
 		windowMenu.add(GlobalActions.fixLayoutAction);
-		GlobalActions.perspectiveMenu = new MenuManager(
-				Messages.ApplicationActionBarAdvisor_7, "openPerspective"); //$NON-NLS-1$
-		GlobalActions.perspectiveList = ContributionItemFactory.PERSPECTIVES_SHORTLIST
-				.create(window);
+		GlobalActions.perspectiveMenu =
+			new MenuManager(Messages.ApplicationActionBarAdvisor_7, "openPerspective"); //$NON-NLS-1$
+		GlobalActions.perspectiveList =
+			ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
 		GlobalActions.perspectiveMenu.add(savePerspectiveAction);
 		GlobalActions.perspectiveMenu.add(savePerspectiveAsAction);
 		perspectiveMenu.add(resetPerspectiveAction);
@@ -166,43 +162,39 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		perspectiveMenu.add(new Separator());
 		GlobalActions.perspectiveMenu.add(GlobalActions.perspectiveList);
 		windowMenu.add(GlobalActions.perspectiveMenu);
-
-		GlobalActions.viewMenu = new MenuManager(
-				Messages.ApplicationActionBarAdvisor_9);
-		GlobalActions.viewList = ContributionItemFactory.VIEWS_SHORTLIST
-				.create(window);
+		
+		GlobalActions.viewMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_9);
+		GlobalActions.viewList = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
 		GlobalActions.viewMenu.add(GlobalActions.viewList);
 		windowMenu.add(GlobalActions.viewMenu);
-
+		
 		/* helpMenu.add(testAction); */
 		helpMenu.add(GlobalActions.helpAction);
 		helpMenu.add(new Separator("additions"));
 		helpMenu.add(new Separator());
 		helpMenu.add(GlobalActions.aboutAction);
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.application.ActionBarAdvisor#fillCoolBar(org.eclipse.jface
+	 * @see org.eclipse.ui.application.ActionBarAdvisor#fillCoolBar(org.eclipse.jface
 	 * .action.ICoolBarManager )
 	 */
-	protected void fillCoolBar(ICoolBarManager coolBar) {
+	protected void fillCoolBar(ICoolBarManager coolBar){
 		ToolBarManager tbm = new ToolBarManager();
-
+		
 		tbm.add(GlobalActions.homeAction);
 		tbm.add(GlobalActions.resetPerspectiveAction);
-
+		
 		tbm.add(new Separator());
 		tbm.add(GlobalActions.printEtikette);
 		tbm.add(GlobalActions.printVersionedEtikette);
 		tbm.add(GlobalActions.printAdresse);
-
+		
 		coolBar.add(tbm);
-		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS,
-				Boolean.toString(true))
-				.equalsIgnoreCase(Boolean.toString(true))) {
+		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS, Boolean.toString(true))
+			.equalsIgnoreCase(Boolean.toString(true))) {
 			ToolBarManager tb2 = new ToolBarManager();
 			// ci.getToolBarManager().add(new Separator());
 			for (IAction action : openPerspectiveActions) {
@@ -212,9 +204,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			}
 			coolBar.add(tb2);
 		}
-
+		
 	}
-
+	
 	/**
 	 * Action for opening a perspective
 	 * 
@@ -222,38 +214,34 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	 */
 	class OpenPerspectiveAction extends Action {
 		private final IPerspectiveDescriptor perspectiveDescriptor;
-
+		
 		/**
 		 * Create a new action for opening a perspective
 		 * 
 		 * @param perspectiveDescriptor
 		 *            the perspective to be opened
 		 */
-		OpenPerspectiveAction(IPerspectiveDescriptor perspectiveDescriptor,
-				String name, String icon) {
+		OpenPerspectiveAction(IPerspectiveDescriptor perspectiveDescriptor, String name, String icon){
 			super(perspectiveDescriptor.getLabel());
-
+			
 			setId(perspectiveDescriptor.getId());
 			if (!StringTool.isNothing(icon)) {
 				setImageDescriptor(perspectiveDescriptor.getImageDescriptor());
 			} else {
-
+				
 				setImageDescriptor(perspectiveDescriptor.getImageDescriptor());
 			}
-
-			setToolTipText((StringTool.isNothing(name) ? perspectiveDescriptor
-					.getLabel() : name)
-					+ Messages.ApplicationActionBarAdvisor_10);
-
+			
+			setToolTipText((StringTool.isNothing(name) ? perspectiveDescriptor.getLabel() : name)
+				+ Messages.ApplicationActionBarAdvisor_10);
+			
 			this.perspectiveDescriptor = perspectiveDescriptor;
 		}
-
-		public void run() {
+		
+		public void run(){
 			try {
-				IWorkbenchWindow win = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow();
-				PlatformUI.getWorkbench().showPerspective(
-						perspectiveDescriptor.getId(), win);
+				IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				PlatformUI.getWorkbench().showPerspective(perspectiveDescriptor.getId(), win);
 			} catch (Exception ex) {
 				ExHandler.handle(ex);
 			}

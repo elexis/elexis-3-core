@@ -23,8 +23,8 @@ import ch.elexis.core.data.Sticker;
 import ch.elexis.core.ui.UiDesk;
 
 /**
- * This is a wrapper class for a {@link Sticker} element. It encapsulates
- * the basic core sticker and adds the respective graphic dependent elements.
+ * This is a wrapper class for a {@link Sticker} element. It encapsulates the basic core sticker and
+ * adds the respective graphic dependent elements.
  * 
  * @since 3.0.0
  */
@@ -33,9 +33,10 @@ public class UiSticker {
 	
 	/**
 	 * Instantiate a given {@link Sticker}
+	 * 
 	 * @param sticker
 	 */
-	public UiSticker(Sticker sticker) {
+	public UiSticker(Sticker sticker){
 		this.sticker = sticker;
 	}
 	
@@ -44,9 +45,9 @@ public class UiSticker {
 		UiDBImage image = new UiDBImage(DBImage.load(sticker.get(Sticker.FLD_IMAGE_ID)));
 		
 		ret = UiDesk.getImageRegistry().get(image.getName());
-		if(ret==null) {
+		if (ret == null) {
 			ret = image.getImageScaledTo(16, 16, false);
-			if (ret!= null)
+			if (ret != null)
 				UiDesk.getImageRegistry().put(image.getName(), ret);
 		}
 		
@@ -67,16 +68,16 @@ public class UiSticker {
 		}
 	}
 	
-	public Color getBackground() {
+	public Color getBackground(){
 		return UiDesk.getColorFromRGB(sticker.getBackground());
 	}
-		
+	
 	public void setBackground(Color bg){
 		if (bg != null) {
 			sticker.setBackground(UiDesk.createColor(bg.getRGB()));
 		}
 	}
-
+	
 	public Composite createForm(Composite parent){
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, false));
@@ -84,7 +85,7 @@ public class UiSticker {
 		
 		GridData gd1 = null;
 		GridData gd2 = null;
-	
+		
 		Composite cImg = new Composite(ret, SWT.NONE);
 		if (img != null) {
 			cImg.setBackgroundImage(img);

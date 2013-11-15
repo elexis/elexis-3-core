@@ -135,9 +135,8 @@ public class AUF2 extends ViewPart implements IActivationListener {
 					if (kons != null) {
 						fall = kons.getFall();
 						if (fall == null) {
-							SWTHelper
-								.showError(
-									Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
+							SWTHelper.showError(Messages.AUF2_noCaseSelected,
+								Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
 							return;
 							
 						}
@@ -148,9 +147,8 @@ public class AUF2 extends ViewPart implements IActivationListener {
 					if (kons == null) {
 						kons = pat.getLetzteKons(false);
 						if (kons == null) {
-							SWTHelper
-								.showError(
-									Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
+							SWTHelper.showError(Messages.AUF2_noCaseSelected,
+								Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
 							return;
 						}
 						fall = kons.getFall();
@@ -169,10 +167,8 @@ public class AUF2 extends ViewPart implements IActivationListener {
 				public void run(){
 					AUF sel = getSelectedAUF();
 					if (sel != null) {
-						if (MessageDialog
-							.openConfirm(
-								getViewSite().getShell(),
-								Messages.AUF2_deleteReally, Messages.AUF2_doyoywantdeletereally)) { //$NON-NLS-1$ //$NON-NLS-2$
+						if (MessageDialog.openConfirm(getViewSite().getShell(),
+							Messages.AUF2_deleteReally, Messages.AUF2_doyoywantdeletereally)) { //$NON-NLS-1$ //$NON-NLS-2$
 							sel.delete();
 							tv.refresh(false);
 						}

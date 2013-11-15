@@ -35,35 +35,34 @@ import ch.elexis.core.ui.util.Log;
 public class LaborOrderPulldownMenuCreator implements IMenuCreator {
 	private final String LAB_ORDER_SELECTED_ACTION_ID = "ch.elexis.LaborOrder.selectedId";
 	private static Log log = Log.get("LaborOrderPulldownMenuCreator"); //$NON-NLS-1$
-
+	
 	List<IAction> actions = new Vector<IAction>();
 	Menu menu = null;
 	IAction selectedAction = null;
-
-	public LaborOrderPulldownMenuCreator(final Shell shell) {
+	
+	public LaborOrderPulldownMenuCreator(final Shell shell){
 		super();
 		init(shell);
 	}
-
+	
 	@SuppressWarnings("unchecked")
-	private void init(final Shell shell) {
-		List<IAction> orderActions = Extensions
-				.getClasses(
-						Extensions.getExtensions("ch.elexis.LaborOrder"), "ToolbarAction", //$NON-NLS-1$ //$NON-NLS-2$
-						false);
+	private void init(final Shell shell){
+		List<IAction> orderActions =
+			Extensions.getClasses(
+				Extensions.getExtensions("ch.elexis.LaborOrder"), "ToolbarAction", //$NON-NLS-1$ //$NON-NLS-2$
+				false);
 		for (IAction action : orderActions) {
 			if (action.getId() != null && action.getImageDescriptor() != null
-					&& action.getText() != null) {
+				&& action.getText() != null) {
 				this.actions.add(action);
 			} else {
-				log.log(MessageFormat
-						.format("Missing #id, #imagedescriptor or #text for LaborOrder action: {0}",
-								action.getText()), Log.WARNINGS);
+				log.log(MessageFormat.format(
+					"Missing #id, #imagedescriptor or #text for LaborOrder action: {0}",
+					action.getText()), Log.WARNINGS);
 			}
 		}
 		if (this.actions != null && this.actions.size() > 0) {
-			String selectedId = CoreHub.localCfg.get(
-					LAB_ORDER_SELECTED_ACTION_ID, null);
+			String selectedId = CoreHub.localCfg.get(LAB_ORDER_SELECTED_ACTION_ID, null);
 			if (selectedId != null) {
 				for (IAction action : this.actions) {
 					if (selectedId.equals(action.getId())) {
@@ -76,23 +75,23 @@ public class LaborOrderPulldownMenuCreator implements IMenuCreator {
 			}
 		}
 	}
-
-	public IAction getSelected() {
+	
+	public IAction getSelected(){
 		return this.selectedAction;
 	}
-
+	
 	@Override
-	public void dispose() {
+	public void dispose(){
 		if (this.menu != null) {
 			this.menu.dispose();
 		}
 	}
-
+	
 	@Override
-	public Menu getMenu(Menu parent) {
+	public Menu getMenu(Menu parent){
 		return null;
 	}
-
+	
 	/**
 	 * Pulldown menu wird anhand selection angepasst
 	 * 
@@ -100,8 +99,7 @@ public class LaborOrderPulldownMenuCreator implements IMenuCreator {
 	 * @param action
 	 * @param image
 	 */
-	private void select(final Control parent, final IAction action,
-			final Image image) {
+	private void select(final Control parent, final IAction action, final Image image){
 		if (parent instanceof ToolBar) {
 			ToolBar toolBar = (ToolBar) parent;
 			if (toolBar.getItemCount() > 0) {
@@ -109,16 +107,15 @@ public class LaborOrderPulldownMenuCreator implements IMenuCreator {
 				toolItem.setImage(image);
 				toolItem.setHotImage(image);
 				toolItem.setToolTipText(action.getToolTipText());
-
+				
 				this.selectedAction = action;
-				CoreHub.localCfg.set(LAB_ORDER_SELECTED_ACTION_ID,
-						this.selectedAction.getId());
+				CoreHub.localCfg.set(LAB_ORDER_SELECTED_ACTION_ID, this.selectedAction.getId());
 			}
 		}
 	}
-
+	
 	@Override
-	public Menu getMenu(final Control parent) {
+	public Menu getMenu(final Control parent){
 		if (this.menu == null) {
 			this.menu = new Menu(parent);
 			for (final IAction action : this.actions) {
@@ -126,40 +123,40 @@ public class LaborOrderPulldownMenuCreator implements IMenuCreator {
 				final Image image = action.getImageDescriptor().createImage();
 				menuItem.setImage(image);
 				menuItem.setText(action.getText());
-
+				
 				// Add listeners
 				menuItem.addSelectionListener(new SelectionAdapter() {
 					@Override
-					public void widgetSelected(SelectionEvent e) {
+					public void widgetSelected(SelectionEvent e){
 						select(parent, action, image);
 						action.run();
 					}
 				});
 			}
-
+			
 		}
-
+		
 		return this.menu;
 	}
-
+	
 	/**
 	 * Returns action to the pulldown button
 	 * 
 	 * @return
 	 */
-	public IAction getAction() {
+	public IAction getAction(){
 		int buttonStyle = IAction.AS_DROP_DOWN_MENU;
 		if (actions.size() == 1) {
 			buttonStyle = IAction.AS_PUSH_BUTTON;
 		}
 		IAction dropDownAction = new Action("Dropdown", buttonStyle) {
 			@Override
-			public void run() {
+			public void run(){
 				getSelected().run();
 			}
 		};
 		dropDownAction.setMenuCreator(this);
 		return dropDownAction;
 	}
-
+	
 }

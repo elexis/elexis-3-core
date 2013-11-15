@@ -18,23 +18,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Listens to generic MessageEvents thrown by the core that should be presented
- * to the user.
+ * Listens to generic MessageEvents thrown by the core that should be presented to the user.
  */
 public class MessageEventListener extends ElexisEventListenerImpl {
-
-	private Logger log = LoggerFactory.getLogger(MessageEventListener.class
-			.getName());
-
-	public MessageEventListener() {
-		super(null, MessageEvent.class, ElexisEvent.EVENT_NOTIFICATION,
-				ElexisEvent.PRIORITY_SYNC);
+	
+	private Logger log = LoggerFactory.getLogger(MessageEventListener.class.getName());
+	
+	public MessageEventListener(){
+		super(null, MessageEvent.class, ElexisEvent.EVENT_NOTIFICATION, ElexisEvent.PRIORITY_SYNC);
 	}
-
+	
 	@Override
-	public void run(ElexisEvent ev) {
+	public void run(ElexisEvent ev){
 		MessageEvent me = (MessageEvent) ev.getGenericObject();
-		log.info("MessageEvent [TITLE] " + me.title + " [MESSAGE] "
-				+ me.message);
+		log.info("MessageEvent [TITLE] " + me.title + " [MESSAGE] " + me.message);
 	}
 }

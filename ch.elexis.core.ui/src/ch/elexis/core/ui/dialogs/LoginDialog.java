@@ -68,9 +68,10 @@ public class LoginDialog extends TitleAreaDialog {
 			usr.setText("Administrator"); //$NON-NLS-1$
 			pwd.setText("admin"); //$NON-NLS-1$
 		}
-
+		
 		@SuppressWarnings("unchecked")
-		List<ILoginNews> newsModules = Extensions.getClasses(ExtensionPointConstantsUi.LOGIN_NEWS, "class");
+		List<ILoginNews> newsModules =
+			Extensions.getClasses(ExtensionPointConstantsUi.LOGIN_NEWS, "class");
 		
 		if (newsModules.size() > 0) {
 			Composite cNews = new Composite(ret, SWT.NONE);

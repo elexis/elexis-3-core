@@ -19,8 +19,7 @@ import java.util.List;
 import ch.elexis.core.data.PersistentObject;
 
 /**
- * For compatibility reasons only, avoids unfolding errors in
- * {@link PersistentObject#fold}
+ * For compatibility reasons only, avoids unfolding errors in {@link PersistentObject#fold}
  * 
  * @since 3.0.0
  * @deprecated
@@ -29,13 +28,13 @@ public class MFUList<T> implements Iterable<T>, Serializable {
 	private static final long serialVersionUID = 3966224865760348882L;
 	private ArrayList<Entry<T>> list;
 	int maxNum;
-
-	public MFUList(int objectsToStart, int objectsToKeep) {
+	
+	public MFUList(int objectsToStart, int objectsToKeep){
 		list = new ArrayList<Entry<T>>(objectsToStart);
 		maxNum = objectsToKeep;
 	}
-
-	public void count(T obj) {
+	
+	public void count(T obj){
 		Iterator<Entry<T>> it = list.iterator();
 		while (it.hasNext()) {
 			Entry<T> e = it.next();
@@ -58,20 +57,20 @@ public class MFUList<T> implements Iterable<T>, Serializable {
 		while (list.size() > maxNum) {
 			list.remove(list.size() - 1);
 		}
-
+		
 		list.add(new Entry<T>(obj));
 		Collections.sort(list);
 	}
-
-	public List<T> getAll() {
+	
+	public List<T> getAll(){
 		ArrayList<T> ret = new ArrayList<T>();
 		for (Entry<T> e : list) {
 			ret.add(e.o);
 		}
 		return ret;
 	}
-
-	public int getIndex(T obj) {
+	
+	public int getIndex(T obj){
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).o.equals(obj)) {
 				return i;
@@ -79,55 +78,55 @@ public class MFUList<T> implements Iterable<T>, Serializable {
 		}
 		return -1;
 	}
-
+	
 	class Entry<X> implements Comparable<Entry<X>>, Serializable {
 		private static final long serialVersionUID = 5090900795191382845L;
 		int count;
 		X o;
-
-		public Entry(X obj) {
+		
+		public Entry(X obj){
 			o = obj;
 			count = 0;
 		}
-
-		public int compareTo(Entry<X> obj) {
+		
+		public int compareTo(Entry<X> obj){
 			return obj.count - count;
 		}
-
+		
 		@SuppressWarnings("unchecked")
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(Object obj){
 			if (obj instanceof Entry) {
 				Entry<X> e = (Entry<X>) obj;
 				return o.equals(e.o);
 			}
 			return false;
 		}
-
+		
 	}
-
-	public Iterator<T> iterator() {
+	
+	public Iterator<T> iterator(){
 		return new It();
 	}
-
+	
 	class It implements Iterator<T> {
 		Iterator<Entry<T>> li;
-
-		It() {
+		
+		It(){
 			li = list.iterator();
 		}
-
-		public boolean hasNext() {
+		
+		public boolean hasNext(){
 			return li.hasNext();
 		}
-
-		public T next() {
+		
+		public T next(){
 			return li.next().o;
 		}
-
-		public void remove() {
+		
+		public void remove(){
 			li.remove();
 		}
-
+		
 	}
 }

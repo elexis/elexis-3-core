@@ -56,8 +56,7 @@ public class ListLoader<T extends PersistentObject> extends AbstractDataLoaderJo
 			result = list.toArray();
 			return Status.OK_STATUS;
 		}
-		return new Status(Status.ERROR,
-			"ch.elexis", 1, Messages.ListLoader_CouldntLoadData, null); //$NON-NLS-1$ //$NON-NLS-2$
+		return new Status(Status.ERROR, "ch.elexis", 1, Messages.ListLoader_CouldntLoadData, null); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public int getSize(){

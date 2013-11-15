@@ -12,7 +12,6 @@
 
 package ch.elexis.core.data.events;
 
-
 public interface ElexisEventListener {
 	/**
 	 * An Event was fired

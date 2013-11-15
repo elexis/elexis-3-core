@@ -65,10 +65,11 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	private Log log = Log.get(this.getClass().getName());
 	private boolean inUpdate = false;
 	
-	private static final String[] columnHeaders =
-		{
-			Messages.LabNotSeenView_patient, Messages.LabNotSeenView_parameter, Messages.LabNotSeenView_normRange, Messages.LabNotSeenView_date, Messages.LabNotSeenView_value
-		};
+	private static final String[] columnHeaders = {
+		Messages.LabNotSeenView_patient, Messages.LabNotSeenView_parameter,
+		Messages.LabNotSeenView_normRange, Messages.LabNotSeenView_date,
+		Messages.LabNotSeenView_value
+	};
 	private static final int[] colWidths = new int[] {
 		250, 100, 60, 70, 50
 	};
@@ -253,8 +254,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	
 	private void makeActions(){
 		markAllAction =
-			new RestrictedAction(AccessControlDefaults.LAB_SEEN,
-				Messages.LabNotSeenView_markAll) { //$NON-NLS-1$
+			new RestrictedAction(AccessControlDefaults.LAB_SEEN, Messages.LabNotSeenView_markAll) { //$NON-NLS-1$
 				{
 					setToolTipText(Messages.LabNotSeenView_markAllToolTip); //$NON-NLS-1$
 					setImageDescriptor(Images.IMG_TICK.getImageDescriptor());

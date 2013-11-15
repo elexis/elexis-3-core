@@ -43,8 +43,7 @@ public class MultiplikatorList {
 	private void fetchResultSet(){
 		Stm statement = PersistentObject.getConnection().getStatement();
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM ").append(table).append(" WHERE TYP=")
-			.append(JdbcLink.wrap(typ));
+		sql.append("SELECT * FROM ").append(table).append(" WHERE TYP=").append(JdbcLink.wrap(typ));
 		ResultSet res = statement.query(sql.toString());
 		try {
 			list = new ArrayList<MultiplikatorList.MultiplikatorInfo>();

@@ -43,7 +43,8 @@ public class Script extends NamedBlob2 {
 	public static final String INTERPRETER_BEANSHELL = "BSH";
 	public static final String INTERPRETER_SCALA = "SCALA";
 	public static final String INTERPRETER_DEFAULT = INTERPRETER_BEANSHELL;
-	private static final Pattern varPattern = Pattern.compile(TextContainerConstants.MATCH_TEMPLATE);
+	private static final Pattern varPattern = Pattern
+		.compile(TextContainerConstants.MATCH_TEMPLATE);
 	private static final String PREFIX = "Script:";
 	public static final String SCRIPT_MARKER = "SCRIPT:";
 	private Interpreter interpreter = null;

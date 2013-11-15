@@ -17,6 +17,7 @@ import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IPersistentObject;
+
 /**
  * A universal event object. Can optionally created with a priority
  * 
@@ -48,15 +49,13 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	public static final int EVENT_OPERATION_PROGRESS = 0x0200;
 	/** notification event */
 	public static final int EVENT_NOTIFICATION = 0x0400;
-
+	
 	/**
-	 * highest priority, will not be put into the queue but directly
-	 * fired.
+	 * highest priority, will not be put into the queue but directly fired.
 	 */
 	public static final int PRIORITY_SYNC = 1;
 	public static final int PRIORITY_HIGH = 1000;
 	public static final int PRIORITY_NORMAL = 10000;
-	
 	
 	private final PersistentObject obj;
 	private final Object genericObject;
@@ -78,11 +77,10 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 		this(o, c, type, PRIORITY_NORMAL);
 	}
 	
-	
 	/**
-	 * Create an {@link ElexisEvent} carrying a generic object. This event is
-	 * of high priority and should not be lightly used. Usage examples are
-	 * communication of ElexisStatus events within the system.
+	 * Create an {@link ElexisEvent} carrying a generic object. This event is of high priority and
+	 * should not be lightly used. Usage examples are communication of ElexisStatus events within
+	 * the system.
 	 * 
 	 * @param genericObject
 	 * @param c
@@ -90,15 +88,15 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	 * @pram priority
 	 * @since 3.0.0
 	 */
-	public ElexisEvent(final Object genericObject, Class<?> c, int type, int priority) {
-		if(genericObject instanceof PersistentObject) {
+	public ElexisEvent(final Object genericObject, Class<?> c, int type, int priority){
+		if (genericObject instanceof PersistentObject) {
 			obj = (PersistentObject) genericObject;
 			this.genericObject = null;
 		} else {
 			this.genericObject = genericObject;
 			obj = null;
 		}
-
+		
 		objClass = c;
 		this.type = type;
 		this.priority = priority;
@@ -131,7 +129,7 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	 * @return the generic object, may be <code>null</code>
 	 * @since 3.0.0
 	 */
-	public Object getGenericObject()  {
+	public Object getGenericObject(){
 		return genericObject;
 	}
 	
@@ -232,7 +230,7 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	 * @return
 	 * @since 3.0.0
 	 */
-	public int getPriority() {
+	public int getPriority(){
 		return priority;
 	}
 }

@@ -64,9 +64,9 @@ public class SelectBestellungDialog extends SelectionDialog {
 		addColumns();
 		
 		setComparator();
-
+		
 		fTableViewer.setInput(this);
-
+		
 		fTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event){
 				if (fAddCancelButton) {
@@ -114,13 +114,14 @@ public class SelectBestellungDialog extends SelectionDialog {
 			}
 		});
 	}
-
+	
 	private void addColumns(){
 		TableViewerColumn time = new TableViewerColumn(fTableViewer, SWT.NONE);
 		time.getColumn().setWidth(125);
 		time.getColumn().setText("Datum");
 		time.setLabelProvider(new ColumnLabelProvider() {
 			TimeTool date = new TimeTool();
+			
 			@Override
 			public String getText(Object element){
 				Bestellung bestellung = (Bestellung) element;
@@ -151,7 +152,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 			}
 		});
 	}
-
+	
 	/**
 	 * Return the style flags for the table viewer.
 	 * 
@@ -160,7 +161,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 	protected int getTableStyle(){
 		return SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION;
 	}
-
+	
 	/*
 	 * Overrides method from Dialog
 	 */

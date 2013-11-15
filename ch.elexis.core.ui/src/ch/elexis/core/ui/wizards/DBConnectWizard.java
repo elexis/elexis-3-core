@@ -28,10 +28,8 @@ import ch.rgw.tools.JdbcLinkException;
 import ch.rgw.tools.StringTool;
 
 public class DBConnectWizard extends Wizard {
-	DBConnectFirstPage first = new DBConnectFirstPage(
-		Messages.DBConnectWizard_typeOfDB); //$NON-NLS-1$
-	DBConnectSecondPage sec = new DBConnectSecondPage(
-		Messages.DBConnectWizard_Credentials); //$NON-NLS-1$
+	DBConnectFirstPage first = new DBConnectFirstPage(Messages.DBConnectWizard_typeOfDB); //$NON-NLS-1$
+	DBConnectSecondPage sec = new DBConnectSecondPage(Messages.DBConnectWizard_Credentials); //$NON-NLS-1$
 	
 	public DBConnectWizard(){
 		super();

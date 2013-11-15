@@ -24,7 +24,7 @@ public class Messages extends NLS {
 	public static String LoginDialog_loginHeader;
 	public static String LoginDialog_notLoggedIn;
 	public static String LoginDialog_enterUsernamePass;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

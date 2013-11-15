@@ -19,28 +19,26 @@ import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
  * @since 3.0.0
  */
 public class CoreEventListener {
-
+	
 	private static ISourceProviderService sps = null;
-
-	public CoreEventListener() {
+	
+	public CoreEventListener(){
 		// Listen to patient selection and de-selection event, set status
 		// accordingly!!
-
+		
 		if (sps == null)
-			sps = (ISourceProviderService) PlatformUI.getWorkbench()
-					.getService(ISourceProviderService.class);
-
-		((PatientSelectionStatus) sps
-				.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE))
-				.setState(true);
-
-		((PatientSelectionStatus) sps
-				.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE))
-				.setState(false);
+			sps =
+				(ISourceProviderService) PlatformUI.getWorkbench().getService(
+					ISourceProviderService.class);
 		
+		((PatientSelectionStatus) sps.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE))
+			.setState(true);
 		
-		/// Handle ElexisStatusEvents!!!
-
+		((PatientSelectionStatus) sps.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE))
+			.setState(false);
+		
+		// / Handle ElexisStatusEvents!!!
+		
 	}
-
+	
 }

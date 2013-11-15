@@ -101,7 +101,8 @@ public class ContactElement extends XChangeElement {
 	
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
-		sb.append(Messages.ContactElement_Name).append(getAttr(ATTR_LASTNAME)).append(StringTool.lf); //$NON-NLS-1$
+		sb.append(Messages.ContactElement_Name).append(getAttr(ATTR_LASTNAME))
+			.append(StringTool.lf); //$NON-NLS-1$
 		sb.append(Messages.ContactElement_vorname).append(getAttr(ATTR_FIRSTNAME)); //$NON-NLS-1$
 		String middle = getAttr(ATTR_MIDDLENAME);
 		if (middle.length() > 0) {

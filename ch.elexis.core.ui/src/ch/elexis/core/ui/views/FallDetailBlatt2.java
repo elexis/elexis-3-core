@@ -80,8 +80,10 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
  * Display detail data of a Fall
  */
 public class FallDetailBlatt2 extends Composite {
-	private static final String SELECT_CONTACT_BODY = Messages.FallDetailBlatt2_PleaseSelectContactFor; //$NON-NLS-1$
-	private static final String SELECT_CONTACT_CAPTION = Messages.FallDetailBlatt2_PleaseSelectCpntactCaption; //$NON-NLS-1$
+	private static final String SELECT_CONTACT_BODY =
+		Messages.FallDetailBlatt2_PleaseSelectContactFor; //$NON-NLS-1$
+	private static final String SELECT_CONTACT_CAPTION =
+		Messages.FallDetailBlatt2_PleaseSelectCpntactCaption; //$NON-NLS-1$
 	private static final String LABEL = Messages.FallDetailBlatt2_Labek; //$NON-NLS-1$
 	private static final String RECHNUNGSEMPFAENGER = Messages.FallDetailBlatt2_BillAdressee; //$NON-NLS-1$
 	private static final String VERSICHERUNGSNUMMER = Messages.FallDetailBlatt2_InsuranceNumber; //$NON-NLS-1$
@@ -125,9 +127,7 @@ public class FallDetailBlatt2 extends Composite {
 		grid.marginWidth = 0;
 		cpAbrechnung.setLayout(grid);
 		cAbrechnung = new Combo(cpAbrechnung, SWT.READ_ONLY);
-		autoFill =
-			tk.createHyperlink(cpAbrechnung,
-				Messages.FallDetailBlatt2_ApplyData, SWT.NONE); //$NON-NLS-1$
+		autoFill = tk.createHyperlink(cpAbrechnung, Messages.FallDetailBlatt2_ApplyData, SWT.NONE); //$NON-NLS-1$
 		autoFill.addHyperlinkListener(new HyperlinkAdapter() {
 			
 			@Override
@@ -140,8 +140,7 @@ public class FallDetailBlatt2 extends Composite {
 				// make sure compatibility methods are called
 				
 				String ktNew = f.getInfoString(KOSTENTRAEGER);
-				String ktOld =
-					f.get(Messages.FallDetailBlatt2_GuarantorNoSpecialChars); //$NON-NLS-1$
+				String ktOld = f.get(Messages.FallDetailBlatt2_GuarantorNoSpecialChars); //$NON-NLS-1$
 				
 				if (StringTool.isNothing(ktNew)) {
 					Kontakt k = Kontakt.load(ktOld);
@@ -168,7 +167,8 @@ public class FallDetailBlatt2 extends Composite {
 							f.setInfoString(RECHNUNGSEMPFAENGER, f0.get("GarantID")); //$NON-NLS-1$
 						}
 						if (f.getInfoString(KOSTENTRAEGER).isEmpty()) {
-							f.setInfoString(KOSTENTRAEGER, f0.get(Messages.FallDetailBlatt2_GuarantorNoSpecialChars)); //$NON-NLS-1$
+							f.setInfoString(KOSTENTRAEGER,
+								f0.get(Messages.FallDetailBlatt2_GuarantorNoSpecialChars)); //$NON-NLS-1$
 						}
 						if (f.getInfoString(VERSICHERUNGSNUMMER).isEmpty()) {
 							f.setInfoString(VERSICHERUNGSNUMMER,
@@ -203,15 +203,15 @@ public class FallDetailBlatt2 extends Composite {
 					cAbrechnung.select(cAbrechnung.indexOf(gesetz));
 				} else if (isDisabled) {
 					// selection not allowed - reset previous selection after message
-					SWTHelper.alert(
-						Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedCaption, //$NON-NLS-1$
+					SWTHelper.alert(Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedCaption, //$NON-NLS-1$
 						Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedBody); //$NON-NLS-1$
 					cAbrechnung.select(cAbrechnung.indexOf(gesetz));
 				} else {
 					if (fall != null) {
 						if (fall.getBehandlungen(false).length > 0) {
 							if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY)) {
-								if (SWTHelper.askYesNo(Messages.FallDetailBlatt2_DontChangeBillingSystemCaption, //$NON-NLS-1$
+								if (SWTHelper.askYesNo(
+									Messages.FallDetailBlatt2_DontChangeBillingSystemCaption, //$NON-NLS-1$
 									Messages.FallDetailBlatt2_DontChangeBillingSystemBody)) { //$NON-NLS-1$
 									fall.setAbrechnungsSystem(cAbrechnung.getItem(i));
 									setFall(fall);
@@ -219,7 +219,8 @@ public class FallDetailBlatt2 extends Composite {
 									return;
 								}
 							} else {
-								SWTHelper.alert(Messages.FallDetailBlatt2_CantChangeBillingSystemCaption, //$NON-NLS-1$
+								SWTHelper.alert(
+									Messages.FallDetailBlatt2_CantChangeBillingSystemCaption, //$NON-NLS-1$
 									Messages.FallDetailBlatt2_CantChangeBillingSystemBody); //$NON-NLS-1$
 							}
 							cAbrechnung.select(cAbrechnung.indexOf(gesetz));
@@ -317,9 +318,8 @@ public class FallDetailBlatt2 extends Composite {
 			
 		});
 		ddc =
-			new DayDateCombo(
-				top,
-				Messages.FallDetailBlatt2_ProposeForBillingIn, Messages.FallDetailBlatt2_DaysOrAfter); //$NON-NLS-1$ //$NON-NLS-2$
+			new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
+				Messages.FallDetailBlatt2_DaysOrAfter); //$NON-NLS-1$ //$NON-NLS-2$
 		ddc.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		ddc.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -347,9 +347,7 @@ public class FallDetailBlatt2 extends Composite {
 			@Override
 			public void linkActivated(final HyperlinkEvent e){
 				KontaktSelektor ksl =
-					new KontaktSelektor(
-						getShell(),
-						Kontakt.class,
+					new KontaktSelektor(getShell(), Kontakt.class,
 						Messages.FallDetailBlatt2_SelectGuarantorCaption, //$NON-NLS-1$
 						Messages.FallDetailBlatt2_SelectGuarantorBody, true, Kontakt.DEFAULT_SORT); //$NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
@@ -575,8 +573,7 @@ public class FallDetailBlatt2 extends Composite {
 		// *** adding optional fields defined in prefs
 		String optionals = f.getOptionals();
 		if ((optionals != null) && (optionals.length() > 0)) {
-			setExtendedFields(f, optionals,
-				Messages.FallDetailBlatt2_optionalData, false, false); //$NON-NLS-1$
+			setExtendedFields(f, optionals, Messages.FallDetailBlatt2_optionalData, false, false); //$NON-NLS-1$
 		}
 		
 		// ****** show any other fields from extinfo - ONLY FOR ADMINS, NOT
@@ -768,9 +765,7 @@ public class FallDetailBlatt2 extends Composite {
 			}
 			// *** only for admins!
 			if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY_SPECIALS) == true) {
-				setExtendedFields(
-					f,
-					otherFieldsList,
+				setExtendedFields(f, otherFieldsList,
 					Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true, true); //$NON-NLS-1$
 			}
 		}
@@ -984,7 +979,8 @@ public class FallDetailBlatt2 extends Composite {
 					// get the extension for styled text
 					String extensionToUse = "Interner Text"; //$NON-NLS-1$
 					IExtensionRegistry exr = Platform.getExtensionRegistry();
-					IExtensionPoint exp = exr.getExtensionPoint(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
+					IExtensionPoint exp =
+						exr.getExtensionPoint(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
 					ITextPlugin plugin = null;
 					if (exp != null) {
 						IExtension[] extensions = exp.getExtensions();
@@ -1301,7 +1297,8 @@ public class FallDetailBlatt2 extends Composite {
 						Map<Object, Object> ht = f.getMap("extinfo"); //$NON-NLS-1$
 						if (SWTHelper.askYesNo(
 							StringTool.leer,
-							Messages.FallDetailBlatt2_DoYouWantToDeleteThisData + key + "/" + ht.get(key) + Messages.FallDetailBlatt2_reallyFromTheCase)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							Messages.FallDetailBlatt2_DoYouWantToDeleteThisData + key
+								+ "/" + ht.get(key) + Messages.FallDetailBlatt2_reallyFromTheCase)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							ht.remove(key);
 							f.setMap("extinfo", ht); //$NON-NLS-1$
 							setFall(f);

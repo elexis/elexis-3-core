@@ -29,11 +29,11 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
-
+	
 	public String initialPerspectiveString;
-
+	
 	@Override
-	public void requestDatabaseConnectionConfiguration() {
+	public void requestDatabaseConnectionConfiguration(){
 		Display disp = new Display();
 		Shell shell = new Shell(disp);
 		WizardDialog wd = new WizardDialog(shell, new DBConnectWizard());
@@ -41,41 +41,40 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		SWTHelper.center(wd.getShell());
 		wd.open();
 	}
-
+	
 	@Override
-	public void requestInitialMandatorConfiguration() {
+	public void requestInitialMandatorConfiguration(){
 		Display d = Display.getDefault();
 		new ErsterMandantDialog(d.getActiveShell()).open();
 	}
-
+	
 	@Override
-	public void adaptForUser() {
-		if(CoreHub.actUser!=null) {
-			initialPerspectiveString = CoreHub.localCfg.get(CoreHub.actUser
-					+ GlobalActions.DEFAULTPERSPECTIVECFG, null);
+	public void adaptForUser(){
+		if (CoreHub.actUser != null) {
+			initialPerspectiveString =
+				CoreHub.localCfg.get(CoreHub.actUser + GlobalActions.DEFAULTPERSPECTIVECFG, null);
 		}
 		
 		UiDesk.updateFont(Preferences.USR_DEFAULTFONT);
-
+		
 		ElexisEventDispatcher.getInstance().fire(
-				new ElexisEvent(CoreHub.actUser, Anwender.class,
-						ElexisEvent.EVENT_USER_CHANGED));
+			new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 	}
-
+	
 	@Override
-	public String getInitialPerspective() {
+	public String getInitialPerspective(){
 		return (initialPerspectiveString == null) ? UiResourceConstants.PatientPerspektive_ID
 				: initialPerspectiveString;
 	}
-
+	
 	@Override
-	public boolean openQuestion(String title, String message) {
+	public boolean openQuestion(String title, String message){
 		Display d = Display.getDefault();
 		return MessageDialog.openQuestion(d.getActiveShell(), title, message);
 	}
-
+	
 	@Override
-	public void performLogin(Object shell) {
+	public void performLogin(Object shell){
 		LoginDialog dlg = new LoginDialog((Shell) shell);
 		dlg.create();
 		dlg.getShell().setText(Messages.LoginDialog_loginHeader);

@@ -85,7 +85,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 							for (Reminder r : list) {
 								sb.append(r.getMessage()).append("\n\n"); //$NON-NLS-1$
 							}
-							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption, sb.toString()); //$NON-NLS-1$
+							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption,
+								sb.toString()); //$NON-NLS-1$
 						}
 					}
 					
@@ -100,8 +101,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		public void runInUi(ElexisEvent ev){
 			boolean bChecked = CoreHub.userCfg.get(Preferences.USR_REMINDERSOPEN, true);
 			onlyOpenReminderAction.setChecked(bChecked);
-			ownReminderAction.setChecked(CoreHub.userCfg
-				.get(Preferences.USR_REMINDEROWN, false));
+			ownReminderAction.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROWN, false));
 			
 			// get state from user's configuration
 			othersReminderAction.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS,

@@ -84,7 +84,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		Composite body = form.getBody();
 		body.setBackground(parent.getBackground());
 		body.setLayout(new GridLayout(2, false));
-		tk.createLabel(body, Messages.BlockDetailDisplay_name).setBackground(parent.getBackground()); //$NON-NLS-1$
+		tk.createLabel(body, Messages.BlockDetailDisplay_name)
+			.setBackground(parent.getBackground()); //$NON-NLS-1$
 		tName = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(body, StringConstants.MANDATOR).setBackground(parent.getBackground());
@@ -191,9 +192,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 			
 		});
-		bNew =
-			tk.createButton(body,
-				Messages.BlockDetailDisplay_addPredefinedServices, SWT.PUSH); //$NON-NLS-1$
+		bNew = tk.createButton(body, Messages.BlockDetailDisplay_addPredefinedServices, SWT.PUSH); //$NON-NLS-1$
 		bNew.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bNew.addSelectionListener(new SelectionAdapter() {
 			
@@ -212,8 +211,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		});
 		
 		bEigen =
-			tk.createButton(body,
-				Messages.BlockDetailDisplay_addSelfDefinedServices, SWT.PUSH); //$NON-NLS-1$
+			tk.createButton(body, Messages.BlockDetailDisplay_addSelfDefinedServices, SWT.PUSH); //$NON-NLS-1$
 		bEigen.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bEigen.addSelectionListener(new SelectionAdapter() {
 			@Override

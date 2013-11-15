@@ -13,10 +13,10 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.views.messages";//$NON-NLS-1$
-
+	
 	public static String BBSView_20; // NO TRANSLATION ?
 	public static String BBSView_22; // NO TRANSLATION ?
-
+	
 	public static String AUF2_NoPatientSelected;
 	public static String AUF2_PleaseDoSelectPatient;
 	public static String AUF2_certificate;
@@ -500,7 +500,7 @@ public class Messages extends NLS {
 	public static String VerrechnungsDisplay_removeElement;
 	public static String allDetailBlatt2_ApplyData;
 	public static String BriefAuswahlNotAllowedToRunStresstess;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

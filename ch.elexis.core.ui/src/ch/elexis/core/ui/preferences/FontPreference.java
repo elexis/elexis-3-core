@@ -23,7 +23,6 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 
-
 public class FontPreference extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	
 	public FontPreference(){

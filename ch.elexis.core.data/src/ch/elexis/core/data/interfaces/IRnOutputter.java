@@ -82,7 +82,8 @@ public interface IRnOutputter {
 	/**
 	 * Create a Control to perform necessary settings for his outputter.
 	 * 
-	 * @param parent <code>null</code> or castable to org.eclipse.swt.widgets.Composite
+	 * @param parent
+	 *            <code>null</code> or castable to org.eclipse.swt.widgets.Composite
 	 * @return <code>null</code> or an object castable to org.eclipse.swt.widgets.Control
 	 * @since 3.0.0 direct dependencies to Composite and Control removed
 	 */

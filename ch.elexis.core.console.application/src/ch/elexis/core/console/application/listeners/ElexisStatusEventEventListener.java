@@ -18,24 +18,21 @@ import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.status.ElexisStatus;
 
 /**
- * Listens to Elexis status events of highest priority, such as exception or
- * operational error messages. Depending on the situation these may or may not
- * be presented to the user.
+ * Listens to Elexis status events of highest priority, such as exception or operational error
+ * messages. Depending on the situation these may or may not be presented to the user.
  */
 public class ElexisStatusEventEventListener extends ElexisEventListenerImpl {
-
-	private Logger log = LoggerFactory
-			.getLogger(ElexisStatusEventEventListener.class.getName());
-
-	public ElexisStatusEventEventListener() {
-		super(null, ElexisStatus.class, ElexisEvent.EVENT_ELEXIS_STATUS,
-				ElexisEvent.PRIORITY_SYNC);
+	
+	private Logger log = LoggerFactory.getLogger(ElexisStatusEventEventListener.class.getName());
+	
+	public ElexisStatusEventEventListener(){
+		super(null, ElexisStatus.class, ElexisEvent.EVENT_ELEXIS_STATUS, ElexisEvent.PRIORITY_SYNC);
 	}
-
+	
 	@Override
-	public void run(ElexisEvent ev) {
+	public void run(ElexisEvent ev){
 		ElexisStatus es = (ElexisStatus) ev.getGenericObject();
-		log.info("StatusEvent [PLUGIN] " + es.getPlugin() + " [MESSAGE] "
-				+ es.getMessage() + " [EXCEPTION] " + es.getException());
+		log.info("StatusEvent [PLUGIN] " + es.getPlugin() + " [MESSAGE] " + es.getMessage()
+			+ " [EXCEPTION] " + es.getException());
 	}
 }

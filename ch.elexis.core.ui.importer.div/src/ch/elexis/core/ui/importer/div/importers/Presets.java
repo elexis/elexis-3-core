@@ -95,7 +95,9 @@ public class Presets {
 			String natel = StringTool.getSafe(row, 13);
 			Kontakt k = null;
 			if (StringTool.isNothing(typ) || typ.equals("0")) { //$NON-NLS-1$
-				k = KontaktMatcher.findOrganisation(bez1, null, strasse, plz, ort, CreateMode.CREATE);
+				k =
+					KontaktMatcher.findOrganisation(bez1, null, strasse, plz, ort,
+						CreateMode.CREATE);
 				if (k == null) {
 					continue;
 				}

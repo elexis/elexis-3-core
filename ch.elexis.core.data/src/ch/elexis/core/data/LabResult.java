@@ -225,7 +225,8 @@ public class LabResult extends PersistentObject {
 		TimeTool limit = new TimeTool();
 		try { // We need to catch wrong formatted numbers in KEEP_UNSEEN
 			limit.addHours(-24
-				* Integer.parseInt(CoreHub.globalCfg.get(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
+				* Integer.parseInt(CoreHub.globalCfg.get(
+					Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
 					Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS)));
 		} catch (NumberFormatException nex) {
 			ExHandler.handle(nex);

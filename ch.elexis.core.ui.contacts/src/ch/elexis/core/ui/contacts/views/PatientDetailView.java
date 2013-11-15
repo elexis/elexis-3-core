@@ -162,10 +162,10 @@ public class PatientDetailView extends ViewPart {
 							Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_STREET
 						};
 						KontaktSelektor ksl =
-							new KontaktSelektor(
-								PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-								Kontakt.class,
-								Messages.Patientenblatt2_contactForAdditionalAddress, Messages.Patientenblatt2_pleaseSelectardress, sortFields); //$NON-NLS-1$ //$NON-NLS-2$
+							new KontaktSelektor(PlatformUI.getWorkbench().getDisplay()
+								.getActiveShell(), Kontakt.class,
+								Messages.Patientenblatt2_contactForAdditionalAddress,
+								Messages.Patientenblatt2_pleaseSelectardress, sortFields); //$NON-NLS-1$ //$NON-NLS-2$
 						if (ksl.open() == Dialog.OK) {
 							Kontakt k = (Kontakt) ksl.getSelection();
 							BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl();
@@ -262,8 +262,8 @@ public class PatientDetailView extends ViewPart {
 			twd_sectDiagnosen.align = TableWrapData.FILL;
 			sectAnamnese.setLayoutData(twd_sectDiagnosen);
 			sectAnamnese.setText("Persönliche Anamnese");
-			sectAnamnese.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + sectAnamnese.getText(),
-				false));
+			sectAnamnese.setExpanded(CoreHub.localCfg.get(
+				KEY_PATIENTENBLATT + sectAnamnese.getText(), false));
 			
 			txtAnamnese = toolkit.createText(sectAnamnese, "", SWT.WRAP | SWT.MULTI);
 			txtAnamnese.addListener(SWT.Modify, new MultiLineAutoGrowListener(txtAnamnese));
@@ -321,8 +321,8 @@ public class PatientDetailView extends ViewPart {
 			twd_sectDiagnosen.align = TableWrapData.FILL;
 			sectRisiken.setLayoutData(twd_sectDiagnosen);
 			sectRisiken.setText("Risiken");
-			sectRisiken.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + sectRisiken.getText(),
-				false));
+			sectRisiken.setExpanded(CoreHub.localCfg.get(
+				KEY_PATIENTENBLATT + sectRisiken.getText(), false));
 			
 			txtRisiken = toolkit.createText(sectRisiken, "", SWT.WRAP | SWT.MULTI);
 			txtRisiken.setText("");

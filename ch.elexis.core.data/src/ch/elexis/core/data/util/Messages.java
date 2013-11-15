@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.data.util.messages";//$NON-NLS-1$
-	//-------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------
 	// Copyright (c) 2013 MEDEVIT <office@medevit.at>.
 	// All rights reserved. This program and the accompanying materials
 	// are made available under the terms of the Eclipse Public License v1.0
@@ -21,10 +21,10 @@ public class Messages extends NLS {
 	// http://www.eclipse.org/legal/epl-v10.html
 	//
 	// Contributors:
-	//     MEDEVIT <office@medevit.at> - initial API and implementation
-	//-------------------------------------------------------------------------------
-	//Created by JInto - www.guh-software.de
-	//Fri Dec 31 14:56:22 CET 2010
+	// MEDEVIT <office@medevit.at> - initial API and implementation
+	// -------------------------------------------------------------------------------
+	// Created by JInto - www.guh-software.de
+	// Fri Dec 31 14:56:22 CET 2010
 	public static String DatabaseCleaner_NoCaseForBill;
 	public static String DatabaseCleaner_NoCaseForKons;
 	public static String DatabaseCleaner_NoMandatorForKons;
@@ -68,7 +68,7 @@ public class Messages extends NLS {
 	public static String TreeContentProvider_loadData;
 	public static String ViewerConfigurer_createNew;
 	public static String WikipediaSearchAction_DisplayName;
-
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

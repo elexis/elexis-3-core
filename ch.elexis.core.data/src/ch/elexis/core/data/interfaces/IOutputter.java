@@ -26,6 +26,7 @@ public interface IOutputter {
 	
 	/**
 	 * Image to symbolize this outputter (should be 16x16 or 24x24 Pixel)
+	 * 
 	 * @return object castable to org.eclipse.swt.graphics.Image
 	 * @since 3.0.0
 	 */

@@ -150,9 +150,8 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 	protected void okPressed(){
 		if (k == null) {
 			if (type == 0) {
-				SWTHelper
-					.showError(
-						Messages.KontaktDetailDialog_typeOfContact, Messages.KontaktDetailDialog_enterType); //$NON-NLS-1$ //$NON-NLS-2$
+				SWTHelper.showError(Messages.KontaktDetailDialog_typeOfContact,
+					Messages.KontaktDetailDialog_enterType); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			} else if (type == 1) {
 				k =
@@ -188,8 +187,7 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 		
 		@Override
 		public void widgetSelected(SelectionEvent e){
-			if (((Button) e.getSource()).getText().equals(
-				Messages.KontaktDetailDialog_textPerson)) { //$NON-NLS-1$
+			if (((Button) e.getSource()).getText().equals(Messages.KontaktDetailDialog_textPerson)) { //$NON-NLS-1$
 				type = 1;
 				liGebDat.setEnabled(true);
 				liSex.setEnabled(true);

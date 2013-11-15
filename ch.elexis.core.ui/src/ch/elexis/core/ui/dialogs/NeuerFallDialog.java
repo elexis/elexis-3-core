@@ -32,8 +32,8 @@ public class NeuerFallDialog extends TitleAreaDialog {
 		if (fall == null) {
 			pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 			fall =
-				pat.neuerFall(
-					Messages.NeuerFallDialog_0, Messages.NeuerFallDialog_1, Messages.NeuerFallDialog_2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				pat.neuerFall(Messages.NeuerFallDialog_0, Messages.NeuerFallDialog_1,
+					Messages.NeuerFallDialog_2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			ElexisEventDispatcher.fireSelectionEvent(fall);
 		}
 	}

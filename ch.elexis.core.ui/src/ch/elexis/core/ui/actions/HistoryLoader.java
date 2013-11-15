@@ -67,8 +67,7 @@ public class HistoryLoader extends BackgroundJob {
 	@Override
 	public IStatus execute(final IProgressMonitor monitor){
 		synchronized (lKons) {
-			monitor.beginTask(
-				Messages.HistoryLoader_LoadKonsMessage, lKons.size() + 100); //$NON-NLS-1$
+			monitor.beginTask(Messages.HistoryLoader_LoadKonsMessage, lKons.size() + 100); //$NON-NLS-1$
 			monitor.subTask(Messages.HistoryLoader_Sorting); //$NON-NLS-1$
 			if (lKons.isEmpty()) {
 				return Status.OK_STATUS;

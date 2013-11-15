@@ -24,12 +24,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * Central image repository. Supersedes the images managed in {@link Desk}. This
- * image registry takes its values from a properties file, namely
- * <code>ch.elexis.iconset.properties</code>. This properties file is to be
- * provided, together with the respective icons by a contributing fragment. See
- * <code>ch.elexis.core.ui.icons</code> for the basic open source icons
- * contribution.
+ * Central image repository. Supersedes the images managed in {@link Desk}. This image registry
+ * takes its values from a properties file, namely <code>ch.elexis.iconset.properties</code>. This
+ * properties file is to be provided, together with the respective icons by a contributing fragment.
+ * See <code>ch.elexis.core.ui.icons</code> for the basic open source icons contribution.
  * 
  * @author M. Descher / MEDEVIT Austria
  */
@@ -187,51 +185,40 @@ public enum Images {
 	/** write document */
 	IMG_DOCUMENT_WRITE,
 	/** remove document */
-	IMG_DOCUMENT_REMOVE,
-	IMG_MENUBAR,
-	IMG_TOOLBAR,
+	IMG_DOCUMENT_REMOVE, IMG_MENUBAR, IMG_TOOLBAR,
 	/** a bill */
-	IMG_BILL,
-	IMG_VIEW_WORK_INCAPABLE,
-	IMG_VIEW_CONSULTATION_DETAIL,
-	IMG_VIEW_LABORATORY,
-	IMG_VIEW_PATIENT_DETAIL,
-	IMG_VIEW_RECIPES,
-	IMG_DATABASE,
-	IMG_CONFLICT;
-
-	private Images() {
-	}
-
+	IMG_BILL, IMG_VIEW_WORK_INCAPABLE, IMG_VIEW_CONSULTATION_DETAIL, IMG_VIEW_LABORATORY,
+		IMG_VIEW_PATIENT_DETAIL, IMG_VIEW_RECIPES, IMG_DATABASE, IMG_CONFLICT;
+	
+	private Images(){}
+	
 	/**
-	 * Returns an image. Clients do not need to dispose the image, it will be
-	 * disposed automatically. Defaults to
-	 * {@link ImageSize#_16x16_DefaultIconSize}
+	 * Returns an image. Clients do not need to dispose the image, it will be disposed
+	 * automatically. Defaults to {@link ImageSize#_16x16_DefaultIconSize}
 	 * 
 	 * @return an {@link Image}
 	 */
-	public Image getImage() {
+	public Image getImage(){
 		return getImage(ImageSize._16x16_DefaultIconSize);
 	}
-
+	
 	/**
 	 * @return {@link ImageDescriptor} for the current image. Defaults to
 	 *         {@link ImageSize#_16x16_DefaultIconSize}
 	 */
-	public ImageDescriptor getImageDescriptor() {
+	public ImageDescriptor getImageDescriptor(){
 		return getImageDescriptor(ImageSize._16x16_DefaultIconSize);
 	}
-
+	
 	/**
 	 * Opportunistic lookup for a probably existing key.<br>
-	 * There may exist keys within the <code>iconset.properties</code> file
-	 * which are not managed by this Enumeration. This method allows an
-	 * opportunistic lookup of such registered images.
+	 * There may exist keys within the <code>iconset.properties</code> file which are not managed by
+	 * this Enumeration. This method allows an opportunistic lookup of such registered images.
 	 * 
 	 * @param iconKey
 	 * @return <code>null</code> if no such image is existent
 	 */
-	public static Image lookupImage(String iconKey, ImageSize is) {
+	public static Image lookupImage(String iconKey, ImageSize is){
 		Image image = JFaceResources.getImageRegistry().get(iconKey);
 		if (image == null) {
 			boolean ret = addIconImageDescriptor(iconKey, is);
@@ -241,14 +228,14 @@ public enum Images {
 		}
 		return image;
 	}
-
+	
 	/**
-	 * Returns an image. Clients do not need to dispose the image, it will be
-	 * disposed automatically.
+	 * Returns an image. Clients do not need to dispose the image, it will be disposed
+	 * automatically.
 	 * 
 	 * @return an {@link Image}
 	 */
-	public Image getImage(ImageSize is) {
+	public Image getImage(ImageSize is){
 		Image image = JFaceResources.getImageRegistry().get(this.name());
 		if (image == null) {
 			addIconImageDescriptor(this.name(), is);
@@ -256,11 +243,11 @@ public enum Images {
 		}
 		return image;
 	}
-
+	
 	/**
 	 * @return {@link ImageDescriptor} for the current image
 	 */
-	public ImageDescriptor getImageDescriptor(ImageSize is) {
+	public ImageDescriptor getImageDescriptor(ImageSize is){
 		ImageDescriptor id = null;
 		id = JFaceResources.getImageRegistry().getDescriptor(this.name());
 		if (id == null) {
@@ -269,51 +256,49 @@ public enum Images {
 		}
 		return id;
 	}
-
+	
 	/**
-	 * @return a string to be embedded as iconURI, see beta plugin process for
-	 *         an example
+	 * @return a string to be embedded as iconURI, see beta plugin process for an example
 	 */
-	public String getIconURI() {
+	public String getIconURI(){
 		return "icon://" + name();
 	}
-
+	
 	/**
-	 * Get the Icon as {@link InputStream}; used by the
-	 * {@link IconURLConnection}
+	 * Get the Icon as {@link InputStream}; used by the {@link IconURLConnection}
 	 * 
 	 * @param is
 	 * @return <code>null</code> if any error in resolving the image
 	 * @throws IOException
 	 */
-	public InputStream getImageAsInputStream(ImageSize is) throws IOException {
+	public InputStream getImageAsInputStream(ImageSize is) throws IOException{
 		InputStream ret = null;
-
+		
 		ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset");
 		String fileName = iconsetProperties.getString(this.name());
-		URL url = FileLocator.find(Activator.getContext().getBundle(),
-				new Path("icons/" + is.name + "/" + fileName), null);
+		URL url =
+			FileLocator.find(Activator.getContext().getBundle(), new Path("icons/" + is.name + "/"
+				+ fileName), null);
 		ret = url.openConnection().getInputStream();
-
+		
 		return ret;
 	}
-
+	
 	/**
-	 * Add an image descriptor for a specific key and {@link IconSize} to the
-	 * global {@link ImageRegistry}
+	 * Add an image descriptor for a specific key and {@link IconSize} to the global
+	 * {@link ImageRegistry}
 	 * 
 	 * @param name
 	 * @param is
 	 * @return <code>true</code> if successfully added, else <code>false</code>
 	 */
-	private static boolean addIconImageDescriptor(String name, ImageSize is) {
+	private static boolean addIconImageDescriptor(String name, ImageSize is){
 		try {
-			ResourceBundle iconsetProperties = ResourceBundle
-					.getBundle("iconset");
+			ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset");
 			String fileName = iconsetProperties.getString(name);
-			URL fileLocation = FileLocator.find(Activator.getContext()
-					.getBundle(),
-					new Path("icons/" + is.name + "/" + fileName), null);
+			URL fileLocation =
+				FileLocator.find(Activator.getContext().getBundle(), new Path("icons/" + is.name
+					+ "/" + fileName), null);
 			ImageDescriptor id = ImageDescriptor.createFromURL(fileLocation);
 			JFaceResources.getImageRegistry().put(name, id);
 		} catch (MissingResourceException | IllegalArgumentException e) {
@@ -321,5 +306,5 @@ public enum Images {
 		}
 		return true;
 	}
-
+	
 }

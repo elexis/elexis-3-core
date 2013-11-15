@@ -14,7 +14,6 @@ package ch.elexis.core.data.interfaces;
 
 import ch.elexis.core.model.ICodeElement;
 
-
 /**
  * Diagnosen sind ebensop wie Leistungen "Pluggable" definiert, damit neue Codesysteme leicht
  * eingebaut werden können. Ein neues Diagnosesystem muss das Interface Diagnose implementieren, und

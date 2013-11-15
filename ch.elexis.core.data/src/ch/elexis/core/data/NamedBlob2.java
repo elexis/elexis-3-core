@@ -18,7 +18,6 @@ import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.rgw.compress.CompEx;
 import ch.rgw.tools.TimeTool;
 
-
 /**
  * Well, just a clone of NamedBlob, but using table HEAP2 - sort of a cheap load balancing
  * 

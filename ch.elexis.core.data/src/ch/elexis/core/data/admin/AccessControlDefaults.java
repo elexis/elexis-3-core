@@ -97,8 +97,7 @@ public class AccessControlDefaults {
 	public static final ACE MANDANT_CREATE = new ACE(MANDANT,
 		"Erstellen", Messages.AccessControlDefaults_create); //$NON-NLS-1$ //$NON-NLS-2$
 	
-	public static final ACE USER = new ACE(DATA,
-		"Anwender", Messages.AccessControlDefaults_user); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final ACE USER = new ACE(DATA, "Anwender", Messages.AccessControlDefaults_user); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE USER_CREATE = new ACE(USER,
 		"Erstellen", Messages.AccessControlDefaults_create); //$NON-NLS-1$ //$NON-NLS-2$
 	
@@ -110,7 +109,7 @@ public class AccessControlDefaults {
 		Messages.AccessControlDefaults_chargeAll);
 	
 	public static final ACE KONS = new ACE(ACE.ACE_ROOT,
-		"Konsultation",Messages.AccessControlDefaults_main_consultation); //$NON-NLS-1$ //$NON-NLS-2$
+		"Konsultation", Messages.AccessControlDefaults_main_consultation); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE KONS_CREATE = new ACE(KONS,
 		"Erstellen", Messages.AccessControlDefaults_create); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE KONS_EDIT = new ACE(KONS,
@@ -169,8 +168,8 @@ public class AccessControlDefaults {
 		"Beenden", Messages.AccessControlDefaults_terminate); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE AC_ABOUT = new ACE(ACTIONS,
 		"Über", Messages.AccessControlDefaults_about); //$NON-NLS-1$ //$NON-NLS-2$
-	public static final ACE AC_HELP = new ACE(ACTIONS,
-		"Hilfe", Messages.AccessControlDefaults_help); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final ACE AC_HELP =
+		new ACE(ACTIONS, "Hilfe", Messages.AccessControlDefaults_help); //$NON-NLS-1$ //$NON-NLS-2$
 	
 	public static final ACE AC_IMORT = new ACE(ACTIONS,
 		"Fremddatenimport", Messages.AccessControlDefaults_dataImport); //$NON-NLS-1$ //$NON-NLS-2$
@@ -202,12 +201,8 @@ public class AccessControlDefaults {
 		Messages.AccessControlDefaults_documentsDeleteCat);
 	
 	private static final ACE[] Alle = {
-		AC_EXIT,
-		AC_ABOUT,
-		AC_HELP,
-		AC_LOGIN,
-		new ACE(ACE.ACE_ROOT,
-			"LoadInfoStore", Messages.AccessControlDefaults_loadInfoStore) //$NON-NLS-1$ //$NON-NLS-2$
+		AC_EXIT, AC_ABOUT, AC_HELP, AC_LOGIN,
+		new ACE(ACE.ACE_ROOT, "LoadInfoStore", Messages.AccessControlDefaults_loadInfoStore) //$NON-NLS-1$ //$NON-NLS-2$
 		};
 	
 	private static final ACE[] Anwender = {

@@ -149,10 +149,8 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 					if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
 						String val = po.get(myField);
 						if (val == null) {
-							SWTHelper.showError(
-								Messages.FieldDisplayView_ErrorFieldCaption, //$NON-NLS-1$
-								Messages.FieldDisplayView_ErrorFieldBody
-									+ myField);
+							SWTHelper.showError(Messages.FieldDisplayView_ErrorFieldCaption, //$NON-NLS-1$
+								Messages.FieldDisplayView_ErrorFieldBody + myField);
 							text.setText(StringTool.leer);
 						} else {
 							text.setText(po.get(myField));

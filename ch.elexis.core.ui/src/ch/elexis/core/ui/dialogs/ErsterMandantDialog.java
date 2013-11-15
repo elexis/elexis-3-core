@@ -34,9 +34,10 @@ import ch.rgw.tools.StringTool;
 public class ErsterMandantDialog extends TitleAreaDialog {
 	Text tUsername, tPwd1, tPwd2, tTitle, tFirstname, tLastname, tEmail, tStreet, tZip, tPlace,
 			tPhone, tFax;
-	String[] anreden =
-		{
-			Messages.ErsterMandantDialog_Herr, Messages.ErsterMandantDialog_Frau, Messages.ErsterMandantDialog_Firma}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	String[] anreden = {
+		Messages.ErsterMandantDialog_Herr, Messages.ErsterMandantDialog_Frau,
+		Messages.ErsterMandantDialog_Firma
+	}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	Combo cbAnrede;
 	
 	public ErsterMandantDialog(Shell parent){
@@ -104,23 +105,20 @@ public class ErsterMandantDialog extends TitleAreaDialog {
 	protected void okPressed(){
 		String pwd = tPwd1.getText();
 		if (!pwd.equals(tPwd2.getText())) {
-			SWTHelper
-				.showError(
-					Messages.ErsterMandantDialog_passwordErrorCaption, Messages.ErsterMandantDialog_passwordErrorBody); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.ErsterMandantDialog_passwordErrorCaption,
+				Messages.ErsterMandantDialog_passwordErrorBody); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 		String email = tEmail.getText();
 		if (!StringTool.isMailAddress(email)) {
-			SWTHelper
-				.showError(
-					Messages.ErsterMandantDialog_mailnvalidCaption, Messages.ErsterMandantDialog_mailInvaildBody); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.ErsterMandantDialog_mailnvalidCaption,
+				Messages.ErsterMandantDialog_mailInvaildBody); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 		String username = tUsername.getText();
 		if (username.equals("")) { //$NON-NLS-1$
-			SWTHelper
-				.showError(
-					Messages.ErsterMandantDialog_noUsernameCaption, Messages.ErsterMandantDialog_noUsernameBody); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.ErsterMandantDialog_noUsernameCaption,
+				Messages.ErsterMandantDialog_noUsernameBody); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 		Mandant m = new Mandant(username, pwd);

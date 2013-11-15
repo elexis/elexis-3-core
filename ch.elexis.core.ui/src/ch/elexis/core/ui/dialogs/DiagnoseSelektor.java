@@ -218,7 +218,6 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		public String getText(){
 			return " keine ";
 		}
-
 		
 		@Override
 		public String getLabel(){
@@ -229,12 +228,12 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		protected String getTableName(){
 			return "";
 		}
-
+		
 		@Override
-		public List<Object> getActions(Object kontext) {
+		public List<Object> getActions(Object kontext){
 			// TODO Auto-generated method stub
 			return null;
 		}
-
+		
 	}
 }

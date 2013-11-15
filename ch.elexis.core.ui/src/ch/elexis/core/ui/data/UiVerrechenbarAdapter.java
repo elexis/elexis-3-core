@@ -12,7 +12,6 @@
 
 package ch.elexis.core.ui.data;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +28,11 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AddElementToBlockDialog;
 
 /**
- *@since 3.0.0
+ * @since 3.0.0
  */
 public abstract class UiVerrechenbarAdapter extends VerrechenbarAdapter {
 	
 	protected IAction addToBlockAction;
-	
 	
 	protected UiVerrechenbarAdapter(final String id){
 		super(id);
@@ -53,7 +51,7 @@ public abstract class UiVerrechenbarAdapter extends VerrechenbarAdapter {
 		actions.add(addToBlockAction);
 		return actions;
 	}
-
+	
 	private void makeActions(final ICodeElement el){
 		addToBlockAction = new Action("Zu Leistungsblock...") {
 			@Override

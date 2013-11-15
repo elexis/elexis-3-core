@@ -23,7 +23,6 @@ import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.SWTHelper;
 
-
 public class KontaktImporter extends ImporterPage {
 	KontaktImporterBlatt importer;
 	

@@ -119,7 +119,8 @@ public class AccountListView extends ViewPart implements IActivationListener, IS
 				} else {
 					loader.schedule();
 					return new Object[] {
-						Messages.AccountListView_loadingData}; //$NON-NLS-1$
+						Messages.AccountListView_loadingData
+					}; //$NON-NLS-1$
 				}
 			}
 			

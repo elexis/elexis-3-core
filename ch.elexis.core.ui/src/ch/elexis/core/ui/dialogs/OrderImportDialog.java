@@ -104,7 +104,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			orderElements.add(orderElement);
 		}
 	}
-
+	
 	@Override
 	protected Control createDialogArea(Composite parent){
 		Composite mainArea = new Composite(parent, SWT.NONE);

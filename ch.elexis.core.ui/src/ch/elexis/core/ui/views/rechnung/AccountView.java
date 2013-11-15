@@ -414,8 +414,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 						(AccountTransaction) ElexisEventDispatcher
 							.getSelected(AccountTransaction.class);
 					if (at != null) {
-						if (SWTHelper.askYesNo(
-							Messages.AccountView_deleteBookingConfirmCaption, //$NON-NLS-1$
+						if (SWTHelper.askYesNo(Messages.AccountView_deleteBookingConfirmCaption, //$NON-NLS-1$
 							Messages.AccountView_deleteBookingConfirmBody)) { //$NON-NLS-1$
 							at.delete();
 							setPatient(actPatient);

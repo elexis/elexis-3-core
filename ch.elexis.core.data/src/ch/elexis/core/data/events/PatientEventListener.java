@@ -24,29 +24,27 @@ import ch.elexis.core.data.interfaces.events.MessageEvent;
  * {@link Hub#stop(org.osgi.framework.BundleContext)}
  */
 public class PatientEventListener extends ElexisEventListenerImpl {
-
-	public PatientEventListener() {
+	
+	public PatientEventListener(){
 		super(Patient.class);
 	}
-
+	
 	@Override
-	public void run(final ElexisEvent ev) {
+	public void run(final ElexisEvent ev){
 		if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
 			if (CoreHub.userCfg.get(Preferences.USR_SHOWPATCHGREMINDER, false)) {
-				List<Reminder> list = Reminder.findRemindersDueFor(
-						(Patient) ev.getObject(), CoreHub.actUser, true);
+				List<Reminder> list =
+					Reminder.findRemindersDueFor((Patient) ev.getObject(), CoreHub.actUser, true);
 				if (list.size() != 0) {
 					StringBuilder sb = new StringBuilder();
 					for (Reminder r : list) {
 						sb.append(r.getMessage()).append("\n\n"); //$NON-NLS-1$
 					}
-					MessageEvent
-							.fireInformation(
-									"important reminders for this patient",
-									sb.toString());
+					MessageEvent.fireInformation("important reminders for this patient",
+						sb.toString());
 				}
 			}
 		}
 	}
-
+	
 }

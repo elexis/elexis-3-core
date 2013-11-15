@@ -17,111 +17,109 @@ import org.eclipse.emf.common.util.EList;
 import ch.rgw.tools.TimeTool;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IPersistent Object</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>IPersistent Object</b></em>
+ * '. <!-- end-user-doc -->
+ * 
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link ch.elexis.core.model.IPersistentObject#isDeleted <em>Deleted</em>}</li>
- *   <li>{@link ch.elexis.core.model.IPersistentObject#getXid <em>Xid</em>}</li>
- *   <li>{@link ch.elexis.core.model.IPersistentObject#getXids <em>Xids</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPersistentObject#isDeleted <em>Deleted</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPersistentObject#getXid <em>Xid</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPersistentObject#getXids <em>Xids</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see ch.elexis.core.model.ModelPackage#getIPersistentObject()
  * @model interface="true" abstract="true"
  * @generated
  */
 public interface IPersistentObject extends Identifiable {
 	/**
-	 * Returns the value of the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Deleted</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Deleted</em>' attribute isn't clear, there really should be more
+	 * of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Deleted</em>' attribute.
 	 * @see ch.elexis.core.model.ModelPackage#getIPersistentObject_Deleted()
 	 * @model changeable="false"
 	 * @generated
 	 */
 	boolean isDeleted();
-
+	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
 	long getLastUpdate();
-
+	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
 	boolean isValid();
-
+	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model
 	 * @generated
 	 */
 	String storeToString();
-
+	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model
 	 * @generated
 	 */
 	int state();
-
+	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model
 	 * @generated
 	 */
 	boolean exists();
-
+	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
 	boolean isAvailable();
-
+	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model
 	 * @generated
 	 */
 	String getXid(String domain);
 	
 	/**
-	 * Returns the value of the '<em><b>Xid</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the value of the '<em><b>Xid</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Xid</em>' reference.
 	 * @see ch.elexis.core.model.ModelPackage#getIPersistentObject_Xid()
 	 * @model changeable="false"
 	 * @generated
 	 */
 	IXid getXid();
-
+	
 	/**
-	 * Returns the value of the '<em><b>Xids</b></em>' reference list.
-	 * The list contents are of type {@link ch.elexis.core.model.IXid}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the value of the '<em><b>Xids</b></em>' reference list. The list contents are of type
+	 * {@link ch.elexis.core.model.IXid}. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Xids</em>' reference list.
 	 * @see ch.elexis.core.model.ModelPackage#getIPersistentObject_Xids()
 	 * @model
@@ -130,8 +128,8 @@ public interface IPersistentObject extends Identifiable {
 	List<IXid> getXids();
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * Assign a Xid to this object.
+	 * <!-- begin-user-doc --> Assign a Xid to this object.
+	 * 
 	 * @param domain
 	 *            the domain whose ID will be assigned
 	 * @param domain_id
@@ -139,8 +137,7 @@ public interface IPersistentObject extends Identifiable {
 	 * @param updateIfExists
 	 *            if true update values if Xid with same domain and domain_id exists. Otherwise the
 	 *            method will fail if a collision occurs.
-	 * @return true on success, false on failure
-	 * <!-- end-user-doc -->
+	 * @return true on success, false on failure <!-- end-user-doc -->
 	 * @model
 	 * @generated
 	 */
@@ -149,24 +146,25 @@ public interface IPersistentObject extends Identifiable {
 	public boolean isDragOK();
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model fieldsDataType="ch.elexis.core.model.StringArray" valuesDataType="ch.elexis.core.model.StringArray"
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @model fieldsDataType="ch.elexis.core.model.StringArray"
+	 *        valuesDataType="ch.elexis.core.model.StringArray"
 	 * @generated
 	 */
 	boolean get(String[] fields, String[] values);
-
+	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model
 	 * @generated
 	 */
 	String get(String field);
-
+	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model
 	 * @generated
 	 */

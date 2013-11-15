@@ -170,10 +170,12 @@ public class GlobalActions {
 				
 				@Override
 				public void run(){
-					File book = new File(Platform.getInstallLocation().getURL().getPath() + "elexis.pdf"); //$NON-NLS-1$
+					File book =
+						new File(Platform.getInstallLocation().getURL().getPath() + "elexis.pdf"); //$NON-NLS-1$
 					Program proggie = Program.findProgram(".pdf"); //$NON-NLS-1$
 					if (proggie != null) {
-						logger.info("will open handbook: " + book.toString() + " using: " + proggie);
+						logger
+							.info("will open handbook: " + book.toString() + " using: " + proggie);
 						proggie.execute(book.toString());
 					} else {
 						logger.info("will launch handbook: " + book.toString());
@@ -221,8 +223,7 @@ public class GlobalActions {
 					}
 				}
 			};
-		savePerspectiveAsDefaultAction =
-			new Action(Messages.GlobalActions_saveasstartperspective) { //$NON-NLS-1$
+		savePerspectiveAsDefaultAction = new Action(Messages.GlobalActions_saveasstartperspective) { //$NON-NLS-1$
 				{
 					setId("start"); //$NON-NLS-1$
 					// setActionDefinitionId(Hub.COMMAND_PREFIX+"startPerspective");
@@ -258,8 +259,7 @@ public class GlobalActions {
 						dlg.setTitle(Messages.GlobalActions_LoginDialogTitle); //$NON-NLS-1$
 						dlg.setMessage(Messages.GlobalActions_LoginDialogMessage); //$NON-NLS-1$
 						// dlg.getButton(IDialogConstants.CANCEL_ID).setText("Beenden");
-						dlg.getShell().setText(
-							Messages.GlobalActions_LoginDialogShelltext); //$NON-NLS-1$
+						dlg.getShell().setText(Messages.GlobalActions_LoginDialogShelltext); //$NON-NLS-1$
 						if (dlg.open() == Dialog.CANCEL) {
 							exitAction.run();
 						}
@@ -391,8 +391,7 @@ public class GlobalActions {
 				}
 			};
 		
-		printVersionedEtikette =
-			new Action(Messages.GlobalActions_PrintVersionedLabel) { //$NON-NLS-1$
+		printVersionedEtikette = new Action(Messages.GlobalActions_PrintVersionedLabel) { //$NON-NLS-1$
 				{
 					setToolTipText(Messages.GlobalActions_PrintVersionedLabelToolTip); //$NON-NLS-1$
 					setImageDescriptor(Images.IMG_VERSIONEDETIKETTE.getImageDescriptor());
@@ -492,8 +491,7 @@ public class GlobalActions {
 				}
 			};
 		
-		fixLayoutAction =
-			new Action(Messages.GlobalActions_LockPerspectives, Action.AS_CHECK_BOX) { //$NON-NLS-1$
+		fixLayoutAction = new Action(Messages.GlobalActions_LockPerspectives, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
 					setToolTipText(Messages.GlobalActions_LockPerspectivesToolTip); //$NON-NLS-1$
 				}
@@ -501,8 +499,7 @@ public class GlobalActions {
 				@Override
 				public void run(){
 					// store the current value in the user's configuration
-					CoreHub.userCfg
-						.set(Preferences.USR_FIX_LAYOUT, fixLayoutAction.isChecked());
+					CoreHub.userCfg.set(Preferences.USR_FIX_LAYOUT, fixLayoutAction.isChecked());
 				}
 			};
 		makeBillAction = new Action(Messages.GlobalActions_MakeBill) { //$NON-NLS-1$
@@ -526,7 +523,7 @@ public class GlobalActions {
 						if (!res.isOK()) {
 							ErrorDialog.openError(mainWindow.getShell(),
 								Messages.GlobalActions_Error, Messages //$NON-NLS-1$
-.GlobalActions_BillErrorMessage, ResultAdapter //$NON-NLS-1$
+								.GlobalActions_BillErrorMessage, ResultAdapter //$NON-NLS-1$
 									.getResultAsStatus(res));
 							// Rechnung rn=(Rechnung)res.get();
 							// rn.storno(true);
@@ -544,10 +541,9 @@ public class GlobalActions {
 					Konsultation k =
 						(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 					if (k == null) {
-						MessageDialog
-							.openInformation(
-								mainWindow.getShell(),
-								Messages.GlobalActions_NoKonsSelected, Messages.GlobalActions_NoKonsSelectedMessage); //$NON-NLS-1$ //$NON-NLS-2$
+						MessageDialog.openInformation(mainWindow.getShell(),
+							Messages.GlobalActions_NoKonsSelected,
+							Messages.GlobalActions_NoKonsSelectedMessage); //$NON-NLS-1$ //$NON-NLS-2$
 						return;
 					}
 					
@@ -567,10 +563,9 @@ public class GlobalActions {
 					Konsultation k =
 						(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 					if (k == null) {
-						MessageDialog
-							.openInformation(
-								mainWindow.getShell(),
-								Messages.GlobalActions_NoKonsSelected, Messages.GlobalActions_NoKonsSelectedMessage); //$NON-NLS-1$ //$NON-NLS-2$
+						MessageDialog.openInformation(mainWindow.getShell(),
+							Messages.GlobalActions_NoKonsSelected,
+							Messages.GlobalActions_NoKonsSelectedMessage); //$NON-NLS-1$ //$NON-NLS-2$
 						return;
 					}
 					
@@ -592,8 +587,7 @@ public class GlobalActions {
 				public void run(){
 					Fall actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 					if ((actFall != null) && (actFall.delete(false) == false)) {
-						SWTHelper.alert(
-							Messages.GlobalActions_CouldntDeleteCaseMessage, //$NON-NLS-1$
+						SWTHelper.alert(Messages.GlobalActions_CouldntDeleteCaseMessage, //$NON-NLS-1$
 							Messages.GlobalActions_CouldntDeleteCaseExplanation + //$NON-NLS-1$
 								Messages.GlobalActions_93); //$NON-NLS-1$
 					}
@@ -692,8 +686,8 @@ public class GlobalActions {
 				GC gc = new GC(prn);
 				int y = 0;
 				prn.startPage();
-				gc.drawString(
-					Messages.GlobalActions_PatientIDLabelText + patient.getPatCode(), 0, 0); //$NON-NLS-1$
+				gc.drawString(Messages.GlobalActions_PatientIDLabelText + patient.getPatCode(), 0,
+					0); //$NON-NLS-1$
 				FontMetrics fmt = gc.getFontMetrics();
 				y += fmt.getHeight();
 				String pers = patient.getPersonalia();
@@ -702,19 +696,21 @@ public class GlobalActions {
 				gc.drawString(patient.getAnschrift().getEtikette(false, false), 0, y);
 				y += fmt.getHeight();
 				StringBuilder tel = new StringBuilder();
-				tel.append(Messages.GlobalActions_PhoneHomeLabelText).append(patient.get("Telefon1")) //$NON-NLS-1$ //$NON-NLS-2$
-					.append(Messages.GlobalActions_PhoneWorkLabelText).append(patient.get("Telefon2")) //$NON-NLS-1$ //$NON-NLS-2$
-					.append(Messages.GlobalActions_PhoneMobileLabelText).append(patient.get("Natel")); //$NON-NLS-1$ //$NON-NLS-2$
+				tel.append(Messages.GlobalActions_PhoneHomeLabelText)
+					.append(patient.get("Telefon1")) //$NON-NLS-1$ //$NON-NLS-2$
+					.append(Messages.GlobalActions_PhoneWorkLabelText)
+					.append(patient.get("Telefon2")) //$NON-NLS-1$ //$NON-NLS-2$
+					.append(Messages.GlobalActions_PhoneMobileLabelText)
+					.append(patient.get("Natel")); //$NON-NLS-1$ //$NON-NLS-2$
 				gc.drawString(tel.toString(), 0, y);
 				gc.dispose();
 				prn.endPage();
 				prn.endJob();
 				prn.dispose();
 			} else {
-				MessageDialog
-					.openError(
-						mainWindow.getShell(),
-						Messages.GlobalActions_PrinterErrorTitle, Messages.GlobalActions_PrinterErrorMessage); //$NON-NLS-1$ //$NON-NLS-2$
+				MessageDialog.openError(mainWindow.getShell(),
+					Messages.GlobalActions_PrinterErrorTitle,
+					Messages.GlobalActions_PrinterErrorMessage); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			}
 		}
@@ -749,19 +745,21 @@ public class GlobalActions {
 				gc.drawString(patient.getAnschrift().getEtikette(false, false), 0, y);
 				y += fmt.getHeight();
 				StringBuilder tel = new StringBuilder();
-				tel.append(Messages.GlobalActions_PhoneHomeLabelText).append(patient.get("Telefon1")) //$NON-NLS-1$ //$NON-NLS-2$
-					.append(Messages.GlobalActions_PhoneWorkLabelText).append(patient.get("Telefon2")) //$NON-NLS-1$ //$NON-NLS-2$
-					.append(Messages.GlobalActions_PhoneMobileLabelText).append(patient.get("Natel")); //$NON-NLS-1$ //$NON-NLS-2$
+				tel.append(Messages.GlobalActions_PhoneHomeLabelText)
+					.append(patient.get("Telefon1")) //$NON-NLS-1$ //$NON-NLS-2$
+					.append(Messages.GlobalActions_PhoneWorkLabelText)
+					.append(patient.get("Telefon2")) //$NON-NLS-1$ //$NON-NLS-2$
+					.append(Messages.GlobalActions_PhoneMobileLabelText)
+					.append(patient.get("Natel")); //$NON-NLS-1$ //$NON-NLS-2$
 				gc.drawString(tel.toString(), 0, y);
 				gc.dispose();
 				prn.endPage();
 				prn.endJob();
 				prn.dispose();
 			} else {
-				MessageDialog
-					.openError(
-						mainWindow.getShell(),
-						Messages.GlobalActions_PrinterErrorTitle, Messages.GlobalActions_PrinterErrorMessage); //$NON-NLS-1$ //$NON-NLS-2$
+				MessageDialog.openError(mainWindow.getShell(),
+					Messages.GlobalActions_PrinterErrorTitle,
+					Messages.GlobalActions_PrinterErrorMessage); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			}
 		}
@@ -801,10 +799,9 @@ public class GlobalActions {
 				prn.endJob();
 				prn.dispose();
 			} else {
-				MessageDialog
-					.openError(
-						mainWindow.getShell(),
-						Messages.GlobalActions_PrinterErrorTitle, Messages.GlobalActions_PrinterErrorMessage); //$NON-NLS-1$ //$NON-NLS-2$
+				MessageDialog.openError(mainWindow.getShell(),
+					Messages.GlobalActions_PrinterErrorTitle,
+					Messages.GlobalActions_PrinterErrorMessage); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			}
 			
@@ -875,8 +872,7 @@ public class GlobalActions {
 		// restore menue settings
 		if (CoreHub.actUser != null) {
 			boolean fixLayoutChecked =
-				CoreHub.userCfg.get(Preferences.USR_FIX_LAYOUT,
-					Preferences.USR_FIX_LAYOUT_DEFAULT);
+				CoreHub.userCfg.get(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
 			fixLayoutAction.setChecked(fixLayoutChecked);
 			// System.err.println("fixLayoutAction: set to " +
 			// fixLayoutChecked);

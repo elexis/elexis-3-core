@@ -40,7 +40,8 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 	@Override
 	protected void createFieldEditors(){
 		
-		List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
+		List<IConfigurationElement> list =
+			Extensions.getExtensions(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
 		String[][] rows = new String[list.size()][];
 		int i = 0;
 		for (IConfigurationElement ice : list) {
