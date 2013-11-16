@@ -2,23 +2,13 @@
 <?pde version="3.8"?><target name="Juno for Elexis 3.0" sequenceNumber="16">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<repository location="http://download.elexis.info/mirror.4.elexis/snapshot"/>
 <unit id="org.eclipse.gyrex.features.addons.jersey.jaxrs.feature.group" version="1.0.0.v20120604-1901"/>
-<repository location="http://ageto.github.com/gyrex-jaxrs-application/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.8.3.v20130125-0826"/>
-<repository location="http://download.eclipse.org/releases/juno/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.platform.feature.group" version="3.8.1.v20130118-180812-9jF7oIBFG8eU2pim-VbIlTuQjY0RWWK3x-bv4I"/>
-<unit id="org.eclipse.platform.ide" version="3.8.2.M20130131-0800"/>
 <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.0.v20121119-201001-7P7OG2BFLWUl7UnqBnO8V4Of"/>
 <unit id="org.eclipse.equinox.executable" version="3.6.0.v20121119-201001-7P7OG2BFLWUl7UnqBnO8V4Of"/>
-<unit id="org.eclipse.platform.sdk" version="3.8.2.M20130131-0800"/>
 <unit id="org.eclipse.pde.junit.runtime.standalone.feature.group" version="1.1.0.v20121207-183635-7a81FKwFBBqyauz0GKeGkIx3IS70"/>
-<repository location="http://download.eclipse.org/eclipse/updates/3.8"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
 <unit id="ch.qos.logback.core" version="1.0.7.v20121108-1250"/>
 <unit id="ch.qos.logback.slf4j" version="1.0.7.v20121108-1250"/>
@@ -29,7 +19,6 @@
 <unit id="org.slf4j.log4j" version="1.7.2.v20130115-1340"/>
 <unit id="org.slf4j.nop" version="1.7.2.v201212060727"/>
 <unit id="javax.ws.rs" version="1.1.1.v20130318-1750"/> 
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <repository location="http://download.elexis.info/elexis.3rdparty.libraries/"/>
