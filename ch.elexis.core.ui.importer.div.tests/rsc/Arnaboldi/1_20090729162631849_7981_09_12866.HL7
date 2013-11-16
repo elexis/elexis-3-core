@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|13000|OPMED|12866|2009071712301307||ORU^R01|2009071712301307|P|2.4|||NE|NE|||D
+PID|1||292937||Muster^Eliane^^^Frau^||19750522|F|||Musterstrasse 1^^Musterdorf^^1234^||||1^deutsch|
+ORC|RE||7981.09||CM||||2009071600000000|Inst. f. biopt.u.zytol. Diagnostik||1234^Muster^Arzt^^^^Dr. med.|||2009071500000000|||||
+OBR|1||7981.09|||2009071600000000|2009071500000000|||||||2009071600000000|Potzio/Zervix|53^Staub^Elmar^^^^Dr. med.|||||||||||
+OBX|1|TX|13^Zytologie||Klinik:\.br\LM 14.07.09. Post partum\.BR\Entnahme-Ort:\.br\Potzio/Zervix\.BR\Entnahme-Datum:\.br\15.07.2009\.BR\Zytolog. Befund:\.br\\.BR\Befund:\.br\\.BR\Abstrichqualität:\.br\\.BR\Empfehlung:\.br\\.BR\|||||||||2009071600000000|^|^|

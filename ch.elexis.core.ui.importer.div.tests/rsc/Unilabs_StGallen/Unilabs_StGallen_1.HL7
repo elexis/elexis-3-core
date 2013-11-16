@@ -1,0 +1,10 @@
+MSH|^~\&|LABOR|ENZYMLABOR|ASKD0|12351|20080602154115||ORU^R01|0805290550154115885000|P|2.2|||||||D
+PID|1|8493|001234812|001234812^8493|MUSTER^ANNA^^^^Frau||19390417|F|||Mustergasse 5^^Musterdorf^^4000^|||
+ORC|RE||0805291234||CM|||||ENZYMLABOR||12351^^^^^^||||||LABSYS||
+OBR|1||0805291234|||20080528000000||||||||20080529071600||12351^^^^^^||||||20080602154115||||
+OBX|1|ST|215^Ferritin||38|mcg/l|15-200 / 15-50 (Grenzbereich) / 100-120 (Optimalbereich)||||F|||20080602154059|||
+OBX|2|ST|226^TSH Thyreotropin basal||1.350|mU/l|0.200-4.230||||F|||20080602154059|||
+NTE|0|L|
+NTE|0|L|Auftrag inklusive nachbestellte Analyse(n):         
+NTE|0|L|
+NTE|0|L|Schlussbericht: Dr. Johann Hoflacher

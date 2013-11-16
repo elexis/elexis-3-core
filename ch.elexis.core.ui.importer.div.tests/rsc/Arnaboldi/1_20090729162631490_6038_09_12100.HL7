@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|13000|OPMED|12100|2009072212301107||ORU^R01|2009072212301107|P|2.4|||NE|NE|||D
+PID|1|1049|347309||Muster^Traudel^^^Frau^||19460708|F|||Musterstrasse 1^^Musterdorf^^1234^||||1^deutsch|
+ORC|RE||6038.09||CM||||2009072100000000|Inst. f. biopt.u.zytol. Diagnostik||123^Muster^Arzt^^^^Dr. med.||||||||
+OBR|1||6038.09|1^||2009072100000000|2009072100000000|||||||2009072100000000||123^Muster^Arzt^^^^Dr. med.|||||||||||
+OBX|1|TX|14^Histologie||Klinik:\.br\Polyp in rechter Flexur.\.BR\Makroskopie:\.br\Rechte Kolonflexur: Eine 7 mm grosse Biopsie. \.BR\Mikroskopie:\.br\\.BR\Diagnose\.br\Polyp in rechter Kolonflexur (wegbiopsiert):\.BR\Sessiles tubulovillöses Kolonschleimhautadenom mit leichter und mittelschwerer Epitheldysplasie (low grade dysplasia).\.BR\Kein Nachweis einer hochgradigen Epitheldysplasie.\.BR\Kein Malignitätsnachweis.\.BR\Kommentar:\.br\\.BR\Nachtragbericht:\.br\||||||F|||2009072100000000|||

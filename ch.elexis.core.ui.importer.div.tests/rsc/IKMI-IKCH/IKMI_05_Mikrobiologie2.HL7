@@ -1,0 +1,13 @@
+MSH|^~\&|OPMED|12106|OPMED|12388|20080809122419||ORU^R01|20080809122920687|P|2.4|||||||F
+PID|1||||B^D||19840822|F|||^^^^|||||
+PV1|1|O|||||||||||||||||
+ORC|RE||2008.08.07.5087.01^IKMI||CM|||||12106||FIORE^^^^^^^^^^^IKMI||||||||
+OBR|1||2008.08.07.5087.01^IKMI|||20080807140000|20080807170034|||||||20080807170034|18475^Tupfer Cervix-Abstrich^IKMI|FIORE^^^^^^^^^^^IKMI||||BAKT|BAKTERIOLOGIE||||||
+OBX|1|FT|MIKROBIOLO01^Mikrobiologie|1|\.br\Probenmaterial/Präanalytik:           \.br\Schwangerschaftswoche:             o.Ang. Woche+Tag  \.br\Bemerkungen/Fragestellung:         ×   \.br\I Sterilität\.br\\.br\Tupfer:                            Cervix-Abstrich   \.br\\.br\Mikroskopie:                      \.br\Plattenepithelzellen:              vereinzelt   \.br\Gram-pos. Diplokokken:             vereinzelt   \.br\Allgemeine Bakteriologie:             \.br\\.br\Kultur aerob:                    \.br\Schleimhautflora:                  reichlich   \.br\Lactobacillus species:             reichlich   \.br\Spezielle Bakteriologie:              \.br\Mykoplasmen/Ureaplasmen:           nicht nachgewiesen   ||||||||||||
+ORC|RE||2008.08.07.5087.02^IKMI||CM|||||12106||FIORE^^^^^^^^^^^IKMI||||||||
+OBR|2||2008.08.07.5087.02^IKMI|||20080807140000|20080807170034|||||||20080807170034|18474^Transportmedium  PCR Cervix-Abstrich^IKMI|FIORE^^^^^^^^^^^IKMI||||BAKT|BAKTERIOLOGIE||||||
+NTE|0|L|
+NTE|0||Chlamydia trachomatis PCR: 
+NTE|0|| Keine DNA nachgewiesen.
+NTE|0||
+OBX|1|FT|MIKROBIOLO02^Mikrobiologie|1|\.br\Probenmaterial/Präanalytik:           \.br\Schwangerschaftswoche:             o.Ang. Woche+Tag  \.br\Bemerkungen/Fragestellung:         ×   \.br\I Sterilität\.br\\.br\Transportmedium  PCR:              Cervix-Abstrich   \.br\Chlamydia trachomatis PCR:         NINA-DNA   ||||||||||||

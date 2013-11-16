@@ -1,0 +1,12 @@
+MSH|^~\&|LABOR|ENZYMLABOR|GM103|12281|20080602160415||ORU^R01|0806021253160415137000|P|2.2|||||||D
+PID|1|2795|001234606|001234606^2795|MUSTER^ANNA^^^^Frau||19730413|F|||Mustergasse 5^^Musterdorf^^4000^|||
+ORC|RE||0806021234||CM|||||ENZYMLABOR||12281^^^^^^||||||LABSYS||
+OBR|1||0806021234|||20080530070000||||||||20080602084100||12281^^^^^^||||||20080602160415||||
+OBX|1|ST|290^Vitamin B12||134|pmol/l|<150 Mangel / 150-220 Graubereich / >220 Ausreichend|*|||F|||20080602160409|||
+OBX|2|ST|226^TSH Thyreotropin basal||1.379|mU/l|0.200-4.230||||F|||20080602160409|||
+OBX|3|ST|1225^FSME IgM||<0.8|MOC|<1.0||||F|||20080602160409|||
+OBX|4|ST|4247^Borrelia burgdorferi IgG||<0.8|MOC|<1.0||||F|||20080602160409|||
+OBX|5|ST|4248^Borrelia burgdorferi IgM||<0.8|MOC|<1.0||||F|||20080602160409|||
+OBX|6|ST|461^Treponemen VDRL||negativ||<1:1||||F|||20080602160409|||
+OBX|7|ST|3225^Treponema Screen IA||<0.8|MOC|<1.0||||F|||20080602160409|||
+NTE|0|L|Schlussbericht: i.V. Matthias Kaelin (Dr. med.)

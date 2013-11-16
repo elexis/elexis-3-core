@@ -1,0 +1,37 @@
+MSH|^~\&|LAB|DIAGNOSTICA|OPMED|12089|20070821100314||ORU^R01|000000002475|P|2.3|||||||D
+PID|1||1500057|1500057^|MUSTER^SIGRID^^^^Frau||19840424|F|||Badenerstr. 444^^Musterdorf^^4500^|||
+ORC|RE||0708170323||CM|||||DIAGNOSTICA||1000^MUSTER^ARZT^^^|||20070817185400|||UNIGES||
+OBR|0001||0708170323|||20070817000000|20070817000000|||||||20070817185400||1000^MUSTER^ARZT^^^|||||||||F|
+NTE|0|L|Serum    
+NTE|0|L|Urinportion    
+OBX|1|ST|2010^EDTA-Plasma^HT||||||||F||N||||
+OBX|2|ST|2800010^Eiweiss^HT||69|g/l|(60-80)||||F||Y||||
+OBX|3|ST|2980B010^  Albumin^HT||53.2|%|(59.8-72.4)|*|||F||Y||||
+OBX|4|ST|2980B020^  alpha-1-Globulin^HT||3.2|%|(1.0-3.2)||||F||Y||||
+OBX|5|ST|2980B030^  alpha-2-Globulin^HT||13.2|%|(7.4-12.6)|*|||F||Y||||
+OBX|6|ST|2980B040^  beta-Globulin^HT||12.3|%|(7.5-12.9)||||F||Y||||
+OBX|7|ST|2980B050^  gamma-Globulin^HT||18.1|%|(8.0-15.8)|*|||F||Y||||
+OBX|8|ST|ALGL2010^  Albumin/Globulin Quotient^HT||1.1||(1.0-2.0)||||F||Y||||
+NTE|8|L|Dysproteinämie vom Misch-Typ (Alpha- und Gamma-Typ).
+OBX|9|ST|3035010^25-OH-Vitamin D^HT||115|nmol/l|(50-150)||||F||Y||||
+NTE|9|L|     >100 nmol/l: Idealwert
+NTE|9|L|     < 50 nmol/l: moderater Mangel
+NTE|9|L|     < 25 nmol/l: starker Mangel
+NTE|9|L|     >300 nmol/l: überdosiert
+OBX|10|ST|3283010^Parathormon intakt^HT||1.3|pmol/l|(1.0-6.8)||||F||N||||
+OBX|11|ST|8040120^  Trübung^HT||leicht trüb ||||||F||N||||
+OBX|12|ST|8040020^  Leukozyten^HT||+ ||||||F||N||||
+OBX|13|ST|8040030^  Nitrit^HT||positiv ||||||F||N||||
+OBX|14|ST|8040040^  Urobilinogen (umol/l)^HT||normal ||||||F||N||||
+OBX|15|ST|8040050^  Protein (g/l)^HT||negativ ||||||F||N||||
+OBX|16|ST|8040060^  pH^HT||6.0||||||F||N||||
+OBX|17|ST|8040070^  Erythrozyten^HT||negativ ||||||F||N||||
+OBX|18|ST|8040080^  Spezifisches Gewicht (g/ml)^HT||1.029|g/ml|||||F||N||||
+OBX|19|ST|8040090^  Ketone (mmol/l)^HT||negativ ||||||F||N||||
+OBX|20|ST|8040100^  Bilirubin^HT||negativ ||||||F||N||||
+OBX|21|ST|8040110^  Glucose (mmol/l)^HT||negativ ||||||F||N||||
+OBX|22|ST|8040130^Sediment^HT||Erythrozyten 10-25/GF ||||||F||N||||
+NTE|22|L|Bakterien ++
+NTE|22|L|Plattenepithelien ++
+NTE|22|L|Schleim +
+NTE|22|L|Calciumoxalat +

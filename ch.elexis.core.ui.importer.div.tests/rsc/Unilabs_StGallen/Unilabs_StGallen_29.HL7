@@ -1,0 +1,29 @@
+MSH|^~\&|LABOR|ENZYMLABOR|PLRTZ|12561|20080603110322||ORU^R01|0806030067110322745000|P|2.2|||||||D
+PID|1|42518|002971234|002971234^42518|MUSTER^JOHN^^^^Herr||19790612|M|||Musterstrasse 8^^Musterdorf^^4000^|||
+ORC|RE||0806031234||CM|||||ENZYMLABOR||12561^^^^^^||||||LABSYS||
+OBR|1||0806031234|||20080602164500||||||||20080603073900||12561^^^^^^||||||20080603110322||||
+OBX|1|ST|122^ALAT / GPT||28|U/l|<41||||F|||20080603110238|||
+OBX|2|ST|124^CK Creatin-Kinase||145|U/l|50-200||||F|||20080603110238|||
+OBX|3|ST|131^AP||56|U/l|<115||||F|||20080603110238|||
+OBX|4|ST|143^P-Amylase||18|U/l|8-53||||F|||20080603110238|||
+OBX|5|ST|144^Gamma-GT||12|U/l|<49||||F|||20080603110238|||
+OBX|6|ST|162^Triglyceride||0.67|mmol/l|<2.00||||F|||20080603110238|||
+OBX|7|ST|163^Cholesterin||3.76|mmol/l|<5.00||||F|||20080603110238|||
+OBX|8|ST|166^HDL-Cholesterin||1.17|mmol/l|>1.00||||F|||20080603110238|||
+OBX|9|ST|166  020^Cholesterin/HDL-Cholesterin||3.2||<5.0||||F|||20080603110238|||
+OBX|10|ST|171^Bilirubin gesamt||22.2|mcmol/l|<22.2||||F|||20080603110238|||
+OBX|11|ST|173^Harnstoff||3.0|mmol/l|2.4-8.3||||F|||20080603110238|||
+OBX|12|ST|174^Harnsäure||238|mcmol/l|<422||||F|||20080603110238|||
+OBX|13|ST|181^Creatinin||70|mcmol/l|<123||||F|||20080603110238|||
+OBX|14|ST|182^Glucose||4.5|mmol/l|3.9-5.8) nüchtern||||F|||20080603110238|||
+OBX|15|ST|191^Natrium||140|mmol/l|135-150||||F|||20080603110238|||
+OBX|16|ST|192^Kalium||3.7|mmol/l|3.5-5.5||||F|||20080603110238|||
+OBX|17|ST|193^Calcium||2.38|mmol/l|2.25-2.70||||F|||20080603110238|||
+OBX|18|ST|1935B^Albumin-korrigiertes Calcium||2.23|mmol/l|||||F|||20080603110238|||
+OBX|19|ST|203^Phosphat||1.1|mmol/l|0.6-1.6||||F|||20080603110238|||
+OBX|20|ST|202^Eiweiss||78|g/l|63-83||||F|||20080603110238|||
+OBX|21|ST|204B^Albumin||46|g/l|38-54||||F|||20080603110238|||
+OBX|22|ST|211^Eisen||13.2|mcmol/l|6.2-30.0||||F|||20080603110238|||
+OBX|23|ST|215^Ferritin||230|mcg/l|20-300 / 20-50 (Grenzbereich) / 100-120 (Optimalbereich)||||F|||20080603110238|||
+OBX|24|ST|245^CRP C-reaktives Protein||<5.0|mg/l|<9.0||||F|||20080603110238|||
+NTE|0|L|Schlussbericht: i.V. Max Muster (Dr. med.)

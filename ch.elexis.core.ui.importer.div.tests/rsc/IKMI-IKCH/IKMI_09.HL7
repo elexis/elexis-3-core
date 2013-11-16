@@ -1,0 +1,25 @@
+MSH|^~\&|OPMED|12117|OPMED|12388|20080812205621||ORU^R01|20080812205823937|P|2.4|||||||F
+PID|1|20013455|20013455||O^L||19291230|F|||^^^^|||||
+PV1|1|O|||||||||||||||||20013455
+ORC|RE||2008.08.12.0403^IKCH||CM|||||12117||KU03^^^^^^^^^^^IKCH||||||||
+OBR|1||2008.08.12.0403^IKCH|||20080812000000|20080812173328|||||||20080812173328|10756^EDTA-Blut^IKCH|KU03^^^^^^^^^^^IKCH||||STANDARD|BLUT-CHEMIE||||||
+NTE|0|L|Probenmaterial/Präanalytik:    
+NTE|0|L|EDTA-Blut ×   
+NTE|0|L|Serum ×   
+OBX|1|NM|14592^Natrium^INLAB^2951-2^Sodium Ser/Pl-msCnc^LOINC||138|mmol/l|130-145||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|2|NM|14588^Kalium^INLAB^2823-3^Potassium SerPl-sCnc^LOINC||4.3|mmol/l|3.5-5.1||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|3|NM|14578^Chlorid^INLAB^2075-0^Chloride SerPl-sCnc^LOINC||106|mmol/l|95-113||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|4|NM|14577^Calcium^INLAB^2000-8^Calcium SerPl-sCnc^LOINC||2.3|mmol/l|2-2.6||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|5|NM|14581^Creatinin^INLAB^14682-9^Creat SerPl-sCnc^LOINC||86|µmol/l|<95||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|6|NM|14585^Harnsäure^INLAB^14933-6^Urate SerPl-sCnc^LOINC||282|µmol/l|150-360||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|7|NM|14576^Bilirubin^INLAB^14631-6^Bilirub SerPl-sCnc^LOINC||11|µmol/l|<20||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|8|NM|14539^AST^INLAB||14|U/l|<40||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|9|NM|14537^ALT^INLAB||13|U/l|<55||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|10|NM|14599^ALP^INLAB^6768-6^ALP SerPl-cCnc^LOINC||64|U/l|42-98||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|11|NM|14535^GGT^INLAB^2324-2^GGT SerPl-cCnc^LOINC||16|U/l|<35||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|12|NM|14593^a-Amylase Pancreas^INLAB^1805-1^Amylase P SerPl-cCnc^LOINC||14|U/l|<46||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|13|NM|14595^Total Proteine^INLAB^2885-2^Prot SerPl-mCnc^LOINC||60|g/l|63-83|L|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|14|NM|13962^BNP^INLAB^30934-4^BNP SerPl-mCnc^LOINC||93|ng/l|<50|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|15|NM|14584^Glucose (nü)^INLAB^14749-6^Glucose SerPl-sCnc^LOINC||11.5|mmol/l|3.9-5.6|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|16|NM|14579^Cholesterin^INLAB^14647-2^Cholest SerPl-sCnc^LOINC||5.3|mmol/l|<5.0|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|17|NM|14596^Triglyceride^INLAB^14927-8^Trigl SerPl-sCnc^LOINC||2.4|mmol/l|<1.7|H|||F|||||10044^^^Dr. M. Muster, Ass.|

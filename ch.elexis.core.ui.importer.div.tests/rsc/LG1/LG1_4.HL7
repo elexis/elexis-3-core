@@ -1,0 +1,19 @@
+MSH|^~\&|OPMED|12342|OPMED|15425|20080130122202||ORU^R01|0801301222020001|P|2.2|||||||D
+PID|1|881|00123360|00059360^881|Muster^Elisabeth^^^^||19201126|||||||||
+ORC|||60471240^290108||CM|||||LG1||mustra7|||20080129144200|||N2_LABOR^001||
+OBR|1||60471240^290108|||20080128|20080128|||||||||mustra7|||||||||||
+OBX|1|TX|lc^Leukozyten^HT||7.9|x1000/mm³|3.7 - 9.6||||F|||20080130122200|||
+OBX|2|TX|stab^  Stabkernige Neutrophile^HT||12.0|%|0 - 18||||F|||20080130122200|||
+OBX|3|TX|seg^  Segmentkernige Neutrophile^HT||40.5|%|30 - 50||||F|||20080130122200|||
+OBX|4|TX|eos^  Eosinophile^HT||2.0|%|2 - 5||||F|||20080130122200|||
+OBX|5|TX|baso^  Basophile^HT||1.0|%|0 - 1||||F|||20080130122200|||
+OBX|6|TX|mono^  Monozyten^HT||7.5|%|2 - 10||||F|||20080130122200|||
+OBX|7|TX|lymph^  Lymphozyten^HT||37.0|%|25 - 40||||F|||20080130122200|||
+OBX|8|TX|lyrea^Lymphozyten reaktiv^HT||+||||||F|||20080130122200|||
+OBX|9|TX|aniso^Anisozytose^HT||+||||||F|||20080130122200|||
+OBX|10|TX|na^Natrium^HT||141|mmol/l|135 - 147||||F|||20080130122200|||
+OBX|11|TX|ferr^Ferritin^HT||406|mcg/l|13 - 400|*|||F|||20080130122200|||
+NTE|11|L|Prämenopausal                  13 - 150 mcg/l
+NTE|11|L|Menopause                      30 - 400 mcg/l
+OBX|12|TX|tsh^TSH basal^HT||2.60|mIU/l|0.27 - 4.20||||F|||20080130122200|||
+OBX|13|TX|ft4^fT4 Freies Thyroxin^HT||13.2|pmol/l|12.0 - 22.0||||F|||20080130122200|||

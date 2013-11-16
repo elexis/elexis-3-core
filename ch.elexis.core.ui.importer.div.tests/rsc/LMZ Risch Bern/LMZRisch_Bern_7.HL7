@@ -1,0 +1,22 @@
+MSH|^~\&|OPMED|12273|OPMED||20080227122014||ORU^R01|42002|P|2.4||||||8859|
+PID|1||134567|134567^|MUSTER NADIA^||19660130|F|||MUSTERSTRASSE 15^^MUSTERDORF^^14789^|||||
+PV1|1|I|||||||||||||||||
+ORC|RE||LA08084567^MOLIS|LA08084567^MOLIS|CM||^^^20080219183845^^R|||||MUSTA^^^^^^^^^^^MOLIS||||0||||
+OBR|1||LA08084567^MOLIS|35^Endocrinologie^MOLIS||20080219|20080219|||||||20080219183845||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080219183845^^R
+OBX|1|NM|LH^LH^MOLIS||5.5|U/l|  ||||F|||20080220|||
+NTE|1|L|Phase folliculaire: 2.4 - 6.6
+NTE|1|L|Pic ovulatoire    : 9.1 - 74.2
+NTE|1|L|Phase lutéale     : 0.9 - 9.3
+NTE|1|L|Postmenopause     : 10.4 - 64.6
+OBX|2|NM|FSH^FSH^MOLIS||6.8|U/l| ||||F|||20080220|||
+NTE|2|L|Phase folliculaire: 3.4 - 21.6
+NTE|2|L|Pic ovulatoire    : 5.0 - 20.8
+NTE|2|L|Phase lutéale     : 1.1 - 14.0
+NTE|2|L|Postmenopause     : 19.3 - 151.0
+OBX|3|NM|OE2^Oestradiol (E2)^MOLIS||168|pmol/l| ||||F|||20080220|||
+NTE|3|L|Phase folliculaire: 77 - 921
+NTE|3|L|Ovulation         : 140 - 2382
+NTE|3|L|Phase lutéale     : 77 - 1145
+NTE|3|L|Sans HRT          : < 103
+NTE|3|L|Avec HRT          : < 529
+OBX|4|NM|AMH^Hormone anti-mullerienne^MOLIS||25.0|pmol/l|12.0 - 38.0||||F||||||

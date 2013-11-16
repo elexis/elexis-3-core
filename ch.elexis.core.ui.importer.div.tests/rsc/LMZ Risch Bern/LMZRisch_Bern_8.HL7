@@ -1,0 +1,28 @@
+MSH|^~\&|OPMED|12273|OPMED||20080227145011||ORU^R01|42031|P|2.4||||||8859|
+PID|1||123403|123403^|MUSTER MUSTO MARIE^||19630408|F|||ROUTE DU TEST 24^^MUSTERD^^1456^|||||
+PV1|1|I|||||||||||||||||
+ORC|RE|4321|LA12341754^MOLIS|LA12341754^MOLIS|A||^^^20080226180307^^R|||||MUSTA^^^^^^^^^^^MOLIS||||0||||
+OBR|1|4321|LA12341754^MOLIS|05^Immuno-hématologie^MOLIS||20080226113000|20080226113000|||||||20080226180307||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226180307^^R
+OBX|1|FT|AKS^Recherche d'anticorps^MOLIS||Recherche anticorps  négative||||||F|||20080227|||
+OBR|2|4321|LA12341754^MOLIS|20^Chimie clinique^MOLIS||20080226113000|20080226113000|||||||20080226180307||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226180307^^R
+OBX|1|NM|FE^Fer^MOLIS||20.8|umol/l|6.6 - 26.0||||F|||20080226|||
+OBX|2|NM|FER^Ferritine^MOLIS||87.3|ng/ml|10.0 - 204.0||||F|||20080227|||
+OBR|3|4321|LA12341754^MOLIS|35^Endocrinologie^MOLIS||20080226113000|20080226113000|||||||20080226180307||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226180307^^R
+OBX|1|NM|TSH^TSH^MOLIS||1.73|mU/l|0.35 - 4.94||||F|||20080227|||
+OBR|4|4321|LA12341754^MOLIS|40^Sérologie^MOLIS||20080226113000|20080226113000|||||||20080226180307||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226180307^^R
+OBX|1|TX|HBVSA^Antigène HBs^MOLIS||négatif||négatif||||F|||20080227|||
+OBX|2|TX|VDRL^VDRL^MOLIS||<2|Titre|< 2||||F||||||
+OBR|5|4321|LA12341754^MOLIS|4013^Toxoplasmose^MOLIS||20080226113000|20080226113000|||||||20080226180307||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226180307^^R
+OBX|1|NM|TOXG^Toxoplasmose IgG^MOLIS||<1|U/ml|||||F|||20080227|||
+NTE|1|L|< 2 négatif
+NTE|1|L|2 - 3 zone grise
+NTE|1|L|> 3 positif
+OBX|2|NM|TOXM^Toxoplasmose IgM^MOLIS||0.1|Index|||||F|||20080227|||
+NTE|2|L|< 0.5 négatif
+NTE|2|L|0.5 - 0.6 zone grise
+NTE|2|L|> 0.6 positif
+NTE|2|L|Interprétation:
+NTE|2|L|Absence d'immunité (aucun anticorps IgG/IgM décelés).
+NTE|2|L|Conseil pour le suivi :
+NTE|2|L|Pendant la grossesse, nous proposons comme prophylaxie secondaire un contrôle sérologique dans environ 6-8 semaines ou, si la grossesse est plus avancée (>32 semaines), nous proposons d'effectuer ce contrôle à la naissance. 
+NTE|2|L|D'autre part, comme prévention primaire, il est conseillé de continuer l'application des mesures de protection contre l'infection.

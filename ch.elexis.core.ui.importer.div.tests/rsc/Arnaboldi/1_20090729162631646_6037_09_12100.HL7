@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|13000|OPMED|12100|2009072212301207||ORU^R01|2009072212301207|P|2.4|||NE|NE|||D
+PID|1|14257|362735||Muster^Giuseppe^^^Herr^||19380929|M|||Musterstrasse 1^^Musterdorf^^1234^||||1^deutsch|
+ORC|RE||6037.09||CM||||2009072100000000|Inst. f. biopt.u.zytol. Diagnostik||123^Muster^Arzt^^^^Dr. med.||||||||
+OBR|1||6037.09|1^||2009072100000000|2009072100000000|||||||2009072100000000||123^Muster^Arzt^^^^Dr. med.|||||||||||
+OBX|1|TX|14^Histologie||Klinik:\.br\Adenom des Zökums. \.BR\Makroskopie:\.br\Schleimhautbiopsien aus Zökum: Fünf bis 3 mm grosse Biopsien. \.BR\Mikroskopie:\.br\\.BR\Diagnose\.br\Biopsien aus dem Zökum: \.BR\Teils oberflächlich erfasste Anteile eines sessilen tubulovillösen Kolonschleimhautadenoms mit leichter und mittelschwerer Epitheldysplasie (low grade dysplasia).\.BR\Kein Nachweis einer hochgradigen Epitheldysplasie.\.BR\Kein Malignitätsnachweis.\.BR\Kommentar:\.br\\.BR\Nachtragbericht:\.br\||||||F|||2009072100000000|||

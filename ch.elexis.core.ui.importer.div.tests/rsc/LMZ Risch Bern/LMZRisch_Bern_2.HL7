@@ -1,0 +1,15 @@
+MSH|^~\&|OPMED|12273|OPMED||20080226150005||ORU^R01|41900|P|2.4||||||8859|
+PID|1||161234|161234^|MUSTER OLIVIA^||19721001|F|||RUE DE TEST 4^^TESTVILLE^^1520^|||||
+PV1|1|I|||||||||||||||||
+ORC|RE|8123|LA08012345^MOLIS|LA08012345^MOLIS|CM||^^^20080226124003^^R|||||MUSTA^^^^^^^^^^^MOLIS||||0||||
+OBR|1|8123|LA08012345^MOLIS|40^Sérologie^MOLIS||20080226100000|20080226100000|||||||20080226124003||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226124003^^R
+OBX|1|NM|CMVG^Cytomégalie IgG^MOLIS||4|U/ml|||||F||||||
+NTE|1|L|< 6 negatif
+NTE|1|L|>= 6 positif
+NTE|1|L|(Attention: nouv. méthode à p. du 04.10.07)
+NTE|1|L| 
+OBX|2|NM|CMVM^Cytomégalie IgM^MOLIS||0.41|Index|||||F||||||
+NTE|2|L|< 0.85 négatif
+NTE|2|L|0.85 - 1.00 zone grise
+NTE|2|L|>= 1.00 positif
+NTE|2|L|(Attention: nouv. méthode à p. du 04.10.07)

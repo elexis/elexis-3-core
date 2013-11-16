@@ -1,0 +1,36 @@
+MSH|^~\&|LAB|DIAGNOSTICA|OPMED|1498|20070822153305||ORU^R01|000000002485|P|2.3|||||||D
+PID|1||188643|188643^|MUSTER^MARTA^^^^Frau||19450101|F|||Ekkehardstr. 24^^Musterdorf^^4500^|||
+ORC|RE||0708210581||CM|||||DIAGNOSTICA||1000^MUSTER^ARZT^^^|||20070821100700|||UNIGES||
+OBR|0001||0708210581|||20070821000000|20070821000000|||||||20070821000000||1000^MUSTER^ARZT^^^|||||||||F|
+NTE|0|L|Serum    
+NTE|0|L|EDTA-Blut    
+NTE|0|L|Citrat 1+9 (Gerinnung)    
+NTE|0|L|Urinportion    
+OBX|1|ST|1810010^Quick^HT||23|%|(70-120)|*|||F||Y||||
+OBX|2|ST|1810020^    INR^HT||2.71||||||F||Y||||
+OBX|3|ST|1490010^HbA1c^HT||6.0|%|(4.8-6.0)||||F||Y||||
+OBX|4|ST|2800010^Eiweiss^HT||78|g/l|(60-80)||||F||Y||||
+OBX|5|ST|2980B010^  Albumin^HT||61.1|%|(59.8-72.4)||||F||Y||||
+OBX|6|ST|2980B020^  alpha-1-Globulin^HT||2.4|%|(1.0-3.2)||||F||Y||||
+OBX|7|ST|2980B030^  alpha-2-Globulin^HT||9.0|%|(7.4-12.6)||||F||Y||||
+OBX|8|ST|2980B040^  beta-Globulin^HT||8.9|%|(7.5-12.9)||||F||Y||||
+OBX|9|ST|2980B050^  gamma-Globulin^HT||18.6|%|(8.0-15.8)|*|||F||Y||||
+OBX|10|ST|ALGL2010^  Albumin/Globulin Quotient^HT||1.6||(1.0-2.0)||||F||Y||||
+NTE|10|L|Leichte Vermehrung der Gammaglobuline bei sonst
+NTE|10|L|unauffälliger Serum-Eiweisselektrophorese.
+OBX|11|ST|2640010^Eisen^HT||18.9|µmol/l|(9.0-27.0)||||F||Y||||
+OBX|12|ST|2860010^Ferritin^HT||42|µg/l|(15-200)||||F||Y||||
+OBX|13|ST|8040120^  Trübung^HT||leicht trüb ||||||F||N||||
+OBX|14|ST|8040020^  Leukozyten^HT||+++ ||||||F||N||||
+OBX|15|ST|8040030^  Nitrit^HT||negativ ||||||F||N||||
+OBX|16|ST|8040040^  Urobilinogen (umol/l)^HT||normal ||||||F||N||||
+OBX|17|ST|8040050^  Protein (g/l)^HT||negativ ||||||F||N||||
+OBX|18|ST|8040060^  pH^HT||7.0||||||F||N||||
+OBX|19|ST|8040070^  Erythrozyten^HT||Spur ||||||F||N||||
+OBX|20|ST|8040080^  Spezifisches Gewicht (g/ml)^HT||1.010|g/ml|||||F||N||||
+OBX|21|ST|8040090^  Ketone (mmol/l)^HT||negativ ||||||F||N||||
+OBX|22|ST|8040100^  Bilirubin^HT||negativ ||||||F||N||||
+OBX|23|ST|8040110^  Glucose (mmol/l)^HT||negativ ||||||F||N||||
+OBX|24|ST|8040130^Sediment^HT||Leucozyten 10-25/GF ||||||F||N||||
+NTE|24|L|Erythrozyten 0-5/GF
+NTE|24|L|Plattenepithelien ++

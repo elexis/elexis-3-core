@@ -1,0 +1,48 @@
+MSH|^~\&|OPMED|12120|OPMED|12005|20090817102314||ORU^R01|04401413|P|2.3.1|||||||
+PID|1|20690886|1000036377|1000506893|Muster^Susanne||19190228|F||||||||
+PV1|1||^^^^^^^^SPOL||||||||||||||||
+ORC|RE||2009081720690886||CM||||200908171117|UHBS||SPOL||||||||
+OBR|1||2009081720690886|14||200908171110|200908171110|200908171110||| | ||200908171117|14^Fluorid|SPOL||||||200908171223|||F||
+NTE|0||11695
+NTE|0||11695
+OBX|1|ST|G^Glucose Fluorid^14||4.6|mmol/l|3.8-6.1||||F||||||
+OBX|2|ST|L^Lactat^14||0.66|mmol/l|1.10-2.00|L|||F||||||
+OBR|2||2009081720690886|01||200908171110|200908171110|200908171110||| | ||200908171117|01^Plasma|SPOL||||||200908171223|||F||
+OBX|1|ST|B1^Hämodialyseblock^01||abgesch.||||||F||||||
+OBX|2|ST|B2^Leberblock^01||abgesch.||||||F||||||
+OBX|3|ST|ALB^Albumin^01||42|g/l|35-52||||F||||||
+OBX|4|ST|ALT^ALAT^01||55|U/l|10-37|H|||F||||||
+OBX|5|ST|AP^alk. Phosphatase^01||60|U/l|<104||||F||||||
+OBX|6|ST|AST^ASAT^01||36|U/l|11-36||||F||||||
+OBX|7|ST|BI^Bilirubin^01||8|µmol/l|5-18||||F||||||
+OBX|8|ST|CA^Calcium^01||2.16|mmol/l|2.10-2.65||||F||||||
+OBX|9|ST|CK^Creatinkinase^01||83|U/l|38-157||||F||||||
+OBX|10|ST|CL^Chlorid^01||102|mmol/l|97-110||||F||||||
+OBX|11|ST|COL^Cholesterin^01||4.29|mmol/l|3.00-5.20||||F||||||
+OBX|12|ST|COLQ^Chol./HDL-Chol.-Quotient^01||2.44||<5.00||||F||||||
+OBX|13|ST|CRP^C-reakt.Protein^01||0.3|mg/l|<10.0||||F||||||
+OBX|14|ST|GGT^GGT^01||15|U/l|8-49||||F||||||
+OBX|15|ST|GLOB^Globuline^01||35|g/l|18-38||||F||||||
+OBX|16|ST|H^Hämolyse Index^01||6||||||F||||||
+OBX|17|ST|HA^Harnsäure^01||163|µmol/l|173-359|L|||F||||||
+OBX|18|ST|HDL0^HDL-Cholesterin^01||1.76|mmol/l|0.90-2.20||||F||||||
+OBX|19|ST|HST^Harnstoff^01||4.2|mmol/l|3.0-7.8||||F||||||
+OBX|20|ST|I^Ikterie Index^01||13||||||F||||||
+OBX|21|ST|K^Kalium^01||3.7|mmol/l|3.5-5.0||||F||||||
+OBX|22|ST|KR^Kreatinin^01||70|µmol/l|45-93||||F||||||
+OBX|23|ST|LD^LDH^01||202|U/l|135-214||||F||||||
+OBX|24|ST|LDL0^LDL-Chol.Friedewald^01||2.12|mmol/l|1.60-3.40||||F||||||
+OBX|25|ST|LIP^Turbidität Index^01||8||||||F||||||
+OBX|26|ST|NA^Natrium^01||137|mmol/l|131-142||||F||||||
+OBX|27|ST|P^Phosphat^01||0.83|mmol/l|0.80-1.50||||F||||||
+OBX|28|ST|PAMY^Pankreas-Amylase^01||29|U/l|13-53||||F||||||
+OBX|29|ST|TP^Total Protein^01||77|g/l|62-80||||F||||||
+OBX|30|ST|CGR^Chemogramm Routine^01||abgesch.||||||F||||||
+OBX|31|ST|LPRO^Lipid-Profil^01||abgesch.||||||F||||||
+OBX|32|ST|TPA^Prot.tot. (+Alb./Glob.)^01||abgesch.||||||F||||||
+OBX|33|ST|TRI^Triglyzeride^01||0.90|mmol/l|<1.70||||F||||||
+NTE|33||Für die Definition des metabolischen Syndroms, gilt ein Cutoff von 1.7 mmol/l.
+OBX|34|ST|AKCA^Albumin korrig. Calcium^01||2.11|mmol/l|2.10-2.65||||F||||||
+NTE|34||Das Albumin korrigierte Calcium ist die auf eine Albuminkonzentration von 40 g/
+NTE|34||l korrigierte Calciumkonzentration. Ggfs. ist die zusätzliche Bestimmung des io
+NTE|34||nisierten Calciums (bitte Präanalytik beachten) zu empfehlen.

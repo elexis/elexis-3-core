@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|13000|OPMED|12100|2009072112301107||ORU^R01|2009072112301107|P|2.4|||NE|NE|||D
+PID|1|3938|278796||Muster^Luise^^^Frau^||19270212|F|||Musterstrasse 1^^Musterdorf^^1234^||||1^deutsch|
+ORC|RE||6007.09||CM||||2009072000000000|Inst. f. biopt.u.zytol. Diagnostik||123^Muster^Arzt^^^^Dr. med.||||||||
+OBR|1||6007.09|1^||2009072000000000|2009072000000000|||||||2009072000000000||123^Muster^Arzt^^^^Dr. med.|||||||||||
+OBX|1|TX|14^Histologie||Klinik:\.br\Tumor am Rektosigmoid. \.BR\Makroskopie:\.br\Vier bis 3 mm grosse Biopsien. \.BR\Mikroskopie:\.br\\.BR\Diagnose\.br\Biopsien aus Tumor im Rektosigmoid:\.BR\Anteile eines hier mässiggradig differenzierten, teils ulzerierten Adenokarzinom vom kolorektalen Typ.\.BR\Kommentar:\.br\\.BR\Nachtragbericht:\.br\||||||F|||2009072000000000|||

@@ -1,0 +1,25 @@
+MSH|^~\&|OPMED|12119|OPMED|12596|20070924142721||ORU^R01|0709241427210001|P|2.2|||||||D
+PID|1|841|188790|188790^|MUSTER^PETER^^^^||19450215|M||||||||
+ORC|||1574727^210907||CM|||||RISCH||MUST|||20070921122400|||N2_LABOR^001||
+OBR|1||1574727^210907|||200709211045|200709211045|||||||||MUST|||||||||||
+NTE|0||
+NTE|0||TEIL- bzw. END-Befund wurde am 24.09.07 um 14:27 elektron. übermittelt.
+OBX|1|TX|S^Serum^HT||$||||||F|||20070924142700|||
+OBX|2|TX|STATPP^Status postprandial^HT||$||||||F|||20070924142700|||
+OBX|3|TX|BORK^Borrelia burgd. (Lyme), IgG/M^HT||2.21|U|< 0.75|*|||F|||20070924142700|||
+OBX|4|TX|TREKB^Treponema pall. (Lues), IgG/M^HT||negativ||negativ||||F|||20070924142700|||
+OBX|5|TX|INTBI^INTERPRET. INFEKT-SEROLOGIE^HT||||||||F|||20070924142700|||
+NTE|5|L|Borrelien:
+OBX|6|TX|BORG^Borrelia burgd. (Lyme), IgG^HT||138|U/ml|< 5|*|||F|||20070924142700|||
+OBX|7|TX|BORM^Borrelia burgd. (Lyme), IgM^HT||0.53|Index|< 0.80||||F|||20070924142700|||
+OBX|8|TX|BOR4M^B. burgd. (Lyme), p14/p21-IgM^HT||0.37|Index|< 0.80||||F|||20070924142700|||
+OBX|9|TX|FSMEG^FSME-Virus, IgG^HT||185|U/ml|< 5|*|||F|||20070924142700|||
+NTE|9|L|              IgG gegen das FSME-Virus sind nachweisbar.
+OBX|10|TX|FSMEM^FSME-Virus, IgM^HT||0.22|Index|< 0.80||||F|||20070924142700|||
+OBX|11|TX|BORGB^Borr. burgd., IgG, Westernblot^HT||positiv||negativ|*|||F|||20070924142700|||
+OBX|12|TX|BOGB11^          - p100-IgG^HT||+||||||F|||20070924142700|||
+OBX|13|TX|BOGB21^          - VlsE^HT||+||||||F|||20070924142700|||
+OBX|14|TX|BOGB41^          - p39^HT||+||||||F|||20070924142700|||
+OBX|15|TX|BOBIN^Lyme-Ergebnis-Interpretation:^HT||||||||F|||20070924142700|||
+NTE|15|L|Borrelia-burgdorferi- s p e z i f i s c h e
+OBX|16|TX|BORMB^Borr. burgd., IgM, Westernblot^HT||negativ||negativ||||F|||20070924142700|||

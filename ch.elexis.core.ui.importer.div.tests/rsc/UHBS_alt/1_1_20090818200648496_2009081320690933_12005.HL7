@@ -1,0 +1,53 @@
+MSH|^~\&|OPMED|12120|OPMED|12005|20090818180555||ORU^R01|04415053|P|2.3.1|||||||
+PID|1|20690933|1000109978|1000506469|Muster^Luanne||19190228|F||||||||
+PV1|1||^^^^^^^^SPOL||||||||||||||||
+ORC|RE||2009081320690933||CM||||200908131208|UHBS||SPOL||||||||
+OBR|1||2009081320690933|03||200908131207|200908131207|200908131207||| | ||200908131208|03^Serum Gel|SPOL||||||200908182005|||F||
+NTE|0||22451
+NTE|0||22451
+OBX|1|ST|VB12^Vitamin B12^03||521|pmol/l|179-660||||F||||||
+OBX|2|ST|TSH^TSH^03||1.880|mIU/l|0.332-4.490||||F||||||
+OBR|2||2009081320690933|01||200908131207|200908131207|200908131207||| | ||200908131208|01^Plasma|SPOL||||||200908182005|||F||
+OBX|1|ST|LPRO^Lipid-Profil^01||abgesch.||||||F||||||
+OBX|2|ST|B2^Leberblock^01||abgesch.||||||F||||||
+OBX|3|ST|CGR^Chemogramm Routine^01||abgesch.||||||F||||||
+OBX|4|ST|FER^Ferritin^01||123|ng/ml|10-200||||F||||||
+OBX|5|ST|B1^Hämodialyseblock^01||abgesch.||||||F||||||
+OBX|6|ST|TPA^Prot.tot. (+Alb./Glob.)^01||abgesch.||||||F||||||
+OBX|7|ST|TRI^Triglyzeride^01||0.53|mmol/l|<1.70||||F||||||
+NTE|7||Für die Definition des metabolischen Syndroms, gilt ein Cutoff von 1.7 mmol/l.
+OBX|8|ST|ALB^Albumin^01||43|g/l|35-52||||F||||||
+OBX|9|ST|ALT^ALAT^01||28|U/l|10-37||||F||||||
+OBX|10|ST|AP^alk. Phosphatase^01||42|U/l|<104||||F||||||
+OBX|11|ST|AST^ASAT^01||20|U/l|11-36||||F||||||
+OBX|12|ST|BI^Bilirubin^01||21|µmol/l|5-18|H|||F||||||
+OBX|13|ST|CA^Calcium^01||2.30|mmol/l|2.10-2.65||||F||||||
+OBX|14|ST|CK^Creatinkinase^01||36|U/l|38-157|L|||F||||||
+OBX|15|ST|CL^Chlorid^01||105|mmol/l|97-110||||F||||||
+OBX|16|ST|COL^Cholesterin^01||5.13|mmol/l|3.00-5.20||||F||||||
+OBX|17|ST|COLQ^Chol./HDL-Chol.-Quotient^01||2.04||<5.00||||F||||||
+OBX|18|ST|CRP^C-reakt.Protein^01||1.3|mg/l|<10.0||||F||||||
+OBX|19|ST|GGT^GGT^01||19|U/l|8-49||||F||||||
+OBX|20|ST|GLOB^Globuline^01||32|g/l|18-38||||F||||||
+OBX|21|ST|H^Hämolyse Index^01||6||||||F||||||
+OBX|22|ST|HA^Harnsäure^01||230|µmol/l|173-359||||F||||||
+OBX|23|ST|HDL0^HDL-Cholesterin^01||2.51|mmol/l|0.90-2.20|H|||F||||||
+OBX|24|ST|HST^Harnstoff^01||4.4|mmol/l|3.0-7.8||||F||||||
+OBX|25|ST|I^Ikterie Index^01||29||||||F||||||
+OBX|26|ST|K^Kalium^01||4.9|mmol/l|3.5-5.0||||F||||||
+OBX|27|ST|KR^Kreatinin^01||59|µmol/l|45-93||||F||||||
+OBX|28|ST|LD^LDH^01||170|U/l|135-214||||F||||||
+OBX|29|ST|LDL0^LDL-Chol.Friedewald^01||2.38|mmol/l|1.60-3.40||||F||||||
+OBX|30|ST|LIP^Turbidität Index^01||7||||||F||||||
+OBX|31|ST|NA^Natrium^01||143|mmol/l|131-142|H|||F||||||
+OBX|32|ST|P^Phosphat^01||1.07|mmol/l|0.80-1.50||||F||||||
+OBX|33|ST|PAMY^Pankreas-Amylase^01||30|U/l|13-53||||F||||||
+OBX|34|ST|TP^Total Protein^01||75|g/l|62-80||||F||||||
+OBX|35|ST|AKCA^Albumin korrig. Calcium^01||2.22|mmol/l|2.10-2.65||||F||||||
+NTE|35||Das Albumin korrigierte Calcium ist die auf eine Albuminkonzentration von 40 g/
+NTE|35||l korrigierte Calciumkonzentration. Ggfs. ist die zusätzliche Bestimmung des io
+NTE|35||nisierten Calciums (bitte Präanalytik beachten) zu empfehlen.
+OBR|3||2009081320690933|07||200908131207|200908131207|200908131207||| | ||200908131208|07^EDTA Vollblut Chemie|SPOL||||||200908182005|||F||
+OBX|1|ST|FOL^Folsäure (Onlinewert)^07||k.Mat.|nmol/l|||||F||||||
+OBX|2|ST|HKT^Hämatokrit Folsäure^07||k.Mat.|%|||||F||||||
+OBX|3|ST|FOLE^Erythrozyten-Folsäure^07||k.Mat.|nmol/l|395-1585||||F||||||

@@ -1,0 +1,68 @@
+MSH|^~\&|OPMED|12119|OPMED|12596|20070719140558||ORU^R01|0707191405580001|P|2.2|||||||D
+PID|1|1283|181796|181796^|MUSTER^ROSA^^^^||19790315|W||||||||
+ORC|||1553880^180707||CM|||||RISCH||MUST|||20070718122100|||N2_LABOR^001||
+OBR|1||1553880^180707|||200707180830|200707180830|||||||||MUST|||||||||||
+OBX|1|TX|S^Serum^HT||$||||||F|||20070719140500|||
+OBX|2|TX|FSH^Follikelstimulierendes Hormon^HT||2.0|IU/l|||||F|||20070719140500|||
+NTE|2|L|                     0.1 - 3 Jahre                0.1 - 13.0
+NTE|2|L|                     4   - 9 Jahre                0.1 - 1.6
+NTE|2|L|                     Follikelphase                2.8 - 11.3
+NTE|2|L|                     Follikelphase 2.-3. Tag      3.0 - 14.4
+NTE|2|L|                     Zyklusmitte                  5.8 - 21.0
+NTE|2|L|                     Lutealphase                  1.2 - 9.0
+NTE|2|L|                     Postmenopause               21.7 - 153.0
+NTE|2|L|                     Orale Kontrazeptiva              - 4.9
+OBX|3|TX|PROLA^Prolactin^HT||17.2|µg/l|1.9 - 25.0||||F|||20070719140500|||
+OBX|4|TX|TSH^TSH (Basalsekretion)^HT||0.502|mU/l|0.400 - 4.00||||F|||20070719140500|||
+OBX|5|TX|FT3^Trijodthyronin (FT3), freies^HT||3.8|pmol/l|2.8 - 6.5||||F|||20070719140500|||
+OBX|6|TX|FT4Z^Thyroxin (FT4), freies^HT||15.1|pmol/l|10.3 - 24.5||||F|||20070719140500|||
+OBX|7|TX|DHEAS^Dehydroepiandrosteron-Sulfat^HT||3.61|µmol/l|||||F|||20070719140500|||
+NTE|7|L|                     13 - 17 Jahre                0.6 - 10.8
+NTE|7|L|                     18 - 19 Jahre                3.9 - 10.7
+NTE|7|L|                     20 - 29 Jahre                1.8 - 10.3
+NTE|7|L|                     30 - 39 Jahre                1.2 - 7.3
+NTE|7|L|                     40 - 49 Jahre                0.9 - 6.5
+NTE|7|L|                     50 - 59 Jahre                0.7 - 5.4
+NTE|7|L|                     60 - 69 Jahre                0.4 - 3.5
+NTE|7|L|                     70 - 79 Jahre                0.5 - 2.4
+NTE|7|L|                     Postmenopause                0.3 - 5.2
+OBX|8|TX|OE2^17-beta-Oestradiol E2 (ECLIA)^HT||831|pmol/l|||||F|||20070719140500|||
+NTE|8|L|                     Follikelphase                 46 - 607
+NTE|8|L|                     Ovulation                    315 - 1828
+NTE|8|L|                     Lutealphase                  161 - 774
+NTE|8|L|                     Postmenopause               < 18 - 201
+NTE|8|L|                     Mädchen 1 - 10 Jahre          22 - 99
+NTE|8|L|                     vorläufige Werte (nur zur Orientierung):
+NTE|8|L|                       Tanner I                    18 - 37
+NTE|8|L|                       Tanner II                   18 - 422
+NTE|8|L|                       Tanner III                  18 - 661
+NTE|8|L|                       Tanner IV                   92 - 1266
+NTE|8|L|                       Tanner V                    92 - 1505
+OBX|9|TX|PRG^Progesteron^HT||42.9|nmol/l|||||F|||20070719140500|||
+NTE|9|L|                     Follikelphase                    - 3.6
+NTE|9|L|                     Zyklusmitte                  1.5 - 5.5
+NTE|9|L|                     Lutealphase                  3.0 - 68.0
+NTE|9|L|                       Mitte (7 .- 8. Tag)       19.0 - 76.0
+NTE|9|L|                     Postmenopause                    < 3.3
+NTE|9|L|                     Orale Kontrazeptiva          1.1 - 2.9
+NTE|9|L|                     Schwangerschaft
+NTE|9|L|                       1. Trimester              29.6 - 106.0
+NTE|9|L|                       2. Trimester              93.8 - 159.0
+NTE|9|L|                       3. Trimester             264.0 - 509.0
+OBX|10|TX|TES^Testosteron (ECLIA)^HT||36|ng/dl|6 - 82||||F|||20070719140500|||
+OBX|11|TX|TESZ^^HT||1.25|nmol/l|0.21 - 2.84||||F|||20070719140500|||
+OBX|12|TX|TESF^Testosteron frei^HT||1.5|pmol/l|||||F|||20070719140500|||
+NTE|12|L|                     Kind 12 - 13 Jahre           0.6 - 6.2
+NTE|12|L|                     Kind 14 - 15 Jahre               - 10.7
+NTE|12|L|                     Kind 16 - 17 Jahre           3.5 - 9.1
+NTE|12|L|                     Frau Ovulation                   < 13.2
+NTE|12|L|                     Orale Kontrazeptiva              < 5.9
+NTE|12|L|                     Postmenopause                0.5 - 6.2
+OBX|13|TX|LH^Luteinisierendes Hormon (LH)^HT||4.1|IU/l|||||F|||20070719140500|||
+NTE|13|L|                     0.1 - 1.5 Jahre                  - 2.3
+NTE|13|L|                     1.6 - 9   Jahre                  - 1.3
+NTE|13|L|                     Follikelphase                1.1 - 11.6
+NTE|13|L|                     Zyklusmitte                 17.0 - 77.0
+NTE|13|L|                     Lutealphase                      - 14.7
+NTE|13|L|                     Postmenopause               11.3 - 39.8
+NTE|13|L|                     Orale Kontrazeptiva              - 8.0

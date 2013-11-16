@@ -1,0 +1,57 @@
+MSH|^~\&|OPMED|12120|OPMED|12005|20090821133533||ORU^R01|04441804|P|2.3.1|||||||
+PID|1|20690905|1000110724|1000507810|Muster^Horst||19190228|M||||||||
+PV1|1||^^^^^^^^SPOL||||||||||||||||
+ORC|RE||2009082120690905||CM||||200908211429|UHBS||SPOL||||||||
+OBR|1||2009082120690905|05||200908211428|200908211428|200908211428||| | ||200908211429|05^EDTA Hämat-Strasse|SPOL||||||200908211535|||F||
+OBX|1|ST|KGBB^Grosses Blutbild^05||abgesch.||||||F||||||
+OBX|2|ST|HILI^Highlist^05||HIGH_L||||||F||||||
+OBX|3|ST|LC^Leukozyten^05||4.07|x10S9/l|3.50 - 10.00||||F||||||
+OBX|4|ST|EC^Erythrozyten^05||5.24|x10S12/l|4.50 - 6.30||||F||||||
+OBX|5|ST|HB^Hämoglobin^05||149|g/l|140 - 180||||F||||||
+OBX|6|ST|HT^Hämatokrit^05||0.45|l/l|0.38 - 0.52||||F||||||
+OBX|7|ST|MCV^- MCV^05||85.8|fl|79.0 - 95.0||||F||||||
+OBX|8|ST|MCH^- MCH^05||28.4|pg|27.0 - 33.2||||F||||||
+OBX|9|ST|MCHC^- MCHC^05||331|g/l|320 - 360||||F||||||
+OBX|10|ST|EVB^- EVB^05||14.5|%|11.5 - 14.5||||F||||||
+OBX|11|ST|HYPOEC^- hypochrome Ec^05||6.0|%|<5.0|H|||F||||||
+OBX|12|ST|TC^Thrombozyten^05||20|x10S9/l|150 - 450|L|||F||||||
+OBX|13|ST|MTV^- MTV^05||11.0|fl|||||F||||||
+OBX|14|ST|TVB^- TVB^05||65.4|%|||||F||||||
+OBX|15|ST|NEUT^Neutrophile (Seg+Stab)^05||46.1|%|40.0 - 74.0||||F||||||
+OBX|16|ST|NEUT#^Neutroph.abs.(Seg+Stab)^05||1.876|x10S9/l|1.300 - 6.700||||F||||||
+OBX|17|ST|LY^Lymphozyten^05||39.8|%|19.0 - 48.0||||F||||||
+OBX|18|ST|LY#^Lymphozyten absolut^05||1.620|x10S9/l|0.900 - 3.300||||F||||||
+OBX|19|ST|MO^Monozyten^05||8.3|%|3.4 - 9.0||||F||||||
+OBX|20|ST|MO#^Monozyten absolut^05||0.338|x10S9/l|0.120 - 0.620||||F||||||
+OBX|21|ST|EOS^Eosinophile^05||3.0|%|0.0 - 7.0||||F||||||
+OBX|22|ST|EOS#^Eosinophile absolut^05||0.122|x10S9/l|0 - 0.300||||F||||||
+OBX|23|ST|BAS^Basophile^05||0.6|%|0.0 - 1.5||||F||||||
+OBX|24|ST|BAS#^Basophile absolut^05||0.024|x10S9/l|0 - 0.090||||F||||||
+OBX|25|ST|LUC^LUC^05||2.2|%|0.0 - 4.0||||F||||||
+OBX|26|ST|LUC#^LUC absolut^05||0.090|x10S9/l|0 - 0.310||||F||||||
+OBX|27|ST|PMN%^PMN%^05||50.5|%|||||F||||||
+OBX|28|ST|MN%^MN%^05||48.6|%|||||F||||||
+OBX|29|ST|GHDIFF^Hand-Diff Centralink^05||Y||||||F||||||
+OBX|30|ST|HAEMAT^Hämatologie Block^05||abgesch.||||||F||||||
+OBX|31|ST|HAID^Arbeitsplatz ID^05||1305||||||F||||||
+OBX|32|ST|HVIS^Visum^05||batch||||||F||||||
+OBR|2||2009082120690905|04||200908211428|200908211428|200908211428||| | ||200908211429|04^EDTA Hämat.-Offline|SPOL||||||200908211535|||F||
+OBX|1|ST|LYH^Lymphozyten^04||40.5|%|19.0 - 48.0||||F||||||
+OBX|2|ST|DIFFNR^Archivnummer^04||507350||||||F||||||
+OBX|3|ST|LYRH^Lymphozyten (gezählt)^04||40.5|%|||||F||||||
+OBX|4|ST|MOH^Monozyten^04||9.5|%|3.4 - 9.0|H|||F||||||
+OBX|5|ST|MOAH^Monozyten^04||0.387|x10S9/l|0.120 - 0.620||||F||||||
+OBX|6|ST|EOSH^Eosinophile^04||1.0|%|||||F||||||
+OBX|7|ST|EOSAH^Eosinophile^04||0.041|x10S9/l|0 - 0.300||||F||||||
+OBX|8|ST|BASH^Basophile^04||0.0|%|0.0 - 1.5||||F||||||
+OBX|9|ST|BASAH^Basophile^04||0.000|x10S9/l|0 - 0.090||||F||||||
+OBX|10|ST|NEUTH^Neutrophile (Seg+Stab)^04||49.0|%|40.0 - 74.0||||F||||||
+OBX|11|ST|NEUTAH^Neutrophile (Seg+Stab)^04||1.994|x10S9/l|1.300 - 6.700||||F||||||
+OBX|12|ST|MIKROS^Mikroskopie^04||Mikroskop.||||||F||||||
+OBX|13|ST|TCABN^Tc: abnorm^04||+||||||F||||||
+OBX|14|ST|TCANZY^Tc: Anisozytose^04||+||||||F||||||
+OBX|15|ST|HDIFF^Hand-Differenzierung^04||abgesch.||||||F||||||
+OBX|16|ST|STABH^Stabkernige^04||3.5|%|5.0 - 15.0|L|||F||||||
+OBX|17|ST|SEGH^Segmentkernige^04||45.5|%|40.0 - 70.0||||F||||||
+OBX|18|ST|MTA^MTA^04||flub||||||F||||||
+OBX|19|ST|LYAH^Lymphozyten^04||1.648|x10S9/l|0.900 - 3.300||||F||||||

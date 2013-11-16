@@ -1,0 +1,16 @@
+MSH|^~\&|OPMED|12168|OPMED|12005|20060404160211||ORU^R01|0604041602110001|P|2.2|||||||D
+PID|1|1|M0112156|M0112156^1|Test^Tester1^^^^||19501224|M||||||||
+ORC|||20228402^310306||CM|||||MAB||1vonwf|||20060331131900|||N2_LABOR^001||
+OBR|1||20228402^310306|||200603311319|200603311319|||||||||1vonwf|||||||||||
+OBX|1|TX|tshb^TSH basal^HT||1.32|mU/l|0.27 - 4.20||||F|||20060404160200|||
+OBX|2|TX|psa^PSA ultrasensitiv^HT||0.49|µg/l|- 3.0||||F|||20060404160200|||
+NTE|2|L|-10.0 auch bei benignen Erkrankungen
+OBX|3|TX|b12^Vitamin B12^HT||108|pmol/l|179 - 660|*|||F|||20060404160200|||
+OBX|4|TX|vdrl^VDRL^HT||<1:1|Titer|< 1:1||||F|||20060404160200|||
+OBX|5|TX|tpha^TPHA^HT||<1:80|Titer|< 1:80||||F|||20060404160200|||
+NTE|5|L|Lues-Screening negativ, sofern das Infektionsrisiko länger als 5 Wochenzurückliegt.
+OBX|6|TX|bobus^Borrelien-AK (Screen)^HT||<0.75|Index|||||F|||20060404160200|||
+NTE|6|L|Bei klinischem Verdacht auf Lyme Disease empfehlen wir eine Verlaufs-kontrolle in 4 - 6 Wochen. Antikörper gegen Borrelia burgdorferi sindzu Erkrankungsbeginn oft noch nicht nachweisbar.
+NTE|6|L|     < 0.75 negativ
+NTE|6|L|0.75 - 1.00 fraglich
+NTE|6|L|     > 1.00 positiv

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test fragment for elexis-importer
+Bundle-SymbolicName: ch.elexis.core.ui.importer.div.tests
+Bundle-Version: 3.0.0.qualifier
+Bundle-Vendor: ch.elexis
+Fragment-Host: ch.elexis.core.ui.importer.div;bundle-version="3.0.0.qualifier"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit

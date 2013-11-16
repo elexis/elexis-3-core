@@ -1,0 +1,16 @@
+MSH|^~\&|LABOR|ENZYMLABOR|SJGX0|12159|20080602155016||ORU^R01|0806020296155016208000|P|2.2|||||||D
+PID|1|3557|001234573|001234573^3557|MUSTER^HEIDI^^^^Frau||19680815|F|||Mustergasse 5^^Musterdorf^^4000^|||
+ORC|RE||0806021234||CM|||||ENZYMLABOR||12159^^^^^^||||||LABSYS||
+OBR|1||0806021234|||20080529162000||||||||20080602065800||12159^^^^^^||||||20080602155016||||
+OBX|1|ST|520^Antikörper-Suchtest||negativ||||||F|||20080602154928|||
+OBX|2|ST|272^Hepatitis B: anti-HBc||<0.8|MOC|<1.0||||F|||20080602154928|||
+OBX|3|ST|411^Rubeolen IgG||2.8|MOC|||||F|||20080602154928|||
+NTE|3|L|                                          Impfschutz:
+NTE|3|L|                                          <1.0       nicht vorhanden
+NTE|3|L|                                          1.0-2.0    fraglich
+NTE|3|L|                                          >2.0       vorhanden
+OBX|4|ST|472^Toxoplasmose IgG||1.2|MOC|<1.0||||F|||20080602154928|||
+OBX|5|ST|470^Toxoplasmose IgM||<0.8|MOC|<1.0||||F|||20080602154928|||
+OBX|6|ST|3225^Treponema Screen IA||<0.8|MOC|<1.0||||F|||20080602154928|||
+OBX|7|ST|271^Hepatitis B: HBs-Antigen||<0.8|MOC|<1.0||||F|||20080602154928|||
+NTE|0|L|Schlussbericht: Dr. Johann Hoflacher

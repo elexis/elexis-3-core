@@ -1,0 +1,28 @@
+MSH|^~\&|OPMED|12273|OPMED||20080227143502||ORU^R01|42020|P|2.4||||||8859|
+PID|1||61234|61234^|MUSTER ANA-SOFIA^||19841024|F|||RTE DES MUSTER 4^^MUSTERDORF^^1456^|||||
+PV1|1|I|||||||||||||||||
+ORC|RE|4567|LA12341234^MOLIS|LA12341234^MOLIS|CM||^^^20080227123323^^R|||||MUSTA^^^^^^^^^^^MOLIS||||0||||
+OBR|1|4567|LA12341234^MOLIS|4013^Toxoplasmose^MOLIS||20080226|20080226|||||||20080227123323||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080227123323^^R
+OBX|1|NM|TOXG^Toxoplasmose IgG^MOLIS||<1|U/ml|||||F||||||
+NTE|1|L|< 2 négatif
+NTE|1|L|2 - 3 zone grise
+NTE|1|L|> 3 positif
+OBX|2|NM|TOXM^Toxoplasmose IgM^MOLIS||0.1|Index|||||F||||||
+NTE|2|L|< 0.5 négatif
+NTE|2|L|0.5 - 0.6 zone grise
+NTE|2|L|> 0.6 positif
+NTE|2|L|Interprétation:
+NTE|2|L|Absence d'immunité (aucun anticorps IgG/IgM décelés).
+NTE|2|L|Conseil pour le suivi :
+NTE|2|L|Pendant la grossesse, nous proposons comme prophylaxie secondaire un contrôle sérologique dans environ 6-8 semaines ou, si la grossesse est plus avancée (>32 semaines), nous proposons d'effectuer ce contrôle à la naissance. 
+NTE|2|L|D'autre part, comme prévention primaire, il est conseillé de continuer l'application des mesures de protection contre l'infection.
+OBX|3|NM|CMVG^Cytomégalie IgG^MOLIS||1|U/ml|||||F||||||
+NTE|3|L|< 6 negatif
+NTE|3|L|>= 6 positif
+NTE|3|L|(Attention: nouv. méthode à p. du 04.10.07)
+NTE|3|L| 
+OBX|4|NM|CMVM^Cytomégalie IgM^MOLIS||0.37|Index|||||F||||||
+NTE|4|L|< 0.85 négatif
+NTE|4|L|0.85 - 1.00 zone grise
+NTE|4|L|>= 1.00 positif
+NTE|4|L|(Attention: nouv. méthode à p. du 04.10.07)

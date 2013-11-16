@@ -1,0 +1,14 @@
+MSH|^~\&|LABOR|ENZYMLABOR|SGSC6|12547|20080602160314||ORU^R01|0806020025160314641000|P|2.2|||||||D
+PID|1|37758|001234522|001234522^37758|MUSTER^MAX^^^^Herr||19671121|M|||Mustergasse 5^^Musterdorf^^4000^|||
+ORC|RE||0806021234||CM|||||ENZYMLABOR||12547^^^^^^||||||LABSYS||
+OBR|1||0806021234|||20080530000000||||||||20080602055800||12547^^^^^^||||||20080602160314||||
+OBX|1|ST|272^Hepatitis B: anti-HBc||<0.8|MOC|<1.0||||F|||20080602160223|||
+OBX|2|ST|279^Hepatitis C: anti-HCV||<0.8|MOC|<1.0||||F|||20080602160223|||
+OBX|3|ST|400^HIV Antigen + Antikörper||negativ||||||F|||20080602160223|||
+NTE|3|L|                               Der HIV-Screening-Test der Firma Abbott deckt die
+OBX|4|ST|400II^*HIV INFO||||||||F|||20080602160223|||
+NTE|4|L|                               Antikörper gegen HIV Typ 1 und HIV Typ 2 ab, sowie das
+NTE|4|L|                               p24-Antigen.
+OBX|5|ST|461^Treponemen VDRL||negativ||<1:1||||F|||20080602160223|||
+OBX|6|ST|3225^Treponema Screen IA||<0.8|MOC|<1.0||||F|||20080602160223|||
+NTE|0|L|Schlussbericht: i.V. Matthias Kaelin (Dr. med.)

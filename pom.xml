@@ -18,6 +18,7 @@
     </profile>
   </profiles>
   <modules>
+    <module>ch.elexis.target</module>
     <module>ch.elexis.core</module>
     <module>ch.elexis.core.application</module>
     <module>ch.elexis.core.application.feature</module>
@@ -37,9 +38,12 @@
     <module>ch.elexis.core.ui.medication</module>
     <module>ch.elexis.core.ui.p2</module>
     <module>ch.elexis.core.ui.importer.div</module>
+    
+    <!-- now follow the unit tests in a more or less logical order -->
     <module>ch.rgw.utility</module>
     <module>ch.rgw.utility.tests</module>
-    <module>ch.elexis.target</module>
+    <module>ch.elexis.core.ui.importer.div.tests</module>
+    
     <!-- the ch.elexis.core.p2site creates an zipped installable application and a p2 update site -->
     <module>ch.elexis.core.p2site</module>
   </modules>

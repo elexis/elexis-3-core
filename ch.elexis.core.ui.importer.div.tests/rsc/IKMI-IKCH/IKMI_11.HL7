@@ -1,0 +1,27 @@
+MSH|^~\&|OPMED|12117|OPMED|12388|20080811192816||ORU^R01|20080811192821593|P|2.4|||||||F
+PID|1|20106430|20106430||T^K||19241217|M|||^^^^|||||
+PV1|1|O|||||||||||||||||20106430
+ORC|RE||2008.08.11.0417^IKCH||CM|||||12117||KU03^^^^^^^^^^^IKCH||||||||
+OBR|1||2008.08.11.0417^IKCH|||20080811000000|20080811170948|||||||20080811170948|10756^EDTA-Blut^IKCH|KU03^^^^^^^^^^^IKCH||||STANDARD|BLUT-CHEMIE||||||
+NTE|0|L|Probenmaterial/Präanalytik:    
+NTE|0|L|EDTA-Blut ×   
+NTE|0|L|Serum ×   
+OBX|1|NM|14592^Natrium^INLAB^2951-2^Sodium Ser/Pl-msCnc^LOINC||138|mmol/l|130-145||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|2|NM|14588^Kalium^INLAB^2823-3^Potassium SerPl-sCnc^LOINC||4.2|mmol/l|3.5-5.1||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|3|NM|14578^Chlorid^INLAB^2075-0^Chloride SerPl-sCnc^LOINC||100|mmol/l|95-113||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|4|NM|14577^Calcium^INLAB||2.2|mmol/l|2-2.6||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|5|NM|14581^Creatinin^INLAB||172|µmol/l|<115|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|6|NM|14585^Harnsäure^INLAB^14933-6^Urate SerPl-sCnc^LOINC||543|µmol/l|210-430|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|7|NM|14576^Bilirubin^INLAB||30|µmol/l|<20|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|8|NM|14539^AST^INLAB||15|U/l|<40||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|9|NM|14537^ALT^INLAB||17|U/l|<55||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|10|NM|14599^ALP^INLAB||171|U/l|53-128|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|11|NM|14535^GGT^INLAB||56|U/l|<65||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|12|NM|14593^a-Amylase Pancreas^INLAB||7|U/l|<46||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|13|NM|14595^Total Proteine^INLAB||64|g/l|63-83||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|14|NM|14580^CRP^INLAB||<1|mg/l|<8||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|15|NM|13962^BNP^INLAB||1888|ng/l|<50|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|16|NM|14584^Glucose (nü)^INLAB^14749-6^Glucose SerPl-sCnc^LOINC||5.8|mmol/l|3.9-5.6|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|17|NM|13958^TSH  (DxI)^INLAB||2.52|mU/l|0.25-4||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|18|NM|14579^Cholesterin^INLAB||2.7|mmol/l|<5.0||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|19|NM|14596^Triglyceride^INLAB||0.7|mmol/l|<1.7||||F|||||10044^^^Dr. M. Muster, Ass.|

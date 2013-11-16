@@ -1,0 +1,51 @@
+MSH|^~\&|OPMED|12106|OPMED|12388|20080808142630||ORU^R01|20080808141720234|P|2.4|||||||F
+PID|1|15769|15769||F^B||19440505|F|||Musterstr. 5a^^Musterdorf^4000^|||||
+PV1|1|O|||||||||||||||||15769
+ORC|RE||2008.08.04.4031^IKMI||CM|||||12106||ZETU^^^^^^^^^^^IKMI||||||||
+OBR|1||2008.08.04.4031^IKMI|||20080804000000|20080804115506|||||||20080804115506|14034^Nativ-Blut^IKMI|ZETU^^^^^^^^^^^IKMI||||STANDARD8|IMMUNOLOGIE||||||
+NTE|0|L|Probenmaterial/Präanalytik:    
+NTE|0|L|Nativ-Blut ×   
+NTE|0|L|
+NTE|0|L|Nachbestellung vom 07.08.2008 10:53 : Borrelia rekomb. Immunobl. IgG, Borrelia rekomb. 
+NTE|0|L|Immunobl. IgM Frau Dr. Bolliger/  (GOE)
+NTE|0|L|Borrelia rekomb. Immunobl. IgG/IgM:
+NTE|0|L| POSITIVER Immunoblot für Borrelia burgdorferi -IgM o/u -IgG:     
+NTE|0|L| - Eine Infektion mit Borrelia burgdorferi hat stattgefunden.     
+NTE|0|L| - Eine Aussage über die Aktivität der Infektion ist serologisch nicht möglich.                                                 
+NTE|0|L| - Die Indikation für eine Antibiotika-Therapie muss klinisch gestellt werden.                                               
+NTE|0|L| - Die Serologie eignet sich nur eingeschränkt zur Verlaufskontrolle (vgl. IKMI-Flyer 
+NTE|0|L|   Nr. 12 Borrelia burgdorferi Infektionen, empfohlene serologische und molekulare 
+NTE|0|L|   Diagnostik)                                                    
+NTE|0|L| - Das Ergebnis beruht auf Bewertung der IgM/IgG-Antikörper gegen folgende Borrelien Antigene:                                   
+NTE|0|L|    spezifisch: p100, VlsE, p39, p18, OSPA/C                       
+NTE|0|L|    wenig spezifisch: Flagellin p41 und p41 int                    
+NTE|0|L|
+OBX|1|NM|14541^CCP IgG^INLAB||<7|U/ml|<7-10||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|2|NM|15711^Rheumafaktoren^INLAB||3|IU/ml|<6||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|3|NM|11658^ANA Antinukleäre IgG IF^INLAB||<80|Titer|<80||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|4|NM|14503^B. burgdorferi IgG (Se), (EIA)^INLAB||14|E/ml|<5|H|||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|5|FT|14504^B. burgdorferi IgM (Se), (EIA)^INLAB||NEG||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|6|FT|13577^Borrelia rekomb. Immunobl. IgG^INLAB||pos.||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|7|FT|12084^- p100 IgG^INLAB||+||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|8|FT|13865^- VlsE^INLAB||+||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|9|FT|12085^- p41, Flagellin IgG^INLAB||++||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|10|FT|12086^- p39 IgG^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|11|FT|12087^- OspA IgG^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|12|FT|13866^- OspC IgG (B. garinii Stamm T25)^INLAB||+/-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|13|FT|13867^- OspC IgG (B. burgd. B. afzelii)^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|14|FT|13868^- OspC IgG (B. garinii Stamm 20047)^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|15|FT|12089^- p41 int. (B.garinii)^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|16|FT|12090^- p41 int. (B.afzelii)^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|17|FT|12091^- p18 IgG^INLAB||+||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|18|FT|13578^Borrelia rekomb. Immunobl. IgM^INLAB||pos.||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|19|FT|12093^- p100 IgM^INLAB||+||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|20|FT|13869^- VlsE^INLAB||+||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|21|FT|12094^- p41, Flagellin IgM^INLAB||+/-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|22|FT|12095^- p39 IgM^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|23|FT|12096^- OspA IgM^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|24|FT|13870^- OspC IgM (B. garinii Stamm T25)^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|25|FT|13871^- OspC IgM (B. burgd. B. afzelii)^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|26|FT|13872^- OspC IgM (B. garinii Stamm 20047)^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|27|FT|12098^- p41 int. (B.garinii)^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|28|FT|12099^- p41 int. (B.afzelii)^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet
+OBX|29|FT|12100^- p18 IgM^INLAB||-||||||F||||||14624^^^Frau Dr. med. vet. Muster Vet

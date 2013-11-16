@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|13000|OPMED|12346|2009072812301207||ORU^R01|2009072812301207|P|2.4|||NE|NE|||D
+PID|1||362831||Muster^Urs^^^Herr^||19590506|M|||Musterstrasse 1^^Musterdorf^^1234^||||1^deutsch|
+ORC|RE||6184.09||CM||||2009072700000000|Inst. f. biopt.u.zytol. Diagnostik||123^Muster^Arzt^^^^Dr. med.||||||||
+OBR|1||6184.09|1^||2009072700000000|2009072700000000|||||||2009072700000000||123^Muster^Arzt^^^^Dr. med.|||||||||||
+OBX|1|TX|14^Histologie||\.BR\Klinik:\.BR\Bolusgefühl im Hypopharynx; retrosternaler Druck, saures Aufstossen bei süssen Speise oder Weisswein. \.BR\Befund: Refluxösophagitis Grad II. Milde Gastritis. \.BR\Fragen:\.BR\1. Gastritis? Helicobacter pylori?\.BR\2. Refluxösophagitis, Barrett?\.BR\\.BR\Makroskopie:\.BR\1. Antrum und Corpus ventriculi: Vier bis 4 mm grosse Biopsien. \.BR\2. Distaler Oesophagus: Zwei bis 6 mm grosse Biopsien. \.BR\\.BR\Mikroskopie:\.BR\\.BR\\.BR\Diagnose\.BR\\.BR\\.BR\Kommentar:\.BR\\.BR\\.BR\Nachtragbericht:\.BR\||||||F|||2009072700000000|||

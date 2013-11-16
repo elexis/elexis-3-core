@@ -1,0 +1,28 @@
+MSH|^~\&|LAB|DIAGNOSTICA|OPMED|1498|20070827153310||ORU^R01|000000002502|P|2.3|||||||D
+PID|1|13484|552903|552903^13484|MUSTER^HELENE^^^^Frau||19360108|F|||In der Bänklen 27^^Musterdorf^^4500^|||
+ORC|RE||0708240382||CM|||||DIAGNOSTICA||1000^MUSTER^ARZT^^^|||20070824182500|||UNIGES||
+OBR|0001||0708240382|||20070824000000|20070824000000|||||||20070824182500||1000^MUSTER^ARZT^^^|||||||||F|
+NTE|0|L|Serum    
+NTE|0|L|Urinportion    
+OBX|1|ST|2800010^Eiweiss^HT||68|g/l|(60-80)||||F||Y||||
+OBX|2|ST|2980B010^  Albumin^HT||67.6|%|(59.8-72.4)||||F||Y||||
+OBX|3|ST|2980B020^  alpha-1-Globulin^HT||2.0|%|(1.0-3.2)||||F||Y||||
+OBX|4|ST|2980B030^  alpha-2-Globulin^HT||9.7|%|(7.4-12.6)||||F||Y||||
+OBX|5|ST|2980B040^  beta-Globulin^HT||10.1|%|(7.5-12.9)||||F||Y||||
+OBX|6|ST|2980B050^  gamma-Globulin^HT||10.6|%|(8.0-15.8)||||F||Y||||
+OBX|7|ST|ALGL2010^  Albumin/Globulin Quotient^HT||2.1||(1.0-2.0)|*|||F||Y||||
+NTE|7|L|Unauffällige Serum-Eiweisselektrophorese.
+OBX|8|ST|8040120^  Trübung^HT||klar ||||||F||N||||
+OBX|9|ST|8040020^  Leukozyten^HT||++ ||||||F||N||||
+OBX|10|ST|8040030^  Nitrit^HT||negativ ||||||F||N||||
+OBX|11|ST|8040040^  Urobilinogen (umol/l)^HT||normal ||||||F||N||||
+OBX|12|ST|8040050^  Protein (g/l)^HT||negativ ||||||F||N||||
+OBX|13|ST|8040060^  pH^HT||6.5||||||F||N||||
+OBX|14|ST|8040070^  Erythrozyten^HT||negativ ||||||F||N||||
+OBX|15|ST|8040080^  Spezifisches Gewicht (g/ml)^HT||1.011|g/ml|||||F||N||||
+OBX|16|ST|8040090^  Ketone (mmol/l)^HT||negativ ||||||F||N||||
+OBX|17|ST|8040100^  Bilirubin^HT||negativ ||||||F||N||||
+OBX|18|ST|8040110^  Glucose (mmol/l)^HT||negativ ||||||F||N||||
+OBX|19|ST|8040130^Sediment^HT||Leucozyten 10-25/GF ||||||F||N||||
+NTE|19|L|Erythrozyten 0-5/GF
+NTE|19|L|Plattenepithelien +

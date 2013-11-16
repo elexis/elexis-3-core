@@ -1,0 +1,48 @@
+MSH|^~\&|OPMED|12273|OPMED||20080226170559||ORU^R01|41925|P|2.4||||||8859|
+PID|1||123466|123466^|MUSTER MARTINE^||19890810|F|||-^^MUSTERDORF^^1485^|||||
+PV1|1|I|||||||||||||||||
+ORC|RE|9876|LA01234284^MOLIS|LA01234284^MOLIS|CM||^^^20080226124142^^R|||||MUSTA^^^^^^^^^^^MOLIS||||0||||
+OBR|1|9876|LA01234284^MOLIS|05^Immuno-hématologie^MOLIS||20080225|20080225|||||||20080226124142||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226124142^^R
+OBX|1|FT|ABO^Groupe sanguin^MOLIS||A||||||F|||20080226|||
+OBX|2|FT|RH^Rhésus^MOLIS||positif||||||F|||20080226|||
+OBX|3|FT|AG^Phénotype Rhésus^MOLIS||Rhésus PhénotypeCcD.Ee\.br\\.br\Autre antigèneKell négatif\.br\\.br\||||||F|||20080226|||
+OBX|4|FT|AKS^Recherche d'anticorps^MOLIS||Recherche anticorps  négative||||||F||||||
+OBR|2|9876|LA01234284^MOLIS|20^Chimie clinique^MOLIS||20080225|20080225|||||||20080226124142||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226124142^^R
+OBX|1|NM|FE^Fer^MOLIS||13.6|umol/l|6.6 - 26.0||||F|||20080226|||
+OBX|2|NM|FER^Ferritine^MOLIS||68.6|ng/ml|10.0 - 204.0||||F|||20080226|||
+OBR|3|9876|LA01234284^MOLIS|35^Endocrinologie^MOLIS||20080225|20080225|||||||20080226124142||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226124142^^R
+OBX|1|NM|TSH^TSH^MOLIS||2.40|mU/l|0.35 - 4.94||||F|||20080226|||
+OBR|4|9876|LA01234284^MOLIS|40^Sérologie^MOLIS||20080225|20080225|||||||20080226124142||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226124142^^R
+OBX|1|TX|HBVSA^Antigène HBs^MOLIS||négatif||négatif||||F||||||
+OBX|2|TX|VDRL^VDRL^MOLIS||<2|Titre|< 2||||F|||20080226|||
+OBR|5|9876|LA01234284^MOLIS|4013^Toxoplasmose^MOLIS||20080225|20080225|||||||20080226124142||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226124142^^R
+OBX|1|NM|TOXG^Toxoplasmose IgG^MOLIS||35|U/ml|||||F||||||
+NTE|1|L|< 2 négatif
+NTE|1|L|2 - 3 zone grise
+NTE|1|L|> 3 positif
+OBX|2|NM|TOXM^Toxoplasmose IgM^MOLIS||0.1|Index|||||F||||||
+NTE|2|L|< 0.5 négatif
+NTE|2|L|0.5 - 0.6 zone grise
+NTE|2|L|> 0.6 positif
+NTE|2|L|Immunité pouvant être admise (Anticorps IgG décelables, IgM négatifs).
+OBX|3|NM|RUBG^Rubéole IgG^MOLIS||37|UI/ml|||||F||||||
+NTE|3|L|< 5 négatif
+NTE|3|L|5 - 20 zone grise
+NTE|3|L|>= 20 positif
+NTE|3|L|(Attention: nouv. méthode à p. du 04.10.07)
+OBX|4|NM|RUBM^Rubéole IgM^MOLIS||0.3|Index|||||F||||||
+NTE|4|L|< 1.2 négatif
+NTE|4|L|1.2 - 1.6 zone grise
+NTE|4|L|>= 1.6 positif
+NTE|4|L|(Attention: nouv. val. de réf. à p. du 04.10.07)
+NTE|4|L|Immunité pouvant être admise (Anticorps IgG décelables, IgM négatifs).
+OBX|5|NM|CMVG^Cytomégalie IgG^MOLIS||1|U/ml|||||F||||||
+NTE|5|L|< 6 negatif
+NTE|5|L|>= 6 positif
+NTE|5|L|(Attention: nouv. méthode à p. du 04.10.07)
+NTE|5|L| 
+OBX|6|NM|CMVM^Cytomégalie IgM^MOLIS||0.25|Index|||||F||||||
+NTE|6|L|< 0.85 négatif
+NTE|6|L|0.85 - 1.00 zone grise
+NTE|6|L|>= 1.00 positif
+NTE|6|L|(Attention: nouv. méthode à p. du 04.10.07)

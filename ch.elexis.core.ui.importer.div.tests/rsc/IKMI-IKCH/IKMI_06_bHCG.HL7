@@ -1,0 +1,17 @@
+MSH|^~\&|OPMED|12117|OPMED|12388|20080804143003||ORU^R01|20080804143213250|P|2.4|||||||F
+PID|1|P007156|P007156||M^I||19721213|F|||^^^^|||||
+PV1|1|O|||||||||||||||||P007156
+ORC|RE||2008.08.04.0278^IKCH||CM|||||12117||FI01^^^^^^^^^^^IKCH||||||||
+OBR|1||2008.08.04.0278^IKCH|||20080804083000|20080804114823|||||||20080804114823|10798^Nativ-Blut^IKCH|FI01^^^^^^^^^^^IKCH||||STANDARD|BLUT-CHEMIE||||||
+NTE|0|L|Probenmaterial/Präanalytik:    
+NTE|0|L|Nativ-Blut ×   
+NTE|0|L|
+NTE|0||HCG:
+NTE|0|| Frauen (nongravid): < 5 U/l
+NTE|0|| Schwangere Frauen:  Zeit nach Konzeption:
+NTE|0||  0.2 - 1 Woche:    5 -     50 U/l       4 -  5 Wochen:  1´000 -  50´000 U/l
+NTE|0||    1 - 2 Wochen:  50 -    500 U/l       5 -  6 Wochen: 10´000 - 100´000 U/l
+NTE|0||    2 - 3 Wochen: 100 -  5´000 U/l       6 -  8 Wochen: 15´000 - 200´000 U/l
+NTE|0||    3 - 4 Wochen: 500 - 10´000 U/l       8 - 12 Wochen: 10´000 - 100´000 U/l
+NTE|0||
+OBX|1|NM|14104^ß-HCG^INLAB||0.51|U/l|||||F||||||10044^^^Dr. H.Engler, Ass.

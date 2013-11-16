@@ -1,0 +1,13 @@
+MSH|^~\&|LAB|DIAGNOSTICA|OPMED|1498|20070921151822||ORU^R01|000000002573|P|2.3|||||||D
+PID|1|25385|1688240|1688240^25385|MUSTER^DANIELA^^^^Frau||19270227|F|||Rütistr. 32^^Musterdorf^^4500^|||
+ORC|RE||0709200349||CM|||||DIAGNOSTICA||1000^MUSTER^ARZT^^^|||20070920161600|||UNIGES||
+OBR|0001||0709200349|||20070920000000|20070920000000|||||||20070920161600||1000^MUSTER^ARZT^^^|||||||||F|
+NTE|0|L|Serum    
+OBX|1|ST|2800010^Eiweiss^HT||66|g/l|(60-80)||||F||Y||||
+OBX|2|ST|2980B010^  Albumin^HT||66.4|%|(59.8-72.4)||||F||Y||||
+OBX|3|ST|2980B020^  alpha-1-Globulin^HT||2.9|%|(1.0-3.2)||||F||Y||||
+OBX|4|ST|2980B030^  alpha-2-Globulin^HT||12.4|%|(7.4-12.6)||||F||Y||||
+OBX|5|ST|2980B040^  beta-Globulin^HT||9.8|%|(7.5-12.9)||||F||Y||||
+OBX|6|ST|2980B050^  gamma-Globulin^HT||8.5|%|(8.0-15.8)||||F||Y||||
+OBX|7|ST|ALGL2010^  Albumin/Globulin Quotient^HT||2.0||(1.0-2.0)||||F||Y||||
+NTE|7|L|Unauffällige Serum-Eiweisselektrophorese.

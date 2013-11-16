@@ -1,0 +1,34 @@
+MSH|^~\&|LABOR|ENZYMLABOR|IEFG0|12333|20080603114426||ORU^R01|0806030685114426353000|P|2.2|||||||D
+PID|1|6859|001451234|001451234^6859|MUSTER^REMO^^^^Herr||19440601|M|||Musterstrasse 8^^Musterdorf^^4000^|||
+ORC|RE||0806031234||CM|||||ENZYMLABOR||12333^^^^^^||||||LABSYS||
+OBR|1||0806031234|||20080602080000||||||||20080603072600||12333^^^^^^||||||20080603114426||||
+OBX|1|ST|111^LDH||134|U/l|<232||||F|||20080603114349|||
+OBX|2|ST|121^ASAT / GOT||22|U/l|<41||||F|||20080603114349|||
+OBX|3|ST|122^ALAT / GPT||23|U/l|<41||||F|||20080603114349|||
+OBX|4|ST|124^CK Creatin-Kinase||70|U/l|50-200||||F|||20080603114349|||
+OBX|5|ST|131^AP||84|U/l|<160||||F|||20080603114349|||
+OBX|6|ST|141^Cholinesterase||8.7|kU/l|5.4-13.2||||F|||20080603114349|||
+OBX|7|ST|143^P-Amylase||23|U/l|8-53||||F|||20080603114349|||
+OBX|8|ST|133^Lipase||18|U/l|8-78||||F|||20080603114349|||
+OBX|9|ST|144^Gamma-GT||14|U/l|<49||||F|||20080603114349|||
+OBX|10|ST|162^Triglyceride||0.98|mmol/l|<2.00||||F|||20080603114349|||
+OBX|11|ST|163^Cholesterin||4.72|mmol/l|<5.00||||F|||20080603114349|||
+OBX|12|ST|166^HDL-Cholesterin||1.32|mmol/l|>1.00||||F|||20080603114349|||
+OBX|13|ST|166  020^Cholesterin/HDL-Cholesterin||3.6||<5.0||||F|||20080603114349|||
+OBX|14|ST|171^Bilirubin gesamt||13.7|mcmol/l|<22.2||||F|||20080603114349|||
+OBX|15|ST|173^Harnstoff||7.8|mmol/l|2.4-8.3||||F|||20080603114349|||
+OBX|16|ST|174^Harnsäure||256|mcmol/l|<422||||F|||20080603114349|||
+OBX|17|ST|181^Creatinin||90|mcmol/l|<123||||F|||20080603114349|||
+OBX|18|ST|182^Glucose||5.3|mmol/l|3.9-5.8) nüchtern||||F|||20080603114349|||
+OBX|19|ST|191^Natrium||140|mmol/l|135-150||||F|||20080603114349|||
+OBX|20|ST|192^Kalium||4.0|mmol/l|3.5-5.5||||F|||20080603114349|||
+OBX|21|ST|193^Calcium||2.30|mmol/l|2.25-2.70||||F|||20080603114349|||
+OBX|22|ST|19350^Albumin-korrigiertes Calcium||2.23|mmol/l|||||F|||20080603114349|||
+OBX|23|ST|202^Eiweiss||68|g/l|63-83||||F|||20080603114349|||
+OBX|24|ST|204^Albumin||43|g/l|38-54||||F|||20080603114349|||
+OBX|25|ST|211^Eisen||18.6|mcmol/l|7.1-21.4||||F|||20080603114349|||
+OBX|26|ST|215^Ferritin||83|mcg/l|20-300 / 20-50 (Grenzbereich) / 100-120 (Optimalbereich)||||F|||20080603114349|||
+OBX|27|ST|245^CRP C-reaktives Protein||<5.0|mg/l|<9.0||||F|||20080603114349|||
+OBX|28|ST|226^TSH Thyreotropin basal||2.228|mU/l|0.200-4.230||||F|||20080603114349|||
+OBX|29|ST|331^PSA Prostata-Spez. Antigen||8.30|ng/ml|<4.00|*|||F|||20080603114349|||
+NTE|0|L|Schlussbericht: i.V. Max Muster (Dr. med.)

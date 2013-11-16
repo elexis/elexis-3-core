@@ -1,0 +1,28 @@
+MSH|^~\&|OPMED|12342|OPMED|15572|20080130133300||ORU^R01|0801301333000001|P|2.2|||||||D
+PID|1|2991|00123108|00105108^2991|Muster^Nava^^^^||19721001|||||||||
+ORC|||60470943^280108||CM|||||LG1||mustra5|||20080128173400|||N2_LABOR^001||
+OBR|1||60470943^280108|||20080128|20080128|||||||||mustra5|||||||||||
+OBX|1|TX|hb^Hämoglobin^HT||14.0|g/dl|12.3 - 15.8||||F|||20080130133300|||
+OBX|2|TX|hk^Hämatokrit^HT||42|%|37 - 47||||F|||20080130133300|||
+OBX|3|TX|ec^Erythrozyten^HT||4.66|Mio./mm³|4.00 - 5.20||||F|||20080130133300|||
+OBX|4|TX|mcv^  MCV^HT||91|fl|80 - 100||||F|||20080130133300|||
+OBX|5|TX|mch^  MCH^HT||30|pg|26 - 34||||F|||20080130133300|||
+OBX|6|TX|mchc^  MCHC^HT||33|g/dl|31 - 36||||F|||20080130133300|||
+OBX|7|TX|rdw^  RDW-SD^HT||43|fl|37 - 46||||F|||20080130133300|||
+OBX|8|TX|tc^Thrombozyten^HT||213|x1000/mm³|150 - 400||||F|||20080130133300|||
+OBX|9|TX|lc^Leukozyten^HT||5.4|x1000/mm³|3.7 - 9.6||||F|||20080130133300|||
+OBX|10|TX|na^Natrium^HT||140|mmol/l|135 - 147||||F|||20080130133300|||
+OBX|11|TX|k^Kalium^HT||3.9|mmol/l|3.5 - 5.1||||F|||20080130133300|||
+OBX|12|TX|bg^Bilirubin, gesamt^HT||5.0|mcmol/l|3.4 - 17.0||||F|||20080130133300|||
+OBX|13|TX|bdi^Bilirubin, direkt^HT||1.3|mcmol/l|< 3.4||||F|||20080130133300|||
+OBX|14|TX|krea2^Kreatinin^HT||70|mcmol/l|44 - 80||||F|||20080130133300|||
+OBX|15|TX|glpo^Glukose postprandial^HT||5.5|mmol/l|3.8 - 7.8||||F|||20080130133300|||
+OBX|16|TX|got^GOT (ASAT)^HT||21|U/l|10 - 30||||F|||20080130133300|||
+OBX|17|TX|gpt^GPT (ALAT)^HT||14|U/l|10 - 36||||F|||20080130133300|||
+OBX|18|TX|ggt^GGT (Gamma-glut.-transf.)^HT||76|U/l|7 - 32|*|||F|||20080130133300|||
+OBX|19|TX|hatz^Hepatitis A - AK IgG/IgM^HT||> 50|IE/L|< 20||||F|||20080130133300|||
+OBX|20|TX|hcv^Hepatitis C - AK^HT||negativ||negativ||||F|||20080130133300|||
+OBX|21|TX|hivc^HIV Combi (p24 AG+I/II AK)^HT||negativ||negativ||||F|||20080130133300|||
+NTE|21|L|Mit Hilfe des HIV Combi Tests kann eine Infektion frühestens 15 Tage
+NTE|21|L|nach dem Infektionszeitpunkt nachgewiesen werden. Im negativen Fall
+NTE|21|L|soll der Test 3 Monate nach einem Ereignis nochmals wiederholt werden.

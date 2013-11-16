@@ -1,0 +1,15 @@
+MSH|^~\&|OPMED|12342|OPMED|15476|20080130135835||ORU^R01|0801301358350001|P|2.2|||||||D
+PID|1|19608|00123476|00120476^19608|Muster^Ibrahim^^^^||19660623|||||||||
+ORC|||60471306^290108||CM|||||LG1||mustra3|||20080129150800|||N2_LABOR^001||
+OBR|1||60471306^290108|||20080129|20080129|||||||||mustra3|||||||||||
+OBX|1|TX|ferr^Ferritin^HT||184|mcg/l|30 - 400||||F|||20080130135800|||
+OBX|2|TX|ham^Hepatitis A - AK IgM^HT||negativ||negativ||||F|||20080130135800|||
+OBX|3|TX|sag^Hepatitis B-s-AG^HT||positiv||negativ|*|||F|||20080130135800|||
+OBX|4|TX|corg^Hepatitis B-c-AK IgG/IgM^HT||positiv||negativ||||F|||20080130135800|||
+OBX|5|TX|hcv^Hepatitis C - AK^HT||negativ||negativ||||F|||20080130135800|||
+OBX|6|TX|sak^Hepatitis B-s-AK^HT||< 2|IE/L|< 10||||F|||20080130135800|||
+OBX|7|TX|corm^Hepatitis B-c-AK IgM^HT||negativ||negativ||||F|||20080130135800|||
+NTE|7|L|Befund spricht für chronische HBV-Infektion resp.chronisches HBs-AG-
+NTE|7|L|Trägertum (HBs-Antigen positiv, HBc-IgM negativ) Beweisend für eine
+NTE|7|L|chronische Infektion (resp.Trägertum) ist der Nachweis von HBs-Antigen
+NTE|7|L|über mehr als 6 Monate.

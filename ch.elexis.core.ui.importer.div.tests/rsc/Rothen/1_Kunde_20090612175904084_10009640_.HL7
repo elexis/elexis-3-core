@@ -1,0 +1,9 @@
+MSH|^~\&|OPMED|12273|OPMED||200906121753||ORU^R01|20090612175904084|P|2.3|||||||
+PID|1||911011129|911011200|Muster^Vincenzo^^^^^^^Herr||19510220|M||||||||
+ORC|RE||10009640||CM||^^^000000000000^^R||200906100911|LARO||ROTC^Rothen, Claude|||200906100848||||^^^^^^^^~^^^^^^^^|
+NTE|0||Bürgerspital Solothurn
+NTE|0||Bürgerspital Solothurn
+OBR|1||10009640|calp_B^Calprotectin||200906100848|200906100848|||||||200906100848|||||||||||||
+OBX|1|ST|calp_B^Calprotectin||153.0|µg/Gramm|0 - 50|H|||F|||200906101653|||
+OBR|2||10009640|osmosS_B^Osmolalität im Stuhl||200906100848|200906100848|||||||200906100848|||||||||||||
+OBX|1|ST|osmosS_B^Osmolalität im Stuhl||445|mosmol/kg|280 - 300|H|||F|||200906101624|||

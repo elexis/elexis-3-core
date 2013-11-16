@@ -1,0 +1,17 @@
+MSH|^~\&|OPMED|12273|OPMED||20080226170558||ORU^R01|41924|P|2.4||||||8859|
+PID|1||1236|1236^|MUSTER SOPHIE^||19550501|F|||RTE DU TEST 15^^TESTVILLE^^1458^|||||
+PV1|1|I|||||||||||||||||
+ORC|RE|7894|LA12345283^MOLIS|LA12345283^MOLIS|CM||^^^20080226124100^^R|||||MUSTA^^^^^^^^^^^MOLIS||||0||||
+OBR|1|7894|LA12345283^MOLIS|05^Immuno-hématologie^MOLIS||20080226093000|20080226093000|||||||20080226124100||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226124100^^R
+OBX|1|FT|AKS^Recherche d'anticorps^MOLIS||Recherche anticorps  négative||||||F||||||
+OBR|2|7894|LA12345283^MOLIS|40^Sérologie^MOLIS||20080226093000|20080226093000|||||||20080226124100||MUSTA^^^^^^^^^^^MOLIS|||||||||||^^^20080226124100^^R
+OBX|1|NM|CMVG^Cytomégalie IgG^MOLIS||<1|U/ml|||||F|||20080226|||
+NTE|1|L|< 6 negatif
+NTE|1|L|>= 6 positif
+NTE|1|L|(Attention: nouv. méthode à p. du 04.10.07)
+NTE|1|L| 
+OBX|2|NM|CMVM^Cytomégalie IgM^MOLIS||0.21|Index|||||F|||20080226|||
+NTE|2|L|< 0.85 négatif
+NTE|2|L|0.85 - 1.00 zone grise
+NTE|2|L|>= 1.00 positif
+NTE|2|L|(Attention: nouv. méthode à p. du 04.10.07)

@@ -1,0 +1,32 @@
+MSH|^~\&|OPMED|12119|OPMED|12596|20070818095708||ORU^R01|0708180957080002|P|2.2|||||||D
+PID|1|1829|184539|184539^|MUSTER^NATHALIE^^^^||19240604|W||||||||
+ORC|||1561821^170807||CM|||||RISCH||MUST|||20070817171700|||N2_LABOR^001||
+OBR|1||1561821^170807|||200708171400|200708171400|||||||||MUST|||||||||||
+NTE|0||
+NTE|0||TEIL- bzw. END-Befund wurde am 18.08.07 um 09:57 elektron. übermittelt.
+OBX|1|TX|URIN^U R I N - A N A L Y S E N^HT||||||||F|||20070818095700|||
+NTE|1|L|Urin in nicht sterilem Transportmedium eingesandt
+OBX|2|TX|SEEC^  Erythrozyten^HT||4-6|/Feld|0 - 1|*|||F|||20070818095700|||
+OBX|3|TX|SELC^  Leukozyten^HT||8-10|/Feld|1 - 4|*|||F|||20070818095700|||
+OBX|4|TX|SEPE^  Plattenepithelien^HT||mässig|/Feld|||||F|||20070818095700|||
+OBX|5|TX|SERE^  Rundepithelien^HT||wenig|/Feld|||||F|||20070818095700|||
+OBX|6|TX|SEBA^  Bakterien^HT||mässig|/Feld|||||F|||20070818095700|||
+OBX|7|TX|STAAUS^  Aussehen^HT||||||||F|||20070818095700|||
+NTE|7|L|hellgelb, leicht trüb
+OBX|8|TX|STSG^  Spezifisches Gewicht^HT||1.005|g/l|1.000 - 1.040||||F|||20070818095700|||
+OBX|9|TX|STPH^  pH^HT||6.5||4.5 - 8.0||||F|||20070818095700|||
+OBX|10|TX|STEI^  Eiweiss^HT||positiv||negativ|*|||F|||20070818095700|||
+OBX|11|TX|STEIS^^HT||25|mg/dl|< 30||||F|||20070818095700|||
+OBX|12|TX|STGL^  Glucose^HT||negativ||negativ||||F|||20070818095700|||
+OBX|13|TX|STKK^  Ketonkörper^HT||negativ||negativ||||F|||20070818095700|||
+OBX|14|TX|STUB^  Urobilinogen^HT||normal||normal||||F|||20070818095700|||
+OBX|15|TX|STBI^  Bilirubin^HT||negativ||negativ||||F|||20070818095700|||
+OBX|16|TX|STNI^  Nitrit^HT||negativ||negativ||||F|||20070818095700|||
+OBX|17|TX|STEC^^HT||150|/µl|< 4|*|||F|||20070818095700|||
+OBX|18|TX|STLC^^HT||500|/µl|< 10|*|||F|||20070818095700|||
+OBX|19|TX|U^Urin^HT||$||||||F|||20070818095700|||
+OBX|20|TX|STATPP^Status postprandial^HT||$||||||F|||20070818095700|||
+OBX|21|TX|KOMM^Kommentar:^HT||||||||F|||20070818095700|||
+NTE|21|L|Werte mit Vorbehalt, da kein steriles Gefäss als
+OBX|22|TX|SESO^  Sonstige Bestandteile^HT|||/Feld|||||F|||20070818095700|||
+NTE|22|L|mässig Schleim

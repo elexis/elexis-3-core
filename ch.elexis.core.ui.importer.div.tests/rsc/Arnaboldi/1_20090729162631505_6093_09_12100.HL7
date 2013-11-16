@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|13000|OPMED|12100|2009072412301207||ORU^R01|2009072412301207|P|2.4|||NE|NE|||D
+PID|1|11296|346172||Muster^Virgil^^^Herr^||19451218|M|||Musterstrasse 1^^Musterdorf^^1234^||||1^deutsch|
+ORC|RE||6093.09||CM||||2009072300000000|Inst. f. biopt.u.zytol. Diagnostik||123^Muster^Arzt^^^^Dr. med.||||||||
+OBR|1||6093.09|1^||2009072300000000|2009072300000000|||||||2009072300000000||123^Muster^Arzt^^^^Dr. med.|||||||||||
+OBX|1|TX|14^Histologie||Klinik:\.br\Gehäuft Magenkarzinome in der Familie. \.BR\Makroskopie:\.br\Magen: Multiple bis 3 mm grosse Biopsien. \.BR\Mikroskopie:\.br\\.BR\Diagnose\.br\\.BR\Kommentar:\.br\\.BR\Nachtragbericht:\.br\||||||F|||2009072300000000|||

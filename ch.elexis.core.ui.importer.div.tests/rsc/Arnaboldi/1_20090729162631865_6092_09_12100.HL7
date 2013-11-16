@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|13000|OPMED|12100|2009072412301207||ORU^R01|2009072412301207|P|2.4|||NE|NE|||D
+PID|1||362782||Muster^Stefan^^^Herr^||19840513|M|||Musterstrasse 1^^Musterdorf^^1234^||||1^deutsch|
+ORC|RE||6092.09||CM||||2009072300000000|Inst. f. biopt.u.zytol. Diagnostik||123^Muster^Arzt^^^^Dr. med.||||||||
+OBR|1||6092.09|1^||2009072300000000|2009072300000000|||||||2009072300000000||123^Muster^Arzt^^^^Dr. med.|||||||||||
+OBX|1|TX|14^Histologie||Klinik:\.br\Gewichtsverlust und Diarrhoe. Ausschluss Sprue. \.BR\Makroskopie:\.br\Duodenum: Vier bis 3 mm grosse Biopsien. Lupenmikroskopisch Oberflächenmuster 0.\.BR\Mikroskopie:\.br\\.BR\Diagnose\.br\Biopsien aus dem Duodenum: \.BR\Entzündungsfreie, regulär strukturierte Duodenalschleimhaut ohne signifikanten histopathologischen Befund.\.BR\Kommentar:\.br\In der Duodenalschleimhaut ergeben sich keine Hinweise auf eine Sprue resp. Zöliakie oder auf einen Morbus Whipple. Lamblien werden nicht nachgewiesen.\.BR\Kein Dysplasie- und kein Malignitätsnachweis.\.BR\Nachtragbericht:\.br\||||||F|||2009072300000000|||

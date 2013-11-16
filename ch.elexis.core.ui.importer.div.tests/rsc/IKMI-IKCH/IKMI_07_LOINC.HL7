@@ -1,0 +1,25 @@
+MSH|^~\&|OPMED|12117|OPMED|12388|20080811192758||ORU^R01|20080811192821828|P|2.4|||||||F
+PID|1|20040604|20040604||W^M||19440630|F|||^^^^|||||
+PV1|1|O|||||||||||||||||20040604
+ORC|RE||2008.08.11.0413^IKCH||CM|||||12117||ST28^^^^^^^^^^^IKCH||||||||
+OBR|1||2008.08.11.0413^IKCH|||20080811000000|20080811161947|||||||20080811161947|10844^Serum^IKCH|ST28^^^^^^^^^^^IKCH||||STANDARD|BLUT-CHEMIE||||||
+NTE|0|L|Probenmaterial/Präanalytik:    
+NTE|0|L|Serum ×   
+OBX|1|NM|14592^Natrium^INLAB^2951-2^Sodium Ser/Pl-msCnc^LOINC||135|mmol/l|130-145||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|2|NM|14588^Kalium^INLAB^2823-3^Potassium SerPl-sCnc^LOINC||3.5|mmol/l|3.5-5.1||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|3|NM|14578^Chlorid^INLAB^2075-0^Chloride SerPl-sCnc^LOINC||101|mmol/l|95-113||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|4|NM|14577^Calcium^INLAB||2.2|mmol/l|2-2.6||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|5|NM|14581^Creatinin^INLAB||49|µmol/l|<95||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|6|NM|14585^Harnsäure^INLAB^14933-6^Urate SerPl-sCnc^LOINC||334|µmol/l|150-360||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|7|NM|14576^Bilirubin^INLAB||13|µmol/l|<20||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|8|NM|14539^AST^INLAB||61|U/l|<40|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|9|NM|14537^ALT^INLAB||83|U/l|<55|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|10|NM|14599^ALP^INLAB||71|U/l|42-98||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|11|NM|14535^GGT^INLAB||24|U/l|<35||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|12|NM|14593^a-Amylase Pancreas^INLAB||23|U/l|<46||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|13|NM|14595^Total Proteine^INLAB||61|g/l|63-83|L|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|14|NM|14584^Glucose (nü)^INLAB^14749-6^Glucose SerPl-sCnc^LOINC||8.5|mmol/l|3.9-5.6|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|15|NM|14579^Cholesterin^INLAB||7.3|mmol/l|<5.0|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|16|NM|14596^Triglyceride^INLAB||1.4|mmol/l|<1.7||||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|17|NM|14100^CEA^INLAB||13.7|µg/l|<3|H|||F|||||10044^^^Dr. M. Muster, Ass.|
+OBX|18|NM|14102^CA 15-3^INLAB||50.3|kU/l|<27|H|||F|||||10044^^^Dr. M. Muster, Ass.|
