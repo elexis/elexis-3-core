@@ -38,7 +38,7 @@
     <module>ch.elexis.core.ui.p2</module>
     <module>ch.elexis.core.ui.importer.div</module>
     <module>ch.rgw.utility</module>
-    <module>ch.rgw.utility_test</module>
+    <module>ch.rgw.utility.tests</module>
     <module>ch.elexis.target</module>
     <!-- the ch.elexis.core.p2site creates an zipped installable application and a p2 update site -->
     <module>ch.elexis.core.p2site</module>
@@ -58,11 +58,11 @@
         <artifactId>tycho-p2-plugin </artifactId>
         <version>${tycho-version}</version>
         <configuration>
-          <baselineMode>warn </baselineMode>
-          <baselineReplace>none </baselineReplace>
+          <baselineMode>warn</baselineMode>
+          <baselineReplace>none</baselineReplace>
           <baselineRepositories>
             <repository>
-              <url>http://download.eclipse.org/eclipse/updates/3.8 </url>
+              <url>http://download.eclipse.org/eclipse/updates/3.8</url>
             </repository>
           </baselineRepositories>
           <executions>
