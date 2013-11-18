@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.application.advisors.ApplicationWorkbenchAdvisor;
-import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
@@ -65,18 +64,7 @@ public class Desk implements IApplication {
 		}
 		
 		// care for log-in
-		String username = System.getProperty("ch.elexis.username");
-		String password = System.getProperty("ch.elexis.password");
-		if (username != null && password != null) {
-			log.error("Bypassing LoginDialog with username " + username);
-			if (!Anwender.login(username, password)) {
-				log.error("Authentication failed. Exiting");
-			}
-		} else {
-			cod.performLogin(UiDesk.getDisplay().getActiveShell());
-		}
-		
-		// check if there is a valid user
+		cod.performLogin(UiDesk.getDisplay().getActiveShell());
 		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
 			// no valid user, exit (don't consider this as an error)
 			log.warn("Exit because no valid user logged-in"); //$NON-NLS-1$

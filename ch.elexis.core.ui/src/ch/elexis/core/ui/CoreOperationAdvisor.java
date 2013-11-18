@@ -14,6 +14,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.Anwender;
@@ -75,11 +77,22 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	@Override
 	public void performLogin(Object shell){
-		LoginDialog dlg = new LoginDialog((Shell) shell);
-		dlg.create();
-		dlg.getShell().setText(Messages.LoginDialog_loginHeader);
-		dlg.setTitle(Messages.LoginDialog_notLoggedIn);
-		dlg.setMessage(Messages.LoginDialog_enterUsernamePass);
-		dlg.open();
+		Logger log = LoggerFactory.getLogger(CoreOperationAdvisor.class);
+		String username = System.getProperty("ch.elexis.username");
+		String password = System.getProperty("ch.elexis.password");
+		if (username != null && password != null) {
+			log.error("Bypassing LoginDialog with username " + username);
+			if (!Anwender.login(username, password)) {
+				log.error("Authentication failed. Exiting");
+			}
+		}		
+		else {
+			LoginDialog dlg = new LoginDialog((Shell) shell);
+			dlg.create();
+			dlg.getShell().setText(Messages.LoginDialog_loginHeader);
+			dlg.setTitle(Messages.LoginDialog_notLoggedIn);
+			dlg.setMessage(Messages.LoginDialog_enterUsernamePass);
+			dlg.open();
+		}
 	}
 }
