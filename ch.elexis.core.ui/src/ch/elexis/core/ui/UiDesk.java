@@ -124,6 +124,9 @@ public class UiDesk {
 	}
 	
 	public static void updateFont(String cfgName){
+		Display display = Display.getCurrent();
+		if (display == null)
+			return;
 		FontRegistry fr = JFaceResources.getFontRegistry();
 		FontData[] fd =
 			PreferenceConverter.getFontDataArray(new SettingsPreferenceStore(CoreHub.userCfg),
