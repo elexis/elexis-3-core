@@ -18,9 +18,12 @@ import java.io.ObjectStreamClass;
 
 /**
  * For compatibility reasons only, avoids unfolding and class de-serialization errors in
- * {@link PersistentObject#fold}
+ * {@link PersistentObject#fold}. See discussion on <i>now unsupported data types in extinfo in
+ * Elexis3</i> in elexis develop mailing list.
  * 
  * @since 3.0.0
+ * 
+ *        mailinglist
  */
 public class CompatibleObjectInputStream extends ObjectInputStream {
 	
