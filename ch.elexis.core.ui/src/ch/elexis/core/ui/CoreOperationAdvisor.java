@@ -33,6 +33,7 @@ import ch.elexis.core.ui.wizards.DBConnectWizard;
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	public String initialPerspectiveString;
+	private static Logger log;
 	
 	@Override
 	public void requestDatabaseConnectionConfiguration(){
@@ -77,10 +78,16 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	@Override
 	public void performLogin(Object shell){
-		Logger log = LoggerFactory.getLogger(CoreOperationAdvisor.class);
+		if (log == null)
+			log = LoggerFactory.getLogger(CoreOperationAdvisor.class);
 		String username = System.getProperty("ch.elexis.username");
 		String password = System.getProperty("ch.elexis.password");
 		if (username != null && password != null) {
+			/* Allow bypassing the login dialog, eg. for automated GUI-tests.
+			 * Example: when having a demoDB you may login directly by passing
+			 * -vmargs -Dch.elexis.username=test -Dch.elexis.password=test 
+			 * as command line parameters to elexis.
+			 */
 			log.error("Bypassing LoginDialog with username " + username);
 			if (!Anwender.login(username, password)) {
 				log.error("Authentication failed. Exiting");

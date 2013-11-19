@@ -62,6 +62,10 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * Required Post-Condition: {@link CoreHub#actUser} and {@link CoreHub#actMandant} have to
 	 * contain valid elements.
 	 * 
+	 * UI-useage: Presents either the user a dialog prompting for username/password or
+	 * uses the System.properties ch.elexis.username and ch.elexis.password to 
+	 * bypass the login dialog. The second is needed for automated GUI tests.
+	 * 
 	 * @param shell
 	 *            and object castable to org.eclipse.swt.widgets.Shell
 	 */
