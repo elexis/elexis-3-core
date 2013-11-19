@@ -16,6 +16,12 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 
+/**
+ * For compatibility reasons only, avoids unfolding and class de-serialization errors in
+ * {@link PersistentObject#fold}
+ * 
+ * @since 3.0.0
+ */
 public class CompatibleObjectInputStream extends ObjectInputStream {
 	
 	public CompatibleObjectInputStream(InputStream arg0) throws IOException{
