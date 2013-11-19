@@ -33,7 +33,7 @@ import ch.elexis.core.ui.wizards.DBConnectWizard;
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	public String initialPerspectiveString;
-	private static Logger log;
+	private Logger log = LoggerFactory.getLogger(CoreOperationAdvisor.class);
 	
 	@Override
 	public void requestDatabaseConnectionConfiguration(){
@@ -78,8 +78,6 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	@Override
 	public void performLogin(Object shell){
-		if (log == null)
-			log = LoggerFactory.getLogger(CoreOperationAdvisor.class);
 		String username = System.getProperty("ch.elexis.username");
 		String password = System.getProperty("ch.elexis.password");
 		if (username != null && password != null) {
