@@ -20,7 +20,8 @@ Wird diese Extension implementiert, dann erscheint eine DropDownIcon auf dem Lab
       </annotation>
       <complexType>
          <sequence>
-            <element ref="Importer"/>
+            <element ref="Importer" minOccurs="0" maxOccurs="1"/>
+            <element ref="ExternOrder" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -71,6 +72,30 @@ Wird diese Extension implementiert, dann erscheint eine DropDownIcon auf dem Lab
       </complexType>
    </element>
 
+   <element name="ExternOrder">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexiscore.ui.util.IExternLaborOrder"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
    <annotation>
       <appInfo>
          <meta.section type="since"/>
@@ -86,15 +111,6 @@ Wird diese Extension implementiert, dann erscheint eine DropDownIcon auf dem Lab
       </appInfo>
       <documentation>
          [Enter extension point usage example here.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         [Enter API information here.]
       </documentation>
    </annotation>
 

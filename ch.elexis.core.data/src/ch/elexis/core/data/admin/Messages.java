@@ -66,6 +66,7 @@ public class Messages extends NLS {
 	public static String AccessControlDefaults_main_consultation;
 	public static String AccessControlDefaults_main_Patient;
 	public static String AccessControlDefaults_mandator;
+	public static String AccessControlDefaults_mergeLabItems;
 	public static String AccessControlDefaults_modify;
 	public static String AccessControlDefaults_modify2;
 	public static String AccessControlDefaults_modify3;

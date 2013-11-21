@@ -19,6 +19,8 @@ import java.util.List;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.part.ViewPart;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -49,10 +51,54 @@ public class LaborblattView extends ViewPart implements ICallback {
 		
 	}
 	
+	public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows){
+		Brief br =
+			text.createFromTemplateName(Konsultation.getAktuelleKons(),
+				Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null);
+		if (br == null) {
+			return false;
+		}
+		Tree tree = rows[0].getParent();
+		int cols = tree.getColumnCount();
+		int[] colsizes = new int[cols];
+		float first = 25;
+		float second = 10;
+		if (cols > 2) {
+			int rest = Math.round((100f - first - second) / (cols - 2f));
+			for (int i = 2; i < cols; i++) {
+				colsizes[i] = rest;
+			}
+		}
+		colsizes[0] = Math.round(first);
+		colsizes[1] = Math.round(second);
+		
+		LinkedList<String[]> usedRows = new LinkedList<String[]>();
+		usedRows.add(header);
+		for (int i = 0; i < rows.length; i++) {
+			boolean used = false;
+			String[] row = new String[cols];
+			for (int j = 0; j < cols; j++) {
+				row[j] = rows[i].getText(j);
+				if ((j > 1) && (row[j].length() > 0)) {
+					used = true;
+					// break;
+				}
+			}
+			if (used == true) {
+				usedRows.add(row);
+			}
+		}
+		String[][] fld = usedRows.toArray(new String[0][]);
+		boolean ret = text.getPlugin().insertTable("[Laborwerte]", //$NON-NLS-1$
+			ITextPlugin.FIRST_ROW_IS_HEADER, fld, colsizes);
+		text.saveBrief(br, Brief.LABOR);
+		return ret;
+	}
+	
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows){
 		Brief br =
 			text.createFromTemplateName(Konsultation.getAktuelleKons(),
-				Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null); //$NON-NLS-1$
+				Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null);
 		if (br == null) {
 			return false;
 		}
@@ -96,11 +142,11 @@ public class LaborblattView extends ViewPart implements ICallback {
 	@SuppressWarnings("unchecked")
 	public boolean createLaborblatt(Patient pat, Document doc){
 		/* Brief br= */text.createFromTemplateName(Konsultation.getAktuelleKons(),
-			Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null); //$NON-NLS-1$
+			Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null);
 		
 		ArrayList<String[]> rows = new ArrayList<String[]>();
 		Element root = doc.getRootElement();
-		String druckdat = root.getAttributeValue(Messages.LaborblattView_created); //$NON-NLS-1$
+		String druckdat = root.getAttributeValue(Messages.LaborblattView_created);
 		Element daten = root.getChild("Daten"); //$NON-NLS-1$
 		List datlist = daten.getChildren();
 		int cols = datlist.size() + 1;

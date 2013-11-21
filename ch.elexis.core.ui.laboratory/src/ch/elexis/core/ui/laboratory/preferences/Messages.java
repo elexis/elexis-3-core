@@ -136,6 +136,9 @@ public class Messages extends NLS {
 	public static String LaborPrefs_type;
 	public static String LaborPrefs_unit;
 	public static String LaborPrefs_unkown;
+	public static String LaborPrefs_labMergeParams;
+	public static String LaborPrefs_mergeLabItems;
+	public static String LaborPrefs_importLabMapping;
 	public static String LagerverwaltungPrefs_checkForInvalid;
 	public static String LagerverwaltungPrefs_orderCriteria;
 	public static String LagerverwaltungPrefs_orderWhenAtMin;

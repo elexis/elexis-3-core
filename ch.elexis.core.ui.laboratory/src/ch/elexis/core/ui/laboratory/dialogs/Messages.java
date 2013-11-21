@@ -14,52 +14,49 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.laboratory.dialogs.messages";//$NON-NLS-1$
 	
-	public static String LaborPrefs_34;
-	public static String LaborPrefs_35;
-	public static String LaborPrefs_36;
-	public static String LaborPrefs_37;
-	public static String LaborPrefs_38;
-	public static String LaborPrefs_39;
-	public static String LaborPrefs_40;
-	public static String LaborPrefs_41;
-	public static String LaborPrefs_42;
-	public static String LaborPrefs_43;
-	public static String LaborPrefs_44;
-	public static String LaborPrefs_45;
-	public static String LaborPrefs_46;
-	public static String LaborPrefs_47;
-	public static String LaborPrefs_48;
-	public static String LaborPrefs_49;
-	public static String LaborPrefs_50;
-	public static String LaborPrefs_51;
-	public static String LaborPrefs_52;
-	public static String LaborPrefs_absolute;
-	public static String LaborPrefs_alpha;
-	public static String LaborPrefs_deleteAllExplain;
-	public static String LaborPrefs_deleteAllItems;
-	public static String LaborPrefs_deleteItem;
-	public static String LaborPrefs_deleteReallyAllItems;
-	public static String LaborPrefs_document;
-	public static String LaborPrefs_enterNewLabParam;
-	public static String LaborPrefs_formula;
-	public static String LaborPrefs_hintExportTag;
-	public static String LaborPrefs_lab;
-	public static String LaborPrefs_labParam;
-	public static String LaborPrefs_labParams;
-	public static String LaborPrefs_labTitle;
-	public static String LaborPrefs_labValue;
-	public static String LaborPrefs_lblExportTag;
-	public static String LaborPrefs_name;
-	public static String LaborPrefs_numeric;
-	public static String LaborPrefs_pleaseEditParam;
-	public static String LaborPrefs_pleaseEnterLabParam;
-	public static String LaborPrefs_refF;
-	public static String LaborPrefs_refM;
-	public static String LaborPrefs_short;
-	public static String LaborPrefs_sortmode;
-	public static String LaborPrefs_type;
-	public static String LaborPrefs_unit;
-	public static String LaborPrefs_unkown;
+	public static String ImportLabMapping_errorNotFound;
+	public static String ImportLabMapping_errorProblems;
+	public static String ImportLabMapping_message;
+	public static String ImportLabMapping_selectFile;
+	public static String ImportLabMapping_shellTitle;
+	public static String ImportLabMapping_title;
+	public static String ImportLabMapping_titleProblemDialog;
+	
+	public static String EditLabResultDialog_errorNoResult;
+	public static String EditLabResultDialog_errorRefFemaleNotNumber;
+	public static String EditLabResultDialog_errorRefMaleNotNumber;
+	public static String EditLabResultDialog_errorResultNotNumber;
+	public static String EditLabResultDialog_labelAnalyse;
+	public static String EditLabResultDialog_labelLab;
+	public static String EditLabResultDialog_labelObservation;
+	public static String EditLabResultDialog_labelRefFemale;
+	public static String EditLabResultDialog_labelRefMale;
+	public static String EditLabResultDialog_labelTime;
+	public static String EditLabResultDialog_labelTransmission;
+	public static String EditLabResultDialog_labelUnit;
+	public static String EditLabResultDialog_labelValue;
+	public static String EditLabResultDialog_message;
+	public static String EditLabResultDialog_shellTitle;
+	public static String EditLabResultDialog_title;
+	
+	public static String LaborVerordnungDialog_alreadyOrdered;
+	public static String LaborVerordnungDialog_errorOrderNumber;
+	public static String LaborVerordnungDialog_labelOrderNumber;
+	public static String LaborVerordnungDialog_labelResponsible;
+	public static String LaborVerordnungDialog_message;
+	public static String LaborVerordnungDialog_shellTitle;
+	public static String LaborVerordnungDialog_title;
+	
+	public static String MergeLabItemDialog_errorNoFromLabItemSelected;
+	public static String MergeLabItemDialog_errorNoToLabItemSelected;
+	public static String MergeLabItemDialog_errorSameSelected;
+	public static String MergeLabItemDialog_labelMergeFrom;
+	public static String MergeLabItemDialog_labelMergeTo;
+	public static String MergeLabItemDialog_messageWarningDialog;
+	public static String MergeLabItemDialog_titleWarningDialog;
+	public static String MergeLabItemDialog_toolTipResultsCount;
+	public static String MergeLabItemDialog_pleaseMergeParam;
+	public static String MergeLabItemDialog_title;
 	
 	static {
 		// load message values from bundle file

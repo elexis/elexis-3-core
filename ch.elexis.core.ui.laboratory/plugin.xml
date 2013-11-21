@@ -35,4 +35,24 @@
       </page>
    </extension>
 
+      <extension
+         point="org.eclipse.ui.commands">
+		<command
+            defaultHandler="ch.elexis.core.ui.laboratory.commands.EditLabItemUi"
+            id="ch.elexis.labitem.edit"
+            name="Labor Item Ändern">
+         <commandParameter
+               id="ch.elexis.labitem.edit.selected"
+               name="Selected LabItem"
+               optional="true"
+               typeId="ch.elexis.PersistentObjectType">
+         </commandParameter>
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.laboratory.commands.CreateLabItemUi"
+            id="ch.elexis.labitem.create"
+            name="Labor Item Anlegen">
+      </command>
+   </extension>
+   
 </plugin>

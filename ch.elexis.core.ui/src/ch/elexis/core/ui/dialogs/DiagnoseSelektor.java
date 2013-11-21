@@ -65,9 +65,11 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 					// get all available diagnoses available (TI can not be Queried as it is
 					// not in the database)
 					if (!(codeSelectorFactory.getCodeSystemName().equalsIgnoreCase("TI-Code"))) { //$NON-NLS-1$
-						Query<IDiagnose> qd =
-							new Query<IDiagnose>(codeSelectorFactory.getElementClass());
-						diagnoses.addAll(qd.execute());
+						if (IDiagnose.class.isAssignableFrom(codeSelectorFactory.getElementClass())) {
+							Query<IDiagnose> qd =
+								new Query<IDiagnose>(codeSelectorFactory.getElementClass());
+							diagnoses.addAll(qd.execute());
+						}
 					} else {
 						// get TI Code via content provider
 						CommonViewer cv = new CommonViewer();

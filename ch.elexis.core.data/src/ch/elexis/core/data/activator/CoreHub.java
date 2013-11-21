@@ -10,19 +10,14 @@
  ******************************************************************************/
 package ch.elexis.core.data.activator;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -50,7 +45,6 @@ import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.rgw.io.LockFile;
-import ch.rgw.io.Resource;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SqlSettings;
 import ch.rgw.io.SysSettings;
@@ -69,7 +63,7 @@ public class CoreHub implements BundleActivator {
 	public static String Version = "3.0.0.qualifier"; //$NON-NLS-1$
 	public static final String APPLICATION_NAME = "Elexis Core"; //$NON-NLS-1$
 	static final String neededJRE = "1.7.0"; //$NON-NLS-1$
-	public static final String DBVersion = "1.8.16"; //$NON-NLS-1$
+	public static final String DBVersion = "1.9.0"; //$NON-NLS-1$
 	
 	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
 	

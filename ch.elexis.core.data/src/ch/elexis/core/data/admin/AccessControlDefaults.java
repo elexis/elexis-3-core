@@ -48,6 +48,8 @@ public class AccessControlDefaults {
 	public static final ACE ACCOUNTING_BILLMODIFY = new ACE(ACCOUNTING_GLOBAL,
 		"modifyBills", Messages.AccessControlDefaults_modifyBills); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE ADMIN_ACE = new ACE(ADMIN, "ACE", "ACE modifizieren");
+	public final static ACE LABITEM_MERGE = new ACE(ADMIN, "Laborparamter vereinen", //$NON-NLS-1$
+		Messages.AccessControlDefaults_mergeLabItems); //$NON-NLS-1$
 	
 	public static final ACE ACL_USERS = new ACE(ACE_ACCESS,
 		"Rechte erteilen", Messages.AccessControlDefaults_grantRights); //$NON-NLS-1$ //$NON-NLS-2$

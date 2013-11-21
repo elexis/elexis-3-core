@@ -15,16 +15,15 @@ package ch.elexis.core.ui.laboratory.preferences;
 
 import java.util.List;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -36,6 +35,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -43,18 +43,23 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.core.data.LabItem;
 import ch.elexis.core.data.LabResult;
 import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
-import ch.elexis.core.ui.laboratory.dialogs.EditLabItem;
-import ch.elexis.core.ui.preferences.Messages;
+import ch.elexis.core.ui.laboratory.commands.CreateImportMappingUi;
+import ch.elexis.core.ui.laboratory.commands.CreateLabItemUi;
+import ch.elexis.core.ui.laboratory.commands.CreateMergeLabItemUi;
+import ch.elexis.core.ui.laboratory.commands.EditLabItemUi;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePage {
@@ -67,11 +72,12 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 	int sortC = 1;
 	private String[] headers = {
 		Messages.LaborPrefs_lab, Messages.LaborPrefs_name, Messages.LaborPrefs_short,
+		"LOINC", //$NON-NLS-1$
 		Messages.LaborPrefs_type, Messages.LaborPrefs_unit, Messages.LaborPrefs_refM,
 		Messages.LaborPrefs_refF, Messages.LaborPrefs_sortmode
 	};
 	private int[] colwidth = {
-		18, 16, 6, 6, 6, 16, 16, 16
+		18, 16, 6, 6, 6, 6, 16, 16, 16
 	};
 	
 	public LaborPrefs(){
@@ -126,11 +132,8 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				Object o = sel.getFirstElement();
 				if (o instanceof LabItem) {
 					LabItem li = (LabItem) o;
-					EditLabItem eli = new EditLabItem(getShell(), li);
-					eli.create();
-					if (eli.open() == Dialog.OK) {
-						tableViewer.refresh();
-					}
+					EditLabItemUi.executeWithParams(li);
+					tableViewer.refresh();
 				}
 			}
 			
@@ -151,11 +154,11 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 					s1 = li1.getKuerzel();
 					s2 = li2.getKuerzel();
 					break;
-				case 3:
+				case 4:
 					s1 = li1.getTyp().toString();
 					s2 = li2.getTyp().toString();
 					break;
-				case 7:
+				case 8:
 					s1 = li1.getGroup();
 					s2 = li2.getGroup();
 					break;
@@ -193,12 +196,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		return tableComposite;
 	}
 	
-	static class LabListLabelProvider extends LabelProvider implements ITableLabelProvider {
-		
-		public Image getColumnImage(Object element, int columnIndex){
-			// TODO Automatisch erstellter Methoden-Stub
-			return null;
-		}
+	static class LabListLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
 		
 		public String getColumnText(Object element, int columnIndex){
 			LabItem li = (LabItem) element;
@@ -211,6 +209,8 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			case 2:
 				return li.getKuerzel();
 			case 3:
+				return li.getLoincCode();
+			case 4:
 				LabItem.typ typ = li.getTyp();
 				if (typ == LabItem.typ.NUMERIC) {
 					return Messages.LaborPrefs_numeric;
@@ -222,36 +222,97 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 					return Messages.LaborPrefs_document;
 				}
 				return Messages.LaborPrefs_absolute;
-			case 4:
-				return li.getEinheit();
 			case 5:
-				return li.get("RefMann"); //$NON-NLS-1$
+				return li.getEinheit();
 			case 6:
-				return li.getRefW();
+				return li.getRefM();
 			case 7:
+				return li.getRefW();
+			case 8:
 				return li.getGroup() + " - " + li.getPrio(); //$NON-NLS-1$
 			default:
 				return "?col?"; //$NON-NLS-1$
 			}
 		}
 		
+		@Override
+		public Image getColumnImage(Object element, int columnIndex){
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public Color getBackground(Object element){
+			LabItem li = (LabItem) element;
+			if (li.isVisible()) {
+				return Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
+			} else {
+				return Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
+			}
+		}
 	};
 	
 	@Override
 	protected void contributeButtons(Composite parent){
+		if (CoreHub.acl.request(AccessControlDefaults.LABITEM_MERGE) == true) {
+			((GridLayout) parent.getLayout()).numColumns++;
+			Button bImportMapping = new Button(parent, SWT.PUSH);
+			bImportMapping.setText(Messages.LaborPrefs_mergeLabItems);
+			bImportMapping.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					try {
+						// execute the command
+						IHandlerService handlerService =
+							(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								.getService(IHandlerService.class);
+						
+						handlerService.executeCommand(CreateMergeLabItemUi.COMMANDID, null);
+					} catch (Exception ex) {
+						throw new RuntimeException(CreateMergeLabItemUi.COMMANDID, ex);
+					}
+					tableViewer.refresh();
+				}
+			});
+		}
+		
+		((GridLayout) parent.getLayout()).numColumns++;
+		Button bImportMapping = new Button(parent, SWT.PUSH);
+		bImportMapping.setText(Messages.LaborPrefs_importLabMapping);
+		bImportMapping.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				try {
+					// execute the command
+					IHandlerService handlerService =
+						(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getService(IHandlerService.class);
+					
+					handlerService.executeCommand(CreateImportMappingUi.COMMANDID, null);
+				} catch (Exception ex) {
+					throw new RuntimeException(CreateImportMappingUi.COMMANDID, ex);
+				}
+				tableViewer.refresh();
+			}
+		});
 		((GridLayout) parent.getLayout()).numColumns++;
 		Button bNewItem = new Button(parent, SWT.PUSH);
 		bNewItem.setText(Messages.LaborPrefs_labValue);
 		bNewItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				EditLabItem eli = new EditLabItem(getShell(), null);
-				eli.create();
-				if (eli.open() == Dialog.OK) {
-					tableViewer.refresh();
+				try {
+					// execute the command
+					IHandlerService handlerService =
+						(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getService(IHandlerService.class);
+					
+					handlerService.executeCommand(CreateLabItemUi.COMMANDID, null);
+				} catch (Exception ex) {
+					throw new RuntimeException(CreateLabItemUi.COMMANDID, ex);
 				}
+				tableViewer.refresh();
 			}
-			
 		});
 		((GridLayout) parent.getLayout()).numColumns++;
 		Button bDelItem = new Button(parent, SWT.PUSH);

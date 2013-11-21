@@ -34,7 +34,7 @@ public class DBUpdate {
 		"1.3.10", "1.3.11", "1.3.12", "1.3.13", "1.4.0", "1.4.1", "1.4.2", "1.4.3", "1.4.4",
 		"1.4.5", "1.4.6", "1.5.0", "1.6.0", "1.6.1", "1.6.2", "1.6.3", "1.6.4", "1.7.0", "1.7.1",
 		"1.7.2", "1.8.0", "1.8.1", "1.8.2", "1.8.3", "1.8.4", "1.8.5", "1.8.6", "1.8.7", "1.8.8",
-		"1.8.9", "1.8.10", "1.8.11", "1.8.12", "1.8.13", "1.8.14", "1.8.15", "1.8.16"
+		"1.8.9", "1.8.10", "1.8.11", "1.8.12", "1.8.13", "1.8.14", "1.8.15", "1.8.16", "1.9.0"
 	};
 	static final String[] cmds =
 		{
@@ -333,7 +333,25 @@ public class DBUpdate {
 			// 1.8.16
 			// T. Huster 29.08.2012
 			// Add userID for needed statistics
-			"ALTER TABLE LEISTUNGEN ADD userID VARCHAR(25);"
+			"ALTER TABLE LEISTUNGEN ADD userID VARCHAR(25);",
+			// 1.9.0
+			// T. Huster 18.07.2013
+			// Changes for new Lab model and view
+
+			"ALTER TABLE LABORITEMS ADD loinccode VARCHAR(128);"
+				+ "ALTER TABLE LABORITEMS ADD visible VARCHAR(1);"
+				+ "ALTER TABLE LABORITEMS MODIFY billingcode VARCHAR(128);"
+				+ "ALTER TABLE LABORITEMS ADD digits VARCHAR(16);"
+				+ "ALTER TABLE LABORITEMS ADD formula VARCHAR(255);"
+				+ "ALTER TABLE LABORWERTE MODIFY resultat VARCHAR(255);"
+				+ "ALTER TABLE LABORWERTE ADD ExtInfo BLOB;"
+				+ "ALTER TABLE LABORWERTE ADD unit VARCHAR(255);"
+				+ "ALTER TABLE LABORWERTE ADD analysetime VARCHAR(24);"
+				+ "ALTER TABLE LABORWERTE ADD observationtime VARCHAR(24);"
+				+ "ALTER TABLE LABORWERTE ADD transmissiontime VARCHAR(24);"
+				+ "ALTER TABLE LABORWERTE ADD refmale VARCHAR(255);"
+				+ "ALTER TABLE LABORWERTE ADD reffemale VARCHAR(255);"
+				+ "ALTER TABLE LABORWERTE ADD OriginID VARCHAR(25);"
 		};
 	
 	static Log log = Log.get(DBUpdate.class.getName());

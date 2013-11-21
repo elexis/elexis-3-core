@@ -54,6 +54,17 @@ public final class Messages extends NLS {
 	public static String GlobalActions_SecondForToday;
 	public static String GlobalActions_SecondForTodayQuestion;
 	
+	public static String LabItem_defaultGroup;
+	public static String LabItem_longOwnLab;
+	public static String LabItem_shortOwnLab;
+	public static String LabMapping_reasonDefinitionNotValid;
+	public static String LabMapping_reasonLineNotValid;
+	public static String LabMapping_reasonMoreContacts;
+	public static String LabMapping_reasonMoreLabItems;
+	public static String LabOrder_stateDone;
+	public static String LabOrder_stateImported;
+	public static String LabOrder_stateOrdered;
+	
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
