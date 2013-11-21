@@ -142,7 +142,7 @@ public class VerrDetailDialog extends TitleAreaDialog {
 		List<Verrechnet> list = k.getLeistungen();
 		Money ret = new Money();
 		for (Verrechnet v : list) {
-			ret.addMoney(v.getEffPreis());
+			ret.addMoney(v.getNettoPreis().multiply(v.getZahl()));
 		}
 		return ret;
 	}

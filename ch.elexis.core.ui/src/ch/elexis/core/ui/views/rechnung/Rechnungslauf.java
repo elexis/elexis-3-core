@@ -185,7 +185,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 						list2.put(k2, kPatient);
 						List<Verrechnet> lstg = k2.getLeistungen();
 						for (Verrechnet v : lstg) {
-							sum.addMoney(v.getNettoPreis());
+							sum.addMoney(v.getNettoPreis().multiply(v.getZahl()));
 						}
 					}
 				}
