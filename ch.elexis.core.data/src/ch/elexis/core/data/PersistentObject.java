@@ -452,7 +452,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				ExHandler.handle(ex);
 				return false;
 			} finally {
-				getConnection().releaseStatement(stm);
+				stm.delete();
 				try {
 					is.close();
 				} catch (Exception ex) {
@@ -607,7 +607,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				break;
 			}
 		}
-		getConnection().releaseStatement(stm);
+		stm.delete();
 		return lockid;
 	}
 	
@@ -1140,7 +1140,8 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.append("SELECT ").append(mapped).append(" FROM ").append(table).append(" WHERE ID='")
 			.append(id).append("'");
 		
-		ResultSet rs = executeSqlQuery(sql.toString());
+		Stm stm = getConnection().getStatement();
+		ResultSet rs = executeSqlQuery(sql.toString(), stm);
 		String res = null;
 		try {
 			if ((rs != null) && (rs.next() == true)) {
@@ -1156,6 +1157,13 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		} catch (SQLException ex) {
 			ExHandler.handle(ex);
+		} finally {
+			try {
+				rs.close();
+				stm.delete();
+			} catch (SQLException e) {
+				// ignore
+			}
 		}
 		return res;
 	}
@@ -1178,13 +1186,21 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.append("SELECT ").append(mapped).append(" FROM ").append(table).append(" WHERE ID='")
 			.append(id).append("'");
 		
-		ResultSet res = executeSqlQuery(sql.toString());
+		Stm stm = getConnection().getStatement();
+		ResultSet rs = executeSqlQuery(sql.toString(), stm);
 		try {
-			if ((res != null) && (res.next() == true)) {
-				return res.getBytes(mapped);
+			if ((rs != null) && (rs.next() == true)) {
+				return rs.getBytes(mapped);
 			}
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
+		} finally {
+			try {
+				rs.close();
+				stm.delete();
+			} catch (SQLException e) {
+				// ignore
+			}
 		}
 		return null;
 	}
@@ -1311,7 +1327,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			sql.append(" FROM ").append(abfr[3]).append(" WHERE ").append(abfr[2]).append("=")
 				.append(getWrappedId());
 			
-			ResultSet rs = executeSqlQuery(sql.toString());
+			Stm stm = getConnection().getStatement();
+			ResultSet rs = executeSqlQuery(sql.toString(), stm);
 			LinkedList<String[]> list = new LinkedList<String[]>();
 			try {
 				while ((rs != null) && rs.next()) {
@@ -1335,6 +1352,13 @@ public abstract class PersistentObject implements IPersistentObject {
 				// as the documentation of the method states.
 				// throw new PersistenceException(status);
 				return null;
+			} finally {
+				try {
+					rs.close();
+					stm.delete();
+				} catch (SQLException e) {
+					// ignore
+				}
 			}
 		} else {
 			log.error("Fehlerhaftes Mapping " + mapped);
@@ -1823,15 +1847,16 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.delete(sql.length() - 1, 1000);
 		sql.append(" FROM ").append(getTableName()).append(" WHERE ID=").append(getWrappedId());
 		
-		ResultSet res = executeSqlQuery(sql.toString());
+		Stm stm = getConnection().getStatement();
+		ResultSet rs = executeSqlQuery(sql.toString(), stm);
 		try {
-			if ((res != null) && res.next()) {
+			if ((rs != null) && rs.next()) {
 				for (int i = 0; i < values.length; i++) {
 					if (values[i] == null) {
 						if (decode[i] == true) {
-							values[i] = decode(fields[i], res);
+							values[i] = decode(fields[i], rs);
 						} else {
-							values[i] = checkNull(res.getString(map(fields[i])));
+							values[i] = checkNull(rs.getString(map(fields[i])));
 						}
 						cache.put(getKey(fields[i]), values[i], getCacheTime());
 					}
@@ -1842,6 +1867,13 @@ public abstract class PersistentObject implements IPersistentObject {
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return false;
+		} finally {
+			try {
+				rs.close();
+				stm.delete();
+			} catch (SQLException e) {
+				// ignore
+			}
 		}
 	}
 	
@@ -2451,11 +2483,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @param sql
 	 * @return
 	 */
-	private ResultSet executeSqlQuery(String sql){
-		Stm stm = null;
+	private ResultSet executeSqlQuery(String sql, Stm stm){
 		ResultSet res = null;
 		try {
-			stm = getConnection().getStatement();
 			res = stm.query(sql);
 		} catch (JdbcLinkException je) {
 			ElexisStatus status = translateJdbcException(je);
@@ -2477,8 +2507,6 @@ public abstract class PersistentObject implements IPersistentObject {
 				status.setLogLevel(ElexisStatus.LOG_FATALS);
 				throw new PersistenceException(status);
 			}
-		} finally {
-			getConnection().releaseStatement(stm);
 		}
 		return res;
 	}

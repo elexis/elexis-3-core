@@ -25,8 +25,16 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
+
+import org.apache.commons.dbcp.ConnectionFactory;
+import org.apache.commons.dbcp.DriverConnectionFactory;
+import org.apache.commons.dbcp.PoolableConnectionFactory;
+import org.apache.commons.dbcp.PoolingDataSource;
+import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool.impl.GenericObjectPool;
 
 /**
  * Weiterer Abstraktionslayer zum einfacheren Zugriff auf eine jdbc-fähige Datenbank
@@ -46,10 +54,9 @@ public class JdbcLink {
 	private String sConn;
 	private String sUser;
 	private String sPwd;
-	java.sql.Connection conn = null;
-	private Vector<Stm> statements;
-	public int keepStatements = 10;
-	private boolean bPoolable = true;
+	
+	private PoolingDataSource dataSource;
+	private PoolableConnectionFactory poolableConnectionFactory;
 	
 	private static Log log;
 	
@@ -205,17 +212,40 @@ public class JdbcLink {
 			// D=(Driver)Class.forName("org.gjt.mm.mysql.Driver").newInstance();
 			sUser = user;
 			sPwd = password;
-			Driver D = (Driver) Class.forName(sDrv).newInstance();
-			verMajor = D.getMajorVersion();
-			verMinor = D.getMinorVersion();
+			Driver driver = (Driver) Class.forName(sDrv).newInstance();
+			verMajor = driver.getMajorVersion();
+			verMinor = driver.getMinorVersion();
 			
 			// Class.forName("org.firebirdsql.jdbc.FBDriver");
 			// "jdbc:mysql://<host>:<port>/<dbname>"
 			// "jdbc:odbc:<dsn>
 			log.log(Level.INFO, "Loading database driver " + sDrv);
 			log.log(Level.INFO, "Connecting with database " + sConn);
-			conn = getConnectionWithRetry(user, password);
-			statements = new Vector<Stm>();
+			
+			//
+			// First, we'll create a ConnectionFactory that the
+			// pool will use to create Connections.
+			// We'll use the DriverManagerConnectionFactory,
+			// using the connect string passed in the command line
+			// arguments.
+			//
+			Properties properties = new Properties();
+			properties.put("user", user);
+			properties.put("pass", password);
+			
+			ConnectionFactory connectionFactory =
+				new DriverConnectionFactory(driver, sConn, properties);
+			//
+			// Next we'll create the PoolableConnectionFactory, which wraps
+			// the "real" Connections created by the ConnectionFactory with
+			// the classes that implement the pooling functionality.
+			//
+			ObjectPool connectionPool = new GenericObjectPool(null);
+			poolableConnectionFactory =
+				new PoolableConnectionFactory(connectionFactory, connectionPool, null, null, false,
+					true);
+			dataSource = new PoolingDataSource(connectionPool);
+			
 			lastErrorCode = CONNECT_SUCCESS;
 			lastErrorString = "Connect successful";
 			log.log("Connect successful", Log.DEBUGMSG);
@@ -223,10 +253,6 @@ public class JdbcLink {
 		} catch (ClassNotFoundException ex) {
 			lastErrorCode = CONNECT_CLASSNOTFOUND;
 			lastErrorString = "Class not found exception: " + ex.getMessage();
-			cause = ex;
-		} catch (SQLException ex) {
-			lastErrorCode = CONNECT_FAILED;
-			lastErrorString = "SQL exception: " + ex.getMessage();
 			cause = ex;
 		} catch (InstantiationException e) {
 			lastErrorCode = CONNECT_UNKNOWN_ERROR;
@@ -264,17 +290,8 @@ public class JdbcLink {
 	}
 	
 	private void checkConn(){
-		if (conn == null)
+		if (dataSource == null)
 			throw new JdbcLinkException("Connection not valid!");
-	}
-	
-	public JdbcLink(Connection c){
-		conn = c;
-		statements = new Vector<Stm>();
-	}
-	
-	public void setPoolable(boolean poolable){
-		bPoolable = poolable;
 	}
 	
 	/**
@@ -352,7 +369,14 @@ public class JdbcLink {
 	}
 	
 	public Connection getConnection(){
-		return conn;
+		try {
+			return dataSource.getConnection();
+		} catch (SQLException ex) {
+			lastErrorCode = CONNECT_FAILED;
+			lastErrorString = "SQL exception: " + ex.getMessage();
+			throw JdbcLinkExceptionTranslation.translateException("Connect failed: "
+				+ lastErrorString, ex);
+		}
 	}
 	
 	public String getDriverName(){
@@ -370,27 +394,7 @@ public class JdbcLink {
 	 * @return ein Stm (JdbcLink-spezifische Statement-Variante)
 	 */
 	public Stm getStatement(){
-		if (!bPoolable) {
-			return createStatement();
-		}
-		if (statements == null) {
-			lastErrorCode = CONNECT_UNKNOWN_ERROR;
-			lastErrorString = "Keine Verbindung zur Datenbank";
-			throw new JdbcLinkException(lastErrorString);
-		}
-		synchronized (statements) {
-			if (statements.isEmpty()) {
-				return createStatement();
-			} else {
-				Stm stm = statements.remove(0);
-				if (stm.isClosed()) {
-					return createStatement();
-				} else {
-					return stm;
-				}
-				
-			}
-		}
+		return createStatement();
 	}
 	
 	private Stm createStatement(){
@@ -411,17 +415,8 @@ public class JdbcLink {
 	 */
 	
 	public void releaseStatement(Stm s){
-		if (!bPoolable) {
+		if (s != null) {
 			s.delete();
-		}
-		synchronized (statements) {
-			if (s != null) {
-				if (statements.size() < keepStatements) {
-					statements.add(s);
-				} else {
-					s.delete();
-				}
-			}
 		}
 	}
 	
@@ -435,7 +430,7 @@ public class JdbcLink {
 	public PreparedStatement prepareStatement(String sql){
 		checkConn();
 		try {
-			return conn.prepareStatement(sql);
+			return dataSource.getConnection().prepareStatement(sql);
 		} catch (SQLException ex) {
 			lastErrorCode = CONNECTION_CANT_PREPARE_STAMENT;
 			lastErrorString = ex.getMessage();
@@ -502,20 +497,7 @@ public class JdbcLink {
 	 * 
 	 */
 	public synchronized void disconnect(){
-		try {
-			while ((statements != null) && (!statements.isEmpty())) {
-				Stm stm = statements.remove(0);
-				stm.delete();
-				stm = null;
-			}
-			if (conn != null) {
-				conn.close();
-			}
-			statements = null;
-			log.log("Disconnected", Log.INFOS);
-		} catch (SQLException e) {
-			ExHandler.handle(e);
-		}
+		log.log("Disconnected", Log.INFOS);
 	}
 	
 	/**
@@ -529,10 +511,8 @@ public class JdbcLink {
 	}
 	
 	public boolean setAutoCommit(boolean value){
-		if (conn == null)
-			return false;
 		try {
-			conn.setAutoCommit(value);
+			dataSource.getConnection().setAutoCommit(value);
 			return true;
 		} catch (SQLException e) {
 			ExHandler.handle(e);
@@ -543,10 +523,8 @@ public class JdbcLink {
 	}
 	
 	public boolean commit(){
-		if (conn == null)
-			return false;
 		try {
-			conn.commit();
+			dataSource.getConnection().commit();
 			return true;
 		} catch (SQLException e) {
 			ExHandler.handle(e);
@@ -558,10 +536,8 @@ public class JdbcLink {
 	}
 	
 	public boolean rollback(){
-		if (conn == null)
-			return false;
 		try {
-			conn.rollback();
+			dataSource.getConnection().rollback();
 			return true;
 		} catch (SQLException e) {
 			ExHandler.handle(e);
@@ -643,20 +619,19 @@ public class JdbcLink {
 	}
 	
 	public class Stm {
+		private Connection conn;
 		private Statement stm;
 		
 		private void checkStm(){
-			if (stm == null)
+			if (stm == null || conn == null)
 				throw new JdbcLinkException("Statement not valid!");
 		}
 		
 		private boolean reconnect(){
-			if (conn == null)
-				return false;
 			try {
 				log.log(Level.WARNING, "Stm()Trying reconnect");
 				connect(sUser, sPwd);
-				stm = conn.createStatement();
+				stm = dataSource.getConnection().createStatement();
 				return true;
 			} catch (SQLException ex) {
 				log.log(Level.WARNING, "Reconnect failed " + ex.getMessage());
@@ -672,6 +647,7 @@ public class JdbcLink {
 		Stm() throws SQLException{
 			checkConn();
 			try {
+				conn = dataSource.getConnection();
 				stm = conn.createStatement();
 			} catch (SQLException se) {
 				log.log(Level.WARNING, "need reconnect " + se.getMessage());
@@ -702,12 +678,14 @@ public class JdbcLink {
 				// stm.cancel();
 				if (stm != null) {
 					stm.close();
+					conn.close();
 				}
 			} catch (SQLException ex) {
 				ExHandler.handle(ex);
 				/* egal */
 			}
 			stm = null;
+			conn = null;
 		}
 		
 		/**
