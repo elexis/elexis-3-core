@@ -12,7 +12,7 @@ package ch.elexis.core.ui.laboratory.preferences;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.core.ui.preferences.messages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "ch.elexis.core.ui.laboratory.preferences.messages";//$NON-NLS-1$
 	
 	public static String Ablauf_0;
 	public static String Ablauf_10;

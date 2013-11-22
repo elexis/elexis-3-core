@@ -58,6 +58,31 @@ public class Messages extends NLS {
 	public static String MergeLabItemDialog_pleaseMergeParam;
 	public static String MergeLabItemDialog_title;
 	
+	public static String EditLabItem_shellTitle;
+	public static String EditLabItem_labelExportTag;
+	public static String EditLabItem_message;
+	public static String EditLabItem_errorNoTitle;
+	public static String EditLabItem_labelDecimalPlace;
+	public static String EditLabItem_labelVisible;
+	public static String EditLabItem_labelShortLabel;
+	public static String EditLabItem_labelTitle;
+	public static String EditLabItem_labelType;
+	public static String EditLabItem_labelTypNumber;
+	public static String EditLabItem_labelTypText;
+	public static String EditLabItem_labelTypAbsolute;
+	public static String EditLabItem_labelTypFormula;
+	public static String EditLabItem_titleScriptEditor;
+	public static String EditLabItem_labelRefMale;
+	public static String EditLabItem_labelRefFemale;
+	public static String EditLabItem_labelUnit;
+	public static String EditLabItem_labelGroup;
+	public static String EditLabItem_tooltipGroup;
+	public static String EditLabItem_labelGroupSequence;
+	public static String EditLabItem_labelGroupPosition;
+	public static String EditLabItem_labelTypDocument;
+	public static String EditLabItem_title;
+	public static String EditLabItem_labelHintExportTag;
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

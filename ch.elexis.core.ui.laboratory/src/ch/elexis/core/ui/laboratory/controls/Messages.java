@@ -22,6 +22,12 @@ public class Messages extends NLS {
 	public static String LaborResultsComposite_textResultTitle;
 	public static String LaborResultsComposite_Open;
 	
+	public static String LaborMappingComposite_columnLabor;
+	public static String LaborMappingComposite_columnShortname;
+	public static String LaborMappingComposite_labelMappings;
+	public static String LaborMappingComposite_labelSelektorMessage;
+	public static String LaborMappingComposite_labelSelektorTitle;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

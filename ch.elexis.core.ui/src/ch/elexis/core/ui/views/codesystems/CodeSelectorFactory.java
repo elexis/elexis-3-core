@@ -38,7 +38,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.dialogs.SelectionDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,6 +104,45 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	public PersistentObject findElement(String code){
 		String s = getElementClass().getName() + StringConstants.DOUBLECOLON + code;
 		return CoreHub.poFactory.createFromString(s);
+	}
+	
+	public SelectionDialog getSelectionDialog(Shell parent, Object data){
+		throw new UnsupportedOperationException("SelectionDialog for code system "
+			+ getCodeSystemName() + " not implemented");
+	}
+	
+	public static SelectionDialog getSelectionDialog(String codeSystemName, Shell parent,
+		Object data){
+		java.util.List<IConfigurationElement> list =
+			Extensions.getExtensions("ch.elexis.Genericcode"); //$NON-NLS-1$
+		list.addAll(Extensions.getExtensions("ch.elexis.Verrechnungscode")); //$NON-NLS-1$
+		list.addAll(Extensions.getExtensions("ch.elexis.Diagnosecode")); //$NON-NLS-1$
+		
+		if (list != null) {
+			for (IConfigurationElement ic : list) {
+				try {
+					PersistentObjectFactory po =
+						(PersistentObjectFactory) ic.createExecutableExtension("ElementFactory"); //$NON-NLS-1$
+					CodeSelectorFactory codeSelectorFactory =
+						(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
+					if (codeSelectorFactory == null) {
+						SWTHelper.alert(CAPTION_ERROR, "CodeSelectorFactory is null"); //$NON-NLS-1$
+					}
+					ICodeElement codeElement =
+						(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
+					if (codeElement == null) {
+						SWTHelper.alert(CAPTION_ERROR, "CodeElement is null"); //$NON-NLS-1$
+					}
+					if (codeSystemName.equals(codeElement.getCodeSystemName())) {
+						return codeSelectorFactory.getSelectionDialog(parent, data);
+					}
+					
+				} catch (CoreException ex) {
+					ExHandler.handle(ex);
+				}
+			}
+		}
+		throw new IllegalStateException("Could not find code system " + codeSystemName);
 	}
 	
 	public static void makeTabs(CTabFolder ctab, IViewSite site, String point){

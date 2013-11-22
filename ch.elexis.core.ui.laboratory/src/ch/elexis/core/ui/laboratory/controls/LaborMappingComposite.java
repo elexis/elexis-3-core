@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.views.controls;
+package ch.elexis.core.ui.laboratory.controls;
 
 import java.util.ArrayList;
 import java.util.Collections;
