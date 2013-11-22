@@ -229,7 +229,7 @@ public class JdbcLink {
 			//
 			Properties properties = new Properties();
 			properties.put("user", user);
-			properties.put("pass", password);
+			properties.put("password", password);
 			
 			ConnectionFactory connectionFactory =
 				new DriverConnectionFactory(driver, sConn, properties);
