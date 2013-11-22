@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.Driver;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -56,7 +55,6 @@ public class JdbcLink {
 	private String sPwd;
 	
 	private PoolingDataSource dataSource;
-	private PoolableConnectionFactory poolableConnectionFactory;
 	
 	private static Log log;
 	
@@ -241,9 +239,8 @@ public class JdbcLink {
 			// the classes that implement the pooling functionality.
 			//
 			ObjectPool connectionPool = new GenericObjectPool(null);
-			poolableConnectionFactory =
-				new PoolableConnectionFactory(connectionFactory, connectionPool, null, null, false,
-					true);
+			new PoolableConnectionFactory(connectionFactory, connectionPool, null, null, false,
+				true);
 			dataSource = new PoolingDataSource(connectionPool);
 			
 			lastErrorCode = CONNECT_SUCCESS;
@@ -265,28 +262,6 @@ public class JdbcLink {
 		}
 		throw JdbcLinkExceptionTranslation.translateException("Connect failed: " + lastErrorString,
 			cause);
-	}
-	
-	private Connection getConnectionWithRetry(String user, String password) throws SQLException{
-		SQLException lastException;
-		int retryCount = 5;
-		do {
-			try {
-				DriverManager.setLoginTimeout(15);
-				return DriverManager.getConnection(sConn, user, password);
-			} catch (SQLException sqlEx) {
-				lastException = sqlEx;
-				// The two SQL states that are 'retry-able' are communication error or concurrency
-				JdbcLinkException je = JdbcLinkExceptionTranslation.translateException(sqlEx);
-				if (je instanceof JdbcLinkResourceException
-					|| je instanceof JdbcLinkConcurrencyException) {
-					retryCount--;
-				} else {
-					retryCount = 0;
-				}
-			}
-		} while (retryCount > 0);
-		throw lastException;
 	}
 	
 	private void checkConn(){
@@ -510,43 +485,6 @@ public class JdbcLink {
 		return true;
 	}
 	
-	public boolean setAutoCommit(boolean value){
-		try {
-			dataSource.getConnection().setAutoCommit(value);
-			return true;
-		} catch (SQLException e) {
-			ExHandler.handle(e);
-			lastErrorCode = TRANSACTION_COMMIT_NOT_SUPPORTED;
-			lastErrorString = e.getMessage();
-			return false;
-		}
-	}
-	
-	public boolean commit(){
-		try {
-			dataSource.getConnection().commit();
-			return true;
-		} catch (SQLException e) {
-			ExHandler.handle(e);
-			lastErrorCode = TRANSACTION_COMMIT_FAILED;
-			lastErrorString = e.getMessage();
-			return false;
-		}
-		
-	}
-	
-	public boolean rollback(){
-		try {
-			dataSource.getConnection().rollback();
-			return true;
-		} catch (SQLException e) {
-			ExHandler.handle(e);
-			lastErrorCode = TRANSACTION_ROLLBACK_FAILED;
-			lastErrorString = e.getMessage();
-			return false;
-		}
-	}
-	
 	/**
 	 * Unscharfes Suchen im ResultSet.
 	 * 
@@ -630,8 +568,8 @@ public class JdbcLink {
 		private boolean reconnect(){
 			try {
 				log.log(Level.WARNING, "Stm()Trying reconnect");
-				connect(sUser, sPwd);
-				stm = dataSource.getConnection().createStatement();
+				conn = dataSource.getConnection();
+				stm = conn.createStatement();
 				return true;
 			} catch (SQLException ex) {
 				log.log(Level.WARNING, "Reconnect failed " + ex.getMessage());

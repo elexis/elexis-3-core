@@ -2126,18 +2126,6 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
-	 * Eine Transaktion beginnen. schreiboperationen müssen auf das zurückgelieferte
-	 * Transactions-Objekt erfolgen. (Und können mit Schreiboperationen ausserhalb der Transaktion
-	 * konkurrieren)
-	 * 
-	 * @return Ein Transaktionsobjekt, über das Schreiboperationen getätigt werden kann, und das am
-	 *         Ende mit commit() oder rollback() ausgeführt resp. gestoppt werden kann.
-	 */
-	public Transaction begin(){
-		return new Transaction(this);
-	}
-	
-	/**
 	 * Get a unique key for a value, suitable for identifying a key in a cache. The current
 	 * implementation uses the table name, the id of the PersistentObject and the field name.
 	 * 

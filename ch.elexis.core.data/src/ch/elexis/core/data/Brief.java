@@ -77,7 +77,6 @@ public class Brief extends PersistentObject {
 	/** Einen neuen Briefeintrag erstellen */
 	public Brief(String Betreff, TimeTool Datum, Kontakt Absender, Kontakt dest, Konsultation bh,
 		String typ){
-		getConnection().setAutoCommit(false);
 		try {
 			super.create(null);
 			if (Datum == null) {
@@ -101,12 +100,8 @@ public class Brief extends PersistentObject {
 				bhdl, typ, StringConstants.ZERO
 			});
 			new contents(this);
-			getConnection().commit();
 		} catch (Throwable ex) {
 			ExHandler.handle(ex);
-			getConnection().rollback();
-		} finally {
-			getConnection().setAutoCommit(true);
 		}
 	}
 	
@@ -195,17 +190,12 @@ public class Brief extends PersistentObject {
 	
 	/** Einen Brief unwiederruflich löschen */
 	public boolean remove(){
-		getConnection().setAutoCommit(false);
 		try {
 			getConnection().exec("DELETE FROM HEAP WHERE ID=" + getWrappedId());
 			getConnection().exec("DELETE FROM BRIEFE WHERE ID=" + getWrappedId());
-			getConnection().commit();
 		} catch (Throwable ex) {
 			ExHandler.handle(ex);
-			getConnection().rollback();
 			return false;
-		} finally {
-			getConnection().setAutoCommit(true);
 		}
 		return true;
 	}
