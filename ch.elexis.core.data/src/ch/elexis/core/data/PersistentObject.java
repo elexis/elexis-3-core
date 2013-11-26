@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -219,24 +218,14 @@ public abstract class PersistentObject implements IPersistentObject {
 		if ("RunFromScratch".equals(System.getProperty("elexis-run-mode"))) {
 			runningAsTest = true;
 		}
-		File base = new File(CoreHub.getBasePath());
-		File demo = new File(base.getParentFile().getParent() + File.separator + "demoDB");
-		log.info("Verzeichnis Demo-Datenbank via Hub.getBasePath(): " + demo.getAbsolutePath());
-		log.info("osgi.install.area: " + System.getProperty("osgi.install.area"));
-		String demo2path =
-			org.eclipse.core.runtime.Platform.getInstanceLocation().getURL().getPath() + "demoDB";
-		File demo2 = new File(demo2path);
-		if (demo2.exists()) {
-			demo = demo2;
-		}
 		
-		if (!demo.exists()) {
-			URI demoName =
-				URI.create(System.getProperty("osgi.install.area").replaceAll(" ", "%20"));
-			demo = new File(demoName.getPath() + File.separator + "demoDB");
-			log.info("Verzeichnis Demo-Datenbank via osgi.install.area: " + demo.getAbsolutePath());
-		}
+		log.info("osgi.install.area: " + System.getProperty("osgi.install.area"));
+
+		File demo = new File(CoreHub.getWritableUserDir() + File.separator + "demoDB");
+		log.info("Checking demo database availability in " + demo.getAbsolutePath());
+
 		if (demo.exists() && demo.isDirectory()) {
+			log.info("Using demoDB in "+demo.getAbsolutePath());
 			j = JdbcLink.createH2Link(demo.getAbsolutePath() + File.separator + "db");
 			try {
 				getConnection().connect("sa", StringTool.leer);
