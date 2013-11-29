@@ -27,9 +27,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.ui.UiDesk;
@@ -38,6 +35,9 @@ import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.views.IDetailDisplay;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.PersistentObject;
 
 public class EigenartikelDetailDisplay implements IDetailDisplay {
 	

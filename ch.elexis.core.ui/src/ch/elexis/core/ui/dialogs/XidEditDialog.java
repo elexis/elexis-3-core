@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.Kontakt;
+import ch.elexis.data.Kontakt;
 
 /**
  * Dialog to enter / edit XID's

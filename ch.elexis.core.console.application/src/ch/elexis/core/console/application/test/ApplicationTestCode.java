@@ -13,10 +13,10 @@ package ch.elexis.core.console.application.test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Prescription;
-import ch.elexis.core.data.Query;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Prescription;
+import ch.elexis.data.Query;
 
 /**
  * This class contains a the static method {@link #performApplicationTest()}, which is being called

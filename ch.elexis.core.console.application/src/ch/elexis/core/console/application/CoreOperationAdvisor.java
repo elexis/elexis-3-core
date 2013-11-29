@@ -13,8 +13,8 @@ package ch.elexis.core.console.application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
+import ch.elexis.data.Anwender;
 
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	private Logger log = LoggerFactory.getLogger(CoreOperationAdvisor.class);

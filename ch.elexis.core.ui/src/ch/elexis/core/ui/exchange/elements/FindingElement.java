@@ -12,8 +12,8 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
-import ch.elexis.core.data.LabItem;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.LabItem;
 
 public class FindingElement extends XChangeElement {
 	public static final String ENCLOSING = "findings";

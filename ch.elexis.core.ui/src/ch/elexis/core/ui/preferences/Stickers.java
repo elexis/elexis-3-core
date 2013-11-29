@@ -45,16 +45,16 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import ch.elexis.core.data.Brief;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Sticker;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.UiSticker;
 import ch.elexis.core.ui.dialogs.ImageChooser;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
+import ch.elexis.data.Sticker;
 
 public class Stickers extends PreferencePage implements IWorkbenchPreferencePage {
 	

@@ -14,8 +14,8 @@ package ch.elexis.core.ui.exchange.elements;
 
 import java.util.List;
 
-import ch.elexis.core.data.LabResult;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;
 

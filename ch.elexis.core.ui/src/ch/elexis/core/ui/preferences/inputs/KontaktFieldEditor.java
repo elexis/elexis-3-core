@@ -22,9 +22,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.data.Kontakt;
 import ch.rgw.io.Settings;
 
 public class KontaktFieldEditor extends FieldEditor {

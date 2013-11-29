@@ -13,13 +13,13 @@ package ch.elexis.core.data.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDataAccess;
 import ch.elexis.core.text.model.Samdas;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 

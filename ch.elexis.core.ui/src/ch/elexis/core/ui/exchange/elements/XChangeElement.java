@@ -14,10 +14,10 @@ import java.util.List;
 
 import org.jdom.Element;
 
-import ch.elexis.core.data.Xid;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.core.ui.exchange.XChangeImporter;
+import ch.elexis.data.Xid;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Result;
 

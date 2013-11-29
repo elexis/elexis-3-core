@@ -15,8 +15,8 @@ package ch.elexis.core.data.interfaces;
 import java.util.Collection;
 import java.util.Properties;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Rechnung;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Result;
 
 /**

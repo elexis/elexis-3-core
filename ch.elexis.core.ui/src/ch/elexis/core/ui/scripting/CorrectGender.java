@@ -10,8 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.ui.scripting;
 
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Query;
+import ch.elexis.data.Person;
+import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 public class CorrectGender {

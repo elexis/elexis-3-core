@@ -17,10 +17,10 @@ import java.util.List;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import ch.elexis.core.data.Xid;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.ui.exchange.elements.XidElement;
+import ch.elexis.data.Xid;
 import ch.rgw.tools.TimeTool;
 
 /**

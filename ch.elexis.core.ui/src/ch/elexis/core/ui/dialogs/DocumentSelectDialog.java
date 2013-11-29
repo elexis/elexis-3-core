@@ -38,17 +38,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Brief;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
+import ch.elexis.data.Brief;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Person;
+import ch.elexis.data.Query;
+import ch.elexis.data.Sticker;
 import ch.rgw.tools.StringTool;
 
 /**

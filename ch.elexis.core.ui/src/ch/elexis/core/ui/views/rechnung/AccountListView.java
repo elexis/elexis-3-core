@@ -35,8 +35,6 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
@@ -44,6 +42,8 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
 import ch.rgw.tools.Money;
 
 /**

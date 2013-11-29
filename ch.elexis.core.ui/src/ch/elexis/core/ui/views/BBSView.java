@@ -32,8 +32,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.BBSEntry;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -43,6 +41,8 @@ import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.TreeContentProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.data.BBSEntry;
+import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Tree;
 

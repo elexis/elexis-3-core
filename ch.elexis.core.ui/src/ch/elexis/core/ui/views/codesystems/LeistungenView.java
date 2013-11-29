@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Leistungsblock;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -35,6 +34,7 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
+import ch.elexis.data.Leistungsblock;
 import ch.rgw.tools.StringTool;
 
 public class LeistungenView extends ViewPart implements IActivationListener, ISaveablePart2 {

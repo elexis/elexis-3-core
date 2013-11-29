@@ -21,12 +21,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.AccountTransaction;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.AccountTransaction;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.Money;
 
 /**

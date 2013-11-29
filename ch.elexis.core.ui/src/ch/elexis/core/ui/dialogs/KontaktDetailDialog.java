@@ -23,12 +23,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.Anschrift;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Organisation;
-import ch.elexis.core.data.Person;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Anschrift;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Organisation;
+import ch.elexis.data.Person;
 import ch.rgw.tools.StringTool;
 
 /**

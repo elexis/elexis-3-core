@@ -19,8 +19,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.selectors.ActiveControl;
 import ch.elexis.core.ui.selectors.ActiveControlListener;
 import ch.elexis.core.ui.selectors.ComboField;
@@ -32,6 +30,8 @@ import ch.elexis.core.ui.selectors.SelectorPanel;
 import ch.elexis.core.ui.selectors.TextField;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.Tree;

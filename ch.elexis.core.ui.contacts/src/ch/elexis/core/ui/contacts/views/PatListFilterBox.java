@@ -27,12 +27,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.NamedBlob;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Script;
-import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.ui.UiDesk;
@@ -43,6 +37,12 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.IPatFilter;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.PatFilterImpl;
+import ch.elexis.data.NamedBlob;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
+import ch.elexis.data.Script;
+import ch.elexis.data.Sticker;
 import ch.rgw.tools.IFilter;
 
 /**

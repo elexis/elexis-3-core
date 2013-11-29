@@ -13,23 +13,23 @@ package ch.elexis.core.ui.views;
 
 import java.util.List;
 
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.BezugsKontakt;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.NamedBlob;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Prescription;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Script;
-import ch.elexis.core.data.Sticker;
-import ch.elexis.core.data.Verrechnet;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.BezugsKontakt;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.NamedBlob;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Prescription;
+import ch.elexis.data.Query;
+import ch.elexis.data.Script;
+import ch.elexis.data.Sticker;
+import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.ExHandler;
 
 /**

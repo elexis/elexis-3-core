@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 
 /**
  * Ein Background-Job, der Datensätze aus einer Tabelle liest und in Form eines Arrays zurückliefert

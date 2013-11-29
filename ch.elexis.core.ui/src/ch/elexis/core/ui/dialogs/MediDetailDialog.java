@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.Prescription;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Prescription;
 
 public class MediDetailDialog extends TitleAreaDialog {
 	Prescription art;

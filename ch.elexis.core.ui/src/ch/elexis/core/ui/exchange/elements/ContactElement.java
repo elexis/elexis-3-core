@@ -14,13 +14,13 @@ package ch.elexis.core.ui.exchange.elements;
 
 import java.util.List;
 
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Organisation;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Person;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Organisation;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Person;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 

@@ -30,8 +30,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.LabResult;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
 import ch.elexis.core.data.services.GlobalServiceDescriptors;
@@ -41,6 +39,8 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.Patient;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.TimeSpan;
 import ch.rgw.tools.TimeTool;

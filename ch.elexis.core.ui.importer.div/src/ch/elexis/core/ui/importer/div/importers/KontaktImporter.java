@@ -18,10 +18,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Query;
 
 public class KontaktImporter extends ImporterPage {
 	KontaktImporterBlatt importer;

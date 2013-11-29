@@ -38,10 +38,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.LabResult;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.PersistentObject;
 
 public class MergeLabItemDialog extends TitleAreaDialog {
 	

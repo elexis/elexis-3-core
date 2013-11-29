@@ -30,13 +30,13 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Rechnung;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.rechnung.Messages;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Tree;
 

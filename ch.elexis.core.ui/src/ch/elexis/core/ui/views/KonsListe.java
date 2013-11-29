@@ -20,9 +20,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -35,6 +32,9 @@ import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
 
 public class KonsListe extends ViewPart implements IActivationListener, ISaveablePart2 {
 	public static final String ID = "ch.elexis.HistoryView"; //$NON-NLS-1$

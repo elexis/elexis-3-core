@@ -30,18 +30,18 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.LabGroup;
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.LabOrder;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Reminder;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.laboratory.laborlink.LaborLink;
 import ch.elexis.core.ui.util.IExternLaborOrder;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.LabGroup;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.LabOrder;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
+import ch.elexis.data.Reminder;
 import ch.rgw.tools.TimeTool;
 
 public class LaborVerordnungDialog extends TitleAreaDialog {

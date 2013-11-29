@@ -16,11 +16,11 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Rechnung;
-import ch.elexis.core.data.RnStatus;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Rechnung;
+import ch.elexis.data.RnStatus;
 import ch.rgw.tools.Tree;
 
 public class RnMenuListener implements IMenuListener {

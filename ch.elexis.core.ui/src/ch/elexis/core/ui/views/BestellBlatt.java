@@ -17,15 +17,15 @@ import java.util.List;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Bestellung.Item;
-import ch.elexis.core.data.Brief;
-import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Bestellung.Item;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 

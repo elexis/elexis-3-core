@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.JdbcLink;
 

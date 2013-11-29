@@ -19,14 +19,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Person;
+import ch.elexis.data.Query;
 import ch.rgw.tools.TimeTool;
 
 import com.tiff.common.ui.datepicker.DatePicker;

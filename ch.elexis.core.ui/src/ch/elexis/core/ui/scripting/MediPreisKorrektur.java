@@ -14,12 +14,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Rechnung;
-import ch.elexis.core.data.RnStatus;
-import ch.elexis.core.data.Verrechnet;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Query;
+import ch.elexis.data.Rechnung;
+import ch.elexis.data.RnStatus;
+import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 

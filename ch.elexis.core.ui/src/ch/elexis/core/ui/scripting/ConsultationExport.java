@@ -20,15 +20,15 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Sticker;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.views.IPatFilter;
 import ch.elexis.core.ui.views.PatFilterImpl;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
+import ch.elexis.data.Sticker;
 import ch.rgw.tools.IFilter;
 
 public class ConsultationExport {

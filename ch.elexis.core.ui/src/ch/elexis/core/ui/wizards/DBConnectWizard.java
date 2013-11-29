@@ -18,10 +18,10 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkException;

@@ -11,8 +11,8 @@
  *******************************************************************************/
 package ch.elexis.core.data.interfaces;
 
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Verrechnet;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Result;
 
 /**

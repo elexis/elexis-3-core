@@ -12,7 +12,7 @@
 
 package ch.elexis.core.ui.actions;
 
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.PersistentObject;
 
 /**
  * An ICodeSelectorTarget can receive objects from CodeSelector lists when they are selected.

@@ -32,8 +32,6 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
@@ -48,6 +46,8 @@ import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.DiagnosenView;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.PersistentObject;
 
 public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 	Table tDg;

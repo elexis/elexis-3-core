@@ -24,10 +24,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Kontakt;
 
 public class Verifier {
 	

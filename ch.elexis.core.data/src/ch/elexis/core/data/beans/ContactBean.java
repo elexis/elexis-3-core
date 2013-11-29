@@ -11,12 +11,12 @@
 package ch.elexis.core.data.beans;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.beans.base.BeanPersistentObject;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.CountryCode;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Patient;
 
 public class ContactBean extends BeanPersistentObject<Kontakt> implements IContact {
 	

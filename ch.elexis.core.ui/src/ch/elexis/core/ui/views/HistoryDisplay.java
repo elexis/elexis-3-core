@@ -25,9 +25,6 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormText;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -36,6 +33,9 @@ import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.HistoryLoader;
 import ch.elexis.core.ui.actions.KonsFilter;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
 
 /**
  * Anzeige der vergangenen Konsultationen. Es sollen einerseits "sofort" die letzten 3 oder 4 Kons

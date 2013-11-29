@@ -18,11 +18,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 
 /**
  * The ElexisContext contains a current set of selected elements. It takes care that at any time,

@@ -31,8 +31,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.Rechnung;
-import ch.elexis.core.data.RnStatus;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
@@ -41,6 +39,8 @@ import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Rechnung;
+import ch.elexis.data.RnStatus;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 

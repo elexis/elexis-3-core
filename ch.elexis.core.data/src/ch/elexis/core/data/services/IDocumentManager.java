@@ -14,9 +14,9 @@ package ch.elexis.core.data.services;
 import java.io.InputStream;
 import java.util.List;
 
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeSpan;
 
 /**

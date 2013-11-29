@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.ILazyContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.ACE;
 import ch.elexis.core.ui.actions.AbstractDataLoaderJob;
@@ -29,6 +28,7 @@ import ch.elexis.core.ui.actions.JobPool;
 import ch.elexis.core.ui.util.Messages;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
+import ch.elexis.data.Query;
 
 /**
  * Ein Content-Provider, der benötigte Daten aus einem BackgroundJob bezieht und einem TableViewer

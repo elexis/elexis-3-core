@@ -19,8 +19,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.custom.StyleRange;
 
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.Hub;
@@ -30,6 +28,8 @@ import ch.elexis.core.ui.laboratory.dialogs.LaborVerordnungDialog;
 import ch.elexis.core.ui.laboratory.views.LaborView;
 import ch.elexis.core.ui.text.IRichTextDisplay;
 import ch.elexis.core.ui.util.IKonsExtension;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
 public class LaborLink implements IKonsExtension {

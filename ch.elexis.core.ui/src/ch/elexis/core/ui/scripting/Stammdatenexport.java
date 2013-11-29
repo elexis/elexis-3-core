@@ -18,12 +18,12 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
 
 public class Stammdatenexport {
 	

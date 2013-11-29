@@ -23,12 +23,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.LabMapping;
-import ch.elexis.core.data.Labor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.LabMapping;
+import ch.elexis.data.Labor;
 
 public class LaborMappingComposite extends Composite {
 	

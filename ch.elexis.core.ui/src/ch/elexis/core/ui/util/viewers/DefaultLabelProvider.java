@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.PersistentObject;
 
 /**
  * Defaultimplementation des Labelproviders. Verwendet die getLabel() Methode von PersistentObject.

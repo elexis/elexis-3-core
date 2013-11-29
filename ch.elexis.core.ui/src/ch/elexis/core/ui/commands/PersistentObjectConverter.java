@@ -13,8 +13,8 @@ package ch.elexis.core.ui.commands;
 import org.eclipse.core.commands.AbstractParameterValueConverter;
 import org.eclipse.core.commands.ParameterValueConversionException;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.data.PersistentObject;
 
 public class PersistentObjectConverter extends AbstractParameterValueConverter {
 	

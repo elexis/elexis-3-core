@@ -62,14 +62,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Mandant;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Rechnung;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.ACE;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -89,6 +81,14 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Mandant;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
+import ch.elexis.data.Rechnung;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
@@ -252,7 +252,7 @@ public class GlobalActions {
 								w.close();
 							}
 						}
-						ch.elexis.core.data.Anwender.logoff();
+						ch.elexis.data.Anwender.logoff();
 						adaptForUser();
 						LoginDialog dlg = new LoginDialog(win.getShell());
 						dlg.create();

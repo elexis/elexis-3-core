@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;

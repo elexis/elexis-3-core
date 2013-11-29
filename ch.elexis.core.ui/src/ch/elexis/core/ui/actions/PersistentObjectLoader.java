@@ -17,12 +17,12 @@ import java.util.LinkedList;
 
 import org.eclipse.jface.viewers.Viewer;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.actions.DelayableJob.IWorker;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 
 /**
  * This is a replacement for the former BackgroundJob-System. Since it became clear that the

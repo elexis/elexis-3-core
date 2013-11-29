@@ -51,11 +51,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.Bestellung;
-import ch.elexis.core.data.Bestellung.Item;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.UiDesk;
@@ -67,6 +62,11 @@ import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Bestellung;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Bestellung.Item;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 

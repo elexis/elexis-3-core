@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.data.Kontakt;
 
 public class KontaktSelectionComposite extends Composite {
 	

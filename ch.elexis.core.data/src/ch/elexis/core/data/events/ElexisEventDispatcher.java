@@ -25,12 +25,12 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 
 /**
  * The Elexis event dispatcher system manages and distributes the information of changing, creating,

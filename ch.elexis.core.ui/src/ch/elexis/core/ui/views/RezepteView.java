@@ -45,16 +45,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.Brief;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.OutputLog;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Prescription;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Rezept;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -76,6 +66,16 @@ import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.OutputLog;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Prescription;
+import ch.elexis.data.Query;
+import ch.elexis.data.Rezept;
 import ch.rgw.tools.ExHandler;
 
 /**

@@ -33,11 +33,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import ch.elexis.core.data.NamedBlob;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.NamedBlob;
 import ch.rgw.io.FileTool;
 import ch.rgw.io.InMemorySettings;
 import ch.rgw.io.Settings;

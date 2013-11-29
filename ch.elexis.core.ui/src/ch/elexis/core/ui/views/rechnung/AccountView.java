@@ -37,10 +37,6 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.AccountTransaction;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Rechnung;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
@@ -54,6 +50,10 @@ import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.data.AccountTransaction;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
+import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Money;
 
 /**

@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.PersistentObject;
 
 public class Counter {
 	private ArrayList<Float> list = new ArrayList<Float>();

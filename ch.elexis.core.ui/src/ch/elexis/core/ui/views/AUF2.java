@@ -25,11 +25,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.AUF;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -41,6 +36,11 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
+import ch.elexis.data.AUF;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -202,7 +202,7 @@ public class AUF2 extends ViewPart implements IActivationListener {
 						AUFZeugnis az =
 							(AUFZeugnis) getViewSite().getPage().showView(AUFZeugnis.ID);
 						AUF actAUF =
-							(ch.elexis.core.data.AUF) ElexisEventDispatcher.getSelected(AUF.class);
+							(ch.elexis.data.AUF) ElexisEventDispatcher.getSelected(AUF.class);
 						az.createAUZ(actAUF);
 					} catch (Exception ex) {
 						ExHandler.handle(ex);
@@ -212,7 +212,7 @@ public class AUF2 extends ViewPart implements IActivationListener {
 			};
 	}
 	
-	private ch.elexis.core.data.AUF getSelectedAUF(){
+	private ch.elexis.data.AUF getSelectedAUF(){
 		IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
 		if ((sel == null) || (sel.isEmpty())) {
 			return null;

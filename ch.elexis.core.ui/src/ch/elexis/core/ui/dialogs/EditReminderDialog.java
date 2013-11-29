@@ -31,15 +31,15 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Reminder;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Reminder;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 

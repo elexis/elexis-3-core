@@ -22,12 +22,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.AUF;
-import ch.elexis.core.data.Fall;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.AUF;
+import ch.elexis.data.Fall;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 

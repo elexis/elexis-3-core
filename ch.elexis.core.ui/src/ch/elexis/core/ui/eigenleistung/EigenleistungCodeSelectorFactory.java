@@ -12,14 +12,14 @@ package ch.elexis.core.ui.eigenleistung;
 
 import org.eclipse.swt.SWT;
 
-import ch.elexis.core.data.Eigenleistung;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import ch.elexis.data.Eigenleistung;
+import ch.elexis.data.PersistentObject;
 
 public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 	

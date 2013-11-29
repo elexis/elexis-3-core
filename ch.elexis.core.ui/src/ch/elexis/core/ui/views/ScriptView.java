@@ -43,7 +43,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Script;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.util.SortedList;
 import ch.elexis.core.exceptions.ElexisException;
@@ -54,6 +53,7 @@ import ch.elexis.core.ui.scripting.ScriptEditor;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.data.Script;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -120,8 +120,8 @@ public class ScriptView extends ViewPart {
 	class ScriptComparator implements Comparator<Script> {
 		@Override
 		public int compare(Script script0, Script script1){
-			String script0_ID = ((ch.elexis.core.data.Script) script0).getId().toUpperCase();
-			String script1_ID = ((ch.elexis.core.data.Script) script1).getId().toUpperCase();
+			String script0_ID = ((ch.elexis.data.Script) script0).getId().toUpperCase();
+			String script1_ID = ((ch.elexis.data.Script) script1).getId().toUpperCase();
 			return script0_ID.compareTo(script1_ID);
 		}
 	}

@@ -34,11 +34,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.LabItem.typ;
-import ch.elexis.core.data.LabResult;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Person;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.DisplayLabDokumenteDialog;
@@ -47,6 +42,11 @@ import ch.elexis.core.ui.laboratory.actions.LaborResultDeleteAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.actions.TogglePathologicAction;
 import ch.elexis.core.ui.util.Log;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Person;
+import ch.elexis.data.LabItem.typ;
 import ch.rgw.tools.TimeTool;
 
 public class LaborResultsComposite extends Composite {

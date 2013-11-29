@@ -23,8 +23,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Tree;
 
 public class GlobalEventDispatcher implements IPartListener2 {

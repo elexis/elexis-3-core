@@ -19,10 +19,6 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
-import ch.elexis.core.data.Eigenleistung;
-import ch.elexis.core.data.Leistungsblock;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.PersistentObjectFactory;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.Extensions;
@@ -32,6 +28,10 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import ch.elexis.data.Eigenleistung;
+import ch.elexis.data.Leistungsblock;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.PersistentObjectFactory;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 

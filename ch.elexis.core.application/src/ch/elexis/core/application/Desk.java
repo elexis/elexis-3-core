@@ -19,13 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.application.advisors.ApplicationWorkbenchAdvisor;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.io.FileTool;
 
 public class Desk implements IApplication {

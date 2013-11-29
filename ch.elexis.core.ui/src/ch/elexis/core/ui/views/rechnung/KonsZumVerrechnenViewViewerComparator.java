@@ -13,9 +13,9 @@ package ch.elexis.core.ui.views.rechnung;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.Tree;
 

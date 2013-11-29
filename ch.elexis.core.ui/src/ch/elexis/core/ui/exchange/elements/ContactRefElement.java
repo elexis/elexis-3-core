@@ -12,9 +12,9 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
-import ch.elexis.core.data.BezugsKontakt;
-import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.BezugsKontakt;
+import ch.elexis.data.Kontakt;
 
 public class ContactRefElement extends XChangeElement {
 	

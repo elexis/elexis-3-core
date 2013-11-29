@@ -10,9 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.ui.events;
 
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.ui.Hub;
+import ch.elexis.data.Patient;
 
 /**
  * Listener for patient events, registered within

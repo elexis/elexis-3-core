@@ -21,9 +21,9 @@ import java.util.regex.Pattern;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.NamedBlob;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.NamedBlob;
 import ch.rgw.io.InMemorySettings;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.Log;

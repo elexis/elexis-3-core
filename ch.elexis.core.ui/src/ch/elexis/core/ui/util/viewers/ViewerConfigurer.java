@@ -24,10 +24,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.util.Messages;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.Tree;
 

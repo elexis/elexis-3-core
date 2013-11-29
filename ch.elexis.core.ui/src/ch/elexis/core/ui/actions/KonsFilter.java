@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
 import ch.elexis.core.text.model.Samdas;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
 
 /**
  * Ein Filter für Konsultationen

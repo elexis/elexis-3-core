@@ -13,7 +13,7 @@ package ch.elexis.core.ui.selectors;
 
 import java.util.List;
 
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.PersistentObject;
 
 /**
  * Link an input or display field to the database

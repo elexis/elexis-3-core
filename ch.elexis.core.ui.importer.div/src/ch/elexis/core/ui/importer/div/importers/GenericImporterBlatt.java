@@ -15,9 +15,9 @@ package ch.elexis.core.ui.importer.div.importers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -57,18 +57,18 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Organisation;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.PersistentObjectFactory;
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Organisation;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.PersistentObjectFactory;
+import ch.elexis.data.Person;
+import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 /**

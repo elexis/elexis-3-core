@@ -29,9 +29,6 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Mandant;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.ui.Hub;
@@ -41,6 +38,9 @@ import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Mandant;
+import ch.elexis.data.Query;
 
 public class AnwenderPref extends PreferencePage implements IWorkbenchPreferencePage {
 	private static final String EXT_INFO = "ExtInfo"; //$NON-NLS-1$

@@ -13,7 +13,6 @@ package ch.elexis.core.ui.eigenartikel;
 
 import org.eclipse.swt.SWT;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.eigenartikel.EigenartikelPersistentObjectFactory;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -24,6 +23,7 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.DefaultButtonProvider;
 import ch.elexis.core.ui.views.artikel.ArtikelContextMenu;
 import ch.elexis.core.ui.views.artikel.ArtikelLabelProvider;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import ch.elexis.data.PersistentObject;
 
 public class EigenartikelSelector extends CodeSelectorFactory {
 	

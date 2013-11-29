@@ -43,12 +43,12 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.data.LabGroup;
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.preferences.Messages;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
+import ch.elexis.data.LabGroup;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.Query;
 
 public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferencePage {
 	

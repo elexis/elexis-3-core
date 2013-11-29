@@ -33,9 +33,6 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.ui.IWorkbenchActionConstants;
 
-import ch.elexis.core.data.Leistungsblock;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -55,6 +52,9 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.data.Leistungsblock;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 
 public class BlockSelector extends CodeSelectorFactory {
 	IAction deleteAction, renameAction, createAction, exportAction;

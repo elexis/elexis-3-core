@@ -14,9 +14,9 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.ui.laboratory.dialogs.EditLabItem;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.PersistentObject;
 
 public class EditLabItemUi extends AbstractHandler {
 	

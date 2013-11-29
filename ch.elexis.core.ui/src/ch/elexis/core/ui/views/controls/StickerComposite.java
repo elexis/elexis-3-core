@@ -30,12 +30,12 @@ import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.data.UiSticker;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Sticker;
 
 public class StickerComposite extends Composite {
 	

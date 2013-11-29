@@ -18,12 +18,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Brief;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.OutputLog;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Prescription;
-import ch.elexis.core.data.Rezept;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IOutputter;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -31,6 +25,12 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.OutputLog;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Prescription;
+import ch.elexis.data.Rezept;
 import ch.rgw.tools.StringTool;
 
 public class RezeptBlatt extends ViewPart implements ICallback, IActivationListener, IOutputter {

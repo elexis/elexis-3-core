@@ -31,11 +31,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.ACE;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Anwender;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.Tree;
 

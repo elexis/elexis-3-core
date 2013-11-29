@@ -17,15 +17,15 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import ch.elexis.core.data.BezugsKontakt;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.ui.exchange.elements.ContactElement;
 import ch.elexis.core.ui.exchange.elements.ContactRefElement;
 import ch.elexis.core.ui.exchange.elements.ContactsElement;
 import ch.elexis.core.ui.exchange.elements.MedicalElement;
 import ch.elexis.core.ui.exchange.elements.XidElement;
+import ch.elexis.data.BezugsKontakt;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 
 public abstract class XChangeExporter implements IDataSender {
 	private final XChangeContainer container = new XChangeContainer();

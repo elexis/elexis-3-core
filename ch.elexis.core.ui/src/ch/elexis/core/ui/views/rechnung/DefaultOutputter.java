@@ -23,10 +23,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Rechnung;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Result;
 
 /**

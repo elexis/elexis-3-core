@@ -37,19 +37,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.LabItem.typ;
-import ch.elexis.core.data.LabOrder;
-import ch.elexis.core.data.LabOrder.State;
-import ch.elexis.core.data.LabResult;
-import ch.elexis.core.data.Labor;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.LabOrder;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.Labor;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
+import ch.elexis.data.LabItem.typ;
+import ch.elexis.data.LabOrder.State;
 import ch.rgw.tools.TimeTool;
 
 public class LaborOrdersComposite extends Composite {

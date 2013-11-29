@@ -29,12 +29,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Organisation;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Xid;
-import ch.elexis.core.data.Xid.XIDDomain;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -52,6 +46,12 @@ import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.Messages;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Organisation;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Person;
+import ch.elexis.data.Xid;
+import ch.elexis.data.Xid.XIDDomain;
 
 public class KontaktBlatt extends Composite implements ElexisEventListener, IActivationListener {
 	private static final String MOBIL = Messages.KontaktBlatt_MobilePhone; //$NON-NLS-1$

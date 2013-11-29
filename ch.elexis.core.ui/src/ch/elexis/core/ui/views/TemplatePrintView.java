@@ -20,12 +20,12 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Brief;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Patient;
 
 public class TemplatePrintView extends ViewPart {
 	private static final String KEY_TEXT = "text"; //$NON-NLS-1$

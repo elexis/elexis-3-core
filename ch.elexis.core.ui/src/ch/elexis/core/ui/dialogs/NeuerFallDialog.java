@@ -17,10 +17,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Patient;
 
 public class NeuerFallDialog extends TitleAreaDialog {
 	Fall fall;

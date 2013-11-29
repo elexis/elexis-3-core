@@ -12,8 +12,8 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
-import ch.elexis.core.data.Anschrift;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.Anschrift;
 import ch.rgw.tools.StringTool;
 
 public class AddressElement extends XChangeElement {

@@ -18,9 +18,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 
-import ch.elexis.core.data.Eigenleistung;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.ui.views.IDetailDisplay;
+import ch.elexis.data.Eigenleistung;
+import ch.elexis.data.PersistentObject;
 
 public class EigenleistungDetailDisplay implements IDetailDisplay {
 	private Text textCode;

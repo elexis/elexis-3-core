@@ -18,10 +18,10 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Brief;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
+import ch.elexis.data.Brief;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.StringTool;
 
 public class CorePreferenceInitializer extends AbstractPreferenceInitializer {

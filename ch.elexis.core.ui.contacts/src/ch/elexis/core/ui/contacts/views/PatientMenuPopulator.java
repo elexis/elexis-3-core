@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.util.Extensions;
@@ -40,6 +39,7 @@ import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus.IMenuPopulator;
 import ch.elexis.core.ui.views.Messages;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.ExHandler;
 
 public class PatientMenuPopulator implements IMenuPopulator {

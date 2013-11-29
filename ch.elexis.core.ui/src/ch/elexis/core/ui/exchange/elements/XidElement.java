@@ -12,16 +12,16 @@ package ch.elexis.core.ui.exchange.elements;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.Labor;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Xid;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.Labor;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Xid;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.XMLTool;
 

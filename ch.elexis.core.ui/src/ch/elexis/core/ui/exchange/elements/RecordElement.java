@@ -16,12 +16,12 @@ import java.util.List;
 
 import org.jdom.Element;
 
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
 import ch.elexis.core.text.model.Samdas.XRef;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionedResource;
 import ch.rgw.tools.VersionedResource.ResourceItem;

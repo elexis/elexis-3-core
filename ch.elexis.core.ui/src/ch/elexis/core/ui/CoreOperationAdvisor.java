@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -29,6 +28,7 @@ import ch.elexis.core.ui.dialogs.ErsterMandantDialog;
 import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
+import ch.elexis.data.Anwender;
 
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	

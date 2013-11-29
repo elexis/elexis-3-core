@@ -14,7 +14,7 @@ package ch.elexis.core.data.interfaces;
 
 import java.util.List;
 
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 
 /**

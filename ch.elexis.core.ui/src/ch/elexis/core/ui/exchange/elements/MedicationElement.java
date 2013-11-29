@@ -12,9 +12,9 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.Prescription;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Prescription;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;

@@ -19,10 +19,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -31,6 +27,10 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
 
 public class FallDetailView extends ViewPart implements ISaveablePart2, IActivationListener {
 	public static final String ID = "ch.elexis.FallDetailView"; //$NON-NLS-1$

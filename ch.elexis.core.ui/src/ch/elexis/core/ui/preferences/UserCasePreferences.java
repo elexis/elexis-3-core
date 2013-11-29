@@ -38,13 +38,13 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.SortedList;
 import ch.elexis.core.ui.dialogs.DiagnoseSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Fall;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.io.InMemorySettings;
 import ch.rgw.tools.StringTool;
 

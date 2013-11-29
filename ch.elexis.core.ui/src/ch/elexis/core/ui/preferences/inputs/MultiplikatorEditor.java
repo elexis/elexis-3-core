@@ -25,10 +25,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.util.MultiplikatorList;
 import ch.elexis.core.ui.dialogs.AddMultiplikatorDialog;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;

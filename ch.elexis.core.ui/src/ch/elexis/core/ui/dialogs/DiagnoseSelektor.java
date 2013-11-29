@@ -30,15 +30,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 import org.eclipse.ui.internal.WorkbenchMessages;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.PersistentObjectFactory;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.PersistentObjectFactory;
+import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
 public class DiagnoseSelektor extends FilteredItemsSelectionDialog {

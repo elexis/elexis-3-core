@@ -37,13 +37,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.BezugsKontakt;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.FlatDataLoader;
@@ -56,6 +49,13 @@ import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.data.BezugsKontakt;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Person;
+import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 

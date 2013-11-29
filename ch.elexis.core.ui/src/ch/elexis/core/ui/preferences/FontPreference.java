@@ -17,11 +17,11 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.data.Anwender;
 
 public class FontPreference extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	

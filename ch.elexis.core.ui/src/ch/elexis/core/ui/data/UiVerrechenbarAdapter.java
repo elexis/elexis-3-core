@@ -19,13 +19,13 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 
-import ch.elexis.core.data.Leistungsblock;
-import ch.elexis.core.data.VerrechenbarAdapter;
-import ch.elexis.core.data.Verrechnet;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AddElementToBlockDialog;
+import ch.elexis.data.Leistungsblock;
+import ch.elexis.data.VerrechenbarAdapter;
+import ch.elexis.data.Verrechnet;
 
 /**
  * @since 3.0.0

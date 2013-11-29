@@ -10,10 +10,10 @@
  ******************************************************************************/
 package ch.elexis.core.ui.eigenleistung;
 
-import ch.elexis.core.data.Eigenleistung;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.actions.FlatDataLoader;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
+import ch.elexis.data.Eigenleistung;
+import ch.elexis.data.Query;
 
 public class EigenleistungLoader extends FlatDataLoader {
 	

@@ -10,11 +10,11 @@
  ******************************************************************************/
 package ch.elexis.core.ui.eigenartikel;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.ui.actions.FlatDataLoader;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 
 public class EigenartikelLoader extends FlatDataLoader {
 	

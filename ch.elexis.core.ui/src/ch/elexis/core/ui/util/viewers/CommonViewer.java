@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
@@ -41,6 +40,7 @@ import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Tree;
 
 /**

@@ -11,7 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.selectors;
 
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.PersistentObject;
 
 public class FieldDescriptor<T extends PersistentObject> {
 	

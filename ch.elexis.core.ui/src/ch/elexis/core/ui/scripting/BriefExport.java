@@ -18,16 +18,16 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 
-import ch.elexis.core.data.Brief;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.views.IPatFilter;
 import ch.elexis.core.ui.views.PatFilterImpl;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Person;
+import ch.elexis.data.Query;
+import ch.elexis.data.Sticker;
 import ch.rgw.io.FileTool;
 
 public class BriefExport {

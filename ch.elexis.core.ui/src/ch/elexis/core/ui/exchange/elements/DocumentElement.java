@@ -14,9 +14,9 @@ package ch.elexis.core.ui.exchange.elements;
 
 import org.jdom.Element;
 
-import ch.elexis.core.data.Brief;
-import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Kontakt;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;
 

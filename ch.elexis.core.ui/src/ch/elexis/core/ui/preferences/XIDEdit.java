@@ -29,11 +29,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import ch.elexis.core.data.Organisation;
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Xid;
-import ch.elexis.core.data.Xid.XIDDomain;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Organisation;
+import ch.elexis.data.Person;
+import ch.elexis.data.Xid;
+import ch.elexis.data.Xid.XIDDomain;
 
 public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage {
 	Table table;

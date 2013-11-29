@@ -27,16 +27,16 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Mandant;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Reminder;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.events.UiPatientEventListener;
 import ch.elexis.core.ui.preferences.PreferenceInitializer;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Mandant;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Reminder;
 import ch.rgw.tools.TimeTool;
 
 /**

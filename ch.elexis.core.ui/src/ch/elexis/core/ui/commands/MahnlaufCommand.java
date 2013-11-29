@@ -19,10 +19,10 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Rechnung;
-import ch.elexis.core.data.RnStatus;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.data.Query;
+import ch.elexis.data.Rechnung;
+import ch.elexis.data.RnStatus;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;

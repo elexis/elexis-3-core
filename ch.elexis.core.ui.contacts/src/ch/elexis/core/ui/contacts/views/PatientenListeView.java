@@ -40,13 +40,6 @@ import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Reminder;
-import ch.elexis.core.data.Sticker;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -72,6 +65,13 @@ import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.core.ui.views.Messages;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Person;
+import ch.elexis.data.Query;
+import ch.elexis.data.Reminder;
+import ch.elexis.data.Sticker;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 //Hier ist mglw. nicht data.Messages, sondern views.Messages nötig.

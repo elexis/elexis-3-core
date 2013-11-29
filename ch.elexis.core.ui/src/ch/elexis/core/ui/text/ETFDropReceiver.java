@@ -16,12 +16,12 @@ import java.util.Hashtable;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.graphics.Point;
 
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget.IReceiver;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.PersistentObject;
 
 public class ETFDropReceiver implements IReceiver {
 	EnhancedTextField etf;

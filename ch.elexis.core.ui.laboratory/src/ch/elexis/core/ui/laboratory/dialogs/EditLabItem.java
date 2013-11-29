@@ -31,14 +31,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.Labor;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.laboratory.controls.LaborMappingComposite;
 import ch.elexis.core.ui.scripting.ScriptEditor;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.Labor;
 import ch.rgw.tools.StringTool;
 
 public class EditLabItem extends TitleAreaDialog {

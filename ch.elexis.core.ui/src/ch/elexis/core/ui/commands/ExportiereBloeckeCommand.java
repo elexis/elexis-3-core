@@ -17,10 +17,10 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
-import ch.elexis.core.data.Leistungsblock;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.exchange.BlockExporter;
 import ch.elexis.core.ui.exchange.XChangeException;
+import ch.elexis.data.Leistungsblock;
+import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
 public class ExportiereBloeckeCommand extends AbstractHandler {

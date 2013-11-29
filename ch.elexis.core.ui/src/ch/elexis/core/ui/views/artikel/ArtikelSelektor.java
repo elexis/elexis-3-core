@@ -40,8 +40,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
@@ -52,6 +50,8 @@ import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 
 public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {

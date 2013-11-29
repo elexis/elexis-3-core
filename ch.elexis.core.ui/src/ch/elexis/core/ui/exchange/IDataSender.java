@@ -12,8 +12,8 @@
 
 package ch.elexis.core.ui.exchange;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.ui.exchange.elements.XChangeElement;
+import ch.elexis.data.PersistentObject;
 
 /**
  * A generic mediator between Elexis Objects and XML-Files. Any number of Objects can be sent to the

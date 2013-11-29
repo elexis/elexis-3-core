@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Kontakt;
 
 /**
  * Dialog to view/modify identifiers such as EAN, AHV, SSN, OID on objects

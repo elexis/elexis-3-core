@@ -33,9 +33,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Mandant;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -48,6 +45,9 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Mandant;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 

@@ -12,11 +12,11 @@
 
 package ch.elexis.core.data.events;
 
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 
 /**
  * A universal event object. Can optionally created with a priority

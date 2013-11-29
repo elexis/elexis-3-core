@@ -25,11 +25,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Sticker;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.data.UiSticker;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Sticker;
 
 public class AssignStickerDialog extends TitleAreaDialog {
 	PersistentObject mine;

@@ -21,12 +21,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.Fall;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Fall;
 
 public class SelectFallDialog extends TitleAreaDialog {
 	Fall[] faelle;

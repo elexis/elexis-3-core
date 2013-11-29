@@ -10,9 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.data.extension;
 
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.PersistentObject;
 
 /**
  * @since 3.0.0

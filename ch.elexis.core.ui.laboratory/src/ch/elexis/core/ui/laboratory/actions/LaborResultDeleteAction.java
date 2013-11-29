@@ -7,10 +7,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredViewer;
 
-import ch.elexis.core.data.LabOrder;
-import ch.elexis.core.data.LabOrder.State;
-import ch.elexis.core.data.LabResult;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.data.LabOrder;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.LabOrder.State;
 
 public class LaborResultDeleteAction extends Action implements IAction {
 	

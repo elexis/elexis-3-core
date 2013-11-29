@@ -54,12 +54,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.BezugsKontakt;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Person;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -89,6 +83,12 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.Messages;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.BezugsKontakt;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Person;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 

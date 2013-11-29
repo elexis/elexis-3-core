@@ -40,10 +40,6 @@ import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.Bestellung;
-import ch.elexis.core.data.Bestellung.Item;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -60,6 +56,10 @@ import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultContentProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.WidgetProvider;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Bestellung;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Bestellung.Item;
 
 public class LagerView extends ViewPart implements DoubleClickListener, ISaveablePart2,
 		IActivationListener {

@@ -16,12 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.console.application.test.ApplicationTestCode;
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 
 /**
  * The main application class as referenced by the org.eclipse.core.runtime.applications extension

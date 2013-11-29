@@ -12,10 +12,10 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
 import ch.rgw.tools.TimeTool;
 
 public class InsuranceElement extends XChangeElement {

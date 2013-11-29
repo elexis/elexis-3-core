@@ -5,8 +5,8 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredViewer;
 
-import ch.elexis.core.data.LabItem.typ;
-import ch.elexis.core.data.LabResult;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.LabItem.typ;
 
 public class TogglePathologicAction extends Action {
 	private List<LabResult> results;

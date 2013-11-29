@@ -15,7 +15,7 @@ package ch.elexis.core.ui.util.viewers;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.elexis.core.data.Query;
+import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 /**

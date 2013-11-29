@@ -10,8 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views;
 
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 
 /**
  * @since 3.0.0

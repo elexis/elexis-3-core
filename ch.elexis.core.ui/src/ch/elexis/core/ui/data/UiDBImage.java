@@ -22,9 +22,9 @@ import org.eclipse.swt.graphics.ImageLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.DBImage;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.DBImage;
 
 /**
  * This is a wrapper class for a {@link DBImage} element. It encapsulates the basic core sticker and

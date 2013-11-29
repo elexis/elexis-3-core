@@ -16,8 +16,8 @@ import java.util.Hashtable;
 
 import org.eclipse.jface.viewers.IFilter;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.data.PersistentObject;
 
 public class ObjectFilterRegistry {
 	

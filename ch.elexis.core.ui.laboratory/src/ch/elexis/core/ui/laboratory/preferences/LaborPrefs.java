@@ -51,9 +51,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.LabResult;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.ui.laboratory.commands.CreateImportMappingUi;
@@ -61,6 +58,9 @@ import ch.elexis.core.ui.laboratory.commands.CreateLabItemUi;
 import ch.elexis.core.ui.laboratory.commands.CreateMergeLabItemUi;
 import ch.elexis.core.ui.laboratory.commands.EditLabItemUi;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.Query;
 
 public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePage {
 	

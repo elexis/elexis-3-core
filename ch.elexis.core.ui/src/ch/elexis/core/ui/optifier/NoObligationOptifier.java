@@ -15,13 +15,13 @@ import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.IVerrechenbar.DefaultOptifier;
 import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
 import ch.rgw.tools.Result;
 
 public class NoObligationOptifier extends DefaultOptifier {

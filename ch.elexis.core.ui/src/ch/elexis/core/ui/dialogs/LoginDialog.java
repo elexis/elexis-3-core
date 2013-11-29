@@ -28,13 +28,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.ILoginNews;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
 public class LoginDialog extends TitleAreaDialog {

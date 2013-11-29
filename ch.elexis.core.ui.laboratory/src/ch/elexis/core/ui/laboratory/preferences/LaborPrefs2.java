@@ -20,9 +20,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.preferences.Messages;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.Query;
 
 public class LaborPrefs2 extends PreferencePage implements IWorkbenchPreferencePage {
 	private final HashMap<String, List<LabItem>> groups = new HashMap<String, List<LabItem>>();

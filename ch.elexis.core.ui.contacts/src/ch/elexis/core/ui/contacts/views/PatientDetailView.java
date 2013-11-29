@@ -41,9 +41,6 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.BezugsKontakt;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -62,6 +59,9 @@ import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.controls.ClientCustomTextComposite;
 import ch.elexis.core.ui.views.controls.StickerComposite;
+import ch.elexis.data.BezugsKontakt;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.StringTool;
 
 public class PatientDetailView extends ViewPart {

@@ -19,13 +19,13 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 
-import ch.elexis.core.data.Anwender;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.ACE;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.data.Anwender;
 
 /**
  * Special class for actiosn requiring special access rights.

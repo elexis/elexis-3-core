@@ -25,8 +25,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.ui.UiDesk;
@@ -34,6 +32,8 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
 import ch.elexis.core.ui.views.Messages;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 public class PatListeContentProvider implements ICommonViewerContentProvider, ILazyContentProvider {

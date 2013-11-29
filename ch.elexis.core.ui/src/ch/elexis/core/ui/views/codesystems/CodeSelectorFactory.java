@@ -46,11 +46,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.PersistentObjectFactory;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -65,6 +60,11 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.PersistentObjectFactory;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 

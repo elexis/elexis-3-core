@@ -27,7 +27,6 @@ import org.jdom.Namespace;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.Hub;
@@ -41,6 +40,7 @@ import ch.elexis.core.ui.exchange.elements.RecordElement;
 import ch.elexis.core.ui.exchange.elements.RiskElement;
 import ch.elexis.core.ui.exchange.elements.XChangeElement;
 import ch.elexis.core.ui.util.Log;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;

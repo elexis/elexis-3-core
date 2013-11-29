@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;

@@ -59,8 +59,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
@@ -73,6 +71,8 @@ import ch.elexis.core.ui.preferences.inputs.MultiplikatorEditor;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Fall;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;

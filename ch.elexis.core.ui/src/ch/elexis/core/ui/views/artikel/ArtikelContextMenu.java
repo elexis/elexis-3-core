@@ -23,11 +23,11 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 
-import ch.elexis.core.data.Artikel;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
+import ch.elexis.data.Artikel;
 
 public class ArtikelContextMenu {
 	private IAction deleteAction, createAction, editAction;

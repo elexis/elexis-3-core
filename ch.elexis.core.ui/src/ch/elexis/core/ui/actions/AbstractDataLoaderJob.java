@@ -15,7 +15,7 @@ package ch.elexis.core.ui.actions;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.elexis.core.data.Query;
+import ch.elexis.data.Query;
 
 /**
  * BackgroundJob which loads data from the database in background. The definition of the access to

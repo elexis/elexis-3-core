@@ -14,8 +14,8 @@ package ch.elexis.core.data.interfaces.text;
 
 import java.io.InputStream;
 
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.data.Patient;
 
 /**
  * A Contract for a piece of Information in an arbitrary format - a document - that can be stored

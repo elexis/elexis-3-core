@@ -20,11 +20,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.ElexisStatusProgressMonitor;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.JdbcLinkException;

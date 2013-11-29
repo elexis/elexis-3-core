@@ -12,7 +12,7 @@
 
 package ch.elexis.core.data.events;
 
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.PersistentObject;
 
 /**
  * An implementation of the most common uses of ElexisSventListeners. Subclasses must override one

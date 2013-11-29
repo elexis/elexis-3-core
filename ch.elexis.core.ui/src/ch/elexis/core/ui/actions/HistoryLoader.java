@@ -24,8 +24,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IFilter;
 
-import ch.elexis.core.data.Konsultation;
 import ch.elexis.core.text.model.Samdas;
+import ch.elexis.data.Konsultation;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionedResource;
 

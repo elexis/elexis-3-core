@@ -12,8 +12,8 @@
 
 package ch.elexis.core.eigenartikel;
 
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.Query;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Query;
 import ch.rgw.tools.JdbcLink;
 
 public class Eigenartikel extends Artikel {

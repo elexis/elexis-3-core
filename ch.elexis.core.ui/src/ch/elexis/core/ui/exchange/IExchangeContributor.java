@@ -14,8 +14,8 @@ package ch.elexis.core.ui.exchange;
 
 import org.eclipse.core.runtime.IExecutableExtension;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.ui.exchange.elements.MedicalElement;
+import ch.elexis.data.PersistentObject;
 
 /**
  * A Class that wants to contribute data to eXChange or that can load data from eXChange must

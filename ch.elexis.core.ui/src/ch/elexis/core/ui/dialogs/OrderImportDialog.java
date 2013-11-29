@@ -51,11 +51,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.Bestellung;
 import ch.elexis.core.ui.actions.ScannerEvents;
 import ch.elexis.core.ui.text.ElexisText;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Bestellung;
 import ch.rgw.tools.StringTool;
 
 /*

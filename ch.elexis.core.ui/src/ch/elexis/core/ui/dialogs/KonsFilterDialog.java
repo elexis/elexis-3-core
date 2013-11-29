@@ -24,13 +24,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 

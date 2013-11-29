@@ -44,11 +44,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Eigenleistung;
-import ch.elexis.core.data.Leistungsblock;
-import ch.elexis.core.data.Mandant;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
@@ -63,6 +58,11 @@ import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.IDetailDisplay;
+import ch.elexis.data.Eigenleistung;
+import ch.elexis.data.Leistungsblock;
+import ch.elexis.data.Mandant;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 public class BlockDetailDisplay implements IDetailDisplay {

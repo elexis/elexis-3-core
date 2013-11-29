@@ -26,9 +26,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.Anschrift;
-import ch.elexis.core.data.Kontakt;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Anschrift;
+import ch.elexis.data.Kontakt;
 import ch.rgw.tools.StringTool;
 
 public class AnschriftEingabeDialog extends TitleAreaDialog {

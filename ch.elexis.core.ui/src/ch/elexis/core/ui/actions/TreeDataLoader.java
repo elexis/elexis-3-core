@@ -20,11 +20,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ILazyTreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 import ch.rgw.tools.LazyTree;
 import ch.rgw.tools.LazyTree.LazyTreeListener;
 import ch.rgw.tools.Tree;

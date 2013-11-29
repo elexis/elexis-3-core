@@ -15,11 +15,11 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Mandant;
-import ch.elexis.core.data.Verrechnet;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Mandant;
+import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;

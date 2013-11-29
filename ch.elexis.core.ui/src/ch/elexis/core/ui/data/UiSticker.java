@@ -18,9 +18,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import ch.elexis.core.data.DBImage;
-import ch.elexis.core.data.Sticker;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.data.DBImage;
+import ch.elexis.data.Sticker;
 
 /**
  * This is a wrapper class for a {@link Sticker} element. It encapsulates the basic core sticker and

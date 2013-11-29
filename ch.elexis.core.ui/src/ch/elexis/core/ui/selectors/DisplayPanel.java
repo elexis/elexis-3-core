@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.LimitSizeStack;
 
 /**

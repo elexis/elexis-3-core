@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Mandant;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -42,6 +41,7 @@ import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.data.Mandant;
 
 /**
  * This class implements the {@link Mandant} selection button bar within the application toolbar

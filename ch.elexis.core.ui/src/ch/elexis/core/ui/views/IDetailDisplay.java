@@ -14,7 +14,7 @@ package ch.elexis.core.ui.views;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.PersistentObject;
 
 /**
  * Detailansicht eines PersistentObject

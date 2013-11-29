@@ -14,11 +14,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Verrechnet;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
+import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;

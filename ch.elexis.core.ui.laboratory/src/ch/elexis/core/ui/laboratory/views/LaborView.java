@@ -45,11 +45,6 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.LabOrder;
-import ch.elexis.core.data.LabResult;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Person;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -68,6 +63,11 @@ import ch.elexis.core.ui.util.Importer;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.LabOrder;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Person;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.TimeTool;
 

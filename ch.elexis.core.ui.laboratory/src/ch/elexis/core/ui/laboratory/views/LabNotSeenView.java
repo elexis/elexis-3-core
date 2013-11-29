@@ -36,8 +36,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.LabResult;
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -48,6 +46,8 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.laboratory.preferences.LabSettings;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.Log;
 
 /**

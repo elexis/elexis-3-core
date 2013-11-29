@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.LabMapping;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.LabMapping;
 
 public class ImportLabMapping extends TitleAreaDialog {
 	

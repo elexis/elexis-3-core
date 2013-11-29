@@ -62,7 +62,7 @@
                   Klasse, die von PersistentObjectFactory abgeleitet ist.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.core.data.PersistentObjectFactory:"/>
+                  <meta.attribute kind="java" basedOn="ch.elexis.data.PersistentObjectFactory:"/>
                </appinfo>
             </annotation>
          </attribute>

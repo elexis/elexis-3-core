@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.LazyTree;
 import ch.rgw.tools.LazyTree.LazyTreeListener;

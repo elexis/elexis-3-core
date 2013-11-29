@@ -15,16 +15,16 @@ package ch.elexis.core.ui.exchange.elements;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.elexis.core.data.Brief;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.LabResult;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Prescription;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Prescription;
+import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 /**

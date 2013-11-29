@@ -12,9 +12,9 @@ package ch.elexis.core.ui.scripting;
 
 import java.util.Collection;
 
-import ch.elexis.core.data.Anwender;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Reminder;
+import ch.elexis.data.Anwender;
+import ch.elexis.data.Query;
+import ch.elexis.data.Reminder;
 
 public class AssignReminderToUser {
 	

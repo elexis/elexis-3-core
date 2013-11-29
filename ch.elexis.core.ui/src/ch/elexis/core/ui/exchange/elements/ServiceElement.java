@@ -13,11 +13,11 @@ import java.util.List;
 
 import org.jdom.Element;
 
-import ch.elexis.core.data.Eigenleistung;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.Eigenleistung;
 import ch.rgw.tools.TimeTool;
 
 public class ServiceElement extends XChangeElement {

@@ -33,15 +33,15 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.RnStatus;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
+import ch.elexis.data.RnStatus;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.StringTool;
 

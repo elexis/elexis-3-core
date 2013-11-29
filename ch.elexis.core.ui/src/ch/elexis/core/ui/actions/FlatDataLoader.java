@@ -21,11 +21,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ILazyContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 
 /**
  * A PersistentObjectLoader for flat tables. This is also an ILazyContentProvider for Structured

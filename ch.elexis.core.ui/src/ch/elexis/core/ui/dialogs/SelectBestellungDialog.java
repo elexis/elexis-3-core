@@ -31,8 +31,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
-import ch.elexis.core.data.Bestellung;
-import ch.elexis.core.data.Query;
+import ch.elexis.data.Bestellung;
+import ch.elexis.data.Query;
 import ch.rgw.tools.TimeTool;
 
 public class SelectBestellungDialog extends SelectionDialog {

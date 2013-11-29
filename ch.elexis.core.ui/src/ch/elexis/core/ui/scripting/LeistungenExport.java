@@ -15,14 +15,14 @@ import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.List;
 
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Mandant;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Verrechnet;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Mandant;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
+import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.TimeTool;
 

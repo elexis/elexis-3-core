@@ -27,11 +27,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Organisation;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -53,6 +48,11 @@ import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.core.ui.views.Messages;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Organisation;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Person;
+import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 public class KontakteView extends ViewPart implements ControlFieldListener, ISaveablePart2 {

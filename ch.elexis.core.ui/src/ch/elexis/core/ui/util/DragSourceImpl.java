@@ -10,7 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.util;
 
-import ch.elexis.core.data.PersistentObject;
+import ch.elexis.data.PersistentObject;
 
 public abstract class DragSourceImpl {
 	

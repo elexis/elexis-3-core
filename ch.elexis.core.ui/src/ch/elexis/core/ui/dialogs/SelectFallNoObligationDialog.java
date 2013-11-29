@@ -31,12 +31,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.data.Fall;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.data.Fall;
 
 public class SelectFallNoObligationDialog extends TitleAreaDialog {
 	

@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.Patient;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.data.Patient;
 
 public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 	

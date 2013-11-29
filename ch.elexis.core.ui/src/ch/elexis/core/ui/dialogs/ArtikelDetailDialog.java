@@ -21,13 +21,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.AutoForm;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.artikel.Artikeldetail;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.PersistentObject;
 
 public class ArtikelDetailDialog extends TitleAreaDialog {
 	protected Artikel art;

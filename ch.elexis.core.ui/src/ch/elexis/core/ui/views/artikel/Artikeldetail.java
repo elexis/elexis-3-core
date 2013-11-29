@@ -23,9 +23,6 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.Artikel;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
@@ -37,6 +34,9 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.PersistentObject;
 
 public class Artikeldetail extends ViewPart implements IActivationListener, ISaveablePart2 {
 	public static final String ID = "ch.elexis.ArtikelDetail"; //$NON-NLS-1$

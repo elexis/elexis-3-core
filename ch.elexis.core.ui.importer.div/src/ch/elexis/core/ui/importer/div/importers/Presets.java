@@ -17,19 +17,20 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import ch.elexis.core.data.Anschrift;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Organisation;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Person;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Xid;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.KontaktMatcher.CreateMode;
+import ch.elexis.data.Anschrift;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Organisation;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Person;
+import ch.elexis.data.Query;
+import ch.elexis.data.Xid;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

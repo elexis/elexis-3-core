@@ -25,12 +25,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.selectors.SelectorPanel;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 
 /**
  * A TreeLoader designed to read only once (for immutable data)

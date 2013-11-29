@@ -16,9 +16,9 @@ package ch.elexis.core.ui.importer.div.importers;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -30,12 +30,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Organisation;
-import ch.elexis.core.data.Person;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.KontaktMatcher.CreateMode;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Organisation;
+import ch.elexis.data.Person;
 import ch.rgw.tools.BinConverter;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;

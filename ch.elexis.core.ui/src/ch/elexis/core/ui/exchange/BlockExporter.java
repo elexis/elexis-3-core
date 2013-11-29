@@ -17,12 +17,12 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import ch.elexis.core.data.Leistungsblock;
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.exchange.elements.ServiceBlockElement;
 import ch.elexis.core.ui.exchange.elements.ServiceBlocksElement;
 import ch.elexis.core.ui.exchange.elements.XChangeElement;
+import ch.elexis.data.Leistungsblock;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 
 public class BlockExporter extends XChangeExporter {

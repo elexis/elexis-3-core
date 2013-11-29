@@ -39,11 +39,11 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
-import ch.elexis.core.data.DBImage;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.UiDBImage;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.DBImage;
+import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
 public class ImageChooser extends AbstractElementListSelectionDialog {

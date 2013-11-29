@@ -21,9 +21,9 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Control;
 
-import ch.elexis.core.data.PersistentObject;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
+import ch.elexis.data.PersistentObject;
 
 /**
  * Universelles DropTarget für PersistentObjects

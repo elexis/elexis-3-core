@@ -17,10 +17,10 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.Viewer;
 
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
 import ch.elexis.core.ui.util.Messages;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 
 /**
  * Default-Implementation des ContentProviders. Zeigt eine Liste der in der Datenbank vorhandenen

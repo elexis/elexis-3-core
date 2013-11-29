@@ -25,14 +25,14 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.Fall;
-import ch.elexis.core.data.Konsultation;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.data.Verrechnet;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.commands.Handler;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Query;
+import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 

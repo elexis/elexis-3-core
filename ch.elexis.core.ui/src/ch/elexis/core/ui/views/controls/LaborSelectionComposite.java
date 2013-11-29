@@ -2,9 +2,9 @@ package ch.elexis.core.ui.views.controls;
 
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.data.Kontakt;
-import ch.elexis.core.data.Labor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Labor;
 
 public class LaborSelectionComposite extends KontaktSelectionComposite {
 	

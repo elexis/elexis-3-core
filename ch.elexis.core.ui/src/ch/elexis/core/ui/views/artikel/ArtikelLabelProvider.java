@@ -17,11 +17,11 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Artikel;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
+import ch.elexis.data.Artikel;
 
 public class ArtikelLabelProvider extends DefaultLabelProvider implements ITableColorProvider {
 	

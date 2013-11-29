@@ -24,10 +24,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Reminder;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.preferences.inputs.DecoratedStringChooser;
 import ch.elexis.core.ui.util.DecoratedString;
+import ch.elexis.data.Reminder;
 import ch.rgw.io.Settings;
 
 public class ReminderPrefences extends PreferencePage implements IWorkbenchPreferencePage {

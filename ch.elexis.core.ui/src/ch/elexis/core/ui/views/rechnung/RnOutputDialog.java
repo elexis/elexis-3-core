@@ -32,8 +32,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Rechnung;
-import ch.elexis.core.data.RnStatus;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IRnOutputter;
@@ -41,6 +39,8 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Rechnung;
+import ch.elexis.data.RnStatus;
 
 public class RnOutputDialog extends TitleAreaDialog {
 	private final Collection<Rechnung> rnn;

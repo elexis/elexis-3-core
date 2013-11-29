@@ -13,10 +13,10 @@ package ch.elexis.core.data.events;
 import java.util.List;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.Reminder;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.data.Patient;
+import ch.elexis.data.Reminder;
 
 /**
  * Listener for patient events, registered within
