@@ -34,14 +34,14 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.data.LabItem;
-import ch.elexis.core.data.LabItem.typ;
-import ch.elexis.core.data.LabResult;
-import ch.elexis.core.data.Patient;
-import ch.elexis.core.data.PersistentObject;
-import ch.elexis.core.data.Query;
-import ch.elexis.core.ui.importer.div.importers.HL7Parser;
 import ch.elexis.core.data.util.PlatformHelper;
+import ch.elexis.core.ui.importer.div.importers.HL7Parser;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.LabItem.typ;
+import ch.elexis.data.LabResult;
+import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 import ch.rgw.tools.Result;
 
 public class Test_HL7_parser {
