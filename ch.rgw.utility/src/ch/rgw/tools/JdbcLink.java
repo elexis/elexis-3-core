@@ -32,7 +32,6 @@ import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.DriverConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
-import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
 /**
@@ -55,6 +54,9 @@ public class JdbcLink {
 	private String sPwd;
 	
 	private PoolingDataSource dataSource;
+	private GenericObjectPool<Connection> connectionPool;
+	// prepared statements are not released properly up until now, so keep 1 connection open
+	private Connection preparedStatementConnection;
 	
 	private static Log log;
 	
@@ -206,26 +208,18 @@ public class JdbcLink {
 	public boolean connect(String user, String password){
 		Exception cause = null;
 		try {
-			// Driver
-			// D=(Driver)Class.forName("org.gjt.mm.mysql.Driver").newInstance();
 			sUser = user;
 			sPwd = password;
 			Driver driver = (Driver) Class.forName(sDrv).newInstance();
 			verMajor = driver.getMajorVersion();
 			verMinor = driver.getMinorVersion();
 			
-			// Class.forName("org.firebirdsql.jdbc.FBDriver");
-			// "jdbc:mysql://<host>:<port>/<dbname>"
-			// "jdbc:odbc:<dsn>
 			log.log(Level.INFO, "Loading database driver " + sDrv);
 			log.log(Level.INFO, "Connecting with database " + sConn);
 			
 			//
 			// First, we'll create a ConnectionFactory that the
 			// pool will use to create Connections.
-			// We'll use the DriverManagerConnectionFactory,
-			// using the connect string passed in the command line
-			// arguments.
 			//
 			Properties properties = new Properties();
 			properties.put("user", user);
@@ -238,7 +232,12 @@ public class JdbcLink {
 			// the "real" Connections created by the ConnectionFactory with
 			// the classes that implement the pooling functionality.
 			//
-			ObjectPool connectionPool = new GenericObjectPool(null);
+			connectionPool = new GenericObjectPool<Connection>(null);
+			// configure the connection pool
+			connectionPool.setMaxActive(16);
+			connectionPool.setMinIdle(2);
+			connectionPool.setMaxWait(10000);
+			
 			new PoolableConnectionFactory(connectionFactory, connectionPool, null, null, false,
 				true);
 			dataSource = new PoolingDataSource(connectionPool);
@@ -262,11 +261,6 @@ public class JdbcLink {
 		}
 		throw JdbcLinkExceptionTranslation.translateException("Connect failed: " + lastErrorString,
 			cause);
-	}
-	
-	private void checkConn(){
-		if (dataSource == null)
-			throw new JdbcLinkException("Connection not valid!");
 	}
 	
 	/**
@@ -403,9 +397,12 @@ public class JdbcLink {
 	 * @return das vorkompilierte PreparedStatement
 	 */
 	public PreparedStatement prepareStatement(String sql){
-		checkConn();
 		try {
-			return dataSource.getConnection().prepareStatement(sql);
+			if (preparedStatementConnection == null) {
+				preparedStatementConnection = dataSource.getConnection();
+			}
+			
+			return preparedStatementConnection.prepareStatement(sql);
 		} catch (SQLException ex) {
 			lastErrorCode = CONNECTION_CANT_PREPARE_STAMENT;
 			lastErrorString = ex.getMessage();
@@ -583,7 +580,6 @@ public class JdbcLink {
 		}
 		
 		Stm() throws SQLException{
-			checkConn();
 			try {
 				conn = dataSource.getConnection();
 				stm = conn.createStatement();
