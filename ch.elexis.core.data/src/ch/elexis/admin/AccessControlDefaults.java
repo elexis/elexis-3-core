@@ -10,7 +10,7 @@
  * 
  *******************************************************************************/
 
-package ch.elexis.core.data.admin;
+package ch.elexis.admin;
 
 /**
  * Hier werden Grundeinstellungen für Zugriffsrechte definiert. Diese werden nur beim allerersten

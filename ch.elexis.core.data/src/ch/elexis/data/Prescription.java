@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.rgw.tools.StringTool;

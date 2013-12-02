@@ -11,17 +11,17 @@
 
 package ch.elexis.core.ui.actions;
 
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_ABOUT;
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_CHANGEMANDANT;
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_CONNECT;
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_EXIT;
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_HELP;
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_IMORT;
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_LOGIN;
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_NEWWINDOW;
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_PREFS;
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_SHOWPERSPECTIVE;
-import static ch.elexis.core.data.admin.AccessControlDefaults.AC_SHOWVIEW;
+import static ch.elexis.admin.AccessControlDefaults.AC_ABOUT;
+import static ch.elexis.admin.AccessControlDefaults.AC_CHANGEMANDANT;
+import static ch.elexis.admin.AccessControlDefaults.AC_CONNECT;
+import static ch.elexis.admin.AccessControlDefaults.AC_EXIT;
+import static ch.elexis.admin.AccessControlDefaults.AC_HELP;
+import static ch.elexis.admin.AccessControlDefaults.AC_IMORT;
+import static ch.elexis.admin.AccessControlDefaults.AC_LOGIN;
+import static ch.elexis.admin.AccessControlDefaults.AC_NEWWINDOW;
+import static ch.elexis.admin.AccessControlDefaults.AC_PREFS;
+import static ch.elexis.admin.AccessControlDefaults.AC_SHOWPERSPECTIVE;
+import static ch.elexis.admin.AccessControlDefaults.AC_SHOWVIEW;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,9 +61,9 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.admin.ACE;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.ACE;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.ResultAdapter;

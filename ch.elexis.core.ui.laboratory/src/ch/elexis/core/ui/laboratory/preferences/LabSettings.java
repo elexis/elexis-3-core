@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.ui.preferences.Messages;
 import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;

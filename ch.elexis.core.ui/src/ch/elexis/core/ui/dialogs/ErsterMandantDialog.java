@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.admin.AccessControl;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.admin.AccessControl;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;

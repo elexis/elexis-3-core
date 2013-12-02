@@ -20,10 +20,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import ch.elexis.admin.ACE;
+import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.admin.IACLContributor;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.ACE;
-import ch.elexis.core.data.admin.AccessControlDefaults;
-import ch.elexis.core.data.admin.IACLContributor;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.preferences.inputs.ACLPreferenceTree;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;

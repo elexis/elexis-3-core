@@ -18,10 +18,10 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.interfaces.events.MessageEvent;

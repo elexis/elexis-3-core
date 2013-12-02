@@ -19,8 +19,8 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 
+import ch.elexis.admin.ACE;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.ACE;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;

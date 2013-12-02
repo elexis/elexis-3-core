@@ -58,9 +58,9 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.MultiplikatorList;

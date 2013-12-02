@@ -7,12 +7,12 @@
  * Contributors: 
  * IBM - Initial API and implementation
  **********************************************************************/
-package ch.elexis.core.data.admin;
+package ch.elexis.admin;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.core.data.admin.messages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "ch.elexis.admin.messages";//$NON-NLS-1$
 	
 	public static String AccessControl_GroupAll;
 	public static String AccessControlDefaults_about;

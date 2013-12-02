@@ -25,8 +25,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;

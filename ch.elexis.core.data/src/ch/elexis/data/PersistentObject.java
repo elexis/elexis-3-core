@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
 import java.sql.DatabaseMetaData;
@@ -45,10 +46,10 @@ import org.eclipse.core.runtime.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.admin.AccessControl;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.AccessControl;
 import ch.elexis.core.data.cache.IPersistentObjectCache;
 import ch.elexis.core.data.cache.SoftCache;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -57,7 +58,6 @@ import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
-import ch.elexis.core.data.util.CompatibleObjectInputStream;
 import ch.elexis.core.data.util.DBUpdate;
 import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.core.exceptions.PersistenceException;
@@ -220,12 +220,12 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		
 		log.info("osgi.install.area: " + System.getProperty("osgi.install.area"));
-
+		
 		File demo = new File(CoreHub.getWritableUserDir() + File.separator + "demoDB");
 		log.info("Checking demo database availability in " + demo.getAbsolutePath());
-
+		
 		if (demo.exists() && demo.isDirectory()) {
-			log.info("Using demoDB in "+demo.getAbsolutePath());
+			log.info("Using demoDB in " + demo.getAbsolutePath());
 			j = JdbcLink.createH2Link(demo.getAbsolutePath() + File.separator + "db");
 			try {
 				getConnection().connect("sa", StringTool.leer);
@@ -2387,7 +2387,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			ByteArrayInputStream bais = new ByteArrayInputStream(flat);
 			ZipInputStream zis = new ZipInputStream(bais);
 			zis.getNextEntry();
-			CompatibleObjectInputStream ois = new CompatibleObjectInputStream(zis);
+			ObjectInputStream ois = new ObjectInputStream(zis);
 			Hashtable<Object, Object> res = (Hashtable<Object, Object>) ois.readObject();
 			ois.close();
 			bais.close();

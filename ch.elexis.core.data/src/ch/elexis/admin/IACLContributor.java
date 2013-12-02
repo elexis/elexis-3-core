@@ -12,7 +12,7 @@
 
 // This interface is to be used with the ACLContribution expension point
 
-package ch.elexis.core.data.admin;
+package ch.elexis.admin;
 
 /**
  * An ACLContributor declares a List of AccessControlElements it will use. Such Elements will define

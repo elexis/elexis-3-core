@@ -16,9 +16,9 @@ import org.eclipse.core.expressions.PropertyTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.admin.ACE;
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.ACE;
-import ch.elexis.core.data.admin.AccessControlDefaults;
 
 public class ACETester extends PropertyTester {
 	

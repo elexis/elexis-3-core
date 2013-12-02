@@ -51,8 +51,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.elexis.core.ui.laboratory.commands.CreateImportMappingUi;
 import ch.elexis.core.ui.laboratory.commands.CreateLabItemUi;
 import ch.elexis.core.ui.laboratory.commands.CreateMergeLabItemUi;

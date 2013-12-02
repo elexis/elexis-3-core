@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.admin.AccessControlDefaults;
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.util.SortedList;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.ui.UiDesk;

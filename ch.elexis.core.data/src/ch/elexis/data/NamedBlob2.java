@@ -13,8 +13,8 @@ package ch.elexis.data;
 
 import java.util.Hashtable;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.admin.AccessControlDefaults;
 import ch.rgw.compress.CompEx;
 import ch.rgw.tools.TimeTool;
 

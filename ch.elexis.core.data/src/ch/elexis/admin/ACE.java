@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  * 
  *******************************************************************************/
-package ch.elexis.core.data.admin;
+package ch.elexis.admin;
 
 import java.io.Serializable;
 

@@ -28,7 +28,7 @@
   <extension
         point="ch.elexis.core.data.ACLContribution">
      <ACLContribution
-           ACLContributor="ch.elexis.core.data.admin.ACLContributor"
+           ACLContributor="ch.elexis.admin.ACLContributor"
            name="Elexis.ACLContribution">
      </ACLContribution>
   </extension>
