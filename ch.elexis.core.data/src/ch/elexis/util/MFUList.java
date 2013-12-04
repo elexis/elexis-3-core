@@ -10,7 +10,7 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.core.data.util;
+package ch.elexis.util;
 
 import java.io.Serializable;
 import java.util.ArrayList;

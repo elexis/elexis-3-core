@@ -43,6 +43,11 @@
  <logger name="ch.qos.logback" level="INFO"/>
  <logger name="AccessControl" level="DEBUG"/>
  <logger name="net.kornr.log.LogbackAdaptor" level="DEBUG"/>
+ 
+ <logger name="org.apache.commons.httpclient" level="WARN"/>
+ <logger name="httpclient.wire" level="WARN"/>
+ 
+ 
  <logger name="Framework Event Dispatcher" level="DEBUG"/>
  <logger name="Elexis startup" level="DEBUG"/>
  <logger name="SoftCache" level="DEBUG">

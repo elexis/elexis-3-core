@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.util.MFUList;
+import ch.elexis.util.MFUList;
 import ch.rgw.tools.StringTool;
 
 /**
