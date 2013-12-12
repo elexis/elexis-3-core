@@ -217,9 +217,10 @@ public class CoreHub implements BundleActivator {
 		Properties prop = new Properties();
 		String elexis_version = "Developer";
 		String qualifier = " ?? ";
+		String url_name = "platform:/plugin/ch.elexis.core.data/version.properties";
 		try {
 			URL url;
-			url = new URL("platform:/plugin/ch.elexis.core.data/version.properties");
+			url = new URL(url_name);
 			InputStream inputStream = url.openConnection().getInputStream();
 			if (inputStream != null) {
 				prop.load(inputStream);
@@ -227,7 +228,7 @@ public class CoreHub implements BundleActivator {
 				qualifier = prop.getProperty("elexis.qualifier");
 			}
 		} catch (IOException e) {
-			log.warn("Error reading build version information. ", e);
+			log.warn("Error reading build version information from "+url_name);
 		}
 		return elexis_version.replace("-SNAPSHOT", "") + " " + qualifier;
 	}
