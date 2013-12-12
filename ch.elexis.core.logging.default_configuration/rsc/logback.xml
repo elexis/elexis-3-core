@@ -12,8 +12,10 @@
   http://logback.qos.ch/manual/configuration.html
   
 -->
-<configuration scan="true" debug="true">
-  <contextName>elexis</contextName> 
+<configuration scan="true" debug="false">
+  <contextName>elexis</contextName>
+  <!-- The NopStatusListener available since 1.0.7 would allow us to suppress about 30 lines at startup
+       Unfortunately I only found 1.0.7 bundles for eclipse. Therefore I stay with it -->
   <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>  
    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
@@ -41,14 +43,15 @@
   
  <logger name="at.medevit.elexis.dbcheck.syntactic.SyntacticCheckMySQL" level="debug" />
  <logger name="ch.qos.logback" level="INFO"/>
- <logger name="AccessControl" level="DEBUG"/>
- <logger name="net.kornr.log.LogbackAdaptor" level="DEBUG"/>
+ <logger name="AccessControl" level="WARN"/>
+ <logger name="net.kornr.log.LogbackAdaptor" level="WARN"/>
+ <logger name="ch.qos.logback.classic.joran.action.LoggerAction" level="WARN" />
  
  <logger name="org.apache.commons.httpclient" level="WARN"/>
  <logger name="httpclient.wire" level="WARN"/>
  
  
- <logger name="Framework Event Dispatcher" level="DEBUG"/>
+ <logger name="Framework Event Dispatcher" level="WARN"/>
  <logger name="Elexis startup" level="DEBUG"/>
  <logger name="SoftCache" level="DEBUG">
     <appender-ref ref="STDOUT" />
