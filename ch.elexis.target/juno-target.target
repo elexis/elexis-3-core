@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Juno for Elexis 3.0" sequenceNumber="21">
+<?pde version="3.8"?><target name="Juno for Elexis 3.0" sequenceNumber="22">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<repository location="http://download.elexis.info/mirror.4.elexis/snapshot"/>
 <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
 <unit id="ch.qos.logback.core" version="1.0.7.v20121108-1250"/>
 <unit id="ch.qos.logback.slf4j" version="1.0.7.v20121108-1250"/>
@@ -19,6 +18,7 @@
 <unit id="org.slf4j.jul" version="1.7.2.v20121108-1250"/>
 <unit id="org.slf4j.log4j" version="1.7.2.v20130115-1340"/>
 <unit id="org.slf4j.nop" version="1.7.2.v201212060727"/>
+<repository location="http://download.elexis.info/mirror.4.elexis/snapshot"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <repository location="http://download.elexis.info/elexis.3rdparty.libraries/"/>
@@ -35,12 +35,15 @@
 <unit id="antlr" version="2.7.7"/>
 <unit id="antlr.stringtemplate" version="2.2.0"/>
 <unit id="bcprov" version="1.46.0"/>
+<unit id="bouncycastle.bcmail-jdk14" version="138.0.0"/>
+<unit id="bouncycastle.bcprov-jdk14" version="138.0.0"/>
 <unit id="bsf" version="2.4.0"/>
 <unit id="cal10n.api" version="0.7.4"/>
 <unit id="ch.qos.logback.classic" version="1.0.7"/>
 <unit id="ch.qos.logback.core" version="1.0.7"/>
 <unit id="com.healthmarketscience.jackcess" version="1.2.13"/>
 <unit id="com.ibm.icu.4j" version="2.6.1"/>
+<unit id="com.lowagie.itext" version="2.0.8"/>
 <unit id="com.mysql.jdbc" version="5.1.21"/>
 <unit id="com.thoughtworks.xstream" version="1.2.2"/>
 <unit id="com.wutka.dtdparser" version="1.21.0"/>
