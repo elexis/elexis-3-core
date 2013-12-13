@@ -73,7 +73,6 @@ public class HuffmanTree {
 	 *            a field of TABLESIZE ints indicating the frequency od each byte
 	 * @return the root node of the newly created tree
 	 */
-	@SuppressWarnings("unchecked")
 	public Node build(int[] table){
 		root = null;
 		if ((table == null) || (table.length != TABLESIZE)) {
@@ -85,7 +84,7 @@ public class HuffmanTree {
 		if (freq[Huff.eof] == 0)
 			freq[Huff.eof] = 1;
 		
-		ArrayList nodes = new ArrayList(freq.length);
+		ArrayList<Node> nodes = new ArrayList<Node>(freq.length);
 		for (int i = 0; i < freq.length; i++) {
 			if (freq[i] == 0)
 				continue;
@@ -167,11 +166,11 @@ public class HuffmanTree {
 			while (source.available() != 0) {
 				int c = source.read();
 				freq[c]++;
-				if (copy)
+				if (copy && fos != null)
 					fos.write(c);
 			}
 			source.close();
-			if (copy) {
+			if (copy && fos != null) {
 				fos.close();
 				return new FileInputStream(file);
 			}
@@ -343,7 +342,7 @@ public class HuffmanTree {
 		return ret;
 	}
 	
-	class Node implements Comparable {
+	class Node implements Comparable<Object> {
 		Node left, right;
 		byte[] ch;
 		int lfreq;
