@@ -19,14 +19,17 @@ package ch.rgw.compress;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.prefs.Preferences;
 
+import ch.rgw.compress.HuffmanTree.Node;
 import ch.rgw.tools.BinConverter;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.IntTool;
@@ -85,7 +88,7 @@ public class HuffmanTree {
 		if (freq[Huff.eof] == 0)
 			freq[Huff.eof] = 1;
 		
-		ArrayList nodes = new ArrayList(freq.length);
+		List<Node> nodes = new ArrayList<Node>(freq.length);
 		for (int i = 0; i < freq.length; i++) {
 			if (freq[i] == 0)
 				continue;
@@ -157,26 +160,29 @@ public class HuffmanTree {
 	public InputStream constructTable(InputStream source, boolean copy){
 		freq = new int[TABLESIZE];
 		try {
-			File file = null;
-			FileOutputStream fos = null;
-			if (copy == true) {
-				file = File.createTempFile("huf", "tmp");
-				file.deleteOnExit();
-				fos = new FileOutputStream(file);
-			}
-			while (source.available() != 0) {
-				int c = source.read();
-				freq[c]++;
-				if (copy)
-					fos.write(c);
-			}
-			source.close();
 			if (copy) {
+				File file = File.createTempFile("huf", "tmp");
+				file.deleteOnExit();
+				FileOutputStream fos = new FileOutputStream(file);
+				
+				while (source.available() != 0) {
+					int c = source.read();
+					freq[c]++;
+					fos.write(c);
+				}
+				
+				source.close();
 				fos.close();
 				return new FileInputStream(file);
+			} else {
+				while (source.available() != 0) {
+					int c = source.read();
+					freq[c]++;
+				}
+				source.close();
+				return null;
 			}
-			return null;
-		} catch (Exception ex) {
+		} catch (IOException ex) {
 			ExHandler.handle(ex);
 			return null;
 		}
