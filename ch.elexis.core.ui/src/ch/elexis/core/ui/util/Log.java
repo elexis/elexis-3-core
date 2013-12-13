@@ -113,6 +113,9 @@ public class Log {
 		if (out == null)
 			out = LoggerFactory.getLogger(Log.class);
 		synchronized (out) {
+			String type = "unknown"; //$NON-NLS-1$
+			if (level > 0 && level < Levels.length)
+				type = Levels[level];
 			switch (level) {
 			case NOTHING:
 				break;
@@ -142,6 +145,9 @@ public class Log {
 						if (doAlert == null) {
 							doAlert = UiDesk.getTopShell();
 						}
+						lastError =
+							new StringBuilder().append(" |").append(type).append("| - ")
+								.append(prefix).append(": ").append(message).toString();
 						if (doAlert != null) {
 							UiDesk.asyncExec(new Runnable() {
 								public void run(){
