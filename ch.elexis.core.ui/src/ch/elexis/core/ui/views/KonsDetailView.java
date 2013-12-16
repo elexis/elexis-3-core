@@ -240,7 +240,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		hXrefs = new Hashtable<String, IKonsExtension>();
 		@SuppressWarnings("unchecked")
 		List<IKonsExtension> xrefs =
-			Extensions.getClasses("ch.elexis.KonsExtension", "KonsExtension"); //$NON-NLS-1$ //$NON-NLS-2$
+			Extensions.getClasses("ch.elexis.core.ui.KonsExtension", "KonsExtension"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (IKonsExtension x : xrefs) {
 			String provider = x.connect(text);
 			hXrefs.put(provider, x);
@@ -316,7 +316,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	public void dispose(){
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		text.disconnectGlobalActions(getViewSite());
-		emFont.dispose();
+		//emFont.dispose();
 		super.dispose();
 	}
 	
