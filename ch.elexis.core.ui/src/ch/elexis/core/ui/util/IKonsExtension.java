@@ -34,7 +34,9 @@ import ch.elexis.core.ui.text.IRichTextDisplay;
  * 
  * @author gerry
  * 
- * @deprecated use IRangeRenderer and SSDRange
+ * @previously_deprecated was deprecated in preparation of a new version - but now no more. If the
+ *                        new version should come along again later -> "use IRangeRenderer and
+ *                        SSDRange"
  * 
  */
 public interface IKonsExtension extends IExecutableExtension {
