@@ -34,8 +34,6 @@ import ch.elexis.core.ui.text.IRichTextDisplay;
  * 
  * @author gerry
  * 
- * @deprecated use IRangeRenderer and SSDRange
- * 
  */
 public interface IKonsExtension extends IExecutableExtension {
 	
