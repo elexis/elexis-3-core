@@ -452,7 +452,7 @@
 					addressed originally
 				</xs:documentation>
 			</xs:annotation>
-		</xs:attribute>
+		</xs:attribute>
 		<xs:attribute name="date" type="xs:date" use="required">
 			<xs:annotation>
 				<xs:documentation>

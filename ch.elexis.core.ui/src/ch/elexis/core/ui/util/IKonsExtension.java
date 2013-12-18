@@ -32,9 +32,7 @@ import ch.elexis.core.ui.text.IRichTextDisplay;
  * wird diese ins Kontextmenu eingebunden. Wenn getAction null zurückliefert, erfolgt keine
  * Veränderung des Kontxtmenüs. Referenzimplementation: ch.elexis.privatnotizen
  * 
- * @author gerry
- * 
- * @deprecated use IRangeRenderer and SSDRange
+ * @author gerry 
  * 
  */
 public interface IKonsExtension extends IExecutableExtension {
