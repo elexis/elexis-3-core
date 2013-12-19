@@ -76,7 +76,9 @@ CREATE TABLE KONTAKT_ADRESS_JOINT(
 	deleted		CHAR(1) default '0',
 	myID		VARCHAR(25),					# ID of a KONTAKT 
 	otherID		VARCHAR(25),					# ID of a KONTAKT that ist related to myID
-	Bezug		VARCHAR(80)						# Dscription of the relationship
+	Bezug		VARCHAR(80),					# Description of the relationship
+	myRType		CHAR(4),						# My formal relationship type
+	otherRType	CHAR(4)							# Other formal relationship type
 );
 
 CREATE INDEX aij1 on KONTAKT_ADRESS_JOINT (myId);
@@ -161,7 +163,7 @@ CREATE TABLE PATIENT_ARTIKEL_JOINT(
 	deleted			CHAR(1) default '0',
 	PatientID		VARCHAR(25),					# foreign key from KONTAKT
 	ArtikelID		VARCHAR(25),					# foreign key from ARTIKEL  !!!! DEPRECATED DO NOT USE !!!
-	Artikel			VARCHAR(80),					# cheap copy of article. replaces ArtikelID
+	Artikel			VARCHAR(255),					# cheap copy of article. replaces ArtikelID
 	RezeptID		VARCHAR(25),					# prescription where this article was last given
 	DateFrom		CHAR(8),						# first date
 	DateUntil		CHAR(8),						# last date

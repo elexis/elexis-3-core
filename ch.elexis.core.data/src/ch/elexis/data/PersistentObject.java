@@ -466,11 +466,15 @@ public abstract class PersistentObject implements IPersistentObject {
 			String msg =
 				String
 					.format(
-						"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Bitte machen Sie ein Update.",
+						"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Wollen Sie trotzdem fortsetzen?",
 						jd.getConnectString(), vi.version().toString(), v2.version().toString());
-			log.error(msg);
-			MessageEvent.fireError("Verbindung nicht möglich", msg);
-			System.exit(2);
+			log.error(msg);		
+			if (!cod.openQuestion(
+				"Diskrepanz in der Datenbank-Version ", msg)) {
+				System.exit(2);
+			} else {
+				log.error("User continues with Elexis / database version mismatch");
+			}
 		}
 		// Wenn trace global eingeschaltet ist, gilt es für alle
 		setTrace(CoreHub.globalCfg.get(Preferences.ABL_TRACE, null));

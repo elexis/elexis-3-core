@@ -40,7 +40,8 @@ public class Prescription extends PersistentObject {
 	private static final String ARTICLE_ID = "ArtikelID";
 	public static final String ARTICLE = "Artikel";
 	public static final String PATIENT_ID = "PatientID";
-	private static final String TABLENAME = "PATIENT_ARTIKEL_JOINT";
+	public static final String TABLENAME = "PATIENT_ARTIKEL_JOINT";
+	
 	static {
 		addMapping(TABLENAME, PATIENT_ID, ARTICLE, ARTICLE_ID, REZEPT_ID, "DatumVon=S:D:DateFrom",
 			"DatumBis=S:D:DateUntil", DOSAGE, REMARK, COUNT, FLD_EXTINFO);

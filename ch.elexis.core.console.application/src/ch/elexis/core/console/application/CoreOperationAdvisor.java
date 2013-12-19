@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
+import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.data.Anwender;
 
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
@@ -62,6 +63,11 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	public String getInitialPerspective(){
 		System.out.println("CoreOperationAdvisor: getInitialPerspective()");
 		return null;
+	}
+
+	@Override
+	public boolean performDatabaseUpdate(String[] array, String pluginId){
+		return new SqlRunner(array, pluginId).runSql();
 	}
 	
 }

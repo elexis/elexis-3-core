@@ -17,7 +17,11 @@ import java.util.List;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
+import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.data.BezugsKontakt;
+import ch.elexis.data.Prescription;
 import ch.rgw.tools.Log;
 import ch.rgw.tools.VersionInfo;
 
@@ -29,12 +33,15 @@ import ch.rgw.tools.VersionInfo;
  */
 public class DBUpdate {
 	
+	private static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
+			.getCoreOperationAdvisor();
+	
 	static final String[] versions = {
 		"1.3.0", "1.3.1", "1.3.2", "1.3.3", "1.3.4", "1.3.5", "1.3.6", "1.3.7", "1.3.8", "1.3.9",
 		"1.3.10", "1.3.11", "1.3.12", "1.3.13", "1.4.0", "1.4.1", "1.4.2", "1.4.3", "1.4.4",
 		"1.4.5", "1.4.6", "1.5.0", "1.6.0", "1.6.1", "1.6.2", "1.6.3", "1.6.4", "1.7.0", "1.7.1",
 		"1.7.2", "1.8.0", "1.8.1", "1.8.2", "1.8.3", "1.8.4", "1.8.5", "1.8.6", "1.8.7", "1.8.8",
-		"1.8.9", "1.8.10", "1.8.11", "1.8.12", "1.8.13", "1.8.14", "1.8.15", "1.8.16", "1.9.0"
+		"1.8.9", "1.8.10", "1.8.11", "1.8.12", "1.8.13", "1.8.14", "1.8.15", "1.8.16", "1.9.0", "3.0.0"
 	};
 	static final String[] cmds =
 		{
@@ -326,18 +333,20 @@ public class DBUpdate {
 			// Due to Ticket #917 - Spalte OID in Tabelle Logs zu kurz
 			"ALTER TABLE LOGS MODIFY OID VARCHAR(255);"
 				+ "ALTER TABLE LOGS MODIFY station VARCHAR(255);",
+				
 			// 1.8.15
 			// N. Giger 18.07.2012
 			// Anpassung für Import ODDB-YAML/CSV. Brauche ATC_code Feld
 			"ALTER TABLE ARTIKEL ADD ATC_code VARCHAR(255);",
+			
 			// 1.8.16
 			// T. Huster 29.08.2012
 			// Add userID for needed statistics
 			"ALTER TABLE LEISTUNGEN ADD userID VARCHAR(25);",
+			
 			// 1.9.0
 			// T. Huster 18.07.2013
 			// Changes for new Lab model and view
-
 			"ALTER TABLE LABORITEMS ADD loinccode VARCHAR(128);"
 				+ "ALTER TABLE LABORITEMS ADD visible VARCHAR(1);"
 				+ "ALTER TABLE LABORITEMS MODIFY billingcode VARCHAR(128);"
@@ -351,8 +360,15 @@ public class DBUpdate {
 				+ "ALTER TABLE LABORWERTE ADD transmissiontime VARCHAR(24);"
 				+ "ALTER TABLE LABORWERTE ADD refmale VARCHAR(255);"
 				+ "ALTER TABLE LABORWERTE ADD reffemale VARCHAR(255);"
-				+ "ALTER TABLE LABORWERTE ADD OriginID VARCHAR(25);"
-		};
+				+ "ALTER TABLE LABORWERTE ADD OriginID VARCHAR(25);",
+				
+			// 3.0.0
+			// M. Descher 19.12.2013
+			// Bump to 3.0.0 in Elexis 3.0.0
+			"ALTER TABLE "+BezugsKontakt.TABLENAME+" ADD "+BezugsKontakt.FLD_MY_RTYPE+" CHAR(4);"+
+			"ALTER TABLE "+BezugsKontakt.TABLENAME+" ADD "+BezugsKontakt.FLD_OTHER_RTYPE+" CHAR(4);"+
+			"ALTER TABLE "+Prescription.TABLENAME+" MODIFY "+Prescription.ARTICLE+" VARCHAR(255);"
+			};
 	
 	static Log log = Log.get(DBUpdate.class.getName());
 	
@@ -397,9 +413,10 @@ public class DBUpdate {
 		log.log("Start DBUpdate from Version " + dbv + " to Version "
 			+ versions[versions.length - 1], Log.INFOS);
 		
-		SqlRunner runner = new SqlRunner(sqlStrings.toArray(new String[0]), CoreHub.PLUGIN_ID);
+		boolean success = cod.performDatabaseUpdate(sqlStrings.toArray(new String[0]), CoreHub.PLUGIN_ID);
+		
 		// update version if all updates are successful
-		if (runner.runSql()) {
+		if (success) {
 			CoreHub.globalCfg.set("dbversion", CoreHub.DBVersion);
 			CoreHub.globalCfg.set("ElexisVersion", CoreHub.Version);
 			CoreHub.globalCfg.flush();

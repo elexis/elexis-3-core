@@ -16,9 +16,13 @@ public class BezugsKontakt extends PersistentObject {
 	public static final String RELATION = "Bezug"; //$NON-NLS-1$
 	public static final String OTHER_ID = "otherID"; //$NON-NLS-1$
 	public static final String MY_ID = "myID"; //$NON-NLS-1$
-	private static final String tablename = "KONTAKT_ADRESS_JOINT"; //$NON-NLS-1$
+	public static final String FLD_MY_RTYPE = "myRType"; // formal relationship type
+	public static final String FLD_OTHER_RTYPE = "otherRType"; // other formal relationship
+	
+	public static final String TABLENAME = "KONTAKT_ADRESS_JOINT"; //$NON-NLS-1$
+	
 	static {
-		addMapping(tablename, MY_ID, OTHER_ID, RELATION);
+		addMapping(TABLENAME, MY_ID, OTHER_ID, RELATION, FLD_MY_RTYPE, FLD_OTHER_RTYPE);
 	}
 	
 	public BezugsKontakt(Kontakt kontakt, Kontakt adr, String bezug){
@@ -53,7 +57,7 @@ public class BezugsKontakt extends PersistentObject {
 	
 	@Override
 	protected String getTableName(){
-		return tablename;
+		return TABLENAME;
 	}
 	
 	protected BezugsKontakt(){}

@@ -22,13 +22,16 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
+import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.ErsterMandantDialog;
 import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.util.SqlWithUiRunner;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.data.Anwender;
+import ch.rgw.tools.Log;
 
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
@@ -99,5 +102,10 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 			dlg.setMessage(Messages.LoginDialog_enterUsernamePass);
 			dlg.open();
 		}
+	}
+
+	@Override
+	public boolean performDatabaseUpdate(String[] array, String pluginId){
+		return new SqlWithUiRunner(array, pluginId).runSql();
 	}
 }
