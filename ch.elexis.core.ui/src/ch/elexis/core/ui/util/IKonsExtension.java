@@ -26,15 +26,13 @@ import ch.elexis.core.ui.text.IRichTextDisplay;
  * KonsDetailView für jedes von ihr deklarierte xref-tag einmal aufgerufen (doLayout). Sie kann da
  * "true" zurückgeben um anzuzeigen, dass sie auf Mausklicks reagieren will, oder false, wenn es nur
  * um Layout ohne Klickaktivität geht. Falls sie auf doLayout "true" zurückgegeben hat, wird sie
- * immer dann via doXref aufgerufe, wenn der Benutzer den von ihr gesetzten Link anklickt.
+ * immer dann via doXref aufgerufen, wenn der Benutzer den von ihr gesetzten Link anklickt.
  * Schliesslich wird die IKonsExtension immer dann aufgerufen, wenn der Anwender das Kontext- menu
  * des Textfelds anzeigen will (rechte Maustaste). Wenn getAction eine IAction zurückliefert, dann
  * wird diese ins Kontextmenu eingebunden. Wenn getAction null zurückliefert, erfolgt keine
- * Veränderung des Kontxtmenüs. Referenzimplementation: ch.elexis.privatnotizen
+ * Veränderung des Kontextmenüs. Referenzimplementation: ch.elexis.privatnotizen
  * 
  * @author gerry
- * 
- * @deprecated use IRangeRenderer and SSDRange
  * 
  */
 public interface IKonsExtension extends IExecutableExtension {
