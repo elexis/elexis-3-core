@@ -12,7 +12,7 @@ import ch.rgw.tools.VersionInfo;
 
 public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	
-	public static final String FLD_USER = "user"; //$NON-NLS-1$
+	public static final String FLD_USER = "userid"; //$NON-NLS-1$
 	public static final String FLD_MANDANT = "mandant"; //$NON-NLS-1$
 	public static final String FLD_PATIENT = "patient"; //$NON-NLS-1$
 	public static final String FLD_ITEM = "item"; //$NON-NLS-1$
@@ -54,7 +54,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			"lastupdate BIGINT," + //$NON-NLS-1$
 			"deleted CHAR(1) default '0'," + //$NON-NLS-1$
 			
-			"user VARCHAR(128)," + //$NON-NLS-1$
+			"userid VARCHAR(128)," + //$NON-NLS-1$
 			"mandant VARCHAR(128)," + //$NON-NLS-1$
 			"patient VARCHAR(128)," + //$NON-NLS-1$
 			"item VARCHAR(128)," + //$NON-NLS-1$
