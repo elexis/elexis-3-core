@@ -31,6 +31,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.StringTool;
 
@@ -118,7 +119,7 @@ class PerspektivenAuswahl extends Dialog {
 		list = new List(parent, SWT.BORDER | SWT.SINGLE);
 		list.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		IExtensionRegistry exr = Platform.getExtensionRegistry();
-		IExtensionPoint exp = exr.getExtensionPoint("ch.elexis.Sidebar"); //$NON-NLS-1$
+		IExtensionPoint exp = exr.getExtensionPoint(ExtensionPointConstantsUi.SIDEBAR);
 		if (exp != null) {
 			IExtension[] extensions = exp.getExtensions();
 			for (IExtension ex : extensions) {

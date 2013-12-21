@@ -42,6 +42,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
@@ -94,7 +95,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		// create open perspective actions according to the list of Sidebar
 		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS, Boolean.toString(true))
 			.equalsIgnoreCase(Boolean.toString(true))) {
-			List<IConfigurationElement> ex = Extensions.getExtensions("ch.elexis.Sidebar"); //$NON-NLS-1$
+			List<IConfigurationElement> ex = Extensions.getExtensions(ExtensionPointConstantsUi.SIDEBAR);
 			openPerspectiveActions = new IAction[ex.size()];
 			int i = 0;
 			for (IConfigurationElement ice : ex) {
