@@ -16,6 +16,7 @@ package ch.elexis.core.data.util;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDataAccess;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
@@ -56,7 +57,7 @@ public class ScriptUtil {
 		} else if (dependendObject.equals("Konsultation")) {
 			ref = Konsultation.getAktuelleKons();
 		}
-		for (IConfigurationElement ic : Extensions.getExtensions("ch.elexis.DataAccess")) {
+		for (IConfigurationElement ic : Extensions.getExtensions(ExtensionPointConstantsData.DATA_ACCESS)) {
 			String icName = ic.getAttribute("name");
 			if (icName.equals(plugin)) {
 				IDataAccess ida;

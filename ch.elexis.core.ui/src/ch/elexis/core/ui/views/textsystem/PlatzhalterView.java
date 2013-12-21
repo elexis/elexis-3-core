@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IDataAccess;
 import ch.elexis.core.data.interfaces.IDataAccess.Element;
 import ch.elexis.core.data.util.Extensions;
@@ -262,7 +263,7 @@ public class PlatzhalterView extends ViewPart {
 		root.addChildren(props.getList());
 		
 		// IDataAccess Implementations
-		List<IDataAccess> dataAccessList = Extensions.getClasses("ch.elexis.DataAccess", "class");//$NON-NLS-1$ //$NON-NLS-2$
+		List<IDataAccess> dataAccessList = Extensions.getClasses(ExtensionPointConstantsData.DATA_ACCESS, "class");//$NON-NLS-1$ //$NON-NLS-2$
 		for (IDataAccess dataAccess : dataAccessList) {
 			PlatzhalterTreeData treeData =
 				new PlatzhalterTreeData(dataAccess.getName(), "", dataAccess.getDescription()); //$NON-NLS-1$
