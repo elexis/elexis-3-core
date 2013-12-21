@@ -30,11 +30,7 @@ import ch.rgw.tools.TimeTool;
  * SAmDaS. In Ermangelung eines besseren Standards sei dieser Name gestattet ;-) Samdas ist ein
  * XML-Schema, das die Übertragung medizinischer Krankengeschichten (Elecronic medical record, EMR)
  * zwischen verschiedenen Endanwendungen ermöglicht. Diese Klasse ist ein API dafür
- * 
- * @author Gerry
- * @deprecated use SimpleStructuredDocument
  */
-@Deprecated
 public class Samdas {
 	public static final String ELEM_ROOT = "EMR"; //$NON-NLS-1$
 	public static final String ELEM_TEXT = "text"; //$NON-NLS-1$
