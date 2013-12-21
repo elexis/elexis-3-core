@@ -32,6 +32,7 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.laboratory.laborlink.LaborLink;
 import ch.elexis.core.ui.util.IExternLaborOrder;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
@@ -258,7 +259,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	
 	private List<IExternLaborOrder> getExternLaborOrder(){
 		List<IExternLaborOrder> externLaborOrders =
-			Extensions.getClasses(Extensions.getExtensions("ch.elexis.LaborOrder"), "class", //$NON-NLS-1$ //$NON-NLS-2$
+			Extensions.getClasses(Extensions.getExtensions(ExtensionPointConstantsUi.LABORORDER), "class", //$NON-NLS-1$ //$NON-NLS-2$
 				false);
 		return externLaborOrders;
 	}

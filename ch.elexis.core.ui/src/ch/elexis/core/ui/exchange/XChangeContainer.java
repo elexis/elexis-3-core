@@ -30,6 +30,7 @@ import org.jdom.output.XMLOutputter;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.Hub;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.exchange.elements.ContactElement;
 import ch.elexis.core.ui.exchange.elements.ContactsElement;
 import ch.elexis.core.ui.exchange.elements.DocumentElement;
@@ -104,7 +105,7 @@ public class XChangeContainer {
 		new HashMap<PersistentObject, XChangeElement>();
 	
 	private final List<IConfigurationElement> lex = Extensions
-		.getExtensions(IExchangeContributor.ExtensionPointName);
+		.getExtensions(ExtensionPointConstantsUi.XCHANGE_CONTRIBUTION);
 	
 	// public abstract Kontakt findContact(String id);
 	

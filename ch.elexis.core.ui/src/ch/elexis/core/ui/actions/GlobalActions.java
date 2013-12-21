@@ -69,6 +69,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
 import ch.elexis.core.ui.dialogs.EtiketteDruckenDialog;
@@ -278,7 +279,7 @@ public class GlobalActions {
 				public void run(){
 					// cnv.open();
 					Importer imp =
-						new Importer(mainWindow.getShell(), "ch.elexis.FremdDatenImport"); //$NON-NLS-1$
+						new Importer(mainWindow.getShell(), ExtensionPointConstantsUi.FREMDDATENIMPORT);
 					imp.create();
 					imp.setMessage(Messages.GlobalActions_ImportDlgMessage); //$NON-NLS-1$
 					imp.getShell().setText(Messages.GlobalActions_ImportDlgShelltext); //$NON-NLS-1$

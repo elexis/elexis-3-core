@@ -30,10 +30,11 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.Log;
 
 public class LaborOrderPulldownMenuCreator implements IMenuCreator {
-	private final String LAB_ORDER_SELECTED_ACTION_ID = "ch.elexis.LaborOrder.selectedId";
+	private final String LAB_ORDER_SELECTED_ACTION_ID = ExtensionPointConstantsUi.LABORORDER+".selectedId";
 	private static Log log = Log.get("LaborOrderPulldownMenuCreator"); //$NON-NLS-1$
 	
 	List<IAction> actions = new Vector<IAction>();
@@ -49,7 +50,7 @@ public class LaborOrderPulldownMenuCreator implements IMenuCreator {
 	private void init(final Shell shell){
 		List<IAction> orderActions =
 			Extensions.getClasses(
-				Extensions.getExtensions("ch.elexis.LaborOrder"), "ToolbarAction", //$NON-NLS-1$ //$NON-NLS-2$
+				Extensions.getExtensions(ExtensionPointConstantsUi.LABORORDER), "ToolbarAction", //$NON-NLS-1$ //$NON-NLS-2$
 				false);
 		for (IAction action : orderActions) {
 			if (action.getId() != null && action.getImageDescriptor() != null

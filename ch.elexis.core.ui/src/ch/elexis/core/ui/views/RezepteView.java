@@ -58,6 +58,7 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.MediDetailDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
@@ -216,7 +217,7 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 		getSite().setSelectionProvider(lvRpLines);
 		IToolBarManager tm = getViewSite().getActionBars().getToolBarManager();
 		List<IAction> importers =
-			Extensions.getClasses(Extensions.getExtensions("ch.elexis.RezeptHook"), //$NON-NLS-1$
+			Extensions.getClasses(Extensions.getExtensions(ExtensionPointConstantsUi.REZEPT_HOOK), //$NON-NLS-1$
 				"RpToolbarAction", false); //$NON-NLS-1$
 		for (IAction ac : importers) {
 			tm.add(ac);

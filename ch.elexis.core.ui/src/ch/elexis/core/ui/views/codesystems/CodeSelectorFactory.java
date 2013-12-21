@@ -55,6 +55,7 @@ import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -115,8 +116,8 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		Object data){
 		java.util.List<IConfigurationElement> list =
 			Extensions.getExtensions("ch.elexis.Genericcode"); //$NON-NLS-1$
-		list.addAll(Extensions.getExtensions("ch.elexis.Verrechnungscode")); //$NON-NLS-1$
-		list.addAll(Extensions.getExtensions("ch.elexis.Diagnosecode")); //$NON-NLS-1$
+		list.addAll(Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE)); //$NON-NLS-1$
+		list.addAll(Extensions.getExtensions(ExtensionPointConstantsUi.DIAGNOSECODE)); //$NON-NLS-1$
 		
 		if (list != null) {
 			for (IConfigurationElement ic : list) {

@@ -54,6 +54,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.laboratory.controls.LaborOrdersComposite;
@@ -203,7 +204,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 		IToolBarManager tm = getViewSite().getActionBars().getToolBarManager();
 		List<IAction> importers =
 			Extensions.getClasses(
-				Extensions.getExtensions("ch.elexis.LaborDatenImport"), "ToolbarAction", //$NON-NLS-1$ //$NON-NLS-2$
+				Extensions.getExtensions(ExtensionPointConstantsUi.LABORDATENIMPORT), "ToolbarAction", //$NON-NLS-1$ //$NON-NLS-2$
 				false);
 		for (IAction ac : importers) {
 			tm.add(ac);
@@ -272,7 +273,7 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 			
 			@Override
 			public void run(){
-				Importer imp = new Importer(getViewSite().getShell(), "ch.elexis.LaborDatenImport"); //$NON-NLS-1$
+				Importer imp = new Importer(getViewSite().getShell(), ExtensionPointConstantsUi.LABORDATENIMPORT); //$NON-NLS-1$
 				imp.create();
 				imp.setMessage(Messages.LaborView_selectDataSource);
 				imp.getShell().setText(Messages.LaborView_labImporterCaption);

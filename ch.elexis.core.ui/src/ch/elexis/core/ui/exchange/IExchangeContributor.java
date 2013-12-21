@@ -25,7 +25,6 @@ import ch.elexis.data.PersistentObject;
  * 
  */
 public interface IExchangeContributor extends IExecutableExtension {
-	public static final String ExtensionPointName = "ch.elexis.xCHangeContribution";
 	
 	/**
 	 * An Element is to be exported. The method can contribute its own data
