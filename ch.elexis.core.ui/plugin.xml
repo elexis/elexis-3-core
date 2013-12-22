@@ -7,7 +7,6 @@
    <extension-point id="Text" name="%elexis.text" schema="schema/Text.exsd"/>
    <extension-point id="Verrechnungscode" name="%elexis.articles" schema="schema/Verrechnungscode.exsd"/>
    <extension-point id="Diagnosecode" name="%elexis.diagnoses" schema="schema/Diagnosecode.exsd"/>
-   <extension-point id="RechnungsManager" name="%elexis.accounting" schema="schema/RechnungsManager.exsd"/>
    <extension-point id="KonsExtension" name="%elexis.konsExtension" schema="schema/KonsExtension.exsd"/>
    <extension-point id="Transporter" name="Transporter" schema="schema/Transporter.exsd"/>
    <extension-point id="RezeptHook" name="RezeptHook" schema="schema/RezeptHook.exsd"/>
@@ -231,7 +230,7 @@
       </coreOperation>
    </extension>
    <extension
-         point="ch.elexis.core.ui.RechnungsManager">
+         point="ch.elexis.core.data.RechnungsManager">
       <Rechnung
             name="Fall-Standard"
             outputter="ch.elexis.core.ui.views.rechnung.DefaultOutputter">
