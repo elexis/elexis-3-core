@@ -94,27 +94,8 @@ Import and export mediates to and from a generic format while output means an ar
                </appinfo>
             </annotation>
          </attribute>
-         <attribute name="Outputter" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn=":ch.elexis.core.data.interfaces.IOutputter"/>
-               </appinfo>
-            </annotation>
-         </attribute>
       </complexType>
    </element>
-
-   <annotation>
-      <appinfo>
-         <meta.section type="apiInfo"/>
-      </appinfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
 
    <annotation>
       <appinfo>
@@ -122,6 +103,8 @@ Import and export mediates to and from a generic format while output means an ar
       </appinfo>
       <documentation>
          2.0.2
+
+3.0.0 The output log is extracted into the new extension point ch.elexis.core.data.OutputLogDescriptor
       </documentation>
    </annotation>
 
@@ -131,6 +114,15 @@ Import and export mediates to and from a generic format while output means an ar
       </appinfo>
       <documentation>
          [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiInfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
       </documentation>
    </annotation>
 

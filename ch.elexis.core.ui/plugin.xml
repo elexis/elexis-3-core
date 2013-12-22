@@ -248,15 +248,6 @@
       </context>
    </extension>
       <extension
-            point="ch.elexis.core.ui.Transporter">
-         <Transporter
-               Outputter="ch.elexis.core.ui.views.RezeptBlatt"
-               id="ch.elexis.Rezeptblatt"
-               name="%RezeptAusgabe"
-               type="ch.elexis.data.Rezept">
-         </Transporter>
-      </extension>
-      <extension
             point="org.eclipse.ui.services">
          <sourceProvider
                provider="ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus">
@@ -316,5 +307,12 @@
                KonsExtension="ch.elexis.core.ui.text.XrefExtension"
                name="DocumentLink">
          </Link>
+      </extension>
+      <extension
+            point="ch.elexis.core.data.OutputLogDescriptor">
+         <OutputLogDescriptor
+               Outputter="ch.elexis.core.ui.views.RezeptBlatt"
+               id="ch.elexis.Rezeptblatt">
+         </OutputLogDescriptor>
       </extension>
 </plugin>

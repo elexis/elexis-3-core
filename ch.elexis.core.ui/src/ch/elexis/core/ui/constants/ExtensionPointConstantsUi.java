@@ -25,5 +25,5 @@ public class ExtensionPointConstantsUi {
 	public static final String LABORORDER = "ch.elexis.core.ui.LaborOrder";
 	public static final String REZEPT_HOOK = "ch.elexis.core.ui.RezeptHook";
 	public static final String XCHANGE_CONTRIBUTION = "ch.elexis.core.ui.xCHangeContribution";
-
+	public static final String TRANSPORTER = "ch.elexis.core.ui.Transporter";
 }

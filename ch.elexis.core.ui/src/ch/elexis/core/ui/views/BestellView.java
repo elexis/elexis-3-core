@@ -55,6 +55,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.SelectBestellungDialog;
 import ch.elexis.core.ui.exchange.IDataSender;
@@ -394,7 +395,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					Item[] bkpList = actBestellung.asList().toArray(new Item[0]);
 					
 					List<IConfigurationElement> list =
-						Extensions.getExtensions("ch.elexis.Transporter"); //$NON-NLS-1$
+						Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER); //$NON-NLS-1$
 					for (IConfigurationElement ic : list) {
 						String handler = ic.getAttribute("type"); //$NON-NLS-1$
 						
