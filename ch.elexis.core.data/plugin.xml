@@ -12,6 +12,7 @@
 -->
 <plugin>
 	<extension-point id="coreOperation" name="coreOperation" schema="schema/coreOperation.exsd"/>
+	<extension-point id="OutputLogDescriptor" name="Output Log Descriptor" schema="schema/OutputLogDescriptor.exsd"/>
 	<extension-point id="ACLContribution" name="Definition of ACLs" schema="schema/ACLContribution.exsd"/>
 	<extension-point id="PersistentReference" name="%elexis.persistency" schema="schema/PersistentReference.exsd"/>
 	<extension-point id="DataAccess" name="DataAccess" schema="schema/DataAccess.exsd"/>

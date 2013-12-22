@@ -17,4 +17,5 @@ public class ExtensionPointConstantsData {
 	public static final String PERSISTENT_REFERENCE = "ch.elexis.core.data.PersistentReference";
 	public static final String RECHNUNGS_MANAGER = "ch.elexis.core.ui.RechnungsManager";
 	public static final String DATA_ACCESS = "ch.elexis.core.data.DataAccess";
+	public static final String OUTPUT_LOG_DESCRIPTOR = "ch.elexis.core.data.OutputLogDescriptor";
 }

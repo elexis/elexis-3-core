@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IOutputter;
@@ -71,12 +72,12 @@ public class OutputLog extends PersistentObject {
 	public static IOutputter getOutputter(String outputterID){
 		IOutputter ret = outputter_cache.get(outputterID);
 		if (ret == null) {
-			List<IConfigurationElement> eps = Extensions.getExtensions("ch.elexis.Transporter");
+			List<IConfigurationElement> eps = Extensions.getExtensions(ExtensionPointConstantsData.OUTPUT_LOG_DESCRIPTOR);
 			for (IConfigurationElement ep : eps) {
 				String id = ep.getAttribute("id");
 				if (id != null && id.equals(outputterID)) {
 					try {
-						ret = (IOutputter) ep.createExecutableExtension("Outputter");
+						ret = (IOutputter) ep.createExecutableExtension("OutputLogDescriptor");
 						outputter_cache.put(outputterID, ret);
 						break;
 					} catch (CoreException ex) {
