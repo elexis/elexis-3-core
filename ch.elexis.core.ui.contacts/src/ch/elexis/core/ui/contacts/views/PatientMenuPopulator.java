@@ -33,6 +33,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
 import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.exchange.XChangeException;
@@ -137,10 +138,10 @@ public class PatientMenuPopulator implements IMenuPopulator {
 					Patient p = mine.getSelectedPatient();
 					if (p != null) {
 						List<IConfigurationElement> list =
-							Extensions.getExtensions("ch.elexis.Transporter"); //$NON-NLS-1$
+							Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER); //$NON-NLS-1$
 						for (final IConfigurationElement ic : list) {
-							String name = ic.getAttribute("name"); //$NON-NLS-1$
-							System.out.println(name);
+							// TODO "Acceptable Types" is not part of ch.elexis.Transporter
+							// never was?! Should we remove this code? - mde
 							String handler = ic.getAttribute("AcceptableTypes"); //$NON-NLS-1$
 							if (handler == null) {
 								continue;
