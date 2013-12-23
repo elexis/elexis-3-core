@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.IVerrechnetAdjuster;
 import ch.elexis.core.data.util.Extensions;
@@ -67,7 +68,7 @@ public class Verrechnet extends PersistentObject {
 			"ExtInfo=Detail", USERID);
 		
 		List<IConfigurationElement> adjustersConfigurations =
-			Extensions.getExtensions(IVerrechnetAdjuster.EXTENSIONPOINTID);
+			Extensions.getExtensions(ExtensionPointConstantsData.VERRECHNUNGSCODE_ADJUSTER);
 		for (IConfigurationElement elem : adjustersConfigurations) {
 			Object o;
 			try {

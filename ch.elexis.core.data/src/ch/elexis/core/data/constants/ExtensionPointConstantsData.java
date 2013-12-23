@@ -18,4 +18,5 @@ public class ExtensionPointConstantsData {
 	public static final String RECHNUNGS_MANAGER = "ch.elexis.core.ui.RechnungsManager";
 	public static final String DATA_ACCESS = "ch.elexis.core.data.DataAccess";
 	public static final String OUTPUT_LOG_DESCRIPTOR = "ch.elexis.core.data.OutputLogDescriptor";
+	public static final String VERRECHNUNGSCODE_ADJUSTER = "ch.elexis.core.data.VerrechnungscodeAdjuster";
 }

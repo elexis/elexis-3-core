@@ -7,6 +7,7 @@
 	<extension-point id="PersistentReference" name="%elexis.persistency" schema="schema/PersistentReference.exsd"/>
 	<extension-point id="RechnungsManager" name="%elexis.accounting" schema="schema/RechnungsManager.exsd"/>
 	<extension-point id="DataAccess" name="DataAccess" schema="schema/DataAccess.exsd"/>
+	<extension-point id="VerrechnungscodeAdjuster" name="VerrechnungscodeAdjuster" schema="schema/VerrechnungscodeAdjuster.exsd"/>
 	 <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester

@@ -19,9 +19,7 @@ import ch.rgw.tools.Money;
  * @author thomas
  * 
  */
-public interface IVerrechnetAdjuster {
-	public static final String EXTENSIONPOINTID = "ch.elexis.VerrechnungscodeAdjuster";
-	
+public interface IVerrechnetAdjuster {	
 	/**
 	 * Adjust the created {@link Verrechnet}.
 	 * 

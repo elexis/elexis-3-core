@@ -15,7 +15,6 @@
    <extension-point id="scripting" name="Script Interpreter" schema="schema/scripting.exsd"/>
    <extension-point id="LaborOrder" name="%elexis.laborOrder" schema="schema/LaborOrder.exsd"/>
    <extension-point id="LoginNews" name="%elexis.loginNews" schema="schema/LoginNews.exsd"/>
-   <extension-point id="VerrechnungscodeAdjuster" name="VerrechnungscodeAdjuster" schema="schema/VerrechnungscodeAdjuster.exsd"/>
       <extension
          point="org.eclipse.ui.preferencePages">
       <page
