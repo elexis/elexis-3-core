@@ -14,7 +14,6 @@ package ch.rgw.io;
 
 import java.util.Hashtable;
 
-import ch.rgw.tools.Log;
 import ch.rgw.tools.StringTool;
 
 /**

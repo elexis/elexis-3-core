@@ -10,6 +10,15 @@
  */
 package ch.elexis.core.types.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.impl.ModelPackageImpl;
 import ch.elexis.core.types.ContactGender;
@@ -18,20 +27,8 @@ import ch.elexis.core.types.CountryCode;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
-
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
-import java.lang.Comparable;
-
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EPackage;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->

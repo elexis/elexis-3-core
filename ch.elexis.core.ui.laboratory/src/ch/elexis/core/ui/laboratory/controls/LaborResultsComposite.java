@@ -43,10 +43,10 @@ import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.actions.TogglePathologicAction;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.data.LabItem;
+import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
-import ch.elexis.data.LabItem.typ;
 import ch.rgw.tools.TimeTool;
 
 public class LaborResultsComposite extends Composite {

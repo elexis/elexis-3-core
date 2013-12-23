@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import ch.rgw.tools.ExHandler;
-import ch.rgw.tools.Log;
 import ch.rgw.tools.StringTool;
 
 /**

@@ -8,10 +8,10 @@ import org.eclipse.jface.window.Window;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.laboratory.dialogs.EditLabResultDialog;
-import ch.elexis.data.LabOrder;
-import ch.elexis.data.LabResult;
 import ch.elexis.data.LabItem.typ;
+import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
+import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 
 public class LaborResultEditDetailAction extends Action {

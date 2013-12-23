@@ -11,7 +11,6 @@
 package ch.elexis.core.model;
 
 import ch.elexis.core.types.ContactGender;
-
 import ch.rgw.tools.TimeTool;
 
 /**

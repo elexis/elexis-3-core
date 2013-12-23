@@ -15,8 +15,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.ui.views.controls.LaborSelectionComposite;
-import ch.elexis.data.LabResult;
 import ch.elexis.data.LabItem.typ;
+import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 
 public class EditLabResultDialog extends TitleAreaDialog {

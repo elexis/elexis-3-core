@@ -25,7 +25,6 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AddElementToBlockDialog;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.VerrechenbarAdapter;
-import ch.elexis.data.Verrechnet;
 
 /**
  * @since 3.0.0

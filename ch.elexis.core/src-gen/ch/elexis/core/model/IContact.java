@@ -10,11 +10,8 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.CountryCode;
-
-import ch.rgw.tools.TimeTool;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>IContact</b></em>'. <!--

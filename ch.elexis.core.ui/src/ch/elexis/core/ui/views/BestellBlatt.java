@@ -23,9 +23,9 @@ import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Bestellung.Item;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Bestellung.Item;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 

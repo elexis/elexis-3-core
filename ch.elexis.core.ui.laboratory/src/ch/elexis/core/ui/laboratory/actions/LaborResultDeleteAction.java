@@ -9,8 +9,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.data.LabOrder;
-import ch.elexis.data.LabResult;
 import ch.elexis.data.LabOrder.State;
+import ch.elexis.data.LabResult;
 
 public class LaborResultDeleteAction extends Action implements IAction {
 	

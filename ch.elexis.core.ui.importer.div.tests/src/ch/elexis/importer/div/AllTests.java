@@ -12,12 +12,11 @@
 
 package ch.elexis.importer.div;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-
-import ch.elexis.importer.div.Test_HL7_parser;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

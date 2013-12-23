@@ -16,6 +16,8 @@ package ch.elexis.core.ui.importer.div.importers;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.KontaktMatcher.CreateMode;
@@ -30,9 +32,6 @@ import ch.elexis.data.Query;
 import ch.elexis.data.Xid;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Some statically defined import methods (all from Excel-files)

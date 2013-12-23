@@ -58,8 +58,8 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.WidgetProvider;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Bestellung;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Bestellung.Item;
+import ch.elexis.data.PersistentObject;
 
 public class LagerView extends ViewPart implements DoubleClickListener, ISaveablePart2,
 		IActivationListener {

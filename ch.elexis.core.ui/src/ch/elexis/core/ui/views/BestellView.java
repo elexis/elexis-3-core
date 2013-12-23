@@ -65,9 +65,9 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Bestellung;
+import ch.elexis.data.Bestellung.Item;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Bestellung.Item;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 

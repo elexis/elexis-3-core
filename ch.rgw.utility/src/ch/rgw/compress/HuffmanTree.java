@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.prefs.Preferences;
 
-import ch.rgw.compress.HuffmanTree.Node;
 import ch.rgw.tools.BinConverter;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.IntTool;

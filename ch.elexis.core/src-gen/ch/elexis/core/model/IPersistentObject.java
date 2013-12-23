@@ -12,10 +12,6 @@ package ch.elexis.core.model;
 
 import java.util.List;
 
-import org.eclipse.emf.common.util.EList;
-
-import ch.rgw.tools.TimeTool;
-
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>IPersistent Object</b></em>
  * '. <!-- end-user-doc -->

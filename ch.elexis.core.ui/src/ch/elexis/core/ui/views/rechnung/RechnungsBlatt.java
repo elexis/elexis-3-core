@@ -11,6 +11,12 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
+import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED;
+import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN;
+import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_REMEMBER_STATE;
+import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES;
+import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +66,6 @@ import ch.elexis.data.Verrechnet;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
-import static ch.elexis.core.ui.constants.UiPreferenceConstants.*;
 
 public class RechnungsBlatt extends Composite implements IActivationListener {
 	

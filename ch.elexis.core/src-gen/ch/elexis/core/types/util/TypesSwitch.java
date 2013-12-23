@@ -10,15 +10,14 @@
  */
 package ch.elexis.core.types.util;
 
-import ch.elexis.core.types.TypesPackage;
-
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
+
+import ch.elexis.core.types.TypesPackage;
 
 /**
  * <!-- begin-user-doc --> The <b>Switch</b> for the model's inheritance hierarchy. It supports the
