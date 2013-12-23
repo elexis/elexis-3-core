@@ -20,6 +20,18 @@
         <version>${tycho-version}</version>
         <configuration>
           <useUIHarness>true</useUIHarness>
+          <skipTests>true</skipTests>
+          <!--application>ch.elexis.core.application.ElexisApp</application>
+          <useUIThread>false</useUIThread-->
+          <argLine>-DjdbcLink=org.h2.Driver:mem:mem_test;AUTO_SERVER=TRUE -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
+          <showEclipseLog>true</showEclipseLog>
+          <dependencies>
+            <dependency>
+              <type>eclipse-feature</type>
+              <artifactId>ch.elexis.core.ui.feature</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+          </dependencies>
         </configuration>
       </plugin>
     </plugins>
