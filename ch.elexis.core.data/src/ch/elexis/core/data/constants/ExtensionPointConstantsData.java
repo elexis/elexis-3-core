@@ -20,4 +20,5 @@ public class ExtensionPointConstantsData {
 	public static final String OUTPUT_LOG_DESCRIPTOR = "ch.elexis.core.data.OutputLogDescriptor";
 	public static final String VERRECHNUNGSCODE_ADJUSTER = "ch.elexis.core.data.VerrechnungscodeAdjuster";
 	public static final String SERVICE_REGISTRY = "ch.elexis.core.data.ServiceRegistry";
+	public static final String SCRIPTING = "ch.elexis.core.data.scripting";
 }

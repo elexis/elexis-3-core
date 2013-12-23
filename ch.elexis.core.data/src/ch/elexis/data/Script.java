@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 import ch.elexis.core.constants.TextContainerConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.util.Extensions;
@@ -60,7 +61,7 @@ public class Script extends NamedBlob2 {
 		if (name == null)
 			name = INTERPRETER_BEANSHELL;
 		
-		List<IConfigurationElement> scripters = Extensions.getExtensions("ch.elexis.scripting");
+		List<IConfigurationElement> scripters = Extensions.getExtensions(ExtensionPointConstantsData.SCRIPTING);
 		for (IConfigurationElement scripter : scripters) {
 			if (scripter.getAttribute("name").equals(name)) {
 				try {
