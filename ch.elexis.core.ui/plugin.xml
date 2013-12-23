@@ -10,7 +10,6 @@
    <extension-point id="KonsExtension" name="%elexis.konsExtension" schema="schema/KonsExtension.exsd"/>
    <extension-point id="Transporter" name="Transporter" schema="schema/Transporter.exsd"/>
    <extension-point id="RezeptHook" name="RezeptHook" schema="schema/RezeptHook.exsd"/>
-   <extension-point id="ServiceRegistry" name="ServiceRegistry" schema="schema/ServiceRegistry.exsd"/>
    <extension-point id="xCHangeContribution" name="xCHange Contribution" schema="schema/xCHangeContribution.exsd"/>
    <extension-point id="scripting" name="Script Interpreter" schema="schema/scripting.exsd"/>
    <extension-point id="LaborOrder" name="%elexis.laborOrder" schema="schema/LaborOrder.exsd"/>
