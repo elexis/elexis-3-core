@@ -14,7 +14,7 @@ package ch.elexis.core.ui.importer.div.importers;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.importers.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "ch.elexis.core.ui.importer.div.importers.messages"; //$NON-NLS-1$
 	public static String ExcelWrapper_ErrorUnknownCellType;
 	public static String GenericImporter_ErrorImporting;
 	public static String GenericImporter_General;

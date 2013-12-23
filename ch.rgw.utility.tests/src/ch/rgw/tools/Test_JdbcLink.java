@@ -144,21 +144,4 @@ public class Test_JdbcLink {
 		stm.exec("DROP TABLE ABC");
 		link.disconnect();
 	}
-	
-	@Test
-	public void testStmQueryConnectFail(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "");
-		link.connect("", "");
-		Stm stm = link.getStatement();
-		assertNotNull(stm);
-		stm.exec("CREATE TABLE ABC (ID INTEGER)");
-		link.disconnect();
-		stm.delete();
-		try {
-			stm.query("SELECT * FROM ABC");
-			fail("Expected Exception not thrown!");
-		} catch (JdbcLinkException je) {
-			
-		}
-	}
 }

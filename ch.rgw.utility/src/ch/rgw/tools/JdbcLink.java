@@ -242,6 +242,9 @@ public class JdbcLink {
 				true);
 			dataSource = new PoolingDataSource(connectionPool);
 			
+			// creating prepared statement also checks if connection can be established
+			preparedStatementConnection = dataSource.getConnection();
+			
 			lastErrorCode = CONNECT_SUCCESS;
 			lastErrorString = "Connect successful";
 			log.log("Connect successful", Log.DEBUGMSG);
@@ -257,6 +260,14 @@ public class JdbcLink {
 		} catch (IllegalAccessException e) {
 			lastErrorCode = CONNECT_UNKNOWN_ERROR;
 			lastErrorString = "Illegal access exception: " + e.getMessage();
+			cause = e;
+		} catch (SQLException e) {
+			lastErrorCode = CONNECT_UNKNOWN_ERROR;
+			lastErrorString = "SQL exception: " + e.getMessage();
+			cause = e;
+		} catch (IllegalStateException e) {
+			lastErrorCode = CONNECT_UNKNOWN_ERROR;
+			lastErrorString = "Illegal state exception: " + e.getMessage();
 			cause = e;
 		}
 		throw JdbcLinkExceptionTranslation.translateException("Connect failed: " + lastErrorString,
@@ -363,6 +374,7 @@ public class JdbcLink {
 	 * @return ein Stm (JdbcLink-spezifische Statement-Variante)
 	 */
 	public Stm getStatement(){
+		checkLink();
 		return createStatement();
 	}
 	
@@ -389,6 +401,12 @@ public class JdbcLink {
 		}
 	}
 	
+	private void checkLink(){
+		if (dataSource == null) {
+			throw new JdbcLinkException("JdbcLink closed");
+		}
+	}
+	
 	/**
 	 * Ein Prepared Statement anlegen
 	 * 
@@ -397,11 +415,8 @@ public class JdbcLink {
 	 * @return das vorkompilierte PreparedStatement
 	 */
 	public PreparedStatement prepareStatement(String sql){
+		checkLink();
 		try {
-			if (preparedStatementConnection == null) {
-				preparedStatementConnection = dataSource.getConnection();
-			}
-			
 			return preparedStatementConnection.prepareStatement(sql);
 		} catch (SQLException ex) {
 			lastErrorCode = CONNECTION_CANT_PREPARE_STAMENT;
@@ -469,6 +484,14 @@ public class JdbcLink {
 	 * 
 	 */
 	public synchronized void disconnect(){
+		try {
+			preparedStatementConnection.close();
+			connectionPool.close();
+		} catch (Exception e) {
+			// ignore
+		} finally {
+			dataSource = null;
+		}
 		log.log("Disconnected", Log.INFOS);
 	}
 	

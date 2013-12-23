@@ -152,19 +152,22 @@ public class Test_HL7_parser {
 	@Test
 	public void testHL7files(){
 		System.out.println("testHL7files in elexis-import_test/rsc: This will take some time");
-		parseAllHL7files(new File(PlatformHelper.getBasePath("ch.elexis.importer.div_test"), "rsc"));
+		parseAllHL7files(new File(
+			PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"), "rsc"));
 	}
 	
 	@Test
 	public void testOverwrite(){
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(PlatformHelper.getBasePath("ch.elexis.importer.div_test"),
+		parseOneHL7file(new File(
+			PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"),
 			"rsc/overwrite_test_1.hl7"), false, true);
 		
-		parseOneHL7file(new File(PlatformHelper.getBasePath("ch.elexis.importer.div_test"),
+		parseOneHL7file(new File(
+			PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"),
 			"rsc/overwrite_test_2.hl7"), false, true);
-
+		
 		// test if values are imported and overwritten
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
@@ -180,7 +183,7 @@ public class Test_HL7_parser {
 		}
 		assertEquals(1, foundCnt);
 	}
-
+	
 	/**
 	 * Rothen filled the HL7 field(8) with 'N' if there was no patholical value found
 	 */
@@ -188,7 +191,8 @@ public class Test_HL7_parser {
 	public void testRothenPatholical(){
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(PlatformHelper.getBasePath("ch.elexis.importer.div_test"),
+		parseOneHL7file(new File(
+			PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"),
 			"rsc/Rothen/1_Kunde_20090612083757162_10009977_.HL7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
@@ -245,7 +249,8 @@ public class Test_HL7_parser {
 	public void testAnalyticaHL7(){
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(PlatformHelper.getBasePath("ch.elexis.importer.div_test"),
+		parseOneHL7file(new File(
+			PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"),
 			"rsc/Analytica/01TEST5005.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
@@ -264,10 +269,10 @@ public class Test_HL7_parser {
 		}
 		assertEquals(7, qrr.size());
 		assertTrue(itemArray[0].getLabel().contains("BEM,  ()"));
-		assertTrue(itemArray[2].getLabel().contains("HB, Hämoglobin (14.0-18.0-14.0-18.0 g/dl)"));
-		assertTrue(itemArray[3].getLabel().contains("K, Kalium (3.5-5.1-3.5-5.1 mmol/l)"));
-		assertTrue(itemArray[4].getLabel().contains("LEUK, Leukozyten (4.0-9.4-4.0-9.4 G/l)"));
-		assertTrue(itemArray[5].getLabel().contains("PROG, Progesteron (- nmol/l)"));
+		assertTrue(itemArray[2].getLabel().contains("HB, Hämoglobin (14.0-18.0/14.0-18.0 g/dl)"));
+		assertTrue(itemArray[3].getLabel().contains("K, Kalium (3.5-5.1/3.5-5.1 mmol/l)"));
+		assertTrue(itemArray[4].getLabel().contains("LEUK, Leukozyten (4.0-9.4/4.0-9.4 G/l)"));
+		assertTrue(itemArray[5].getLabel().contains("PROG, Progesteron (/ nmol/l)"));
 		boolean found = false;
 		for (j = 0; j < qrr.size(); j++) {
 			assertTrue(qrr.get(j).getLabel().contains("10.03.2004"));
