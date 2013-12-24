@@ -1,0 +1,620 @@
+#/*******************************************************************************
+# * Copyright (c) 2005-2008, G. Weirich and Elexis
+# * All rights reserved. This program and the accompanying materials
+# * are made available under the terms of the Eclipse Public License v1.0
+# * which accompanies this distribution, and is available at
+# * http://www.eclipse.org/legal/epl-v10.html
+# *
+# * Contributors:
+# *    G. Weirich - initial implementation
+# *    
+# * $Id: createDB.script 4337 2008-09-01 15:41:59Z rgw_ch $
+# *******************************************************************************
+
+# Universelles create-Script für Elexis.
+# Wird von JdbcLink automatisch für mySQL, hsqldb und PostgreSQL angepasst
+# Bei mySQL und PostgreSQL: Database Elexis muss schon existieren, darf aber
+# noch keine Tabellen enthalten.
+# ---------------------------------------------
+# This script can create the elexis database on mysql, hsql and postresql servers
+# Tha database should exist already, but should not contain any tables.
+#
+# WARNING: The database layout is internal to elexis and must not be assumed stable.
+# Fields can be omitted or changed between versions.
+# Access to persistent data has to be done via the API (ch.elexis.data.PersistentObject)
+
+
+# Table for all kinds of contact information (Patients, Relations, Labs)
+CREATE TABLE KONTAKT(
+	ID				VARCHAR(25) primary key,	# UUID
+	lastupdate      BIGINT,                     # timestamp of last update
+	deleted			CHAR(1) default '0',		# indicates that this object is marked deleted
+	istOrganisation	CHAR(1) default '0',		# this object is an organization 
+	istPerson		CHAR(1) default '0',		# this object is a person
+	istPatient		CHAR(1)	default '0',		# is a patient
+	istAnwender		CHAR(1) default '0',		# is an elexis user
+	istMandant	    CHAR(1) default '0',		# is an elexis mandator
+	istLabor		CHAR(1)	default '0',		# is a lab
+	Land			CHAR(3),					# country as ISO code
+	Geburtsdatum	CHAR(8),					# bithdate as yyyymmdd
+	Geschlecht		CHAR(1),					# sex m or w
+	TITEL			VARCHAR(20),				# title
+	Bezeichnung1	VARCHAR(80),				# name1
+	Bezeichnung2	VARCHAR(80),				# name2
+	Bezeichnung3	VARCHAR(80),				# name3
+	Strasse			VARCHAR(80),				# street
+	Plz				VARCHAR(6),					# zip-code
+	Ort				VARCHAR(50),				# place (don't try Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch)
+	Telefon1		VARCHAR(30),				# phone1
+	Telefon2		VARCHAR(30),				# phone2
+	Fax				VARCHAR(30),				# you'll guess it
+	NatelNr			VARCHAR(30),				# mobile
+	EMail			VARCHAR(80),				# guess 
+	Website			VARCHAR(80),
+	Gruppe			VARCHAR(10),				# mandator group
+	PatientNr		VARCHAR(40),				# external identifier
+	Anschrift		TEXT,						# postal (address sticker)
+	Bemerkung		TEXT,						# remarks
+	Diagnosen		BLOB,						# diagnoses	
+	PersAnamnese	BLOB,						# anamnesis
+	SysAnamnese		BLOB,						# deprecated, do not use
+	FamAnamnese	    BLOB,						# deprecated, do not use
+	Risiken			TEXT,						# risk factors
+	Allergien		TEXT,						# allergies
+	ExtInfo			BLOB						# other informations (Hashtable)
+);
+
+CREATE INDEX k0 ON KONTAKT(Bezeichnung1);
+
+
+# Verbindung von Kontakten zu Adressbezügen mit einem
+# BezugsTEXT
+CREATE TABLE KONTAKT_ADRESS_JOINT(
+	ID			VARCHAR(25) primary key,
+	lastupdate  BIGINT,
+	deleted		CHAR(1) default '0',
+	myID		VARCHAR(25),					# ID of a KONTAKT 
+	otherID		VARCHAR(25),					# ID of a KONTAKT that ist related to myID
+	Bezug		VARCHAR(80)						# Dscription of the relationship
+);
+
+CREATE INDEX aij1 on KONTAKT_ADRESS_JOINT (myId);
+
+# Ein Fall ist eine benannte Serie von Behandlungen, welche demselben
+# Patienten und demselben Garanten zugeordnet werden. (Aber nicht
+# notwendigerweise demselben Mandanten)
+CREATE TABLE FAELLE(
+	ID				VARCHAR(25) primary key,		# UUID
+	lastupdate      BIGINT,                         # timestamp of last write operation
+	deleted			CHAR(1) default '0',			# indicates that this object is marked deleted
+	PatientID		VARCHAR(25),					# foreign key from 'KONTAKT' -> patient
+	GarantID		VARCHAR(25),					# foreign key from 'KONTAKT' -> bill receiver 
+	KostentrID		VARCHAR(25),					# foreign key from 'KONTAKT' -> insurance
+	VersNummer		VARCHAR(25),					# deprecated, do not use
+	FallNummer		VARCHAR(25),					# deprecated, do not use
+	BetriebsNummer	VARCHAR(25),					# deprecated, do not use
+	Diagnosen		VARCHAR(80),					# diagnoses related to this case
+	DatumVon		CHAR(8),						# date of beginning
+	DatumBis		CHAR(8),						# end date
+	Bezeichnung		VARCHAR(80),					# title of the case
+	Grund			VARCHAR(80),					# reason for treatment
+	Gesetz			VARCHAR(20),					# deprecated, do not use
+	Status			VARCHAR(80),					# deprecated, do not use
+	ExtInfo			BLOB							# additional informations (hashtable)
+);
+
+CREATE INDEX i3 on FAELLE (PatientID);
+
+# Eine Behandlung ist ein einzelner Mandant/Patient - Kontakt
+CREATE TABLE BEHANDLUNGEN(
+	ID				VARCHAR(25) primary key,		# UUID
+	lastupdate      BIGINT,                         # timestamp
+	deleted			CHAR(1) default '0',			# indicates that this object is marked deleted
+	FallID			VARCHAR(25),					# foreign key from FAELLE -> case we belong to
+	MandantID		VARCHAR(25),					# foreign key from KONTAKT -> mandator
+	RechnungsID		VARCHAR(25),					# foreign key from RECHNUGNEN -> bill
+	Datum			CHAR(8),						# date of treatment
+	Diagnosen		VARCHAR(25),					# diagnoses
+	Leistungen		VARCHAR(25),					# deprecated, do not use.
+	Eintrag			BLOB							# treatment text (as VersionedResource)
+);
+
+CREATE INDEX i4 on BEHANDLUNGEN (FallID);
+
+# 
+CREATE TABLE ARTIKEL(
+	ID				VARCHAR(25) primary key,		# UUID
+	lastupdate      BIGINT,                         # timestamp
+	deleted			CHAR(1) default '0',			# indicates that this object is marked deleted
+	EAN				VARCHAR(15),                    # the european article number
+	SubID			VARCHAR(20),                    # an ID depending of the type (e.g. Pharmacode)
+	LieferantID		VARCHAR(25),                    # foreign key from KONTAKT -> dealer
+	Klasse			VARCHAR(80),					# class of the objects representing this article
+	Name			VARCHAR(127),					# official name
+	Name_intern		VARCHAR(127),					# internal name
+	Maxbestand		CHAR(4),						# max number to hold on stock
+	Minbestand		CHAR(4),						# min number on stock before ordering
+	Istbestand		CHAR(4),						# actual number on stock
+	EK_Preis		CHAR(8),						# cost (buy) in cents/rp
+	VK_Preis		CHAR(8),						# price (sell) in cents/rp
+	Typ				VARCHAR(15),					# type of the article
+	Codeclass		VARCHAR(10),					# used differently
+	ExtID			VARCHAR(25),					# used differently
+	LastImport		CHAR(8),						# date of last import (yyyymmdd)
+	ValidFrom		CHAR(8),			
+	ValidTo			CHAR(8),
+	ExtInfo			BLOB							# additional informations (hashtable)
+);
+
+CREATE INDEX i5 on ARTIKEL (Name);
+CREATE INDEX art1 on ARTIKEL (SubID);
+CREATE INDEX art2 on ARTIKEL (Typ);
+CREATE INDEX art3 on ARTIKEL (Codeclass);
+
+
+# Relation of an article to a patient
+CREATE TABLE PATIENT_ARTIKEL_JOINT(
+	ID				VARCHAR(25) primary key,
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',
+	PatientID		VARCHAR(25),					# foreign key from KONTAKT
+	ArtikelID		VARCHAR(25),					# foreign key from ARTIKEL  !!!! DEPRECATED DO NOT USE !!!
+	Artikel			VARCHAR(80),					# cheap copy of article. replaces ArtikelID
+	RezeptID		VARCHAR(25),					# prescription where this article was last given
+	DateFrom		CHAR(8),						# first date
+	DateUntil		CHAR(8),						# last date
+	Dosis			VARCHAR(10),					# number
+	Anzahl			CHAR(3),
+	Bemerkung		VARCHAR(80),
+	ExtInfo			BLOB
+);
+
+CREATE INDEX paj1 on PATIENT_ARTIKEL_JOINT(PATIENTID);
+CREATE INDEX PAJ2 on PATIENT_ARTIKEL_JOINT(REZEPTID);
+
+CREATE TABLE ARTIKEL_DETAILS(   
+    ARTICLE_ID      VARCHAR(25),                    # foreign key from ARTIKEL                     
+    notes           TEXT,                           # informations or usage of the article
+    image           BLOB                            # an image or other binary data
+);
+
+# Das Konto ist eine Liste sämtlicher Forderungen und Zahlungen
+# Somit lässt sich für jeden Patienten über alle bisherigen
+# Rechnungen eine übergreifende Bilanz erstellen und verrechnen.
+CREATE TABLE KONTO(
+	ID				VARCHAR(25) primary key,
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',
+	PatientID		VARCHAR(25),              # foreign key from KONTAKT 
+	RechnungsID		VARCHAR(25),              # foreign key from RECHNUNG
+	ZahlungsID		VARCHAR(25),              # foreign key from ZAHLUNG
+	Betrag			CHAR(8),
+	Datum			CHAR(8),
+	Bemerkung		VARCHAR(80)
+);
+
+CREATE INDEX konto1 on KONTO (Datum);
+CREATE INDEX konto2 on KONTO (PatientID);
+
+# Eine Leistung ist eine einzelne Verrechnungsposition
+CREATE TABLE LEISTUNGEN(
+	ID				VARCHAR(25) primary key,
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',
+	BEHANDLUNG		VARCHAR(25),
+	LEISTG_TXT		VARCHAR(255),
+	LEISTG_CODE		VARCHAR(25),
+	KLASSE			VARCHAR(80),
+	ZAHL			CHAR(3),
+	EK_KOSTEN		CHAR(8),
+	VK_TP			CHAR(6),
+	VK_SCALE		CHAR(6),
+	VK_PREIS		CHAR(8),
+	SCALE			CHAR(4) DEFAULT '100',
+	SCALE2			CHAR(4) DEFAULT '100',
+	DETAIL			BLOB
+);
+
+CREATE INDEX lst1 on LEISTUNGEN(BEHANDLUNG);
+CREATE INDEX lst2 on LEISTUNGEN(KlASSE,LEISTG_CODE);
+
+# Ein Leistungsblock ist eine benannte Kombination beliebig vieler Leistungen
+CREATE TABLE LEISTUNGSBLOCK(
+	ID				VARCHAR(25) primary key,
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',
+	MandantID		VARCHAR(25),
+	Name			VARCHAR(30),
+	Leistungen		BLOB
+);
+
+CREATE INDEX block1 on LEISTUNGSBLOCK(Name);
+CREATE INDEX block2 on LEISTUNGSBLOCK(MandantID);
+
+
+CREATE TABLE EK_PREISE(
+	TYP				VARCHAR(80),
+	ID				VARCHAR(25),
+	lastupdate      BIGINT,
+	DATUM_VON		CHAR(8),
+	DATUM_BIS		CHAR(8),
+	MULTIPLIKATOR	CHAR(4)
+);
+
+CREATE INDEX ekp1 ON EK_PREISE (TYP);
+CREATE INDEX ekp2 ON EK_PREISE (DATUM_VON);
+
+
+CREATE TABLE VK_PREISE(
+	TYP				VARCHAR(80),
+	ID				VARCHAR(25),
+	lastupdate      BIGINT,
+	DATUM_VON		CHAR(8),
+	DATUM_BIS		CHAR(8),
+	MULTIPLIKATOR	CHAR(4)
+);
+
+CREATE INDEX vkp1 on VK_PREISE (TYP);
+CREATE INDEX vkp2 on VK_PREISE (DATUM_VON);
+
+
+CREATE TABLE DIAGNOSEN(
+	ID				VARCHAR(25) primary key,
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',
+	DG_TXT			VARCHAR(255),
+	DG_CODE			VARCHAR(25),
+	KLASSE			VARCHAR(80)
+);
+
+CREATE INDEX dg1 on DIAGNOSEN (KLASSE,DG_CODE);
+
+CREATE TABLE BEHDL_DG_JOINT(
+	ID				VARCHAR(25) primary key,
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',
+	BehandlungsID	VARCHAR(25),
+	DiagnoseID		VARCHAR(25)
+);
+
+CREATE INDEX bdg1 on BEHDL_DG_JOINT (BehandlungsID);
+
+# Verschiedene Konfigurationsdaten
+CREATE TABLE CONFIG(
+    lastupdate      BIGINT,
+	param			VARCHAR(80) primary key,
+	wert			TEXT
+);
+
+# Briefe werden nicht in dieser Tabelle gespeichert.
+# Hier befinden sich nur Verweise und Metainformationen zu
+# den eigentlichen Briefen (welche in HEAP oder im Dateisystem sein können).
+CREATE TABLE BRIEFE(
+	ID				VARCHAR(25) primary key,
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',
+	Betreff			VARCHAR(80),
+	Datum			CHAR(8),
+	modifiziert		CHAR(8),
+	gedruckt		CHAR(8),
+	geloescht		CHAR(2),
+	AbsenderID		VARCHAR(25),           # foreign key from KONTAKT
+	DestID			VARCHAR(25),           # foreign key from KONTAKT
+	BehandlungsID	VARCHAR(25),           # foreign key from BEHANDLUNG
+	PatientID		VARCHAR(25),           # foreign key from KONTAKT
+	Typ				VARCHAR(30),
+	MimeType		VARCHAR(80),
+	Path			TEXT
+);
+
+CREATE INDEX i8 on BRIEFE (BehandlungsID);
+
+# Output log for letters, prescriptions etc.
+CREATE TABLE OUTPUT_LOG(
+	ID				VARCHAR(25) primary key,
+	lastupdate		BIGINT,
+	deleted			CHAR(1) default '0',
+	ObjectID		VARCHAR(25),		# foreign key from object
+	ObjectType		VARCHAR(80),		# Class ob object
+	Datum			CHAR(8),
+	Outputter		VARCHAR(80),		# identification of the output device/program
+	ExtInfo			BLOB				# outputter specific information
+);
+
+CREATE INDEX bal_i1 ON OUTPUT_LOG (ObjectID);
+
+# Bills
+CREATE TABLE RECHNUNGEN(
+	ID				VARCHAR(25) primary key,     # UUID
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',         # indicates that this object is marked deleted
+	RnNummer		VARCHAR(8),                  # Number of the bill (unique within this database)
+	FallID			VARCHAR(25),                 # foreign key from FAELLE (case this bill belongs to)
+	MandantID		VARCHAR(25),                 # foreign key from KONTAKT (mandator this bill beongs to)
+	RnDatum			CHAR(8),                     # date of creating this bill
+	RnStatus		VARCHAR(20),                 # state of this bill (e.g. open, payed)
+	RnDatumVon	    CHAR(8),                     # date of first treatment billed
+	RnDatumBis		CHAR(8),                     # date of last treatment billed
+	Betrag			CHAR(8),                     # amount in Rp / cents
+	StatusDatum		CHAR(8),                     # date of last state change
+	ExtInfo			BLOB                         # hastable for trace infos etc.
+);
+
+CREATE INDEX Rn1 on RECHNUNGEN (FallID);
+CREATE INDEX Rn2 on RECHNUNGEN (MandantID);
+CREATE INDEX Rn3 ON RECHNUNGEN (RnStatus);
+CREATE INDEX Rn4 ON RECHNUNGEN (RnDatumVon);
+CREATE INDEX Rn5 ON RECHNUNGEN (RnDatumBis);
+
+# payments
+CREATE TABLE ZAHLUNGEN(
+	ID				VARCHAR(25) primary key,     # UUID
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',         # indicates that this object is marked deleted
+	RechnungsID		VARCHAR(25),                 # bill this payment belongs to (can be null)
+	Betrag			CHAR(8),                     # amount of this payment in Rp/cents
+	Datum			CHAR(8),                     # date of this payment
+	Bemerkung		VARCHAR(80)                  # remark
+);
+
+CREATE INDEX zahl1 on ZAHLUNGEN(RechnungsID);
+
+CREATE TABLE REMINDERS(
+	ID				VARCHAR(25) primary key,
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',
+	IdentID			VARCHAR(25),                 # foreign key from KONTAKT
+	OriginID		VARCHAR(25),                 # foreign key from KONTAKT
+	Responsible  	VARCHAR(25),                 # foreign key from KONTAKT
+	DateDue			CHAR(8),
+	Status			VARCHAR(1),
+	Typ				VARCHAR(1),
+	Params			TEXT,
+	Message			TEXT
+);
+
+CREATE TABLE REMINDERS_RESPONSIBLE_LINK(
+	ID				VARCHAR(25) primary key,
+	lastupdate      BIGINT,
+	deleted			CHAR(1) default '0',
+	ReminderID		VARCHAR(25),                  # foreign key from REMINDERS
+	ResponsibleID	VARCHAR(25)                   # foreign key from KONTAKT
+);
+
+CREATE INDEX rrl1 on REMINDERS_RESPONSIBLE_LINK (ReminderID);
+CREATE INDEX rrl2 on REMINDERS_RESPONSIBLE_LINK (ResponsibleID);
+
+CREATE INDEX rem1 on REMINDERS (IdentID);
+CREATE INDEX rem2 on REMINDERS (DateDue);
+CREATE INDEX rem3 ON REMINDERS (Responsible);
+
+
+# Die Trace-Table kann (wenn Trace eingeschaltet wurde) jeden Schreibzugriff
+# auf die Datenbank protokollieren, und zwar mit Zeit, Datum, Arbeitsstation 
+# und dort angemeldetem Benutzer. so können Fehlbedienungen besser erfasst und
+# korrigiert werden.
+CREATE TABLE TRACES(
+	logtime			BIGINT,
+	Workstation		VARCHAR(40),
+	Username		VARCHAR(30),
+	action			TEXT
+);
+
+CREATE INDEX trace1 on TRACES(logtime);
+CREATE INDEX trace2 on TRACES(Username);
+
+# Das Schwarze Brett der Praxis
+CREATE TABLE BBS(
+	ID			VARCHAR(25) primary key,
+	lastupdate  BIGINT,
+	deleted			CHAR(1) default '0',
+	reference	VARCHAR(25),
+	topic		VARCHAR(80),
+	date		CHAR(8),
+	time		CHAR(4),
+	authorID	VARCHAR(25),
+	message		TEXT
+);
+
+CREATE INDEX bbs1 on BBS (reference);
+
+# Ein Laboritem ist ein möglicher Laborbefund. Jedes
+# Laboritem hat ein Labor, von dem es gemacht wird
+# und den von diesem Labor stammenden Referenzbereich
+# Typ des Werts ist entweder numerisch(0), TEXT (1) oder pos/neg (2)
+# Ausserdem gehört jedes Laboritem zu einer Gruppe (unter der es im Laborblatt
+# aufgelistet wird, und eine Priorität mit der es innerhalb dieser Gruppe
+# gelistet ist.
+
+CREATE TABLE LABORITEMS(
+	ID			VARCHAR(25) primary key,
+	lastupdate  BIGINT,
+	deleted		CHAR(1) default '0',
+	kuerzel		VARCHAR(80),
+	titel		VARCHAR(80),
+	laborID		VARCHAR(25),                   # foreign key from KONTAKT
+	RefMann		VARCHAR(80),
+	RefFrauOrTx TEXT,
+	Einheit		VARCHAR(20),
+	typ			CHAR(1),
+	Gruppe		VARCHAR(25),
+	prio		CHAR(3),
+	billingcode	VARCHAR(20)						# Code for automatic billing (from e.g EAL2009)
+	
+);
+	
+CREATE INDEX labit1 on LABORITEMS(kuerzel);
+CREATE INDEX labit2 on LABORITEMS(laborID);
+
+# Laborwerte sind zuordnungen von Laboritems zu Datum und Patient
+# mit dem entsprechenden Resultat.
+
+CREATE TABLE LABORWERTE(
+	ID			VARCHAR(25) primary key,
+	lastupdate  BIGINT,
+	deleted		CHAR(1) default '0',
+	PatientID	VARCHAR(25),              # foreign key from KONTAKT
+	datum		CHAR(8),
+	zeit        CHAR(6),
+	ItemID		VARCHAR(25),                # foreign key from LABORIMTEMS
+	Resultat	VARCHAR(80),
+	Flags		VARCHAR(10),
+	Origin		VARCHAR(30),
+	Kommentar	TEXT
+);
+
+CREATE INDEX labor1 on LABORWERTE (PatientID);
+CREATE INDEX labor2 on LABORWERTE (datum);
+CREATE INDEX labor3 on LABORWERTE (ItemID);
+
+CREATE TABLE LABGROUPS(
+   ID VARCHAR(25) primary key,
+   lastupdate   BIGINT,
+   deleted		CHAR(1) default '0',
+   name VARCHAR(30)
+); 
+
+CREATE TABLE LABGROUP_ITEM_JOINT(
+     lastupdate      BIGINT,
+     GroupID        VARCHAR(25),
+     ItemID         VARCHAR(25),
+     Comment        TEXT
+); 
+
+
+CREATE TABLE REZEPTE(
+	ID			VARCHAR(25) primary key,
+	lastupdate  BIGINT,
+	deleted		CHAR(1) default '0',
+	PatientID	VARCHAR(25),                  # foreign key from KONTAKT
+	MandantID	VARCHAR(25),                  # foreign key from KONTAKT
+	BriefID		VARCHAR(25),                  # foreign key from BRIEFE
+	datum		CHAR(8),
+	RpTxt		TEXT,
+	RpZusatz	VARCHAR(80)
+);	
+
+CREATE INDEX rp1 on REZEPTE(PatientID);
+
+# Tabelle zum Speichern von benannten BLOB's verschiedener Herkunft
+CREATE TABLE HEAP(
+	ID			VARCHAR(80) primary key,
+	lastupdate  BIGINT,
+	deleted		CHAR(1) default '0',
+	inhalt		BLOB,
+	datum		CHAR(8)
+);
+
+CREATE TABLE AUF(
+	ID			VARCHAR(25) primary key,
+	lastupdate  BIGINT,
+	deleted		CHAR(1) default '0',
+	PatientID	VARCHAR(25),
+	FallID		VARCHAR(25),
+	BriefID		VARCHAR(25),
+	Prozent		CHAR(3),
+	DatumAUZ	CHAR(8),
+	DatumVon	CHAR(8),
+	DatumBis	CHAR(8),
+	Grund		VARCHAR(50),
+	AUFZusatz	VARCHAR(80)
+);
+	
+CREATE INDEX AUF1 on AUF(PatientID);
+
+CREATE TABLE EIGENLEISTUNGEN(
+	ID			VARCHAR(25) primary key,
+	lastupdate  BIGINT,
+	deleted		CHAR(1) default '0',
+	Code		VARCHAR(20),
+	Bezeichnung VARCHAR(80),
+	EK_PREIS	CHAR(6),
+	VK_PREIS	CHAR(6),
+	ZEIT		CHAR(4)
+);
+
+CREATE TABLE HEAP2(
+	ID		    VARCHAR(80) primary key,
+	deleted		CHAR(1) default '0',
+	datum		CHAR(8),
+	lastupdate  BIGINT,
+	Contents	BLOB
+);
+
+CREATE TABLE LOGS(
+	ID			VARCHAR(25) primary key,	# log entry's id
+	lastupdate  BIGINT,
+	deleted     char(1) default '0',
+	OID			VARCHAR(80),				# foreign key on modified object
+	datum		CHAR(8),					# date of modification
+	typ			VARCHAR(20),				
+	userID		VARCHAR(25),				# foreign key on modifying user
+	station		VARCHAR(40),				# modifying workstation name
+	ExtInfo		BLOB
+);
+
+CREATE TABLE USERCONFIG(
+    lastupdate  BIGINT,
+	UserID		VARCHAR(25),
+	Param		VARCHAR(80),
+	Value		TEXT
+);
+CREATE INDEX UCFG ON USERCONFIG(Param);
+CREATE INDEX UCFG2 ON USERCONFIG(UserID);
+
+CREATE TABLE XID(
+	ID			VARCHAR(25) primary key,
+	lastupdate  BIGINT,
+	deleted		CHAR(1) default '0',
+	type		VARCHAR(80),				# class of the object
+	object		VARCHAR(25),				# ID of the object
+	domain		VARCHAR(255),				# Domain of the XID used
+	domain_id	VARCHAR(255),				# ID of the object within that domain
+	quality		CHAR(1) default '0'			# Assignment tag of the XID
+);
+CREATE INDEX XIDIDX1 on XID(domain);
+CREATE INDEX XIDIDX2 on XID(domain_id);
+CREATE INDEX XIDIDX3 on XID(object);
+
+CREATE TABLE ETIKETTEN(  
+    ID          VARCHAR(25) primary key,
+    lastupdate  BIGINT,
+    Image       VARCHAR(25),
+    deleted     CHAR(1) default '0',
+    importance	VARCHAR(7),
+    Name        VARCHAR(40),
+    foreground  CHAR(6),
+    background  CHAR(6),
+    classes     VARCHAR(255)
+);
+CREATE INDEX ETIKETTE1 on ETIKETTEN(Name);
+
+CREATE TABLE ETIKETTEN_OBJECT_LINK(
+    lastupdate  BIGINT,
+	obj			VARCHAR(25),
+	etikette	VARCHAR(25)
+);
+CREATE INDEX ETIKETTE2 on ETIKETTEN_OBJECT_LINK(obj);
+CREATE INDEX ETIKETTE3 on ETIKETTEN_OBJECT_LINK(etikette);
+
+CREATE TABLE ETIKETTEN_OBJCLASS_LINK(
+	objclass VARCHAR(80),
+	sticker VARCHAR(25)
+);
+CREATE INDEX eol1 on ETIKETTEN_OBJCLASS_LINK(objclass);
+
+CREATE TABLE DBIMAGE (
+    ID             VARCHAR(25) primary key,
+    lastupdate     BIGINT,
+    deleted        CHAR(1) default '0',
+    Datum          CHAR(8),
+    Prefix		   VARCHAR(80),				# A Unique ID of the image creator/importer
+    Title          VARCHAR(80),  			# A title unique within the prefix's namespace
+    Bild           BLOB
+);
+CREATE INDEX DBIMAGE1 on DBIMAGE(Title);  
+            
+
+INSERT INTO CONFIG (param,wert) VALUES ('dbversion','1.8.8');
+INSERT INTO CONFIG (param,wert) VALUES ('ElexisVersion','2.1.0');
+

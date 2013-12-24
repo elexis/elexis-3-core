@@ -31,8 +31,14 @@ public class CoreOperationExtensionPoint {
 			Platform.getExtensionRegistry().getConfigurationElementsFor(
 				"ch.elexis.core.data.coreOperation");
 		if (config.length != 1)
+ {
+			for (IConfigurationElement cfg : config)
+				log.error(cfg.getName());
 			throw new Error(
-				"Error at CoreOperationExtensionPoint initialization, not exactly one extension point found. Exiting.");
+				"Config has "
+					+ config.length
+					+ " elemnts. Error at CoreOperationExtensionPoint initialization, not exactly one extension point found. Exiting.");
+		}
 		try {
 			IConfigurationElement e = ((IConfigurationElement) config[0]);
 			final Object o = e.createExecutableExtension("advisor");
