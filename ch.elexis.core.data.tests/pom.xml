@@ -1,0 +1,91 @@
+<project xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>ch.elexis</groupId>
+    <artifactId>ch.elexis.core.releng</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+  </parent>
+  <groupId>ch.elexis</groupId>
+  <artifactId>ch.elexis.core.data.tests</artifactId>
+  <version>3.0.0-SNAPSHOT</version>
+  <packaging>eclipse-test-plugin</packaging>
+  <!-- comment out to enable headless tests and add additional dependencies if needed
+    -->
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <!-- at the moment I don't know how to pass the correct parameter to 
+          tycho-surefire-plugin as to get the same result as with DataAllTests.launch
+          There Niklaus skips this test as per 24.12.2013
+          Currently the DB start running ch.elexis.data.Test_PersistentObject. The DB is created but the run fails with
+          Exception in thread "Thread-5" java.lang.ClassCastException: ch.rgw.io.InMemorySettings cannot be cast to ch.rgw.io.SysSettings
+          TODO: Fix this test
+            -->
+          <skipTests>true</skipTests> 
+          <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
+          <showEclipseLog>true</showEclipseLog>
+          <useUIHarness>false</useUIHarness>
+          <useUIThread>false</useUIThread>
+          <application>ch.elexis.core.application.ElexisApp</application>
+          <dependencies>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>ch.elexis.core.console.application</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+              <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-reflect</artifactId>
+                <version>1.4.12</version>
+              </dependency>
+              <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>1.4.12</version>
+              </dependency>
+              <dependency>
+              <groupId>org.powermock</groupId>
+              <artifactId>powermock-module-junit4</artifactId>
+              <version>1.4.12</version>
+            </dependency>
+            <dependency>
+              <groupId>org.powermock</groupId>
+              <artifactId>powermock-module-junit4-common</artifactId>
+              <version>1.4.12</version>
+            </dependency>
+            <dependency>
+              <groupId>org.powermock</groupId>
+              <artifactId>powermock-api-mockito</artifactId>
+              <version>1.4.12</version>
+            </dependency>
+            <dependency>
+              <groupId>org.powermock</groupId>
+              <artifactId>powermock-module-junit4-common</artifactId>
+              <version>1.4.12</version>
+            </dependency>
+            <dependency>
+              <groupId>cglib</groupId>
+              <artifactId>cglib.nodep</artifactId>
+              <version>2.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.objenesis</groupId>
+                <artifactId>objenesis</artifactId>
+                <version>1.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>1.4.12</version>
+            </dependency>
+          </dependencies>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
