@@ -30,15 +30,23 @@ public class CoreOperationExtensionPoint {
 		IConfigurationElement[] config =
 			Platform.getExtensionRegistry().getConfigurationElementsFor(
 				"ch.elexis.core.data.coreOperation");
-		if (config.length != 1)
+		
+		if (config.length != 1) {
+			// we must have exactly one CoreOperationAdvisor extension contribution
+			for (IConfigurationElement ic : config) {
+				log.error("CoreOperationExtensionPoint contribution in "+ic.getName());
+			}
 			throw new Error(
-				"Error at CoreOperationExtensionPoint initialization, not exactly one extension point found. Exiting.");
+				"Error at CoreOperationExtensionPoint initialization, not exactly one, but "
+					+ config.length + " extension point contributions found. See log file. Exiting.");
+		}
+		
 		try {
 			IConfigurationElement e = ((IConfigurationElement) config[0]);
 			final Object o = e.createExecutableExtension("advisor");
 			if (o instanceof AbstractCoreOperationAdvisor) {
 				coa = (AbstractCoreOperationAdvisor) o;
-				log.info("CoreOperationExtensionPoint found @ " + e.getContributor().getName()
+				log.debug("CoreOperationExtensionPoint found @ " + e.getContributor().getName()
 					+ ": " + o.getClass().getName());
 			}
 			return;
