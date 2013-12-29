@@ -59,6 +59,7 @@
       <import plugin="com.healthmarketscience.jackcess"/>
       <import plugin="ch.elexis.core.eigenartikel" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api"/>
+      <import plugin="ch.elexis.core.eigendiagnosen"/>
    </requires>
 
    <plugin
@@ -112,6 +113,13 @@
 
    <plugin
          id="ch.elexis.core.ui.eigenartikel"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.ui.eigendiagnosen"
          download-size="0"
          install-size="0"
          version="0.0.0"
