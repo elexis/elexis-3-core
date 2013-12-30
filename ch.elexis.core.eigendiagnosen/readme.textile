@@ -1,0 +1,4 @@
+h1. Elexis Eigendiagnosen Core Part
+
+This plug-in allows for self-managed diagnoses within Elexis. This is the core part defining the datatype and the factory
+to create the @Eigendiagnose@ (self-managed diagnoses) in Elexis.

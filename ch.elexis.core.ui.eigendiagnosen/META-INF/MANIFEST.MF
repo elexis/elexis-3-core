@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Selbstdefinierte Diagnosen
+Bundle-SymbolicName: ch.elexis.core.ui.eigendiagnosen;singleton:=true
+Bundle-Version: 3.0.0.qualifier
+Bundle-Vendor: elexis.ch
+Require-Bundle: ch.elexis.core;bundle-version="3.0.0",
+ ch.elexis.core.data;bundle-version="3.0.0",
+ ch.elexis.core.ui;bundle-version="3.0.0",
+ ch.elexis.core.ui.icons;bundle-version="3.0.0",
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ ch.elexis.core.ui.importer.div,
+ org.eclipse.ui.forms,
+ ch.rgw.utility,
+ ch.elexis.core.eigendiagnosen;bundle-version="3.0.0"
+Created-By: Buildr
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+

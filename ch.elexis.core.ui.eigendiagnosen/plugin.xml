@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="ch.elexis.core.ui.Diagnosecode">
+      <Diagnosesystem
+            CodeDetailDisplay="ch.elexis.core.ui.eigendiagnosen.EigendiagnoseDetailDisplay"
+            CodeSelectorFactory="ch.elexis.core.ui.eigendiagnosen.EigendiagnoseSelector"
+            ElementFactory="ch.elexis.data.EigendiagnosePersistentObjectFactory"
+            ImporterClass="ch.elexis.core.ui.eigendiagnosen.Importer"
+            name="Eigendiagnosen">
+      </Diagnosesystem>
+   </extension>
+
+</plugin>
