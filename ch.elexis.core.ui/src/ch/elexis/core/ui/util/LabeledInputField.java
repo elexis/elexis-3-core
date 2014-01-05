@@ -635,6 +635,7 @@ public class LabeledInputField extends Composite {
 					// def[i].setText(Double.toString(betr/100.0));
 					break;
 				case CHECKBOX:
+					val = StringTool.unNull(val);
 					((Button) (def[i].mine.getControl())).setSelection(val.equalsIgnoreCase("1"));
 					break;
 				case CHECKBOXTRISTATE:
