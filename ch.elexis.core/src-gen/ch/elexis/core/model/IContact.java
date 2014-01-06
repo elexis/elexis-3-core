@@ -46,7 +46,7 @@ import ch.elexis.core.types.CountryCode;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IContact extends Identifiable {
+public interface IContact extends Identifiable, Deleteable {
 	/**
 	 * Returns the value of the '<em><b>Contact Type</b></em>' attribute. The literals are from the
 	 * enumeration {@link ch.elexis.core.types.ContactType}. <!-- begin-user-doc -->

@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.model.impl;
 
+import ch.elexis.core.model.Deleteable;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -109,6 +110,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass identifiableEClass = null;
+	
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass deleteableEClass = null;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -382,17 +390,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * 
 	 * @generated
 	 */
-	public EAttribute getIPersistentObject_Deleted(){
-		return (EAttribute) iPersistentObjectEClass.getEStructuralFeatures().get(0);
-	}
-	
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	public EReference getIPersistentObject_Xid(){
-		return (EReference) iPersistentObjectEClass.getEStructuralFeatures().get(1);
+		return (EReference) iPersistentObjectEClass.getEStructuralFeatures().get(0);
 	}
 	
 	/**
@@ -401,7 +400,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EReference getIPersistentObject_Xids(){
-		return (EReference) iPersistentObjectEClass.getEStructuralFeatures().get(2);
+		return (EReference) iPersistentObjectEClass.getEStructuralFeatures().get(1);
 	}
 	
 	/**
@@ -652,6 +651,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * 
 	 * @generated
 	 */
+	public EClass getDeleteable(){
+		return deleteableEClass;
+	}
+	
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getDeleteable_Deleted(){
+		return (EAttribute) deleteableEClass.getEStructuralFeatures().get(0);
+	}
+	
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EDataType getStringArray(){
 		return stringArrayEDataType;
 	}
@@ -706,7 +723,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iContactEClass, ICONTACT__COMMENT);
 		
 		iPersistentObjectEClass = createEClass(IPERSISTENT_OBJECT);
-		createEAttribute(iPersistentObjectEClass, IPERSISTENT_OBJECT__DELETED);
 		createEReference(iPersistentObjectEClass, IPERSISTENT_OBJECT__XID);
 		createEReference(iPersistentObjectEClass, IPERSISTENT_OBJECT__XIDS);
 		
@@ -745,6 +761,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		
 		identifiableEClass = createEClass(IDENTIFIABLE);
 		
+		deleteableEClass = createEClass(DELETEABLE);
+		createEAttribute(deleteableEClass, DELETEABLE__DELETED);
+		
 		// Create data types
 		stringArrayEDataType = createEDataType(STRING_ARRAY);
 	}
@@ -782,6 +801,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		
 		// Add supertypes to classes
 		iContactEClass.getESuperTypes().add(this.getIdentifiable());
+		iContactEClass.getESuperTypes().add(this.getDeleteable());
 		iPersistentObjectEClass.getESuperTypes().add(this.getIdentifiable());
 		iXidEClass.getESuperTypes().add(this.getIPersistentObject());
 		EGenericType g1 = createEGenericType(theTypesPackage.getComparable());
@@ -855,9 +875,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		
 		initEClass(iPersistentObjectEClass, IPersistentObject.class, "IPersistentObject",
 			IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIPersistentObject_Deleted(), ecorePackage.getEBoolean(), "deleted", null,
-			0, 1, IPersistentObject.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE,
-			!IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIPersistentObject_Xid(), this.getIXid(), null, "xid", null, 0, 1,
 			IPersistentObject.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE,
 			IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1065,6 +1082,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		
 		addEOperation(identifiableEClass, ecorePackage.getEString(), "getLabel", 0, 1, IS_UNIQUE,
 			IS_ORDERED);
+		
+		initEClass(deleteableEClass, Deleteable.class, "Deleteable", IS_ABSTRACT, IS_INTERFACE,
+			IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDeleteable_Deleted(), ecorePackage.getEBoolean(), "deleted", null, 0, 1,
+			Deleteable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+			IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		
 		// Initialize data types
 		initEDataType(stringArrayEDataType, String[].class, "StringArray", IS_SERIALIZABLE,

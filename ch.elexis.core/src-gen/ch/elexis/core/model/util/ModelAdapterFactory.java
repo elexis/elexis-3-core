@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.model.util;
 
+import ch.elexis.core.model.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
@@ -127,6 +128,11 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseIdentifiable(Identifiable object){
 			return createIdentifiableAdapter();
+		}
+		
+		@Override
+		public Adapter caseDeleteable(Deleteable object){
+			return createDeleteableAdapter();
 		}
 		
 		@Override
@@ -290,6 +296,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIdentifiableAdapter(){
+		return null;
+	}
+	
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.Deleteable
+	 * <em>Deleteable</em>}'. <!-- begin-user-doc --> This default implementation returns null so
+	 * that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all
+	 * the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.Deleteable
+	 * @generated
+	 */
+	public Adapter createDeleteableAdapter(){
 		return null;
 	}
 	

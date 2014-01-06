@@ -29,6 +29,7 @@ import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
+import java.lang.Comparable;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->

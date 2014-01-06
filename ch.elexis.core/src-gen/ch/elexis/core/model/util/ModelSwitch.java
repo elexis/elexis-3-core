@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.model.util;
 
+import ch.elexis.core.model.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
@@ -84,6 +85,8 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			if (result == null)
 				result = caseIdentifiable(iContact);
 			if (result == null)
+				result = caseDeleteable(iContact);
+			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
 		}
@@ -138,6 +141,8 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			if (result == null)
 				result = caseIdentifiable(iPerson);
 			if (result == null)
+				result = caseDeleteable(iPerson);
+			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
 		}
@@ -151,6 +156,8 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			if (result == null)
 				result = caseIdentifiable(iPatient);
 			if (result == null)
+				result = caseDeleteable(iPatient);
+			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
 		}
@@ -162,12 +169,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			if (result == null)
 				result = caseIdentifiable(iUser);
 			if (result == null)
+				result = caseDeleteable(iUser);
+			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
 		}
 		case ModelPackage.IDENTIFIABLE: {
 			Identifiable identifiable = (Identifiable) theEObject;
 			T1 result = caseIdentifiable(identifiable);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelPackage.DELETEABLE: {
+			Deleteable deleteable = (Deleteable) theEObject;
+			T1 result = caseDeleteable(deleteable);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -325,6 +341,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIdentifiable(Identifiable object){
+		return null;
+	}
+	
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Deleteable</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will
+	 * terminate the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Deleteable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseDeleteable(Deleteable object){
 		return null;
 	}
 	

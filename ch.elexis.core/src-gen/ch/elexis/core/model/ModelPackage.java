@@ -102,13 +102,22 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT = 0;
 	
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+	
+	/**
 	 * The feature id for the '<em><b>Contact Type</b></em>' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__CONTACT_TYPE = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int ICONTACT__CONTACT_TYPE = IDENTIFIABLE_FEATURE_COUNT + 1;
 	
 	/**
 	 * The feature id for the '<em><b>Mandator</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -117,7 +126,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int ICONTACT__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 2;
 	
 	/**
 	 * The feature id for the '<em><b>User</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -126,7 +135,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__USER = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int ICONTACT__USER = IDENTIFIABLE_FEATURE_COUNT + 3;
 	
 	/**
 	 * The feature id for the '<em><b>Patient</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -135,7 +144,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int ICONTACT__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 4;
 	
 	/**
 	 * The feature id for the '<em><b>Description1</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -144,7 +153,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__DESCRIPTION1 = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int ICONTACT__DESCRIPTION1 = IDENTIFIABLE_FEATURE_COUNT + 5;
 	
 	/**
 	 * The feature id for the '<em><b>Description2</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -153,7 +162,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__DESCRIPTION2 = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int ICONTACT__DESCRIPTION2 = IDENTIFIABLE_FEATURE_COUNT + 6;
 	
 	/**
 	 * The feature id for the '<em><b>Description3</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -162,7 +171,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__DESCRIPTION3 = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int ICONTACT__DESCRIPTION3 = IDENTIFIABLE_FEATURE_COUNT + 7;
 	
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -171,7 +180,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__CODE = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int ICONTACT__CODE = IDENTIFIABLE_FEATURE_COUNT + 8;
 	
 	/**
 	 * The feature id for the '<em><b>Country</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -180,7 +189,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__COUNTRY = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int ICONTACT__COUNTRY = IDENTIFIABLE_FEATURE_COUNT + 9;
 	
 	/**
 	 * The feature id for the '<em><b>Zip</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -189,7 +198,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__ZIP = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int ICONTACT__ZIP = IDENTIFIABLE_FEATURE_COUNT + 10;
 	
 	/**
 	 * The feature id for the '<em><b>City</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -198,7 +207,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__CITY = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int ICONTACT__CITY = IDENTIFIABLE_FEATURE_COUNT + 11;
 	
 	/**
 	 * The feature id for the '<em><b>Street</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -207,7 +216,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__STREET = IDENTIFIABLE_FEATURE_COUNT + 11;
+	int ICONTACT__STREET = IDENTIFIABLE_FEATURE_COUNT + 12;
 	
 	/**
 	 * The feature id for the '<em><b>Phone1</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -216,7 +225,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__PHONE1 = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int ICONTACT__PHONE1 = IDENTIFIABLE_FEATURE_COUNT + 13;
 	
 	/**
 	 * The feature id for the '<em><b>Phone2</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -225,7 +234,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__PHONE2 = IDENTIFIABLE_FEATURE_COUNT + 13;
+	int ICONTACT__PHONE2 = IDENTIFIABLE_FEATURE_COUNT + 14;
 	
 	/**
 	 * The feature id for the '<em><b>Fax</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -234,7 +243,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__FAX = IDENTIFIABLE_FEATURE_COUNT + 14;
+	int ICONTACT__FAX = IDENTIFIABLE_FEATURE_COUNT + 15;
 	
 	/**
 	 * The feature id for the '<em><b>Email</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -243,7 +252,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__EMAIL = IDENTIFIABLE_FEATURE_COUNT + 15;
+	int ICONTACT__EMAIL = IDENTIFIABLE_FEATURE_COUNT + 16;
 	
 	/**
 	 * The feature id for the '<em><b>Website</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -252,7 +261,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__WEBSITE = IDENTIFIABLE_FEATURE_COUNT + 16;
+	int ICONTACT__WEBSITE = IDENTIFIABLE_FEATURE_COUNT + 17;
 	
 	/**
 	 * The feature id for the '<em><b>Mobile</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -261,7 +270,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__MOBILE = IDENTIFIABLE_FEATURE_COUNT + 17;
+	int ICONTACT__MOBILE = IDENTIFIABLE_FEATURE_COUNT + 18;
 	
 	/**
 	 * The feature id for the '<em><b>Comment</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -270,7 +279,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__COMMENT = IDENTIFIABLE_FEATURE_COUNT + 18;
+	int ICONTACT__COMMENT = IDENTIFIABLE_FEATURE_COUNT + 19;
 	
 	/**
 	 * The number of structural features of the '<em>IContact</em>' class. <!-- begin-user-doc -->
@@ -279,16 +288,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 19;
-	
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int IPERSISTENT_OBJECT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 20;
 	
 	/**
 	 * The feature id for the '<em><b>Xid</b></em>' reference. <!-- begin-user-doc --> <!--
@@ -297,7 +297,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPERSISTENT_OBJECT__XID = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int IPERSISTENT_OBJECT__XID = IDENTIFIABLE_FEATURE_COUNT + 0;
 	
 	/**
 	 * The feature id for the '<em><b>Xids</b></em>' reference list. <!-- begin-user-doc --> <!--
@@ -306,7 +306,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPERSISTENT_OBJECT__XIDS = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int IPERSISTENT_OBJECT__XIDS = IDENTIFIABLE_FEATURE_COUNT + 1;
 	
 	/**
 	 * The number of structural features of the '<em>IPersistent Object</em>' class. <!--
@@ -315,7 +315,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPERSISTENT_OBJECT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int IPERSISTENT_OBJECT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
 	
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IXid <em>IXid</em>}' class. <!--
@@ -326,15 +326,6 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IXID = 2;
-	
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int IXID__DELETED = IPERSISTENT_OBJECT__DELETED;
 	
 	/**
 	 * The feature id for the '<em><b>Xid</b></em>' reference. <!-- begin-user-doc --> <!--
@@ -501,6 +492,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IPERSON = 6;
+	
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__DELETED = ICONTACT__DELETED;
 	
 	/**
 	 * The feature id for the '<em><b>Contact Type</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -727,6 +727,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IPATIENT = 7;
+	
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__DELETED = IPERSON__DELETED;
 	
 	/**
 	 * The feature id for the '<em><b>Contact Type</b></em>' attribute. <!-- begin-user-doc --> <!--
@@ -1000,6 +1009,15 @@ public interface ModelPackage extends EPackage {
 	int IUSER = 8;
 	
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER__DELETED = ICONTACT__DELETED;
+	
+	/**
 	 * The feature id for the '<em><b>Contact Type</b></em>' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
@@ -1198,13 +1216,41 @@ public interface ModelPackage extends EPackage {
 	int IUSER_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 2;
 	
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}'
+	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see ch.elexis.core.model.Deleteable
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getDeleteable()
+	 * @generated
+	 */
+	int DELETEABLE = 10;
+	
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DELETEABLE__DELETED = 0;
+	
+	/**
+	 * The number of structural features of the '<em>Deleteable</em>' class. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DELETEABLE_FEATURE_COUNT = 1;
+	
+	/**
 	 * The meta object id for the '<em>String Array</em>' data type. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 	 * @generated
 	 */
-	int STRING_ARRAY = 10;
+	int STRING_ARRAY = 11;
 	
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IContact <em>IContact</em>}'.
@@ -1438,18 +1484,6 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getIPersistentObject();
-	
-	/**
-	 * Returns the meta object for the attribute '
-	 * {@link ch.elexis.core.model.IPersistentObject#isDeleted <em>Deleted</em>}'. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Deleted</em>'.
-	 * @see ch.elexis.core.model.IPersistentObject#isDeleted()
-	 * @see #getIPersistentObject()
-	 * @generated
-	 */
-	EAttribute getIPersistentObject_Deleted();
 	
 	/**
 	 * Returns the meta object for the reference '
@@ -1771,6 +1805,27 @@ public interface ModelPackage extends EPackage {
 	EClass getIdentifiable();
 	
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.Deleteable
+	 * <em>Deleteable</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Deleteable</em>'.
+	 * @see ch.elexis.core.model.Deleteable
+	 * @generated
+	 */
+	EClass getDeleteable();
+	
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.Deleteable#isDeleted
+	 * <em>Deleted</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Deleted</em>'.
+	 * @see ch.elexis.core.model.Deleteable#isDeleted()
+	 * @see #getDeleteable()
+	 * @generated
+	 */
+	EAttribute getDeleteable_Deleted();
+	
+	/**
 	 * Returns the meta object for data type '<em>String Array</em>'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
@@ -1973,14 +2028,6 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IPERSISTENT_OBJECT = eINSTANCE.getIPersistentObject();
-		
-		/**
-		 * The meta object literal for the '<em><b>Deleted</b></em>' attribute feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EAttribute IPERSISTENT_OBJECT__DELETED = eINSTANCE.getIPersistentObject_Deleted();
 		
 		/**
 		 * The meta object literal for the '<em><b>Xid</b></em>' reference feature. <!--
@@ -2229,6 +2276,24 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IDENTIFIABLE = eINSTANCE.getIdentifiable();
+		
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.Deleteable
+		 * <em>Deleteable</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see ch.elexis.core.model.Deleteable
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getDeleteable()
+		 * @generated
+		 */
+		EClass DELETEABLE = eINSTANCE.getDeleteable();
+		
+		/**
+		 * The meta object literal for the '<em><b>Deleted</b></em>' attribute feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute DELETEABLE__DELETED = eINSTANCE.getDeleteable_Deleted();
 		
 		/**
 		 * The meta object literal for the '<em>String Array</em>' data type. <!-- begin-user-doc

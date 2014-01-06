@@ -19,7 +19,6 @@ import java.util.List;
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link ch.elexis.core.model.IPersistentObject#isDeleted <em>Deleted</em>}</li>
  * <li>{@link ch.elexis.core.model.IPersistentObject#getXid <em>Xid</em>}</li>
  * <li>{@link ch.elexis.core.model.IPersistentObject#getXids <em>Xids</em>}</li>
  * </ul>
@@ -30,21 +29,6 @@ import java.util.List;
  * @generated
  */
 public interface IPersistentObject extends Identifiable {
-	/**
-	 * Returns the value of the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Deleted</em>' attribute isn't clear, there really should be more
-	 * of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Deleted</em>' attribute.
-	 * @see ch.elexis.core.model.ModelPackage#getIPersistentObject_Deleted()
-	 * @model changeable="false"
-	 * @generated
-	 */
-	boolean isDeleted();
-	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
