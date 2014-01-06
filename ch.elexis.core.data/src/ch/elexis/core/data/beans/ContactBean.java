@@ -289,4 +289,14 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	public void setCountry(CountryCode value){
 		entity.set(Kontakt.FLD_COUNTRY, value.getLiteral());
 	}
+
+	@Override
+	public boolean isDeleted(){
+		return entity.isDeleted();
+	}
+
+	@Override
+	public void setDeleted(boolean value){
+		entity.delete();
+	}
 }
