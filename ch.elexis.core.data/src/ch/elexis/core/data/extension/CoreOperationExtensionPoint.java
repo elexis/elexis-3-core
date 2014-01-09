@@ -16,6 +16,8 @@ import org.eclipse.core.runtime.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
+
 /**
  * @since 3.0.0
  */
@@ -29,7 +31,7 @@ public class CoreOperationExtensionPoint {
 	private CoreOperationExtensionPoint(){
 		IConfigurationElement[] config =
 			Platform.getExtensionRegistry().getConfigurationElementsFor(
-				"ch.elexis.core.data.coreOperation");
+				ExtensionPointConstantsData.CORE_OPERATION_ADVISOR);
 		
 		if (config.length != 1) {
 			// we must have exactly one CoreOperationAdvisor extension contribution

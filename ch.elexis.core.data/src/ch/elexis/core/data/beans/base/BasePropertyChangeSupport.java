@@ -37,5 +37,11 @@ public abstract class BasePropertyChangeSupport extends EObjectImpl implements
 	
 	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue){
 		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+		updateCache();
 	}
+	
+	/**
+	 * Allows to add a cache to be refreshed each time a property is changed (does not consider the property type);
+	 */
+	protected abstract void updateCache();
 }

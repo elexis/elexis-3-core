@@ -41,10 +41,11 @@ import ch.rgw.tools.StringTool;
 public class Anwender extends Person {
 	
 	public static final String ADMINISTRATOR = "Administrator";
-	public static final String LABEL = "Label";
+	public static final String FLD_LABEL = "Label"; // contains username
+	public static final String FLD_EXTINFO_PASSWORD = "UsrPwd";
 	
 	static {
-		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER, "Label=Bezeichnung3",
+		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER, FLD_LABEL+"=Bezeichnung3",
 			"Reminders=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
 	}
 	
@@ -73,7 +74,7 @@ public class Anwender extends Person {
 	 */
 	@Override
 	public boolean isValid(){
-		String label = get(LABEL);
+		String label = get(FLD_LABEL);
 		if (StringTool.isNothing(label)) {
 			return false;
 		}
@@ -92,7 +93,7 @@ public class Anwender extends Person {
 	 */
 	@Override
 	public String getLabel(final boolean shortLabel){
-		String l = get(LABEL);
+		String l = get(FLD_LABEL);
 		if (StringTool.isNothing(l)) {
 			l = checkNull(get(Person.NAME)) + StringTool.space + checkNull(get(Person.FIRSTNAME));
 			if (StringTool.isNothing(l)) {
@@ -109,13 +110,20 @@ public class Anwender extends Person {
 	public void setLabel(final String label){
 		String oldlabel = getLabel();
 		if (!label.equals(oldlabel)) {
-			set(LABEL, label);
+			set(FLD_LABEL, label);
 		}
 	}
 	
 	/** Passwort setzen */
 	public void setPwd(final String pwd){
-		setInfoElement("UsrPwd", pwd);
+		setInfoElement(FLD_EXTINFO_PASSWORD, pwd);
+	}
+	
+	/**
+	 * @since 3.0.0
+	 */
+	public String getPwd() {
+		return (String) getInfoElement(FLD_EXTINFO_PASSWORD);
 	}
 	
 	/**
@@ -179,14 +187,14 @@ public class Anwender extends Person {
 		Anwender admin = new Anwender();
 		admin.create(null);
 		admin.set(new String[] {
-			Person.NAME, LABEL, Kontakt.FLD_IS_USER
+			Person.NAME, FLD_LABEL, Kontakt.FLD_IS_USER
 		}, ADMINISTRATOR, ADMINISTRATOR, StringConstants.ONE);
 		CoreHub.actUser = admin;
 		CoreHub.acl.grant(admin, new ACE(ACE.ACE_IMPLICIT, "WriteInfoStore"), new ACE(
 			ACE.ACE_IMPLICIT, "LoadInfoStore"), new ACE(ACE.ACE_IMPLICIT, "WriteGroups"), new ACE(
 			ACE.ACE_IMPLICIT, "ReadGroups"));
 		Map hash = admin.getInfoStore();
-		hash.put("UsrPwd", "admin");
+		hash.put(FLD_EXTINFO_PASSWORD, "admin");
 		hash.put("Groups", "Admin,Anwender");
 		admin.flushInfoStore(hash);
 		CoreHub.acl.grant("Admin", new ACE(ACE.ACE_IMPLICIT, "ReadUsrPwd"), new ACE(
@@ -213,7 +221,7 @@ public class Anwender extends Person {
 		CoreHub.actUser = null;
 		cod.adaptForUser();
 		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
-		qbe.add(LABEL, StringTool.equals, username);
+		qbe.add(FLD_LABEL, StringTool.equals, username);
 		List<Anwender> list = qbe.execute();
 		if ((list == null) || (list.size() < 1)) {
 			return false;
@@ -229,7 +237,7 @@ public class Anwender extends Person {
 				MessageEvent.fireLoggedError("Fatal error", "Can't store user map", e);
 			}
 		}
-		String pwd = (String) km.get("UsrPwd");
+		String pwd = (String) km.get(FLD_EXTINFO_PASSWORD);
 		if (pwd == null) {
 			return false;
 		}
@@ -239,7 +247,7 @@ public class Anwender extends Person {
 			String MandantID = null;
 			if (!StringTool.isNothing(MandantLabel)) {
 				MandantID =
-					new Query<Mandant>(Mandant.class).findSingle(LABEL, StringTool.equals,
+					new Query<Mandant>(Mandant.class).findSingle(FLD_LABEL, StringTool.equals,
 						MandantLabel);
 			}
 			if (MandantID != null) {

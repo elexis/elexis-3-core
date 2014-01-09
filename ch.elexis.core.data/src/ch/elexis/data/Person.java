@@ -28,6 +28,7 @@ public class Person extends Kontakt {
 	// If you add new fields, please be sure to update KontakteView.java tidySelectedAddressesAction
 // (and, most probably, other places)
 	public static final String TITLE = "Titel"; //$NON-NLS-1$
+	public static final String FLD_TITLE_SUFFIX = "TitelSuffix"; //$NON-NLS-1$
 	public static final String MOBILE = "Natel"; //$NON-NLS-1$
 	public static final String SEX = "Geschlecht"; //$NON-NLS-1$
 	public static final String BIRTHDATE = "Geburtsdatum"; //$NON-NLS-1$
@@ -37,10 +38,16 @@ public class Person extends Kontakt {
 	public static final String FEMALE = "w"; //$NON-NLS-1$
 	
 	static {
-		addMapping(Kontakt.TABLENAME, "Name			=	Bezeichnung1", //$NON-NLS-1$
-			"Vorname		=   Bezeichnung2", "Zusatz 		=	Bezeichnung3", //$NON-NLS-1$ //$NON-NLS-2$
-			"Geburtsdatum	=	S:D:Geburtsdatum", SEX, "Natel=NatelNr", //$NON-NLS-1$ //$NON-NLS-2$
-			Kontakt.FLD_IS_PERSON, TITLE);
+		addMapping(Kontakt.TABLENAME, 
+			NAME+"="+Kontakt.FLD_NAME1,
+			FIRSTNAME+"="+Kontakt.FLD_NAME2, 
+			"Zusatz 		="+Kontakt.FLD_NAME3,
+			BIRTHDATE+"=	S:D:Geburtsdatum", 
+			SEX, 
+			MOBILE+"=NatelNr", //$NON-NLS-1$ //$NON-NLS-2$
+			Kontakt.FLD_IS_PERSON, 
+			TITLE, 
+			FLD_TITLE_SUFFIX);
 	}
 	
 	public String getName(){

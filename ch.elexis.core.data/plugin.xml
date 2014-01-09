@@ -19,6 +19,13 @@
             properties="ACE"
             type="java.lang.Object">
       </propertyTester>
+      <propertyTester
+            class="ch.elexis.core.data.propertyTester.ContactIsDeleted"
+            id="ch.elexis.commands.propertyTester.ContactIsDeleted"
+            namespace="ch.elexis.commands.propertyTester.contact"
+            properties="isDeleted"
+            type="ch.elexis.core.model.IContact">
+      </propertyTester>
    </extension>
   <extension
         point="ch.elexis.core.data.ACLContribution">

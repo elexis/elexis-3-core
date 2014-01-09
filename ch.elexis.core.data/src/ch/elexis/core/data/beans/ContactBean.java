@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2014 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,22 +13,39 @@ package ch.elexis.core.data.beans;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.beans.base.BeanPersistentObject;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.CountryCode;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Person;
+import ch.rgw.tools.TimeTool;
 
-public class ContactBean extends BeanPersistentObject<Kontakt> implements IContact {
+public class ContactBean extends BeanPersistentObject<Kontakt> implements IContact, IPerson,
+		IPatient, IUser {
+	
+	private ContactCache cache;
 	
 	public ContactBean(Kontakt kontakt){
 		super(kontakt);
+		cache = new ContactCache();
+	}
+	
+	@Override
+	protected void updateCache(){
+		cache = new ContactCache();
 	}
 	
 	@Override
 	public ContactType getContactType(){
-		if (entity.istOrganisation())
+		if (cache.isOrganization)
 			return ContactType.ORGANIZATION;
-		if (entity.istPatient() || entity.istPerson())
+		if (cache.isPatient || cache.isPerson)
 			return ContactType.PERSON;
 		return ContactType.UNKNOWN;
 	}
@@ -57,7 +74,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	
 	@Override
 	public String getDescription1(){
-		return entity.get(Kontakt.FLD_NAME1);
+		return cache.description1;
 	}
 	
 	@Override
@@ -69,7 +86,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	
 	@Override
 	public String getDescription2(){
-		return entity.get(Kontakt.FLD_NAME2);
+		return cache.description2;
 	}
 	
 	@Override
@@ -81,7 +98,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	
 	@Override
 	public String getDescription3(){
-		return entity.get(Kontakt.FLD_NAME3);
+		return cache.description3;
 	}
 	
 	@Override
@@ -224,7 +241,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	
 	@Override
 	public boolean isMandator(){
-		return entity.get(Kontakt.FLD_IS_MANDATOR).equals(StringConstants.ONE);
+		return cache.isMandator;
 	}
 	
 	@Override
@@ -237,7 +254,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	
 	@Override
 	public boolean isUser(){
-		return entity.get(Kontakt.FLD_IS_USER).equals(StringConstants.ONE);
+		return cache.isUser;
 	}
 	
 	@Override
@@ -250,7 +267,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	
 	@Override
 	public boolean isPatient(){
-		return entity.get(Kontakt.FLD_IS_PATIENT).equals(StringConstants.ONE);
+		return cache.isPatient;
 	}
 	
 	@Override
@@ -287,16 +304,238 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	
 	@Override
 	public void setCountry(CountryCode value){
+		CountryCode old = getCountry();
 		entity.set(Kontakt.FLD_COUNTRY, value.getLiteral());
+		firePropertyChange("country", old, value);
 	}
-
+	
 	@Override
 	public boolean isDeleted(){
-		return entity.isDeleted();
+		return cache.isDeleted;
+	}
+	
+	@Override
+	public void setDeleted(boolean value){
+		boolean old = isDeleted();
+		entity.delete();
+		firePropertyChange("deleted", old, value);
+	}
+	
+	// Person
+	
+	@Override
+	public TimeTool getDateOfBirth(){
+		return cache.dateOfBirth;
+	}
+	
+	@Override
+	public void setDateOfBirth(TimeTool value){
+		TimeTool old = getDateOfBirth();
+		entity.set(Person.BIRTHDATE, value.toString(TimeTool.DATE_COMPACT));
+		firePropertyChange("dateOfBirth", old, value);
+	}
+	
+	@Override
+	public ContactGender getGender(){
+		return cache.sex;
+	}
+	
+	@Override
+	public void setGender(ContactGender value){
+		ContactGender old = getGender();
+		String vs;
+		switch (value) {
+		case MALE:
+			vs = "m";
+			break;
+		case FEMALE:
+			vs = "w";
+			break;
+		case UNDEFINED:
+			vs = "u";
+			break;
+		default:
+			vs = "";
+		}
+		entity.set(Person.SEX, vs);
+		firePropertyChange("gender", old, value);
+	}
+	
+	@Override
+	public String getTitel(){
+		return cache.titel;
+	}
+	
+	@Override
+	public void setTitel(String value){
+		String old = getTitel();
+		entity.set(Person.TITLE, value);
+		firePropertyChange("titel", old, value);
+	}
+	
+	@Override
+	public String getTitelSuffix(){
+		return entity.get(Person.FLD_TITLE_SUFFIX);
+	}
+	
+	@Override
+	public void setTitelSuffix(String value){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	// Patient -----------------------
+	
+	@Override
+	public String getDiagnosen(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setDiagnosen(String value){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public String getRisk(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setRisk(String value){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public String getFamilyAnamnese(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setFamilyAnamnese(String value){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public String getPersonalAnamnese(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setPersonalAnamnese(String value){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public String getAllergies(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setAllergies(String value){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public String getPatientLabel(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public String getPatientNr(){
+		return cache.patientNr;
+	}
+	
+	@Override
+	public void setPatientNr(String value){
+		String old = getPatientNr();
+		entity.set(Patient.FLD_ID, value);
+		firePropertyChange("patientNr", old, value);
+	}
+	
+	// User ---
+	@Override
+	public String getUsername(){
+		return cache.description3;
 	}
 
 	@Override
-	public void setDeleted(boolean value){
-		entity.delete();
+	public void setUsername(String value){
+		String old = getUsername();
+		entity.set(Kontakt.FLD_NAME3, value);
+		firePropertyChange("username", old, value);
+	}
+
+	@Override
+	public String getPassword(){
+		return (String) entity.getInfoElement(Anwender.FLD_EXTINFO_PASSWORD);
+	}
+
+	@Override
+	public void setPassword(String value){
+		// TODO Auto-generated method stub
+	}
+	
+	/**
+	 * This class caches contact properties to speed up the current {@link PersistentObject}
+	 * dependent implementation, where every access is executed synchronous to the DB.
+	 */
+	private class ContactCache {
+		boolean isDeleted, isPerson, isOrganization, isMandator, isUser, isPatient;
+		String patientNr, description1, description2, description3, titel;
+		TimeTool dateOfBirth;
+		ContactGender sex;
+		
+		public ContactCache(){
+			String[] labels = new String[13];
+			entity.get(new String[] {
+				Kontakt.FLD_DELETED, Kontakt.FLD_IS_PERSON, Kontakt.FLD_IS_ORGANIZATION,
+				Kontakt.FLD_IS_MANDATOR, Kontakt.FLD_IS_USER, Kontakt.FLD_IS_PATIENT,
+				Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3, Person.BIRTHDATE,
+				Person.SEX, Patient.FLD_PATID, Person.TITLE
+			}, labels);
+			
+			isDeleted = labels[0].equals(StringConstants.ONE);
+			isPerson = labels[1].equals(StringConstants.ONE);
+			isOrganization = labels[2].equals(StringConstants.ONE);
+			isMandator = labels[3].equals(StringConstants.ONE);
+			isUser = labels[4].equals(StringConstants.ONE);
+			isPatient = labels[5].equals(StringConstants.ONE);
+			description1 = labels[6];
+			description2 = labels[7];
+			description3 = labels[8];
+			dateOfBirth = new TimeTool(labels[9]);
+			sex = switchSex(labels[10]);
+			patientNr = labels[11];
+			titel = labels[12];
+		}
+		
+		private ContactGender switchSex(String labels){
+			if (labels == null || labels.length() < 1)
+				return ContactGender.UNKNOWN;
+			switch (labels.charAt(0)) {
+			case 'w':
+				return ContactGender.FEMALE;
+			case 'f':
+				return ContactGender.FEMALE;
+			case 'u':
+				return ContactGender.UNDEFINED;
+			case 'm':
+				return ContactGender.MALE;
+			default:
+				return ContactGender.UNKNOWN;
+			}
+		}
 	}
 }

@@ -46,11 +46,12 @@ import ch.rgw.tools.TimeTool.TimeFormatException;
  * 
  */
 public class Patient extends Person {
+	private final JdbcLink j = getConnection();
+	
 	public static final String FLD_ALLERGIES = "Allergien";
 	public static final String FLD_RISKS = "Risiken";
 	public static final String FLD_GROUP = "Gruppe";
 	public static final String FLD_DIAGNOSES = "Diagnosen";
-	private final JdbcLink j = getConnection();
 	public static final String FLD_PATID = "PatientNr";
 	public final static String FLD_NAME = "Name";
 	public static final String FLD_FIRSTNAME = "Vorname";
@@ -74,8 +75,8 @@ public class Patient extends Person {
 	static {
 		addMapping(
 			Kontakt.TABLENAME,
-			"Diagnosen       	=S:C:Diagnosen",
-			"PersAnamnese   	=S:C:PersAnamnese",
+			FLD_DIAGNOSES+"    	=S:C:Diagnosen",
+			FLD_PERS_ANAMNESE+"	=S:C:PersAnamnese",
 			"SystemAnamnese	 	=S:C:SysAnamnese",
 			"FamilienAnamnese	=S:C:FamAnamnese",
 			FLD_RISKS,
@@ -85,7 +86,7 @@ public class Patient extends Person {
 				+ Kontakt.class.getCanonicalName(),
 			"Dauermedikation	=JOINT:ArtikelID:PatientID:PATIENT_ARTIKEL_JOINT:"
 				+ Artikel.class.getCanonicalName(), FLD_BALANCE + "			=LIST:PatientID:KONTO",
-			FLD_GROUP, "PatientNr", "istPatient");
+			FLD_GROUP, FLD_PATID, Kontakt.FLD_IS_PATIENT);
 	}
 	
 	public String getDiagnosen(){
