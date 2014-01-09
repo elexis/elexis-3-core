@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="ch.elexis" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="ch.elexis" id="Genericcode" name="%elexis.genericcode"/>
+      </appInfo>
+      <documentation>
+         &lt;p&gt;Erweiterungspunkt für das Einbinden externer generischer Codierungs-Systeme&lt;/p&gt;
+&lt;p&gt;Ein Plugin, das diesen Punkt erweitert, muss folgende Abhängigkeiten einbinden:&lt;/p&gt;&lt;ul&gt;
+&lt;li&gt;ch.elexis&lt;/li&gt;
+&lt;li&gt;org.eclipse.core.runtime&lt;/li&gt;
+&lt;li&gt;org.eclipse.swt&lt;/li&gt;
+&lt;/ul&gt;
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="Codesystem" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Codesystem">
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Ein frei wählbarer Name
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="CodeDetailDisplay" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.views.IDetailDisplay"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="ImporterClass" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.util.ImporterPage"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="CodeSelectorFactory" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.views.codesystems.CodeSelectorFactory:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="ElementFactory" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="ch.elexis.data.PersistentObjectFactory"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>
