@@ -13,31 +13,32 @@ package ch.elexis.core.model;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>IPatient</b></em>'. <!--
  * end-user-doc -->
- * 
+ *
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link ch.elexis.core.model.IPatient#getDiagnosen <em>Diagnosen</em>}</li>
- * <li>{@link ch.elexis.core.model.IPatient#getRisk <em>Risk</em>}</li>
- * <li>{@link ch.elexis.core.model.IPatient#getFamilyAnamnese <em>Family Anamnese</em>}</li>
- * <li>{@link ch.elexis.core.model.IPatient#getPersonalAnamnese <em>Personal Anamnese</em>}</li>
- * <li>{@link ch.elexis.core.model.IPatient#getAllergies <em>Allergies</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPatient#getDiagnosen <em>Diagnosen</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPatient#getRisk <em>Risk</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPatient#getFamilyAnamnese <em>Family Anamnese</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPatient#getPersonalAnamnese <em>Personal Anamnese</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPatient#getAllergies <em>Allergies</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPatient#getPatientNr <em>Patient Nr</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @see ch.elexis.core.model.ModelPackage#getIPatient()
  * @model interface="true" abstract="true"
  * @generated
  */
 public interface IPatient extends IPerson {
 	/**
-	 * Returns the value of the '<em><b>Diagnosen</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Diagnosen</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Diagnosen</em>' attribute isn't clear, there really should be more
 	 * of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Diagnosen</em>' attribute.
 	 * @see #setDiagnosen(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIPatient_Diagnosen()
@@ -47,24 +48,22 @@ public interface IPatient extends IPerson {
 	String getDiagnosen();
 	
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getDiagnosen <em>Diagnosen</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Diagnosen</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getDiagnosen <em>Diagnosen</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Diagnosen</em>' attribute.
 	 * @see #getDiagnosen()
 	 * @generated
 	 */
 	void setDiagnosen(String value);
 	
 	/**
-	 * Returns the value of the '<em><b>Risk</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Risk</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Risk</em>' attribute isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Risk</em>' attribute.
 	 * @see #setRisk(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIPatient_Risk()
@@ -74,24 +73,22 @@ public interface IPatient extends IPerson {
 	String getRisk();
 	
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getRisk <em>Risk</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Risk</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getRisk <em>Risk</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Risk</em>' attribute.
 	 * @see #getRisk()
 	 * @generated
 	 */
 	void setRisk(String value);
 	
 	/**
-	 * Returns the value of the '<em><b>Family Anamnese</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Family Anamnese</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Family Anamnese</em>' attribute isn't clear, there really should
 	 * be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Family Anamnese</em>' attribute.
 	 * @see #setFamilyAnamnese(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIPatient_FamilyAnamnese()
@@ -101,25 +98,23 @@ public interface IPatient extends IPerson {
 	String getFamilyAnamnese();
 	
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getFamilyAnamnese
-	 * <em>Family Anamnese</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Family Anamnese</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getFamilyAnamnese <em>Family Anamnese</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Family Anamnese</em>' attribute.
 	 * @see #getFamilyAnamnese()
 	 * @generated
 	 */
 	void setFamilyAnamnese(String value);
 	
 	/**
-	 * Returns the value of the '<em><b>Personal Anamnese</b></em>' attribute. <!-- begin-user-doc
+	 * Returns the value of the '<em><b>Personal Anamnese</b></em>' attribute.
+	 * <!-- begin-user-doc
 	 * -->
 	 * <p>
 	 * If the meaning of the '<em>Personal Anamnese</em>' attribute isn't clear, there really should
 	 * be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Personal Anamnese</em>' attribute.
 	 * @see #setPersonalAnamnese(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIPatient_PersonalAnamnese()
@@ -129,24 +124,22 @@ public interface IPatient extends IPerson {
 	String getPersonalAnamnese();
 	
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getPersonalAnamnese
-	 * <em>Personal Anamnese</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Personal Anamnese</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getPersonalAnamnese <em>Personal Anamnese</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Personal Anamnese</em>' attribute.
 	 * @see #getPersonalAnamnese()
 	 * @generated
 	 */
 	void setPersonalAnamnese(String value);
 	
 	/**
-	 * Returns the value of the '<em><b>Allergies</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Allergies</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Allergies</em>' attribute isn't clear, there really should be more
 	 * of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Allergies</em>' attribute.
 	 * @see #setAllergies(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIPatient_Allergies()
@@ -156,19 +149,42 @@ public interface IPatient extends IPerson {
 	String getAllergies();
 	
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getAllergies <em>Allergies</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Allergies</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getAllergies <em>Allergies</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Allergies</em>' attribute.
 	 * @see #getAllergies()
 	 * @generated
 	 */
 	void setAllergies(String value);
 	
 	/**
+	 * Returns the value of the '<em><b>Patient Nr</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Patient Nr</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Patient Nr</em>' attribute.
+	 * @see #setPatientNr(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIPatient_PatientNr()
+	 * @model
+	 * @generated
+	 */
+	String getPatientNr();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getPatientNr <em>Patient Nr</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Patient Nr</em>' attribute.
+	 * @see #getPatientNr()
+	 * @generated
+	 */
+	void setPatientNr(String value);
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */

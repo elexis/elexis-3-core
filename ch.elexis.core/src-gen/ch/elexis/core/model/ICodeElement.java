@@ -15,8 +15,8 @@ import java.util.List;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>ICode Element</b></em>'.
  * <!-- end-user-doc -->
- * 
- * 
+ *
+ *
  * @see ch.elexis.core.model.ModelPackage#getICodeElement()
  * @model interface="true" abstract="true"
  * @generated
@@ -24,7 +24,6 @@ import java.util.List;
 public interface ICodeElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -32,7 +31,6 @@ public interface ICodeElement {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -40,7 +38,6 @@ public interface ICodeElement {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -48,7 +45,6 @@ public interface ICodeElement {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -56,7 +52,6 @@ public interface ICodeElement {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */

@@ -33,82 +33,72 @@ import java.lang.Comparable;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass comparableEClass = null;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass listEClass = null;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass mapEClass = null;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EEnum contactTypeEEnum = null;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EEnum contactGenderEEnum = null;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EEnum countryCodeEEnum = null;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EEnum relationshipTypeEEnum = null;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EDataType moneyEDataType = null;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EDataType timeToolEDataType = null;
 	
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package package URI
-	 * value.
-	 * <p>
-	 * Note: the correct way to create the package is via the static factory method {@link #init
-	 * init()}, which also performs initialization of the package, or returns the registered
-	 * package, if one already exists. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see ch.elexis.core.types.TypesPackage#eNS_URI
 	 * @see #init()
@@ -120,52 +110,44 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private static boolean isInited = false;
 	
 	/**
-	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others
-	 * upon which it depends.
+	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
 	 * 
-	 * <p>
-	 * This method is used to initialize {@link TypesPackage#eINSTANCE} when that field is accessed.
-	 * Clients should not invoke it directly. Instead, they should simply access that field to
-	 * obtain the package. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <p>This method is used to initialize {@link TypesPackage#eINSTANCE} when that field is accessed.
+	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #eNS_URI
 	 * @see #createPackageContents()
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
 	public static TypesPackage init(){
-		if (isInited)
-			return (TypesPackage) EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI);
-		
+		if (isInited) return (TypesPackage)EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI);
+
 		// Obtain or create and register package
-		TypesPackageImpl theTypesPackage =
-			(TypesPackageImpl) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof TypesPackageImpl ? EPackage.Registry.INSTANCE
-				.get(eNS_URI) : new TypesPackageImpl());
-		
+		TypesPackageImpl theTypesPackage = (TypesPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof TypesPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new TypesPackageImpl());
+
 		isInited = true;
-		
+
 		// Obtain or create and register interdependencies
-		ModelPackageImpl theModelPackage =
-			(ModelPackageImpl) (EPackage.Registry.INSTANCE.getEPackage(ModelPackage.eNS_URI) instanceof ModelPackageImpl ? EPackage.Registry.INSTANCE
-				.getEPackage(ModelPackage.eNS_URI) : ModelPackage.eINSTANCE);
-		
+		ModelPackageImpl theModelPackage = (ModelPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ModelPackage.eNS_URI) instanceof ModelPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ModelPackage.eNS_URI) : ModelPackage.eINSTANCE);
+
 		// Create package meta-data objects
 		theTypesPackage.createPackageContents();
 		theModelPackage.createPackageContents();
-		
+
 		// Initialize created meta-data
 		theTypesPackage.initializePackageContents();
 		theModelPackage.initializePackageContents();
-		
+
 		// Mark meta-data to indicate it can't be changed
 		theTypesPackage.freeze();
-		
+
+  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(TypesPackage.eNS_URI, theTypesPackage);
 		return theTypesPackage;
@@ -173,7 +155,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getComparable(){
@@ -182,7 +163,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getList(){
@@ -191,7 +171,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getMap(){
@@ -200,7 +179,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EEnum getContactType(){
@@ -209,7 +187,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EEnum getContactGender(){
@@ -218,7 +195,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EEnum getCountryCode(){
@@ -227,7 +203,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EEnum getRelationshipType(){
@@ -236,7 +211,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EDataType getMoney(){
@@ -245,7 +219,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EDataType getTimeTool(){
@@ -254,44 +227,41 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public TypesFactory getTypesFactory(){
-		return (TypesFactory) getEFactoryInstance();
+		return (TypesFactory)getEFactoryInstance();
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isCreated = false;
 	
 	/**
-	 * Creates the meta-model objects for the package. This method is guarded to have no affect on
-	 * any invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the meta-model objects for the package.  This method is
+	 * guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents(){
-		if (isCreated)
-			return;
+		if (isCreated) return;
 		isCreated = true;
-		
+
 		// Create classes and their features
 		comparableEClass = createEClass(COMPARABLE);
-		
+
 		listEClass = createEClass(LIST);
-		
+
 		mapEClass = createEClass(MAP);
-		
+
 		// Create enums
 		contactTypeEEnum = createEEnum(CONTACT_TYPE);
 		contactGenderEEnum = createEEnum(CONTACT_GENDER);
 		countryCodeEEnum = createEEnum(COUNTRY_CODE);
 		relationshipTypeEEnum = createEEnum(RELATIONSHIP_TYPE);
-		
+
 		// Create data types
 		moneyEDataType = createEDataType(MONEY);
 		timeToolEDataType = createEDataType(TIME_TOOL);
@@ -299,59 +269,54 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isInitialized = false;
 	
 	/**
-	 * Complete the initialization of the package and its meta-model. This method is guarded to have
-	 * no affect on any invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Complete the initialization of the package and its meta-model.  This
+	 * method is guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents(){
-		if (isInitialized)
-			return;
+		if (isInitialized) return;
 		isInitialized = true;
-		
+
 		// Initialize package
 		setName(eNAME);
 		setNsPrefix(eNS_PREFIX);
 		setNsURI(eNS_URI);
-		
+
 		// Create type parameters
 		addETypeParameter(comparableEClass, "T");
 		addETypeParameter(listEClass, "E");
 		addETypeParameter(mapEClass, "K");
 		addETypeParameter(mapEClass, "V");
-		
+
 		// Set bounds for type parameters
-		
+
 		// Add supertypes to classes
-		
+
 		// Initialize classes and features; add operations and parameters
-		initEClass(comparableEClass, Comparable.class, "Comparable", IS_ABSTRACT, IS_INTERFACE,
-			!IS_GENERATED_INSTANCE_CLASS);
-		
-		initEClass(listEClass, List.class, "List", IS_ABSTRACT, IS_INTERFACE,
-			!IS_GENERATED_INSTANCE_CLASS);
-		
-		initEClass(mapEClass, Map.class, "Map", IS_ABSTRACT, IS_INTERFACE,
-			!IS_GENERATED_INSTANCE_CLASS);
-		
+		initEClass(comparableEClass, Comparable.class, "Comparable", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(listEClass, List.class, "List", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(mapEClass, Map.class, "Map", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+
 		// Initialize enums and add enum literals
 		initEEnum(contactTypeEEnum, ContactType.class, "ContactType");
 		addEEnumLiteral(contactTypeEEnum, ContactType.PERSON);
 		addEEnumLiteral(contactTypeEEnum, ContactType.ORGANIZATION);
 		addEEnumLiteral(contactTypeEEnum, ContactType.UNKNOWN);
-		
+
 		initEEnum(contactGenderEEnum, ContactGender.class, "ContactGender");
 		addEEnumLiteral(contactGenderEEnum, ContactGender.MALE);
 		addEEnumLiteral(contactGenderEEnum, ContactGender.FEMALE);
 		addEEnumLiteral(contactGenderEEnum, ContactGender.UNDEFINED);
 		addEEnumLiteral(contactGenderEEnum, ContactGender.UNKNOWN);
-		
+
 		initEEnum(countryCodeEEnum, CountryCode.class, "CountryCode");
 		addEEnumLiteral(countryCodeEEnum, CountryCode.NDF);
 		addEEnumLiteral(countryCodeEEnum, CountryCode.AT);
@@ -359,7 +324,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(countryCodeEEnum, CountryCode.DE);
 		addEEnumLiteral(countryCodeEEnum, CountryCode.FR);
 		addEEnumLiteral(countryCodeEEnum, CountryCode.LI);
-		
+
 		initEEnum(relationshipTypeEEnum, RelationshipType.class, "RelationshipType");
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.AGENERIC);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.BUSINESS_EMPLOYER);
@@ -373,13 +338,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_CONSULTANT);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_INSURER);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_INSUREE);
-		
+
 		// Initialize data types
-		initEDataType(moneyEDataType, Money.class, "Money", IS_SERIALIZABLE,
-			!IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(timeToolEDataType, TimeTool.class, "TimeTool", IS_SERIALIZABLE,
-			!IS_GENERATED_INSTANCE_CLASS);
-		
+		initEDataType(moneyEDataType, Money.class, "Money", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(timeToolEDataType, TimeTool.class, "TimeTool", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+
 		// Create resource
 		createResource(eNS_URI);
 	}

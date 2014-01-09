@@ -15,15 +15,15 @@ import java.util.List;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>IPersistent Object</b></em>
  * '. <!-- end-user-doc -->
- * 
+ *
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link ch.elexis.core.model.IPersistentObject#getXid <em>Xid</em>}</li>
- * <li>{@link ch.elexis.core.model.IPersistentObject#getXids <em>Xids</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPersistentObject#getXid <em>Xid</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPersistentObject#getXids <em>Xids</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @see ch.elexis.core.model.ModelPackage#getIPersistentObject()
  * @model interface="true" abstract="true"
  * @generated
@@ -31,7 +31,6 @@ import java.util.List;
 public interface IPersistentObject extends Identifiable {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -39,7 +38,6 @@ public interface IPersistentObject extends Identifiable {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -47,7 +45,6 @@ public interface IPersistentObject extends Identifiable {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -55,7 +52,6 @@ public interface IPersistentObject extends Identifiable {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -63,7 +59,6 @@ public interface IPersistentObject extends Identifiable {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -71,7 +66,6 @@ public interface IPersistentObject extends Identifiable {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -79,16 +73,15 @@ public interface IPersistentObject extends Identifiable {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
 	String getXid(String domain);
 	
 	/**
-	 * Returns the value of the '<em><b>Xid</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * Returns the value of the '<em><b>Xid</b></em>' reference.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Xid</em>' reference.
 	 * @see ch.elexis.core.model.ModelPackage#getIPersistentObject_Xid()
 	 * @model changeable="false"
@@ -97,9 +90,9 @@ public interface IPersistentObject extends Identifiable {
 	IXid getXid();
 	
 	/**
-	 * Returns the value of the '<em><b>Xids</b></em>' reference list. The list contents are of type
-	 * {@link ch.elexis.core.model.IXid}. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the value of the '<em><b>Xids</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IXid}.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the value of the '<em>Xids</em>' reference list.
 	 * @see ch.elexis.core.model.ModelPackage#getIPersistentObject_Xids()
 	 * @model
@@ -127,16 +120,13 @@ public interface IPersistentObject extends Identifiable {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @model fieldsDataType="ch.elexis.core.model.StringArray"
-	 *        valuesDataType="ch.elexis.core.model.StringArray"
+	 * @model fieldsDataType="ch.elexis.core.model.StringArray" valuesDataType="ch.elexis.core.model.StringArray"
 	 * @generated
 	 */
 	boolean get(String[] fields, String[] values);
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -144,7 +134,6 @@ public interface IPersistentObject extends Identifiable {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */

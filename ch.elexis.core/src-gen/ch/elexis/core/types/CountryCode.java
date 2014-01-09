@@ -19,15 +19,14 @@ import org.eclipse.emf.common.util.Enumerator;
 /**
  * <!-- begin-user-doc --> A representation of the literals of the enumeration '
  * <em><b>Country Code</b></em>', and utility methods for working with them. <!-- end-user-doc -->
- * 
  * @see ch.elexis.core.types.TypesPackage#getCountryCode()
  * @model
  * @generated
  */
 public enum CountryCode implements Enumerator {
 	/**
-	 * The '<em><b>NDF</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The '<em><b>NDF</b></em>' literal object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #NDF_VALUE
 	 * @generated
 	 * @ordered
@@ -35,8 +34,8 @@ public enum CountryCode implements Enumerator {
 	NDF(0, "NDF", "NDF"),
 	
 	/**
-	 * The '<em><b>AT</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The '<em><b>AT</b></em>' literal object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #AT_VALUE
 	 * @generated
 	 * @ordered
@@ -44,8 +43,8 @@ public enum CountryCode implements Enumerator {
 	AT(40, "AT", "AT"),
 	
 	/**
-	 * The '<em><b>CH</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The '<em><b>CH</b></em>' literal object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #CH_VALUE
 	 * @generated
 	 * @ordered
@@ -53,8 +52,8 @@ public enum CountryCode implements Enumerator {
 	CH(756, "CH", "CH"),
 	
 	/**
-	 * The '<em><b>DE</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The '<em><b>DE</b></em>' literal object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #DE_VALUE
 	 * @generated
 	 * @ordered
@@ -62,8 +61,8 @@ public enum CountryCode implements Enumerator {
 	DE(276, "DE", "DE"),
 	
 	/**
-	 * The '<em><b>FR</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The '<em><b>FR</b></em>' literal object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #FR_VALUE
 	 * @generated
 	 * @ordered
@@ -71,8 +70,8 @@ public enum CountryCode implements Enumerator {
 	FR(250, "FR", "FR"),
 	
 	/**
-	 * The '<em><b>LI</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The '<em><b>LI</b></em>' literal object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #LI_VALUE
 	 * @generated
 	 * @ordered
@@ -80,13 +79,13 @@ public enum CountryCode implements Enumerator {
 	LI(438, "LI", "LI");
 	
 	/**
-	 * The '<em><b>NDF</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>NDF</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>NDF</b></em>' literal object isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #NDF
 	 * @model
 	 * @generated
@@ -95,13 +94,13 @@ public enum CountryCode implements Enumerator {
 	public static final int NDF_VALUE = 0;
 	
 	/**
-	 * The '<em><b>AT</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>AT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>AT</b></em>' literal object isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #AT
 	 * @model
 	 * @generated
@@ -110,13 +109,13 @@ public enum CountryCode implements Enumerator {
 	public static final int AT_VALUE = 40;
 	
 	/**
-	 * The '<em><b>CH</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>CH</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>CH</b></em>' literal object isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #CH
 	 * @model
 	 * @generated
@@ -125,13 +124,13 @@ public enum CountryCode implements Enumerator {
 	public static final int CH_VALUE = 756;
 	
 	/**
-	 * The '<em><b>DE</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>DE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>DE</b></em>' literal object isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #DE
 	 * @model
 	 * @generated
@@ -140,13 +139,13 @@ public enum CountryCode implements Enumerator {
 	public static final int DE_VALUE = 276;
 	
 	/**
-	 * The '<em><b>FR</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>FR</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>FR</b></em>' literal object isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #FR
 	 * @model
 	 * @generated
@@ -155,13 +154,13 @@ public enum CountryCode implements Enumerator {
 	public static final int FR_VALUE = 250;
 	
 	/**
-	 * The '<em><b>LI</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>LI</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>LI</b></em>' literal object isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #LI
 	 * @model
 	 * @generated
@@ -170,14 +169,19 @@ public enum CountryCode implements Enumerator {
 	public static final int LI_VALUE = 438;
 	
 	/**
-	 * An array of all the '<em><b>Country Code</b></em>' enumerators. <!-- begin-user-doc --> <!--
+	 * An array of all the '<em><b>Country Code</b></em>' enumerators.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private static final CountryCode[] VALUES_ARRAY = new CountryCode[] {
-		NDF, AT, CH, DE, FR, LI,
-	};
+			NDF,
+			AT,
+			CH,
+			DE,
+			FR,
+			LI,
+		};
 	
 	/**
 	 * A public read-only list of all the '<em><b>Country Code</b></em>' enumerators. <!--
@@ -185,8 +189,7 @@ public enum CountryCode implements Enumerator {
 	 * 
 	 * @generated
 	 */
-	public static final List<CountryCode> VALUES = Collections.unmodifiableList(Arrays
-		.asList(VALUES_ARRAY));
+	public static final List<CountryCode> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 	
 	/**
 	 * Returns the '<em><b>Country Code</b></em>' literal with the specified literal value. <!--
@@ -228,46 +231,37 @@ public enum CountryCode implements Enumerator {
 	 */
 	public static CountryCode get(int value){
 		switch (value) {
-		case NDF_VALUE:
-			return NDF;
-		case AT_VALUE:
-			return AT;
-		case CH_VALUE:
-			return CH;
-		case DE_VALUE:
-			return DE;
-		case FR_VALUE:
-			return FR;
-		case LI_VALUE:
-			return LI;
+			case NDF_VALUE: return NDF;
+			case AT_VALUE: return AT;
+			case CH_VALUE: return CH;
+			case DE_VALUE: return DE;
+			case FR_VALUE: return FR;
+			case LI_VALUE: return LI;
 		}
 		return null;
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private final int value;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private final String name;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private final String literal;
 	
 	/**
-	 * Only this class can construct instances. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Only this class can construct instances.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private CountryCode(int value, String name, String literal){
@@ -278,29 +272,26 @@ public enum CountryCode implements Enumerator {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public int getValue(){
-		return value;
+	  return value;
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getName(){
-		return name;
+	  return name;
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getLiteral(){
-		return literal;
+	  return literal;
 	}
 	
 	/**

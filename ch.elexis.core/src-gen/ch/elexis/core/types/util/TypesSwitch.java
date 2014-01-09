@@ -25,21 +25,20 @@ import ch.elexis.core.types.TypesPackage;
  * each class of the model, starting with the actual class of the object and proceeding up the
  * inheritance hierarchy until a non-null result is returned, which is the result of the switch.
  * <!-- end-user-doc -->
- * 
  * @see ch.elexis.core.types.TypesPackage
  * @generated
  */
 public class TypesSwitch<T1> extends Switch<T1> {
 	/**
-	 * The cached model package <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached model package
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected static TypesPackage modelPackage;
 	
 	/**
-	 * Creates an instance of the switch. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the switch.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public TypesSwitch(){
@@ -49,9 +48,9 @@ public class TypesSwitch<T1> extends Switch<T1> {
 	}
 	
 	/**
-	 * Checks whether this is a switch for the given package. <!-- begin-user-doc --> <!--
+	 * Checks whether this is a switch for the given package.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @parameter ePackage the package in question.
 	 * @return whether this is a switch for the given package.
 	 * @generated
@@ -62,38 +61,33 @@ public class TypesSwitch<T1> extends Switch<T1> {
 	}
 	
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result;
-	 * it yields that result. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
 	@Override
 	protected T1 doSwitch(int classifierID, EObject theEObject){
 		switch (classifierID) {
-		case TypesPackage.COMPARABLE: {
-			Comparable<?> comparable = (Comparable<?>) theEObject;
-			T1 result = caseComparable(comparable);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case TypesPackage.LIST: {
-			List<?> list = (List<?>) theEObject;
-			T1 result = caseList(list);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case TypesPackage.MAP: {
-			Map<?, ?> map = (Map<?, ?>) theEObject;
-			T1 result = caseMap(map);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		default:
-			return defaultCase(theEObject);
+			case TypesPackage.COMPARABLE: {
+				Comparable<?> comparable = (Comparable<?>)theEObject;
+				T1 result = caseComparable(comparable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypesPackage.LIST: {
+				List<?> list = (List<?>)theEObject;
+				T1 result = caseList(list);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypesPackage.MAP: {
+				Map<?, ?> map = (Map<?, ?>)theEObject;
+				T1 result = caseMap(map);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			default: return defaultCase(theEObject);
 		}
 	}
 	

@@ -13,8 +13,8 @@ package ch.elexis.core.model;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Identifiable</b></em>'. <!--
  * end-user-doc -->
- * 
- * 
+ *
+ *
  * @see ch.elexis.core.model.ModelPackage#getIdentifiable()
  * @model interface="true" abstract="true"
  * @generated

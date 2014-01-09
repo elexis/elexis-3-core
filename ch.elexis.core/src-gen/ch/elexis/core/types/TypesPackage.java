@@ -25,36 +25,35 @@ import org.eclipse.emf.ecore.EPackage;
  * <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * 
  * @see ch.elexis.core.types.TypesFactory
  * @model kind="package"
  * @generated
  */
 public interface TypesPackage extends EPackage {
 	/**
-	 * The package name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The package name.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	String eNAME = "types";
 	
 	/**
-	 * The package namespace URI. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The package namespace URI.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	String eNS_URI = "http://ch.elexis.core/model/types";
 	
 	/**
-	 * The package namespace name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The package namespace name.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	String eNS_PREFIX = "ch.elexis.core.types";
 	
 	/**
-	 * The singleton instance of the package. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The singleton instance of the package.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	TypesPackage eINSTANCE = ch.elexis.core.types.impl.TypesPackageImpl.init();
@@ -70,18 +69,18 @@ public interface TypesPackage extends EPackage {
 	int COMPARABLE = 0;
 	
 	/**
-	 * The number of structural features of the '<em>Comparable</em>' class. <!-- begin-user-doc -->
+	 * The number of structural features of the '<em>Comparable</em>' class.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int COMPARABLE_FEATURE_COUNT = 0;
 	
 	/**
-	 * The meta object id for the '{@link java.util.List <em>List</em>}' class. <!-- begin-user-doc
+	 * The meta object id for the '{@link java.util.List <em>List</em>}' class.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see java.util.List
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getList()
 	 * @generated
@@ -89,18 +88,18 @@ public interface TypesPackage extends EPackage {
 	int LIST = 1;
 	
 	/**
-	 * The number of structural features of the '<em>List</em>' class. <!-- begin-user-doc --> <!--
+	 * The number of structural features of the '<em>List</em>' class.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int LIST_FEATURE_COUNT = 0;
 	
 	/**
-	 * The meta object id for the '{@link java.util.Map <em>Map</em>}' class. <!-- begin-user-doc
+	 * The meta object id for the '{@link java.util.Map <em>Map</em>}' class.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see java.util.Map
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMap()
 	 * @generated
@@ -108,18 +107,17 @@ public interface TypesPackage extends EPackage {
 	int MAP = 2;
 	
 	/**
-	 * The number of structural features of the '<em>Map</em>' class. <!-- begin-user-doc --> <!--
+	 * The number of structural features of the '<em>Map</em>' class.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int MAP_FEATURE_COUNT = 0;
 	
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}'
-	 * enum. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The meta object id for the '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}' enum.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see ch.elexis.core.types.ContactType
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getContactType()
 	 * @generated
@@ -127,9 +125,8 @@ public interface TypesPackage extends EPackage {
 	int CONTACT_TYPE = 3;
 	
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.types.ContactGender
-	 * <em>Contact Gender</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The meta object id for the '{@link ch.elexis.core.types.ContactGender <em>Contact Gender</em>}' enum.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see ch.elexis.core.types.ContactGender
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getContactGender()
 	 * @generated
@@ -137,9 +134,8 @@ public interface TypesPackage extends EPackage {
 	int CONTACT_GENDER = 4;
 	
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.types.CountryCode <em>Country Code</em>}'
-	 * enum. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The meta object id for the '{@link ch.elexis.core.types.CountryCode <em>Country Code</em>}' enum.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see ch.elexis.core.types.CountryCode
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountryCode()
 	 * @generated
@@ -147,9 +143,8 @@ public interface TypesPackage extends EPackage {
 	int COUNTRY_CODE = 5;
 	
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.types.RelationshipType
-	 * <em>Relationship Type</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The meta object id for the '{@link ch.elexis.core.types.RelationshipType <em>Relationship Type</em>}' enum.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see ch.elexis.core.types.RelationshipType
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getRelationshipType()
 	 * @generated
@@ -157,9 +152,9 @@ public interface TypesPackage extends EPackage {
 	int RELATIONSHIP_TYPE = 6;
 	
 	/**
-	 * The meta object id for the '<em>Money</em>' data type. <!-- begin-user-doc --> <!--
+	 * The meta object id for the '<em>Money</em>' data type.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see ch.rgw.tools.Money
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 	 * @generated
@@ -167,9 +162,9 @@ public interface TypesPackage extends EPackage {
 	int MONEY = 7;
 	
 	/**
-	 * The meta object id for the '<em>Time Tool</em>' data type. <!-- begin-user-doc --> <!--
+	 * The meta object id for the '<em>Time Tool</em>' data type.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see ch.rgw.tools.TimeTool
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTimeTool()
 	 * @generated
@@ -188,9 +183,9 @@ public interface TypesPackage extends EPackage {
 	EClass getComparable();
 	
 	/**
-	 * Returns the meta object for class '{@link java.util.List <em>List</em>}'. <!-- begin-user-doc
+	 * Returns the meta object for class '{@link java.util.List <em>List</em>}'.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for class '<em>List</em>'.
 	 * @see java.util.List
 	 * @model instanceClass="java.util.List" typeParameters="E"
@@ -199,9 +194,9 @@ public interface TypesPackage extends EPackage {
 	EClass getList();
 	
 	/**
-	 * Returns the meta object for class '{@link java.util.Map <em>Map</em>}'. <!-- begin-user-doc
+	 * Returns the meta object for class '{@link java.util.Map <em>Map</em>}'.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for class '<em>Map</em>'.
 	 * @see java.util.Map
 	 * @model instanceClass="java.util.Map" typeParameters="K V"
@@ -210,9 +205,8 @@ public interface TypesPackage extends EPackage {
 	EClass getMap();
 	
 	/**
-	 * Returns the meta object for enum '{@link ch.elexis.core.types.ContactType
-	 * <em>Contact Type</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for enum '<em>Contact Type</em>'.
 	 * @see ch.elexis.core.types.ContactType
 	 * @generated
@@ -220,9 +214,8 @@ public interface TypesPackage extends EPackage {
 	EEnum getContactType();
 	
 	/**
-	 * Returns the meta object for enum '{@link ch.elexis.core.types.ContactGender
-	 * <em>Contact Gender</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.ContactGender <em>Contact Gender</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for enum '<em>Contact Gender</em>'.
 	 * @see ch.elexis.core.types.ContactGender
 	 * @generated
@@ -230,9 +223,8 @@ public interface TypesPackage extends EPackage {
 	EEnum getContactGender();
 	
 	/**
-	 * Returns the meta object for enum '{@link ch.elexis.core.types.CountryCode
-	 * <em>Country Code</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.CountryCode <em>Country Code</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for enum '<em>Country Code</em>'.
 	 * @see ch.elexis.core.types.CountryCode
 	 * @generated
@@ -240,9 +232,8 @@ public interface TypesPackage extends EPackage {
 	EEnum getCountryCode();
 	
 	/**
-	 * Returns the meta object for enum '{@link ch.elexis.core.types.RelationshipType
-	 * <em>Relationship Type</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.RelationshipType <em>Relationship Type</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for enum '<em>Relationship Type</em>'.
 	 * @see ch.elexis.core.types.RelationshipType
 	 * @generated
@@ -263,7 +254,6 @@ public interface TypesPackage extends EPackage {
 	/**
 	 * Returns the meta object for data type '{@link ch.rgw.tools.TimeTool <em>Time Tool</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for data type '<em>Time Tool</em>'.
 	 * @see ch.rgw.tools.TimeTool
 	 * @model instanceClass="ch.rgw.tools.TimeTool"
@@ -272,9 +262,9 @@ public interface TypesPackage extends EPackage {
 	EDataType getTimeTool();
 	
 	/**
-	 * Returns the factory that creates the instances of the model. <!-- begin-user-doc --> <!--
+	 * Returns the factory that creates the instances of the model.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @return the factory that creates the instances of the model.
 	 * @generated
 	 */
@@ -289,14 +279,12 @@ public interface TypesPackage extends EPackage {
 	 * <li>and each data type</li>
 	 * </ul>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	interface Literals {
 		/**
 		 * The meta object literal for the '{@link java.lang.Comparable <em>Comparable</em>}' class.
 		 * <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
 		 * @see java.lang.Comparable
 		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getComparable()
 		 * @generated
@@ -324,9 +312,8 @@ public interface TypesPackage extends EPackage {
 		EClass MAP = eINSTANCE.getMap();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.types.ContactType
-		 * <em>Contact Type</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}' enum.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.types.ContactType
 		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getContactType()
 		 * @generated
@@ -334,9 +321,8 @@ public interface TypesPackage extends EPackage {
 		EEnum CONTACT_TYPE = eINSTANCE.getContactType();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.types.ContactGender
-		 * <em>Contact Gender</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.types.ContactGender <em>Contact Gender</em>}' enum.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.types.ContactGender
 		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getContactGender()
 		 * @generated
@@ -344,9 +330,8 @@ public interface TypesPackage extends EPackage {
 		EEnum CONTACT_GENDER = eINSTANCE.getContactGender();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.types.CountryCode
-		 * <em>Country Code</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.types.CountryCode <em>Country Code</em>}' enum.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.types.CountryCode
 		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountryCode()
 		 * @generated
@@ -354,9 +339,8 @@ public interface TypesPackage extends EPackage {
 		EEnum COUNTRY_CODE = eINSTANCE.getCountryCode();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.types.RelationshipType
-		 * <em>Relationship Type</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.types.RelationshipType <em>Relationship Type</em>}' enum.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.types.RelationshipType
 		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getRelationshipType()
 		 * @generated
@@ -364,9 +348,9 @@ public interface TypesPackage extends EPackage {
 		EEnum RELATIONSHIP_TYPE = eINSTANCE.getRelationshipType();
 		
 		/**
-		 * The meta object literal for the '<em>Money</em>' data type. <!-- begin-user-doc --> <!--
+		 * The meta object literal for the '<em>Money</em>' data type.
+		 * <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
 		 * @see ch.rgw.tools.Money
 		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 		 * @generated
@@ -374,9 +358,9 @@ public interface TypesPackage extends EPackage {
 		EDataType MONEY = eINSTANCE.getMoney();
 		
 		/**
-		 * The meta object literal for the '<em>Time Tool</em>' data type. <!-- begin-user-doc -->
+		 * The meta object literal for the '<em>Time Tool</em>' data type.
+		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * 
 		 * @see ch.rgw.tools.TimeTool
 		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTimeTool()
 		 * @generated

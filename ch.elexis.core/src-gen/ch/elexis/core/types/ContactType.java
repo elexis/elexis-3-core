@@ -19,15 +19,14 @@ import org.eclipse.emf.common.util.Enumerator;
 /**
  * <!-- begin-user-doc --> A representation of the literals of the enumeration '
  * <em><b>Contact Type</b></em>', and utility methods for working with them. <!-- end-user-doc -->
- * 
  * @see ch.elexis.core.types.TypesPackage#getContactType()
  * @model
  * @generated
  */
 public enum ContactType implements Enumerator {
 	/**
-	 * The '<em><b>PERSON</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The '<em><b>PERSON</b></em>' literal object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #PERSON_VALUE
 	 * @generated
 	 * @ordered
@@ -45,8 +44,8 @@ public enum ContactType implements Enumerator {
 	ORGANIZATION(1, "ORGANIZATION", "ORGANIZATION"),
 	
 	/**
-	 * The '<em><b>UNKNOWN</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The '<em><b>UNKNOWN</b></em>' literal object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #UNKNOWN_VALUE
 	 * @generated
 	 * @ordered
@@ -54,13 +53,13 @@ public enum ContactType implements Enumerator {
 	UNKNOWN(2, "UNKNOWN", "UNKNOWN");
 	
 	/**
-	 * The '<em><b>PERSON</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>PERSON</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>PERSON</b></em>' literal object isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #PERSON
 	 * @model
 	 * @generated
@@ -69,13 +68,13 @@ public enum ContactType implements Enumerator {
 	public static final int PERSON_VALUE = 0;
 	
 	/**
-	 * The '<em><b>ORGANIZATION</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>ORGANIZATION</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>ORGANIZATION</b></em>' literal object isn't clear, there really
 	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #ORGANIZATION
 	 * @model
 	 * @generated
@@ -84,13 +83,13 @@ public enum ContactType implements Enumerator {
 	public static final int ORGANIZATION_VALUE = 1;
 	
 	/**
-	 * The '<em><b>UNKNOWN</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>UNKNOWN</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>UNKNOWN</b></em>' literal object isn't clear, there really should
 	 * be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #UNKNOWN
 	 * @model
 	 * @generated
@@ -99,14 +98,16 @@ public enum ContactType implements Enumerator {
 	public static final int UNKNOWN_VALUE = 2;
 	
 	/**
-	 * An array of all the '<em><b>Contact Type</b></em>' enumerators. <!-- begin-user-doc --> <!--
+	 * An array of all the '<em><b>Contact Type</b></em>' enumerators.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private static final ContactType[] VALUES_ARRAY = new ContactType[] {
-		PERSON, ORGANIZATION, UNKNOWN,
-	};
+			PERSON,
+			ORGANIZATION,
+			UNKNOWN,
+		};
 	
 	/**
 	 * A public read-only list of all the '<em><b>Contact Type</b></em>' enumerators. <!--
@@ -114,8 +115,7 @@ public enum ContactType implements Enumerator {
 	 * 
 	 * @generated
 	 */
-	public static final List<ContactType> VALUES = Collections.unmodifiableList(Arrays
-		.asList(VALUES_ARRAY));
+	public static final List<ContactType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 	
 	/**
 	 * Returns the '<em><b>Contact Type</b></em>' literal with the specified literal value. <!--
@@ -157,40 +157,34 @@ public enum ContactType implements Enumerator {
 	 */
 	public static ContactType get(int value){
 		switch (value) {
-		case PERSON_VALUE:
-			return PERSON;
-		case ORGANIZATION_VALUE:
-			return ORGANIZATION;
-		case UNKNOWN_VALUE:
-			return UNKNOWN;
+			case PERSON_VALUE: return PERSON;
+			case ORGANIZATION_VALUE: return ORGANIZATION;
+			case UNKNOWN_VALUE: return UNKNOWN;
 		}
 		return null;
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private final int value;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private final String name;
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private final String literal;
 	
 	/**
-	 * Only this class can construct instances. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Only this class can construct instances.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private ContactType(int value, String name, String literal){
@@ -201,29 +195,26 @@ public enum ContactType implements Enumerator {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public int getValue(){
-		return value;
+	  return value;
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getName(){
-		return name;
+	  return name;
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getLiteral(){
-		return literal;
+	  return literal;
 	}
 	
 	/**

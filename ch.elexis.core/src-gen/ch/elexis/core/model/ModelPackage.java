@@ -28,44 +28,42 @@ import ch.elexis.core.types.TypesPackage;
  * <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * 
  * @see ch.elexis.core.model.ModelFactory
  * @model kind="package"
  * @generated
  */
 public interface ModelPackage extends EPackage {
 	/**
-	 * The package name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The package name.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	String eNAME = "model";
 	
 	/**
-	 * The package namespace URI. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The package namespace URI.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	String eNS_URI = "http://ch.elexis.corel/model/model";
 	
 	/**
-	 * The package namespace name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The package namespace name.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	String eNS_PREFIX = "ch.elexis.core.model";
 	
 	/**
-	 * The singleton instance of the package. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The singleton instance of the package.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	ModelPackage eINSTANCE = ch.elexis.core.model.impl.ModelPackageImpl.init();
 	
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'
-	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The meta object id for the '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.Identifiable
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIdentifiable()
 	 * @generated
@@ -73,18 +71,17 @@ public interface ModelPackage extends EPackage {
 	int IDENTIFIABLE = 9;
 	
 	/**
-	 * The number of structural features of the '<em>Identifiable</em>' class. <!-- begin-user-doc
+	 * The number of structural features of the '<em>Identifiable</em>' class.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IDENTIFIABLE_FEATURE_COUNT = 0;
 	
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IPersistentObject
-	 * <em>IPersistent Object</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The meta object id for the '{@link ch.elexis.core.model.IPersistentObject <em>IPersistent Object</em>}' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.IPersistentObject
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPersistentObject()
 	 * @generated
@@ -94,7 +91,6 @@ public interface ModelPackage extends EPackage {
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IContact <em>IContact</em>}' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see ch.elexis.core.model.IContact
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIContact()
 	 * @generated
@@ -102,207 +98,207 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT = 0;
 	
 	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
 	
 	/**
-	 * The feature id for the '<em><b>Contact Type</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Contact Type</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__CONTACT_TYPE = IDENTIFIABLE_FEATURE_COUNT + 1;
 	
 	/**
-	 * The feature id for the '<em><b>Mandator</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Mandator</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 2;
 	
 	/**
-	 * The feature id for the '<em><b>User</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>User</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__USER = IDENTIFIABLE_FEATURE_COUNT + 3;
 	
 	/**
-	 * The feature id for the '<em><b>Patient</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Patient</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 4;
 	
 	/**
-	 * The feature id for the '<em><b>Description1</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description1</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__DESCRIPTION1 = IDENTIFIABLE_FEATURE_COUNT + 5;
 	
 	/**
-	 * The feature id for the '<em><b>Description2</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description2</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__DESCRIPTION2 = IDENTIFIABLE_FEATURE_COUNT + 6;
 	
 	/**
-	 * The feature id for the '<em><b>Description3</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description3</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__DESCRIPTION3 = IDENTIFIABLE_FEATURE_COUNT + 7;
 	
 	/**
-	 * The feature id for the '<em><b>Code</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__CODE = IDENTIFIABLE_FEATURE_COUNT + 8;
 	
 	/**
-	 * The feature id for the '<em><b>Country</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Country</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__COUNTRY = IDENTIFIABLE_FEATURE_COUNT + 9;
 	
 	/**
-	 * The feature id for the '<em><b>Zip</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Zip</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__ZIP = IDENTIFIABLE_FEATURE_COUNT + 10;
 	
 	/**
-	 * The feature id for the '<em><b>City</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>City</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__CITY = IDENTIFIABLE_FEATURE_COUNT + 11;
 	
 	/**
-	 * The feature id for the '<em><b>Street</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Street</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__STREET = IDENTIFIABLE_FEATURE_COUNT + 12;
 	
 	/**
-	 * The feature id for the '<em><b>Phone1</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Phone1</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__PHONE1 = IDENTIFIABLE_FEATURE_COUNT + 13;
 	
 	/**
-	 * The feature id for the '<em><b>Phone2</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Phone2</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__PHONE2 = IDENTIFIABLE_FEATURE_COUNT + 14;
 	
 	/**
-	 * The feature id for the '<em><b>Fax</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Fax</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__FAX = IDENTIFIABLE_FEATURE_COUNT + 15;
 	
 	/**
-	 * The feature id for the '<em><b>Email</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Email</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__EMAIL = IDENTIFIABLE_FEATURE_COUNT + 16;
 	
 	/**
-	 * The feature id for the '<em><b>Website</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Website</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__WEBSITE = IDENTIFIABLE_FEATURE_COUNT + 17;
 	
 	/**
-	 * The feature id for the '<em><b>Mobile</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Mobile</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__MOBILE = IDENTIFIABLE_FEATURE_COUNT + 18;
 	
 	/**
-	 * The feature id for the '<em><b>Comment</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT__COMMENT = IDENTIFIABLE_FEATURE_COUNT + 19;
 	
 	/**
-	 * The number of structural features of the '<em>IContact</em>' class. <!-- begin-user-doc -->
+	 * The number of structural features of the '<em>IContact</em>' class.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 20;
 	
 	/**
-	 * The feature id for the '<em><b>Xid</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Xid</b></em>' reference.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSISTENT_OBJECT__XID = IDENTIFIABLE_FEATURE_COUNT + 0;
 	
 	/**
-	 * The feature id for the '<em><b>Xids</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Xids</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -328,81 +324,80 @@ public interface ModelPackage extends EPackage {
 	int IXID = 2;
 	
 	/**
-	 * The feature id for the '<em><b>Xid</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Xid</b></em>' reference.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IXID__XID = IPERSISTENT_OBJECT__XID;
 	
 	/**
-	 * The feature id for the '<em><b>Xids</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Xids</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IXID__XIDS = IPERSISTENT_OBJECT__XIDS;
 	
 	/**
-	 * The feature id for the '<em><b>Domain</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Domain</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IXID__DOMAIN = IPERSISTENT_OBJECT_FEATURE_COUNT + 0;
 	
 	/**
-	 * The feature id for the '<em><b>Domain Id</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Domain Id</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IXID__DOMAIN_ID = IPERSISTENT_OBJECT_FEATURE_COUNT + 1;
 	
 	/**
-	 * The feature id for the '<em><b>Object</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Object</b></em>' reference.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IXID__OBJECT = IPERSISTENT_OBJECT_FEATURE_COUNT + 2;
 	
 	/**
-	 * The feature id for the '<em><b>Quality</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Quality</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IXID__QUALITY = IPERSISTENT_OBJECT_FEATURE_COUNT + 3;
 	
 	/**
-	 * The feature id for the '<em><b>GUID</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>GUID</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IXID__GUID = IPERSISTENT_OBJECT_FEATURE_COUNT + 4;
 	
 	/**
-	 * The number of structural features of the '<em>IXid</em>' class. <!-- begin-user-doc --> <!--
+	 * The number of structural features of the '<em>IXid</em>' class.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IXID_FEATURE_COUNT = IPERSISTENT_OBJECT_FEATURE_COUNT + 5;
 	
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}'
-	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The meta object id for the '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.ICodeElement
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICodeElement()
 	 * @generated
@@ -410,18 +405,17 @@ public interface ModelPackage extends EPackage {
 	int ICODE_ELEMENT = 3;
 	
 	/**
-	 * The number of structural features of the '<em>ICode Element</em>' class. <!-- begin-user-doc
+	 * The number of structural features of the '<em>ICode Element</em>' class.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ICODE_ELEMENT_FEATURE_COUNT = 0;
 	
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IChangeListener
-	 * <em>IChange Listener</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The meta object id for the '{@link ch.elexis.core.model.IChangeListener <em>IChange Listener</em>}' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.IChangeListener
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIChangeListener()
 	 * @generated
@@ -440,7 +434,6 @@ public interface ModelPackage extends EPackage {
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see ch.elexis.core.model.ISticker
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getISticker()
 	 * @generated
@@ -448,36 +441,36 @@ public interface ModelPackage extends EPackage {
 	int ISTICKER = 5;
 	
 	/**
-	 * The feature id for the '<em><b>Background</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Background</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ISTICKER__BACKGROUND = TypesPackage.COMPARABLE_FEATURE_COUNT + 0;
 	
 	/**
-	 * The feature id for the '<em><b>Foreground</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Foreground</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ISTICKER__FOREGROUND = TypesPackage.COMPARABLE_FEATURE_COUNT + 1;
 	
 	/**
-	 * The feature id for the '<em><b>Visible</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Visible</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int ISTICKER__VISIBLE = TypesPackage.COMPARABLE_FEATURE_COUNT + 2;
 	
 	/**
-	 * The number of structural features of the '<em>ISticker</em>' class. <!-- begin-user-doc -->
+	 * The number of structural features of the '<em>ISticker</em>' class.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -486,7 +479,6 @@ public interface ModelPackage extends EPackage {
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see ch.elexis.core.model.IPerson
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPerson()
 	 * @generated
@@ -494,225 +486,225 @@ public interface ModelPackage extends EPackage {
 	int IPERSON = 6;
 	
 	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__DELETED = ICONTACT__DELETED;
 	
 	/**
-	 * The feature id for the '<em><b>Contact Type</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Contact Type</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__CONTACT_TYPE = ICONTACT__CONTACT_TYPE;
 	
 	/**
-	 * The feature id for the '<em><b>Mandator</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Mandator</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__MANDATOR = ICONTACT__MANDATOR;
 	
 	/**
-	 * The feature id for the '<em><b>User</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>User</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__USER = ICONTACT__USER;
 	
 	/**
-	 * The feature id for the '<em><b>Patient</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Patient</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__PATIENT = ICONTACT__PATIENT;
 	
 	/**
-	 * The feature id for the '<em><b>Description1</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description1</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__DESCRIPTION1 = ICONTACT__DESCRIPTION1;
 	
 	/**
-	 * The feature id for the '<em><b>Description2</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description2</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__DESCRIPTION2 = ICONTACT__DESCRIPTION2;
 	
 	/**
-	 * The feature id for the '<em><b>Description3</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description3</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__DESCRIPTION3 = ICONTACT__DESCRIPTION3;
 	
 	/**
-	 * The feature id for the '<em><b>Code</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__CODE = ICONTACT__CODE;
 	
 	/**
-	 * The feature id for the '<em><b>Country</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Country</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__COUNTRY = ICONTACT__COUNTRY;
 	
 	/**
-	 * The feature id for the '<em><b>Zip</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Zip</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__ZIP = ICONTACT__ZIP;
 	
 	/**
-	 * The feature id for the '<em><b>City</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>City</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__CITY = ICONTACT__CITY;
 	
 	/**
-	 * The feature id for the '<em><b>Street</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Street</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__STREET = ICONTACT__STREET;
 	
 	/**
-	 * The feature id for the '<em><b>Phone1</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Phone1</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__PHONE1 = ICONTACT__PHONE1;
 	
 	/**
-	 * The feature id for the '<em><b>Phone2</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Phone2</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__PHONE2 = ICONTACT__PHONE2;
 	
 	/**
-	 * The feature id for the '<em><b>Fax</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Fax</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__FAX = ICONTACT__FAX;
 	
 	/**
-	 * The feature id for the '<em><b>Email</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Email</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__EMAIL = ICONTACT__EMAIL;
 	
 	/**
-	 * The feature id for the '<em><b>Website</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Website</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__WEBSITE = ICONTACT__WEBSITE;
 	
 	/**
-	 * The feature id for the '<em><b>Mobile</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Mobile</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__MOBILE = ICONTACT__MOBILE;
 	
 	/**
-	 * The feature id for the '<em><b>Comment</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__COMMENT = ICONTACT__COMMENT;
 	
 	/**
-	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute. <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__DATE_OF_BIRTH = ICONTACT_FEATURE_COUNT + 0;
 	
 	/**
-	 * The feature id for the '<em><b>Gender</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Gender</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__GENDER = ICONTACT_FEATURE_COUNT + 1;
 	
 	/**
-	 * The feature id for the '<em><b>Titel</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Titel</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__TITEL = ICONTACT_FEATURE_COUNT + 2;
 	
 	/**
-	 * The feature id for the '<em><b>Titel Suffix</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Titel Suffix</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPERSON__TITEL_SUFFIX = ICONTACT_FEATURE_COUNT + 3;
 	
 	/**
-	 * The number of structural features of the '<em>IPerson</em>' class. <!-- begin-user-doc -->
+	 * The number of structural features of the '<em>IPerson</em>' class.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -721,7 +713,6 @@ public interface ModelPackage extends EPackage {
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IPatient <em>IPatient</em>}' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see ch.elexis.core.model.IPatient
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPatient()
 	 * @generated
@@ -729,274 +720,283 @@ public interface ModelPackage extends EPackage {
 	int IPATIENT = 7;
 	
 	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__DELETED = IPERSON__DELETED;
 	
 	/**
-	 * The feature id for the '<em><b>Contact Type</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Contact Type</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__CONTACT_TYPE = IPERSON__CONTACT_TYPE;
 	
 	/**
-	 * The feature id for the '<em><b>Mandator</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Mandator</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__MANDATOR = IPERSON__MANDATOR;
 	
 	/**
-	 * The feature id for the '<em><b>User</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>User</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__USER = IPERSON__USER;
 	
 	/**
-	 * The feature id for the '<em><b>Patient</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Patient</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__PATIENT = IPERSON__PATIENT;
 	
 	/**
-	 * The feature id for the '<em><b>Description1</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description1</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__DESCRIPTION1 = IPERSON__DESCRIPTION1;
 	
 	/**
-	 * The feature id for the '<em><b>Description2</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description2</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__DESCRIPTION2 = IPERSON__DESCRIPTION2;
 	
 	/**
-	 * The feature id for the '<em><b>Description3</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description3</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__DESCRIPTION3 = IPERSON__DESCRIPTION3;
 	
 	/**
-	 * The feature id for the '<em><b>Code</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__CODE = IPERSON__CODE;
 	
 	/**
-	 * The feature id for the '<em><b>Country</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Country</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__COUNTRY = IPERSON__COUNTRY;
 	
 	/**
-	 * The feature id for the '<em><b>Zip</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Zip</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__ZIP = IPERSON__ZIP;
 	
 	/**
-	 * The feature id for the '<em><b>City</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>City</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__CITY = IPERSON__CITY;
 	
 	/**
-	 * The feature id for the '<em><b>Street</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Street</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__STREET = IPERSON__STREET;
 	
 	/**
-	 * The feature id for the '<em><b>Phone1</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Phone1</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__PHONE1 = IPERSON__PHONE1;
 	
 	/**
-	 * The feature id for the '<em><b>Phone2</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Phone2</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__PHONE2 = IPERSON__PHONE2;
 	
 	/**
-	 * The feature id for the '<em><b>Fax</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Fax</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__FAX = IPERSON__FAX;
 	
 	/**
-	 * The feature id for the '<em><b>Email</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Email</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__EMAIL = IPERSON__EMAIL;
 	
 	/**
-	 * The feature id for the '<em><b>Website</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Website</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__WEBSITE = IPERSON__WEBSITE;
 	
 	/**
-	 * The feature id for the '<em><b>Mobile</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Mobile</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__MOBILE = IPERSON__MOBILE;
 	
 	/**
-	 * The feature id for the '<em><b>Comment</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__COMMENT = IPERSON__COMMENT;
 	
 	/**
-	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute. <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__DATE_OF_BIRTH = IPERSON__DATE_OF_BIRTH;
 	
 	/**
-	 * The feature id for the '<em><b>Gender</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Gender</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__GENDER = IPERSON__GENDER;
 	
 	/**
-	 * The feature id for the '<em><b>Titel</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Titel</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__TITEL = IPERSON__TITEL;
 	
 	/**
-	 * The feature id for the '<em><b>Titel Suffix</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Titel Suffix</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__TITEL_SUFFIX = IPERSON__TITEL_SUFFIX;
 	
 	/**
-	 * The feature id for the '<em><b>Diagnosen</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Diagnosen</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__DIAGNOSEN = IPERSON_FEATURE_COUNT + 0;
 	
 	/**
-	 * The feature id for the '<em><b>Risk</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Risk</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__RISK = IPERSON_FEATURE_COUNT + 1;
 	
 	/**
-	 * The feature id for the '<em><b>Family Anamnese</b></em>' attribute. <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Family Anamnese</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__FAMILY_ANAMNESE = IPERSON_FEATURE_COUNT + 2;
 	
 	/**
-	 * The feature id for the '<em><b>Personal Anamnese</b></em>' attribute. <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Personal Anamnese</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__PERSONAL_ANAMNESE = IPERSON_FEATURE_COUNT + 3;
 	
 	/**
-	 * The feature id for the '<em><b>Allergies</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Allergies</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IPATIENT__ALLERGIES = IPERSON_FEATURE_COUNT + 4;
 	
 	/**
-	 * The number of structural features of the '<em>IPatient</em>' class. <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Patient Nr</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT_FEATURE_COUNT = IPERSON_FEATURE_COUNT + 5;
+	int IPATIENT__PATIENT_NR = IPERSON_FEATURE_COUNT + 5;
+
+	/**
+	 * The number of structural features of the '<em>IPatient</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT_FEATURE_COUNT = IPERSON_FEATURE_COUNT + 6;
 	
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IUser <em>IUser</em>}' class. <!--
@@ -1009,216 +1009,215 @@ public interface ModelPackage extends EPackage {
 	int IUSER = 8;
 	
 	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__DELETED = ICONTACT__DELETED;
 	
 	/**
-	 * The feature id for the '<em><b>Contact Type</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Contact Type</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__CONTACT_TYPE = ICONTACT__CONTACT_TYPE;
 	
 	/**
-	 * The feature id for the '<em><b>Mandator</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Mandator</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__MANDATOR = ICONTACT__MANDATOR;
 	
 	/**
-	 * The feature id for the '<em><b>User</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>User</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__USER = ICONTACT__USER;
 	
 	/**
-	 * The feature id for the '<em><b>Patient</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Patient</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__PATIENT = ICONTACT__PATIENT;
 	
 	/**
-	 * The feature id for the '<em><b>Description1</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description1</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__DESCRIPTION1 = ICONTACT__DESCRIPTION1;
 	
 	/**
-	 * The feature id for the '<em><b>Description2</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description2</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__DESCRIPTION2 = ICONTACT__DESCRIPTION2;
 	
 	/**
-	 * The feature id for the '<em><b>Description3</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Description3</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__DESCRIPTION3 = ICONTACT__DESCRIPTION3;
 	
 	/**
-	 * The feature id for the '<em><b>Code</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__CODE = ICONTACT__CODE;
 	
 	/**
-	 * The feature id for the '<em><b>Country</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Country</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__COUNTRY = ICONTACT__COUNTRY;
 	
 	/**
-	 * The feature id for the '<em><b>Zip</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Zip</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__ZIP = ICONTACT__ZIP;
 	
 	/**
-	 * The feature id for the '<em><b>City</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>City</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__CITY = ICONTACT__CITY;
 	
 	/**
-	 * The feature id for the '<em><b>Street</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Street</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__STREET = ICONTACT__STREET;
 	
 	/**
-	 * The feature id for the '<em><b>Phone1</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Phone1</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__PHONE1 = ICONTACT__PHONE1;
 	
 	/**
-	 * The feature id for the '<em><b>Phone2</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Phone2</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__PHONE2 = ICONTACT__PHONE2;
 	
 	/**
-	 * The feature id for the '<em><b>Fax</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Fax</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__FAX = ICONTACT__FAX;
 	
 	/**
-	 * The feature id for the '<em><b>Email</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Email</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__EMAIL = ICONTACT__EMAIL;
 	
 	/**
-	 * The feature id for the '<em><b>Website</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Website</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__WEBSITE = ICONTACT__WEBSITE;
 	
 	/**
-	 * The feature id for the '<em><b>Mobile</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Mobile</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__MOBILE = ICONTACT__MOBILE;
 	
 	/**
-	 * The feature id for the '<em><b>Comment</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__COMMENT = ICONTACT__COMMENT;
 	
 	/**
-	 * The feature id for the '<em><b>Username</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Username</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__USERNAME = ICONTACT_FEATURE_COUNT + 0;
 	
 	/**
-	 * The feature id for the '<em><b>Password</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Password</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER__PASSWORD = ICONTACT_FEATURE_COUNT + 1;
 	
 	/**
-	 * The number of structural features of the '<em>IUser</em>' class. <!-- begin-user-doc --> <!--
+	 * The number of structural features of the '<em>IUser</em>' class.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int IUSER_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 2;
 	
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}'
-	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The meta object id for the '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.Deleteable
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getDeleteable()
 	 * @generated
@@ -1226,27 +1225,27 @@ public interface ModelPackage extends EPackage {
 	int DELETEABLE = 10;
 	
 	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int DELETEABLE__DELETED = 0;
 	
 	/**
-	 * The number of structural features of the '<em>Deleteable</em>' class. <!-- begin-user-doc -->
+	 * The number of structural features of the '<em>Deleteable</em>' class.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int DELETEABLE_FEATURE_COUNT = 1;
 	
 	/**
-	 * The meta object id for the '<em>String Array</em>' data type. <!-- begin-user-doc --> <!--
+	 * The meta object id for the '<em>String Array</em>' data type.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 	 * @generated
 	 */
@@ -1255,7 +1254,6 @@ public interface ModelPackage extends EPackage {
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IContact <em>IContact</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for class '<em>IContact</em>'.
 	 * @see ch.elexis.core.model.IContact
 	 * @generated
@@ -1275,9 +1273,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_ContactType();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isMandator
-	 * <em>Mandator</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isMandator <em>Mandator</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Mandator</em>'.
 	 * @see ch.elexis.core.model.IContact#isMandator()
 	 * @see #getIContact()
@@ -1286,9 +1283,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Mandator();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isUser
-	 * <em>User</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isUser <em>User</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>User</em>'.
 	 * @see ch.elexis.core.model.IContact#isUser()
 	 * @see #getIContact()
@@ -1297,9 +1293,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_User();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isPatient
-	 * <em>Patient</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isPatient <em>Patient</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Patient</em>'.
 	 * @see ch.elexis.core.model.IContact#isPatient()
 	 * @see #getIContact()
@@ -1344,9 +1339,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Description3();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getCode
-	 * <em>Code</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getCode <em>Code</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Code</em>'.
 	 * @see ch.elexis.core.model.IContact#getCode()
 	 * @see #getIContact()
@@ -1355,9 +1349,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Code();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getCountry
-	 * <em>Country</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getCountry <em>Country</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Country</em>'.
 	 * @see ch.elexis.core.model.IContact#getCountry()
 	 * @see #getIContact()
@@ -1366,9 +1359,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Country();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getZip
-	 * <em>Zip</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getZip <em>Zip</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Zip</em>'.
 	 * @see ch.elexis.core.model.IContact#getZip()
 	 * @see #getIContact()
@@ -1377,9 +1369,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Zip();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getCity
-	 * <em>City</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getCity <em>City</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>City</em>'.
 	 * @see ch.elexis.core.model.IContact#getCity()
 	 * @see #getIContact()
@@ -1388,9 +1379,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_City();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getStreet
-	 * <em>Street</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getStreet <em>Street</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Street</em>'.
 	 * @see ch.elexis.core.model.IContact#getStreet()
 	 * @see #getIContact()
@@ -1399,9 +1389,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Street();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getPhone1
-	 * <em>Phone1</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getPhone1 <em>Phone1</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Phone1</em>'.
 	 * @see ch.elexis.core.model.IContact#getPhone1()
 	 * @see #getIContact()
@@ -1410,9 +1399,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Phone1();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getPhone2
-	 * <em>Phone2</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getPhone2 <em>Phone2</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Phone2</em>'.
 	 * @see ch.elexis.core.model.IContact#getPhone2()
 	 * @see #getIContact()
@@ -1421,9 +1409,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Phone2();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getFax
-	 * <em>Fax</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getFax <em>Fax</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Fax</em>'.
 	 * @see ch.elexis.core.model.IContact#getFax()
 	 * @see #getIContact()
@@ -1432,9 +1419,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Fax();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getEmail
-	 * <em>Email</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getEmail <em>Email</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Email</em>'.
 	 * @see ch.elexis.core.model.IContact#getEmail()
 	 * @see #getIContact()
@@ -1443,9 +1429,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Email();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getWebsite
-	 * <em>Website</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getWebsite <em>Website</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Website</em>'.
 	 * @see ch.elexis.core.model.IContact#getWebsite()
 	 * @see #getIContact()
@@ -1454,9 +1439,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Website();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getMobile
-	 * <em>Mobile</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getMobile <em>Mobile</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Mobile</em>'.
 	 * @see ch.elexis.core.model.IContact#getMobile()
 	 * @see #getIContact()
@@ -1465,9 +1449,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Mobile();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getComment
-	 * <em>Comment</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getComment <em>Comment</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Comment</em>'.
 	 * @see ch.elexis.core.model.IContact#getComment()
 	 * @see #getIContact()
@@ -1476,9 +1459,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Comment();
 	
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.IPersistentObject
-	 * <em>IPersistent Object</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IPersistentObject <em>IPersistent Object</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>IPersistent Object</em>'.
 	 * @see ch.elexis.core.model.IPersistentObject
 	 * @generated
@@ -1486,10 +1468,9 @@ public interface ModelPackage extends EPackage {
 	EClass getIPersistentObject();
 	
 	/**
-	 * Returns the meta object for the reference '
-	 * {@link ch.elexis.core.model.IPersistentObject#getXid <em>Xid</em>}'. <!-- begin-user-doc -->
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IPersistentObject#getXid <em>Xid</em>}'.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for the reference '<em>Xid</em>'.
 	 * @see ch.elexis.core.model.IPersistentObject#getXid()
 	 * @see #getIPersistentObject()
@@ -1498,10 +1479,9 @@ public interface ModelPackage extends EPackage {
 	EReference getIPersistentObject_Xid();
 	
 	/**
-	 * Returns the meta object for the reference list '
-	 * {@link ch.elexis.core.model.IPersistentObject#getXids <em>Xids</em>}'. <!-- begin-user-doc
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IPersistentObject#getXids <em>Xids</em>}'.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for the reference list '<em>Xids</em>'.
 	 * @see ch.elexis.core.model.IPersistentObject#getXids()
 	 * @see #getIPersistentObject()
@@ -1520,9 +1500,8 @@ public interface ModelPackage extends EPackage {
 	EClass getIXid();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IXid#getDomain
-	 * <em>Domain</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IXid#getDomain <em>Domain</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Domain</em>'.
 	 * @see ch.elexis.core.model.IXid#getDomain()
 	 * @see #getIXid()
@@ -1531,9 +1510,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIXid_Domain();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IXid#getDomainId
-	 * <em>Domain Id</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IXid#getDomainId <em>Domain Id</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Domain Id</em>'.
 	 * @see ch.elexis.core.model.IXid#getDomainId()
 	 * @see #getIXid()
@@ -1542,9 +1520,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIXid_DomainId();
 	
 	/**
-	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IXid#getObject
-	 * <em>Object</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IXid#getObject <em>Object</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Object</em>'.
 	 * @see ch.elexis.core.model.IXid#getObject()
 	 * @see #getIXid()
@@ -1553,9 +1530,8 @@ public interface ModelPackage extends EPackage {
 	EReference getIXid_Object();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IXid#getQuality
-	 * <em>Quality</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IXid#getQuality <em>Quality</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Quality</em>'.
 	 * @see ch.elexis.core.model.IXid#getQuality()
 	 * @see #getIXid()
@@ -1564,9 +1540,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIXid_Quality();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IXid#isGUID
-	 * <em>GUID</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IXid#isGUID <em>GUID</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>GUID</em>'.
 	 * @see ch.elexis.core.model.IXid#isGUID()
 	 * @see #getIXid()
@@ -1575,9 +1550,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIXid_GUID();
 	
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.ICodeElement
-	 * <em>ICode Element</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for class '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>ICode Element</em>'.
 	 * @see ch.elexis.core.model.ICodeElement
 	 * @generated
@@ -1585,9 +1559,8 @@ public interface ModelPackage extends EPackage {
 	EClass getICodeElement();
 	
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.IChangeListener
-	 * <em>IChange Listener</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IChangeListener <em>IChange Listener</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>IChange Listener</em>'.
 	 * @see ch.elexis.core.model.IChangeListener
 	 * @generated
@@ -1597,7 +1570,6 @@ public interface ModelPackage extends EPackage {
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for class '<em>ISticker</em>'.
 	 * @see ch.elexis.core.model.ISticker
 	 * @generated
@@ -1605,10 +1577,9 @@ public interface ModelPackage extends EPackage {
 	EClass getISticker();
 	
 	/**
-	 * Returns the meta object for the attribute '
-	 * {@link ch.elexis.core.model.ISticker#getBackground <em>Background</em>}'. <!-- begin-user-doc
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ISticker#getBackground <em>Background</em>}'.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for the attribute '<em>Background</em>'.
 	 * @see ch.elexis.core.model.ISticker#getBackground()
 	 * @see #getISticker()
@@ -1617,10 +1588,9 @@ public interface ModelPackage extends EPackage {
 	EAttribute getISticker_Background();
 	
 	/**
-	 * Returns the meta object for the attribute '
-	 * {@link ch.elexis.core.model.ISticker#getForeground <em>Foreground</em>}'. <!-- begin-user-doc
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ISticker#getForeground <em>Foreground</em>}'.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for the attribute '<em>Foreground</em>'.
 	 * @see ch.elexis.core.model.ISticker#getForeground()
 	 * @see #getISticker()
@@ -1629,9 +1599,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getISticker_Foreground();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ISticker#isVisible
-	 * <em>Visible</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ISticker#isVisible <em>Visible</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Visible</em>'.
 	 * @see ch.elexis.core.model.ISticker#isVisible()
 	 * @see #getISticker()
@@ -1642,7 +1611,6 @@ public interface ModelPackage extends EPackage {
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for class '<em>IPerson</em>'.
 	 * @see ch.elexis.core.model.IPerson
 	 * @generated
@@ -1662,9 +1630,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIPerson_DateOfBirth();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPerson#getGender
-	 * <em>Gender</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPerson#getGender <em>Gender</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Gender</em>'.
 	 * @see ch.elexis.core.model.IPerson#getGender()
 	 * @see #getIPerson()
@@ -1673,9 +1640,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIPerson_Gender();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPerson#getTitel
-	 * <em>Titel</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPerson#getTitel <em>Titel</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Titel</em>'.
 	 * @see ch.elexis.core.model.IPerson#getTitel()
 	 * @see #getIPerson()
@@ -1698,7 +1664,6 @@ public interface ModelPackage extends EPackage {
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IPatient <em>IPatient</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @return the meta object for class '<em>IPatient</em>'.
 	 * @see ch.elexis.core.model.IPatient
 	 * @generated
@@ -1706,9 +1671,8 @@ public interface ModelPackage extends EPackage {
 	EClass getIPatient();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPatient#getDiagnosen
-	 * <em>Diagnosen</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPatient#getDiagnosen <em>Diagnosen</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Diagnosen</em>'.
 	 * @see ch.elexis.core.model.IPatient#getDiagnosen()
 	 * @see #getIPatient()
@@ -1717,9 +1681,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIPatient_Diagnosen();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPatient#getRisk
-	 * <em>Risk</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPatient#getRisk <em>Risk</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Risk</em>'.
 	 * @see ch.elexis.core.model.IPatient#getRisk()
 	 * @see #getIPatient()
@@ -1752,9 +1715,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIPatient_PersonalAnamnese();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPatient#getAllergies
-	 * <em>Allergies</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPatient#getAllergies <em>Allergies</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Allergies</em>'.
 	 * @see ch.elexis.core.model.IPatient#getAllergies()
 	 * @see #getIPatient()
@@ -1762,6 +1724,17 @@ public interface ModelPackage extends EPackage {
 	 */
 	EAttribute getIPatient_Allergies();
 	
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPatient#getPatientNr <em>Patient Nr</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Patient Nr</em>'.
+	 * @see ch.elexis.core.model.IPatient#getPatientNr()
+	 * @see #getIPatient()
+	 * @generated
+	 */
+	EAttribute getIPatient_PatientNr();
+
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IUser <em>IUser</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -1773,9 +1746,8 @@ public interface ModelPackage extends EPackage {
 	EClass getIUser();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUser#getUsername
-	 * <em>Username</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUser#getUsername <em>Username</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Username</em>'.
 	 * @see ch.elexis.core.model.IUser#getUsername()
 	 * @see #getIUser()
@@ -1784,9 +1756,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIUser_Username();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUser#getPassword
-	 * <em>Password</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUser#getPassword <em>Password</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Password</em>'.
 	 * @see ch.elexis.core.model.IUser#getPassword()
 	 * @see #getIUser()
@@ -1795,9 +1766,8 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIUser_Password();
 	
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable
-	 * <em>Identifiable</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Identifiable</em>'.
 	 * @see ch.elexis.core.model.Identifiable
 	 * @generated
@@ -1805,9 +1775,8 @@ public interface ModelPackage extends EPackage {
 	EClass getIdentifiable();
 	
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.Deleteable
-	 * <em>Deleteable</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for class '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Deleteable</em>'.
 	 * @see ch.elexis.core.model.Deleteable
 	 * @generated
@@ -1815,9 +1784,8 @@ public interface ModelPackage extends EPackage {
 	EClass getDeleteable();
 	
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.Deleteable#isDeleted
-	 * <em>Deleted</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.Deleteable#isDeleted <em>Deleted</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Deleted</em>'.
 	 * @see ch.elexis.core.model.Deleteable#isDeleted()
 	 * @see #getDeleteable()
@@ -1826,9 +1794,9 @@ public interface ModelPackage extends EPackage {
 	EAttribute getDeleteable_Deleted();
 	
 	/**
-	 * Returns the meta object for data type '<em>String Array</em>'. <!-- begin-user-doc --> <!--
+	 * Returns the meta object for data type '<em>String Array</em>'.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @return the meta object for data type '<em>String Array</em>'.
 	 * @model instanceClass="java.lang.String[]"
 	 * @generated
@@ -1836,9 +1804,9 @@ public interface ModelPackage extends EPackage {
 	EDataType getStringArray();
 	
 	/**
-	 * Returns the factory that creates the instances of the model. <!-- begin-user-doc --> <!--
+	 * Returns the factory that creates the instances of the model.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @return the factory that creates the instances of the model.
 	 * @generated
 	 */
@@ -1853,14 +1821,12 @@ public interface ModelPackage extends EPackage {
 	 * <li>and each data type</li>
 	 * </ul>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IContact <em>IContact</em>}'
-		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.model.IContact <em>IContact</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.model.IContact
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIContact()
 		 * @generated
@@ -2020,9 +1986,8 @@ public interface ModelPackage extends EPackage {
 		EAttribute ICONTACT__COMMENT = eINSTANCE.getIContact_Comment();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IPersistentObject
-		 * <em>IPersistent Object</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.model.IPersistentObject <em>IPersistent Object</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.model.IPersistentObject
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPersistentObject()
 		 * @generated
@@ -2048,7 +2013,6 @@ public interface ModelPackage extends EPackage {
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IXid <em>IXid</em>}' class.
 		 * <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
 		 * @see ch.elexis.core.model.IXid
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIXid()
 		 * @generated
@@ -2096,9 +2060,8 @@ public interface ModelPackage extends EPackage {
 		EAttribute IXID__GUID = eINSTANCE.getIXid_GUID();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.ICodeElement
-		 * <em>ICode Element</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.model.ICodeElement
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICodeElement()
 		 * @generated
@@ -2106,9 +2069,8 @@ public interface ModelPackage extends EPackage {
 		EClass ICODE_ELEMENT = eINSTANCE.getICodeElement();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IChangeListener
-		 * <em>IChange Listener</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.model.IChangeListener <em>IChange Listener</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.model.IChangeListener
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIChangeListener()
 		 * @generated
@@ -2116,9 +2078,8 @@ public interface ModelPackage extends EPackage {
 		EClass ICHANGE_LISTENER = eINSTANCE.getIChangeListener();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}'
-		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.model.ISticker
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getISticker()
 		 * @generated
@@ -2150,9 +2111,8 @@ public interface ModelPackage extends EPackage {
 		EAttribute ISTICKER__VISIBLE = eINSTANCE.getISticker_Visible();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'
-		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.model.IPerson
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPerson()
 		 * @generated
@@ -2192,9 +2152,8 @@ public interface ModelPackage extends EPackage {
 		EAttribute IPERSON__TITEL_SUFFIX = eINSTANCE.getIPerson_TitelSuffix();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IPatient <em>IPatient</em>}'
-		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.model.IPatient <em>IPatient</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.model.IPatient
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPatient()
 		 * @generated
@@ -2228,7 +2187,6 @@ public interface ModelPackage extends EPackage {
 		/**
 		 * The meta object literal for the '<em><b>Personal Anamnese</b></em>' attribute feature.
 		 * <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
 		 * @generated
 		 */
 		EAttribute IPATIENT__PERSONAL_ANAMNESE = eINSTANCE.getIPatient_PersonalAnamnese();
@@ -2242,9 +2200,16 @@ public interface ModelPackage extends EPackage {
 		EAttribute IPATIENT__ALLERGIES = eINSTANCE.getIPatient_Allergies();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IUser <em>IUser</em>}'
-		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '<em><b>Patient Nr</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPATIENT__PATIENT_NR = eINSTANCE.getIPatient_PatientNr();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IUser <em>IUser</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.model.IUser
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUser()
 		 * @generated
@@ -2268,9 +2233,8 @@ public interface ModelPackage extends EPackage {
 		EAttribute IUSER__PASSWORD = eINSTANCE.getIUser_Password();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.Identifiable
-		 * <em>Identifiable</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.model.Identifiable
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIdentifiable()
 		 * @generated
@@ -2278,9 +2242,8 @@ public interface ModelPackage extends EPackage {
 		EClass IDENTIFIABLE = eINSTANCE.getIdentifiable();
 		
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.Deleteable
-		 * <em>Deleteable</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see ch.elexis.core.model.Deleteable
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getDeleteable()
 		 * @generated
@@ -2296,9 +2259,9 @@ public interface ModelPackage extends EPackage {
 		EAttribute DELETEABLE__DELETED = eINSTANCE.getDeleteable_Deleted();
 		
 		/**
-		 * The meta object literal for the '<em>String Array</em>' data type. <!-- begin-user-doc
+		 * The meta object literal for the '<em>String Array</em>' data type.
+		 * <!-- begin-user-doc
 		 * --> <!-- end-user-doc -->
-		 * 
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 		 * @generated
 		 */

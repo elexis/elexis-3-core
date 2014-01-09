@@ -28,31 +28,30 @@ import ch.rgw.tools.TimeTool;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	/**
-	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static TypesFactory init(){
 		try {
-			TypesFactory theTypesFactory =
-				(TypesFactory) EPackage.Registry.INSTANCE.getEFactory(TypesPackage.eNS_URI);
+			TypesFactory theTypesFactory = (TypesFactory)EPackage.Registry.INSTANCE.getEFactory(TypesPackage.eNS_URI);
 			if (theTypesFactory != null) {
 				return theTypesFactory;
 			}
-		} catch (Exception exception) {
+		}
+		catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new TypesFactoryImpl();
 	}
 	
 	/**
-	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public TypesFactoryImpl(){
@@ -61,86 +60,76 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public EObject create(EClass eClass){
 		switch (eClass.getClassifierID()) {
-		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName()
-				+ "' is not a valid classifier");
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue){
 		switch (eDataType.getClassifierID()) {
-		case TypesPackage.CONTACT_TYPE:
-			return createContactTypeFromString(eDataType, initialValue);
-		case TypesPackage.CONTACT_GENDER:
-			return createContactGenderFromString(eDataType, initialValue);
-		case TypesPackage.COUNTRY_CODE:
-			return createCountryCodeFromString(eDataType, initialValue);
-		case TypesPackage.RELATIONSHIP_TYPE:
-			return createRelationshipTypeFromString(eDataType, initialValue);
-		case TypesPackage.MONEY:
-			return createMoneyFromString(eDataType, initialValue);
-		case TypesPackage.TIME_TOOL:
-			return createTimeToolFromString(eDataType, initialValue);
-		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName()
-				+ "' is not a valid classifier");
+			case TypesPackage.CONTACT_TYPE:
+				return createContactTypeFromString(eDataType, initialValue);
+			case TypesPackage.CONTACT_GENDER:
+				return createContactGenderFromString(eDataType, initialValue);
+			case TypesPackage.COUNTRY_CODE:
+				return createCountryCodeFromString(eDataType, initialValue);
+			case TypesPackage.RELATIONSHIP_TYPE:
+				return createRelationshipTypeFromString(eDataType, initialValue);
+			case TypesPackage.MONEY:
+				return createMoneyFromString(eDataType, initialValue);
+			case TypesPackage.TIME_TOOL:
+				return createTimeToolFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue){
 		switch (eDataType.getClassifierID()) {
-		case TypesPackage.CONTACT_TYPE:
-			return convertContactTypeToString(eDataType, instanceValue);
-		case TypesPackage.CONTACT_GENDER:
-			return convertContactGenderToString(eDataType, instanceValue);
-		case TypesPackage.COUNTRY_CODE:
-			return convertCountryCodeToString(eDataType, instanceValue);
-		case TypesPackage.RELATIONSHIP_TYPE:
-			return convertRelationshipTypeToString(eDataType, instanceValue);
-		case TypesPackage.MONEY:
-			return convertMoneyToString(eDataType, instanceValue);
-		case TypesPackage.TIME_TOOL:
-			return convertTimeToolToString(eDataType, instanceValue);
-		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName()
-				+ "' is not a valid classifier");
+			case TypesPackage.CONTACT_TYPE:
+				return convertContactTypeToString(eDataType, instanceValue);
+			case TypesPackage.CONTACT_GENDER:
+				return convertContactGenderToString(eDataType, instanceValue);
+			case TypesPackage.COUNTRY_CODE:
+				return convertCountryCodeToString(eDataType, instanceValue);
+			case TypesPackage.RELATIONSHIP_TYPE:
+				return convertRelationshipTypeToString(eDataType, instanceValue);
+			case TypesPackage.MONEY:
+				return convertMoneyToString(eDataType, instanceValue);
+			case TypesPackage.TIME_TOOL:
+				return convertTimeToolToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ContactType createContactTypeFromString(EDataType eDataType, String initialValue){
 		ContactType result = ContactType.get(initialValue);
-		if (result == null)
-			throw new IllegalArgumentException("The value '" + initialValue
-				+ "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertContactTypeToString(EDataType eDataType, Object instanceValue){
@@ -149,20 +138,16 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ContactGender createContactGenderFromString(EDataType eDataType, String initialValue){
 		ContactGender result = ContactGender.get(initialValue);
-		if (result == null)
-			throw new IllegalArgumentException("The value '" + initialValue
-				+ "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertContactGenderToString(EDataType eDataType, Object instanceValue){
@@ -171,20 +156,16 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public CountryCode createCountryCodeFromString(EDataType eDataType, String initialValue){
 		CountryCode result = CountryCode.get(initialValue);
-		if (result == null)
-			throw new IllegalArgumentException("The value '" + initialValue
-				+ "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertCountryCodeToString(EDataType eDataType, Object instanceValue){
@@ -193,21 +174,17 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RelationshipType createRelationshipTypeFromString(EDataType eDataType,
 		String initialValue){
 		RelationshipType result = RelationshipType.get(initialValue);
-		if (result == null)
-			throw new IllegalArgumentException("The value '" + initialValue
-				+ "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertRelationshipTypeToString(EDataType eDataType, Object instanceValue){
@@ -216,16 +193,14 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Money createMoneyFromString(EDataType eDataType, String initialValue){
-		return (Money) super.createFromString(eDataType, initialValue);
+		return (Money)super.createFromString(eDataType, initialValue);
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertMoneyToString(EDataType eDataType, Object instanceValue){
@@ -234,16 +209,14 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public TimeTool createTimeToolFromString(EDataType eDataType, String initialValue){
-		return (TimeTool) super.createFromString(eDataType, initialValue);
+		return (TimeTool)super.createFromString(eDataType, initialValue);
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertTimeToolToString(EDataType eDataType, Object instanceValue){
@@ -252,16 +225,14 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public TypesPackage getTypesPackage(){
-		return (TypesPackage) getEPackage();
+		return (TypesPackage)getEPackage();
 	}
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @deprecated
 	 * @generated
 	 */

@@ -13,8 +13,8 @@ package ch.elexis.core.model;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>IChange Listener</b></em>'.
  * <!-- end-user-doc -->
- * 
- * 
+ *
+ *
  * @see ch.elexis.core.model.ModelPackage#getIChangeListener()
  * @model interface="true" abstract="true"
  * @generated
@@ -22,7 +22,6 @@ package ch.elexis.core.model;
 public interface IChangeListener {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -30,7 +29,6 @@ public interface IChangeListener {
 	
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
