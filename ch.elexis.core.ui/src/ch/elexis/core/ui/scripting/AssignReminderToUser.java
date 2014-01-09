@@ -24,7 +24,7 @@ public class AssignReminderToUser {
 	
 	private String run(Collection<Reminder> workset, String username){
 		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
-		Anwender toUser = Anwender.load(qbe.findSingle(Anwender.LABEL, Query.EQUALS, username));
+		Anwender toUser = Anwender.load(qbe.findSingle(Anwender.FLD_LABEL, Query.EQUALS, username));
 		if (!toUser.exists()) {
 			return username + " kann nicht gefunden werden";
 		}
@@ -42,7 +42,7 @@ public class AssignReminderToUser {
 	
 	public String assign(String fromUsername, String toUsername){
 		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
-		Anwender user = Anwender.load(qbe.findSingle(Anwender.LABEL, Query.EQUALS, fromUsername));
+		Anwender user = Anwender.load(qbe.findSingle(Anwender.FLD_LABEL, Query.EQUALS, fromUsername));
 		if (user.exists()) {
 			return run(user.getReminders(null), toUsername);
 		} else {
