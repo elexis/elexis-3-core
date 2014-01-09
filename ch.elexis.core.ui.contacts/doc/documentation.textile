@@ -1,0 +1,30 @@
+*{color:blue}Created by MEDEVIT Austria <office@medevit.at>*
+
+h1. Contacts documentation
+
+This contacts plug-in consists of three views, which together cover all aspects of contact and patient management.
+
+h2. Contact selector view
+
+h3. The intelligent text filter field
+
+The search field is not case sensitive, so for example @Markus@ and @markus@ are treated accordingly.
+
+|_. Input Type |_. Result  |_. Example |
+| @#@ number | Only the contact with number @number@ is shown | @#1@ -> Marco Descher|
+| part of name | All contacts containing this part of a name are shown. | @mar@ -> Marco Descher, Markus Maier |
+| part of name, part of name, ... | All contacts with one of the parts are shown | pic |
+| @=@ formula @;@| A formula is directly evaluated and presented | @=13+4;@ -> 13+4=17|
+
+The keybinding to call intelligent search is @M1+1@
+
+h3. Define relationships between contacts
+
+Simply drag on contact on to the other contact. The order is simple, if you drag contact A onto contact B and the define the relation it is like you have Person A pointing at Person B saying "this guy is my friend". The result will be that for now on A has a relation mark @friend@ to B entered in his file.
+
+h2. Contact details view
+
+
+
+h2. Patient details view
+

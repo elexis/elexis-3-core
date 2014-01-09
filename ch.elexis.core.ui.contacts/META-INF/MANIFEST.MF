@@ -17,10 +17,18 @@ Require-Bundle: org.eclipse.core.runtime,
  ch.elexis.core.data;bundle-version="3.0.0",
  ch.elexis.core.ui;bundle-version="3.0.0",
  ch.elexis.core.ui.icons;bundle-version="3.0.0",
- ch.elexis.core.ui.medication;bundle-version="3.0.0"
+ ch.elexis.core.ui.medication;bundle-version="3.0.0",
+ at.medevit.elexis.geonames
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/geonamesClient.xml
 Export-Package: ch.elexis.core.ui.contacts.dialogs,
  ch.elexis.core.ui.contacts.perspectives,
  ch.elexis.core.ui.contacts.preferences,
  ch.elexis.core.ui.contacts.views
+Import-Package: ch.elexis.data,
+ org.eclipse.ui.views.properties,
+ org.eclipse.ui.views.properties.tabbed,
+ org.slf4j;version="1.7.2"
+Bundle-ClassPath: lib/jep-2.3.1.jar,
+ .
