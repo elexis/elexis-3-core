@@ -44,6 +44,8 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
+import ch.elexis.core.ui.views.provider.FaelleContentProvider;
+import ch.elexis.core.ui.views.provider.FaelleLabelProvider;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
@@ -129,46 +131,6 @@ public class FaelleView extends ViewPart implements IActivationListener {
 		if (currentFall != null) {
 			tv.setSelection(new StructuredSelection(currentFall));
 		}
-	}
-	
-	class FaelleLabelProvider extends DefaultLabelProvider {
-		
-		@Override
-		public Image getColumnImage(final Object element, final int columnIndex){
-			if (element instanceof Fall) {
-				Fall fall = (Fall) element;
-				if (fall.isValid()) {
-					return Images.IMG_OK.getImage();
-				} else {
-					return Images.IMG_FEHLER.getImage();
-				}
-			}
-			return super.getColumnImage(element, columnIndex);
-		}
-		
-	}
-	
-	class FaelleContentProvider implements IStructuredContentProvider {
-		
-		public Object[] getElements(final Object inputElement){
-			Patient act = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-			if (act == null) {
-				return new Object[0];
-			} else {
-				return act.getFaelle();
-			}
-			
-		}
-		
-		public void dispose(){
-			// TODO Auto-generated method stub
-			
-		}
-		
-		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput){
-			
-		}
-		
 	}
 	
 	public void activation(final boolean mode){
