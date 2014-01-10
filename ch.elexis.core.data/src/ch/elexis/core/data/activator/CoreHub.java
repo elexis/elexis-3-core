@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
@@ -228,7 +229,7 @@ public class CoreHub implements BundleActivator {
 				qualifier = prop.getProperty("elexis.qualifier");
 			}
 		} catch (IOException e) {
-			log.warn("Error reading build version information from "+url_name);
+			log.warn("Error reading build version information from " + url_name);
 		}
 		return elexis_version.replace("-SNAPSHOT", "") + " " + qualifier;
 	}
@@ -259,6 +260,9 @@ public class CoreHub implements BundleActivator {
 				String[] c = s.split("="); //$NON-NLS-1$
 				config = c[1];
 			}
+		}
+		if ("RunFromScratch".equals(System.getProperty("elexis-run-mode"))) {
+			config = UUID.randomUUID().toString();
 		}
 		loadLocalCfg(config);
 		
