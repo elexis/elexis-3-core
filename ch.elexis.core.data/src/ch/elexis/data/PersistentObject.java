@@ -149,7 +149,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	private static String pcname;
 	private static String tracetable;
 	protected static int default_lifetime;
-	private static boolean runningAsTest = false;
+	private static boolean runningFromScratch = false;
 	private static String dbUser;
 	private static String dbPw;
 	
@@ -216,7 +216,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		String dbFlavor = System.getProperty("ch.elexis.dbFlavor");
 		String dbSpec = System.getProperty("ch.elexis.dbSpec");
 		if ("RunFromScratch".equals(System.getProperty("elexis-run-mode"))) {
-			runningAsTest = true;
+			runningFromScratch = true;
 		}
 		
 		log.info("osgi.install.area: " + System.getProperty("osgi.install.area"));
@@ -240,7 +240,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		} else if (dbFlavor != null && dbFlavor.length() >= 2 && dbSpec != null
 			&& dbSpec.length() > 5 && dbUser != null && dbPw != null) {
 			return PersistentObject.connect(dbFlavor, dbSpec, dbUser, dbPw, true);
-		} else if (runningAsTest) {
+		} else if (runningFromScratch) {
 			try {
 				File dbFile = File.createTempFile("elexis", "db");
 				log.info("RunFromScratch test database created in " + dbFile.getAbsolutePath());
@@ -371,7 +371,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	public static boolean connect(final JdbcLink jd){
 		j = jd;
 		if (tableExists("CONFIG")) {
-			if (runningAsTest) {
+			if (runningFromScratch) {
 				log.error("With elexis-run-mode=RunFromScratch and MySQL/postgres you must start with an empty database");
 				System.exit(-8);
 			}
@@ -398,7 +398,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					Mandant.init();
 					CoreHub.pin.initializeGrants();
 					CoreHub.pin.initializeGlobalPreferences();
-					if (runningAsTest) {
+					if (runningFromScratch) {
 						Mandant m = new Mandant("007", "topsecret");
 						String clientEmail = System.getProperty("ch.elexis.clientEmail");
 						if (clientEmail == null)
@@ -419,8 +419,8 @@ public abstract class PersistentObject implements IPersistentObject {
 					CoreHub.globalCfg.flush();
 					CoreHub.localCfg.flush();
 					disconnect();
-					if (runningAsTest) {
-						runningAsTest = false; // Avoid recursion!!
+					if (runningFromScratch) {
+						runningFromScratch = false; // Avoid recursion!!
 						JdbcLink jReconnect =
 							new JdbcLink(testJdbcLink.getDriverName(),
 								testJdbcLink.getConnectString(), testJdbcLink.DBFlavor);
