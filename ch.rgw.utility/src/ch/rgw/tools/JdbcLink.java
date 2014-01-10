@@ -326,7 +326,7 @@ public class JdbcLink {
 			case 34:
 				
 			case '\'':
-				if (flavor.startsWith("hsql")) {
+				if (flavor.startsWith("postgresql") || flavor.startsWith("hsql")) {
 					out[j++] = '\'';
 					break;
 				}
