@@ -26,7 +26,7 @@ public class Test_Patient extends AbstractPersistentObjectTest {
 		};
 		
 		for (final String flavor : dbFlavors) {
-			System.out.println(flavor);
+			System.out.println("Running test with DB " + flavor);
 			/*
 			 * Display.getDefault().asyncExec(new Runnable() { public void run(){
 			 * setUpTestDb(flavor); male.set(Patient.FLD_NAME, familyNameWithApostrophe); assert
@@ -50,8 +50,9 @@ public class Test_Patient extends AbstractPersistentObjectTest {
 	@Test
 	public void testSetComplicateName(){
 		final String familyNameWithApostrophe = "D'Andrea";
-		// male.set(Patient.FLD_NAME, familyNameWithApostrophe);
-		// assert (Patient.NAME == familyNameWithApostrophe);
+		male.set(Patient.FLD_NAME, familyNameWithApostrophe);
+		System.out.println("male.getName() is " + male.getName());
+		assert (male.getName() == familyNameWithApostrophe);
 		// fail("Not yet implemented"); // TODO
 	}
 	/*

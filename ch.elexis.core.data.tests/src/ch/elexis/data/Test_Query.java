@@ -20,6 +20,10 @@ public class Test_Query extends AbstractPersistentObjectTest {
 
 	@Before
 	public void setUp() throws Exception{
+		if (link != null) {
+			PersistentObject.deleteAllTables();
+			link.disconnect();
+		}
 		link = initDB();
 		// create a instance of an PersistentObject ex. Organisation to test the query
 		new Organisation("orgname", "orgzusatz1");
@@ -92,6 +96,10 @@ public class Test_Query extends AbstractPersistentObjectTest {
 				+ Organisation.TABLENAME);
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
 		ArrayList<String> result = query.execute(ps, new String[0]);
+		System.out.println("found " + result.size() + " Organisation");
+		for (String s : result) {
+			System.out.println("Organisation: found " + s);
+		}
 		assertEquals(3, result.size());
 	}
 	
