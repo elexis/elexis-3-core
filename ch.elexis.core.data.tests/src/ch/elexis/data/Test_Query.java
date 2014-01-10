@@ -96,11 +96,20 @@ public class Test_Query extends AbstractPersistentObjectTest {
 				+ Organisation.TABLENAME);
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
 		ArrayList<String> result = query.execute(ps, new String[0]);
-		System.out.println("found " + result.size() + " Organisation");
+		int nrOrgs = result.size();
+		System.out.println("Before creating new organistaion found " + nrOrgs
+			+ " Organisation");
 		for (String s : result) {
 			System.out.println("Organisation: found " + s);
 		}
-		assertEquals(3, result.size());
+		new Organisation("NeueOrganistation", "Zusatznamen2");
+		result = query.execute(ps, new String[0]);
+		System.out.println("After creating new organistaion found " + result.size()
+			+ " Organisation");
+		for (String s : result) {
+			System.out.println("Organisation: found " + s);
+		}
+		assertEquals(nrOrgs + 1, result.size());
 	}
 	
 	private class PersistentObjectImpl extends PersistentObject {

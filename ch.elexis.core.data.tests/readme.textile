@@ -14,3 +14,5 @@ For mysql run the following commands
 bq. mysql --host=localhost --user root --password
 create database unittests; 
 grant all on unittests.* to elexis@localhost identified by 'elexisTest'; 
+
+The Test_Patient.java contains tests which are run for H2, PostgreSQL and MySQL. As it is quite time consuming to setup a new database, this should be done only where really necessary.
