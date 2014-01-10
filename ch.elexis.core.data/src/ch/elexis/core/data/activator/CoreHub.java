@@ -199,12 +199,13 @@ public class CoreHub implements BundleActivator {
 		
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
 		
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run(){
-				SysSettings localCfg = (SysSettings) CoreHub.localCfg;
-				localCfg.write_xml(LocalCfgFile);
-			}
-		});
+		if (!"RunFromScratch".equals(System.getProperty("elexis-run-mode")))
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				public void run(){
+					SysSettings localCfg = (SysSettings) CoreHub.localCfg;
+					localCfg.write_xml(LocalCfgFile);
+				}
+			});
 	}
 	
 	/*
