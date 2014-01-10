@@ -19,19 +19,10 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-          <!-- at the moment I don't know how to pass the correct parameter to 
-          tycho-surefire-plugin as to get the same result as with DataAllTests.launch
-          There Niklaus skips this test as per 24.12.2013
-          Currently the DB start running ch.elexis.data.Test_PersistentObject. The DB is created but the run fails with
-          Exception in thread "Thread-5" java.lang.ClassCastException: ch.rgw.io.InMemorySettings cannot be cast to ch.rgw.io.SysSettings
-          TODO: Fix this test
-            -->
-          <skipTests>true</skipTests> 
           <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
-          <showEclipseLog>true</showEclipseLog>
+          <showEclipseLog>false</showEclipseLog>
           <useUIHarness>false</useUIHarness>
-          <useUIThread>false</useUIThread>
-          <application>ch.elexis.core.application.ElexisApp</application>
+          <useUIThread>true</useUIThread>
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>

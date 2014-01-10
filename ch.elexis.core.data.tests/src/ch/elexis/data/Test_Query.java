@@ -27,6 +27,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 	
 	@After
 	public void tearDown() throws Exception{
+		PersistentObject.deleteAllTables();
 		link.exec("DROP ALL OBJECTS");
 		link.disconnect();
 	}
@@ -86,7 +87,9 @@ public class Test_Query extends AbstractPersistentObjectTest {
 	
 	@Test
 	public void testQueryExpression(){
-		PreparedStatement ps = link.prepareStatement("SELECT * FROM " + Organisation.TABLENAME);
+		PreparedStatement ps =
+			link.prepareStatement("SELECT " + Organisation.FLD_NAME1 + " FROM "
+				+ Organisation.TABLENAME);
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
 		ArrayList<String> result = query.execute(ps, new String[0]);
 		assertEquals(3, result.size());
