@@ -1,0 +1,16 @@
+h2. Running the unittests
+
+You need to grant access to the mysql and postgresql databases unittest.
+
+For postgres run the following commands
+
+bq.  sudo -u postgres psql -c "create database unittests"
+sudo -u postgres psql -c "create user elexis with UNENCRYPTED password 'elexisTest';"
+sudo -u postgres psql -c "grant all privileges  on database unittests to elexis;"
+
+
+For mysql run the following commands
+
+bq. mysql --host=localhost --user root --password
+create database unittests; 
+grant all on unittests.* to elexis@localhost identified by 'elexisTest'; 
