@@ -2508,6 +2508,42 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 	}
 	
+	/**
+	 * Utility procedure for unit tests which need to start with a clean database
+	 */
+	public static boolean deleteAllTables(){
+		int nrTables = 0;
+		String tableName = "none";
+		DatabaseMetaData dmd;
+		try {
+			dmd = j.getConnection().getMetaData();
+			String[] onlyTables = {
+				"TABLE"
+			};
+			ResultSet rs = dmd.getTables(null, null, "%", onlyTables);
+			if (rs != null) {
+				while (rs.next()) {
+					// DatabaseMetaData#getTables() specifies TABLE_NAME is in
+					// column 3
+					tableName = rs.getString(3);
+					getConnection().exec("DROP TABLE " + tableName);
+					nrTables++;
+				}
+			}
+		} catch (SQLException e1) {
+			log.error("Error deleting table " + tableName);
+			return false;
+		}
+		log.info("Deleted " + nrTables + " tables");
+		return true;
+	}
+	
+	/**
+	 * Utility procedure
+	 * 
+	 * @param tableName
+	 *            name of the table to check existence for
+	 */
 	public static boolean tableExists(String tableName){
 		int nrFounds = 0;
 		// Vergleich schaut nicht auf Gross/Klein-Schreibung, da thomas
