@@ -370,12 +370,10 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	public static boolean connect(final JdbcLink jd){
 		j = jd;
+		if (runningFromScratch) {
+			deleteAllTables();
+		}
 		if (tableExists("CONFIG")) {
-			if (runningFromScratch) {
-				log.error("With elexis-run-mode=RunFromScratch and MySQL/postgres you must start with an empty database");
-				System.exit(-8);
-			}
-			
 			CoreHub.globalCfg = new SqlSettings(getConnection(), "CONFIG");
 			String created = CoreHub.globalCfg.get("created", null);
 			log.debug("Database version " + created);
