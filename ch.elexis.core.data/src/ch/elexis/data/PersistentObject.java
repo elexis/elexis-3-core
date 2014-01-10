@@ -392,7 +392,6 @@ public abstract class PersistentObject implements IPersistentObject {
 					CoreHub.globalCfg.undo();
 					CoreHub.globalCfg.set("created", new TimeTool().toString(TimeTool.FULL_GER));
 					CoreHub.acl.load();
-					Anwender.init();
 					Mandant.init();
 					CoreHub.pin.initializeGrants();
 					CoreHub.pin.initializeGlobalPreferences();
@@ -416,20 +415,8 @@ public abstract class PersistentObject implements IPersistentObject {
 					}
 					CoreHub.globalCfg.flush();
 					CoreHub.localCfg.flush();
-					disconnect();
-					if (runningFromScratch) {
-						runningFromScratch = false; // Avoid recursion!!
-						JdbcLink jReconnect =
-							new JdbcLink(testJdbcLink.getDriverName(),
-								testJdbcLink.getConnectString(), testJdbcLink.DBFlavor);
-						jReconnect.connect(dbUser, dbPw);
-						return connect(jReconnect);
-					}
-					MessageEvent
-						.fireInformation(
-							"Programmende",
-							"Es wurde eine neue Datenbank angelegt. Das Programm muss beendet werden. Bitte starten Sie danach neu.");
-					System.exit(1);
+					MessageEvent.fireInformation("Neue Datenbank",
+						"Es wurde eine neue Datenbank angelegt.");
 				} else {
 					log.error("Kein create script für Datenbanktyp " + getConnection().DBFlavor
 						+ " gefunden.");
@@ -466,9 +453,8 @@ public abstract class PersistentObject implements IPersistentObject {
 					.format(
 						"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Wollen Sie trotzdem fortsetzen?",
 						jd.getConnectString(), vi.version().toString(), v2.version().toString());
-			log.error(msg);		
-			if (!cod.openQuestion(
-				"Diskrepanz in der Datenbank-Version ", msg)) {
+			log.error(msg);
+			if (!cod.openQuestion("Diskrepanz in der Datenbank-Version ", msg)) {
 				System.exit(2);
 			} else {
 				log.error("User continues with Elexis / database version mismatch");
