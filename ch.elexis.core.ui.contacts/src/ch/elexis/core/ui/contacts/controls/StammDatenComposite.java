@@ -58,6 +58,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.CountryCode;
 import ch.elexis.core.ui.contacts.proposalProvider.CityInformationProposalProvider;
+import ch.elexis.core.ui.contacts.proposalProvider.ContactGeonames;
 import ch.elexis.core.ui.contacts.proposalProvider.StreetInformationProposalProvider;
 import ch.elexis.core.ui.contacts.proposalProvider.TitleProposalProvider;
 import ch.elexis.core.ui.contacts.proposalProvider.ZipInformationProposalProvider;
@@ -238,12 +239,11 @@ public class StammDatenComposite extends AbstractComposite {
 					if (selCountry == CountryCode.NDF) {
 						comboViewerCountry.getCombo().setForeground(
 							Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+						ContactGeonames.setCountry(null);
 					} else {
 						comboViewerCountry.getCombo().setForeground(
 							Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-						cityIP.setCountry(selCountry);
-						zipIP.setCountry(selCountry);
-						streetIP.setCountry(selCountry);
+						ContactGeonames.setCountry(selCountry);
 					}
 					
 				}
@@ -496,7 +496,7 @@ public class StammDatenComposite extends AbstractComposite {
 		@Override
 		public void focusLost(FocusEvent e){
 			Text text = ((Text) e.widget);
-			if (text.getText().equalsIgnoreCase(cityIP.getDialPrefix()))
+			if (text.getText().equalsIgnoreCase(ContactGeonames.getDialPrefix()))
 				text.setText("");
 		}
 		
@@ -504,7 +504,7 @@ public class StammDatenComposite extends AbstractComposite {
 		public void focusGained(FocusEvent e){
 			Text text = ((Text) e.widget);
 			if (text.getText().length() == 0)
-				text.setText(cityIP.getDialPrefix());
+				text.setText(ContactGeonames.getDialPrefix());
 		}
 	};
 	private Button btnWebsite;

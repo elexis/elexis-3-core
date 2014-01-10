@@ -15,21 +15,13 @@ import java.util.List;
 
 import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
-import ch.elexis.core.types.CountryCode;
+public class ZipInformationProposalProvider implements IContentProposalProvider {
 
-public class ZipInformationProposalProvider extends GeoInformationProposalProvider {
-	
-	private static List<String> zips;
-	
-	@Override
-	public void init(CountryCode country) {
-		zips = igs.getZipByCountry(country);
-	}
-
-	@Override
 	public IContentProposal[] getProposals(String contents, int position){
 		List<ContentProposal> cp = new LinkedList<ContentProposal>();
+		List<String> zips = ContactGeonames.getZip();
 		for (int i = 0; i < zips.size(); i++) {
 			String currZip = zips.get(i);
 			if (contents == null)
@@ -42,7 +34,7 @@ public class ZipInformationProposalProvider extends GeoInformationProposalProvid
 	}
 	
 	public String findCityNameForZip(String content){
-		List<String> result = igs.getCityByZipAndCountry(content, configuredCountry);
+		List<String> result = ContactGeonames.getCityByZip(content);
 		if (result.size() >= 1)
 			return result.get(0);
 		return "";

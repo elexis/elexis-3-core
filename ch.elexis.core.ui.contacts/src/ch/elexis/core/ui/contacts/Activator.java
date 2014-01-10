@@ -3,6 +3,7 @@ package ch.elexis.core.ui.contacts;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import ch.elexis.core.ui.contacts.extension.ContactGeonamesExtensionPoint;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Patient;
 
@@ -35,6 +36,9 @@ public class Activator extends AbstractUIPlugin {
 		// in order to have the correct PersistentObject mappings
 		Class.forName(Patient.class.getName());
 		Class.forName(Anwender.class.getName());
+		
+		// Initialize geonames content proposal
+		ContactGeonamesExtensionPoint.init();
 	}
 	
 	/*

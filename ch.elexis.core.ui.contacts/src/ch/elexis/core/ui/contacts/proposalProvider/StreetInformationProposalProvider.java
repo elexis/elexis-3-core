@@ -15,18 +15,13 @@ import java.util.List;
 
 import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.types.CountryCode;
-
-public class StreetInformationProposalProvider extends GeoInformationProposalProvider {
+public class StreetInformationProposalProvider implements IContentProposalProvider {
 	
 	private static List<String> streets;
 	
-	@Override
-	public void init(CountryCode country){}
-	
-	@Override
 	public IContentProposal[] getProposals(String contents, int position){
 		List<ContentProposal> cp = new LinkedList<ContentProposal>();
 		for (int i = 0; i < streets.size(); i++) {
@@ -46,7 +41,7 @@ public class StreetInformationProposalProvider extends GeoInformationProposalPro
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run(){
-				streets = igs.getStreetByZipAndCountry(zip, configuredCountry);
+				streets = ContactGeonames.getStreetByZip(zip);
 			}
 		});
 	}

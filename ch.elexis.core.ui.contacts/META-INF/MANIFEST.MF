@@ -22,7 +22,6 @@ Require-Bundle: org.eclipse.core.runtime,
  ch.elexis.core.ui.medication;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/geonamesClient.xml
 Export-Package: ch.elexis.core.ui.contacts.dialogs,
  ch.elexis.core.ui.contacts.perspectives,
  ch.elexis.core.ui.contacts.preferences,
