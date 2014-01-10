@@ -115,7 +115,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	public static SelectionDialog getSelectionDialog(String codeSystemName, Shell parent,
 		Object data){
 		java.util.List<IConfigurationElement> list =
-			Extensions.getExtensions("ch.elexis.Genericcode"); //$NON-NLS-1$
+			Extensions.getExtensions(ExtensionPointConstantsUi.GENERICCODE); //$NON-NLS-1$
 		list.addAll(Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE)); //$NON-NLS-1$
 		list.addAll(Extensions.getExtensions(ExtensionPointConstantsUi.DIAGNOSECODE)); //$NON-NLS-1$
 		

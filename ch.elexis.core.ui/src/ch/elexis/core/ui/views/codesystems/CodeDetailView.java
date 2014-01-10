@@ -68,9 +68,9 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		
 		addPagesFor(ExtensionPointConstantsUi.DIAGNOSECODE);
 		addPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
+		addPagesFor(ExtensionPointConstantsUi.GENERICCODE);
 		if (ctab.getItemCount() > 0) {
 			ctab.setSelection(0);
-			
 		}
 		ctab.addSelectionListener(new SelectionAdapter() {
 			@Override

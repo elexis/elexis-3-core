@@ -259,7 +259,7 @@
              <Leistung
             CodeDetailDisplay="ch.elexis.core.ui.eigenleistung.EigenleistungDetailDisplay"
             CodeSelectorFactory="ch.elexis.core.ui.eigenleistung.EigenleistungCodeSelectorFactory"
-            ElementFactory="ch.elexis.core.data.PersistentObjectFactory"
+            ElementFactory="ch.elexis.data.PersistentObjectFactory"
             name="Eigenleistung">
       </Leistung>
       </extension>
