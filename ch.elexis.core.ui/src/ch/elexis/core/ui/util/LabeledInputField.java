@@ -8,7 +8,7 @@
  * Contributors:
  *    G. Weirich - initial implementation
  * 	  M. Descher - added executable link type
- *    
+ *    H. Marlovits - added BOOL/BOOLTRISTATE resp CHECHBOX/CHECKBOXTRISTATE
  *******************************************************************************/
 package ch.elexis.core.ui.util;
 
@@ -21,8 +21,11 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -50,23 +53,51 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
  */
 public class LabeledInputField extends Composite {
 	static public enum Typ {
-		TEXT, BOOL, LIST, LINK, DATE, MONEY, COMBO, EXECLINK
+		TEXT, BOOL, BOOLTRISTATE, LIST, LINK, DATE, MONEY, COMBO, EXECLINK
 	};
 	
 	Label lbl;
 	Control ctl;
 	FormToolkit tk = UiDesk.getToolkit();
+	Typ inputFieldType;
 	
+	/**
+	 * simply creates a LabeledInputField of Type {@link LabeledInputField.Typ.TEXT}
+	 * 
+	 * @param parent
+	 * @param label
+	 *            the label to show above the field
+	 */
 	public LabeledInputField(Composite parent, String label){
 		this(parent, label, Typ.TEXT);
 	}
 	
+	/**
+	 * creates a LabeledInputField of the desired Type.
+	 * 
+	 * @param parent
+	 * @param label
+	 *            the label to show above the field
+	 * @param typ
+	 *            the type of field to create. One of {@link LabeledInputField.Typ}
+	 */
 	public LabeledInputField(Composite parent, String label, Typ typ){
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(1, false));
-		// lbl=tk.createLabel(this, label, SWT.BOLD);
+		
+		this.inputFieldType = typ;
+		
 		lbl = new Label(this, SWT.BOLD);
-		lbl.setText(label);
+		switch (typ) {
+		case BOOL:
+		case BOOLTRISTATE:
+			// just a a spacer for nice alignment - label is shown behind the checkbox as usual
+			break;
+		default:
+			lbl.setText(label);
+			break;
+		}
+		
 		switch (typ) {
 		case LINK:
 			lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE)); //$NON-NLS-1$
@@ -91,6 +122,19 @@ public class LabeledInputField extends Composite {
 			ctl = new Combo(this, SWT.SINGLE | SWT.BORDER);
 			ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
 			break;
+		case BOOL:
+			ctl = tk.createButton(this, label, SWT.CHECK);
+			((Button) ctl).setText(label);
+			ctl.setBackground(this.getBackground());
+			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			break;
+		case BOOLTRISTATE:
+			ctl = tk.createButton(this, label, SWT.CHECK);
+			((Button) ctl).setText(label);
+			((Button) ctl).addSelectionListener(new TristateSelectionListener());
+			ctl.setBackground(this.getBackground());
+			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			break;
 		case EXECLINK:
 			lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
 			ctl = tk.createText(this, "", SWT.BORDER);
@@ -102,6 +146,14 @@ public class LabeledInputField extends Composite {
 		lbl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 	}
 	
+	/**
+	 * Sets the item's text. For List, Combo and RadioGroup it looks for the right item and selects
+	 * it. For CheckBoxes you can set "0" or "1". For CheckboxTristate you can set "" for
+	 * "undefined".
+	 * 
+	 * @param text
+	 * 
+	 */
 	public void setText(String text){
 		if (ctl instanceof Text) {
 			((Text) ctl).setText(text);
@@ -127,15 +179,26 @@ public class LabeledInputField extends Composite {
 				if (idx != -1) {
 					combo.select(idx);
 				}
-				// combo.setText(text);
 			}
 		} else if (ctl instanceof DatePickerCombo) {
-			
 			DatePickerCombo dp = (DatePickerCombo) ctl;
 			dp.setDate(new TimeTool(text).getTime());
+		} else if (ctl instanceof Button) {
+			Button myself = (Button) ctl;
+			text = StringTool.unNull(text);
+			if (inputFieldType == Typ.BOOL) {
+				myself.setSelection(text.equalsIgnoreCase("1") ? true : false);
+			} else if (inputFieldType == Typ.BOOLTRISTATE) {
+				setTristateStringValue(myself, text);
+			}
 		}
 	}
 	
+	/**
+	 * get the String/the selected item of the control
+	 * 
+	 * @return
+	 */
 	public String getText(){
 		if (ctl instanceof Text) {
 			return ((Text) ctl).getText();
@@ -151,16 +214,48 @@ public class LabeledInputField extends Composite {
 			return ((Combo) ctl).getText();
 		} else if (ctl instanceof DatePickerCombo) {
 			return ((DatePickerCombo) ctl).getText();
+		} else if (ctl instanceof Button) {
+			Button myself = (Button) ctl;
+			if (inputFieldType == Typ.BOOL) {
+				return (myself.getSelection() == true) ? "1" : "0";
+			} else if (inputFieldType == Typ.BOOLTRISTATE) {
+				return getTristateStringValue(myself);
+			}
 		}
 		return "";
 	}
 	
+	/**
+	 * sets the label for the LabeledInputField
+	 * 
+	 * @param text
+	 *            the new label
+	 */
 	public void setLabel(String text){
-		lbl.setText(text);
+		switch (inputFieldType) {
+		case BOOL:
+		case BOOLTRISTATE:
+			((Button) ctl).setText(text);
+			break;
+		default:
+			lbl.setText(text);
+			break;
+		}
 	}
 	
+	/**
+	 * gets the lable for the LabeledInputField
+	 * 
+	 * @return
+	 */
 	public String getLabel(){
-		return lbl.getText();
+		switch (inputFieldType) {
+		case BOOL:
+		case BOOLTRISTATE:
+			return ((Button) ctl).getText();
+		default:
+			return lbl.getText();
+		}
 	}
 	
 	public Label getLabelComponent(){
@@ -194,9 +289,13 @@ public class LabeledInputField extends Composite {
 		}
 	}
 	
+	/**
+	 * class for storing display details for use with LabeledInputField
+	 */
 	public static class InputData {
 		public enum Typ {
-			STRING, INT, CURRENCY, LIST, HYPERLINK, DATE, COMBO, EXECSTRING
+			STRING, INT, CURRENCY, LIST, HYPERLINK, DATE, COMBO, EXECSTRING, CHECKBOX,
+				CHECKBOXTRISTATE
 		};
 		
 		String sAnzeige, sFeldname, sHashname;
@@ -204,6 +303,18 @@ public class LabeledInputField extends Composite {
 		Object ext;
 		LabeledInputField mine;
 		
+		/**
+		 * create control of different types.
+		 * 
+		 * @param anzeige
+		 *            String, the label shown above the field
+		 * @param feldname
+		 *            the database field name
+		 * @param feldtyp
+		 *            field type to use, one of InputData.Typ
+		 * @param hashname
+		 *            the name of the field in the hashfield, set to null if feldname is not a hash
+		 */
 		public InputData(String anzeige, String feldname, Typ feldtyp, String hashname){
 			sAnzeige = anzeige;
 			sFeldname = feldname;
@@ -211,6 +322,12 @@ public class LabeledInputField extends Composite {
 			sHashname = hashname;
 		}
 		
+		/**
+		 * create control of type STRING. label and fieldType are the same
+		 * 
+		 * @param all
+		 *            the fieldname, also used for the label
+		 */
 		public InputData(String all){
 			sAnzeige = all;
 			sFeldname = all;
@@ -218,6 +335,16 @@ public class LabeledInputField extends Composite {
 			sHashname = null;
 		}
 		
+		/**
+		 * create control of type HYPERLINK
+		 * 
+		 * @param anzeige
+		 *            String, the label shown above the field
+		 * @param feldname
+		 *            the database field name
+		 * @param cp
+		 *            an IContentProvider used to display the contents
+		 */
 		public InputData(String anzeige, String feldname, IContentProvider cp){
 			sAnzeige = anzeige;
 			sFeldname = feldname;
@@ -247,6 +374,18 @@ public class LabeledInputField extends Composite {
 			tFeldTyp = Typ.EXECSTRING;
 		}
 		
+		/**
+		 * create control of type LIST
+		 * 
+		 * @param anzeige
+		 *            String, the label shown above the field
+		 * @param feldname
+		 *            the database field name
+		 * @param hashname
+		 *            the name of the field in the hashfield, set to null if feldname is not a hash
+		 * @param choices
+		 *            the items to be displayed in the list
+		 */
 		public InputData(String anzeige, String feldname, String hashname, String[] choices){
 			sAnzeige = anzeige;
 			sFeldname = feldname;
@@ -255,6 +394,20 @@ public class LabeledInputField extends Composite {
 			ext = choices;
 		}
 		
+		/**
+		 * create control of type COMBO
+		 * 
+		 * @param anzeige
+		 *            String, the label shown above the field
+		 * @param feldname
+		 *            the database field name
+		 * @param hashname
+		 *            the name of the field in the hashfield, set to null if feldname is not a hash
+		 * @param comboItems
+		 *            the items to be displayed in the combo
+		 * @param bDropDown
+		 *            just to select this method - not used actually...
+		 */
 		public InputData(String anzeige, String feldname, String hashname, String[] comboItems,
 			boolean bDropDown){
 			sAnzeige = anzeige;
@@ -302,10 +455,14 @@ public class LabeledInputField extends Composite {
 	};
 	
 	/**
-	 * Create an automatocally maintained form out of an array of InpuData[]. Usage: InputData[]
-	 * id=new InputData[]{ // ... }; TableWrapLayout twl=new TableWrapLayout(); setLayout(twl);
-	 * AutoForm af=new LabeledInputField.AutoForm(parent,id)); TableWrapData twd=new
-	 * TableWrapData(TableWrapData.FILL_GRAB); twd.grabHorizontal=true; af.setLayoutData(twd);
+	 * Create an automatically maintained form out of an array of InpuData[].<br>
+	 * Usage: <code><nowrap><br><ul>
+	 * InputData[] id=new InputData[]{ // ... };<br>
+	 * TableWrapLayout twl=new TableWrapLayout();<br>
+	 * setLayout(twl);<br>
+	 * AutoForm af=new LabeledInputField.AutoForm(parent,id));<br>
+	 * TableWrapData twd=new TableWrapData(TableWrapData.FILL_GRAB);<br>
+	 * twd.grabHorizontal=true;<br>af.setLayoutData(twd);</ul><br></code>
 	 */
 	public static class AutoForm extends Tableau {
 		InputData[] def;
@@ -331,6 +488,10 @@ public class LabeledInputField extends Composite {
 				} else if (typ == InputData.Typ.COMBO) {
 					ltf = addComponent(def[i].sAnzeige, LabeledInputField.Typ.COMBO);
 					((Combo) ltf.getControl()).setItems((String[]) def[i].ext);
+				} else if (typ == InputData.Typ.CHECKBOX) {
+					ltf = addComponent(def[i].sAnzeige, LabeledInputField.Typ.BOOL);
+				} else if (typ == InputData.Typ.CHECKBOXTRISTATE) {
+					ltf = addComponent(def[i].sAnzeige, LabeledInputField.Typ.BOOLTRISTATE);
 				} else if (typ == InputData.Typ.EXECSTRING) {
 					ltf = addComponent(def[i].sAnzeige, LabeledInputField.Typ.EXECLINK);
 					ltf.lbl.setData(i);
@@ -396,6 +557,16 @@ public class LabeledInputField extends Composite {
 								break;
 							case LIST:
 								val = inp.getText();
+								break;
+							case CHECKBOX:
+								val =
+									(((Button) (inp.mine.getControl())).getSelection() == true) ? "1"
+											: "0";
+								break;
+							case CHECKBOXTRISTATE:
+								val = getTristateStringValue(((Button) (inp.mine.getControl())));
+								if (val == null)
+									val = "";
 								break;
 							default:
 								break;
@@ -463,6 +634,13 @@ public class LabeledInputField extends Composite {
 					
 					// def[i].setText(Double.toString(betr/100.0));
 					break;
+				case CHECKBOX:
+					val = StringTool.unNull(val);
+					((Button) (def[i].mine.getControl())).setSelection(val.equalsIgnoreCase("1"));
+					break;
+				case CHECKBOXTRISTATE:
+					setTristateStringValue(((Button) (def[i].mine.getControl())), val);
+					break;
 				}
 			}
 		}
@@ -479,5 +657,120 @@ public class LabeledInputField extends Composite {
 	public interface IExecLinkProvider {
 		/** Execute the string within the InputData */
 		public void executeString(InputData ltf);
+	}
+	
+	/**
+	 * a class for implementing a tristate checkbox. Just add this as a selection listener to the
+	 * checkbox. The states cycle through empty -> checked -> unchecked
+	 * 
+	 * @author H. Marlovits
+	 * 
+	 */
+	class TristateSelectionListener implements SelectionListener {
+		TristateSelectionListener(){}
+		
+		@Override
+		public void widgetSelected(SelectionEvent e){
+			Button button = ((Button) e.getSource());
+			boolean selection = !button.getSelection();
+			boolean grayed = button.getGrayed();
+			if (selection) {
+				if (grayed) {
+					button.setSelection(true);
+					button.setGrayed(false);
+				} else {
+					button.setSelection(false);
+					button.setGrayed(false);
+				}
+			} else {
+				button.setSelection(true);
+				button.setGrayed(true);
+			}
+		}
+		
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e){}
+	}
+	
+	/**
+	 * returns the selected value of a tristate button.
+	 * 
+	 * @param checkBox
+	 *            the checkbox to test for
+	 * @return 0 for "not selected, 1 for "selected", -1 for "not defined", -2 on error
+	 */
+	public static int getTristateValue(Button checkBox){
+		String result = getTristateStringValue(checkBox);
+		if (result.equalsIgnoreCase(""))
+			return -1;
+		if (result.equalsIgnoreCase("1"))
+			return 1;
+		if (result.equalsIgnoreCase("0"))
+			return 0;
+		return -2;
+	}
+	
+	/**
+	 * returns the selected value of a tristate button.
+	 * 
+	 * @param checkBox
+	 *            the checkbox to test for
+	 * @return "0" for "not selected, "1" for "selected", "" for "not defined", null on error
+	 */
+	public static String getTristateStringValue(Button checkBox){
+		if (checkBox == null)
+			return null;
+		// test if this is a Button
+		if (!checkBox.getClass().getSimpleName().equalsIgnoreCase("button"))
+			return null;
+		// test if this is a checkbox
+		if ((checkBox.getStyle() & SWT.CHECK) == 0)
+			return null;
+		boolean selection = checkBox.getSelection();
+		boolean grayed = checkBox.getGrayed();
+		if (selection) {
+			if (grayed) {
+				return "";
+			} else {
+				return "1";
+			}
+		} else {
+			return "0";
+		}
+	}
+	
+	/**
+	 * sets the selected value of a tristate button.
+	 * 
+	 * @param checkBox
+	 *            the checkbox for which to set the value
+	 * @param value
+	 *            new new value "0" = set deselected; "1" = set selected, everything else set undef
+	 * @return true on success, false on error
+	 */
+	public static boolean setTristateStringValue(Button checkBox, String value){
+		if (checkBox == null)
+			return false;
+		// test if this is a Button
+		if (!checkBox.getClass().getSimpleName().equalsIgnoreCase("button"))
+			return false;
+		// test if this is a checkbox
+		if ((checkBox.getStyle() & SWT.CHECK) == 0)
+			return false;
+		// set the right values
+		if (value == null) {
+			checkBox.setSelection(true);
+			checkBox.setGrayed(false);
+		} else if (value.equalsIgnoreCase("1")) {
+			checkBox.setSelection(true);
+			checkBox.setGrayed(false);
+		} else if (value.equalsIgnoreCase("0")) {
+			checkBox.setSelection(false);
+			checkBox.setGrayed(false);
+		} else {
+			checkBox.setSelection(true);
+			checkBox.setGrayed(true);
+		}
+		return true;
 	}
 }
