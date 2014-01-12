@@ -28,6 +28,8 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 	@After
 	public void tearDown(){
 		try {
+			if (link == null || !link.isAlive())
+				return;
 			link.exec("DROP ALL OBJECTS");
 			link.disconnect();
 		} catch (JdbcLinkException je) {

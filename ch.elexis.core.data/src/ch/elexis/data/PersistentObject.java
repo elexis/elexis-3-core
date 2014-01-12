@@ -149,7 +149,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	private static String pcname;
 	private static String tracetable;
 	protected static int default_lifetime;
-	private static boolean runningAsTest = false;
+	private static boolean runningFromScratch = false;
 	private static String dbUser;
 	private static String dbPw;
 	
@@ -226,7 +226,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		String dbFlavor = System.getProperty("ch.elexis.dbFlavor");
 		String dbSpec = System.getProperty("ch.elexis.dbSpec");
 		if ("RunFromScratch".equals(System.getProperty("elexis-run-mode"))) {
-			runningAsTest = true;
+			runningFromScratch = true;
 		}
 		
 		log.info("osgi.install.area: " + System.getProperty("osgi.install.area"));
@@ -250,7 +250,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		} else if (dbFlavor != null && dbFlavor.length() >= 2 && dbSpec != null
 			&& dbSpec.length() > 5 && dbUser != null && dbPw != null) {
 			return PersistentObject.connect(dbFlavor, dbSpec, dbUser, dbPw, true);
-		} else if (runningAsTest) {
+		} else if (runningFromScratch) {
 			try {
 				File dbFile = File.createTempFile("elexis", "db");
 				log.info("RunFromScratch test database created in " + dbFile.getAbsolutePath());
@@ -380,12 +380,10 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	public static boolean connect(final JdbcLink jd){
 		j = jd;
+		if (runningFromScratch) {
+			deleteAllTables();
+		}
 		if (tableExists("CONFIG")) {
-			if (runningAsTest) {
-				log.error("With elexis-run-mode=RunFromScratch and MySQL/postgres you must start with an empty database");
-				System.exit(-8);
-			}
-			
 			CoreHub.globalCfg = new SqlSettings(getConnection(), "CONFIG");
 			String created = CoreHub.globalCfg.get("created", null);
 			log.debug("Database version " + created);
@@ -404,11 +402,10 @@ public abstract class PersistentObject implements IPersistentObject {
 					CoreHub.globalCfg.undo();
 					CoreHub.globalCfg.set("created", new TimeTool().toString(TimeTool.FULL_GER));
 					CoreHub.acl.load();
-					Anwender.init();
 					Mandant.init();
 					CoreHub.pin.initializeGrants();
 					CoreHub.pin.initializeGlobalPreferences();
-					if (runningAsTest) {
+					if (runningFromScratch) {
 						Mandant m = new Mandant("007", "topsecret");
 						String clientEmail = System.getProperty("ch.elexis.clientEmail");
 						if (clientEmail == null)
@@ -428,20 +425,8 @@ public abstract class PersistentObject implements IPersistentObject {
 					}
 					CoreHub.globalCfg.flush();
 					CoreHub.localCfg.flush();
-					disconnect();
-					if (runningAsTest) {
-						runningAsTest = false; // Avoid recursion!!
-						JdbcLink jReconnect =
-							new JdbcLink(testJdbcLink.getDriverName(),
-								testJdbcLink.getConnectString(), testJdbcLink.DBFlavor);
-						jReconnect.connect(dbUser, dbPw);
-						return connect(jReconnect);
-					}
-					MessageEvent
-						.fireInformation(
-							"Programmende",
-							"Es wurde eine neue Datenbank angelegt. Das Programm muss beendet werden. Bitte starten Sie danach neu.");
-					System.exit(1);
+					MessageEvent.fireInformation("Neue Datenbank",
+						"Es wurde eine neue Datenbank angelegt.");
 				} else {
 					log.error("Kein create script für Datenbanktyp " + getConnection().DBFlavor
 						+ " gefunden.");
@@ -2562,6 +2547,42 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 	}
 	
+	/**
+	 * Utility procedure for unit tests which need to start with a clean database
+	 */
+	public static boolean deleteAllTables(){
+		int nrTables = 0;
+		String tableName = "none";
+		DatabaseMetaData dmd;
+		try {
+			dmd = j.getConnection().getMetaData();
+			String[] onlyTables = {
+				"TABLE"
+			};
+			ResultSet rs = dmd.getTables(null, null, "%", onlyTables);
+			if (rs != null) {
+				while (rs.next()) {
+					// DatabaseMetaData#getTables() specifies TABLE_NAME is in
+					// column 3
+					tableName = rs.getString(3);
+					getConnection().exec("DROP TABLE " + tableName);
+					nrTables++;
+				}
+			}
+		} catch (SQLException e1) {
+			log.error("Error deleting table " + tableName);
+			return false;
+		}
+		log.info("Deleted " + nrTables + " tables");
+		return true;
+	}
+	
+	/**
+	 * Utility procedure
+	 * 
+	 * @param tableName
+	 *            name of the table to check existence for
+	 */
 	public static boolean tableExists(String tableName){
 		int nrFounds = 0;
 		// Vergleich schaut nicht auf Gross/Klein-Schreibung, da thomas

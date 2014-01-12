@@ -20,6 +20,10 @@ public class Test_Query extends AbstractPersistentObjectTest {
 
 	@Before
 	public void setUp() throws Exception{
+		if (link != null) {
+			PersistentObject.deleteAllTables();
+			link.disconnect();
+		}
 		link = initDB();
 		// create a instance of an PersistentObject ex. Organisation to test the query
 		new Organisation("orgname", "orgzusatz1");
@@ -27,6 +31,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 	
 	@After
 	public void tearDown() throws Exception{
+		PersistentObject.deleteAllTables();
 		link.exec("DROP ALL OBJECTS");
 		link.disconnect();
 	}
@@ -86,10 +91,25 @@ public class Test_Query extends AbstractPersistentObjectTest {
 	
 	@Test
 	public void testQueryExpression(){
-		PreparedStatement ps = link.prepareStatement("SELECT * FROM " + Organisation.TABLENAME);
+		PreparedStatement ps =
+			link.prepareStatement("SELECT " + Organisation.FLD_NAME1 + " FROM "
+				+ Organisation.TABLENAME);
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
 		ArrayList<String> result = query.execute(ps, new String[0]);
-		assertEquals(3, result.size());
+		int nrOrgs = result.size();
+		System.out.println("Before creating new organistaion found " + nrOrgs
+			+ " Organisation");
+		for (String s : result) {
+			System.out.println("Organisation: found " + s);
+		}
+		new Organisation("NeueOrganistation", "Zusatznamen2");
+		result = query.execute(ps, new String[0]);
+		System.out.println("After creating new organistaion found " + result.size()
+			+ " Organisation");
+		for (String s : result) {
+			System.out.println("Organisation: found " + s);
+		}
+		assertEquals(nrOrgs + 1, result.size());
 	}
 	
 	private class PersistentObjectImpl extends PersistentObject {

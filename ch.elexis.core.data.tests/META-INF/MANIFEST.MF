@@ -6,7 +6,10 @@ Bundle-Version: 3.0.0.qualifier
 Bundle-Vendor: elexis.ch
 Fragment-Host: ch.elexis.core.data;bundle-version="3.0.0.qualifier"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit;bundle-version="4.10.0"
+Require-Bundle: org.junit;bundle-version="4.10.0",
+ ch.rgw.utility,
+ org.eclipse.swt,
+ ch.elexis.core
 Bundle-ClassPath: .,
  rsc/
 Import-Package: ch.elexis.core.data.activator
