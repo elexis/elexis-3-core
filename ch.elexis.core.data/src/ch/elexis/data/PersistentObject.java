@@ -181,6 +181,16 @@ public abstract class PersistentObject implements IPersistentObject {
 	};
 	
 	/**
+	 * the possible states of a tristate checkbox: true/checked, false/unchecked,
+	 * undefined/"filled with a square"/"partly selected"
+	 * 
+	 * @since 3.0.0
+	 */
+	static public enum TristateBoolean {
+		TRUE, FALSE, UNDEF
+	};
+	
+	/**
 	 * Connect to a database.
 	 * 
 	 * In the first place, the method checks if there is a demoDB in the Elexis base directory. If
@@ -468,9 +478,8 @@ public abstract class PersistentObject implements IPersistentObject {
 					.format(
 						"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Wollen Sie trotzdem fortsetzen?",
 						jd.getConnectString(), vi.version().toString(), v2.version().toString());
-			log.error(msg);		
-			if (!cod.openQuestion(
-				"Diskrepanz in der Datenbank-Version ", msg)) {
+			log.error(msg);
+			if (!cod.openQuestion("Diskrepanz in der Datenbank-Version ", msg)) {
 				System.exit(2);
 			} else {
 				log.error("User continues with Elexis / database version mismatch");
@@ -1248,6 +1257,51 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public int getInt(final String field){
 		return checkZero(get(field));
+	}
+	
+	/**
+	 * returns the selected TristateBoolean value (for a tristate checkbox)
+	 * 
+	 * @param field
+	 *            the name of the field to be tested
+	 * @return the current tristate selection state, one of TristateBoolean (TRUE/FALSE/UNDEF)
+	 * @author H. Marlovits
+	 * @since 3.0.0
+	 */
+	public TristateBoolean getTriStateBoolean(final String field){
+		String value = get(field);
+		if (value == null)
+			return TristateBoolean.UNDEF;
+		if (value.equalsIgnoreCase(StringConstants.ONE))
+			return TristateBoolean.TRUE;
+		else if (value.equalsIgnoreCase(StringConstants.ZERO))
+			return TristateBoolean.FALSE;
+		else
+			return TristateBoolean.UNDEF;
+	}
+	
+	/**
+	 * save the selected TristateBoolean value (of a tristate checkbox)
+	 * 
+	 * @param field
+	 *            the name of the field to be set
+	 * @param newVal
+	 *            the new state to save to the cb, one of TristateBoolean (TRUE/FALSE/UNDEF)
+	 * @return true on success, false on error
+	 * @author H. Marlovits
+	 * @since 3.0.0
+	 */
+	public boolean setTriStateBoolean(final String field, TristateBoolean newVal){
+		if (newVal == null)
+			return false;
+		String saveVal = "";
+		if (newVal == TristateBoolean.TRUE)
+			saveVal = StringConstants.ONE;
+		if (newVal == TristateBoolean.FALSE)
+			saveVal = StringConstants.ZERO;
+		if (newVal == TristateBoolean.UNDEF)
+			saveVal = StringConstants.EMPTY;
+		return set(field, saveVal);
 	}
 	
 	/**
