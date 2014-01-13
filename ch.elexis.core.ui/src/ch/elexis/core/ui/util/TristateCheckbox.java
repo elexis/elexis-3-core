@@ -32,8 +32,7 @@ import ch.elexis.data.PersistentObject.TristateBoolean;
 /**
  * A tristate checkbox. The states cycle through "filled with a square"/undefined/"partly selected",
  * checked/true and unchecked/false.<br>
- * The starting state is undef/f
- * illed with a square<br>
+ * The starting state is undef/filled with a square<br>
  * To set the tristate selection state of the tristate checkbox use {@link #getTristate()}.<br>
  * To set the tristate selection state of the tristate checkbox use.<br>
  * {@link #setTristate(TristateBoolean)}.<br>

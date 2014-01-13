@@ -1302,7 +1302,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (newVal == TristateBoolean.UNDEF)
 			saveVal = StringConstants.EMPTY;
 		boolean result = set(field, saveVal);
-		if (result) {
+		if (!result) {
 			throw new PersistenceException(new ElexisStatus(Status.ERROR, CoreHub.PLUGIN_ID,
 				ElexisStatus.CODE_NONE,
 				"PersistentObject.setTriStateBoolean(): Error on saving value " + newVal
