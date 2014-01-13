@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2013, G. Weirich and Elexis
+ * Copyright (c) 2005-2014, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1272,13 +1272,14 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            the name of the field to be set
 	 * @param newVal
 	 *            the new state to save to the cb, one of TristateBoolean (TRUE/FALSE/UNDEF)
-	 * @return true on success, false on error
 	 * @author H. Marlovits
 	 * @since 3.0.0
 	 */
-	public boolean setTriStateBoolean(final String field, TristateBoolean newVal){
+	public void setTriStateBoolean(final String field, TristateBoolean newVal)
+		throws IllegalArgumentException, PersistenceException{
 		if (newVal == null)
-			return false;
+			throw new IllegalArgumentException(
+				"PersistentObject.setTriStateBoolean(): param newVal == null");
 		String saveVal = "";
 		if (newVal == TristateBoolean.TRUE)
 			saveVal = StringConstants.ONE;
@@ -1286,7 +1287,13 @@ public abstract class PersistentObject implements IPersistentObject {
 			saveVal = StringConstants.ZERO;
 		if (newVal == TristateBoolean.UNDEF)
 			saveVal = StringConstants.EMPTY;
-		return set(field, saveVal);
+		boolean result = set(field, saveVal);
+		if (!result) {
+			throw new PersistenceException(new ElexisStatus(Status.ERROR, CoreHub.PLUGIN_ID,
+				ElexisStatus.CODE_NONE,
+				"PersistentObject.setTriStateBoolean(): Error on saving value " + newVal
+					+ " to field " + field, null));
+		}
 	}
 	
 	/**
