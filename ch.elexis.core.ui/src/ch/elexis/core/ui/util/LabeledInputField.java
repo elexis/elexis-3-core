@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2013, G. Weirich and Elexis
+ * Copyright (c) 2005-2014, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ package ch.elexis.core.ui.util;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -31,6 +32,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.PersistentObject;
@@ -147,7 +149,8 @@ public class LabeledInputField extends Composite {
 	 * it sets the new text only if present as a possible selection. For BOOL, BOOLTRISTATE it sets
 	 * the label of the control.
 	 * 
-	 * @param text the text to be set
+	 * @param text
+	 *            the text to be set
 	 * 
 	 */
 	public void setText(String text){
