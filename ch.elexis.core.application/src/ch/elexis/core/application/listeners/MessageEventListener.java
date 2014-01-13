@@ -11,6 +11,7 @@
 package ch.elexis.core.application.listeners;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,19 +32,24 @@ public class MessageEventListener extends ElexisEventListenerImpl {
 	}
 	
 	@Override
-	public void run(ElexisEvent ev){
-		MessageEvent me = (MessageEvent) ev.getGenericObject();
-		log.debug("MessageEvent [TITLE] " + me.title);
-		switch (me.mt) {
-		case ERROR:
-			MessageDialog.openError(UiDesk.getTopShell(), me.title, me.message);
-			break;
-		case WARN:
-			MessageDialog.openWarning(UiDesk.getTopShell(), me.title, me.message);
-			break;
-		default:
-			MessageDialog.openInformation(UiDesk.getTopShell(), me.title, me.message);
-			break;
-		}
+	public void run(final ElexisEvent ev){
+		Display.getDefault().syncExec(new Runnable() {
+			@Override
+			public void run(){
+				MessageEvent me = (MessageEvent) ev.getGenericObject();
+				log.debug("MessageEvent [TITLE] " + me.title);
+				switch (me.mt) {
+				case ERROR:
+					MessageDialog.openError(UiDesk.getTopShell(), me.title, me.message);
+					break;
+				case WARN:
+					MessageDialog.openWarning(UiDesk.getTopShell(), me.title, me.message);
+					break;
+				default:
+					MessageDialog.openInformation(UiDesk.getTopShell(), me.title, me.message);
+					break;
+				}
+			}
+		});
 	}
 }
