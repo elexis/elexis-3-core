@@ -324,34 +324,7 @@ public class HL7 {
 	 * @return the lab or null if it could not be found
 	 */
 	public Result<Kontakt> getLabor(){
-		if (labor == null) {
-			if (labName == null) {
-				if (lines.length > 1) {
-					String[] orc = getElement(ORC, 0);
-					if (orc.length > 10) {
-						labName = orc[10];
-						if (labID == null) {
-							labID = orc[10].length() > 10 ? orc[10].substring(0, 10) : orc[10];
-						}
-					}
-				}
-			}
-			Query<Labor> qbe = new Query<Labor>(Labor.class);
-			qbe.startGroup();
-			qbe.add(Kontakt.FLD_SHORT_LABEL, Query.LIKE, "%" + labName + "%"); //$NON-NLS-1$ //$NON-NLS-2$
-			qbe.or();
-			qbe.add(Kontakt.FLD_NAME1, Query.LIKE, "%" + labName + "%"); //$NON-NLS-1$ //$NON-NLS-2$
-			qbe.or();
-			qbe.add(Kontakt.FLD_SHORT_LABEL, Query.EQUALS, labID);
-			qbe.endGroup();
-			List<Labor> list = qbe.execute();
-			if (list.size() != 1) {
-				labor = new Labor(labName, "Labor " + labName); //$NON-NLS-1$
-			} else {
-				labor = list.get(0);
-			}
-		}
-		return new Result<Kontakt>(labor);
+		return new Result<Kontakt>(LabImportUtil.getOrCreateLabor(labName));
 	}
 	
 	/**
@@ -485,6 +458,18 @@ public class HL7 {
 			return tt;
 		}
 		
+		/**
+		 * Get the observation time of the OBR record. If it is empty null is returned.
+		 * 
+		 * @return
+		 */
+		public TimeTool getObservationTime(){
+			String date = field[7];
+			if (!date.isEmpty()) {
+				return makeTimeStamp(date);
+			}
+			return null;
+		}
 	}
 	
 	public class OBX {
@@ -526,6 +511,10 @@ public class HL7 {
 			}
 		}
 		
+		public int getLineOffset(){
+			return of;
+		}
+
 		public String getObxNr(){
 			return obxFields[1];
 		}
@@ -609,6 +598,24 @@ public class HL7 {
 		}
 		
 		/**
+		 * Get the observation time of the OBX record. If it is empty the observation time of the
+		 * OBR record is returned.
+		 * 
+		 * @return
+		 */
+		public TimeTool getObservationTime(){
+			String tim = getField(14);
+			if (tim.length() == 0) {
+				return myOBR.getObservationTime();
+			}
+			return makeTimeStamp(tim);
+		}
+
+		private String[] abnormalFlagStartCharacters = {
+			"-", "+", "<", ">", "L", "H"
+		};
+
+		/**
 		 * This is greatly simplified from the possible values <<, <, >,>>, +, ++, -, -- and so on
 		 * we just say "it's pathologic".
 		 * 
@@ -616,10 +623,14 @@ public class HL7 {
 		 */
 		public boolean isPathologic(){
 			String abnormalFlag = getField(8);
-			if (StringTool.isNothing(abnormalFlag)) {
-				return false;
+			if (!StringTool.isNothing(abnormalFlag)) {
+				for (String startChar : abnormalFlagStartCharacters) {
+					if (abnormalFlag.startsWith(startChar)) {
+						return true;
+					}
+				}
 			}
-			return true;
+			return false;
 		}
 		
 		public RECORDTYPE getType(){
@@ -701,7 +712,7 @@ public class HL7 {
 		 * @return The comment (that can be an empty String or might contain several NTE records)
 		 */
 		public String getComment(){
-			return getOBXComments(lines, obxFields);
+			return getOBXComments(lines, this);
 		}
 		
 		private String getField(final int f){
@@ -719,10 +730,40 @@ public class HL7 {
 	 * @param hl7Rows
 	 * @return String
 	 */
-	protected String getOBXComments(String[] hl7Rows, String[] obxFields){
-		String obxNr = obxFields[1];
+	protected String getOBXComments(String[] hl7Rows, OBX obx){
+		String comments = getFollowOBXComments(hl7Rows, obx);
+		if (comments.isEmpty()) {
+			comments = getMatchingOBXComment(hl7Rows, obx);
+		}
+		return comments;
+	}
+	
+	private String getFollowOBXComments(String[] hl7Rows, OBX obx){
+		int lineOffset = obx.getLineOffset() + 1;
 		StringBuilder ret = new StringBuilder();
-		for (int i = 0; i < hl7Rows.length; i++) {
+		for (int i = lineOffset; i < hl7Rows.length; i++) {
+			if (hl7Rows[i].startsWith(NTE)) {
+				String[] nte = hl7Rows[i].split(separator);
+				if (nte.length > 1 && i == lineOffset) {
+					if (!nte[1].equals("1")) {
+						break;
+					}
+				}
+				if (nte.length > 3) {
+					ret.append(nte[3]).append(StringTool.lf);
+				}
+			} else {
+				break;
+			}
+		}
+		return ret.toString();
+	}
+
+	private String getMatchingOBXComment(String[] hl7Rows, OBX obx){
+		int lineOffset = obx.getLineOffset() + 1;
+		String obxNr = obx.getObxNr();
+		StringBuilder ret = new StringBuilder();
+		for (int i = lineOffset; i < hl7Rows.length; i++) {
 			if (hl7Rows[i].startsWith(NTE)) {
 				String[] nte = hl7Rows[i].split(separator);
 				if (nte.length > 1) {
@@ -732,6 +773,8 @@ public class HL7 {
 						}
 					}
 				}
+			} else {
+				break;
 			}
 		}
 		return ret.toString();
@@ -816,6 +859,20 @@ public class HL7 {
 			if (ret.set(date)) {
 				return ret;
 			}
+		}
+		return null;
+	}
+	
+	public static TimeTool makeTimeStamp(final String datestring){
+		String timestamp = datestring;
+		if (timestamp.length() >= 8) {
+			if (timestamp.length() < 14) {
+				// fill missing values with 0
+				for (int i = timestamp.length(); i < 14; i++) {
+					timestamp = timestamp + "0";
+				}
+			}
+			return new TimeTool(timestamp);
 		}
 		return null;
 	}

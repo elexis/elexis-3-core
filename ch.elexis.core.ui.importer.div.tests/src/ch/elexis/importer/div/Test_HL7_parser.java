@@ -24,6 +24,7 @@
 package ch.elexis.importer.div;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -224,8 +225,7 @@ public class Test_HL7_parser {
 				assertTrue(qrr.get(j).getFlags() == LabResult.PATHOLOGIC);
 				foundPathological = true;
 			} else {
-				assertTrue(qrr.get(j).getFlags() == LabResult.PATHOLOGIC);
-				assertTrue(qrr.get(j).isFlag(LabResult.PATHOLOGIC));
+				assertFalse(qrr.get(j).isFlag(LabResult.PATHOLOGIC));
 			}
 			if (foundPathological && foundLymphozyten)
 				break;
@@ -291,7 +291,7 @@ public class Test_HL7_parser {
 		assertEquals("Hämoglobin", aItem.getName());
 		assertEquals(typ.NUMERIC, aItem.getTyp());
 		assertTrue(aItem.getGroup().contains("Z Automatisch"));
-		assertEquals("Labor HL7_Test", aItem.getLabor().getKuerzel());
+		assertEquals("HL7_Test", aItem.getLabor().getKuerzel());
 		assertTrue(aItem.getLabor().getLabel().contains("Labor HL7_Test Labor"));
 		Query<Patient> pqr = new Query<Patient>(Patient.class);
 		List<Patient> pqrr = pqr.execute();
