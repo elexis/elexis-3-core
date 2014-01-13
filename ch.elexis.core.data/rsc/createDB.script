@@ -444,8 +444,12 @@ CREATE TABLE LABORITEMS(
 	typ			CHAR(1),
 	Gruppe		VARCHAR(25),
 	prio		CHAR(3),
-	billingcode	VARCHAR(20),					# Code for automatic billing (from e.g EAL2009)
-	export		VARCHAR(100)
+	billingcode	VARCHAR(128),					# Code for automatic billing (from e.g EAL2009)
+	export		VARCHAR(100),
+	loinccode   VARCHAR(128),
+	visible     VARCHAR(1),
+	digits      VARCHAR(16),
+	formula     VARCHAR(255)
 );
 	
 CREATE INDEX labit1 on LABORITEMS(kuerzel);
@@ -462,10 +466,18 @@ CREATE TABLE LABORWERTE(
 	datum		CHAR(8),
 	zeit        CHAR(6),
 	ItemID		VARCHAR(25),                # foreign key from LABORIMTEMS
-	Resultat	VARCHAR(80),
+	Resultat	VARCHAR(255),
 	Flags		VARCHAR(10),
 	Origin		VARCHAR(30),
-	Kommentar	TEXT
+	unit        VARCHAR(255),
+	analysetime VARCHAR(24),
+	observationtime VARCHAR(24),
+	transmissiontime VARCHAR(24),
+	refmale     VARCHAR(255),
+	reffemale   VARCHAR(255),
+	OriginID    VARCHAR(25),
+	Kommentar	TEXT,
+	ExtInfo		BLOB
 );
 
 CREATE INDEX labor1 on LABORWERTE (PatientID);
