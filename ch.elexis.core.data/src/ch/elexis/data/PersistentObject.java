@@ -1288,6 +1288,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @param newVal
 	 *            the new state to save to the cb, one of TristateBoolean (TRUE/FALSE/UNDEF)
 	 * @author H. Marlovits
+	 * @since 3.0.0
 	 */
 	public void setTriStateBoolean(final String field, TristateBoolean newVal)
 		throws IllegalArgumentException, PersistenceException{
