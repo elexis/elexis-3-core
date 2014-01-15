@@ -17,12 +17,15 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
+import ch.elexis.core.ui.importer.div.importers.hl7.internal.AbstractSegment;
 import ch.elexis.data.Anschrift;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Labor;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 import ch.elexis.data.Query;
@@ -40,10 +43,14 @@ import ch.rgw.tools.TimeTool;
  * 
  */
 public class HL7 {
+	
+	static Logger logger = LoggerFactory.getLogger(HL7.class);
+	
 	private static final String NTE = "NTE"; //$NON-NLS-1$
 	private static final String ORC = "ORC"; //$NON-NLS-1$
 	private static final String OBX = "OBX"; //$NON-NLS-1$
 	private static final String OBR = "OBR"; //$NON-NLS-1$
+	private static final String MSH = "MSH"; //$NON-NLS-1$
 	
 	public enum RECORDTYPE {
 		TEXT, CODED, NUMERIC, STRUCTURED, OTHER
@@ -77,7 +84,7 @@ public class HL7 {
 		labID = kuerzel;
 	}
 	
-	protected String getSeparator(){
+	public String getSeparator(){
 		return this.separator;
 	}
 	
@@ -117,6 +124,21 @@ public class HL7 {
 				ex.getMessage(), true);
 		}
 		
+	}
+	
+	/**
+	 * Load the message and break it up to separate lines. All other methods should only be called
+	 * after load was successful. To comply with some of the many standards around, we accept \n and
+	 * \r and any combination thereof as field separators
+	 * 
+	 * @param message
+	 *            String
+	 * @return
+	 */
+	public Result<Object> loadMessage(final String message){
+		lines = message.split("[\\r\\n]+"); //$NON-NLS-1$
+		separator = "\\" + lines[0].substring(3, 4); //$NON-NLS-1$"
+		return new Result<Object>("OK"); //$NON-NLS-1$
 	}
 	
 	/**
@@ -341,6 +363,14 @@ public class HL7 {
 		return ret;
 	}
 	
+	public MSH getMSH(){
+		MSH ret = new MSH(0);
+		if (ret.isValid()) {
+			return ret;
+		}
+		return null;
+	}
+	
 	/**
 	 * Find the index of the next Element of a given type
 	 * 
@@ -359,11 +389,53 @@ public class HL7 {
 		return -1;
 	}
 	
-	public class OBR {
-		int of;
-		String[] field;
+	/**
+	 * MessageHeader element, 21 entries
+	 * 
+	 * @author Lucia
+	 * 
+	 */
+	public class MSH extends AbstractSegment {
+		/** Receiving facility */
+		public static final int RECV_FAC_INDEX = 5;
+		/** Date/Time of Message */
+		public static final int DATETIME_INDEX = 6;
+		/** Message type */
+		public static final int MESSAGE_TYPE_INDEX = 8;
 		
-		OBR(final int off){
+		public MSH(final int of){
+			this.of = of;
+			field = lines[of].split(separator);
+		}
+		
+		public boolean isValid(){
+			return getFieldAt(0).equals(MSH);
+		}
+		
+		public TimeTool getDate(){
+			String date = getFieldAt(DATETIME_INDEX);
+			
+			TimeTool tt = makeTime(date);
+			if (tt == null) {
+				return new TimeTool();
+			}
+			return tt;
+		}
+		
+		public String[] getFields(){
+			return field;
+		}
+	}
+	
+	public class OBR extends AbstractSegment {
+		/** Observation Time of Message */
+		public static final int REQUESTED_TIME_INDEX = 6;
+		/** Observation Time of Message */
+		public static final int OBSERVATION_TIME_INDEX = 7;
+		/** Status Changed Time of Message */
+		public static final int STATUS_TIME_INDEX = 22;
+		
+		public OBR(final int off){
 			of = off;
 			field = lines[of].split(separator);
 		}
@@ -388,7 +460,7 @@ public class HL7 {
 		 * @return the next OBX or null if none was found
 		 */
 		public OBX nextOBX(final OBX old){
-			return nextOBX(old.of);
+			return nextOBX(old.getOf());
 		}
 		
 		/**
@@ -440,13 +512,13 @@ public class HL7 {
 		 * @return the OBR's date (obr[7]). If none was found, it will be the date of today.
 		 */
 		public TimeTool getDate(){
-			String date = field[7];
-			if (StringTool.isNothing(date)) {
-				if (field.length > 22) {
-					date = field[22];
-				} else {
-					date = field[6];
-					if (StringTool.isNothing(date)) {
+			String date = getFieldAt(OBSERVATION_TIME_INDEX);
+			
+			if (date.equals(INVALID)) {
+				date = getFieldAt(STATUS_TIME_INDEX);
+				if (date.equals(INVALID)) {
+					date = getFieldAt(REQUESTED_TIME_INDEX);
+					if (date.equals(INVALID)) {
 						return new TimeTool();
 					}
 				}
@@ -464,23 +536,42 @@ public class HL7 {
 		 * @return
 		 */
 		public TimeTool getObservationTime(){
-			String date = field[7];
+			String date = getFieldAt(OBSERVATION_TIME_INDEX);
+			
+			if (date.equals(INVALID)) {
+				date = getFieldAt(STATUS_TIME_INDEX);
+				if (date.equals(INVALID)) {
+					date = getFieldAt(REQUESTED_TIME_INDEX);
+					if (date.equals(INVALID)) {
+						return new TimeTool();
+					}
+				}
+			}
 			if (!date.isEmpty()) {
 				return makeTimeStamp(date);
 			}
 			return null;
 		}
+		
+		@Override
+		public boolean isValid(){
+			return getFieldAt(0).equals(OBR);
+		}
 	}
 	
-	public class OBX {
+	public class OBX extends AbstractSegment {
+		/** Analysis Time of Message */
+		public static final int ANALYSIS_TIME_INDEX = 19;
+		/** Observation Time of Message */
+		public static final int OBSERVATION_TIME_INDEX = 14;
+		
 		private static final String FT = "FT"; //$NON-NLS-1$
 		private static final String TX = "TX"; //$NON-NLS-1$
 		private static final String SN = "SN"; //$NON-NLS-1$
 		private static final String MO = "MO"; //$NON-NLS-1$
 		private static final String CE = "CE"; //$NON-NLS-1$
 		private static final String NM = "NM"; //$NON-NLS-1$
-		int of;
-		String[] obxFields;
+		
 		OBR myOBR;
 		
 		OBX(final OBR obr, final int off){
@@ -488,25 +579,29 @@ public class HL7 {
 			myOBR = obr;
 		}
 		
+		public int getOf(){
+			return of;
+		}
+		
 		private void setPosition(final int off){
 			of = off;
-			obxFields = lines[of].split(separator);
+			field = lines[of].split(separator);
 			
 			// remove spaces from numeric results
-			if (obxFields.length >= 5) {
-				String value = obxFields[5];
+			if (field.length >= 5) {
+				String value = field[5];
 				value = value.replace(" ", "");
 				if (isNumeric(value)) {
-					obxFields[5] = value;
+					field[5] = value;
 				}
 			}
 			
 			// remove spaces from numeric reference ranges
-			if (obxFields.length >= 7) {
-				String value = obxFields[7];
+			if (field.length >= 7) {
+				String value = field[7];
 				value = value.replace(" ", "");
 				if (isNumeric(value)) {
-					obxFields[7] = value;
+					field[7] = value;
 				}
 			}
 		}
@@ -514,9 +609,9 @@ public class HL7 {
 		public int getLineOffset(){
 			return of;
 		}
-
+		
 		public String getObxNr(){
-			return obxFields[1];
+			return field[1];
 		}
 		
 		public String getItemCode(){
@@ -604,17 +699,21 @@ public class HL7 {
 		 * @return
 		 */
 		public TimeTool getObservationTime(){
-			String tim = getField(14);
-			if (tim.length() == 0) {
-				return myOBR.getObservationTime();
+			String tim = getField(OBSERVATION_TIME_INDEX);
+			
+			if (tim.equals(INVALID) || tim.isEmpty()) {
+				tim = getField(ANALYSIS_TIME_INDEX);
+				if (tim.equals(INVALID) || tim.isEmpty()) {
+					return myOBR.getObservationTime();
+				}
 			}
 			return makeTimeStamp(tim);
 		}
-
+		
 		private String[] abnormalFlagStartCharacters = {
 			"-", "+", "<", ">", "L", "H"
 		};
-
+		
 		/**
 		 * This is greatly simplified from the possible values <<, <, >,>>, +, ++, -, -- and so on
 		 * we just say "it's pathologic".
@@ -682,7 +781,7 @@ public class HL7 {
 		}
 		
 		public boolean isFormattedText(){
-			return (obxFields[2].equals(FT));
+			return (field[2].equals(FT));
 		}
 		
 		public RESULTSTATUS getStatus(){
@@ -716,10 +815,15 @@ public class HL7 {
 		}
 		
 		private String getField(final int f){
-			if (obxFields.length > f) {
-				return obxFields[f];
+			if (field.length > f) {
+				return field[f];
 			}
 			return StringConstants.EMPTY;
+		}
+		
+		@Override
+		public boolean isValid(){
+			return getFieldAt(0).equals(OBX);
 		}
 	}
 	
@@ -758,7 +862,7 @@ public class HL7 {
 		}
 		return ret.toString();
 	}
-
+	
 	private String getMatchingOBXComment(String[] hl7Rows, OBX obx){
 		int lineOffset = obx.getLineOffset() + 1;
 		String obxNr = obx.getObxNr();
