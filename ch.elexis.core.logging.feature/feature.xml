@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="ch.elexis.core.logging.feature"
-      label="Elexis OpenSource Common Bundles Feature"
+      label="Elexis OpenSource Common Logging Feature"
       version="3.0.0.qualifier"
       provider-name="elexis.info">
 

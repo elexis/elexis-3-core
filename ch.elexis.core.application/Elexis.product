@@ -46,7 +46,7 @@
    </plugins>
 
    <features>
-      <feature id="org.eclipse.platform"/>
+      <feature id="org.eclipse.rcp"/>
    </features>
 
    <configurations>
