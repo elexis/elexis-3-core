@@ -46,11 +46,7 @@
    </plugins>
 
    <features>
-      <feature id="ch.elexis.core.application.feature"/>
-      <feature id="ch.elexis.core.ui.feature"/>
-      <feature id="ch.elexis.core.logging.feature"/>
-      <feature id="ch.elexis.core.common.feature"/>
-      <feature id="ch.elexis.core.ui.p2.feature"/>
+      <feature id="org.eclipse.platform"/>
    </features>
 
    <configurations>
