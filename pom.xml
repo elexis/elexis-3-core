@@ -69,7 +69,7 @@
         <baselineReplace>none</baselineReplace>
         <baselineRepositories>
           <repository>
-            <url>http://download.eclipse.org/eclipse/updates/3.8</url>
+            <url>http://download.elexis.info/mirror.4.elexis/snapshot</url>
           </repository>
         </baselineRepositories>
         <executions>
@@ -90,8 +90,8 @@
     </plugin>
     <plugin>
       <!-- we want to ensure that the bin directory created by the Eclipse gets cleaned, too. 
-     Without it Maven would put two versions of each class file into the jars
-     -->
+ Without it Maven would put two versions of each class file into the jars
+ -->
       <artifactId>maven-clean-plugin </artifactId>
       <version>2.5</version>
       <configuration>
@@ -134,11 +134,11 @@
       <version>${tycho-version}</version>
       <configuration>
         <!-- see http://wiki.eclipse.org/Tycho/Target_Platform
-    we want to use the first alternative:
-    If you are already using a target file in Eclipse, and that target file only contains "Software Site" locations
-    (i.e. location elements with type="InstallableUnit"), use that target file for the Tycho build. 
-    This approach is the only way to share the same target platform configuration between Tycho and Eclipse. 
-    -->
+we want to use the first alternative:
+If you are already using a target file in Eclipse, and that target file only contains "Software Site" locations
+(i.e. location elements with type="InstallableUnit"), use that target file for the Tycho build. 
+This approach is the only way to share the same target platform configuration between Tycho and Eclipse. 
+-->
         <target>
           <artifact>
             <groupId>ch.elexis</groupId>
