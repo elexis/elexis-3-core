@@ -5,8 +5,8 @@
       version="3.0.0.qualifier"
       provider-name="elexis.info">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="http://www.elexis.info">
+      Elexis Open Source Application Feature
    </description>
 
    <copyright url="http://www.example.com/copyright">
