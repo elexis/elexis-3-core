@@ -17,6 +17,10 @@
       [Enter License Description here.]
    </license>
 
+   <requires>
+      <import feature="ch.elexis.core.application.feature" version="3.0.0.qualifier"/>
+   </requires>
+
    <plugin
          id="ch.elexis.core.ui.p2"
          download-size="0"

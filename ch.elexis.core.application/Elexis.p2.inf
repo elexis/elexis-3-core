@@ -5,19 +5,3 @@ instructions.configure=\
   addRepository(type:0,location:http${#58}//download.elexis.info/elexis.3.core/repo_variant,name:Elexis 3 Core repo_variant");\
   addRepository(type:1,location:http${#58}//download.elexis.info/elexis.3.core/repo_variant,name:Elexis 3 Core repo_variant");\
   mkdir(path:${installFolder}/dropins);
- 
-requires.1.namespace = org.eclipse.equinox.p2.iu
-requires.1.name = ch.elexis.core.application.feature.feature.group
-requires.1.range = 3.0.0
-
-requires.2.namespace = org.eclipse.equinox.p2.iu
-requires.2.name = ch.elexis.core.logging.feature.feature.group
-requires.2.range = 3.0.0
-
-requires.3.namespace = org.eclipse.equinox.p2.iu
-requires.3.name = ch.elexis.core.common.feature.feature.group
-requires.3.range = 3.0.0
-
-requires.4.namespace = org.eclipse.equinox.p2.iu
-requires.4.name = ch.elexis.core.ui.p2.feature.feature.group
-requires.4.range = 3.0.0
