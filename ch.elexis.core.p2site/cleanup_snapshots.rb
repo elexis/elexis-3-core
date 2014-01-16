@@ -13,21 +13,16 @@
 # ========================================================================
 # 
 
-require "find"
-require "erb"
-require "pathname"
 require "fileutils"
-require 'set'
-require 'pp'
 
-ENV['ROOT'] ||= '/srv/www/download.elexis.info'
-root = ENV['ROOT']
+ENV['P2_ROOT'] ||= '/srv/www/download.elexis.info'
+p2_root = ENV['P2_ROOT']
 nrVersions = 3
-root ||= '/srv/www/download.elexis.info'
-root = File.expand_path(root)
-puts "Cleaning up versions_4_snapshot under #{root}. Preserving #{nrVersions} snapshots"
+p2_root ||= '/srv/www/download.elexis.info'
+p2_root = File.expand_path(p2_root)
+puts "Cleaning up versions_4_snapshot under #{p2_root}. Preserving #{nrVersions} snapshots"
 
-Dir.glob("#{root}/*").each {
+Dir.glob("#{p2_root}/*").each {
   |dir|
     snapshot_path = "#{dir}/versions_4_snapshot"
     next unless Dir.glob(snapshot_path).size > 0
