@@ -46,7 +46,8 @@
    </plugins>
 
    <features>
-      <feature id="org.eclipse.rcp"/>
+      <feature id="ch.elexis.core.application.feature"/>
+      <feature id="ch.elexis.core.ui.p2.feature"/>
    </features>
 
    <configurations>

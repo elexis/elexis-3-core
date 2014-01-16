@@ -5,8 +5,8 @@
       version="3.0.0.qualifier"
       provider-name="elexis.info">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="http://www.elexis.info/bundle/ch.elexis.core.ui.p2.feature">
+      Elexis Core Update Feature
    </description>
 
    <copyright url="http://www.example.com/copyright">
@@ -16,6 +16,10 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
+
+   <requires>
+      <import feature="ch.elexis.core.application.feature" version="3.0.0.qualifier"/>
+   </requires>
 
    <plugin
          id="ch.elexis.core.ui.p2"
