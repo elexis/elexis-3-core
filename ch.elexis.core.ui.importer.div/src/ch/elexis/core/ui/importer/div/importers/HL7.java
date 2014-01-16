@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
-import ch.elexis.core.ui.importer.div.importers.hl7.AbstractSegment;
+import ch.elexis.core.ui.importer.div.importers.hl7.internal.AbstractSegment;
 import ch.elexis.data.Anschrift;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
