@@ -9,6 +9,10 @@
   <artifactId>ch.elexis.core.data.tests</artifactId>
   <version>3.0.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
+  <properties>
+    <elexis.run.dbtests>false</elexis.run.dbtests>
+  </properties>
+  
   <!-- comment out to enable headless tests and add additional dependencies if needed
     -->
   <build>
@@ -19,7 +23,7 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-          <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
+          <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Delexis.run.dbtests=${elexis.run.dbtests}</argLine>
           <showEclipseLog>false</showEclipseLog>
           <useUIHarness>false</useUIHarness>
           <useUIThread>true</useUIThread>

@@ -30,15 +30,26 @@ public class Test_Patient extends AbstractPersistentObjectTest {
 	
 	@Parameters
 	public static Collection<Object[]> data(){
-		Object[][] data = new Object[][] {
-			{
-				"postgresql",
-			}, {
-				"mysql"
-			}, {
-				"h2"
-			},
-		};
+		Object[][] data = null;
+		String tstIt = "elexis.run.dbtests";
+		System.out.println("Test_Patient:" + tstIt + " is " + System.getProperty(tstIt));
+		if ("true".equals(System.getProperty(tstIt))) {
+			data = new Object[][] {
+				{
+					"postgresql",
+				}, {
+					"mysql"
+				}, {
+					"h2"
+				},
+			};
+		} else {
+			data = new Object[][] {
+				{
+					"h2"
+				},
+			};
+		}		
 		return Arrays.asList(data);
 	}
 	
@@ -86,5 +97,5 @@ public class Test_Patient extends AbstractPersistentObjectTest {
 	public static void logout(){
 		cleanupDb();
 	}
-
+	
 }
