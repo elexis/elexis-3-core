@@ -9,7 +9,7 @@ h2. Usage
 h2. Requirements
 
 * Java 7
-* Maven 3
+* Maven 3.0.5 (Maven 3.1 is problematic for the copy-maven-plugin and fails)
 * Eclipse Juno (3.8.2)
 * Ruby/Rake/Jubula
 
