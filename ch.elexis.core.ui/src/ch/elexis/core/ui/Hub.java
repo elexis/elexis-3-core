@@ -215,6 +215,7 @@ public class Hub extends AbstractUIPlugin {
 	 * down.
 	 * 
 	 * @param job
+	 * @deprecated Use <code>PlatformUI.getWorkbench().addWorkbenchListener()</code>
 	 */
 	public static void addShutdownJob(final ShutdownJob job){
 		if (!shutdownJobs.contains(job)) {
