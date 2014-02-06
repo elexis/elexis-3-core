@@ -297,10 +297,6 @@
       <extension
             point="ch.elexis.core.ui.KonsExtension">
          <Link
-               KonsExtension="ch.elexis.core.ui.util.WikipediaSearchAction"
-               name="ch.elexis.core.ui.util.WikipediaSearchAction">
-         </Link>
-         <Link
                KonsExtension="ch.elexis.core.ui.text.XrefExtension"
                name="DocumentLink">
          </Link>
