@@ -5,16 +5,16 @@
       version="3.0.0.qualifier"
       provider-name="elexis.info">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="http://wiki.elexis.info">
+      Elexis Open Source Application Feature. Common parts.
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright url="http://elexis.info/de_contributers.html">
+     Gerry Weirich, 2007-2013 und viele andere
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
+      Eclipse Public License v1.0
    </license>
 
    <requires>
