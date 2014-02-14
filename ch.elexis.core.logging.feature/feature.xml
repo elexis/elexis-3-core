@@ -5,7 +5,7 @@
       version="3.0.0.qualifier"
       provider-name="elexis.info">
 
-   <description url="http://elexis.info">
+   <description>
       Provides logback based logging for Elexis.
    </description>
 
