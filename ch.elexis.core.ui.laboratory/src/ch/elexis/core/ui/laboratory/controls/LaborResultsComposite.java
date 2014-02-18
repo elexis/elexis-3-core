@@ -146,7 +146,11 @@ public class LaborResultsComposite extends Composite {
 			@Override
 			public String getText(Object element){
 				if (element instanceof String) {
-					return (String) element;
+					String groupName = (String) element;
+					if (groupName.charAt(1) == ' ') {
+						groupName = groupName.substring(2);
+					}
+					return groupName;
 				} else if (element instanceof LaborItemResults) {
 					sb.setLength(0);
 					LabItem item = ((LaborItemResults) element).getFirstResult().getItem();
@@ -501,8 +505,9 @@ public class LaborResultsComposite extends Composite {
 			LabItem labItem = labResult.getItem();
 			if (labItem.getTyp().equals(LabItem.typ.TEXT) || (labResult.getComment().length() > 0)) {
 				DisplayTextDialog dlg =
-					new DisplayTextDialog(composite.getShell(), Messages.LaborResultsComposite_textResultTitle,
-						labItem.getName(), labResult.getComment());
+					new DisplayTextDialog(composite.getShell(),
+						Messages.LaborResultsComposite_textResultTitle, labItem.getName(),
+						labResult.getComment());
 				// HL7 Befunde enthalten oft mit Leerzeichen formatierte Bemerkungen,
 				// die nur mit nicht-proportionalen Fonts dargestellt werden k��nnen
 				// Wir versuchen also, die Anzeige mit Courier New, ohne zu wissen ob die
@@ -528,7 +533,8 @@ public class LaborResultsComposite extends Composite {
 				Patient patient = ElexisEventDispatcher.getSelectedPatient();
 				if (patient != null) {
 					new DisplayLabDokumenteDialog(composite.getShell(),
-						Messages.LaborResultsComposite_Documents, Collections.singletonList(labResult)).open();//$NON-NLS-1$
+						Messages.LaborResultsComposite_Documents,
+						Collections.singletonList(labResult)).open();//$NON-NLS-1$
 				}
 			}
 		}
