@@ -92,7 +92,8 @@ public class LaborMappingComposite extends Composite {
 					Labor labor = (Labor) selektor.getSelection();
 					if (labItem != null) {
 						LabMapping mapping =
-							new LabMapping(labor.getId(), "???", labItem.getId(), false); //$NON-NLS-1$
+							new LabMapping(labor.getId(), labItem.getKuerzel(), labItem.getId(),
+								false); //$NON-NLS-1$
 						refreshContent();
 					} else {
 						TransientLabMapping mapping = new TransientLabMapping();

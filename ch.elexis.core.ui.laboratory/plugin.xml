@@ -17,12 +17,6 @@
       </page>
       <page
             category="ch.elexis.LaborPref"
-            class="ch.elexis.core.ui.laboratory.preferences.LaborPrefs2"
-            id="ch.elexis.laborprefs2"
-            name="Laboritems und Gruppen">
-      </page>
-      <page
-            category="ch.elexis.LaborPref"
             class="ch.elexis.core.ui.laboratory.preferences.LabGroupPrefs"
             id="ch.elexis.preferences.LabGroupPrefs"
             name="%elexis.labGroupPrefs">
