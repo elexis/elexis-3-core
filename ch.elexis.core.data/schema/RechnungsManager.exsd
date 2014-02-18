@@ -3,7 +3,7 @@
 <schema targetNamespace="ch.elexis" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="ch.elexis.core.ui" id="RechnungsManager" name="RechnungsManager"/>
+         <meta.schema plugin="ch.elexis.core.data" id="RechnungsManager" name="RechnungsManager"/>
       </appinfo>
       <documentation>
          Hier können sich plugins für Rechnungserstellung und -export einbinden. Diese erhalten eine Rechnung in generischem Format und können daraus Papier- und Datenversionen erstellen.
