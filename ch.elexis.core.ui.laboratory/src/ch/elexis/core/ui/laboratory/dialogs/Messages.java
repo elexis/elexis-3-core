@@ -26,6 +26,9 @@ public class Messages extends NLS {
 	public static String EditLabResultDialog_errorRefFemaleNotNumber;
 	public static String EditLabResultDialog_errorRefMaleNotNumber;
 	public static String EditLabResultDialog_errorResultNotNumber;
+	public static String EditLabItemDialog_errorRefFemaleNotAbsolute;
+	public static String EditLabItemDialog_errorRefMaleNotAbsolute;
+	public static String EditLabItemDialog_errorResultNotAbsolute;
 	public static String EditLabResultDialog_labelAnalyse;
 	public static String EditLabResultDialog_labelLab;
 	public static String EditLabResultDialog_labelObservation;

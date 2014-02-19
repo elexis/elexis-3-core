@@ -56,6 +56,9 @@ public class LabResult extends PersistentObject {
 	private static final String TABLENAME = "LABORWERTE"; //$NON-NLS-1$
 	
 	private static Pattern refValuesPattern = Pattern.compile("\\((.*?)\\)"); //$NON-NLS-1$
+	private static String[] VALID_ABS_VALUES = new String[] {
+		"positiv", "negativ", "pos.", "neg.", "pos", "neg", ">0", "<0"
+	};
 	
 	@Override
 	protected String getTableName(){
@@ -574,6 +577,15 @@ public class LabResult extends PersistentObject {
 			}
 		}
 		return true;
+	}
+	
+	public static boolean isValidAbsoluteRefValue(String value){
+		for (String string : VALID_ABS_VALUES) {
+			if (value.trim().equals(string)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

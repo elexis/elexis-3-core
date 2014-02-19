@@ -289,8 +289,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 			setErrorMessage(Messages.EditLabResultDialog_errorNoResult);
 			return false;
 		}
-		if (!resultTxt.getText().isEmpty()
-			&& (result.getItem().getTyp() == typ.ABSOLUTE || result.getItem().getTyp() == typ.NUMERIC)) {
+		if (!resultTxt.getText().isEmpty() && result.getItem().getTyp() == typ.NUMERIC) {
 			try {
 				String numeric = resultTxt.getText();
 				if (numeric.startsWith("<") || numeric.startsWith(">")) {
@@ -302,14 +301,32 @@ public class EditLabResultDialog extends TitleAreaDialog {
 				return false;
 			}
 		}
+		
+		if (!resultTxt.getText().isEmpty() && result.getItem().getTyp() == typ.ABSOLUTE) {
+			if (!LabResult.isValidAbsoluteRefValue(resultTxt.getText())) {
+				setErrorMessage(Messages.EditLabItemDialog_errorResultNotAbsolute);
+				return false;
+			}
+		}
+		
 		if (!refMaleTxt.getText().isEmpty()) {
-			if (!LabResult.isValidNumericRefValue(refMaleTxt.getText())) {
+			if (result.getItem().getTyp() == typ.ABSOLUTE) {
+				if (!LabResult.isValidAbsoluteRefValue(refMaleTxt.getText())) {
+					setErrorMessage(Messages.EditLabItemDialog_errorRefMaleNotAbsolute);
+					return false;
+				}
+			} else if (!LabResult.isValidNumericRefValue(refMaleTxt.getText())) {
 				setErrorMessage(Messages.EditLabResultDialog_errorRefMaleNotNumber);
 				return false;
 			}
 		}
 		if (!refFemaleTxt.getText().isEmpty()) {
-			if (!LabResult.isValidNumericRefValue(refFemaleTxt.getText())) {
+			if (result.getItem().getTyp() == typ.ABSOLUTE) {
+				if (!LabResult.isValidAbsoluteRefValue(refFemaleTxt.getText())) {
+					setErrorMessage(Messages.EditLabItemDialog_errorRefFemaleNotAbsolute);
+					return false;
+				}
+			} else if (!LabResult.isValidNumericRefValue(refFemaleTxt.getText())) {
 				setErrorMessage(Messages.EditLabResultDialog_errorRefFemaleNotNumber);
 				return false;
 			}
