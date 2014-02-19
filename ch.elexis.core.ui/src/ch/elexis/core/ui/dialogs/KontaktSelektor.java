@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -245,7 +246,6 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 			});
 			bezugsKontaktViewer.setLabelProvider(new DefaultLabelProvider());
 			bezugsKontaktViewer.setInput(this);
-			
 			bezugsKontaktViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event){
 					if (isSelecting) {
@@ -349,7 +349,6 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 				}
 			});
 		}
-		
 		return ret;
 	}
 	
@@ -411,7 +410,11 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 				if ((sel != null) && (sel.length > 0)) {
 					selection = sel[0];
 				} else {
-					selection = null;
+					Table tbl = (Table) cv.getViewerWidget().getControl();
+					tbl.setSelection(0);
+					if (cv.getSelection().length > 0) {
+						selection = cv.getSelection()[0];
+					}
 				}
 			}
 		}
