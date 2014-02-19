@@ -55,6 +55,7 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.laboratory.commands.CreateImportMappingUi;
 import ch.elexis.core.ui.laboratory.commands.CreateLabItemUi;
+import ch.elexis.core.ui.laboratory.commands.CreateMappingFrom2_1_7;
 import ch.elexis.core.ui.laboratory.commands.CreateMergeLabItemUi;
 import ch.elexis.core.ui.laboratory.commands.EditLabItemUi;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -71,13 +72,13 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 	private Table table;
 	int sortC = 1;
 	private String[] headers = {
-		Messages.LaborPrefs_lab, Messages.LaborPrefs_name, Messages.LaborPrefs_short,
+		Messages.LaborPrefs_name, Messages.LaborPrefs_short,
 		"LOINC", //$NON-NLS-1$
 		Messages.LaborPrefs_type, Messages.LaborPrefs_unit, Messages.LaborPrefs_refM,
 		Messages.LaborPrefs_refF, Messages.LaborPrefs_sortmode
 	};
 	private int[] colwidth = {
-		18, 16, 6, 6, 6, 6, 16, 16, 16
+		16, 6, 6, 6, 6, 16, 16, 16
 	};
 	
 	public LaborPrefs(){
@@ -146,19 +147,15 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				LabItem li2 = (LabItem) e2;
 				String s1 = "", s2 = ""; //$NON-NLS-1$ //$NON-NLS-2$
 				switch (sortC) {
-				case 0:
-					s1 = li1.getLabor().getLabel();
-					s2 = li2.getLabor().getLabel();
-					break;
-				case 2:
+				case 1:
 					s1 = li1.getKuerzel();
 					s2 = li2.getKuerzel();
 					break;
-				case 4:
+				case 3:
 					s1 = li1.getTyp().toString();
 					s2 = li2.getTyp().toString();
 					break;
-				case 8:
+				case 7:
 					s1 = li1.getGroup();
 					s2 = li2.getGroup();
 					break;
@@ -202,15 +199,12 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			LabItem li = (LabItem) element;
 			switch (columnIndex) {
 			case 0:
-				return li.getLabor() == null ? Messages.LaborPrefs_unkown : li.getLabor()
-					.getLabel();
-			case 1:
 				return li.getName();
-			case 2:
+			case 1:
 				return li.getKuerzel();
-			case 3:
+			case 2:
 				return li.getLoincCode();
-			case 4:
+			case 3:
 				LabItem.typ typ = li.getTyp();
 				if (typ == LabItem.typ.NUMERIC) {
 					return Messages.LaborPrefs_numeric;
@@ -222,13 +216,13 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 					return Messages.LaborPrefs_document;
 				}
 				return Messages.LaborPrefs_absolute;
-			case 5:
+			case 4:
 				return li.getEinheit();
-			case 6:
+			case 5:
 				return li.getRefM();
-			case 7:
+			case 6:
 				return li.getRefW();
-			case 8:
+			case 7:
 				return li.getGroup() + " - " + li.getPrio(); //$NON-NLS-1$
 			default:
 				return "?col?"; //$NON-NLS-1$
@@ -254,6 +248,26 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 	
 	@Override
 	protected void contributeButtons(Composite parent){
+		((GridLayout) parent.getLayout()).numColumns++;
+		Button bMappingFrom2_1_7 = new Button(parent, SWT.PUSH);
+		bMappingFrom2_1_7.setText(Messages.LaborPrefs_mappingFrom2_1_7);
+		bMappingFrom2_1_7.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				try {
+					// execute the command
+					IHandlerService handlerService =
+						(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getService(IHandlerService.class);
+					
+					handlerService.executeCommand(CreateMappingFrom2_1_7.COMMANDID, null);
+				} catch (Exception ex) {
+					throw new RuntimeException(CreateMappingFrom2_1_7.COMMANDID, ex);
+				}
+				tableViewer.refresh();
+			}
+		});
+		
 		if (CoreHub.acl.request(AccessControlDefaults.LABITEM_MERGE) == true) {
 			((GridLayout) parent.getLayout()).numColumns++;
 			Button bImportMapping = new Button(parent, SWT.PUSH);

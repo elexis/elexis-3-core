@@ -47,6 +47,11 @@
             id="ch.elexis.labitem.create"
             name="Labor Item Anlegen">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.laboratory.commands.CreateMappingFrom2_1_7"
+            id="ch.elexis.mapping.2_1_7.create"
+            name="Labor Items aus 2.1.7 mappen">
+      </command>
    </extension>
    
 </plugin>
