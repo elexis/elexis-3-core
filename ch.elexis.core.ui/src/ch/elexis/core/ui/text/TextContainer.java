@@ -17,6 +17,7 @@ package ch.elexis.core.ui.text;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -114,6 +115,8 @@ public class TextContainer {
 	public static final String DISALLOWED_SQLEXPRESSIONS = "DROP,UPDATE,CREATE,INSERT"; //$NON-NLS-1$
 	//public static final String MATCH_SCRIPT = "\\["+Script.SCRIPT_MARKER+".+\\]"; //$NON-NLS-1$
 	public static final String MATCH_SCRIPT = "\\[" + Script.SCRIPT_MARKER + "[^\\[]+\\]"; //$NON-NLS-1$
+	
+	public static Connection queryConn = null;
 	
 	/**
 	 * Der Konstruktor sucht nach dem in den Settings definierten Textplugin Wenn er kein Textplugin
@@ -694,11 +697,13 @@ public class TextContainer {
 		}
 		
 		// execute query
-		java.sql.Connection conn = j.getConnection();
+		if (queryConn == null) {
+			queryConn = j.getConnection();
+		}
 		Statement statement = null;
 		ResultSet rs = null;
 		try {
-			statement = conn.createStatement();
+			statement = queryConn.createStatement();
 			rs = statement.executeQuery(sql);
 		} catch (SQLException e1) {
 			j.releaseStatement(stm);
