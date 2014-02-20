@@ -327,9 +327,11 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			tMoney2.setText("");
 		} else {
 			tTime2.setText(Integer.toString(k.getMinutes()));
-			double m = k.getUmsatz();
-			DecimalFormat df = new DecimalFormat("0.00"); //$NON-NLS-1$
-			tMoney2.setText(df.format(m / 100.0));
+			Money mon = new Money();
+			for (Verrechnet ver : k.getLeistungen()) {
+				mon = mon.addMoney(ver.getNettoPreis());
+			}
+			tMoney2.setText(mon.getAmountAsString());
 			final Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 			Fall fall = k.getFall();
 			if (fall != null) {
@@ -565,16 +567,18 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 							}
 						}
 					} else {
-						sumAll += ((Konsultation) o).getUmsatz();
+						for (Verrechnet verr : ((Konsultation) o).getLeistungen()) {
+							sumAll += verr.getNettoPreis().doubleValue();
+						}
 						sumTime += ((Konsultation) o).getMinutes();
 					}
 					monitor.worked(1);
+					
 					if (monitor.isCanceled()) {
 						monitor.done();
 						result = new Konsultation[0];
 						return Status.CANCEL_STATUS;
 					}
-					
 				}
 				numPat = ret.length;
 				result = ret;
@@ -599,7 +603,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				tPat.setText(Integer.toString(numPat));
 				tTime.setText(Double.toString(sumTime));
 				DecimalFormat df = new DecimalFormat("0.00"); //$NON-NLS-1$
-				tMoney.setText(df.format(sumAll / 100.0));
+				tMoney.setText(df.format(sumAll));
+				selection(kons[kons.length - 1]);
 				cv.notify(CommonViewer.Message.update);
 			}
 		} else {
