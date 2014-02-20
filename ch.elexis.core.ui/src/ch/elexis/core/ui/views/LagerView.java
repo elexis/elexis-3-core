@@ -259,10 +259,10 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 			public int compare(Viewer viewer, Object e1, Object e2){
 				String s1 =
 					((LagerLabelProvider) cv.getConfigurer().getLabelProvider()).getColumnText(e1,
-						col);
+						col).toLowerCase();
 				String s2 =
 					((LagerLabelProvider) cv.getConfigurer().getLabelProvider()).getColumnText(e2,
-						col);
+						col).toLowerCase();
 				return s1.compareTo(s2);
 			}
 			
