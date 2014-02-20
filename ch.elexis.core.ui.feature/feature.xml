@@ -10,7 +10,7 @@
    </description>
 
    <copyright url="http://elexis.info/de_contributers.html">
-     Gerry Weirich, 2007-2013 und viele andere
+      Gerry Weirich, 2007-2013 und viele andere
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
@@ -60,6 +60,7 @@
       <import plugin="ch.elexis.core.eigenartikel" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api"/>
       <import plugin="ch.elexis.core.eigendiagnosen"/>
+      <import plugin="org.apache.commons.jexl"/>
    </requires>
 
    <plugin
