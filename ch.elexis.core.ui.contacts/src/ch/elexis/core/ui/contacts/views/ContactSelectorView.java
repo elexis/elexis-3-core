@@ -10,8 +10,13 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.views;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.jexl2.Expression;
+import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.MapContext;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.list.WritableList;
@@ -152,9 +157,10 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 		
 		contactList.getRealm().asyncExec(loadContactsRunnable);
 		
-		tableViewerContacts.addSelectionChangedListener(new ContactSelectionChangedToEventDispatcher());
+		tableViewerContacts
+			.addSelectionChangedListener(new ContactSelectionChangedToEventDispatcher());
 		tableViewerContacts.addSelectionChangedListener(new ISelectionChangedListener() {
-
+			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
 				StructuredSelection ss = (StructuredSelection) event.getSelection();
@@ -229,12 +235,19 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 				String formula;
 				if (txt.contains(";")) {
 					formula = txt.substring(1, txt.indexOf(";"));
-					org.nfunk.jep.JEP myParser = new org.nfunk.jep.JEP();
-					myParser.addStandardFunctions();
-					myParser.parseExpression(formula);
+					
+					Map<String, Object> functions = new HashMap<>();
+					functions.put("math", Math.class);
+					JexlEngine jexl = new JexlEngine();
+					jexl.setLenient(false);
+					jexl.setFunctions(functions);
+					
+					Expression expr = jexl.createExpression(formula);
+					Object result = expr.evaluate(new MapContext());
+					
 					text.setText("");
-					text.setMessage(formula + "=" + myParser.getValue() + "");
-					myParser = null;
+					text.setMessage(formula + "=" + result + "");
+					result = null;
 				}
 				return;
 			}
@@ -286,7 +299,7 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 	 * Forwards selections in the contact viewer table to the ElexisEventDispatcher
 	 */
 	private class ContactSelectionChangedToEventDispatcher implements ISelectionChangedListener {
-
+		
 		@Override
 		public void selectionChanged(SelectionChangedEvent event){
 			ISelection selection = event.getSelection();
@@ -299,8 +312,7 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 			if (selectedObject instanceof IContact) {
 				IContact contact = (IContact) selectedObject;
 				if (contact.isPatient()) {
-					ElexisEventDispatcher
-							.fireSelectionEvent(Patient.load(contact.getId()));
+					ElexisEventDispatcher.fireSelectionEvent(Patient.load(contact.getId()));
 				}
 			}
 		}
