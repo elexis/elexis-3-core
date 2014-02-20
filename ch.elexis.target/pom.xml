@@ -1,6 +1,6 @@
 <project xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>juno</artifactId>
+  <artifactId>juno-target</artifactId>
   <packaging>eclipse-target-definition</packaging>
   <name>Target Definition for Elexis 3.0</name>
   <parent>
@@ -13,6 +13,9 @@
   <build>
     <plugins>
         <plugin>
+          <!-- this is a little be tricky. We replace in the target definition
+          snapshot|beta|release by the content of the variable repo_variant (default) snapshot
+            -->
            <groupId>com.google.code.maven-replacer-plugin</groupId>
            <artifactId>replacer</artifactId>
            <version>1.5.2</version>
@@ -25,15 +28,13 @@
                </execution>
            </executions>
            <configuration>
-               <!--outputDir>../ch.elexis.core.p2site</outputDir>
-               <basedir>ch.elexis.core.application</basedir-->
                <basedir>${basedir}</basedir>
                <file>juno-target.target</file>
-               <outputFile>juno.target</outputFile>
+               <outputFile>juno-target.target</outputFile>
                <replacements>
                    <replacement>
-                       <token>snapshot</token>
-                       <value>${repo_variant}</value>
+                       <token>/(snapshot|release|beta)/</token>
+                       <value>/${repo_variant}/</value>
                    </replacement>
                </replacements>
            </configuration>
