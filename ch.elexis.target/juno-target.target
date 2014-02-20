@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Juno for Elexis 3.0" sequenceNumber="32">
+<?pde version="3.8"?><target name="Juno for Elexis 3.0" sequenceNumber="33">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
@@ -34,6 +34,20 @@
 <unit id="antlr" version="2.7.7"/>
 <unit id="antlr.source" version="2.7.2"/>
 <unit id="antlr.stringtemplate" version="2.2.0"/>
+<unit id="batik.awt-util" version="1.6.0.1"/>
+<unit id="batik.bridge" version="1.6.0.1"/>
+<unit id="batik.css" version="1.6.0.1"/>
+<unit id="batik.dom" version="1.6.0.1"/>
+<unit id="batik.ext" version="1.6.0.1"/>
+<unit id="batik.extension" version="1.6.0.1"/>
+<unit id="batik.gui-util" version="1.6.0.1"/>
+<unit id="batik.gvt" version="1.6.0.1"/>
+<unit id="batik.parser" version="1.6.0.1"/>
+<unit id="batik.script" version="1.6.0.1"/>
+<unit id="batik.svg-dom" version="1.6.0.1"/>
+<unit id="batik.transcoder" version="1.6.0.1"/>
+<unit id="batik.util" version="1.6.0.1"/>
+<unit id="batik.xml" version="1.6.0.1"/>
 <unit id="bcprov" version="1.46.0"/>
 <unit id="bcprov.source" version="1.46.0"/>
 <unit id="bouncycastle.bcmail-jdk14" version="138.0.0"/>
@@ -58,6 +72,8 @@
 <unit id="com.wutka.dtdparser" version="1.21.0"/>
 <unit id="commons-collections" version="3.1.0"/>
 <unit id="commons-collections.source" version="3.1.0"/>
+<unit id="commons-io" version="1.1.0"/>
+<unit id="commons-io.source" version="1.1.0"/>
 <unit id="commons-lang" version="2.0.0"/>
 <unit id="commons-lang.source" version="2.0.0"/>
 <unit id="commons-logging" version="1.1.1"/>
@@ -101,10 +117,16 @@
 <unit id="org.apache.ant" version="1.7.0"/>
 <unit id="org.apache.ant.launcher" version="1.7.0"/>
 <unit id="org.apache.ant.source" version="1.7.0"/>
+<unit id="org.apache.avalon.framework.avalon-framework-api" version="4.3.1"/>
+<unit id="org.apache.avalon.framework.avalon-framework-api.source" version="4.3.1"/>
+<unit id="org.apache.avalon.framework.avalon-framework-impl" version="4.3.1"/>
+<unit id="org.apache.avalon.framework.avalon-framework-impl.source" version="4.3.1"/>
 <unit id="org.apache.commons.dbcp" version="1.4.0"/>
 <unit id="org.apache.commons.dbcp.source" version="1.4.0"/>
 <unit id="org.apache.commons.io" version="2.4.0"/>
 <unit id="org.apache.commons.io.source" version="2.4.0"/>
+<unit id="org.apache.commons.jexl" version="2.1.1"/>
+<unit id="org.apache.commons.jexl.source" version="2.1.1"/>
 <unit id="org.apache.commons.lang" version="2.6.0"/>
 <unit id="org.apache.commons.lang.source" version="2.6.0"/>
 <unit id="org.apache.commons.lang3" version="3.1.0"/>
@@ -113,6 +135,8 @@
 <unit id="org.apache.commons.pool.source" version="1.6.0"/>
 <unit id="org.apache.ibatis.sqlmap" version="2.3.0"/>
 <unit id="org.apache.poi" version="3.0.2.FINAL"/>
+<unit id="org.apache.xmlgraphics.commons" version="1.2.0"/>
+<unit id="org.apache.xmlgraphics.fop" version="0.94.0"/>
 <unit id="org.beanshell.bsh" version="2.0.0.0b4"/>
 <unit id="org.freemarker" version="2.3.15"/>
 <unit id="org.freemarker.source" version="2.3.15"/>
@@ -195,6 +219,8 @@
 <unit id="org.rxtx" version="2.1.7"/>
 <unit id="org.yaml.snakeyaml" version="1.11.0"/>
 <unit id="org.yaml.snakeyaml.source" version="1.11.0"/>
+<unit id="rhino.js" version="1.0.0.5R4_1"/>
+<unit id="rhino.js.source" version="1.0.0.5R4_1"/>
 <unit id="slf4j.api" version="1.6.6"/>
 <unit id="slf4j.api.source" version="1.6.6"/>
 <unit id="slf4j.ext" version="1.6.6"/>
@@ -212,6 +238,7 @@
 <unit id="xerces.xmlParserAPIs" version="2.6.2"/>
 <unit id="xml-apis" version="1.3.4"/>
 <unit id="xml-apis.source" version="1.3.4"/>
+<unit id="xml-apis.xmlParserAPIs" version="2.0.2"/>
 <unit id="xml-resolver" version="1.2.0"/>
 <unit id="xml-resolver.source" version="1.2.0"/>
 <unit id="xom" version="1.0.0"/>
