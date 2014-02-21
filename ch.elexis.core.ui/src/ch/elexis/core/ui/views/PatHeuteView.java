@@ -604,7 +604,9 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				tTime.setText(Double.toString(sumTime));
 				DecimalFormat df = new DecimalFormat("0.00"); //$NON-NLS-1$
 				tMoney.setText(df.format(sumAll));
-				selection(kons[kons.length - 1]);
+				if (kons.length >= 1) {
+					selection(kons[kons.length - 1]);
+				}
 				cv.notify(CommonViewer.Message.update);
 			}
 		} else {

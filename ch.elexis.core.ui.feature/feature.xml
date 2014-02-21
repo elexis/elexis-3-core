@@ -60,7 +60,6 @@
       <import plugin="ch.elexis.core.eigenartikel" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api"/>
       <import plugin="ch.elexis.core.eigendiagnosen"/>
-      <import plugin="org.apache.commons.jexl"/>
    </requires>
 
    <plugin
