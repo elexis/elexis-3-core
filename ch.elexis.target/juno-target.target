@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Juno for Elexis 3.0" sequenceNumber="33">
+<?pde version="3.8"?><target name="Juno for Elexis 3.0" sequenceNumber="34">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
@@ -251,16 +251,18 @@
 <repository location="http://download.eclipse.org/nattable/releases/1.0.1/repository/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="ca.odell.glazedlists" version="1.9.0.v201303080712"/>
-<unit id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
-<unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
-<unit id="javax.xml" version="1.3.4.v201005080400"/>
-<unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="1.9.0.20131008-0518"/>
 <repository location="http://download.eclipse.org/mylyn/releases/latest"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="ca.odell.glazedlists" version="1.9.0.v201303080712"/>
+<unit id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
+<unit id="ca.odell.glazedlists.source" version="1.9.0.v201303080712"/>
+<unit id="javax.xml" version="1.3.4.v201005080400"/>
+<unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
+<unit id="org.apache.commons.exec" version="1.1.0.v201301240602"/>
+<unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 </locations>
 </target>
