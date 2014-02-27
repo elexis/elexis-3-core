@@ -48,7 +48,7 @@ public class PatientPerspektive implements IPerspectiveFactory {
 			layout.createFolder("Rechts.folder", IPageLayout.RIGHT, 0.7f, "Haupt.Folder");
 		
 		main.addView(UiResourceConstants.PatientDetailView2_ID);
-		left.addView(UiResourceConstants.PatientDetailView2_ID);
+		left.addView(UiResourceConstants.PatientenListeView_ID);
 		leftbottom.addView(FaelleView.ID);
 		left.addView(PatHeuteView.ID);
 		main.addView(KonsDetailView.ID);
