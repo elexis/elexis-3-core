@@ -55,6 +55,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.data.UiSticker;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -240,7 +241,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		hXrefs = new Hashtable<String, IKonsExtension>();
 		@SuppressWarnings("unchecked")
 		List<IKonsExtension> xrefs =
-			Extensions.getClasses("ch.elexis.core.ui.KonsExtension", "KonsExtension"); //$NON-NLS-1$ //$NON-NLS-2$
+			Extensions.getClasses(ExtensionPointConstantsUi.KONSEXTENSION, "KonsExtension"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (IKonsExtension x : xrefs) {
 			String provider = x.connect(text);
 			hXrefs.put(provider, x);

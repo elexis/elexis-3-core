@@ -23,4 +23,5 @@ public class ExtensionPointConstantsData {
 	public static final String SERVICE_REGISTRY = "ch.elexis.core.data.ServiceRegistry";
 	public static final String SCRIPTING = "ch.elexis.core.data.scripting";
 	public static final String CORE_OPERATION_ADVISOR = "ch.elexis.core.data.coreOperation";
+	public static final String ACL_CONTRIBUTION = "ch.elxis.core.data.ACLContribution";
 }
