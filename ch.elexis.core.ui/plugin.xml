@@ -293,6 +293,36 @@
             </dynamic>
          </toolbar>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.LeistungenView">
+         <command
+               commandId="org.eclipse.ui.file.properties"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/system-search-3.png"
+               label="%properties"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.PatListView">
+         <command
+               commandId="org.eclipse.ui.file.properties"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/system-search-3.png"
+               label="%properties"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.codedetailview">
+         <command
+               commandId="org.eclipse.ui.file.properties"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/system-search-3.png"
+               label="%properties"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -307,5 +337,47 @@
                Outputter="ch.elexis.core.ui.views.RezeptBlatt"
                id="ch.elexis.Rezeptblatt">
          </OutputLogDescriptor>
+      </extension>
+      <extension
+            point="org.eclipse.ui.propertyPages">
+         <page
+               class="ch.elexis.core.ui.propertypage.PatientPropertyPage"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/personal.png"
+               id="at.medevit.elexis.properties.propertyPage.PatientPropertyPage"
+               name="%details">
+            <enabledWhen>
+               <instanceof
+                     value="ch.elexis.data.Patient">
+               </instanceof>
+            </enabledWhen>
+         </page>
+         <page
+               class="ch.elexis.core.ui.propertypage.PatientAddressPage"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/address-book-new-2.png"
+               id="at.medevit.elexis.properties.propertyPage.PatientAddressPage"
+               name="%address">
+            <enabledWhen>
+               <instanceof
+                     value="ch.elexis.data.Patient">
+               </instanceof>
+            </enabledWhen>
+         </page>
+         <page
+               class="ch.elexis.core.ui.propertypage.XIDPropertyPage"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/emblem-symbolic-link-2.png"
+               id="at.medevit.elexis.properties.propertyPage.XIDPropertyPage"
+               name="XID">
+            <enabledWhen>
+               <instanceof
+                     value="ch.elexis.data.PersistentObject">
+               </instanceof>
+            </enabledWhen>
+         </page>
+         <page
+               class="ch.elexis.core.ui.propertypage.ExtInfoPropertyPage"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/emblem-symbolic-link-2.png"
+               id="at.medevit.elexis.properties.propertyPage.ExtInfoPropertyPage"
+               name="ExtInfo">
+         </page>
       </extension>
 </plugin>
