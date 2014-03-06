@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Elexis OpenSource" uid="ch.elexis.core.application.product" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Elexis OpenSource" uid="ch.elexis.core.application.ElexisApp" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
+      <image path="/ch.elexis.core.application/rsc/elexislogo2.png"/>
       <text>
          Elexis 3.0 Development Version - www.elexis.info
       </text>
@@ -13,20 +14,20 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs> -Dosgi.console.enable.builtin=true </vmArgs>
-      <vmArgsMac> -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts </vmArgsMac>
+      <vmArgs>-Dosgi.console.enable.builtin=true -Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8</vmArgsMac>
    </launcherArgs>
 
    <windowImages i16="/ch.elexis.core.application/rsc/elexis2_16.gif" i32="/ch.elexis.core.application/rsc/elexis32_2.gif" i48="/ch.elexis.core.application/rsc/elexis48.gif"/>
 
    <splash
       location="ch.elexis.core.application" />
-   <launcher name="Elexis 3.0">
-      <linux icon="/ch.elexis.core.application/rsc/elexis48.xpm"/>
-      <macosx icon="/ch.elexis.core.application/rsc/elexis-mac.icns"/>
+   <launcher name="Elexis3">
+      <linux icon="../ch.elexis.core.application/rsc/elexis48.xpm"/>
+      <macosx icon="../ch.elexis.core.application/rsc/elexis-mac.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/ch.elexis.core.application/rsc/elexis.ico"/>
+         <ico path="../ch.elexis.core.application/rsc/elexis.ico"/>
          <bmp/>
       </win>
    </launcher>
