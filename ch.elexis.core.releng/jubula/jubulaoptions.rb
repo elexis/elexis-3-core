@@ -107,18 +107,25 @@ module JubulaOptions
   @wrapper     ||= "#{@workspace}/test-runner.bat" # use bat for windows!
   @vm          ||= 'java'
   unless @exeFile
-    pathname = "../../**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
-    if (Dir.glob(File.expand_path(pathname)).size == 1)
-      pathname = pathname.sub('configuration/config.ini', '*.ini')
-      if (Dir.glob(File.expand_path(pathname)).size == 1)
-        @exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
-      end
-    end
+	if RbConfig::CONFIG['host_os'].match(WINDOWS_REGEXP)
+		pathname = File.join('..', '..', '**',@winType, '**', @cpu, "*elexis*.exe")
+		if (Dir.glob(File.expand_path(pathname)).size == 1)
+			@exeFile = Dir.glob(File.expand_path(pathname))[0]
+		end
+	else
+		pathname = "../../**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
+		if (Dir.glob(File.expand_path(pathname)).size == 1)
+		  pathname = pathname.sub('configuration/config.ini', '*.ini')
+		  if (Dir.glob(File.expand_path(pathname)).size == 1)
+			@exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
+		  end
+		end
+	end	
   end
   host_os = RbConfig::CONFIG['host_os']
   case RbConfig::CONFIG['host_os']
     when WINDOWS_REGEXP
-      @exeFile = File.expand_path(@exeFile.sub('/windows/', '/win32/') + '.exe')
+      @exeFile = File.expand_path(@exeFile.sub('/windows/', '/win32/') + '.exe').sub('exe.exe','exe')
     when /linux/i
       @vm = 'java'
     when /sunos|solaris/i
