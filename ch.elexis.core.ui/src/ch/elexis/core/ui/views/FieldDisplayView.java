@@ -211,20 +211,30 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	@SuppressWarnings("unchecked")
 	private Class resolveName(String k){
 		Class ret = null;
-		if (k.equalsIgnoreCase("Mandant")) { //$NON-NLS-1$
-			ret = Mandant.class;
-		} else if (k.equalsIgnoreCase("Anwender")) { //$NON-NLS-1$
-			ret = Anwender.class;
-		} else {
+		
+		// resolve with classic names
+		try {
+			String fqname = "ch.elexis.data." + k; //$NON-NLS-1$
+			ret = Class.forName(fqname);
+		} catch (ClassNotFoundException ex) {
+			ret = null;
+		}
+		
+		// fall back to new schema (there should not exist any)
+		if (ret == null) {
 			try {
 				String fqname = "ch.elexis.core.data." + k; //$NON-NLS-1$
 				ret = Class.forName(fqname);
-			} catch (java.lang.Exception ex) {
-				SWTHelper.showError(Messages.FieldDisplayView_WrongTypeCaption, //$NON-NLS-1$
-					Messages.FieldDisplayView_WrongTypeBody + k + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+			} catch (ClassNotFoundException ex) {
 				ret = null;
 			}
 		}
+		
+		if (ret == null) {
+			SWTHelper.showError(Messages.FieldDisplayView_WrongTypeCaption, //$NON-NLS-1$
+				Messages.FieldDisplayView_WrongTypeBody + k + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		
 		return ret;
 	}
 	
