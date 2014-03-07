@@ -3401,9 +3401,64 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Take a snapshot</name>
-              <comment xsi:nil="true" />
-              <GUID>d7b42ab603414161bfba272f8fef4280</GUID>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>8b40ae39611340bbaa6f838450803f45</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>500</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>05dc3a55a56649e9917f578579784e84</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>control</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>m</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d8ec7960064</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d8ee3f80065</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083181d393b01181d8e6c380062</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>303908bed81d4a1b81edcf45750f35de</GUID>
               <generated>false</generated>
               <active>true</active>
               <testdata>
@@ -3417,8 +3472,40 @@
                 </row>
                 <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>cdeeeb7d5fec497282d2e8b2c40ebd89</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>control</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>m</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d8ec7960064</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d8ee3f80065</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083181d393b01181d8e6c380062</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -5428,13 +5515,13 @@
           <comment xsi:nil="true" />
           <GUID>737d099007cd47fabfbe017688f4747b</GUID>
           <generated>false</generated>
-          <active>false</active>
+          <active>true</active>
           <testdata>
             <row rowCount="1">
               <data columnCount="1">
                 <data>
                   <language>de_DE</language>
-                  <value>logger &quot;I was here from Jubula&quot; suite $TEST_TESTSUITE nach ={6ef9ef2a0b3440aebf14c3133920a9d9}</value>
+                  <value>logger &quot;Screenshot&quot; ={6ef9ef2a0b3440aebf14c3133920a9d9}</value>
                 </data>
               </data>
               <data columnCount="2">
