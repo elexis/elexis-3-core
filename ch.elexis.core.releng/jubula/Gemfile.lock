@@ -5,7 +5,9 @@ GEM
     xml-simple (1.1.2)
 
 PLATFORMS
+  java
   ruby
+  x86-mingw32
 
 DEPENDENCIES
   rubyzip (< 1.0)
