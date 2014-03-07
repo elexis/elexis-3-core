@@ -425,8 +425,11 @@ public abstract class PersistentObject implements IPersistentObject {
 					}
 					CoreHub.globalCfg.flush();
 					CoreHub.localCfg.flush();
-					MessageEvent.fireInformation("Neue Datenbank",
-						"Es wurde eine neue Datenbank angelegt.");
+					if (!runningFromScratch)
+					{
+						MessageEvent.fireInformation("Neue Datenbank",
+								"Es wurde eine neue Datenbank angelegt.");
+					}
 				} else {
 					log.error("Kein create script für Datenbanktyp " + getConnection().DBFlavor
 						+ " gefunden.");
