@@ -5,6 +5,7 @@
 
 require 'optparse'
 require 'fileutils'
+require 'pp'
 require "#{File.dirname(__FILE__)}/helpers"
 
 module JubulaOptions
@@ -105,7 +106,15 @@ module JubulaOptions
   @vmargs      ||= ""  
   @wrapper     ||= "#{@workspace}/test-runner.bat" # use bat for windows!
   @vm          ||= 'java'
-  @exeFile     ||= "#{File.expand_path(File.dirname(__FILE__))}/../../ch.elexis.core.p2site/target/products/ch.elexis.core.application.product/#{@os}/#{@winType}/#{@cpu}/Elexis 3.0"
+  unless @exeFile
+    pathname = "../../**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
+    if (Dir.glob(File.expand_path(pathname)).size == 1)
+      pathname = pathname.sub('configuration/config.ini', '*.ini')
+      if (Dir.glob(File.expand_path(pathname)).size == 1)
+        @exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
+      end
+    end
+  end
   host_os = RbConfig::CONFIG['host_os']
   case RbConfig::CONFIG['host_os']
     when WINDOWS_REGEXP

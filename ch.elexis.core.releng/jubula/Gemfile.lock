@@ -1,12 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    rubyzip (1.0.0)
+    rubyzip (0.9.9)
     xml-simple (1.1.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  rubyzip
+  rubyzip (< 1.0)
   xml-simple
