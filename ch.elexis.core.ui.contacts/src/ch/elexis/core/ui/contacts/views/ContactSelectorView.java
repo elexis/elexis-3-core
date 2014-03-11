@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.JexlException;
 import org.apache.commons.jexl2.MapContext;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
@@ -242,12 +243,16 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 					jexl.setLenient(false);
 					jexl.setFunctions(functions);
 					
-					Expression expr = jexl.createExpression(formula);
-					Object result = expr.evaluate(new MapContext());
-					
-					text.setText("");
-					text.setMessage(formula + "=" + result + "");
-					result = null;
+					try {
+						Expression expr = jexl.createExpression(formula);
+						Object result = expr.evaluate(new MapContext());
+						text.setText("");
+						text.setMessage(formula + "=" + result + "");
+						result = null;
+					} catch (JexlException e) {
+						text.setText("");
+						text.setMessage("Invalid expression: " + formula);
+					}
 				}
 				return;
 			}
