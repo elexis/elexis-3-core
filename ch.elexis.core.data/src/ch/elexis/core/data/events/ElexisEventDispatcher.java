@@ -12,6 +12,7 @@
 
 package ch.elexis.core.data.events;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,6 +55,7 @@ public final class ElexisEventDispatcher extends Job {
 	private static ElexisEventDispatcher theInstance;
 	private final Map<Class<?>, IElexisEventDispatcher> dispatchers;
 	private final PriorityQueue<ElexisEvent> eventQueue;
+	private final ArrayList<ElexisEvent> eventCopy;
 	private transient boolean bStop = false;
 	private final Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class.getName());
 	
@@ -75,6 +77,7 @@ public final class ElexisEventDispatcher extends Job {
 		listeners = new LinkedList<ElexisEventListener>();
 		dispatchers = new HashMap<Class<?>, IElexisEventDispatcher>();
 		eventQueue = new PriorityQueue<ElexisEvent>(50);
+		eventCopy = new ArrayList<ElexisEvent>(50);
 		
 		elexisUIContext = new ElexisContext();
 	}
@@ -193,7 +196,6 @@ public final class ElexisEventDispatcher extends Job {
 	 */
 	public void fire(final ElexisEvent... ees){
 		for (ElexisEvent ee : ees) {
-			
 			// Those are single events
 			if (ee.getPriority() == ElexisEvent.PRIORITY_SYNC
 				&& ee.getType() != ElexisEvent.EVENT_SELECTED) {
@@ -202,7 +204,6 @@ public final class ElexisEventDispatcher extends Job {
 			}
 			
 			int eventType = ee.getType();
-			
 			if (eventType == ElexisEvent.EVENT_SELECTED
 				|| eventType == ElexisEvent.EVENT_DESELECTED) {
 				
@@ -233,7 +234,6 @@ public final class ElexisEventDispatcher extends Job {
 			synchronized (eventQueue) {
 				eventQueue.offer(ee);
 			}
-			
 		}
 	}
 	
@@ -337,12 +337,20 @@ public final class ElexisEventDispatcher extends Job {
 	
 	@Override
 	protected IStatus run(IProgressMonitor monitor){
+		// copy all events so doDispatch is outside of synchronization,
+		// and event handling can run code in display thread without deadlock
 		synchronized (eventQueue) {
 			while (!eventQueue.isEmpty()) {
-				doDispatch(eventQueue.poll());
+				eventCopy.add(eventQueue.poll());
 			}
 			eventQueue.notifyAll();
 		}
+		
+		for (ElexisEvent event : eventCopy) {
+			doDispatch(event);
+		}
+		eventCopy.clear();
+		
 		if (!bStop) {
 			this.schedule(30);
 		}
