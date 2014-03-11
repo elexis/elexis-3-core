@@ -145,7 +145,7 @@
          unpack="false"/>
 
    <plugin
-         id="ch.elexis.scripting.beanshell"
+         id="ch.elexis.core.scripting.beanshell"
          download-size="0"
          install-size="0"
          version="0.0.0"
