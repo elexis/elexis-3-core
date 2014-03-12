@@ -1,4 +1,6 @@
 This project is used to automatically set-up an Elexis 3 development environment by employing
 the Eclipse Oomph Installer (http://wiki.eclipse.org/Eclipse_Oomph_Installer). More documentation to follow.
 
+It integrates both core and base resources, this project is not used outside of the oomph installer tool.
+
 descher@medevit.at
