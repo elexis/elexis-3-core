@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<setup:Project setup:toolVersion="8" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:predicates="http://www.eclipse.org/CDO/releng/predicates/1.0" xmlns:setup="http://www.eclipse.org/CDO/releng/setup/1.0" name="Elexis 3" label="Elexis 3">
+<setup:Project setup:toolVersion="8" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:setup="http://www.eclipse.org/CDO/releng/setup/1.0" name="Elexis 3" label="Elexis 3">
   <setupTasks xsi:type="setup:P2Task">
     <installableUnits id="org.eclipse.egit.feature.group"/>
+    <installableUnits id="org.eclipse.mylyn.wikitext_feature.feature.group"/>
     <p2Repositories url="${train.url}"/>
   </setupTasks>
   <setupTasks xsi:type="setup:EclipseIniTask" documentation="Redirect to the development version of the Elexis 3 setup" option="-Dsetup.branch.uri" value="=${elexis-3-core.git.location|uri}/ch.elexis.sdk/Elexis3.setup" vm="true"/>
@@ -15,18 +16,16 @@
   <branches name="master">
     <setupTasks xsi:type="setup:GitCloneTask" location="${elexis-3-core.git.location}" remoteURI="https://github.com/elexis/elexis-3-core.git" userID="" checkoutBranch="master"/>
     <setupTasks xsi:type="setup:GitCloneTask" location="${elexis-3-base.git.location}" remoteURI="https://github.com/elexis/elexis-3-base.git" userID="" checkoutBranch="master"/>
-    <setupTasks xsi:type="setup:TargletTask" name="Elexis 3 Core">
+    <setupTasks xsi:type="setup:TargletTask" name="Elexis 3">
       <roots id="ch.elexis.sdk"/>
+      <roots id="ch.elexis.base.ch.feature.feature.group"/>
       <sourceLocators rootFolder="${elexis-3-core.git.location}"/>
+      <sourceLocators rootFolder="${elexis-3-base.git.location}"/>
       <repositoryLists name="Elexis Repositories">
         <p2Repositories url="http://download.elexis.info/mirror.4.elexis/snapshot"/>
         <p2Repositories url="http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot/"/>
       </repositoryLists>
     </setupTasks>
-    <setupTasks xsi:type="setup:WorkingSetTask">
-      <workingSets name="Features">
-        <predicates xsi:type="predicates:NaturePredicate" nature="org.eclipse.pde.FeatureNature"/>
-      </workingSets>
-    </setupTasks>
+    <setupTasks xsi:type="setup:WorkingSetTask"/>
   </branches>
 </setup:Project>
