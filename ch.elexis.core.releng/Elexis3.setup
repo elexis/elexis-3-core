@@ -5,10 +5,11 @@
     <p2Repositories url="${train.url}"/>
   </setupTasks>
   <setupTasks xsi:type="setup:EclipseIniTask" documentation="Redirect to the development version of the Elexis 3 setup" option="-Dsetup.branch.uri" value="=${elexis-3-core.git.location|uri}/ch.elexis.core.releng/Elexis3.setup" vm="true"/>
-  <setupTasks xsi:type="setup:CompoundSetupTask" name="refresh.enabled">
+  <setupTasks xsi:type="setup:ContextVariableTask" name="elexis-3-core.git.location" value="${setup.branch.dir/git/elexis-3-core.git}"/>
+  <setupTasks xsi:type="setup:CompoundSetupTask" name="Elexis Preferences">
+    <setupTasks xsi:type="setup:EclipsePreferenceTask" key="/instance/org.eclipse.core.resources/encoding" value="UTF-8"/>
     <setupTasks xsi:type="setup:EclipsePreferenceTask" key="/instance/org.eclipse.core.resources/refresh.enabled" value="true"/>
   </setupTasks>
-  <setupTasks xsi:type="setup:ContextVariableTask" name="elexis-3-core.git.location" value="${setup.branch.dir/git/elexis-3-core.git}"/>
   <branches name="master">
     <setupTasks xsi:type="setup:GitCloneTask" location="${elexis-3-core.git.location}" remoteURI="https://github.com/elexis/elexis-3-core.git" checkoutBranch="master"/>
     <setupTasks xsi:type="setup:TargletTask" name="Elexis 3">
