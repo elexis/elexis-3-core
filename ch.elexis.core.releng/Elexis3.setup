@@ -19,5 +19,10 @@
         <p2Repositories url="http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot/"/>
       </repositoryLists>
     </setupTasks>
+    <setupTasks xsi:type="setup:WorkingSetTask">
+       <workingSets name="Features">
+               <predicates xsi:type="predicates:NaturePredicate" nature="org.eclipse.pde.FeatureNature"/>
+       </workingSets>
+    </setupTasks>
   </branches>
 </setup:Project>
