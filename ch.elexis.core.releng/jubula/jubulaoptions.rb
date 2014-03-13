@@ -107,20 +107,35 @@ module JubulaOptions
   @wrapper     ||= "#{@workspace}/test-runner.bat" # use bat for windows!
   @vm          ||= 'java'
   unless @exeFile
-	if RbConfig::CONFIG['host_os'].match(WINDOWS_REGEXP)
-		pathname = File.join('..', '..', '**',@winType, '**', @cpu, "*elexis*.exe")
-		if (Dir.glob(File.expand_path(pathname)).size == 1)
-			@exeFile = Dir.glob(File.expand_path(pathname))[0]
-		end
-	else
-		pathname = "../../**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
-		if (Dir.glob(File.expand_path(pathname)).size == 1)
-		  pathname = pathname.sub('configuration/config.ini', '*.ini')
-		  if (Dir.glob(File.expand_path(pathname)).size == 1)
-			@exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
-		  end
-		end
-	end	
+  case RbConfig::CONFIG['host_os']
+    when WINDOWS_REGEXP
+    pathname = File.join('..', '..', '**',@winType, '**', @cpu, "*elexis*.exe")
+    if (Dir.glob(File.expand_path(pathname)).size == 1)
+      @exeFile = Dir.glob(File.expand_path(pathname))[0]
+      @instDest =  File.dirname(@exeFile)
+    end
+    when MACOSX_REGEXP
+    pathname = "../../*/target/products/*/#{@os}/#{@winType}/#{@cpu}/*app/configuration/config.ini"
+    files = Dir.glob(File.expand_path(pathname))
+    if (files.size == 1)
+      pathname =files[0].sub('.app/Contents/macos/configuration/config.ini', '')
+      pathname =pathname.sub('configuration/config.ini', '')
+    appName = File.basename(pathname).sub('.app', '')
+      @exeFile = File.join(pathname, 'Contents', 'MacOS', appName)
+      @instDest =  pathname
+    end
+
+    when /linux/i
+  else
+    pathname = "../../**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
+    if (Dir.glob(File.expand_path(pathname)).size == 1)
+      pathname = pathname.sub('configuration/config.ini', '*.ini')
+      if (Dir.glob(File.expand_path(pathname)).size == 1)
+      @exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
+      @instDest =  File.dirname(@exeFile)
+      end
+    end
+  end
   end
   host_os = RbConfig::CONFIG['host_os']
   case RbConfig::CONFIG['host_os']
