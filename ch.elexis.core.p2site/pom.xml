@@ -108,6 +108,9 @@
         <version>${tycho-version}</version>
         <configuration>
           <includeAllDependencies>true</includeAllDependencies>
+          <profileProperties>
+            <macosx-bundled>true</macosx-bundled>
+          </profileProperties>
         </configuration>
       </plugin>
       <plugin>
