@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature>
+
+   <includes
+         id="ch.elexis.agenda.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.archie.patientstatistik.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.archie.wzw.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.base.befunde.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.base.ch.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.base.ch.legacy.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.base.konsextension.bildanzeige.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.base.konsextension.privatnotizen.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.base.messages.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.base.textplugin.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.connect.abxmicros.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.connect.afinion.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.connect.fuji.drichem3500.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.connect.labgeo.ib10.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.connect.mythic.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.connect.reflotron.v2.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.connect.rochebaseunit.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.connect.swelab.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.connect.sysmex.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.connect.urilux.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.core.application.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.core.common.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.core.logging.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.core.ui.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.core.ui.p2.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.covercard.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.externe_dokumente.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.fop_wrapper.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.global_inbox.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.icpc.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.laborimport.analytica.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.laborimport.bioanalytica.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.laborimport.hl7.allg.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.laborimport.teamw.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.laborimport_labtop.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.laborimport_lg1.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.laborimport_viollier.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.mediserv.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.notes.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.omnivore-plus.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.omnivore.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.omnivoredirect.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.privatrechnung.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.elexis.rezept.zurrose.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.barcode.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.connect.urisys1100.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.dcavantage.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.decision.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.disposan.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.gdt.customed.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.gdt.defaultfilecp.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.gdt.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.gdt.teamw.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.gdt.unilabs.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.igmbestellung.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.loinc.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.medietikette.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.elexis.roche.labor.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.medelexis.blueevidence.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="at.medevit.medelexis.vat_ch.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.docbox.elexis.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.medshare.connect.abacusjunior.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.medshare.mediport.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ch.unibe.iam.scg.archie.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.actavis.medidirect.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.hilotec.elexis.kgview.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.hilotec.elexis.opendocument.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="net.medshare.percentile.v2.feature"
+         version="0.0.0"/>
+
+</feature>

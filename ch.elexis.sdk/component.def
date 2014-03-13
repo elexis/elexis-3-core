@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<setup:ComponentDefinition setup:toolVersion="8" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:setup="http://www.eclipse.org/CDO/releng/setup/1.0" id="ch.elexis.core.releng" version="1.0.0.qualifier">
-  <dependencies id="ch.elexis.core.common.feature.feature.group"/>
-  <dependencies id="ch.elexis.core.ui.feature.feature.group"/>
-  <dependencies id="ch.elexis.core.application.feature.feature.group"/>
-  <dependencies id="ch.elexis.core.logging.feature.feature.group"/>
-  <dependencies id="ch.elexis.core.ui.p2.feature.feature.group"/>
-</setup:ComponentDefinition>

@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <projectDescription>
-	<name>ch.elexis.sdk</name>
-	<comment></comment>
-	<projects>
-	</projects>
-	<buildSpec>
-	</buildSpec>
-	<natures>
-	</natures>
+<name>ch.elexis.sdk</name>
+<comment/>
+<projects>
+</projects>
+<buildSpec>
+</buildSpec>
+<natures>
+  <nature>org.eclipse.pde.FeatureNature</nature>
+</natures>
 </projectDescription>
