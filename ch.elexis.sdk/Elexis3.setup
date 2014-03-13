@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<setup:Project setup:toolVersion="8" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:predicates="http://www.eclipse.org/CDO/releng/predicates/1.0" xmlns:setup="http://www.eclipse.org/CDO/releng/setup/1.0" name="Elexis 3" label="Elexis 3">
+<setup:Project setup:toolVersion="8" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:predicates="http://www.eclipse.org/CDO/releng/predicates/1.0" xmlns:setup="http://www.eclipse.org/CDO/releng/setup/1.0" name="elexis3" label="Elexis 3">
   <setupTasks xsi:type="setup:P2Task">
     <installableUnits id="org.eclipse.egit.feature.group"/>
     <installableUnits id="org.eclipse.mylyn.wikitext_feature.feature.group"/>
