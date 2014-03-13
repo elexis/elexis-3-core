@@ -22,8 +22,7 @@
     <setupTasks xsi:type="setup:GitCloneTask" location="${elexis-3-core.git.location}" remoteURI="https://github.com/elexis/elexis-3-core.git" userID="" checkoutBranch="master"/>
     <setupTasks xsi:type="setup:GitCloneTask" location="${elexis-3-base.git.location}" remoteURI="https://github.com/elexis/elexis-3-base.git" userID="" checkoutBranch="master"/>
     <setupTasks xsi:type="setup:TargletTask" name="Elexis 3">
-      <roots id="ch.elexis.sdk"/>
-      <roots id="ch.elexis.base.ch.feature.feature.group"/>
+      <roots id="ch.elexis.sdk.feature.group"/>
       <sourceLocators rootFolder="${elexis-3-core.git.location}"/>
       <sourceLocators rootFolder="${elexis-3-base.git.location}"/>
       <repositoryLists name="Elexis Repositories">
