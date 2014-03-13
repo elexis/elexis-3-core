@@ -10,16 +10,12 @@
    </description>
 
    <copyright url="http://elexis.info/de_contributers.html">
-     Gerry Weirich, 2007-2013 und viele andere
+      Gerry Weirich, 2007-2013 und viele andere
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
       Eclipse Public License v1.0
    </license>
-
-   <requires>
-      <import feature="ch.elexis.core.application.feature" version="3.0.0.qualifier"/>
-   </requires>
 
    <plugin
          id="ch.elexis.core.ui.p2"
