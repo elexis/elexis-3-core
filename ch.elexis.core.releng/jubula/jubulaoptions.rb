@@ -124,8 +124,6 @@ module JubulaOptions
       @exeFile = File.join(pathname, 'Contents', 'MacOS', appName)
       @instDest =  pathname
     end
-
-    when /linux/i
   else
     pathname = "../../**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
     if (Dir.glob(File.expand_path(pathname)).size == 1)
@@ -150,7 +148,6 @@ module JubulaOptions
       puts "unknown RbConfig::CONFIG['host_os'] #{RbConfig::CONFIG['host_os']}"
       exit 3
   end
-  @instDest    ||= File.dirname(@exeFile)
   
   def JubulaOptions::parseArgs
     options = OptionParser.new do |opts|
