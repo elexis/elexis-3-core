@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="ch.elexis.core.ui.feature"
-      label="Elexis 3.0.0.qualifier Core UI Feature"
+      label="Elexis Core UI Feature"
       version="3.0.0.qualifier"
       provider-name="elexis.info">
 
@@ -16,14 +16,6 @@
    <license url="http://www.eclipse.org/legal/epl-v10.html">
       Eclipse Public License v1.0
    </license>
-
-   <includes
-         id="ch.elexis.core.common.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="ch.elexis.core.logging.feature"
-         version="0.0.0"/>
 
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
@@ -60,6 +52,8 @@
       <import plugin="ch.elexis.core.eigenartikel" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api"/>
       <import plugin="ch.elexis.core.eigendiagnosen"/>
+      <import feature="ch.elexis.core.common.feature" version="3.0.0.qualifier"/>
+      <import feature="ch.elexis.core.logging.feature" version="3.0.0.qualifier"/>
    </requires>
 
    <plugin

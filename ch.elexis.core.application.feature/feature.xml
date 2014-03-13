@@ -17,17 +17,11 @@
       Eclipse Public License v1.0
    </license>
 
-   <includes
-         id="ch.elexis.core.ui.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="ch.elexis.core.logging.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="ch.elexis.core.common.feature"
-         version="0.0.0"/>
+   <requires>
+      <import feature="ch.elexis.core.ui.feature" version="3.0.0.qualifier"/>
+      <import feature="ch.elexis.core.common.feature" version="3.0.0.qualifier"/>
+      <import feature="ch.elexis.core.logging.feature" version="3.0.0.qualifier"/>
+   </requires>
 
    <plugin
          id="ch.elexis.core.application"

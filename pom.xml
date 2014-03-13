@@ -53,7 +53,7 @@
 </modules>
 <properties>
   <scm_url>git@github.com:elexis/elexis-3-core.git</scm_url>
-  <tycho-version>0.19.0</tycho-version>
+  <tycho-version>0.20.0</tycho-version>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   <tycho-extras.version>${tycho-version}</tycho-extras.version>
   <repo_name>elexis.3.core</repo_name>
@@ -91,8 +91,8 @@
     </plugin>
     <plugin>
       <!-- we want to ensure that the bin directory created by the Eclipse gets cleaned, too. 
- Without it Maven would put two versions of each class file into the jars
- -->
+Without it Maven would put two versions of each class file into the jars
+-->
       <artifactId>maven-clean-plugin </artifactId>
       <version>2.5</version>
       <configuration>
@@ -281,6 +281,12 @@ This approach is the only way to share the same target platform configuration be
     <id>tycho-snapshots</id>
     <url>https://oss.sonatype.org/content/groups/public/</url>
   </pluginRepository>
+  <!-- Try Tycho 0.20 - staged version - remove after release -->
+  <pluginRepository>
+    <id>tycho-staged</id>
+    <url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1007/</url>
+  </pluginRepository>
+  <!-- end of removal -->
 </pluginRepositories>
 <scm>
   <developerConnection>scm:git:${scm_url}</developerConnection>

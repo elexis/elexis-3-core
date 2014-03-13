@@ -47,8 +47,12 @@
    </plugins>
 
    <features>
-      <feature id="ch.elexis.core.application.feature"/>
-      <feature id="ch.elexis.core.ui.p2.feature"/>
+   <!-- see https://bugs.eclipse.org/bugs/show_bug.cgi?id=361722#c50  Tycho 0.20 root install -->
+      <feature id="ch.elexis.core.common.feature" installMode="root"/>
+      <feature id="ch.elexis.core.logging.feature" installMode="root"/>
+      <feature id="ch.elexis.core.ui.feature" installMode="root"/>
+      <feature id="ch.elexis.core.application.feature" installMode="root"/>
+      <feature id="ch.elexis.core.ui.p2.feature" installMode="root"/>
    </features>
 
    <configurations>
