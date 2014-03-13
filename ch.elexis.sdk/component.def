@@ -5,4 +5,7 @@
   <dependencies id="ch.elexis.core.application.feature.feature.group"/>
   <dependencies id="ch.elexis.core.logging.feature.feature.group"/>
   <dependencies id="ch.elexis.core.ui.p2.feature.feature.group"/>
+  <dependencies id="ch.elexis.base.ch.feature.feature.group"/>
+  <dependencies id="ch.elexis.agenda.feature.feature.group"/>
+  <dependencies id="at.medevit.elexis.loinc.feature.feature.group"/>
 </setup:ComponentDefinition>
