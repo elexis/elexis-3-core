@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.preferences;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.eclipse.jface.preference.PreferencePage;
@@ -24,6 +25,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.data.PersistentObject;
@@ -39,6 +42,8 @@ public class Datenbank extends PreferencePage implements IWorkbenchPreferencePag
 	Label lOutputFile;
 	Button bOutputFile, bCheck;
 	Settings cfg;
+	
+	private static Logger log = LoggerFactory.getLogger(Datenbank.class);
 	
 	public Datenbank(){
 		
@@ -57,10 +62,20 @@ public class Datenbank extends PreferencePage implements IWorkbenchPreferencePag
 		
 		String driver = jdbcl.getDriverName();
 		String user;
+		Connection conn = null;
 		try {
-			user = jdbcl.getConnection().getMetaData().getUserName();
+			conn = jdbcl.getConnection();
+			user = conn.getMetaData().getUserName();
 		} catch (SQLException e) {
 			user = "ERR: " + e.getMessage();
+		} finally {
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				log.error("Error closing connection" + e);
+			}
 		}
 		String typ = jdbcl.dbDriver();
 		String connectstring = jdbcl.getConnectString();
