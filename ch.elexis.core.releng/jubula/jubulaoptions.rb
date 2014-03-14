@@ -126,14 +126,16 @@ module JubulaOptions
     end
   else
     pathname = "../../**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
-    if (Dir.glob(File.expand_path(pathname)).size == 1)
-      pathname = pathname.sub('configuration/config.ini', '*.ini')
+    Dir.glob(File.expand_path(pathname)).each{
+      |file|
+      next if /\/bin\//i.match(file)
+      pathname = file.sub('configuration/config.ini', '*.ini')
       if (Dir.glob(File.expand_path(pathname)).size == 1)
-      @exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
-      @instDest =  File.dirname(@exeFile)
+        @exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
+        @instDest =  File.dirname(@exeFile)
       end
+      }
     end
-  end
   end
   host_os = RbConfig::CONFIG['host_os']
   case RbConfig::CONFIG['host_os']
@@ -181,7 +183,7 @@ module JubulaOptions
       end
       opts.on("-e", "--exeFile exeFile", "exeFile to use. Defaults to '#{@exeFile}'") do |v|
         puts "@exeFile ist jetzt #{v}"
-	@exeFile = v
+  @exeFile = File.expand_path(v)
   @instDest = File.dirname(@exeFile)
       end
       opts.on("--jubulaHome jubulaHome", "Home of Jubula installation. Defaults to '#{@vmargs}'") do |v|

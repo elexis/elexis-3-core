@@ -96,7 +96,7 @@ public
  end
  
   def prepareRcpSupport
-    savedDir = Dir.pwd    
+    savedDir = Dir.pwd
     unless @dryRun and not File.directory?(@instDest)
       FileUtils.makedirs(File.join(@instDest, 'plugins'))
       Dir.chdir(File.join(@instDest, 'plugins'))
