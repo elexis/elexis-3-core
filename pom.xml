@@ -276,18 +276,6 @@ This approach is the only way to share the same target platform configuration be
     </plugins>
   </pluginManagement>
 </build>
-<pluginRepositories>
-  <pluginRepository>
-    <id>tycho-snapshots</id>
-    <url>https://oss.sonatype.org/content/groups/public/</url>
-  </pluginRepository>
-  <!-- Try Tycho 0.20 - staged version - remove after release -->
-  <pluginRepository>
-    <id>tycho-staged</id>
-    <url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1007/</url>
-  </pluginRepository>
-  <!-- end of removal -->
-</pluginRepositories>
 <scm>
   <developerConnection>scm:git:${scm_url}</developerConnection>
 </scm>
