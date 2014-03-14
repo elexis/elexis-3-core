@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -425,10 +426,9 @@ public abstract class PersistentObject implements IPersistentObject {
 					}
 					CoreHub.globalCfg.flush();
 					CoreHub.localCfg.flush();
-					if (!runningFromScratch)
-					{
+					if (!runningFromScratch) {
 						MessageEvent.fireInformation("Neue Datenbank",
-								"Es wurde eine neue Datenbank angelegt.");
+							"Es wurde eine neue Datenbank angelegt.");
 					}
 				} else {
 					log.error("Kein create script für Datenbanktyp " + getConnection().DBFlavor
@@ -2564,8 +2564,10 @@ public abstract class PersistentObject implements IPersistentObject {
 		int nrTables = 0;
 		String tableName = "none";
 		DatabaseMetaData dmd;
+		Connection conn = null;
 		try {
-			dmd = j.getConnection().getMetaData();
+			conn = j.getConnection();
+			dmd = conn.getMetaData();
 			String[] onlyTables = {
 				"TABLE"
 			};
@@ -2582,6 +2584,14 @@ public abstract class PersistentObject implements IPersistentObject {
 		} catch (SQLException e1) {
 			log.error("Error deleting table " + tableName);
 			return false;
+		} finally {
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				log.error("Error closing connection" + e);
+			}
 		}
 		log.info("Deleted " + nrTables + " tables");
 		return true;
@@ -2597,8 +2607,10 @@ public abstract class PersistentObject implements IPersistentObject {
 		int nrFounds = 0;
 		// Vergleich schaut nicht auf Gross/Klein-Schreibung, da thomas
 		// schon H2-DB gesehen hat, wo entweder alles gross oder alles klein war
+		Connection conn = null;
 		try {
-			DatabaseMetaData dmd = j.getConnection().getMetaData();
+			conn = j.getConnection();
+			DatabaseMetaData dmd = conn.getMetaData();
 			String[] onlyTables = {
 				"TABLE"
 			};
@@ -2613,6 +2625,14 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		} catch (SQLException je) {
 			log.error("Fehler beim abrufen der Datenbank Tabellen Information.", je);
+		} finally {
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				log.error("Error closing connection " + e);
+			}
 		}
 		if (nrFounds > 1) {
 			// Dies kann vorkommen, wenn man eine MySQL-datenbank von Windows ->
