@@ -587,8 +587,11 @@ public class JdbcLink {
 		
 		private boolean reconnect(){
 			try {
+				if (conn != null) {
+					conn.close();
+				}
 				log.log(Level.WARNING, "Stm()Trying reconnect");
-				conn = dataSource.getConnection();
+				conn = getConnection();
 				stm = conn.createStatement();
 				return true;
 			} catch (SQLException ex) {
@@ -604,7 +607,7 @@ public class JdbcLink {
 		
 		Stm() throws SQLException{
 			try {
-				conn = dataSource.getConnection();
+				conn = getConnection();
 				stm = conn.createStatement();
 			} catch (SQLException se) {
 				log.log(Level.WARNING, "need reconnect " + se.getMessage());
@@ -635,6 +638,8 @@ public class JdbcLink {
 				// stm.cancel();
 				if (stm != null) {
 					stm.close();
+				}
+				if (conn != null) {
 					conn.close();
 				}
 			} catch (SQLException ex) {
