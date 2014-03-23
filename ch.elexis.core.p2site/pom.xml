@@ -35,10 +35,11 @@
                    <replacement>
                        <token>project_version</token>
                        <value>${project.version}</value>
-                   </replacement>        
+                   </replacement>    
                    <replacement>
                        <token>buildQualifier</token>
-                       <value>${buildQualifier}</value>
+                       <!-- we want to take the actual time to update the snapshots!-->
+                       <value>${repo_timestamp}</value>
                    </replacement>        
                    <replacement>
                        <token>unqualifiedVersion</token>

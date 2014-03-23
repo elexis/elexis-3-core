@@ -58,6 +58,7 @@
   <tycho-extras.version>${tycho-version}</tycho-extras.version>
   <repo_name>elexis.3.core</repo_name>
   <repo_variant>snapshot</repo_variant>
+  <repo_timestamp>v${maven.build.timestamp}</repo_timestamp>
 </properties>
 <build>
   <plugins>
