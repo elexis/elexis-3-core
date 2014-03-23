@@ -125,7 +125,7 @@ module JubulaOptions
       @instDest =  pathname
     end
   else
-    pathname = "../../**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
+    pathname = "../../**/*#{@os}/*#{@winType}/*#{@cpu}/configuration/config.ini"
     Dir.glob(File.expand_path(pathname)).each{
       |file|
       next if /\/bin\//i.match(file)
