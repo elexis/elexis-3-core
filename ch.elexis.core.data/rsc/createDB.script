@@ -629,9 +629,7 @@ CREATE TABLE DBIMAGE (
     Title          VARCHAR(80),  			# A title unique within the prefix's namespace
     Bild           BLOB
 );
-CREATE INDEX DBIMAGE1 on DBIMAGE(Title);  
-            
+CREATE INDEX DBIMAGE1 on DBIMAGE(Title);     
 
-INSERT INTO CONFIG (param,wert) VALUES ('dbversion','1.8.16');
-INSERT INTO CONFIG (param,wert) VALUES ('ElexisVersion','2.1.6');
-
+INSERT INTO CONFIG (param,wert) VALUES ('dbversion','3.0.0');
+INSERT INTO CONFIG (param,wert) VALUES ('ElexisVersion','3.0.0');
