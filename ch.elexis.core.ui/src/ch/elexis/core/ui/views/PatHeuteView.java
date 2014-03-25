@@ -332,16 +332,6 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				mon = mon.addMoney(ver.getNettoPreis());
 			}
 			tMoney2.setText(mon.getAmountAsString());
-			final Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-			Fall fall = k.getFall();
-			if (fall != null) {
-				final Patient bPat = fall.getPatient();
-				if (bPat != null) {
-					if ((pat == null) || (!pat.getId().equals(bPat.getId()))) {
-						ElexisEventDispatcher.fireSelectionEvent(bPat);
-					}
-				}
-			}
 		}
 	}
 	
