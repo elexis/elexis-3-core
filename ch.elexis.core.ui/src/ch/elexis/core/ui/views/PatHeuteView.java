@@ -329,7 +329,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			tTime2.setText(Integer.toString(k.getMinutes()));
 			Money mon = new Money();
 			for (Verrechnet ver : k.getLeistungen()) {
-				mon = mon.addMoney(ver.getNettoPreis());
+				mon = mon.addMoney(ver.getNettoPreis().multiply(ver.getZahl()));
 			}
 			tMoney2.setText(mon.getAmountAsString());
 		}
@@ -558,7 +558,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 						}
 					} else {
 						for (Verrechnet verr : ((Konsultation) o).getLeistungen()) {
-							sumAll += verr.getNettoPreis().doubleValue();
+							sumAll += verr.getNettoPreis().multiply(verr.getZahl()).doubleValue();
 						}
 						sumTime += ((Konsultation) o).getMinutes();
 					}
