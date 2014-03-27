@@ -90,7 +90,7 @@ class CompositeRepository
               newVersion = File.join(relative.to_s, version)
               next if @children_repo.index(newVersion)
               artifactJar = File.expand_path(File.join(compositeRepoParentFolder, relative, newVersion, 'artifacts.jar'))
-              if nrVersions == 0 or addedVersions < nrVersions-1
+              if nrVersions == 0 or addedVersions < nrVersions
                 addedVersions += 1
                 puts "Adding #{addedVersions}/#{nrVersions}: #{newVersion} has #{artifactJar} #{File.size(artifactJar)} bytes"
                 @children_repo << newVersion
