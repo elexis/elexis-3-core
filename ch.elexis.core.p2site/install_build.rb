@@ -101,7 +101,6 @@ class CompositeRepository
                 FileUtils.rm_rf(snapshotDir2Delete, :verbose => $VERBOSE)
               end
             }
-    exit
   end
     
   def get_versionned_output_dir()
