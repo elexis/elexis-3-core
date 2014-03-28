@@ -8,10 +8,9 @@
     <artifactId>ch.elexis.core.releng</artifactId>
     <version>3.0.0-SNAPSHOT</version>
   </parent>
-  <groupId>ch.elexis</groupId>
-  <version>3.0.0-SNAPSHOT</version>
   <build>
-    <plugins>
+    <pluginManagement>
+      <plugins>
         <plugin>
           <!-- this is a little be tricky. We replace in the target definition
           snapshot|beta|release by the content of the variable repo_variant (default) snapshot
@@ -40,5 +39,7 @@
            </configuration>
         </plugin>
       </plugins>
+          </pluginManagement>
+      
     </build>
 </project>
