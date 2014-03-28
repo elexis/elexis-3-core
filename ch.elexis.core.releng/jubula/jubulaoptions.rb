@@ -102,7 +102,7 @@ module JubulaOptions
   @testResults ||= "#{@workspace}/test-results"
   @server      ||= 'localhost'
   @testsuite   ||= 'sample'
-  @version     ||= '1.0'
+  @version     ||= '1.1'
   @vmargs      ||= ""  
   @wrapper     ||= "#{@workspace}/test-runner.bat" # use bat for windows!
   @vm          ||= 'java'
