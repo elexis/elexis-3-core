@@ -76,7 +76,8 @@ def patchJubulaXML(xml_name, plugin_dir)
   }
 
   counter = 0; views = []
-  viewNames.each{|name|
+	# TODO: Fix this problem!!!
+  viewNames[0..14].each{|name|
     counter += 1
     next if  /Welcome/i.match(name)
     views << eval(genScreenshotElement(counter, name))
