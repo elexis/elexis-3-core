@@ -43,8 +43,8 @@ import ch.rgw.tools.TimeTool;
 public class Verrechnet extends PersistentObject {
 	
 	public static final String DETAIL = "Detail";
-	private static final String SCALE2 = "Scale2";
-	private static final String SCALE = "Scale";
+	public static final String SCALE2 = "Scale2";
+	public static final String SCALE = "Scale";
 	public static final String LEISTG_CODE = "Leistg_code";
 	public static final String LEISTG_TXT = "Leistg_txt";
 	public static final String KONSULTATION = "Konsultation";
@@ -105,6 +105,16 @@ public class Verrechnet extends PersistentObject {
 		for (IVerrechnetAdjuster adjuster : adjusters) {
 			adjuster.adjust(this);
 		}
+	}
+	
+	/**
+	 * Create a copy of the {@link Verrechnet}. The copy can be queried with the id of the reference
+	 * {@link PersistentObject}. Used e.g. by Rechnung to keep track of its {@link Verrechnet}.
+	 * 
+	 * @param reference
+	 */
+	public void createCopy(PersistentObject reference){
+		new VerrechnetCopy(this, reference);
 	}
 	
 	public String getText(){

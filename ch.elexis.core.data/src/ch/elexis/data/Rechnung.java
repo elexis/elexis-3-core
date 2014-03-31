@@ -104,7 +104,7 @@ public class Rechnung extends PersistentObject {
 			return result.add(Result.SEVERITY.WARNING, 1,
 				"Die Rechnung enthält keine Behandlungen (Konsultationen)", null, true); // js:
 // added (Konsultationen) to match
-																							// nomenclature
+			// nomenclature
 // elsewhere in Elexis.
 		}
 		
@@ -296,6 +296,13 @@ public class Rechnung extends PersistentObject {
 		
 		for (Konsultation b : behandlungen) {
 			b.setRechnung(ret);
+			
+			// save all verrechnet of this rechnung
+			List<Verrechnet> lstg = b.getLeistungen();
+			for (Verrechnet l : lstg) {
+				// create copy for each verrechnet with the rechnung as reference
+				l.createCopy(ret);
+			}
 		}
 		if (ret.getOffenerBetrag().isZero()) {
 			ret.setStatus(RnStatus.BEZAHLT);
@@ -327,6 +334,20 @@ public class Rechnung extends PersistentObject {
 			}
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Die verrechneten Leistungen zu der Rechnung holen
+	 * 
+	 * @return
+	 */
+	public List<Verrechnet> getLeistungen(){
+		Query<VerrechnetCopy> vcQuery = new Query<VerrechnetCopy>(VerrechnetCopy.class);
+		vcQuery.add(VerrechnetCopy.REFERENCEID, Query.EQUALS, getId());
+		List<VerrechnetCopy> res = vcQuery.execute();
+		List<Verrechnet> ret = new ArrayList<Verrechnet>();
+		ret.addAll(res);
+		return ret;
 	}
 	
 	/** Die Rechnungsnummer holen */
