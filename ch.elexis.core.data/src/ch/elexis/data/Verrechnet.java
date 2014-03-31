@@ -108,13 +108,12 @@ public class Verrechnet extends PersistentObject {
 	}
 	
 	/**
-	 * Create a copy of the {@link Verrechnet}. The copy can be queried with the id of the reference
-	 * {@link PersistentObject}. Used e.g. by Rechnung to keep track of its {@link Verrechnet}.
+	 * Create a copy of the {@link Verrechnet} for the {@link Rechnung}.
 	 * 
-	 * @param reference
+	 * @param bill
 	 */
-	public void createCopy(PersistentObject reference){
-		new VerrechnetCopy(this, reference);
+	public void createCopy(Rechnung bill){
+		new VerrechnetCopy(this, bill);
 	}
 	
 	public String getText(){

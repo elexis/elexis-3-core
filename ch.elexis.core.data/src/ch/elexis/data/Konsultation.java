@@ -14,6 +14,7 @@ package ch.elexis.data;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import ch.elexis.admin.AccessControlDefaults;
@@ -330,6 +331,27 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	
 	public Rechnung getRechnung(){
 		return Rechnung.load(get(FLD_BILL_ID));
+	}
+	
+	/**
+	 * Lookup {@link Rechnung} including canceled ones for this {@link Konsultation}. Only works
+	 * with {@link Konsultation} created with Elexis version 3.0.0 or newer.
+	 * 
+	 * @since 3.0.0
+	 * @return
+	 */
+	public List<Rechnung> getRechnungen(){
+		List<VerrechnetCopy> konsVerrechnet = VerrechnetCopy.getVerrechnetCopyByConsultation(this);
+		List<Rechnung> ret = new ArrayList<Rechnung>();
+		HashSet<String> rechnungsIds = new HashSet<String>();
+		for (VerrechnetCopy verrechnetCopy : konsVerrechnet) {
+			String rechnungsId = verrechnetCopy.get(VerrechnetCopy.RECHNUNGID);
+			rechnungsIds.add(rechnungsId);
+		}
+		for (String rechnungsId : rechnungsIds) {
+			ret.add(Rechnung.load(rechnungsId));
+		}
+		return ret;
 	}
 	
 	public void setRechnung(Rechnung r){

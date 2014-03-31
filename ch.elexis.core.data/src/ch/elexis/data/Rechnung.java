@@ -337,17 +337,14 @@ public class Rechnung extends PersistentObject {
 	}
 	
 	/**
-	 * Die verrechneten Leistungen zu der Rechnung holen
+	 * Get all {@link Verrechnet} of this bill. Also works if the {@link Rechnung} has been
+	 * canceled. Only works if the {@link Rechnung} was created with Elexis version 3.0.0 or newer.
 	 * 
+	 * @since 3.0.0
 	 * @return
 	 */
 	public List<Verrechnet> getLeistungen(){
-		Query<VerrechnetCopy> vcQuery = new Query<VerrechnetCopy>(VerrechnetCopy.class);
-		vcQuery.add(VerrechnetCopy.REFERENCEID, Query.EQUALS, getId());
-		List<VerrechnetCopy> res = vcQuery.execute();
-		List<Verrechnet> ret = new ArrayList<Verrechnet>();
-		ret.addAll(res);
-		return ret;
+		return VerrechnetCopy.getVerrechnetByBill(this);
 	}
 	
 	/** Die Rechnungsnummer holen */

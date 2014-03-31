@@ -1,11 +1,15 @@
 package ch.elexis.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.VersionInfo;
 
 public class VerrechnetCopy extends Verrechnet {
 	
-	public static final String REFERENCEID = "ReferenceId"; //$NON-NLS-1$
+	public static final String RECHNUNGID = "RechnungId"; //$NON-NLS-1$
+	public static final String BEHANDLUNGID = "BehandlungId"; //$NON-NLS-1$
 	
 	public static final String VERSIONID = "VERSION"; //$NON-NLS-1$
 	private static final String TABLENAME = "VERRECHNETCOPY"; //$NON-NLS-1$
@@ -18,7 +22,8 @@ public class VerrechnetCopy extends Verrechnet {
 			"lastupdate BIGINT," + //$NON-NLS-1$
 			"deleted CHAR(1) default '0'," + //$NON-NLS-1$
 			
-			"ReferenceId VARCHAR(25), " + //$NON-NLS-1$
+			"RechnungId VARCHAR(25), " + //$NON-NLS-1$
+			"BehandlungId VARCHAR(25), " + //$NON-NLS-1$
 			"Leistg_txt VARCHAR(255)," + //$NON-NLS-1$
 			"Leistg_code VARCHAR(25)," + //$NON-NLS-1$
 			"Klasse VARCHAR(80)," + //$NON-NLS-1$
@@ -32,24 +37,28 @@ public class VerrechnetCopy extends Verrechnet {
 			"userID VARCHAR(25)," + //$NON-NLS-1$
 			"Detail BLOB" + //$NON-NLS-1$		
 			");" + //$NON-NLS-1$
-			"CREATE INDEX verrechnetcopy1 ON " + TABLENAME + " (" + REFERENCEID + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"INSERT INTO " + TABLENAME + " (ID," + REFERENCEID + ") VALUES (" + JdbcLink.wrap(VERSIONID) + "," + JdbcLink.wrap(VERSION) + ");"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			"CREATE INDEX verrechnetcopy1 ON " + TABLENAME + " (" + RECHNUNGID + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"CREATE INDEX verrechnetcopy2 ON " + TABLENAME + " (" + BEHANDLUNGID + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"INSERT INTO " + TABLENAME + " (ID," + RECHNUNGID + ") VALUES (" + JdbcLink.wrap(VERSIONID) + "," + JdbcLink.wrap(VERSION) + ");"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	// @formatter:on
 	
 	static {
-		addMapping(TABLENAME, REFERENCEID, LEISTG_TXT, LEISTG_CODE, CLASS, COUNT, COST_BUYING,
-			SCALE_TP_SELLING, SCALE_SELLING, PRICE_SELLING, SCALE, SCALE2, "ExtInfo=Detail", USERID);
+		addMapping(TABLENAME, RECHNUNGID, BEHANDLUNGID, LEISTG_TXT, LEISTG_CODE, CLASS, COUNT,
+			COST_BUYING, SCALE_TP_SELLING, SCALE_SELLING, PRICE_SELLING, SCALE, SCALE2,
+			"ExtInfo=Detail", USERID);
 		
 		if (!tableExists(TABLENAME)) {
 			createOrModifyTable(create);
 		} else {
 			VerrechnetCopy version = load(VERSIONID);
-			VersionInfo vi = new VersionInfo(version.get(REFERENCEID));
+			VersionInfo vi = new VersionInfo(version.get(RECHNUNGID));
 			if (vi.isOlder(VERSION)) {
 				// put update code here when needed
 			}
 		}
 	}
+	
+	public VerrechnetCopy(){}
 	
 	public VerrechnetCopy(String id){
 		super(id);
@@ -64,18 +73,54 @@ public class VerrechnetCopy extends Verrechnet {
 		return TABLENAME;
 	}
 	
-	public VerrechnetCopy(Verrechnet verrechnet, PersistentObject reference){
+	/**
+	 * {@link VerrechnetCopy} instances are created on successful creation of a {@link Rechnung}.
+	 * <b>Using this class differently is not allowed!</b>
+	 * 
+	 * @param verrechnet
+	 * @param bill
+	 */
+	public VerrechnetCopy(Verrechnet verrechnet, Rechnung bill){
 		create(null);
 		set(new String[] {
-			REFERENCEID, LEISTG_TXT, LEISTG_CODE, CLASS, COUNT, COST_BUYING, SCALE_TP_SELLING,
-			SCALE_SELLING, PRICE_SELLING, SCALE, SCALE2, USERID
+			RECHNUNGID, BEHANDLUNGID, LEISTG_TXT, LEISTG_CODE, CLASS, COUNT, COST_BUYING,
+			SCALE_TP_SELLING, SCALE_SELLING, PRICE_SELLING, SCALE, SCALE2, USERID
 		},
 			new String[] {
-				reference.getId(), verrechnet.get(LEISTG_TXT), verrechnet.get(LEISTG_CODE),
-				verrechnet.get(CLASS), verrechnet.get(COUNT), verrechnet.get(COST_BUYING),
-				verrechnet.get(SCALE_TP_SELLING), verrechnet.get(SCALE_SELLING),
-				verrechnet.get(PRICE_SELLING), verrechnet.get(SCALE), verrechnet.get(SCALE2),
-				verrechnet.get(USERID)
+				bill.getId(), verrechnet.getKons().getId(), verrechnet.get(LEISTG_TXT),
+				verrechnet.get(LEISTG_CODE), verrechnet.get(CLASS), verrechnet.get(COUNT),
+				verrechnet.get(COST_BUYING), verrechnet.get(SCALE_TP_SELLING),
+				verrechnet.get(SCALE_SELLING), verrechnet.get(PRICE_SELLING),
+				verrechnet.get(SCALE), verrechnet.get(SCALE2), verrechnet.get(USERID)
 			});
+	}
+	
+	/**
+	 * Get a list of all {@link Verrechnet} for a bill. Also returns {@link Verrechnet} for canceled
+	 * bills.
+	 * 
+	 * @param bill
+	 * @return
+	 */
+	public static List<Verrechnet> getVerrechnetByBill(Rechnung bill){
+		ArrayList<Verrechnet> ret = new ArrayList<Verrechnet>();
+		Query<VerrechnetCopy> vcQuery = new Query<VerrechnetCopy>(VerrechnetCopy.class);
+		vcQuery.add(VerrechnetCopy.RECHNUNGID, Query.EQUALS, bill.getId());
+		List<VerrechnetCopy> res = vcQuery.execute();
+		ret.addAll(res);
+		return ret;
+	}
+	
+	/**
+	 * Get a list of all {@link VerrechnetCopy} for a {@link Konsultation}. This information can be
+	 * used to determine all {@link Rechnung} for a {@link Konsultation}.
+	 * 
+	 * @param consultation
+	 * @return
+	 */
+	public static List<VerrechnetCopy> getVerrechnetCopyByConsultation(Konsultation consultation){
+		Query<VerrechnetCopy> vcQuery = new Query<VerrechnetCopy>(VerrechnetCopy.class);
+		vcQuery.add(VerrechnetCopy.BEHANDLUNGID, Query.EQUALS, consultation.getId());
+		return vcQuery.execute();
 	}
 }
