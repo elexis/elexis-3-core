@@ -34,8 +34,9 @@ import ch.rgw.tools.VersionInfo;
 public class DBUpdate {
 	
 	private static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
-			.getCoreOperationAdvisor();
+		.getCoreOperationAdvisor();
 	
+	//@formatter:off
 	static final String[] versions = {
 		"1.3.0", "1.3.1", "1.3.2", "1.3.3", "1.3.4", "1.3.5", "1.3.6", "1.3.7", "1.3.8", "1.3.9",
 		"1.3.10", "1.3.11", "1.3.12", "1.3.13", "1.4.0", "1.4.1", "1.4.2", "1.4.3", "1.4.4",
@@ -369,6 +370,7 @@ public class DBUpdate {
 			"ALTER TABLE "+BezugsKontakt.TABLENAME+" ADD "+BezugsKontakt.FLD_OTHER_RTYPE+" CHAR(4);"+
 			"ALTER TABLE "+Prescription.TABLENAME+" MODIFY "+Prescription.ARTICLE+" VARCHAR(255);"
 			};
+	//@formatter:on
 	
 	static Log log = Log.get(DBUpdate.class.getName());
 	
@@ -413,7 +415,8 @@ public class DBUpdate {
 		log.log("Start DBUpdate from Version " + dbv + " to Version "
 			+ versions[versions.length - 1], Log.INFOS);
 		
-		boolean success = cod.performDatabaseUpdate(sqlStrings.toArray(new String[0]), CoreHub.PLUGIN_ID);
+		boolean success =
+			cod.performDatabaseUpdate(sqlStrings.toArray(new String[0]), CoreHub.PLUGIN_ID);
 		
 		// update version if all updates are successful
 		if (success) {
