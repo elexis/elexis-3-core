@@ -85,12 +85,21 @@ class CompositeRepository
       raise "Could not locate a version directory in #{compositeRepoParentFolder.to_s}/#{version_glob}"
     end
     /snapshot/i.match(compositeRepoParentFolder.to_s) ? nrVersions = 3 : nrVersions = 0
-    all.sort.reverse[0..(nrVersions-1)].each{|version| 
+    addedVersions = 0
+    all.sort.reverse.each{|version|
               newVersion = File.join(relative.to_s, version)
               next if @children_repo.index(newVersion)
-              puts "Adding #{newVersion}"
-              @children_repo << newVersion
-              @already_indexed_parents << compositeRepoParentFolder
+              artifactJar = File.expand_path(File.join(compositeRepoParentFolder, relative, newVersion, 'artifacts.jar'))
+              if nrVersions == 0 or addedVersions < nrVersions
+                addedVersions += 1
+                puts "Adding #{addedVersions}/#{nrVersions}: #{newVersion} has #{artifactJar} #{File.size(artifactJar)} bytes"
+                @children_repo << newVersion
+                @already_indexed_parents << compositeRepoParentFolder
+              else
+                snapshotDir2Delete = File.dirname(artifactJar)
+                puts "Removing #{addedVersions}/#{nrVersions} artifactJar #{snapshotDir2Delete}"
+                FileUtils.rm_rf(snapshotDir2Delete, :verbose => $VERBOSE)
+              end
             }
   end
     
@@ -136,7 +145,7 @@ class CompositeRepository
     puts "compute_last_version in #{parent_dir} using '#{version_glob}'"
     glob=File.join(parent_dir,version_glob)
     puts "Looking for the last version in #{glob}"
-    versions = Dir.glob(File.join(glob,"artifacts.*")) | Dir.glob(File.join(glob,"dummy")) | Dir.glob(File.join(glob,"compositeArtifacts.*"))
+    versions = Dir.glob(File.join(glob,"artifacts.*")) | Dir.glob(File.join(glob,"compositeArtifacts.*"))
     sortedversions= Array.new
     versions.uniq.sort.each do |path|
       if FileTest.file?(path) && !FileTest.symlink?(File.dirname(path)) && "latest" != File.basename(File.dirname(path))
