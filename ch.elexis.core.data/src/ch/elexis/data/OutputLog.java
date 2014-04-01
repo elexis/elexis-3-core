@@ -72,12 +72,13 @@ public class OutputLog extends PersistentObject {
 	public static IOutputter getOutputter(String outputterID){
 		IOutputter ret = outputter_cache.get(outputterID);
 		if (ret == null) {
-			List<IConfigurationElement> eps = Extensions.getExtensions(ExtensionPointConstantsData.OUTPUT_LOG_DESCRIPTOR);
+			List<IConfigurationElement> eps =
+				Extensions.getExtensions(ExtensionPointConstantsData.OUTPUT_LOG_DESCRIPTOR);
 			for (IConfigurationElement ep : eps) {
 				String id = ep.getAttribute("id");
 				if (id != null && id.equals(outputterID)) {
 					try {
-						ret = (IOutputter) ep.createExecutableExtension("OutputLogDescriptor");
+						ret = (IOutputter) ep.createExecutableExtension("Outputter");
 						outputter_cache.put(outputterID, ret);
 						break;
 					} catch (CoreException ex) {
