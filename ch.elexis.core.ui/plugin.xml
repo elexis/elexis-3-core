@@ -335,7 +335,7 @@
             point="ch.elexis.core.data.OutputLogDescriptor">
          <OutputLogDescriptor
                Outputter="ch.elexis.core.ui.views.RezeptBlatt"
-               id="ch.elexis.Rezeptblatt">
+               id="ch.elexis.RezeptBlatt">
          </OutputLogDescriptor>
       </extension>
       <extension
