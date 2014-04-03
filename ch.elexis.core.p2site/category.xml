@@ -6,10 +6,5 @@
    <feature url="features/ch.elexis.core.ui.p2.feature_3.0.0.qualifier.jar" id="ch.elexis.core.ui.p2.feature" version="3.0.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <category-def name="elexis_3_core" label="elexis_3_core">
-      <description>
-         ALPHA Version of upcoming Elexis 3 Core. See also
-      https://github.com/elexis/elexis-3-core
-      </description>
-   </category-def>
+   <category-def name="elexis_3_core" label="Elexis 3 Kern"/>
 </site>
