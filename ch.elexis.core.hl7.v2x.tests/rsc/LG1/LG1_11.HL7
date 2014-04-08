@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|12342|OPMED|15426|20080130095728||ORU^R01|0801300957280002|P|2.2|||||||D
+PID|1|56|00123035|00004035^56|Muster^Werner^^^^||19480515|||||||||
+ORC|||60470684^280108||IP|||||LG1||mustra1|||20080128135800|||N2_LABOR^001||
+OBR|1||60470684^280108|||200801281200|200801281200|||||||||mustra1|||||||||||
+OBX|1|FT|BAKBEFUND^Mikrobiologie||UNTERSUCHUNGSMATERIAL\.BR\Blutkultur 2: aerob u. anaerob\.BR\\.BR\KULTURELLER  BEFUND:\.BR\\.BR\Nach 48 h Bebrütung in aerober und anaerober Flasche:\.BR\kein Wachstum von Mikroorganismen.\.BR\Die Blutkulturen werden noch weiterbebrütet.\.BR\Ein Schlussbericht folgt.\.BR\||||||P|||200801281200|||

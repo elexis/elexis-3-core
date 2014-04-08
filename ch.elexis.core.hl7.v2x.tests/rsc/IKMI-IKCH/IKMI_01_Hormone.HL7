@@ -1,0 +1,33 @@
+MSH|^~\&|OPMED|12117|OPMED|12388|20080805170401||ORU^R01|20080805170424578|P|2.4|||||||F
+PID|1||||E^M||19700520|F|||^^^^|||||
+PV1|1|O|||||||||||||||||
+ORC|RE||2008.08.05.0343^IKCH||CM|||||12117||KU03^^^^^^^^^^^IKCH||||||||
+OBR|1||2008.08.05.0343^IKCH|||20080805112500|20080805134129|||||||20080805134129|10798^Nativ-Blut^IKCH|KU03^^^^^^^^^^^IKCH||||STANDARD|BLUT-CHEMIE||||||
+NTE|0|L|Probenmaterial/Präanalytik:    
+NTE|0|L|Nativ-Blut ×   
+NTE|0|L|
+NTE|0|L|LH/FSH/Estradiol:
+NTE|0|L| Frauen (ab 17 Jahre)     LH                  FSH                Estradiol
+NTE|0|L|  Follikelphase            2 -  11 U/l         4 -  9  U/l        21 - 114 ng/l
+NTE|0|L|  Ovulation               19 - 103 U/l         5 - 23  U/l        62 - 534 ng/l
+NTE|0|L|  Lutealphase              1 -  13 U/l         2 -  5  U/l        80 - 273 ng/l
+NTE|0|L|  Postmenopause           11 -  59 U/l        17 - 114 U/l            < 88 ng/l
+NTE|0|L|  Schwangerschaft                                                 Zunahme
+NTE|0|L|Prolaktin:                                         
+NTE|0|L| Frauen (ab 17 Jahre)          <20 µg/l             Postmenopause           <15 µg/l
+NTE|0|L|Progesteron (PGN):
+NTE|0|L|  Frauen:           Follikelphase:                           < 6.7  nmol/l
+NTE|0|L|                    Lutealphase:                         5.6 - 127  nmol/l
+NTE|0|L|                    Lutealphase Mittelphase (7.-8. Tag):  35 - 142  nmol/l
+NTE|0|L|                    Postmenopausal:                          < 6.0  nmol/l
+NTE|0|L|                    Orale Kontrazeptiva:                 2.0 - 5.4  nmol/l
+NTE|0|L|  Schwangerschaft:  1. Trimester:                         55 - 198  nmol/l
+NTE|0|L|                    2. Trimester:                        175 - 296  nmol/l
+NTE|0|L|                    3. Trimester:                        491 - 949  nmol/l
+NTE|0|L|
+OBX|1|NM|13941^FSH^INLAB||13.9|U/l|||||F||||||10003^^^Herr Muster Dr
+OBX|2|NM|13940^LH^INLAB||4.47|U/l|||||F||||||10003^^^Herr Muster Dr
+OBX|3|NM|16117^Prolactin (PRL)^INLAB||23.8|µg/l|<20|H|||F||||||10003^^^Herr Muster Dr
+OBX|4|NM|16049^Estradiol (E2)^INLAB||62|ng/l|||||F||||||10003^^^Herr Muster Dr
+OBX|5|NM|11996^Progesteron^INLAB||1.7|nmol/l|||||F||||||10003^^^Herr Muster Dr
+OBX|6|NM|13958^TSH  (DxI)^INLAB||2.79|mU/l|0.25-4||||F||||||10003^^^Herr Muster Dr

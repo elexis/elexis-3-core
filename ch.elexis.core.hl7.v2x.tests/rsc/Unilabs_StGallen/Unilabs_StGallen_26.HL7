@@ -1,0 +1,26 @@
+MSH|^~\&|LABOR|ENZYMLABOR|IFJM0|12067|20080603103521||ORU^R01|0806020493103521040000|P|2.2|||||||D
+PID|1|10722|002321234|002321234^10722|MUSTER^SILVIA^^^^Frau||19760706|F|||Musterstrasse 8^^Musterdorf^^4000^|||
+ORC|RE||0806021234||CM|||||ENZYMLABOR||12067^^^^^^||||||LABSYS||
+OBR|1||0806021234|||20080530120000||||||||20080602070600||12067^^^^^^||||||20080603103521||||
+OBX|1|ST|215^Ferritin||53|mcg/l|15-200 / 15-50 (Grenzbereich) / 100-120 (Optimalbereich)||||F|||20080603103454|||
+OBX|2|ST|520^Antikörper-Suchtest||negativ||||||F|||20080603103454|||
+OBX|3|ST|272^Hepatitis B: anti-HBc||<0.8|MOC|<1.0||||F|||20080603103454|||
+OBX|4|ST|279^Hepatitis C: anti-HCV||<0.8|MOC|<1.0||||F|||20080603103454|||
+OBX|5|ST|400^HIV Antigen + Antikörper||negativ||||||F|||20080603103454|||
+NTE|5|L|                               Der HIV-Screening-Test der Firma Abbott deckt die
+OBX|6|ST|400II^*HIV INFO||||||||F|||20080603103454|||
+NTE|6|L|                               Antikörper gegen HIV Typ 1 und HIV Typ 2 ab, sowie das
+NTE|6|L|                               p24-Antigen.
+OBX|7|ST|411^Rubeolen IgG||21.3|MOC|||||F|||20080603103454|||
+NTE|7|L|                                          Impfschutz:
+NTE|7|L|                                          <1.0       nicht vorhanden
+NTE|7|L|                                          1.0-2.0    fraglich
+NTE|7|L|                                          >2.0       vorhanden
+OBX|8|ST|472^Toxoplasmose IgG||7.9|MOC|<1.0||||F|||20080603103454|||
+OBX|9|ST|470^Toxoplasmose IgM||<0.8|MOC|<1.0||||F|||20080603103454|||
+OBX|10|ST|3225^Treponema Screen IA||<0.8|MOC|<1.0||||F|||20080603103454|||
+OBX|11|ST|271^Hepatitis B: HBs-Antigen||<0.8|MOC|<1.0||||F|||20080603103454|||
+NTE|0|L|
+NTE|0|L|Auftrag inklusive nachbestellte Analyse(n):         
+NTE|0|L|
+NTE|0|L|Schlussbericht: i.V. Max Muster (Dr. med.)

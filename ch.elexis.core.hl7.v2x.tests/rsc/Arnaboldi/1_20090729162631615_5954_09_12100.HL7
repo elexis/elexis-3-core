@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|13000|OPMED|12100|2009071712301107||ORU^R01|2009071712301107|P|2.4|||NE|NE|||D
+PID|1|14250|362673||Muster^Peter^^^Herr^||19460816|M|||Musterstrasse 1^^Musterdorf^^1234^||||1^deutsch|
+ORC|RE||5954.09||CM||||2009071600000000|Inst. f. biopt.u.zytol. Diagnostik||123^Muster^Arzt^^^^Dr. med.||||||||
+OBR|1||5954.09|1^||2009071600000000|2009071600000000|||||||2009071600000000||123^Muster^Arzt^^^^Dr. med.|||||||||||
+OBX|1|TX|14^Histologie||Klinik:\.br\Ausschluss Morbus Crohn. Normale Kolonoskopie.\.BR\Makroskopie:\.br\Kolon: Sechs, bis 5 mm grosse Biopsien.\.BR\Mikroskopie:\.br\\.BR\Diagnose\.br\Biopsien aus dem Kolon:\.BR\Entzündungsfreie, regulär strukturierte Kolonschleimhaut ohne signifikanten histopathologischen Befund. \.BR\Kommentar:\.br\Insbesondere ergeben sich im vorliegenden Biopsiematerial keine Hinweise auf einen Morbus Crohn.\.BR\Kein Dysplasie- und kein Malignitätsnachweis.\.BR\Nachtragbericht:\.br\||||||F|||2009071600000000|||

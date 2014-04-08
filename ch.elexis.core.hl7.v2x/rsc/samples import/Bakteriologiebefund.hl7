@@ -1,0 +1,39 @@
+MSH|^~\&|IMED^^MLABRESULTS|6003|MLAB2MESS||201103031023||ORU^R01|00000083|P|2.6
+PID|1||1|1|Muster^Franz^^^^^^^Frau||19771202|F|||Musterstraﬂe 16^^Bern^^3013^Schweiz||^^^^^^^^^^|||||||||||||||
+PV1|1|?|^^^^^^^^^^6003^0^0^13911^||||^^^^^^^^^^^^^^^^^^^||||||||||||442779|||||K||||||||||||||||||||200701301132|
+OBR||2733410|2733410|^test|||201103021356|||||||201103021356|||
+OBX|1|TX|||Patient: Nachname, Vorname (* xx.xx.xx)
+OBX|2|TX|||
+OBX|3|TX|||Auftragsnummer: 2733410
+OBX|4|TX|||Auftragsdatum: 02.03.2011 13:56
+OBX|5|TX|||Auftragsstatus: Endbefund
+OBX|6|TX|||
+OBX|7|TX|||Material: Uricult (Dip-Slide)
+OBX|8|TX|||
+OBX|9|TX|||Abnahmezeitpunkt: 01.03.2011 / 99:99
+OBX|10|TX|||Tagesnummer:      u305828
+OBX|11|TX|||
+OBX|12|TX|||     Resultate:
+OBX|13|TX|||          Keimidentifikation:
+OBX|14|TX|||      [1] Escherichia coli 10E6/ml
+OBX|15|TX|||
+OBX|16|TX|||     Antibiogramm:                          [1]
+OBX|17|TX|||          Ampicillin                         S
+OBX|18|TX|||          Trimeth/Sulfa                      S
+OBX|19|TX|||          Piperacillin                       S
+OBX|20|TX|||          Piperacillin/Tazobactam            S
+OBX|21|TX|||          Cefuroxim-Axetil                   S
+OBX|22|TX|||          Cefpodoxim                         S
+OBX|23|TX|||          Cefotaxime                         S
+OBX|24|TX|||          Ceftazidim                         S
+OBX|25|TX|||          Ceftriaxon                         S
+OBX|26|TX|||          Cefepim                            S
+OBX|27|TX|||          Imipenem                           S
+OBX|28|TX|||          Meropenem                          S
+OBX|29|TX|||          Amikacin                           S
+OBX|30|TX|||          Gentamicin                         S
+OBX|31|TX|||          Tobramycin                         S
+OBX|32|TX|||          Ciprofloxacin                      S
+OBX|33|TX|||          Norfloxacin                        S
+OBX|34|TX|||          Nitrofurantoin                     S
+OBX|35|TX|||          Augmentin                          S

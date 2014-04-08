@@ -1,0 +1,63 @@
+MSH|^~\&|OPMED|12342|OPMED|12005|20060725153803||ORU^R01|0607251538030007|P|2.2|||||||D
+PID|1|1|00009489|00009489^|Test Mikrobiologie^^^^^|||||||||||
+ORC|||60346886^200706||CM|||||LG1||test|||20060720181300|||N2_LABOR^001||
+OBR|1||60346886^200706|||20060720|20060720|||||||||test|||||||||||
+OBX|1|FT|BAKBEFUND^Mikrobiologie||UNTERSUCHUNGSMATERIAL\.BR\Uricult (Mittelstrahlurin)\.BR\\.BR\KEIMZAHL\.BR\100.000/ml\.BR\\.BR\KULTURELLER  BEFUND:\.BR\\.BR\1.  anhämolytische Streptokokken\.BR\2.  vergrünende Streptokokken\.BR\3.  Enterokokken\.BR\4.  Proteus mirabilis\.BR\5.  Candida krusei\.BR\6.  Lactobacillus spezies\.BR\\.BR\Antibiogramm            1.2.3.4.5.6.                        1.2.3.4.5.6.\.BR\------------------------------------------------------------------------\.BR\Ampicillin, Amoxicillin   S   S       Ciprofloxacin           S S S S\.BR\Augmentin                   R S       Cephalosporin 1.Gen     I R   S\.BR\Cefixim                         S\.BR\Co-trimoxazol                 S R R\.BR\Nitrofurantoin            I   R   I\.BR\Norfloxacin             S     S\.BR\Tetracyclin                       R\.BR\------------------------------------------------------------------------\.BR\                              (S=sensibel R=resistent I=intermediär)\.BR\                              \.BR\BEMERKUNGEN\.BR\\.BR\Candida glabrata ist auf Fluconazol relativ resistent, Candida krusei\.BR\ist immer Fluconazol resistent.\.BR\\.BR\Die isolierten Streptokokken sind empfindlich auf Ampicillin, Amoxy-\.BR\cillin, Augmentin und Nitrofurantoin. Für die Behandlung eines\.BR\unkomplizierten Harnwegsinfekt erübrigt sich ein Antibiogramm.\.BR\\.BR\Ob eine therapiewürdige HWI vorliegt, muss stets zusammen mit dem\.BR\Sediment und der Klinik entschieden werden.\.BR\\.BR\Falls Klinisch weiterhin Verdacht auf eine HWI besteht, empfehlen wir\.BR\Ihnen eine Kontrolle mittels Urinvacutainer (UCK). Dieser erlaubt auch\.BR\den Nachweis von anspruchsvollen Keimen wie Mykoplasmen, Ureaplasmen,\.BR\Gardnerella, Aerokokken, usw.\.BR\Der UCK kann auch für den Nachweis von nicht kultivierbaren Keimen wie\.BR\Chlamydien, HSV, Trichomonaden, Mykoplasma genitalium und Gonokokken\.BR\verwendet werden (PCR-Untersuchung).\.BR\\.BR\Wurde eine Chlamydien Infektion schon ausgeschlossen?\.BR\||||||F|||20060720|||
+OBX|2|TX|hdl^HDL-Cholesterin^HT||2.1|mmol/l|> 1.4||||F|||20060717170000|||
+NTE|2|L|Prognostisch günstig              > 1.4 mmol/l
+NTE|2|L|Standardrisiko                0.9 - 1.4 mmol/l
+NTE|2|L|Risikoindikator                   < 0.9 mmol/l
+OBX|3|TX|ldl^LDL-Cholesterin (berechnet)^HT||2.9|mmol/l|< 4.0||||F|||20060717170000|||
+NTE|3|L|Niederes Risiko                                       < 4.0 mmol/l
+NTE|3|L|Mässiges Risiko                                   4.1 - 4.9 mmol/l
+NTE|3|L|Mit zusätzlichen Risikofaktoren                       < 3.5 mmol/l
+NTE|3|L|Diabetes Typ 2                                        < 3.0 mmol/l
+NTE|3|L|
+NTE|3|L|Bei hohen Triglyceridwerten (> 4 mmol/l) sind die LDL-Werte mit
+NTE|3|L|Vorbehalt (zu tiefe Werte) zu beurteilen.
+OBX|4|TX|hcg^ß-HCG^HT||5692|U/l|< 4||||F|||20060717114700|||
+NTE|4|L|1. SSW nach Konzeption          0 - 50
+NTE|4|L|2. SSW       "                 20 - 500
+NTE|4|L|3. SSW       "                500 - 5000
+NTE|4|L|4. SSW       "               3000 - 19000
+NTE|4|L|2. Monat     "              14000 - 169000
+NTE|4|L|3. Monat     "              16000 - 160000
+OBX|5|TX|hba1c^HbA1c DCCT^HT||8.3|%|4.8 - 5.9|*|||F|||20060717170000|||
+NTE|5|L|Einstellung für Diabetiker
+NTE|5|L| - sehr gut eingestellt                            6 - 7
+NTE|5|L| - gut eingestellt                                 7 - 8
+NTE|5|L| - ungenügend eingestellt                            > 8
+NTE|5|L|
+NTE|5|L|Das Vorhandensein von Hb-Varianten kann (bei HbS,HbC) zu falsch
+NTE|5|L|hohen oder (bei HbF) zu falsch niederigen Werten führen.
+OBX|6|TX|hba1ci^HbA1c IFCC^HT||6.9|%|2.9 - 4.2|*|||F|||20060717170000|||
+NTE|6|L|Standardisierung nach IFCC
+NTE|6|L| - sehr gut eingestellt                         4.5 - 5.5
+NTE|6|L| - gut eingestellt                              5.5 - 6.5
+NTE|6|L| - ungenügend eingestellt                           > 6.5
+OBX|7|TX|cho^Cholesterin^HT||5.8|mmol/l|3.0 - 5.2|*|||F|||20060717170000|||
+NTE|7|L|niedriges Risiko                  < 5.2 mmol/l
+NTE|7|L|mässiges Risiko               5.2 - 6.2 mmol/l
+NTE|7|L|erhöhtes Risiko                   > 6.2 mmol/l
+OBX|8|TX|rsx1^Allergie-Screen sx1^HT||27.40|kU/l|< 0.35|*|||F|||20060717170000|||
+NTE|8|L|CAP-Klasse positiv
+NTE|8|L|Klasse         (kU/L)         Interpretation
+NTE|8|L|0              < 0.35         negativ
+NTE|8|L|1              0.35 - 0.69    fraglich
+NTE|8|L|2              0.70 - 3.49    positiv
+NTE|8|L|3              3.50 - 17.49   stark positiv
+NTE|8|L|4             17.50 - 52.49   stark positiv
+NTE|8|L|5             52.50 - 99.99   stark positiv
+NTE|8|L|6              > 100          stark positiv
+NTE|8|L|Zusammensetzung: Lieschgras, Roggen, Warzenbirke, Beifuss, Dermato-
+NTE|8|L|phagoides pteron., Katzen-, Hundeschuppen, Cladosporium herbarum
+OBX|9|TX|lh^LH (Lutropin)^HT||7.3|IU/L|1.0 - 95.6||||F|||20060717114700|||
+NTE|9|L|Follikelreifung:              2.4 - 12.6 IU/l
+NTE|9|L|Ovulation:                   14.0 - 95.6 IU/l
+NTE|9|L|Lutealphase:                  1.0 - 11.4 IU/l
+NTE|9|L|Postmenopause:                7.7 - 58.5 IU/l
+OBX|10|TX|fsh^FSH (Follitropin)^HT||9.8|IU/l|1.7 - 135.0||||F|||20060717114700|||
+NTE|10|L|Follikelreifung:              3.5 - 12.5 IU/l
+NTE|10|L|Ovulation:                    4.7 - 21.5 IU/l
+NTE|10|L|Lutealphase:                  1.7 -  7.7 IU/l
+NTE|10|L|Postmenopause:               26.0 -135.0 IU/l

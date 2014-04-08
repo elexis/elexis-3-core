@@ -1,0 +1,54 @@
+MSH|^~\&|OPMED|12119|OPMED|12596|20070821134625||ORU^R01|0708211346250001|P|2.2|||||||D
+PID|1|1163|184828|184828^|MUSTER^OLAF^^^^||19620205|M||||||||
+ORC|||1562658^210807||CM|||||RISCH||MUST|||20070821082300|||N2_LABOR^001||
+OBR|1||1562658^210807|||200708171600|200708171600|||||||||MUST|||||||||||
+NTE|0||
+NTE|0||TEIL- bzw. END-Befund wurde am 21.08.07 um 13:46 elektron. übermittelt.
+OBX|1|TX|S^Serum^HT||$||||||F|||20070821134600|||
+OBX|2|TX|EB^EDTA-Blut^HT||$||||||F|||20070821134600|||
+OBX|3|TX|EC^Erythrozyten^HT||5.51|T/l|4.50 - 5.99||||F|||20070821134600|||
+OBX|4|TX|HK^Hämatokrit^HT||0.52|l/l|0.36 - 0.48|*|||F|||20070821134600|||
+OBX|5|TX|HB^Hämoglobin^HT||148|g/l|140 - 180||||F|||20070821134600|||
+OBX|6|TX|MCV^MCV^HT||94|fl|80 - 96||||F|||20070821134600|||
+OBX|7|TX|MCH^MCH^HT||27|pg|28 - 33|*|||F|||20070821134600|||
+OBX|8|TX|MCHC^MCHC^HT||285|g/l|330 - 360|*|||F|||20070821134600|||
+OBX|9|TX|LC^Leukozyten^HT||10.3|G/l|4.4 - 11.3||||F|||20070821134600|||
+OBX|10|TX|DANE^  Neutrophile^HT||79.3|%|42.2 - 75.2|*|||F|||20070821134600|||
+OBX|11|TX|DANEZ^^HT||8.2|G/l|1.40 - 6.50|*|||F|||20070821134600|||
+OBX|12|TX|DAEO^  Eosinophile^HT||0.7|%|0.0 - 7.0||||F|||20070821134600|||
+OBX|13|TX|DAEOZ^^HT||0.1|G/l|0.00 - 0.70||||F|||20070821134600|||
+OBX|14|TX|DABA^  Basophile^HT||0.3|%|0.0 - 4.0||||F|||20070821134600|||
+OBX|15|TX|DABAZ^^HT||0.0|G/l|0.0 - 0.40||||F|||20070821134600|||
+OBX|16|TX|DAMO^  Monozyten^HT||3.0|%|2.0 - 14.0||||F|||20070821134600|||
+OBX|17|TX|DAMOZ^^HT||0.3|G/l|0.20 - 1.40||||F|||20070821134600|||
+OBX|18|TX|DALY^  Lymphozyten^HT||16.7|%|20.5 - 51.1|*|||F|||20070821134600|||
+OBX|19|TX|DALYZ^^HT||1.7|G/l|1.20 - 3.40||||F|||20070821134600|||
+OBX|20|TX|TC^Thrombozyten^HT||249|G/l|193 - 365||||F|||20070821134600|||
+OBX|21|TX|DAU^Differentialblutbild aut.^HT||$||||||F|||20070821134600|||
+OBX|22|TX|AUS^Ausstrich^HT||$||||||F|||20070821134600|||
+OBX|23|TX|STATPP^Status postprandial^HT||$||||||F|||20070821134600|||
+OBX|24|TX|IGE^Immunglobulin E (IgE)^HT||15.5|kU/l|< 166||||F|||20070821134600|||
+OBX|25|TX|DMU^Differentialblutbild mikr.^HT||||||||F|||20070821134600|||
+NTE|25|L|Das maschinell erstellte Differenzialblutbild ergibt
+OBX|26|TX|DMLCU^  Differenzierung der Leukoz.^HT||$||||||F|||20070821134600|||
+OBX|27|TX|DMST^    Stabkernige^HT||1.5|%|3 - 5|*|||F|||20070821134600|||
+OBX|28|TX|DMSTZ^^HT||0.16|G/l|0.12 - 0.45||||F|||20070821134600|||
+OBX|29|TX|DMSE^    Segmentkernige^HT||76.0|%|50 - 70|*|||F|||20070821134600|||
+OBX|30|TX|DMSEZ^^HT||7.83|G/l|2.00 - 6.30|*|||F|||20070821134600|||
+OBX|31|TX|DMEO^    Eosinophile^HT||0.0|%|2 - 4|*|||F|||20070821134600|||
+OBX|32|TX|DMEOZ^^HT||0.00|G/l|0.08 - 0.36|*|||F|||20070821134600|||
+OBX|33|TX|DMBA^    Basophile^HT||1.0|%|0 - 1||||F|||20070821134600|||
+OBX|34|TX|DMBAZ^^HT||0.10|G/l|< 0.10|*|||F|||20070821134600|||
+OBX|35|TX|DMMO^    Monozyten^HT||3.0|%|2 - 6||||F|||20070821134600|||
+OBX|36|TX|DMMOZ^^HT||0.3|G/l|0.08 - 0.54||||F|||20070821134600|||
+OBX|37|TX|DMLY^    Lymphozyten^HT||18.0|%|25 - 40|*|||F|||20070821134600|||
+OBX|38|TX|DMLYZ^^HT||1.85|G/l|1.00 - 3.60||||F|||20070821134600|||
+OBX|39|TX|DMMYE^    Myelozyten^HT||0.5|%|< 1||||F|||20070821134600|||
+OBX|40|TX|DMMYEZ^^HT||0.05|G/l|||||F|||20070821134600|||
+OBX|41|TX|DMANI^    Anisozytose^HT||+||||||F|||20070821134600|||
+OBX|42|TX|DMECU^  Beschreibung der Erythroz.^HT||$||||||F|||20070821134600|||
+OBX|43|TX|DMMIK^    Mikrozytose^HT||+||||||F|||20070821134600|||
+OBX|44|TX|DMANU^    Anulozyten^HT||(+)||||||F|||20070821134600|||
+OBX|45|TX|DMHYO^    Hypochromasie^HT||+||||||F|||20070821134600|||
+OBX|46|TX|DMBNE^  Beschreibung der Neutrophil.^HT||$||||||F|||20070821134600|||
+OBX|47|TX|DMVGR^    Vergröberte Granulation^HT||z.T.||||||F|||20070821134600|||

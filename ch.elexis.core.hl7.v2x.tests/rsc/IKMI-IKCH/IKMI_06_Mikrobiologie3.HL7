@@ -1,0 +1,9 @@
+MSH|^~\&|OPMED|12106|OPMED|12388|20080808102124||ORU^R01|20080808102019937|P|2.4|||||||F
+PID|1|200808065017|200808065017||W^J||19640408|M|||^^Musterdorf^4000^|||||
+PV1|1|O|||||||||||||||||200808065017
+ORC|RE||2008.08.06.5017.01^IKMI||CM|||||12106||SRUD^^^^^^^^^^^IKMI||||||||
+OBR|1||2008.08.06.5017.01^IKMI|||20080806074822|20080806074822|||||||20080806074822|16090^Stuhl (Cary Blair) ×^IKMI|SRUD^^^^^^^^^^^IKMI||||BAKT|BAKTERIOLOGIE||||||
+OBX|1|FT|MIKROBIOLO01^Mikrobiologie|1|\.br\Probenmaterial/Präanalytik:           \.br\Stuhl (Cary Blair):                ×   \.br\Stuhl-Bakteriologie:                  \.br\\.br\Stuhl-Kultur:                    \.br\Salmonella:                        nicht nachgewiesen   \.br\Shigella:                          nicht nachgewiesen   \.br\Campylobacter:                     nicht nachgewiesen   \.br\Yersinia:                          nicht nachgewiesen   ||||||||||||
+ORC|RE||2008.08.06.5017.02^IKMI||CM|||||12106||SRUD^^^^^^^^^^^IKMI||||||||
+OBR|2||2008.08.06.5017.02^IKMI|||20080806081336|20080806081336|||||||20080806081336|16099^Stuhl in SAF ×^IKMI|SRUD^^^^^^^^^^^IKMI||||BAKT|BAKTERIOLOGIE||||||
+OBX|1|FT|MIKROBIOLO02^Mikrobiologie|1|\.br\Probenmaterial/Präanalytik:           \.br\Stuhl in SAF:                      ×   \.br\Parasiten, Mikroskopie (SAF):         \.br\Keine Wurmeier und keine Darmprotozoen nachgewiesen.||||||||||||

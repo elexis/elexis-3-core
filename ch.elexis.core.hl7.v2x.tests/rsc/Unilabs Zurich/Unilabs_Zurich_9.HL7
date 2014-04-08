@@ -1,0 +1,23 @@
+MSH|^~\&|LAB|DIAGNOSTICA|OPMED|12108|20070912101809||ORU^R01|000000002545|P|2.3|||||||D
+PID|1|25342|1933833|1933833^25342|MUSTER^ANNA^^^^Frau||19740301|F|||Dolderstr. 5^^Musterdorf^^4500^|||
+ORC|RE||0709070360||CM|||||DIAGNOSTICA||1000^MUSTER^ARZT^^^|||20070907172200|||UNIGES||
+OBR|0001||0709070360|||20070907000000|20070907000000|||||||20070907172200||1000^MUSTER^ARZT^^^|||||||||F|
+NTE|0|L|Serum    
+OBX|1|ST|2800010^Eiweiss^HT||73|g/l|(60-80)||||F||Y||||
+OBX|2|ST|2980B010^  Albumin^HT||62.3|%|(59.8-72.4)||||F||Y||||
+OBX|3|ST|2980B020^  alpha-1-Globulin^HT||2.8|%|(1.0-3.2)||||F||Y||||
+OBX|4|ST|2980B030^  alpha-2-Globulin^HT||12.2|%|(7.4-12.6)||||F||Y||||
+OBX|5|ST|2980B040^  beta-Globulin^HT||12.1|%|(7.5-12.9)||||F||Y||||
+OBX|6|ST|2980B050^  gamma-Globulin^HT||10.6|%|(8.0-15.8)||||F||Y||||
+OBX|7|ST|ALGL2010^  Albumin/Globulin Quotient^HT||1.7||(1.0-2.0)||||F||Y||||
+NTE|7|L|Unauffällige Serum-Eiweisselektrophorese.
+OBX|8|ST|2905010^IgA^HT||1.40|g/l|(0.82-4.53)||||F||Y||||
+OBX|9|ST|4150010^Gliadin-AK IgG^HT||0.1|MOC|(<1.0)||||F||Y||||
+OBX|10|ST|4152010^Gliadin-AK IgA^HT||<0.1|MOC|(<1.0)||||F||Y||||
+OBX|11|ST|4154010^Transglutaminase-AK IgA^HT||<0.1|MOC|(<1.0)||||F||Y||||
+OBX|12|ST|3035010^25-OH-Vitamin D^HT||148|nmol/l|(50-150)||||F||Y||||
+NTE|12|L|     >100 nmol/l: Idealwert
+NTE|12|L|     < 50 nmol/l: moderater Mangel
+NTE|12|L|     < 25 nmol/l: starker Mangel
+NTE|12|L|     >300 nmol/l: überdosiert
+OBX|13|ST|3111010^TSH basal^HT||2.669|mU/l|(0.200-4.000)||||F||Y||||

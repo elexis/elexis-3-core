@@ -1,11 +1,12 @@
 package ch.elexis.core.ui.importer.div.importers;
 
-import ch.elexis.core.ui.importer.div.importers.HL7.OBX;
+import ch.elexis.hl7.model.AbstractData;
 
 public interface ILabItemResolver {
-	public String getTestName(OBX obx);
 	
-	public String getTestGroupName(OBX obx);
+	public String getTestGroupName(AbstractData data);
 	
-	public String getNextTestGroupSequence(OBX obx);
+	public String getTestName(AbstractData data);
+	
+	public String getNextTestGroupSequence(AbstractData data);
 }

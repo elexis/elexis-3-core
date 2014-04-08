@@ -1,0 +1,14 @@
+MSH|^~\&|LABOR|ENZYMLABOR|ADMD0|12670|20080603114528||ORU^R01|0806031215114528450000|P|2.2|||||||D
+PID|1|1907|000371234|000371234^1907|MUSTER^CATERINA^^^^Frau||19301207|F|||Musterstrasse 8^^Musterdorf^^4000^|||
+ORC|RE||0806031234||CM|||||ENZYMLABOR||12670^^^^^^||||||LABSYS||
+OBR|1||0806031234|||20080602103000||||||||20080603084400||12670^^^^^^||||||20080603114528||||
+OBX|1|ST|195^Glycohämoglobin Hb-A1c||8.3|%|4.3-6.1|*|||F|||20080603114446|||
+NTE|1|L|                                                  Blutzucker-Einstellung:
+NTE|1|L|                                                  5.0-7.0 : ideal
+NTE|1|L|                                                  7.1-8.0 : akzeptabel
+NTE|1|L|                                                  >8.0 : ungenügend
+OBX|2|ST|2541^Mittlere Glucose/8-12 Wochen||10.5|mmol/l|||||F|||20080603114446|||
+OBX|3|ST|220^T4 frei||19|pmol/l|11-24||||F|||20080603114446|||
+OBX|4|ST|235^T3 frei||3.5|pmol/l|3.0-6.2||||F|||20080603114446|||
+OBX|5|ST|226^TSH Thyreotropin basal||0.826|mU/l|0.200-4.230||||F|||20080603114446|||
+NTE|0|L|Schlussbericht: i.V. Max Muster (Dr. med.)

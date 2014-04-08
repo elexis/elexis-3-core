@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: HL7 Import Test
+Bundle-SymbolicName: ch.elexis.core.hl7.v2x.tests
+Bundle-Version: 3.0.0.qualifier
+Bundle-Vendor: ch.elexis
+Fragment-Host: ch.elexis.core.hl7.v2x;bundle-version="3.0.0.qualifier"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit;bundle-version="4.10.0"
+Import-Package: ch.elexis.data

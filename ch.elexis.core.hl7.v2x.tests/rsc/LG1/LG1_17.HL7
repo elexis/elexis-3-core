@@ -1,0 +1,17 @@
+MSH|^~\&|OPMED|12342|OPMED|15514|20080130133300||ORU^R01|0801301333000001|P|2.2|||||||D
+PID|1|6788|00123529|00167529^6788|Muster^Vljora^^^^||19811206|||||||||
+ORC|||60470800^280108||CM|||||LG1||mustra6|||20080128144500|||N2_LABOR^001||
+OBR|1||60470800^280108|||20080125|20080125|||||||||mustra6|||||||||||
+OBX|1|TX|sak^Hepatitis B-s-AK^HT||< 2|IE/L|< 10||||F|||20080130133300|||
+OBX|2|TX|corg^Hepatitis B-c-AK IgG/IgM^HT||negativ||negativ||||F|||20080130133300|||
+NTE|2|L|Zum Ausschluss einer chronischen HBV-Infektion haben wir zusätzlich
+NTE|2|L|HBc-IgG/M bestimmt. (bei chronischen HBV-Infektionen erübrigen sich
+NTE|2|L|weitere Impfungen)
+NTE|2|L|
+NTE|2|L|Non- oder Hyporesponder:
+NTE|2|L|Falls der/die PatientIn nur die Grundimmunisierung erhielt, soll 1 Monat
+NTE|2|L|nach der Auffrischimpfung wieder eine Kontrolle durchgeführt werden.
+NTE|2|L|Falls nach der ersten Auffrischimpfung die Anti-HBs-Konzentration
+NTE|2|L|weiterhin unter 100 IE/L ist, sollen Auffrischimpfungen alle 6-12 Monate
+NTE|2|L|(je nach Exposition) durchgeführt werden. Die Kontrollen erfolgen
+NTE|2|L|jeweils 1 Monat nach den Auffrischimpfungen. (Empfehlungen BAG, 1997)

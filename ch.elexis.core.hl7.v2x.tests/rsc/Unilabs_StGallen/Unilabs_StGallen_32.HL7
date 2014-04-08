@@ -1,0 +1,12 @@
+MSH|^~\&|LABOR|ENZYMLABOR|SAHJ0|12439|20080603114527||ORU^R01|0806031085114527290000|P|2.2|||||||D
+PID|1|2734|002971234|002971234^2734|MUSTER^ANNAMARIE^^^^Frau||19360801|F|||Musterstrasse 8^^Musterdorf^^4000^|||
+ORC|RE||0806031234||CM|||||ENZYMLABOR||12439^^^^^^||||||LABSYS||
+OBR|1||0806031234|||20080531091500||||||||20080603082600||12439^^^^^^||||||20080603114527||||
+OBX|1|ST|194^Magnesium||0.82|mmol/l|0.72-1.05||||F|||20080603114442|||
+OBX|2|ST|215^Ferritin||41|mcg/l|15-200 / 15-50 (Grenzbereich) / 100-120 (Optimalbereich)||||F|||20080603114442|||
+OBX|3|ST|226^TSH Thyreotropin basal||0.234|mU/l|0.200-4.230||||F|||20080603114442|||
+OBX|4|ST|352^FSH||116.2|U/l|Follikel   (1.6-12.0) / Peak       (8.0-22.0) / Luteal     (0.9-12.0) / Postmeno   (35.0-151.0)||||F|||20080603114442|||
+OBX|5|ST|353^LH||34.3|U/l|Follikel   (1.8-13.4) / Peak       (15.6-78.9) / Luteal     (0.7-19.4) / Postmeno   (10.8-61.4)||||F|||20080603114442|||
+OBX|6|ST|354^E2 Estradiol||<37|pmol/l|Follikel   (70-672) / Luteal     (220-774) / Peak       (551-1938) / Postmeno   (<114)||||F|||20080603114442|||
+OBX|7|ST|356^Prolactin||19.2|mcg/l|2.3-25.0 / Postmeno   (2.3-10.0) / Grav.      (<250)||||F|||20080603114442|||
+NTE|0|L|Schlussbericht: i.V. Max Muster (Dr. med.)

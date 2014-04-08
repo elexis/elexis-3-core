@@ -1,0 +1,16 @@
+MSH|^~\&|LAB|DIAGNOSTICA|OPMED|12592|20070924153306||ORU^R01|000000002576|P|2.3|||||||D
+PID|1|25389|1941911|1941911^25389|MUSTER^NICOLE^^^^Frau||19730609|F|||Rebwiesstr. 5^^Musterdorf^^4500^|||
+ORC|RE||0709210303||CM|||||DIAGNOSTICA||1000^MUSTER^ARZT^^^|||20070921170700|||UNIGES||
+OBR|0001||0709210303|||20070921000000|20070921000000|||||||20070921170700||1000^MUSTER^ARZT^^^|||||||||F|
+NTE|0|L|Serum    
+OBX|1|ST|2800010^Eiweiss^HT||71|g/l|(60-80)||||F||Y||||
+OBX|2|ST|2980B010^  Albumin^HT||60.5|%|(59.8-72.4)||||F||Y||||
+OBX|3|ST|2980B020^  alpha-1-Globulin^HT||2.0|%|(1.0-3.2)||||F||Y||||
+OBX|4|ST|2980B030^  alpha-2-Globulin^HT||9.2|%|(7.4-12.6)||||F||Y||||
+OBX|5|ST|2980B040^  beta-Globulin^HT||9.6|%|(7.5-12.9)||||F||Y||||
+OBX|6|ST|2980B050^  gamma-Globulin^HT||18.7|%|(8.0-15.8)|*|||F||Y||||
+OBX|7|ST|ALGL2010^  Albumin/Globulin Quotient^HT||1.5||(1.0-2.0)||||F||Y||||
+NTE|7|L|Erhöhung der Gamma-Fraktion bei sonst
+NTE|7|L|unauffälliger Serum-Eiweisselektrophorese.
+OBX|8|ST|2640010^Eisen^HT||9.2|µmol/l|(9.0-27.0)||||F||Y||||
+OBX|9|ST|2860010^Ferritin^HT||55|µg/l|(15-200)||||F||Y||||
