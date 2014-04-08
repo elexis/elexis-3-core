@@ -1,0 +1,23 @@
+MSH|^~\&|LABOR|ENZYMLABOR|SGSC6|12547|20080603115328||ORU^R01|0806020024115328990000|P|2.2|||||||D
+PID|1|37630|001761234|001761234^37630|MUSTER^ANNA^^^^Frau||19510818|F|||Musterstrasse 8^^Musterdorf^^4000^|||
+ORC|RE||0806021234||CM|||||ENZYMLABOR||12547^^^^^^||||||LABSYS||
+OBR|1||0806021234|||20080530000000||||||||20080602055800||12547^^^^^^||||||20080603115328||||
+OBX|1|ST|509^Leukozyten||7.50|G/l|3.50-10.00||||F|||20080603115326|||
+OBX|2|ST|504^Erythrozyten||4.74|T/l|3.90-5.15||||F|||20080603115326|||
+OBX|3|ST|5111^RDW||13.6|%|12.0-15.0||||F|||20080603115326|||
+OBX|4|ST|506^Hämoglobin||151|g/l|120-156||||F|||20080603115326|||
+OBX|5|ST|505^Hämatokrit||0.45|l/l|0.35-0.45||||F|||20080603115326|||
+OBX|6|ST|514^MCV||95|fl|85-102||||F|||20080603115326|||
+OBX|7|ST|515^MCH||31.9|pg|27.0-34.0||||F|||20080603115326|||
+OBX|8|ST|516^MCHC||333|g/l|315-360||||F|||20080603115326|||
+OBX|9|ST|511^Thrombozyten||313|G/l|150-370||||F|||20080603115326|||
+NTE|0|L|Gemäss telefonischen Angaben besteht bei dieser 56jährigen Patientin eine ekzematöse Dermatose. Eine Hautbiopsie
+NTE|0|L|steht noch aus.
+NTE|0|L|Das Blutbild ist quantitativ unauffällig. Die Morphologie der Lymphozyten (trotz alter Blutprobe,3 Tg) lässt
+NTE|0|L|dennoch ein sicherer Ausschluss dieser speziell abnormen Zelle nicht absolut zu.
+NTE|0|L|Die Lymphozytenpopulation präsentiert sich grössen- und Kernpolymorph. Ungefähr 5-10% der Lymphozyten weissen
+NTE|0|L|Kernstrukturen mit Rillen und oder Falten auf, z.T. auch angedeutete Kernvertiefung (Nukleolus-like).
+NTE|0|L|Eine Kontrolle mit frischem Blutausstrich und ev Immunphäno- typisierung - abhängig von der Klinik /
+NTE|0|L|Hautbiopsiebefund - ist zu empfehlen.
+NTE|0|L|
+NTE|0|L|Schlussbericht: Dr. med. Max Muster

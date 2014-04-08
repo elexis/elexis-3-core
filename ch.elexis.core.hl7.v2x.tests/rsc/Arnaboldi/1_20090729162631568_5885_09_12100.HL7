@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|13000|OPMED|12100|2009071512302007||ORU^R01|2009071512302007|P|2.4|||NE|NE|||D
+PID|1|14239|362621||Muster^Gianni^^^Herr^||19870419|M|||Musterstrasse 1^^Musterdorf^^1234^||||1^deutsch|
+ORC|RE||5885.09||CM||||2009071400000000|Inst. f. biopt.u.zytol. Diagnostik||123^Muster^Arzt^^^^Dr. med.||||||||
+OBR|1||5885.09|1^||2009071400000000|2009071400000000|||||||2009071400000000||123^Muster^Arzt^^^^Dr. med.|||||||||||
+OBX|1|TX|14^Histologie||Klinik:\.br\Ausschluss Sprue, Lambliasis. \.BR\Makroskopie:\.br\Duodenum: Vier bis 4 mm grosse Biopsien. Lupenmikroskopisch Oberflächenmuster 0.\.BR\Mikroskopie:\.br\\.BR\Diagnose\.br\Biopsien aus dem Duodenum: \.BR\Entzündungsfreie, regulär strukturierte Duodenalschleimhaut ohne signifikanten histopathologischen Befund.\.BR\Kommentar:\.br\In der Duodenalschleimhaut ergeben sich keine Hinweise auf eine Sprue resp. Zöliakie oder auf einen Morbus Whipple. Lamblien werden nicht nachgewiesen.\.BR\Kein Dysplasie- und kein Malignitätsnachweis.\.BR\Nachtragbericht:\.br\||||||F|||2009071400000000|||

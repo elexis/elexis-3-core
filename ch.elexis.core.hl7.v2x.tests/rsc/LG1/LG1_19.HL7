@@ -1,0 +1,10 @@
+MSH|^~\&|OPMED|12342|OPMED|15588|20080130140913||ORU^R01|0801301409130001|P|2.2|||||||D
+PID|1||00123668|00167668^|Anonym^08139^^^^|||||||||||
+ORC|||60471369^290108||CM|||||LG1||mustra2|||20080129160300|||N2_LABOR^001||
+OBR|1||60471369^290108|||20080129|20080129|||||||||mustra2|||||||||||
+NTE|0||Röhrli mit 080139 beschriftet
+OBX|1|TX|tpclia^T.pallidum (Lues-Screening)^HT||< 0.1|Index|< 0.9||||F|||20080130140900|||
+OBX|2|TX|hivc^HIV Combi (p24 AG+I/II AK)^HT||negativ||negativ||||F|||20080130140900|||
+NTE|2|L|Mit Hilfe des HIV Combi Tests kann eine Infektion frühestens 15 Tage
+NTE|2|L|nach dem Infektionszeitpunkt nachgewiesen werden. Im negativen Fall
+NTE|2|L|soll der Test 3 Monate nach einem Ereignis nochmals wiederholt werden.

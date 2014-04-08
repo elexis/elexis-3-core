@@ -1,6 +1,6 @@
 package ch.elexis.core.ui.importer.div.importers;
 
-import ch.elexis.core.ui.importer.div.importers.HL7.OBX;
+import ch.elexis.hl7.model.AbstractData;
 import ch.rgw.tools.TimeTool;
 
 public class DefaultLabItemResolver implements ILabItemResolver {
@@ -14,18 +14,17 @@ public class DefaultLabItemResolver implements ILabItemResolver {
 	}
 	
 	@Override
-	public String getTestName(OBX obx){
-		return obx.getItemName();
+	public String getTestName(AbstractData data){
+		return data.getName();
 	}
 	
 	@Override
-	public String getTestGroupName(OBX obx){
+	public String getTestGroupName(AbstractData data){
 		return Messages.HL7Parser_AutomaticAddedGroup + dat;
 	}
 	
 	@Override
-	public String getNextTestGroupSequence(OBX obx){
+	public String getNextTestGroupSequence(AbstractData data){
 		return Integer.toString(sequence++);
 	}
-	
 }

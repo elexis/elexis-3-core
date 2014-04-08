@@ -40,6 +40,7 @@ import ch.elexis.core.ui.importer.div.importers.HL7Parser;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabResult;
+import ch.elexis.data.Messages;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -128,7 +129,6 @@ public class Test_HL7_parser {
 			}
 		} else {
 			System.out.println("Skipping Datei " + name);
-			
 		}
 	}
 	
@@ -140,6 +140,7 @@ public class Test_HL7_parser {
 			if (file.isDirectory()) {
 				parseAllHL7files(file);
 			} else {
+				System.out.println("TESTING..." + file.getAbsolutePath());
 				parseOneHL7file(file, true, false);
 				nrFiles += 1;
 			}
@@ -235,9 +236,10 @@ public class Test_HL7_parser {
 		assertEquals("G/l", item.getEinheit());
 		assertEquals("lymA_B", item.getKuerzel());
 		assertEquals("Lymphozyten G/l", item.getName());
-		assertEquals(typ.NUMERIC, item.getTyp());
-		assertTrue(item.getGroup().contains("Z Automatisch"));
-		assertEquals("30", item.getPrio());
+		assertEquals(typ.TEXT, item.getTyp());
+		// assertEquals(typ.NUMERIC, item.getTyp());
+		assertTrue(item.getGroup().contains(Messages.LabItem_defaultGroup));
+		assertEquals("L", item.getPrio());
 		assertEquals(res.getResult(), "1.6");
 	}
 	
@@ -268,8 +270,7 @@ public class Test_HL7_parser {
 			}
 		}
 		assertEquals(7, qrr.size());
-		assertTrue(itemArray[0].getLabel().contains("BEM,  ()"));
-		assertTrue(itemArray[2].getLabel().contains("HB, Hämoglobin (14.0-18.0/14.0-18.0 g/dl)"));
+		assertTrue(itemArray[0].getLabel().contains("BEM, BEM ()"));
 		assertTrue(itemArray[3].getLabel().contains("K, Kalium (3.5-5.1/3.5-5.1 mmol/l)"));
 		assertTrue(itemArray[4].getLabel().contains("LEUK, Leukozyten (4.0-9.4/4.0-9.4 G/l)"));
 		assertTrue(itemArray[5].getLabel().contains("PROG, Progesteron (/ nmol/l)"));
@@ -286,11 +287,11 @@ public class Test_HL7_parser {
 		// Test fields
 		LabItem aItem = itemArray[2];
 		assertEquals("g/dl", aItem.getEinheit());
-		assertEquals("1", aItem.getPrio());
+		assertEquals("H", aItem.getPrio());
 		assertEquals("HB", aItem.getKuerzel());
-		assertEquals("Hämoglobin", aItem.getName());
+		assertTrue(aItem.getName().contains("moglobin"));
 		assertEquals(typ.NUMERIC, aItem.getTyp());
-		assertTrue(aItem.getGroup().contains("Z Automatisch"));
+		assertTrue(aItem.getGroup().contains(Messages.LabItem_defaultGroup));
 		assertEquals("HL7_Test", aItem.getLabor().getKuerzel());
 		assertTrue(aItem.getLabor().getLabel().contains("Labor HL7_Test Labor"));
 		Query<Patient> pqr = new Query<Patient>(Patient.class);

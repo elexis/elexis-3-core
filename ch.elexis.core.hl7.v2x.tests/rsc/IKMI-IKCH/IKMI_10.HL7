@@ -1,0 +1,33 @@
+MSH|^~\&|OPMED|12117|OPMED|12388|20080811164002||ORU^R01|20080811164121953|P|2.4|||||||F
+PID|1|200808110306|200808110306||S^S||19830301|F|||Musterstr. 3^^Musterdorf^4000^|||||
+PV1|1|O|||||||||||||||||200808110306
+ORC|RE||2008.08.11.0306^IKCH||CM|||||12117||SR06^^^^^^^^^^^IKCH||||||||
+OBR|1||2008.08.11.0306^IKCH|||20080811000000|20080811125011|||||||20080811125011|10844^Serum^IKCH|SR06^^^^^^^^^^^IKCH||||STANDARD|BLUT-CHEMIE||||||
+NTE|0|L|Probenmaterial/Präanalytik:    
+NTE|0|L|Serum ×   
+NTE|0|L|
+NTE|0|L|Progesteron (PGN):
+NTE|0|L|  Frauen:           Follikelphase:                           < 6.7  nmol/l
+NTE|0|L|                    Lutealphase:                         5.6 - 127  nmol/l
+NTE|0|L|                    Lutealphase Mittelphase (7.-8. Tag):  35 - 142  nmol/l
+NTE|0|L|                    Postmenopausal:                          < 6.0  nmol/l
+NTE|0|L|                    Orale Kontrazeptiva:                 2.0 - 5.4  nmol/l
+NTE|0|L|  Schwangerschaft:  1. Trimester:                         55 - 198  nmol/l
+NTE|0|L|                    2. Trimester:                        175 - 296  nmol/l
+NTE|0|L|                    3. Trimester:                        491 - 949  nmol/l
+NTE|0|L|LH/FSH/Estradiol:
+NTE|0|L| Frauen (ab 17 Jahre)     LH                  FSH                Estradiol
+NTE|0|L|  Follikelphase            2 -  11 U/l         4 -  9  U/l        21 - 114 ng/l
+NTE|0|L|  Ovulation               19 - 103 U/l         5 - 23  U/l        62 - 534 ng/l
+NTE|0|L|  Lutealphase              1 -  13 U/l         2 -  5  U/l        80 - 273 ng/l
+NTE|0|L|  Postmenopause           11 -  59 U/l        17 - 114 U/l            < 88 ng/l
+NTE|0|L|  Schwangerschaft                                                 Zunahme
+NTE|0|L|Prolaktin:                                         
+NTE|0|L| Frauen (ab 17 Jahre)          <20 µg/l             Postmenopause           <15 µg/l
+NTE|0|L|
+OBX|1|NM|13941^FSH^INLAB||6.35|U/l|||||F|||||10095^^^Prof. Dr. M. Muster|
+OBX|2|NM|13940^LH^INLAB||27.6|U/l|||||F|||||10095^^^Prof. Dr. M. Muster|
+OBX|3|NM|16117^Prolactin (PRL)^INLAB||12.5|µg/l|<20||||F|||||10095^^^Prof. Dr. M. Muster|
+OBX|4|NM|16049^Estradiol (E2)^INLAB||48|ng/l|||||F|||||10095^^^Prof. Dr. M. Muster|
+OBX|5|NM|11996^Progesteron^INLAB||1.8|nmol/l|||||F|||||10095^^^Prof. Dr. M. Muster|
+OBX|6|NM|13958^TSH  (DxI)^INLAB||1.63|mU/l|0.25-4||||F|||||10095^^^Prof. Dr. M. Muster|

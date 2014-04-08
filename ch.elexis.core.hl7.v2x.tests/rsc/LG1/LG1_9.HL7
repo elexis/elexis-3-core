@@ -1,0 +1,37 @@
+MSH|^~\&|OPMED|12342|OPMED|15572|20080130133301||ORU^R01|0801301333010002|P|2.2|||||||D
+PID|1|2992|00123664|00039664^2992|Muster^Diemo^^^^||19700903|||||||||
+ORC|||60470947^280108||CM|||||LG1||mustra5|||20080128173800|||N2_LABOR^001||
+OBR|1||60470947^280108|||20080128|20080128|||||||||mustra5|||||||||||
+OBX|1|TX|q^Quick (Prothrombinzeit)^HT||> 130|%|80 - 130||||F|||20080130133300|||
+NTE|1|L|             therap. Bereich   12 - 33
+OBX|2|TX|inron^INR^HT||0.9||||||F|||20080130133300|||
+OBX|3|TX|na^Natrium^HT||145|mmol/l|135 - 147||||F|||20080130133300|||
+OBX|4|TX|k^Kalium^HT||4.3|mmol/l|3.5 - 5.1||||F|||20080130133300|||
+OBX|5|TX|bg^Bilirubin, gesamt^HT||10.0|mcmol/l|3.4 - 17.0||||F|||20080130133300|||
+OBX|6|TX|bdi^Bilirubin, direkt^HT||4.2|mcmol/l|< 3.4|*|||F|||20080130133300|||
+OBX|7|TX|krea2^Kreatinin^HT||62|mcmol/l|62 - 106||||F|||20080130133300|||
+OBX|8|TX|glpo^Glukose postprandial^HT||4.8|mmol/l|3.8 - 7.8||||F|||20080130133300|||
+OBX|9|TX|got^GOT (ASAT)^HT||206|U/l|10 - 34|*|||F|||20080130133300|||
+OBX|10|TX|gpt^GPT (ALAT)^HT||133|U/l|10 - 44|*|||F|||20080130133300|||
+OBX|11|TX|alp^Alkalische Phosphatase^HT||85|U/l|40 - 130||||F|||20080130133300|||
+OBX|12|TX|ggt^GGT (Gamma-glut.-transf.)^HT||753|U/l|11 - 50|*|||F|||20080130133300|||
+OBX|13|TX|pam^Pankreas-Amylase^HT||32|U/l|< 53||||F|||20080130133300|||
+OBX|14|TX|albs^Albumin^HT||48.7|g/l|35 - 52||||F|||20080130133300|||
+OBX|15|TX|hcv^Hepatitis C - AK^HT||negativ||negativ||||F|||20080130133300|||
+OBX|16|TX|sak^Hepatitis B-s-AK^HT||< 2|IE/L|< 10||||F|||20080130133300|||
+NTE|16|L|Zum Ausschluss einer chronischen HBV-Infektion haben wir zusätzlich
+NTE|16|L|HBc-IgG/M bestimmt. (bei chronischen HBV-Infektionen erübrigen sich
+NTE|16|L|weitere Impfungen)
+NTE|16|L|
+NTE|16|L|Non- oder Hyporesponder:
+NTE|16|L|Falls der/die PatientIn nur die Grundimmunisierung erhielt, soll 1 Monat
+NTE|16|L|nach der Auffrischimpfung wieder eine Kontrolle durchgeführt werden.
+NTE|16|L|Falls nach der ersten Auffrischimpfung die Anti-HBs-Konzentration
+NTE|16|L|weiterhin unter 100 IE/L ist, sollen Auffrischimpfungen alle 6-12 Monate
+NTE|16|L|(je nach Exposition) durchgeführt werden. Die Kontrollen erfolgen
+NTE|16|L|jeweils 1 Monat nach den Auffrischimpfungen. (Empfehlungen BAG, 1997)
+OBX|17|TX|hivc^HIV Combi (p24 AG+I/II AK)^HT||negativ||negativ||||F|||20080130133300|||
+NTE|17|L|Mit Hilfe des HIV Combi Tests kann eine Infektion frühestens 15 Tage
+NTE|17|L|nach dem Infektionszeitpunkt nachgewiesen werden. Im negativen Fall
+NTE|17|L|soll der Test 3 Monate nach einem Ereignis nochmals wiederholt werden.
+OBX|18|TX|corg^Hepatitis B-c-AK IgG/IgM^HT||negativ||negativ||||F|||20080130133300|||

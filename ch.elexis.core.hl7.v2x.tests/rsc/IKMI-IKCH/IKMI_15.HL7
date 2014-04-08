@@ -1,0 +1,23 @@
+MSH|^~\&|OPMED|12117|OPMED|12388|20080804150819||ORU^R01|20080804150936640|P|2.4|||||||F
+PID|1|P007302|P007302||B^U||19710222|F|||^^^^|||||
+PV1|1|O|||||||||||||||||P007302
+ORC|RE||2008.08.04.0333^IKCH||CM|||||12117||FI01^^^^^^^^^^^IKCH||||||||
+OBR|1||2008.08.04.0333^IKCH|||20080804121000|20080804131452|||||||20080804131452|10755^Heparin-Blut^IKCH|FI01^^^^^^^^^^^IKCH||||STANDARD|BLUT-CHEMIE||||||
+NTE|0|L|Probenmaterial/Präanalytik:    
+NTE|0|L|Heparin-Blut ×   
+NTE|0|L|Nativ-Blut ×   
+NTE|0|L|
+NTE|0|L|LH/FSH/Estradiol:
+NTE|0|L| Frauen (ab 17 Jahre)     LH                  FSH                Estradiol
+NTE|0|L|  Follikelphase            2 -  11 U/l         4 -  9  U/l        21 - 114 ng/l
+NTE|0|L|  Ovulation               19 - 103 U/l         5 - 23  U/l        62 - 534 ng/l
+NTE|0|L|  Lutealphase              1 -  13 U/l         2 -  5  U/l        80 - 273 ng/l
+NTE|0|L|  Postmenopause           11 -  59 U/l        17 - 114 U/l            < 88 ng/l
+NTE|0|L|  Schwangerschaft                                                 Zunahme
+NTE|0|L|Homocystein:
+NTE|0|L| Ideal sind Messwerte unter 10.0 µmol/l.
+NTE|0|L| Wechsel von HPLC auf Nephelometrie.
+NTE|0|L|
+OBX|1|NM|256^Homocystein^INLAB||6|µmol/l|<15||||F||||||10044^^^Dr. M. Muster, Ass.
+OBX|2|NM|16049^Estradiol (E2)^INLAB||136|ng/l|||||F||||||10044^^^Dr. M. Muster, Ass.
+OBX|3|NM|13958^TSH  (DxI)^INLAB||1.64|mU/l|0.25-4||||F||||||10044^^^Dr. M. Muster, Ass.

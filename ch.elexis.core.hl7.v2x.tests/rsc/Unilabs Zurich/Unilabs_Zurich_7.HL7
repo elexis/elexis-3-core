@@ -1,0 +1,13 @@
+MSH|^~\&|LAB|DIAGNOSTICA|OPMED|12080|20070925153316||ORU^R01|000000002578|P|2.3|||||||D
+PID|1||1626490|1626490^|MUSTER^ELKE^^^^Frau||19310322|F|||Stockenstr. 44^^Musterdorf^^4500^|||
+ORC|RE||0709240332||CM|||||DIAGNOSTICA||1000^MUSTER^ARZT^^^|||20070924165500|||UNIGES||
+OBR|0001||0709240332|||20070924000000|20070924000000|||||||20070924165500||1000^MUSTER^ARZT^^^|||||||||F|
+NTE|0|L|Serum    
+OBX|1|ST|2800010^Eiweiss^HT||68|g/l|(60-80)||||F||Y||||
+OBX|2|ST|2980B010^  Albumin^HT||58.9|%|(59.8-72.4)|*|||F||Y||||
+OBX|3|ST|2980B020^  alpha-1-Globulin^HT||2.6|%|(1.0-3.2)||||F||Y||||
+OBX|4|ST|2980B030^  alpha-2-Globulin^HT||11.7|%|(7.4-12.6)||||F||Y||||
+OBX|5|ST|2980B040^  beta-Globulin^HT||10.6|%|(7.5-12.9)||||F||Y||||
+OBX|6|ST|2980B050^  gamma-Globulin^HT||16.2|%|(8.0-15.8)|*|||F||Y||||
+OBX|7|ST|ALGL2010^  Albumin/Globulin Quotient^HT||1.4||(1.0-2.0)||||F||Y||||
+NTE|7|L|Dysproteinämie vom Gamma-Typ.

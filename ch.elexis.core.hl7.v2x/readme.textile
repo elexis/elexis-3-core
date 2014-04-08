@@ -1,0 +1,23 @@
+h1. HL7-Export Tools
+
+p(klein). (c) 2011 by M.Imhof
+ $Id$	
+ 
+h2. Einleitung
+
+Dies ist eine Sammlung von HL7 Export/Import Funktionalitäten basieren auf HAPI 1.1.
+Mit Hilfe des Ant-Scripts build.xml kann ein JAR für den externen Gebrauch gebaut werden.
+
+h2. Abhängigkeiten
+
+Das Plugin hat keine Abhängigkeiten!
+
+h2. Funktionalitäten
+
+Aktuelle sind 2 verschiedene HL7-Format Exporte implementiert:
+* OML_O21
+* ORU_R01
+
+h2. Tests
+
+Um die Funktionalität zu testen wird eine entsprechende HL7 Datei (OML^O21 oder ORU^R01) erstellt und die Struktur verifiziert.

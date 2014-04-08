@@ -1,0 +1,25 @@
+MSH|^~\&|LAB|DIAGNOSTICA|OPMED|1498|20070813154814||ORU^R01|000000002450|P|2.3|||||||D
+PID|1||1918023|1918023^|MUSTER^ANDRE^^^^Herrn||19241223|M|||Studenbühlstr. 55^^Musterdorf^^4500^|||
+ORC|RE||0708100284||CM|||||DIAGNOSTICA||1000^MUSTER^ARZT^^^|||20070810172900|||UNIGES||
+OBR|0001||0708100284|||20070810000000|20070810000000|||||||20070810172900||1000^MUSTER^ARZT^^^|||||||||F|
+NTE|0|L|Serum    
+OBX|1|ST|2800010^Eiweiss^HT||69|g/l|(60-80)||||F||Y||||
+OBX|2|ST|2980B010^  Albumin^HT||67.1|%|(59.8-72.4)||||F||Y||||
+OBX|3|ST|2980B020^  alpha-1-Globulin^HT||2.6|%|(1.0-3.2)||||F||Y||||
+OBX|4|ST|2980B030^  alpha-2-Globulin^HT||11.0|%|(7.4-12.6)||||F||Y||||
+OBX|5|ST|2980B040^  beta-Globulin^HT||9.8|%|(7.5-12.9)||||F||Y||||
+OBX|6|ST|2980B050^  gamma-Globulin^HT||9.5|%|(8.0-15.8)||||F||Y||||
+OBX|7|ST|ALGL2010^  Albumin/Globulin Quotient^HT||2.0||(1.0-2.0)||||F||Y||||
+NTE|7|L|Unauffällige Serum-Eiweisselektrophorese.
+OBX|8|ST|3525010^PSA Prostataspez. Ag^HT||9.5|µg/l|(<4.5)|*|||F||Y||||
+NTE|8|L|     bis 50 jährig       -  2.0 µg/l
+NTE|8|L|       51-60-jährig      -  3.0 µg/l
+NTE|8|L|       61-70-jährig      -  4.0 µg/l
+NTE|8|L|     > 70-jährig         -  4.5 µg/l
+NTE|8|L|     Graubereich: 2 bis 10 µg/l
+OBX|9|ST|3526010^Freies PSA^HT||1.7|µg/l|||||F||Y||||
+OBX|10|ST|3526020^Ratio fPSA / PSA^HT||18|%|||||F||N||||
+NTE|10|L|     > 23 % sprechen für eine benigne Hyperplasie
+NTE|10|L|     < 23 % sprechen eher für ein Prostata-CA
+NTE|10|L|     Bitte beachten Sie, dass die Ratio nur bei erhöhtem
+NTE|10|L|     Gesamt-PSA aussagekräftig ist.

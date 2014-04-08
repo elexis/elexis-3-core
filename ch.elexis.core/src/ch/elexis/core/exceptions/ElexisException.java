@@ -38,6 +38,10 @@ public class ElexisException extends Exception {
 		log.severe(clazz.getName() + ": " + errmsg + " " + Integer.toString(errcode));
 	}
 	
+	public ElexisException(String errmsg, Throwable throwable){
+		super(errmsg, throwable);
+	}
+	
 	public Class<?> getThrowingClass(){
 		return clazz;
 	}

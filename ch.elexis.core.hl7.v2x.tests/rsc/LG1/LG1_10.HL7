@@ -1,0 +1,15 @@
+MSH|^~\&|OPMED|12342|OPMED|15425|20080130133300||ORU^R01|0801301333000001|P|2.2|||||||D
+PID|1|785|00123012|00022012^785|Muster^Heidi^^^^||19251214|||||||||
+ORC|||60470733^280108||CM|||||LG1||mustra7|||20080128141400|||N2_LABOR^001||
+OBR|1||60470733^280108|||20080128|20080128|||||||||mustra7|||||||||||
+OBX|1|TX|fe^Eisen^HT||17.5|mcmol/l|8.8 - 27.0||||F|||20080130133300|||
+OBX|2|TX|trf^Transferrin^HT||3.2|g/l|2.0 - 3.8||||F|||20080130133300|||
+OBX|3|TX|feb^Transferrin-Sättigung^HT||22|%|16 - 45||||F|||20080130133300|||
+OBX|4|TX|ferr^Ferritin^HT||241|mcg/l|13 - 400||||F|||20080130133300|||
+NTE|4|L|Prämenopausal                  13 - 150 mcg/l
+NTE|4|L|Menopause                      30 - 400 mcg/l
+OBX|5|TX|alp^Alkalische Phosphatase^HT||44|U/l|35 - 105||||F|||20080130133300|||
+OBX|6|TX|hatz^Hepatitis A - AK IgG/IgM^HT||> 50|IE/L|< 20||||F|||20080130133300|||
+OBX|7|TX|sak^Hepatitis B-s-AK^HT||< 2|IE/L|< 10||||F|||20080130133300|||
+OBX|8|TX|corg^Hepatitis B-c-AK IgG/IgM^HT||negativ||negativ||||F|||20080130133300|||
+OBX|9|TX|hcv^Hepatitis C - AK^HT||negativ||negativ||||F|||20080130133300|||

@@ -1,0 +1,30 @@
+MSH|^~\&|LAB|DIAGNOSTICA|OPMED|12089|20070926183306||ORU^R01|000000002579|P|2.3|||||||D
+PID|1||1942986|1942986^|MUSTER^FRANZ^^^^Herrn||19240603|M|||Ackersteinstr. 111^^Musterdorf^^4500^|||
+ORC|RE||0709240339||CM|||||DIAGNOSTICA||1000^MUSTER^ARZT^^^|||20070924165800|||UNIGES||
+OBR|0001||0709240339|||20070924000000|20070924000000|||||||20070924165800||1000^MUSTER^ARZT^^^|||||||||F|
+NTE|0|L|Serum    
+OBX|1|ST|2800010^Eiweiss^HT||82|g/l|(60-80)|*|||F||Y||||
+OBX|2|ST|2980B010^  Albumin^HT||59.3|%|(59.8-72.4)|*|||F||Y||||
+OBX|3|ST|2980B020^  alpha-1-Globulin^HT||2.5|%|(1.0-3.2)||||F||Y||||
+OBX|4|ST|2980B030^  alpha-2-Globulin^HT||10.5|%|(7.4-12.6)||||F||Y||||
+OBX|5|ST|2980B040^  beta-Globulin^HT||9.9|%|(7.5-12.9)||||F||Y||||
+OBX|6|ST|2980B050^  gamma-Globulin^HT||17.8|%|(8.0-15.8)|*|||F||Y||||
+OBX|7|ST|ALGL2010^  Albumin/Globulin Quotient^HT||1.5||(1.0-2.0)||||F||Y||||
+NTE|7|L|Im Gammabereich der Serum-Eiweisselektrophorese ist ein
+NTE|7|L|M-Gradient sichtbar.
+NTE|7|L|Wir empfehlen die Bestimmung
+NTE|7|L|der Konzentrationen der Immunglobuline (IgG,
+NTE|7|L|IgA, IgM) sowie eine Kontrolle der freien
+NTE|7|L|Leichtkettenproteine des Serums (Code 2938).
+NTE|7|L|Die densitometrische Auswertung des M-Gradienten beträgt
+NTE|7|L|ca. 7.2g/l.
+NTE|7|L|Daneben kommt eine weitere schwächere Bande zur
+NTE|7|L|Darstellung.
+OBX|8|ST|2985T010^Immunfixation (Paraproteinachweis)^HT||||||||F||N||||
+OBX|9|ST|2985B010^Paraproteinnachweis^HT||positiv ||||||F||N||||
+NTE|9|L|IgG Kappa und IgM Kappa
+OBX|10|ST|3035010^25-OH-Vitamin D^HT||133|nmol/l|(50-150)||||F||Y||||
+NTE|10|L|     >100 nmol/l: Idealwert
+NTE|10|L|     < 50 nmol/l: moderater Mangel
+NTE|10|L|     < 25 nmol/l: starker Mangel
+NTE|10|L|     >300 nmol/l: überdosiert

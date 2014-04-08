@@ -1,0 +1,18 @@
+MSH|^~\&|LAB|DIAGNOSTICA|OPMED|12080|20070924154810||ORU^R01|000000002577|P|2.3|||||||D
+PID|1|14668|1941303|1941303^14668|MUSTER^HELENE^^^^Frau||19620305|F|||Sternenfeldstr. 20^^Musterdorf^^4500^|||
+ORC|RE||0709200351||CM|||||DIAGNOSTICA||1000^MUSTER^ARZT^^^|||20070920161600|||UNIGES||
+OBR|0001||0709200351|||20070920000000|20070920000000|||||||20070920161600||1000^MUSTER^ARZT^^^|||||||||F|
+NTE|0|L|Serum    
+OBX|1|ST|2800010^Eiweiss^HT||71|g/l|(60-80)||||F||Y||||
+OBX|2|ST|2980B010^  Albumin^HT||67.5|%|(59.8-72.4)||||F||Y||||
+OBX|3|ST|2980B020^  alpha-1-Globulin^HT||1.9|%|(1.0-3.2)||||F||Y||||
+OBX|4|ST|2980B030^  alpha-2-Globulin^HT||10.2|%|(7.4-12.6)||||F||Y||||
+OBX|5|ST|2980B040^  beta-Globulin^HT||9.2|%|(7.5-12.9)||||F||Y||||
+OBX|6|ST|2980B050^  gamma-Globulin^HT||11.2|%|(8.0-15.8)||||F||Y||||
+OBX|7|ST|ALGL2010^  Albumin/Globulin Quotient^HT||2.1||(1.0-2.0)|*|||F||Y||||
+NTE|7|L|Unauffällige Serum-Eiweisselektrophorese.
+OBX|8|ST|3035010^25-OH-Vitamin D^HT||96|nmol/l|(50-150)||||F||Y||||
+NTE|8|L|     >100 nmol/l: Idealwert
+NTE|8|L|     < 50 nmol/l: moderater Mangel
+NTE|8|L|     < 25 nmol/l: starker Mangel
+NTE|8|L|     >300 nmol/l: überdosiert

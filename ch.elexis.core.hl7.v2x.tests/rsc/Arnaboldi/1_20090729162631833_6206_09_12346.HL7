@@ -1,0 +1,5 @@
+MSH|^~\&|OPMED|13000|OPMED|12346|2009072912301207||ORU^R01|2009072912301207|P|2.4|||NE|NE|||D
+PID|1||362859||Muster^Eveline^^^Frau^||19620516|F|||Musterstrasse 1^^Musterdorf^^1234^||||1^deutsch|
+ORC|RE||6206.09||CM||||2009072800000000|Inst. f. biopt.u.zytol. Diagnostik||123^Muster^Arzt^^^^Dr. med.||||||||
+OBR|1||6206.09|1^||2009072800000000|2009072800000000|||||||2009072800000000||123^Muster^Arzt^^^^Dr. med.|||||||||||
+OBX|1|TX|14^Histologie||\.BR\Klinik:\.BR\Vor Bypass-OP, ansonsten keine Beschwerden. \.BR\Befund: Antrumgastritis, Drüsenkörperzysten, Refluxösophagitis Grad II. \.BR\Fragen: \.BR\1. Gastritis? Helicobacter pylori?\.BR\2. Drüsenkörperzysten?\.BR\3. Refluxösophagitis? Barrett?\.BR\\.BR\Makroskopie:\.BR\1. Antrum und Corpus ventriculi: Vier bis 6 mm grosse Biopsien. \.BR\2. Corpus ventriculi (Drüsenkörperzysten): Zwei bis 5 mm grosse Biopsien. \.BR\3. Distaler Oesophagus: Zwei bis 3 mm grosse Biopsien. \.BR\\.BR\Mikroskopie:\.BR\\.BR\\.BR\Diagnose\.BR\\.BR\\.BR\Kommentar:\.BR\\.BR\\.BR\Nachtragbericht:\.BR\||||||F|||2009072800000000|||
