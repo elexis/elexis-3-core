@@ -17,21 +17,21 @@ import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
-
 public class CityInformationProposalProvider implements IContentProposalProvider {
 	
 	public IContentProposal[] getProposals(String contents, int position){
-		//System.out.println("getProposals()");
+		// System.out.println("getProposals()");
 		List<ContentProposal> cp = new LinkedList<ContentProposal>();
 		List<String[]> cities = ContactGeonames.getLabeledCities();
 		for (int i = 0; i < cities.size(); i++) {
 			String[] currCity = cities.get(i);
-			if (contents == null)
+			if (contents == null) {
 				cp.add(new ContentProposal(currCity[0], currCity[0] + " (" + currCity[1] + ")",
 					null));
-			if (currCity[0].toLowerCase().startsWith(contents.toLowerCase()))
+			} else if (currCity[0].toLowerCase().startsWith(contents.toLowerCase())) {
 				cp.add(new ContentProposal(currCity[0], currCity[0] + " (" + currCity[1] + ")",
 					null));
+			}
 		}
 		
 		return cp.toArray(new ContentProposal[] {});

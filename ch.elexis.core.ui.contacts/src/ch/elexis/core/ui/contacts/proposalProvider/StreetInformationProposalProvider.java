@@ -28,9 +28,9 @@ public class StreetInformationProposalProvider implements IContentProposalProvid
 			String currStreet = streets.get(i);
 			if (contents == null) {
 				cp.add(new ContentProposal(currStreet));
-			}
-			if (currStreet.toLowerCase().startsWith(contents.toLowerCase()))
+			} else if (currStreet.toLowerCase().startsWith(contents.toLowerCase())) {
 				cp.add(new ContentProposal(currStreet));
+			}
 		}
 		
 		return cp.toArray(new ContentProposal[] {});
