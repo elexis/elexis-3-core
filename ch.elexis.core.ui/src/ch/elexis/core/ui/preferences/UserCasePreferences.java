@@ -152,6 +152,15 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 				}
 			}
 		});
+		Button diagnoseDelBtn = new Button(diagnoseParent, SWT.PUSH);
+		diagnoseDelBtn.setImage(Images.IMG_DELETE.getImage());
+		diagnoseDelBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, "");
+				diagnoseTxt.setText("");
+			}
+		});
 		
 		FormData fd = new FormData();
 		fd.top = new FormAttachment(0, 5);
@@ -166,8 +175,13 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		
 		fd = new FormData();
 		fd.top = new FormAttachment(diagnoseLbl, 0, SWT.CENTER);
-		fd.right = new FormAttachment(100, -5);
+		fd.right = new FormAttachment(diagnoseDelBtn, -5);
 		diagnoseBtn.setLayoutData(fd);
+		
+		fd = new FormData();
+		fd.top = new FormAttachment(diagnoseLbl, 0, SWT.CENTER);
+		fd.right = new FormAttachment(100, -5);
+		diagnoseDelBtn.setLayoutData(fd);
 		
 		// ********* section for specifying sorting of billing system
 		new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper
