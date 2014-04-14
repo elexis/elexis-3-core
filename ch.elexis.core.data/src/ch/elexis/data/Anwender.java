@@ -246,9 +246,13 @@ public class Anwender extends Person {
 			String MandantLabel = (String) km.get("Mandant");
 			String MandantID = null;
 			if (!StringTool.isNothing(MandantLabel)) {
-				MandantID =
-					new Query<Mandant>(Mandant.class).findSingle(FLD_LABEL, StringTool.equals,
-						MandantLabel);
+				MandantLabel = MandantLabel.split(",")[0];
+				for (Mandant m: CoreHub.getMandantenList()) {
+					if (m.getLabel().equals(MandantLabel)) {
+						MandantID = m.getId();
+						break;
+					}
+				}
 			}
 			if (MandantID != null) {
 				CoreHub.setMandant(Mandant.load(MandantID));
