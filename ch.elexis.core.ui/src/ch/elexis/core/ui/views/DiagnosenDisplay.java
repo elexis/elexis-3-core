@@ -15,13 +15,16 @@ package ch.elexis.core.ui.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -33,31 +36,48 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
+import ch.elexis.core.ui.dialogs.FreeTextDiagnoseDialog;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.DiagnosenView;
+import ch.elexis.data.FreeTextDiagnose;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
 
 public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 	Table tDg;
+	private final Button addFreeTextBtn;
 	private final Hyperlink hDg;
 	private final Log log = Log.get("DiagnosenDisplay"); //$NON-NLS-1$
 	private final PersistentObjectDropTarget dropTarget;
 	
+	private final ElexisEventListener eeli_update = new ElexisUiEventListenerImpl(
+		Konsultation.class, ElexisEvent.EVENT_UPDATE) {
+		@Override
+		public void runInUi(ElexisEvent ev){
+			Konsultation actKons =
+				(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+			setDiagnosen(actKons);
+		}
+	};
+	
 	public DiagnosenDisplay(final IWorkbenchPage page, final Composite parent, final int style){
 		super(parent, style);
-		setLayout(new GridLayout());
+		setLayout(new GridLayout(2, false));
 		hDg =
 			UiDesk.getToolkit()
 				.createHyperlink(this, Messages.DiagnosenDisplay_Diagnoses, SWT.NONE); //$NON-NLS-1$
@@ -77,8 +97,25 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 				}
 			}
 		});
+		addFreeTextBtn = new Button(this, SWT.PUSH);
+		addFreeTextBtn.setImage(Images.IMG_DOCUMENT_TEXT.getImage());
+		addFreeTextBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				FreeTextDiagnoseDialog ftDialog =
+					new FreeTextDiagnoseDialog(Display.getDefault().getActiveShell());
+				if (ftDialog.open() == Window.OK) {
+					FreeTextDiagnose diag = new FreeTextDiagnose(ftDialog.getText(), true);
+					Konsultation actKons =
+						(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+					actKons.addDiagnose(diag);
+					setDiagnosen(actKons);
+				}
+			}
+		});
+		
 		tDg = UiDesk.getToolkit().createTable(this, SWT.SINGLE | SWT.WRAP);
-		tDg.setLayoutData(new GridData(GridData.FILL_BOTH));
+		tDg.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		tDg.setMenu(createDgMenu());
 		
 		// new PersistentObjectDragSource()
@@ -87,6 +124,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 				new DropReceiver()); //$NON-NLS-1$
 		new PersistentObjectDragSource(tDg, this);
 		
+		ElexisEventDispatcher.getInstance().addListeners(eeli_update);
 	}
 	
 	public void clear(){
