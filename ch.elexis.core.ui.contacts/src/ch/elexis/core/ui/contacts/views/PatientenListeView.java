@@ -176,12 +176,17 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		plfb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		((GridData) plfb.getLayoutData()).heightHint = 0;
 		
+		DefaultControlFieldProvider dcfp =
+				new DefaultControlFieldProvider(cv, fields.toArray(new String[0]));
+		String ff = CoreHub.userCfg.get(Preferences.USR_PATLIST_FOCUSFIELD, null);
+		if (ff != null)
+			dcfp.setFocusField(ff);
 		vc =
 			new ViewerConfigurer(
 			// new LazyContentProvider(cv,loader,
 			// AccessControlDefaults.PATIENT_DISPLAY),
-				plcp, new PatLabelProvider(), new DefaultControlFieldProvider(cv,
-					fields.toArray(new String[0])), new ViewerConfigurer.DefaultButtonProvider(), // cv,Patient.class),
+				plcp, new PatLabelProvider(), dcfp,
+				new ViewerConfigurer.DefaultButtonProvider(), // cv,Patient.class),
 				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.SINGLE, cv));
 		cv.create(vc, parent, SWT.NONE, getViewSite());
 		// let user select patient by pressing ENTER in the control fields
