@@ -64,6 +64,7 @@ import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.EnhancedTextField;
 import ch.elexis.core.ui.util.IKonsExtension;
+import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -247,6 +248,12 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 			hXrefs.put(provider, x);
 		}
 		text.setXrefHandlers(hXrefs);
+		
+		@SuppressWarnings("unchecked")
+		List<IKonsMakro> makros =
+			Extensions.getClasses(ExtensionPointConstantsUi.KONSEXTENSION, "KonsMakro"); //$NON-NLS-1$ //$NON-NLS-2$
+		text.setExternalMakros(makros);
+		
 		GridData gd =
 			new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL | GridData.GRAB_VERTICAL
 				| GridData.GRAB_HORIZONTAL);
@@ -317,7 +324,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	public void dispose(){
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		text.disconnectGlobalActions(getViewSite());
-		//emFont.dispose();
+		// emFont.dispose();
 		super.dispose();
 	}
 	
