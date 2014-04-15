@@ -103,6 +103,7 @@ public class Preferences {
 	public static final String USR_PATLIST_SHOWNAME = "anwender/patlist/zeigename"; //$NON-NLS-1$
 	public static final String USR_PATLIST_SHOWFIRSTNAME = "anwender/patlist/zeigevorname"; //$NON-NLS-1$
 	public static final String USR_PATLIST_SHOWDOB = "anwender/patlist/zeigegebdat"; //$NON-NLS-1$
+	public static final String USR_PATLIST_FOCUSFIELD = "anwender/patlist/focusfield"; //$NON-NLS-1$
 	public static final String USR_MANDATOR_COLORS_PREFIX = "mandanten/farben/";
 	
 	// Menu item "lock perspectives" (GlobalActions.fixLayoutAction)
