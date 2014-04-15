@@ -330,6 +330,9 @@
                KonsExtension="ch.elexis.core.ui.text.XrefExtension"
                name="DocumentLink">
          </Link>
+         <Makro
+               KonsMakro="ch.elexis.core.ui.text.BlockMakro">
+         </Makro>
       </extension>
       <extension
             point="ch.elexis.core.data.OutputLogDescriptor">

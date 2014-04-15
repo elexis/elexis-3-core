@@ -44,6 +44,7 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
@@ -74,6 +75,16 @@ public class VerrechnungsDisplay extends Composite {
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElement; //$NON-NLS-1$
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText; //$NON-NLS-1$
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll; //$NON-NLS-1$
+	
+	private final ElexisEventListener eeli_update = new ElexisUiEventListenerImpl(
+		Konsultation.class, ElexisEvent.EVENT_UPDATE) {
+		@Override
+		public void runInUi(ElexisEvent ev){
+			Konsultation actKons =
+				(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+			setLeistungen(actKons);
+		}
+	};
 	
 	public VerrechnungsDisplay(final IWorkbenchPage page, Composite parent, int style){
 		super(parent, style);
@@ -128,6 +139,8 @@ public class VerrechnungsDisplay extends Composite {
 					setLeistungen(actKons);
 				}
 			});
+		
+		ElexisEventDispatcher.getInstance().addListeners(eeli_update);
 	}
 	
 	public void clear(){

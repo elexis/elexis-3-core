@@ -53,20 +53,16 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.text.model.SSDRange;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.util.IKonsExtension;
+import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.Leistungsblock;
-import ch.elexis.data.Query;
 import ch.rgw.tools.GenericRange;
-import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
 
 /**
@@ -99,6 +95,11 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	private IAction copyAction, cutAction, pasteAction;
 	private IMenuListener globalMenuListener;
 	private final ElexisEventListener eeli_user = new UserChangeListener();
+	private List<IKonsMakro> externalMakros;
+	
+	public void setExternalMakros(List<IKonsMakro> makros){
+		externalMakros = makros;
+	}
 	
 	public void setXrefHandlers(Map<String, IKonsExtension> xrefs){
 		hXrefs = xrefs;
@@ -503,34 +504,20 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 					e.doit = false;
 					doFormat(getContentsAsXML());
 					text.setCaretOffset(start + comp.length());
-				} else { // Nein -> prüfen, ob es einem Leistungsblocknamen
-					// entspricht
-					Query<Leistungsblock> qbe = new Query<Leistungsblock>(Leistungsblock.class);
-					qbe.add(Leistungsblock.NAME, Query.EQUALS, s.reverse().toString());
-					qbe.startGroup();
-					qbe.add(Leistungsblock.MANDANT_ID, Query.EQUALS, CoreHub.actMandant.getId());
-					qbe.or();
-					qbe.add(Leistungsblock.MANDANT_ID, Query.EQUALS, StringTool.leer);
-					qbe.endGroup();
-					List<Leistungsblock> list = qbe.execute();
-					if ((list != null) && (list.size() > 0) && (actKons != null)) {
-						Leistungsblock lb = list.get(0);
-						for (ICodeElement ice : lb.getElements()) {
-							Result<IVerrechenbar> result = actKons.addLeistung((IVerrechenbar) ice);
-							if (!result.isOK()) {
-								SWTHelper.alert(Messages.EnhancedTextField_ThisChargeIsInvalid,
-									result.toString());
-								// also see KonsDetailView.DropReceiver
-							}
-						}
-						start += 1;
-						text.replaceTextRange(start, e.end - start, StringTool.leer);
-						e.doit = false;
-						actKons.updateEintrag(getContentsAsXML(), false);
-						setDirty(false);
-						ElexisEventDispatcher.update(actKons);
+				} else { // Nein -> aufruf externer makros
+					start += 1;
+					String makro = s.reverse().toString();
+					StringBuilder replace = new StringBuilder();
+					
+					for (IKonsMakro extMakro : externalMakros) {
+						replace.append(extMakro.executeMakro(makro));
 					}
 					
+					text.replaceTextRange(start, (e.end - start), replace.toString());
+					e.doit = false;
+					doFormat(getContentsAsXML());
+					text.setCaretOffset(start + replace.toString().length());
+					ElexisEventDispatcher.update(actKons);
 				}
 				// Wenn ein : gedrückt wurde, prüfen, ob es ein Wort am
 				// Zeilenanfang ist und ggf.
