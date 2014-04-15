@@ -61,11 +61,13 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	protected final List<ControlFieldListener> listeners;
 	private final FormToolkit tk;
 	protected CommonViewer myViewer;
+	protected int focusField;
 	boolean bCeaseFire;
 	
 	public DefaultControlFieldProvider(final CommonViewer viewer, final String[] flds){
 		fields = new String[flds.length];
 		dbFields = new String[fields.length];
+		focusField = 0;
 		myViewer = viewer;
 		// this.fields=new String[fields.length];
 		lastFiltered = new String[fields.length];
@@ -143,8 +145,30 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		selectors = new ElexisText[fields.length];
 	}
 	
+	/**
+	 * Setze Feld welches den Fokus erhaelt
+	 * @param index Index im field array
+	 */
+	public void setFocusField(int index) {
+		if (index >= fields.length)
+			throw new IndexOutOfBoundsException("Invalid field index");
+		focusField = index;
+	}
+
+	/**
+	 * Setze Feld welches den Fokus erhaelt (nach DB name). Ein ungueltiger
+	 * Name wird ignoriert.
+	 * @param name DB-Namen des Feldes
+	 */
+	public void setFocusField(String name) {
+		for (int i = 0; i < dbFields.length; i++) {
+			if (dbFields[i].equals(name))
+				focusField = i;
+		}
+	}
+
 	public void setFocus(){
-		selectors[0].setFocus();
+		selectors[focusField].setFocus();
 	}
 	
 	public boolean isModified(){
