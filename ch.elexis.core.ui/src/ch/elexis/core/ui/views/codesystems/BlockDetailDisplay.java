@@ -71,7 +71,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	Text tName;
 	Combo cbMandant;
 	ListViewer lLst;
-	Button bNew, bEigen;
+	Button bNew, bEigen, bDiag;
 	List<Mandant> lMandanten;
 	private static Log log = Log.get("BlockDetail"); //$NON-NLS-1$
 	private Action removeLeistung, moveUpAction, moveDownAction, editAction;
@@ -229,6 +229,25 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				lLst.refresh();
 			}
 		});
+		
+		bDiag = tk.createButton(body, "Diagnose hinzufügen", SWT.PUSH); //$NON-NLS-1$
+		bDiag.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		bDiag.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(final SelectionEvent e){
+				try {
+					site.getPage().showView(DiagnosenView.ID);
+				} catch (Exception ex) {
+					ElexisStatus status =
+						new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+							"Fehler beim Starten des Diagnosecodes " + ex.getMessage(), ex,
+							ElexisStatus.LOG_ERRORS);
+					StatusManager.getManager().handle(status, StatusManager.SHOW);
+				}
+			}
+		});
+		
 		makeActions();
 		ViewMenus menus = new ViewMenus(site);
 		menus.createControlContextMenu(lLst.getControl(), new ViewMenus.IMenuPopulator() {

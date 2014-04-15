@@ -45,6 +45,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
@@ -167,6 +168,8 @@ public class VerrechnungsDisplay extends Composite {
 					}
 					setLeistungen(actKons);
 				}
+			} else if (o instanceof IDiagnose) {
+				actKons.addDiagnose((IDiagnose) o);
 			}
 		}
 	}
