@@ -31,6 +31,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -101,7 +102,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private IAction filterAction, newPatAction, copySelectedPatInfosToClipboardAction,
 			copySelectedAddressesToClipboardAction;
 	private Patient actPatient;
-	private boolean initiated = false;
 	PatListFilterBox plfb;
 	PatListeContentProvider plcp;
 	Composite parent;
@@ -143,18 +143,19 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	}
 	
 	@Override
-	public void createPartControl(final Composite parent){
+	public void createPartControl(final Composite op){
+		op.setLayout(new FillLayout());
+		parent = new Composite(op, SWT.NONE);
+
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		layout.verticalSpacing = 0;
 		
-		this.parent = parent;
-		this.parent.setLayout(layout);
+		parent.setLayout(layout);
 		
 		cv = new CommonViewer();
 		ArrayList<String> fields = new ArrayList<String>();
-		initiated = !("".equals(CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, "")));
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, false)) {
 			fields.add(Patient.FLD_PATID + Query.EQUALS + Messages.PatientenListeView_PatientNr); //$NON-NLS-1$
 		}
@@ -815,12 +816,15 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	}
 	
 	public void UserChanged(){
-		if (!initiated)
-			SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID);
-		if (!cv.getViewerWidget().getControl().isDisposed()) {
-			cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-			cv.notify(CommonViewer.Message.update);
-		}
+		/*
+		 * Not really pretty, but should do the job, basically we just
+		 * throw the out view content away and recreate it with the
+		 * appropriate settings.
+		 */
+		Composite par = parent.getParent();
+		parent.dispose();
+		createPartControl(par);
+		par.layout(true);
 	}
 	
 }
