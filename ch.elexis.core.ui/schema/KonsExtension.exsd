@@ -17,9 +17,10 @@
          </appinfo>
       </annotation>
       <complexType>
-         <sequence>
+         <choice>
             <element ref="Link" minOccurs="1" maxOccurs="unbounded"/>
-         </sequence>
+            <element ref="Makro" minOccurs="1" maxOccurs="unbounded"/>
+         </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -69,14 +70,20 @@
       </complexType>
    </element>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="apiInfo"/>
-      </appinfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
+   <element name="Makro">
+      <complexType>
+         <attribute name="KonsMakro" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.core.ui.util.IKonsMakro"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
 
    <annotation>
       <appinfo>
@@ -94,6 +101,15 @@
       <documentation>
          see elexis-bildanzeie and elexis-privatnotizen plugins as examples
 for implementing this point.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiInfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
       </documentation>
    </annotation>
 
