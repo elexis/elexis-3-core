@@ -14,9 +14,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.views.messages";//$NON-NLS-1$
 	
-	public static String BBSView_20; // NO TRANSLATION ?
-	public static String BBSView_22; // NO TRANSLATION ?
-	
 	public static String AUF2_NoPatientSelected;
 	public static String AUF2_PleaseDoSelectPatient;
 	public static String AUF2_certificate;
@@ -38,7 +35,9 @@ public class Messages extends NLS {
 	public static String BBSView_17;
 	public static String BBSView_18;
 	public static String BBSView_19;
+	public static String BBSView_20;
 	public static String BBSView_21;
+	public static String BBSView_22;
 	public static String BBSView_DoSend;
 	public static String BBSView_PleaseEnterSubject;
 	public static String BBSView_blau;
@@ -445,7 +444,6 @@ public class Messages extends NLS {
 	public static String SearchView_limitTo;
 	public static String SearchView_searchButtonCaption;
 	public static String SearchView_textToSearch;
-	public static String Starter_partname;
 	public static String TextView_15;
 	public static String TextView_NoCaseSelected;
 	public static String TextView_SaveNotPossibleNoCaseAndKonsSelected;
@@ -498,7 +496,6 @@ public class Messages extends NLS {
 	public static String VerrechnungsDisplay_missingRightsCaption;
 	public static String VerrechnungsDisplay_removeAll;
 	public static String VerrechnungsDisplay_removeElement;
-	public static String allDetailBlatt2_ApplyData;
 	public static String BriefAuswahlNotAllowedToRunStresstess;
 	
 	static {
