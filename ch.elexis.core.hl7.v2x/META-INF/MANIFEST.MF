@@ -9,6 +9,7 @@ Export-Package: ch.elexis.hl7,
  ch.elexis.hl7.data,
  ch.elexis.hl7.model,
  ch.elexis.hl7.util,
+ ch.elexis.hl7.v22,
  ch.elexis.hl7.v26,
  ch.elexis.hl7.v2x
 Bundle-Vendor: elexis.info
