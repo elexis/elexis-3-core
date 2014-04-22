@@ -45,16 +45,19 @@ import ch.rgw.tools.TimeTool;
  */
 public class Rechnungslauf implements IRunnableWithProgress {
 	
-	TimeTool ttFirstBefore, ttLastBefore, ttHeute, limitQuartal;
+	TimeTool ttFirstBefore, ttLastBefore, ttHeute, limitQuartal, ttFrom, ttTo;
 	Money mLimit;
 	boolean bQuartal, bMarked, bSkip;
 	Hashtable<Konsultation, Patient> hKons;
 	KonsZumVerrechnenView kzv;
 	
 	public Rechnungslauf(KonsZumVerrechnenView kzv, boolean bMarked, TimeTool ttFirstBefore,
-		TimeTool ttLastBefore, Money mLimit, boolean bQuartal, boolean bSkip){
+		TimeTool ttLastBefore, Money mLimit, boolean bQuartal, boolean bSkip, TimeTool ttFrom,
+		TimeTool ttTo){
 		this.ttFirstBefore = ttFirstBefore;
 		this.ttLastBefore = ttLastBefore;
+		this.ttFrom = ttFrom;
+		this.ttTo = ttTo;
 		this.mLimit = mLimit;
 		this.bQuartal = bQuartal;
 		this.bSkip = bSkip;
@@ -139,6 +142,21 @@ public class Rechnungslauf implements IRunnableWithProgress {
 					}
 				}
 			}
+			if (ttFrom != null && ttTo != null) { // alle serien zwischen xy datum und yz datum
+				cmp.set(k.getDatum());
+				if (cmp.isAfterOrEqual(ttFrom) && cmp.isBeforeOrEqual(ttTo)) {
+					Iterator<Konsultation> i2 = list.iterator();
+					while (i2.hasNext()) {
+						Konsultation k2 = i2.next();
+						String fid = k2.get(Konsultation.FLD_CASE_ID);
+						if ((fid != null) && (fid.equals(kfID))) {
+							hKons.put(k2, kPatient);
+							i2.remove();
+						}
+					}
+				}
+			}
+			
 			if (ttFirstBefore != null) { // Alle Serien mit Beginn vor einem
 				// bestimmten Datum
 				cmp.set(k.getDatum());
@@ -221,5 +239,4 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		monitor.done();
 		
 	}
-	
 }

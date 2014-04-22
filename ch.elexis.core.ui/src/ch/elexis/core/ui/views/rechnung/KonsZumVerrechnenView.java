@@ -586,7 +586,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 						try {
 							progressService.runInUI(progressService, new Rechnungslauf(self,
 								kzvd.bMarked, kzvd.ttFirstBefore, kzvd.ttLastBefore, kzvd.mAmount,
-								kzvd.bQuartal, kzvd.bSkip), null);
+								kzvd.bQuartal, kzvd.bSkip, kzvd.ttFrom, kzvd.ttTo), null);
 						} catch (Throwable ex) {
 							ExHandler.handle(ex);
 						}

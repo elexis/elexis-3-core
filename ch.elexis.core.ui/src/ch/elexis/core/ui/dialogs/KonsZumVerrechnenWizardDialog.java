@@ -11,6 +11,9 @@
  *******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -19,6 +22,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
@@ -48,19 +52,24 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		Messages.KonsZumVerrechnenWizardDialog_choseEndeDate; //$NON-NLS-1$
 	private final static String TREATMENTBEGINBEFORE =
 		Messages.KonsZumVerrechnenWizardDialog_chooseBeginningDate; //$NON-NLS-1$
+	private final static String TREATMENT_TIMESPAN =
+		Messages.KonsZumVerrechnenWizardDialog_timespan;
+	private final static String TREATMENT_TIMESPAN_TILL =
+		Messages.KonsZumVerrechnenWizardDialog_timespanTill;
 	
 	private static final String SKIPSELECTION = Messages.KonsZumVerrechnenWizardDialog_skipProposal; //$NON-NLS-1$
 	private static final String CFG_SKIP = CONFIG + "skipselection"; //$NON-NLS-1$
 	
-	Button cbMarked, cbBefore, cbAmount, cbTime, cbQuartal, cbSkip;
+	Button cbMarked, cbBefore, cbAmount, cbTime, cbQuartal, cbSkip, cbTimespan;
 	// DatePickerCombo dp1, dp2;
 	// Spinner sp1, sp2;
 	MoneyInput mi1;
 	DayDateCombo ddc1, ddc2;
 	
-	public TimeTool ttFirstBefore, ttLastBefore;
+	public TimeTool ttFirstBefore, ttLastBefore, ttFrom, ttTo;
 	public Money mAmount;
 	public boolean bQuartal, bMarked, bSkip;
+	private DateTime timespanFrom, timespanTo;
 	
 	public KonsZumVerrechnenWizardDialog(final Shell parentShell){
 		super(parentShell);
@@ -97,9 +106,27 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		cbAmount.setText(TREATMENT_AMOUNTHIGHER);
 		mi1 = new MoneyInput(ret);
 		mi1.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
-		new Label(ret, SWT.NONE);
+		
 		cbQuartal = new Button(ret, SWT.CHECK);
 		cbQuartal.setText(TREATMENT_TRIMESTER);
+		
+		cbTimespan = new Button(ret, SWT.CHECK);
+		cbTimespan.setText(TREATMENT_TIMESPAN);
+		timespanFrom = new DateTime(ret, SWT.NONE);
+		Label lblTill = new Label(ret, SWT.NONE);
+		lblTill.setText(TREATMENT_TIMESPAN_TILL);
+		timespanTo = new DateTime(ret, SWT.NONE);
+		cbTimespan.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				timespanFrom.setEnabled(cbTimespan.getSelection());
+				timespanTo.setEnabled(cbTimespan.getSelection());
+			}
+		});
+		
+		new Label(ret, SWT.NONE);
+		new Label(ret, SWT.NONE);
+		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(4,
 			true, 1, false));
@@ -120,8 +147,14 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 			}
 			
 		});
+		
+		timespanFrom.setEnabled(false);
+		timespanTo.setEnabled(false);
 		ddc1.setEnabled(false);
 		ddc2.setEnabled(false);
+		new Label(ret, SWT.NONE);
+		new Label(ret, SWT.NONE);
+		new Label(ret, SWT.NONE);
 		return ret;
 	}
 	
@@ -145,6 +178,10 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		if (cbAmount.getSelection()) {
 			mAmount = mi1.getMoney(false);
 		}
+		if (cbTimespan.getSelection()) {
+			ttFrom = getDate(timespanFrom);
+			ttTo = getDate(timespanTo);
+		}
 		bQuartal = cbQuartal.getSelection();
 		bMarked = cbMarked.getSelection();
 		bSkip = cbSkip.getSelection();
@@ -152,4 +189,18 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
+	private TimeTool getDate(DateTime selDate){
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.set(Calendar.DAY_OF_MONTH, selDate.getDay());
+		cal.set(Calendar.MONTH, selDate.getMonth());
+		cal.set(Calendar.YEAR, selDate.getYear());
+		
+		cal.set(Calendar.HOUR_OF_DAY, selDate.getHours());
+		cal.set(Calendar.MINUTE, selDate.getMinutes());
+		cal.set(Calendar.SECOND, selDate.getSeconds());
+		
+		TimeTool date = new TimeTool(cal.getTime());
+		
+		return date;
+	}
 }
