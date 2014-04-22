@@ -68,11 +68,13 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		Messages.RnControlFieldProvider_reminder2Printed,
 		Messages.RnControlFieldProvider_reminder3, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		Messages.RnControlFieldProvider_reminder3Printed,
-		Messages.RnControlFieldProvider_enforcement, Messages.RnControlFieldProvider_partlyLost,
+		Messages.RnControlFieldProvider_enforcement,
+		Messages.RnControlFieldProvider_partlyLost,
 		Messages.RnControlFieldProvider_totallyLost,
 		Messages.RnControlFieldProvider_storno, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		Messages.RnControlFieldProvider_erroneous, Messages.RnControlFieldProvider_toPrint,
-		Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind
+		Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind,
+		Messages.RnControlFieldProvider_writtenOff
 	};
 	
 	final static int[] statInts = {
@@ -81,7 +83,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		RnStatus.MAHNUNG_2, RnStatus.MAHNUNG_2_GEDRUCKT, RnStatus.MAHNUNG_3,
 		RnStatus.MAHNUNG_3_GEDRUCKT, RnStatus.IN_BETREIBUNG, RnStatus.TEILVERLUST,
 		RnStatus.TOTALVERLUST, RnStatus.STORNIERT, RnStatus.FEHLERHAFT, RnStatus.ZU_DRUCKEN,
-		RnStatus.AUSSTEHEND, RnStatus.MAHNSTOPP
+		RnStatus.AUSSTEHEND, RnStatus.MAHNSTOPP, RnStatus.ABGESCHRIEBEN
 	};
 	
 	final static int STAT_DEFAULT_INDEX = 1;
