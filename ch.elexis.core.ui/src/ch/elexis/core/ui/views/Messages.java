@@ -495,7 +495,7 @@ public class Messages extends NLS {
 	public static String VerrechnungsDisplay_missingRightsBody;
 	public static String VerrechnungsDisplay_missingRightsCaption;
 	public static String VerrechnungsDisplay_removeAll;
-	public static String VerrechnungsDisplay_removeElement;
+	public static String VerrechnungsDisplay_removeElements;
 	public static String BriefAuswahlNotAllowedToRunStresstess;
 	
 	static {

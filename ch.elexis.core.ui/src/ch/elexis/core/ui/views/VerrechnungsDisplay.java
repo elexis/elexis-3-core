@@ -26,6 +26,8 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -73,7 +75,7 @@ public class VerrechnungsDisplay extends Composite {
 	private IAction chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice; //$NON-NLS-1$
 	private static final String CHCOUNT = Messages.VerrechnungsDisplay_changeNumber; //$NON-NLS-1$
-	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElement; //$NON-NLS-1$
+	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements; //$NON-NLS-1$
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText; //$NON-NLS-1$
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll; //$NON-NLS-1$
 	
@@ -113,7 +115,7 @@ public class VerrechnungsDisplay extends Composite {
 			}
 		});
 		makeActions();
-		tVerr = UiDesk.getToolkit().createTable(this, SWT.SINGLE);
+		tVerr = UiDesk.getToolkit().createTable(this, SWT.MULTI);
 		tVerr.setLayoutData(new GridData(GridData.FILL_BOTH));
 		tVerr.setMenu(createVerrMenu());
 		// dummy table viewer needed for SelectionsProvider for Menu
@@ -125,6 +127,19 @@ public class VerrechnungsDisplay extends Composite {
 				TableItem[] selection = tVerr.getSelection();
 				Verrechnet verrechnet = (Verrechnet) selection[0].getData();
 				ElexisEventDispatcher.fireSelectionEvent(verrechnet);
+			}
+		});
+		tVerr.addKeyListener(new KeyListener() {
+			@Override
+			public void keyReleased(KeyEvent e){}
+			
+			@Override
+			public void keyPressed(KeyEvent e){
+				if (e.keyCode == SWT.DEL) {
+					if (tVerr.getSelectionIndices().length >= 1 && removeAction != null) {
+						removeAction.run();
+					}
+				}
 			}
 		});
 		dropTarget =
@@ -223,27 +238,32 @@ public class VerrechnungsDisplay extends Composite {
 		contextMenuManager.setRemoveAllWhenShown(true);
 		contextMenuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager){
-				int sel = tVerr.getSelectionIndex();
-				if (sel != -1) {
-					TableItem ti = tVerr.getItem(sel);
-					Verrechnet v = (Verrechnet) ti.getData();
-					manager.add(chPriceAction);
-					manager.add(chCountAction);
-					IVerrechenbar vbar = v.getVerrechenbar();
-					List<IAction> itemActions = (List<IAction>) (List<?>) vbar.getActions(v);
-					if ((itemActions != null) && (itemActions.size() > 0)) {
-						manager.add(new Separator());
-						for (IAction a : itemActions) {
-							if (a != null) {
-								manager.add(a);
+				int[] selIndices = tVerr.getSelectionIndices();
+				if (selIndices.length > 1) {
+					manager.add(removeAction);
+				} else {
+					int sel = tVerr.getSelectionIndex();
+					if (sel != -1) {
+						TableItem ti = tVerr.getItem(sel);
+						Verrechnet v = (Verrechnet) ti.getData();
+						manager.add(chPriceAction);
+						manager.add(chCountAction);
+						IVerrechenbar vbar = v.getVerrechenbar();
+						List<IAction> itemActions = (List<IAction>) (List<?>) vbar.getActions(v);
+						if ((itemActions != null) && (itemActions.size() > 0)) {
+							manager.add(new Separator());
+							for (IAction a : itemActions) {
+								if (a != null) {
+									manager.add(a);
+								}
 							}
 						}
+						manager.add(new Separator());
+						manager.add(chTextAction);
+						manager.add(removeAction);
+						manager.add(new Separator());
+						manager.add(removeAllAction);
 					}
-					manager.add(new Separator());
-					manager.add(chTextAction);
-					manager.add(removeAction);
-					manager.add(new Separator());
-					manager.add(removeAllAction);
 				}
 			}
 		});
@@ -254,18 +274,22 @@ public class VerrechnungsDisplay extends Composite {
 		removeAction = new Action(REMOVE) {
 			@Override
 			public void run(){
-				int sel = tVerr.getSelectionIndex();
-				TableItem ti = tVerr.getItem(sel);
-				Result<Verrechnet> result =
-					((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class))
-						.removeLeistung((Verrechnet) ti.getData());
-				if (!result.isOK()) {
-					SWTHelper.alert(Messages.VerrechnungsDisplay_PositionCanootBeRemoved, result //$NON-NLS-1$
-						.toString());
+				int[] sel = tVerr.getSelectionIndices();
+				for (int i : sel) {
+					TableItem ti = tVerr.getItem(i);
+					Result<Verrechnet> result =
+						((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class))
+							.removeLeistung((Verrechnet) ti.getData());
+					if (!result.isOK()) {
+						SWTHelper.alert(Messages.VerrechnungsDisplay_PositionCanootBeRemoved,
+							result //$NON-NLS-1$
+								.toString());
+					}
 				}
 				setLeistungen((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class));
 			}
 		};
+		
 		removeAllAction = new Action(REMOVEALL) {
 			@Override
 			public void run(){
