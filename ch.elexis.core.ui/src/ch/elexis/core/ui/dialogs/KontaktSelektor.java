@@ -271,41 +271,43 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 		if (extraText != null) {
 			new Label(ret, SWT.WRAP).setText(extraText);
 		}
-		vc = new ViewerConfigurer(
-		// new LazyContentProvider(cv,dataloader, null),
-			kl, new DefaultLabelProvider(), new DefaultControlFieldProvider(cv, new String[] {
-				"Kuerzel", "Bezeichnung1"
-			}), new ViewerConfigurer.ButtonProvider() {
-				
-				public Button createButton(final Composite parent){
-					Button ret = new Button(parent, SWT.PUSH);
-					ret.setText("Neu erstellen...");
-					ret.addSelectionListener(new SelectionAdapter() {
-						
-						@Override
-						public void widgetSelected(SelectionEvent e){
-							if (hints == null) {
-								hints = new String[3];
-								hints[0] = vc.getControlFieldProvider().getValues()[1];
+		vc =
+			new ViewerConfigurer(
+			// new LazyContentProvider(cv,dataloader, null),
+				kl, new DefaultLabelProvider(), new DefaultControlFieldProvider(cv, new String[] {
+					Messages.KontaktSelector_abbreviation, Messages.KontaktSelector_expression1,
+					Messages.KontaktSelector_birthDate
+				}), new ViewerConfigurer.ButtonProvider() {
+					
+					public Button createButton(final Composite parent){
+						Button ret = new Button(parent, SWT.PUSH);
+						ret.setText("Neu erstellen...");
+						ret.addSelectionListener(new SelectionAdapter() {
+							
+							@Override
+							public void widgetSelected(SelectionEvent e){
+								if (hints == null) {
+									hints = new String[3];
+									hints[0] = vc.getControlFieldProvider().getValues()[1];
+								}
+								KontaktErfassenDialog ked =
+									new KontaktErfassenDialog(parent.getShell(), hints);
+								ked.open();
+								selection = ked.getResult();
+								okPressed();
+								// cv.getViewerWidget().refresh();
+								// cv.getViewerWidget().setSelection(new
+								// StructuredSelection(kr), true);
 							}
-							KontaktErfassenDialog ked =
-								new KontaktErfassenDialog(parent.getShell(), hints);
-							ked.open();
-							selection = ked.getResult();
-							okPressed();
-							// cv.getViewerWidget().refresh();
-							// cv.getViewerWidget().setSelection(new
-							// StructuredSelection(kr), true);
-						}
-						
-					});
-					return ret;
-				}
-				
-				public boolean isAlwaysEnabled(){
-					return false;
-				}
-			}, new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.NONE, cv));
+							
+						});
+						return ret;
+					}
+					
+					public boolean isAlwaysEnabled(){
+						return false;
+					}
+				}, new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.NONE, cv));
 		Composite types = new Composite(ret, SWT.BORDER);
 		types.setLayout(new FillLayout());
 		types.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
