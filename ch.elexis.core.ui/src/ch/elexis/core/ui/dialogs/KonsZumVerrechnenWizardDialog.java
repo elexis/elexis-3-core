@@ -15,6 +15,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -30,6 +35,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.util.DayDateCombo;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Fall;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
@@ -56,16 +62,20 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		Messages.KonsZumVerrechnenWizardDialog_timespan;
 	private final static String TREATMENT_TIMESPAN_TILL =
 		Messages.KonsZumVerrechnenWizardDialog_timespanTill;
+	private final static String TREATMENT_ACCOUNTING_SYS =
+		Messages.KonsZumVerrechnenWizardDialog_chooseAccountingSystem;
 	
 	private static final String SKIPSELECTION = Messages.KonsZumVerrechnenWizardDialog_skipProposal; //$NON-NLS-1$
 	private static final String CFG_SKIP = CONFIG + "skipselection"; //$NON-NLS-1$
 	
-	Button cbMarked, cbBefore, cbAmount, cbTime, cbQuartal, cbSkip, cbTimespan;
+	Button cbMarked, cbBefore, cbAmount, cbTime, cbQuartal, cbSkip, cbTimespan, cbAccountingSys;
 	// DatePickerCombo dp1, dp2;
 	// Spinner sp1, sp2;
 	MoneyInput mi1;
 	DayDateCombo ddc1, ddc2;
 	
+	ComboViewer cAccountingSys;
+	public String accountSys;
 	public TimeTool ttFirstBefore, ttLastBefore, ttFrom, ttTo;
 	public Money mAmount;
 	public boolean bQuartal, bMarked, bSkip;
@@ -124,6 +134,21 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 			}
 		});
 		
+		cbAccountingSys = new Button(ret, SWT.CHECK);
+		cbAccountingSys.setText(TREATMENT_ACCOUNTING_SYS);
+		cbAccountingSys.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				cAccountingSys.getCombo().setEnabled(cbAccountingSys.getSelection());
+			}
+		});
+		cAccountingSys = new ComboViewer(ret, SWT.NONE);
+		cAccountingSys.setContentProvider(ArrayContentProvider.getInstance());
+		cAccountingSys.setLabelProvider(new LabelProvider());
+		String[] accSystems = Fall.getAbrechnungsSysteme();
+		cAccountingSys.setInput(accSystems);
+		cAccountingSys.setSelection(new StructuredSelection(accSystems[0]));
+		
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
@@ -148,6 +173,7 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 			
 		});
 		
+		cAccountingSys.getCombo().setEnabled(false);
 		timespanFrom.setEnabled(false);
 		timespanTo.setEnabled(false);
 		ddc1.setEnabled(false);
@@ -181,6 +207,10 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		if (cbTimespan.getSelection()) {
 			ttFrom = getDate(timespanFrom);
 			ttTo = getDate(timespanTo);
+		}
+		if (cbAccountingSys.getSelection()) {
+			IStructuredSelection sel = (IStructuredSelection) cAccountingSys.getSelection();
+			accountSys = (String) sel.getFirstElement();
 		}
 		bQuartal = cbQuartal.getSelection();
 		bMarked = cbMarked.getSelection();

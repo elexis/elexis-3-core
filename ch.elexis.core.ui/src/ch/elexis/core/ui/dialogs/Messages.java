@@ -139,6 +139,7 @@ public class Messages extends NLS {
 	public static String KonsZumVerrechnenWizardDialog_skipProposal;
 	public static String KonsZumVerrechnenWizardDialog_timespan;
 	public static String KonsZumVerrechnenWizardDialog_timespanTill;
+	public static String KonsZumVerrechnenWizardDialog_chooseAccountingSystem;
 	public static String KontaktDetailDialog_enterData;
 	public static String KontaktDetailDialog_enterType;
 	public static String KontaktDetailDialog_labelBirthdate;

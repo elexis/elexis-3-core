@@ -45,6 +45,7 @@ import ch.rgw.tools.TimeTool;
  */
 public class Rechnungslauf implements IRunnableWithProgress {
 	
+	String accountSys;
 	TimeTool ttFirstBefore, ttLastBefore, ttHeute, limitQuartal, ttFrom, ttTo;
 	Money mLimit;
 	boolean bQuartal, bMarked, bSkip;
@@ -53,7 +54,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	
 	public Rechnungslauf(KonsZumVerrechnenView kzv, boolean bMarked, TimeTool ttFirstBefore,
 		TimeTool ttLastBefore, Money mLimit, boolean bQuartal, boolean bSkip, TimeTool ttFrom,
-		TimeTool ttTo){
+		TimeTool ttTo, String accountSys){
 		this.ttFirstBefore = ttFirstBefore;
 		this.ttLastBefore = ttLastBefore;
 		this.ttFrom = ttFrom;
@@ -61,6 +62,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		this.mLimit = mLimit;
 		this.bQuartal = bQuartal;
 		this.bSkip = bSkip;
+		this.accountSys = accountSys;
 		hKons = new Hashtable<Konsultation, Patient>(1000);
 		ttHeute = new TimeTool();
 		limitQuartal = new TimeTool();
@@ -101,9 +103,17 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			}
 			
 			if (kons.getMandant().getRechnungssteller().getId().equals(rsId)) {
-				list.add(kons);
+				if (accountSys != null) {
+					if (kons.getFall() != null
+						&& kons.getFall().getAbrechnungsSystem().equals(accountSys)) {
+						list.add(kons);
+					}
+				} else {
+					list.add(kons);
+				}
 			}
 		}
+		
 		ArrayList<Konsultation> listbasic = new ArrayList<Konsultation>(list);
 		HashMap<Fall, Object> hSkipCase = new HashMap<Fall, Object>();
 		TimeTool now = new TimeTool();
@@ -119,6 +129,11 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			if ((kFall == null) || (!kFall.exists())) {
 				continue;
 			}
+			if (accountSys != null) {
+				if (!kFall.getAbrechnungsSystem().equals(accountSys)) {
+					continue;
+				}
+			}
 			if (hSkipCase.get(kFall) != null) {
 				continue;
 			}
@@ -128,6 +143,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			if ((kPatient == null) || (!kPatient.exists())) {
 				continue;
 			}
+			
 			if (bMarked) { // Alle zur Verrechnung markierten Fälle abrechnen
 				TimeTool bd = kFall.getBillingDate();
 				if ((bd != null) && (bd.isBeforeOrEqual(now))) {
@@ -226,7 +242,11 @@ public class Rechnungslauf implements IRunnableWithProgress {
 				}
 			}
 		}
+		
 		monitor.subTask(Messages.Rechnungslauf_creatingLists); //$NON-NLS-1$
+		for (Konsultation konsultation : hKons.keySet()) {
+			System.out.println(konsultation.getFall().getAbrechnungsSystem());
+		}
 		Enumeration<Konsultation> en = hKons.keys();
 		while (en.hasMoreElements()) {
 			kzv.selectKonsultation(en.nextElement());
