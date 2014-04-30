@@ -13,6 +13,8 @@ package ch.elexis.core.ui.views;
 
 import java.io.FileWriter;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,6 +27,13 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -108,6 +117,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	// boolean bOnlyOpen;
 	boolean bOpen = true;
 	boolean bClosed = true;
+	private String accountSys;
 	private Konsultation[] kons;
 	private final KonsLoader kload;
 	private int numPat;
@@ -209,6 +219,33 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				bClosed = bClosedKons.getSelection();
 			}
 		});
+		ComboViewer cAccountingSys = new ComboViewer(top, SWT.READ_ONLY);
+		cAccountingSys.setContentProvider(ArrayContentProvider.getInstance());
+		cAccountingSys.setLabelProvider(new LabelProvider());
+		
+		String allCases = Messages.PatHeuteView_all;
+		List<String> faelle = Arrays.asList(Fall.getAbrechnungsSysteme());
+		
+		List<String> accountingSys = new ArrayList<String>();
+		accountingSys.add(allCases);
+		accountingSys.addAll(faelle);
+		
+		cAccountingSys.setInput(accountingSys);
+		cAccountingSys.setSelection(new StructuredSelection(allCases));
+		
+		cAccountingSys.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				accountSys = (String) selection.getFirstElement();
+				
+				// call reload
+				if (kons != null) {
+					kload.schedule();
+				}
+			}
+		});
+		
 		bClosedKons.setText(Messages.PatHeuteView_billed); //$NON-NLS-1$
 		bOpenKons.setSelection(bOpen);
 		bClosedKons.setSelection(bClosed);
@@ -532,7 +569,18 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			if (list == null) {
 				result = new Konsultation[0];
 			} else {
+				if (accountSys != null && !accountSys.isEmpty()
+					&& !accountSys.equals(Messages.PatHeuteView_all)) {
+					List<Konsultation> konsRet = new ArrayList<Konsultation>();
+					for (Konsultation kons : list) {
+						if (kons.getFall().getAbrechnungsSystem().equals(accountSys)) {
+							konsRet.add(kons);
+						}
+					}
+					list = konsRet;
+				}
 				Konsultation[] ret = new Konsultation[list.size()];
+				
 				if (filterAction.isChecked()) {
 					lfiltered = ldFilter.getAll().toArray(new IVerrechenbar[0]);
 					if (lfiltered.length == 0) {
