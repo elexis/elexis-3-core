@@ -209,7 +209,6 @@
 		<module>ch.elexis.core.common.feature</module>
 		<module>ch.elexis.core.console.application</module>
 		<module>ch.elexis.core.data</module>
-		<!-- <module>ch.elexis.core.data.tests</module> -->
 		<module>ch.elexis.core.eigenartikel</module>
 		<module>ch.elexis.core.eigendiagnosen</module>
 		<module>ch.elexis.core.logging.feature</module>
@@ -228,11 +227,13 @@
 		<module>ch.elexis.core.ui.p2.feature</module>
 		<module>ch.elexis.core.ui.importer.div</module>
 		<module>ch.elexis.core.hl7.v2x</module>
-		<!-- now follow the unit tests in a more or less logical order -->
 		<module>ch.rgw.utility</module>
-		<!-- <module>ch.rgw.utility.tests</module> -->
-		<!-- <module>ch.elexis.core.ui.importer.div.tests</module> -->
-		<!-- the ch.elexis.core.p2site creates an zipped installable application 
+    <!-- now follow the unit tests in a more or less logical order -->
+    <module>ch.elexis.core.data.tests</module>
+    <module>ch.elexis.core.hl7.v2x.tests</module>
+    <module>ch.elexis.core.ui.importer.div.tests</module>
+    <module>ch.rgw.utility.tests</module>
+    <!-- the ch.elexis.core.p2site creates an zipped installable application 
 			and a p2 update site -->
 		<module>ch.elexis.core.p2site</module>
 	</modules>
