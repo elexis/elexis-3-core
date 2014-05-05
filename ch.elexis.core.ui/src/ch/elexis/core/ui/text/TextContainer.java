@@ -476,7 +476,7 @@ public class TextContainer {
 		}
 		try {
 			Object result = Script.executeScript(q[1], ret);
-			return result == null ? q[2] : result.toString();
+			return result == null ? q[1] : result.toString();
 		} catch (ElexisException e) {
 			SWTHelper.showError("Fehler beim Ausführen des Scripts", e.getMessage());
 			return "??SCRIPT ERROR??";

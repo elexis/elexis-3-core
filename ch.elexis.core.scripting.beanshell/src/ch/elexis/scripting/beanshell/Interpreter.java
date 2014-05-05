@@ -9,16 +9,15 @@ import bsh.ParseException;
 import bsh.TargetError;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.data.Kontakt;
 import ch.elexis.data.Script;
 import ch.rgw.tools.ExHandler;
 
 public class Interpreter implements ch.elexis.core.data.interfaces.scripting.Interpreter,
 		IExecutableExtension {
-	bsh.Interpreter scripter = new bsh.Interpreter();
+	private bsh.Interpreter scripter = new bsh.Interpreter();
 	
-	public Interpreter(){
-		
-	}
+	public Interpreter(){}
 	
 	@Override
 	public void setValue(String name, Object value) throws ElexisException{
@@ -35,11 +34,17 @@ public class Interpreter implements ch.elexis.core.data.interfaces.scripting.Int
 	@Override
 	public Object run(String script, boolean showErrors) throws ElexisException{
 		try {
+			ClassLoader dataLoader = Kontakt.class.getClassLoader();
+			scripter.setClassLoader(dataLoader);
 			
 			return scripter.eval(script);
 		} catch (TargetError e) {
 			if (showErrors) {
-				MessageEvent.fireError("Script target Error", "Target Error: " + e.getTarget());
+				StringBuilder sb = new StringBuilder();
+				sb.append("Script Error: " + e.getTarget() + "\n\n");
+				sb.append(e.getMessage());
+				
+				MessageEvent.fireError("Script target Error", sb.toString());
 			}
 			throw (new ElexisException(Script.class, e.getMessage(),
 				ElexisException.EE_UNEXPECTED_RESPONSE));
@@ -66,8 +71,11 @@ public class Interpreter implements ch.elexis.core.data.interfaces.scripting.Int
 				ElexisException.EE_UNEXPECTED_RESPONSE));
 		} catch (EvalError e) {
 			if (showErrors) {
-				MessageEvent.fireError("Script general error",
-					"Allgemeiner Script Fehler: " + e.getErrorText());
+				StringBuilder sb = new StringBuilder();
+				sb.append("Script Error: " + e.getErrorText() + "\n\n");
+				sb.append(e.getMessage());
+				
+				MessageEvent.fireError("Script general error", sb.toString());
 			}
 			throw (new ElexisException(Script.class, "Allgemeiner Script Fehler: "
 				+ e.getErrorText(), ElexisException.EE_UNEXPECTED_RESPONSE));
