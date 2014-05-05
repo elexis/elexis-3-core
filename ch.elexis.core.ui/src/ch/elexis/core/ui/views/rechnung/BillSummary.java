@@ -468,12 +468,16 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		clipboard.dispose();
 	}
 	
-	public void catchElexisEvent(ElexisEvent ev){
-		if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-			setPatient((Patient) ev.getObject());
-		} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
-			setPatient(null);
-		}
+	public void catchElexisEvent(final ElexisEvent ev){
+		UiDesk.asyncExec(new Runnable() {
+			public void run(){
+				if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
+					setPatient((Patient) ev.getObject());
+				} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
+					setPatient(null);
+				}
+			}
+		});
 	}
 	
 	private final ElexisEvent eetmpl = new ElexisEvent(null, Patient.class,
