@@ -20,6 +20,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
@@ -30,6 +33,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
@@ -179,6 +183,8 @@ public class BriefAuswahl extends ViewPart implements
 	}
 	
 	class sPage extends Composite {
+		private TableViewer tableViewer;
+		private LetterViewerComparator comparator;
 		private final CommonViewer cv;
 		private final ViewerConfigurer vc;
 		
@@ -218,19 +224,15 @@ public class BriefAuswahl extends ViewPart implements
 				}, new DefaultLabelProvider(), new DefaultControlFieldProvider(cv, new String[] {
 					"Betreff=Titel"
 				}), new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
-					SimpleWidgetProvider.TYPE_LIST, SWT.V_SCROLL, cv));
+					SimpleWidgetProvider.TYPE_TABLE, SWT.V_SCROLL | SWT.FULL_SELECTION, cv));
 			cv.create(vc, this, SWT.NONE, getViewSite());
-			cv.getViewerWidget().setComparator(new ViewerComparator() {
-				@Override
-				public int compare(Viewer viewer, Object e1, Object e2){
-					if (e1 instanceof Brief && e2 instanceof Brief) {
-						TimeTool bt1 = new TimeTool(((Brief) e1).getDatum());
-						TimeTool bt2 = new TimeTool(((Brief) e2).getDatum());
-						return bt2.compareTo(bt1);
-					}
-					return 0;
-				}
-			});
+			
+			tableViewer = (TableViewer) cv.getViewerWidget();
+			tableViewer.getTable().setHeaderVisible(true);
+			createColumns();
+			comparator = new LetterViewerComparator();
+			tableViewer.setComparator(comparator);
+			
 			vc.getContentProvider().startListening();
 			Button bLoad = tk.createButton(this, Messages.BriefAuswahlLoadButtonText, SWT.PUSH); //$NON-NLS-1$
 			bLoad.addSelectionListener(new SelectionAdapter() {
@@ -256,6 +258,99 @@ public class BriefAuswahl extends ViewPart implements
 			});
 			bLoad.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			
+		}
+		
+		// create the columns for the table
+		private void createColumns(){
+			// first column - date
+			TableViewerColumn col = new TableViewerColumn(tableViewer, SWT.NONE);
+			col.getColumn().setText(Messages.BriefAuswahlColumnDate);
+			col.getColumn().setWidth(100);
+			col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 0));
+			col.setLabelProvider(new ColumnLabelProvider() {
+				@Override
+				public String getText(Object element){
+					Brief b = (Brief) element;
+					return b.getDatum();
+				}
+			});
+			
+			// second column - title
+			col = new TableViewerColumn(tableViewer, SWT.NONE);
+			col.getColumn().setText(Messages.BriefAuswahlColumnTitle);
+			col.getColumn().setWidth(300);
+			col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 1));
+			col.setLabelProvider(new ColumnLabelProvider() {
+				@Override
+				public String getText(Object element){
+					Brief b = (Brief) element;
+					return b.getBetreff();
+				}
+			});
+		}
+		
+		private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index){
+			SelectionAdapter selectionAdapter = new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					comparator.setColumn(index);
+					int dir = comparator.getDirection();
+					tableViewer.getTable().setSortDirection(dir);
+					tableViewer.getTable().setSortColumn(column);
+					tableViewer.refresh();
+				}
+			};
+			return selectionAdapter;
+		}
+		
+		class LetterViewerComparator extends ViewerComparator {
+			private int propertyIndex;
+			private static final int DESCENDING = 1;
+			private int direction = DESCENDING;
+			
+			public LetterViewerComparator(){
+				this.propertyIndex = 0;
+				direction = DESCENDING;
+			}
+			
+			public int getDirection(){
+				return direction == 1 ? SWT.DOWN : SWT.UP;
+			}
+			
+			public void setColumn(int column){
+				if (column == this.propertyIndex) {
+					// Same column as last sort; toggle the direction
+					direction = 1 - direction;
+				} else {
+					// New column; do an ascending sort
+					this.propertyIndex = column;
+					direction = DESCENDING;
+				}
+			}
+			
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2){
+				Brief b1 = (Brief) e1;
+				Brief b2 = (Brief) e2;
+				int rc = 0;
+				switch (propertyIndex) {
+				case 0:
+					TimeTool time1 = new TimeTool(((Brief) e1).getDatum());
+					TimeTool time2 = new TimeTool(((Brief) e2).getDatum());
+					rc = time1.compareTo(time2);
+					break;
+				case 1:
+					rc = b1.getBetreff().compareTo(b2.getBetreff());
+					break;
+				default:
+					rc = 0;
+				}
+				// If descending order, flip the direction
+				if (direction == DESCENDING) {
+					rc = -rc;
+				}
+				return rc;
+			}
 		}
 	}
 	

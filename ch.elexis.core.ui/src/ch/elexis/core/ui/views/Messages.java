@@ -103,6 +103,8 @@ public class Messages extends NLS {
 	public static String BriefAuswahlRenameDocument;
 	public static String BriefAuswahlStressTestButtonText1;
 	public static String BriefAuswahlStressTestButtonText2;
+	public static String BriefAuswahlColumnDate;
+	public static String BriefAuswahlColumnTitle;
 	public static String DauerMediView_copy;
 	public static String DauerMediView_copyToClipboard;
 	public static String DiagnosenDisplay_DiagnoseTarget;
