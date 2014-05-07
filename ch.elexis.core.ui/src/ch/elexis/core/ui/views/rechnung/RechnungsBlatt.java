@@ -51,6 +51,7 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
@@ -140,7 +141,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	};
 	LabeledInputField.AutoForm rnform;
 	
-	private final ElexisEventListenerImpl eeli_rn = new ElexisEventListenerImpl(Rechnung.class,
+	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
 		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE
 			| ElexisEvent.EVENT_SELECTED) {
 		
@@ -164,7 +165,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		}
 	};
 	
-	private final ElexisEventListenerImpl eeli_user = new ElexisEventListenerImpl(Anwender.class,
+	private final ElexisEventListenerImpl eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
 		ElexisEvent.EVENT_USER_CHANGED) {
 		
 		public void runInUi(ElexisEvent ev){
