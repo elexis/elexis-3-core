@@ -294,8 +294,7 @@ public class BriefAuswahl extends ViewPart implements
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					comparator.setColumn(index);
-					int dir = comparator.getDirection();
-					tableViewer.getTable().setSortDirection(dir);
+					tableViewer.getTable().setSortDirection(comparator.getDirection());
 					tableViewer.getTable().setSortColumn(column);
 					tableViewer.refresh();
 				}
@@ -305,51 +304,61 @@ public class BriefAuswahl extends ViewPart implements
 		
 		class LetterViewerComparator extends ViewerComparator {
 			private int propertyIndex;
-			private static final int DESCENDING = 1;
-			private int direction = DESCENDING;
+			private boolean direction = true;
+			private TimeTool time1;
+			private TimeTool time2;
 			
 			public LetterViewerComparator(){
 				this.propertyIndex = 0;
-				direction = DESCENDING;
+				time1 = new TimeTool();
+				time2 = new TimeTool();
 			}
 			
+			/**
+			 * for sort direction
+			 * 
+			 * @return SWT.DOWN or SWT.UP
+			 */
 			public int getDirection(){
-				return direction == 1 ? SWT.DOWN : SWT.UP;
+				return direction ? SWT.DOWN : SWT.UP;
 			}
 			
 			public void setColumn(int column){
 				if (column == this.propertyIndex) {
 					// Same column as last sort; toggle the direction
-					direction = 1 - direction;
+					direction = !direction;
 				} else {
 					// New column; do an ascending sort
 					this.propertyIndex = column;
-					direction = DESCENDING;
+					direction = true;
 				}
 			}
 			
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2){
-				Brief b1 = (Brief) e1;
-				Brief b2 = (Brief) e2;
-				int rc = 0;
-				switch (propertyIndex) {
-				case 0:
-					TimeTool time1 = new TimeTool(((Brief) e1).getDatum());
-					TimeTool time2 = new TimeTool(((Brief) e2).getDatum());
-					rc = time1.compareTo(time2);
-					break;
-				case 1:
-					rc = b1.getBetreff().compareTo(b2.getBetreff());
-					break;
-				default:
-					rc = 0;
+				if (e1 instanceof Brief && e2 instanceof Brief) {
+					Brief b1 = (Brief) e1;
+					Brief b2 = (Brief) e2;
+					int rc = 0;
+					switch (propertyIndex) {
+					case 0:
+						time1.set((b1).getDatum());
+						time2.set((b2).getDatum());
+						rc = time1.compareTo(time2);
+						break;
+					case 1:
+						rc = b1.getBetreff().compareTo(b2.getBetreff());
+						break;
+					default:
+						rc = 0;
+					}
+					// If descending order, flip the direction
+					if (direction) {
+						rc = -rc;
+					}
+					return rc;
 				}
-				// If descending order, flip the direction
-				if (direction == DESCENDING) {
-					rc = -rc;
-				}
-				return rc;
+				return 0;
 			}
 		}
 	}
