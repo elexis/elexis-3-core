@@ -36,6 +36,8 @@ public class Messages extends NLS {
 	public static String ArtikelDetailDialog_enterArticleDetails;
 	public static String AssignStickerDialog_PleaseConfirm;
 	public static String AssignStickerDialog_enterStickers;
+	public static String AssignStickerDialog_StickerName;
+	public static String AssignStickerDialog_StickerWert;
 	public static String DateSelectorDialog_enterDate;
 	public static String DocumentSelectDialog_askForAddressee;
 	public static String DocumentSelectDialog_changeSubjectAction;
