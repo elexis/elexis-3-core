@@ -244,7 +244,7 @@
 		<tycho-extras.version>${tycho-version}</tycho-extras.version>
 		<repo_name>elexis.3.core</repo_name>
 		<repo_variant>snapshot</repo_variant>
-		<repo_timestamp>v${maven.build.timestamp}</repo_timestamp>
+		<timestamp_format>'a'yyyyMMdd-HHmm</timestamp_format>
 	</properties>
 	<build>
 		<plugins>
@@ -411,7 +411,7 @@
 					</dependencies>
 					<configuration>
 						<strictBinIncludes>false </strictBinIncludes>
-						<format>'v'yyyyMMdd-HHmm </format>
+						<format>${timestamp_format}</format>
 						<timestampProvider>jgit </timestampProvider>
 						<jgit.ignore />
 						<jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>

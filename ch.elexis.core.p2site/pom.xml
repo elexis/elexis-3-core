@@ -38,7 +38,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                    <replacement>
                        <token>buildQualifier</token>
                        <!-- we want to take the actual time to update the snapshots!-->
-                       <value>${repo_timestamp}</value>
+                       <value>${buildQualifier}</value>
                    </replacement>        
                    <replacement>
                        <token>unqualifiedVersion</token>
