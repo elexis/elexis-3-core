@@ -233,7 +233,7 @@
     <module>ch.elexis.core.hl7.v2x.tests</module>
     <module>ch.elexis.core.ui.importer.div.tests</module>
     <module>ch.rgw.utility.tests</module>
-    <!-- the ch.elexis.core.p2site creates an zipped installable application 
+    <!-- the ch.elexis.core.p2site creates an zipped installable application
 			and a p2 update site -->
 		<module>ch.elexis.core.p2site</module>
 	</modules>
@@ -244,10 +244,31 @@
 		<tycho-extras.version>${tycho-version}</tycho-extras.version>
 		<repo_name>elexis.3.core</repo_name>
 		<repo_variant>snapshot</repo_variant>
-		<timestamp_format>'a'yyyyMMdd-HHmm</timestamp_format>
 	</properties>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>com.github.goldin</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>0.2.5</version>
+				<executions>
+					<execution>
+						<id>set-properties</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>set-properties</goal>
+						</goals>
+						<configuration>
+							<properties>
+								<property>
+									<name>timestamp_format</name>
+									<value>{{"'" + "${repo_variant}".substring(0,1)+"'yyyyMMdd-HHmm" }}</value>
+								</property>
+								</properties>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin </artifactId>
