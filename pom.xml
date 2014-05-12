@@ -262,7 +262,7 @@
 							<properties>
 								<property>
 									<name>timestamp_format</name>
-									<value>{{"'" + "${repo_variant}".substring(0,1)+"'yyyyMMdd-HHmm" }}</value>
+									<value>{{"'" + "${repo_variant}".substring(0,1).replaceFirst('s','a')+"'yyyyMMdd-HHmm" }}</value>
 								</property>
 								</properties>
 							</configuration>
@@ -434,7 +434,7 @@
 						<strictBinIncludes>false </strictBinIncludes>
 						<format>${timestamp_format}</format>
 						<timestampProvider>jgit </timestampProvider>
-						<jgit.ignore />
+						<jgit.ignore>pom.xml</jgit.ignore>
 						<jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
 					</configuration>
 				</plugin>
