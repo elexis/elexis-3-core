@@ -10,6 +10,7 @@
 	<extension-point id="VerrechnungscodeAdjuster" name="VerrechnungscodeAdjuster" schema="schema/VerrechnungscodeAdjuster.exsd"/>
 	<extension-point id="ServiceRegistry" name="ServiceRegistry" schema="schema/ServiceRegistry.exsd"/>
     <extension-point id="scripting" name="Script Interpreter" schema="schema/scripting.exsd"/>
+    <extension-point id="referenceDataImporter" name="ReferenceDataImporter" schema="schema/referenceDataImporter.exsd"/>
 	 <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
