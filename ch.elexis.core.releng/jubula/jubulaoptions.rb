@@ -88,7 +88,7 @@ module JubulaOptions
   @dbpw        ||= "elexisTest"
   @dryRun      ||= false
 
-  version = '7.1.00054'
+  version = '8.0.00170'
   ["/opt/jubula_#{version}", "c:/Program Files/jubula_#{version}", "E:/jubula_#{version}", "/Applications/jubula_#{version}", ].each {
      |default|
       if File.exists?(default) # File.directory? chokes under Windows
@@ -125,17 +125,15 @@ module JubulaOptions
       @instDest =  pathname
     end
   else
-    pathname = "../../**/*#{@os}/*#{@winType}/*#{@cpu}/configuration/config.ini"
-    Dir.glob(File.expand_path(pathname)).each{
-      |file|
-      next if /\/bin\//i.match(file)
-      pathname = file.sub('configuration/config.ini', '*.ini')
+    pathname = "../../**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
+    if (Dir.glob(File.expand_path(pathname)).size == 1)
+      pathname = pathname.sub('configuration/config.ini', '*.ini')
       if (Dir.glob(File.expand_path(pathname)).size == 1)
-        @exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
-        @instDest =  File.dirname(@exeFile)
+      @exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
+      @instDest =  File.dirname(@exeFile)
       end
-      }
     end
+  end
   end
   host_os = RbConfig::CONFIG['host_os']
   case RbConfig::CONFIG['host_os']
@@ -183,7 +181,7 @@ module JubulaOptions
       end
       opts.on("-e", "--exeFile exeFile", "exeFile to use. Defaults to '#{@exeFile}'") do |v|
         puts "@exeFile ist jetzt #{v}"
-  @exeFile = File.expand_path(v)
+	@exeFile = v
   @instDest = File.dirname(@exeFile)
       end
       opts.on("--jubulaHome jubulaHome", "Home of Jubula installation. Defaults to '#{@vmargs}'") do |v|

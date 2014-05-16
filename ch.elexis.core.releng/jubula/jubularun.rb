@@ -97,7 +97,7 @@ public
  
   def prepareRcpSupport
     savedDir = Dir.pwd
-    unless @dryRun and not File.directory?(@instDest)
+    if not @dryRun and not @instDest and not File.directory?(@instDest)
       FileUtils.makedirs(File.join(@instDest, 'plugins'))
       Dir.chdir(File.join(@instDest, 'plugins'))
     end
@@ -243,8 +243,12 @@ public
   end
 
   def genWrapper
+    unless @exeFile
+      puts "no ExeFile defined";
+      exit 2
+    end
     wrapper = "#{JubulaOptions.wrapper}"
-    exe  = File.expand_path(exeFile)
+    exe  = File.expand_path(@exeFile)
     doc = "\"#{exe}\" #{vm.eql?('java') ? "" : " -vm #{vm}"} -clean -consoleLog -debug -data #{@dataDir} -vmargs #{vmargs}"
     File.open(wrapper, 'w') {|f| f.puts(doc) }
     FileUtils.chmod(0744, wrapper)
