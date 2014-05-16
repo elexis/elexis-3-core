@@ -25,8 +25,13 @@
 							<properties>
 								<property>
 									<name>groovyBuildQualifier</name>
+									<!-- http://evgeny-goldin.com/wiki/Properties-maven-plugin has a very confusing behaviour:
+									if you reference project.properties.repo_variant it will always report snapshot as this is default in the parent pom.xml
+									if your referenc repo_variant it will return the value passed on the command line or (if not specified there) the default-value
+									Did cost me two hours to find it and to work around!
+										!-->
 									<value>{{import java.text.SimpleDateFormat; new
-										SimpleDateFormat("'"+project.properties.repo_variant.substring(0,1).replaceFirst('s','a')+"'yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
+										SimpleDateFormat("'"+repo_variant.substring(0,1).replaceFirst('s','a')+"'yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
 										}}</value>
 								</property>
 							</properties>
