@@ -67,7 +67,7 @@ public
       saved = Dir.pwd
       FileUtils.makedirs(@instDest)
       Dir.chdir(@instDest)
-      system("unzip -q #{saved}/#{short}")
+      system("unzip -qu #{saved}/#{short}")
       Dir.chdir(saved)
     else
       short = wgetIfNotExists(@installer)
@@ -97,16 +97,18 @@ public
  
   def prepareRcpSupport
     savedDir = Dir.pwd
-    if not @dryRun and not @instDest and not File.directory?(@instDest)
+    cmd = "#{JubulaOptions::jubulaHome}/development/rcp-support.zip"
+    if @dryRun
+      puts "should cd #{File.join(@instDest, 'plugins')} && unzip #{cmd}"
+    elsif @instDest and File.directory?(@instDest)
       FileUtils.makedirs(File.join(@instDest, 'plugins'))
       Dir.chdir(File.join(@instDest, 'plugins'))
     end
-    cmd = "#{JubulaOptions::jubulaHome}/development/rcp-support.zip"
     if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
       cmd = "#{File.expand_path(File.dirname(__FILE__))}/7z x -y #{cmd} > test-unzip.log"
       cmd.gsub!('\\', '\\\\')
     else 
-      cmd = "unzip -q #{cmd}"
+      cmd = "unzip -qu #{cmd}"
     end
     fileName = File.expand_path("#{@instDest}/plugins/org.eclipse.jubula.rc.rcp_*.jar")
     if Dir.glob(fileName).size != 1 or File.size(Dir.glob(fileName)[0]) < 4000
@@ -127,6 +129,7 @@ public
     }   
     puts "#{File.basename(ini_name)}: #{needsJubulaRcpSupport ? 'must be patched to add ' : ' already was already patched to '} start jubula.rc.rcp"
     if needsJubulaRcpSupport
+      FileUtils.cp(ini_name, ini_name + '.bak', :verbose => true);
       config_ini.each{ 
         |line|
           if /^osgi.bundles=/.match(line)
@@ -165,7 +168,7 @@ public
 	exit 1
       end
       system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{tcs[0]} #{dbSpec}", @@myFail)
-      } # if false
+      } if true
     system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{xmlFile} #{dbSpec}")
   end
 
@@ -226,6 +229,7 @@ public
     startAUT(sleepTime)
     okay = runTestsuite(testcase)
     stopAgent(10)
+    system("killall #{File.basename(@exeFile)}") unless WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os']) # if still alive
     okay
   end
 
@@ -249,7 +253,7 @@ public
     end
     wrapper = "#{JubulaOptions.wrapper}"
     exe  = File.expand_path(@exeFile)
-    doc = "\"#{exe}\" #{vm.eql?('java') ? "" : " -vm #{vm}"} -clean -consoleLog -debug -data #{@dataDir} -vmargs #{vmargs}"
+    doc = "\"#{exe}\" #{vm.eql?('java') ? "" : " -vm #{vm}"} -data #{@dataDir} -vmargs #{vmargs}"
     File.open(wrapper, 'w') {|f| f.puts(doc) }
     FileUtils.chmod(0744, wrapper)
     puts "#{dryRun ? 'Would create' : 'Created'} wrapper script #{wrapper} with content"
