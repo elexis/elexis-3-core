@@ -4,7 +4,7 @@ See also our "Wiki":https://bitbucket.org/ngiger/jubula-elexis/wiki/Home
 
 h2. Using the Jubula GUI
 
-* Install Jubula Standalone Version 7.1 from "Bredex":http://testing.bredex.de/ (Subscribe necessary, no costs involved)
+* Install Jubula Standalone Version 8.0 from "Bredex":http://testing.bredex.de/ (Subscribe necessary, no costs involved)
 * @cd ch.elexis.core.releng/ && mvn clean install && cd jubula@
 * @export WORKSPACE=${PWD}@
 * @jubula -data workspace/ &@  # Launch jubula
@@ -40,3 +40,42 @@ h3. requirements
 * Ruby >= 1.9.0
 ** gem xml-simple
 ** gem zip
+
+h2. Running via Jenkins-CI
+
+Running the GUI-tests via Jenkins-CI consumed much time to find the best setup. Here my experiences.
+
+Common steps for each slave
+* Install Java version 1.7.55
+* Install maven 3.0.5
+* Install Ruby 1.9 or above
+* Install git 1.8 or above
+* Install jubula 8.0 
+** Linux: under /opt/jubula_*version*
+** MacOSX: under /Applications/jubula_*version*
+** Windows: under  C:\Programm Files\jubula_*version*  or E:\jubula_*version*
+
+Verify manually that the following commands run (which we will run via Jenkins CI)
+* @git checkout https://github.com/elexis/elexis-3-core.git && cd elexis-3-core@
+* @mvn clean install -Pall-arch -Dmaven.test.skip@
+* @cd ch.elexis.core.releng/jubula && ruby ./run_jenkins.rb@
+OS-specific considerations
+
+h3. Windows slave
+
+Setup a Virtual Machine. Launching slave "Slaves":https://srv.elexis.info/jenkins/computer/windows-7/. Using "Launch" start agent from web-browser.
+
+h3. MacOSX slave
+
+Use xvfb (Installed via X11-Server from the developpers tools). Using "Launch" start agent from web-browser. Xvfb-setup binary /usr/X11/bin/xvfb. I was unable to run the tests using an ssh-shell from another computer to MacOSX or using launchctl to run @java -jar slave.jar -noCertificateCheck -jnlpUrl https://srv.elexis.info/jenkins/computer/MacOSX-64-bit/slave-agent.jnlp@
+
+Tried xvfb Shutdown Xvfb with whole job, not just with the main build action, 	Xvfb installation.
+
+It is also necessary to ensure that the MacOSX does enter sleep mode or active the screen saver or the builds get stuck.
+
+h3. Linux slave
+
+Linux has no problems running the tests fully headless. In an ssh shell I started the slave using @wget --timestamping https://srv.elexis.info/jenkins/jnlpJars/slave.jar && java -jar slave.jar -noCertificateCheck -jnlpUrl https://srv.elexis.info/jenkins/computer/MacOSX-64-bit/slave-agent.jnlp@ -noCertificateCheck only because srv.elexis.info has no official Certificate.
+
+
+TODO: Use daemontools

@@ -14,7 +14,7 @@ Start the Elexis3 application.
 
 h2. Building
 
-You need Java 1.7.5. Maven (we use 3.0.4 for our builds, other versions might work). Then you should be able to generate the application and p2 update site using the following calls:
+You need Java 1.7+. Maven (we use 3.0.4 for our builds, other versions might work). Then you should be able to generate the application and p2 update site using the following calls:
 
 @git clone https://github.com/elexis/elexis-3-core@
 @mvn clean install@
