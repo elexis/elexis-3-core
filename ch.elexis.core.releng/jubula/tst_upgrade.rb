@@ -21,19 +21,29 @@ rescue LoadError
 end
 
 
-defaultUrl = 'http://ngiger.dyndns.org/jenkins/job/Elexis-3.0-Core/lastSuccessfulBuild/artifact/ch.elexis.core.p2site/target/products/ch.elexis.core.application.product-linux.gtk.x86_64.zip'
+defaultUrl = 'https://srv.elexis.info/jenkins/job/Elexis-3.0-Core/lastSuccessfulBuild/artifact/ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp-linux.gtk.x86_64.zip'
 defaultDest = '/tmp/elexis-3.0.test'
+SavedDir = Dir.pwd
 
 def unzip_elexis_3 (file, destination)
   tempName = File.basename(file)
   puts "Downloading #{file} via #{tempName} into #{destination}"
+  FileUtils.makedirs(destination)
+  Dir.chdir(destination)
+  cmd ="wget --no-check-certificate --timestamping #{file}"
+  puts cmd
+  res = system(cmd)
+  exit(2) unless res and File.exists?(tempName)
+
+  if false
   open(file) {
     |f|
     ausgabe = File.open(tempName, 'w+')
     ausgabe.write f.read
     ausgabe.close
   } unless File.exists?(tempName) and File.size(tempName) > 1024
-
+  end
+  
   Zip::ZipFile.open(tempName) { |zip_file|
    zip_file.each { |f|
      f_path=File.join(destination, f.name)
@@ -50,32 +60,32 @@ if Dir.glob("#{defaultDest}/*lexis*").size > 0
 else
   exeFile = 'unknown_elexis_exe'
 end
-ARGV << "--exeFile=#{exeFile}"
-ARGV << "--vmargs='-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch'"
-ARGV << '--projectVersion=1.1'
-require "#{File.dirname(__FILE__)}/jubulaoptions"
+Dir.chdir(SavedDir)
 $stdout.sync=true
+
+require "#{File.dirname(__FILE__)}/jubulaoptions"
+require "#{File.dirname(__FILE__)}/jubularun"
 opts = JubulaOptions::parseArgs
 opts.parse!(ARGV)
-require "#{File.dirname(__FILE__)}/jubularun"
 JubulaOptions::dryRun == true ? DryRun = true : DryRun = false
+puts "Calling JubulaRun.new"
 jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
+                       # Workaround see https://bugs.eclipse.org/bugs/show_bug.cgi?id=404776, which was not backported to 3.8.2, only in 4.3.2
+                       # and for p2.unsignedPolicy https://bugs.eclipse.org/bugs/show_bug.cgi?id=235526
+                       :exeFile => exeFile,
+                       :instDest => File.dirname(exeFile),
+                       :vmargs => "-Declipse.p2.unsignedPolicy=allow -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch",
                        :autid => 'elexis')
-# For unknown reasons (which took me a few hours to code around) I decided
-# that is is not my aim to use a MySQL database to store the Jubula testcases
-# Instead we also start from a fresh, empty workspace and an empty embedded H2 db
-# Costs me a good minute
-
-wsDir = "#{jubula.workspace}/test-ws"
+wsDir = "#{jubula.workspace}/test-ws-upgrade"
 FileUtils.rm_rf(wsDir, :verbose => true, :noop => DryRun)
 
 jubula.useH2(Dir.pwd)
 jubula.prepareRcpSupport
 jubula.genWrapper
-exit
-jubula.rmTestcases 	# only if using h2 
+jubula.patchXML
+jubula.rmTestcases  # only if using h2
 jubula.loadTestcases    # only if using h2
-res_TST_UPGRADE = jubula.runOneTestcase('TST_UPGRADE', 15) # 30 Sekunden waren nicht genug auf Windows bis Elexis aufgestartet war
+res_TST_UPGRADE = jubula.runOneTestcase('TST_UPGRADE')
 puts "res_TST_UPGRADE ist #{res_TST_UPGRADE}"
 
 Dir.glob("**/*shot*/*.png").each{ 

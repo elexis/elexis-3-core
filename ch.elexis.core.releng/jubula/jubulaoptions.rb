@@ -106,6 +106,7 @@ module JubulaOptions
   @vmargs      ||= ""  
   @wrapper     ||= "#{@workspace}/test-runner.bat" # use bat for windows!
   @vm          ||= 'java'
+  puts "@exeFile ist #{@exeFile.inspect}"
   unless @exeFile
   case RbConfig::CONFIG['host_os']
     when WINDOWS_REGEXP
@@ -125,7 +126,7 @@ module JubulaOptions
       @instDest =  pathname
     end
   else
-    pathname = "../../**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
+    pathname = "../../*/target/**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
     if (Dir.glob(File.expand_path(pathname)).size == 1)
       pathname = pathname.sub('configuration/config.ini', '*.ini')
       if (Dir.glob(File.expand_path(pathname)).size == 1)
@@ -181,8 +182,8 @@ module JubulaOptions
       end
       opts.on("-e", "--exeFile exeFile", "exeFile to use. Defaults to '#{@exeFile}'") do |v|
         puts "@exeFile ist jetzt #{v}"
-	@exeFile = v
-  @instDest = File.dirname(@exeFile)
+    @exeFile = v
+    @instDest = File.dirname(@exeFile)
       end
       opts.on("--jubulaHome jubulaHome", "Home of Jubula installation. Defaults to '#{@vmargs}'") do |v|
 	@jubulaHome = v

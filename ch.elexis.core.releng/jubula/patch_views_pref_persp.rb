@@ -3,6 +3,8 @@
 #
 # A helper to patch the dataset of a Jubula Test-XML. See help
 #
+# TODO: Fix this problem!!! LIMIT_VIEWS_TO
+LIMIT_VIEWS_TO = 0 # eg. 15, 0 means no limit
 
 # We decided to use xml-simple, as I found nokogiri a bit more difficult to generate XML-elements
 # http://xml-simple.rubyforge.org/
@@ -76,8 +78,7 @@ def patchJubulaXML(xml_name, plugin_dir)
   }
 
   counter = 0; views = []
-	# TODO: Fix this problem!!!
-  viewNames[0..14].each{|name|
+  viewNames[0..LIMIT_VIEWS_TO-1].each{|name|
     counter += 1
     next if  /Welcome/i.match(name)
     views << eval(genScreenshotElement(counter, name))

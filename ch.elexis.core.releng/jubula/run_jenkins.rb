@@ -13,7 +13,8 @@ opts = JubulaOptions::parseArgs
 opts.parse!(ARGV)
 JubulaOptions::dryRun == true ? DryRun = true : DryRun = false
 jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
-                       :vmargs => "-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch",
+                       # Workaround see https://bugs.eclipse.org/bugs/show_bug.cgi?id=404776, which was not backported to 3.8.2, only in 4.3.2
+                       :vmargs => "-Dorg.eclipse.swt.browser.DefaultType=mozilla -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch",
                        :autid => 'elexis')
 
 # For unknown reasons (which took me a few hours to code around) I decided
@@ -27,8 +28,8 @@ FileUtils.rm_rf(wsDir, :verbose => true, :noop => DryRun)
 jubula.useH2(Dir.pwd)
 jubula.prepareRcpSupport
 jubula.genWrapper
-jubula.rmTestcases 	# only if using h2 
 jubula.patchXML
+jubula.rmTestcases 	# only if using h2 
 jubula.loadTestcases    # only if using h2
 res_FULLTEST = jubula.runOneTestcase('FULLTEST', 15) # 30 Sekunden waren nicht genug auf Windows bis Elexis aufgestartet war
 puts "res_FULLTEST ist #{res_FULLTEST}"

@@ -17,6 +17,7 @@ end
 
 class JubulaRun
 
+  DefaultSleepTime =  /linux/.match(RbConfig::CONFIG['host_os']) ? 5 : 30
 public
     JubulaOptions::Fields.each { 
       |x|
@@ -56,6 +57,7 @@ public
 	FileUtils.rm_rf(File.expand_path(x), :verbose => true, :noop => @dryRun)
 	FileUtils.makedirs(x, :verbose => true, :noop => @dryRun)
     }
+    instDest = File.dirname(exeFile)
     ENV['TEST_UPV_WORKSPACE'] = @workspace
   end
 
@@ -120,6 +122,7 @@ public
       puts "prepareRcpSupport: Could not find ini_name #{ini_name}. host_os is #{RbConfig::CONFIG['host_os']}"
       exit 1
     end
+    FileUtils.chmod(0755, @exeFile, :verbose => true)    
     config_ini = IO.readlines(ini_name)
     needsJubulaRcpSupport = true
     rcpStart = ',org.eclipse.jubula.rc.rcp@start'
@@ -127,7 +130,7 @@ public
       |line|
         needsJubulaRcpSupport = false if /^osgi.bundles=/.match(line) and /#{rcpStart}/.match(line)
     }   
-    puts "#{File.basename(ini_name)}: #{needsJubulaRcpSupport ? 'must be patched to add ' : ' already was already patched to '} start jubula.rc.rcp"
+    puts "#{File.expand_path(ini_name)}: #{needsJubulaRcpSupport ? ' Will patch to add' : ' Already patched to'} start jubula.rc.rcp."
     if needsJubulaRcpSupport
       FileUtils.cp(ini_name, ini_name + '.bak', :verbose => true);
       config_ini.each{ 
@@ -181,8 +184,9 @@ public
     return cmd
   end
   
-  def startAgent(sleepTime = 15)
-	cmd = adaptCmdForMacOSx("#{JubulaOptions::jubulaHome}/server/autagent")
+  def startAgent(sleepTime = DefaultSleepTime)
+    puts("# Sleeping on os #{@os} for #{sleepTime} after startAgent" )
+  cmd = adaptCmdForMacOSx("#{JubulaOptions::jubulaHome}/server/autagent")
 	cmd = "#{cmd} -p #{portNumber}"
 	if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
 		res = system("start #{cmd}")
@@ -193,7 +197,9 @@ public
     sleep(sleepTime) # give the agent time to start up (sometimes two seconds were okay)
   end
   
-  def startAUT(sleepTime = 30)
+  def startAUT(slTime = DefaultSleepTime)
+    puts("#xx Sleeping on os #{@os.inspect } #{DefaultSleepTime}' } for #{slTime} after startAUT" )
+         
     @@nrRun ||= 0
     @@nrRun += 1
     log = "#{@testResults}/test-console-#{@@nrRun}.log"
@@ -205,8 +211,8 @@ public
     end
     res = system(cmd)
     if !res then puts "failed. exiting"; exit(3); end
-    puts("# Sleeping for #{sleepTime} after startAUT" )
-    sleep(sleepTime)
+      puts("# Sleeping on os #{@os} for #{slTime} after startAUT" )
+                                          sleep(slTime)
   end
   
   def stopAgent(sleepTime = 3)
@@ -224,7 +230,7 @@ public
     res
   end
   
-  def runOneTestcase(testcase, sleepTime = 30)
+  def runOneTestcase(testcase, sleepTime = DefaultSleepTime)
     startAgent
     startAUT(sleepTime)
     okay = runTestsuite(testcase)
