@@ -30,7 +30,7 @@ def unzip_elexis_3 (file, destination)
   puts "Downloading #{file} via #{tempName} into #{destination}"
   FileUtils.makedirs(destination)
   Dir.chdir(destination)
-  cmd ="wget --no-check-certificate --timestamping #{file}"
+  cmd ="wget --quiet --no-check-certificate --timestamping #{file}"
   puts cmd
   res = system(cmd)
   exit(2) unless res and File.exists?(tempName)
@@ -70,7 +70,7 @@ opts.parse!(ARGV)
 JubulaOptions::dryRun == true ? DryRun = true : DryRun = false
 puts "Calling JubulaRun.new"
 jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
-                       # Workaround see https://bugs.eclipse.org/bugs/show_bug.cgi?id=404776, which was not backported to 3.8.2, only in 4.3.2
+                       # browser: workaround see https://bugs.eclipse.org/bugs/show_bug.cgi?id=404776, which was not backported to 3.8.2, only in 4.3.2
                        # and for p2.unsignedPolicy https://bugs.eclipse.org/bugs/show_bug.cgi?id=235526
                        :exeFile => exeFile,
                        :instDest => File.dirname(exeFile),

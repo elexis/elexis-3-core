@@ -106,7 +106,6 @@ module JubulaOptions
   @vmargs      ||= ""  
   @wrapper     ||= "#{@workspace}/test-runner.bat" # use bat for windows!
   @vm          ||= 'java'
-  puts "@exeFile ist #{@exeFile.inspect}"
   unless @exeFile
   case RbConfig::CONFIG['host_os']
     when WINDOWS_REGEXP

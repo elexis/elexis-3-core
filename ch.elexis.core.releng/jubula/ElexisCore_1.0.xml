@@ -2,7 +2,7 @@
 <content xmlns="http://www.eclipse.org/jubula/client/archive/schema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <project>
     <name>ElexisCore</name>
-    <comment xsi:nil="true" />
+    <comment xsi:nil="true"/>
     <GUID>b80640b58118457d83cc1cdfdd69410e</GUID>
     <generated>false</generated>
     <active>true</active>
@@ -1211,15 +1211,15 @@
       <name>elexis</name>
       <config id="ID_C_140873">
         <name>elexis-linux@localhost</name>
-        <classname></classname>
-        <classpath></classpath>
-        <jarfile></jarfile>
-        <parameter></parameter>
-        <workingDir></workingDir>
-        <jreDir></jreDir>
-        <jreParameter></jreParameter>
-        <server></server>
-        <environment></environment>
+        <classname/>
+        <classpath/>
+        <jarfile/>
+        <parameter/>
+        <workingDir/>
+        <jreDir/>
+        <jreParameter/>
+        <server/>
+        <environment/>
         <activateApp>false</activateApp>
         <activationMethod>none</activationMethod>
         <confAttrMapEntry>
@@ -1289,15 +1289,15 @@
       </config>
       <config id="ID_C_140874">
         <name>elexis@localhost</name>
-        <classname></classname>
-        <classpath></classpath>
-        <jarfile></jarfile>
-        <parameter></parameter>
-        <workingDir></workingDir>
-        <jreDir></jreDir>
-        <jreParameter></jreParameter>
-        <server></server>
-        <environment></environment>
+        <classname/>
+        <classpath/>
+        <jarfile/>
+        <parameter/>
+        <workingDir/>
+        <jreDir/>
+        <jreParameter/>
+        <server/>
+        <environment/>
         <activateApp>false</activateApp>
         <activationMethod>none</activationMethod>
         <confAttrMapEntry>
@@ -1344,7 +1344,7 @@
       <language>de_DE</language>
       <objectMapping>
         <profile>
-          <name xsi:nil="true" />
+          <name xsi:nil="true"/>
           <contextFactor>0.1</contextFactor>
           <nameFactor>0.6</nameFactor>
           <pathFactor>0.3</pathFactor>
@@ -1367,9 +1367,9 @@
               <hierarchyName>org.eclipse.swt.widgets.CoolBar_1</hierarchyName>
               <hierarchyName>org.eclipse.swt.widgets.ToolBar_1</hierarchyName>
               <hierarchyName>home</hierarchyName>
-              <alternativeDisplayName xsi:nil="true" />
+              <alternativeDisplayName xsi:nil="true"/>
             </technicalName>
-            <type xsi:nil="true" />
+            <type xsi:nil="true"/>
             <logicalName>040ef2cad29147368a147274bb781bf1</logicalName>
           </association>
           <association>
@@ -1400,7 +1400,7 @@
               <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
               <alternativeDisplayName>Text Field/Text Area/Editor Pane/Text Pane</alternativeDisplayName>
             </technicalName>
-            <type xsi:nil="true" />
+            <type xsi:nil="true"/>
             <logicalName>e6b18dcce2af4d559d20b91d4c512bd1</logicalName>
           </association>
           <association>
@@ -1415,7 +1415,7 @@
               <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
               <alternativeDisplayName>Table</alternativeDisplayName>
             </technicalName>
-            <type xsi:nil="true" />
+            <type xsi:nil="true"/>
             <logicalName>8ab6b08d1a4d08f3011a4d09a4930022</logicalName>
           </association>
           <association>
@@ -1431,7 +1431,7 @@
               <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
               <alternativeDisplayName>Text Component</alternativeDisplayName>
             </technicalName>
-            <type xsi:nil="true" />
+            <type xsi:nil="true"/>
             <logicalName>7c474f2af67640899cb98658db3fcedf</logicalName>
           </association>
           <category>
@@ -1448,9 +1448,9 @@
                 <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
                 <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
                 <hierarchyName>dialog.button.ok</hierarchyName>
-                <alternativeDisplayName>dialog.button.ok (&quot;OK&quot;)</alternativeDisplayName>
+                <alternativeDisplayName>dialog.button.ok ("OK")</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>2ba2ec4023294b0fbdbf09d7bde14e74</logicalName>
             </association>
             <association>
@@ -1480,7 +1480,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Text_3</hierarchyName>
                 <alternativeDisplayName>Text Field/Text Area/Editor Pane/Text Pane</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>f9246048948c4029bae37d802a7f5c68</logicalName>
             </association>
             <association>
@@ -1510,7 +1510,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Text_2</hierarchyName>
                 <alternativeDisplayName>Text Field/Text Area/Editor Pane/Text Pane</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>fc19a4ec8ca24c97b380b29924512ee0</logicalName>
             </association>
             <association>
@@ -1540,7 +1540,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
                 <alternativeDisplayName>Text Field/Text Area/Editor Pane/Text Pane</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>a43dd75cbfc64f50988d8a8f890e7343</logicalName>
             </association>
             <association>
@@ -1555,7 +1555,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.ToolItem_1</hierarchyName>
                 <alternativeDisplayName>Toolbar Item</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>ad1edac2cbaf44b9b5a06bc782d75db8</logicalName>
             </association>
             <association>
@@ -1578,7 +1578,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
                 <alternativeDisplayName>Text Field/Text Area/Editor Pane/Text Pane</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>b5994fe3acd14b8e9c96b98549e38ef0</logicalName>
             </association>
             <association>
@@ -1608,7 +1608,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Combo_1</hierarchyName>
                 <alternativeDisplayName>Combo Box</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>94c475d93f53405e8d22a63819257022</logicalName>
             </association>
           </category>
@@ -1625,9 +1625,9 @@
                 <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
                 <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
                 <hierarchyName>dialog.button.ok</hierarchyName>
-                <alternativeDisplayName>dialog.button.ok (&quot;OK&quot;)</alternativeDisplayName>
+                <alternativeDisplayName>dialog.button.ok ("OK")</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>273ab17ffc8c4799bced2462265e6c6f</logicalName>
             </association>
             <association>
@@ -1646,9 +1646,9 @@
                 <hierarchyName>ch.elexis.global_inbox.Prefs</hierarchyName>
                 <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
                 <hierarchyName>org.eclipse.swt.widgets.Button_2</hierarchyName>
-                <alternativeDisplayName>Button/Check Box/Radio Button (&quot;Apply&quot;)</alternativeDisplayName>
+                <alternativeDisplayName>Button/Check Box/Radio Button ("Apply")</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>77bae73ecbbe428582a0e86cb6ee0723</logicalName>
             </association>
             <association>
@@ -1665,7 +1665,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Tree_1</hierarchyName>
                 <alternativeDisplayName>Tree</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>ef4e9efee9a14667b3b5420dfc796e1a</logicalName>
             </association>
           </category>
@@ -1681,9 +1681,9 @@
                 <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
                 <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
                 <hierarchyName>dialog.button.ok</hierarchyName>
-                <alternativeDisplayName>dialog.button.ok (&quot;OK&quot;)</alternativeDisplayName>
+                <alternativeDisplayName>dialog.button.ok ("OK")</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>d900038e05b94b89abfbf82dfd0d2020</logicalName>
             </association>
             <association>
@@ -1699,7 +1699,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Tree_1</hierarchyName>
                 <alternativeDisplayName>Tree</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>511e8694a0b54b97a4a4f311378859e8</logicalName>
             </association>
             <association>
@@ -1716,7 +1716,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
                 <alternativeDisplayName>Text Field/Text Area/Editor Pane/Text Pane</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>8ab6b08d1a4d08f3011a4d09a497002c</logicalName>
             </association>
           </category>
@@ -1733,9 +1733,9 @@
                 <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
                 <hierarchyName>org.eclipse.swt.widgets.Composite_3</hierarchyName>
                 <hierarchyName>dialog.button.ok</hierarchyName>
-                <alternativeDisplayName>dialog.button.ok (&quot;OK&quot;)</alternativeDisplayName>
+                <alternativeDisplayName>dialog.button.ok ("OK")</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>3cd0b6cda2a1498c8a9e355a521271f3</logicalName>
             </association>
           </category>
@@ -1756,9 +1756,9 @@
                 <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
                 <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
                 <hierarchyName>dialog.button.ok</hierarchyName>
-                <alternativeDisplayName>dialog.button.ok (&quot;OK&quot;)</alternativeDisplayName>
+                <alternativeDisplayName>dialog.button.ok ("OK")</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>bb4b196e395a4fdea88d08447618bd3d</logicalName>
             </association>
             <association>
@@ -1772,7 +1772,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
                 <alternativeDisplayName>Table</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
               <logicalName>21380d96bd0d496a9ac7486a81578ff1</logicalName>
             </association>
           </category>
@@ -1780,11 +1780,11 @@
         <unmappedComponent>
           <name>#1!unmappedlogicalGDCat#1!</name>
           <association>
-            <type xsi:nil="true" />
+            <type xsi:nil="true"/>
             <logicalName>8ab6b08d1a4d08f3011a4d09a4960029</logicalName>
           </association>
           <association>
-            <type xsi:nil="true" />
+            <type xsi:nil="true"/>
             <logicalName>e32d3867e67140d1a359ab1da7070c75</logicalName>
           </association>
         </unmappedComponent>
@@ -1803,7 +1803,7 @@
               <hierarchyName>org.eclipse.swt.widgets.List_1</hierarchyName>
               <alternativeDisplayName>List</alternativeDisplayName>
             </technicalName>
-            <type xsi:nil="true" />
+            <type xsi:nil="true"/>
           </association>
           <category>
             <name>Abrechnung</name>
@@ -1823,7 +1823,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
                 <alternativeDisplayName>Text Field/Text Area/Editor Pane/Text Pane</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
             </association>
             <association>
               <technicalName>
@@ -1841,7 +1841,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
                 <alternativeDisplayName>Text Field/Text Area/Editor Pane/Text Pane</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
             </association>
           </category>
           <category>
@@ -1860,7 +1860,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
                 <alternativeDisplayName>Table</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
             </association>
             <association>
               <technicalName>
@@ -1882,7 +1882,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Text_2</hierarchyName>
                 <alternativeDisplayName>Text Field/Text Area/Editor Pane/Text Pane</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
             </association>
           </category>
           <category>
@@ -1920,7 +1920,7 @@
                 <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
                 <alternativeDisplayName>Text Field/Text Area/Editor Pane/Text Pane</alternativeDisplayName>
               </technicalName>
-              <type xsi:nil="true" />
+              <type xsi:nil="true"/>
             </association>
           </category>
         </unmappedTechnical>
@@ -1930,28 +1930,28 @@
     </aut>
     <category>
       <name>Work_ng</name>
-      <comment xsi:nil="true" />
+      <comment xsi:nil="true"/>
       <GUID>9a3279837a344eedbb9b6792da9aa573</GUID>
       <generated>false</generated>
       <active>true</active>
       <category>
         <name>Patienten</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>dcf2d2579e4b4c6e8cb89850f5d1cb19</GUID>
         <generated>false</generated>
         <active>true</active>
         <testcase>
           <name>UC_1_Patienten_Erfassen</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>4843a57fbc974060ae3bafa19196b8da</GUID>
           <generated>false</generated>
           <active>true</active>
-          <testdata></testdata>
-          <datafile xsi:nil="true" />
+          <testdata/>
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>edd87cdd1938438bbc4f6e23f2168447</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -2020,7 +2020,7 @@
                 <uniqueIds>9bc3752a8c6f404e9cb32f31e5b0e218</uniqueIds>
                 <uniqueIds>d9b37457d91b44858b566f9f307bc381</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>ce047a9881aa42c8ad2b22bfedb96844</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
@@ -2030,16 +2030,16 @@
       </category>
       <testcase>
         <name>Omnivore</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>d7464a12563a48acb04d3e5f6653cdfe</GUID>
         <generated>false</generated>
         <active>true</active>
-        <testdata></testdata>
-        <datafile xsi:nil="true" />
+        <testdata/>
+        <datafile xsi:nil="true"/>
         <teststep>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>dec6b7bcb66c4e50a13d8d6a62fee4e1</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -2054,7 +2054,7 @@
               </row>
               <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
@@ -2063,16 +2063,16 @@
       </testcase>
       <testcase>
         <name>Print environment to file</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>ec512e2c9ec74527831d84edd76db11a</GUID>
         <generated>false</generated>
         <active>true</active>
-        <testdata></testdata>
-        <datafile xsi:nil="true" />
+        <testdata/>
+        <datafile xsi:nil="true"/>
         <teststep>
           <usedTestcase>
             <name>Print env</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>53c125d56bb24c378d227b1f12d6cc57</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -2081,7 +2081,7 @@
                 <data columnCount="1">
                   <data>
                     <language>de_DE</language>
-                    <value>/bin/sh -c &quot;env | tee  \${HOME}/jubula_sample.log&quot;</value>
+                    <value>/bin/sh -c "env | tee  \${HOME}/jubula_sample.log"</value>
                   </data>
                 </data>
                 <data columnCount="2">
@@ -2108,7 +2108,7 @@
               <uniqueIds>8ab6b083181d393b01181d8bb901005a</uniqueIds>
               <uniqueIds>8ab6b083181d393b01181d8beaaf005c</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b08316c3bbe20116c3bec817000c</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -2119,26 +2119,26 @@
     </category>
     <category>
       <name>Event Handlers</name>
-      <comment xsi:nil="true" />
+      <comment xsi:nil="true"/>
       <GUID>9d03b9d466f147d29209601f8ff63fe0</GUID>
       <generated>false</generated>
       <active>true</active>
     </category>
     <category>
       <name>AUT modules</name>
-      <comment xsi:nil="true" />
+      <comment xsi:nil="true"/>
       <GUID>c5785d39e74a4b7388aff4785ab56e5c</GUID>
       <generated>false</generated>
       <active>true</active>
       <category>
         <name>Preferences</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>d97c67e1394b4a9491673f45b2199971</GUID>
         <generated>false</generated>
         <active>true</active>
         <testcase>
           <name>Select Preference Item</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>76a22bc7a9854f268785b471f30c1acd</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -2150,11 +2150,11 @@
           <testdata>
             <uniqueIds>e26d6b54acdc4d2491c95e63e0bdc4a3</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>ec71d7f97ff9492792b242fb2b60c798</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -2176,7 +2176,7 @@
                 <uniqueIds>8ab6b08d294519bd01294618ea220efb</uniqueIds>
                 <uniqueIds>8ab6b08d294519bd012946192cdf0efc</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d294519bd0129461469a20e7c</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -2185,12 +2185,12 @@
           <teststep>
             <usedTestcase>
               <name>Select preferences menu</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>0239a71fd174412fb9b231b34f520431</GUID>
               <generated>false</generated>
               <active>true</active>
-              <testdata></testdata>
-              <datafile xsi:nil="true" />
+              <testdata/>
+              <datafile xsi:nil="true"/>
               <referencedTestData>MENU_PREFERENCES</referencedTestData>
               <testcaseGuid>8ab6b083150339b501150364b007095f</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
@@ -2200,7 +2200,7 @@
           <teststep>
             <usedTestcase>
               <name>Select PREFERENCES_PATH</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>7e98ff7c43bb4de0b1ffaf0cf9cb6cc4</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -2257,7 +2257,7 @@
                 <uniqueIds>8ab6b08d2a187ce3012a1881f0580187</uniqueIds>
                 <uniqueIds>8ab6b08d2a187ce3012a18820e8e0188</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d2a187ce3012a187f71b20002</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -2273,7 +2273,7 @@
         </testcase>
         <testcase>
           <name>Select Item. Press Apply and Okay</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>f0f25b6cdb5742fcaa355f6f7ad26f30</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -2285,11 +2285,11 @@
           <testdata>
             <uniqueIds>92fa606d97c84b08922ea631769051c8</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
               <name>Select preferences menu</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>b2a247ee435741cdbc0719501b2a1bed</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -2311,7 +2311,7 @@
                 <uniqueIds>8ab6b083154b8c1601154b91d2000112</uniqueIds>
                 <uniqueIds>8ab6b083181dc1bc01181dc95d920013</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364b007095f</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -2320,7 +2320,7 @@
           <teststep>
             <usedTestcase>
               <name>Select PREFERENCES_PATH</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>e8321eb8d3c54509b322534601d06200</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -2377,7 +2377,7 @@
                 <uniqueIds>8ab6b08d2a187ce3012a1881f0580187</uniqueIds>
                 <uniqueIds>8ab6b08d2a187ce3012a18820e8e0188</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d2a187ce3012a187f71b20002</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -2392,7 +2392,7 @@
           <teststep>
             <usedTestcase>
               <name>Wait for Apply</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>92b5bf5cfa434f129548858b5badc0df</GUID>
               <generated>false</generated>
               <active>false</active>
@@ -2414,7 +2414,7 @@
                 <uniqueIds>8ab6b083181dc1bc01181dc3c5fb0003</uniqueIds>
                 <uniqueIds>8ab6b083181dc1bc01181dc3dbc50004</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364aff708ea</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -2423,11 +2423,11 @@
           <teststep>
             <usedTestcase>
               <name>Synch Click Apply</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>7b03a9d488414b74916ae838f281763e</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
@@ -2441,11 +2441,11 @@
           <teststep>
             <usedTestcase>
               <name>Click Apply if exists</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>f4a89931a40a421fabe484ac9a28628f</GUID>
               <generated>false</generated>
               <active>false</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>94647e1be2874050b43a259e99b692f7</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
@@ -2459,11 +2459,11 @@
           <teststep>
             <usedTestcase>
               <name>Sync Ok Click</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>dbf2207a40dc4d4a902d242ba64af2be</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
@@ -2475,36 +2475,36 @@
             </usedTestcase>
           </teststep>
           <eventTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>fd6400721fe24b4180e4ab1698d22fed</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>9230ed2fa60d47b0b54f637da3c72b56</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
             <eventType>TestErrorEvent.Action</eventType>
             <reentryProperty>return</reentryProperty>
           </eventTestcase>
           <eventTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>895553910bfd4973a0d1b1de3417032f</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>9230ed2fa60d47b0b54f637da3c72b56</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
             <eventType>TestErrorEvent.VerifyFailed</eventType>
             <reentryProperty>continue</reentryProperty>
           </eventTestcase>
           <eventTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>1464f78840c74ffcaaf43e979e28e10d</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>12d0f5d1956a4e13b2ad29936889840a</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
             <eventType>TestErrorEvent.CompNotFound</eventType>
@@ -2512,11 +2512,11 @@
           </eventTestcase>
           <eventTestcase>
             <name>Click O &amp; wait</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>dbed3534e4794ec0a9925b420caf69fb</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>12d0f5d1956a4e13b2ad29936889840a</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
             <eventType>TestErrorEvent.Config</eventType>
@@ -2526,20 +2526,20 @@
         </testcase>
         <testcase>
           <name>Click Okay and wait for window close</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>12d0f5d1956a4e13b2ad29936889840a</GUID>
           <generated>false</generated>
           <active>true</active>
-          <testdata></testdata>
-          <datafile xsi:nil="true" />
+          <testdata/>
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
               <name>Click OK</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>94b619c85135412ebb51f7e50980879f</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
@@ -2553,7 +2553,7 @@
           <teststep>
             <usedTestcase>
               <name>Preferences Window must close</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>ec60b69def464f2b9937f804008af8ea</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -2589,7 +2589,7 @@
                 <uniqueIds>8ab6b083181d393b01181d9e7e460093</uniqueIds>
                 <uniqueIds>8ab6b083181d393b01181d9ead360094</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -2599,7 +2599,7 @@
         </testcase>
         <testcase>
           <name>Select Item. Press Okay</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>3b518420a4c24fcda15931a3279cd45d</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -2611,11 +2611,11 @@
           <testdata>
             <uniqueIds>3720176f94bd410eb64c98940a76c869</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>ae4518536a4b4b09b83b7f783a1d8df7</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -2630,19 +2630,19 @@
                 </row>
                 <uniqueIds>e26d6b54acdc4d2491c95e63e0bdc4a3</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>76a22bc7a9854f268785b471f30c1acd</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>a6b261241fb34b4c9e620721dd638e36</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>12d0f5d1956a4e13b2ad29936889840a</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
@@ -2652,13 +2652,13 @@
       </category>
       <category>
         <name>Helpers</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>ed0b9232307249ea9c9384bd7b765258</GUID>
         <generated>false</generated>
         <active>true</active>
         <testcase>
           <name>ActivateViewAndClick</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>7b9f4bb48bba4bd1b781ee8f0ff0135e</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -2676,11 +2676,11 @@
             <uniqueIds>ee032c42287f40c8a3d0f38651914955</uniqueIds>
             <uniqueIds>127762ec6d2f4ae48a15529e69686cf9</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>dfc05b8668e04af584d364d814032b3d</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -2702,19 +2702,19 @@
                 <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
                 <uniqueIds>6c7efc8fc151413aae21009e48fd1e08</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>b471dc1aacc44a399224cb6740f7bf71</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -2727,12 +2727,12 @@
             </usedTestcase>
           </teststep>
           <eventTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>df296944f45f498b9754b40e36a176e1</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>9230ed2fa60d47b0b54f637da3c72b56</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
             <eventType>TestErrorEvent.CompNotFound</eventType>
@@ -2742,16 +2742,16 @@
         </testcase>
         <testcase>
           <name>ClickOkay if multiple problems</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>9f4f888613974ca8bc20dc0b54451c66</GUID>
           <generated>false</generated>
           <active>true</active>
-          <testdata></testdata>
-          <datafile xsi:nil="true" />
+          <testdata/>
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
               <name>Check whether multiple problem have occure</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>b42111fa97e441bea6e79759994e253d</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -2780,7 +2780,7 @@
                 <uniqueIds>8ab6b08d2a7fc0e1012a7fc2e3c70114</uniqueIds>
                 <uniqueIds>8ab6b08d2a7fc0e1012a7fc2f5d60115</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d2a7fc0e1012a7fc1ff79000f</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -2789,7 +2789,7 @@
           <teststep>
             <usedTestcase>
               <name>SelectMultipleProblems</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>8271521b677c4bebb025739ab33fd3b8</GUID>
               <generated>false</generated>
               <active>false</active>
@@ -2818,7 +2818,7 @@
                 <uniqueIds>8ab6b083181d393b01181d9bdbc6008a</uniqueIds>
                 <uniqueIds>8ab6b083181d393b01181d9bf9dd008b</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364afe807bb</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -2827,11 +2827,11 @@
           <teststep>
             <usedTestcase>
               <name>Click OK on Multiple</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>276866b84c5246169c1f108dc265b593</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -2845,11 +2845,11 @@
           </teststep>
           <eventTestcase>
             <name>1</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>ebd15f427175408495384b2232786ebf</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
@@ -2864,11 +2864,11 @@
           </eventTestcase>
           <eventTestcase>
             <name>2</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>dfe0d492a6864c0f87970e0a0eccb856</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
@@ -2885,16 +2885,16 @@
         </testcase>
         <testcase>
           <name>Elexis Setup</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>d9e60504cb584eaca241b259b3ae009d</GUID>
           <generated>false</generated>
           <active>true</active>
-          <testdata></testdata>
-          <datafile xsi:nil="true" />
+          <testdata/>
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
               <name>Snapshot</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>7ab7bb27086946dfac81e94172d50014</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -2909,19 +2909,19 @@
                 </row>
                 <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Avoid problems with window &quot;Multiple problem occured&quot;</name>
-              <comment xsi:nil="true" />
+              <name>Avoid problems with window "Multiple problem occured"</name>
+              <comment xsi:nil="true"/>
               <GUID>5a07b76cfa5b43a5ab965891b696ce03</GUID>
               <generated>false</generated>
               <active>false</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>9f4f888613974ca8bc20dc0b54451c66</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
@@ -2929,11 +2929,11 @@
           <teststep>
             <usedTestcase>
               <name>Speicherdauer setzen (auf 30)</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>6e08bcf6fd4b4a4ab6e6e15552d57b37</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <referencedTestData>LOGGING</referencedTestData>
               <testcaseGuid>2b84c22924c04ca79ea4852654db0d2f</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -2941,23 +2941,23 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>69c08ca67e344d9ea3ee343ff6873ebd</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>5a034cd013b74493bbfbe153cfcd18d1</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <eventTestcase>
             <name>Restart on action Error</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>16cf84d3edfb4e639e16862cf96483e7</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
             <eventType>TestErrorEvent.Action</eventType>
@@ -2965,11 +2965,11 @@
           </eventTestcase>
           <eventTestcase>
             <name>Restart on check failed</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>ce4cf9fdbaa743c98a019cf5e16840e4</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
             <eventType>TestErrorEvent.VerifyFailed</eventType>
@@ -2977,11 +2977,11 @@
           </eventTestcase>
           <eventTestcase>
             <name>Restart on comp not found</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>a683993ce1cf4a20884e0ba0d5da8d46</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
             <eventType>TestErrorEvent.CompNotFound</eventType>
@@ -2989,11 +2989,11 @@
           </eventTestcase>
           <eventTestcase>
             <name>Restart on config error</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>92b684f093da43b4a26ea1f8e71376ae</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
             <eventType>TestErrorEvent.Config</eventType>
@@ -3003,7 +3003,7 @@
         </testcase>
         <testcase>
           <name>Open View by Name</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>3ca416c67277453ca1c6d724ff916ec0</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -3019,20 +3019,20 @@
           </parameterDescription>
           <testdata>
             <row rowCount="1">
-              <data columnCount="1" />
+              <data columnCount="1"/>
             </row>
             <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
             <uniqueIds>6c7efc8fc151413aae21009e48fd1e08</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
               <name>Reset Perspective</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>79d648e8dd384e6d94dd23e252003a7e</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>5a034cd013b74493bbfbe153cfcd18d1</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
@@ -3040,7 +3040,7 @@
           <teststep>
             <usedTestcase>
               <name>Wait for MenuBar</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>2c6d7bbef6e14e4c917ba8bb221ae142</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3062,7 +3062,7 @@
                 <uniqueIds>8ab6b08d294519bd01294618ea220efb</uniqueIds>
                 <uniqueIds>8ab6b08d294519bd012946192cdf0efc</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d294519bd0129461469a20e7c</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3071,7 +3071,7 @@
           <teststep>
             <usedTestcase>
               <name>Menu wählen</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>fac6987131ba41e6a858104d8b7a8442</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3093,7 +3093,7 @@
                 <uniqueIds>8ab6b083154b8c1601154b91d2000112</uniqueIds>
                 <uniqueIds>8ab6b083181dc1bc01181dc95d920013</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364b007095f</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3102,7 +3102,7 @@
           <teststep>
             <usedTestcase>
               <name>Wait for Show View</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>a056141ad6714f2ab4d3115bc06036cd</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3131,7 +3131,7 @@
                 <uniqueIds>8ab6b083181d393b01181d9bdbc6008a</uniqueIds>
                 <uniqueIds>8ab6b083181d393b01181d9bf9dd008b</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364afe807bb</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3140,11 +3140,11 @@
           <teststep>
             <usedTestcase>
               <name>Click search</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>0638d62f8ec1409e948373045c8f7a18</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -3153,7 +3153,7 @@
           <teststep>
             <usedTestcase>
               <name>Enter view name to search for</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>0865b99415dc460dad1e23121101514c</GUID>
               <generated>false</generated>
               <active>false</active>
@@ -3168,7 +3168,7 @@
                 </row>
                 <uniqueIds>660f12dd04cb4728ab2cc352d6db702c</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
@@ -3181,8 +3181,8 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>b741b916a309458ea7bfb936d8a7a60f</GUID>
               <generated>false</generated>
               <active>false</active>
@@ -3232,7 +3232,7 @@
                 <uniqueIds>8ab6b08d2a187ce3012a1884b147018d</uniqueIds>
                 <uniqueIds>8ab6b08d2a187ce3012a1884de4d018e</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d2a187ce3012a187f55f80001</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3247,11 +3247,11 @@
           <teststep>
             <usedTestcase>
               <name>Select tree</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>3873c50cf015419e95160a7df2b65f39</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -3266,7 +3266,7 @@
           <teststep>
             <usedTestcase>
               <name>Select view Name</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>26cf7d477fb4438eb47fdec1dc1ab7e6</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3323,7 +3323,7 @@
                 <uniqueIds>8ab6b08d2a187ce3012a1881f0580187</uniqueIds>
                 <uniqueIds>8ab6b08d2a187ce3012a18820e8e0188</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d2a187ce3012a187f71b20002</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3338,11 +3338,11 @@
           <teststep>
             <usedTestcase>
               <name>Click Okay</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>c1d91e55404d4c79a0d2346723008201</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -3357,7 +3357,7 @@
           <teststep>
             <usedTestcase>
               <name>Wait for window close and wait some time (e.g. for codes)</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>6dba4834b3424312aa65fc6ea529dee1</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3393,7 +3393,7 @@
                 <uniqueIds>8ab6b083181d393b01181d9e7e460093</uniqueIds>
                 <uniqueIds>8ab6b083181d393b01181d9ead360094</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3513,16 +3513,16 @@
         </testcase>
         <testcase>
           <name>ResetPerspective</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>5a034cd013b74493bbfbe153cfcd18d1</GUID>
           <generated>false</generated>
           <active>true</active>
-          <testdata></testdata>
-          <datafile xsi:nil="true" />
+          <testdata/>
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
               <name>Wait for MenuBar</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>a02b228b10834d1783a7950fff7404d0</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3544,7 +3544,7 @@
                 <uniqueIds>8ab6b08d294519bd01294618ea220efb</uniqueIds>
                 <uniqueIds>8ab6b08d294519bd012946192cdf0efc</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d294519bd0129461469a20e7c</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3553,7 +3553,7 @@
           <teststep>
             <usedTestcase>
               <name>Select menu entry reset perspective</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>a823d2274b1e442b96f55cd64180b545</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3575,7 +3575,7 @@
                 <uniqueIds>8ab6b083154b8c1601154b91d2000112</uniqueIds>
                 <uniqueIds>8ab6b083181dc1bc01181dc95d920013</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364b007095f</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3584,11 +3584,11 @@
           <teststep>
             <usedTestcase>
               <name>Click Yes</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>9687b49b34df467180bcfdbccab7b3b9</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
@@ -3603,20 +3603,20 @@
         </testcase>
         <testcase>
           <name>Restart Elexis</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>83d26ab988824e82894aa3e2d7c3f7c0</GUID>
           <generated>false</generated>
           <active>true</active>
-          <testdata></testdata>
-          <datafile xsi:nil="true" />
+          <testdata/>
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
               <name>Restart Elexis</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>045f774c837c449488bb39a43f30b213</GUID>
               <generated>false</generated>
               <active>false</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364afe807c1</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -3625,7 +3625,7 @@
           <teststep>
             <usedTestcase>
               <name>Wait for Main-Windows</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>058767de3c734b19aae53197215c98f5</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3661,7 +3661,7 @@
                 <uniqueIds>8ab6b083181d393b01181d9dd5d2008f</uniqueIds>
                 <uniqueIds>8ab6b083181d393b01181d9df0db0090</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364afe807b1</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3671,7 +3671,7 @@
         </testcase>
         <testcase>
           <name>Select Item and open view if necessary</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>a1281c300ae54856830a8945e70d15ee</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -3683,15 +3683,15 @@
           <testdata>
             <uniqueIds>6d5e88a477fb49ae878201edf5687ccb</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>c8c00e7885024e1e992a711d43dbe7bf</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -3704,8 +3704,8 @@
             </usedTestcase>
           </teststep>
           <eventTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>a625d0b4be804ad6a45eeb8951593e9e</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -3720,7 +3720,7 @@
               </row>
               <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
             <eventType>TestErrorEvent.CompNotFound</eventType>
@@ -3731,17 +3731,17 @@
         </testcase>
         <testcase>
           <name>Default Speicherdauer setzen</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>2b84c22924c04ca79ea4852654db0d2f</GUID>
           <generated>false</generated>
           <active>true</active>
-          <testdata></testdata>
-          <datafile xsi:nil="true" />
+          <testdata/>
+          <datafile xsi:nil="true"/>
           <referencedTestData>LOGGING</referencedTestData>
           <teststep>
             <usedTestcase>
               <name>Select Preferences..General</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>8543ddb0df2240fc98f864fdfc34593a</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3756,15 +3756,15 @@
                 </row>
                 <uniqueIds>e26d6b54acdc4d2491c95e63e0bdc4a3</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>76a22bc7a9854f268785b471f30c1acd</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>b090ec1dd8a34db8aa0c3a55f49f308d</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3800,7 +3800,7 @@
                 <uniqueIds>8ab6b083181d393b01181d993cef0082</uniqueIds>
                 <uniqueIds>8ab6b083181d393b01181d9958a40083</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083181d393b01181d98e42f007e</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3809,7 +3809,7 @@
           <teststep>
             <usedTestcase>
               <name>Speicherdauer setzen</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>57a7e43aa4c44899a1c000b1d1fcc927</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3824,7 +3824,7 @@
                 </row>
                 <uniqueIds>660f12dd04cb4728ab2cc352d6db702c</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
@@ -3838,7 +3838,7 @@
           <teststep>
             <usedTestcase>
               <name>Screenshot of logpath</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>618bd926d72c4f2d9200a6e52bdcfc9b</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3853,7 +3853,7 @@
                 </row>
                 <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
@@ -3861,11 +3861,11 @@
           <teststep>
             <usedTestcase>
               <name>Click apply</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>a398ac4e73c141729480b6f84a9751e9</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
@@ -3879,11 +3879,11 @@
           <teststep>
             <usedTestcase>
               <name>Click OK</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>7a84232e11b743b295c8e030d972ba6f</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
@@ -3898,7 +3898,7 @@
         </testcase>
         <testcase>
           <name>Open Perspective by Name</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>081896a0ebde4f64b918d0750b0b52fd</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -3912,17 +3912,17 @@
             <type>java.lang.String</type>
             <uniqueId>93cef12ceda7419a8ab7df803fe38d3e</uniqueId>
           </parameterDescription>
-          <testdata></testdata>
-          <datafile xsi:nil="true" />
+          <testdata/>
+          <datafile xsi:nil="true"/>
           <referencedTestData>PERSPECTIVES</referencedTestData>
           <teststep>
             <usedTestcase>
               <name>Reset Perspective</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>c8770e9240354cc18c7b4e704d84b5fa</GUID>
               <generated>false</generated>
               <active>false</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>5a034cd013b74493bbfbe153cfcd18d1</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
@@ -3930,7 +3930,7 @@
           <teststep>
             <usedTestcase>
               <name>Wait for MenuBar</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>612fca5bbf9a4af088552d470306e3c0</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3952,7 +3952,7 @@
                 <uniqueIds>8ab6b08d294519bd01294618ea220efb</uniqueIds>
                 <uniqueIds>8ab6b08d294519bd012946192cdf0efc</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d294519bd0129461469a20e7c</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3961,7 +3961,7 @@
           <teststep>
             <usedTestcase>
               <name>Menü wählen</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>63886d88c8734c03906451f7e9c651e1</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -3983,7 +3983,7 @@
                 <uniqueIds>8ab6b083154b8c1601154b91d2000112</uniqueIds>
                 <uniqueIds>8ab6b083181dc1bc01181dc95d920013</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364b007095f</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -3992,7 +3992,7 @@
           <teststep>
             <usedTestcase>
               <name>Wait for Open Perspective window</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>f6ee3b71957e4eeea74a16fdff365ac0</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -4021,7 +4021,7 @@
                 <uniqueIds>8ab6b083181d393b01181d9bdbc6008a</uniqueIds>
                 <uniqueIds>8ab6b083181d393b01181d9bf9dd008b</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364afe807bb</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -4030,11 +4030,11 @@
           <teststep>
             <usedTestcase>
               <name>Select table tree</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>d02be1febdde4545a261ffa778b10ec2</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -4049,7 +4049,7 @@
           <teststep>
             <usedTestcase>
               <name>Select perspective name</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>9354486fbd494cb8b3f187fc47433616</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -4134,7 +4134,7 @@
                 <uniqueIds>8ab6b08d294519bd012945ff44160b53</uniqueIds>
                 <uniqueIds>8ab6b08d294519bd012945ff5ec10b54</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d294519bd012945fd786a0acb</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -4149,11 +4149,11 @@
           <teststep>
             <usedTestcase>
               <name>Accept selection</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>9ee1b590c6c04406970860892cda5b04</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -4168,11 +4168,11 @@
           <teststep>
             <usedTestcase>
               <name>Click Okay</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>51df5e35ece94f65bdcd5a859ff893a0</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -4187,7 +4187,7 @@
           <teststep>
             <usedTestcase>
               <name>Wait for window closed</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>fd144e1e685648eea43e0a1dda1039d3</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -4223,7 +4223,7 @@
                 <uniqueIds>8ab6b083181d393b01181d9e7e460093</uniqueIds>
                 <uniqueIds>8ab6b083181d393b01181d9ead360094</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -4232,11 +4232,11 @@
           <teststep>
             <usedTestcase>
               <name>Reset perspective</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>4c6a5a3a805d4c5ca0bf679978341dc0</GUID>
               <generated>false</generated>
               <active>true</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>5a034cd013b74493bbfbe153cfcd18d1</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
@@ -4244,7 +4244,7 @@
           <teststep>
             <usedTestcase>
               <name>Take a snapshot</name>
-              <comment xsi:nil="true" />
+              <comment xsi:nil="true"/>
               <GUID>b230d07905b3499c9f8beba3cc3ce961</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -4259,7 +4259,7 @@
                 </row>
                 <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
@@ -4268,20 +4268,20 @@
         </testcase>
         <testcase>
           <name>CloseElexis</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>d3fe33de30584c17ae2aa0d24e8fee30</GUID>
           <generated>false</generated>
           <active>true</active>
-          <testdata></testdata>
-          <datafile xsi:nil="true" />
+          <testdata/>
+          <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>bdf8ab7819c6434e88a79dd54022c4e3</GUID>
               <generated>false</generated>
               <active>false</active>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>96d963aaa1e24d2cb103a12446e8c98c</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
@@ -4289,8 +4289,8 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>276ef13556aa4c50bfb4963af1b88554</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -4312,7 +4312,7 @@
                 <uniqueIds>8ab6b08d294519bd01294618ea220efb</uniqueIds>
                 <uniqueIds>8ab6b08d294519bd012946192cdf0efc</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b08d294519bd0129461469a20e7c</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -4320,8 +4320,8 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>c41c1097c7804839b80c4dad81217394</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -4343,7 +4343,7 @@
                 <uniqueIds>8ab6b083154b8c1601154b91d2000112</uniqueIds>
                 <uniqueIds>8ab6b083181dc1bc01181dc95d920013</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364b007095f</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -4351,8 +4351,8 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name></name>
-              <comment xsi:nil="true" />
+              <name/>
+              <comment xsi:nil="true"/>
               <GUID>2ad603bb349b40ba814cb178f1c989fa</GUID>
               <generated>false</generated>
               <active>true</active>
@@ -4367,7 +4367,7 @@
                 </row>
                 <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
               </testdata>
-              <datafile xsi:nil="true" />
+              <datafile xsi:nil="true"/>
               <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
@@ -4378,20 +4378,20 @@
       </category>
       <testcase>
         <name>FULLTEST</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>59d8e7e0c26848a8b760f143602d92e1</GUID>
         <generated>false</generated>
         <active>true</active>
-        <testdata></testdata>
-        <datafile xsi:nil="true" />
+        <testdata/>
+        <datafile xsi:nil="true"/>
         <teststep>
           <usedTestcase>
             <name>Elexis neu starten (für jenkins)</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>9fd5f59690424fe2b127c312105ab794</GUID>
             <generated>false</generated>
             <active>false</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
@@ -4399,11 +4399,11 @@
         <teststep>
           <usedTestcase>
             <name>Elexis setup</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>cd1b3396bca343c8883205c613ac7eed</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>d9e60504cb584eaca241b259b3ae009d</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
@@ -4411,12 +4411,12 @@
         <teststep>
           <usedTestcase>
             <name>Alle Ansichten öffnen</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>0066bb4b73dd4c888e3b334b18ae0940</GUID>
             <generated>false</generated>
             <active>true</active>
-            <testdata></testdata>
-            <datafile xsi:nil="true" />
+            <testdata/>
+            <datafile xsi:nil="true"/>
             <referencedTestData>VIEWS</referencedTestData>
             <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4425,12 +4425,12 @@
         <teststep>
           <usedTestcase>
             <name>Visit all preferences</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>248758863ac04562aa9692ce13d4062f</GUID>
             <generated>false</generated>
             <active>true</active>
-            <testdata></testdata>
-            <datafile xsi:nil="true" />
+            <testdata/>
+            <datafile xsi:nil="true"/>
             <referencedTestData>PREFERENCES</referencedTestData>
             <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4439,11 +4439,11 @@
         <teststep>
           <usedTestcase>
             <name>Alle Perspektiven öffnen</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <referencedTestData>PERSPECTIVES</referencedTestData>
             <testcaseGuid>081896a0ebde4f64b918d0750b0b52fd</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
@@ -4452,7 +4452,7 @@
         <teststep>
           <usedTestcase>
             <name>Screenshot all views open</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>f4d7fd6464ad42798e0623033f31003a</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -4467,7 +4467,7 @@
               </row>
               <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
@@ -4475,12 +4475,12 @@
         <teststep>
           <usedTestcase>
             <name>Patienten eingeben</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>84af95b884af4c78a3f6eace4d7d22de</GUID>
             <generated>false</generated>
             <active>true</active>
-            <testdata></testdata>
-            <datafile xsi:nil="true" />
+            <testdata/>
+            <datafile xsi:nil="true"/>
             <referencedTestData>PATIENTEN</referencedTestData>
             <testcaseGuid>ce047a9881aa42c8ad2b22bfedb96844</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4489,7 +4489,7 @@
         <teststep>
           <usedTestcase>
             <name>Screenshot of last windows</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>598431b3ac0f4adcaa53dee907ec336b</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -4504,18 +4504,18 @@
               </row>
               <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <eventTestcase>
-          <name></name>
-          <comment xsi:nil="true" />
+          <name/>
+          <comment xsi:nil="true"/>
           <GUID>9f406ad074434670bba237641ab5c0c3</GUID>
           <generated>false</generated>
           <active>true</active>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <testcaseGuid>9230ed2fa60d47b0b54f637da3c72b56</testcaseGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <eventType>TestErrorEvent.Action</eventType>
@@ -4525,7 +4525,7 @@
       </testcase>
       <testcase>
         <name>Neuen Patienten erfassen</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>ce047a9881aa42c8ad2b22bfedb96844</GUID>
         <generated>false</generated>
         <active>true</active>
@@ -4555,11 +4555,11 @@
           <uniqueIds>0c8f5bcab73a429ea78550efcaeab5f9</uniqueIds>
           <uniqueIds>f5d7f7c8ec8d4e8da875c1ffc37c341f</uniqueIds>
         </testdata>
-        <datafile xsi:nil="true" />
+        <datafile xsi:nil="true"/>
         <teststep>
           <usedTestcase>
             <name>Open PatientenView</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>41680c50a6c041a682e62d04334f88d0</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -4581,7 +4581,7 @@
               <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
               <uniqueIds>6c7efc8fc151413aae21009e48fd1e08</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
@@ -4589,11 +4589,11 @@
         <teststep>
           <usedTestcase>
             <name>Click in View Patient.Namen auswählen</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>2358d529ebb54a46801451ffee058ea6</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
@@ -4608,11 +4608,11 @@
         <teststep>
           <usedTestcase>
             <name>Click create Patient</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>9c86cc0eadf3453fb899dd3f99e1951c</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
@@ -4627,7 +4627,7 @@
         <teststep>
           <usedTestcase>
             <name>Wait for create patient window</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>f0247134925c4300a2e98cf50785fb2b</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -4663,7 +4663,7 @@
               <uniqueIds>8ab6b083181d393b01181d9dd5d2008f</uniqueIds>
               <uniqueIds>8ab6b083181d393b01181d9df0db0090</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364afe807b1</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4672,7 +4672,7 @@
         <teststep>
           <usedTestcase>
             <name>Select sex by value</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>394f8bac16134add921a0bab0cee3b16</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -4701,7 +4701,7 @@
               <uniqueIds>8ab6b083181d393b01181da3cbee00a1</uniqueIds>
               <uniqueIds>8ab6b083181d393b01181da3e19900a2</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181da35a68009e</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4716,7 +4716,7 @@
         <teststep>
           <usedTestcase>
             <name>Wait for create patient window</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>51eb86c35733446db02ca242343c07fa</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -4745,7 +4745,7 @@
               <uniqueIds>8ab6b083181d393b01181d9bdbc6008a</uniqueIds>
               <uniqueIds>8ab6b083181d393b01181d9bf9dd008b</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364afe807bb</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4754,7 +4754,7 @@
         <teststep>
           <usedTestcase>
             <name>Enter family name</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>7c5845852ff744738436688e3f39215a</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -4769,7 +4769,7 @@
               </row>
               <uniqueIds>8ab6b083154b8c1601154b91d20000cb</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708a9</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4784,7 +4784,7 @@
         <teststep>
           <usedTestcase>
             <name>Enter given name</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>938234ad5f2e43f3ba002d6a3a818a60</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -4799,7 +4799,7 @@
               </row>
               <uniqueIds>8ab6b083154b8c1601154b91d20000cb</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708a9</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4814,7 +4814,7 @@
         <teststep>
           <usedTestcase>
             <name>Enter birthday</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>0198ee97af7c4b89ae80542b6c264d73</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -4829,7 +4829,7 @@
               </row>
               <uniqueIds>8ab6b083154b8c1601154b91d20000cb</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708a9</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4844,11 +4844,11 @@
         <teststep>
           <usedTestcase>
             <name>Click Okay</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>e333b81d320e47a3b7124bd61353cd09</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
@@ -4863,7 +4863,7 @@
         <teststep>
           <usedTestcase>
             <name>Wait close window create patient</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>f410dee721764faf90d46bc4859f337f</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -4899,7 +4899,7 @@
               <uniqueIds>8ab6b083181d393b01181d9e7e460093</uniqueIds>
               <uniqueIds>8ab6b083181d393b01181d9ead360094</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4909,69 +4909,69 @@
       </testcase>
       <testcase>
         <name>sample</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>73e71773bafb43c293bb7fcb04b3af21</GUID>
         <generated>false</generated>
         <active>true</active>
-        <testdata></testdata>
-        <datafile xsi:nil="true" />
+        <testdata/>
+        <datafile xsi:nil="true"/>
         <teststep>
           <usedTestcase>
             <name>Avoid multiple problems</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>b9e8075dc4d84338918c8bf6aaef965a</GUID>
             <generated>false</generated>
             <active>false</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>9f4f888613974ca8bc20dc0b54451c66</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>ec133c3e81044df78ec86766aa889c99</GUID>
             <generated>false</generated>
             <active>false</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>ec512e2c9ec74527831d84edd76db11a</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>485da35ba2ae47858e43a4d05edfadaf</GUID>
             <generated>false</generated>
             <active>false</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>5f38d97aea45488e87f78c42249f3389</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>d9e60504cb584eaca241b259b3ae009d</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>ad122853a5374b2480bd41a6573bcf8d</GUID>
             <generated>false</generated>
             <active>true</active>
-            <testdata></testdata>
-            <datafile xsi:nil="true" />
+            <testdata/>
+            <datafile xsi:nil="true"/>
             <referencedTestData>PATIENTEN</referencedTestData>
             <testcaseGuid>ce047a9881aa42c8ad2b22bfedb96844</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -4979,12 +4979,12 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>6444b15f43c34f8c858c07d7833a3ed5</GUID>
             <generated>false</generated>
             <active>false</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
@@ -4998,12 +4998,12 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>f5ca7acaf31b446a81f199872371e1d8</GUID>
             <generated>false</generated>
             <active>false</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364afe807c9</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
@@ -5011,8 +5011,8 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>ac21e9fa2094497e9b0393f323bbc776</GUID>
             <generated>false</generated>
             <active>false</active>
@@ -5027,19 +5027,19 @@
               </row>
               <uniqueIds>8ab6b083257263bb0125731cc0b4004c</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083257263bb0125731c1040004a</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <eventTestcase>
-          <name></name>
-          <comment xsi:nil="true" />
+          <name/>
+          <comment xsi:nil="true"/>
           <GUID>a831dccfb05642deaff9c8ee9b99a604</GUID>
           <generated>false</generated>
           <active>true</active>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <eventType>TestErrorEvent.Action</eventType>
@@ -5050,16 +5050,16 @@
       </testcase>
       <testcase>
         <name>FULLTEST_BROKEN</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>bb11cf9b783047fc952299f597dc1cf0</GUID>
         <generated>false</generated>
         <active>true</active>
-        <testdata></testdata>
-        <datafile xsi:nil="true" />
+        <testdata/>
+        <datafile xsi:nil="true"/>
         <teststep>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>892b364b8d184c80823234a5340dda02</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -5082,7 +5082,7 @@
               </row>
               <uniqueIds>92fa606d97c84b08922ea631769051c8</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>f0f25b6cdb5742fcaa355f6f7ad26f30</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
@@ -5092,22 +5092,22 @@
     </category>
     <category>
       <name>unbound modules</name>
-      <comment xsi:nil="true" />
+      <comment xsi:nil="true"/>
       <GUID>f6bbbe45df8f4e94ba1a0fb3a9c76e2b</GUID>
       <generated>false</generated>
       <active>true</active>
       <testcase>
         <name>Synchronized Click</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>f7239477bfd84662ac2fe91e83b03826</GUID>
         <generated>false</generated>
         <active>true</active>
-        <testdata></testdata>
-        <datafile xsi:nil="true" />
+        <testdata/>
+        <datafile xsi:nil="true"/>
         <teststep>
           <usedTestcase>
             <name>Wait for component</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>2e1282cfaa7e499ba22aee67764a5afe</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -5129,7 +5129,7 @@
               <uniqueIds>8ab6b083181dc1bc01181dc3c5fb0003</uniqueIds>
               <uniqueIds>8ab6b083181dc1bc01181dc3dbc50004</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708ea</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -5144,7 +5144,7 @@
         <teststep>
           <usedTestcase>
             <name>Check enabled</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>2bb8824f1c554c5cb2b5bcb930261015</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -5159,7 +5159,7 @@
               </row>
               <uniqueIds>8ab6b083181d393b01181da80a0900b0</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708e6</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -5174,11 +5174,11 @@
         <teststep>
           <usedTestcase>
             <name>Click once (left)</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>7df74ce8a6e94719b5f881a3b15be128</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
@@ -5191,12 +5191,12 @@
           </usedTestcase>
         </teststep>
         <eventTestcase>
-          <name></name>
-          <comment xsi:nil="true" />
+          <name/>
+          <comment xsi:nil="true"/>
           <GUID>e5f49b0fdcd041b38f44a910bdd32d7e</GUID>
           <generated>false</generated>
           <active>true</active>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <testcaseGuid>9230ed2fa60d47b0b54f637da3c72b56</testcaseGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <eventType>TestErrorEvent.CompNotFound</eventType>
@@ -5206,7 +5206,7 @@
       </testcase>
       <testcase>
         <name>Synchronized Replace Text</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>07a110937451400ea2330dc4088e49ed</GUID>
         <generated>false</generated>
         <active>true</active>
@@ -5218,11 +5218,11 @@
         <testdata>
           <uniqueIds>660f12dd04cb4728ab2cc352d6db702c</uniqueIds>
         </testdata>
-        <datafile xsi:nil="true" />
+        <datafile xsi:nil="true"/>
         <teststep>
           <usedTestcase>
             <name>Wait for component</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>6b3ad1431ade43de969252b9202118bb</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -5244,7 +5244,7 @@
               <uniqueIds>8ab6b083181dc1bc01181dc3c5fb0003</uniqueIds>
               <uniqueIds>8ab6b083181dc1bc01181dc3dbc50004</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708ea</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -5259,7 +5259,7 @@
         <teststep>
           <usedTestcase>
             <name>Check enabled</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>5c078c2b88364a07b8b8f3ad0b965249</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -5274,7 +5274,7 @@
               </row>
               <uniqueIds>8ab6b083181d393b01181da80a0900b0</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708e6</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -5289,7 +5289,7 @@
         <teststep>
           <usedTestcase>
             <name>Check editable</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>01e0fe5dc3dd4cab8bbcf8dcd0d975e0</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -5304,7 +5304,7 @@
               </row>
               <uniqueIds>8ab6b083181d393b01181da76d7c00af</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708c4</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -5319,7 +5319,7 @@
         <teststep>
           <usedTestcase>
             <name>Replace text</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>3552110a19b24a6e962955a10a5a16e2</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -5334,7 +5334,7 @@
               </row>
               <uniqueIds>8ab6b083154b8c1601154b91d20000cb</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708a9</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -5349,7 +5349,7 @@
         <teststep>
           <usedTestcase>
             <name>Check text</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>f25f01c75f1448a9b22e458b69a4aeee</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -5371,7 +5371,7 @@
               <uniqueIds>8ab6b083181d393b01181da60e9900ab</uniqueIds>
               <uniqueIds>8ab6b083181d393b01181da61c4500ac</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181da5bf8e00a9</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -5387,16 +5387,16 @@
       </testcase>
       <testcase>
         <name>Synchronized Click if exists</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>94647e1be2874050b43a259e99b692f7</GUID>
         <generated>false</generated>
         <active>true</active>
-        <testdata></testdata>
-        <datafile xsi:nil="true" />
+        <testdata/>
+        <datafile xsi:nil="true"/>
         <teststep>
           <usedTestcase>
             <name>Wait for Component</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>13479ea175564c74bb104d4b48c244a6</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -5418,7 +5418,7 @@
               <uniqueIds>8ab6b083181dc1bc01181dc3c5fb0003</uniqueIds>
               <uniqueIds>8ab6b083181dc1bc01181dc3dbc50004</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708ea</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -5433,7 +5433,7 @@
         <teststep>
           <usedTestcase>
             <name>Check whether enabled</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>9ece3d7b98654afc8e8dece72f5fa752</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -5448,7 +5448,7 @@
               </row>
               <uniqueIds>8ab6b083181d393b01181da80a0900b0</uniqueIds>
             </testdata>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083150339b501150364aff708e6</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
@@ -5463,11 +5463,11 @@
         <teststep>
           <usedTestcase>
             <name>Click Left</name>
-            <comment xsi:nil="true" />
+            <comment xsi:nil="true"/>
             <GUID>3b594db719364e68be98853f9f4a93b2</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
             <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
@@ -5480,12 +5480,12 @@
           </usedTestcase>
         </teststep>
         <eventTestcase>
-          <name></name>
-          <comment xsi:nil="true" />
+          <name/>
+          <comment xsi:nil="true"/>
           <GUID>7faae49279ce401ba52404e77b216ade</GUID>
           <generated>false</generated>
           <active>true</active>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <testcaseGuid>9230ed2fa60d47b0b54f637da3c72b56</testcaseGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <eventType>TestErrorEvent.CompNotFound</eventType>
@@ -5496,7 +5496,7 @@
     </category>
     <testcase>
       <name>Screenshot</name>
-      <comment xsi:nil="true" />
+      <comment xsi:nil="true"/>
       <GUID>7eb5f0389f0344989f68e011800b7a3e</GUID>
       <generated>false</generated>
       <active>true</active>
@@ -5508,11 +5508,11 @@
       <testdata>
         <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
       </testdata>
-      <datafile xsi:nil="true" />
+      <datafile xsi:nil="true"/>
       <teststep>
         <usedTestcase>
           <name>Log screenshot</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>737d099007cd47fabfbe017688f4747b</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -5521,7 +5521,7 @@
               <data columnCount="1">
                 <data>
                   <language>de_DE</language>
-                  <value>logger &quot;Screenshot&quot; ={6ef9ef2a0b3440aebf14c3133920a9d9}</value>
+                  <value>logger "Screenshot" ={6ef9ef2a0b3440aebf14c3133920a9d9}</value>
                 </data>
               </data>
               <data columnCount="2">
@@ -5548,7 +5548,7 @@
             <uniqueIds>8ab6b083181d393b01181d8bb901005a</uniqueIds>
             <uniqueIds>8ab6b083181d393b01181d8beaaf005c</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <testcaseGuid>8ab6b08316c3bbe20116c3bec817000c</testcaseGuid>
           <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
@@ -5557,7 +5557,7 @@
       <teststep>
         <usedTestcase>
           <name>Take a Screenshot</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>466f11601302433cbf7a338aea6de019</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -5628,7 +5628,7 @@
             <uniqueIds>8ab6b083257263bb0125731711c70048</uniqueIds>
             <uniqueIds>8ab6b083257263bb0125731736b40049</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <testcaseGuid>8ab6b083257263bb012572bb6926003f</testcaseGuid>
           <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
@@ -5638,7 +5638,7 @@
     </testcase>
     <testcase>
       <name>OkayIfNothingInTable</name>
-      <comment xsi:nil="true" />
+      <comment xsi:nil="true"/>
       <GUID>b6a98db0f95c4f53a9e35a4212c017bd</GUID>
       <generated>false</generated>
       <active>true</active>
@@ -5650,11 +5650,11 @@
       <testdata>
         <uniqueIds>39fb0c79c3a243b9887fab6e7d9b0deb</uniqueIds>
       </testdata>
-      <datafile xsi:nil="true" />
+      <datafile xsi:nil="true"/>
       <teststep>
         <usedTestcase>
-          <name></name>
-          <comment xsi:nil="true" />
+          <name/>
+          <comment xsi:nil="true"/>
           <GUID>197fe21d8a534defbbef41b8c2d880da</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -5718,7 +5718,7 @@
             <uniqueIds>8ab6b08d294519bd01294605f73a0c63</uniqueIds>
             <uniqueIds>8ab6b08d294519bd0129460644d20c64</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <testcaseGuid>8ab6b08d294519bd01294604c4010bde</testcaseGuid>
           <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
@@ -5732,8 +5732,8 @@
       </teststep>
       <teststep>
         <usedTestcase>
-          <name></name>
-          <comment xsi:nil="true" />
+          <name/>
+          <comment xsi:nil="true"/>
           <GUID>98c24dd33cfc4ac88b1307ba38c83fd3</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -5755,7 +5755,7 @@
             <uniqueIds>8ab6b083181d393b01181da60e9900ab</uniqueIds>
             <uniqueIds>8ab6b083181d393b01181da61c4500ac</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <testcaseGuid>8ab6b083181d393b01181da5bf8e00a9</testcaseGuid>
           <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
@@ -5769,12 +5769,12 @@
       </teststep>
       <teststep>
         <usedTestcase>
-          <name></name>
-          <comment xsi:nil="true" />
+          <name/>
+          <comment xsi:nil="true"/>
           <GUID>98e141aebbfc40968874aea5cd07676c</GUID>
           <generated>false</generated>
           <active>true</active>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <testcaseGuid>8ab6b083150339b501150364afe807c9</testcaseGuid>
           <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
@@ -5782,8 +5782,8 @@
       </teststep>
       <teststep>
         <usedTestcase>
-          <name></name>
-          <comment xsi:nil="true" />
+          <name/>
+          <comment xsi:nil="true"/>
           <GUID>c72fc0295ed04fecb44eb16b7d8b97ee</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -5833,7 +5833,7 @@
             <uniqueIds>8ab6b08d294519bd012945f0c48008b3</uniqueIds>
             <uniqueIds>8ab6b08d294519bd012945f0d6df08b4</uniqueIds>
           </testdata>
-          <datafile xsi:nil="true" />
+          <datafile xsi:nil="true"/>
           <testcaseGuid>8ab6b08d294519bd012945ef8e1d0830</testcaseGuid>
           <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
@@ -5846,8 +5846,8 @@
         </usedTestcase>
       </teststep>
       <eventTestcase>
-        <name></name>
-        <comment xsi:nil="true" />
+        <name/>
+        <comment xsi:nil="true"/>
         <GUID>1a3741de589f46879ff4e65ca712b2f3</GUID>
         <generated>false</generated>
         <active>true</active>
@@ -5897,7 +5897,7 @@
           <uniqueIds>8ab6b083181d393b01181d8b26850058</uniqueIds>
           <uniqueIds>8ab6b083181d393b01181d8b36830059</uniqueIds>
         </testdata>
-        <datafile xsi:nil="true" />
+        <datafile xsi:nil="true"/>
         <testcaseGuid>8ab6b083150339b501150364afe807aa</testcaseGuid>
         <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
         <hasOwnTestdata>true</hasOwnTestdata>
@@ -5908,37 +5908,37 @@
     </testcase>
     <testcase>
       <name>EH: Empty</name>
-      <comment xsi:nil="true" />
+      <comment xsi:nil="true"/>
       <GUID>9230ed2fa60d47b0b54f637da3c72b56</GUID>
       <generated>false</generated>
       <active>true</active>
-      <testdata></testdata>
-      <datafile xsi:nil="true" />
+      <testdata/>
+      <datafile xsi:nil="true"/>
       <interfaceLocked>false</interfaceLocked>
     </testcase>
     <execCategories>
       <category>
         <name>Test Suites</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>0f9e7fa28554441aaa218eabb31fd72e</GUID>
         <generated>false</generated>
         <active>true</active>
         <testsuite>
           <name>FULLTEST</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>aef684f301174fb28caf0731a74af9fe</GUID>
           <generated>false</generated>
           <active>true</active>
           <selectedAut>ID_A_140803</selectedAut>
           <stepDelay>0</stepDelay>
-          <commandLineParameter xsi:nil="true" />
+          <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>c41f798eecab4294afeff145bf6dc4fa</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>59d8e7e0c26848a8b760f143602d92e1</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
@@ -5961,20 +5961,20 @@
         </testsuite>
         <testsuite>
           <name>sample</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>dda24a380a2647e28c7ea7802fcc2809</GUID>
           <generated>false</generated>
           <active>true</active>
           <selectedAut>ID_A_140803</selectedAut>
           <stepDelay>0</stepDelay>
-          <commandLineParameter xsi:nil="true" />
+          <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>5f8ff5f3e1d34113bfbcde799c9634c4</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>73e71773bafb43c293bb7fcb04b3af21</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
@@ -5997,20 +5997,20 @@
         </testsuite>
         <testsuite>
           <name>FULLTEST_BROKEN</name>
-          <comment xsi:nil="true" />
+          <comment xsi:nil="true"/>
           <GUID>2da5d8163cb745eeace667dad6202fc4</GUID>
           <generated>false</generated>
           <active>true</active>
           <selectedAut>ID_A_140803</selectedAut>
           <stepDelay>0</stepDelay>
-          <commandLineParameter xsi:nil="true" />
+          <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
-            <name></name>
-            <comment xsi:nil="true" />
+            <name/>
+            <comment xsi:nil="true"/>
             <GUID>4e90dc03cd7146d0b64114833133f106</GUID>
             <generated>false</generated>
             <active>true</active>
-            <datafile xsi:nil="true" />
+            <datafile xsi:nil="true"/>
             <testcaseGuid>bb11cf9b783047fc952299f597dc1cf0</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
@@ -6036,7 +6036,7 @@
     <execCategories>
       <category>
         <name>Test Jobs</name>
-        <comment xsi:nil="true" />
+        <comment xsi:nil="true"/>
         <GUID>ced7fb8e239945aab513cd4b18f83d66</GUID>
         <generated>false</generated>
         <active>true</active>
@@ -6071,192 +6071,192 @@
       <compType>org.eclipse.swt.widgets.ToolItem</compType>
       <GUID>040ef2cad29147368a147274bb781bf1</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>Home_Button_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Table</compType>
       <GUID>21380d96bd0d496a9ac7486a81578ff1</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>OpenPerspective_ViewTree_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
       <GUID>273ab17ffc8c4799bced2462265e6c6f</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>Preferences_OkButton_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
       <GUID>2ba2ec4023294b0fbdbf09d7bde14e74</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>CreatePatient_OkButton_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>2d42d67f4fd147fd87e4036847472769</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>PreferencesGeneral_EnterLogpath</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
       <GUID>3cd0b6cda2a1498c8a9e355a521271f3</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>MultipleProblem_OkButton_grc</compName>
     </componentNames>
     <componentNames>
       <compType>org.eclipse.swt.widgets.Tree</compType>
       <GUID>511e8694a0b54b97a4a4f311378859e8</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>ShowView_ViewTree_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
       <GUID>77bae73ecbbe428582a0e86cb6ee0723</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>Preferences_ApplyButton_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
       <GUID>7c474f2af67640899cb98658db3fcedf</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>ShowView_SelView_cti</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>80c940f2e2a24bacbce02de95b810963</GUID>
       <creationContext>OBJECT_MAPPING</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>dialog.open.ok</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.ComboBox</compType>
       <GUID>94c475d93f53405e8d22a63819257022</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>CreatePatient_ChooseSexe_cbx</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>9af6f2a19cdc429cae7ac44bf765cc11</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>EsrTabelle_Datum_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
       <GUID>a43dd75cbfc64f50988d8a8f890e7343</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>CreatePatient_FamilyName_cti</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>a7dcac63959d4e328806ab85dc304eda</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>View_Item_grc</compName>
     </componentNames>
     <componentNames>
       <compType>org.eclipse.swt.widgets.ToolItem</compType>
       <GUID>ad1edac2cbaf44b9b5a06bc782d75db8</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>Patient_create_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
       <GUID>b5994fe3acd14b8e9c96b98549e38ef0</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>Patienten_SelectName_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
       <GUID>bb4b196e395a4fdea88d08447618bd3d</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>ResetPerspektive_OkButton_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.TextVerifiable</compType>
       <GUID>d3b23f91cb4746498f2443a3e07055ad</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>PatListView_Info_ctx</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
       <GUID>d900038e05b94b89abfbf82dfd0d2020</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>ShowView_OkButton_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Table</compType>
       <GUID>dddf95c79d3e4a48875d6e31a2fd266a</GUID>
       <creationContext>OBJECT_MAPPING</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>Open Perspective</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>e32d3867e67140d1a359ab1da7070c75</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>OpenPerspective_OkButton_grc</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
       <GUID>e6b18dcce2af4d559d20b91d4c512bd1</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>synch_text_input</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Table</compType>
       <GUID>eec8107c5a6544559e5306f659ae6f57</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>Pat_List_tbl</compName>
     </componentNames>
     <componentNames>
       <compType>org.eclipse.swt.widgets.Tree</compType>
       <GUID>ef4e9efee9a14667b3b5420dfc796e1a</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>Preferences_ItemChoice_tre</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
       <GUID>f9246048948c4029bae37d802a7f5c68</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>CreatePatient_Birthday_cti</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
       <GUID>fc19a4ec8ca24c97b380b29924512ee0</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>CreatePatient_ChristianName_cti</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>fe064adbf8a34e3aa125b5fe2a50b2aa</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
-      <refGuid xsi:nil="true" />
+      <refGuid xsi:nil="true"/>
       <compName>Esr_Datum_grc</compName>
     </componentNames>
-    <testresultSummaries></testresultSummaries>
+    <testresultSummaries/>
     <checkConfiguration>
       <checkId>com.bredexsw.guidancer.client.teststyle.bredexstyle.nospaces</checkId>
       <activated>true</activated>

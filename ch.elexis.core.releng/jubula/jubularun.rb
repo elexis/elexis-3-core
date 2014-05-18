@@ -17,7 +17,7 @@ end
 
 class JubulaRun
 
-  DefaultSleepTime =  /linux/.match(RbConfig::CONFIG['host_os']) ? 5 : 30
+  DefaultSleepTime =  /linux/.match(RbConfig::CONFIG['host_os']) ? 15 : 30
 public
     JubulaOptions::Fields.each { 
       |x|
@@ -122,7 +122,7 @@ public
       puts "prepareRcpSupport: Could not find ini_name #{ini_name}. host_os is #{RbConfig::CONFIG['host_os']}"
       exit 1
     end
-    FileUtils.chmod(0755, @exeFile, :verbose => true)    
+    FileUtils.chmod(0755, @exeFile, :verbose => true)
     config_ini = IO.readlines(ini_name)
     needsJubulaRcpSupport = true
     rcpStart = ',org.eclipse.jubula.rc.rcp@start'
@@ -185,7 +185,7 @@ public
   end
   
   def startAgent(sleepTime = DefaultSleepTime)
-    puts("# Sleeping on os #{@os} for #{sleepTime} after startAgent" )
+    puts("# Sleeping for #{sleepTime} after startAgent" )
   cmd = adaptCmdForMacOSx("#{JubulaOptions::jubulaHome}/server/autagent")
 	cmd = "#{cmd} -p #{portNumber}"
 	if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
@@ -194,12 +194,11 @@ public
 		res = system("#{cmd} &")
 	end
 	if !res then puts "failed. exiting"; exit(3); end
-    sleep(sleepTime) # give the agent time to start up (sometimes two seconds were okay)
+    sleep(sleepTime)
   end
   
-  def startAUT(slTime = DefaultSleepTime)
-    puts("#xx Sleeping on os #{@os.inspect } #{DefaultSleepTime}' } for #{slTime} after startAUT" )
-         
+  def startAUT(sleepTime = DefaultSleepTime)
+    puts("# Sleeping for #{sleepTime} after startAUT" )
     @@nrRun ||= 0
     @@nrRun += 1
     log = "#{@testResults}/test-console-#{@@nrRun}.log"
@@ -211,9 +210,8 @@ public
     end
     res = system(cmd)
     if !res then puts "failed. exiting"; exit(3); end
-      puts("# Sleeping on os #{@os} for #{slTime} after startAUT" )
-                                          sleep(slTime)
-  end
+      sleep(sleepTime)
+    end
   
   def stopAgent(sleepTime = 3)
     cmd = adaptCmdForMacOSx("#{JubulaOptions::jubulaHome}/server/stopautagent")

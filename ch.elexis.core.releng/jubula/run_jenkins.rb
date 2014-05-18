@@ -13,8 +13,9 @@ opts = JubulaOptions::parseArgs
 opts.parse!(ARGV)
 JubulaOptions::dryRun == true ? DryRun = true : DryRun = false
 jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
-                       # Workaround see https://bugs.eclipse.org/bugs/show_bug.cgi?id=404776, which was not backported to 3.8.2, only in 4.3.2
-                       :vmargs => "-Dorg.eclipse.swt.browser.DefaultType=mozilla -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch",
+                       # browser: workaround see https://bugs.eclipse.org/bugs/show_bug.cgi?id=404776, which was not backported to 3.8.2, only in 4.3.2
+                       # and for p2.unsignedPolicy https://bugs.eclipse.org/bugs/show_bug.cgi?id=235526
+                       :vmargs => "-Declipse.p2.unsignedPolicy=allow -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch",
                        :autid => 'elexis')
 
 # For unknown reasons (which took me a few hours to code around) I decided

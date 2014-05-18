@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ARTIKELSTAMM xmlns="http://elexis.ch/Elexis_Artikelstamm_v001" CREATION_DATETIME="2014-03-01T02:26:19.8881338+01:00" LANG="DE" MONTH="3" YEAR="2014" CUMUL_VER="15" TYPE="P" DATA_QUALITY="3">
+  <ITEM>
+    <GTIN>7680202580475</GTIN>
+    <PHAR>20209</PHAR>
+    <DSCR>ERYTHROCIN i.v. Trockensub 1000 mg</DSCR>
+    <ADDSCR>Ampulle 1 Stk</ADDSCR>
+    <ATC>J01FA01</ATC>
+    <COMP>
+      <NAME>Pro Concepta Zug AG</NAME>
+      <GLN>7640111540007</GLN>
+    </COMP>
+    <PEXF>15.18</PEXF>
+    <PKG_SIZE>1</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680316440115</GTIN>
+    <PHAR>20244</PHAR>
+    <DSCR>FERRO-GRADUMET Depottabl</DSCR>
+    <ADDSCR>30 Stk</ADDSCR>
+    <ATC>B03AA07</ATC>
+    <COMP>
+      <NAME>Farmaceutica Teofarma Suisse SA (c/o Bernasconi Peter Gaggin</NAME>
+      <GLN>7601001374539</GLN>
+    </COMP>
+    <PEXF>8.95</PEXF>
+    <PKG_SIZE>30</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680353660163</GTIN>
+    <PHAR>20273</PHAR>
+    <DSCR>KENDURAL Depottabl</DSCR>
+    <ADDSCR>30 Stk</ADDSCR>
+    <ATC>B03AE10</ATC>
+    <COMP>
+      <NAME>Farmaceutica Teofarma Suisse SA (c/o Bernasconi Peter Gaggin</NAME>
+      <GLN>7601001374539</GLN>
+    </COMP>
+    <PEXF>4.97</PEXF>
+    <PPUB>8.4</PPUB>
+    <PKG_SIZE>30</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>C</IKSCAT>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680172330681</GTIN>
+    <PHAR>20652</PHAR>
+    <DSCR>SELSUN Shampoo Susp</DSCR>
+    <ADDSCR>120 ml</ADDSCR>
+    <ATC>D11AC03</ATC>
+    <COMP>
+      <NAME>Doetsch Grether AG</NAME>
+      <GLN>7614700999989</GLN>
+    </COMP>
+    <PEXF>15.76</PEXF>
+    <PKG_SIZE>120</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680324750190</GTIN>
+    <PHAR>23722</PHAR>
+    <DSCR>LANSOYL Gel</DSCR>
+    <ADDSCR>225 g</ADDSCR>
+    <ATC>A06AA01</ATC>
+    <COMP>
+      <NAME>Actipharm SA</NAME>
+      <GLN>7601001002012</GLN>
+    </COMP>
+    <PEXF>9.85</PEXF>
+    <PKG_SIZE>225</PKG_SIZE>
+    <LPPV>true</LPPV>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680291520390</GTIN>
+    <PHAR>31532</PHAR>
+    <DSCR>BEN-U-RON Supp 250 mg Kind</DSCR>
+    <ADDSCR>10 Stk</ADDSCR>
+    <ATC>N02BE01</ATC>
+    <COMP>
+      <NAME>Nutrimedis SA</NAME>
+      <GLN>7640110770009</GLN>
+    </COMP>
+    <PEXF>1.94</PEXF>
+    <PPUB>3.3</PPUB>
+    <PKG_SIZE>10</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>D</IKSCAT>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>4009077073203</GTIN>
+    <PHAR>41499</PHAR>
+    <DSCR>SOLDAN EM EUKAL Bronchial Bonbons</DSCR>
+    <ADDSCR>Beutel 75 g</ADDSCR>
+    <ATC>R05X</ATC>
+    <COMP>
+      <NAME>Vifor SA</NAME>
+      <GLN>7601001001862</GLN>
+    </COMP>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680147690482</GTIN>
+    <PHAR>41803</PHAR>
+    <DSCR>KETALGIN Inj Lös 10 mg/ml</DSCR>
+    <ADDSCR>100 Ampullen 1 ml</ADDSCR>
+    <ATC>N07BC02</ATC>
+    <COMP>
+      <NAME>Amino AG</NAME>
+      <GLN>7601001392571</GLN>
+    </COMP>
+    <PEXF>30.63</PEXF>
+    <PKG_SIZE>100</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680147700112</GTIN>
+    <PHAR>41826</PHAR>
+    <DSCR>KETALGIN Tabl 5 mg</DSCR>
+    <ADDSCR>20 Stk</ADDSCR>
+    <ATC>N07BC02</ATC>
+    <COMP>
+      <NAME>Amino AG</NAME>
+      <GLN>7601001392571</GLN>
+    </COMP>
+    <PEXF>2.33</PEXF>
+    <PPUB>6.15</PPUB>
+    <PKG_SIZE>20</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>A</IKSCAT>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>true</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680147700389</GTIN>
+    <PHAR>41832</PHAR>
+    <DSCR>KETALGIN Tabl 5 mg</DSCR>
+    <ADDSCR>200 Stk</ADDSCR>
+    <ATC>N07BC02</ATC>
+    <COMP>
+      <NAME>Amino AG</NAME>
+      <GLN>7601001392571</GLN>
+    </COMP>
+    <PEXF>19.21</PEXF>
+    <PKG_SIZE>200</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680199320283</GTIN>
+    <PHAR>41855</PHAR>
+    <DSCR>KETALGIN Supp 10 mg</DSCR>
+    <ADDSCR>5 Stk</ADDSCR>
+    <ATC>N07BC02</ATC>
+    <COMP>
+      <NAME>Amino AG</NAME>
+      <GLN>7601001392571</GLN>
+    </COMP>
+    <PEXF>1.9</PEXF>
+    <PPUB>5.7</PPUB>
+    <PKG_SIZE>5</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>A</IKSCAT>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>true</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680331590215</GTIN>
+    <PHAR>47852</PHAR>
+    <DSCR>DEAFTOL Tabl m Lidocain</DSCR>
+    <ADDSCR>30 Stk</ADDSCR>
+    <ATC>A01AD11</ATC>
+    <COMP>
+      <NAME>Dr. Wild &amp; Co. AG</NAME>
+      <GLN>7601001002456</GLN>
+    </COMP>
+    <PEXF>7.14</PEXF>
+    <PKG_SIZE>30</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680331600464</GTIN>
+    <PHAR>47869</PHAR>
+    <DSCR>DEAFTOL Mundspray m Lidocain</DSCR>
+    <ADDSCR>20 ml</ADDSCR>
+    <ATC>A01AD11</ATC>
+    <COMP>
+      <NAME>Dr. Wild &amp; Co. AG</NAME>
+      <GLN>7601001002456</GLN>
+    </COMP>
+    <PEXF>7.81</PEXF>
+    <PKG_SIZE>20</PKG_SIZE>
+    <LPPV>true</LPPV>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680263130152</GTIN>
+    <PHAR>48751</PHAR>
+    <DSCR>FLAGYL Filmtabl 250 mg</DSCR>
+    <ADDSCR>20 Stk</ADDSCR>
+    <ATC>P01AB01</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>4.06</PEXF>
+    <PPUB>8.75</PPUB>
+    <PKG_SIZE>20</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>O</GENERIC_TYPE>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680263140113</GTIN>
+    <PHAR>48797</PHAR>
+    <DSCR>FLAGYL Ovula 500 mg</DSCR>
+    <ADDSCR>10 Stk</ADDSCR>
+    <ATC>G01AF01</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>5.74</PEXF>
+    <PPUB>14.8</PPUB>
+    <PKG_SIZE>10</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>O</GENERIC_TYPE>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680188890216</GTIN>
+    <PHAR>50966</PHAR>
+    <DSCR>NIVAQUINE Tabl 100 mg</DSCR>
+    <ADDSCR>100 Stk</ADDSCR>
+    <ATC>P01BA01</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>17.37</PEXF>
+    <PKG_SIZE>100</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680240410185</GTIN>
+    <PHAR>51078</PHAR>
+    <DSCR>NOZINAN Filmtabl 25 mg</DSCR>
+    <ADDSCR>20 Stk</ADDSCR>
+    <ATC>N05AA02</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>4.19</PEXF>
+    <PPUB>8.25</PPUB>
+    <PKG_SIZE>20</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680240410260</GTIN>
+    <PHAR>51084</PHAR>
+    <DSCR>NOZINAN Filmtabl 25 mg</DSCR>
+    <ADDSCR>100 Stk</ADDSCR>
+    <ATC>N05AA02</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>17.69</PEXF>
+    <PPUB>34.7</PPUB>
+    <PKG_SIZE>100</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680240410420</GTIN>
+    <PHAR>51109</PHAR>
+    <DSCR>NOZINAN Filmtabl 100 mg</DSCR>
+    <ADDSCR>20 Stk</ADDSCR>
+    <ATC>N05AA02</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>20.67</PEXF>
+    <PKG_SIZE>20</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680240410505</GTIN>
+    <PHAR>51115</PHAR>
+    <DSCR>NOZINAN Filmtabl 100 mg</DSCR>
+    <ADDSCR>100 Stk</ADDSCR>
+    <ATC>N05AA02</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>96.6</PEXF>
+    <PKG_SIZE>100</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680250390170</GTIN>
+    <PHAR>51138</PHAR>
+    <DSCR>NOZINAN Tropfen 4 %</DSCR>
+    <ADDSCR>30 ml</ADDSCR>
+    <ATC>N05AA02</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>21.81</PEXF>
+    <PKG_SIZE>30</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680250390255</GTIN>
+    <PHAR>51144</PHAR>
+    <DSCR>NOZINAN Tropfen 4 %</DSCR>
+    <ADDSCR>125 ml</ADDSCR>
+    <ATC>N05AA02</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>77.16</PEXF>
+    <PKG_SIZE>125</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680287890179</GTIN>
+    <PHAR>53344</PHAR>
+    <DSCR>SURMONTIL Tabl 25 mg</DSCR>
+    <ADDSCR>50 Stk</ADDSCR>
+    <ATC>N06AA06</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>6.81</PEXF>
+    <PPUB>16.0</PPUB>
+    <PKG_SIZE>50</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>O</GENERIC_TYPE>
+    <DEDUCTIBLE>20</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680287890339</GTIN>
+    <PHAR>53367</PHAR>
+    <DSCR>SURMONTIL Tabl 100 mg</DSCR>
+    <ADDSCR>20 Stk</ADDSCR>
+    <ATC>N06AA06</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>8.63</PEXF>
+    <PPUB>18.1</PPUB>
+    <PKG_SIZE>20</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>O</GENERIC_TYPE>
+    <DEDUCTIBLE>20</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680287890414</GTIN>
+    <PHAR>53373</PHAR>
+    <DSCR>SURMONTIL Tabl 100 mg</DSCR>
+    <ADDSCR>100 Stk</ADDSCR>
+    <ATC>N06AA06</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>42.13</PEXF>
+    <PPUB>64.75</PPUB>
+    <PKG_SIZE>100</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>O</GENERIC_TYPE>
+    <DEDUCTIBLE>20</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680294790110</GTIN>
+    <PHAR>53396</PHAR>
+    <DSCR>SURMONTIL Tropfen 4 %</DSCR>
+    <ADDSCR>30 ml</ADDSCR>
+    <ATC>N06AA06</ATC>
+    <COMP>
+      <NAME>Sanofi-Aventis (Suisse) SA</NAME>
+      <GLN>7601001002340</GLN>
+    </COMP>
+    <PEXF>7.26</PEXF>
+    <PPUB>16.55</PPUB>
+    <PKG_SIZE>30</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>O</GENERIC_TYPE>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680261460466</GTIN>
+    <PHAR>55679</PHAR>
+    <DSCR>SOLARCAÏNE Lot</DSCR>
+    <ADDSCR>85 ml</ADDSCR>
+    <ATC>D04AB01</ATC>
+    <COMP>
+      <NAME>Vifor SA</NAME>
+      <GLN>7601001001862</GLN>
+    </COMP>
+    <PEXF>12.41</PEXF>
+    <PKG_SIZE>85</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680103790164</GTIN>
+    <PHAR>57980</PHAR>
+    <DSCR>LEBEWOHL Hühneraugenpflaster</DSCR>
+    <ADDSCR>8 Stk</ADDSCR>
+    <ATC>D11AF</ATC>
+    <COMP>
+      <NAME>Melisana AG</NAME>
+      <GLN>7601001001114</GLN>
+    </COMP>
+    <PEXF>5.7</PEXF>
+    <LPPV>true</LPPV>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680085370118</GTIN>
+    <PHAR>58910</PHAR>
+    <DSCR>ASPIRIN Tabl 500 mg Erw</DSCR>
+    <ADDSCR>20 Stk</ADDSCR>
+    <ATC>N02BA01</ATC>
+    <COMP>
+      <NAME>Bayer (Schweiz) AG</NAME>
+      <GLN>7601001002593</GLN>
+    </COMP>
+    <PEXF>4.43</PEXF>
+    <PKG_SIZE>20</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680336700282</GTIN>
+    <PHAR>58985</PHAR>
+    <DSCR>ASPIRIN C Brausetabl</DSCR>
+    <ADDSCR>10 Stk</ADDSCR>
+    <ATC>N02BA51</ATC>
+    <COMP>
+      <NAME>Bayer (Schweiz) AG</NAME>
+      <GLN>7601001002593</GLN>
+    </COMP>
+    <PEXF>6.31</PEXF>
+    <PKG_SIZE>10</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680310950184</GTIN>
+    <PHAR>66370</PHAR>
+    <DSCR>FLORINEF Tabl 0.1 mg</DSCR>
+    <ADDSCR>100 Stk</ADDSCR>
+    <ATC>H02AA02</ATC>
+    <COMP>
+      <NAME>Bristol-Myers Squibb SA</NAME>
+      <GLN>7601001010703</GLN>
+    </COMP>
+    <PEXF>8.36</PEXF>
+    <PPUB>16.65</PPUB>
+    <PKG_SIZE>100</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680310960145</GTIN>
+    <PHAR>66430</PHAR>
+    <DSCR>FUNGIZONE Trockensub 50 mg</DSCR>
+    <ADDSCR>Durchstechflasche 1 Stk</ADDSCR>
+    <ATC>J02AA01</ATC>
+    <COMP>
+      <NAME>Bristol-Myers Squibb SA</NAME>
+      <GLN>7601001010703</GLN>
+    </COMP>
+    <PEXF>75.98</PEXF>
+    <PKG_SIZE>50</PKG_SIZE>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680592560026</GTIN>
+    <PHAR>4037572</PHAR>
+    <DSCR>LOSARTAN Mepha Lactabs 50 mg (alt)</DSCR>
+    <ADDSCR>28 Stk</ADDSCR>
+    <ATC>C09CA01</ATC>
+    <COMP>
+      <NAME>Mepha Pharma AG</NAME>
+      <GLN>7601001001121</GLN>
+    </COMP>
+    <PEXF>10.33</PEXF>
+    <PPUB>18.8</PPUB>
+    <PKG_SIZE>28</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>G</GENERIC_TYPE>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680592560033</GTIN>
+    <PHAR>4037589</PHAR>
+    <DSCR>LOSARTAN Mepha Lactabs 50 mg (alt)</DSCR>
+    <ADDSCR>98 Stk</ADDSCR>
+    <ATC>C09CA01</ATC>
+    <COMP>
+      <NAME>Mepha Pharma AG</NAME>
+      <GLN>7601001001121</GLN>
+    </COMP>
+    <PEXF>34.03</PEXF>
+    <PPUB>52.85</PPUB>
+    <PKG_SIZE>98</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>G</GENERIC_TYPE>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680631110069</GTIN>
+    <PHAR>5592382</PHAR>
+    <DSCR>METOPROLOL Actavis Retard Ret Tabl 50 mg</DSCR>
+    <ADDSCR>100 Stk</ADDSCR>
+    <ATC>C07AB02</ATC>
+    <COMP>
+      <NAME>Actavis Switzerland AG</NAME>
+      <GLN>7601001376618</GLN>
+    </COMP>
+    <PEXF>11.0</PEXF>
+    <PPUB>24.95</PPUB>
+    <PKG_SIZE>100</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>G</GENERIC_TYPE>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680631110045</GTIN>
+    <PHAR>5592353</PHAR>
+    <DSCR>METOPROLOL Actavis Retard Ret Tabl 50 mg</DSCR>
+    <ADDSCR>30 Stk</ADDSCR>
+    <ATC>C07AB02</ATC>
+    <COMP>
+      <NAME>Actavis Switzerland AG</NAME>
+      <GLN>7601001376618</GLN>
+    </COMP>
+    <PEXF>3.88</PEXF>
+    <PPUB>8.55</PPUB>
+    <PKG_SIZE>30</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>G</GENERIC_TYPE>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680586360076</GTIN>
+    <PHAR>5829594</PHAR>
+    <DSCR>PAROXETIN Mepha Lactabs 20 mg</DSCR>
+    <ADDSCR>28 Stk</ADDSCR>
+    <ATC>N06AB05</ATC>
+    <COMP>
+      <NAME>Mepha Pharma AG</NAME>
+      <GLN>7601001001121</GLN>
+    </COMP>
+    <PEXF>13.65</PEXF>
+    <PPUB>26.45</PPUB>
+    <PKG_SIZE>28</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>G</GENERIC_TYPE>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+  <ITEM>
+    <GTIN>7680586360069</GTIN>
+    <PHAR>5829571</PHAR>
+    <DSCR>PAROXETIN Mepha Lactabs 20 mg</DSCR>
+    <ADDSCR>14 Stk</ADDSCR>
+    <ATC>N06AB05</ATC>
+    <COMP>
+      <NAME>Mepha Pharma AG</NAME>
+      <GLN>7601001001121</GLN>
+    </COMP>
+    <PEXF>9.24</PEXF>
+    <PPUB>17.6</PPUB>
+    <PKG_SIZE>14</PKG_SIZE>
+    <SL_ENTRY>true</SL_ENTRY>
+    <IKSCAT>B</IKSCAT>
+    <GENERIC_TYPE>G</GENERIC_TYPE>
+    <DEDUCTIBLE>10</DEDUCTIBLE>
+    <NARCOTIC>false</NARCOTIC>
+  </ITEM>
+</ARTIKELSTAMM>

@@ -362,9 +362,9 @@
         <uniqueId>e02501c17c834a338bb420f8923d8b06</uniqueId>
       </parameterDescription>
     </namedTestData>
-    <aut id="ID_A_6697">
+    <aut id="ID_A_21691">
       <name>elexis</name>
-      <config id="ID_C_6810">
+      <config id="ID_C_21849">
         <name>elexis-linux@localhost</name>
         <classname/>
         <classpath/>
@@ -442,7 +442,7 @@
           <value>/opt/elexis-3/elexis-3-core/ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp/linux/gtk/x86_64</value>
         </confAttrMapEntry>
       </config>
-      <config id="ID_C_19664">
+      <config id="ID_C_21848">
         <name>elexis-tst-upgrade@localhost</name>
         <classname/>
         <classpath/>
@@ -679,6 +679,256 @@
             </technicalName>
             <type xsi:nil="true"/>
             <logicalName>8ece40db6ee74d81b5e83818dcec0f06</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <componentClassName>org.eclipse.swt.custom.CTabFolder</componentClassName>
+              <supportedClassName>org.eclipse.swt.custom.CTabFolder</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.artikelview</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <alternativeDisplayName>Tabbed Component ("Eigenartikel","Artikelstamm","Medical",...)</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>e9512a54cf3440858cdafa802938db58</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>ch.elexis.core.ui.selectors.SelectorPanel_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Table</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Table</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.artikelview</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.artikel.ArtikelView$MasterDetailsPage_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
+              <alternativeDisplayName>Table</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>309c5934d6d04671bb91ebf5c9b3b711</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.artikelview</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.artikel.ArtikelView$MasterDetailsPage_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.selectors.SelectorPanel_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.selectors.TextField_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
+              <alternativeDisplayName>Text Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>00517d78e8ca481e901dd86610854e93</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <componentClassName>org.eclipse.swt.widgets.ToolItem</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.ToolItem</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_4</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.ToolBar_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.ToolItem_1</hierarchyName>
+              <alternativeDisplayName>Toolbar Item</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>9d4aad26267543df9dc8c7df7caa4d2e</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Table</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Table</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.PatListView</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
+              <alternativeDisplayName>Table</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>2235198437c9487ea483521fdf61ead4</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.ToolItem_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolItem_2</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.ToolItem</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.ToolItem</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.artikelview</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.artikel.ArtikelView$MasterDetailsPage_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.selectors.SelectorPanel_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.ToolBar_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.ToolItem_2</hierarchyName>
+              <alternativeDisplayName>Toolbar Item</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>121e9eb52f5c4c4ca3d936803a128d9a</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Button</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Button</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.util.ImporterPage$FileBasedImporter_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Button_1</hierarchyName>
+              <alternativeDisplayName>Button Component ("Suchen...")</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>3dcc93a56a5240b08b7a8f6e9bf3a84b</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Table</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Table</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.artikelview</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.artikel.ArtikelView$MasterDetailsPage_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
+              <alternativeDisplayName>Table</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>2b5962ce69c548d0b28aaadf6b727a74</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.custom.CTabFolder_1</neighbour>
+              <neighbour>org.eclipse.swt.custom.CTabFolder_2</neighbour>
+              <neighbour>org.eclipse.swt.custom.CTabFolder_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Sash_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Sash_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Sash_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolBar_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolBar_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolBar_3</neighbour>
+              <componentClassName>org.eclipse.swt.custom.CTabFolder</componentClassName>
+              <supportedClassName>org.eclipse.swt.custom.CTabFolder</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_4</hierarchyName>
+              <alternativeDisplayName>Tabbed Component ("*Konsultationen","*Artikel")</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.custom.CTabFolder_1</neighbour>
+              <neighbour>org.eclipse.swt.custom.CTabFolder_2</neighbour>
+              <neighbour>org.eclipse.swt.custom.CTabFolder_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Sash_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Sash_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Sash_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolBar_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolBar_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolBar_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolBar_4</neighbour>
+              <componentClassName>org.eclipse.swt.custom.CTabFolder</componentClassName>
+              <supportedClassName>org.eclipse.swt.custom.CTabFolder</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_4</hierarchyName>
+              <alternativeDisplayName>Tabbed Component ("*Konsultationen","*Artikel")</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>5c33578795b04d479fa19c2d2aa41f69</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolBar_1</neighbour>
+              <componentClassName>org.eclipse.swt.custom.CTabFolder</componentClassName>
+              <supportedClassName>org.eclipse.swt.custom.CTabFolder</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <alternativeDisplayName>Tabbed Component ("*Konsultationen","*Artikel")</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <componentClassName>org.eclipse.swt.custom.CTabFolder</componentClassName>
+              <supportedClassName>org.eclipse.swt.custom.CTabFolder</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <alternativeDisplayName>Tabbed Component ("*Konsultationen","*Artikel")</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>daf4a1f9abc74c2c91dc6f6feef95f50</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.util.ImporterPage$FileBasedImporter_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
+              <alternativeDisplayName>Text Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>f3dca4d6d02d42399170e7027f039a86</logicalName>
           </association>
           <category>
             <name>Patients</name>
@@ -1467,6 +1717,9 @@
             <type xsi:nil="true"/>
             <logicalName>8ab6b08d1a4d08f3011a4d09a497002c</logicalName>
           </association>
+          <association>
+            <type xsi:nil="true"/>
+          </association>
         </unmappedComponent>
         <unmappedTechnical>
           <name>#1!mappedtechnicalGDCat#1!</name>
@@ -2134,7 +2387,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -2164,7 +2416,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -7250,7 +7501,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -7767,6 +8017,706 @@
           <interfaceLocked>false</interfaceLocked>
         </testcase>
       </category>
+      <category>
+        <name>Artikelstamm</name>
+        <comment xsi:nil="true"/>
+        <GUID>8162438f2b3c4c71a2830eb638bc6651</GUID>
+        <generated>false</generated>
+        <active>true</active>
+        <taskId xsi:nil="true"/>
+        <testcase>
+          <name>Import_Artikelstamm</name>
+          <comment xsi:nil="true"/>
+          <GUID>97fa53a2477946e39a1e1e2ab4c6c537</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata/>
+          <datafile xsi:nil="true"/>
+          <teststep>
+            <usedTestcase>
+              <name>Open view "Artikel"</name>
+              <comment xsi:nil="true"/>
+              <GUID>012b34a292734c399d2d9ed25888d3f3</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Daten/Artikel</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Select Konsultation</name>
+              <comment xsi:nil="true"/>
+              <GUID>d8837b213eb24285b1e9f2752d88aac7</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>'*Konsultationen'</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d20f012f</uniqueIds>
+                <uniqueIds>8ab6b083181dc1bc01181dcfdd7f0019</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364b007098c</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a497002b</originalName>
+                <newName>5c33578795b04d479fa19c2d2aa41f69</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Double click to maximize</name>
+              <comment xsi:nil="true"/>
+              <GUID>3913b6102f744e9892945f337da38cfd</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>2</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>2</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>percent</value>
+                    </data>
+                  </data>
+                  <data columnCount="5">
+                    <data>
+                      <language>de_DE</language>
+                      <value>2</value>
+                    </data>
+                  </data>
+                  <data columnCount="6">
+                    <data>
+                      <language>de_DE</language>
+                      <value>percent</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181dbe75b500c5</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181dbe8c2b00c6</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181dbe9cd500c7</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181dbeb82d00c8</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181dbec8a700c9</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181dbedeb000ca</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083181d393b01181dbe268c00c3</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>5c33578795b04d479fa19c2d2aa41f69</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Select tab "Artikel"</name>
+              <comment xsi:nil="true"/>
+              <GUID>4d01c79931f94389a89af17834716519</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>'*Artikel'</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d20f012f</uniqueIds>
+                <uniqueIds>8ab6b083181dc1bc01181dcfdd7f0019</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364b007098c</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a497002b</originalName>
+                <newName>daf4a1f9abc74c2c91dc6f6feef95f50</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Select tab "Artikelstamm"</name>
+              <comment xsi:nil="true"/>
+              <GUID>8a6fe8b21a274b14b97a305069751cde</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Artikelstamm</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d20f012f</uniqueIds>
+                <uniqueIds>8ab6b083181dc1bc01181dcfdd7f0019</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364b007098c</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a497002b</originalName>
+                <newName>e9512a54cf3440858cdafa802938db58</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Click Toolbar..Import </name>
+              <comment xsi:nil="true"/>
+              <GUID>70ddf6a111a941a1aee3fa134475c483</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>'Import...'</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b08324478f5b01244839687a0075</uniqueIds>
+                <uniqueIds>8ab6b08324478f5b0124483987410076</uniqueIds>
+                <uniqueIds>8ab6b08324478f5b0124487c95120084</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b08324478f5b01244836b703006e</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>9d4aad26267543df9dc8c7df7caa4d2e</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Wait for window "Datenimport"</name>
+              <comment xsi:nil="true"/>
+              <GUID>879d24ec7ead480b9c7ecbc1398064c3</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Datenimport</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>100</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d9914390080</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9921d50081</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d993cef0082</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9958a40083</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083181d393b01181d98e42f007e</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Copy filename to clipboard</name>
+              <comment xsi:nil="true"/>
+              <GUID>1b59f794ef3740f788bc7c9c93fd737c</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>/opt/elexis-3/elexis-3-core/ch.elexis.core.releng/jubula/artikelstamm_first_v2.xml</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083225416bc012254a0d58c000e</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083225416bc012254a0450a000c</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Ctrl-A</name>
+              <comment xsi:nil="true"/>
+              <GUID>39b3031428224bf8a6a80dc62ce25b39</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>control</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>a</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d8d8ab2005f</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d8d9d020060</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083181d393b01181d8cd405005d</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Press DEL</name>
+              <comment xsi:nil="true"/>
+              <GUID>357531409c3746259c7ed03f1c247d3d</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807c7</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Ctrl-V</name>
+              <comment xsi:nil="true"/>
+              <GUID>2675f87b81ce4bf1916a40d3a5b8ad1e</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>control</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>v</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d8d8ab2005f</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d8d9d020060</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083181d393b01181d8cd405005d</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Press Tab</name>
+              <comment xsi:nil="true"/>
+              <GUID>e8b7c3a79482478b82aea97e12ee7510</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807c8</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>71e083e1d74343fca902c93df55e0acb</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>d9e98a9ddfb8436cbb1ddfc4b7c763bd</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807c9</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>258bf2f184b347baa8d4bd5e58fc199c</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>artikelstamm_first_v2.xml</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>660f12dd04cb4728ab2cc352d6db702c</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>e6b18dcce2af4d559d20b91d4c512bd1</originalName>
+                <newName>f3dca4d6d02d42399170e7027f039a86</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>cd68bf0f724546f2bfecaaf24556bed2</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>2000</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Press OK</name>
+              <comment xsi:nil="true"/>
+              <GUID>88b9fc4b49354d1eb7b261ec188aedfd</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>2ba2ec4023294b0fbdbf09d7bde14e74</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Wait for import to close</name>
+              <comment xsi:nil="true"/>
+              <GUID>3197a33a2c5d42188cbcd0dd868499af</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Datenimport</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>120000</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>100</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d9e514b0091</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9e5ef70092</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9e7e460093</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9ead360094</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Wait for window "Artikelstamm CH Import"</name>
+              <comment xsi:nil="true"/>
+              <GUID>b27a136e10e04c2d9a201bd837124a0b</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Artikelstamm CH Import</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>5000</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>0</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d9914390080</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9921d50081</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d993cef0082</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9958a40083</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083181d393b01181d98e42f007e</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Wait for window "Artikelstamm CH Import" to close</name>
+              <comment xsi:nil="true"/>
+              <GUID>4d7a16a7e47141868d98a148a1575813</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Artikelstamm CH Import</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>120000</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d9e514b0091</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9e5ef70092</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9e7e460093</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9ead360094</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Screenshot Import Artikelstamm</name>
+              <comment xsi:nil="true"/>
+              <GUID>319ca682ea854d4986cfdd6ae3c978e6</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>screenshots/Import_Artikelstamm.png</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <interfaceLocked>false</interfaceLocked>
+        </testcase>
+      </category>
       <testcase>
         <name>FULLTEST</name>
         <comment xsi:nil="true"/>
@@ -7786,7 +8736,6 @@
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>1ad2058b1db845e5b59262eb83e505af</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
@@ -7800,7 +8749,19 @@
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>5a60331e3934472ea43be57ee246fa1f</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Artikelstamm importieren</name>
+            <comment xsi:nil="true"/>
+            <GUID>c2ea4cf1f45043a78a74463a903a85ec</GUID>
+            <generated>false</generated>
+            <active>false</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
@@ -7816,52 +8777,6 @@
             <datafile xsi:nil="true"/>
             <referencedTestData>PATIENTEN</referencedTestData>
             <testcaseGuid>ce047a9881aa42c8ad2b22bfedb96844</testcaseGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Fall erfassen</name>
-            <comment xsi:nil="true"/>
-            <GUID>dd981e7b7b0243449ede8a2fc5c06eb8</GUID>
-            <generated>false</generated>
-            <active>false</active>
-            <taskId xsi:nil="true"/>
-            <testdata>
-              <row rowCount="1">
-                <data columnCount="1">
-                  <data>
-                    <language>de_DE</language>
-                    <value>Bernasco</value>
-                  </data>
-                </data>
-                <data columnCount="2">
-                  <data>
-                    <language>de_DE</language>
-                    <value>UVG</value>
-                  </data>
-                </data>
-                <data columnCount="3">
-                  <data>
-                    <language>de_DE</language>
-                    <value>Unfall</value>
-                  </data>
-                </data>
-                <data columnCount="4">
-                  <data>
-                    <language>de_DE</language>
-                    <value>Unfall Nummer 27</value>
-                  </data>
-                </data>
-              </row>
-              <uniqueIds>9566315b203d451ea9ad9098540ed85c</uniqueIds>
-              <uniqueIds>cf1c6003ceeb4fd79be4e3997a14c4ce</uniqueIds>
-              <uniqueIds>41d45ad9659d483586b42afe27221c53</uniqueIds>
-              <uniqueIds>a3c6bf314c42417c890fb97bea8f4a17</uniqueIds>
-            </testdata>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>31e5391fe47245138f466b8e9e8ef398</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
@@ -7930,6 +8845,51 @@
             </testdata>
             <datafile xsi:nil="true"/>
             <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Fall erfassen</name>
+            <comment xsi:nil="true"/>
+            <GUID>dd981e7b7b0243449ede8a2fc5c06eb8</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata>
+              <row rowCount="1">
+                <data columnCount="1">
+                  <data>
+                    <language>de_DE</language>
+                    <value>Bernasco</value>
+                  </data>
+                </data>
+                <data columnCount="2">
+                  <data>
+                    <language>de_DE</language>
+                    <value>UVG</value>
+                  </data>
+                </data>
+                <data columnCount="3">
+                  <data>
+                    <language>de_DE</language>
+                    <value>Unfall</value>
+                  </data>
+                </data>
+                <data columnCount="4">
+                  <data>
+                    <language>de_DE</language>
+                    <value>Unfall Nummer 27</value>
+                  </data>
+                </data>
+              </row>
+              <uniqueIds>9566315b203d451ea9ad9098540ed85c</uniqueIds>
+              <uniqueIds>cf1c6003ceeb4fd79be4e3997a14c4ce</uniqueIds>
+              <uniqueIds>41d45ad9659d483586b42afe27221c53</uniqueIds>
+              <uniqueIds>a3c6bf314c42417c890fb97bea8f4a17</uniqueIds>
+            </testdata>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>31e5391fe47245138f466b8e9e8ef398</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
@@ -8192,7 +9152,7 @@
             <comment xsi:nil="true"/>
             <GUID>041e537dc04d49268cf917eb42e71752</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <taskId xsi:nil="true"/>
             <testdata>
               <row rowCount="1">
@@ -8228,6 +9188,36 @@
             </testdata>
             <datafile xsi:nil="true"/>
             <testcaseGuid>31e5391fe47245138f466b8e9e8ef398</testcaseGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Open all views</name>
+            <comment xsi:nil="true"/>
+            <GUID>495b2a007f264034a8a0c9981fb973ed</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata/>
+            <datafile xsi:nil="true"/>
+            <referencedTestData>VIEWS</referencedTestData>
+            <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Open all Preferences</name>
+            <comment xsi:nil="true"/>
+            <GUID>9b292fc7377d4defbd0225b0aa30b1c9</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata/>
+            <datafile xsi:nil="true"/>
+            <referencedTestData>PREFERENCES</referencedTestData>
+            <testcaseGuid>76a22bc7a9854f268785b471f30c1acd</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
@@ -9169,233 +10159,6 @@
       <interfaceLocked>false</interfaceLocked>
     </testcase>
     <testcase>
-      <name>Observed1</name>
-      <comment xsi:nil="true"/>
-      <GUID>39e6c5e60e34458f9858a7645bc0d08a</GUID>
-      <generated>false</generated>
-      <active>true</active>
-      <taskId xsi:nil="true"/>
-      <testdata/>
-      <datafile xsi:nil="true"/>
-      <teststep>
-        <cap>
-          <name>Click on Toolbar Item</name>
-          <comment xsi:nil="true"/>
-          <GUID>940164c389694e9384e16d911a1f87ec</GUID>
-          <generated>false</generated>
-          <active>true</active>
-          <taskId xsi:nil="true"/>
-          <parameterDescription>
-            <name>CompSystem.ClickCount</name>
-            <type>java.lang.Integer</type>
-            <uniqueId>CompSystem.ClickCount</uniqueId>
-          </parameterDescription>
-          <parameterDescription>
-            <name>CompSystem.MouseButton</name>
-            <type>java.lang.Integer</type>
-            <uniqueId>CompSystem.MouseButton</uniqueId>
-          </parameterDescription>
-          <testdata>
-            <row rowCount="1">
-              <data columnCount="1">
-                <data>
-                  <language>de_DE</language>
-                  <value>1</value>
-                </data>
-              </data>
-              <data columnCount="2">
-                <data>
-                  <language>de_DE</language>
-                  <value>1</value>
-                </data>
-              </data>
-            </row>
-            <uniqueIds>CompSystem.ClickCount</uniqueIds>
-            <uniqueIds>CompSystem.MouseButton</uniqueIds>
-          </testdata>
-          <datafile xsi:nil="true"/>
-          <actionName>CompSystem.Click</actionName>
-          <componentName>0985bdff3775499e88048a49e4d5c069</componentName>
-          <componentType>guidancer.abstract.Widget</componentType>
-        </cap>
-      </teststep>
-      <teststep>
-        <cap>
-          <name>Wait for Window</name>
-          <comment xsi:nil="true"/>
-          <GUID>a694c9427b0a4e8eaefedcaf48119266</GUID>
-          <generated>false</generated>
-          <active>true</active>
-          <taskId xsi:nil="true"/>
-          <parameterDescription>
-            <name>CompSystem.Title</name>
-            <type>java.lang.String</type>
-            <uniqueId>CompSystem.Title</uniqueId>
-          </parameterDescription>
-          <parameterDescription>
-            <name>CompSystem.Operator</name>
-            <type>java.lang.String</type>
-            <uniqueId>CompSystem.Operator</uniqueId>
-          </parameterDescription>
-          <parameterDescription>
-            <name>CompSystem.Timeout</name>
-            <type>java.lang.Integer</type>
-            <uniqueId>CompSystem.Timeout</uniqueId>
-          </parameterDescription>
-          <parameterDescription>
-            <name>CompSystem.DelayAfterVisibility</name>
-            <type>java.lang.Integer</type>
-            <uniqueId>CompSystem.DelayAfterVisibility</uniqueId>
-          </parameterDescription>
-          <testdata>
-            <row rowCount="1">
-              <data columnCount="1">
-                <data>
-                  <language>de_DE</language>
-                  <value>'Neuer Fall'</value>
-                </data>
-              </data>
-              <data columnCount="2">
-                <data>
-                  <language>de_DE</language>
-                  <value>equals</value>
-                </data>
-              </data>
-              <data columnCount="3">
-                <data>
-                  <language>de_DE</language>
-                  <value>15000</value>
-                </data>
-              </data>
-              <data columnCount="4">
-                <data>
-                  <language>de_DE</language>
-                  <value>500</value>
-                </data>
-              </data>
-            </row>
-            <uniqueIds>CompSystem.Title</uniqueIds>
-            <uniqueIds>CompSystem.Operator</uniqueIds>
-            <uniqueIds>CompSystem.Timeout</uniqueIds>
-            <uniqueIds>CompSystem.DelayAfterVisibility</uniqueIds>
-          </testdata>
-          <datafile xsi:nil="true"/>
-          <actionName>CompSystem.WaitForWindow</actionName>
-          <componentName xsi:nil="true"/>
-          <componentType>guidancer.concrete.GraphicApplication</componentType>
-        </cap>
-      </teststep>
-      <teststep>
-        <cap>
-          <name>Click on dialog.button.ok ("OK")</name>
-          <comment xsi:nil="true"/>
-          <GUID>e1f8487a792e41f890dc974714bae9ea</GUID>
-          <generated>false</generated>
-          <active>true</active>
-          <taskId xsi:nil="true"/>
-          <parameterDescription>
-            <name>CompSystem.ClickCount</name>
-            <type>java.lang.Integer</type>
-            <uniqueId>CompSystem.ClickCount</uniqueId>
-          </parameterDescription>
-          <parameterDescription>
-            <name>CompSystem.MouseButton</name>
-            <type>java.lang.Integer</type>
-            <uniqueId>CompSystem.MouseButton</uniqueId>
-          </parameterDescription>
-          <testdata>
-            <row rowCount="1">
-              <data columnCount="1">
-                <data>
-                  <language>de_DE</language>
-                  <value>1</value>
-                </data>
-              </data>
-              <data columnCount="2">
-                <data>
-                  <language>de_DE</language>
-                  <value>1</value>
-                </data>
-              </data>
-            </row>
-            <uniqueIds>CompSystem.ClickCount</uniqueIds>
-            <uniqueIds>CompSystem.MouseButton</uniqueIds>
-          </testdata>
-          <datafile xsi:nil="true"/>
-          <actionName>CompSystem.Click</actionName>
-          <componentName>036e74a2113a46c19154d7dedadc6cf5</componentName>
-          <componentType>guidancer.abstract.Widget</componentType>
-        </cap>
-      </teststep>
-      <teststep>
-        <cap>
-          <name>Wait for Window to Close</name>
-          <comment xsi:nil="true"/>
-          <GUID>20e1f9e467dc4c13b2a09c4eb7f4e99f</GUID>
-          <generated>false</generated>
-          <active>true</active>
-          <taskId xsi:nil="true"/>
-          <parameterDescription>
-            <name>CompSystem.Title</name>
-            <type>java.lang.String</type>
-            <uniqueId>CompSystem.Title</uniqueId>
-          </parameterDescription>
-          <parameterDescription>
-            <name>CompSystem.Operator</name>
-            <type>java.lang.String</type>
-            <uniqueId>CompSystem.Operator</uniqueId>
-          </parameterDescription>
-          <parameterDescription>
-            <name>CompSystem.Timeout</name>
-            <type>java.lang.Integer</type>
-            <uniqueId>CompSystem.Timeout</uniqueId>
-          </parameterDescription>
-          <parameterDescription>
-            <name>CompSystem.DelayAfterClose</name>
-            <type>java.lang.Integer</type>
-            <uniqueId>CompSystem.DelayAfterClose</uniqueId>
-          </parameterDescription>
-          <testdata>
-            <row rowCount="1">
-              <data columnCount="1">
-                <data>
-                  <language>de_DE</language>
-                  <value>'Neuer Fall'</value>
-                </data>
-              </data>
-              <data columnCount="2">
-                <data>
-                  <language>de_DE</language>
-                  <value>equals</value>
-                </data>
-              </data>
-              <data columnCount="3">
-                <data>
-                  <language>de_DE</language>
-                  <value>15000</value>
-                </data>
-              </data>
-              <data columnCount="4">
-                <data>
-                  <language>de_DE</language>
-                  <value>500</value>
-                </data>
-              </data>
-            </row>
-            <uniqueIds>CompSystem.Title</uniqueIds>
-            <uniqueIds>CompSystem.Operator</uniqueIds>
-            <uniqueIds>CompSystem.Timeout</uniqueIds>
-            <uniqueIds>CompSystem.DelayAfterClose</uniqueIds>
-          </testdata>
-          <datafile xsi:nil="true"/>
-          <actionName>CompSystem.WaitForWindowToClose</actionName>
-          <componentName xsi:nil="true"/>
-          <componentType>guidancer.concrete.GraphicApplication</componentType>
-        </cap>
-      </teststep>
-      <interfaceLocked>false</interfaceLocked>
-    </testcase>
-    <testcase>
       <name>Konsultation_Erfassen</name>
       <comment xsi:nil="true"/>
       <GUID>ae9ad522d2304e999f75afe5f6b6ae3d</GUID>
@@ -9458,7 +10221,6 @@
           <taskId xsi:nil="true"/>
           <datafile xsi:nil="true"/>
           <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -9525,7 +10287,6 @@
           </testdata>
           <datafile xsi:nil="true"/>
           <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -9544,7 +10305,6 @@
           <taskId xsi:nil="true"/>
           <datafile xsi:nil="true"/>
           <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -9630,7 +10390,6 @@
           <taskId xsi:nil="true"/>
           <datafile xsi:nil="true"/>
           <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -9695,7 +10454,6 @@
           <taskId xsi:nil="true"/>
           <datafile xsi:nil="true"/>
           <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -9760,7 +10518,6 @@
           <taskId xsi:nil="true"/>
           <datafile xsi:nil="true"/>
           <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -9768,6 +10525,287 @@
             <newName>94d37909b7f6489a8a42d24dceed645d</newName>
           </overriddenNames>
         </usedTestcase>
+      </teststep>
+      <interfaceLocked>false</interfaceLocked>
+    </testcase>
+    <testcase>
+      <name>Observer_Erstimport</name>
+      <comment xsi:nil="true"/>
+      <GUID>cfe650fbeea84d0d97f54a05b2d6d455</GUID>
+      <generated>false</generated>
+      <active>true</active>
+      <taskId xsi:nil="true"/>
+      <testdata/>
+      <datafile xsi:nil="true"/>
+      <teststep>
+        <cap>
+          <name>Select Tab by Value on Tabbed Component ("Eigenartikel","Artikelstamm","Medical",...)</name>
+          <comment xsi:nil="true"/>
+          <GUID>10f85600ff984bc2b009b6d5e404c235</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <parameterDescription>
+            <name>CompSystem.Title</name>
+            <type>java.lang.String</type>
+            <uniqueId>CompSystem.Title</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>CompSystem.Operator</name>
+            <type>java.lang.String</type>
+            <uniqueId>CompSystem.Operator</uniqueId>
+          </parameterDescription>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Artikelstamm</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>equals</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>CompSystem.Title</uniqueIds>
+            <uniqueIds>CompSystem.Operator</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <actionName>CompSystem.SelectTab</actionName>
+          <componentName>e9512a54cf3440858cdafa802938db58</componentName>
+          <componentType>guidancer.concrete.TabbedPane</componentType>
+        </cap>
+      </teststep>
+      <teststep>
+        <cap>
+          <name>Select Context Menu Entry by Textpath on Toolbar Item</name>
+          <comment xsi:nil="true"/>
+          <GUID>2c75e630b0164dc282031177ef37d5f9</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <parameterDescription>
+            <name>CompSystem.TextPath</name>
+            <type>java.lang.String</type>
+            <uniqueId>CompSystem.TextPath</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>CompSystem.Operator</name>
+            <type>java.lang.String</type>
+            <uniqueId>CompSystem.Operator</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>CompSystem.MouseButton</name>
+            <type>java.lang.Integer</type>
+            <uniqueId>CompSystem.MouseButton</uniqueId>
+          </parameterDescription>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>'Import...'</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>equals</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>CompSystem.TextPath</uniqueIds>
+            <uniqueIds>CompSystem.Operator</uniqueIds>
+            <uniqueIds>CompSystem.MouseButton</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <actionName>CompSystem.PopupSelectByTextPathNew</actionName>
+          <componentName>9d4aad26267543df9dc8c7df7caa4d2e</componentName>
+          <componentType>org.eclipse.swt.widgets.ToolItem</componentType>
+        </cap>
+      </teststep>
+      <teststep>
+        <cap>
+          <name>Wait for Window</name>
+          <comment xsi:nil="true"/>
+          <GUID>105151104dd945ada1a6f38b26918f39</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <parameterDescription>
+            <name>CompSystem.Title</name>
+            <type>java.lang.String</type>
+            <uniqueId>CompSystem.Title</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>CompSystem.Operator</name>
+            <type>java.lang.String</type>
+            <uniqueId>CompSystem.Operator</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>CompSystem.Timeout</name>
+            <type>java.lang.Integer</type>
+            <uniqueId>CompSystem.Timeout</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>CompSystem.DelayAfterVisibility</name>
+            <type>java.lang.Integer</type>
+            <uniqueId>CompSystem.DelayAfterVisibility</uniqueId>
+          </parameterDescription>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Datenimport</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>equals</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>15000</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>500</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>CompSystem.Title</uniqueIds>
+            <uniqueIds>CompSystem.Operator</uniqueIds>
+            <uniqueIds>CompSystem.Timeout</uniqueIds>
+            <uniqueIds>CompSystem.DelayAfterVisibility</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <actionName>CompSystem.WaitForWindow</actionName>
+          <componentName xsi:nil="true"/>
+          <componentType>guidancer.concrete.GraphicApplication</componentType>
+        </cap>
+      </teststep>
+      <teststep>
+        <cap>
+          <name>Click on dialog.button.ok ("OK")</name>
+          <comment xsi:nil="true"/>
+          <GUID>08453b83731544c3a65fcfec5068314a</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <parameterDescription>
+            <name>CompSystem.ClickCount</name>
+            <type>java.lang.Integer</type>
+            <uniqueId>CompSystem.ClickCount</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>CompSystem.MouseButton</name>
+            <type>java.lang.Integer</type>
+            <uniqueId>CompSystem.MouseButton</uniqueId>
+          </parameterDescription>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>CompSystem.ClickCount</uniqueIds>
+            <uniqueIds>CompSystem.MouseButton</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <actionName>CompSystem.Click</actionName>
+          <componentName>2ba2ec4023294b0fbdbf09d7bde14e74</componentName>
+          <componentType>guidancer.abstract.Widget</componentType>
+        </cap>
+      </teststep>
+      <teststep>
+        <cap>
+          <name>Wait for Window to Close</name>
+          <comment xsi:nil="true"/>
+          <GUID>4492233fc62548a2ba9570a6859e8139</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <parameterDescription>
+            <name>CompSystem.Title</name>
+            <type>java.lang.String</type>
+            <uniqueId>CompSystem.Title</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>CompSystem.Operator</name>
+            <type>java.lang.String</type>
+            <uniqueId>CompSystem.Operator</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>CompSystem.Timeout</name>
+            <type>java.lang.Integer</type>
+            <uniqueId>CompSystem.Timeout</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>CompSystem.DelayAfterClose</name>
+            <type>java.lang.Integer</type>
+            <uniqueId>CompSystem.DelayAfterClose</uniqueId>
+          </parameterDescription>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Datenimport</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>equals</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>15000</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>500</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>CompSystem.Title</uniqueIds>
+            <uniqueIds>CompSystem.Operator</uniqueIds>
+            <uniqueIds>CompSystem.Timeout</uniqueIds>
+            <uniqueIds>CompSystem.DelayAfterClose</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <actionName>CompSystem.WaitForWindowToClose</actionName>
+          <componentName xsi:nil="true"/>
+          <componentType>guidancer.concrete.GraphicApplication</componentType>
+        </cap>
       </teststep>
       <interfaceLocked>false</interfaceLocked>
     </testcase>
@@ -9786,7 +10824,7 @@
           <generated>false</generated>
           <active>true</active>
           <taskId xsi:nil="true"/>
-          <selectedAut>ID_A_6697</selectedAut>
+          <selectedAut>ID_A_21691</selectedAut>
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
@@ -9824,7 +10862,7 @@
           <generated>false</generated>
           <active>true</active>
           <taskId xsi:nil="true"/>
-          <selectedAut>ID_A_6697</selectedAut>
+          <selectedAut>ID_A_21691</selectedAut>
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
@@ -9911,7 +10949,7 @@
           <generated>false</generated>
           <active>true</active>
           <taskId xsi:nil="true"/>
-          <selectedAut>ID_A_6697</selectedAut>
+          <selectedAut>ID_A_21691</selectedAut>
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
@@ -9949,7 +10987,7 @@
           <generated>false</generated>
           <active>true</active>
           <taskId xsi:nil="true"/>
-          <selectedAut>ID_A_6697</selectedAut>
+          <selectedAut>ID_A_21691</selectedAut>
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
@@ -9993,7 +11031,6 @@
             </testdata>
             <datafile xsi:nil="true"/>
             <testcaseGuid>31e5391fe47245138f466b8e9e8ef398</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
           <usedTestcase>
@@ -10016,7 +11053,6 @@
             </testdata>
             <datafile xsi:nil="true"/>
             <testcaseGuid>ae9ad522d2304e999f75afe5f6b6ae3d</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
           <eventHandler>
@@ -10052,7 +11088,7 @@
     <autToolKit>com.bredexsw.guidancer.RcpToolkitPlugin</autToolKit>
     <majorProjectVersion>1</majorProjectVersion>
     <minorProjectVersion>1</minorProjectVersion>
-    <testResultDetailsCleanupInterval>1</testResultDetailsCleanupInterval>
+    <testResultDetailsCleanupInterval>-1</testResultDetailsCleanupInterval>
     <isReusable>false</isReusable>
     <isProtected>false</isProtected>
     <reusedProjects>
@@ -10083,6 +11119,18 @@
       <majorVersion>4</majorVersion>
       <minorVersion>0</minorVersion>
     </usedToolkit>
+    <usedToolkit>
+      <name>com.bredexsw.guidancer.SwtToolkitPlugin</name>
+      <majorVersion>4</majorVersion>
+      <minorVersion>1</minorVersion>
+    </usedToolkit>
+    <componentNames>
+      <compType>guidancer.concrete.TextComponent</compType>
+      <GUID>00517d78e8ca481e901dd86610854e93</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300a201405181557_Artikelstamm_Text_1_txf</compName>
+    </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>0190c6e52bc848ffb958451a23597c39</GUID>
@@ -10133,6 +11181,13 @@
       <compName>Elexis300qualifier00737_CTabFolder_2_tpn</compName>
     </componentNames>
     <componentNames>
+      <compType>org.eclipse.swt.widgets.ToolItem</compType>
+      <GUID>121e9eb52f5c4c4ca3d936803a128d9a</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300a201405181557_Artikelstamm_ToolItem_2_tbi</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>1dd96d916b4346ec830ac1963f8c2e0f</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
@@ -10161,6 +11216,13 @@
       <compName>sw_update_select_sites_cbc</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.Table</compType>
+      <GUID>2235198437c9487ea483521fdf61ead4</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300a201405181557_Table_1_tbl</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>26074af0ea1241878d4f410f3b2a1614</GUID>
       <creationContext>STEP</creationContext>
@@ -10187,6 +11249,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>SW_update_select_all_btn</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.Table</compType>
+      <GUID>2b5962ce69c548d0b28aaadf6b727a74</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300qualifier0070_Eigenartikel_Table_1_tbl</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
@@ -10224,6 +11293,13 @@
       <compName>PreferencesGeneral_EnterLogpath</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.Table</compType>
+      <GUID>309c5934d6d04671bb91ebf5c9b3b711</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300a201405181557_Artikelstamm_Table_1_tbl</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>34621c9a1eab4006af8b723ce8d20e0f</GUID>
       <creationContext>STEP</creationContext>
@@ -10257,6 +11333,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>MultipleProblem_OkButton_grc</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.Button</compType>
+      <GUID>3dcc93a56a5240b08b7a8f6e9bf3a84b</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300a201405181557_Datenimport_Suchen_btn</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.ComboBox</compType>
@@ -10327,6 +11410,13 @@
       <creationContext>STEP</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Elexis300qualifier00721_Icpc_Alle_Tree_1_tre</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.TabbedPane</compType>
+      <GUID>5c33578795b04d479fa19c2d2aa41f69</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>CTabFolder_Konsultationen_Artikel</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
@@ -10474,6 +11564,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>EsrTabelle_Datum_grc</compName>
+    </componentNames>
+    <componentNames>
+      <compType>org.eclipse.swt.widgets.ToolItem</compType>
+      <GUID>9d4aad26267543df9dc8c7df7caa4d2e</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Artikel_ToolItem_1_tbi</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
@@ -10651,6 +11748,13 @@
       <compName>ShowView_OkButton_grc</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.TabbedPane</compType>
+      <GUID>daf4a1f9abc74c2c91dc6f6feef95f50</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300a201405182026_CTabFolder_1_tpn</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.concrete.Table</compType>
       <GUID>dddf95c79d3e4a48875d6e31a2fd266a</GUID>
       <creationContext>OBJECT_MAPPING</creationContext>
@@ -10700,6 +11804,13 @@
       <compName>synch_text_input</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.TabbedPane</compType>
+      <GUID>e9512a54cf3440858cdafa802938db58</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>CTab_Artikel</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>edb5967cb755467698979b36f96a60a1</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
@@ -10726,6 +11837,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Neuer_Fall_Abrechnungsmethode_cbc</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.TextComponent</compType>
+      <GUID>f3dca4d6d02d42399170e7027f039a86</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Artikelstamm_import_file</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.TextInputSupport</compType>
@@ -10824,7 +11942,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>3ec65813f61a4bcb826fd2c091c11234</value>
+          <value>100dad43f06f42e3aedfc49314d858a9</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -11031,7 +12149,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>65b720c7b3ce4fd89000c9c81a7476d4</value>
+          <value>6ac12ecd89624a99ade14d5991960a97</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -11238,7 +12356,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>21b17561a1ca4ca7bd52fc1ae428382f</value>
+          <value>6b995f5e89124c85ae41d92c8d1f218b</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -11445,7 +12563,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>f8e45fd486124fa7914c48614b563110</value>
+          <value>0aba86ca8b114ce2ac91636f3c916c53</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -11652,7 +12770,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>9190b3cb83d94df7aaf368b9fcb4fd49</value>
+          <value>6a81ac8a32ec40898b4d90c7c2b1fe1a</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -11859,7 +12977,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>fc68f1f28a8b41d89370a93911589f18</value>
+          <value>f12c2e98d97a4a76b7384cdec39b17b4</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -12066,7 +13184,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>70bb445b5a2241a9a0803ef4694589c3</value>
+          <value>c84fd66fa63f4511a7e3769258cb9252</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -12273,7 +13391,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>f17073475adb496baefc128fcad27130</value>
+          <value>36cec568c9334a359c7dc99d170cb17c</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -12480,7 +13598,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>fc3e973490cd42cc8424f035df8a811f</value>
+          <value>739293ed565448fda745ed387b9df093</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -12687,7 +13805,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>7e2bd456137e4a52b5f75a9cb17683c2</value>
+          <value>5bcca99891d848889836654f57f32bd4</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -12894,7 +14012,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>0ec896b26853423f9a1c48bbb85f76d7</value>
+          <value>52c7f8dc42ab49f6aeb75e92dcb1a2bf</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -13101,7 +14219,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>26821f7d297d43c0b75b3b40b6ba0bfb</value>
+          <value>07d0432445dc408db050076f71a58061</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -13308,7 +14426,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>ff54a02a665742db84451d042778fc04</value>
+          <value>45b9d99abd964fa9b88df13b0c7e93c5</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -13515,7 +14633,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>cb3effcce04349ba9701e1eed933c243</value>
+          <value>33546c9be70948ba91f7419a8cb536eb</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -13722,7 +14840,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>e7db24ea54934bb7ba38f3aa63fe9996</value>
+          <value>701c66bcfbbc4c049e37a537bcc35d71</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -13929,7 +15047,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>f618662a2073446190ef8b33d39b63bd</value>
+          <value>742989404d1f4642bd1cc2d22f0d8439</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -14136,7 +15254,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>66a52e711e5d43259c234b5b7f850559</value>
+          <value>afe47901688044d39aaec17fc455cf2d</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -14343,7 +15461,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>0e3c79102f0e46ffbe52b29794ce1545</value>
+          <value>94028e34490849a69a13b2f48f85408b</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -14550,7 +15668,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>d9029f950853481d9af0a66debdbcd47</value>
+          <value>8b12777eb2ba4dbd97cf5c576324c591</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -14757,7 +15875,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>d6e76abdbd00443bb938c32362d52389</value>
+          <value>b8ce7bf56f4e4832a87321aeaa03c31d</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -14964,7 +16082,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>dc2703aa83bc4623911795ef0b0e59f4</value>
+          <value>5e31c69cd3474882bbad74b66981a5eb</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -15171,7 +16289,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>5399cb886f76401199423ad7e053ec25</value>
+          <value>3e60e08bb50b4e56ac9f52b369073cf0</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -15378,7 +16496,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>a724b38ad8d14b579cc739bc593e6700</value>
+          <value>5467e1fb150f403e93fa5c34861536d6</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -15585,7 +16703,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>49b6b52ff8c3491fbbd92a0d3f3f9b58</value>
+          <value>1d788dc5a78640b7b2d22208c25a58ac</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -15792,7 +16910,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>228537b3937242d4a08ef8b92e7496f0</value>
+          <value>f054f6a16f954206bd975160ce9f21d0</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -15999,7 +17117,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>01c9a21cfa754ef683a46e5b73f80960</value>
+          <value>983dcd9028d240d1ada68495f3ebfc60</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -16206,7 +17324,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>03a6f518602a4ea4aec732371d1eda74</value>
+          <value>843657324a2248cfa36750fc63899e92</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -16413,7 +17531,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>61f7f1e5e3c241ccb2bf102f2016d50e</value>
+          <value>bd2a1861c7234f8898cdf38cb17d58e7</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -16620,7 +17738,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>f32087ecfc684eb581659c871897f14c</value>
+          <value>f2b4f32e13d14ee99c225bfb7c93c82e</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -16827,7 +17945,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>db46abb9e1834046b44f27d5b3e70f0d</value>
+          <value>84e3170b32d942d49fab97c1717d6ab8</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -17034,7 +18152,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>236a5771490141e382dce64ed558a323</value>
+          <value>9e38261cc6ca42eda91f7e0ce844dcd7</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -17241,7 +18359,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>0c23d01bedc44615bf222fbba0d83627</value>
+          <value>fa8d17f29c674e168b9514e346b07aa6</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -17448,7 +18566,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>0ff909c1ba3443ad827b970dc93f729a</value>
+          <value>4e6649a1565546bcb016fe9577842405</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -17655,7 +18773,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>1dd575b0c8b1428ebceb5fc1ae9c107f</value>
+          <value>d5cb6620252a45759b0bb547d233affc</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -17862,7 +18980,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>96c3fc53279f418ea4bd73053abf1238</value>
+          <value>6e18ec16f4a54d05aed2d46836c11274</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -18069,7 +19187,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>f472430f0141439eb79e5d3a7778c764</value>
+          <value>76f2b5836df64988a3a603e3157cfdf5</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -18276,7 +19394,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>8cbecbb3451f43d99a3c0009e842a036</value>
+          <value>2af96cd5caf84c1eafd146ae9634fcc0</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -18483,7 +19601,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>e334eaaa1f634c9893083dcdd1acff36</value>
+          <value>d16d81efebef42eb81b9832847793bf9</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -18690,7 +19808,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>5e7a7c43d3e8478bb4bd7c80bfdb4979</value>
+          <value>a5792f672daa41888698ef9e722c1cf8</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -18897,7 +20015,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>26c05250fcb142ac99056f4b6e001d9d</value>
+          <value>9df552af4b934af8a3f5c264572a5562</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -19104,7 +20222,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>9b8a728fc79f4842b8060ea603db745f</value>
+          <value>090324c1aa994dabbd6598c7633b4c01</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -19311,7 +20429,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>9cd347f477a542edbb805c0b48bf3775</value>
+          <value>e3995186d4144315bd505a93417de29c</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -19518,7 +20636,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>8f04ac42e6b04f57a80642e663c0820e</value>
+          <value>8c184f3c4ca34e98a0be908d91262afc</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -19725,7 +20843,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>89a84809193d42f19737cb9149312a5e</value>
+          <value>7bf2805e57a14f3cb07034ba359586f9</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -19932,7 +21050,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>6a5cd5038d8b4c809b852879aadb1ad5</value>
+          <value>ee4e5e53bae14c60a58d202e44d5af3c</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -20139,7 +21257,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>042eba22f7e64d01a375c21dbc70b757</value>
+          <value>20514e5310ed4e1a9e086af77c745629</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -20346,7 +21464,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>d6303585c65d4cfdac0b7065e0c943b4</value>
+          <value>07034beded884a06a57707cf34b4cc03</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -20553,7 +21671,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>202803415dfb4d51a306157f05c811d3</value>
+          <value>8e00fd2ecec94f0fb73fe4fd37e994be</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -20760,7 +21878,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>4ea37e0769d5476ea41db3ea1112e654</value>
+          <value>2212a167064849aa8ff2c1b72e4d9c10</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -20967,7 +22085,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>613d92b350984ad88088fb9f89c5efa2</value>
+          <value>fd4d70b3f7db412a974951bc6492641d</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -21174,7 +22292,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>5bb15f7d1a5240c49ff040092115a208</value>
+          <value>2ba6ec533fa74d618b417b05fbce51ac</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -21381,7 +22499,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>e0e04b8216b54a1a802e7c2ec81c5f8a</value>
+          <value>9d87e0adb2234d048dd21b870df9e206</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -21588,7 +22706,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>fb3548fb234e4a7486b4ac1352d7937d</value>
+          <value>44f29bb4049e4484ba3954c876f386b7</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -21795,7 +22913,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>90eda39b9feb434e9e59341e6b541757</value>
+          <value>6c7005fe838e4e9a9b442fe2a882b333</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -22002,7 +23120,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>aa8cc53d9af84929a6b3d7799c15f347</value>
+          <value>984b101bdf514efaa918f1ab7e7cdfe8</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -22209,7 +23327,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>3663ca6f086f4c8eb17f5d750ecf6887</value>
+          <value>a877a5e6592d469ebd5af51598169cb9</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -22416,7 +23534,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>79a931c49d69464b84a34abcc08a7fc3</value>
+          <value>524f48c2664b40f6b0d412143ae41c0f</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -22623,7 +23741,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>8c3dd35217cf4c92a79594fd94314885</value>
+          <value>b4cdbd8292d24231a4fc621591bc3bba</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -22830,7 +23948,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>ecf0671d916147b291876638958ae4ce</value>
+          <value>8fd358f3216f47dba8c087353e1e3148</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -23037,7 +24155,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>a8631050d08848f1a843166b7b0c6eca</value>
+          <value>711c7c587d344da8a905d0666916d041</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -23244,7 +24362,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>d371571a914845b0b2dcd75e0ad022c6</value>
+          <value>51c02debb8b64a6dbbf1a13d2e4df5e4</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -23451,7 +24569,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>7b5aa2f4825b41bf99846206092f14a5</value>
+          <value>d71ebef19f2d4b4cbcf98ebdfb32443c</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -23658,7 +24776,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>08f1ade3bf6d49029e6fc9db86cead94</value>
+          <value>5ad904d566954f31a9937a74418fcfff</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -23865,7 +24983,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>38537bfa6d58492daa6391caa2026ac2</value>
+          <value>8ea9c79c35c844f9aa505fc6f397b7a4</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -24072,7 +25190,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>da04a976bda64070a458a974acde2f3c</value>
+          <value>e26d5f983cd64456ad642c9370e2d2bf</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -24279,7 +25397,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>82c32b310fbe40f2ac70691d39ef2db8</value>
+          <value>cc475cc56a974b0698b9a9625e10feae</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -24486,7 +25604,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>764dd6fb6d054d8997b479182b362e5c</value>
+          <value>2c06e5ea9cf14006ad6b60e1988d3d90</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -24693,7 +25811,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>755d8c0267774e1e9733d2c02aaec8cc</value>
+          <value>8e1d65aa970349668d8a6738b24a5165</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -24900,7 +26018,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>f5045cb8240647d583fafcebc98f94f7</value>
+          <value>001618ae1744461b9bf14f37e91b2fe1</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -25107,7 +26225,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>65309873ceba4422bdb7ceb2ffb981c2</value>
+          <value>0a4321ea69c74614b95bd4dd473f2fc5</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -25314,7 +26432,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>8ae03666116941c69f53550a173d2fea</value>
+          <value>4f16fa98a45146da9083620ba09b0c81</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -25521,7 +26639,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>53dce7e6684c4acc88bad5a9ed69dab6</value>
+          <value>81e13a8278fb4eaf950916ba9f8b049f</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -25728,7 +26846,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>c4b373133ef04d18830e9a0ac7ea943d</value>
+          <value>480b42d4dcea458789623bb2602a6461</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -25935,7 +27053,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>c4edf4e08a3946c7b4a656cbc45b22e1</value>
+          <value>852a6750ca834b5db13d944088b2c394</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -26142,7 +27260,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>05fb42d34fd04dd2a8ed53e2f4dd5bca</value>
+          <value>3db0cfe3b5dd4d1dafa807e02c0bf47b</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -26349,7 +27467,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>29c37aecf22344a2a1a6094a3a8a652a</value>
+          <value>f88586f85489451e9450b1dcc1fc23c5</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -26556,7 +27674,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>447a2fa1f1b449e3b073e2d011faaa43</value>
+          <value>64969b2133924052ba42d9dd50e8511c</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -26763,7 +27881,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>e35c53256a0d4dd2b16e3f19c5162aa8</value>
+          <value>e5f824703d5a4d2dbb1eea94156395b2</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -26970,7 +28088,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>7be01ccacca14d5fb9be492a220ed71b</value>
+          <value>5b5035b5cbce45069ecd95d3980eb98f</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -27177,7 +28295,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>2384eda4764f4fff922fda8a7c755c5b</value>
+          <value>5c1ba826e8174e4ebfe94c27f69e8f66</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -27384,7 +28502,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>a638111608e8464594eda3b1882bc1b1</value>
+          <value>0512dcdce37d4d038d8c4bc8f09ac6d8</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -27591,7 +28709,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>c06aea248c504b7dbeace85d7d9c15ea</value>
+          <value>d114335bc7bb4340837500dddb62c098</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -27798,7 +28916,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>9e1076848b1944a896ebb0797a6b62c3</value>
+          <value>53506d168df14c3da3e1d74fbaf02f02</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -28005,7 +29123,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>ba47f9bd5cbf40cb9758517ab126beba</value>
+          <value>594d1e39f75741469e57900d283aaf14</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -28212,7 +29330,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>4193ae82328e4181a8cf62c20583f5c8</value>
+          <value>a615cf0839c14d87a0ded90e5b3c7655</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -28419,7 +29537,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>8ddac238af6c458382a4ada7307faf92</value>
+          <value>ed25c816892a470cbad9e7863211e9e9</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -28626,7 +29744,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>002623f74ce04df3a2ccf94bdd433003</value>
+          <value>a1bf816ea3bf43459f29e3d5844b60a5</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -28833,7 +29951,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>7f80c60c89784526a82f8a087f6f37d8</value>
+          <value>157e05783f9245fe8c1a4be5f9359262</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -29040,7 +30158,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>95a2a95ec9384a199f60e8b1dacc7d3b</value>
+          <value>fbd2542c41f34f088cc9c96176011a61</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -29247,7 +30365,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>b7eed156c52b411b84c659b3341b2a7f</value>
+          <value>8f2da4ec48304cb0b4f4a7cec14056c6</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -29454,7 +30572,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>bd215c0b1f69418a92b08560f469c711</value>
+          <value>17be52d6998845e1bbb6c6fd994aee5c</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -29661,7 +30779,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>ca72ee057a4e43c297ecfb22190b01c6</value>
+          <value>6f4225b404364184ae00aad8bbd4ca14</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -29868,7 +30986,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>ab5d745d9049473a887a6211dec5467c</value>
+          <value>d335d1c7f3ed4ef6b0eff2e3fc572bd7</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -30075,7 +31193,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>97f1f1c1b6d845bba0c234e9b13623d1</value>
+          <value>e6dd45696ec64a978a5ff429e2f022b7</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -30282,7 +31400,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>031b9431986f4320a631d1dc7d7c293b</value>
+          <value>796e3166a7e246e8a44acdc12b0e1aba</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -30489,7 +31607,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>6883a8588e1140fa999801833ceeee9d</value>
+          <value>954bbdd935344422b6a396adf37125f9</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -30696,7 +31814,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>69c8a44015764f9e9ae866e2f86a465d</value>
+          <value>2e3858363e3a4ff18a68f8f819ef50c3</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -30903,7 +32021,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>6a1fe742685d46689dbd307a32339fc3</value>
+          <value>39fa7e550d044262ab124b28ca8fb03c</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -31110,7 +32228,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>b6fe1bc4392f459d9456685074cdda19</value>
+          <value>bb2ee5360ed34111b7354661e4ac215f</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -31317,7 +32435,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>91e35d6869cb4f2b81fd7697171820dc</value>
+          <value>82642a844dba47e5955c4ff79462dc36</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -31524,7 +32642,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>50eb828ed98a41d18ee846cfc5a6b5a5</value>
+          <value>9ab5df7ae4484a1ea80e768cc52af699</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -31731,7 +32849,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>d0a418b9af23400c98c2f39302f4c4a0</value>
+          <value>74c0501a5e1a40c8a55406748501f40a</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -31938,7 +33056,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>fb095815057b471083c3a5bcead593ae</value>
+          <value>9a6054e7a19a4e77accbedcea94c321f</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -32145,7 +33263,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>6185181c1693419ea04e311f2c5e4759</value>
+          <value>dcb8ed05694144a8aec183081fc131a9</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -32352,7 +33470,7 @@
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>463bb9cec2444d3094bdb4779519c135</value>
+          <value>536bcbfdb872461bbde65bb115533bc4</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
