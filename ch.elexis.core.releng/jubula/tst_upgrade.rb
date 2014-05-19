@@ -9,6 +9,8 @@
 
 require 'fileutils'
 require 'open-uri'
+require 'tmpdir'
+
 begin 
   require  'zip/zip'
 rescue LoadError
@@ -22,7 +24,7 @@ end
 
 
 defaultUrl = 'https://srv.elexis.info/jenkins/job/Elexis-3.0-Core/lastSuccessfulBuild/artifact/ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp-linux.gtk.x86_64.zip'
-defaultDest = '/tmp/elexis-3.0.test'
+defaultDest = File.join(Dir.tmpdir, ENV['USERNAME'], "elexis-3.0.test")
 SavedDir = Dir.pwd
 
 def unzip_elexis_3 (file, destination)
@@ -33,17 +35,8 @@ def unzip_elexis_3 (file, destination)
   cmd ="wget --quiet --no-check-certificate --timestamping #{file}"
   puts cmd
   res = system(cmd)
-  exit(2) unless res and File.exists?(tempName)
+  exit(2) unless res or File.exists?(tempName)
 
-  if false
-  open(file) {
-    |f|
-    ausgabe = File.open(tempName, 'w+')
-    ausgabe.write f.read
-    ausgabe.close
-  } unless File.exists?(tempName) and File.size(tempName) > 1024
-  end
-  
   Zip::ZipFile.open(tempName) { |zip_file|
    zip_file.each { |f|
      f_path=File.join(destination, f.name)
