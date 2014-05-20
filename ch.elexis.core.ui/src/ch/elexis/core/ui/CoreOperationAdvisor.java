@@ -38,9 +38,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	@Override
 	public void requestDatabaseConnectionConfiguration(){
-		Display disp = new Display();
-		Shell shell = new Shell(disp);
-		WizardDialog wd = new WizardDialog(shell, new DBConnectWizard());
+		WizardDialog wd = new WizardDialog(UiDesk.getTopShell(), new DBConnectWizard());
 		wd.create();
 		SWTHelper.center(wd.getShell());
 		wd.open();
@@ -82,17 +80,16 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		String username = System.getProperty("ch.elexis.username");
 		String password = System.getProperty("ch.elexis.password");
 		if (username != null && password != null) {
-			/* Allow bypassing the login dialog, eg. for automated GUI-tests.
-			 * Example: when having a demoDB you may login directly by passing
-			 * -vmargs -Dch.elexis.username=test -Dch.elexis.password=test 
-			 * as command line parameters to elexis.
+			/*
+			 * Allow bypassing the login dialog, eg. for automated GUI-tests. Example: when having a
+			 * demoDB you may login directly by passing -vmargs -Dch.elexis.username=test
+			 * -Dch.elexis.password=test as command line parameters to elexis.
 			 */
 			log.error("Bypassing LoginDialog with username " + username);
 			if (!Anwender.login(username, password)) {
 				log.error("Authentication failed. Exiting");
 			}
-		}		
-		else {
+		} else {
 			LoginDialog dlg = new LoginDialog((Shell) shell);
 			dlg.create();
 			dlg.getShell().setText(Messages.LoginDialog_loginHeader);
@@ -101,7 +98,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 			dlg.open();
 		}
 	}
-
+	
 	@Override
 	public boolean performDatabaseUpdate(String[] array, String pluginId){
 		return new SqlWithUiRunner(array, pluginId).runSql();
