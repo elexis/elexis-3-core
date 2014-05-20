@@ -13,6 +13,8 @@
 
 package ch.elexis.core.ui.util;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -24,6 +26,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
@@ -54,6 +58,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 	protected Log log = Log.get("Import");
 	
 	/** Nur intern gebraucht; kann bei Bedarf überschrieben oder erweitert werden */
+	@Override
 	public void setInitializationData(final IConfigurationElement config,
 		final String propertyName, final Object data) throws CoreException{
 		
@@ -148,6 +153,17 @@ public abstract class ImporterPage implements IExecutableExtension {
 			lFile.setText(Messages.ImporterPage_file); //$NON-NLS-1$
 			lFile.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tFname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			tFname.addModifyListener(new ModifyListener() {
+				/** {@inheritDoc} */
+				@Override
+				public void modifyText(ModifyEvent event){
+					String filename = tFname.getText();
+					if (new File(filename).isFile()) {
+						home.results[0] = filename;
+					}
+				}
+			});
+
 			Button bFile = new Button(this, SWT.PUSH);
 			bFile.setText(Messages.ImporterPage_browse); //$NON-NLS-1$
 			// bFile.setLayoutData(SWTHelper.getFillGridData(2,true,1,false));
@@ -165,7 +181,6 @@ public abstract class ImporterPage implements IExecutableExtension {
 							"ImporterPage/" + home.getTitle() + "/filename", filename); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
-				
 			});
 			
 		}
