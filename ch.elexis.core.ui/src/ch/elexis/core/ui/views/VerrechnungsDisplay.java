@@ -161,6 +161,7 @@ public class VerrechnungsDisplay extends Composite {
 	
 	public void clear(){
 		tVerr.removeAll();
+		hVer.setText(Messages.VerrechnungsDisplay_billed + ")");
 	}
 	
 	public void addPersistentObject(PersistentObject o){
