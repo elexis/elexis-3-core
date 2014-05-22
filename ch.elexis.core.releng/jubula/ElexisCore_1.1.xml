@@ -75,36 +75,6 @@
         <uniqueId>f660a7f515b34f098c2a1daec83080b0</uniqueId>
       </parameterDescription>
       <parameterDescription>
-        <name>FAMILYNAME</name>
-        <type>java.lang.String</type>
-        <uniqueId>f660a7f515b34f098c2a1daec83080b0</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>FAMILYNAME</name>
-        <type>java.lang.String</type>
-        <uniqueId>f660a7f515b34f098c2a1daec83080b0</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>FAMILYNAME</name>
-        <type>java.lang.String</type>
-        <uniqueId>f660a7f515b34f098c2a1daec83080b0</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>GIVENNAME</name>
-        <type>java.lang.String</type>
-        <uniqueId>03c7654144c0403e83de734b4ed61d54</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>GIVENNAME</name>
-        <type>java.lang.String</type>
-        <uniqueId>03c7654144c0403e83de734b4ed61d54</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>GIVENNAME</name>
-        <type>java.lang.String</type>
-        <uniqueId>03c7654144c0403e83de734b4ed61d54</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
         <name>GIVENNAME</name>
         <type>java.lang.String</type>
         <uniqueId>03c7654144c0403e83de734b4ed61d54</uniqueId>
@@ -113,36 +83,6 @@
         <name>BIRTHDAY</name>
         <type>java.lang.String</type>
         <uniqueId>d0d9f1cfc3424c04aed8238117900614</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>BIRTHDAY</name>
-        <type>java.lang.String</type>
-        <uniqueId>d0d9f1cfc3424c04aed8238117900614</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>BIRTHDAY</name>
-        <type>java.lang.String</type>
-        <uniqueId>d0d9f1cfc3424c04aed8238117900614</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>BIRTHDAY</name>
-        <type>java.lang.String</type>
-        <uniqueId>d0d9f1cfc3424c04aed8238117900614</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>SEX</name>
-        <type>java.lang.String</type>
-        <uniqueId>4146adb611ff4f6c8058a2f0c90723cf</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>SEX</name>
-        <type>java.lang.String</type>
-        <uniqueId>4146adb611ff4f6c8058a2f0c90723cf</uniqueId>
-      </parameterDescription>
-      <parameterDescription>
-        <name>SEX</name>
-        <type>java.lang.String</type>
-        <uniqueId>4146adb611ff4f6c8058a2f0c90723cf</uniqueId>
       </parameterDescription>
       <parameterDescription>
         <name>SEX</name>
@@ -412,20 +352,6 @@
           <data columnCount="1">
             <data>
               <language>de_DE</language>
-              <value>Elexis 3 Base</value>
-            </data>
-          </data>
-          <data columnCount="2">
-            <data>
-              <language>de_DE</language>
-              <value>file:///srv/www/download.elexis.info/elexis.3.base/snapshot</value>
-            </data>
-          </data>
-        </row>
-        <row rowCount="2">
-          <data columnCount="1">
-            <data>
-              <language>de_DE</language>
               <value>Elexis 3 Core</value>
             </data>
           </data>
@@ -450,9 +376,9 @@
         <uniqueId>3fa86b926fe947bba4af5e491b9e3fd7</uniqueId>
       </parameterDescription>
     </namedTestData>
-    <aut id="ID_A_21691">
+    <aut id="ID_A_73940">
       <name>elexis</name>
-      <config id="ID_C_21849">
+      <config id="ID_C_74174">
         <name>elexis-linux@localhost</name>
         <classname/>
         <classpath/>
@@ -530,7 +456,7 @@
           <value>/opt/elexis-3-jubula-8.0/elexis-3-core/ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp/linux/gtk/x86_64</value>
         </confAttrMapEntry>
       </config>
-      <config id="ID_C_21848">
+      <config id="ID_C_74173">
         <name>elexis-tst-upgrade@localhost</name>
         <classname/>
         <classpath/>
@@ -608,7 +534,7 @@
           <value>/tmp/elexis-3.0.test/</value>
         </confAttrMapEntry>
       </config>
-      <config id="ID_C_28270">
+      <config id="ID_C_74175">
         <name>medelexis-2.1.7@localhost</name>
         <classname/>
         <classpath/>
@@ -3300,7 +3226,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -3334,7 +3259,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>cae5e081bb2b432a8ebffcd9a42bb65c</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -3359,7 +3283,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -5363,7 +5286,6 @@
               <testdata/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>3a6b624d0da44dc2993081fd57b8db17</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -5645,7 +5567,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>708ca2047d664e63bc8bcdd4beb4faa3</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -6070,7 +5991,7 @@
           <referencedTestData>PERSPECTIVES</referencedTestData>
           <teststep>
             <usedTestcase>
-              <name xsi:nil="true"/>
+              <name/>
               <comment xsi:nil="true"/>
               <GUID>064b1eae329b4b08b768ee107b946177</GUID>
               <generated>false</generated>
@@ -6093,7 +6014,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>3c8e68c1ad044bddb8efcb849e40e4cf</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -6107,7 +6027,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>5a034cd013b74493bbfbe153cfcd18d1</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -6283,7 +6202,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>5a034cd013b74493bbfbe153cfcd18d1</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -7589,7 +7507,6 @@
               <testdata/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>94631e7519c04b918fc193959ef3b9c8</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -7604,7 +7521,6 @@
               <testdata/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>95ac84524a614a9c804ee2ec535fff87</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -7619,7 +7535,6 @@
               <testdata/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>13e9ac51d71046caaf56fe9a49455c54</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -9118,7 +9033,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -9148,7 +9062,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -9284,7 +9197,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -9360,7 +9272,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -9390,7 +9301,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -9409,7 +9319,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -9474,7 +9383,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -9639,7 +9547,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>94631e7519c04b918fc193959ef3b9c8</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -9655,7 +9562,6 @@
               <datafile xsi:nil="true"/>
               <referencedTestData>FILE_REPOSITORIES</referencedTestData>
               <testcaseGuid>45545af7bfc14ce58a3e0208d8c9ac3f</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -9669,7 +9575,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>95ac84524a614a9c804ee2ec535fff87</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -9683,7 +9588,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>13e9ac51d71046caaf56fe9a49455c54</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -9976,7 +9880,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>5a034cd013b74493bbfbe153cfcd18d1</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -10365,7 +10268,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -10452,7 +10354,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -10495,7 +10396,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -10726,7 +10626,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -10745,7 +10644,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -10764,7 +10662,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>708ca2047d664e63bc8bcdd4beb4faa3</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -10894,7 +10791,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>3c8e68c1ad044bddb8efcb849e40e4cf</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -10908,7 +10804,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>5a034cd013b74493bbfbe153cfcd18d1</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -11404,7 +11299,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -11571,7 +11465,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name xsi:nil="true"/>
+              <name/>
               <comment xsi:nil="true"/>
               <GUID>26a624bbe7d34a4c80382f9e8b5acbf0</GUID>
               <generated>false</generated>
@@ -11579,7 +11473,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>708ca2047d664e63bc8bcdd4beb4faa3</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -11604,7 +11497,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -11629,7 +11521,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -11648,7 +11539,6 @@
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
@@ -11717,6 +11607,50 @@
             <datafile xsi:nil="true"/>
             <testcaseGuid>5a60331e3934472ea43be57ee246fa1f</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Visit all preferences</name>
+            <comment xsi:nil="true"/>
+            <GUID>248758863ac04562aa9692ce13d4062f</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata/>
+            <datafile xsi:nil="true"/>
+            <referencedTestData>PREFERENCES</referencedTestData>
+            <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Alle Perspektiven öffnen</name>
+            <comment xsi:nil="true"/>
+            <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <referencedTestData>PERSPECTIVES</referencedTestData>
+            <testcaseGuid>081896a0ebde4f64b918d0750b0b52fd</testcaseGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Open all Views and take a snapshot of each</name>
+            <comment xsi:nil="true"/>
+            <GUID>0374472a209d43e795adcf4df2932511</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata/>
+            <datafile xsi:nil="true"/>
+            <referencedTestData>VIEWS</referencedTestData>
+            <testcaseGuid>14e59233a8ad482baacf132dc749c6f8</testcaseGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
@@ -11827,7 +11761,6 @@
             </testdata>
             <datafile xsi:nil="true"/>
             <testcaseGuid>ae9ad522d2304e999f75afe5f6b6ae3d</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
@@ -11841,7 +11774,6 @@
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>839d2de9e6184841b2bee9277ef18442</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
@@ -11866,51 +11798,6 @@
             </testdata>
             <datafile xsi:nil="true"/>
             <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Open all Views and take a snapshot of each</name>
-            <comment xsi:nil="true"/>
-            <GUID>0374472a209d43e795adcf4df2932511</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <testdata/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>VIEWS</referencedTestData>
-            <testcaseGuid>14e59233a8ad482baacf132dc749c6f8</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Alle Perspektiven öffnen</name>
-            <comment xsi:nil="true"/>
-            <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>PERSPECTIVES</referencedTestData>
-            <testcaseGuid>081896a0ebde4f64b918d0750b0b52fd</testcaseGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Visit all preferences</name>
-            <comment xsi:nil="true"/>
-            <GUID>248758863ac04562aa9692ce13d4062f</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <testdata/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>PREFERENCES</referencedTestData>
-            <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
@@ -12665,7 +12552,6 @@
           <taskId xsi:nil="true"/>
           <datafile xsi:nil="true"/>
           <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -12732,7 +12618,6 @@
           </testdata>
           <datafile xsi:nil="true"/>
           <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -13036,7 +12921,6 @@
           <taskId xsi:nil="true"/>
           <datafile xsi:nil="true"/>
           <testcaseGuid>02f23e8fcb5f4e76858828b86d4782b4</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -13220,7 +13104,6 @@
           </testdata>
           <datafile xsi:nil="true"/>
           <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -13240,7 +13123,6 @@
           <testdata/>
           <datafile xsi:nil="true"/>
           <testcaseGuid>02f23e8fcb5f4e76858828b86d4782b4</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -13259,7 +13141,6 @@
           <taskId xsi:nil="true"/>
           <datafile xsi:nil="true"/>
           <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
-          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
           <overriddenNames>
             <propagated>false</propagated>
@@ -13331,7 +13212,7 @@
           <generated>false</generated>
           <active>true</active>
           <taskId xsi:nil="true"/>
-          <selectedAut>ID_A_21691</selectedAut>
+          <selectedAut>ID_A_73940</selectedAut>
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
@@ -13369,7 +13250,7 @@
           <generated>false</generated>
           <active>true</active>
           <taskId xsi:nil="true"/>
-          <selectedAut>ID_A_21691</selectedAut>
+          <selectedAut>ID_A_73940</selectedAut>
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
@@ -13456,7 +13337,7 @@
           <generated>false</generated>
           <active>true</active>
           <taskId xsi:nil="true"/>
-          <selectedAut>ID_A_21691</selectedAut>
+          <selectedAut>ID_A_73940</selectedAut>
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
@@ -13494,7 +13375,7 @@
           <generated>false</generated>
           <active>true</active>
           <taskId xsi:nil="true"/>
-          <selectedAut>ID_A_21691</selectedAut>
+          <selectedAut>ID_A_73940</selectedAut>
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
@@ -13506,7 +13387,6 @@
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <usedTestcase>
@@ -13518,7 +13398,6 @@
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>3c8e68c1ad044bddb8efcb849e40e4cf</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <usedTestcase>
@@ -13531,7 +13410,6 @@
             <datafile xsi:nil="true"/>
             <referencedTestData>PATIENTEN</referencedTestData>
             <testcaseGuid>ce047a9881aa42c8ad2b22bfedb96844</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <usedTestcase>
@@ -13622,11 +13500,10 @@
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>839d2de9e6184841b2bee9277ef18442</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <usedTestcase>
-            <name xsi:nil="true"/>
+            <name/>
             <comment xsi:nil="true"/>
             <GUID>8dc7a55d03a146418f8937a4d1c898f5</GUID>
             <generated>false</generated>
@@ -13634,7 +13511,6 @@
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>67b665104ad748ffbcd87eee1210e3a8</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <eventHandler>
@@ -13661,7 +13537,7 @@
           <generated>false</generated>
           <active>true</active>
           <taskId xsi:nil="true"/>
-          <selectedAut>ID_A_21691</selectedAut>
+          <selectedAut>ID_A_73940</selectedAut>
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
@@ -13673,7 +13549,6 @@
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>8475bcf04f544076b991323864c7f573</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <eventHandler>
@@ -13713,14 +13588,14 @@
     <isReusable>false</isReusable>
     <isProtected>false</isProtected>
     <reusedProjects>
-      <projectName>unbound_modules_concrete</projectName>
-      <projectGUID>8ab6b083150339b501150364afb90435</projectGUID>
+      <projectName>unbound_modules_swt</projectName>
+      <projectGUID>8a81818316dd751b0116dd75444a0001</projectGUID>
       <majorProjectVersion>8</majorProjectVersion>
       <minorProjectVersion>0</minorProjectVersion>
     </reusedProjects>
     <reusedProjects>
-      <projectName>unbound_modules_swt</projectName>
-      <projectGUID>8a81818316dd751b0116dd75444a0001</projectGUID>
+      <projectName>unbound_modules_concrete</projectName>
+      <projectGUID>8ab6b083150339b501150364afb90435</projectGUID>
       <majorProjectVersion>8</majorProjectVersion>
       <minorProjectVersion>0</minorProjectVersion>
     </reusedProjects>
