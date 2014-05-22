@@ -152,9 +152,43 @@
     </namedTestData>
     <namedTestData name="FAELLE">
       <testData>
+        <row rowCount="1">
+          <data columnCount="1">
+            <data>
+              <language>de_DE</language>
+              <value>Bernasconi</value>
+            </data>
+          </data>
+          <data columnCount="2">
+            <data>
+              <language>de_DE</language>
+              <value>KVG</value>
+            </data>
+          </data>
+          <data columnCount="3">
+            <data>
+              <language>de_DE</language>
+              <value>14.05.2014</value>
+            </data>
+          </data>
+          <data columnCount="4">
+            <data>
+              <language>de_DE</language>
+              <value>Bernasconi Erika,,</value>
+            </data>
+          </data>
+          <data columnCount="5">
+            <data>
+              <language>de_DE</language>
+              <value>13.04.2014</value>
+            </data>
+          </data>
+        </row>
         <uniqueIds>e7bffc3445984729a99ef6600bfc27af</uniqueIds>
         <uniqueIds>3b365ed4cb3b4b74b89155c42abe459a</uniqueIds>
         <uniqueIds>ea0ef256aef84818b8d0d8bc8f6098d4</uniqueIds>
+        <uniqueIds>c4e997d8653d4317933b68903a9c106f</uniqueIds>
+        <uniqueIds>450b6bd510484e1d956f742575064b9e</uniqueIds>
       </testData>
       <parameterDescription>
         <name>FAMILYNAME</name>
@@ -170,6 +204,16 @@
         <name>FALL_START_DATUM</name>
         <type>java.lang.String</type>
         <uniqueId>ea0ef256aef84818b8d0d8bc8f6098d4</uniqueId>
+      </parameterDescription>
+      <parameterDescription>
+        <name>KOSTEN_TRAEGER</name>
+        <type>java.lang.String</type>
+        <uniqueId>c4e997d8653d4317933b68903a9c106f</uniqueId>
+      </parameterDescription>
+      <parameterDescription>
+        <name>START_DATE</name>
+        <type>java.lang.String</type>
+        <uniqueId>450b6bd510484e1d956f742575064b9e</uniqueId>
       </parameterDescription>
     </namedTestData>
     <namedTestData name="GLOBAL_VARS">
@@ -858,129 +902,6 @@
           <association>
             <technicalName>
               <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Combo_1</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
-              <componentClassName>org.eclipse.swt.widgets.Link</componentClassName>
-              <supportedClassName>org.eclipse.swt.widgets.Link</supportedClassName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Link_1</hierarchyName>
-              <alternativeDisplayName>Graphics Component</alternativeDisplayName>
-            </technicalName>
-            <type xsi:nil="true"/>
-            <logicalName>09a3bd5e3d304589a1f479587b6bab49</logicalName>
-          </association>
-          <association>
-            <technicalName>
-              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Table_1</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
-              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
-              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
-              <alternativeDisplayName>Text Component</alternativeDisplayName>
-            </technicalName>
-            <type xsi:nil="true"/>
-            <logicalName>5aaeb4c535a74c5da8f39a4d24a10315</logicalName>
-          </association>
-          <association>
-            <technicalName>
-              <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Button_2</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Button_3</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Button_4</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Button_5</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Button_6</neighbour>
-              <componentClassName>org.eclipse.swt.widgets.Button</componentClassName>
-              <supportedClassName>org.eclipse.swt.widgets.Button</supportedClassName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Button_2</hierarchyName>
-              <alternativeDisplayName>Button Component ("Edit")</alternativeDisplayName>
-            </technicalName>
-            <type xsi:nil="true"/>
-            <logicalName>6ef63ffc44604748b8ad7d9b2a3d39ab</logicalName>
-          </association>
-          <association>
-            <technicalName>
-              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
-              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
-              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
-              <alternativeDisplayName>Text Component</alternativeDisplayName>
-            </technicalName>
-            <type xsi:nil="true"/>
-            <logicalName>c49a3153d0564cc5ba085cb0b64249b5</logicalName>
-          </association>
-          <association>
-            <technicalName>
-              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
-              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
-              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
-              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Text_2</hierarchyName>
-              <alternativeDisplayName>Text Component</alternativeDisplayName>
-            </technicalName>
-            <type xsi:nil="true"/>
-            <logicalName>cf54be57046b4900bf0e8fc0eb3a6fa5</logicalName>
-          </association>
-          <association>
-            <technicalName>
-              <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
-              <componentClassName>org.eclipse.swt.widgets.Button</componentClassName>
-              <supportedClassName>org.eclipse.swt.widgets.Button</supportedClassName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>dialog.button.ok</hierarchyName>
-              <alternativeDisplayName>dialog.button.ok ("OK")</alternativeDisplayName>
-            </technicalName>
-            <type xsi:nil="true"/>
-            <logicalName>a074ba6e60b9415995750892793da3cf</logicalName>
-          </association>
-          <association>
-            <technicalName>
-              <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
               <componentClassName>org.eclipse.swt.widgets.Button</componentClassName>
               <supportedClassName>org.eclipse.swt.widgets.Button</supportedClassName>
               <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
@@ -1042,6 +963,300 @@
             </technicalName>
             <type xsi:nil="true"/>
             <logicalName>2b25eee386a54739b1ff856cc4d90fc6</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.ToolItem_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolItem_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolItem_3</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.ToolItem</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.ToolItem</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.PatListView.toolbar</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.ToolItem_1</hierarchyName>
+              <alternativeDisplayName>Toolbar Item</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>4af052c234ca44918cef3e990c781328</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>ch.elexis.core.ui.selectors.SelectorPanel_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Table</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Table</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.LeistungenView</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.codesystems.CodeSelectorFactory$cPage_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Group_3</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
+              <alternativeDisplayName>Table</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>49527b4b79e54fcd9ec57c266a8c4e36</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <componentClassName>org.eclipse.swt.custom.CTabFolder</componentClassName>
+              <supportedClassName>org.eclipse.swt.custom.CTabFolder</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.LeistungenView</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <alternativeDisplayName>Tabbed Component ("Block","Eigenleistung","Eigenartikel",...)</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>e33846acf1a14066b18c6a6ac9f8913f</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Table_1</neighbour>
+              <componentClassName>org.eclipse.ui.forms.widgets.Hyperlink</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Canvas</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.Konsdetail</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.LayoutComposite_2</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.VerrechnungsDisplay_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Hyperlink_1</hierarchyName>
+              <alternativeDisplayName>Graphics Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>c822355913bf4ac2ae67ae06c0123d05</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.LeistungenView</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.codesystems.CodeSelectorFactory$cPage_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Group_3</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.selectors.SelectorPanel_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.selectors.TextField_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
+              <alternativeDisplayName>Text Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>0c1c228010fd43a38f8c120dae2bca1d</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Table</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Table</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.Konsdetail</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.LayoutComposite_2</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.VerrechnungsDisplay_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
+              <alternativeDisplayName>Table</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>d02cdf7eab904c9f8518001480ab40c6</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>ch.elexis.core.ui.util.DayDateCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Combo_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_5</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_6</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_5</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_6</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_7</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_8</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_9</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_3</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_2</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.FallDetailView</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.FallDetailBlatt2_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.ScrolledForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Form_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.LayoutComposite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Text_4</hierarchyName>
+              <alternativeDisplayName>Text Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>89d58457da7b4106802d27d08e87a492</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>ch.elexis.core.ui.util.DayDateCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Combo_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_5</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_6</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_5</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_6</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_7</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_8</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_9</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_3</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_2</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.FallDetailView</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.FallDetailBlatt2_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.ScrolledForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Form_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.LayoutComposite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Text_3</hierarchyName>
+              <alternativeDisplayName>Text Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>b1f1cf9ab15d4477a6316146012efd19</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
+              <alternativeDisplayName>Text Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>531718ab6cf64725968a844af6e7dc84</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>ch.elexis.core.ui.util.DayDateCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Combo_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_5</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_6</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_4</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
+              <componentClassName>org.eclipse.ui.forms.widgets.Hyperlink</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Canvas</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.FallDetailBlatt2_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.ScrolledForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Form_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.LayoutComposite_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Hyperlink_2</hierarchyName>
+              <alternativeDisplayName>Graphics Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>d610712300a943b08b388998e0e21683</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>ch.elexis.core.ui.util.DayDateCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Combo_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_5</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_6</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_7</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_3</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_2</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.FallDetailBlatt2_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.ScrolledForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Form_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.LayoutComposite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Text_4</hierarchyName>
+              <alternativeDisplayName>Text Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>58065158bec74dd0ae6645f25e3d44b8</logicalName>
           </association>
           <category>
             <name>Patients</name>
@@ -1520,6 +1735,132 @@
               <type xsi:nil="true"/>
               <logicalName>c7e970eb27da41a1ad1eb41a40de2019</logicalName>
             </association>
+            <association>
+              <technicalName>
+                <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Button_2</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Button_3</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Button_4</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Button_5</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Button_6</neighbour>
+                <componentClassName>org.eclipse.swt.widgets.Button</componentClassName>
+                <supportedClassName>org.eclipse.swt.widgets.Button</supportedClassName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Button_2</hierarchyName>
+                <alternativeDisplayName>Button Component ("Edit")</alternativeDisplayName>
+              </technicalName>
+              <type xsi:nil="true"/>
+              <logicalName>6ef63ffc44604748b8ad7d9b2a3d39ab</logicalName>
+            </association>
+            <association>
+              <technicalName>
+                <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Table_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+                <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+                <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
+                <alternativeDisplayName>Text Component</alternativeDisplayName>
+              </technicalName>
+              <type xsi:nil="true"/>
+              <logicalName>5aaeb4c535a74c5da8f39a4d24a10315</logicalName>
+            </association>
+            <association>
+              <technicalName>
+                <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+                <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+                <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
+                <alternativeDisplayName>Text Component</alternativeDisplayName>
+              </technicalName>
+              <type xsi:nil="true"/>
+              <logicalName>c49a3153d0564cc5ba085cb0b64249b5</logicalName>
+            </association>
+            <association>
+              <technicalName>
+                <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Combo_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+                <componentClassName>org.eclipse.swt.widgets.Link</componentClassName>
+                <supportedClassName>org.eclipse.swt.widgets.Link</supportedClassName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Link_1</hierarchyName>
+                <alternativeDisplayName>Graphics Component</alternativeDisplayName>
+              </technicalName>
+              <type xsi:nil="true"/>
+              <logicalName>09a3bd5e3d304589a1f479587b6bab49</logicalName>
+            </association>
+            <category>
+              <name>Edit-SW-Sites</name>
+              <association>
+                <technicalName>
+                  <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
+                  <componentClassName>org.eclipse.swt.widgets.Button</componentClassName>
+                  <supportedClassName>org.eclipse.swt.widgets.Button</supportedClassName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>dialog.button.ok</hierarchyName>
+                  <alternativeDisplayName>dialog.button.ok ("OK")</alternativeDisplayName>
+                </technicalName>
+                <type xsi:nil="true"/>
+                <logicalName>a074ba6e60b9415995750892793da3cf</logicalName>
+              </association>
+              <association>
+                <technicalName>
+                  <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+                  <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
+                  <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+                  <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+                  <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Text_2</hierarchyName>
+                  <alternativeDisplayName>Text Component</alternativeDisplayName>
+                </technicalName>
+                <type xsi:nil="true"/>
+                <logicalName>cf54be57046b4900bf0e8fc0eb3a6fa5</logicalName>
+              </association>
+            </category>
           </category>
           <category>
             <name>Fälle</name>
@@ -1625,58 +1966,6 @@
                 <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
                 <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
                 <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-                <hierarchyName>ch.elexis.Konsdetail.toolbar</hierarchyName>
-                <hierarchyName>org.eclipse.swt.widgets.ToolItem_1</hierarchyName>
-                <alternativeDisplayName>Toolbar Item</alternativeDisplayName>
-              </technicalName>
-              <type xsi:nil="true"/>
-              <logicalName>6ee2938cafc54bbba44699e7ae93f90d</logicalName>
-            </association>
-            <association>
-              <technicalName>
-                <neighbour>ch.elexis.core.ui.util.DayDateCombo_1</neighbour>
-                <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_1</neighbour>
-                <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_2</neighbour>
-                <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_3</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Combo_1</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Label_3</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Label_4</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Label_5</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Label_6</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Label_7</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Text_2</neighbour>
-                <neighbour>org.eclipse.swt.widgets.Text_3</neighbour>
-                <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
-                <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_2</neighbour>
-                <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
-                <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
-                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-                <hierarchyName>ch.elexis.core.ui.views.FallDetailBlatt2_1</hierarchyName>
-                <hierarchyName>org.eclipse.ui.forms.widgets.ScrolledForm_1</hierarchyName>
-                <hierarchyName>org.eclipse.ui.forms.widgets.Form_1</hierarchyName>
-                <hierarchyName>org.eclipse.ui.forms.widgets.LayoutComposite_1</hierarchyName>
-                <hierarchyName>org.eclipse.swt.widgets.Text_4</hierarchyName>
-                <alternativeDisplayName>Text Component</alternativeDisplayName>
-              </technicalName>
-              <type xsi:nil="true"/>
-              <logicalName>b3e8f1769bda493e94172ff637fe7279</logicalName>
-            </association>
-            <association>
-              <technicalName>
-                <neighbour>org.eclipse.swt.widgets.ToolItem_1</neighbour>
-                <componentClassName>org.eclipse.swt.widgets.ToolItem</componentClassName>
-                <supportedClassName>org.eclipse.swt.widgets.ToolItem</supportedClassName>
-                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
                 <hierarchyName>ch.elexis.schoebufaelle.toolbar</hierarchyName>
                 <hierarchyName>org.eclipse.swt.widgets.ToolItem_1</hierarchyName>
                 <alternativeDisplayName>Toolbar Item</alternativeDisplayName>
@@ -1721,7 +2010,7 @@
                 <alternativeDisplayName>Table</alternativeDisplayName>
               </technicalName>
               <type xsi:nil="true"/>
-              <logicalName>8ab6b08d1a4d08f3011a4d09a4930022</logicalName>
+              <logicalName>c1bb49de4f834bfe818dd640d43ce63c</logicalName>
             </association>
           </category>
           <category>
@@ -1782,6 +2071,21 @@
               <logicalName>723f730529ff485db564508caecdfde5</logicalName>
               <logicalName>b6f4d477e0954e8aba25040eb12ffea9</logicalName>
             </association>
+            <association>
+              <technicalName>
+                <neighbour>org.eclipse.swt.widgets.ToolItem_1</neighbour>
+                <componentClassName>org.eclipse.swt.widgets.ToolItem</componentClassName>
+                <supportedClassName>org.eclipse.swt.widgets.ToolItem</supportedClassName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>ch.elexis.Konsdetail.toolbar</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.ToolItem_1</hierarchyName>
+                <alternativeDisplayName>Toolbar Item</alternativeDisplayName>
+              </technicalName>
+              <type xsi:nil="true"/>
+              <logicalName>6ee2938cafc54bbba44699e7ae93f90d</logicalName>
+            </association>
           </category>
           <category>
             <name>Artikelstamm</name>
@@ -1818,12 +2122,83 @@
               <logicalName>eca93312f4ee4ffbb07a37f42bf43ef4</logicalName>
             </association>
           </category>
+          <category>
+            <name>Kontakt</name>
+            <category>
+              <name>Auswahl-Kontakt</name>
+              <association>
+                <technicalName>
+                  <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
+                  <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+                  <componentClassName>org.eclipse.swt.widgets.Table</componentClassName>
+                  <supportedClassName>org.eclipse.swt.widgets.Table</supportedClassName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
+                  <alternativeDisplayName>Table</alternativeDisplayName>
+                </technicalName>
+                <type xsi:nil="true"/>
+                <logicalName>26433d4d57f74ed093fa2d48f79be3a6</logicalName>
+              </association>
+              <association>
+                <technicalName>
+                  <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
+                  <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+                  <componentClassName>org.eclipse.swt.widgets.Table</componentClassName>
+                  <supportedClassName>org.eclipse.swt.widgets.Table</supportedClassName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
+                  <alternativeDisplayName>Table</alternativeDisplayName>
+                </technicalName>
+                <type xsi:nil="true"/>
+                <logicalName>664eb84fe99b4359b5c4e6ad4a63a91f</logicalName>
+              </association>
+              <association>
+                <technicalName>
+                  <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+                  <neighbour>org.eclipse.swt.widgets.Text_2</neighbour>
+                  <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
+                  <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_2</neighbour>
+                  <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_3</neighbour>
+                  <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+                  <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                  <hierarchyName>org.eclipse.swt.widgets.Text_2</hierarchyName>
+                  <alternativeDisplayName>Text Component</alternativeDisplayName>
+                </technicalName>
+                <type xsi:nil="true"/>
+                <logicalName>971ed2630fb14a5f8861263e895f5ef3</logicalName>
+              </association>
+            </category>
+          </category>
         </mapped>
         <unmappedComponent>
           <name>#1!unmappedlogicalGDCat#1!</name>
           <association>
             <type xsi:nil="true"/>
             <logicalName>8ab6b08d1a4d08f3011a4d09a497002c</logicalName>
+          </association>
+          <association>
+            <type xsi:nil="true"/>
+            <logicalName>8ab6b08d1a4d08f3011a4d09a4930022</logicalName>
           </association>
         </unmappedComponent>
         <unmappedTechnical>
@@ -1940,20 +2315,6 @@
               <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
               <hierarchyName>org.eclipse.swt.widgets.Tree_1</hierarchyName>
               <alternativeDisplayName>Tree</alternativeDisplayName>
-            </technicalName>
-            <type xsi:nil="true"/>
-          </association>
-          <association>
-            <technicalName>
-              <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
-              <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
-              <alternativeDisplayName>Text Component</alternativeDisplayName>
             </technicalName>
             <type xsi:nil="true"/>
           </association>
@@ -2227,6 +2588,78 @@
             </technicalName>
             <type xsi:nil="true"/>
           </association>
+          <association>
+            <technicalName>
+              <neighbour>ch.elexis.core.ui.util.DayDateCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_2</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Combo_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_5</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_6</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_7</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_4</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
+              <componentClassName>org.eclipse.ui.forms.widgets.Hyperlink</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Canvas</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.FallDetailBlatt2_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.ScrolledForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Form_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.LayoutComposite_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Hyperlink_1</hierarchyName>
+              <alternativeDisplayName>Graphics Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>ch.elexis.core.ui.util.DayDateCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_1</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_2</neighbour>
+              <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Combo_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_4</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_5</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_6</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Label_7</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_3</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_4</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
+              <componentClassName>org.eclipse.ui.forms.widgets.Hyperlink</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Canvas</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.FallDetailBlatt2_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.ScrolledForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Form_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.LayoutComposite_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Hyperlink_2</hierarchyName>
+              <alternativeDisplayName>Graphics Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+          </association>
           <category>
             <name>Abrechnung</name>
             <association>
@@ -2438,6 +2871,45 @@
               <type xsi:nil="true"/>
             </association>
           </category>
+          <category>
+            <name>Fälle</name>
+            <association>
+              <technicalName>
+                <neighbour>ch.elexis.core.ui.util.DayDateCombo_1</neighbour>
+                <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_1</neighbour>
+                <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_2</neighbour>
+                <neighbour>com.tiff.common.ui.datepicker.DatePickerCombo_3</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Combo_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Label_2</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Label_3</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Label_4</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Label_5</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Label_6</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Label_7</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Text_2</neighbour>
+                <neighbour>org.eclipse.swt.widgets.Text_3</neighbour>
+                <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
+                <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_2</neighbour>
+                <componentClassName>org.eclipse.swt.widgets.Text</componentClassName>
+                <supportedClassName>org.eclipse.swt.widgets.Text</supportedClassName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+                <hierarchyName>ch.elexis.core.ui.views.FallDetailBlatt2_1</hierarchyName>
+                <hierarchyName>org.eclipse.ui.forms.widgets.ScrolledForm_1</hierarchyName>
+                <hierarchyName>org.eclipse.ui.forms.widgets.Form_1</hierarchyName>
+                <hierarchyName>org.eclipse.ui.forms.widgets.LayoutComposite_1</hierarchyName>
+                <hierarchyName>org.eclipse.swt.widgets.Text_4</hierarchyName>
+                <alternativeDisplayName>Text Component</alternativeDisplayName>
+              </technicalName>
+              <type xsi:nil="true"/>
+            </association>
+          </category>
         </unmappedTechnical>
       </objectMapping>
       <autToolkit>com.bredexsw.guidancer.RcpToolkitPlugin</autToolkit>
@@ -2561,6 +3033,16 @@
             <type>java.lang.String</type>
             <uniqueId>a3c6bf314c42417c890fb97bea8f4a17</uniqueId>
           </parameterDescription>
+          <parameterDescription>
+            <name>KOSTEN_TRAEGER</name>
+            <type>java.lang.String</type>
+            <uniqueId>85399dfa17c942e2ac2a6bafc345f0b7</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>START_DATE</name>
+            <type>java.lang.String</type>
+            <uniqueId>6e0f46b2bfc043238463095fc10573cf</uniqueId>
+          </parameterDescription>
           <testdata>
             <row rowCount="1">
               <data columnCount="1">
@@ -2572,13 +3054,13 @@
               <data columnCount="2">
                 <data>
                   <language>de_DE</language>
-                  <value>UVG</value>
+                  <value>KVG</value>
                 </data>
               </data>
               <data columnCount="3">
                 <data>
                   <language>de_DE</language>
-                  <value>Unfall</value>
+                  <value>Fieber</value>
                 </data>
               </data>
               <data columnCount="4">
@@ -2587,11 +3069,25 @@
                   <value>Unfall # 397</value>
                 </data>
               </data>
+              <data columnCount="5">
+                <data>
+                  <language>de_DE</language>
+                  <value>Bernasconi</value>
+                </data>
+              </data>
+              <data columnCount="6">
+                <data>
+                  <language>de_DE</language>
+                  <value>14.05.2014</value>
+                </data>
+              </data>
             </row>
             <uniqueIds>9566315b203d451ea9ad9098540ed85c</uniqueIds>
             <uniqueIds>cf1c6003ceeb4fd79be4e3997a14c4ce</uniqueIds>
             <uniqueIds>41d45ad9659d483586b42afe27221c53</uniqueIds>
             <uniqueIds>a3c6bf314c42417c890fb97bea8f4a17</uniqueIds>
+            <uniqueIds>85399dfa17c942e2ac2a6bafc345f0b7</uniqueIds>
+            <uniqueIds>6e0f46b2bfc043238463095fc10573cf</uniqueIds>
           </testdata>
           <datafile xsi:nil="true"/>
           <teststep>
@@ -2662,6 +3158,52 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name>Wait for window "Neuer Fall"</name>
+              <comment xsi:nil="true"/>
+              <GUID>4ca8fd432dfb4a1db75aeb1cfad5b3c0</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>.*Neuer Fall.*</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>matches</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>100</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d9914390080</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9921d50081</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d993cef0082</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9958a40083</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083181d393b01181d98e42f007e</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Abrechnungsmethode auswählen</name>
               <comment xsi:nil="true"/>
               <GUID>b022ff035268412c83a24ce5f8eb3bef</GUID>
@@ -2679,7 +3221,7 @@
                   <data columnCount="2">
                     <data>
                       <language>de_DE</language>
-                      <value>equals</value>
+                      <value>matches</value>
                     </data>
                   </data>
                   <data columnCount="3">
@@ -2750,9 +3292,28 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Unfallnummer erfassen</name>
+              <name>Press Leistungsträger</name>
               <comment xsi:nil="true"/>
-              <GUID>e9c91884b96d4f76b1547498613b7591</GUID>
+              <GUID>a41e5a13662448c287037882b29c6701</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>d610712300a943b08b388998e0e21683</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Select Leistungsträger by family name</name>
+              <comment xsi:nil="true"/>
+              <GUID>2cc41e49165d4e66abbc89c61b916562</GUID>
               <generated>false</generated>
               <active>true</active>
               <taskId xsi:nil="true"/>
@@ -2761,7 +3322,36 @@
                   <data columnCount="1">
                     <data>
                       <language>de_DE</language>
-                      <value>=a3c6bf314c42417c890fb97bea8f4a17</value>
+                      <value>=85399dfa17c942e2ac2a6bafc345f0b7</value>
+                    </data>
+                    <data>
+                      <language>fr_CH</language>
+                      <value>=85399dfa17c942e2ac2a6bafc345f0b7</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>3299aca2f8c34734a101867d4753a3b8</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>cae5e081bb2b432a8ebffcd9a42bb65c</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Versicherungsnummer eingeben</name>
+              <comment xsi:nil="true"/>
+              <GUID>afcc0f6859cf4afea08061da1fa25185</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1234567890</value>
                     </data>
                   </data>
                 </row>
@@ -2769,11 +3359,12 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
               <overriddenNames>
                 <propagated>false</propagated>
                 <originalName>e6b18dcce2af4d559d20b91d4c512bd1</originalName>
-                <newName>b3e8f1769bda493e94172ff637fe7279</newName>
+                <newName>58065158bec74dd0ae6645f25e3d44b8</newName>
               </overriddenNames>
             </usedTestcase>
           </teststep>
@@ -2822,6 +3413,52 @@
                 <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
                 <newName>036e74a2113a46c19154d7dedadc6cf5</newName>
               </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Wait for window "Neuer Fall" to close</name>
+              <comment xsi:nil="true"/>
+              <GUID>77a2a20a312e4874b4814889f620528e</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>.*Neuer Fall.*</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>matches</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>100</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181d9e514b0091</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9e5ef70092</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9e7e460093</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d9ead360094</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <interfaceLocked>false</interfaceLocked>
@@ -6640,6 +7277,117 @@
           </eventTestcase>
           <interfaceLocked>false</interfaceLocked>
         </testcase>
+        <testcase>
+          <name>Select topLeft cell</name>
+          <comment xsi:nil="true"/>
+          <GUID>02f23e8fcb5f4e76858828b86d4782b4</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata/>
+          <datafile xsi:nil="true"/>
+          <teststep>
+            <usedTestcase>
+              <name>Select topLeft cell</name>
+              <comment xsi:nil="true"/>
+              <GUID>82dd1a54f1334805a4c3025ecfc87824</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                  <data columnCount="5">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                  <data columnCount="6">
+                    <data>
+                      <language>de_DE</language>
+                      <value>50</value>
+                    </data>
+                  </data>
+                  <data columnCount="7">
+                    <data>
+                      <language>de_DE</language>
+                      <value>percent</value>
+                    </data>
+                  </data>
+                  <data columnCount="8">
+                    <data>
+                      <language>de_DE</language>
+                      <value>50</value>
+                    </data>
+                  </data>
+                  <data columnCount="9">
+                    <data>
+                      <language>de_DE</language>
+                      <value>percent</value>
+                    </data>
+                  </data>
+                  <data columnCount="10">
+                    <data>
+                      <language>de_DE</language>
+                      <value>no</value>
+                    </data>
+                  </data>
+                  <data columnCount="11">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b08d294519bd012945fe33be0b4a</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945fe77030b4b</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945fe81170b4c</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945fe9baa0b4d</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945fec5a40b4e</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945feebdf0b4f</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945feff520b50</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945ff18a40b51</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945ff2b4f0b52</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945ff44160b53</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945ff5ec10b54</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b08d294519bd012945fd786a0acb</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>true</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4940024</originalName>
+                <newName>8ab6b08d1a4d08f3011a4d09a4940024</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <interfaceLocked>false</interfaceLocked>
+        </testcase>
       </category>
       <category>
         <name>SW_Installation</name>
@@ -9290,7 +10038,7 @@
               <overriddenNames>
                 <propagated>false</propagated>
                 <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
-                <newName>ad1edac2cbaf44b9b5a06bc782d75db8</newName>
+                <newName>4af052c234ca44918cef3e990c781328</newName>
               </overriddenNames>
             </usedTestcase>
           </teststep>
@@ -9598,6 +10346,31 @@
           <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>eff3a19d657e48809a44205f8bcc3fa1</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>screenshots/Kons_erfassen_start.png</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Konsfenster auswählen</name>
               <comment xsi:nil="true"/>
               <GUID>abe7df239f384c6582a8965c472ffcb5</GUID>
@@ -9609,13 +10382,13 @@
                   <data columnCount="1">
                     <data>
                       <language>de_DE</language>
-                      <value>'*Konsultation'</value>
+                      <value>.*Konsultation.*</value>
                     </data>
                   </data>
                   <data columnCount="2">
                     <data>
                       <language>de_DE</language>
-                      <value>equals</value>
+                      <value>matches</value>
                     </data>
                   </data>
                 </row>
@@ -9635,7 +10408,57 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Click Fall erfassen</name>
+              <name>Warte, bis sich Elexis beruhigt hat. Wäre schoen wenn wir den Patientenamen sehen würden</name>
+              <comment xsi:nil="true"/>
+              <GUID>7078df88384645c0b87d611041d477f4</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>4ceeb6d473ec4baea3457459b381883d</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>screenshots/Kons_create_tbi_pressed.png</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Click Neue Kons erstellen</name>
               <comment xsi:nil="true"/>
               <GUID>3894adc098a047bbaab1ee5518830667</GUID>
               <generated>false</generated>
@@ -9649,6 +10472,31 @@
                 <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
                 <newName>6ee2938cafc54bbba44699e7ae93f90d</newName>
               </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>1c92378114d544de98585315becb2f1c</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>screenshots/Kons_should_have_created_kons.png</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -9822,48 +10670,102 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name/>
+              <name>Wait for freitext</name>
               <comment xsi:nil="true"/>
-              <GUID>4d1e63b614264c11814b936fff8c6b43</GUID>
+              <GUID>69d188b30ba244b1aa183091966910db</GUID>
               <generated>false</generated>
-              <active>false</active>
+              <active>true</active>
               <taskId xsi:nil="true"/>
               <testdata>
                 <row rowCount="1">
                   <data columnCount="1">
                     <data>
                       <language>de_DE</language>
-                      <value>""</value>
-                    </data>
-                  </data>
-                  <data columnCount="2">
-                    <data>
-                      <language>de_DE</language>
-                      <value>equals</value>
-                    </data>
-                  </data>
-                  <data columnCount="3">
-                    <data>
-                      <language>de_DE</language>
                       <value>1000</value>
                     </data>
                   </data>
-                  <data columnCount="4">
+                  <data columnCount="2">
                     <data>
                       <language>de_DE</language>
                       <value>100</value>
                     </data>
                   </data>
                 </row>
-                <uniqueIds>8ab6b083181d393b01181d9914390080</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d9921d50081</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d993cef0082</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d9958a40083</uniqueIds>
+                <uniqueIds>8ab6b083181dc1bc01181dc3c5fb0003</uniqueIds>
+                <uniqueIds>8ab6b083181dc1bc01181dc3dbc50004</uniqueIds>
               </testdata>
               <datafile xsi:nil="true"/>
-              <testcaseGuid>8ab6b083181d393b01181d98e42f007e</testcaseGuid>
+              <testcaseGuid>8ab6b083150339b501150364aff708ea</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>531718ab6cf64725968a844af6e7dc84</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Enter freitext diagnose</name>
+              <comment xsi:nil="true"/>
+              <GUID>c1aa5f8acd27467ba617ed412d703be9</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Moliere: un malade imaginaire (Jubula hat UTF-8 nicht so gernre)</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>660f12dd04cb4728ab2cc352d6db702c</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>e6b18dcce2af4d559d20b91d4c512bd1</originalName>
+                <newName>531718ab6cf64725968a844af6e7dc84</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Press okay</name>
+              <comment xsi:nil="true"/>
+              <GUID>9d3577b29fb34839b23ecd83d40026f1</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>2ba2ec4023294b0fbdbf09d7bde14e74</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Wait for Freitext window to close</name>
+              <comment xsi:nil="true"/>
+              <GUID>e8edf4a73f3f4fb18f3447f43f07f61f</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>708ca2047d664e63bc8bcdd4beb4faa3</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -9872,7 +10774,7 @@
               <comment xsi:nil="true"/>
               <GUID>8fb2b4e455de4ce0b74b79d439d73ead</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
@@ -9890,7 +10792,7 @@
               <comment xsi:nil="true"/>
               <GUID>76a723dd50024daea5cc0fc312613124</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <taskId xsi:nil="true"/>
               <testdata>
                 <row rowCount="1">
@@ -10208,6 +11110,31 @@
                 <originalName>8ab6b08d1a4d08f3011a4d09a497002b</originalName>
                 <newName>e9512a54cf3440858cdafa802938db58</newName>
               </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Loose a second to be on the safe side</name>
+              <comment xsi:nil="true"/>
+              <GUID>977b278942e14d13b361834cabcd085a</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -10794,22 +11721,6 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name>Open all Views and take a snapshot of each</name>
-            <comment xsi:nil="true"/>
-            <GUID>0374472a209d43e795adcf4df2932511</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <testdata/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>VIEWS</referencedTestData>
-            <testcaseGuid>14e59233a8ad482baacf132dc749c6f8</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
             <name>Artikelstamm importieren</name>
             <comment xsi:nil="true"/>
             <GUID>c2ea4cf1f45043a78a74463a903a85ec</GUID>
@@ -10819,35 +11730,6 @@
             <datafile xsi:nil="true"/>
             <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Alle Perspektiven öffnen</name>
-            <comment xsi:nil="true"/>
-            <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>PERSPECTIVES</referencedTestData>
-            <testcaseGuid>081896a0ebde4f64b918d0750b0b52fd</testcaseGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Visit all preferences</name>
-            <comment xsi:nil="true"/>
-            <GUID>248758863ac04562aa9692ce13d4062f</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <testdata/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>PREFERENCES</referencedTestData>
-            <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
@@ -10899,15 +11781,68 @@
                     <value>Unfall Nummer 27</value>
                   </data>
                 </data>
+                <data columnCount="5">
+                  <data>
+                    <language>de_DE</language>
+                    <value>Bernasconi Erika,,</value>
+                  </data>
+                </data>
+                <data columnCount="6">
+                  <data>
+                    <language>de_DE</language>
+                    <value>1.4.2014</value>
+                  </data>
+                </data>
               </row>
               <uniqueIds>9566315b203d451ea9ad9098540ed85c</uniqueIds>
               <uniqueIds>cf1c6003ceeb4fd79be4e3997a14c4ce</uniqueIds>
               <uniqueIds>41d45ad9659d483586b42afe27221c53</uniqueIds>
               <uniqueIds>a3c6bf314c42417c890fb97bea8f4a17</uniqueIds>
+              <uniqueIds>85399dfa17c942e2ac2a6bafc345f0b7</uniqueIds>
+              <uniqueIds>6e0f46b2bfc043238463095fc10573cf</uniqueIds>
             </testdata>
             <datafile xsi:nil="true"/>
             <testcaseGuid>31e5391fe47245138f466b8e9e8ef398</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Kons erfassen (only one patient)</name>
+            <comment xsi:nil="true"/>
+            <GUID>4fb93beaefc04375879f1951d747d5b0</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata>
+              <row rowCount="1">
+                <data columnCount="1">
+                  <data>
+                    <language>de_DE</language>
+                    <value>Niklaus ist nicht gut in der medizischen Diagnose.</value>
+                  </data>
+                </data>
+              </row>
+              <uniqueIds>83001c4d2b1348558832fdd7471850a3</uniqueIds>
+            </testdata>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>ae9ad522d2304e999f75afe5f6b6ae3d</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Patient receives a drug</name>
+            <comment xsi:nil="true"/>
+            <GUID>38831514375c43bba5777f1ba059dd4f</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>839d2de9e6184841b2bee9277ef18442</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
@@ -10931,6 +11866,51 @@
             </testdata>
             <datafile xsi:nil="true"/>
             <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Open all Views and take a snapshot of each</name>
+            <comment xsi:nil="true"/>
+            <GUID>0374472a209d43e795adcf4df2932511</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata/>
+            <datafile xsi:nil="true"/>
+            <referencedTestData>VIEWS</referencedTestData>
+            <testcaseGuid>14e59233a8ad482baacf132dc749c6f8</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Alle Perspektiven öffnen</name>
+            <comment xsi:nil="true"/>
+            <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <referencedTestData>PERSPECTIVES</referencedTestData>
+            <testcaseGuid>081896a0ebde4f64b918d0750b0b52fd</testcaseGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Visit all preferences</name>
+            <comment xsi:nil="true"/>
+            <GUID>248758863ac04562aa9692ce13d4062f</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata/>
+            <datafile xsi:nil="true"/>
+            <referencedTestData>PREFERENCES</referencedTestData>
+            <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
@@ -11651,6 +12631,691 @@
         <interfaceLocked>false</interfaceLocked>
       </testcase>
     </category>
+    <testcase>
+      <name>Medikament hinzufügen</name>
+      <comment xsi:nil="true"/>
+      <GUID>839d2de9e6184841b2bee9277ef18442</GUID>
+      <generated>false</generated>
+      <active>true</active>
+      <taskId xsi:nil="true"/>
+      <parameterDescription>
+        <name>NAME</name>
+        <type>java.lang.String</type>
+        <uniqueId>e642f62d4ca44c68a9f0f21d74608177</uniqueId>
+      </parameterDescription>
+      <testdata>
+        <row rowCount="1">
+          <data columnCount="1">
+            <data>
+              <language>de_DE</language>
+              <value>Aspirin</value>
+            </data>
+          </data>
+        </row>
+        <uniqueIds>e642f62d4ca44c68a9f0f21d74608177</uniqueIds>
+      </testdata>
+      <datafile xsi:nil="true"/>
+      <teststep>
+        <usedTestcase>
+          <name>Click "Verrechnung"</name>
+          <comment xsi:nil="true"/>
+          <GUID>3127a6cc7f72448a9c347ace149a3ca8</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>c822355913bf4ac2ae67ae06c0123d05</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Select tab "Artikelstamm"</name>
+          <comment xsi:nil="true"/>
+          <GUID>f430274296364b3195f95d4ce8aecc84</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Artikelstamm</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>equals</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083154b8c1601154b91d20f012f</uniqueIds>
+            <uniqueIds>8ab6b083181dc1bc01181dcfdd7f0019</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364b007098c</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a497002b</originalName>
+            <newName>e33846acf1a14066b18c6a6ac9f8913f</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Leistungsbezeichnung ausfüllen</name>
+          <comment xsi:nil="true"/>
+          <GUID>e8f5dca069a347bcbfe022f668ee36fd</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>=e642f62d4ca44c68a9f0f21d74608177</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>660f12dd04cb4728ab2cc352d6db702c</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>e6b18dcce2af4d559d20b91d4c512bd1</originalName>
+            <newName>0c1c228010fd43a38f8c120dae2bca1d</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Select top cell</name>
+          <comment xsi:nil="true"/>
+          <GUID>86c60ce7b68d44028561e4d6bfe14bde</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>equals</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>equals</value>
+                </data>
+              </data>
+              <data columnCount="5">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+              <data columnCount="6">
+                <data>
+                  <language>de_DE</language>
+                  <value>50</value>
+                </data>
+              </data>
+              <data columnCount="7">
+                <data>
+                  <language>de_DE</language>
+                  <value>percent</value>
+                </data>
+              </data>
+              <data columnCount="8">
+                <data>
+                  <language>de_DE</language>
+                  <value>50</value>
+                </data>
+              </data>
+              <data columnCount="9">
+                <data>
+                  <language>de_DE</language>
+                  <value>percent</value>
+                </data>
+              </data>
+              <data columnCount="10">
+                <data>
+                  <language>de_DE</language>
+                  <value>no</value>
+                </data>
+              </data>
+              <data columnCount="11">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b08d294519bd012945fe33be0b4a</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945fe77030b4b</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945fe81170b4c</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945fe9baa0b4d</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945fec5a40b4e</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945feebdf0b4f</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945feff520b50</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945ff18a40b51</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945ff2b4f0b52</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945ff44160b53</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945ff5ec10b54</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b08d294519bd012945fd786a0acb</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4940024</originalName>
+            <newName>49527b4b79e54fcd9ec57c266a8c4e36</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Drag first cell</name>
+          <comment xsi:nil="true"/>
+          <GUID>b216bb1444804838a662d9505c480b8f</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b08d294519bd012945da2cbd0717</uniqueIds>
+            <uniqueIds>8ab6b08d294519bd012945da7a7d0718</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b08d294519bd012945d9811f0715</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4940024</originalName>
+            <newName>49527b4b79e54fcd9ec57c266a8c4e36</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Drop middle of verrechnung</name>
+          <comment xsi:nil="true"/>
+          <GUID>c75f2a1721304306b9d88e1bfa7c1fd8</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>50</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>percent</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>50</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>percent</value>
+                </data>
+              </data>
+              <data columnCount="5">
+                <data>
+                  <language>de_DE</language>
+                  <value>500</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b0831b4af515011b4b0ede51000b</uniqueIds>
+            <uniqueIds>8ab6b0831b4af515011b4b0efca7000c</uniqueIds>
+            <uniqueIds>8ab6b0831b4af515011b4b0f0e89000d</uniqueIds>
+            <uniqueIds>8ab6b0831b4af515011b4b0f29a2000e</uniqueIds>
+            <uniqueIds>8ab6b0831b4af515011b4b0f5825000f</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b0831b4af515011b4b0e0f980009</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>d02cdf7eab904c9f8518001480ab40c6</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <interfaceLocked>false</interfaceLocked>
+    </testcase>
+    <testcase>
+      <name>Ersten Fall verrechnen</name>
+      <comment xsi:nil="true"/>
+      <GUID>67b665104ad748ffbcd87eee1210e3a8</GUID>
+      <generated>false</generated>
+      <active>true</active>
+      <taskId xsi:nil="true"/>
+      <testdata/>
+      <datafile xsi:nil="true"/>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>bf130822371346c792cea91799da91bf</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>50</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>percent</value>
+                </data>
+              </data>
+              <data columnCount="5">
+                <data>
+                  <language>de_DE</language>
+                  <value>50</value>
+                </data>
+              </data>
+              <data columnCount="6">
+                <data>
+                  <language>de_DE</language>
+                  <value>percent</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083181d393b01181dbe75b500c5</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181dbe8c2b00c6</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181dbe9cd500c7</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181dbeb82d00c8</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181dbec8a700c9</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181dbedeb000ca</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083181d393b01181dbe268c00c3</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>c1bb49de4f834bfe818dd640d43ce63c</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>f73a4ec50e7747808bb73ef7a68c6b9c</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364afe807d9</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>0fad4ef8af17461c9d55849f8db7c3e7</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>02f23e8fcb5f4e76858828b86d4782b4</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4940024</originalName>
+            <newName>c1bb49de4f834bfe818dd640d43ce63c</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>9a776816ef534c55a65b8ca7a944c6b3</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Rechnung.*</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>3</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>matches</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b08324478f5b01244839687a0075</uniqueIds>
+            <uniqueIds>8ab6b08324478f5b0124483987410076</uniqueIds>
+            <uniqueIds>8ab6b08324478f5b0124487c95120084</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b08324478f5b01244836b703006e</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>c1bb49de4f834bfe818dd640d43ce63c</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>32ca503d1dbb419fbf3500a7139efd92</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>.*Rechnung.*</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>matches</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>1000</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>100</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083181d393b01181d9914390080</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d9921d50081</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d993cef0082</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d9958a40083</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083181d393b01181d98e42f007e</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <interfaceLocked>false</interfaceLocked>
+    </testcase>
+    <testcase>
+      <name>Kontakt_Auswahl_by_Familyname</name>
+      <comment xsi:nil="true"/>
+      <GUID>cae5e081bb2b432a8ebffcd9a42bb65c</GUID>
+      <generated>false</generated>
+      <active>true</active>
+      <taskId xsi:nil="true"/>
+      <parameterDescription>
+        <name>KOSTEN_TRAEGER</name>
+        <type>java.lang.String</type>
+        <uniqueId>3299aca2f8c34734a101867d4753a3b8</uniqueId>
+      </parameterDescription>
+      <testdata>
+        <uniqueIds>3299aca2f8c34734a101867d4753a3b8</uniqueIds>
+      </testdata>
+      <datafile xsi:nil="true"/>
+      <teststep>
+        <usedTestcase>
+          <name>Wait for "Kontakt auswählen" window</name>
+          <comment xsi:nil="true"/>
+          <GUID>e5970af9daff463f9b1cfa6236d171ed</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Kontakt ausw.*</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>matches</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>1000</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>100</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083181d393b01181d9914390080</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d9921d50081</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d993cef0082</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d9958a40083</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083181d393b01181d98e42f007e</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Enter Familie name in contact chooser</name>
+          <comment xsi:nil="true"/>
+          <GUID>b193c401262f4ae8bc76e70762b749a4</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>=3299aca2f8c34734a101867d4753a3b8</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>660f12dd04cb4728ab2cc352d6db702c</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>e6b18dcce2af4d559d20b91d4c512bd1</originalName>
+            <newName>971ed2630fb14a5f8861263e895f5ef3</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Select top left contact</name>
+          <comment xsi:nil="true"/>
+          <GUID>7a884a8e113d4ab994f23927a46c1fbd</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>02f23e8fcb5f4e76858828b86d4782b4</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4940024</originalName>
+            <newName>664eb84fe99b4359b5c4e6ad4a63a91f</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Press okay</name>
+          <comment xsi:nil="true"/>
+          <GUID>219430da5c7f4eb2a85732fd22c0b6a9</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>6eecedca95a4444cbb3c67641f93493d</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Wait for "Kontakt auswählen" window to close</name>
+          <comment xsi:nil="true"/>
+          <GUID>5348abdd6f1741dd9e03ae5d8c3e2f7e</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Kontakt ausw.*</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>matches</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>1000</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>100</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083181d393b01181d9e514b0091</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d9e5ef70092</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d9e7e460093</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d9ead360094</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <interfaceLocked>false</interfaceLocked>
+    </testcase>
     <execCategories>
       <category>
         <name>Test Suites</name>
@@ -11833,11 +13498,23 @@
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
+            <name/>
+            <comment xsi:nil="true"/>
+            <GUID>f016be4a75ad4cd188150f5187161d23</GUID>
+            <generated>false</generated>
+            <active>false</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+          <usedTestcase>
             <name>Open default perspective</name>
             <comment xsi:nil="true"/>
             <GUID>6077d0390cf84c94bb27b9ac786f0e91</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>3c8e68c1ad044bddb8efcb849e40e4cf</testcaseGuid>
@@ -11849,27 +13526,13 @@
             <comment xsi:nil="true"/>
             <GUID>425d30fb145e47f4a9ff98aef83ca364</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <referencedTestData>PATIENTEN</referencedTestData>
             <testcaseGuid>ce047a9881aa42c8ad2b22bfedb96844</testcaseGuid>
             <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-          <usedTestcase>
-            <name/>
-            <comment xsi:nil="true"/>
-            <GUID>0f596e67ebcc4ffd97af5062f845f6d3</GUID>
-            <generated>false</generated>
-            <active>false</active>
-            <taskId xsi:nil="true"/>
-            <testdata/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>VIEWS</referencedTestData>
-            <testcaseGuid>14e59233a8ad482baacf132dc749c6f8</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
           <usedTestcase>
             <name/>
@@ -11889,7 +13552,7 @@
                 <data columnCount="2">
                   <data>
                     <language>de_DE</language>
-                    <value>UVG</value>
+                    <value>KVG</value>
                   </data>
                 </data>
                 <data columnCount="3">
@@ -11904,27 +13567,29 @@
                     <value>Unfall 377</value>
                   </data>
                 </data>
+                <data columnCount="5">
+                  <data>
+                    <language>de_DE</language>
+                    <value>Bernasconi</value>
+                  </data>
+                </data>
+                <data columnCount="6">
+                  <data>
+                    <language>de_DE</language>
+                    <value>9.5.2014</value>
+                  </data>
+                </data>
               </row>
               <uniqueIds>9566315b203d451ea9ad9098540ed85c</uniqueIds>
               <uniqueIds>cf1c6003ceeb4fd79be4e3997a14c4ce</uniqueIds>
               <uniqueIds>41d45ad9659d483586b42afe27221c53</uniqueIds>
               <uniqueIds>a3c6bf314c42417c890fb97bea8f4a17</uniqueIds>
+              <uniqueIds>85399dfa17c942e2ac2a6bafc345f0b7</uniqueIds>
+              <uniqueIds>6e0f46b2bfc043238463095fc10573cf</uniqueIds>
             </testdata>
             <datafile xsi:nil="true"/>
             <testcaseGuid>31e5391fe47245138f466b8e9e8ef398</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-          <usedTestcase>
-            <name/>
-            <comment xsi:nil="true"/>
-            <GUID>901cb1544db64f5d9ddfb9f21fbaec25</GUID>
-            <generated>false</generated>
-            <active>false</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <usedTestcase>
             <name/>
@@ -11947,6 +13612,30 @@
             <datafile xsi:nil="true"/>
             <testcaseGuid>ae9ad522d2304e999f75afe5f6b6ae3d</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+          <usedTestcase>
+            <name/>
+            <comment xsi:nil="true"/>
+            <GUID>5f16db9ee5604fd6bc2c06eb5ab2c29d</GUID>
+            <generated>false</generated>
+            <active>false</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>839d2de9e6184841b2bee9277ef18442</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+          <usedTestcase>
+            <name xsi:nil="true"/>
+            <comment xsi:nil="true"/>
+            <GUID>8dc7a55d03a146418f8937a4d1c898f5</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>67b665104ad748ffbcd87eee1210e3a8</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <eventHandler>
             <event>TestErrorEvent.Config</event>
@@ -12102,6 +13791,13 @@
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
+      <GUID>0c1c228010fd43a38f8c120dae2bca1d</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Leistungen_Bezeichnungs_txt</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.TextComponent</compType>
       <GUID>0db9bf4449c24fada7e8dc9cfe93d7ec</GUID>
       <creationContext>STEP</creationContext>
       <refGuid xsi:nil="true"/>
@@ -12127,6 +13823,13 @@
       <creationContext>STEP</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Elexis300a201405181557_Artikelstamm_ToolItem_2_tbi</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>136e5ac4a1e64e2fb9d2a995913f6005</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Kontakt_Auswahl_Familyname</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
@@ -12171,6 +13874,13 @@
       <compName>NeuerFall_Button_Datum_btn</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.Table</compType>
+      <GUID>26433d4d57f74ed093fa2d48f79be3a6</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Kontaktauswählen_Table_1_tbl</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.concrete.Button</compType>
       <GUID>273ab17ffc8c4799bced2462265e6c6f</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
@@ -12190,6 +13900,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>SW_update_select_all_btn</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>2a1a9f0d9f46481fa7cfb97a48bd07bd</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Leistungen_Tab_Artikelstamm</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
@@ -12283,6 +14000,13 @@
       <compName>Irgendein_txf</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>3b642995843e42daba88b3695de617d1</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Kontakt_Auswahl_Okay_btn</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.concrete.Button</compType>
       <GUID>3cd0b6cda2a1498c8a9e355a521271f3</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
@@ -12312,10 +14036,24 @@
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
+      <GUID>4161dd690d9b4181a4d65c21452d2f2b</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Kons_Freitext_okay_btn</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
       <GUID>417024c58ac443e7941fae7de4b270c8</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Fall_NeuenFall_erzeugen_grc</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>42c74cb4e46047d48d1c80dd2811f8f0</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Artikelstamm_Alle_Table</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.TabbedPane</compType>
@@ -12339,11 +14077,39 @@
       <compName>Elexis300qualifier00724_Patientenübersicht_tbi</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.Table</compType>
+      <GUID>49527b4b79e54fcd9ec57c266a8c4e36</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Artikelstamm_Alle_Table_1_tbl</compName>
+    </componentNames>
+    <componentNames>
+      <compType>org.eclipse.swt.widgets.ToolItem</compType>
+      <GUID>4af052c234ca44918cef3e990c781328</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Patient_create_tbi</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>4d3d560b1d1149fcb58fb4c4f859a7d3</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Kontact_Auwahl_tbl</compName>
+    </componentNames>
+    <componentNames>
       <compType>org.eclipse.swt.widgets.Tree</compType>
       <GUID>511e8694a0b54b97a4a4f311378859e8</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>ShowView_ViewTree_grc</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.TextComponent</compType>
+      <GUID>531718ab6cf64725968a844af6e7dc84</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Kons_Freitext_txt</compName>
     </componentNames>
     <componentNames>
       <compType>org.eclipse.swt.widgets.ToolItem</compType>
@@ -12365,6 +14131,13 @@
       <creationContext>STEP</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Elexis300qualifier00721_Icpc_Alle_Tree_1_tre</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.TextComponent</compType>
+      <GUID>58065158bec74dd0ae6645f25e3d44b8</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>NeuerFall_Versicherungs_Nummer_txf</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
@@ -12416,6 +14189,13 @@
       <compName>Elexis300qualifier00711_NeuerFall_Button_1_btn</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.Table</compType>
+      <GUID>664eb84fe99b4359b5c4e6ad4a63a91f</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Kontaktauswählen_Table_2_tbl</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>6e18698e04af4bd48bb1a16c9d1e3972</GUID>
       <creationContext>STEP</creationContext>
@@ -12427,7 +14207,7 @@
       <GUID>6ee2938cafc54bbba44699e7ae93f90d</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
-      <compName>tbi_fall_erfassen</compName>
+      <compName>Kons_create_tbi</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
@@ -12514,6 +14294,13 @@
       <compName>Elexis300v201403110959_Install_Cancel_btn</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.TextComponent</compType>
+      <GUID>89d58457da7b4106802d27d08e87a492</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>NeuerFall_Versichertennummer_txf</compName>
+    </componentNames>
+    <componentNames>
       <compType>org.eclipse.swt.widgets.ToolItem</compType>
       <GUID>8cb0001ccf6449ccbc2b4617d69531da</GUID>
       <creationContext>STEP</creationContext>
@@ -12561,6 +14348,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>kons_text</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.TextComponent</compType>
+      <GUID>971ed2630fb14a5f8861263e895f5ef3</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Kontaktauswählen_Text_txf</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
@@ -12654,6 +14448,13 @@
       <compName>Elexis300qualifier00717_ToolItem_1_tbi</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.TextComponent</compType>
+      <GUID>b1f1cf9ab15d4477a6316146012efd19</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>NeuerFall_Kostentraeger_txt</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.concrete.Button</compType>
       <GUID>b1ff0749760849e3b90070794ad79226</GUID>
       <creationContext>STEP</creationContext>
@@ -12661,7 +14462,7 @@
       <compName>Elexis300a201405151339_Install_Cancel_btn_1</compName>
     </componentNames>
     <componentNames>
-      <compType>guidancer.concrete.TextComponent</compType>
+      <compType>guidancer.abstract.TextInputSupport</compType>
       <GUID>b3e8f1769bda493e94172ff637fe7279</GUID>
       <creationContext>STEP</creationContext>
       <refGuid xsi:nil="true"/>
@@ -12680,6 +14481,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Patienten_SelectName_grc</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>b7a3430bfbd24f97b591be3134386171</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300qualifier0072_Table_1_tbl</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
@@ -12731,6 +14539,13 @@
       <compName>SW_Install_Next_btn</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.Table</compType>
+      <GUID>c1bb49de4f834bfe818dd640d43ce63c</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Cases_Table_1_tbl</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.concrete.Button</compType>
       <GUID>c3a806497ef5448e84e234271fb3fa91</GUID>
       <creationContext>STEP</creationContext>
@@ -12752,11 +14567,32 @@
       <compName>SW_update_information</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>c822355913bf4ac2ae67ae06c0123d05</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Kons_Verrechnung_grc</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
       <GUID>cf54be57046b4900bf0e8fc0eb3a6fa5</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>SW_Edit_Site_P2_URL</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.Table</compType>
+      <GUID>d02cdf7eab904c9f8518001480ab40c6</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Kons_Verrechnung_table</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>d059d4ac6a4e42dbb075a526669a9d6b</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300qualifier0071_Table_1_tbl</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
@@ -12785,6 +14621,13 @@
       <creationContext>STEP</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Elexis300qualifier00732_TICode_Alle_Tree_1_tre</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>d610712300a943b08b388998e0e21683</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>NeuerFall_Kostentrager_btn</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
@@ -12822,7 +14665,7 @@
       <compName>OpenPerspective_OkButton_grc</compName>
     </componentNames>
     <componentNames>
-      <compType>guidancer.abstract.Widget</compType>
+      <compType>guidancer.concrete.TabbedPane</compType>
       <GUID>e33846acf1a14066b18c6a6ac9f8913f</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
