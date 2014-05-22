@@ -50,6 +50,13 @@ It requires a realisation of the AbstractReferenceDataImporter class.
 
    <element name="importer">
       <complexType>
+       <attribute name="referenceDataId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The ID of the reference data type this importer is responsible for. E.g. &quot;tarmed&quot; or &quot;artikelstamm_pharma&quot; is used to uniquely identify the correct importers.
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>

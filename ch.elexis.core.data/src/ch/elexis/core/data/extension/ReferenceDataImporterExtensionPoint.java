@@ -1,31 +1,24 @@
 package ch.elexis.core.data.extension;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.RegistryFactory;
-import org.eclipse.core.runtime.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.AbstractReferenceDataImporter;
+import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.jdt.Nullable;
 
 /**
  * This class offers a centralized contact point for reference data imports. It forwards the update
  * to the appropriate importer. This update forwarding effects all importers included as
  * ExtensionPoint {@code ch.elexis.core.data.referenceDataImporter} and extending the
  * {@link AbstractReferenceDataImporter} class
- * 
- * @author Lucia
  *
  */
 public class ReferenceDataImporterExtensionPoint {
@@ -33,8 +26,8 @@ public class ReferenceDataImporterExtensionPoint {
 		.getName());
 	
 	private static final String CLASS_PROPERTY = "class";
-	private static List<AbstractReferenceDataImporter> importers;
-	private static ReferenceDataImporterExtensionPoint instance = null;
+	private static final String ATTRIBUTE_REFDATA_ID = "referenceDataId";
+	private static HashMap<String, AbstractReferenceDataImporter> importers;
 	
 	/**
 	 * loads all ExtensionPoints of type {@code ExtensionPointConstantsData.REFERENCE_DATA_IMPORTER}
@@ -42,7 +35,7 @@ public class ReferenceDataImporterExtensionPoint {
 	 */
 	private ReferenceDataImporterExtensionPoint(){
 		try {
-			importers = new ArrayList<AbstractReferenceDataImporter>();
+			importers = new HashMap<String,AbstractReferenceDataImporter>();
 			
 			// load reference-data-extensionpoint
 			IExtensionPoint refDataExtensionPoint =
@@ -53,16 +46,14 @@ public class ReferenceDataImporterExtensionPoint {
 			
 			// add all found extensionPoints to the importer list
 			for (IConfigurationElement ePoint : extensionPoints) {
-				Object o;
-				
-				o = ePoint.createExecutableExtension(CLASS_PROPERTY);
+				Object o = ePoint.createExecutableExtension(CLASS_PROPERTY);
+				String refDataId = ePoint.getAttribute(ATTRIBUTE_REFDATA_ID);
 				
 				if (o instanceof AbstractReferenceDataImporter) {
 					AbstractReferenceDataImporter importer = (AbstractReferenceDataImporter) o;
-					importers.add(importer);
+					importers.put(refDataId, importer);
 					
-					log.debug("Added ReferenceDataImporter for... "
-						+ importer.getReferenceDataIdResponsibleFor());
+					log.debug("Added ReferenceDataImporter for... "+refDataId);
 				}
 			}
 		} catch (CoreException e) {
@@ -71,36 +62,11 @@ public class ReferenceDataImporterExtensionPoint {
 	}
 	
 	/**
-	 * performs an update using the importer given by the id
 	 * 
-	 * @param importerId
-	 *            the id of the importer to use
-	 * @param inputStream
-	 *            a {@link InputStream} containing the data to be imported
-	 * @return {@link IStatus#OK} for a successful import, {@link IStatus#ERROR} for any other case,
-	 *         where in the case of an error the data set version will not be increased.
+	 * @param refDataId the id of the requested reference data type
+	 * @return the {@link AbstractReferenceDataImporter} if found, else null
 	 */
-	public static IStatus update(String importerId, IProgressMonitor ipm, InputStream inputStream){
-		for (AbstractReferenceDataImporter importer : getImporters()) {
-			if (importerId.equals(importer.getReferenceDataIdResponsibleFor())) {
-				if (ipm == null)
-					ipm = new NullProgressMonitor();
-				return importer.performImport(ipm, inputStream);
-			}
-		}
-		return new Status(IStatus.ERROR, CoreHub.PLUGIN_ID, "No Importer found for id: "
-			+ importerId);
-	}
-	
-	/**
-	 * get all ReferenceDataImporters found via the referenceDataImporter ExtensionPoint
-	 * 
-	 * @return a list of AbstractReferenceDataImporters
-	 */
-	public static List<AbstractReferenceDataImporter> getImporters(){
-		if (instance == null) {
-			instance = new ReferenceDataImporterExtensionPoint();
-		}
-		return importers;
+	public static @Nullable AbstractReferenceDataImporter getReferenceDataImporterByReferenceDataId(@NonNull String refDataId) {
+		return importers.get(refDataId);
 	}
 }
