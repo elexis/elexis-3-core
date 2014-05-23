@@ -48,7 +48,7 @@ class EclipseJar
   UI_PreferencePage = Struct.new('UI_PreferencePage', :id, :category, :translation)
   UI_View           = Struct.new('UI_View',           :id, :category, :translation)
   UI_Perspective    = Struct.new('UI_Perspective',    :id, :category, :translation)
-  Category          = Struct.new('Category',    :id, :name, :translation)
+  Category          = Struct.new('Category',          :id, :name, :category, :translation) # we can have nested categories
   @@views                     = Hash.new
   @@view_categories           = Hash.new
   @@preferencePages           = Hash.new
@@ -56,20 +56,26 @@ class EclipseJar
   @@prefPage_categories       = Hash.new
   @@view_categories           = Hash.new
   attr_reader :views, :view_categories, :preferencePages, :perspectives
+  Dest = File.join(File.dirname(__FILE__), 'plugin_infos');
+  FileUtils.makedirs(Dest)
   
   def initialize(jarname, iso='de')
     @iso                       = iso
     @jarname                   = jarname
     @jarfile                   = Zip::ZipFile.open(jarname) 
     # we use hashes to be able to find the categories fast
+    if @jarfile.find_entry('plugin.xml')
+      out = File.open(File.join(Dest, File.basename(jarname).sub('.jar','.xml')), 'w+')
+      out.write(@jarfile.read('plugin.xml'))
+    end if $VERBOSE # handy for analysing all plugin.xml
     readPluginXML(File.basename(jarname))
   rescue # HACK: we need this to handle org.apache.commons.lang under Windows-7
     puts "Skipped plugin #{File.expand_path(jarname)}"
   end
   
-  def addCategory(hash, id, name = nil)
+  def addCategory(hash, id, name = nil, category = nil)
     return if hash[id] and hash[id].translation
-    hash[id] = Category.new(id, name) unless hash[id]
+    hash[id] = Category.new(id, name, category) unless hash[id]
     translation = getTranslationForPlugin(name, @iso) if name
     hash[id].translation = translation if name and translation
     puts "#{File.basename(@jarname)}: Added category #{id} name #{name} tr '#{translation}'" if $VERBOSE
@@ -77,20 +83,14 @@ class EclipseJar
   
   def EclipseJar.getTranslatedPreferencePages
     all = []
+    # We can have nested categories like Textverarbeitung/Schablonenprozessor/OpenOffice.org Processor
     @@preferencePages.each{
-      |id, content| 
-        unless content.category
-          next if @@preferencePages.find { |sub_id, x| x.category.eql?(content.id) }
-        end
-        category =  content.category
-        cat_trans = content.translation
-        text = nil
-        if @@prefPage_categories[category]
-          text = "#{@@prefPage_categories[category].translation}/#{content.translation}"
-          puts "preferencePages #{id} category #{category.inspect} text #{cat_trans}" if $VERBOSE
-        else
-          text = content.translation
-          puts "preferencePages #{id} text #{text}" if $VERBOSE
+      |id, content|
+        iterator  = @@prefPage_categories[content.category]
+        text = content.translation
+        while iterator
+          text = "#{iterator.translation}/#{text}"
+          iterator = @@preferencePages[iterator.category]
         end
         all << text
     }
@@ -210,7 +210,7 @@ class EclipseJar
       name     = x.attributes['name'].sub(/^%/,'')
       id       = x.attributes['id'].sub(/^%/,'')
       category = x.attributes['category']
-      addCategory(@@prefPage_categories, id, name) unless category
+      addCategory(@@prefPage_categories, id, name, category) unless category
       translation =  getTranslationForPlugin(name, @iso)
       puts "Adding preferences: id #{id} category #{category.inspect} translation #{translation}" if $VERBOSE
       unless category
@@ -218,6 +218,7 @@ class EclipseJar
       else
         @@preferencePages[id]           = UI_PreferencePage.new(id, category, translation)
       end
+      @@prefPage_categories[id] = @@preferencePages[id] unless @@prefPage_categories[id] # for nested categories
     } if res and res[0] and res[0].elements
     puts "#{sprintf("%-40s", File.basename(File.dirname(plugin_xml)))}: now #{@@preferencePages.size} preferencePages" if $VERBOSE
   end
