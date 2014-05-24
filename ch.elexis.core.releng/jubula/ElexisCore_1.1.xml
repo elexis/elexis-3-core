@@ -11525,6 +11525,20 @@
         </teststep>
         <teststep>
           <usedTestcase>
+            <name/>
+            <comment xsi:nil="true"/>
+            <GUID>d5e638d254e74126bbf86a4699154d99</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>986ae047b37f4acba827bacb341a178e</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
             <name>Alle Perspektiven öffnen</name>
             <comment>May 24. Fails with teamw and a lot of other Labors</comment>
             <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
@@ -14539,6 +14553,113 @@
           </testdata>
           <datafile xsi:nil="true"/>
           <testcaseGuid>8ab6b08316c3bbe20116c3bec817000c</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <interfaceLocked>false</interfaceLocked>
+    </testcase>
+    <testcase>
+      <name>OpenPerspectiveLeistungFirstTime</name>
+      <comment xsi:nil="true"/>
+      <GUID>986ae047b37f4acba827bacb341a178e</GUID>
+      <generated>false</generated>
+      <active>true</active>
+      <taskId xsi:nil="true"/>
+      <testdata/>
+      <datafile xsi:nil="true"/>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>8f5d266117974ec2b878fd27ed1636fa</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>.*Leistungen.*</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>219d735749e54932ad98cab6c6f4ffc7</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>3c8e68c1ad044bddb8efcb849e40e4cf</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Wait 5 seconds to see progress or not</name>
+          <comment xsi:nil="true"/>
+          <GUID>84874cea34bc411a8553d9f81d748741</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>5000</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Wiat max 30 seconds for Progess window to close</name>
+          <comment xsi:nil="true"/>
+          <GUID>c36394231ad542e986e1dca73aaa08a4</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>.*Progress.*</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>matches</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>30000</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>100</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083181d393b01181d9e514b0091</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d9e5ef70092</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d9e7e460093</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d9ead360094</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
           <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
         </usedTestcase>
