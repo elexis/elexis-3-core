@@ -11445,21 +11445,6 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name>Visit all preferences</name>
-            <comment xsi:nil="true"/>
-            <GUID>248758863ac04562aa9692ce13d4062f</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <testdata/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>PREFERENCES</referencedTestData>
-            <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
             <name>Alle Perspektiven öffnen</name>
             <comment xsi:nil="true"/>
             <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
@@ -11609,6 +11594,21 @@
             <datafile xsi:nil="true"/>
             <testcaseGuid>839d2de9e6184841b2bee9277ef18442</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Visit all preferences</name>
+            <comment>May 24. Fails with teamw and a lot of other Labors</comment>
+            <GUID>248758863ac04562aa9692ce13d4062f</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata/>
+            <datafile xsi:nil="true"/>
+            <referencedTestData>PREFERENCES</referencedTestData>
+            <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
@@ -14336,10 +14336,10 @@
           </usedTestcase>
           <usedTestcase>
             <name>No no more core updates should be necessary</name>
-            <comment xsi:nil="true"/>
+            <comment>Does not work at the moment. Beta-2 would upgrade</comment>
             <GUID>7b60801251c24ccda6fa3a2cd10e14bd</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <taskId xsi:nil="true"/>
             <testdata>
               <row rowCount="1">
