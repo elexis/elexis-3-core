@@ -527,7 +527,7 @@
         </confAttrMapEntry>
         <confAttrMapEntry>
           <key>SOURCE_DIR</key>
-          <value>/opt/elexis-3-core/ch.elexis.core.releng</value>
+          <value>/opt/elexis-3-base</value>
         </confAttrMapEntry>
         <confAttrMapEntry>
           <key>WORKING_DIR</key>
@@ -7499,6 +7499,36 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name>Save details for SW-Installation in log file</name>
+              <comment xsi:nil="true"/>
+              <GUID>045a723968624734b35a159637bcc964</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>sw-inst-details.log</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>7c2282faf72a469a8e5bc47587aa7f9a</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>6574afdb65eb41eda7bafb08f00941f7</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>2a230284644e4fce9450d5a213724cca</originalName>
+                <newName>270ee82907be4c5c8cf8ddbc15d00d5f</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Click Finish button</name>
               <comment xsi:nil="true"/>
               <GUID>d67eb7f7171142ba8a6815971cc5ea51</GUID>
@@ -7634,7 +7664,7 @@
               <comment xsi:nil="true"/>
               <GUID>6a36d915fa6946cf8a96eaaae71eee51</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <taskId xsi:nil="true"/>
               <testdata>
                 <row rowCount="1">
@@ -14001,6 +14031,52 @@
           </overriddenNames>
         </usedTestcase>
       </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Finish SW Installation</name>
+          <comment>We assume to be inside the SW-Update dialog</comment>
+          <GUID>4f46a94bdf27408ebb7c819b1b3fa364</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>330bf0790ae14c819601bd793e430abb</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>As we finished, store false into MUST_UPGRADE</name>
+          <comment xsi:nil="true"/>
+          <GUID>396df0763c8b4ec4adc60079c9a63bd6</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>MUST_UPGRADE</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>false</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b0831c7549be011c754c9dc60004</uniqueIds>
+            <uniqueIds>8ab6b0831c7549be011c754cb8cc0005</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b0831c7549be011c754b6e9a0002</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
       <interfaceLocked>false</interfaceLocked>
     </testcase>
     <testcase>
@@ -14046,7 +14122,44 @@
       </teststep>
       <teststep>
         <usedTestcase>
-          <name/>
+          <name>Wait for Finish button</name>
+          <comment>Will only fail after a successfull instalation</comment>
+          <GUID>4752ddbbdf144b55aec7689837eb6663</GUID>
+          <generated>false</generated>
+          <active>false</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>100</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>100</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083181dc1bc01181dc3c5fb0003</uniqueIds>
+            <uniqueIds>8ab6b083181dc1bc01181dc3dbc50004</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364aff708ea</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>bcf910317c0a49f0a091052c9ff3f6d1</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Is Finish button enabled?</name>
           <comment>If sw-installed will fail, because no longer valid</comment>
           <GUID>df85c7db3f7449679f1adb2f1127351e</GUID>
           <generated>false</generated>
@@ -14110,8 +14223,276 @@
           <newName>14fa0e5c061b4289adc87dfd8cf260f0</newName>
         </overriddenNames>
         <eventType>TestErrorEvent.VerifyFailed</eventType>
-        <reentryProperty>continue</reentryProperty>
+        <reentryProperty>retry</reentryProperty>
+        <maxRetries>1</maxRetries>
       </eventTestcase>
+      <eventTestcase>
+        <name>Click cancel if finish is not found</name>
+        <comment xsi:nil="true"/>
+        <GUID>830e6ba31b804d608277f6a75abe0a82</GUID>
+        <generated>false</generated>
+        <active>true</active>
+        <taskId xsi:nil="true"/>
+        <datafile xsi:nil="true"/>
+        <testcaseGuid>8ab6b083181d393b01181dac453700bd</testcaseGuid>
+        <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+        <hasOwnTestdata>false</hasOwnTestdata>
+        <overriddenNames>
+          <propagated>false</propagated>
+          <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+          <newName>14fa0e5c061b4289adc87dfd8cf260f0</newName>
+        </overriddenNames>
+        <eventType>TestErrorEvent.CompNotFound</eventType>
+        <reentryProperty>retry</reentryProperty>
+        <maxRetries>1</maxRetries>
+      </eventTestcase>
+      <interfaceLocked>false</interfaceLocked>
+    </testcase>
+    <testcase>
+      <name>Save_txt_field_to_file_via_xclip</name>
+      <comment xsi:nil="true"/>
+      <GUID>6574afdb65eb41eda7bafb08f00941f7</GUID>
+      <generated>false</generated>
+      <active>true</active>
+      <taskId xsi:nil="true"/>
+      <parameterDescription>
+        <name>FILE_NAME</name>
+        <type>java.lang.String</type>
+        <uniqueId>7c2282faf72a469a8e5bc47587aa7f9a</uniqueId>
+      </parameterDescription>
+      <testdata>
+        <uniqueIds>7c2282faf72a469a8e5bc47587aa7f9a</uniqueIds>
+      </testdata>
+      <datafile xsi:nil="true"/>
+      <teststep>
+        <usedTestcase>
+          <name>Select text field</name>
+          <comment xsi:nil="true"/>
+          <GUID>cd0e3c3ba869489192f112432ba658a3</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>true</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>2a230284644e4fce9450d5a213724cca</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>57d6ef775cc24243b5b3ff52faae1a2a</GUID>
+          <generated>false</generated>
+          <active>false</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364afe807d9</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Select all</name>
+          <comment xsi:nil="true"/>
+          <GUID>855856fc40474311a33485bf5324b7c3</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364afe807dc</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Copy to clipboard</name>
+          <comment xsi:nil="true"/>
+          <GUID>aeaac695b81a4fe989129d81279c24a3</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364afe807dd</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>250b9a55eac643f1bffc5cbf562979ea</GUID>
+          <generated>false</generated>
+          <active>false</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>MY_VAR</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083154b8c1601154b91d1f000b6</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364aff70896</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4960028</originalName>
+            <newName>270ee82907be4c5c8cf8ddbc15d00d5f</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Log var</name>
+          <comment xsi:nil="true"/>
+          <GUID>4f3a4959b2ed4184b6c08d2f5fb292b7</GUID>
+          <generated>false</generated>
+          <active>false</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>bash -c "logger jubula MY_VAR is ${MY_VAR}"</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>0</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>true</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>1000</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b08316c3bbe20116c3bf02fd000e</uniqueIds>
+            <uniqueIds>8ab6b08316c3bbe20116c3bf1a3e000f</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d8bb901005a</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d8beaaf005c</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b08316c3bbe20116c3bec817000c</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Logger ${MY_VAR}</name>
+          <comment xsi:nil="true"/>
+          <GUID>8b16cf2f77244390bafef29c24e2d6ec</GUID>
+          <generated>false</generated>
+          <active>false</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>bash -c "logger pwd of jubula is `pwd`"</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>0</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>true</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>1000</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b08316c3bbe20116c3bf02fd000e</uniqueIds>
+            <uniqueIds>8ab6b08316c3bbe20116c3bf1a3e000f</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d8bb901005a</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d8beaaf005c</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b08316c3bbe20116c3bec817000c</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Save clipboard to file</name>
+          <comment xsi:nil="true"/>
+          <GUID>aebca1275ab34e0983f62f8db269346f</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>bash -c "xclip -o &gt; ={7c2282faf72a469a8e5bc47587aa7f9a}"</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>0</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>true</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>1000</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b08316c3bbe20116c3bf02fd000e</uniqueIds>
+            <uniqueIds>8ab6b08316c3bbe20116c3bf1a3e000f</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d8bb901005a</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181d8beaaf005c</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b08316c3bbe20116c3bec817000c</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
       <interfaceLocked>false</interfaceLocked>
     </testcase>
     <execCategories>
@@ -14162,7 +14543,7 @@
         </testsuite>
         <testsuite>
           <name>TST_UPGRADE</name>
-          <comment xsi:nil="true"/>
+          <comment>Will only return okay if there is something to upgrade</comment>
           <GUID>dda24a380a2647e28c7ea7802fcc2809</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -14562,12 +14943,40 @@
             <comment>The request comes from the environment variable TEST_UDF_SW_MUST_UPGRADE. Defaults to no</comment>
             <GUID>2ce08c63c1d24ea2b67906bcf3af2d4e</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>52b76da1c9bf4c8c80bac8103dfe8698</testcaseGuid>
             <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+          <usedTestcase>
+            <name/>
+            <comment xsi:nil="true"/>
+            <GUID>02fad116bbd741ab8b5bfe1b20a2726a</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata>
+              <row rowCount="1">
+                <data columnCount="1">
+                  <data>
+                    <language>de_DE</language>
+                    <value>sw-inst-detail.log</value>
+                  </data>
+                </data>
+              </row>
+              <uniqueIds>7c2282faf72a469a8e5bc47587aa7f9a</uniqueIds>
+            </testdata>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>6574afdb65eb41eda7bafb08f00941f7</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+            <overriddenNames>
+              <propagated>false</propagated>
+              <originalName>2a230284644e4fce9450d5a213724cca</originalName>
+              <newName>270ee82907be4c5c8cf8ddbc15d00d5f</newName>
+            </overriddenNames>
           </usedTestcase>
           <eventHandler>
             <event>TestErrorEvent.Config</event>
@@ -14624,16 +15033,6 @@
             <reentryProperty>continue</reentryProperty>
           </eventHandler>
         </testsuite>
-      </category>
-    </execCategories>
-    <execCategories>
-      <category>
-        <name>Test Jobs</name>
-        <comment xsi:nil="true"/>
-        <GUID>ced7fb8e239945aab513cd4b18f83d66</GUID>
-        <generated>false</generated>
-        <active>true</active>
-        <taskId xsi:nil="true"/>
       </category>
     </execCategories>
     <metaDataVersion>6</metaDataVersion>
@@ -14870,6 +15269,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Leistungen_Tab_Artikelstamm</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>2a230284644e4fce9450d5a213724cca</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>nn_nn_txt</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
