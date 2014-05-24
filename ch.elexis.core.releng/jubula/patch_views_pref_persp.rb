@@ -86,9 +86,8 @@ def patchJubulaXML(xml_name, plugin_dir)
 
   counter = 0; perspectives = []
   perspectiveNames.each{|name|
-    next if /RCP_/.match(name)
     counter += 1
-    perspectives << eval(genScreenshotElement(counter, name, 'p_'))
+    perspectives << eval(genScreenshotElement(counter, name.sub(/ *$/,'')+'.*', 'perspectives/p_'))
   }
 
   counter=0
