@@ -76,7 +76,7 @@ class EclipseJar
   def addCategory(hash, id, name = nil, category = nil)
     return if hash[id] and hash[id].translation
     hash[id] = Category.new(id, name, category) unless hash[id]
-    translation = getTranslationForPlugin(name, @iso) if name
+    translation = getTranslationForPlugin(name, @iso, @bundleLocalization) if name
     hash[id].translation = translation if name and translation
     puts "#{File.basename(@jarname)}: Added category #{id} name #{name} tr '#{translation}'" if $VERBOSE
   end
@@ -148,9 +148,14 @@ class EclipseJar
     @@preferencePages
   end
        
-  def getTranslationForPlugin(look_for, iso)
-    properties = "plugin_#{iso}.properties"
-    properties = "plugin.properties" unless @jarfile.find_entry(properties)
+  def getTranslationForPlugin(look_for, iso, translationPath)
+    if translationPath
+      properties = "#{translationPath}_#{iso}.properties"
+      properties = "#{translationPath}.properties" unless @jarfile.find_entry(properties)
+    else
+      properties = "plugin_#{iso}.properties"
+      properties = "plugin.properties" unless @jarfile.find_entry(properties)
+    end
     puts "Looking for translation of #{look_for} in #{properties}"  if $VERBOSE
     line_nr = 0
     @jarfile.read(properties).split("\n").each {
@@ -169,6 +174,11 @@ class EclipseJar
   def readPluginXML(plugin_xml)
     return unless  @jarfile.find_entry('plugin.xml')
     doc = Document.new @jarfile.read('plugin.xml')
+    mf  = @jarfile.read('META-INF/MANIFEST.MF')
+    m = /Bundle-Localization: (.*)/.match(mf)
+    @bundleLocalization = nil
+    @bundleLocalization = m[1].chomp if m and not /plugin|bundle/.match(m[1])
+
     # Get all perspectives
     root = doc.root
     res = []
@@ -176,7 +186,7 @@ class EclipseJar
     res[0].elements.each{
       |x|
       id = x.attributes['name'].sub(/^%/,'')
-      @@perspectives[id] = UI_Perspective.new(id, nil, getTranslationForPlugin(id, @iso))
+      @@perspectives[id] = UI_Perspective.new(id, nil, getTranslationForPlugin(id, @iso, @bundleLocalization))
     } if res and res[0] and res[0].elements
     puts "found #{@@perspectives.size} perspectives in #{plugin_xml}" if $VERBOSE
 
@@ -191,7 +201,7 @@ class EclipseJar
         addCategory(@@view_categories, id, name)
       elsif x.attributes['name']
         category = x.attributes['category']
-        translation =  getTranslationForPlugin(name, @iso)
+        translation =  getTranslationForPlugin(name, @iso, @bundleLocalization)
         puts "#{File.basename(@jarname, '.jar')}: Adding view: id #{id} category #{category.inspect} translation #{translation}" if $VERBOSE
         unless category
           @@views[id]           = UI_View.new(id, nil, translation)
@@ -211,7 +221,7 @@ class EclipseJar
       id       = x.attributes['id'].sub(/^%/,'')
       category = x.attributes['category']
       addCategory(@@prefPage_categories, id, name, category) unless category
-      translation =  getTranslationForPlugin(name, @iso)
+      translation =  getTranslationForPlugin(name, @iso, @bundleLocalization)
       puts "Adding preferences: id #{id} category #{category.inspect} translation #{translation}" if $VERBOSE
       unless category
         @@preferencePages[id]           = UI_PreferencePage.new(id, nil, translation)
