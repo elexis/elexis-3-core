@@ -136,7 +136,8 @@ public
       config_ini.each{ 
         |line|
           if /^osgi.bundles=/.match(line)
-            puts "must patch #{ini_name}\n#{line.inspect}"
+            puts "must patch #{ini_name}"
+            puts line if $VERBOSE
             line.sub!(/\n/, rcpStart + "\n")
             break
           end
@@ -205,7 +206,7 @@ public
     cmd = "#{JubulaOptions::jubulaHome}/server/autrun --workingdir #{@testResults} -rcp --kblayout #{@kblayout} -i #{@autid} --exec #{@wrapper} --generatename true --autagentport #{@portNumber}"
     if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
       cmd = "start #{cmd}"
-    else 
+    else
       cmd += " 2>&1 | tee #{log} &"
     end
     res = system(cmd)
@@ -262,6 +263,27 @@ public
     FileUtils.chmod(0744, wrapper)
     puts "#{dryRun ? 'Would create' : 'Created'} wrapper script #{wrapper} with content"
     puts doc
+  end
+
+  def checkOutcome(res, label)
+    if res
+      puts "#{label} completed successfully"
+    else
+      puts "#{label} #{label} failed"
+      exit(2)
+    end
+  end
+
+  def saveImages(dest = @testResults)
+    FileUtils.makedirs(dest)
+    puts "Would save images/htm/log to #{dest}" if DryRun
+    (Dir.glob("**/*shot*/*.png")+Dir.glob("**/*.log")+Dir.glob("**/*htm")).each{
+      |x|
+          next if /images/.match(x)
+          next if /plugins/.match(x)
+          next if /#{File.basename(@testResults)}/.match(x)
+          FileUtils.cp(x, dest, :verbose => true, :noop => DryRun)
+    }
   end
 
 end

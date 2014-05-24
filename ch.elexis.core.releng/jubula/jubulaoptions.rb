@@ -150,6 +150,7 @@ module JubulaOptions
   end
   
   def JubulaOptions::parseArgs
+    @installer = nil
     options = OptionParser.new do |opts|
       opts.banner = %(Usage: #{File.basename($0)} [@options]
 	runs a jubula test for elexis. Parameters it the choosen test, eg. sample, FULLTEST, FULLTEST_BROKEN
