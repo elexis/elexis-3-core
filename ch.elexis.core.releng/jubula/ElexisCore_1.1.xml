@@ -3004,6 +3004,31 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name>Take a snapshot</name>
+              <comment xsi:nil="true"/>
+              <GUID>3ac5ed7e747347d58111ca41a225b4f6</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>screenshots/preferences/={3720176f94bd410eb64c98940a76c869}.png</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name/>
               <comment xsi:nil="true"/>
               <GUID>a6b261241fb34b4c9e620721dd638e36</GUID>
@@ -11476,7 +11501,7 @@
         <teststep>
           <usedTestcase>
             <name>Alle Perspektiven öffnen</name>
-            <comment xsi:nil="true"/>
+            <comment>May 24. Fails with teamw and a lot of other Labors</comment>
             <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -11500,19 +11525,6 @@
             <referencedTestData>VIEWS</referencedTestData>
             <testcaseGuid>14e59233a8ad482baacf132dc749c6f8</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Artikelstamm importieren</name>
-            <comment xsi:nil="true"/>
-            <GUID>c2ea4cf1f45043a78a74463a903a85ec</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
@@ -11615,19 +11627,6 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name>Patient receives a drug</name>
-            <comment xsi:nil="true"/>
-            <GUID>38831514375c43bba5777f1ba059dd4f</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>839d2de9e6184841b2bee9277ef18442</testcaseGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
             <name>Visit all preferences</name>
             <comment>May 24. Fails with teamw and a lot of other Labors</comment>
             <GUID>248758863ac04562aa9692ce13d4062f</GUID>
@@ -11639,6 +11638,32 @@
             <referencedTestData>PREFERENCES</referencedTestData>
             <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Artikelstamm importieren</name>
+            <comment xsi:nil="true"/>
+            <GUID>c2ea4cf1f45043a78a74463a903a85ec</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Patient receives a drug</name>
+            <comment xsi:nil="true"/>
+            <GUID>38831514375c43bba5777f1ba059dd4f</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>839d2de9e6184841b2bee9277ef18442</testcaseGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
