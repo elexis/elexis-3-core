@@ -4550,7 +4550,7 @@
           <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
-              <name/>
+              <name>Reset Perspective</name>
               <comment xsi:nil="true"/>
               <GUID>5b55e944f89b42079a7b3aa044d2f6a8</GUID>
               <generated>false</generated>
@@ -4563,7 +4563,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name/>
+              <name>Open View by name</name>
               <comment xsi:nil="true"/>
               <GUID>1a3a0760368148f983cfa9abf1476169</GUID>
               <generated>false</generated>
@@ -4587,7 +4587,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name/>
+              <name>Maximize View using Ctrl-m</name>
               <comment xsi:nil="true"/>
               <GUID>fc6d29b1117d46a09c1d704dc0f1d1d3</GUID>
               <generated>false</generated>
@@ -4619,7 +4619,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name/>
+              <name>Take a screenshot</name>
               <comment xsi:nil="true"/>
               <GUID>b7dbbc7bd25f4c9493f8b38fd223a024</GUID>
               <generated>false</generated>
@@ -4643,7 +4643,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name/>
+              <name>Restore View using Ctrl-m</name>
               <comment xsi:nil="true"/>
               <GUID>9d07832c23394e0aa0e4ded1862f8bd3</GUID>
               <generated>false</generated>
@@ -11628,7 +11628,7 @@
         <teststep>
           <usedTestcase>
             <name>Visit all preferences</name>
-            <comment>May 24. Fails with teamw and a lot of other Labors</comment>
+            <comment>May 24 2014: Fails with teamw and a lot of other Labors</comment>
             <GUID>248758863ac04562aa9692ce13d4062f</GUID>
             <generated>false</generated>
             <active>true</active>
