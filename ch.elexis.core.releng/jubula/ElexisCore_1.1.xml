@@ -3747,6 +3747,31 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name>Wait a little bit (workaround for Codes/Codes</name>
+              <comment xsi:nil="true"/>
+              <GUID>5fceb91d44ca4af7a511baab93ebe861</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Wait for Elexis Main WIndow</name>
               <comment xsi:nil="true"/>
               <GUID>f0ec749c7d88441781a76d6e2305b32a</GUID>
