@@ -1187,6 +1187,48 @@
             <type xsi:nil="true"/>
             <logicalName>ec02dee28f4243d1a440e0412cbd3eba</logicalName>
           </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_3</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_1</neighbour>
+              <neighbour>org.eclipse.ui.forms.widgets.Hyperlink_2</neighbour>
+              <componentClassName>org.eclipse.ui.forms.widgets.Hyperlink</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Canvas</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.PatListView</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.ui.forms.widgets.Hyperlink_1</hierarchyName>
+              <alternativeDisplayName>Graphics Component</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>4e7449721ef44c36a19ec70d45f9d634</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Table</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Table</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.PatListView</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
+              <alternativeDisplayName>Table</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>8ee1219858794bf0ac5c7c543bf61276</logicalName>
+          </association>
           <category>
             <name>Patients</name>
             <association>
@@ -2188,23 +2230,6 @@
               <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
               <hierarchyName>org.eclipse.swt.widgets.Text_1</hierarchyName>
               <alternativeDisplayName>Text Component</alternativeDisplayName>
-            </technicalName>
-            <type xsi:nil="true"/>
-          </association>
-          <association>
-            <technicalName>
-              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
-              <componentClassName>org.eclipse.swt.widgets.Table</componentClassName>
-              <supportedClassName>org.eclipse.swt.widgets.Table</supportedClassName>
-              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>ch.elexis.PatListView</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
-              <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
-              <alternativeDisplayName>Table</alternativeDisplayName>
             </technicalName>
             <type xsi:nil="true"/>
           </association>
@@ -11525,8 +11550,22 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name/>
+            <name>Select a patient (if we run with a DemoDB)</name>
             <comment xsi:nil="true"/>
+            <GUID>2e9c3cb6800d4dcaa38786d7e9939798</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>e4836ee6f42d49a7b5fc1b7ba25dc67c</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Open Leistung perspective</name>
+            <comment>Can take a long time. Must be run early to avoid this delay afterwards</comment>
             <GUID>d5e638d254e74126bbf86a4699154d99</GUID>
             <generated>false</generated>
             <active>true</active>
@@ -11539,7 +11578,7 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name>Alle Perspektiven öffnen</name>
+            <name>Open all perspectives and take a snapshot of each</name>
             <comment>May 24. Fails with teamw and a lot of other Labors</comment>
             <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
             <generated>false</generated>
@@ -11553,7 +11592,7 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name>Open all Views and take a snapshot of each</name>
+            <name>Open all views and take a snapshot of each</name>
             <comment xsi:nil="true"/>
             <GUID>0374472a209d43e795adcf4df2932511</GUID>
             <generated>false</generated>
@@ -11666,7 +11705,20 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name>Visit all preferences</name>
+            <name>Artikelstamm importieren</name>
+            <comment xsi:nil="true"/>
+            <GUID>c2ea4cf1f45043a78a74463a903a85ec</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Visit all preference pages and take a snapshot of each</name>
             <comment>May 24 2014: Fails with teamw and a lot of other Labors</comment>
             <GUID>248758863ac04562aa9692ce13d4062f</GUID>
             <generated>false</generated>
@@ -11677,19 +11729,6 @@
             <referencedTestData>PREFERENCES</referencedTestData>
             <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Artikelstamm importieren</name>
-            <comment xsi:nil="true"/>
-            <GUID>c2ea4cf1f45043a78a74463a903a85ec</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
@@ -14620,8 +14659,8 @@
       </teststep>
       <teststep>
         <usedTestcase>
-          <name>Wiat max 30 seconds for Progess window to close</name>
-          <comment xsi:nil="true"/>
+          <name>Wait max 240 seconds for Progess window to close</name>
+          <comment>Niklaus did see 110 second on his PC with PostgreSQL (2014.05.24)</comment>
           <GUID>c36394231ad542e986e1dca73aaa08a4</GUID>
           <generated>false</generated>
           <active>true</active>
@@ -14643,7 +14682,7 @@
               <data columnCount="3">
                 <data>
                   <language>de_DE</language>
-                  <value>30000</value>
+                  <value>240000</value>
                 </data>
               </data>
               <data columnCount="4">
@@ -14662,6 +14701,131 @@
           <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
           <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
           <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <interfaceLocked>false</interfaceLocked>
+    </testcase>
+    <testcase>
+      <name>SelectPatientFromListIfAny</name>
+      <comment xsi:nil="true"/>
+      <GUID>e4836ee6f42d49a7b5fc1b7ba25dc67c</GUID>
+      <generated>false</generated>
+      <active>true</active>
+      <taskId xsi:nil="true"/>
+      <testdata/>
+      <datafile xsi:nil="true"/>
+      <teststep>
+        <usedTestcase>
+          <name>Click Name in Tab Patient</name>
+          <comment xsi:nil="true"/>
+          <GUID>c5b8aed9e54247dea6c71d892183560d</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>4e7449721ef44c36a19ec70d45f9d634</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Select a patient (if there is any)</name>
+          <comment>Must work with empty table, too. Therefore we don't select the top one</comment>
+          <GUID>bf067eb9d8e642949d7a4821a0686be2</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>e8b36ef6b6624a1ca7a772b348500787</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>8ee1219858794bf0ac5c7c543bf61276</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <interfaceLocked>false</interfaceLocked>
+    </testcase>
+    <testcase>
+      <name>ClickInMiddleOfComponent</name>
+      <comment xsi:nil="true"/>
+      <GUID>e8b36ef6b6624a1ca7a772b348500787</GUID>
+      <generated>false</generated>
+      <active>true</active>
+      <taskId xsi:nil="true"/>
+      <testdata/>
+      <datafile xsi:nil="true"/>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>a8f3013f923e47149bb7fe49da74ee5b</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>1</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>50</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>percent</value>
+                </data>
+              </data>
+              <data columnCount="5">
+                <data>
+                  <language>de_DE</language>
+                  <value>50</value>
+                </data>
+              </data>
+              <data columnCount="6">
+                <data>
+                  <language>de_DE</language>
+                  <value>percent</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083181d393b01181dbe75b500c5</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181dbe8c2b00c6</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181dbe9cd500c7</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181dbeb82d00c8</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181dbec8a700c9</uniqueIds>
+            <uniqueIds>8ab6b083181d393b01181dbedeb000ca</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083181d393b01181dbe268c00c3</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>true</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>8ab6b08d1a4d08f3011a4d09a4930022</newName>
+          </overriddenNames>
         </usedTestcase>
       </teststep>
       <interfaceLocked>false</interfaceLocked>
@@ -15126,7 +15290,7 @@
             <comment xsi:nil="true"/>
             <GUID>02fad116bbd741ab8b5bfe1b20a2726a</GUID>
             <generated>false</generated>
-            <active>true</active>
+            <active>false</active>
             <taskId xsi:nil="true"/>
             <testdata>
               <row rowCount="1">
@@ -15148,6 +15312,41 @@
               <originalName>2a230284644e4fce9450d5a213724cca</originalName>
               <newName>270ee82907be4c5c8cf8ddbc15d00d5f</newName>
             </overriddenNames>
+          </usedTestcase>
+          <usedTestcase>
+            <name/>
+            <comment xsi:nil="true"/>
+            <GUID>28ec64d685034311b9c8a4eaa4bb20d9</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata>
+              <row rowCount="1">
+                <data columnCount="1">
+                  <data>
+                    <language>de_DE</language>
+                    <value>Abrechnung/ESR .old..*</value>
+                  </data>
+                </data>
+              </row>
+              <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
+            </testdata>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+          <usedTestcase>
+            <name/>
+            <comment xsi:nil="true"/>
+            <GUID>d3b0ad92581542e3947af3c47fb31764</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>e4836ee6f42d49a7b5fc1b7ba25dc67c</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <eventHandler>
             <event>TestErrorEvent.Config</event>
@@ -15678,6 +15877,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Kontact_Auwahl_tbl</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.abstract.Widget</compType>
+      <GUID>4e7449721ef44c36a19ec70d45f9d634</GUID>
+      <creationContext>OVERRIDDEN_NAME</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Tab_Patient_Name_grc</compName>
     </componentNames>
     <componentNames>
       <compType>org.eclipse.swt.widgets.Tree</compType>
