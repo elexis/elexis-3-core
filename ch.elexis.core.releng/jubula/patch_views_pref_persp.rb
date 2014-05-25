@@ -80,8 +80,8 @@ def patchJubulaXML(xml_name, plugin_dir)
   counter = 0; views = []
   viewNames[0..LIMIT_VIEWS_TO-1].each{|name|
     counter += 1
-    next if  /Welcome/i.match(name)
-    views << eval(genScreenshotElement(counter, name))
+    next if  /Welcome|Hilotec Messwerte V2/i.match(name)
+    views << eval(genScreenshotElement(counter, name.gsub(/[()]/,'.')))
   }
 
   counter = 0; perspectives = []
