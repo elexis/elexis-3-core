@@ -151,10 +151,9 @@ endTime = Time.now
 seconds = (endTime-startTime).to_i
 report_add_separator
 
-puts "Summary over #{@swInstId-1} (with #{@nrFailedInstallations} failed) installations after #{seconds/60} minutes and #{seconds%60} seconds is:"
+puts "#{Time.now}: Summary over #{@swInstId-1} (with #{@nrFailedInstallations} failed) installations after #{seconds/60} minutes and #{seconds%60} seconds is:"
 cmd = "grep Upgrade #{File.expand_path(File.join(@jubula.testResults, '..', '*', '*.log'))}"
 puts @summary.join("\n")
 report_add_separator
-exit @nrFailedInstallations == 0
-
+exit @nrFailedInstallations == 0 ? 0 : 1
 
