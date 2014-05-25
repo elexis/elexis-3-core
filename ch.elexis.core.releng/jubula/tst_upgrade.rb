@@ -126,7 +126,7 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
   nrNewJars = newJars.size- origJars.size
   report "difference is: #{origJars.size} ->  #{newJars.size} jars: #{(newJars-origJars).sort.uniq}"
   report "our expectation using TEST_UDV_SW_MUST_UPGRADE was #{expectation}."
-  info = "Upgrade Elexis created #{@versionDate} added #{nrNewJars} jars #{res ? 'was succesfull' : 'failed'}"
+  info = "Upgrade #{@version} created #{@versionDate} added #{nrNewJars} jars and #{res ? 'was succesfull' : 'failed'}"
   report info
   @summary << info
   report_add_separator

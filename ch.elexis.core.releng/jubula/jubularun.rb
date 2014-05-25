@@ -282,7 +282,7 @@ public
   def saveImages(dest = @testResults)
     FileUtils.makedirs(dest)
     puts "Would save images/htm/log to #{dest}" if DryRun
-    (Dir.glob("**/*shot*/*.png")+Dir.glob("**/*.log")+Dir.glob("**/*htm")).each{
+    (Dir.glob("**/*shot*/*.png")+Dir.glob("**/*.log")+Dir.glob("**/*htm")+Dir.glob(File.join(@dataDir, '*.log')).each{
       |x|
           next if /images/.match(x)
           next if /plugins/.match(x)
