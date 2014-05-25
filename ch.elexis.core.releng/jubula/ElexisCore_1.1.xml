@@ -6639,7 +6639,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Wait for window "Installing Software" to close</name>
+              <name>Wait max 3 minutes for window "Installing Software" to close</name>
               <comment xsi:nil="true"/>
               <GUID>28f16be7f56348ceb72ba8ddeb9f0470</GUID>
               <generated>false</generated>
@@ -6662,7 +6662,7 @@
                   <data columnCount="3">
                     <data>
                       <language>de_DE</language>
-                      <value>15000</value>
+                      <value>180000</value>
                     </data>
                   </data>
                   <data columnCount="4">
