@@ -74,7 +74,7 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
   ENV['TEST_UDV_SW_MUST_UPGRADE'] = expectation
   FileUtils.rm_rf(instDest, :verbose => true) unless DryRun
   unzip_elexis_3(url, instDest)
-  exeFile = -1
+  exeFile = File.join(SavedDir, 'path/to/exe')
   if DryRun and not File.directory?(instDest)
     exeFile = File.join(Dir.pwd, 'dummy-exe-file-for-dryRun')
   elsif Dir.glob("#{instDest}/*lexis*").size > 0
@@ -91,7 +91,7 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
     puts "No elexis found in zip from #{url}. Saved in #{instDest}"
     exit 2
   end
-  Dir.chdir(File.join(instDest, 'plugins'))
+  Dir.chdir(File.join(instDest, 'plugins')) unless DryRun
   Dir.chdir(SavedDir)
 
   @jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
