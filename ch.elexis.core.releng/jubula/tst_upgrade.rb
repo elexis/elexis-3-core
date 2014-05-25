@@ -55,7 +55,10 @@ end
 
 @swInstId ||= 1
 @summary  = []
+@nrFailedInstallations = 0
 @testResultsRoot = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'test-results'))
+FileUtils.rm_rf(@testResultsRoot, :verbose => true) unless DryRun
+FileUtils.rm_rf(File.join(Dir.home, 'elexis', 'demoDB'), :verbose => true)
 def report(msg)
   puts "#{@swInstId}: #{@version}: #{Time.now} #{msg}"
 end
@@ -70,6 +73,7 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
   @version = sprintf('%-40s', (m ? "#{m[1]} build #{m[2]}" : 'version not found'))
   report "instDest -> #{instDest} expecting #{expectation}"
   ENV['TEST_UDV_SW_MUST_UPGRADE'] = expectation
+  FileUtils.rm_rf(instDest, :verbose => true) unless DryRun
   unzip_elexis_3(url, instDest)
   exeFile = -1
   if DryRun and not File.directory?(instDest)
@@ -89,7 +93,6 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
     exit 2
   end
   Dir.chdir(File.join(instDest, 'plugins'))
-  origJars = Dir.glob('*.jar')
   Dir.chdir(SavedDir)
 
   @jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
@@ -103,6 +106,7 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
 
   @jubula.useH2(Dir.pwd)
   @jubula.prepareRcpSupport
+  origJars = Dir.glob('*.jar') # Don't count Jubula
 #  @jubula.patchXML not needed for SW-Upgrade
   @jubula.genWrapper
   if @swInstId == 1
@@ -111,6 +115,7 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
   end
   tstCase2run = 'TST_UPGRADE'
   res = @jubula.runOneTestcase(tstCase2run)
+  @nrFailedInstallations += 1 unless res
   @jubula.saveImages
   Dir.chdir(File.join(instDest, 'plugins'))
   newJars = Dir.glob('*.jar')
@@ -118,7 +123,7 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
   puts "origJars were: #{origJars}"
   report "newJars  are: #{newJars}"
   report_add_separator
-  nrNewJars = origJars.size - newJars.size
+  nrNewJars = newJars.size- origJars.size
   report "difference is: #{origJars.size} ->  #{newJars.size} jars: #{(newJars-origJars).sort.uniq}"
   report "our expectation using TEST_UDV_SW_MUST_UPGRADE was #{expectation}."
   info = "Upgrade Elexis created #{@versionDate} added #{nrNewJars} jars #{res ? 'was succesfull' : 'failed'}"
@@ -146,8 +151,10 @@ endTime = Time.now
 seconds = (endTime-startTime).to_i
 report_add_separator
 
-puts "Summary over #{@swInstId-1} installations after #{seconds/60} minutes and #{seconds%60} seconds is:"
+puts "Summary over #{@swInstId-1} (with #{@nrFailedInstallations} failed) installations after #{seconds/60} minutes and #{seconds%60} seconds is:"
 cmd = "grep Upgrade #{File.expand_path(File.join(@jubula.testResults, '..', '*', '*.log'))}"
 puts @summary.join("\n")
 report_add_separator
+exit @nrFailedInstallations == 0
+
 
