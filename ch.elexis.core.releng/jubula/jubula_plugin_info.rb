@@ -94,7 +94,7 @@ class EclipseJar
         end
         all << text
     }
-    all.sort.reverse.uniq if all and all.size > 0
+    all.sort.uniq if all and all.size > 0
   end
   
   def EclipseJar.getTranslatedViews
@@ -111,7 +111,7 @@ class EclipseJar
         end
         all << text if text
     }
-    all.sort.reverse.uniq if all and all.size > 0
+    all.sort.uniq if all and all.size > 0
   end
   def EclipseJar.getTranslatedPerspectives
     all = []
@@ -129,7 +129,7 @@ class EclipseJar
         end
         all << text
     }
-    all.sort.reverse.uniq if all and all.size > 0
+    all.sort.uniq if all and all.size > 0
   end
   
   def EclipseJar::views
