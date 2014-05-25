@@ -54,6 +54,8 @@ def unzip_elexis_3 (file, destination)
 end
 
 @swInstId ||= 1
+@summary  = []
+@testResultsRoot = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'test-results'))
 def report(msg)
   puts "#{@swInstId}: #{@version}: #{Time.now} #{msg}"
 end
@@ -94,7 +96,7 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
                         # browser: workaround see https://bugs.eclipse.org/bugs/show_bug.cgi?id=404776, which was not backported to 3.8.2, only in 4.3.2
                         # and for p2.unsignedPolicy https://bugs.eclipse.org/bugs/show_bug.cgi?id=235526
                         :exeFile => exeFile,
-                        :testResults => File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'test-results', @swInstId.to_s)),
+                        :testResults => File.join(@testResultsRoot, @swInstId.to_s),
                         :instDest => File.dirname(exeFile),
                         :vmargs => "-Declipse.p2.unsignedPolicy=allow -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch",
                         :autid => 'elexis')
@@ -116,9 +118,12 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
   puts "origJars were: #{origJars}"
   report "newJars  are: #{newJars}"
   report_add_separator
+  nrNewJars = origJars.size - newJars.size
   report "difference is: #{origJars.size} ->  #{newJars.size} jars: #{(newJars-origJars).sort.uniq}"
   report "our expectation using TEST_UDV_SW_MUST_UPGRADE was #{expectation}."
-  report "Upgrade Elexis created #{@versionDate} was #{res ? 'was succesfull' : 'failed'}"
+  info = "Upgrade Elexis created #{@versionDate} added #{nrNewJars} jars #{res ? 'was succesfull' : 'failed'}"
+  report info
+  @summary << info
   report_add_separator
 #  @jubula.checkOutcome(res, tstCase2run)
   @swInstId += 1
@@ -133,13 +138,16 @@ urls = {
   # but it seems to have (as per 24.05.2014 at least the same problem as the Beta2 org.apache.commons.io not found)
   # ci_base + 'job/Elexis-3.0-Core-Releases/23/artifact/ch.elexis.core.p2site/target/products/ch.elexis.core.application.product-linux.gtk.x86_64.zip' => "true", # Beta 1
   }
-urls.each{ |url, expectation| runOneInstallTest(url, expectation);  break
+urls.each{ |url, expectation| runOneInstallTest(url, expectation)
 }
 
 
 endTime = Time.now
 seconds = (endTime-startTime).to_i
 report_add_separator
+
 puts "Summary over #{@swInstId-1} installations after #{seconds/60} minutes and #{seconds%60} seconds is:"
-Kernel.system("grep Upgrade #{File.expand_path(File.join(@jubula.testResults, '..', '*', '*.log'))}")
+cmd = "grep Upgrade #{File.expand_path(File.join(@jubula.testResults, '..', '*', '*.log'))}"
+puts @summary.join("\n")
 report_add_separator
+
