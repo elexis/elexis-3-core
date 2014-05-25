@@ -58,7 +58,6 @@ end
 @nrFailedInstallations = 0
 @testResultsRoot = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'test-results'))
 FileUtils.rm_rf(@testResultsRoot, :verbose => true) unless DryRun
-FileUtils.rm_rf(File.join(Dir.home, 'elexis', 'demoDB'), :verbose => true)
 def report(msg)
   puts "#{@swInstId}: #{@version}: #{Time.now} #{msg}"
 end
@@ -104,6 +103,7 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
                         :vmargs => "-Declipse.p2.unsignedPolicy=allow -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch",
                         :autid => 'elexis')
 
+  @jubula.cleanDemoDb
   @jubula.useH2(Dir.pwd)
   @jubula.prepareRcpSupport
   origJars = Dir.glob('*.jar') # Don't count Jubula

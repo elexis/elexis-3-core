@@ -23,7 +23,7 @@ opts.parse!(ARGV)
 variant = ENV['VARIANT']
 dbUserPw = '-Dch.elexis.dbUser=elexis -Dch.elexis.dbPw=elexisTest'
 dbRunMode = '-Delexis-run-mode=RunFromScratch -Dch.elexis.username=007 -Dch.elexis.password=topsecret'
-FileUtils.rm_rf(File.join(Dir.home, 'elexis', 'demoDB'), :verbose => true)
+@hasDemoDb = false
 case variant
   when /postgres/i
     dbOpts = ' -Dch.elexis.dbFlavor=postgresql  -Dch.elexis.dbSpec=jdbc:postgresql://localhost/elexis ' + dbUserPw
@@ -35,6 +35,7 @@ case variant
     FileUtils.mv('demoDB', File.join(Dir.home, 'elexis'), :verbose => true)
     dbOpts = '-DdbOpts=h2'
     dbRunMode = '-Dch.elexis.username=test -Dch.elexis.password=test'
+    @hasDemoDb = true
   else
     dbOpts = '-DdbOpts=h2'
 end
@@ -69,6 +70,7 @@ end
 def run_upgrade_local_core_and_remote_base(jubula, label)
   res = true
   ENV['TEST_UDV_SW_MUST_UPGRADE'] = 'true' # we want installing all SW-features to succeed
+  jubula.cleanDemoDb unless @hasDemoDb
   jubula.genWrapper
   jubula.prepareRcpSupport
 #  jubula.patchXML # not needed for SW-Upgrade

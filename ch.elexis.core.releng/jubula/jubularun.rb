@@ -197,7 +197,12 @@ public
 	if !res then puts "failed. exiting"; exit(3); end
     sleep(sleepTime)
   end
-  
+
+  def cleanDemoDb
+    demoDb = File.join(Dir.home, 'elexis', 'demoDB')
+    FileUtils.rm_rf(demoDb, :verbose => true) if File.exists?(demoDb)
+  end
+
   def startAUT(sleepTime = DefaultSleepTime)
     puts("# Sleeping for #{sleepTime} after startAUT" )
     @@nrRun ||= 0
