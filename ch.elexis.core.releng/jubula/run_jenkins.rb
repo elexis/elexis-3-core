@@ -15,17 +15,39 @@
 
 require "#{File.dirname(__FILE__)}/jubulaoptions"
 require "#{File.dirname(__FILE__)}/jubularun"
+JubulaOptions::dryRun == true ? DryRun = true : DryRun = false
 $stdout.sync=true
 
 opts = JubulaOptions::parseArgs
 opts.parse!(ARGV)
-JubulaOptions::dryRun == true ? DryRun = true : DryRun = false
-jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
-                       # browser: workaround see https://bugs.eclipse.org/bugs/show_bug.cgi?id=404776, which was not backported to 3.8.2, only in 4.3.2
-                       # and for p2.unsignedPolicy https://bugs.eclipse.org/bugs/show_bug.cgi?id=235526
-                       :vmargs => "-Declipse.p2.unsignedPolicy=allow -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch",
-                       :autid => 'elexis')
+variant = ENV['VARIANT']
+dbUserPw = '-Dch.elexis.dbUser=elexis -Dch.elexis.dbPw=elexisTest'
+dbRunMode = '-Delexis-run-mode=RunFromScratch -Dch.elexis.username=007 -Dch.elexis.password=topsecret'
+FileUtils.rm_rf(File.join(Dir.home, 'elexis', 'demoDB'), :verbose => true)
+case variant
+  when /postgres/i
+    dbOpts = ' -Dch.elexis.dbFlavor=postgresql  -Dch.elexis.dbSpec=jdbc:postgresql://localhost/elexis ' + dbUserPw
+  when /mysql/i
+    dbOpts = '-Dch.elexis.dbFlavor=mysql        -Dch.elexis.dbSpec=jdbc:mysql://localhost/elexis_empty ' + dbUserPw
+  when /demoDb/i
+    system("wget --quiet --timestamping http://download.elexis.info/demoDB/demoDB_2_1_7_mit_Administrator.zip")
+    system("unzip -o demoDB_2_1_7_mit_Administrator.zip")
+    FileUtils.mv('demoDB', File.join(Dir.home, 'elexis'), :verbose => true)
+    dbOpts = '-DdbOpts=h2'
+    dbRunMode = '-Dch.elexis.username=test -Dch.elexis.password=test'
+  else
+    dbOpts = '-DdbOpts=h2'
+end
 
+# browser: workaround see https://bugs.eclipse.org/bugs/show_bug.cgi?id=404776, which was not backported to 3.8.2, only in 4.3.2
+# and for p2.unsignedPolicy https://bugs.eclipse.org/bugs/show_bug.cgi?id=235526. Disables the security popup while running SW-Upgrade
+workArounds = '-Declipse.p2.unsignedPolicy=allow -Dorg.eclipse.swt.browser.DefaultType=mozilla '
+
+
+jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
+                        :vmargs => "#{dbOpts} #{dbRunMode} #{workArounds} ",
+                       :autid => 'elexis',
+                       )
 # For unknown reasons (which took me a few hours to code around) I decided
 # that is is not my aim to use a MySQL database to store the Jubula testcases
 # Instead we also start from a fresh, empty workspace and an empty embedded H2 db
