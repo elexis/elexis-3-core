@@ -513,9 +513,11 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 			
 			@Override
 			public void run(){
-				AssignStickerDialog asd =
-					new AssignStickerDialog(getViewSite().getShell(), actKons);
-				asd.open();
+				if (actKons != null) {
+					AssignStickerDialog asd =
+						new AssignStickerDialog(getViewSite().getShell(), actKons);
+					asd.open();
+				}
 			}
 		};
 	}
