@@ -234,7 +234,7 @@ public class JdbcLink {
 			//
 			connectionPool = new GenericObjectPool<Connection>(null);
 			// configure the connection pool
-			connectionPool.setMaxActive(16);
+			connectionPool.setMaxActive(32);
 			connectionPool.setMinIdle(2);
 			connectionPool.setMaxWait(10000);
 			
