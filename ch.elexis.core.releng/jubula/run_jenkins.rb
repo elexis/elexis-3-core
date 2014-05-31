@@ -15,11 +15,11 @@
 
 require "#{File.dirname(__FILE__)}/jubulaoptions"
 require "#{File.dirname(__FILE__)}/jubularun"
-JubulaOptions::dryRun == true ? DryRun = true : DryRun = false
 $stdout.sync=true
 
 opts = JubulaOptions::parseArgs
 opts.parse!(ARGV)
+JubulaOptions::dryRun == true ? DryRun = true : DryRun = false
 variant = ENV['VARIANT']
 dbUserPw = '-Dch.elexis.dbUser=elexis -Dch.elexis.dbPw=elexisTest'
 dbRunMode = '-Delexis-run-mode=RunFromScratch -Dch.elexis.username=007 -Dch.elexis.password=topsecret'
@@ -46,7 +46,7 @@ workArounds = '-Declipse.p2.unsignedPolicy=allow -Dorg.eclipse.swt.browser.Defau
 
 
 jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
-                        :vmargs => "#{dbOpts} #{dbRunMode} #{workArounds} ",
+                       :vmargs => "#{dbOpts} #{dbRunMode} #{workArounds} ",
                        :autid => 'elexis',
                        )
 # For unknown reasons (which took me a few hours to code around) I decided
@@ -83,6 +83,7 @@ def run_upgrade_local_core_and_remote_base(jubula, label)
 end
 
 def run_fulltest(jubula, label)
+  jubula.useH2(Dir.pwd)
   jubula.patchXML
   jubula.rmTestcases  # only if using h2
   jubula.loadTestcases    # only if using h2

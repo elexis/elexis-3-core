@@ -130,6 +130,7 @@ def runOneInstallTest(url, expectation, instDest = File.join(Dir.pwd, "sw-upgrad
   report info
   @summary << info
   report_add_separator
+  FileUtils.mv(Dir.glob(File.join(@jubula.dataDir, '*.log')), @jubula.testResults, :verbose => true)
 #  @jubula.checkOutcome(res, tstCase2run)
   @swInstId += 1
 end
