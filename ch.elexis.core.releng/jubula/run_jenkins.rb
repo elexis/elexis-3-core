@@ -93,6 +93,8 @@ def run_fulltest(jubula, label)
   # TODO: Check for other *.jubula*.xml files to execute as TestCases, eg. Omnivore, KG-Iatrix
 end
 
+FileUtils.makedirs(jubula.dataDir, :verbose => true)
+FileUtils.cp('artikelstamm_first_v2.xml', jubula.dataDir, :verbose => true)
 run_upgrade_local_core_and_remote_base(jubula, 'TST_UPGRADE')
 run_fulltest(jubula, 'FULLTEST')
 

@@ -376,6 +376,64 @@
         <uniqueId>3fa86b926fe947bba4af5e491b9e3fd7</uniqueId>
       </parameterDescription>
     </namedTestData>
+    <namedTestData name="PATIENTEN_2">
+      <testData>
+        <row rowCount="1">
+          <data columnCount="1">
+            <data>
+              <language>de_DE</language>
+              <value>Miller</value>
+            </data>
+            <data>
+              <language>fr_CH</language>
+              <value>Müller</value>
+            </data>
+          </data>
+          <data columnCount="2">
+            <data>
+              <language>de_DE</language>
+              <value>Beatrice</value>
+            </data>
+          </data>
+          <data columnCount="3">
+            <data>
+              <language>de_DE</language>
+              <value>1.1.1980</value>
+            </data>
+          </data>
+          <data columnCount="4">
+            <data>
+              <language>de_DE</language>
+              <value>w</value>
+            </data>
+          </data>
+        </row>
+        <uniqueIds>4550462a201f4d4fa160be1c96684bec</uniqueIds>
+        <uniqueIds>fef306eb25ed4f77a110051015394859</uniqueIds>
+        <uniqueIds>547ad132293343a583d5ba88f7d6975a</uniqueIds>
+        <uniqueIds>b30fd1aeb058476f904d046faec74a06</uniqueIds>
+      </testData>
+      <parameterDescription>
+        <name>FAMILYNAME</name>
+        <type>java.lang.String</type>
+        <uniqueId>4550462a201f4d4fa160be1c96684bec</uniqueId>
+      </parameterDescription>
+      <parameterDescription>
+        <name>GIVENNAME</name>
+        <type>java.lang.String</type>
+        <uniqueId>fef306eb25ed4f77a110051015394859</uniqueId>
+      </parameterDescription>
+      <parameterDescription>
+        <name>BIRTHDAY</name>
+        <type>java.lang.String</type>
+        <uniqueId>547ad132293343a583d5ba88f7d6975a</uniqueId>
+      </parameterDescription>
+      <parameterDescription>
+        <name>SEX</name>
+        <type>java.lang.String</type>
+        <uniqueId>b30fd1aeb058476f904d046faec74a06</uniqueId>
+      </parameterDescription>
+    </namedTestData>
     <aut id="ID_A_73940">
       <name>elexis</name>
       <config id="ID_C_74175">
@@ -511,7 +569,7 @@
         </confAttrMapEntry>
         <confAttrMapEntry>
           <key>KEYBOARD_LAYOUT</key>
-          <value>en_US</value>
+          <value>de_DE</value>
         </confAttrMapEntry>
         <confAttrMapEntry>
           <key>PATTERN</key>
@@ -4020,6 +4078,31 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name>Import Artikelstamm</name>
+              <comment xsi:nil="true"/>
+              <GUID>3231c762c85240c8afc72b716d40310a</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>artikelstamm_first_v2.xml</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>a41daf8e246e4251ac57829d882763c0</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Wait up to 30 seconds for Main-Windows to show up again</name>
               <comment>Restarting Elexis can be slow</comment>
               <GUID>058767de3c734b19aae53197215c98f5</GUID>
@@ -5911,6 +5994,42 @@
           </eventTestcase>
           <interfaceLocked>false</interfaceLocked>
         </testcase>
+        <testcase>
+          <name>Elexis_SlowDown_Necessary</name>
+          <comment xsi:nil="true"/>
+          <GUID>2cc82a65d808499fb219408a83968851</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata/>
+          <datafile xsi:nil="true"/>
+          <teststep>
+            <usedTestcase>
+              <name>Slow down Elexis a little bit</name>
+              <comment>This should not be necessary, but is a good marker</comment>
+              <GUID>d866d22590314ae988f31a118002419a</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>500</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <interfaceLocked>false</interfaceLocked>
+        </testcase>
       </category>
       <category>
         <name>SW_Installation</name>
@@ -7576,20 +7695,6 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name/>
-              <comment xsi:nil="true"/>
-              <GUID>4ae3f93368fc46848293fac959a002d7</GUID>
-              <generated>false</generated>
-              <active>false</active>
-              <taskId xsi:nil="true"/>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>8ab6b083150339b501150364afe8079f</testcaseGuid>
-              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-              <hasOwnTestdata>false</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
               <name>Save details for SW-Installation in log file</name>
               <comment xsi:nil="true"/>
               <GUID>045a723968624734b35a159637bcc964</GUID>
@@ -8900,7 +9005,7 @@
               <comment xsi:nil="true"/>
               <GUID>7c5845852ff744738436688e3f39215a</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <taskId xsi:nil="true"/>
               <testdata>
                 <row rowCount="1">
@@ -8920,6 +9025,36 @@
               <overriddenNames>
                 <propagated>false</propagated>
                 <originalName>8ab6b08d1a4d08f3011a4d09a4940023</originalName>
+                <newName>a43dd75cbfc64f50988d8a8f890e7343</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Enter family name</name>
+              <comment xsi:nil="true"/>
+              <GUID>533b4f008fa14eee902db952544f4fab</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>=8ed5487ab8c146ef86ebb3949a82dd5d</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>660f12dd04cb4728ab2cc352d6db702c</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>07a110937451400ea2330dc4088e49ed</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>e6b18dcce2af4d559d20b91d4c512bd1</originalName>
                 <newName>a43dd75cbfc64f50988d8a8f890e7343</newName>
               </overriddenNames>
             </usedTestcase>
@@ -9093,6 +9228,20 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>88011fecd480436e9234bb0e0b670a0e</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Konsfenster auswählen</name>
               <comment xsi:nil="true"/>
               <GUID>abe7df239f384c6582a8965c472ffcb5</GUID>
@@ -9130,11 +9279,25 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>68ef48d15a714c6cb3cc49a960147c4f</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Warte, bis sich Elexis beruhigt hat. Wäre schoen wenn wir den Patientenamen sehen würden</name>
               <comment xsi:nil="true"/>
               <GUID>7078df88384645c0b87d611041d477f4</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <taskId xsi:nil="true"/>
               <testdata>
                 <row rowCount="1">
@@ -9151,6 +9314,25 @@
               <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
               <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Click in Konstext</name>
+              <comment xsi:nil="true"/>
+              <GUID>f37e7f5293d448bc906dd8634718a3c1</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>d554ded6f21f4ea1aaf5e2ab005197b6</newName>
+              </overriddenNames>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -9175,6 +9357,20 @@
               <datafile xsi:nil="true"/>
               <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>c962594c321e4726bbf6c31016af01fb</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -9221,24 +9417,43 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name>Click in middle of konstext</name>
+              <comment xsi:nil="true"/>
+              <GUID>0dd9b0893f214a55a036c2837f1cbbe8</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>e8b36ef6b6624a1ca7a772b348500787</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>d554ded6f21f4ea1aaf5e2ab005197b6</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Tab Konsultationen öffnen</name>
               <comment xsi:nil="true"/>
               <GUID>2d501c8c86ae4213b2c98faa7ea3c475</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <taskId xsi:nil="true"/>
               <testdata>
                 <row rowCount="1">
                   <data columnCount="1">
                     <data>
                       <language>de_DE</language>
-                      <value>'*Konsultation'</value>
+                      <value>.*Konsult.*</value>
                     </data>
                   </data>
                   <data columnCount="2">
                     <data>
                       <language>de_DE</language>
-                      <value>equals</value>
+                      <value> matches</value>
                     </data>
                   </data>
                 </row>
@@ -9438,7 +9653,7 @@
                   <data columnCount="1">
                     <data>
                       <language>de_DE</language>
-                      <value>Moliere: un malade imaginaire (Jubula hat UTF-8 nicht so gernre)</value>
+                      <value>=83001c4d2b1348558832fdd7471850a3</value>
                     </data>
                   </data>
                 </row>
@@ -10014,7 +10229,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Drop middle of verrechnung</name>
+              <name>Drop into middle of verrechnung</name>
               <comment xsi:nil="true"/>
               <GUID>c75f2a1721304306b9d88e1bfa7c1fd8</GUID>
               <generated>false</generated>
@@ -10049,7 +10264,7 @@
                   <data columnCount="5">
                     <data>
                       <language>de_DE</language>
-                      <value>500</value>
+                      <value>1000</value>
                     </data>
                   </data>
                 </row>
@@ -10068,6 +10283,39 @@
                 <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
                 <newName>d02cdf7eab904c9f8518001480ab40c6</newName>
               </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Click again in verrechnung</name>
+              <comment xsi:nil="true"/>
+              <GUID>8a32b9506aee45e7a7b65188000f1619</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>d554ded6f21f4ea1aaf5e2ab005197b6</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>f32e10f6509044f08e3462bc313c34af</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <interfaceLocked>false</interfaceLocked>
@@ -10186,7 +10434,7 @@
               <comment xsi:nil="true"/>
               <GUID>e3caf08b6de44885874460a4d61d49eb</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <taskId xsi:nil="true"/>
               <testdata>
                 <row rowCount="1">
@@ -10202,6 +10450,25 @@
               <datafile xsi:nil="true"/>
               <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Click in table cases</name>
+              <comment xsi:nil="true"/>
+              <GUID>e78a1f61aa1c4528839554e7a6cd8f8c</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>e8b36ef6b6624a1ca7a772b348500787</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>c1bb49de4f834bfe818dd640d43ce63c</newName>
+              </overriddenNames>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -10433,7 +10700,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Start-Datum auf 1.4.2014 setzen</name>
+              <name>Start-Datum auf 21.4.2014 setzen</name>
               <comment xsi:nil="true"/>
               <GUID>4ad718801c4c42ec8ff42f8615d1dcd1</GUID>
               <generated>false</generated>
@@ -10458,6 +10725,20 @@
                 <originalName>e6b18dcce2af4d559d20b91d4c512bd1</originalName>
                 <newName>7de421fa146f40eab0129f350cc8d2d7</newName>
               </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>f0df3d661ab64f93963e04ea5c1a6f2f</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -10524,6 +10805,53 @@
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>ca0b72c664d24dc9bf89d65f211d6137</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Select top most case</name>
+              <comment xsi:nil="true"/>
+              <GUID>24e0df2245a64680bf949b0b82ec594d</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>02f23e8fcb5f4e76858828b86d4782b4</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4940024</originalName>
+                <newName>c1bb49de4f834bfe818dd640d43ce63c</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>852ddc9414344dd89b3579e781fe12ba</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
           <interfaceLocked>false</interfaceLocked>
         </testcase>
         <testcase>
@@ -10558,15 +10886,8 @@
                       <value>Daten/Patienten.*</value>
                     </data>
                   </data>
-                  <data columnCount="2">
-                    <data>
-                      <language>de_DE</language>
-                      <value>Daten/select_patient</value>
-                    </data>
-                  </data>
                 </row>
                 <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
-                <uniqueIds>6c7efc8fc151413aae21009e48fd1e08</uniqueIds>
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
@@ -10729,7 +11050,7 @@
               <data columnCount="1">
                 <data>
                   <language>de_DE</language>
-                  <value>/opt/elexis-3-jubula-8.0/elexis-3-core/ch.elexis.core.releng/jubula/artikelstamm_first_v2.xml</value>
+                  <value>artikelstamm_first_xx.xml</value>
                 </data>
               </data>
             </row>
@@ -11395,6 +11716,20 @@
         </teststep>
         <teststep>
           <usedTestcase>
+            <name>Use case: patient comes in, gets drug, pays</name>
+            <comment xsi:nil="true"/>
+            <GUID>3d78c57ce8db40dba14405f90a0ac486</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>e6a4abe8db47468cb4daf523b2323cec</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
             <name>Open Leistung perspective</name>
             <comment>Can take a long time. Must be run early to avoid this delay afterwards</comment>
             <GUID>d5e638d254e74126bbf86a4699154d99</GUID>
@@ -11453,117 +11788,6 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name>Patienten eingeben</name>
-            <comment xsi:nil="true"/>
-            <GUID>84af95b884af4c78a3f6eace4d7d22de</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <testdata/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>PATIENTEN</referencedTestData>
-            <testcaseGuid>ce047a9881aa42c8ad2b22bfedb96844</testcaseGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Fall erfassen</name>
-            <comment xsi:nil="true"/>
-            <GUID>dd981e7b7b0243449ede8a2fc5c06eb8</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <testdata>
-              <row rowCount="1">
-                <data columnCount="1">
-                  <data>
-                    <language>de_DE</language>
-                    <value>Bernasco</value>
-                  </data>
-                </data>
-                <data columnCount="2">
-                  <data>
-                    <language>de_DE</language>
-                    <value>UVG</value>
-                  </data>
-                </data>
-                <data columnCount="3">
-                  <data>
-                    <language>de_DE</language>
-                    <value>Unfall</value>
-                  </data>
-                </data>
-                <data columnCount="4">
-                  <data>
-                    <language>de_DE</language>
-                    <value>Unfall Nummer 27</value>
-                  </data>
-                </data>
-                <data columnCount="5">
-                  <data>
-                    <language>de_DE</language>
-                    <value>Bernasconi Erika,,</value>
-                  </data>
-                </data>
-                <data columnCount="6">
-                  <data>
-                    <language>de_DE</language>
-                    <value>1.4.2014</value>
-                  </data>
-                </data>
-              </row>
-              <uniqueIds>9566315b203d451ea9ad9098540ed85c</uniqueIds>
-              <uniqueIds>cf1c6003ceeb4fd79be4e3997a14c4ce</uniqueIds>
-              <uniqueIds>41d45ad9659d483586b42afe27221c53</uniqueIds>
-              <uniqueIds>a3c6bf314c42417c890fb97bea8f4a17</uniqueIds>
-              <uniqueIds>85399dfa17c942e2ac2a6bafc345f0b7</uniqueIds>
-              <uniqueIds>6e0f46b2bfc043238463095fc10573cf</uniqueIds>
-            </testdata>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>31e5391fe47245138f466b8e9e8ef398</testcaseGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Kons erfassen (only one patient)</name>
-            <comment xsi:nil="true"/>
-            <GUID>4fb93beaefc04375879f1951d747d5b0</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <testdata>
-              <row rowCount="1">
-                <data columnCount="1">
-                  <data>
-                    <language>de_DE</language>
-                    <value>Niklaus ist nicht gut in der medizischen Diagnose.</value>
-                  </data>
-                </data>
-              </row>
-              <uniqueIds>83001c4d2b1348558832fdd7471850a3</uniqueIds>
-            </testdata>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>ae9ad522d2304e999f75afe5f6b6ae3d</testcaseGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
-            <name>Patient receives a drug</name>
-            <comment xsi:nil="true"/>
-            <GUID>38831514375c43bba5777f1ba059dd4f</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>839d2de9e6184841b2bee9277ef18442</testcaseGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
             <name>Screenshot of last windows</name>
             <comment xsi:nil="true"/>
             <GUID>598431b3ac0f4adcaa53dee907ec336b</GUID>
@@ -11587,17 +11811,32 @@
           </usedTestcase>
         </teststep>
         <eventTestcase>
+          <name>RestartElexis</name>
+          <comment xsi:nil="true"/>
+          <GUID>25a8d6a873f9455e9e56d09750225ea9</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+          <eventType>TestErrorEvent.Action</eventType>
+          <reentryProperty>return</reentryProperty>
+        </eventTestcase>
+        <eventTestcase>
           <name/>
           <comment xsi:nil="true"/>
-          <GUID>9f406ad074434670bba237641ab5c0c3</GUID>
+          <GUID>2f18d4ab0b924af7945b0105be13395c</GUID>
           <generated>false</generated>
           <active>true</active>
           <taskId xsi:nil="true"/>
           <datafile xsi:nil="true"/>
           <testcaseGuid>9230ed2fa60d47b0b54f637da3c72b56</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
           <hasOwnTestdata>false</hasOwnTestdata>
-          <eventType>TestErrorEvent.Action</eventType>
-          <reentryProperty>exit</reentryProperty>
+          <eventType>TestErrorEvent.VerifyFailed</eventType>
+          <reentryProperty>continue</reentryProperty>
         </eventTestcase>
         <interfaceLocked>false</interfaceLocked>
       </testcase>
@@ -12007,6 +12246,20 @@
                 <originalName>8ab6b08d1a4d08f3011a4d09a4940024</originalName>
                 <newName>664eb84fe99b4359b5c4e6ad4a63a91f</newName>
               </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>939cd3db063645a2a3886da46252ecd4</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -14566,7 +14819,7 @@
           <overriddenNames>
             <propagated>false</propagated>
             <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
-            <newName>8ee1219858794bf0ac5c7c543bf61276</newName>
+            <newName>4e7449721ef44c36a19ec70d45f9d634</newName>
           </overriddenNames>
         </usedTestcase>
       </teststep>
@@ -14646,6 +14899,433 @@
           </overriddenNames>
         </usedTestcase>
       </teststep>
+      <interfaceLocked>false</interfaceLocked>
+    </testcase>
+    <testcase>
+      <name>Kons_Verrechnen</name>
+      <comment xsi:nil="true"/>
+      <GUID>3e3acdc0f513477fa53feef478edc4e7</GUID>
+      <generated>false</generated>
+      <active>true</active>
+      <taskId xsi:nil="true"/>
+      <testdata/>
+      <datafile xsi:nil="true"/>
+      <teststep>
+        <usedTestcase>
+          <name>Click in Cases</name>
+          <comment xsi:nil="true"/>
+          <GUID>6d27a012d1ca4f3abc694f4c6a75381f</GUID>
+          <generated>false</generated>
+          <active>false</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>f7239477bfd84662ac2fe91e83b03826</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>c1bb49de4f834bfe818dd640d43ce63c</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Click in middle of Cases</name>
+          <comment xsi:nil="true"/>
+          <GUID>56d123a6215242009c2cac7ab1429ef6</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>e8b36ef6b6624a1ca7a772b348500787</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>c1bb49de4f834bfe818dd640d43ce63c</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Select top most case</name>
+          <comment xsi:nil="true"/>
+          <GUID>fb18221be9c84cbda65f5626445e01ea</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>02f23e8fcb5f4e76858828b86d4782b4</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4940024</originalName>
+            <newName>c1bb49de4f834bfe818dd640d43ce63c</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>c0ac38baea7045759a3b120078c6ff34</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Context menu Rechnung erstellen</name>
+          <comment xsi:nil="true"/>
+          <GUID>6d50235c16374c8f8be42df1c2918a28</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Rechnung erstellen.*</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>3</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>matches</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b08324478f5b01244839687a0075</uniqueIds>
+            <uniqueIds>8ab6b08324478f5b0124483987410076</uniqueIds>
+            <uniqueIds>8ab6b08324478f5b0124487c95120084</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b08324478f5b01244836b703006e</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+          <overriddenNames>
+            <propagated>false</propagated>
+            <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+            <newName>c1bb49de4f834bfe818dd640d43ce63c</newName>
+          </overriddenNames>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>View Rechnungsübersicht öffnen</name>
+          <comment xsi:nil="true"/>
+          <GUID>c365a726fa8f4c6fa337ae6fbcb850a3</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Abrechnung/Rechnungsübersicht.*</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>maximize view</name>
+          <comment xsi:nil="true"/>
+          <GUID>f58dad1e61a54d8692a21c549d47a0dd</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>m</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>8ab6b083154b8c1601154b91d1e0004c</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>8ab6b083150339b501150364afe807da</testcaseGuid>
+          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Screenshot Erste Rechnung erstellen</name>
+          <comment xsi:nil="true"/>
+          <GUID>8253773f11a044d89351716375a73fa4</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>screenshots/erste_rechnung.png</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <interfaceLocked>false</interfaceLocked>
+    </testcase>
+    <testcase>
+      <name>Neupatient_mit_Kons_und_Rechnung</name>
+      <comment xsi:nil="true"/>
+      <GUID>e6a4abe8db47468cb4daf523b2323cec</GUID>
+      <generated>false</generated>
+      <active>true</active>
+      <taskId xsi:nil="true"/>
+      <testdata/>
+      <datafile xsi:nil="true"/>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>d33f08e770c643db8845db84817730f7</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata/>
+          <datafile xsi:nil="true"/>
+          <referencedTestData>PATIENTEN_2</referencedTestData>
+          <testcaseGuid>ce047a9881aa42c8ad2b22bfedb96844</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>d3b0ad92581542e3947af3c47fb31764</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata/>
+          <datafile xsi:nil="true"/>
+          <referencedTestData>PATIENTEN_2</referencedTestData>
+          <testcaseGuid>e4836ee6f42d49a7b5fc1b7ba25dc67c</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>7d78644b0fad4390af57ee16c044e18c</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Miller</value>
+                </data>
+              </data>
+              <data columnCount="2">
+                <data>
+                  <language>de_DE</language>
+                  <value>KVG</value>
+                </data>
+              </data>
+              <data columnCount="3">
+                <data>
+                  <language>de_DE</language>
+                  <value>Krankheit</value>
+                </data>
+              </data>
+              <data columnCount="4">
+                <data>
+                  <language>de_DE</language>
+                  <value>Unfall # 397</value>
+                </data>
+              </data>
+              <data columnCount="5">
+                <data>
+                  <language>de_DE</language>
+                  <value>Miller</value>
+                </data>
+              </data>
+              <data columnCount="6">
+                <data>
+                  <language>de_DE</language>
+                  <value>14.05.2014</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>9566315b203d451ea9ad9098540ed85c</uniqueIds>
+            <uniqueIds>cf1c6003ceeb4fd79be4e3997a14c4ce</uniqueIds>
+            <uniqueIds>41d45ad9659d483586b42afe27221c53</uniqueIds>
+            <uniqueIds>a3c6bf314c42417c890fb97bea8f4a17</uniqueIds>
+            <uniqueIds>85399dfa17c942e2ac2a6bafc345f0b7</uniqueIds>
+            <uniqueIds>6e0f46b2bfc043238463095fc10573cf</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>31e5391fe47245138f466b8e9e8ef398</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>2fdff0b64b6344b1a2f2f8c76f31c184</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Erste Konsultation wegen Molemax</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>83001c4d2b1348558832fdd7471850a3</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>ae9ad522d2304e999f75afe5f6b6ae3d</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>42e0897796c44469b670ed1b1a58b32d</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>839d2de9e6184841b2bee9277ef18442</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>080b53152d1c4acc9ceacddb3def99e0</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <teststep>
+        <usedTestcase>
+          <name/>
+          <comment xsi:nil="true"/>
+          <GUID>99877e01575144af949462461fc4cdff</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>3e3acdc0f513477fa53feef478edc4e7</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>false</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
+      <eventTestcase>
+        <name>RestartElexisOnActionError</name>
+        <comment xsi:nil="true"/>
+        <GUID>b576def816324872b82eab22904248ae</GUID>
+        <generated>false</generated>
+        <active>true</active>
+        <taskId xsi:nil="true"/>
+        <datafile xsi:nil="true"/>
+        <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
+        <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+        <hasOwnTestdata>false</hasOwnTestdata>
+        <eventType>TestErrorEvent.Action</eventType>
+        <reentryProperty>return</reentryProperty>
+      </eventTestcase>
+      <eventTestcase>
+        <name/>
+        <comment xsi:nil="true"/>
+        <GUID>79fd39975442421b9ed0bef38be5610c</GUID>
+        <generated>false</generated>
+        <active>true</active>
+        <taskId xsi:nil="true"/>
+        <datafile xsi:nil="true"/>
+        <testcaseGuid>9230ed2fa60d47b0b54f637da3c72b56</testcaseGuid>
+        <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+        <hasOwnTestdata>false</hasOwnTestdata>
+        <eventType>TestErrorEvent.VerifyFailed</eventType>
+        <reentryProperty>continue</reentryProperty>
+      </eventTestcase>
+      <eventTestcase>
+        <name>RestartElexisOnComponentNotFound</name>
+        <comment xsi:nil="true"/>
+        <GUID>d64f256b2b4348b38db5d8f9d36437ed</GUID>
+        <generated>false</generated>
+        <active>true</active>
+        <taskId xsi:nil="true"/>
+        <datafile xsi:nil="true"/>
+        <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
+        <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+        <hasOwnTestdata>false</hasOwnTestdata>
+        <eventType>TestErrorEvent.CompNotFound</eventType>
+        <reentryProperty>return</reentryProperty>
+      </eventTestcase>
+      <eventTestcase>
+        <name>RestartElexisOnConfigurationError</name>
+        <comment xsi:nil="true"/>
+        <GUID>044eee513a704e888c35dd2d0661ca53</GUID>
+        <generated>false</generated>
+        <active>true</active>
+        <taskId xsi:nil="true"/>
+        <datafile xsi:nil="true"/>
+        <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
+        <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+        <hasOwnTestdata>false</hasOwnTestdata>
+        <eventType>TestErrorEvent.Config</eventType>
+        <reentryProperty>return</reentryProperty>
+      </eventTestcase>
       <interfaceLocked>false</interfaceLocked>
     </testcase>
     <execCategories>
@@ -14957,98 +15637,38 @@
           <stepDelay>0</stepDelay>
           <commandLineParameter xsi:nil="true"/>
           <usedTestcase>
-            <name/>
+            <name>Import Artikelstamm from current directory</name>
             <comment xsi:nil="true"/>
             <GUID>f016be4a75ad4cd188150f5187161d23</GUID>
             <generated>false</generated>
             <active>true</active>
             <taskId xsi:nil="true"/>
+            <testdata>
+              <row rowCount="1">
+                <data columnCount="1">
+                  <data>
+                    <language>de_DE</language>
+                    <value>artikelstamm_first_v2.xml</value>
+                  </data>
+                </data>
+              </row>
+              <uniqueIds>a41daf8e246e4251ac57829d882763c0</uniqueIds>
+            </testdata>
             <datafile xsi:nil="true"/>
             <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-          <usedTestcase>
-            <name/>
-            <comment xsi:nil="true"/>
-            <GUID>ee7e24a854d5405c9b9912079f1f988a</GUID>
-            <generated>false</generated>
-            <active>false</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>PATIENTEN</referencedTestData>
-            <testcaseGuid>ce047a9881aa42c8ad2b22bfedb96844</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-          <usedTestcase>
-            <name/>
-            <comment xsi:nil="true"/>
-            <GUID>d3b0ad92581542e3947af3c47fb31764</GUID>
-            <generated>false</generated>
-            <active>false</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>e4836ee6f42d49a7b5fc1b7ba25dc67c</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-          <usedTestcase>
-            <name/>
-            <comment xsi:nil="true"/>
-            <GUID>7d78644b0fad4390af57ee16c044e18c</GUID>
-            <generated>false</generated>
-            <active>false</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>31e5391fe47245138f466b8e9e8ef398</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-          <usedTestcase>
-            <name/>
-            <comment xsi:nil="true"/>
-            <GUID>2fdff0b64b6344b1a2f2f8c76f31c184</GUID>
-            <generated>false</generated>
-            <active>false</active>
-            <taskId xsi:nil="true"/>
-            <testdata>
-              <row rowCount="1">
-                <data columnCount="1">
-                  <data>
-                    <language>de_DE</language>
-                    <value>Erste Konsultation wegen Molemax</value>
-                  </data>
-                </data>
-              </row>
-              <uniqueIds>83001c4d2b1348558832fdd7471850a3</uniqueIds>
-            </testdata>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>ae9ad522d2304e999f75afe5f6b6ae3d</testcaseGuid>
-            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
           <usedTestcase>
             <name/>
             <comment xsi:nil="true"/>
-            <GUID>28ec64d685034311b9c8a4eaa4bb20d9</GUID>
+            <GUID>991545f03fb7471c971d4214db86fbf0</GUID>
             <generated>false</generated>
-            <active>false</active>
+            <active>true</active>
             <taskId xsi:nil="true"/>
-            <testdata>
-              <row rowCount="1">
-                <data columnCount="1">
-                  <data>
-                    <language>de_DE</language>
-                    <value>Other/Molemax.*</value>
-                  </data>
-                </data>
-              </row>
-              <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
-            </testdata>
             <datafile xsi:nil="true"/>
-            <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
+            <testcaseGuid>e6a4abe8db47468cb4daf523b2323cec</testcaseGuid>
             <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
+            <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <eventHandler>
             <event>TestErrorEvent.Config</event>
@@ -15893,7 +16513,7 @@
       <GUID>971ed2630fb14a5f8861263e895f5ef3</GUID>
       <creationContext>STEP</creationContext>
       <refGuid xsi:nil="true"/>
-      <compName>Kontaktauswählen_Text_txf</compName>
+      <compName>Kontaktauswählen_Bezeichung_1_name_txf</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.abstract.Widget</compType>
