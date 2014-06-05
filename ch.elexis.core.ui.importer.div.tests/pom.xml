@@ -9,8 +9,6 @@
   <artifactId>ch.elexis.core.ui.importer.div.tests</artifactId>
   <version>3.0.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
-  <!-- comment out to enable headless tests and add additional dependencies if needed
-    -->
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -19,13 +17,19 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-          <useUIHarness>true</useUIHarness>
           <skipTests>true</skipTests>
-          <!--application>ch.elexis.core.application.ElexisApp</application>
-          <useUIThread>false</useUIThread-->
-          <argLine>-DjdbcLink=org.h2.Driver:mem:mem_test;AUTO_SERVER=TRUE -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
+          <useUIHarness>true</useUIHarness>
+          <useUIThread>false</useUIThread>
+          <application>ch.elexis.core.application.ElexisApp</application>
+          <product>ch.elexis.ElexisProduct</product>
+          <argLine>-ea -Xms40m -Xmx512m -DjdbcLink=org.h2.Driver:mem:mem_test;AUTO_SERVER=TRUE -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
           <showEclipseLog>true</showEclipseLog>
           <dependencies>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>ch.elexis.core.ui.importer.div</artifactId>
+              <version>0.0.0</version>
+            </dependency>
             <dependency>
               <type>eclipse-feature</type>
               <artifactId>ch.elexis.core.ui.feature</artifactId>
