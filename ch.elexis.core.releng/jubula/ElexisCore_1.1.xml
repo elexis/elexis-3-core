@@ -11267,7 +11267,7 @@
               <comment xsi:nil="true"/>
               <GUID>d8837b213eb24285b1e9f2752d88aac7</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <taskId xsi:nil="true"/>
               <testdata>
                 <row rowCount="1">
@@ -11304,7 +11304,7 @@
               <comment xsi:nil="true"/>
               <GUID>9c0b08967e4d46da9933a35ce549dab5</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <taskId xsi:nil="true"/>
               <datafile xsi:nil="true"/>
               <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
