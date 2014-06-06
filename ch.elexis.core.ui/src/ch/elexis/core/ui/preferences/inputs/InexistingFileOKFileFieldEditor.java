@@ -32,4 +32,9 @@ public class InexistingFileOKFileFieldEditor extends FileFieldEditor {
 		return true;
 	}
 	
+	@Override
+	protected boolean checkState(){
+		return true;
+	}
+	
 }
