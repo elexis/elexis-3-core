@@ -71,6 +71,10 @@ public class JdbcLink {
 	public static final int CONNECTION_CANT_PREPARE_STAMENT = 31;
 	public static final int CONNECTION_SQL_ERROR = 40;
 	
+	public static final String DBFLAVOR_MYSQL = "mysql";
+	public static final String DBFLAVOR_POSTGRESQL = "postgresql";
+	public static final String DBFLAVOR_H2 = "h2";
+	
 	static {
 		log = Log.get("jdbcLink");
 	}
@@ -89,7 +93,7 @@ public class JdbcLink {
 		String hostname = hostdetail[0];
 		String hostport = hostdetail.length > 1 ? hostdetail[1] : "3306";
 		String connect = "jdbc:mysql://" + hostname + ":" + hostport + "/" + database;
-		return new JdbcLink(driver, connect, "mysql");
+		return new JdbcLink(driver, connect, DBFLAVOR_MYSQL);
 	}
 	
 	/**
@@ -136,7 +140,7 @@ public class JdbcLink {
 			prefix += "zip:";
 		}
 		String connect = prefix + database + ";AUTO_SERVER=TRUE";
-		return new JdbcLink(driver, connect, "h2");
+		return new JdbcLink(driver, connect, DBFLAVOR_H2);
 	}
 	
 	/**
@@ -167,7 +171,7 @@ public class JdbcLink {
 		String hostport = hostdetail.length > 1 ? hostdetail[1] : "5432";
 		
 		String connect = "jdbc:postgresql://" + hostname + ":" + hostport + "/" + database;
-		return new JdbcLink(driver, connect, "postgresql");
+		return new JdbcLink(driver, connect, DBFLAVOR_POSTGRESQL);
 	}
 	
 	public static JdbcLink createODBCLink(String dsn){
@@ -286,10 +290,10 @@ public class JdbcLink {
 			return "''";
 		}
 		try {
-			return wrap(s.getBytes("UTF-8"), "mysql");
+			return wrap(s.getBytes("UTF-8"), DBFLAVOR_MYSQL);
 		} catch (UnsupportedEncodingException e) {
 			ExHandler.handle(e);
-			return wrap(s.getBytes(), "mysql");
+			return wrap(s.getBytes(), DBFLAVOR_MYSQL);
 		}
 	}
 	
@@ -326,7 +330,7 @@ public class JdbcLink {
 			case 34:
 				
 			case '\'':
-				if (flavor.startsWith("postgresql") || flavor.startsWith("hsql")) {
+				if (flavor.startsWith(DBFLAVOR_POSTGRESQL) || flavor.startsWith("hsql")) {
 					out[j++] = '\'';
 					break;
 				}
@@ -619,7 +623,7 @@ public class JdbcLink {
 		
 		public boolean isClosed(){
 			checkStm();
-			if ("postgresql".equals(DBFlavor)) {
+			if (DBFLAVOR_POSTGRESQL.equals(DBFlavor)) {
 				return false;
 			}
 			try {
@@ -922,18 +926,18 @@ public class JdbcLink {
 	public String translateFlavor(String sql){
 		// sql=sql.toLowerCase();
 		// TODO: Konzept für case-sensitiveness klarer definieren
-		if (DBFlavor.equalsIgnoreCase("postgresql")) {
+		if (DBFlavor.equalsIgnoreCase(DBFLAVOR_POSTGRESQL)) {
 			sql = sql.replaceAll("BLOB", "BYTEA");
 			sql = sql.replaceAll("DROP INDEX (.+?) ON .+?;", "DROP INDEX $1;");
 			sql = sql.replaceAll("MODIFY\\s+(\\w+)\\s+(.+)", "ALTER COLUMN $1 TYPE $2");
 			sql = sql.replaceAll("SIGNED", "INT");
-		} else if (DBFlavor.startsWith("hsqldb") || DBFlavor.startsWith("h2")) {
+		} else if (DBFlavor.startsWith("hsqldb") || DBFlavor.startsWith(DBFLAVOR_H2)) {
 			sql = sql.replaceAll("TEXT", "LONGVARCHAR");
 			sql = sql.replaceAll("BLOB", "LONGVARBINARY");
 			sql = sql.replaceAll("CREATE +TABLE", "CREATE CACHED TABLE");
 			sql = sql.replaceAll("DROP INDEX (.+?) ON .+?;", "DROP INDEX $1;");
 			sql = sql.replaceAll("MODIFY (.+)", "ALTER COLUMN $1");
-		} else if (DBFlavor.equalsIgnoreCase("mysql")) {
+		} else if (DBFlavor.equalsIgnoreCase(DBFLAVOR_MYSQL)) {
 			sql = sql.replaceAll("BLOB", "LONGBLOB");
 			sql = sql.replaceAll("TEXT", "LONGTEXT");
 			/* experimental - do not use */
