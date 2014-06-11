@@ -354,7 +354,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return
 	 * @since 3.0.0
 	 */
-	public static boolean connect(String dbFlavor, String dbSpec, String dbUser, String dbPw,
+	private static boolean connect(String dbFlavor, String dbSpec, String dbUser, String dbPw,
 		boolean exitOnFail){
 		String msg = "Connecting to DB using " + dbFlavor + " " + dbSpec + " " + dbUser;
 		System.out.println(msg);
