@@ -1,0 +1,1 @@
+Do not move to target. These files are required to be co-located with the source code for classloading reasons.

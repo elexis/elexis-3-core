@@ -1,0 +1,7 @@
+
+h1. Quartz based scheduler for Elexis
+
+This scheduler eases the execution of tasks at certain times within Elexis. It is wrapping the "Quartz":http://quartz-scheduler.org library and provides persistence within the Elexis database.
+
+Jobs can be registered with a set of triggers on the provided extension point. A job is executed on ONE machine only.
+To see a sample of a job, have a look at @ch.elexis.core.scheduler.sample.SampleSchedulerJob.java@

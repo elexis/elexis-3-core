@@ -208,6 +208,7 @@
 		<module>ch.elexis.core.application.feature</module>
 		<module>ch.elexis.core.common.feature</module>
 		<module>ch.elexis.core.console.application</module>
+		<module>ch.elexis.core.scheduler</module>
 		<module>ch.elexis.core.data</module>
 		<module>ch.elexis.core.eigenartikel</module>
 		<module>ch.elexis.core.eigendiagnosen</module>
