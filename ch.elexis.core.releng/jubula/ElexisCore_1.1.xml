@@ -6215,6 +6215,133 @@
           </teststep>
           <interfaceLocked>false</interfaceLocked>
         </testcase>
+        <testcase>
+          <name>WaitForContextMenu</name>
+          <comment>Max 5 seconds</comment>
+          <GUID>64f30f14e54247d489e19bae7212fde6</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <parameterDescription>
+            <name>MOUSE_BUTTON</name>
+            <type>java.lang.Integer</type>
+            <uniqueId>6baf3143d28248199e862f5358ba8a44</uniqueId>
+          </parameterDescription>
+          <parameterDescription>
+            <name>TEXTPATH</name>
+            <type>java.lang.String</type>
+            <uniqueId>dad0e39690184af98834041c63d482d2</uniqueId>
+          </parameterDescription>
+          <testdata>
+            <uniqueIds>6baf3143d28248199e862f5358ba8a44</uniqueIds>
+            <uniqueIds>dad0e39690184af98834041c63d482d2</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>464fe1c6249d4c7cb8d4457fcf04a215</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>=dad0e39690184af98834041c63d482d2</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>matches</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>true</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>=6baf3143d28248199e862f5358ba8a44</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b0832433fd9701243435546a0037</uniqueIds>
+                <uniqueIds>8ab6b0832433fd97012434356d9a0038</uniqueIds>
+                <uniqueIds>8ab6b0832433fd9701243435920b0039</uniqueIds>
+                <uniqueIds>8ab6b0832433fd9701243435b08c003a</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b0832433fd9701243434ad160035</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>true</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>8ab6b08d1a4d08f3011a4d09a4930022</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <eventTestcase>
+            <name>Loose100msIfCheckFailed</name>
+            <comment xsi:nil="true"/>
+            <GUID>875a48b6433d4e4e8f44aa59fdb2dff7</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata>
+              <row rowCount="1">
+                <data columnCount="1">
+                  <data>
+                    <language>de_DE</language>
+                    <value>100</value>
+                  </data>
+                </data>
+              </row>
+              <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+            </testdata>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+            <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+            <eventType>TestErrorEvent.VerifyFailed</eventType>
+            <reentryProperty>retry</reentryProperty>
+            <maxRetries>1</maxRetries>
+          </eventTestcase>
+          <eventTestcase>
+            <name>Loose100ms</name>
+            <comment xsi:nil="true"/>
+            <GUID>e961415039e14eebbf7e58dec42f8faf</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata>
+              <row rowCount="1">
+                <data columnCount="1">
+                  <data>
+                    <language>de_DE</language>
+                    <value>100</value>
+                  </data>
+                </data>
+              </row>
+              <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+            </testdata>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+            <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+            <eventType>TestErrorEvent.CompNotFound</eventType>
+            <reentryProperty>retry</reentryProperty>
+            <maxRetries>50</maxRetries>
+          </eventTestcase>
+          <interfaceLocked>false</interfaceLocked>
+        </testcase>
       </category>
       <category>
         <name>SW_Installation</name>
@@ -11199,15 +11326,26 @@
           <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
-              <name>Open default perspective</name>
+              <name>Open Artikel perspective</name>
               <comment xsi:nil="true"/>
               <GUID>2ffc888916774bd4855f18aa0c2b1a76</GUID>
               <generated>false</generated>
               <active>true</active>
               <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Artikel</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>219d735749e54932ad98cab6c6f4ffc7</uniqueIds>
+              </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>3c8e68c1ad044bddb8efcb849e40e4cf</testcaseGuid>
-              <hasOwnTestdata>false</hasOwnTestdata>
+              <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -11221,160 +11359,6 @@
               <datafile xsi:nil="true"/>
               <testcaseGuid>5a034cd013b74493bbfbe153cfcd18d1</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name>Open view "Artikel"</name>
-              <comment xsi:nil="true"/>
-              <GUID>012b34a292734c399d2d9ed25888d3f3</GUID>
-              <generated>false</generated>
-              <active>true</active>
-              <taskId xsi:nil="true"/>
-              <testdata>
-                <row rowCount="1">
-                  <data columnCount="1">
-                    <data>
-                      <language>de_DE</language>
-                      <value>Daten/Artikel</value>
-                    </data>
-                  </data>
-                </row>
-                <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
-              </testdata>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
-              <hasOwnTestdata>true</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name/>
-              <comment xsi:nil="true"/>
-              <GUID>a5da5df675954b0faddd1745890697e0</GUID>
-              <generated>false</generated>
-              <active>true</active>
-              <taskId xsi:nil="true"/>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-              <hasOwnTestdata>false</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name>Select Konsultation</name>
-              <comment xsi:nil="true"/>
-              <GUID>d8837b213eb24285b1e9f2752d88aac7</GUID>
-              <generated>false</generated>
-              <active>false</active>
-              <taskId xsi:nil="true"/>
-              <testdata>
-                <row rowCount="1">
-                  <data columnCount="1">
-                    <data>
-                      <language>de_DE</language>
-                      <value>'*Konsultationen'</value>
-                    </data>
-                  </data>
-                  <data columnCount="2">
-                    <data>
-                      <language>de_DE</language>
-                      <value>equals</value>
-                    </data>
-                  </data>
-                </row>
-                <uniqueIds>8ab6b083154b8c1601154b91d20f012f</uniqueIds>
-                <uniqueIds>8ab6b083181dc1bc01181dcfdd7f0019</uniqueIds>
-              </testdata>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>8ab6b083150339b501150364b007098c</testcaseGuid>
-              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-              <hasOwnTestdata>true</hasOwnTestdata>
-              <overriddenNames>
-                <propagated>false</propagated>
-                <originalName>8ab6b08d1a4d08f3011a4d09a497002b</originalName>
-                <newName>5c33578795b04d479fa19c2d2aa41f69</newName>
-              </overriddenNames>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name/>
-              <comment xsi:nil="true"/>
-              <GUID>9c0b08967e4d46da9933a35ce549dab5</GUID>
-              <generated>false</generated>
-              <active>false</active>
-              <taskId xsi:nil="true"/>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-              <hasOwnTestdata>false</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name>Double click to maximize</name>
-              <comment xsi:nil="true"/>
-              <GUID>3913b6102f744e9892945f337da38cfd</GUID>
-              <generated>false</generated>
-              <active>true</active>
-              <taskId xsi:nil="true"/>
-              <testdata>
-                <row rowCount="1">
-                  <data columnCount="1">
-                    <data>
-                      <language>de_DE</language>
-                      <value>2</value>
-                    </data>
-                  </data>
-                  <data columnCount="2">
-                    <data>
-                      <language>de_DE</language>
-                      <value>1</value>
-                    </data>
-                  </data>
-                  <data columnCount="3">
-                    <data>
-                      <language>de_DE</language>
-                      <value>2</value>
-                    </data>
-                  </data>
-                  <data columnCount="4">
-                    <data>
-                      <language>de_DE</language>
-                      <value>percent</value>
-                    </data>
-                  </data>
-                  <data columnCount="5">
-                    <data>
-                      <language>de_DE</language>
-                      <value>2</value>
-                    </data>
-                  </data>
-                  <data columnCount="6">
-                    <data>
-                      <language>de_DE</language>
-                      <value>percent</value>
-                    </data>
-                  </data>
-                </row>
-                <uniqueIds>8ab6b083181d393b01181dbe75b500c5</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181dbe8c2b00c6</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181dbe9cd500c7</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181dbeb82d00c8</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181dbec8a700c9</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181dbedeb000ca</uniqueIds>
-              </testdata>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>8ab6b083181d393b01181dbe268c00c3</testcaseGuid>
-              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-              <hasOwnTestdata>true</hasOwnTestdata>
-              <overriddenNames>
-                <propagated>false</propagated>
-                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
-                <newName>5c33578795b04d479fa19c2d2aa41f69</newName>
-              </overriddenNames>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -11448,6 +11432,57 @@
                 <propagated>false</propagated>
                 <originalName>8ab6b08d1a4d08f3011a4d09a497002b</originalName>
                 <newName>e9512a54cf3440858cdafa802938db58</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Wait some time for ContextMenu</name>
+              <comment>Should better wait till ContextMenu valid</comment>
+              <GUID>fcc207a1327d4ccdb717dddb7dc622ca</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment>Max 5 seconds</comment>
+              <GUID>6032a6b8f54b474ebfc584d730b9e673</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>Import.*</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6baf3143d28248199e862f5358ba8a44</uniqueIds>
+                <uniqueIds>dad0e39690184af98834041c63d482d2</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>64f30f14e54247d489e19bae7212fde6</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>eca93312f4ee4ffbb07a37f42bf43ef4</newName>
               </overriddenNames>
             </usedTestcase>
           </teststep>
@@ -17079,6 +17114,213 @@
       <compName>Esr_Datum_grc</compName>
     </componentNames>
     <testresultSummaries>
+      <testresultSummary>
+        <attribute>
+          <key>almReportStatus</key>
+          <value>NOT_CONFIGURED</value>
+          <type>org.eclipse.jubula.client.core.model.ITestResultSummaryPO$AlmReportStatus</type>
+        </attribute>
+        <attribute>
+          <key>autAgentName</key>
+          <value>localhost</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>autCmdParameter</key>
+          <value>-clean -vmargs -Declipse.p2.unsignedPolicy=allow -Dorg.eclipse.swt.browser.DefaultType=mozilla  -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Duser.language=de -Duser.region=DE</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>autConfigName</key>
+          <value>elexis-linux@localhost</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>autHostname</key>
+          <value>localhost</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>autId</key>
+          <value>elexis</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>autName</key>
+          <value>elexis</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>autOS</key>
+          <value>Linux</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>autToolkit</key>
+          <value>com.bredexsw.guidancer.RcpToolkitPlugin</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>commentDetail</key>
+          <value xsi:nil="true"/>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>commentTitle</key>
+          <value xsi:nil="true"/>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>internalAutConfigGuid</key>
+          <value>c571462a2d0145b28eb26707b2f659f9</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>internalAutGuid</key>
+          <value>1b9d8f8ff7eb401ab6a4deddc9f251f8</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>internalGuid</key>
+          <value>3ec92d91946e41eab7e7d6564737cbff</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>internalMonitoringId</key>
+          <value>none selected</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>internalProjectGuid</key>
+          <value>b80640b58118457d83cc1cdfdd69410e</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>internalProjectID</key>
+          <value>188452</value>
+          <type>java.lang.Long</type>
+        </attribute>
+        <attribute>
+          <key>internalTestJobGuid</key>
+          <value xsi:nil="true"/>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>internalTestsuiteGuid</key>
+          <value>db18cfe07d8e49cd8bf0a5086fe80a64</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>monitoringValue</key>
+          <value xsi:nil="true"/>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>monitoringValueType</key>
+          <value>none</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>projectMajorVersion</key>
+          <value>1</value>
+          <type>int</type>
+        </attribute>
+        <attribute>
+          <key>projectMinorVersion</key>
+          <value>1</value>
+          <type>int</type>
+        </attribute>
+        <attribute>
+          <key>projectName</key>
+          <value>ElexisCore 1.1</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>reportWritten</key>
+          <value>false</value>
+          <type>boolean</type>
+        </attribute>
+        <attribute>
+          <key>statusString</key>
+          <value>Successfully tested</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>testJobName</key>
+          <value xsi:nil="true"/>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>testJobStartTime</key>
+          <value xsi:nil="true"/>
+          <type>java.util.Date</type>
+        </attribute>
+        <attribute>
+          <key>testRunState</key>
+          <value>OK</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteDate</key>
+          <value>2014-06-12 10:23:55.0</value>
+          <type>java.util.Date</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteDuration</key>
+          <value>00:00:16</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteEndTime</key>
+          <value>2014-06-12 10:23:55.0</value>
+          <type>java.util.Date</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteEventHandlerTeststeps</key>
+          <value>4</value>
+          <type>int</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteExecutedTeststeps</key>
+          <value>44</value>
+          <type>int</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteExpectedTeststeps</key>
+          <value>40</value>
+          <type>int</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteFailedTeststeps</key>
+          <value>0</value>
+          <type>int</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteLanguage</key>
+          <value>German (Germany)</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteName</key>
+          <value>Work</value>
+          <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteRelevant</key>
+          <value>true</value>
+          <type>boolean</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteStartTime</key>
+          <value>2014-06-12 10:23:38.0</value>
+          <type>java.util.Date</type>
+        </attribute>
+        <attribute>
+          <key>testsuiteStatus</key>
+          <value>1</value>
+          <type>int</type>
+        </attribute>
+      </testresultSummary>
     </testresultSummaries>
     <checkConfiguration>
       <checkId>com.bredexsw.guidancer.client.teststyle.bredexstyle.nospaces</checkId>
