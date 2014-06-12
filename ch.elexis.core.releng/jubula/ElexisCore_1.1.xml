@@ -3639,7 +3639,12 @@
           </parameterDescription>
           <testdata>
             <row rowCount="1">
-              <data columnCount="1"/>
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>Daten/Artikel</value>
+                </data>
+              </data>
             </row>
             <uniqueIds>e8596dde6bb348d69a539e1e938b76b4</uniqueIds>
           </testdata>
@@ -7039,7 +7044,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Wait for 'Software Updates' windows</name>
+              <name>Wait max 3" for 'Software Updates' windows</name>
               <comment xsi:nil="true"/>
               <GUID>8c7a13b95c6b4b519a5e3b2252c60696</GUID>
               <generated>false</generated>
@@ -7056,7 +7061,7 @@
                   <data columnCount="2">
                     <data>
                       <language>de_DE</language>
-                      <value>15000</value>
+                      <value>180000</value>
                     </data>
                   </data>
                   <data columnCount="3">
@@ -7078,7 +7083,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Wait max 3 minutes for window "Installing Software" to close</name>
+              <name>Wait max 3" for window "Installing Software" to close</name>
               <comment xsi:nil="true"/>
               <GUID>28f16be7f56348ceb72ba8ddeb9f0470</GUID>
               <generated>false</generated>
@@ -11363,6 +11368,45 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name>Screenshot perspective</name>
+              <comment xsi:nil="true"/>
+              <GUID>802eb340a8614a53a89336cc470b5fac</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>screenshots/import_artikelstamm/p_artikel.png</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Open Viiew Artikel</name>
+              <comment xsi:nil="true"/>
+              <GUID>8a03fc0ea3ac464c952652cb4a40a8dd</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>3ca416c67277453ca1c6d724ff916ec0</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Select tab "Artikel"</name>
               <comment xsi:nil="true"/>
               <GUID>4d01c79931f94389a89af17834716519</GUID>
@@ -11396,6 +11440,31 @@
                 <originalName>8ab6b08d1a4d08f3011a4d09a497002b</originalName>
                 <newName>daf4a1f9abc74c2c91dc6f6feef95f50</newName>
               </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>6aacf23cfc5546979d76281f997021e2</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>screenshots/import_artikelstamm/tab_artikel.png</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -11447,6 +11516,31 @@
               <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
               <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>817bea40db2b4851aa23adc934d2f36a</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>screenshots/import_artikelstamm/tab_artikelstamm.png</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -11750,7 +11844,7 @@
                   <data columnCount="1">
                     <data>
                       <language>de_DE</language>
-                      <value>screenshots/Artikelstamm_Import_done.png</value>
+                      <value>screenshots/import_artikelstamm/Artikelstamm_Import_done.png</value>
                     </data>
                   </data>
                 </row>
@@ -11810,6 +11904,20 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name>Give Elexis some time to show the drug</name>
+              <comment xsi:nil="true"/>
+              <GUID>65194c8fb46f405f94358bec4592cc1b</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Screenshot Artikelstamm Aspirin</name>
               <comment xsi:nil="true"/>
               <GUID>319ca682ea854d4986cfdd6ae3c978e6</GUID>
@@ -11821,7 +11929,7 @@
                   <data columnCount="1">
                     <data>
                       <language>de_DE</language>
-                      <value>screenshots/Artikelstamm_Aspirin.png</value>
+                      <value>screenshots/import_artikelstamm/Artikelstamm_Aspirin.png</value>
                     </data>
                   </data>
                 </row>
@@ -14915,6 +15023,31 @@
           <hasOwnTestdata>true</hasOwnTestdata>
         </usedTestcase>
       </teststep>
+      <teststep>
+        <usedTestcase>
+          <name>Take a screeshot of the Leistungen</name>
+          <comment xsi:nil="true"/>
+          <GUID>f0be87479eb74639b285aaf4cc621e58</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata>
+            <row rowCount="1">
+              <data columnCount="1">
+                <data>
+                  <language>de_DE</language>
+                  <value>screenshots/leistungen.png</value>
+                </data>
+              </data>
+            </row>
+            <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+          </testdata>
+          <datafile xsi:nil="true"/>
+          <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+          <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+          <hasOwnTestdata>true</hasOwnTestdata>
+        </usedTestcase>
+      </teststep>
       <interfaceLocked>false</interfaceLocked>
     </testcase>
     <testcase>
@@ -17127,7 +17260,7 @@
         </attribute>
         <attribute>
           <key>autCmdParameter</key>
-          <value>-clean -vmargs -Declipse.p2.unsignedPolicy=allow -Dorg.eclipse.swt.browser.DefaultType=mozilla  -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Duser.language=de -Duser.region=DE</value>
+          <value>-clean -vmargs -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -17172,17 +17305,17 @@
         </attribute>
         <attribute>
           <key>internalAutConfigGuid</key>
-          <value>c571462a2d0145b28eb26707b2f659f9</value>
+          <value>465f1c4703c342a896795100397a4642</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
           <key>internalAutGuid</key>
-          <value>1b9d8f8ff7eb401ab6a4deddc9f251f8</value>
+          <value>df6da9e470f1483492ffcb0e204b0ee4</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
           <key>internalGuid</key>
-          <value>3ec92d91946e41eab7e7d6564737cbff</value>
+          <value>100dad43f06f42e3aedfc49314d858a9</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -17197,7 +17330,7 @@
         </attribute>
         <attribute>
           <key>internalProjectID</key>
-          <value>188452</value>
+          <value>10441</value>
           <type>java.lang.Long</type>
         </attribute>
         <attribute>
@@ -17207,7 +17340,7 @@
         </attribute>
         <attribute>
           <key>internalTestsuiteGuid</key>
-          <value>db18cfe07d8e49cd8bf0a5086fe80a64</value>
+          <value>aef684f301174fb28caf0731a74af9fe</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -17242,7 +17375,7 @@
         </attribute>
         <attribute>
           <key>statusString</key>
-          <value>Successfully tested</value>
+          <value>Error in Children</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -17257,42 +17390,42 @@
         </attribute>
         <attribute>
           <key>testRunState</key>
-          <value>OK</value>
+          <value>FAILED</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
           <key>testsuiteDate</key>
-          <value>2014-06-12 10:23:55.0</value>
+          <value>2014-03-29 12:03:39.0</value>
           <type>java.util.Date</type>
         </attribute>
         <attribute>
           <key>testsuiteDuration</key>
-          <value>00:00:16</value>
+          <value>00:00:43</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
           <key>testsuiteEndTime</key>
-          <value>2014-06-12 10:23:55.0</value>
+          <value>2014-03-29 12:03:39.0</value>
           <type>java.util.Date</type>
         </attribute>
         <attribute>
           <key>testsuiteEventHandlerTeststeps</key>
-          <value>4</value>
+          <value>0</value>
           <type>int</type>
         </attribute>
         <attribute>
           <key>testsuiteExecutedTeststeps</key>
-          <value>44</value>
+          <value>67</value>
           <type>int</type>
         </attribute>
         <attribute>
           <key>testsuiteExpectedTeststeps</key>
-          <value>40</value>
+          <value>107</value>
           <type>int</type>
         </attribute>
         <attribute>
           <key>testsuiteFailedTeststeps</key>
-          <value>0</value>
+          <value>1</value>
           <type>int</type>
         </attribute>
         <attribute>
@@ -17302,7 +17435,7 @@
         </attribute>
         <attribute>
           <key>testsuiteName</key>
-          <value>Work</value>
+          <value>FULLTEST</value>
           <type>java.lang.String</type>
         </attribute>
         <attribute>
@@ -17312,12 +17445,12 @@
         </attribute>
         <attribute>
           <key>testsuiteStartTime</key>
-          <value>2014-06-12 10:23:38.0</value>
+          <value>2014-03-29 12:02:56.0</value>
           <type>java.util.Date</type>
         </attribute>
         <attribute>
           <key>testsuiteStatus</key>
-          <value>1</value>
+          <value>5</value>
           <type>int</type>
         </attribute>
       </testresultSummary>
