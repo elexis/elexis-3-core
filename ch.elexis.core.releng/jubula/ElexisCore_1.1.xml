@@ -4110,7 +4110,7 @@
           <interfaceLocked>false</interfaceLocked>
         </testcase>
         <testcase>
-          <name>Restart Elexis</name>
+          <name>Restart Elexis and import Artikelstamm</name>
           <comment xsi:nil="true"/>
           <GUID>83d26ab988824e82894aa3e2d7c3f7c0</GUID>
           <generated>false</generated>
@@ -4135,92 +4135,17 @@
           <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
-              <name/>
+              <name>Restart Elexis and open Leistungen</name>
               <comment xsi:nil="true"/>
-              <GUID>1d45e8d9effc485dad250538ecc327c3</GUID>
-              <generated>false</generated>
-              <active>false</active>
-              <taskId xsi:nil="true"/>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>8ab6b083150339b501150364afe8079f</testcaseGuid>
-              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-              <hasOwnTestdata>false</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name>Take screenshot before restart</name>
-              <comment xsi:nil="true"/>
-              <GUID>f46690f6729141f58c77d6f29f3ff39a</GUID>
+              <GUID>5d32c67c5144490eac3058d5c5f4ab38</GUID>
               <generated>false</generated>
               <active>true</active>
               <taskId xsi:nil="true"/>
-              <testdata>
-                <row rowCount="1">
-                  <data columnCount="1">
-                    <data>
-                      <language>de_DE</language>
-                      <value>screenshots/sw-inst/before_restart.png</value>
-                    </data>
-                  </data>
-                </row>
-                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
-              </testdata>
+              <testdata/>
               <datafile xsi:nil="true"/>
-              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
-              <hasOwnTestdata>true</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name>Restart Elexis</name>
-              <comment>As told in documentation opens with same configuration. But we might use the new one</comment>
-              <GUID>045f774c837c449488bb39a43f30b213</GUID>
-              <generated>false</generated>
-              <active>true</active>
-              <taskId xsi:nil="true"/>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>8ab6b083150339b501150364afe807c1</testcaseGuid>
-              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-              <hasOwnTestdata>false</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name>Take screenshot after restart</name>
-              <comment xsi:nil="true"/>
-              <GUID>52a1e68d22c9411fb06871148ec33549</GUID>
-              <generated>false</generated>
-              <active>true</active>
-              <taskId xsi:nil="true"/>
-              <testdata>
-                <row rowCount="1">
-                  <data columnCount="1">
-                    <data>
-                      <language>de_DE</language>
-                      <value>screenshots/sw-inst/after_restart.png</value>
-                    </data>
-                  </data>
-                </row>
-                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
-              </testdata>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
-              <hasOwnTestdata>true</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name>Must open first Leistungen (take long time)</name>
-              <comment xsi:nil="true"/>
-              <GUID>7835f7c626ff42c49e7572fa1d7c8548</GUID>
-              <generated>false</generated>
-              <active>true</active>
-              <taskId xsi:nil="true"/>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>986ae047b37f4acba827bacb341a178e</testcaseGuid>
+              <testcaseGuid>21d5642e2f0440e493728c413a3258ec</testcaseGuid>
               <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-              <hasOwnTestdata>false</hasOwnTestdata>
+              <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -4244,144 +4169,6 @@
               </testdata>
               <datafile xsi:nil="true"/>
               <testcaseGuid>97fa53a2477946e39a1e1e2ab4c6c537</testcaseGuid>
-              <hasOwnTestdata>true</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name>Wait up to 30 seconds for Main-Windows to show up again</name>
-              <comment>Restarting Elexis can be slow</comment>
-              <GUID>058767de3c734b19aae53197215c98f5</GUID>
-              <generated>false</generated>
-              <active>false</active>
-              <taskId xsi:nil="true"/>
-              <testdata>
-                <row rowCount="1">
-                  <data columnCount="1">
-                    <data>
-                      <language>de_DE</language>
-                      <value>.*Elexis.*</value>
-                    </data>
-                  </data>
-                  <data columnCount="2">
-                    <data>
-                      <language>de_DE</language>
-                      <value>matches</value>
-                    </data>
-                  </data>
-                  <data columnCount="3">
-                    <data>
-                      <language>de_DE</language>
-                      <value>30000</value>
-                    </data>
-                  </data>
-                  <data columnCount="4">
-                    <data>
-                      <language>de_DE</language>
-                      <value>100</value>
-                    </data>
-                  </data>
-                </row>
-                <uniqueIds>8ab6b083181d393b01181d9da432008d</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d9db72e008e</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d9dd5d2008f</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d9df0db0090</uniqueIds>
-              </testdata>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>8ab6b083150339b501150364afe807b1</testcaseGuid>
-              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-              <hasOwnTestdata>true</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name>Wait for Elexis window to close</name>
-              <comment xsi:nil="true"/>
-              <GUID>6f6eac92b6c54ca4a4eccfaa976eda53</GUID>
-              <generated>false</generated>
-              <active>false</active>
-              <taskId xsi:nil="true"/>
-              <testdata>
-                <row rowCount="1">
-                  <data columnCount="1">
-                    <data>
-                      <language>de_DE</language>
-                      <value>=eac8d6ae10524a9891d9bce1e44d0bd0</value>
-                    </data>
-                  </data>
-                  <data columnCount="2">
-                    <data>
-                      <language>de_DE</language>
-                      <value>matches</value>
-                    </data>
-                  </data>
-                  <data columnCount="3">
-                    <data>
-                      <language>de_DE</language>
-                      <value>5000</value>
-                    </data>
-                  </data>
-                  <data columnCount="4">
-                    <data>
-                      <language>de_DE</language>
-                      <value>100</value>
-                    </data>
-                  </data>
-                </row>
-                <uniqueIds>8ab6b083181d393b01181d9e514b0091</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d9e5ef70092</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d9e7e460093</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d9ead360094</uniqueIds>
-              </testdata>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>8ab6b083150339b501150364afe807b5</testcaseGuid>
-              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-              <hasOwnTestdata>true</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name>Wait for Elexis window</name>
-              <comment xsi:nil="true"/>
-              <GUID>d1d151babe6749ea817ca03105bee670</GUID>
-              <generated>false</generated>
-              <active>false</active>
-              <taskId xsi:nil="true"/>
-              <testdata>
-                <row rowCount="1">
-                  <data columnCount="1">
-                    <data>
-                      <language>de_DE</language>
-                      <value>=eac8d6ae10524a9891d9bce1e44d0bd0</value>
-                    </data>
-                  </data>
-                  <data columnCount="2">
-                    <data>
-                      <language>de_DE</language>
-                      <value>matches</value>
-                    </data>
-                  </data>
-                  <data columnCount="3">
-                    <data>
-                      <language>de_DE</language>
-                      <value>10000</value>
-                    </data>
-                  </data>
-                  <data columnCount="4">
-                    <data>
-                      <language>de_DE</language>
-                      <value>100</value>
-                    </data>
-                  </data>
-                </row>
-                <uniqueIds>8ab6b083181d393b01181d9914390080</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d9921d50081</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d993cef0082</uniqueIds>
-                <uniqueIds>8ab6b083181d393b01181d9958a40083</uniqueIds>
-              </testdata>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>8ab6b083181d393b01181d98e42f007e</testcaseGuid>
-              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
               <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
@@ -6317,7 +6104,7 @@
             <hasOwnTestdata>true</hasOwnTestdata>
             <eventType>TestErrorEvent.Action</eventType>
             <reentryProperty>retry</reentryProperty>
-            <maxRetries>50</maxRetries>
+            <maxRetries>3</maxRetries>
           </eventTestcase>
           <eventTestcase>
             <name>Loose100msIfCheckFailed</name>
@@ -6343,7 +6130,7 @@
             <hasOwnTestdata>true</hasOwnTestdata>
             <eventType>TestErrorEvent.VerifyFailed</eventType>
             <reentryProperty>retry</reentryProperty>
-            <maxRetries>50</maxRetries>
+            <maxRetries>3</maxRetries>
           </eventTestcase>
           <eventTestcase>
             <name>Loose100ms</name>
@@ -6369,8 +6156,95 @@
             <hasOwnTestdata>true</hasOwnTestdata>
             <eventType>TestErrorEvent.CompNotFound</eventType>
             <reentryProperty>retry</reentryProperty>
-            <maxRetries>50</maxRetries>
+            <maxRetries>3</maxRetries>
           </eventTestcase>
+          <interfaceLocked>false</interfaceLocked>
+        </testcase>
+        <testcase>
+          <name>Restart Elexis and Open Leistungen</name>
+          <comment xsi:nil="true"/>
+          <GUID>21d5642e2f0440e493728c413a3258ec</GUID>
+          <generated>false</generated>
+          <active>true</active>
+          <taskId xsi:nil="true"/>
+          <testdata/>
+          <datafile xsi:nil="true"/>
+          <teststep>
+            <usedTestcase>
+              <name>Take screenshot before restart</name>
+              <comment xsi:nil="true"/>
+              <GUID>f46690f6729141f58c77d6f29f3ff39a</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>screenshots/sw-inst/before_restart.png</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Restart Elexis</name>
+              <comment>As told in documentation opens with same configuration. But we might use the new one</comment>
+              <GUID>045f774c837c449488bb39a43f30b213</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807c1</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Take screenshot after restart</name>
+              <comment xsi:nil="true"/>
+              <GUID>52a1e68d22c9411fb06871148ec33549</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>screenshots/sw-inst/after_restart.png</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>6ef9ef2a0b3440aebf14c3133920a9d9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>7eb5f0389f0344989f68e011800b7a3e</testcaseGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Must open first Leistungen (take long time)</name>
+              <comment xsi:nil="true"/>
+              <GUID>7835f7c626ff42c49e7572fa1d7c8548</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>986ae047b37f4acba827bacb341a178e</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
           <interfaceLocked>false</interfaceLocked>
         </testcase>
       </category>
@@ -11419,7 +11293,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Open Viiew Artikel</name>
+              <name>Open View Artikel</name>
               <comment xsi:nil="true"/>
               <GUID>8a03fc0ea3ac464c952652cb4a40a8dd</GUID>
               <generated>false</generated>
@@ -15805,12 +15679,13 @@
           <usedTestcase>
             <name>Restart Elexis to be sure that the new components work</name>
             <comment xsi:nil="true"/>
-            <GUID>4edffc96123f4b9083497ff6c89083ba</GUID>
+            <GUID>51a1be2a7b2b489a96555dd6caa7b341</GUID>
             <generated>false</generated>
             <active>true</active>
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
-            <testcaseGuid>83d26ab988824e82894aa3e2d7c3f7c0</testcaseGuid>
+            <testcaseGuid>21d5642e2f0440e493728c413a3258ec</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
           <usedTestcase>
