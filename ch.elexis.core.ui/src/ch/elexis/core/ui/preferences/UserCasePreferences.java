@@ -183,6 +183,38 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		fd.right = new FormAttachment(100, -5);
 		diagnoseDelBtn.setLayoutData(fd);
 		
+		Composite lastConsParent = new Composite((Composite) suParent, SWT.NULL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gd.horizontalSpan = 2;
+		lastConsParent.setLayoutData(gd);
+		
+		lastConsParent.setLayout(new FormLayout());
+		Label lastConsLbl = new Label(lastConsParent, SWT.NONE);
+		lastConsLbl.setText(Messages.UserCasePreferences_LoadConsultationAll);
+		
+		final Button lastConsBtn = new Button(lastConsParent, SWT.CHECK);
+		lastConsBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				if (lastConsBtn.getSelection()) {
+					CoreHub.userCfg.set(Preferences.USR_DEFLOADCONSALL, true);
+				} else {
+					CoreHub.userCfg.set(Preferences.USR_DEFLOADCONSALL, false);
+				}
+			}
+		});
+		lastConsBtn.setSelection(CoreHub.userCfg.get(Preferences.USR_DEFLOADCONSALL, false));
+		
+		fd = new FormData();
+		fd.top = new FormAttachment(0, 5);
+		fd.left = new FormAttachment(0, 0);
+		lastConsLbl.setLayoutData(fd);
+		
+		fd = new FormData();
+		fd.top = new FormAttachment(0, 5);
+		fd.right = new FormAttachment(100, -5);
+		lastConsBtn.setLayoutData(fd);
+		
 		// ********* section for specifying sorting of billing system
 		new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper
 			.getFillGridData(2, true, 1, false));

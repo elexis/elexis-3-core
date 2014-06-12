@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -75,8 +76,8 @@ public class Patient extends Person {
 	static {
 		addMapping(
 			Kontakt.TABLENAME,
-			FLD_DIAGNOSES+"    	=S:C:Diagnosen",
-			FLD_PERS_ANAMNESE+"	=S:C:PersAnamnese",
+			FLD_DIAGNOSES + "    	=S:C:Diagnosen",
+			FLD_PERS_ANAMNESE + "	=S:C:PersAnamnese",
 			"SystemAnamnese	 	=S:C:SysAnamnese",
 			"FamilienAnamnese	=S:C:FamAnamnese",
 			FLD_RISKS,
@@ -216,7 +217,12 @@ public class Patient extends Person {
 			return null;
 		}
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
-		qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
+		
+		// if not configured otherwise load only consultations of active mandant
+		if (!CoreHub.userCfg.get(Preferences.USR_DEFLOADCONSALL, false)) {
+			qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
+		}
+		
 		// qbe.add("Datum", "=", new
 		// TimeTool().toString(TimeTool.DATE_COMPACT));
 		

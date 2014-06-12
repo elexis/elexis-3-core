@@ -333,6 +333,7 @@ public class Messages extends NLS {
 	public static String XIDEdit_ShowWith;
 	public static String XIDEdit_XidOpetions;
 	public static String Zugriff_AccessRights;
+	public static String UserCasePreferences_LoadConsultationAll;
 	
 	static {
 		// load message values from bundle file
