@@ -154,6 +154,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	private static boolean runningFromScratch = false;
 	private static String dbUser;
 	private static String dbPw;
+	private static File runFromScratchDB = null;
 	
 	protected static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
 		.getCoreOperationAdvisor();
@@ -260,11 +261,11 @@ public abstract class PersistentObject implements IPersistentObject {
 		} else if (runningFromScratch) {
 			// run from scratch configuration with a temporary database
 			try {
-				File dbFile = File.createTempFile("elexis", "db");
-				log.info("RunFromScratch test database created in " + dbFile.getAbsolutePath());
+				runFromScratchDB = File.createTempFile("elexis", "db");
+				log.info("RunFromScratch test database created in " + runFromScratchDB.getAbsolutePath());
 				dbUser = "sa";
 				dbPw = StringTool.leer;
-				j = JdbcLink.createH2Link(dbFile.getAbsolutePath());
+				j = JdbcLink.createH2Link(runFromScratchDB.getAbsolutePath());
 				if (getConnection().connect(dbUser, dbPw)) {
 					testJdbcLink = j;
 					return connect(getConnection());
@@ -2221,6 +2222,13 @@ public abstract class PersistentObject implements IPersistentObject {
 			getConnection().disconnect();
 			j = null;
 			log.info("Verbindung zur Datenbank getrennt.");
+			if (runFromScratchDB != null)
+			{
+				File dbFile = new File(runFromScratchDB.getAbsolutePath()+ ".h2.db");
+				log.info("Deleting runFromScratchDB was " + runFromScratchDB + " and " + dbFile);
+				dbFile.delete();
+				runFromScratchDB.delete();
+			}
 			cache.stat();
 		}
 	}
