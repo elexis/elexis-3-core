@@ -6294,6 +6294,32 @@
             </usedTestcase>
           </teststep>
           <eventTestcase>
+            <name>Loose100msOnActionError</name>
+            <comment xsi:nil="true"/>
+            <GUID>d8e3c2dddd034a898898248a2155ae1b</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata>
+              <row rowCount="1">
+                <data columnCount="1">
+                  <data>
+                    <language>de_DE</language>
+                    <value>100</value>
+                  </data>
+                </data>
+              </row>
+              <uniqueIds>8ab6b083154b8c1601154b91d1e00052</uniqueIds>
+            </testdata>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>8ab6b083150339b501150364afe807bf</testcaseGuid>
+            <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
+            <eventType>TestErrorEvent.Action</eventType>
+            <reentryProperty>retry</reentryProperty>
+            <maxRetries>50</maxRetries>
+          </eventTestcase>
+          <eventTestcase>
             <name>Loose100msIfCheckFailed</name>
             <comment xsi:nil="true"/>
             <GUID>875a48b6433d4e4e8f44aa59fdb2dff7</GUID>
@@ -6317,7 +6343,7 @@
             <hasOwnTestdata>true</hasOwnTestdata>
             <eventType>TestErrorEvent.VerifyFailed</eventType>
             <reentryProperty>retry</reentryProperty>
-            <maxRetries>1</maxRetries>
+            <maxRetries>50</maxRetries>
           </eventTestcase>
           <eventTestcase>
             <name>Loose100ms</name>
