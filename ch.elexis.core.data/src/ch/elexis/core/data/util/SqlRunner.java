@@ -24,6 +24,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.ElexisStatusProgressMonitor;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -39,6 +40,7 @@ public class SqlRunner {
 	private List<String> sqlStrings;
 	private List<UpdateDbSql> sql;
 	private String pluginId;
+	private JdbcLink jdbcl;
 	
 	public SqlRunner(String[] sql, String pluginId){
 		sqlStrings = new ArrayList<String>();
@@ -46,6 +48,21 @@ public class SqlRunner {
 			sqlStrings.add(sql[i]);
 		}
 		this.pluginId = pluginId;
+	}
+	
+	/**
+	 * 
+	 * @param sql
+	 *            as in {@link SqlRunner#sql}
+	 * @param pluginId
+	 *            as in {@link SqlRunner#pluginId}
+	 * @param jdbcl
+	 *            optionally assign a jdbclink to use to perform the updates
+	 */
+	public SqlRunner(String[] sql, String pluginId, @Nullable
+	JdbcLink jdbcl){
+		this(sql, pluginId);
+		this.jdbcl = jdbcl;
 	}
 	
 	public boolean runSql(){
@@ -92,10 +109,10 @@ public class SqlRunner {
 		
 		@Override
 		public void run(){
-			JdbcLink link = null;
 			Stm statement = null;
+			JdbcLink link = null;
 			try {
-				link = PersistentObject.getConnection();
+				link = (jdbcl == null) ? PersistentObject.getConnection() : jdbcl;
 				statement = link.getStatement();
 				setStatus(SqlStatus.EXECUTE);
 				// do not use execScript method here as it will catch the

@@ -62,6 +62,7 @@ import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.DBUpdate;
 import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.model.IChangeListener;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.ISticker;
@@ -235,7 +236,11 @@ public abstract class PersistentObject implements IPersistentObject {
 		File demo = new File(CoreHub.getWritableUserDir() + File.separator + "demoDB");
 		log.info("Checking demo database availability in " + demo.getAbsolutePath());
 		
+		// --
+		// returns if either, demo db, direct connection or run from scratch
+		// --
 		if (demo.exists() && demo.isDirectory()) {
+			// open demo database connection
 			log.info("Using demoDB in " + demo.getAbsolutePath());
 			j = JdbcLink.createH2Link(demo.getAbsolutePath() + File.separator + "db");
 			try {
@@ -250,8 +255,10 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		} else if (dbFlavor != null && dbFlavor.length() >= 2 && dbSpec != null
 			&& dbSpec.length() > 5 && dbUser != null && dbPw != null) {
+			// open direct database connection according to system properties
 			return PersistentObject.connect(dbFlavor, dbSpec, dbUser, dbPw, true);
 		} else if (runningFromScratch) {
+			// run from scratch configuration with a temporary database
 			try {
 				File dbFile = File.createTempFile("elexis", "db");
 				log.info("RunFromScratch test database created in " + dbFile.getAbsolutePath());
@@ -271,24 +278,23 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		}
 		
+		// --
+		// initialize a regular database connection
+		// --
 		String driver = "";
 		String user = "";
 		String pwd = "";
 		String typ = "";
 		String connectstring = "";
-		Hashtable<Object, Object> hConn = null;
-		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
-		if (cnt != null) {
-			log.debug("Read connection string from localCfg");
-			hConn = fold(StringTool.dePrintable(cnt));
-			if (hConn != null) {
-				driver = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
-				user = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
-				pwd = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS));
-				typ = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
-				connectstring =
-					checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
-			}
+		
+		Hashtable<Object, Object> hConn = getConnectionHashtable();
+		if (hConn != null) {
+			driver = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
+			user = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
+			pwd = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS));
+			typ = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
+			connectstring =
+				checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
 		}
 		log.info("Driver is " + driver);
 		try {
@@ -317,6 +323,22 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
+	 * 
+	 * @return a {@link Hashtable} containing the connection parameters, use
+	 *         {@link Preferences#CFG_FOLDED_CONNECTION} to retrieve the required parameters,
+	 *         castable to {@link String}
+	 */
+	public static @NonNull Hashtable<Object, Object> getConnectionHashtable(){
+		Hashtable<Object, Object> ret = new Hashtable<>();
+		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
+		if (cnt != null) {
+			log.debug("Read connection string from localCfg");
+			ret = fold(StringTool.dePrintable(cnt));
+		}
+		return ret;
+	}
+	
+	/**
 	 * Directly connect to the database using the combined connection information.
 	 * 
 	 * @param dbFlavor
@@ -332,7 +354,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return
 	 * @since 3.0.0
 	 */
-	public static boolean connect(String dbFlavor, String dbSpec, String dbUser, String dbPw,
+	private static boolean connect(String dbFlavor, String dbSpec, String dbUser, String dbPw,
 		boolean exitOnFail){
 		String msg = "Connecting to DB using " + dbFlavor + " " + dbSpec + " " + dbUser;
 		System.out.println(msg);

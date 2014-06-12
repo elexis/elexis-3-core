@@ -24,6 +24,9 @@ public class ElexisValidation extends DefaultValidation {
 				if (binding.getActive() && binding.appliesToVersion("*")
 					&& binding.appliesToScope("TX")) {
 					iter.remove();
+				} else if (binding.getActive() && binding.appliesToVersion("*")
+					&& binding.appliesToScope("TN")) {
+					iter.remove();
 				}
 			}
 		}
