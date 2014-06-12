@@ -52,8 +52,6 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
@@ -84,7 +82,7 @@ import ch.rgw.tools.TimeTool;
  * 
  * @author gerry
  */
-public class LaborView extends ViewPart implements IActivationListener, ISaveablePart2 {
+public class LaborView extends ViewPart implements ISaveablePart2 {
 	
 	public static final String ID = "ch.elexis.Labor"; //$NON-NLS-1$
 	private static Log log = Log.get("LaborView"); //$NON-NLS-1$
@@ -204,7 +202,8 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 		IToolBarManager tm = getViewSite().getActionBars().getToolBarManager();
 		List<IAction> importers =
 			Extensions.getClasses(
-				Extensions.getExtensions(ExtensionPointConstantsUi.LABORDATENIMPORT), "ToolbarAction", //$NON-NLS-1$ //$NON-NLS-2$
+				Extensions.getExtensions(ExtensionPointConstantsUi.LABORDATENIMPORT),
+				"ToolbarAction", //$NON-NLS-1$ //$NON-NLS-2$
 				false);
 		for (IAction ac : importers) {
 			tm.add(ac);
@@ -219,13 +218,14 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 		tm.add(expandAllAction);
 		tm.add(collapseAllAction);
 		tm.add(printAction);
-		GlobalEventDispatcher.addActivationListener(this, this);
-	}
-	
-	@Override
-	public void dispose(){
-		GlobalEventDispatcher.removeActivationListener(this, this);
-		super.dispose();
+		
+		// register event listeners
+		ElexisEventDispatcher.getInstance().addListeners(eeli_labitem, eeli_laborder,
+			eeli_labresult, eeli_pat);
+		Patient act = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
+		if ((act != null && act != resultsComposite.getPatient())) {
+			resultsComposite.selectPatient(act);
+		}
 	}
 	
 	@Override
@@ -273,7 +273,9 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 			
 			@Override
 			public void run(){
-				Importer imp = new Importer(getViewSite().getShell(), ExtensionPointConstantsUi.LABORDATENIMPORT); //$NON-NLS-1$
+				Importer imp =
+					new Importer(getViewSite().getShell(),
+						ExtensionPointConstantsUi.LABORDATENIMPORT); //$NON-NLS-1$
 				imp.create();
 				imp.setMessage(Messages.LaborView_selectDataSource);
 				imp.getShell().setText(Messages.LaborView_labImporterCaption);
@@ -368,21 +370,6 @@ public class LaborView extends ViewPart implements IActivationListener, ISaveabl
 		printAction.setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 		xmlAction.setImageDescriptor(Images.IMG_EXPORT.getImageDescriptor());
 		refreshAction.setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
-	}
-	
-	public void visible(final boolean mode){
-		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_labitem, eeli_laborder,
-				eeli_labresult, eeli_pat);
-			Patient act = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-			if ((act != null && act != resultsComposite.getPatient())) {
-				resultsComposite.selectPatient(act);
-			}
-			
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_labitem, eeli_laborder,
-				eeli_labresult, eeli_pat);
-		}
 	}
 	
 	public Document makeXML(){
