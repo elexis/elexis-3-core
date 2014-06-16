@@ -144,7 +144,7 @@ public class LaborResultsComposite extends Composite {
 			public String getText(Object element){
 				if (element instanceof String) {
 					String groupName = (String) element;
-					if (groupName.charAt(1) == ' ') {
+					if ((groupName.length() > 2) && groupName.charAt(1) == ' ') {
 						groupName = groupName.substring(2);
 					}
 					return groupName;
