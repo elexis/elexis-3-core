@@ -52,6 +52,11 @@
             id="ch.elexis.mapping.2_1_7.create"
             name="Labor Items aus 2.1.7 mappen">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.laboratory.commands.CreateMergeLabItemUi"
+            id="ch.elexis.labitem.merge"
+            name="Labor Items vereinen">
+      </command>
    </extension>
    
 </plugin>
