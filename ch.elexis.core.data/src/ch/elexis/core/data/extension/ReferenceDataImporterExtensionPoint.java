@@ -19,7 +19,7 @@ import ch.elexis.core.jdt.Nullable;
  * to the appropriate importer. This update forwarding effects all importers included as
  * ExtensionPoint {@code ch.elexis.core.data.referenceDataImporter} and extending the
  * {@link AbstractReferenceDataImporter} class
- *
+ * 
  */
 public class ReferenceDataImporterExtensionPoint {
 	private static Logger log = LoggerFactory.getLogger(ReferenceDataImporterExtensionPoint.class
@@ -30,12 +30,27 @@ public class ReferenceDataImporterExtensionPoint {
 	private static HashMap<String, AbstractReferenceDataImporter> importers;
 	
 	/**
+	 * 
+	 * @param refDataId
+	 *            the id of the requested reference data type
+	 * @return the {@link AbstractReferenceDataImporter} if found, else null
+	 */
+	public static @Nullable
+	AbstractReferenceDataImporter getReferenceDataImporterByReferenceDataId(@NonNull
+	String refDataId){
+		if (importers == null) {
+			initialize();
+		}
+		return importers.get(refDataId);
+	}
+	
+	/**
 	 * loads all ExtensionPoints of type {@code ExtensionPointConstantsData.REFERENCE_DATA_IMPORTER}
 	 * and adds them to a list of available importers
 	 */
-	private ReferenceDataImporterExtensionPoint(){
+	private static void initialize(){
 		try {
-			importers = new HashMap<String,AbstractReferenceDataImporter>();
+			importers = new HashMap<String, AbstractReferenceDataImporter>();
 			
 			// load reference-data-extensionpoint
 			IExtensionPoint refDataExtensionPoint =
@@ -53,20 +68,11 @@ public class ReferenceDataImporterExtensionPoint {
 					AbstractReferenceDataImporter importer = (AbstractReferenceDataImporter) o;
 					importers.put(refDataId, importer);
 					
-					log.debug("Added ReferenceDataImporter for... "+refDataId);
+					log.debug("Added ReferenceDataImporter for... " + refDataId);
 				}
 			}
 		} catch (CoreException e) {
 			log.error("Exception occured trying to load ReferenceDataImporter ExtensionPoints", e);
 		}
-	}
-	
-	/**
-	 * 
-	 * @param refDataId the id of the requested reference data type
-	 * @return the {@link AbstractReferenceDataImporter} if found, else null
-	 */
-	public static @Nullable AbstractReferenceDataImporter getReferenceDataImporterByReferenceDataId(@NonNull String refDataId) {
-		return importers.get(refDataId);
 	}
 }
