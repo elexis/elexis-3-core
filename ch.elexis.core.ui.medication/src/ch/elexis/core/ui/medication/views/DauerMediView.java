@@ -24,6 +24,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.ListDisplaySelectionProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
 
@@ -47,6 +48,10 @@ public class DauerMediView extends ViewPart implements IActivationListener, Elex
 		parent.setLayout(new GridLayout());
 		dmd = new FixMediDisplay(parent, getViewSite());
 		dmd.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+		ListDisplaySelectionProvider selDisplay = new ListDisplaySelectionProvider(dmd);
+		getSite().registerContextMenu(FixMediDisplay.ID, dmd.getMenuManager(), selDisplay);
+		getSite().setSelectionProvider(selDisplay);
+		
 		makeActions();
 		getViewSite().getActionBars().getToolBarManager().add(toClipBoardAction);
 		GlobalEventDispatcher.addActivationListener(this, this);

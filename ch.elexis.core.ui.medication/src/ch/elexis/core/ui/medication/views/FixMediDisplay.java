@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -62,12 +63,14 @@ import ch.rgw.tools.TimeTool;
  * 
  */
 public class FixMediDisplay extends ListDisplay<Prescription> {
+	public static final String ID = "ch.elexis.FixMediDisplay";
 	private static final String TTCOST = Messages.FixMediDisplay_DailyCost; //$NON-NLS-1$
 	private final LDListener dlisten;
 	private IAction stopMedicationAction, changeMedicationAction, removeMedicationAction;
 	FixMediDisplay self;
 	Label lCost;
 	PersistentObjectDropTarget target;
+	private MenuManager menuManager;
 	static final String REZEPT = Messages.FixMediDisplay_Prescription; //$NON-NLS-1$
 	static final String LISTE = Messages.FixMediDisplay_UsageList; //$NON-NLS-1$
 	static final String HINZU = Messages.FixMediDisplay_AddItem; //$NON-NLS-1$
@@ -85,6 +88,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 		ViewMenus menu = new ViewMenus(s);
 		menu.createControlContextMenu(list, stopMedicationAction, changeMedicationAction, null,
 			removeMedicationAction);
+		menuManager = menu.getContextMenu();
 		setDLDListener(dlisten);
 		target = new PersistentObjectDropTarget(Messages.FixMediDisplay_FixMedikation, this, //$NON-NLS-1$
 			new PersistentObjectDropTarget.IReceiver() {
@@ -149,6 +153,10 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				ElexisEventDispatcher.fireSelectionEvent(getSelection());
 			}
 		});
+	}
+	
+	public MenuManager getMenuManager(){
+		return menuManager;
 	}
 	
 	public void reload(){
