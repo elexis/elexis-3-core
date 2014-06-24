@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -31,6 +32,7 @@ import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.data.Reminder;
 import ch.rgw.tools.ExHandler;
 
@@ -87,7 +89,16 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public String getInitialWindowPerspectiveId(){
-		return cod.getInitialPerspective();
+		String initPerspective = cod.getInitialPerspective();
+		
+		// avoid that nothing opens up after login in case the stored perspective can't be found
+		IPerspectiveRegistry perspectiveRegistry =
+			PlatformUI.getWorkbench().getPerspectiveRegistry();
+		if (perspectiveRegistry.findPerspectiveWithId(initPerspective) == null) {
+			initPerspective = UiResourceConstants.PatientPerspektive_ID;
+		}
+		
+		return initPerspective;
 	}
 	
 	@Override
