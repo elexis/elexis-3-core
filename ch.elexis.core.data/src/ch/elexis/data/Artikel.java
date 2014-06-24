@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.rgw.tools.Money;
@@ -395,9 +396,9 @@ public class Artikel extends VerrechenbarAdapter {
 	 */
 	public static List<Artikel> getLagerartikel(){
 		Query<Artikel> qbe = new Query<Artikel>(Artikel.class);
-		qbe.add(MINBESTAND, ">", "0");
+		qbe.add(MINBESTAND, Query.GREATER, StringConstants.ZERO);
 		qbe.or();
-		qbe.add(MAXBESTAND, ">", "0");
+		qbe.add(MAXBESTAND, Query.GREATER, StringConstants.ZERO);
 		qbe.orderBy(false, new String[] {
 			FLD_NAME
 		});
