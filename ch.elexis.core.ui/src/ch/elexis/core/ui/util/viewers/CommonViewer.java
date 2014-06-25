@@ -129,6 +129,9 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		viewer.setContentProvider(vc.getContentProvider());
 		viewer.setLabelProvider(vc.getLabelProvider());
 		viewer.addSelectionChangedListener(this);
+		if (vc.getDoubleClickListener() != null) {
+			viewer.addDoubleClickListener(vc.getDoubleClickListener());
+		}
 		bNew = vc.getButtonProvider().createButton(ret);
 		if (bNew != null) {
 			GridData gdNew = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
@@ -280,6 +283,8 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	}
 	
 	public void dispose(){
+		if (vc.getDoubleClickListener() != null)
+			viewer.removeDoubleClickListener(vc.getDoubleClickListener());
 		viewer.removeSelectionChangedListener(this);
 	}
 	

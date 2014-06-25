@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2010, G. Weirich and Elexis
+ * Copyright (c) 2005-2014, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *    MEDEVIT <office@medevit.at> - enhancements and refactorings
  *******************************************************************************/
 
 package ch.elexis.core.ui.util.viewers;
@@ -15,6 +15,7 @@ package ch.elexis.core.ui.util.viewers;
 import java.util.HashMap;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -46,18 +47,38 @@ public class ViewerConfigurer {
 	ControlFieldProvider controlFieldProvider;
 	private ButtonProvider buttonProvider;
 	private WidgetProvider widgetProvider;
+	private IDoubleClickListener doubleClickListener;
 	
 	/**
-	 * Standard Konstruktor. Erstellt einen Viewer mit Kontrollfeld und Button
+	 * This constructor extends the default constructor
+	 * {@link ViewerConfigurer#ViewerConfigurer(ICommonViewerContentProvider, LabelProvider, ControlFieldProvider, ButtonProvider, WidgetProvider)}
+	 * by allowing to pass an additional {@link IDoubleClickListener} which will be informed on
+	 * double clicks in the viewer
+	 * 
+	 * @param cnp
+	 * @param lp
+	 * @param cfp
+	 * @param bp
+	 * @param wp
+	 * @param iscl
 	 */
 	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp,
-		ControlFieldProvider cfp, ButtonProvider bp, WidgetProvider wp){
+		ControlFieldProvider cfp, ButtonProvider bp, WidgetProvider wp, IDoubleClickListener idcl){
 		
 		contentProvider = cnp;
 		labelProvider = (lp == null) ? new DefaultLabelProvider() : lp;
 		controlFieldProvider = cfp;
 		buttonProvider = bp;
 		widgetProvider = wp;
+		doubleClickListener = idcl;
+	}
+	
+	/**
+	 * Standard Konstruktor. Erstellt einen Viewer mit Kontrollfeld und Button
+	 */
+	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp,
+		ControlFieldProvider cfp, ButtonProvider bp, WidgetProvider wp){
+		this(cnp, lp, cfp, bp, wp, null);
 	}
 	
 	/**
@@ -68,10 +89,7 @@ public class ViewerConfigurer {
 	 * @param wp
 	 */
 	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp, WidgetProvider wp){
-		contentProvider = cnp;
-		labelProvider = lp;
-		buttonProvider = new DefaultButtonProvider();
-		widgetProvider = wp;
+		this(cnp, lp, null, new DefaultButtonProvider(), wp);
 	}
 	
 	/**
@@ -216,10 +234,10 @@ public class ViewerConfigurer {
 	 */
 	public static class TreeLabelProvider extends LabelProvider {
 		
-		@SuppressWarnings("unchecked")
 		@Override
 		public String getText(Object element){
 			if (element instanceof Tree) {
+				@SuppressWarnings("rawtypes")
 				Tree tree = (Tree) element;
 				return ((PersistentObject) tree.contents).getLabel();
 			} else {
@@ -313,4 +331,7 @@ public class ViewerConfigurer {
 		
 	}
 	
+	public IDoubleClickListener getDoubleClickListener(){
+		return doubleClickListener;
+	}
 }
