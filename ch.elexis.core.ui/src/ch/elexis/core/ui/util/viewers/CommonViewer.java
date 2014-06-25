@@ -337,16 +337,14 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				if ((sel != null) && (!sel.isEmpty())) {
 					Object element = sel.getFirstElement();
-					PersistentObject po;
 					if (element instanceof Tree<?>) {
-						po = (PersistentObject) ((Tree<?>) element).contents;
-					} else {
-						po = (PersistentObject) element;
+						element = ((Tree<?>) element).contents;
 					}
-					dl.doubleClicked(po, this);
+					if (element instanceof PersistentObject) {
+						dl.doubleClicked((PersistentObject) element, this);
+					}
 				}
 			}
-			
 		}
 		
 	}
