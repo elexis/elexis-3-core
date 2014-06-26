@@ -201,7 +201,9 @@ public enum Images {
 	IMG_FLAG_CH,
 	IMG_FLAG_FR,
 	IMG_FLAG_IT,
-	IMG_FLAG_FL;
+	IMG_FLAG_FL,
+	/** a generic group icon */
+	IMG_CATEGORY_GROUP;
 	
 	private Images(){}
 	
