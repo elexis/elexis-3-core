@@ -203,7 +203,9 @@ public enum Images {
 	IMG_FLAG_IT,
 	IMG_FLAG_FL,
 	/** a generic group icon */
-	IMG_CATEGORY_GROUP;
+	IMG_CATEGORY_GROUP,
+	/** a syringe, nozzle, injection icon*/
+	IMG_SYRINGE;
 	
 	private Images(){}
 	
