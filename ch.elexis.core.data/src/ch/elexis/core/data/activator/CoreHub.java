@@ -104,7 +104,11 @@ public class CoreHub implements BundleActivator {
 	public static Settings mandantCfg;
 	
 	public static Anwender actUser; // TODO set
-	public static Mandant actMandant; // TODO set
+	/**
+	 * @deprecated please use {@link ElexisEventDispatcher#getSelected(Mandant.class)} to retrieve
+	 *             current mandator
+	 */
+	public static Mandant actMandant;
 	
 	/** Der Initialisierer für die Voreinstellungen */
 	public static final CorePreferenceInitializer pin = new CorePreferenceInitializer();
@@ -352,7 +356,7 @@ public class CoreHub implements BundleActivator {
 		actMandant = newMandant;
 		
 		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(CoreHub.actMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
+			new ElexisEvent(newMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
 	}
 	
 	public Bundle getBundle(){
