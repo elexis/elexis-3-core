@@ -73,6 +73,7 @@ public class Importer extends TitleAreaDialog {
 				if (top != null) {
 					ImporterPage p = (ImporterPage) top.getData();
 					setMessage(p.getDescription());
+					top.getControl().setFocus();
 				}
 			}
 			
