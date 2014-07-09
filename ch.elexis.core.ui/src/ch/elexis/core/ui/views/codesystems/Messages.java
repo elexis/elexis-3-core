@@ -48,6 +48,7 @@ public class Messages extends NLS {
 	public static String CodeSelectorFactory_yourMostFrequent;
 	public static String CodeSelectorFactory_resetStatistic;
 	public static String LeistungenView_error;
+	public static String LeistungenView_defineColor;
 	
 	static {
 		// load message values from bundle file

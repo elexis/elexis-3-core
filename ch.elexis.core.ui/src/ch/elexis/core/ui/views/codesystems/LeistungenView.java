@@ -19,14 +19,21 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -43,9 +50,10 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 	public final static String ID = "ch.elexis.LeistungenView"; //$NON-NLS-1$
 	public CTabFolder ctab;
 	CTabItem selected;
+	private String defaultRGB;
 	
 	public LeistungenView(){
-		
+		defaultRGB = UiDesk.createColor(new RGB(255, 255, 255));
 	}
 	
 	@Override
@@ -78,6 +86,23 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 			}
 			
 		});
+		
+		// menu to select & define color
+		Menu tabFolderMenu = new Menu(ctab);
+		MenuItem miColor = new MenuItem(tabFolderMenu, SWT.POP_UP);
+		miColor.setText(Messages.LeistungenView_defineColor);
+		miColor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				CTabItem item = ctab.getSelection();
+				ColorDialog cd = new ColorDialog(UiDesk.getTopShell());
+				RGB selected = cd.open();
+				CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_COLOR + item.getText(),
+					UiDesk.createColor(selected));
+				setCTabItemColor(ctab.getSelection().getText());
+			}
+		});
+		ctab.setMenu(tabFolderMenu);
 		
 		BlockSelector cs = new BlockSelector();
 		CTabItem ct = new CTabItem(ctab, SWT.NONE);
@@ -127,6 +152,17 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 			}
 			page.cv.getConfigurer().getControlFieldProvider().setFocus();
 		}
+		setCTabItemColor(selected.getText());
+	}
+	
+	private void setCTabItemColor(String id){
+		String rgbColor = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + id, defaultRGB);
+		Color color = UiDesk.getColorFromRGB(rgbColor);
+		ctab.setSelectionBackground(new Color[] {
+			UiDesk.getDisplay().getSystemColor(SWT.COLOR_WHITE), color
+		}, new int[] {
+			100
+		}, true);
 	}
 	
 	void swapTabs(int iLeft, int iRight){

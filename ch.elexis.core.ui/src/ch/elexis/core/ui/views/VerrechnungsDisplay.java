@@ -30,6 +30,8 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -43,6 +45,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -70,6 +73,8 @@ public class VerrechnungsDisplay extends Composite {
 	Table tVerr;
 	TableViewer viewer;
 	MenuManager contextMenuManager;
+	private String defaultRGB;
+	private IWorkbenchPage page;
 	private final Hyperlink hVer;
 	private final PersistentObjectDropTarget dropTarget;
 	private IAction chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
@@ -89,9 +94,12 @@ public class VerrechnungsDisplay extends Composite {
 		}
 	};
 	
-	public VerrechnungsDisplay(final IWorkbenchPage page, Composite parent, int style){
+	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style){
 		super(parent, style);
 		setLayout(new GridLayout());
+		this.page = p;
+		defaultRGB = UiDesk.createColor(new RGB(255, 255, 255));
+		
 		hVer =
 			UiDesk.getToolkit().createHyperlink(this, Messages.VerrechnungsDisplay_billing,
 				SWT.NONE); //$NON-NLS-1$
@@ -227,6 +235,13 @@ public class VerrechnungsDisplay extends Composite {
 			TableItem ti = new TableItem(tVerr, SWT.WRAP);
 			ti.setText(sdg.toString());
 			ti.setData(lst);
+			
+			// set table item color
+			String codeName = lst.getVerrechenbar().getCodeSystemName();
+			String rgbColor =
+				CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeName, defaultRGB);
+			Color color = UiDesk.getColorFromRGB(rgbColor);
+			ti.setBackground(color);
 		}
 		tVerr.setRedraw(true);
 		sdg.setLength(0);
