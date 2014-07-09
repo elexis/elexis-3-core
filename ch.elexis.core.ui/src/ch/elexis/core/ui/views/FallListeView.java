@@ -100,12 +100,10 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		public void runInUi(final ElexisEvent ev){
 			actPatient = (Patient) ev.getObject();
 			form.setText(actPatient.getPersonalia());
-			fallViewer.getViewerWidget().refresh(false);
+			fallViewer.getViewerWidget().refresh();
 		}
 	};
-	private ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class,
-		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_RELOAD
-			| ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_UPDATE) {
+	private ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class) {
 		
 		public void runInUi(final ElexisEvent ev){
 			Fall f = (Fall) ev.getObject();
@@ -364,6 +362,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 			actBehandlung = b;
 			reopenFallAction.setEnabled(!f.isOpen());
 			behandlViewer.getViewerWidget().refresh(true);
+			fallViewer.getViewerWidget().refresh(true);
 			noPatientHandled = false;
 		} else {
 			if (!noPatientHandled) {
