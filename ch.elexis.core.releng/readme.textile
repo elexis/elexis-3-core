@@ -62,9 +62,21 @@ h2. GUI tests
 
 We try to maintain Jubula GUI test for ensuring that common operations work well. For details please consult the "readme.texile":jubual/readme.texile in the jubula directory.
 
+h2. Hints
+
+To rebuild the elexis.ico for Windows use the following bash snippet
+
+bq. convert elexis.xpm -bordercolor white -border 0 \
+\( -clone 0 -resize 16x16 -colors 256 \) \( -clone 0 -resize 16x16 \) \
+\( -clone 0 -resize 32x32 -colors 256 \) \( -clone 0 -resize 32x32 \) \
+\( -clone 0 -resize 48x48 -colors 256 \) \( -clone 0 -resize 48x48 \) \
+\( -clone 0 -resize 256x256 \) \
+-delete 0 -alpha off elexis.ico
+
+And be aware that for building with Maven the path must be different from the one given in the PDE till the "Eclipse bug 424805":bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=424805 and "361722":https://bugs.eclipse.org/bugs/show_bug.cgi?id=361722 are resolved.
+
 h2. TODO
 
-* Fix problem with missing icons
 * Create a tag (but with a good name not @jenkins-Elexis-3.0-Core-18@ and pushing it to github each time, all tests (JUnit, PDE-Test, Jubula) have passed on one/all architecture. The tag name should be something like @I_YEAR_MONTH_DAY_HOUR_MINUTE@, see example "eclipse.e4.tools":http://git.eclipse.org/c/e4/org.eclipse.e4.tools.git/
 * Howto build release here some hints
 ** http://de.slideshare.net/matthiaskoester/release-enginnering-with-tycho-and-p2 (Linux Version 1.0.0 < 1.0.1.snapshot < 1.0.2)
