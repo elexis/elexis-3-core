@@ -237,11 +237,19 @@ public class VerrechnungsDisplay extends Composite {
 			ti.setData(lst);
 			
 			// set table item color
-			String codeName = lst.getVerrechenbar().getCodeSystemName();
-			String rgbColor =
-				CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeName, defaultRGB);
-			Color color = UiDesk.getColorFromRGB(rgbColor);
-			ti.setBackground(color);
+			IVerrechenbar verrBar = lst.getVerrechenbar();
+			if (verrBar != null) {
+				Color color = UiDesk.getColorFromRGB(defaultRGB);
+				String codeName = verrBar.getCodeSystemName();
+				
+				if (codeName != null) {
+					String rgbColor =
+						CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeName,
+							defaultRGB);
+					color = UiDesk.getColorFromRGB(rgbColor);
+				}
+				ti.setBackground(color);
+			}
 		}
 		tVerr.setRedraw(true);
 		sdg.setLength(0);
