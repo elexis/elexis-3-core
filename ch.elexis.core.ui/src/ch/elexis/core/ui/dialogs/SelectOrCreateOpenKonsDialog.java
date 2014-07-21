@@ -110,8 +110,10 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		fallCombo.setSelection(new StructuredSelection(ElexisEventDispatcher
-			.getSelected(Fall.class)));
+		Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+		if (selectedFall != null) {
+			fallCombo.setSelection(new StructuredSelection(selectedFall));
+		}
 		
 		fd = new FormData();
 		fd.top = new FormAttachment(0, 5);

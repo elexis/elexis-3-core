@@ -126,7 +126,13 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	}
 	
 	public LabResult createResult(){
-		LabResult result = new LabResult(getPatient(), null, getLabItem(), "", null); //$NON-NLS-1$
+		LabResult result = new LabResult(getPatient(), null, getLabItem(), "", null);
+		setLabResult(result);
+		return result;
+	}
+	
+	public LabResult createResult(Kontakt origin){
+		LabResult result = new LabResult(getPatient(), null, getLabItem(), "", null, origin);
 		setLabResult(result);
 		return result;
 	}
@@ -228,6 +234,27 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			}
 		}
 		return ret;
+	}
+	
+	/**
+	 * Get the {@link Kontakt} used if result is entered manual.
+	 * 
+	 * @return
+	 */
+	public static Kontakt getOrCreateManualLabor(){
+		String identifier = Messages.LabOrder_contactOwnLabName;
+		Labor labor = null;
+		Query<Labor> qbe = new Query<Labor>(Labor.class);
+		qbe.add(Kontakt.FLD_SHORT_LABEL, Query.LIKE, "%" + identifier + "%"); //$NON-NLS-1$ //$NON-NLS-2$
+		qbe.or();
+		qbe.add(Kontakt.FLD_NAME1, Query.LIKE, "%" + identifier + "%"); //$NON-NLS-1$ //$NON-NLS-2$
+		List<Labor> results = qbe.execute();
+		if (results.isEmpty()) {
+			labor = new Labor(identifier, "Labor " + identifier); //$NON-NLS-1$
+		} else {
+			labor = results.get(0);
+		}
+		return labor;
 	}
 	
 	/**

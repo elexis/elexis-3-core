@@ -47,9 +47,7 @@ import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.LabResult;
-import ch.elexis.data.Labor;
 import ch.elexis.data.Patient;
-import ch.elexis.data.Query;
 import ch.rgw.tools.TimeTool;
 
 public class LaborOrdersComposite extends Composite {
@@ -74,8 +72,8 @@ public class LaborOrdersComposite extends Composite {
 		selectPatient(ElexisEventDispatcher.getSelectedPatient());
 	}
 	
-	private LabResult createResult(LabOrder order){
-		LabResult result = order.createResult();
+	private LabResult createResult(LabOrder order, Kontakt origin){
+		LabResult result = order.createResult(origin);
 		result.setTransmissionTime(new TimeTool());
 		return result;
 	}
@@ -317,37 +315,20 @@ public class LaborOrdersComposite extends Composite {
 					} else if (labItem.getTyp() == typ.TEXT) {
 						LabResult result = ((LabOrder) element).getLabResult();
 						if (result == null) {
-							result = createResult((LabOrder) element);
-							result
-								.setOrigin(getOrCreateManualLabor(Messages.LaborOrdersComposite_contactOwnLabName));
+							result =
+								createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
 						}
 						return result.getComment();
 					} else {
 						LabResult result = ((LabOrder) element).getLabResult();
 						if (result == null) {
-							result = createResult((LabOrder) element);
-							result
-								.setOrigin(getOrCreateManualLabor(Messages.LaborOrdersComposite_contactOwnLabName));
+							result =
+								createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
 						}
 						return result.getResult();
 					}
 				}
 				return "???"; //$NON-NLS-1$
-			}
-			
-			private Kontakt getOrCreateManualLabor(String identifier){
-				Labor labor = null;
-				Query<Labor> qbe = new Query<Labor>(Labor.class);
-				qbe.add(Kontakt.FLD_SHORT_LABEL, Query.LIKE, "%" + identifier + "%"); //$NON-NLS-1$ //$NON-NLS-2$
-				qbe.or();
-				qbe.add(Kontakt.FLD_NAME1, Query.LIKE, "%" + identifier + "%"); //$NON-NLS-1$ //$NON-NLS-2$
-				List<Labor> results = qbe.execute();
-				if (results.isEmpty()) {
-					labor = new Labor(identifier, "Labor " + identifier); //$NON-NLS-1$
-				} else {
-					labor = results.get(0);
-				}
-				return labor;
 			}
 			
 			protected void setValue(Object element, Object value){

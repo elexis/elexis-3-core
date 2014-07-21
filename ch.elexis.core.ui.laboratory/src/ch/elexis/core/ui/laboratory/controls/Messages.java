@@ -12,7 +12,6 @@ public class Messages extends NLS {
 	public static String LaborOrdersComposite_columnParameter;
 	public static String LaborOrdersComposite_columnState;
 	public static String LaborOrdersComposite_columnValue;
-	public static String LaborOrdersComposite_contactOwnLabName;
 	public static String LaborOrdersComposite_validatorNotNumber;
 	public static String LaborOrdersComposite_NoPatientSelected;
 	
