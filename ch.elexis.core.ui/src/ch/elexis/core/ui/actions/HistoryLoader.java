@@ -136,10 +136,10 @@ public class HistoryLoader extends BackgroundJob {
 				String label = maskHTML(k.getLabel());
 				// label+="<br/>"+k.getFall().getLabel();
 				sb.append("<p><a href=\"") //$NON-NLS-1$
-					.append(k.getId()).append("\">") //$NON-NLS-1$
+					.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
 					.append(label).append("</a><br/>") //$NON-NLS-1$
 					.append("<span color=\"gruen\">") //$NON-NLS-1$
-					.append(k.getFall().getLabel()).append("</span><br/>") //$NON-NLS-1$
+					.append(maskHTML(k.getFall().getLabel())).append("</span><br/>") //$NON-NLS-1$
 					.append(s).append("</p>"); //$NON-NLS-1$
 				monitor.worked(1);
 				
