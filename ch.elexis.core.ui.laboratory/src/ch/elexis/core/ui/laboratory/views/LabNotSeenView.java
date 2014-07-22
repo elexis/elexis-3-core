@@ -264,7 +264,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 				public void doRun(){
 					if (MessageDialog.openConfirm(getViewSite().getShell(),
 						Messages.LabNotSeenView_reallyMarkCaption, //$NON-NLS-1$
-						Messages.LabNotSeenView_markAllOfPatientToolTip)) //$NON-NLS-1$
+						Messages.LabNotSeenView_markAllToolTip)) //$NON-NLS-1$
 						tv.setAllChecked(true);
 					{
 						for (LabResult lr : LabResult.getUnseen()) {
