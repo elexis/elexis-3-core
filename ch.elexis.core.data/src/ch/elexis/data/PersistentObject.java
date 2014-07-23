@@ -63,6 +63,7 @@ import ch.elexis.core.data.util.DBUpdate;
 import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IChangeListener;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.ISticker;
@@ -262,7 +263,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			// run from scratch configuration with a temporary database
 			try {
 				runFromScratchDB = File.createTempFile("elexis", "db");
-				log.info("RunFromScratch test database created in " + runFromScratchDB.getAbsolutePath());
+				log.info("RunFromScratch test database created in "
+					+ runFromScratchDB.getAbsolutePath());
 				dbUser = "sa";
 				dbPw = StringTool.leer;
 				j = JdbcLink.createH2Link(runFromScratchDB.getAbsolutePath());
@@ -329,7 +331,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         {@link Preferences#CFG_FOLDED_CONNECTION} to retrieve the required parameters,
 	 *         castable to {@link String}
 	 */
-	public static @NonNull Hashtable<Object, Object> getConnectionHashtable(){
+	public static @NonNull
+	Hashtable<Object, Object> getConnectionHashtable(){
 		Hashtable<Object, Object> ret = new Hashtable<>();
 		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
@@ -1242,7 +1245,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	@SuppressWarnings({
 		"rawtypes", "unchecked"
 	})
-	public Map getMap(final String field){
+	public @NonNull
+	Map getMap(final String field){
 		String key = getKey(field);
 		Object o = cache.get(key);
 		if (o instanceof Hashtable) {
@@ -1258,6 +1262,37 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		cache.put(key, ret, getCacheTime());
 		return ret;
+	}
+	
+	/**
+	 * Retrieves an object out of the {@link #FLD_EXTINFO} if it exists
+	 * 
+	 * @param key
+	 * @return the {@link Object} stored for the given key in ExtInfo, or <code>null</code>
+	 * @since 3.0
+	 */
+	public @Nullable
+	Object getExtInfoStoredObjectByKey(final Object key){
+		byte[] binaryRaw = getBinaryRaw(FLD_EXTINFO);
+		if (binaryRaw == null)
+			return null;
+		
+		@SuppressWarnings("unchecked")
+		Map<Object, Object> ext = getMap(FLD_EXTINFO);
+		return ext.get(key);
+	}
+	
+	/**
+	 * Set a value in the {@link #FLD_EXTINFO} field, will create an ExtInfo field if required
+	 * 
+	 * @param key
+	 * @param value
+	 * @since 3.0
+	 */
+	public void setExtInfoStoredObjectByKey(final Object key, final Object value){
+		Map extinfo = getMap(FLD_EXTINFO);
+		extinfo.put(key, value);
+		setMap(FLD_EXTINFO, extinfo);
 	}
 	
 	/**
@@ -2222,9 +2257,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			getConnection().disconnect();
 			j = null;
 			log.info("Verbindung zur Datenbank getrennt.");
-			if (runFromScratchDB != null)
-			{
-				File dbFile = new File(runFromScratchDB.getAbsolutePath()+ ".h2.db");
+			if (runFromScratchDB != null) {
+				File dbFile = new File(runFromScratchDB.getAbsolutePath() + ".h2.db");
 				log.info("Deleting runFromScratchDB was " + runFromScratchDB + " and " + dbFile);
 				dbFile.delete();
 				runFromScratchDB.delete();
