@@ -254,7 +254,7 @@ public class GlobalActions {
 							}
 						}
 						ch.elexis.data.Anwender.logoff();
-						adaptForUser();
+						
 						LoginDialog dlg = new LoginDialog(win.getShell());
 						dlg.create();
 						dlg.setTitle(Messages.GlobalActions_LoginDialogTitle); //$NON-NLS-1$
@@ -264,6 +264,7 @@ public class GlobalActions {
 						if (dlg.open() == Dialog.CANCEL) {
 							exitAction.run();
 						}
+						adaptForUser();
 					} catch (Exception ex) {
 						ExHandler.handle(ex);
 					}
@@ -279,7 +280,8 @@ public class GlobalActions {
 				public void run(){
 					// cnv.open();
 					Importer imp =
-						new Importer(mainWindow.getShell(), ExtensionPointConstantsUi.FREMDDATENIMPORT);
+						new Importer(mainWindow.getShell(),
+							ExtensionPointConstantsUi.FREMDDATENIMPORT);
 					imp.create();
 					imp.setMessage(Messages.GlobalActions_ImportDlgMessage); //$NON-NLS-1$
 					imp.getShell().setText(Messages.GlobalActions_ImportDlgShelltext); //$NON-NLS-1$
