@@ -229,6 +229,13 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 	}
 	
 	@Override
+	public void dispose(){
+		super.dispose();
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_labitem, eeli_laborder,
+			eeli_labresult, eeli_pat);
+	}
+	
+	@Override
 	public void setFocus(){
 		// TODO Automatisch erstellter Methoden-Stub
 		
