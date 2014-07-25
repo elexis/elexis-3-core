@@ -1,12 +1,12 @@
 #
 ImageName = 'ngiger/jenkins-slave'
-Version = '0.1.2' # Must be kept in sync with $default in jenkins-slave.pp
+Version = '0.3'
 Origin  = '/opt/downloads/jubula_8.0/installer-jubula_linux-gtk-x86_64.sh'
 
 desc "Build the docker image using Jubula-Installer from #{File.exists?(Origin) ? 'existing' : 'missing (download or adapt the rakefile)'} #{Origin} "
 task :build do
   dest = "#{Dir.pwd}/docker/installer-jubula_linux-gtk-x86_64.sh"
-  FileUtils.cp_p(Origin, dest) unless File.exists?(dest)
+  FileUtils.cp(Origin, dest, :preserve => true, :verbose => true) unless File.exists?(dest)
   exit 2 unless File.exists?(dest)
   cmd = "docker build -t #{ImageName}:#{Version} docker"
   puts cmd
