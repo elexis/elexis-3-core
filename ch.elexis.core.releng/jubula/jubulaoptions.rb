@@ -125,7 +125,7 @@ module JubulaOptions
       @instDest =  pathname
     end
   else
-    pathname = "../../*/target/**/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
+    pathname = "../../*site*/target/products/*/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
     if (Dir.glob(File.expand_path(pathname)).size == 1)
       pathname = pathname.sub('configuration/config.ini', '*.ini')
       if (Dir.glob(File.expand_path(pathname)).size == 1)
