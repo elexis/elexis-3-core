@@ -393,7 +393,17 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 	}
 	
 	public String getFormula(){
-		return get(FORMULA);
+		String formula = get(FORMULA);
+		
+		if (formula == null || formula.isEmpty()) {
+			String[] refWEntry = get(REF_FEMALE_OR_TEXT).split("##");
+			formula = refWEntry.length > 1 ? refWEntry[1] : "";
+			
+			if (formula != null && !formula.isEmpty()) {
+				setFormula(formula);
+			}
+		}
+		return formula;
 	}
 	
 	public String getLoincCode(){
@@ -429,10 +439,10 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 		get(fields, vals);
 		sb.append(vals[0]).append(", ").append(vals[1]); //$NON-NLS-1$
 		if (vals[5].equals(StringConstants.ZERO)) {
-			sb.append(" (").append(vals[2]).append("/").append(vals[3]).append(StringTool.space) //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append(" (").append(vals[2]).append("/").append(getRefW()).append(StringTool.space) //$NON-NLS-1$ //$NON-NLS-2$
 				.append(vals[4]).append(")"); //$NON-NLS-1$
 		} else {
-			sb.append(" (").append(vals[3]).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append(" (").append(getRefW()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		sb.append("[").append(vals[6]).append(", ").append(vals[7]).append("]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return sb.toString();
