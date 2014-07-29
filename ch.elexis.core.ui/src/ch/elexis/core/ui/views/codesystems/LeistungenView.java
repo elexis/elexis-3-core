@@ -97,9 +97,11 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 				CTabItem item = ctab.getSelection();
 				ColorDialog cd = new ColorDialog(UiDesk.getTopShell());
 				RGB selected = cd.open();
-				CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_COLOR + item.getText(),
-					UiDesk.createColor(selected));
-				setCTabItemColor(ctab.getSelection().getText());
+				if (selected != null) {
+					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_COLOR + item.getText(),
+						UiDesk.createColor(selected));
+					setCTabItemColor(ctab.getSelection().getText());
+				}
 			}
 		});
 		ctab.setMenu(tabFolderMenu);
