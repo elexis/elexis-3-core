@@ -14,6 +14,7 @@ package ch.elexis.core.ui.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -34,21 +35,25 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -56,10 +61,12 @@ import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultContentProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.WidgetProvider;
+import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Bestellung;
 import ch.elexis.data.Bestellung.Item;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 
 public class LagerView extends ViewPart implements DoubleClickListener, ISaveablePart2,
 		IActivationListener {
@@ -80,14 +87,25 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 		vc = new ViewerConfigurer(new DefaultContentProvider(cv, Artikel.class) {
 			@Override
 			public Object[] getElements(Object inputElement){
-				/*
-				 * Query<Artikel> qbe=new Query<Artikel>(Artikel.class); qbe.startGroup();
-				 * qbe.add("Minbestand","<>","0"); qbe.or(); qbe.add("Maxbestand","<>","0");
-				 * qbe.endGroup(); //cv.getConfigurer().getControlFieldProvider ().setQuery(qbe);
-				 * List<Artikel> l=qbe.execute();
-				 */
+				List<Artikel> ret = Artikel.getLagerartikel();
+				// add articles which are not in the ARTIKEL db table ... by classname!?
+				// put additional article class names in isAdditionalArticle
+				// TODO move Lager information out of Artikel, solves this hack
+				for (CodeSelectorFactory csf : getArticleCodeSelectorFactories()) {
+					Class<? extends PersistentObject> elementClass = csf.getElementClass();
+					
+					if (elementClass != null && Artikel.class.isAssignableFrom(elementClass)
+						&& isAdditionalArticle(elementClass)) {
+						Query<Artikel> qbe = new Query<Artikel>(elementClass);
+						qbe.add(Artikel.MINBESTAND, Query.GREATER, StringConstants.ZERO);
+						qbe.or();
+						qbe.add(Artikel.MAXBESTAND, Query.GREATER, StringConstants.ZERO);
+						List<Artikel> l = qbe.execute();
+						ret.addAll(l);
+					}
+				}
 				
-				return Artikel.getLagerartikel().toArray();
+				return ret.toArray();
 			}
 			
 		}, new LagerLabelProvider() {}, null, // new DefaultControlFieldProvider(cv,new
@@ -109,6 +127,35 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 		
 		cv.setContextMenu(contextMenu);
 		GlobalEventDispatcher.addActivationListener(this, this);
+	}
+	
+	protected boolean isAdditionalArticle(Class<? extends PersistentObject> elementClass){
+		return elementClass.getSimpleName().equals("ArtikelstammItem");
+	}
+	
+	private List<CodeSelectorFactory> getArticleCodeSelectorFactories(){
+		List<IConfigurationElement> list =
+			Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
+		List<CodeSelectorFactory> csfList = new ArrayList<CodeSelectorFactory>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			IConfigurationElement ce = list.get(i);
+			try {
+				if (!"Artikel".equals(ce.getName())) {
+					continue;
+				}
+				csfList.add((CodeSelectorFactory) ce
+					.createExecutableExtension("CodeSelectorFactory"));
+			} catch (Exception ex) {
+				MessageBox mb = new MessageBox(getViewSite().getShell(), SWT.ICON_ERROR | SWT.OK);
+				mb.setText(ch.elexis.core.ui.views.artikel.Messages.ArtikelView_errorCaption);
+				mb.setMessage(ch.elexis.core.ui.views.artikel.Messages.ArtikelView_errorText
+					+ ce.getName() + ":\n" //$NON-NLS-1$
+					+ ex.getLocalizedMessage());
+				mb.open();
+			}
+		}
+		return csfList;
 	}
 	
 	@Override
