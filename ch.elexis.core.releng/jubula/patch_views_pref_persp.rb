@@ -74,7 +74,7 @@ def patchJubulaXML(xml_name, plugin_dir)
   counter = 0; pages = []
   pageNames.each{|name|
     counter += 1
-    pages << eval(genPreferencePageElement(counter, name))
+    pages << eval(genPreferencePageElement(counter, name.gsub(/[()]/,'.')))
   }
 
   counter = 0; views = []
