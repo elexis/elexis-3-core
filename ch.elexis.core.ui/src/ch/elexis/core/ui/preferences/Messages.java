@@ -15,16 +15,8 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.preferences.messages";//$NON-NLS-1$
 	
 	public static String Ablauf_0;
-	public static String Ablauf_10;
-	public static String Ablauf_12;
-	public static String Ablauf_14;
-	public static String Ablauf_15;
-	public static String Ablauf_17;
-	public static String Ablauf_19;
-	public static String Ablauf_21;
-	public static String Ablauf_23;
-	public static String Ablauf_24;
 	public static String Ablauf_3;
+	public static String Ablauf_24;
 	public static String Ablauf_31;
 	public static String Ablauf_4;
 	public static String Ablauf_6;
@@ -222,6 +214,10 @@ public class Messages extends NLS {
 	public static String Leistungscodes_textMultipleLines;
 	public static String Leistungscodes_textStyled;
 	public static String Leistungscodes_unusedData;
+	public static String LogbackConfigDetails;
+	public static String LogbackConfigDefault;
+	public static String LogbackConfigXmlExists;
+	public static String LogbackConfigXmlMissing;
 	public static String Mandanten_0;
 	public static String Mandanten_biller;
 	public static String Mandanten_groups;

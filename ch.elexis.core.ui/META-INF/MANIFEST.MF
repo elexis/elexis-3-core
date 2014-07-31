@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.core.runtime,
  ch.rgw.utility;bundle-version="3.0.0",
  ch.elexis.core;bundle-version="3.0.0",
  ch.elexis.core.data;bundle-version="3.0.0",
- ch.elexis.core.ui.icons;bundle-version="3.0.0"
+ ch.elexis.core.ui.icons;bundle-version="3.0.0",
+ ch.qos.logback.classic
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui,
