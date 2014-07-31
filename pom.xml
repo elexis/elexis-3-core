@@ -240,7 +240,7 @@
 	</modules>
 	<properties>
 		<scm_url>git@github.com:elexis/elexis-3-core.git</scm_url>
-		<tycho-version>0.20.0</tycho-version>
+		<tycho-version>0.21.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-extras.version>${tycho-version}</tycho-extras.version>
 		<repo_name>elexis.3.core</repo_name>
