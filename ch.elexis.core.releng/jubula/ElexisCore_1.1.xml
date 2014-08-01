@@ -206,27 +206,11 @@
           <data columnCount="1">
             <data>
               <language>de_DE</language>
-              <value>Datenaustausch/Labor Analytica</value>
-            </data>
-          </data>
-        </row>
-        <row rowCount="2">
-          <data columnCount="1">
-            <data>
-              <language>de_DE</language>
               <value>Abrechnungssysteme</value>
             </data>
           </data>
         </row>
-        <row rowCount="3">
-          <data columnCount="1">
-            <data>
-              <language>de_DE</language>
-              <value>Datenaustausch/Team W Import</value>
-            </data>
-          </data>
-        </row>
-        <row rowCount="4">
+        <row rowCount="2">
           <data columnCount="1">
             <data>
               <language>de_DE</language>
@@ -1334,6 +1318,58 @@
             </technicalName>
             <type xsi:nil="true"/>
             <logicalName>ad8b4567a49a410d840251a99a995a08</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>ch.elexis.core.ui.selectors.SelectorPanel_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Table</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Table</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.artikelview</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.artikel.ArtikelView$MasterDetailsPage_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Table_1</hierarchyName>
+              <alternativeDisplayName>Table</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>ad2622a63567429fb8ba545998e8fe5c</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Button_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Button</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Button</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_2</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>dialog.button.cancel</hierarchyName>
+              <alternativeDisplayName>dialog.button.cancel ("Cancel")</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>4e004a02e5324876a4929d52d44dc0a4</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Composite_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Composite_2</neighbour>
+              <componentClassName>org.eclipse.swt.custom.CTabFolder</componentClassName>
+              <supportedClassName>org.eclipse.swt.custom.CTabFolder</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <alternativeDisplayName>Tabbed Component ("*Artikel","Lager","Kompendium online")</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>9683c69fdf754a53a7ea41c79be7aff3</logicalName>
           </association>
           <category>
             <name>Patients</name>
@@ -11422,7 +11458,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name/>
+              <name>Create Screenshot of Tab Artikel</name>
               <comment xsi:nil="true"/>
               <GUID>6aacf23cfc5546979d76281f997021e2</GUID>
               <generated>false</generated>
@@ -11484,21 +11520,7 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name>Wait some time for ContextMenu</name>
-              <comment>Should better wait till ContextMenu valid</comment>
-              <GUID>fcc207a1327d4ccdb717dddb7dc622ca</GUID>
-              <generated>false</generated>
-              <active>false</active>
-              <taskId xsi:nil="true"/>
-              <datafile xsi:nil="true"/>
-              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
-              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
-              <hasOwnTestdata>false</hasOwnTestdata>
-            </usedTestcase>
-          </teststep>
-          <teststep>
-            <usedTestcase>
-              <name/>
+              <name>Create Screenshot of Tab Artikelstamm</name>
               <comment xsi:nil="true"/>
               <GUID>817bea40db2b4851aa23adc934d2f36a</GUID>
               <generated>false</generated>
@@ -11523,7 +11545,44 @@
           </teststep>
           <teststep>
             <usedTestcase>
-              <name/>
+              <name>Re-Select tab "Artikel"</name>
+              <comment xsi:nil="true"/>
+              <GUID>7f9bcd44abdd4af0b9fd4fdf067a3ed9</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>'*Artikel'</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083154b8c1601154b91d20f012f</uniqueIds>
+                <uniqueIds>8ab6b083181dc1bc01181dcfdd7f0019</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364b007098c</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a497002b</originalName>
+                <newName>daf4a1f9abc74c2c91dc6f6feef95f50</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Wait for Context Menu</name>
               <comment>Max 5 seconds</comment>
               <GUID>6032a6b8f54b474ebfc584d730b9e673</GUID>
               <generated>false</generated>
@@ -12267,6 +12326,20 @@
             <taskId xsi:nil="true"/>
             <datafile xsi:nil="true"/>
             <testcaseGuid>3c8e68c1ad044bddb8efcb849e40e4cf</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Perspektive zurücksetzen</name>
+            <comment xsi:nil="true"/>
+            <GUID>b7a341abb5df42e980843dde6dcd4d30</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>5a034cd013b74493bbfbe153cfcd18d1</testcaseGuid>
             <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
@@ -16306,6 +16379,13 @@
       <compName>Kontact_Auwahl_tbl</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.Button</compType>
+      <GUID>4e004a02e5324876a4929d52d44dc0a4</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300qualifier0070_Datenimport_Cancel_btn</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.abstract.Widget</compType>
       <GUID>4e7449721ef44c36a19ec70d45f9d634</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
@@ -16614,6 +16694,13 @@
       <compName>kons_text</compName>
     </componentNames>
     <componentNames>
+      <compType>guidancer.concrete.TabbedPane</compType>
+      <GUID>9683c69fdf754a53a7ea41c79be7aff3</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300qualifier0072_CTabFolder_1_tpn</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
       <GUID>971ed2630fb14a5f8861263e895f5ef3</GUID>
       <creationContext>STEP</creationContext>
@@ -16696,6 +16783,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Patient_create_grc</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.Table</compType>
+      <GUID>ad2622a63567429fb8ba545998e8fe5c</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300qualifier0071_Artikelstamm_Table_1_tbl</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
