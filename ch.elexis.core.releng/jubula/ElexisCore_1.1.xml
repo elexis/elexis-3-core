@@ -12244,19 +12244,6 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name>Select a patient (if we run with a DemoDB)</name>
-            <comment xsi:nil="true"/>
-            <GUID>2e9c3cb6800d4dcaa38786d7e9939798</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <datafile xsi:nil="true"/>
-            <testcaseGuid>e4836ee6f42d49a7b5fc1b7ba25dc67c</testcaseGuid>
-            <hasOwnTestdata>false</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
             <name>Visit all preference pages and take a snapshot of each</name>
             <comment>May 24 2014: Fails with teamw and a lot of other Labors</comment>
             <GUID>248758863ac04562aa9692ce13d4062f</GUID>
@@ -12268,6 +12255,33 @@
             <referencedTestData>PREFERENCES</referencedTestData>
             <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
             <hasOwnTestdata>true</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Patienten Perspektive öffnen</name>
+            <comment xsi:nil="true"/>
+            <GUID>08f726f4116144c5ba7142e22ad70d7a</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>3c8e68c1ad044bddb8efcb849e40e4cf</testcaseGuid>
+            <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Select a patient (if we run with a DemoDB)</name>
+            <comment xsi:nil="true"/>
+            <GUID>2e9c3cb6800d4dcaa38786d7e9939798</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <datafile xsi:nil="true"/>
+            <testcaseGuid>e4836ee6f42d49a7b5fc1b7ba25dc67c</testcaseGuid>
+            <hasOwnTestdata>false</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
