@@ -694,6 +694,84 @@
           <value>/opt/elexis-3-jubula-8.0/elexis-3-core/ch.elexis.core.releng/jubula/sw-upgrade-tst-1/</value>
         </confAttrMapEntry>
       </config>
+      <config id="ID_C_224161">
+        <name>medelexis-3-app@localhost</name>
+        <classname/>
+        <classpath/>
+        <jarfile/>
+        <parameter/>
+        <workingDir/>
+        <jreDir/>
+        <jreParameter/>
+        <server/>
+        <environment/>
+        <activateApp>false</activateApp>
+        <activationMethod>none</activationMethod>
+        <confAttrMapEntry>
+          <key>ACTIVATE_APPLICATION</key>
+          <value>false</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>ACTIVATION_METHOD</key>
+          <value>TITLEBAR</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>AGENT_CLASS</key>
+          <value>com.bredexsw.guidancer.autagent.monitoring.jacoco.MonitoringImpl</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>AUT_ARGUMENTS</key>
+          <value>-clean -vmargs  -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Duser.language=de -Duser.region=DE</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>AUT_ID</key>
+          <value>medelexis_3</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>CONFIG_NAME</key>
+          <value>medelexis-3-app@localhost</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>EXECUTABLE</key>
+          <value>/opt/elexis-3-jubula-8.0/medelexis-3-application/ch.medelexis.application.product/target/products/ch.medelexis.application.product.Medelexis/linux/gtk/x86_64/Medelexis</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>INSTALL_DIR</key>
+          <value>/opt/elexis-3-core/ch.elexis.core.releng/product/target/products/ch.elexis.core.application.product/linux/gtk/x86_64/plugins</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>JAR_FILE_PATH</key>
+          <value>./lib/ext/jacocoagent.jar</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>JRE_BINARY</key>
+          <value>/usr/bin/java</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>KEYBOARD_LAYOUT</key>
+          <value>de_DE</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>PATTERN</key>
+          <value>ch.elexis.*</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>RESET_AGENT</key>
+          <value>true</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>SERVER</key>
+          <value>localhost</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>SOURCE_DIR</key>
+          <value>/opt/elexis-3-core/ch.elexis.core.releng</value>
+        </confAttrMapEntry>
+        <confAttrMapEntry>
+          <key>WORKING_DIR</key>
+          <value>/opt/elexis-3-jubula-8.0/medelexis-3-application/ch.medelexis.application.product/target/products/ch.medelexis.application.product.Medelexis/linux/gtk/x86_64</value>
+        </confAttrMapEntry>
+      </config>
       <language>de_DE</language>
       <objectMapping>
         <profile>
@@ -12137,21 +12215,6 @@
         </teststep>
         <teststep>
           <usedTestcase>
-            <name>Visit all preference pages and take a snapshot of each</name>
-            <comment>May 24 2014: Fails with teamw and a lot of other Labors</comment>
-            <GUID>248758863ac04562aa9692ce13d4062f</GUID>
-            <generated>false</generated>
-            <active>true</active>
-            <taskId xsi:nil="true"/>
-            <testdata/>
-            <datafile xsi:nil="true"/>
-            <referencedTestData>PREFERENCES</referencedTestData>
-            <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
-            <hasOwnTestdata>true</hasOwnTestdata>
-          </usedTestcase>
-        </teststep>
-        <teststep>
-          <usedTestcase>
             <name>Open all perspectives and take a snapshot of each</name>
             <comment>May 24. Fails with teamw and a lot of other Labors</comment>
             <GUID>1ed3ae04477e47ccb5a79736cc76bfdf</GUID>
@@ -12190,6 +12253,21 @@
             <datafile xsi:nil="true"/>
             <testcaseGuid>e4836ee6f42d49a7b5fc1b7ba25dc67c</testcaseGuid>
             <hasOwnTestdata>false</hasOwnTestdata>
+          </usedTestcase>
+        </teststep>
+        <teststep>
+          <usedTestcase>
+            <name>Visit all preference pages and take a snapshot of each</name>
+            <comment>May 24 2014: Fails with teamw and a lot of other Labors</comment>
+            <GUID>248758863ac04562aa9692ce13d4062f</GUID>
+            <generated>false</generated>
+            <active>true</active>
+            <taskId xsi:nil="true"/>
+            <testdata/>
+            <datafile xsi:nil="true"/>
+            <referencedTestData>PREFERENCES</referencedTestData>
+            <testcaseGuid>3b518420a4c24fcda15931a3279cd45d</testcaseGuid>
+            <hasOwnTestdata>true</hasOwnTestdata>
           </usedTestcase>
         </teststep>
         <teststep>
@@ -14609,20 +14687,6 @@
       </teststep>
       <teststep>
         <usedTestcase>
-          <name/>
-          <comment xsi:nil="true"/>
-          <GUID>57d6ef775cc24243b5b3ff52faae1a2a</GUID>
-          <generated>false</generated>
-          <active>false</active>
-          <taskId xsi:nil="true"/>
-          <datafile xsi:nil="true"/>
-          <testcaseGuid>8ab6b083150339b501150364afe807d9</testcaseGuid>
-          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-          <hasOwnTestdata>false</hasOwnTestdata>
-        </usedTestcase>
-      </teststep>
-      <teststep>
-        <usedTestcase>
           <name>Select all</name>
           <comment xsi:nil="true"/>
           <GUID>855856fc40474311a33485bf5324b7c3</GUID>
@@ -14651,133 +14715,11 @@
       </teststep>
       <teststep>
         <usedTestcase>
-          <name/>
-          <comment xsi:nil="true"/>
-          <GUID>250b9a55eac643f1bffc5cbf562979ea</GUID>
-          <generated>false</generated>
-          <active>false</active>
-          <taskId xsi:nil="true"/>
-          <testdata>
-            <row rowCount="1">
-              <data columnCount="1">
-                <data>
-                  <language>de_DE</language>
-                  <value>MY_VAR</value>
-                </data>
-              </data>
-            </row>
-            <uniqueIds>8ab6b083154b8c1601154b91d1f000b6</uniqueIds>
-          </testdata>
-          <datafile xsi:nil="true"/>
-          <testcaseGuid>8ab6b083150339b501150364aff70896</testcaseGuid>
-          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-          <hasOwnTestdata>true</hasOwnTestdata>
-          <overriddenNames>
-            <propagated>false</propagated>
-            <originalName>8ab6b08d1a4d08f3011a4d09a4960028</originalName>
-            <newName>270ee82907be4c5c8cf8ddbc15d00d5f</newName>
-          </overriddenNames>
-        </usedTestcase>
-      </teststep>
-      <teststep>
-        <usedTestcase>
-          <name>Log var</name>
-          <comment xsi:nil="true"/>
-          <GUID>4f3a4959b2ed4184b6c08d2f5fb292b7</GUID>
-          <generated>false</generated>
-          <active>false</active>
-          <taskId xsi:nil="true"/>
-          <testdata>
-            <row rowCount="1">
-              <data columnCount="1">
-                <data>
-                  <language>de_DE</language>
-                  <value>bash -c "logger jubula MY_VAR is ${MY_VAR}"</value>
-                </data>
-              </data>
-              <data columnCount="2">
-                <data>
-                  <language>de_DE</language>
-                  <value>0</value>
-                </data>
-              </data>
-              <data columnCount="3">
-                <data>
-                  <language>de_DE</language>
-                  <value>true</value>
-                </data>
-              </data>
-              <data columnCount="4">
-                <data>
-                  <language>de_DE</language>
-                  <value>1000</value>
-                </data>
-              </data>
-            </row>
-            <uniqueIds>8ab6b08316c3bbe20116c3bf02fd000e</uniqueIds>
-            <uniqueIds>8ab6b08316c3bbe20116c3bf1a3e000f</uniqueIds>
-            <uniqueIds>8ab6b083181d393b01181d8bb901005a</uniqueIds>
-            <uniqueIds>8ab6b083181d393b01181d8beaaf005c</uniqueIds>
-          </testdata>
-          <datafile xsi:nil="true"/>
-          <testcaseGuid>8ab6b08316c3bbe20116c3bec817000c</testcaseGuid>
-          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-          <hasOwnTestdata>true</hasOwnTestdata>
-        </usedTestcase>
-      </teststep>
-      <teststep>
-        <usedTestcase>
-          <name>Logger ${MY_VAR}</name>
-          <comment xsi:nil="true"/>
-          <GUID>8b16cf2f77244390bafef29c24e2d6ec</GUID>
-          <generated>false</generated>
-          <active>false</active>
-          <taskId xsi:nil="true"/>
-          <testdata>
-            <row rowCount="1">
-              <data columnCount="1">
-                <data>
-                  <language>de_DE</language>
-                  <value>bash -c "logger pwd of jubula is `pwd`"</value>
-                </data>
-              </data>
-              <data columnCount="2">
-                <data>
-                  <language>de_DE</language>
-                  <value>0</value>
-                </data>
-              </data>
-              <data columnCount="3">
-                <data>
-                  <language>de_DE</language>
-                  <value>true</value>
-                </data>
-              </data>
-              <data columnCount="4">
-                <data>
-                  <language>de_DE</language>
-                  <value>1000</value>
-                </data>
-              </data>
-            </row>
-            <uniqueIds>8ab6b08316c3bbe20116c3bf02fd000e</uniqueIds>
-            <uniqueIds>8ab6b08316c3bbe20116c3bf1a3e000f</uniqueIds>
-            <uniqueIds>8ab6b083181d393b01181d8bb901005a</uniqueIds>
-            <uniqueIds>8ab6b083181d393b01181d8beaaf005c</uniqueIds>
-          </testdata>
-          <datafile xsi:nil="true"/>
-          <testcaseGuid>8ab6b08316c3bbe20116c3bec817000c</testcaseGuid>
-          <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
-          <hasOwnTestdata>true</hasOwnTestdata>
-        </usedTestcase>
-      </teststep>
-      <teststep>
-        <usedTestcase>
-          <name>Save clipboard to file</name>
-          <comment xsi:nil="true"/>
+          <name>Save clipboard to file (NOOP at the moment)</name>
+          <comment>Disabled at the moment as it creates problem on MacOSX and Windows</comment>
           <GUID>aebca1275ab34e0983f62f8db269346f</GUID>
           <generated>false</generated>
-          <active>true</active>
+          <active>false</active>
           <taskId xsi:nil="true"/>
           <testdata>
             <row rowCount="1">
@@ -17148,213 +17090,6 @@
       <compName>Esr_Datum_grc</compName>
     </componentNames>
     <testresultSummaries>
-      <testresultSummary>
-        <attribute>
-          <key>almReportStatus</key>
-          <value>NOT_CONFIGURED</value>
-          <type>org.eclipse.jubula.client.core.model.ITestResultSummaryPO$AlmReportStatus</type>
-        </attribute>
-        <attribute>
-          <key>autAgentName</key>
-          <value>localhost</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>autCmdParameter</key>
-          <value>-clean -vmargs -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>autConfigName</key>
-          <value>elexis-linux@localhost</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>autHostname</key>
-          <value>localhost</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>autId</key>
-          <value>elexis</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>autName</key>
-          <value>elexis</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>autOS</key>
-          <value>Linux</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>autToolkit</key>
-          <value>com.bredexsw.guidancer.RcpToolkitPlugin</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>commentDetail</key>
-          <value xsi:nil="true"/>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>commentTitle</key>
-          <value xsi:nil="true"/>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>internalAutConfigGuid</key>
-          <value>465f1c4703c342a896795100397a4642</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>internalAutGuid</key>
-          <value>df6da9e470f1483492ffcb0e204b0ee4</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>internalGuid</key>
-          <value>100dad43f06f42e3aedfc49314d858a9</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>internalMonitoringId</key>
-          <value>none selected</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>internalProjectGuid</key>
-          <value>b80640b58118457d83cc1cdfdd69410e</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>internalProjectID</key>
-          <value>10441</value>
-          <type>java.lang.Long</type>
-        </attribute>
-        <attribute>
-          <key>internalTestJobGuid</key>
-          <value xsi:nil="true"/>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>internalTestsuiteGuid</key>
-          <value>aef684f301174fb28caf0731a74af9fe</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>monitoringValue</key>
-          <value xsi:nil="true"/>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>monitoringValueType</key>
-          <value>none</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>projectMajorVersion</key>
-          <value>1</value>
-          <type>int</type>
-        </attribute>
-        <attribute>
-          <key>projectMinorVersion</key>
-          <value>1</value>
-          <type>int</type>
-        </attribute>
-        <attribute>
-          <key>projectName</key>
-          <value>ElexisCore 1.1</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>reportWritten</key>
-          <value>false</value>
-          <type>boolean</type>
-        </attribute>
-        <attribute>
-          <key>statusString</key>
-          <value>Error in Children</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>testJobName</key>
-          <value xsi:nil="true"/>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>testJobStartTime</key>
-          <value xsi:nil="true"/>
-          <type>java.util.Date</type>
-        </attribute>
-        <attribute>
-          <key>testRunState</key>
-          <value>FAILED</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteDate</key>
-          <value>2014-03-29 12:03:39.0</value>
-          <type>java.util.Date</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteDuration</key>
-          <value>00:00:43</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteEndTime</key>
-          <value>2014-03-29 12:03:39.0</value>
-          <type>java.util.Date</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteEventHandlerTeststeps</key>
-          <value>0</value>
-          <type>int</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteExecutedTeststeps</key>
-          <value>67</value>
-          <type>int</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteExpectedTeststeps</key>
-          <value>107</value>
-          <type>int</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteFailedTeststeps</key>
-          <value>1</value>
-          <type>int</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteLanguage</key>
-          <value>German (Germany)</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteName</key>
-          <value>FULLTEST</value>
-          <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteRelevant</key>
-          <value>true</value>
-          <type>boolean</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteStartTime</key>
-          <value>2014-03-29 12:02:56.0</value>
-          <type>java.util.Date</type>
-        </attribute>
-        <attribute>
-          <key>testsuiteStatus</key>
-          <value>5</value>
-          <type>int</type>
-        </attribute>
-      </testresultSummary>
     </testresultSummaries>
     <checkConfiguration>
       <checkId>com.bredexsw.guidancer.client.teststyle.bredexstyle.nospaces</checkId>
