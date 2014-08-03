@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+#encoding: utf-8
 # ========================================================================
 # Copyright (c) 2006-2010 Intalio Inc
 # ------------------------------------------------------------------------
@@ -220,9 +221,14 @@ class CompositeRepository
 <html>
   <head><title>Composite Repository <%= @name %>-<%= @version %></title></head>
   <body>
-    <p>This the P2-update site for the <%= @name %> plugins. Currently it is totally unusable in a productive environment!</p>
+    <p>This the P2-update site for the <%= @name %> features.</p>
+    <p>The code can be found in the git repository <%= `git ls-remote --get-url` %></p>
     <h3>For more info see <a  href="http://download.elexis.info/">http://download.elexis.info/</a></h3>
-    <p>A release is planned for end of 2013.</p>
+    <h3>Stable releases</h3>
+    <ol>
+    <li>Elexis 3.0.0 was released on August 3 2014</li>
+    </ol>
+    <h3>Further information</h3>
     <p>The p2-update site service is sponsored by Medelexis AG. Thanks a lot!</p>
     <p>For questions and suggestions send an e-mail to the <a  href="mailto:elexis-develop@lists.sourceforge.net">elexis developer</a></p>
     <h3>Content of <%= @name %>-<%= @version %> built on <%= @date %></h3>
@@ -279,7 +285,10 @@ artifact.repository.factory.order = compositeArtifacts.xml,\!
       out_dir = @versionned_output_dir
       File.open(File.join(out_dir,"compositeArtifacts.xml"), 'w') {|f| f.puts(artifactsRes) }
       File.open(File.join(out_dir,"compositeContent.xml"), 'w') {|f| f.puts(metadataRes) }
-      File.open(File.join(out_dir,"index.html"), 'w') {|f| f.puts(htmlRes) }
+      File.open(File.join(out_dir,"index.html"), 'w') {
+        |f|
+        f.puts(htmlRes)
+      }
       File.open(File.join(out_dir,"p2.index"), 'w') {|f| f.puts(p2_index) }
       puts "Wrote the composite repository in #{out_dir}"
     end
