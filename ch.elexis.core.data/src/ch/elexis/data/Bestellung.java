@@ -31,7 +31,7 @@ public class Bestellung extends PersistentObject {
 	public static final String ISORDERED = "ch.elexis.data.Bestellung.isOrdered"; //$NON-NLS-1$
 	
 	private List<Item> alItems;
-	
+	private static PersistentObjectFactory poFactory = new PersistentObjectFactory();
 	private static Log logger = Log.get(Bestellung.class.getName());
 	
 	public enum ListenTyp {
@@ -147,7 +147,7 @@ public class Bestellung extends PersistentObject {
 		initItems();
 		StringBuilder sb = new StringBuilder();
 		for (Item i : alItems) {
-			sb.append(i.art.getId()).append(",").append(i.num).append(";"); //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append(i.art.storeToString()).append(",").append(i.num).append(";"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		set(FLD_ITEMS, sb.toString());
 	}
@@ -165,15 +165,40 @@ public class Bestellung extends PersistentObject {
 		} else {
 			alItems.clear();
 		}
+		
+		logger.log("Found articles to order: " + it.length, Log.DEBUGMSG);
 		for (String i : it) {
 			String[] fld = i.split(","); //$NON-NLS-1$
 			if (fld.length == 2) {
-				Artikel art = Artikel.load(fld[0]);
+				Artikel art = loadArtikel(fld[0]);
+				
 				if (art != null && art.exists()) {
 					alItems.add(new Item(art, Integer.parseInt(fld[1])));
 				}
 			}
 		}
+	}
+	
+	/**
+	 * loads the article via id or class::id value
+	 * 
+	 * @param articleIdentifier
+	 *            id or the {@code persistentObject.storeToString()} value (class::id)
+	 * @return found article, might NOT exists
+	 */
+	private Artikel loadArtikel(String articleIdentifier){
+		Artikel art = Artikel.load(articleIdentifier);
+		
+		if (art == null || !art.exists()) {
+			PersistentObject poFromString = poFactory.createFromString(articleIdentifier);
+			if (poFromString == null) {
+				logger.log("Article for 'Bestellung' not found via [" + articleIdentifier + "]",
+					Log.WARNINGS);
+			} else {
+				art = (Artikel) poFromString;
+			}
+		}
+		return art;
 	}
 	
 	@Override
