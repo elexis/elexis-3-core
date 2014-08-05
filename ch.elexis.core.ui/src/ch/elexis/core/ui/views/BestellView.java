@@ -61,6 +61,7 @@ import ch.elexis.core.ui.dialogs.SelectBestellungDialog;
 import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.LagerartikelUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Artikel;
@@ -265,7 +266,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 						CoreHub.globalCfg.get(Preferences.INVENTORY_ORDER_TRIGGER,
 							Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
 					
-					List<Artikel> l = Artikel.getLagerartikel();
+					List<Artikel> l = LagerartikelUtil.getAllLagerartikel();
 					for (Artikel a : l) {
 						if ((a == null) || (!a.exists())) {
 							continue;
