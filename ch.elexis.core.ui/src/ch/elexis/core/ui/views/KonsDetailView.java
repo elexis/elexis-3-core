@@ -242,7 +242,9 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		hXrefs = new Hashtable<String, IKonsExtension>();
 		@SuppressWarnings("unchecked")
 		List<IKonsExtension> xrefs =
-			Extensions.getClasses(ExtensionPointConstantsUi.KONSEXTENSION, "KonsExtension"); //$NON-NLS-1$ //$NON-NLS-2$
+			Extensions.getClasses(
+				Extensions.getExtensions(ExtensionPointConstantsUi.KONSEXTENSION),
+				"KonsExtension", false); //$NON-NLS-1$ //$NON-NLS-2$
 		for (IKonsExtension x : xrefs) {
 			String provider = x.connect(text);
 			hXrefs.put(provider, x);
@@ -251,7 +253,9 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		
 		@SuppressWarnings("unchecked")
 		List<IKonsMakro> makros =
-			Extensions.getClasses(ExtensionPointConstantsUi.KONSEXTENSION, "KonsMakro"); //$NON-NLS-1$ //$NON-NLS-2$
+			Extensions.getClasses(
+				Extensions.getExtensions(ExtensionPointConstantsUi.KONSEXTENSION),
+				"KonsMakro", false); //$NON-NLS-1$ //$NON-NLS-2$
 		text.setExternalMakros(makros);
 		
 		GridData gd =
