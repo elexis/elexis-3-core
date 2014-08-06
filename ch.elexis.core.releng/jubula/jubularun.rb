@@ -203,6 +203,20 @@ public
     FileUtils.rm_rf(demoDb, :verbose => true) if File.exists?(demoDb)
   end
 
+  def clean_settings
+    elexis_home = File.join(Dir.home, 'elexis')
+    FileUtils.rm_rf(elexis_home, :verbose => true) if File.directory?(elexis_home)
+    if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
+      puts "TODO: remove elexis configuration from registry"
+    elsif MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
+      system("rm -rf #{File.join(Dir.home, 'Library/Preferences/ch.*elexis*')}")
+    else
+      java_elexis_setting = File.join(Dir.home, '.java/.userPrefs/ch/elexis')
+      FileUtils.rm_rf(java_elexis_setting, :verbose => true) if File.directory?(java_elexis_setting)
+    end
+    FileUtils.makedirs File.join(Dir.home, 'elexis', 'Eingangsfach')
+  end
+
   def startAUT(sleepTime = DefaultSleepTime)
     puts("# Sleeping for #{sleepTime} after startAUT" )
     @@nrRun ||= 0

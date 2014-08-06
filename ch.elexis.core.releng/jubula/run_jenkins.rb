@@ -70,6 +70,7 @@ end
 def run_upgrade_local_core_and_remote_base(jubula, label)
   res = true
   ENV['TEST_UDV_SW_MUST_UPGRADE'] = 'true' # we want installing all SW-features to succeed
+  jubula.clean_settings
   jubula.cleanDemoDb unless @hasDemoDb
   jubula.genWrapper
   jubula.prepareRcpSupport
@@ -94,7 +95,7 @@ def run_fulltest(jubula, label)
 end
 
 FileUtils.makedirs(jubula.dataDir, :verbose => true)
-FileUtils.cp('artikelstamm_first_v2.xml', jubula.dataDir, :verbose => true)
+FileUtils.cp('artikelstamm_first_v2.xml', jubula.testResults, :verbose => true)
 run_upgrade_local_core_and_remote_base(jubula, 'TST_UPGRADE')
 run_fulltest(jubula, 'FULLTEST')
 
