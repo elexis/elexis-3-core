@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  *    
  *******************************************************************************/
-package ch.elexis.core.ui.scripting;
+package ch.elexis.scripting;
 
 import org.eclipse.jface.dialogs.Dialog;
 

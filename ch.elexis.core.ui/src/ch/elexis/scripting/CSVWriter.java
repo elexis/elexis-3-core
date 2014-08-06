@@ -8,7 +8,7 @@
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
-package ch.elexis.core.ui.scripting;
+package ch.elexis.scripting;
 
 /**
  Copyright 2005 Bytecode Pty Ltd.

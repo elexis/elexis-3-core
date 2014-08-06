@@ -7,7 +7,7 @@
  * Contributors: 
  * IBM - Initial API and implementation
  **********************************************************************/
-package ch.elexis.core.ui.scripting;
+package ch.elexis.scripting;
 
 import org.eclipse.osgi.util.NLS;
 

@@ -49,11 +49,11 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.scripting.ScriptEditor;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Script;
+import ch.elexis.scripting.ScriptEditor;
 import ch.rgw.tools.ExHandler;
 
 /**

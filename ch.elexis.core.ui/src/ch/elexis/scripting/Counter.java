@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  *    
  *******************************************************************************/
-package ch.elexis.core.ui.scripting;
+package ch.elexis.scripting;
 
 import java.util.ArrayList;
 import java.util.Collections;
