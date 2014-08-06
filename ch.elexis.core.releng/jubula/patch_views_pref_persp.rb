@@ -36,6 +36,12 @@ def genPreferencePageElement(rowCount = 1, name='dummy', language= 'de_DE')
   s
 end
 
+def gen_screenshot_file_name(prefix='', name='screenshot')
+  ohne_umlaute = "screenshots/#{prefix}#{name}".gsub('ö','oe').gsub('ü','ue').gsub('ä','ae')
+  new_name = (ohne_umlaute.gsub(/[^a-zA-Z09\/_]/,'_').gsub(/[.*]+/,'.')+'.png').gsub(/_+/,'_').sub('_.png', '.png')
+  new_name
+end
+
 def genScreenshotElement(rowCount = 1, name='dummy', prefix = '', language= 'de_DE')
   s = %(
 {"rowCount"=>"#{rowCount}",
@@ -44,7 +50,7 @@ def genScreenshotElement(rowCount = 1, name='dummy', prefix = '', language= 'de_
       "data"=>[{"language"=>["#{language}"], "value"=>["#{name}.*"]}]},
     {"columnCount"=>"2",
       "data"=>
-      [{"language"=>["#{language}"], "value"=>["screenshots/#{prefix}#{name}.png"] }]
+      [{"language"=>["#{language}"], "value"=>["#{gen_screenshot_file_name(prefix,name)}"] }]
     }]
 }
     )
