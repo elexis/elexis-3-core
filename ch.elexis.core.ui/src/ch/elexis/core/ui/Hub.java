@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ShutdownJob;
+import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.events.UiPatientEventListener;
 import ch.elexis.core.ui.preferences.PreferenceInitializer;
@@ -88,6 +89,9 @@ public class Hub extends AbstractUIPlugin {
 		plugin = this;
 		
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
+		
+		// add UI ClassLoader to default Script Interpreter
+		Interpreter.classLoaders.add(Hub.class.getClassLoader());
 	}
 	
 	@Override

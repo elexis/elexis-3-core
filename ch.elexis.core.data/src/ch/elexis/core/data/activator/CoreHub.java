@@ -38,6 +38,7 @@ import ch.elexis.core.data.events.PatientEventListener;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.data.Anwender;
@@ -202,6 +203,9 @@ public class CoreHub implements BundleActivator {
 		heart = Heartbeat.getInstance();
 		
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
+		
+		// add core ClassLoader to default Script Interpreter
+		Interpreter.classLoaders.add(CoreHub.class.getClassLoader());
 		
 		if (!"RunFromScratch".equals(System.getProperty("elexis-run-mode")))
 			Runtime.getRuntime().addShutdownHook(new Thread() {

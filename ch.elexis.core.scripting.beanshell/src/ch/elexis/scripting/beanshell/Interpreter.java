@@ -9,13 +9,16 @@ import bsh.ParseException;
 import bsh.TargetError;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.data.Kontakt;
 import ch.elexis.data.Script;
+import ch.elexis.scripting.beanshell.internal.MultiClassLoader;
 import ch.rgw.tools.ExHandler;
 
 public class Interpreter implements ch.elexis.core.data.interfaces.scripting.Interpreter,
 		IExecutableExtension {
 	private bsh.Interpreter scripter = new bsh.Interpreter();
+	
+	private MultiClassLoader multiClassLoader = new MultiClassLoader(
+		ch.elexis.core.data.interfaces.scripting.Interpreter.classLoaders);
 	
 	public Interpreter(){}
 	
@@ -34,8 +37,7 @@ public class Interpreter implements ch.elexis.core.data.interfaces.scripting.Int
 	@Override
 	public Object run(String script, boolean showErrors) throws ElexisException{
 		try {
-			ClassLoader dataLoader = Kontakt.class.getClassLoader();
-			scripter.setClassLoader(dataLoader);
+			scripter.setClassLoader(multiClassLoader);
 			
 			return scripter.eval(script);
 		} catch (TargetError e) {
@@ -89,5 +91,4 @@ public class Interpreter implements ch.elexis.core.data.interfaces.scripting.Int
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

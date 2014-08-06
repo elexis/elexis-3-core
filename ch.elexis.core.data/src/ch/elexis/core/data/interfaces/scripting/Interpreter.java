@@ -10,9 +10,13 @@
  ******************************************************************************/
 package ch.elexis.core.data.interfaces.scripting;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.elexis.core.exceptions.ElexisException;
 
 public interface Interpreter {
+	public static List<ClassLoader> classLoaders = new ArrayList<ClassLoader>();
 	
 	public void setValue(String name, Object value) throws ElexisException;
 	
