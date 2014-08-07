@@ -259,6 +259,7 @@
 		<repo_name>elexis.3.core</repo_name>
 		<repo_variant>snapshot</repo_variant>
 		<useReleaseTarget></useReleaseTarget>
+		<ROOT>${project.basedir}/compositeRepository</ROOT>
 	</properties>
 	<build>
 		<plugins>
@@ -277,7 +278,7 @@
 							<properties>
 								<property>
 									<name>timestamp_format</name>
-									<value>{{"'" + "${repo_variant}".substring(0,1).replaceFirst('s','a')+"'yyyyMMdd-HHmm" }}</value>
+									<value>{{"'" + "${repo_variant}".substring(0,1).replaceFirst('s','a').replaceFirst('^p','r')+"'yyyyMMdd-HHmm" }}</value>
 								</property>
 								</properties>
 							</configuration>

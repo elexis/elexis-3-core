@@ -31,7 +31,8 @@
 									Did cost me two hours to find it and to work around!
 										!-->
 									<value>{{import java.text.SimpleDateFormat; new
-										SimpleDateFormat("'"+repo_variant.substring(0,1).replaceFirst('s','a')+"'yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
+										<!-- for snapshot we want an 'a' << 'b' (beta) << 'r' (prerelease and release) -->
+										SimpleDateFormat("'"+repo_variant.substring(0,1).replaceFirst('s','a').replaceFirst('p','r')+"'yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
 										}}</value>
 								</property>
 							</properties>
