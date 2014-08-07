@@ -190,19 +190,32 @@
 			</build>
 		</profile>
 		<profile>
-			<id>release</id>
+			<id>prerelease</id>
 			<activation>
 				<property>
-					<name>forceContextQualifier</name>
+					<name>repo_variant</name>
+					<value>prerelease</value>
 				</property>
 			</activation>
 			<properties>
-				<p2.inf_extension>release</p2.inf_extension>
+				<useReleaseTarget>.release</useReleaseTarget>
+			</properties>
+		</profile>
+		<profile>
+			<id>release</id>
+			<activation>
+				<property>
+					<name>repo_variant</name>
+					<value>release</value>
+				</property>
+			</activation>
+			<properties>
+				<useReleaseTarget>.release</useReleaseTarget>
 			</properties>
 		</profile>
 	</profiles>
 	<modules>
-		<module>ch.elexis.target</module>
+		<module>ch.elexis.target${useReleaseTarget}</module>
 		<module>ch.elexis.core</module>
 		<module>ch.elexis.core.application</module>
 		<module>ch.elexis.core.application.feature</module>
@@ -245,6 +258,7 @@
 		<tycho-extras.version>${tycho-version}</tycho-extras.version>
 		<repo_name>elexis.3.core</repo_name>
 		<repo_variant>snapshot</repo_variant>
+		<useReleaseTarget></useReleaseTarget>
 	</properties>
 	<build>
 		<plugins>
