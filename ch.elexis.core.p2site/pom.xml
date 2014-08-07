@@ -183,10 +183,9 @@
 					</execution>
 				</executions>
 					<configuration>
-						<executable>bash</executable>
+						<executable>${project.basedir}/install_build.rb</executable>
 						<arguments>
-							<argument>ruby</argument>
-							<argument>${project.basedir}/install_build.rb</argument>
+							<argument>${ROOT}</argument>
 						</arguments>
 				</configuration>
 			</plugin>

@@ -303,8 +303,12 @@ ini_lines.each{ |line| splitted = line.strip.split('='); ini[splitted[0]] = spli
 fullVersion = "#{ini['version']}.#{ini['qualifier']}"
 repo_name = ini['repoName']
 project = File.expand_path(File.join(__FILE__, '..', '..', ini['projectName']))
-ENV['ROOT'] ||= "/srv/www/download.elexis.info/#{repo_name}"
-root = ENV['ROOT']
+if ARGV.size == 1
+	root = ARGV[0]
+else
+	ENV['ROOT'] ||= "/srv/www/download.elexis.info/#{repo_name}"
+	root = ENV['ROOT']
+end
 destBaseDir = "#{root}/versions_4_#{ini['repoVariant']}/"
 dest = File.expand_path("#{destBaseDir}/#{fullVersion}")
 unless File.directory?(dest)
