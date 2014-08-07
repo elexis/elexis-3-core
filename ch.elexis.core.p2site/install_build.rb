@@ -319,3 +319,4 @@ end
 
 compositeRepository=CompositeRepository.new root, ini['repoVariant'], destBaseDir, ini['repoName'], 'otherurls'
 compositeRepository.emit
+FileUtils.cp(File.expand_path(__FILE__),compositeRepository.get_versionned_output_dir, :verbose => true) # copy myself to be able to be downloaded!
