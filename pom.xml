@@ -119,7 +119,7 @@
 			<id>macosx</id>
 			<activation>
 				<os>
-					<family>mac</family>
+					<name>Mac OS X</name>
 				</os>
 			</activation>
 			<build>
