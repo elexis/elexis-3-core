@@ -603,6 +603,9 @@ public class LabeledInputField extends Composite {
 					} else {
 						Map ext = o.getMap(def[i].sFeldname);
 						val = (String) ext.get(def[i].sHashname);
+						if (val == null) {
+							val = o.get(def[i].sHashname);
+						}
 					}
 				}
 				switch (def[i].tFeldTyp) {
