@@ -15,6 +15,9 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -145,6 +148,8 @@ public interface IVerrechenbar extends ICodeElement {
 	
 	public static class DefaultOptifier implements IOptifier {
 		
+		private Logger log;
+		
 		public Result<Object> optify(final Konsultation kons){
 			return new Result<Object>(kons);
 		}
@@ -153,7 +158,18 @@ public interface IVerrechenbar extends ICodeElement {
 			List<Verrechnet> old = kons.getLeistungen();
 			Verrechnet foundVerrechnet = null;
 			for (Verrechnet verrechnet : old) {
-				if (verrechnet.getVerrechenbar().getId().equals(code.getId())) {
+				IVerrechenbar vrElement = verrechnet.getVerrechenbar();
+				if (vrElement == null) {
+					// #2454 This should not happen, may however if we have to consider
+					// elements where the responsible plugin is not available
+					if (log == null)
+						log = LoggerFactory.getLogger(DefaultOptifier.class);
+					log.error("IVerrechenbar is not resolvable in " + verrechnet.getId() + " is "
+						+ verrechnet.get(Verrechnet.CLASS) + " available?");
+					continue;
+				}
+				
+				if (vrElement.getId().equals(code.getId())) {
 					if (verrechnet.getText().equals(code.getText())) {
 						foundVerrechnet = verrechnet;
 						break;
