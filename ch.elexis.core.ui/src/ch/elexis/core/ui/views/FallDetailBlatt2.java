@@ -70,6 +70,8 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
+import ch.elexis.data.Rechnung;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -109,7 +111,7 @@ public class FallDetailBlatt2 extends Composite {
 	Combo cAbrechnung, cReason;
 	DatePickerCombo dpVon, dpBis;
 	Text tBezeichnung, tGarant;
-	Hyperlink autoFill;
+	Hyperlink autoFill, hlGarant;
 	List<Control> lReqs = new ArrayList<Control>();
 	
 	public FallDetailBlatt2(final Composite parent){
@@ -342,7 +344,7 @@ public class FallDetailBlatt2 extends Composite {
 		lbReq.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		lbReq.setText(Messages.Leistungscodes_necessaryData);
 		
-		Hyperlink hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
+		hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
 		hlGarant.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(final HyperlinkEvent e){
@@ -522,6 +524,17 @@ public class FallDetailBlatt2 extends Composite {
 			c.dispose();
 		}
 		lReqs.clear();
+		
+		boolean allowFieldUpdate = true;
+		if (actFall != null) {
+			Query<Rechnung> rQuery = new Query<Rechnung>(Rechnung.class);
+			rQuery.add(Rechnung.CASE_ID, Query.EQUALS, actFall.getId());
+			List<Rechnung> billMatch = rQuery.execute();
+			
+			if (billMatch != null && !billMatch.isEmpty()) {
+				allowFieldUpdate = false;
+			}
+		}
 		
 		// *** fill billing systems into combo, set current system
 		cAbrechnung.setItems(Abrechnungstypen);
@@ -768,6 +781,22 @@ public class FallDetailBlatt2 extends Composite {
 				setExtendedFields(f, otherFieldsList,
 					Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true, true); //$NON-NLS-1$
 			}
+		}
+		allowFieldUpdate(allowFieldUpdate);
+	}
+	
+	private void allowFieldUpdate(boolean enable){
+		cAbrechnung.setEnabled(enable);
+		cReason.setEnabled(enable);
+		hlGarant.setEnabled(enable);
+		tGarant.setEnabled(enable);
+		autoFill.setEnabled(enable);
+		
+		for (Control req : lReqs) {
+			if (req instanceof Label) {
+				continue;
+			}
+			req.setEnabled(enable);
 		}
 	}
 	
