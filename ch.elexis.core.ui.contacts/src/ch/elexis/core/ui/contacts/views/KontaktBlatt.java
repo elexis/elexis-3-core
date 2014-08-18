@@ -157,8 +157,10 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 			
 			@Override
 			public void linkActivated(HyperlinkEvent e){
-				new AnschriftEingabeDialog(getShell(), actKontakt).open();
-				ElexisEventDispatcher.fireSelectionEvent(actKontakt);
+				if (actKontakt != null) {
+					new AnschriftEingabeDialog(getShell(), actKontakt).open();
+					ElexisEventDispatcher.fireSelectionEvent(actKontakt);
+				}
 			}
 			
 		});
