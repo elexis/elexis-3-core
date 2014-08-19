@@ -178,6 +178,7 @@ public class HL7Parser {
 				LabImportUtil.importLabResults(results, new DefaultLabImportUiHandler());
 			}
 		} catch (ElexisException e) {
+			logger.error("Parsing HL7 failed", e);
 			return new Result<Object>(SEVERITY.ERROR, 2,
 				Messages.getString("HL7_ExceptionWhileProcessingData"), e.getMessage(), true);
 		}

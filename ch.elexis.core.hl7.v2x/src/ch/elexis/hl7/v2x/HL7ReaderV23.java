@@ -37,6 +37,7 @@ import ch.elexis.hl7.model.EncapsulatedData;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
 import ch.elexis.hl7.model.TextData;
+import ch.elexis.hl7.util.HL7Helper;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
 import ch.elexis.hl7.v26.Messages;
@@ -65,6 +66,10 @@ public class HL7ReaderV23 extends HL7Reader {
 				OBR obr = oru.getRESPONSE().getORDER_OBSERVATION(idx).getOBR();
 				String obrObservationDateTime =
 					obr.getObr7_ObservationDateTime().getTs1_TimeOfAnEvent().getValue();
+				if (obrObservationDateTime == null || obrObservationDateTime.length() < 8) {
+					obrObservationDateTime =
+						HL7Helper.dateToString(observation.getDateTimeOfMessage());
+				}
 				
 				setOrderComment(oru, idx, obrObservationDateTime);
 				
@@ -254,7 +259,7 @@ public class HL7ReaderV23 extends HL7Reader {
 				nte = oobs.getOBSERVATION(i).getNTE(n);
 			}
 			AbstractPrimitive comment = nte.getNte3_Comment(0);
-			if (comment != null) {
+			if (comment != null && comment.getValue() != null) {
 				if (commentNTE != null) {
 					commentNTE += "\n";
 				} else {
