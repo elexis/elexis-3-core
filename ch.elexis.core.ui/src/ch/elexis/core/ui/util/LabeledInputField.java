@@ -603,8 +603,15 @@ public class LabeledInputField extends Composite {
 					} else {
 						Map ext = o.getMap(def[i].sFeldname);
 						val = (String) ext.get(def[i].sHashname);
+						
+						// needed to make artikelstamm dialog work properly (without **ERROR:...)
 						if (val == null) {
 							val = o.get(def[i].sHashname);
+							
+							// in case no value exists for this field keep it empty
+							if (val.startsWith(PersistentObject.MAPPING_ERROR_MARKER)) {
+								val = null;
+							}
 						}
 					}
 				}

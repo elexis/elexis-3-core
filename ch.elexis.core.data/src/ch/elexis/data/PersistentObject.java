@@ -116,7 +116,7 @@ import ch.rgw.tools.net.NetTool;
  * @author gerry
  */
 public abstract class PersistentObject implements IPersistentObject {
-	protected static final String MAPPING_ERROR_MARKER = "**ERROR:";
+	public static final String MAPPING_ERROR_MARKER = "**ERROR:";
 	
 	/** predefined field name for the GUID */
 	public static final String FLD_ID = "id";
@@ -331,8 +331,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         {@link Preferences#CFG_FOLDED_CONNECTION} to retrieve the required parameters,
 	 *         castable to {@link String}
 	 */
-	public static @NonNull
-	Hashtable<Object, Object> getConnectionHashtable(){
+	public static @NonNull Hashtable<Object, Object> getConnectionHashtable(){
 		Hashtable<Object, Object> ret = new Hashtable<>();
 		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
@@ -1245,8 +1244,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	@SuppressWarnings({
 		"rawtypes", "unchecked"
 	})
-	public @NonNull
-	Map getMap(final String field){
+	public @NonNull Map getMap(final String field){
 		String key = getKey(field);
 		Object o = cache.get(key);
 		if (o instanceof Hashtable) {
@@ -1271,8 +1269,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return the {@link Object} stored for the given key in ExtInfo, or <code>null</code>
 	 * @since 3.0
 	 */
-	public @Nullable
-	Object getExtInfoStoredObjectByKey(final Object key){
+	public @Nullable Object getExtInfoStoredObjectByKey(final Object key){
 		byte[] binaryRaw = getBinaryRaw(FLD_EXTINFO);
 		if (binaryRaw == null)
 			return null;
