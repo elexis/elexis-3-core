@@ -54,6 +54,8 @@ public class LabResult extends PersistentObject {
 	// wenn er formal ausserhalb des Normbereichs ist)
 	
 	private static final String TABLENAME = "LABORWERTE"; //$NON-NLS-1$
+	private final String SMALLER = "<";
+	private final String BIGGER = ">";
 	
 	private static Pattern refValuesPattern = Pattern.compile("\\((.*?)\\)"); //$NON-NLS-1$
 	private static String[] VALID_ABS_VALUES = new String[] {
@@ -143,17 +145,23 @@ public class LabResult extends PersistentObject {
 	
 	private boolean testRef(String ref, String result){
 		try {
-			if (ref.trim().startsWith("<")) { //$NON-NLS-1$
+			if (ref.trim().startsWith(SMALLER) || ref.trim().startsWith(BIGGER)) {
+				String resultSign = null;
 				double refVal = Double.parseDouble(ref.substring(1).trim());
-				double val = Double.parseDouble(result);
-				if (val >= refVal) {
-					return true;
+				
+				if (result.trim().startsWith(SMALLER) || result.trim().startsWith(BIGGER)) {
+					resultSign = result.substring(0, 1).trim();
+					result = result.substring(1).trim();
 				}
-			} else if (ref.trim().startsWith(">")) { //$NON-NLS-1$
-				double refVal = Double.parseDouble(ref.substring(1).trim());
 				double val = Double.parseDouble(result);
-				if (val <= refVal) {
-					return true;
+				if (ref.trim().startsWith(SMALLER)) {
+					if (val >= refVal && !(val == refVal && SMALLER.equals(resultSign))) {
+						return true;
+					}
+				} else {
+					if (val <= refVal && !(val == refVal && BIGGER.equals(resultSign))) {
+						return true;
+					}
 				}
 			} else {
 				String[] range = ref.split("\\s*-\\s*"); //$NON-NLS-1$

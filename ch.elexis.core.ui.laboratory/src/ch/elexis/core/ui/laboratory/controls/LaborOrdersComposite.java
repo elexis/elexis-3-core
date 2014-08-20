@@ -128,7 +128,6 @@ public class LaborOrdersComposite extends Composite {
 						|| order.getLabItem().getTyp() == typ.ABSOLUTE) {
 						try {
 							String editedValue = (String) value;
-							System.out.println(editedValue);
 							if (editedValue.startsWith(SMALLER) || editedValue.startsWith(BIGGER)) {
 								String nrValue =
 									editedValue.replace(SMALLER, "").replace(BIGGER, "");
