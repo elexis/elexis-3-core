@@ -52,6 +52,9 @@ import ch.rgw.tools.TimeTool;
 
 public class LaborOrdersComposite extends Composite {
 	
+	private final String SMALLER = "<";
+	private final String BIGGER = ">";
+	
 	private final FormToolkit tk = UiDesk.getToolkit();
 	private Form form;
 	
@@ -124,7 +127,15 @@ public class LaborOrdersComposite extends Composite {
 					if (order.getLabItem().getTyp() == typ.NUMERIC
 						|| order.getLabItem().getTyp() == typ.ABSOLUTE) {
 						try {
-							Float.parseFloat((String) value);
+							String editedValue = (String) value;
+							System.out.println(editedValue);
+							if (editedValue.startsWith(SMALLER) || editedValue.startsWith(BIGGER)) {
+								String nrValue =
+									editedValue.replace(SMALLER, "").replace(BIGGER, "");
+								editedValue = nrValue.trim();
+							}
+							Float.parseFloat(editedValue);
+							
 						} catch (NumberFormatException e) {
 							return Messages.LaborOrdersComposite_validatorNotNumber;
 						}
@@ -298,8 +309,6 @@ public class LaborOrdersComposite extends Composite {
 					LabItem labItem = ((LabOrder) element).getLabItem();
 					if (labItem.getTyp() == typ.DOCUMENT) {
 						return null;
-					} else if (labItem.getTyp() == typ.TEXT) {
-						return new MultiLineTextCellEditor((Composite) viewer.getControl());
 					} else {
 						return textCellEditor;
 					}
