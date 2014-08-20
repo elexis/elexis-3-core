@@ -1,4 +1,4 @@
-package ch.elexis.data;
+package ch.elexis.eigenartikel;
 
 import ch.elexis.core.eigenartikel.EigenartikelPersistentObjectFactory;
 
