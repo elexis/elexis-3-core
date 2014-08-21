@@ -8,6 +8,39 @@
 	</parent>
 	<artifactId>ch.elexis.core.p2site</artifactId>
 	<packaging>eclipse-repository</packaging>
+	<profiles>
+		<profile>
+			<id>all-archs</id>
+			<activation>
+				<property>
+					<name>all-archs</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.3.2</version>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+							<configuration>
+								<executable>${project.basedir}/install_build.rb</executable>
+								<arguments>
+									<argument>${ROOT}</argument>
+								</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -169,25 +202,6 @@
 							</rootFolders>
 						</product>
 					</products>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.3.2</version>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-				</executions>
-					<configuration>
-						<executable>${project.basedir}/install_build.rb</executable>
-						<arguments>
-							<argument>${ROOT}</argument>
-						</arguments>
 				</configuration>
 			</plugin>
 		</plugins>
