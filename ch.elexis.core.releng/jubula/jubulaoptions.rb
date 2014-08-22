@@ -14,6 +14,7 @@ module JubulaOptions
     :application,
     :autid, 
     :auto_xml, 
+    :cpu,
     :data, 
     :dataDir,
     :dbscheme,
@@ -37,6 +38,7 @@ module JubulaOptions
     :vmargs,
     :workspace,
     :wrapper,
+    :winType,
   ]
 
 
@@ -50,6 +52,7 @@ module JubulaOptions
 
   # set default value for os
   require 'rbconfig'
+
 
   @cpu = RbConfig::CONFIG['target_cpu']
   case RbConfig::CONFIG['host_os']
@@ -76,6 +79,8 @@ module JubulaOptions
   @auto_xml    ||= "auto_install.xml"
   @data        ||= "#{ENV['HOME']}/.jubula"
   @dataDir     ||= "#{@workspace}/test-data"
+  @instDest    ||= File.expand_path(File.join(__FILE__, '..', '..', '..', 'instDest'))
+
   
   # If you want to use a mysql-DB, you still must have a working Jubula-installation, which defines
   # a dbscheme "mysql" (via the Preferences..Test..Database menu)
@@ -106,49 +111,7 @@ module JubulaOptions
   @vmargs      ||= ""  
   @wrapper     ||= "#{@workspace}/test-runner.bat" # use bat for windows!
   @vm          ||= 'java'
-  unless @exeFile
-  case RbConfig::CONFIG['host_os']
-    when WINDOWS_REGEXP
-    pathname = File.join('..', '..', '**',@winType, '**', @cpu, "*elexis*.exe")
-    if (Dir.glob(File.expand_path(pathname)).size == 1)
-      @exeFile = Dir.glob(File.expand_path(pathname))[0]
-      @instDest =  File.dirname(@exeFile)
-    end
-    when MACOSX_REGEXP
-    pathname = "../../*/target/products/*/#{@os}/#{@winType}/#{@cpu}/*app/configuration/config.ini"
-    files = Dir.glob(File.expand_path(pathname))
-    if (files.size == 1)
-      pathname =files[0].sub('.app/Contents/macos/configuration/config.ini', '')
-      pathname =pathname.sub('configuration/config.ini', '')
-    appName = File.basename(pathname).sub('.app', '')
-      @exeFile = File.join(pathname, 'Contents', 'MacOS', appName)
-      @instDest =  pathname
-    end
-  else
-    pathname = "../../*site*/target/products/*/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"
-    if (Dir.glob(File.expand_path(pathname)).size == 1)
-      pathname = pathname.sub('configuration/config.ini', '*.ini')
-      if (Dir.glob(File.expand_path(pathname)).size == 1)
-      @exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
-      @instDest =  File.dirname(@exeFile)
-      end
-    end
-  end
-  end
-  host_os = RbConfig::CONFIG['host_os']
-  case RbConfig::CONFIG['host_os']
-    when WINDOWS_REGEXP
-      @exeFile = File.expand_path(@exeFile.sub('/windows/', '/win32/') + '.exe').sub('exe.exe','exe')
-    when /linux/i
-      @vm = 'java'
-    when /sunos|solaris/i
-        # Solaris
-    when MACOSX_REGEXP
-    else
-      puts "unknown RbConfig::CONFIG['host_os'] #{RbConfig::CONFIG['host_os']}"
-      exit 3
-  end
-  
+
   def JubulaOptions::parseArgs
     @installer = nil
     options = OptionParser.new do |opts|
@@ -183,6 +146,7 @@ module JubulaOptions
       opts.on("-e", "--exeFile exeFile", "exeFile to use. Defaults to '#{@exeFile}'") do |v|
         puts "@exeFile ist jetzt #{v}"
     @exeFile = v
+    puts "#{__LINE__} #{@instDest}"
     @instDest = File.dirname(@exeFile)
       end
       opts.on("--jubulaHome jubulaHome", "Home of Jubula installation. Defaults to '#{@vmargs}'") do |v|

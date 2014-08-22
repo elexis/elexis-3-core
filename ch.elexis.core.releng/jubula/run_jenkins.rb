@@ -12,9 +12,11 @@
 #  3) Reboot
 #  4) Patch Jubula testcases to add names for all views/perspectives from elexis-3-core and base
 #  5) Run the new FULLTEST which needs Tarmed and Artikelstamm to be able to create invoices
-
-require "#{File.dirname(__FILE__)}/jubulaoptions"
-require "#{File.dirname(__FILE__)}/jubularun"
+WORKSPACE = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
+ENV['WORKSPACE']=WORKSPACE
+$: << File.dirname(__FILE__) unless $:.index(File.dirname(__FILE__))
+require "jubulaoptions"
+require "jubularun"
 $stdout.sync=true
 
 opts = JubulaOptions::parseArgs
@@ -57,7 +59,7 @@ jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
 wsDir = "#{jubula.workspace}/test-ws"
 FileUtils.rm_rf(wsDir, :verbose => true, :noop => DryRun)
 
-def save_images(destination)
+def save_images(destination = File.join(WORKSPACE, 'my-screenshots'))
   Dir.glob("**/*shot*/*.png").each{
     |x|
         next if /images/.match(x)
@@ -67,10 +69,21 @@ def save_images(destination)
   }
 end
 
+def installArtikelStamm(jubula)
+  FileUtils.makedirs(jubula.dataDir, :verbose => true, :noop => DryRun)
+  FileUtils.makedirs(jubula.testResults, :verbose => true, :noop => DryRun)
+  FileUtils.cp(File.join(File.dirname(__FILE__), 'artikelstamm_first_v2.xml'), jubula.testResults, :verbose => true, :noop => DryRun)
+  if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os']) # MacOSX seems to set the file dialog to its home directory
+    FileUtils.cp(File.join(File.dirname(__FILE__), 'artikelstamm_first_v2.xml'), Dir.home, :verbose => true, :noop => DryRun)
+  end
+end
+
 def run_upgrade_local_core_and_remote_base(jubula, label)
   res = true
   ENV['TEST_UDV_SW_MUST_UPGRADE'] = 'true' # we want installing all SW-features to succeed
-  jubula.clean_settings
+  jubula.cleanup_from_old_runs
+  installArtikelStamm(jubula)
+  jubula.installFromZip
   jubula.cleanDemoDb unless @hasDemoDb
   jubula.genWrapper
   jubula.prepareRcpSupport
@@ -84,6 +97,7 @@ def run_upgrade_local_core_and_remote_base(jubula, label)
 end
 
 def run_fulltest(jubula, label)
+  installArtikelStamm(jubula)
   jubula.useH2(Dir.pwd)
   jubula.patchXML
   jubula.rmTestcases  # only if using h2
@@ -94,8 +108,6 @@ def run_fulltest(jubula, label)
   # TODO: Check for other *.jubula*.xml files to execute as TestCases, eg. Omnivore, KG-Iatrix
 end
 
-FileUtils.makedirs(jubula.dataDir, :verbose => true)
-FileUtils.cp('artikelstamm_first_v2.xml', jubula.testResults, :verbose => true)
 run_upgrade_local_core_and_remote_base(jubula, 'TST_UPGRADE')
 run_fulltest(jubula, 'FULLTEST')
 

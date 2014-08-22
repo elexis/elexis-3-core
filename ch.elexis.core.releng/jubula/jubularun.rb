@@ -16,7 +16,6 @@ if $0.index(File.basename(__FILE__))
 end
 
 class JubulaRun
-
   DefaultSleepTime =  /linux/.match(RbConfig::CONFIG['host_os']) ? 15 : 30
 public
     JubulaOptions::Fields.each { 
@@ -40,27 +39,112 @@ public
     end
     JubulaOptions::Fields.each { |x| eval("@#{x} = JubulaOptions::#{x}") }
     options.each { |opt, val| eval( "@#{opt} = '#{val}'") } if options
-	["#{JubulaOptions::jubulaHome}/server/autagent*",
-	"#{JubulaOptions::jubulaHome}/#{@application}/#{@application}*",
-	"#{JubulaOptions::jubulaHome}/#{@application}/testexec*",
-	"#{JubulaOptions::jubulaHome}/#{@application}/dbtool*",
-	].each { 
-	  |file|
-		if Dir.glob(file.gsub('"','')).size == 0
-			puts("Jubula not correctly installed in #{JubulaOptions::jubulaHome}")
-			puts("We could not find the needed application: #{file}")
-			exit 1
-                end
-	}
-    [@testResults, @dataDir].each { #  @data,
-      |x|
-	FileUtils.rm_rf(File.expand_path(x), :verbose => true, :noop => @dryRun)
-	FileUtils.makedirs(x, :verbose => true, :noop => @dryRun)
+    ["#{JubulaOptions::jubulaHome}/server/autagent*",
+    "#{JubulaOptions::jubulaHome}/#{@application}/#{@application}*",
+    "#{JubulaOptions::jubulaHome}/#{@application}/testexec*",
+    "#{JubulaOptions::jubulaHome}/#{@application}/dbtool*",
+    ].each {
+      |file|
+      if Dir.glob(file.gsub('"','')).size == 0
+        puts("Jubula not correctly installed in #{JubulaOptions::jubulaHome}")
+        raise "We could not find the needed application: #{file}"
+      end
     }
-    instDest = File.dirname(exeFile)
     ENV['TEST_UPV_WORKSPACE'] = @workspace
   end
 
+  # set the helper variables for @instDest, @config_ini, @plugins_dir
+  def getInfoForExe
+    if @installer
+      FileUtils.makedirs(@instDest, :verbose => true, :noop => @dryRun)
+      case RbConfig::CONFIG['host_os']
+        when WINDOWS_REGEXP
+          pathname = File.join(@instDest, '*elexis*.exe')
+          if (Dir.glob(File.expand_path(pathname)).size == 1)
+            @exeFile = Dir.glob(File.expand_path(pathname))[0]
+          end
+        when MACOSX_REGEXP
+          pathname = "#{@instDest}/*app/configuration/config.ini"
+          files = Dir.glob(File.expand_path(pathname))
+          if (files.size == 1)
+            pathname =files[0].sub('.app/Contents/macos/configuration/config.ini', '')
+            pathname =pathname.sub('configuration/config.ini', '')
+            appName = File.basename(pathname).sub('.app', '')
+            @exeFile = File.join(pathname, 'Contents', 'MacOS', appName)
+          end
+        else # linux
+          if @dryRun
+            @exeFile = File.expand_path(@instDest+'/Elexis')
+          else
+            Dir.glob(File.expand_path(@instDest+'/*.ini')).each{ |f|
+              f = f.sub('.ini', '')
+              if File.executable?(f) and not File.directory?(f)
+                @exeFile = f; break;
+              end
+            }
+          end
+      end
+    elsif @exeFile
+      puts " @exeFile defined as #{@exeFile}"
+      @plugins_dir = File.join(@instDest, 'plugins')
+      if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
+        @plugins_dir = File.expand_path(File.join(@exeFile, '..', '..', '..', 'plugins'))
+      end
+    else # Try to find the Elexis exe in our workspace
+      puts "Try to find the Elexis exe in our workspace"
+      pathname = ''; @exeFile = ''
+      case RbConfig::CONFIG['host_os']
+        when WINDOWS_REGEXP
+        pathname = File.expand_path(File.join('..', '..', '**',@winType, '**', @cpu, "*elexis*.exe"))
+        if (Dir.glob(File.expand_path(pathname)).size == 1)
+          @exeFile = Dir.glob(File.expand_path(pathname))[0]
+          @instDest =  File.dirname(@exeFile)
+        end
+        when MACOSX_REGEXP
+        pathname = File.expand_path("../../*/target/products/*/#{@os}/#{@winType}/#{@cpu}/*app/configuration/config.ini")
+        files = Dir.glob(File.expand_path(pathname))
+        if (files.size == 1)
+          pathname =files[0].sub('.app/Contents/macos/configuration/config.ini', '')
+          pathname =pathname.sub('configuration/config.ini', '')
+          appName = File.basename(pathname).sub('.app', '')
+          @exeFile = File.join(pathname, 'Contents', 'MacOS', appName)
+          @instDest =  pathname
+        end
+      else
+        pathname = File.expand_path(File.join(__FILE__, "../../../*site*/target/products/*/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"))
+        if (Dir.glob(File.expand_path(pathname)).size == 1)
+          pathname = pathname.sub('configuration/config.ini', '*.ini')
+          if (Dir.glob(File.expand_path(pathname)).size == 1)
+          @exeFile = Dir.glob(File.expand_path(pathname))[0].sub('.ini', '')
+          @instDest =  File.dirname(@exeFile)
+          end
+        end
+      end
+      raise "Could not find an exefile using #{pathname}" unless File.exists?(@exeFile)
+    end
+    @plugins_dir = File.join(@instDest, 'plugins')
+    puts "self #{self.inspect}"
+    if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
+      @plugins_dir = File.expand_path(File.join(@exeFile, '..', '..', '..', 'plugins'))
+    end
+    puts "exe: #{@exeFile} installer: #{@installer} plugins #{@plugins_dir}"
+  end
+
+  def installFromZip
+    if @installer
+      @installer = File.expand_path(@installer)
+      if File.directory?(@instDest)
+        puts "Skip unzipping from #{@installer} as #{@instDest} already present"
+      else
+        saved = Dir.pwd
+        FileUtils.makedirs(@instDest)
+        raise "No installer #{@installer} found. Cannot unzip" unless File.exists?(@installer)
+        Dir.chdir(@instDest) unless @dryRun
+        system("unzip -qu #{@installer}")
+        Dir.chdir(saved)
+      end
+    end
+  end
   def autoInstall
     FileUtils.rm_rf(File.expand_path(@instDest), :verbose => true, :noop => @dryRun)
     if /2\.1\.6/.match(@installer) and MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
@@ -101,10 +185,9 @@ public
     savedDir = Dir.pwd
     cmd = "#{JubulaOptions::jubulaHome}/development/rcp-support.zip"
     if @dryRun
-      puts "should cd #{File.join(@instDest, 'plugins')} && unzip #{cmd}"
-    elsif @instDest and File.directory?(@instDest)
-      FileUtils.makedirs(File.join(@instDest, 'plugins'))
-      Dir.chdir(File.join(@instDest, 'plugins'))
+      puts "should cd #{@plugins_dir} && unzip #{cmd}"
+    else
+      Dir.chdir(@plugins_dir)
     end
     if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
       cmd = "#{File.expand_path(File.dirname(__FILE__))}/7z x -y #{cmd} > test-unzip.log"
@@ -112,12 +195,17 @@ public
     else 
       cmd = "unzip -qu #{cmd}"
     end
-    fileName = File.expand_path("#{@instDest}/plugins/org.eclipse.jubula.rc.rcp_*.jar")
-    if Dir.glob(fileName).size != 1 or File.size(Dir.glob(fileName)[0]) < 4000
-      FileUtils.rm_f(Dir.glob(fileName)[0]) if Dir.glob(fileName).size > 0
+    jubula_jar = File.expand_path("#{@plugins_dir}/org.eclipse.jubula.rc.rcp_*.jar")
+    ini_name = File.join(@instDest, 'configuration', 'config.ini')
+    if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
+      ini_name = File.expand_path(File.join(@exeFile, '..', '..', '..', 'configuration', 'config.ini'))
+    end
+    if Dir.glob(jubula_jar).size != 1 or File.size(Dir.glob(jubula_jar)[0]) < 4000
+      FileUtils.rm_f(Dir.glob(jubula_jar)[0]) if Dir.glob(jubula_jar).size > 0
       system(cmd)
     end
-    ini_name = File.join(@instDest, 'configuration', 'config.ini')
+    if @dryRun then puts "prepareRcpSupport: would patch #{ini_name}"; return end
+    jubula_jar = File.basename(Dir.glob(jubula_jar)[0])
     if Dir.glob(@exeFile).size == 0
       puts "prepareRcpSupport: Could not find ini_name #{ini_name}. host_os is #{RbConfig::CONFIG['host_os']}"
       exit 1
@@ -125,23 +213,26 @@ public
     FileUtils.chmod(0755, @exeFile, :verbose => true)
     config_ini = IO.readlines(ini_name)
     needsJubulaRcpSupport = true
-    rcpStart = ',org.eclipse.jubula.rc.rcp@start'
+    #           reference\:file\:org.slf4j.jcl_1.7.2.v20130115-1340.jar@1\:start,
+    rcpStart = 'reference\:file\:'+ jubula_jar+'@4\:start,'
     config_ini.each{ 
       |line|
         needsJubulaRcpSupport = false if /^osgi.bundles=/.match(line) and /#{rcpStart}/.match(line)
     }   
-    puts "#{File.expand_path(ini_name)}: #{needsJubulaRcpSupport ? ' Will patch to add' : ' Already patched to'} start jubula.rc.rcp."
+    puts "#{File.expand_path(ini_name)}: #{needsJubulaRcpSupport ? ' Will patch to add' : ' Already patched to'} start " + jubula_jar
     if needsJubulaRcpSupport
       FileUtils.cp(ini_name, ini_name + '.bak', :verbose => true);
+      found = false
       config_ini.each{ 
         |line|
           if /^osgi.bundles=/.match(line)
-            puts "must patch #{ini_name}"
+            found = true
             puts line if $VERBOSE
-            line.sub!(/\n/, rcpStart + "\n")
+            line.sub!(/osgi.bundles=/, 'osgi.bundles='+rcpStart )
             break
           end
       }
+      raise "Could not find line osgi.bundle in #{File.expand_path(ini_name)}" unless found
       File.open(ini_name, 'w') { |file| file.write config_ini.join('') }
     end
     Dir.chdir(savedDir)
@@ -159,42 +250,43 @@ public
   
   def patchXML
     xmlFile = "#{project}_#{version}.xml"
-    cmd = "ruby patch_views_pref_persp.rb #{xmlFile} #{@instDest}/plugins"
+    savedDir = Dir.pwd
+    Dir.chdir(File.dirname(__FILE__))
+    cmd = "ruby patch_views_pref_persp.rb #{xmlFile} #{@plugins_dir}"
     exit 1 unless system(cmd, false)
+    Dir.chdir(File.dirname(__FILE__))
+    Dir.chdir(savedDir)
   end
   
-  def loadTestcases(xmlFile = "#{project}_#{version}.xml")
+  def loadTestcases(xmlFile = "#{File.dirname(__FILE__)}/#{project}_#{version}.xml")
     ["unbound_modules_swt", "unbound_modules_concrete",  "unbound_modules_rcp"].each{ 
       |tcModule|
       tcs = Dir.glob("#{JubulaOptions::jubulaHome}/examples/testCaseLibrary/#{tcModule}_*.xml")
-      if tcs.size != 1
-	puts "Should have found exactly 1 one file. Got #{tcs.inspect}"
-	exit 1
-      end
+      raise "Should have found exactly 1 one file. Got #{tcs.inspect}" if tcs.size != 1
       system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{tcs[0]} #{dbSpec}", @@myFail)
-      } if true
+    }
     system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{xmlFile} #{dbSpec}")
   end
 
   def adaptCmdForMacOSx(cmd)
     [ '.app/Contents/MacOS/JavaApplicationStub',
       '.app/Contents/MacOS/autagent'].each {
-	|tst|
-	return cmd+tst if Dir.glob(cmd+tst).size == 1
-      }
+    |tst|
+      return cmd+tst if Dir.glob(cmd+tst).size == 1
+    }
     return cmd
   end
   
   def startAgent(sleepTime = DefaultSleepTime)
     puts("# Sleeping for #{sleepTime} after startAgent" )
-  cmd = adaptCmdForMacOSx("#{JubulaOptions::jubulaHome}/server/autagent")
-	cmd = "#{cmd} -p #{portNumber}"
-	if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
-		res = system("start #{cmd}")
-	else
-		res = system("#{cmd} &")
-	end
-	if !res then puts "failed. exiting"; exit(3); end
+    cmd = adaptCmdForMacOSx("#{JubulaOptions::jubulaHome}/server/autagent")
+    cmd = "#{cmd} -p #{portNumber}"
+    if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
+      res = system("start #{cmd}")
+    else
+      res = system("#{cmd} &")
+    end
+    if !res then puts "failed. exiting"; exit(3); end
     sleep(sleepTime)
   end
 
@@ -203,9 +295,12 @@ public
     FileUtils.rm_rf(demoDb, :verbose => true) if File.exists?(demoDb)
   end
 
-  def clean_settings
+  def cleanup_from_old_runs
     elexis_home = File.join(Dir.home, 'elexis')
-    FileUtils.rm_rf(elexis_home, :verbose => true) if File.directory?(elexis_home)
+    [@testResults, @dataDir, @instDest, elexis_home].each {
+      |x|
+        FileUtils.rm_rf(File.expand_path(x), :verbose => true, :noop => @dryRun) if File.directory?(x)
+    }
     if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
       puts "TODO: remove elexis configuration from registry"
     elsif MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
@@ -241,9 +336,9 @@ public
 
   def runTestsuite(testsuite = @testsuite)
     res = system("#{JubulaOptions::jubulaHome}/#{@application}/testexec -project  #{project} -port #{@portNumber} " +
-	  "-version #{@version} -testsuite '#{testsuite}' -server #{server} -autid #{@autid} "+
-	  "-resultdir #{@testResults} -language  #{@kblayout} #{dbSpec} " +
-	  "-datadir #{@dataDir} -data #{@data}")
+      "-version #{@version} -testsuite '#{testsuite}' -server #{server} -autid #{@autid} "+
+      "-resultdir #{@testResults} -language  #{@kblayout} #{dbSpec} " +
+      "-datadir #{@dataDir} -data #{@data}")
     puts "runTestsuite  #{testsuite} returned #{res.inspect}"
     res
   end
@@ -253,13 +348,18 @@ public
     startAUT(sleepTime)
     okay = runTestsuite(testcase)
     stopAgent(10)
-    system("killall #{File.basename(@exeFile)}") unless WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os']) # if still alive
+    if @exeFile and not WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
+      # killit if it is still alive
+      system("ps -ef | grep #{@exeFile}")
+      system("ps -ef | grep #{File.basename(@exeFile)}")
+      system("killall #{File.basename(@exeFile)}")
+    end
     okay
   end
 
   def run(testsuite=@testsuite)
-    genWrapper
     autoInstall
+    genWrapper
     prepareRcpSupport
     useH2
     loadTestcases
@@ -271,9 +371,9 @@ public
   end
 
   def genWrapper
+    getInfoForExe
     unless @exeFile
-      puts "no ExeFile defined";
-      exit 2
+      raise "genWrapper: no ExeFile defined";
     end
     wrapper = "#{JubulaOptions.wrapper}"
     exe  = File.expand_path(@exeFile)
