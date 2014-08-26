@@ -19,11 +19,14 @@ public class CreateMappingFrom2_1_7 extends AbstractHandler {
 		List<LabItem> items = qbli.execute();
 		
 		for (LabItem item : items) {
-			LabMapping mapping =
-				LabMapping.getByContactAndItemId(item.getLabor().getId(), item.getId());
-			if (mapping == null) {
-				mapping =
-					new LabMapping(item.getLabor().getId(), item.getKuerzel(), item.getId(), false);
+			if (item.getLabor() != null) {
+				LabMapping mapping =
+					LabMapping.getByContactAndItemId(item.getLabor().getId(), item.getId());
+				if (mapping == null) {
+					mapping =
+						new LabMapping(item.getLabor().getId(), item.getKuerzel(), item.getId(),
+							false);
+				}
 			}
 		}
 		return null;

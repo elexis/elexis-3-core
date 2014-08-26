@@ -57,6 +57,11 @@
             id="ch.elexis.labitem.merge"
             name="Labor Items vereinen">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.laboratory.commands.CreateImportMappingUi"
+            id="ch.elexis.labmapping.import"
+            name="Zuordnung importieren">
+      </command>
    </extension>
    
 </plugin>
