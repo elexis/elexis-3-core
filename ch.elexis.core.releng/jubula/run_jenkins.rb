@@ -70,11 +70,13 @@ def save_images(destination = File.join(WORKSPACE, 'my-screenshots'))
 end
 
 def installArtikelStamm(jubula)
+  stamm = File.join(File.dirname(__FILE__), 'artikelstamm_first_v2.xml')
+  ENV['TEST_UDV_ARTIKEL_STAMM'] = stamm
   FileUtils.makedirs(jubula.dataDir, :verbose => true, :noop => DryRun)
   FileUtils.makedirs(jubula.testResults, :verbose => true, :noop => DryRun)
-  FileUtils.cp(File.join(File.dirname(__FILE__), 'artikelstamm_first_v2.xml'), jubula.testResults, :verbose => true, :noop => DryRun)
+  FileUtils.cp(stamm, jubula.testResults, :verbose => true, :noop => DryRun)
   if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os']) # MacOSX seems to set the file dialog to its home directory
-    FileUtils.cp(File.join(File.dirname(__FILE__), 'artikelstamm_first_v2.xml'), Dir.home, :verbose => true, :noop => DryRun)
+    FileUtils.cp(stamm, Dir.home, :verbose => true, :noop => DryRun)
   end
 end
 

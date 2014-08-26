@@ -249,6 +249,7 @@ public
   end
   
   def patchXML
+    getInfoForExe unless @plugins_dir
     xmlFile = "#{project}_#{version}.xml"
     savedDir = Dir.pwd
     Dir.chdir(File.dirname(__FILE__))

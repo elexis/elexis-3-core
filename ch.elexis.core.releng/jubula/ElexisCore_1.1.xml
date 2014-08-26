@@ -1371,6 +1371,47 @@
             <type xsi:nil="true"/>
             <logicalName>9683c69fdf754a53a7ea41c79be7aff3</logicalName>
           </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.ToolItem_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolItem_2</neighbour>
+              <neighbour>org.eclipse.swt.widgets.ToolItem_3</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.ToolItem</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.ToolItem</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.artikelview</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.CTabFolder_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.views.artikel.ArtikelView$MasterDetailsPage_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.custom.SashForm_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.selectors.SelectorPanel_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.ToolBar_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.ToolItem_2</hierarchyName>
+              <alternativeDisplayName>Toolbar Item</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>a153cc93723e4c429a6e446e2fd2d7a6</logicalName>
+          </association>
+          <association>
+            <technicalName>
+              <neighbour>org.eclipse.swt.widgets.Label_1</neighbour>
+              <neighbour>org.eclipse.swt.widgets.Text_1</neighbour>
+              <componentClassName>org.eclipse.swt.widgets.Button</componentClassName>
+              <supportedClassName>org.eclipse.swt.widgets.Button</supportedClassName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Shell_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Composite_1</hierarchyName>
+              <hierarchyName>ch.elexis.core.ui.util.ImporterPage$FileBasedImporter_1</hierarchyName>
+              <hierarchyName>org.eclipse.swt.widgets.Button_1</hierarchyName>
+              <alternativeDisplayName>Button Component ("Suchen...")</alternativeDisplayName>
+            </technicalName>
+            <type xsi:nil="true"/>
+            <logicalName>ffe2184701a047a1bce06878d15a3505</logicalName>
+          </association>
           <category>
             <name>Patients</name>
             <association>
@@ -11403,6 +11444,84 @@
           <datafile xsi:nil="true"/>
           <teststep>
             <usedTestcase>
+              <name>expand filename with $ARTIKEL_STAMM</name>
+              <comment xsi:nil="true"/>
+              <GUID>23c8e12a247a494093d18a8705b7f4ec</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>FILENAME_IN_HOME</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>$ARTIKEL_STAMM</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b0831c7549be011c754c9dc60004</uniqueIds>
+                <uniqueIds>8ab6b0831c7549be011c754cb8cc0005</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b0831c7549be011c754b6e9a0002</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>logger $FILENAME_IN_HOME</name>
+              <comment xsi:nil="true"/>
+              <GUID>2ea5cbb43f654d7e888ba5d5382a2841</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>logger Starting artikelimport $ARTIKEL_STAMM</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>0</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>true</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b08316c3bbe20116c3bf02fd000e</uniqueIds>
+                <uniqueIds>8ab6b08316c3bbe20116c3bf1a3e000f</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d8bb901005a</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d8beaaf005c</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b08316c3bbe20116c3bec817000c</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Open Artikel perspective</name>
               <comment xsi:nil="true"/>
               <GUID>2ffc888916774bd4855f18aa0c2b1a76</GUID>
@@ -11798,7 +11917,7 @@
                   <data columnCount="1">
                     <data>
                       <language>de_DE</language>
-                      <value>=a41daf8e246e4251ac57829d882763c0</value>
+                      <value>$ARTIKEL_STAMM</value>
                     </data>
                   </data>
                 </row>
@@ -12003,6 +12122,175 @@
               <datafile xsi:nil="true"/>
               <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
               <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Select first article</name>
+              <comment xsi:nil="true"/>
+              <GUID>d2968ea1c648414b8c483b650c2ed6b8</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>3</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>percent</value>
+                    </data>
+                  </data>
+                  <data columnCount="5">
+                    <data>
+                      <language>de_DE</language>
+                      <value>30</value>
+                    </data>
+                  </data>
+                  <data columnCount="6">
+                    <data>
+                      <language>de_DE</language>
+                      <value>percent</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083181d393b01181dbe75b500c5</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181dbe8c2b00c6</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181dbe9cd500c7</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181dbeb82d00c8</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181dbec8a700c9</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181dbedeb000ca</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083181d393b01181dbe268c00c3</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4930022</originalName>
+                <newName>ad2622a63567429fb8ba545998e8fe5c</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Store Text in Artikelname</name>
+              <comment xsi:nil="true"/>
+              <GUID>0ffd6a520abd4ed49e1720981cd61370</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>ARTIKELNAME</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1</value>
+                    </data>
+                  </data>
+                  <data columnCount="5">
+                    <data>
+                      <language>de_DE</language>
+                      <value>equals</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b08d294519bd012945fb5a4e0ac5</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945fb735a0ac6</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945fb87640ac7</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945fba5940ac8</uniqueIds>
+                <uniqueIds>8ab6b08d294519bd012945fbbca60ac9</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b08d294519bd012945faa09d0a46</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+              <overriddenNames>
+                <propagated>false</propagated>
+                <originalName>8ab6b08d1a4d08f3011a4d09a4940024</originalName>
+                <newName>ad2622a63567429fb8ba545998e8fe5c</newName>
+              </overriddenNames>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Logger Artikelstamm</name>
+              <comment xsi:nil="true"/>
+              <GUID>93bd7b47d5fe43a7a37d98c9a7d636ca</GUID>
+              <generated>false</generated>
+              <active>false</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>logger Found first article $ARTIKELNAME</value>
+                    </data>
+                  </data>
+                  <data columnCount="2">
+                    <data>
+                      <language>de_DE</language>
+                      <value>0</value>
+                    </data>
+                  </data>
+                  <data columnCount="3">
+                    <data>
+                      <language>de_DE</language>
+                      <value>true</value>
+                    </data>
+                  </data>
+                  <data columnCount="4">
+                    <data>
+                      <language>de_DE</language>
+                      <value>1000</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b08316c3bbe20116c3bf02fd000e</uniqueIds>
+                <uniqueIds>8ab6b08316c3bbe20116c3bf1a3e000f</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d8bb901005a</uniqueIds>
+                <uniqueIds>8ab6b083181d393b01181d8beaaf005c</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b08316c3bbe20116c3bec817000c</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
             </usedTestcase>
           </teststep>
           <teststep>
@@ -16350,7 +16638,7 @@
       <compName>Elexis300a201405151339_AboutElexisOpenSource_ElexisOpenSourceInstallatio0_TabFolder_1_tpn</compName>
     </componentNames>
     <componentNames>
-      <compType>guidancer.abstract.Widget</compType>
+      <compType>guidancer.concrete.Tree</compType>
       <GUID>42c74cb4e46047d48d1c80dd2811f8f0</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
@@ -16770,6 +17058,13 @@
       <compName>SW_Edit_Site_Okay</compName>
     </componentNames>
     <componentNames>
+      <compType>org.eclipse.swt.widgets.ToolItem</compType>
+      <GUID>a153cc93723e4c429a6e446e2fd2d7a6</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300a201408201543_Artikelstamm_ToolItem_2_tbi</compName>
+    </componentNames>
+    <componentNames>
       <compType>guidancer.concrete.TextComponent</compType>
       <GUID>a43dd75cbfc64f50988d8a8f890e7343</GUID>
       <creationContext>OVERRIDDEN_NAME</creationContext>
@@ -16816,7 +17111,7 @@
       <GUID>ad2622a63567429fb8ba545998e8fe5c</GUID>
       <creationContext>STEP</creationContext>
       <refGuid xsi:nil="true"/>
-      <compName>Elexis300qualifier0071_Artikelstamm_Table_1_tbl</compName>
+      <compName>Artikelstamm_Table_1_tbl</compName>
     </componentNames>
     <componentNames>
       <compType>guidancer.concrete.Button</compType>
@@ -17223,6 +17518,13 @@
       <creationContext>OVERRIDDEN_NAME</creationContext>
       <refGuid xsi:nil="true"/>
       <compName>Esr_Datum_grc</compName>
+    </componentNames>
+    <componentNames>
+      <compType>guidancer.concrete.Button</compType>
+      <GUID>ffe2184701a047a1bce06878d15a3505</GUID>
+      <creationContext>STEP</creationContext>
+      <refGuid xsi:nil="true"/>
+      <compName>Elexis300a201408201543_Datenimport_Suchen_btn</compName>
     </componentNames>
     <testresultSummaries>
       <testresultSummary>
