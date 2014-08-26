@@ -41,6 +41,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
+import ch.elexis.core.ui.laboratory.preferences.LabSettings;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabItem.typ;
@@ -375,8 +376,7 @@ public class LaborOrdersComposite extends Composite {
 		if (patient != null) {
 			actPatient = patient;
 			form.setText(actPatient.getLabel());
-			viewer.setInput(LabOrder.getLabOrders(actPatient, CoreHub.actMandant, null, null, null,
-				null, null));
+			viewer.setInput(getOrders());
 			viewer.expandAll();
 		} else {
 			actPatient = patient;
@@ -388,11 +388,25 @@ public class LaborOrdersComposite extends Composite {
 	public void reload(){
 		setRedraw(false);
 		if (actPatient != null) {
-			viewer.setInput(LabOrder.getLabOrders(actPatient, CoreHub.actMandant, null, null, null,
-				null, null));
+			viewer.setInput(getOrders());
 			viewer.expandAll();
 		}
 		setRedraw(true);
+	}
+	
+	private List<LabOrder> getOrders(){
+		List<LabOrder> ret = new ArrayList<LabOrder>();
+		List<LabOrder> orders = null;
+		if (CoreHub.userCfg.get(LabSettings.LABORDERS_SHOWMANDANTONLY, false)) {
+			orders =
+				LabOrder.getLabOrders(actPatient, CoreHub.actMandant, null, null, null, null, null);
+		} else {
+			orders = LabOrder.getLabOrders(actPatient, null, null, null, null, null, null);
+		}
+		if (orders != null) {
+			ret.addAll(orders);
+		}
+		return ret;
 	}
 	
 	public TreeViewer getViewer(){

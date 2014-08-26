@@ -132,7 +132,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		menu.createToolbar(markPersonAction, markAllAction);
 		heartbeat();
 		CoreHub.heart.addListener(this,
-			CoreHub.localCfg.get(LabSettings.LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
+			CoreHub.userCfg.get(LabSettings.LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
 		
 		tv.setInput(this);
 	}

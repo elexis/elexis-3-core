@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.laboratory.preferences;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -30,9 +31,11 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 	public static final String KEEP_UNSEEN_LAB_RESULTS = "lab/keepUnseen"; //$NON-NLS-1$
 	public static final String LABNEW_HEARTRATE = "lab/heartrate_unseen"; //$NON-NLS-1$
 	
+	public static final String LABORDERS_SHOWMANDANTONLY = "lab/showMandantOnly"; //$NON-NLS-1$
+	
 	public LabSettings(){
 		super(GRID);
-		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
+		setPreferenceStore(new SettingsPreferenceStore(CoreHub.userCfg));
 	}
 	
 	@Override
@@ -46,6 +49,9 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 	
 	@Override
 	protected void createFieldEditors(){
+		addField(new BooleanFieldEditor(LABORDERS_SHOWMANDANTONLY,
+			Messages.LabSettings_showOrdersActiveMandant, getFieldEditorParent()));
+		
 		addField(new StringFieldEditor(KEEP_UNSEEN_LAB_RESULTS,
 			Messages.LabSettings_showNewLabvaluesDays, getFieldEditorParent()));
 		addField(new RadioGroupFieldEditor(
