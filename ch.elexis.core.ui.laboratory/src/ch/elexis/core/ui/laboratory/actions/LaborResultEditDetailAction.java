@@ -19,6 +19,7 @@ public class LaborResultEditDetailAction extends Action {
 	private List<LabOrder> orders;
 	private StructuredViewer viewer;
 	
+	@SuppressWarnings("unchecked")
 	public LaborResultEditDetailAction(List<?> list, StructuredViewer viewer){
 		super(Messages.LaborResultEditDetailAction_title); //$NON-NLS-1$
 		Object firstObject = list.get(0);

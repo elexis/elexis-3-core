@@ -183,7 +183,9 @@ public class LaborOrdersComposite extends Composite {
 							orders.add((LabOrder) object);
 						}
 					}
-					mgr.add(new LaborResultEditDetailAction(orders, viewer));
+					if (!orders.isEmpty()) {
+						mgr.add(new LaborResultEditDetailAction(orders, viewer));
+					}
 				}
 			}
 		});

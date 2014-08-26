@@ -13,6 +13,7 @@
 package ch.elexis.core.ui.views;
 
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -220,7 +221,10 @@ public class VerrechnungsDisplay extends Composite {
 	}
 	
 	public void setLeistungen(Konsultation b){
-		List<Verrechnet> lgl = b.getLeistungen();
+		List<Verrechnet> lgl = Collections.emptyList();
+		if (b != null) {
+			lgl = b.getLeistungen();
+		}
 		tVerr.setRedraw(false);
 		tVerr.removeAll();
 		StringBuilder sdg = new StringBuilder();
