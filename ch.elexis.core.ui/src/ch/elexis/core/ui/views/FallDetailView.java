@@ -48,11 +48,12 @@ public class FallDetailView extends ViewPart implements ISaveablePart2, IActivat
 	private final ElexisEventListener eeli_kons =
 		new ElexisUiEventListenerImpl(Konsultation.class) {
 			public void runInUi(final ElexisEvent ev){
-				fdb.setFall(((Konsultation) ev.getObject()).getFall());
+				if (ev.getObject() != null) {
+					fdb.setFall(((Konsultation) ev.getObject()).getFall());
+				}
 			}
 		};
 	private final ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class) {
-		
 		public void runInUi(final ElexisEvent ev){
 			fdb.setFall((Fall) ev.getObject());
 		}
