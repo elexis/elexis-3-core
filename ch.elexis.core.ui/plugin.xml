@@ -323,6 +323,15 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:help">
+         <command
+               commandId="org.eclipse.ui.window.showKeyAssist"
+               label="Key Assist..."
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -382,5 +391,18 @@
                id="at.medevit.elexis.properties.propertyPage.ExtInfoPropertyPage"
                name="ExtInfo">
          </page>
+      </extension>
+      <extension
+            point="org.eclipse.ui.bindings">
+         <key
+               commandId="org.eclipse.ui.window.showKeyAssist"
+               schemeId="ch.elexis.ui.keybindingScheme"
+               sequence="M1+SHIFT+L">
+         </key>
+         <scheme
+               description="KeyBindings that use this scheme will be displayed by the KeyAssistant in Elexis"
+               id="ch.elexis.ui.keybindingScheme"
+               name="Elexis Keybinding Scheme">
+         </scheme>
       </extension>
 </plugin>
