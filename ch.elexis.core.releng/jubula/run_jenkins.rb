@@ -70,7 +70,7 @@ def save_images(destination = File.join(WORKSPACE, 'my-screenshots'))
 end
 
 def installArtikelStamm(jubula)
-  stamm = File.join(File.dirname(__FILE__), 'artikelstamm_first_v2.xml')
+  stamm = File.expand_path(File.join(File.dirname(__FILE__), 'artikelstamm_first_v2.xml'))
   ENV['TEST_UDV_ARTIKEL_STAMM'] = stamm
   FileUtils.makedirs(jubula.dataDir, :verbose => true, :noop => DryRun)
   FileUtils.makedirs(jubula.testResults, :verbose => true, :noop => DryRun)
