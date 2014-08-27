@@ -219,7 +219,9 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		userViewer.setLabelProvider(new DefaultLabelProvider());
 		
 		Query<Anwender> query = new Query<Anwender>(Anwender.class);
-		userViewer.setInput(query.execute());
+		List<Anwender> users = query.execute();
+		users.set(0, new NoAnwender());
+		userViewer.setInput(users);
 		
 		selectLastSelectedUser();
 		
@@ -259,7 +261,8 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	
 	private List<IExternLaborOrder> getExternLaborOrder(){
 		List<IExternLaborOrder> externLaborOrders =
-			Extensions.getClasses(Extensions.getExtensions(ExtensionPointConstantsUi.LABORORDER), "class", //$NON-NLS-1$ //$NON-NLS-2$
+			Extensions.getClasses(Extensions.getExtensions(ExtensionPointConstantsUi.LABORORDER),
+				"class", //$NON-NLS-1$ //$NON-NLS-2$
 				false);
 		return externLaborOrders;
 	}
@@ -362,10 +365,11 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	private Anwender getSelectedUser(){
 		Object sel = ((IStructuredSelection) userViewer.getSelection()).getFirstElement();
 		if (sel instanceof Anwender) {
-			return (Anwender) sel;
-		} else {
-			return null;
+			if (!(sel instanceof NoAnwender)) {
+				return (Anwender) sel;
+			}
 		}
+		return null;
 	}
 	
 	@Override
@@ -381,7 +385,9 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		}
 		
 		List<LabOrder> orders = createLabOrders(getSelectedItems());
-		createReminder(getSelectedUser());
+		if (getSelectedUser() != null) {
+			createReminder(getSelectedUser());
+		}
 		
 		saveLastSelectedUser();
 		
@@ -540,6 +546,23 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		public GroupItem(String groupname, LabItem labItem){
 			this.groupname = groupname;
 			this.labItem = labItem;
+		}
+	}
+	
+	private static class NoAnwender extends Anwender {
+		@Override
+		public String getId(){
+			return "";
+		}
+		
+		@Override
+		public String getLabel(){
+			return "";
+		}
+		
+		@Override
+		public String getLabel(boolean shortLabel){
+			return getLabel();
 		}
 	}
 }
