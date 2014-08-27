@@ -11906,11 +11906,106 @@
           </teststep>
           <teststep>
             <usedTestcase>
+              <name>Copy filename to clipboard</name>
+              <comment xsi:nil="true"/>
+              <GUID>86a9e7d283904b70b2e2982ab0c3771e</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <testdata>
+                <row rowCount="1">
+                  <data columnCount="1">
+                    <data>
+                      <language>de_DE</language>
+                      <value>$ARTIKEL_STAMM</value>
+                    </data>
+                  </data>
+                </row>
+                <uniqueIds>8ab6b083225416bc012254a0d58c000e</uniqueIds>
+              </testdata>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083225416bc012254a0450a000c</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>true</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Select all (old value)</name>
+              <comment xsi:nil="true"/>
+              <GUID>ac03fd5aca26462bafeecdd7541aa71d</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807dc</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Delete</name>
+              <comment xsi:nil="true"/>
+              <GUID>ef77dfdb40cf42a5833ea2a90b6107ff</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807c7</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>defa842b36c54b4e9d732e572ba651c8</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name>Ctrl-V is more reliable (and faster) than entering text</name>
+              <comment xsi:nil="true"/>
+              <GUID>0317604534434005974fd20027f3663d</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>8ab6b083150339b501150364afe807de</testcaseGuid>
+              <projectGuid>8ab6b083150339b501150364afb90435</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
+              <name/>
+              <comment xsi:nil="true"/>
+              <GUID>6d9894ffb67f489ebe004e4b28c75add</GUID>
+              <generated>false</generated>
+              <active>true</active>
+              <taskId xsi:nil="true"/>
+              <datafile xsi:nil="true"/>
+              <testcaseGuid>2cc82a65d808499fb219408a83968851</testcaseGuid>
+              <projectGuid>b80640b58118457d83cc1cdfdd69410e</projectGuid>
+              <hasOwnTestdata>false</hasOwnTestdata>
+            </usedTestcase>
+          </teststep>
+          <teststep>
+            <usedTestcase>
               <name>Enter filenname to import</name>
               <comment xsi:nil="true"/>
               <GUID>258bf2f184b347baa8d4bd5e58fc199c</GUID>
               <generated>false</generated>
-              <active>true</active>
+              <active>false</active>
               <taskId xsi:nil="true"/>
               <testdata>
                 <row rowCount="1">
