@@ -328,7 +328,7 @@
             class="ch.elexis.core.ui.contacts.views.PatientDetailView2"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/person.ico"
             id="ch.elexis.PatDetail_v2"
-            name="%elexis.patDetailView">
+            name="%elexis.patDetailView_v2">
       </view>
       <view
             class="ch.elexis.core.ui.views.ScriptView"
