@@ -12,12 +12,14 @@
 package ch.elexis.data;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.status.ElexisStatus;
@@ -94,6 +96,8 @@ public class PersistentObjectFactory implements IExecutableExtension {
 		return null;
 	}
 	
+	private HashMap<String, PersistentObjectFactory> poFactoryCache = new HashMap<>();
+	
 	/**
 	 * Ein Objekt einer beliebigen abgeleiteten Klasse anhand des Pseudoserialisiercodes erstellen.
 	 * Wenn das Objekt vom Programmkern nicht erstellt werden kann, werden der Reihe nach alle
@@ -109,14 +113,24 @@ public class PersistentObjectFactory implements IExecutableExtension {
 		if (code == null) {
 			return null;
 		}
+		
+		String[] ci = code.split(StringConstants.DOUBLECOLON);
+		if (ci.length != 2)
+			return null;
+		
+		// try to resolve factory from cache
+		PersistentObjectFactory persistentObjectFactory = poFactoryCache.get(ci[0]);
+		if (persistentObjectFactory != null && persistentObjectFactory != this) {
+			return persistentObjectFactory.createFromString(code);
+		}
+		
 		try {
-			String[] ci = code.split("::");
-			if (ci.length != 2)
-				return null;
 			Class clazz = Class.forName(ci[0]);
 			Method load = clazz.getMethod("load", new Class[] {
 				String.class
 			});
+			// set this object factory as responsible
+			poFactoryCache.put(ci[0], this);
 			return (PersistentObject) (load.invoke(null, new Object[] {
 				ci[1]
 			}));
@@ -126,6 +140,8 @@ public class PersistentObjectFactory implements IExecutableExtension {
 			for (PersistentObjectFactory po : exts) {
 				PersistentObject ret = po.createFromString(code);
 				if (ret != null) {
+					// found a responsible factory, cache it
+					poFactoryCache.put(ci[0], po);
 					return ret;
 				}
 			}
