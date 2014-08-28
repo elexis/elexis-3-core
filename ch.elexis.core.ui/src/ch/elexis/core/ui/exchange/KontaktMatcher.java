@@ -233,8 +233,8 @@ public class KontaktMatcher {
 				return ret;
 			} else if (createMode == CreateMode.ASK) {
 				return (Person) KontaktSelektor.showInSync(Person.class,
-					Messages.KontaktMatcher_PersonNotFound, name + "StringTool.Space" + vorname + //$NON-NLS-1$
-						(StringTool.isNothing(gebdat) ? StringTool.leer : SEP + gebdat) + SEP
+					Messages.KontaktMatcher_PersonNotFound, name + StringTool.space + vorname
+						+ (StringTool.isNothing(gebdat) ? StringTool.leer : SEP + gebdat) + SEP
 						+ strasse + SEP + plz + " " + ort, resolve1, hints);
 			}
 			return null;

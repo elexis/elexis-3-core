@@ -1,6 +1,9 @@
 package ch.elexis.core.ui.importer.div.importers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -237,6 +240,8 @@ public class LabImportUtil {
 		private TimeTool observationTime;
 		private TimeTool transmissionTime;
 		
+		private Map<String, String> setProperties;
+		
 		private TransientLabResult(Builder builder){
 			this.patient = builder.patient;
 			this.labItem = builder.labItem;
@@ -253,6 +258,8 @@ public class LabImportUtil {
 			this.analyseTime = builder.analyseTime;
 			this.observationTime = builder.observationTime;
 			this.transmissionTime = builder.transmissionTime;
+			
+			this.setProperties = builder.setProperties;
 		}
 		
 		private void overwriteExisting(LabResult labResult){
@@ -324,6 +331,13 @@ public class LabImportUtil {
 			}
 			// set all flags at once, flags is a string in the database
 			labResult.set(LabResult.FLAGS, Integer.toString(flags));
+			
+			if (setProperties != null) {
+				Set<String> keys = setProperties.keySet();
+				for (String string : keys) {
+					labResult.set(string, setProperties.get(string));
+				}
+			}
 		}
 		
 		public Patient getPatient(){
@@ -393,6 +407,8 @@ public class LabImportUtil {
 			private TimeTool observationTime;
 			private TimeTool transmissionTime;
 			
+			private Map<String, String> setProperties;
+			
 			public Builder(Patient patient, Kontakt origin, LabItem labItem, String result){
 				this.patient = patient;
 				this.labItem = labItem;
@@ -456,6 +472,14 @@ public class LabImportUtil {
 			
 			public TransientLabResult build(){
 				return new TransientLabResult(this);
+			}
+			
+			public Builder setProperty(String property, String value){
+				if (setProperties == null) {
+					setProperties = new HashMap<String, String>();
+				}
+				setProperties.put(property, value);
+				return this;
 			}
 		}
 	}

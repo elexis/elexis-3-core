@@ -1,12 +1,16 @@
 package ch.elexis.hl7;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
@@ -26,11 +30,16 @@ import ch.elexis.hl7.v2x.HL7ReaderV251;
 import ch.elexis.hl7.v2x.HL7ReaderV26;
 import ch.rgw.tools.ExHandler;
 
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
+
 public enum HL7ReaderFactory {
 	
 	INSTANCE;
 	
 	protected List<Message> messageList;
+	
+	private static Logger logger = LoggerFactory.getLogger(HL7ReaderFactory.class);
 	
 	public List<HL7Reader> getReader(File file){
 		messageList = new ArrayList<Message>();
@@ -48,12 +57,12 @@ public enum HL7ReaderFactory {
 				file.getAbsolutePath());
 			return Collections.emptyList();
 		}
+		
 		List<HL7Reader> ret = new ArrayList<HL7Reader>();
-		try {
-			InputStream is = new BufferedInputStream(new FileInputStream(file));
+		try (InputStream inputStream = getFileInputStream(file)) {
 			// HAPI utility class will iterate over the messages which appear over an InputStream
 			Hl7InputStreamMessageStringIterator stringIterator =
-				new Hl7InputStreamMessageStringIterator(is);
+				new Hl7InputStreamMessageStringIterator(inputStream);
 			
 			Parser p = new PipeParser();
 			p.setValidationContext(new NoValidation());
@@ -65,7 +74,6 @@ public enum HL7ReaderFactory {
 				messageList.add(hl7Message);
 				ret.add(getReaderForMessage(hl7Message));
 			}
-			is.close();
 			return ret;
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
@@ -73,6 +81,20 @@ public enum HL7ReaderFactory {
 				ex.getMessage());
 		}
 		return Collections.emptyList();
+	}
+	
+	private InputStream getFileInputStream(File file) throws IOException{
+		byte[] bytes = Files.readAllBytes(file.toPath());
+		CharsetDetector detector = new CharsetDetector();
+		detector.setText(bytes);
+		CharsetMatch match = detector.detect();
+		if (match != null) {
+			logger.info("Reading HL7 file " + file.getAbsolutePath() + " encoded "
+				+ match.getName() + " " + match.getLanguage());
+			return new ByteArrayInputStream(match.getString().getBytes());
+		}
+		
+		return new ByteArrayInputStream(bytes);
 	}
 	
 	private String assureSaveMSH9Access(String hl7Message){
