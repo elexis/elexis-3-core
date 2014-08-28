@@ -19,5 +19,5 @@ Require-Bundle: org.apache.commons.codec,
  ch.rgw.utility,
  ch.elexis.core,
  ch.elexis.core.data;bundle-version="3.0.0",
- ca.uhn.hapi.osgi-base;bundle-version="1.2.0",
- com.ibm.icu.4j;bundle-version="2.6.1"
+ ca.uhn.hapi.osgi-base;bundle-version="1.2.0"
+Import-Package: com.ibm.icu.text;version="4.4.0"
