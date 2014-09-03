@@ -28,17 +28,6 @@ h1 {
 	font-size: 24px;
 }
 
-h3 {
-	font-size: 11px;
-	color: #444444;
-	clear: both;
-}
-
-h4 {
-	font-size: 10px;
-	color: #6c6c6c;
-}
-
 #container {
 	margin-top: 40px;
 	margin-left: auto;
@@ -60,112 +49,21 @@ h4 {
 	line-height: 24px;
 }
 
-#modules-main {
-	padding: 30px 0 0 0;
-	list-style: none;
-	clear: both;
-	margin: 0;
-}
-
-#modules-main li {
-	width: 33%;
-	float: left;
-	list-style: none;
-	margin: 0 0px 0 0;
-	padding: 0;
-}
-
-#modules-main div {
-	height: 34px;
-	background: url(images/button-l.gif) no-repeat left center;
-	font-weight: normal;
-	width: 190px;
-	float: left;
-	text-align: center;
-}
-
-#modules-main a {
-	color: #000;
-	text-decoration: none;
-	background:url(images/button-r.gif) no-repeat right top;
-	padding: 10px 16px 10px 8px;
-	margin-left: 8px;
-	font-size: 12px;
-	display: block;
-}
-
-.module-header {
-	padding-top: 60px;
-	border-bottom: 1px solid #ececec;
-	padding-bottom: 2px;
-	width: 99%;
-}
-
-.module {
-	width: 33%;
-	float: left;
-}
-
-.module ul {
-	padding: 0;
-	margin: 0;
-	list-style: none;
-	font-size: 12px;
-}	
-
-.popular {
-	font-size: 10px;
-	font-weight: bold;
-	color: #2aaa2d;
-}
-
-
 /* Releases */
 
 #release-main {
-	padding: 30px 0 0 0;
+  background: #00FFFF;
+	padding: 10px 10px 10px 10px;
 	list-style: none;
 	clear: both;
 	margin: 0;
-}
-
-#release-main li {
-	width: 50%;
-	float: left;
-	list-style: none;
-	margin: 0 0px 0 0;
-	padding: 0;
-}
-
-#release-main div {
-	height: 34px;
-	background: url(images/button-l.gif) no-repeat left center;
-	font-weight: normal;
-	width: 290px;
-	float: left;
-	text-align: center;
-}
-
-#release-main a {
-	text-decoration: none;
-	background:url(images/button-r.gif) no-repeat right top;
-	padding: 10px 8px 10px 0;
-	margin-left: 8px;
-	font-size: 12px;
-	display: block;
+  border-radius: 10px;
 }
 
 
 .download-module {
 	float: left;
 	width: 50%;
-}
-
-.download-module ul {	
-	list-style: disc;
-	font-size: 12px;
-	margin: 0;
-	padding: 0 0 0 20px;
 }
 
 .download-module li {
@@ -175,7 +73,7 @@ h4 {
 
 .download-header {
 
-	padding-top: 60px;
+	padding-top: 20px;
 	border-bottom: 1px solid #ececec;
 	padding-bottom: 2px;
 }

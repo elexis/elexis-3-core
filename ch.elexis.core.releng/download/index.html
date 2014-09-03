@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <!-- This page is updated from
-  https://github.com/elexis/elexis-3-core/tree/master/ch.elexis.core.releng/download 
+  https://github.com/elexis/elexis-3-core/tree/master/ch.elexis.core.releng/download
   each time the Jenkins-CI job https://jenkins.medelexis.ch/jenkins/view/3.0/job/Elexis-3.0-Core/ is run
 -->
 <title>Elexis downloads</title>
@@ -14,51 +14,77 @@
 
 <div id="container">
     <div id='wrap'>
-      <div id='header'> 
+      <div id='header'>
         <img width="150" height="65" alt='elexis' src='images/splash.png'></a>
         <div align='right' class='tagline'>Elexis: eine freie Software<br>von Ärzten für Ärzte</div>
       </div>
     </div>
-    <h1 id="download-header">Downloads</h1>
-    <ul id="release-main">
-      <li><div><a href="elexis-2.1.7.1/">Download latest Stable Release: <strong>2.1.7.1</strong></a></div></li>
-      <li><div><a href="elexis-2.1.7.1/">Download latest Beta Release: <strong>2.1.7.1</strong></a></div></li>
-    </ul>
-     <div class="download-module"> 
-     <h3 class="download-header">Old releases</h3>
-      <ul>
-        <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/2.1.7.1/">Elexis 2.1.7.1 (2013-06-29)</a>
-         <a href="https://github.com/elexis/elexis/wiki/Release-Notes-for-2.1.7.1"> Release Notes</a>
-          </li>
-        <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/2.1.7.0/">Elexis 2.1.7.0 (2012-11-08)</a>
-         <a href="https://github.com/elexis/elexis/wiki/Release-Notes-for-2.1.7.0"> Release Notes</a>
-          </li>
-        <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/2.1.6.4.1">Elexis 2.1.6.4.1 (2012-05-12)</a></li>
-        <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/Elexis-2.1.5.4/">Elexis 2.1.5.4 (2011-10-02)</a></li>
-        <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/elexis-1.4/">Elexis 1.4 (2009-01-02)</a></li>
-      </ul>
-     <h3 class="download-header">Demo databases</h3>
-      <ul>
-        <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/2.1.7.0/">Demo-DB for Elexis 2.1.7.*</a></li>
-      </ul>
-      </h3>
-  </div>
-  <div class="download-module">
-    <h3 class="download-header">Experimental snapshots (from our Jenkins-CI)</h3>
-    <ul>
-      <li><a href="elexis.3rdparty.libraries/">P2-Site for 3rd-party libraries for Elexis 3 (Alpha)</a></li>
-      <li><a href="elexis.3.core/snapshot">P2-Site for Elexis 3.0 core snapshot (Alpha)</a></li>
-      <li><a href="elexis.3.base/snapshot">P2-Site for Elexis 3.0 base plugins snapshot (Alpha)</a></li>
-    </ul>
-  </div>
-  <div class="download-module">
-    <h3 class="download-header">Other P2-Update sites with plug-ins for Elexis 3</h3>      
-        <ul>
-          <li>At the moment (early alpha stade) none.</li>
-        </ul>
-    <h3 class="download-header">Maven</h3>
-      The Elexis project does not provide Maven artifacts.
-  </div>    
+    <table>
+    <tr>
+      <td width="50%" >
+        <h1>Downloads</h1>
+      </td>
+      <td id="release-main"> <a href="elexis.3.core/3.0.0">Elexis <strong>3.0.0</strong> core (stable release)</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td id="release-main">
+          <a href="https://github.com/elexis/elexis/wiki/Release-Notes-3.0.0">Release Notes</a>/<a href="http://sourceforge.net/projects/elexis/files/elexis%20full%20installation/3.0.0/demoDB_3.0_with_administrator.zip">Demo-DB</a>
+          for Elexis 3.0.0
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td id="release-main">
+          <div><a href="/ch.elexis.core.p2site/target/products">Elexis <strong>3.0.0</strong> core (snapshot)</a></div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h3 class="download-header">Old releases</h3>
+      </td>
+      <td>
+          <h3 class="download-header">Other Variant of Elexis 3</h3>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          <ul>
+            <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/2.1.7.1/">Elexis 2.1.7.1 (2013-06-29)</a>
+            <br><a href="https://github.com/elexis/elexis/wiki/Release-Notes-for-2.1.7.1"> Release Notes</a>
+              </li>
+            <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/2.1.7.0/">Elexis 2.1.7.0 (2012-11-08)</a>
+            <br><a href="https://github.com/elexis/elexis/wiki/Release-Notes-for-2.1.7.0"> Release Notes</a>
+              </li>
+            <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/2.1.6.4.1">Elexis 2.1.6.4.1 (2012-05-12)</a></li>
+            <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/Elexis-2.1.5.4/">Elexis 2.1.5.4 (2011-10-02)</a></li>
+            <li><a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/elexis-1.4/">Elexis 1.4 (2009-01-02)</a></li>
+          </ul>
+      </td>
+      <td>
+          The <a href="http://www.medelexis.ch/">Medelexis AG</a> offers a commercial version based on exactly the same codebase plus some propritary plugins for swiss german practitioners
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <h3 >Demo databases</h3>
+            <a href="http://sourceforge.net/projects/elexis/files/elexis%20full%20installation/3.0.0/demoDB_3.0_with_administrator.zip">Demo-DB for Elexis 3.0.0</a>
+      </td>
+      <td>
+          <h3 >Maven</h3>
+            The Elexis project does not provide Maven artifacts.
+      </td>
+    </tr>
+    <tr>
+      <td>
+          <a href="https://sourceforge.net/projects/elexis/files/elexis%20full%20installation/2.1.7.0/">Demo-DB for Elexis 2.1.7.*</a>
+        </h3>
+      </td>
+    </tr>
+  </table>
 </div>
 </body>
 </html>
