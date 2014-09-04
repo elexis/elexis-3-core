@@ -1,0 +1,36 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ch.elexis</groupId>
+  <artifactId>ch.elexis.core.releng</artifactId>
+  <version>3.0.0-SNAPSHOT</version>
+  <parent>
+    <groupId>ch.elexis.base</groupId>
+    <artifactId>elexis-3-base</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+  </parent>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId> exec-maven-plugin </artifactId>
+        <version> 1.2.1 </version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>ruby</executable>
+          <workingDirectory>${project.basedir}</workingDirectory>
+          <arguments>
+            <argument>enforce_elexis_formatting.rb</argument>
+            <argument>..</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -9,4 +9,5 @@ bin/
 target/
 jetty.log
 workspace/
+profile.tmp
 
