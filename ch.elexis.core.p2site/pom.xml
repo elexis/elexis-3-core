@@ -10,10 +10,10 @@
 	<packaging>eclipse-repository</packaging>
 	<profiles>
 		<profile>
-			<id>all-archs</id>
+			<id>install_build</id>
 			<activation>
 				<property>
-					<name>all-archs</name>
+					<name>ROOT</name>
 				</property>
 			</activation>
 			<build>
