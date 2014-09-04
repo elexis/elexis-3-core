@@ -75,10 +75,10 @@ public class PersistentObjectConnectionProvider implements ConnectionProvider {
 	 */
 	public void initialize() throws SQLException{
 		JdbcLink jdbcLink = PersistentObject.getConnection();
-
+		
 		if (jdbcLink == null) {
 			jdbcLink = generateOwnJdbcLink();
-		} 
+		}
 		
 		Connection connection = jdbcLink.getConnection();
 		
@@ -97,7 +97,8 @@ public class PersistentObjectConnectionProvider implements ConnectionProvider {
 	
 	/**
 	 * initialize the database with the required tables for the Quartz JobStore
-	 * @param connection 
+	 * 
+	 * @param connection
 	 */
 	private void initializeDatabase(JdbcLink jdbcl){
 		log.warn("Quartz tables not found, initializing database");
@@ -105,7 +106,7 @@ public class PersistentObjectConnectionProvider implements ConnectionProvider {
 		log.debug("Initializing quartz tables for " + jdbcl.DBFlavor);
 		
 		URL sqlStringUrl = null;
-
+		
 		switch (jdbcl.DBFlavor) {
 		case JdbcLink.DBFLAVOR_MYSQL:
 			sqlStringUrl = Activator.getResource("rsc/tables_mysql.sql");

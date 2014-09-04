@@ -17,7 +17,7 @@ import ch.rgw.tools.JdbcLink;
 public class Test_Query extends AbstractPersistentObjectTest {
 	
 	private JdbcLink link;
-
+	
 	@Before
 	public void setUp() throws Exception{
 		if (link != null) {
@@ -65,6 +65,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 			
 		}
 	}
+	
 	@Test
 	public void testGetPreparedStatement(){
 		// fail("Not yet implemented"); // TODO
@@ -97,8 +98,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
 		ArrayList<String> result = query.execute(ps, new String[0]);
 		int nrOrgs = result.size();
-		System.out.println("Before creating new organistaion found " + nrOrgs
-			+ " Organisation");
+		System.out.println("Before creating new organistaion found " + nrOrgs + " Organisation");
 		for (String s : result) {
 			System.out.println("Organisation: found " + s);
 		}

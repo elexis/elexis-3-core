@@ -66,14 +66,14 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		
 		// this is nice for runtime but makes testing really hard :)
 		// we need to mock JdbcLink.createH2Link to stop creation of database
-// PowerMockito.mockStatic(JdbcLink.class);
-// PowerMockito.when(JdbcLink.createH2Link(Matchers.anyString())).thenReturn(
-// new JdbcLink("", "", ""));
+		// PowerMockito.mockStatic(JdbcLink.class);
+		// PowerMockito.when(JdbcLink.createH2Link(Matchers.anyString())).thenReturn(
+		// new JdbcLink("", "", ""));
 		// connect and simulate db creation failure with JdbcLink mock
 		try {
 			PersistentObject.connect(CoreHub.localCfg);
 			// TODO: does not work at the moment in Elexis 3.0
-// fail("Expected Exception not thrown!");
+			// fail("Expected Exception not thrown!");
 		} catch (PersistenceException pe) {
 			
 		}
@@ -123,9 +123,9 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 	@Test
 	public void testGetFail(){
 		// mock a status manager for ignoring the error status
-// StatusManager statusMock = PowerMockito.mock(StatusManager.class);
-// PowerMockito.mockStatic(StatusManager.class);
-// PowerMockito.when(StatusManager.getManager()).thenReturn(statusMock);
+		// StatusManager statusMock = PowerMockito.mock(StatusManager.class);
+		// PowerMockito.mockStatic(StatusManager.class);
+		// PowerMockito.when(StatusManager.getManager()).thenReturn(statusMock);
 		
 		PersistentObjectImpl impl = new PersistentObjectImpl();
 		try {

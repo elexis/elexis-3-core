@@ -469,19 +469,19 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	public String getUsername(){
 		return cache.description3;
 	}
-
+	
 	@Override
 	public void setUsername(String value){
 		String old = getUsername();
 		entity.set(Kontakt.FLD_NAME3, value);
 		firePropertyChange("username", old, value);
 	}
-
+	
 	@Override
 	public String getPassword(){
 		return (String) entity.getInfoElement(Anwender.FLD_EXTINFO_PASSWORD);
 	}
-
+	
 	@Override
 	public void setPassword(String value){
 		// TODO Auto-generated method stub

@@ -20,9 +20,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	ch.rgw.tools.Test_VersionInfo.class,
-	ch.rgw.tools.Test_Money.class,
-	ch.rgw.tools.Test_JdbcLink.class, 
+	ch.rgw.tools.Test_VersionInfo.class, ch.rgw.tools.Test_Money.class,
+	ch.rgw.tools.Test_JdbcLink.class,
 })
 public class AllTests {
 	public static Test suite() throws ClassNotFoundException{

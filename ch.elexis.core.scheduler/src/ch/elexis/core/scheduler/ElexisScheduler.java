@@ -25,40 +25,39 @@ public class ElexisScheduler {
 		try {
 			properties = Activator.getQuartzProperties();
 			scheduler = new StdSchedulerFactory(properties).getScheduler();
-//			schedulerListener = new ElexisSchedulerListener();
+			// schedulerListener = new ElexisSchedulerListener();
 		} catch (SchedulerException e) {
 			log.error("Error initializing class", e);
 		}
 	};
 	
-	public static ElexisScheduler getInstance() {
-		if(instance == null) {
+	public static ElexisScheduler getInstance(){
+		if (instance == null) {
 			instance = new ElexisScheduler();
 		}
 		return instance;
 	}
-
+	
 	public void startScheduler(){
 		try {
-//			scheduler.getListenerManager().addSchedulerListener(schedulerListener);
+			// scheduler.getListenerManager().addSchedulerListener(schedulerListener);
 			
 			ElexisSchedulerExtensionPoint.initialize(scheduler);
 			
 			scheduler.start();
 			
-
 		} catch (SchedulerException e) {
 			log.error("Error starting scheduler", e);
 		}
 	}
-
+	
 	public void shutdownScheduler(){
 		try {
 			scheduler.shutdown();
-//			scheduler.getListenerManager().removeSchedulerListener(schedulerListener);
+			// scheduler.getListenerManager().removeSchedulerListener(schedulerListener);
 		} catch (SchedulerException e) {
 			log.error("Error on scheduler shutdown", e);
 		}
 	}
-
+	
 }

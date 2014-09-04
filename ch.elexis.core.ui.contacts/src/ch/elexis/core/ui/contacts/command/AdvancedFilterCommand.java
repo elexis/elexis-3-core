@@ -22,24 +22,23 @@ import org.eclipse.ui.menus.UIElement;
 import ch.elexis.core.ui.contacts.dialogs.AdvancedFilterDialog;
 import ch.elexis.core.ui.icons.Images;
 
-public class AdvancedFilterCommand extends AbstractHandler implements
-		IElementUpdater {
-
+public class AdvancedFilterCommand extends AbstractHandler implements IElementUpdater {
+	
 	public static final String ID = "at.medevit.elexis.contacts.core.command.AdvancedFilterCommand";
-
+	
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		AdvancedFilterDialog afd = new AdvancedFilterDialog(PlatformUI
-				.getWorkbench().getDisplay().getActiveShell());
+	public Object execute(ExecutionEvent event) throws ExecutionException{
+		AdvancedFilterDialog afd =
+			new AdvancedFilterDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell());
 		int retVal = afd.open();
-		//System.out.println(retVal);
+		// System.out.println(retVal);
 		return null;
 	}
-
+	
 	@Override
-	public void updateElement(UIElement element,
-			@SuppressWarnings("rawtypes") Map parameters) {
+	public void updateElement(UIElement element, @SuppressWarnings("rawtypes")
+	Map parameters){
 		element.setIcon(Images.IMG_FILTER.getImageDescriptor());
 	}
-
+	
 }

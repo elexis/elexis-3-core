@@ -15,7 +15,8 @@ public abstract class AbstractElexisSchedulerJob {
 	 * @see <a
 	 *      href="http://quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/tutorial-lesson-02">http://quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/tutorial-lesson-02</a>
 	 */
-	public abstract @NonNull Job getJob();
+	public abstract @NonNull
+	Job getJob();
 	
 	/**
 	 * 

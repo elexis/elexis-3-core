@@ -28,25 +28,33 @@ public class BenchmarkTimer {
 		return this.endTime - this.startTime;
 	}
 	
-	public String geTotalTimeHumanReadableString() {
+	public String geTotalTimeHumanReadableString(){
 		return convertMS(getTotalTime());
 	}
 	
-	private String convertMS(long ms) {
-	    int seconds = (int) ((ms / 1000) % 60);
-	    int minutes = (int) (((ms / 1000) / 60) % 60);
-	    int hours = (int) ((((ms / 1000) / 60) / 60) % 24);
-
-	    String sec, min, hrs;
-	    if(seconds<10)  sec="0"+seconds;
-	    else            sec= ""+seconds;
-	    if(minutes<10)  min="0"+minutes;
-	    else            min= ""+minutes;
-	    if(hours<10)    hrs="0"+hours;
-	    else            hrs= ""+hours;
-
-	    if(hours == 0)  return min+" min, "+sec+" sec";
-	    else    return hrs+" hrs, "+min+"min, "+sec+" sec";
+	private String convertMS(long ms){
+		int seconds = (int) ((ms / 1000) % 60);
+		int minutes = (int) (((ms / 1000) / 60) % 60);
+		int hours = (int) ((((ms / 1000) / 60) / 60) % 24);
+		
+		String sec, min, hrs;
+		if (seconds < 10)
+			sec = "0" + seconds;
+		else
+			sec = "" + seconds;
+		if (minutes < 10)
+			min = "0" + minutes;
+		else
+			min = "" + minutes;
+		if (hours < 10)
+			hrs = "0" + hours;
+		else
+			hrs = "" + hours;
+		
+		if (hours == 0)
+			return min + " min, " + sec + " sec";
+		else
+			return hrs + " hrs, " + min + "min, " + sec + " sec";
 	}
 	
 }

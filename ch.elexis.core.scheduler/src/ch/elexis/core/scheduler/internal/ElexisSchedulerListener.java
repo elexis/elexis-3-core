@@ -9,7 +9,7 @@ import org.quartz.TriggerKey;
 
 public class ElexisSchedulerListener implements SchedulerListener {
 	
-//	private static Logger log = LoggerFactory.getLogger(ElexisSchedulerListener.class);
+	// private static Logger log = LoggerFactory.getLogger(ElexisSchedulerListener.class);
 	
 	@Override
 	public void jobAdded(JobDetail arg0){

@@ -102,9 +102,11 @@ public class PatientAddressPage extends PropertyPage implements IWorkbenchProper
 		String[] fields = {
 			Patient.FLD_STREET, Patient.FLD_COUNTRY, Patient.FLD_ZIP, Patient.FLD_PLACE
 		};
-		String[] values = {
-			textStrasse.getText(), tableCombo.getText(), textPostleitzahl.getText(), textOrtschaft.getText()
-		};
+		String[] values =
+			{
+				textStrasse.getText(), tableCombo.getText(), textPostleitzahl.getText(),
+				textOrtschaft.getText()
+			};
 		pat.set(fields, values);
 	}
 	

@@ -353,7 +353,7 @@ public class StammDatenComposite extends AbstractComposite {
 					Desktop.getDesktop().mail(uriMailTo);
 				} catch (URISyntaxException | IOException ex) {
 					log.warn("Error opening URI", ex);
-				} 
+				}
 			}
 		});
 		
@@ -369,13 +369,13 @@ public class StammDatenComposite extends AbstractComposite {
 			public void widgetSelected(SelectionEvent e){
 				try {
 					URI uriURL = new URI(txtWebsite.getText());
-					if(!uriURL.isAbsolute()) {
-						uriURL = new URI("http://"+txtWebsite.getText());
+					if (!uriURL.isAbsolute()) {
+						uriURL = new URI("http://" + txtWebsite.getText());
 					}
 					Desktop.getDesktop().browse(uriURL);
 				} catch (URISyntaxException | IOException ex) {
 					log.warn("Error opening URI", ex);
-				} 
+				}
 			}
 		});
 		
@@ -464,16 +464,16 @@ public class StammDatenComposite extends AbstractComposite {
 		
 		// DateTime
 		// TODO
-//		IObservableValue dateTimeObserveWidget = SWTObservables.observeSelection(dateTimeDob);
-//		IObservableValue dateTimeObserveValue =
-//			BeansObservables.observeDetailValue(contactObservable, "dateOfBirth",
-//				org.joda.time.DateTime.class);
-//		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-//		targetToModel.setConverter(new DateDateTimeConverter());
-//		UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
-//		modelToTarget.setConverter(new DateTimeDateConverter());
-//		bindingContext.bindValue(dateTimeObserveWidget, dateTimeObserveValue, targetToModel,
-//			modelToTarget);
+		// IObservableValue dateTimeObserveWidget = SWTObservables.observeSelection(dateTimeDob);
+		// IObservableValue dateTimeObserveValue =
+		// BeansObservables.observeDetailValue(contactObservable, "dateOfBirth",
+		// org.joda.time.DateTime.class);
+		// UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+		// targetToModel.setConverter(new DateDateTimeConverter());
+		// UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
+		// modelToTarget.setConverter(new DateTimeDateConverter());
+		// bindingContext.bindValue(dateTimeObserveWidget, dateTimeObserveValue, targetToModel,
+		// modelToTarget);
 		
 		// Warum liegt denn hier Stroh rum?
 		IObservableValue sexObserver = ViewersObservables.observeSingleSelection(comboViewerSex);

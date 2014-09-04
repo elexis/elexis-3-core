@@ -42,7 +42,8 @@ public class AssignReminderToUser {
 	
 	public String assign(String fromUsername, String toUsername){
 		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
-		Anwender user = Anwender.load(qbe.findSingle(Anwender.FLD_LABEL, Query.EQUALS, fromUsername));
+		Anwender user =
+			Anwender.load(qbe.findSingle(Anwender.FLD_LABEL, Query.EQUALS, fromUsername));
 		if (user.exists()) {
 			return run(user.getReminders(null), toUsername);
 		} else {

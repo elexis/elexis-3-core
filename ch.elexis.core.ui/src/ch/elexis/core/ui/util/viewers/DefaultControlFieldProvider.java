@@ -147,26 +147,29 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	
 	/**
 	 * Setze Feld welches den Fokus erhaelt
-	 * @param index Index im field array
+	 * 
+	 * @param index
+	 *            Index im field array
 	 */
-	public void setFocusField(int index) {
+	public void setFocusField(int index){
 		if (index >= fields.length)
 			throw new IndexOutOfBoundsException("Invalid field index");
 		focusField = index;
 	}
-
+	
 	/**
-	 * Setze Feld welches den Fokus erhaelt (nach DB name). Ein ungueltiger
-	 * Name wird ignoriert.
-	 * @param name DB-Namen des Feldes
+	 * Setze Feld welches den Fokus erhaelt (nach DB name). Ein ungueltiger Name wird ignoriert.
+	 * 
+	 * @param name
+	 *            DB-Namen des Feldes
 	 */
-	public void setFocusField(String name) {
+	public void setFocusField(String name){
 		for (int i = 0; i < dbFields.length; i++) {
 			if (dbFields[i].equals(name))
 				focusField = i;
 		}
 	}
-
+	
 	public void setFocus(){
 		selectors[focusField].setFocus();
 	}
