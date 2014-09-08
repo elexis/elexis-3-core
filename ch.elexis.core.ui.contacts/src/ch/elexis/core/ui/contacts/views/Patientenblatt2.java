@@ -670,7 +670,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 							}
 							
 							if (!StringTool.isNothing(salutation)) { // salutation should currently
-							// never be empty, but paranoia...
+								// never be empty, but paranoia...
 								SelectedContactInfosText.append(salutation);
 								SelectedContactInfosText.append(StringTool.space);
 							}
