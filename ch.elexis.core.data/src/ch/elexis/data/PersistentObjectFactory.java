@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2009, G. Weirich and Elexis
+ * Copyright (c) 2005-2014, G. Weirich, Elexis and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *    MEDEVIT - <office@medevit.at>
  *******************************************************************************/
 package ch.elexis.data;
 
@@ -29,36 +29,47 @@ import ch.rgw.tools.ExHandler;
 
 public class PersistentObjectFactory implements IExecutableExtension {
 	
+	private HashMap<String, PersistentObjectFactory> poFactoryCache = new HashMap<>();
+	
+	private static final String CLASS = "Class";
+	
 	/**
-	 * Ein Objekt als Schablone eines beliebigen abgeleiteten Typs erstellen, ohne es in die
-	 * Datenbank einzutragen. Wenn der Programmkern kein Objekt dieser Klasse erstellen kann, werden
-	 * der Reihe nach alle Plugins abgeklappert, die eine PersistentObjectFactory deklariert haben.
+	 * Create a template of the provided class type, without creating a corresponding database
+	 * entry. If the core is not able to create the resp. class, all plug-ins contributing a
+	 * PersistentObjectFactory will be queried.
 	 * 
-	 * @param typ
-	 *            Der gewünschte Subtyp von PersistentObject
-	 * 
-	 * @return ein unabhängiges Objekt des gewünschten Typs oder null
-	 * 
+	 * @param type
+	 *            the requested class type
+	 * @return a non-persisted object of class type or <code>null</code>
 	 * @throws PersistenceException
 	 */
 	@SuppressWarnings("unchecked")
-	public PersistentObject createTemplate(Class typ){
+	public PersistentObject createTemplate(Class type){
+		// try to resolve factory from cache
+		PersistentObjectFactory persistentObjectFactory =
+			poFactoryCache.get(type.getName());
+		if (persistentObjectFactory != null) {
+			return persistentObjectFactory.doCreateTemplate(type);
+		}
 		
 		try {
-			return (PersistentObject) typ.newInstance();
+			PersistentObject po = (PersistentObject) type.newInstance();
+			return po;
 		} catch (IllegalAccessException ex) {
-			List<PersistentObjectFactory> exts =
-				Extensions.getClasses(ExtensionPointConstantsData.PERSISTENT_REFERENCE, "Class");
-			for (PersistentObjectFactory po : exts) {
-				PersistentObject ret = po.doCreateTemplate(typ);
+			List<PersistentObjectFactory> contributedFactories =
+				Extensions.getClasses(ExtensionPointConstantsData.PERSISTENT_REFERENCE, CLASS);
+			for (PersistentObjectFactory po : contributedFactories) {
+				PersistentObject ret = po.doCreateTemplate(type);
 				if (ret != null) {
+					// found a responsible factory, cache it
+					poFactoryCache.put(type.getName(), po);
 					return ret;
 				}
 			}
 		} catch (Exception ex) {
 			ElexisStatus status =
 				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					"create: Konnte Objekt nicht erstellen " + ex.getMessage(), ex,
+					"create: Couldn't create object " + ex.getMessage(), ex,
 					ElexisStatus.LOG_ERRORS);
 			throw new PersistenceException(status);
 		}
@@ -96,20 +107,18 @@ public class PersistentObjectFactory implements IExecutableExtension {
 		return null;
 	}
 	
-	private HashMap<String, PersistentObjectFactory> poFactoryCache = new HashMap<>();
-	
 	/**
-	 * Ein Objekt einer beliebigen abgeleiteten Klasse anhand des Pseudoserialisiercodes erstellen.
-	 * Wenn das Objekt vom Programmkern nicht erstellt werden kann, werden der Reihe nach alle
-	 * Plugins abgeklappert, die eine PersistentObjectFactory deklariert haben.
+	 * Create an object of a derived class given a pseudo de-serialization code, e.g.
+	 * <code>ch.elexis.artikel_ch.data.Medikament::ca8bb5c27bdd67d5f011821</code>. If the object can
+	 * not be created by the core, all plug-ins contributing a {@link #PersistentObjectFactory()}
+	 * are queried.
 	 * 
 	 * @param code
-	 *            der String, der das Objekt beschreibt
-	 * @return das erstellte Objekt oder null, wenn aus dem übergebenen Code kein Objekt erstellt
-	 *         werden konnte.
+	 *            the storeToString as shown in the above example
+	 * @return the de-serialized object, or <code>null</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public PersistentObject createFromString(String code){
+	public PersistentObject createFromString(final String code){
 		if (code == null) {
 			return null;
 		}
@@ -120,7 +129,7 @@ public class PersistentObjectFactory implements IExecutableExtension {
 		
 		// try to resolve factory from cache
 		PersistentObjectFactory persistentObjectFactory = poFactoryCache.get(ci[0]);
-		if (persistentObjectFactory != null && persistentObjectFactory != this) {
+		if (persistentObjectFactory != null) {
 			return persistentObjectFactory.createFromString(code);
 		}
 		
@@ -129,15 +138,13 @@ public class PersistentObjectFactory implements IExecutableExtension {
 			Method load = clazz.getMethod("load", new Class[] {
 				String.class
 			});
-			// set this object factory as responsible
-			poFactoryCache.put(ci[0], this);
 			return (PersistentObject) (load.invoke(null, new Object[] {
 				ci[1]
 			}));
 		} catch (ClassNotFoundException ex) {
-			List<PersistentObjectFactory> exts =
-				Extensions.getClasses(ExtensionPointConstantsData.PERSISTENT_REFERENCE, "Class");
-			for (PersistentObjectFactory po : exts) {
+			List<PersistentObjectFactory> contributedFactories =
+					Extensions.getClasses(ExtensionPointConstantsData.PERSISTENT_REFERENCE, CLASS);
+			for (PersistentObjectFactory po : contributedFactories) {
 				PersistentObject ret = po.createFromString(code);
 				if (ret != null) {
 					// found a responsible factory, cache it
