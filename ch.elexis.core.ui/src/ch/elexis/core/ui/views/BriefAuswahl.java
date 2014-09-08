@@ -405,11 +405,11 @@ public class BriefAuswahl extends ViewPart implements
 					TextView tv = null;
 					try {
 						tv = (TextView) getSite().getPage().showView(TextView.ID /*
-																				 * ,StringTool.unique
-																				 * ("textView")
-																				 * ,IWorkbenchPage
-																				 * .VIEW_ACTIVATE
-																				 */);
+																					* ,StringTool.unique
+																					* ("textView")
+																					* ,IWorkbenchPage
+																					* .VIEW_ACTIVATE
+																					*/);
 						DocumentSelectDialog bs =
 							new DocumentSelectDialog(getViewSite().getShell(), CoreHub.actMandant,
 								DocumentSelectDialog.TYPE_CREATE_DOC_WITH_TEMPLATE);

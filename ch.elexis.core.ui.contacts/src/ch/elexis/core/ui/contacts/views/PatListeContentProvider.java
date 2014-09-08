@@ -163,8 +163,8 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 			(IWorkbenchSiteProgressService) site.getSite().getAdapter(
 				IWorkbenchSiteProgressService.class);
 		siteService.schedule(job, 0 /* now */, true /*
-													 * use the half-busy cursor in the part
-													 */);
+														 * use the half-busy cursor in the part
+														 */);
 		
 		job.setProperty(IProgressConstants.ICON_PROPERTY, Images.IMG_AUSRUFEZ_ROT.getImage());
 		

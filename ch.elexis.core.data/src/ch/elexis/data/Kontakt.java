@@ -221,8 +221,8 @@ public class Kontakt extends PersistentObject {
 			sb.append(an.getEtikette(false, true));
 			ret = sb.toString();
 		}/*
-		 * else{ ret= an.getEtikette(true, true); }
-		 */
+			* else{ ret= an.getEtikette(true, true); }
+			*/
 		// create the postal if it does not exist yet
 		String old = get(FLD_ANSCHRIFT);
 		if (StringTool.isNothing(old)) {
