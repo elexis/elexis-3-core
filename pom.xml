@@ -228,7 +228,6 @@
 		<module>ch.elexis.core.logging.feature</module>
 		<module>ch.elexis.core.logging.default_configuration</module>
 		<module>ch.elexis.core.logging</module>
-		<module>ch.elexis.core.releng</module>
 		<module>ch.elexis.core.scripting.beanshell</module>
 		<module>ch.elexis.core.ui</module>
 		<module>ch.elexis.core.ui.eigenartikel</module>
