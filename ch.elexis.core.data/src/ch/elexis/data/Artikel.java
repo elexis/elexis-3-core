@@ -377,16 +377,27 @@ public class Artikel extends VerrechenbarAdapter {
 	}
 	
 	/**
-	 * Prüfen, ob ein Artikel ein ALgerartikel ist
+	 * Check if the article is considered a stock article, this is the case if either a stock amount
+	 * is defined or there exists an upper or lower bound for the number of articles to be on stock
 	 * 
-	 * @return true wenn ja
+	 * @return <code>true</code> if on stock
+	 * @since 3.1 the behaviour of the method has changed according to ticket #1496
 	 */
 	public boolean isLagerartikel(){
-		if ((getMinbestand() > 0) || (getMaxbestand() > 0)) {
+		String[] result = new String[3];
+		get(new String[] {
+			ISTBESTAND, MINBESTAND, MAXBESTAND
+		}, result);
+		
+		if (checkZero(result[0]) > 0) {
 			return true;
-		} else {
-			return false;
 		}
+		
+		if ((checkZero(result[1]) > 0) || (checkZero(result[2]) > 0)) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -508,10 +519,8 @@ public class Artikel extends VerrechenbarAdapter {
 		set(FLD_LIEFERANT_ID, l.getId());
 	}
 	
-	@SuppressWarnings("unchecked")
 	public int getVerpackungsEinheit(){
-		Map ext = getMap(FLD_EXTINFO);
-		return checkZero((String) ext.get(VERPACKUNGSEINHEIT));
+		return checkZero((String) getExtInfoStoredObjectByKey(VERPACKUNGSEINHEIT));
 	}
 	
 	@SuppressWarnings("unchecked")
