@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.ui.preferences.inputs.ComboFieldEditor;
 import ch.elexis.core.logging.LogbackUtils;
 
@@ -44,8 +45,8 @@ public class Ablauf extends FieldEditorPreferencePage implements
 		super(GRID);
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.localCfg));
 		String logbackInfo = "";
-		String logbackPlace = System.getProperty("logback.configurationFile",//$NON-NLS-1$
-				null);
+		String logbackPlace =
+			System.getProperty(ElexisSystemPropertyConstants.LOGBACK_CONFIG_FILE, null);
 		Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 		if (logbackPlace == null) {
 			logbackInfo = Messages.LogbackConfigDefault;

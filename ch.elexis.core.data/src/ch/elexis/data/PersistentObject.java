@@ -53,6 +53,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.cache.IPersistentObjectCache;
 import ch.elexis.core.data.cache.SoftCache;
+import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
@@ -225,11 +226,12 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true für ok, false wenn keine Verbindung hergestellt werden konnte.
 	 */
 	public static boolean connect(final Settings cfg){
-		dbUser = System.getProperty("ch.elexis.dbUser");
-		dbPw = System.getProperty("ch.elexis.dbPw");
-		String dbFlavor = System.getProperty("ch.elexis.dbFlavor");
-		String dbSpec = System.getProperty("ch.elexis.dbSpec");
-		if ("RunFromScratch".equals(System.getProperty("elexis-run-mode"))) {
+		dbUser = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME);
+		dbPw = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD);
+		String dbFlavor = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR);
+		String dbSpec = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC);
+		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH.equals(System
+			.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
 			runningFromScratch = true;
 		}
 		
@@ -433,7 +435,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					CoreHub.pin.initializeGlobalPreferences();
 					if (runningFromScratch) {
 						Mandant m = new Mandant("007", "topsecret");
-						String clientEmail = System.getProperty("ch.elexis.clientEmail");
+						String clientEmail = System.getProperty(ElexisSystemPropertyConstants.CLIENT_EMAIL);
 						if (clientEmail == null)
 							clientEmail = "james@bond.invalid";
 						m.set(new String[] {

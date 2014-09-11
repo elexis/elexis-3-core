@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
@@ -77,8 +78,8 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	@Override
 	public void performLogin(Object shell){
-		String username = System.getProperty("ch.elexis.username");
-		String password = System.getProperty("ch.elexis.password");
+		String username = System.getProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME);
+		String password = System.getProperty(ElexisSystemPropertyConstants.LOGIN_PASSWORD);
 		if (username != null && password != null) {
 			/*
 			 * Allow bypassing the login dialog, eg. for automated GUI-tests. Example: when having a
