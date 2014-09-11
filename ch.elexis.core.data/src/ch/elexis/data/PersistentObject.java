@@ -389,7 +389,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					return false;
 				}
 			} catch (Exception ex) {
-				msg = "Exception connecting to test database:" + dbSpec + " using " + dbFlavor;
+				msg = "Exception connecting to test database:" + dbSpec + " using " + dbFlavor+": "+ex.getMessage();
 				log.error(msg);
 				System.out.println(msg);
 				if (exitOnFail)
