@@ -908,6 +908,17 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		Konsultation actLetzte = actFall.getLetzteBehandlung();
 		if ((actLetzte != null)
 			&& actLetzte.getDatum().equals(new TimeTool().toString(TimeTool.DATE_GER))) {
+			// KG-Iatrix's JournalView triggers a second call to neueKonsultation
+			// because the round trip takes too much. Therefore this ugly work-around
+			// This error can be easily reproduced by selecting a new patient and
+			// typing fast several chars in the konstext
+			long diffMs = System.currentTimeMillis() - actLetzte.getLastUpdate();
+			if (diffMs < 100000)
+				return; // for KG-Iatrix: don't update a consultation last updated in last 10 seconds
+			if (cod.openQuestion(Messages.GlobalActions_SecondForToday,
+				Messages.GlobalActions_SecondForTodayQuestion) == false) {
+				return;
+			}
 			
 			if (cod.openQuestion(Messages.GlobalActions_SecondForToday,
 				Messages.GlobalActions_SecondForTodayQuestion) == false) {
