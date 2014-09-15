@@ -115,6 +115,12 @@ public enum HL7ReaderFactory {
 			mshPart[8] = "ORU^R01";
 			splitted[0] = joinStrings(mshPart, "|");
 		}
+		
+		// 2.3.2 is no proper Hl7 version and therefore needs to be handled as version 2.3
+		if (mshPart[11].equals("2.3.2")) {
+			mshPart[11] = "2.3";
+			splitted[0] = joinStrings(mshPart, "|");
+		}
 		return joinStrings(splitted, separator);
 	}
 	
