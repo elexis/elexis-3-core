@@ -35,7 +35,14 @@ public class ExtInfoPropertyPage extends PropertyPage implements
 		header.setText("Definierte Felder in ExtInfo:");
 		header.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, true, false, 2, 1));
 
-		Map<Object, Object> extinfo = po.getMap(PersistentObject.FLD_EXTINFO);
+		Map<Object, Object> extinfo = null;
+		try {
+			extinfo = po.getMap(PersistentObject.FLD_EXTINFO);
+		} catch (Exception e) {
+			// we ignore any exception here, as it might be coming
+			// from a missing ExtInfo (like in Leistunbsblock) or
+			// something else
+		}
 		
 		if (extinfo == null || extinfo.size() == 0) {
 			Label lab = new Label(comp, SWT.None);
