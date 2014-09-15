@@ -57,7 +57,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 			if (!Anwender.login(username, password)) {
 				log.error("Authentication failed. Exiting");
 			}
-		}	
+		}
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		System.out.println("CoreOperationAdvisor: getInitialPerspective()");
 		return null;
 	}
-
+	
 	@Override
 	public boolean performDatabaseUpdate(String[] array, String pluginId){
 		return new SqlRunner(array, pluginId).runSql();

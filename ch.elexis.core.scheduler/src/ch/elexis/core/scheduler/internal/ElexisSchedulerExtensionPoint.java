@@ -25,7 +25,8 @@ public class ElexisSchedulerExtensionPoint {
 		"ch.elexis.core.scheduler.scheduledJob";
 	private static final String CLASS_PROPERTY = "class";
 	
-	private static HashMap<String, AbstractElexisSchedulerJob> schedulerJobClasses = new HashMap<>();
+	private static HashMap<String, AbstractElexisSchedulerJob> schedulerJobClasses =
+		new HashMap<>();
 	
 	public static void initialize(Scheduler scheduler){
 		try {
@@ -48,29 +49,31 @@ public class ElexisSchedulerExtensionPoint {
 		}
 		
 	}
-
+	
 	private static void addJob(AbstractElexisSchedulerJob aesj, Scheduler scheduler){
-		if(aesj==null || aesj.getJob() == null || aesj.getJobTriggers() == null || scheduler==null) {
-			log.error("Invalid state in class "+aesj.getClass(), new IllegalArgumentException("A required value is null"));
+		if (aesj == null || aesj.getJob() == null || aesj.getJobTriggers() == null
+			|| scheduler == null) {
+			log.error("Invalid state in class " + aesj.getClass(), new IllegalArgumentException(
+				"A required value is null"));
 			return;
 		}
-				
+		
 		// create job detail and add job
 		Class<? extends Job> jobClass = aesj.getJob().getClass();
-		log.debug("Adding job "+jobClass.getName());
+		log.debug("Adding job " + jobClass.getName());
 		
 		schedulerJobClasses.put(jobClass.getName(), aesj);
 		
-		JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(jobClass.getName()).build();	
+		JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(jobClass.getName()).build();
 		Set<Trigger> jobTriggers = aesj.getJobTriggers();
 		
 		try {
 			scheduler.scheduleJob(jobDetail, jobTriggers, true);
 		} catch (SchedulerException e) {
-			log.error("Error replacing or adding job "+jobClass.getName(), e);
+			log.error("Error replacing or adding job " + jobClass.getName(), e);
 		}
 	}
-
+	
 	public static Class<?> getClassByName(String name){
 		return schedulerJobClasses.get(name).getClass();
 	}

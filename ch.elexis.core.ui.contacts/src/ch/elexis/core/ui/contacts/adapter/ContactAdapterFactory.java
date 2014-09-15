@@ -16,21 +16,22 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import ch.elexis.core.data.beans.ContactBean;
 
 public class ContactAdapterFactory implements IAdapterFactory {
-
+	
 	@Override
-	public Object getAdapter(Object adaptableObject,
-			@SuppressWarnings("rawtypes") Class adapterType) {
-		if (adapterType == IPropertySource.class
-				&& adaptableObject instanceof ContactBean) {
+	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes")
+	Class adapterType){
+		if (adapterType == IPropertySource.class && adaptableObject instanceof ContactBean) {
 			return new ContactPropertyAdapter((ContactBean) adaptableObject);
 		}
 		return null;
 	}
-
+	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Class[] getAdapterList() {
-		return new Class[] { IPropertySource.class };
+	public Class[] getAdapterList(){
+		return new Class[] {
+			IPropertySource.class
+		};
 	}
-
+	
 }

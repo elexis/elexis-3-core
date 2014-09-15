@@ -146,7 +146,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	public void createPartControl(final Composite op){
 		op.setLayout(new FillLayout());
 		parent = new Composite(op, SWT.NONE);
-
+		
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
@@ -177,17 +177,15 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		((GridData) plfb.getLayoutData()).heightHint = 0;
 		
 		DefaultControlFieldProvider dcfp =
-				new DefaultControlFieldProvider(cv, fields.toArray(new String[0]));
+			new DefaultControlFieldProvider(cv, fields.toArray(new String[0]));
 		String ff = CoreHub.userCfg.get(Preferences.USR_PATLIST_FOCUSFIELD, null);
 		if (ff != null)
 			dcfp.setFocusField(ff);
-		vc =
-			new ViewerConfigurer(
-			// new LazyContentProvider(cv,loader,
-			// AccessControlDefaults.PATIENT_DISPLAY),
-				plcp, new PatLabelProvider(), dcfp,
-				new ViewerConfigurer.DefaultButtonProvider(), // cv,Patient.class),
-				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.SINGLE, cv));
+		vc = new ViewerConfigurer(
+		// new LazyContentProvider(cv,loader,
+		// AccessControlDefaults.PATIENT_DISPLAY),
+			plcp, new PatLabelProvider(), dcfp, new ViewerConfigurer.DefaultButtonProvider(), // cv,Patient.class),
+			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.SINGLE, cv));
 		cv.create(vc, parent, SWT.NONE, getViewSite());
 		// let user select patient by pressing ENTER in the control fields
 		cv.getConfigurer().getControlFieldProvider()
@@ -407,9 +405,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 					 * Funktion getPostAnschriftFaxEmail() zu ergänzen...
 					 */
 					// TODO: PatientenListeView.java, Bitte in Person.java getPersonalia() durch
-// abgewandelte Fassung komplementieren und den entsprechenden Code dorthin verlagern.
+					// abgewandelte Fassung komplementieren und den entsprechenden Code dorthin verlagern.
 					// TODO: Bitte Fehlermeldung Elexis-Konform gestalten, ggf. Automatik /
-// assistierte Fehlerbehebung hinzufügen.
+					// assistierte Fehlerbehebung hinzufügen.
 					
 					StringBuffer selectedPatInfosText = new StringBuffer();
 					
@@ -418,7 +416,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 					// If you enable the following line for debug output,
 					// you should also enable the selectedPatInfosText.setLength(0) line below,
 					// and enable output of selectedPatInfosText even for the case of an empty
-// selection further below.
+					// selection further below.
 					// selectedPatInfosText.append("jsdebug: Sorry, your selection is empty.");
 					
 					if (sel != null && sel.length > 0) {
@@ -426,9 +424,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 						// selectedPatInfosText.append("jsdebug: Your selection includes "+sel.length+" element(s):"+System.getProperty("line.separator"));
 						
 						// In PateintenListeView.java, only zero or one patients can be selected at
-// a time.
+						// a time.
 						// Consequently, the for-loop inherited from KontakteView.java is a bit of
-// an overkill right here.
+						// an overkill right here.
 						for (int i = 0; i < sel.length; i++) {
 							
 							/*
@@ -449,22 +447,22 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 							 */
 							
 							// The following code is adopted from Kontakt.createStdAnschrift for a
-// different purpose/layout:
+							// different purpose/layout:
 							// ggf. hier zu Person.getPersonalia() eine abgewandelte Fassung
-// hinzufügen und von hier aus aufrufen.
+							// hinzufügen und von hier aus aufrufen.
 							
 							// Highly similar (but still different) code is now added
 							// to KontakteView.java CopySelectedContactInfoToClipboard...
-// 201202161313js
+							// 201202161313js
 							
 							if (k.istPerson()) {
 								// TODO default salutation might be configurable (or a
-// "Sex missing!" Info might appear) js
+								// "Sex missing!" Info might appear) js
 								String salutation;
 								if (k.getGeschlecht().equals(Person.MALE)) {
 									salutation = Messages.KontakteView_SalutationM; //$NON-NLS-1$
 								} else // We do not use any default salutation for unknown sex to
-// avoid errors!
+								// avoid errors!
 								if (k.getGeschlecht().equals(Person.FEMALE)) {
 									salutation = Messages.KontakteView_SalutationF; //$NON-NLS-1$
 								} else {
@@ -478,10 +476,10 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 									selectedPatInfosText.append(titel).append(StringTool.space);
 								}
 								// A comma between Family Name and Given Name would be generally
-// helpful to reliably tell them apart:
+								// helpful to reliably tell them apart:
 								// selectedPatInfosText.append(k.getName()+","+StringTool.space+k.getVorname());
 								// But Jürg Hamacher prefers this in his letters without a comma in
-// between:
+								// between:
 								// selectedPatInfosText.append(k.getName()+StringTool.space+k.getVorname());
 								// Now, I only use a spacer, if the first field is not empty!
 								// SelectedContactInfosText.append(p.getVorname()+StringTool.space+p.getName());
@@ -495,11 +493,11 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 								String thisPatientBIRTHDATE = (String) k.get(k.BIRTHDATE);
 								if (!StringTool.isNothing(thisPatientBIRTHDATE)) {
 									// This would add the term "geb." (born on the) before the date
-// of birth:
+									// of birth:
 									// selectedPatInfosText.append(","+StringTool.space+"geb."+StringTool.space+new
-// TimeTool(thisPatientBIRTHDATE).toString(TimeTool.DATE_GER));
+									// TimeTool(thisPatientBIRTHDATE).toString(TimeTool.DATE_GER));
 									// But Jürg Hamacher prefers the patient information in his
-// letters without that term:
+									// letters without that term:
 									selectedPatInfosText.append(","
 										+ StringTool.space
 										+ new TimeTool(thisPatientBIRTHDATE)
@@ -580,13 +578,13 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 								selectedPatInfosText
 									.append("Fehler: Bei diesem Patienten ist das Flag \"Person\" nicht gesetzt! Bitte korrigieren!\n");
 								// TODO: Fehler: Bei diesem Patienten ist das Flag
-// \"Person\" nicht gesetzt!\n");
+								// \"Person\" nicht gesetzt!\n");
 								// TODO: Bitte Fehlermeldung Elexis-Konform gestalten, ggf.
-// Automatik / assistierte Fehlerbehebung hinzufügen.\n");
+								// Automatik / assistierte Fehlerbehebung hinzufügen.\n");
 							}
 							
 							// Add another empty line (or rather: paragraph), if at least one more
-// address will follow.
+							// address will follow.
 							if (i < sel.length - 1) {
 								selectedPatInfosText.append(System.getProperty("line.separator"));
 								
@@ -646,7 +644,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 					// If you enable the following line for debug output,
 					// you should also enable the selectedAddressesText.setLength(0) line below,
 					// and enable output of selectedAddressesText even for the case of an empty
-// selection further below.
+					// selection further below.
 					// selectedAddressesText.append("jsdebug: Sorry, your selection is empty.");
 					
 					if (sel != null && sel.length > 0) {
@@ -654,9 +652,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 						// selectedAddressesText.append("jsdebug: Your selection includes "+sel.length+" element(s):"+System.getProperty("line.separator"));
 						
 						// In PateintenListeView.java, only zero or one patients can be selected at
-// a time.
+						// a time.
 						// Consequently, the for-loop inherited from KontakteView.java is a bit of
-// an overkill right here.
+						// an overkill right here.
 						for (int i = 0; i < sel.length; i++) {
 							
 							/*
@@ -679,15 +677,15 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 							// selectedAddressesText.append("jsdebug: Item "+Integer.toString(i)+" "+k.toString()+System.getProperty("line.separator"));
 							
 							// getPostAnschriftPhoneFaxEmail() already returns a line separator
-// after the address
+							// after the address
 							// The first parameter controls multiline or single line output
 							// The second parameter controls whether the phone numbers shall be
-// included
+							// included
 							selectedAddressesText.append(k
 								.getPostAnschriftPhoneFaxEmail(true, true));
 							
 							// Add another empty line (or rather: paragraph), if at least one more
-// address will follow.
+							// address will follow.
 							if (i < sel.length - 1) {
 								selectedAddressesText.append(System.getProperty("line.separator"));
 								

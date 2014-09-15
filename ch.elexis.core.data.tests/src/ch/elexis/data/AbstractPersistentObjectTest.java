@@ -6,7 +6,6 @@ import ch.rgw.tools.JdbcLink;
 
 public abstract class AbstractPersistentObjectTest {
 	
-	
 	/**
 	 * create a H2-JdbcLink with an initialized db for elexis.
 	 * 
@@ -34,11 +33,11 @@ public abstract class AbstractPersistentObjectTest {
 			link = JdbcLink.createMySqlLink("localhost", "unittests");
 		else if (dbflavor == "postgresql")
 			link = JdbcLink.createPostgreSQLLink("localhost", "unittests");
-
+		
 		assertNotNull(link);
 		link.connect("elexis", "elexisTest");
 		PersistentObject.connect(link);
 		return link;
 	}
-
+	
 }

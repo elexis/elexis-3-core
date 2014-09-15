@@ -95,7 +95,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		// create open perspective actions according to the list of Sidebar
 		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS, Boolean.toString(true))
 			.equalsIgnoreCase(Boolean.toString(true))) {
-			List<IConfigurationElement> ex = Extensions.getExtensions(ExtensionPointConstantsUi.SIDEBAR);
+			List<IConfigurationElement> ex =
+				Extensions.getExtensions(ExtensionPointConstantsUi.SIDEBAR);
 			openPerspectiveActions = new IAction[ex.size()];
 			int i = 0;
 			for (IConfigurationElement ice : ex) {

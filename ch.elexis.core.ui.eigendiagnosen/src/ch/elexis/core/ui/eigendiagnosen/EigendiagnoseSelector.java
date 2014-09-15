@@ -51,7 +51,8 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 			new ViewerConfigurer(new TreeContentProvider(cv, dataloader),
 				new ViewerConfigurer.TreeLabelProvider(), new DefaultControlFieldProvider(cv,
 					new String[] {
-						Messages.EigendiagnoseSelector_Shortcut_Label , Messages.EigendiagnoseSelector_Text_Label
+						Messages.EigendiagnoseSelector_Shortcut_Label,
+						Messages.EigendiagnoseSelector_Text_Label
 					}), new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
 					SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
 		return vc;

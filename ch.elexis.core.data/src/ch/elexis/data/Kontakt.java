@@ -37,7 +37,7 @@ import ch.rgw.tools.StringTool;
  */
 public class Kontakt extends PersistentObject {
 	// If you add new fields, please be sure to update KontakteView.java tidySelectedAddressesAction
-// (and, most probably, other places)
+	// (and, most probably, other places)
 	// public static final String FLD_KUERZEL = "Kuerzel";
 	public static final String FLD_E_MAIL = "E-Mail";
 	public static final String FLD_WEBSITE = "Website";
@@ -277,9 +277,9 @@ public class Kontakt extends PersistentObject {
 		thisAddress.append(System.getProperty("line.separator"));
 		
 		// && !k.FLD_FAX.isEmpty() is NOT sufficient to prevent empty lines, or lines with just the
-// Labels "Fax" and "E-Mail".
+		// Labels "Fax" and "E-Mail".
 		// Apparently, the entries "Fax" or "E-Mail" exist in the respective fields instead of
-// proper content.
+		// proper content.
 		//
 		// THIS DOES NOT WORK:
 		//
