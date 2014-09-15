@@ -18,6 +18,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 
 import ch.elexis.core.model.IContact;
 
+
 public class ContactSelectorDragListener implements DragSourceListener {
 	
 	private final TableViewer viewer;

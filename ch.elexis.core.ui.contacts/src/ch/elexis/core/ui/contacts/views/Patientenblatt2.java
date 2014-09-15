@@ -592,54 +592,54 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 					StringBuffer SelectedContactInfosText = new StringBuffer();
 					
 					// Here's a handling difference between Patientenblatt2.java and
-					// KontakteView.java:
+// KontakteView.java:
 					// Apparently, the method getSelection() from ListDisplay.java returns only the
-					// first selected entry.
+// first selected entry.
 					// Actually, in the List of addresses in section "Hinzu", it is only possible to
-					// select one address at a time.
+// select one address at a time.
 					// Moreover, it doesn't return Object[], but T, which is a list to be displayed
-					// with GUI, extending composite.
+// with GUI, extending composite.
 					// Object[] sel = inpZusatzAdresse.getSelection(); //This would not work for
-					// inpZusatzAdresse
+// inpZusatzAdresse
 					BezugsKontakt sel = (BezugsKontakt) inpZusatzAdresse.getSelection(); // This
-					// works, but returns only one entry.
+// works, but returns only one entry.
 					
 					// If you enable the following line for debug output,
 					// you should also enable the SelectedContactInfosText.setLength(0) line below,
 					// and enable output of SelectedContactInfosText even for the case of an empty
-					// selection further below.
+// selection further below.
 					// SelectedContactInfosText.append("jsdebug: Sorry, your selection is empty.");
 					
 					// if (sel != null && sel.length > 0) { //This would not work for
-					// inpZusatzAdresse
+// inpZusatzAdresse
 					if (sel != null) {
 						// SelectedContactInfosText.setLength(0);
 						// SelectedContactInfosText.append("jsdebug: Your selection includes "+sel.length+" element(s):"+System.getProperty("line.separator"));
 						
 						// for (int i = 0; i < sel.length; i++) { //This would not work for
-						// inpZusatzAdresse
+// inpZusatzAdresse
 						// Kontakt k = (Kontakt) sel[i]; //This would not work for inpZusatzAdresse
 						Kontakt k = sel.getBezugsKontakt();
 						
 						// System.out.print("jsdebug: SelectedContactInfos.k.toString(): \n"+k.toString()+"\n");
 						
 						// The following code is adopted from Kontakt.createStdAnschrift for a
-						// different purpose/layout:
+// different purpose/layout:
 						// ggf. hier zu Person.getPersonalia() eine abgewandelte Fassung hinzufügen
-						// und von hier aus aufrufen.
+// und von hier aus aufrufen.
 						
 						// This highly similar (but still different) code has been adopted from my
-						// addition
+// addition
 						// to PatientenListeView.java CopySelectedPatInfosToClipboard...
-						// 201202161313js
+// 201202161313js
 						
 						// optional code; this could be made configurable. For now: disabled by if
-						// (false)...
+// (false)...
 						if (false) {
 							// I put the field of "Kürzel" in front. It contains a Patient ID
-							// number,
+// number,
 							// and optionally kk... for health insurances, or vn initials as Vorname
-							// Nachname for physicians.
+// Nachname for physicians.
 							String thisKontaktFLD_SHORT_LABEL = k.get(k.FLD_SHORT_LABEL); //$NON-NLS-1$
 							if (!StringTool.isNothing(thisKontaktFLD_SHORT_LABEL)) {
 								SelectedContactInfosText.append(thisKontaktFLD_SHORT_LABEL)
@@ -649,20 +649,20 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 						
 						if (k.istPerson()) {
 							// Here, we need to look at the Person variant of a Kontakt to obtain
-							// their sex; 201202161326js
+// their sex; 201202161326js
 							// Kontakt cannot simply be cast to Person - if we try, we'll throw an
-							// error, and the remainder of this action will be ignored.
+// error, and the remainder of this action will be ignored.
 							// Person p = (Person) sel[i]; //THIS WILL NOT WORK.
 							// So obtain the corresponding Person for a Kontakt via the ID:
 							Person p = Person.load(k.getId());
 							
 							String salutation;
 							// TODO default salutation might be configurable (or a "Sex missing!"
-							// Info might appear) js
+// Info might appear) js
 							if (p.getGeschlecht().equals(Person.MALE)) {
 								salutation = Messages.KontakteView_SalutationM; //$NON-NLS-1$
 							} else // We do not use any default salutation for unknown sex to avoid
-							// errors!
+// errors!
 							if (p.getGeschlecht().equals(Person.FEMALE)) {
 								salutation = Messages.KontakteView_SalutationF; //$NON-NLS-1$
 							} else {
@@ -670,7 +670,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 							}
 							
 							if (!StringTool.isNothing(salutation)) { // salutation should currently
-								// never be empty, but paranoia...
+// never be empty, but paranoia...
 								SelectedContactInfosText.append(salutation);
 								SelectedContactInfosText.append(StringTool.space);
 							}
@@ -680,14 +680,14 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 								SelectedContactInfosText.append(titel).append(StringTool.space);
 							}
 							// A comma between Family Name and Given Name would be generally helpful
-							// to reliably tell them apart:
+// to reliably tell them apart:
 							// SelectedContactInfosText.append(k.getName()+","+StringTool.space+k.getVorname());
 							// But Jürg Hamacher prefers this in his letters without a comma in
-							// between:
+// between:
 							// SelectedContactInfosText.append(p.getName()+StringTool.space+p.getVorname());
 							// Whereas I use the above variant for PatientenListeView.java;
 							// I put the Vorname first in KontakteView. And I only use a spacer, if
-							// the first field is not empty!
+// the first field is not empty!
 							// SelectedContactInfosText.append(p.getVorname()+StringTool.space+p.getName());
 							if (!StringTool.isNothing(p.getVorname())) {
 								SelectedContactInfosText.append(p.getVorname() + StringTool.space);
@@ -697,7 +697,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 							}
 							
 							// Also, in KontakteView, I copy the content of fields "Bemerkung" and
-							// "Zusatz" as well.
+// "Zusatz" as well.
 							// "Zusatz" is mapped to "Bezeichnung3" in Person.java.
 							String thisPersonFLD_REMARK = p.get(p.FLD_REMARK); //$NON-NLS-1$
 							if (!StringTool.isNothing(thisPersonFLD_REMARK)) {
@@ -713,11 +713,11 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 							String thisPatientBIRTHDATE = (String) p.get(p.BIRTHDATE);
 							if (!StringTool.isNothing(thisPatientBIRTHDATE)) {
 								// This would add the term "geb." (born on the) before the date of
-								// birth:
+// birth:
 								// SelectedContactInfosText.append(","+StringTool.space+"geb."+StringTool.space+new
-								// TimeTool(thisPatientBIRTHDATE).toString(TimeTool.DATE_GER));
+// TimeTool(thisPatientBIRTHDATE).toString(TimeTool.DATE_GER));
 								// But Jürg Hamacher prefers the patient information in his letters
-								// without that term:
+// without that term:
 								SelectedContactInfosText.append(","
 									+ StringTool.space
 									+ new TimeTool(thisPatientBIRTHDATE)
@@ -823,7 +823,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 						 */
 						
 						// } // for each element in sel do //This would not work for
-						// inpZusatzAdresse
+// inpZusatzAdresse
 						
 						/*
 						 * I would prefer to move the following code portions down behind the
@@ -885,32 +885,32 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 					StringBuffer selectedAddressesText = new StringBuffer();
 					
 					// Here's a handling difference between Patientenblatt2.java and
-					// KontakteView.java:
+// KontakteView.java:
 					// Apparently, the method getSelection() from ListDisplay.java returns only the
-					// first selected entry.
+// first selected entry.
 					// Actually, in the List of addresses in section "Hinzu", it is only possible to
-					// select one address at a time.
+// select one address at a time.
 					// Moreover, it doesn't return Object[], but T, which is a list to be displayed
-					// with GUI, extending composite.
+// with GUI, extending composite.
 					// Object[] sel = inpZusatzAdresse.getSelection(); //This would not work for
-					// inpZusatzAdresse
+// inpZusatzAdresse
 					BezugsKontakt sel = (BezugsKontakt) inpZusatzAdresse.getSelection(); // This
-					// works, but returns only one entry.
+// works, but returns only one entry.
 					
 					// If you enable the following line for debug output,
 					// you should also enable the SelectedContactInfosText.setLength(0) line below,
 					// and enable output of SelectedContactInfosText even for the case of an empty
-					// selection further below.
+// selection further below.
 					// SelectedContactInfosText.append("jsdebug: Sorry, your selection is empty.");
 					
 					// if (sel != null && sel.length > 0) { //This would not work for
-					// inpZusatzAdresse
+// inpZusatzAdresse
 					if (sel != null) {
 						// SelectedContactInfosText.setLength(0);
 						// SelectedContactInfosText.append("jsdebug: Your selection includes "+sel.length+" element(s):"+System.getProperty("line.separator"));
 						
 						// for (int i = 0; i < sel.length; i++) { //This would not work for
-						// inpZusatzAdresse
+// inpZusatzAdresse
 						// Kontakt k = (Kontakt) sel[i]; //This would not work for inpZusatzAdresse
 						Kontakt k = sel.getBezugsKontakt();
 						
@@ -934,7 +934,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 						// selectedAddressesText.append("jsdebug: Item "+Integer.toString(i)+" "+k.toString()+System.getProperty("line.separator"));
 						
 						// getPostAnschriftPhoneFaxEmail() already returns a line separator after
-						// the address
+// the address
 						// The first parameter controls multiline or single line output
 						// The second parameter controls whether the phone numbers shall be included
 						selectedAddressesText.append(k.getPostAnschriftPhoneFaxEmail(true, true));
@@ -949,7 +949,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 						 */
 						
 						// } // for each element in sel do //This would not work for
-						// inpZusatzAdresse
+// inpZusatzAdresse
 						
 						/*
 						 * I would prefer to move the following code portions down behind the

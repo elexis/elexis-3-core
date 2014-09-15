@@ -26,12 +26,14 @@ import ch.elexis.core.ui.contacts.controls.StammDatenComposite;
 public class StammdatenTab extends AbstractPropertySection {
 	
 	/**
-	 * we need to use {@link ContactBean} as it fullfills both {@link IContact} and {@link IPerson}
+	 * we need to use {@link ContactBean} as it fullfills
+	 * both {@link IContact} and {@link IPerson}
 	 */
 	private ContactBean contact;
 	private StammDatenComposite sdc;
 	
-	public StammdatenTab(){}
+	public StammdatenTab(){
+	}
 	
 	@Override
 	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage){

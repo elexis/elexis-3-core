@@ -17,6 +17,7 @@ import ch.elexis.core.model.IContact;
 
 public class ContactPropertyAdapter implements IPropertySource {
 	
+
 	public ContactPropertyAdapter(IContact adaptableObject){}
 	
 	@Override

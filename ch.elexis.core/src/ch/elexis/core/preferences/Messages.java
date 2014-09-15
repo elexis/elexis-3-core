@@ -16,7 +16,7 @@ package ch.elexis.core.preferences;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.preferences.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "ch.elexis.core.preferences.messages"; //$NON-NLS-1$
 	
 	public static String Ablauf_0;
 	

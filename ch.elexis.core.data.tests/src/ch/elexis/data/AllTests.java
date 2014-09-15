@@ -10,5 +10,5 @@ import org.junit.runners.Suite.SuiteClasses;
 	Test_Query.class
 })
 public class AllTests {
-	// System.out.println("Started AllTests");
+// System.out.println("Started AllTests");
 }

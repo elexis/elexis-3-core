@@ -22,24 +22,23 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import ch.elexis.core.ui.contacts.Activator;
 import ch.elexis.core.ui.contacts.views.ContactSelectorView;
 
+
 /**
- * Focus the intelligent search text field. This command exists for the purpose of getting called
- * via a keybdinding.
+ * Focus the intelligent search text field. This command exists for the purpose
+ * of getting called via a keybdinding.
  */
 public class FocusIntelligentSearch extends AbstractHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.showView(ContactSelectorView.ID);
+					.showView(ContactSelectorView.ID);
 		} catch (PartInitException e) {
-			Status status =
-				new Status(IStatus.WARNING, Activator.PLUGIN_ID,
-					"Error activating intelligent search view");
+			Status status = new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Error activating intelligent search view");
 			StatusManager.getManager().handle(status, StatusManager.SHOW);
 		}
 		return null;
 	}
-	
+
 }

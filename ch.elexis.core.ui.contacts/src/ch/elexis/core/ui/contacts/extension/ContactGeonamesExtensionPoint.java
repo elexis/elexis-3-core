@@ -26,8 +26,8 @@ public class ContactGeonamesExtensionPoint {
 				final Object o = ice.createExecutableExtension("geonames");
 				if (o instanceof IContactGenoameService) {
 					IContactGenoameService cgs = (IContactGenoameService) o;
-					log.debug("IContactGenoameService found @ " + ice.getContributor().getName()
-						+ ": " + o.getClass().getName());
+					log.debug("IContactGenoameService found @ " + ice.getContributor().getName() + ": "
+						+ o.getClass().getName());
 					services.put(cgs.getProvidesInformationForCountry(), cgs);
 				}
 				return;
@@ -38,9 +38,9 @@ public class ContactGeonamesExtensionPoint {
 		
 		// TODO shall we initialize them?
 	}
-	
+
 	public static IContactGenoameService getGeonameServiceForCountry(CountryCode country){
 		return services.get(country);
 	}
-	
+
 }

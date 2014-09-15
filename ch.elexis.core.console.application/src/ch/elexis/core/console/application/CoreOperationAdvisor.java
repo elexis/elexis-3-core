@@ -13,6 +13,7 @@ package ch.elexis.core.console.application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.data.Anwender;
@@ -44,19 +45,19 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	}
 	
 	public void performLogin(Object shell){
-		String username = System.getProperty("ch.elexis.username");
-		String password = System.getProperty("ch.elexis.password");
+		String username = System.getProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME);
+		String password = System.getProperty(ElexisSystemPropertyConstants.LOGIN_PASSWORD);
 		if (username != null && password != null) {
-			/*
-			 * Allow bypassing the login dialog, eg. for automated GUI-tests. Example: when having a
-			 * demoDB you may login directly by passing -vmargs -Dch.elexis.username=test
-			 * -Dch.elexis.password=test as command line parameters to elexis.
+			/* Allow bypassing the login dialog, eg. for automated GUI-tests.
+			 * Example: when having a demoDB you may login directly by passing
+			 * -vmargs -Dch.elexis.username=test -Dch.elexis.password=test 
+			 * as command line parameters to elexis.
 			 */
 			log.error("Bypassing LoginDialog with username " + username);
 			if (!Anwender.login(username, password)) {
 				log.error("Authentication failed. Exiting");
 			}
-		}
+		}	
 	}
 	
 	@Override
@@ -64,7 +65,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		System.out.println("CoreOperationAdvisor: getInitialPerspective()");
 		return null;
 	}
-	
+
 	@Override
 	public boolean performDatabaseUpdate(String[] array, String pluginId){
 		return new SqlRunner(array, pluginId).runSql();

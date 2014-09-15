@@ -21,7 +21,7 @@ public class ContactIsDeleted extends PropertyTester {
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue){
 		IContact c = (IContact) receiver;
-		if (c.isDeleted()) {
+		if(c.isDeleted()) {
 			return true;
 		}
 		return false;

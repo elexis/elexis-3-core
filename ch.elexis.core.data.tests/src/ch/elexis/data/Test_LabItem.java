@@ -41,7 +41,8 @@ public class Test_LabItem extends AbstractPersistentObjectTest {
 	
 	@After
 	public void tearDown(){
-		if (link != null) {
+		if (link != null)
+		{
 			link.exec("DROP ALL OBJECTS");
 			link.disconnect();
 		}

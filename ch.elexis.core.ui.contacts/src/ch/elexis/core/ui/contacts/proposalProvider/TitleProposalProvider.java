@@ -21,7 +21,7 @@ public class TitleProposalProvider implements IContentProposalProvider {
 	
 	public static final int TITLE_POSITION_PREFIX = 1;
 	public static final int TITLE_POSITION_SUFFIX = 2;
-	
+
 	public static final String[] titlePrefix = {
 		"Dr.", "Dr. med.", "Prof.", "Dipl.-Ing.", "Dipl.-Ing. (FH)", "Mag.", "Mag. (FH)", "Ing."
 	};

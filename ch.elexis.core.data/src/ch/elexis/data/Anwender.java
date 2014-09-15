@@ -45,8 +45,7 @@ public class Anwender extends Person {
 	public static final String FLD_EXTINFO_PASSWORD = "UsrPwd";
 	
 	static {
-		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER,
-			FLD_LABEL + "=Bezeichnung3",
+		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER, FLD_LABEL+"=Bezeichnung3",
 			"Reminders=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
 	}
 	
@@ -123,7 +122,7 @@ public class Anwender extends Person {
 	/**
 	 * @since 3.0.0
 	 */
-	public String getPwd(){
+	public String getPwd() {
 		return (String) getInfoElement(FLD_EXTINFO_PASSWORD);
 	}
 	
@@ -248,7 +247,7 @@ public class Anwender extends Person {
 			String MandantID = null;
 			if (!StringTool.isNothing(MandantLabel)) {
 				MandantLabel = MandantLabel.split(",")[0];
-				for (Mandant m : CoreHub.getMandantenList()) {
+				for (Mandant m: CoreHub.getMandantenList()) {
 					if (m.getLabel().equals(MandantLabel)) {
 						MandantID = m.getId();
 						break;

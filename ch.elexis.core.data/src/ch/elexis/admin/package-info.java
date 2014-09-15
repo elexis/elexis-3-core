@@ -7,10 +7,10 @@
  * <br>
  * <br>
  * <b>In order to realize compatibility with previous Elexis releases (2.1.x) classes that are referenced within existing databases have to keep their original naming structure.</b>
- * <hr>
- * <h1>Klassen, die Steuerungs- und Kontrollaufgaben &uuml;bernehmen</h1>
- * <p>Diese Package ist eine Ebene zwischen den Datenobjekten der untersten und der
- * Benutzeroberfl&auml;che der obersten Ebene. Hier erfolgt Zugriffskontrolle und
- * Eingabeverifikation
+* <hr>
+* <h1>Klassen, die Steuerungs- und Kontrollaufgaben &uuml;bernehmen</h1>
+* <p>Diese Package ist eine Ebene zwischen den Datenobjekten der untersten und der
+* Benutzeroberfl&auml;che der obersten Ebene. Hier erfolgt Zugriffskontrolle und
+* Eingabeverifikation
  */
 package ch.elexis.admin;

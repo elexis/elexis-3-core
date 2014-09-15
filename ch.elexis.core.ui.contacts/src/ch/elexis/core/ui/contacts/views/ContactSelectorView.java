@@ -274,29 +274,29 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 	private class LoadContactsRunnable implements Runnable {
 		@Override
 		public void run(){
-			// Date d, e, f, g, h, i, j;
-			// d = new Date();
+// Date d, e, f, g, h, i, j;
+// d = new Date();
 			Query<Kontakt> qbe = new Query<>(Kontakt.class);
-			// e = new Date();
+// e = new Date();
 			List<Kontakt> qre = qbe.execute();
-			// f = new Date(); // 2598
+// f = new Date(); // 2598
 			List<? extends IContact> result = ContactBeanFactory.createContactBeans(qre);
-			// g = new Date();
+// g = new Date();
 			lblStatus.setText(qbe.size() + " contacts found.");
-			// h = new Date(); // 4001 !!!
+// h = new Date(); // 4001 !!!
 			tableViewerContacts.getControl().setRedraw(false);
 			contactList.clear();
 			contactList.addAll(result);
-			// i = new Date();
-			// j = new Date();
+// i = new Date();
+// j = new Date();
 			tableViewerContacts.getControl().setRedraw(true);
-			// System.out.println("d-e: "+(e.getTime()-d.getTime()));
-			// System.out.println("e-f: "+(f.getTime()-e.getTime()));
-			// System.out.println("f-g: "+(g.getTime()-f.getTime()));
-			// System.out.println("g-h: "+(h.getTime()-g.getTime()));
-			// System.out.println("h-i: "+(i.getTime()-h.getTime()));
-			// System.out.println("i-j: "+(j.getTime()-i.getTime()));
-			// System.out.println("sum: "+(i.getTime()-d.getTime()));
+// System.out.println("d-e: "+(e.getTime()-d.getTime()));
+// System.out.println("e-f: "+(f.getTime()-e.getTime()));
+// System.out.println("f-g: "+(g.getTime()-f.getTime()));
+// System.out.println("g-h: "+(h.getTime()-g.getTime()));
+// System.out.println("h-i: "+(i.getTime()-h.getTime()));
+// System.out.println("i-j: "+(j.getTime()-i.getTime()));
+// System.out.println("sum: "+(i.getTime()-d.getTime()));
 		}
 	}
 	

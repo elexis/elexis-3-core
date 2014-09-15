@@ -27,13 +27,14 @@ import ch.elexis.core.ui.contacts.controls.UserManagementComposite;
  * This property tab provides the management of User (Anwender) and Mandant respective information.
  */
 public class UserManagementTab extends AbstractPropertySection implements IFilter {
-	
+
 	private UserManagementComposite umc;
 	
-	public UserManagementTab(){}
+	public UserManagementTab() {}
 	
 	@Override
-	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage){
+	public void createControls(Composite parent,
+			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);
 		umc = new UserManagementComposite(parent, SWT.None, aTabbedPropertySheetPage);
 		aTabbedPropertySheetPage.getWidgetFactory().adapt(umc);
@@ -41,16 +42,16 @@ public class UserManagementTab extends AbstractPropertySection implements IFilte
 	}
 	
 	@Override
-	public void setInput(IWorkbenchPart part, ISelection selection){
+	public void setInput(IWorkbenchPart part, ISelection selection) {
 		super.setInput(part, selection);
 		Object input = ((IStructuredSelection) selection).getFirstElement();
 		umc.setContact((ContactBean) input);
 	}
-	
+
 	@Override
-	public boolean select(Object toTest){
+	public boolean select(Object toTest) {
 		IContact c = (IContact) toTest;
 		return (c.isMandator() || c.isUser());
 	}
-	
+ 
 }

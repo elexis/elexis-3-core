@@ -19,7 +19,7 @@ import ch.rgw.tools.Money;
  * @author thomas
  * 
  */
-public interface IVerrechnetAdjuster {
+public interface IVerrechnetAdjuster {	
 	/**
 	 * Adjust the created {@link Verrechnet}.
 	 * 

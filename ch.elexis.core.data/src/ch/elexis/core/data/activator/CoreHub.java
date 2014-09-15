@@ -30,6 +30,7 @@ import ch.elexis.Desk;
 import ch.elexis.admin.AccessControl;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
@@ -207,7 +208,8 @@ public class CoreHub implements BundleActivator {
 		// add core ClassLoader to default Script Interpreter
 		Interpreter.classLoaders.add(CoreHub.class.getClassLoader());
 		
-		if (!"RunFromScratch".equals(System.getProperty("elexis-run-mode")))
+		if (!ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH.equals(System
+			.getProperty(ElexisSystemPropertyConstants.RUN_MODE)))
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				public void run(){
 					SysSettings localCfg = (SysSettings) CoreHub.localCfg;
@@ -270,7 +272,8 @@ public class CoreHub implements BundleActivator {
 				config = c[1];
 			}
 		}
-		if ("RunFromScratch".equals(System.getProperty("elexis-run-mode"))) {
+		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH.equals(System
+			.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
 			config = UUID.randomUUID().toString();
 		}
 		loadLocalCfg(config);

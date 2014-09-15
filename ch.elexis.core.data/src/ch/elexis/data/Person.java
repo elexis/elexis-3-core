@@ -26,7 +26,7 @@ import ch.rgw.tools.TimeTool;
  */
 public class Person extends Kontakt {
 	// If you add new fields, please be sure to update KontakteView.java tidySelectedAddressesAction
-	// (and, most probably, other places)
+// (and, most probably, other places)
 	public static final String TITLE = "Titel"; //$NON-NLS-1$
 	public static final String FLD_TITLE_SUFFIX = "TitelSuffix"; //$NON-NLS-1$
 	public static final String MOBILE = "Natel"; //$NON-NLS-1$
@@ -38,10 +38,16 @@ public class Person extends Kontakt {
 	public static final String FEMALE = "w"; //$NON-NLS-1$
 	
 	static {
-		addMapping(Kontakt.TABLENAME, NAME + "=" + Kontakt.FLD_NAME1, FIRSTNAME + "="
-			+ Kontakt.FLD_NAME2, "Zusatz 		=" + Kontakt.FLD_NAME3,
-			BIRTHDATE + "=	S:D:Geburtsdatum", SEX, MOBILE + "=NatelNr", //$NON-NLS-1$ //$NON-NLS-2$
-			Kontakt.FLD_IS_PERSON, TITLE, FLD_TITLE_SUFFIX);
+		addMapping(Kontakt.TABLENAME, 
+			NAME+"="+Kontakt.FLD_NAME1,
+			FIRSTNAME+"="+Kontakt.FLD_NAME2, 
+			"Zusatz 		="+Kontakt.FLD_NAME3,
+			BIRTHDATE+"=	S:D:Geburtsdatum", 
+			SEX, 
+			MOBILE+"=NatelNr", //$NON-NLS-1$ //$NON-NLS-2$
+			Kontakt.FLD_IS_PERSON, 
+			TITLE, 
+			FLD_TITLE_SUFFIX);
 	}
 	
 	public String getName(){

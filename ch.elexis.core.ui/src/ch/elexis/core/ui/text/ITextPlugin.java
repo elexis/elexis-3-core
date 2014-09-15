@@ -157,13 +157,13 @@ public interface ITextPlugin extends IExecutableExtension {
 	
 	// Properties for tables
 	public final static int FIRST_ROW_IS_HEADER = 0x0001; // If set, the first row will be formatted
-	// differently
+// differently
 	
 	// TODO make grid lines invisible for tables - Für die Rezept-Tabellen die Linien unsichtbar
-	// machen
+// machen
 	// public final static int GRID_VISIBLE = 0x0002; // If set, Grid Lines will be visible
 	// Nein, auf 0 setzen geht nicht, mit 1 oder 0 kommt lediglich die RP Erzeugung durcheinander
-	// und frägt 2x nach der Adresse, mit 0 bringt sie keinen Inhalt,
+// und frägt 2x nach der Adresse, mit 0 bringt sie keinen Inhalt,
 	public final static int GRID_VISIBLE = 0x0002; // If set, Grid Lines will be visible
 	public final static String ENTRY_TYPE_TABLE = "TypeTable";
 	public final static String ENTRY_TYPE_TEXT = "TypeText";

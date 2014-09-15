@@ -49,7 +49,7 @@ public class Test_Patient extends AbstractPersistentObjectTest {
 					"h2"
 				},
 			};
-		}
+		}		
 		return Arrays.asList(data);
 	}
 	

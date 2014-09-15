@@ -103,9 +103,9 @@ public class Rechnung extends PersistentObject {
 		if ((behandlungen == null) || (behandlungen.size() == 0)) {
 			return result.add(Result.SEVERITY.WARNING, 1,
 				"Die Rechnung enthält keine Behandlungen (Konsultationen)", null, true); // js:
-			// added (Konsultationen) to match
+// added (Konsultationen) to match
 			// nomenclature
-			// elsewhere in Elexis.
+// elsewhere in Elexis.
 		}
 		
 		// On the fly prüfen, ob ein Patient auch Person ist; ggf. korrigieren.

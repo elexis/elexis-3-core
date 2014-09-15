@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 import ch.elexis.core.model.IContact;
 
+
 public class KontaktAnzeigeTextFieldViewerFilter extends ViewerFilter {
 	
 	private String searchString;

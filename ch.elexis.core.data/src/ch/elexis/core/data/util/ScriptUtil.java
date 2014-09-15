@@ -57,8 +57,7 @@ public class ScriptUtil {
 		} else if (dependendObject.equals("Konsultation")) {
 			ref = Konsultation.getAktuelleKons();
 		}
-		for (IConfigurationElement ic : Extensions
-			.getExtensions(ExtensionPointConstantsData.DATA_ACCESS)) {
+		for (IConfigurationElement ic : Extensions.getExtensions(ExtensionPointConstantsData.DATA_ACCESS)) {
 			String icName = ic.getAttribute("name");
 			if (icName.equals(plugin)) {
 				IDataAccess ida;
