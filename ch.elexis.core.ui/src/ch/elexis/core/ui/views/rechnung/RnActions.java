@@ -134,7 +134,7 @@ public class RnActions {
 					IWorkbenchPage rnPage =
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					try {
-						/* FallDetailView fdv=(FallDetailView) */rnPage.showView(FallDetailView.ID);
+						rnPage.showView(FallDetailView.ID);
 					} catch (Exception ex) {
 						ExHandler.handle(ex);
 					}

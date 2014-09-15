@@ -139,15 +139,16 @@ public class TimeSpan implements Comparable<TimeSpan> {
 	 * @return eine neue timeSpan, die den überlappungszeitraum enthält oder null, wenn keine
 	 *         überlappung vorliegt
 	 */
-	public TimeSpan overlap(TimeSpan other){ /*
-											 * Es sind 6 Fälle möglich: a) other ganz vor this b)
-											 * other überlappt this.from c) other liegt ganz
-											 * innerhalb this d) other überlappt this.until e) other
-											 * liegt ganz nach this f) other überlappt this ganz
-											 * ende oder Anfang auf selber Minute wird nicht als
-											 * überlappung gerechnet. TimeSpan der Dauer null
-											 * überlappt niemals
-											 */
+	public TimeSpan overlap(TimeSpan other){
+		/*
+		 * Es sind 6 Fälle möglich: a) other ganz vor this b)
+		 * other überlappt this.from c) other liegt ganz
+		 * innerhalb this d) other überlappt this.until e) other
+		 * liegt ganz nach this f) other überlappt this ganz
+		 * ende oder Anfang auf selber Minute wird nicht als
+		 * überlappung gerechnet. TimeSpan der Dauer null
+		 * überlappt niemals
+		 */
 		if ((getSeconds() == 0) || (other.getSeconds() == 0)) {
 			return null;
 		}
