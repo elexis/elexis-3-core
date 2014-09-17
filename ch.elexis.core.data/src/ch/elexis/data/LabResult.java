@@ -394,6 +394,7 @@ public class LabResult extends PersistentObject {
 	
 	public void setRefMale(String value){
 		set(REFMALE, value);
+		setFlag(PATHOLOGIC, isPathologic(getPatient(), getItem(), getResult()));
 	}
 	
 	public String getRefFemale(){
@@ -406,6 +407,7 @@ public class LabResult extends PersistentObject {
 	
 	public void setRefFemale(String value){
 		set(REFFEMALE, value);
+		setFlag(PATHOLOGIC, isPathologic(getPatient(), getItem(), getResult()));
 	}
 	
 	/**
