@@ -134,20 +134,14 @@ public class HL7ReaderV22 extends HL7Reader {
 			
 			PID pid = oru.getPATIENT_RESULT().getPATIENT().getPID();
 			
-			String patid = pid.getPatientIDInternalID()[0].getCm_pat_id1_IDNumber().getValue();
+			String patid = pid.getPatientIDInternalID(0).getCm_pat_id1_IDNumber().getValue();
 			String patid_alternative = pid.getAlternatePatientID().getValue();
 			if (StringTool.isNothing(patid)) {
-				patid = pid.getPatientIDInternalID(0).getCm_pat_id1_IDNumber().getValue();
+				patid = pid.getPatientIDExternalID().getCk1_IDNumber().getValue();
 				if (StringTool.isNothing(patid)) {
-					patid = pid.getPatientIDExternalID().getCk1_IDNumber().getValue();
-					if (StringTool.isNothing(patid)) {
-						patid = pid.getPatientIDInternalID()[0].getCm_pat_id1_IDNumber().getValue();
-						if (StringTool.isNothing(patid)) {
-							patid = patid_alternative;
-							if (patid == null) {
-								patid = "";
-							}
-						}
+					patid = patid_alternative;
+					if (patid == null) {
+						patid = "";
 					}
 				}
 			}
