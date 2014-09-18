@@ -109,6 +109,9 @@ public class TextView extends ViewPart implements IActivationListener {
 		if (actBrief != null) {
 			actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin().getMimeType());
 		}
+		if (doc == null) {
+			return false;
+		}
 		if (txt.open(doc) == true) {
 			log.debug("TextView.openDocument: "); //$NON-NLS-1$		
 			actBrief = doc;
