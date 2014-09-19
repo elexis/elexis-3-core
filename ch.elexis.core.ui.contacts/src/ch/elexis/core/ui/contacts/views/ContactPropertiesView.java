@@ -40,16 +40,16 @@ public class ContactPropertiesView extends PropertySheet {
 	@Override
 	protected boolean isImportant(IWorkbenchPart part){
 		// Only listen to selections made in the ContactSelectorView
-		 if (part.getSite().getId().equals(ContactSelectorView.ID)) {
-			if(isPinned()) {
+		if (part.getSite().getId().equals(ContactSelectorView.ID)) {
+			if (isPinned()) {
 				return false;
 			} else {
 				return true;
 			}
-		 } 
-
-		 return false;
-	}	
+		}
+		
+		return false;
+	}
 	
 	// To declaratively provide commands in the toolbar of this view the
 	// command has to be able to access the current selection by means of the
@@ -57,13 +57,21 @@ public class ContactPropertiesView extends PropertySheet {
 	// SelectionProvider.
 	private class ProxySelectionProvider implements ISelectionProvider {
 		ISelection current;
+		
 		@Override
 		public void addSelectionChangedListener(ISelectionChangedListener listener){}
+		
 		@Override
-		public ISelection getSelection(){ return current; }
+		public ISelection getSelection(){
+			return current;
+		}
+		
 		@Override
 		public void removeSelectionChangedListener(ISelectionChangedListener listener){}
+		
 		@Override
-		public void setSelection(ISelection selection){ current = selection;}
+		public void setSelection(ISelection selection){
+			current = selection;
+		}
 	}
 }

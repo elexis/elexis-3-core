@@ -45,9 +45,9 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 	private SettingsPreferenceStore prefs = new SettingsPreferenceStore(CoreHub.userCfg);
 	
 	private static final String[] patlistFocusFields = {
-		Patient.FLD_PATID, Patient.FLD_NAME, Patient.FLD_FIRSTNAME,
-		Patient.BIRTHDATE, };
-
+		Patient.FLD_PATID, Patient.FLD_NAME, Patient.FLD_FIRSTNAME, Patient.BIRTHDATE,
+	};
+	
 	public UserSettings2(){
 		super(GRID);
 		setPreferenceStore(prefs);
@@ -83,8 +83,8 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 			Messages.UserSettings2_PatientFirstname, getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWDOB,
 			Messages.UserSettings2_Birthdate, getFieldEditorParent()));
-		addField(new ComboFieldEditor(Preferences.USR_PATLIST_FOCUSFIELD,
-			"Fokusfeld", patlistFocusFields, getFieldEditorParent()));
+		addField(new ComboFieldEditor(Preferences.USR_PATLIST_FOCUSFIELD, "Fokusfeld",
+			patlistFocusFields, getFieldEditorParent()));
 		new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper
 			.getFillGridData(2, true, 1, false));
 		new Label(getFieldEditorParent(), SWT.NONE)

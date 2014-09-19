@@ -263,7 +263,8 @@ public class PlatzhalterView extends ViewPart {
 		root.addChildren(props.getList());
 		
 		// IDataAccess Implementations
-		List<IDataAccess> dataAccessList = Extensions.getClasses(ExtensionPointConstantsData.DATA_ACCESS, "class");//$NON-NLS-1$ //$NON-NLS-2$
+		List<IDataAccess> dataAccessList =
+			Extensions.getClasses(ExtensionPointConstantsData.DATA_ACCESS, "class");//$NON-NLS-1$ //$NON-NLS-2$
 		for (IDataAccess dataAccess : dataAccessList) {
 			PlatzhalterTreeData treeData =
 				new PlatzhalterTreeData(dataAccess.getName(), "", dataAccess.getDescription()); //$NON-NLS-1$

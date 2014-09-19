@@ -163,7 +163,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 					}
 				}
 			});
-
+			
 			Button bFile = new Button(this, SWT.PUSH);
 			bFile.setText(Messages.ImporterPage_browse); //$NON-NLS-1$
 			// bFile.setLayoutData(SWTHelper.getFillGridData(2,true,1,false));

@@ -157,7 +157,8 @@ public class Extensions {
 	public static Object findBestService(String name, String variant){
 		int value = Integer.MIN_VALUE;
 		IConfigurationElement best = null;
-		List<IConfigurationElement> services = getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
+		List<IConfigurationElement> services =
+			getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
 		for (IConfigurationElement ic : services) {
 			String nam = ic.getAttribute("name");
 			if (nam.equalsIgnoreCase(name)) {
@@ -192,7 +193,8 @@ public class Extensions {
 	}
 	
 	public static List<Object> getServices(String name, String variant){
-		List<IConfigurationElement> services = getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
+		List<IConfigurationElement> services =
+			getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
 		List<Object> ret = new ArrayList<Object>();
 		for (IConfigurationElement ic : services) {
 			String nam = ic.getAttribute("name");
@@ -258,7 +260,8 @@ public class Extensions {
 	 * @return true if at least one implementation of a service with the given name is registered
 	 */
 	public static boolean isServiceAvailable(String name){
-		List<IConfigurationElement> services = getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
+		List<IConfigurationElement> services =
+			getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
 		for (IConfigurationElement ic : services) {
 			String nam = ic.getAttribute("name");
 			if (nam.equalsIgnoreCase(name)) {

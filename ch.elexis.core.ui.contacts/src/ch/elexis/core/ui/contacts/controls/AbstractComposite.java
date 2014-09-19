@@ -22,21 +22,20 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.data.beans.ContactBean;
 
 public abstract class AbstractComposite extends Composite {
-
+	
 	IObservableValue contactObservable = new WritableValue(null, ContactBean.class);
-
-	public AbstractComposite(Composite parent, int style) {
+	
+	public AbstractComposite(Composite parent, int style){
 		super(parent, style);
 	}
-
-	void bindValue(Text text, String property, DataBindingContext bindingContext) {
-		IObservableValue textObserveWidget = SWTObservables
-				.observeDelayedValue(5,
-						SWTObservables.observeText(text, SWT.Modify));
-		IObservableValue observeValue = BeansObservables.observeDetailValue(
-				contactObservable, property, String.class);
+	
+	void bindValue(Text text, String property, DataBindingContext bindingContext){
+		IObservableValue textObserveWidget =
+			SWTObservables.observeDelayedValue(5, SWTObservables.observeText(text, SWT.Modify));
+		IObservableValue observeValue =
+			BeansObservables.observeDetailValue(contactObservable, property, String.class);
 		bindingContext.bindValue(textObserveWidget, observeValue, null, null);
 	}
-
+	
 	public abstract void setContact(ContactBean k);
 }

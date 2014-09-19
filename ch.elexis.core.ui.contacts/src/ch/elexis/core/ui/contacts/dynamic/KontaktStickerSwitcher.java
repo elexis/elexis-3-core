@@ -36,35 +36,35 @@ public class KontaktStickerSwitcher extends ContributionItem {
 		IStructuredSelection strucSelection = (IStructuredSelection) selection;
 		k = (IContact) strucSelection.getFirstElement();
 		
-//		if (k != null) {
-//			List<ISticker> stickersForClass =
-//				IStickerFactory.eINSTANCE.findStickersForClass(k.getClass());
-//			List<ISticker> definedStickers = IStickerFactory.eINSTANCE.findStickersForObject(k);
-//			
-//			for (ISticker st : stickersForClass) {
-//				MenuItem item = new MenuItem(menu, SWT.CHECK, index);
-//				item.setText(st.getName());
-//				item.setData("ID", st.getId());
-//				for (ISticker dst : definedStickers) {
-//					if (dst.getId().equalsIgnoreCase(st.getId()))
-//						item.setSelection(true);
-//				}
-//				item.addSelectionListener(new SelectionAdapter() {
-//					@Override
-//					public void widgetSelected(SelectionEvent e){
-//						MenuItem i = (MenuItem) e.widget;
-//						ISticker is = IStickerFactory.eINSTANCE.findById((String) i.getData("ID"));
-//						if (i.getSelection()) {
-//							// sticker is not set -> set
-//							IStickerFactory.eINSTANCE.setStickerOnObject(is, k);
-//						} else {
-//							// sticker is set -> remove
-//							IStickerFactory.eINSTANCE.removeStickerFromObject(is, k);
-//						}
-//					}
-//				});
-//			}
-//		}
+		//		if (k != null) {
+		//			List<ISticker> stickersForClass =
+		//				IStickerFactory.eINSTANCE.findStickersForClass(k.getClass());
+		//			List<ISticker> definedStickers = IStickerFactory.eINSTANCE.findStickersForObject(k);
+		//			
+		//			for (ISticker st : stickersForClass) {
+		//				MenuItem item = new MenuItem(menu, SWT.CHECK, index);
+		//				item.setText(st.getName());
+		//				item.setData("ID", st.getId());
+		//				for (ISticker dst : definedStickers) {
+		//					if (dst.getId().equalsIgnoreCase(st.getId()))
+		//						item.setSelection(true);
+		//				}
+		//				item.addSelectionListener(new SelectionAdapter() {
+		//					@Override
+		//					public void widgetSelected(SelectionEvent e){
+		//						MenuItem i = (MenuItem) e.widget;
+		//						ISticker is = IStickerFactory.eINSTANCE.findById((String) i.getData("ID"));
+		//						if (i.getSelection()) {
+		//							// sticker is not set -> set
+		//							IStickerFactory.eINSTANCE.setStickerOnObject(is, k);
+		//						} else {
+		//							// sticker is set -> remove
+		//							IStickerFactory.eINSTANCE.removeStickerFromObject(is, k);
+		//						}
+		//					}
+		//				});
+		//			}
+		//		}
 		
 	}
 	

@@ -44,7 +44,8 @@ public class Zugriff extends PreferencePage implements IWorkbenchPreferencePage 
 		CoreHub.acl.load();
 		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
 			List<IACLContributor> acls =
-				Extensions.getClasses(ExtensionPointConstantsData.ACL_CONTRIBUTION, "ACLContributor"); //$NON-NLS-1$ //$NON-NLS-2$
+				Extensions.getClasses(ExtensionPointConstantsData.ACL_CONTRIBUTION,
+					"ACLContributor"); //$NON-NLS-1$ //$NON-NLS-2$
 			ArrayList<ACE> lAcls = new ArrayList<ACE>(100);
 			for (IACLContributor acl : acls) {
 				for (ACE s : acl.getACL()) {

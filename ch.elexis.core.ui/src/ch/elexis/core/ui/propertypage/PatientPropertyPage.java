@@ -199,9 +199,9 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 				+ cal.get(Calendar.YEAR);
 		String[] fields =
 			{
-				Patient.FLD_FIRSTNAME, Person.NAME, Person.BIRTHDATE,
-				Patient.FLD_E_MAIL, Patient.FLD_PHONE1, Patient.FLD_PHONE2,
-				Patient.FLD_MOBILEPHONE, Patient.FLD_REMARK, Patient.FLD_FAX
+				Patient.FLD_FIRSTNAME, Person.NAME, Person.BIRTHDATE, Patient.FLD_E_MAIL,
+				Patient.FLD_PHONE1, Patient.FLD_PHONE2, Patient.FLD_MOBILEPHONE,
+				Patient.FLD_REMARK, Patient.FLD_FAX
 			};
 		String[] values =
 			{

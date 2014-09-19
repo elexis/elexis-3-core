@@ -29,7 +29,7 @@ public class Activator implements BundleActivator {
 		
 		// only start if we have a db connection configured
 		connPref = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
-		if(connPref != null) {
+		if (connPref != null) {
 			ElexisScheduler.getInstance().startScheduler();
 		} else {
 			log.error("No database configuration found, stopping startup");
@@ -39,7 +39,7 @@ public class Activator implements BundleActivator {
 	
 	@Override
 	public void stop(BundleContext context) throws Exception{
-		if(connPref != null) {
+		if (connPref != null) {
 			ElexisScheduler.getInstance().shutdownScheduler();
 		}
 		Activator.context = null;
@@ -61,7 +61,7 @@ public class Activator implements BundleActivator {
 		return properties;
 	}
 	
-	public static URL getResource(String resource) {
+	public static URL getResource(String resource){
 		return context.getBundle().getEntry(resource);
 	}
 	
