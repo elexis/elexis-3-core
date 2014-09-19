@@ -41,7 +41,8 @@ public abstract class BasePropertyChangeSupport extends EObjectImpl implements
 	}
 	
 	/**
-	 * Allows to add a cache to be refreshed each time a property is changed (does not consider the property type);
+	 * Allows to add a cache to be refreshed each time a property is changed (does not consider the
+	 * property type);
 	 */
 	protected abstract void updateCache();
 }

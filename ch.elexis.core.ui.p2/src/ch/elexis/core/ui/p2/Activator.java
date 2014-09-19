@@ -40,18 +40,18 @@ public class Activator extends AbstractUIPlugin {
 		registerP2Policy(context);
 		getPreferenceStore().addPropertyChangeListener(getPreferenceListener());
 		
-// ServiceReference<IProvisioningAgent> serviceReference =
-// context.getServiceReference(IProvisioningAgent.class);
-// IProvisioningAgent agent = context.getService(serviceReference);
-// if (agent == null) {
-// System.out.println(">> no agent loaded!");
-// return;
-// }
-//
-// if (! P2Util.addRepository(agent, "http://download.elexis.info/elexis.3.snapshot")) {
-// System.out.println(">> could no add repostory!");
-// return;
-// }
+		// ServiceReference<IProvisioningAgent> serviceReference =
+		// context.getServiceReference(IProvisioningAgent.class);
+		// IProvisioningAgent agent = context.getService(serviceReference);
+		// if (agent == null) {
+		// System.out.println(">> no agent loaded!");
+		// return;
+		// }
+		//
+		// if (! P2Util.addRepository(agent, "http://download.elexis.info/elexis.3.snapshot")) {
+		// System.out.println(">> could no add repostory!");
+		// return;
+		// }
 	}
 	
 	/*

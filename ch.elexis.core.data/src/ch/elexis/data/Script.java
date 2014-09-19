@@ -61,7 +61,8 @@ public class Script extends NamedBlob2 {
 		if (name == null)
 			name = INTERPRETER_BEANSHELL;
 		
-		List<IConfigurationElement> scripters = Extensions.getExtensions(ExtensionPointConstantsData.SCRIPTING);
+		List<IConfigurationElement> scripters =
+			Extensions.getExtensions(ExtensionPointConstantsData.SCRIPTING);
 		for (IConfigurationElement scripter : scripters) {
 			if (scripter.getAttribute("name").equals(name)) {
 				try {

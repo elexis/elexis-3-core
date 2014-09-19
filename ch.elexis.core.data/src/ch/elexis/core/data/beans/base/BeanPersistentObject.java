@@ -29,7 +29,7 @@ public class BeanPersistentObject<E> extends BasePropertyChangeSupport {
 	public E getContainedEntity(){
 		return entity;
 	}
-
+	
 	@Override
 	protected void updateCache(){
 		// TODO Auto-generated method stub

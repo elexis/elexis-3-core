@@ -46,8 +46,7 @@ public class PersistentObjectFactory implements IExecutableExtension {
 	@SuppressWarnings("unchecked")
 	public PersistentObject createTemplate(Class type){
 		// try to resolve factory from cache
-		PersistentObjectFactory persistentObjectFactory =
-			poFactoryCache.get(type.getName());
+		PersistentObjectFactory persistentObjectFactory = poFactoryCache.get(type.getName());
 		if (persistentObjectFactory != null) {
 			return persistentObjectFactory.doCreateTemplate(type);
 		}
@@ -143,7 +142,7 @@ public class PersistentObjectFactory implements IExecutableExtension {
 			}));
 		} catch (ClassNotFoundException ex) {
 			List<PersistentObjectFactory> contributedFactories =
-					Extensions.getClasses(ExtensionPointConstantsData.PERSISTENT_REFERENCE, CLASS);
+				Extensions.getClasses(ExtensionPointConstantsData.PERSISTENT_REFERENCE, CLASS);
 			for (PersistentObjectFactory po : contributedFactories) {
 				PersistentObject ret = po.createFromString(code);
 				if (ret != null) {

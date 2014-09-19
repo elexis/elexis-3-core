@@ -837,14 +837,14 @@ public class TextContainer {
 			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief.getBetreff() == "
 				+ brief.getBetreff());
 			// 20130425js: Das hier lieber nicht machen: Das öffnet interaktiv das Dialogfenster zur
-// Adressauswahl; unpassend als Debug-Output.
+			// Adressauswahl; unpassend als Debug-Output.
 			// log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief.getAdressat() == "+brief.getAdressat());
 		}
 		
 		if ((brief == null) || (brief.getAdressat() == null)) {
 			
 			// TODO: 20130425js added this: Nur Hinweis auf möglichen Bedienfehler im Log (Keine
-// Konsultation beim Erstellen eines Briefes)
+			// Konsultation beim Erstellen eines Briefes)
 			if (Konsultation.getAktuelleKons() == null) {
 				log.debug("ch.elexis.views/TextContainer.java saveBrief(): TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW");
 				log.debug("ch.elexis.views/TextContainer.java saveBrief(): WARNING: Konsultation.getAktuelleKonsultation == null");
@@ -895,7 +895,7 @@ public class TextContainer {
 			
 			log.debug("ch.elexis.views/TextContainer.java saveBrief(): about to byte[] contents = plugin.storeToByteArray();");
 			// TODO: js: why should this variable be named "contents" here, and "arr" in "open()"
-// below? Please refactor and use similar names for similar things.
+			// below? Please refactor and use similar names for similar things.
 			
 			byte[] contents = plugin.storeToByteArray();
 			if (contents == null) {
