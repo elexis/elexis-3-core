@@ -21,7 +21,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Central image repository. Supersedes the images managed in {@link Desk}. This image registry
@@ -138,6 +141,7 @@ public enum Images {
 	IMG_CLIPBOARD,
 	/** Arrow right */
 	IMG_NEXT,
+	IMG_NEXT_WO_SHADOW,
 	/** Arrow left */
 	IMG_PREVIOUS,
 	/** Arrow up */
@@ -146,12 +150,18 @@ public enum Images {
 	IMG_ARROWDOWN,
 	/** Arrow down to rectangle */
 	IMG_ARROWDOWNTORECT,
+	/** Arrow to stop */
+	IMG_ARROWSTOP,
+	IMG_ARROWSTOP_WO_SHADOW,
+	IMG_EYE_WO_SHADOW,
 	/** undo */
 	IMG_UNDO,
 	/** a 8px pencil symbol */
 	IMG_PENCIL_8PX,
 	/** a pill symbol */
 	IMG_PILL,
+	/** a pill with an exclamation */
+	IMG_PILL_EXCLAMATION_WO_SHADOW,
 	/** a link symbol */
 	IMG_LINK,
 	/** Move to upper list */
@@ -187,25 +197,13 @@ public enum Images {
 	/** remove document */
 	IMG_DOCUMENT_REMOVE, IMG_MENUBAR, IMG_TOOLBAR,
 	/** a bill */
-	IMG_BILL, 
-	IMG_VIEW_WORK_INCAPABLE, 
-	IMG_VIEW_CONSULTATION_DETAIL, 
-	IMG_VIEW_LABORATORY,
-	IMG_VIEW_PATIENT_DETAIL, 
-	IMG_VIEW_RECIPES, 
-	IMG_DATABASE, 
-	IMG_CONFLICT,
-	IMG_QUESTION_MARK,
-	IMG_FLAG_AT,
-	IMG_FLAG_DE,
-	IMG_FLAG_CH,
-	IMG_FLAG_FR,
-	IMG_FLAG_IT,
-	IMG_FLAG_FL,
-	/** a generic group icon */
-	IMG_CATEGORY_GROUP,
-	/** a syringe, nozzle, injection icon*/
-	IMG_SYRINGE;
+	IMG_BILL, IMG_VIEW_WORK_INCAPABLE, IMG_VIEW_CONSULTATION_DETAIL, IMG_VIEW_LABORATORY,
+		IMG_VIEW_PATIENT_DETAIL, IMG_VIEW_RECIPES, IMG_DATABASE, IMG_CONFLICT, IMG_QUESTION_MARK,
+		IMG_FLAG_AT, IMG_FLAG_DE, IMG_FLAG_CH, IMG_FLAG_FR, IMG_FLAG_IT, IMG_FLAG_FL,
+		/** a generic group icon */
+		IMG_CATEGORY_GROUP,
+		/** a syringe, nozzle, injection icon */
+		IMG_SYRINGE;
 	
 	private Images(){}
 	
@@ -322,6 +320,29 @@ public enum Images {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Return a resized (software scaled) version of an image, image will not be e
+	 * 
+	 * @param image the image to resize
+	 * @param is the target {@link ImageSize}
+	 * @return
+	 */
+	public static Image resize(Image image, ImageSize is){
+		return resize(image, is.width, is.height);
+	}
+	
+	/**
+	 * Return a resized (software scaled) version of an image, image will not be disposed
+	 * 
+	 * @param image the image to resize
+	 * @param width
+	 * @param height
+	 * @return
+	 */
+	public static Image resize(Image image, int width, int height){	
+		return new Image(Display.getDefault(), image.getImageData().scaledTo(width, height));
 	}
 	
 }
