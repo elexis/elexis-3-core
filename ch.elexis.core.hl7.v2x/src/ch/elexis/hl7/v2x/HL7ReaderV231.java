@@ -12,6 +12,7 @@ import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v231.datatype.CE;
 import ca.uhn.hl7v2.model.v231.datatype.ED;
+import ca.uhn.hl7v2.model.v231.datatype.FN;
 import ca.uhn.hl7v2.model.v231.datatype.FT;
 import ca.uhn.hl7v2.model.v231.datatype.NM;
 import ca.uhn.hl7v2.model.v231.datatype.SN;
@@ -171,14 +172,16 @@ public class HL7ReaderV231 extends HL7Reader {
 				oru.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI().getORC()
 					.getOrc2_PlacerOrderNumber().getEi1_EntityIdentifier().getValue();
 			
-			if (pid.getPid5_PatientName(0).getFamilyLastName() != null)
+			FN familyLastName = pid.getPid5_PatientName(0).getFamilyLastName();
+			if (familyLastName.getFn1_FamilyName().getValue() != null
+				|| familyLastName.getFn2_LastNamePrefix().getValue() != null)
 				lastName =
 					pid.getPid5_PatientName(0).getFamilyLastName().getFn2_LastNamePrefix()
 						.getValue()
 						+ " "
 						+ pid.getPid5_PatientName(0).getFamilyLastName().getFn1_FamilyName()
 							.getValue();
-			if (pid.getPid5_PatientName(0).getGivenName() != null)
+			if (pid.getPid5_PatientName(0).getGivenName().getValue() != null)
 				firstName = pid.getPid5_PatientName(0).getGivenName().getValue();
 			String patientName = firstName + " " + lastName;
 			

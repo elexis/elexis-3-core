@@ -230,9 +230,9 @@ public class HL7ReaderV251 extends HL7Reader {
 			// if (pidflds.length > 0)
 			// pid = pidflds[pidflds.length - 1];
 			
-			if (pid.getPid5_PatientName(0).getName() != null)
+			if (pid.getPid5_PatientName(0).getFamilyName().getFn1_Surname().getValue() != null)
 				lastName = pid.getPid5_PatientName(0).getFamilyName().getFn1_Surname().getValue();
-			if (pid.getPid5_PatientName(0).getFamilyName() != null)
+			if (pid.getPid5_PatientName(0).getGivenName().getValue() != null)
 				firstName = pid.getPid5_PatientName(0).getGivenName().getValue();
 			String patientName = firstName + " " + lastName;
 			

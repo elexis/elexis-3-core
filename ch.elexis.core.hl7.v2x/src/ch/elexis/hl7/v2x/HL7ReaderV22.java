@@ -161,9 +161,9 @@ public class HL7ReaderV22 extends HL7Reader {
 				oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC().getOrc2_PlacerOrderNumber()
 					.getCm_placer1_UniquePlacerId().getValue();
 			
-			if (pid.getPatientName().getPn1_FamilyName() != null)
+			if (pid.getPatientName().getPn1_FamilyName().getValue() != null)
 				lastName = pid.getPatientName().getPn1_FamilyName().getValue();
-			if (pid.getPatientName().getGivenName() != null)
+			if (pid.getPatientName().getGivenName().getValue() != null)
 				firstName = pid.getPatientName().getGivenName().getValue();
 			String patientName = firstName + " " + lastName;
 			
