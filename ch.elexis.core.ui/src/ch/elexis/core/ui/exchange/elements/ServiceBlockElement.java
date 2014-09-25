@@ -113,7 +113,7 @@ public class ServiceBlockElement extends XChangeElement {
 								CodeSelectorFactory cof = factories.get(ice);
 								if (cof != null) {
 									PersistentObject po = cof.findElement(code);
-									if (po != null /* && po.exists() */) {
+									if (po != null && po.exists()) {
 										bMatched = true;
 										ret.addElement((ICodeElement) po);
 										break;
