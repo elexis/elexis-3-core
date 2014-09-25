@@ -161,15 +161,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			if (ttFrom != null && ttTo != null) { // alle serien zwischen xy datum und yz datum
 				cmp.set(k.getDatum());
 				if (cmp.isAfterOrEqual(ttFrom) && cmp.isBeforeOrEqual(ttTo)) {
-					Iterator<Konsultation> i2 = list.iterator();
-					while (i2.hasNext()) {
-						Konsultation k2 = i2.next();
-						String fid = k2.get(Konsultation.FLD_CASE_ID);
-						if ((fid != null) && (fid.equals(kfID))) {
-							hKons.put(k2, kPatient);
-							i2.remove();
-						}
-					}
+					hKons.put(k, kPatient);
 				}
 			}
 			
