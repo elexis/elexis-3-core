@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2010, G. Weirich and Elexis
+ * Copyright (c) 2009-2014, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,13 @@ package ch.elexis.admin;
 import java.io.Serializable;
 
 /**
- * AcessControlElement: An item constituting a named right. AccessControlElements are collected
- * hiearchically in ACL's (AccessControlLists). An ACE has a parent, an internal name and a
- * (probably localized) external name that will be shown to the user
+ * AcessControlElement
+ * 
+ * An item constituting a named right. AccessControlElements are collected hierarchically in ACL's
+ * (AccessControlLists). An ACE has a parent, an internal name and a (probably localized) external
+ * name that will be shown to the user. <br>
+ * <br>
+ * ACEs are loaded within {@link AccessControl#load()}
  * 
  * @since 2.0
  * @author gerry
@@ -36,12 +40,12 @@ public class ACE implements Serializable {
 	 * Create a new ACE. This is the recommended constructor for most cases.
 	 * 
 	 * @param parent
-	 *            the parent ACE. If this is a top-evel ACE, use ACE_ROOT as parent.
+	 *            the parent ACE. If this is a top-level ACE, use {@link #ACE_ROOT} as parent.
 	 * @param name
 	 *            the internal, immutable name of this ACE. Should be unique. Therefore, it is
 	 *            recommended to prefix the name with the plugin ID
 	 * @param localizedName
-	 *            the name that will be presented to the user. Thsi should be a translatable String
+	 *            the name that will be presented to the user. This should be a translatable String
 	 */
 	public ACE(ACE parent, String name, String localizedName){
 		this.parent = parent;

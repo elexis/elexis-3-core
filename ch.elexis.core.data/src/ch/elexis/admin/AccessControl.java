@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2011, G. Weirich and Elexis
+ * Copyright (c) 2005-2014, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -126,15 +126,15 @@ public class AccessControl {
 	}
 	
 	/**
-	 * Zugriffsrecht für einen Anwender erfragen
+	 * query the access right of a given user (that is {@link Anwender})
 	 * 
 	 * @param user
-	 *            Der Anwender
+	 *            the user {@link Anwender}
 	 * @param right
-	 *            Das Recht, das erfragt werden soll
-	 * @return true, wenn der Anwender (oder eine der Gruppen, zu der dieser Anwender gehört) dieses
-	 *         Recht hat. Immer true, wenn der Anwender zur Gruppe "Admin" gehört. Immer false, wenn
-	 *         kein Anwender angemeldet ist
+	 *            the right to query for, if <code>null</code> always <code>true</code> is returned
+	 * @return <code>true</code> if the user (or one of the groups this user belongs to) has the
+	 *         resp. right. Also <code>true</code> if the user belongs to group "Admin". Always
+	 *         <code>false</code> if no user is logged in
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean request(Anwender user, ACE rightACE){
