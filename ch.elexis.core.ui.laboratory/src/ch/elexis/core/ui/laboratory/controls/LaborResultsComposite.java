@@ -491,7 +491,8 @@ public class LaborResultsComposite extends Composite {
 		}
 		
 		List<TimeTool> dates = contentProvider.getDates();
-		for (int i = 0; i < dates.size() && i < resultColumns.size(); i++) {
+		for (int i = 0; i < dates.size() && i < resultColumns.size()
+			&& ((i + columnOffset) < dates.size()); i++) {
 			resultColumns.get(i).getColumn()
 				.setText(dates.get(i + columnOffset).toString(TimeTool.DATE_GER));
 			resultColumns.get(i).getColumn().setData(COLUMN_DATE_KEY, dates.get(i + columnOffset));
