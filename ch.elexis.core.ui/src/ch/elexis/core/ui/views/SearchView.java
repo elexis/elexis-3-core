@@ -54,6 +54,7 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 	TabFolder tabFolder;
 	TabItem mainTabItem;
 	Text mainSearchText;
+	Button searchButton;
 	Button mainCaseCheckbox;
 	Button consultationRadio;
 	Button consultationTextRadio;
@@ -113,7 +114,7 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 		consultationTextRadio.setText(Messages.SearchView_entry); //$NON-NLS-1$
 		consultationTextRadio.setSelection(true);
 		
-		Button searchButton = new Button(mainSearchArea, SWT.PUSH);
+		searchButton = new Button(mainSearchArea, SWT.PUSH);
 		searchButton.setText(Messages.SearchView_searchButtonCaption); //$NON-NLS-1$
 		GridData gd = SWTHelper.getFillGridData(1, true, 1, false);
 		gd.horizontalAlignment = GridData.END;
@@ -221,6 +222,10 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 	
 	private List<Konsultation> searchForKonsultationText(String searchString){
 		List<Konsultation> result = new ArrayList<Konsultation>();
+		boolean considerCases = mainCaseCheckbox.getSelection();
+		if (!considerCases) {
+			searchString = searchString.toLowerCase();
+		}
 		
 		Query<Konsultation> query = new Query<Konsultation>(Konsultation.class);
 		query.orderBy(false, Messages.SearchView_date); //$NON-NLS-1$
@@ -229,6 +234,9 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 			for (Konsultation konsultation : konsultationen) {
 				String eintrag = konsultation.getEintrag().getHead();
 				if (eintrag != null) {
+					if (!considerCases) {
+						eintrag = eintrag.toLowerCase();
+					}
 					if (eintrag.contains(searchString)) {
 						result.add(konsultation);
 					}
