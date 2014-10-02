@@ -42,7 +42,9 @@ public class Anwender extends Person {
 	
 	public static final String ADMINISTRATOR = "Administrator";
 	public static final String FLD_LABEL = "Label"; // contains username
+	
 	public static final String FLD_EXTINFO_PASSWORD = "UsrPwd";
+	public static final String FLD_EXTINFO_GROUPS = "Groups";
 	
 	static {
 		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER,
@@ -57,7 +59,7 @@ public class Anwender extends Person {
 		}, Username);
 		setLabel(Username);
 		setPwd(Password);
-		setInfoElement("Groups", "Anwender");
+		setInfoElement(FLD_EXTINFO_GROUPS, "Anwender");
 		super.setConstraint();
 	}
 	
@@ -194,10 +196,10 @@ public class Anwender extends Person {
 		CoreHub.acl.grant(admin, new ACE(ACE.ACE_IMPLICIT, "WriteInfoStore"), new ACE(
 			ACE.ACE_IMPLICIT, "LoadInfoStore"), new ACE(ACE.ACE_IMPLICIT, "WriteGroups"), new ACE(
 			ACE.ACE_IMPLICIT, "ReadGroups"));
-		Map hash = admin.getInfoStore();
-		hash.put(FLD_EXTINFO_PASSWORD, "admin");
-		hash.put("Groups", "Admin,Anwender");
-		admin.flushInfoStore(hash);
+		
+		admin.setExtInfoStoredObjectByKey(FLD_EXTINFO_PASSWORD, "admin");
+		admin.setExtInfoStoredObjectByKey(FLD_EXTINFO_GROUPS, "Admin,Anwender");
+
 		CoreHub.acl.grant("Admin", new ACE(ACE.ACE_IMPLICIT, "ReadUsrPwd"), new ACE(
 			ACE.ACE_IMPLICIT, "WriteUsrPwd"), new ACE(ACE.ACE_IMPLICIT, "CreateAndDelete"),
 			new ACE(ACE.ACE_IMPLICIT, "WriteGroups"));

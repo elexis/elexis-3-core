@@ -386,15 +386,11 @@ public class Kontakt extends PersistentObject {
 	 * Rechte des aktuellen Anwenders zum Lesen dieses Elements nicht ausreichen, wird ebenfalls
 	 * Null zurückgeliefert. 2.9.2007 We remove the checks. they are useless at this moment better
 	 * check permissions on inout fields. gw
+	 * 
+	 * @deprecated please use {@link PersistentObject#getExtInfoStoredObjectByKey(Object)}
 	 */
 	public Object getInfoElement(String elem){
-		
-		// if(CoreHub.acl.request("Read"+elem)==true){
-		return getInfoStore().get(elem);
-		// }else{
-		// log.log("Unzureichende Rechte zum Lesen von "+elem,Log.WARNINGS);
-		// return null;
-		// }
+		return getMap(FLD_EXTINFO).get(elem);
 	}
 	
 	/**
@@ -406,7 +402,7 @@ public class Kontakt extends PersistentObject {
 	 *         ausreichen
 	 */
 	public String getInfoString(String elem){
-		return checkNull((String) getInfoElement(elem));
+		return checkNull((String) getExtInfoStoredObjectByKey(elem));
 	}
 	
 	/**
@@ -418,37 +414,15 @@ public class Kontakt extends PersistentObject {
 	 *            Name des Elements
 	 * @param val
 	 *            Inhalt des Elements 2.9.2007 emoved the checks g. weirich
+	 * @deprecated use {@link PersistentObject#setExtInfoStoredObjectByKey(Object, Object)}
 	 */
 	@SuppressWarnings("unchecked")
 	public void setInfoElement(String elem, Object val){
-		// if(CoreHub.acl.request("Write"+elem)==true){
 		Map extinfos = getMap(FLD_EXTINFO);
 		if (extinfos != null) {
 			extinfos.put(elem, val);
 			setMap(FLD_EXTINFO, extinfos);
 		}
-		/*
-		 * }else{ log.log("Unzureichende Rechte zum Schreiben von "+elem,Log.WARNINGS); }
-		 */
-	}
-	
-	/**
-	 * Den gesamten Infostore holen. Dies ist sinnvoll, wenn kurz nacheinander mehrere Werte gelesen
-	 * oder geschrieben werden sollen, da damit das wiederholte entpacken/packen gespart wird. Nach
-	 * Änderungen muss der Store mit flushInfoStore() explizit gesichert werden. ACHTUNG: Nicht
-	 * Thread-Safe. Konkurriende Schreiboperationen, während ein Thread den store hält, werden
-	 * verlorengehen.
-	 * 
-	 * @return eine Hashtable, die die parameter-wert-paare enthält.
-	 */
-	@SuppressWarnings("unchecked")
-	public Map getInfoStore(){
-		return getMap(FLD_EXTINFO);
-		/*
-		 * if(CoreHub.acl.request("LoadInfoStore")==true){ return getHashtable("ExtInfo"); } else{
-		 * log.log("Unzureichende Rechte zum lesen des Infostore",Log.WARNINGS); return new
-		 * Hashtable(); }
-		 */
 	}
 	
 	/**
@@ -457,14 +431,11 @@ public class Kontakt extends PersistentObject {
 	 * 
 	 * @param store
 	 *            die zuvor mit getInfoStore() erhaltene Hashtable.
+	 * @deprecated use {@link PersistentObject#setExtInfoStoredObjectByKey(Object, Object)}
 	 */
 	@SuppressWarnings("unchecked")
 	public void flushInfoStore(Map store){
 		setMap(FLD_EXTINFO, store);
-		/*
-		 * if(CoreHub.acl.request("WriteInfoStore")==true){ setHashtable("ExtInfo",store); }else{
-		 * log.log("Unzureichende Rechte zum Schreiben des Infostore" ,Log.WARNINGS); }
-		 */
 	}
 	
 	/**
