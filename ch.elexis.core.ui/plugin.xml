@@ -17,10 +17,12 @@
       <extension
          point="org.eclipse.ui.preferencePages">
       <page
+            category="ch.elexis.core.ui.preferences.SystemPreferencePage"
             class="ch.elexis.core.ui.preferences.Ablauf"
             id="ch.elexis.preferences.general"
             name="%elexis.generalPrefs"/>
       <page
+            category="ch.elexis.core.ui.preferences.SystemPreferencePage"
             class="ch.elexis.core.ui.preferences.Datenbank"
             id="ch.elexis.preferences.connect"
             name="%elexis.databasePrefs"/>
@@ -69,6 +71,7 @@
             id="ch.elexis.Leistungscodes"
             name="%elexis.activityCodePrefs"/>
       <page
+            category="ch.elexis.core.ui.preferences.SystemPreferencePage"
             class="ch.elexis.core.ui.preferences.PrinterPreferencePage"
             id="ch.elexis.PrinterPreference"
             name="%elexis.printerPrefs"/>
@@ -128,6 +131,11 @@
             class="ch.elexis.core.ui.preferences.TextTemplatePreferences"
             id="ch.elexis.preferences.documentTemplates"
             name="%Textvorlagen">
+      </page>
+      <page
+            class="ch.elexis.core.ui.preferences.SystemPreferencePage"
+            id="ch.elexis.core.ui.preferences.SystemPreferencePage"
+            name="System">
       </page>
    </extension>
    <extension
