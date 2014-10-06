@@ -358,6 +358,10 @@ public class Artikel extends VerrechenbarAdapter {
 		return checkZero(getExt(ANBRUCH));
 	}
 	
+	public void setBruchteile(int number) {
+		setExt(ANBRUCH, Integer.toString(number));
+	}
+	
 	/**
 	 * Prüfen, ob der Lagerbestand ungültig ist
 	 * 
@@ -423,24 +427,20 @@ public class Artikel extends VerrechenbarAdapter {
 	 * 
 	 * @param n
 	 */
-	@SuppressWarnings("unchecked")
 	public void einzelAbgabe(final int n){
-		Map<Object, Object> ext = getMap(FLD_EXTINFO);
-		int anbruch = checkZero((String) ext.get(ANBRUCH));
-		int ve = checkZero(ext.get(VERKAUFSEINHEIT));
-		int vk = checkZero(ext.get(VERPACKUNGSEINHEIT));
+		int anbruch = getBruchteile();
+		int ve = getVerkaufseinheit();
+		int vk = getVerpackungsEinheit();
 		if (vk == 0) {
 			if (ve != 0) {
 				vk = ve;
-				ext.put(VERKAUFSEINHEIT, Integer.toString(vk));
-				setMap(FLD_EXTINFO, ext);
+				setVerkaufseinheit(vk);
 			}
 		}
 		if (ve == 0) {
 			if (vk != 0) {
 				ve = vk;
-				ext.put(VERPACKUNGSEINHEIT, Integer.toString(ve));
-				setMap(FLD_EXTINFO, ext);
+				setVerpackungsEinheit(ve);
 			}
 		}
 		int num = n * ve;
@@ -452,8 +452,7 @@ public class Artikel extends VerrechenbarAdapter {
 				rest = rest + vk;
 				setIstbestand(getIstbestand() - 1);
 			}
-			ext.put(ANBRUCH, Integer.toString(rest));
-			setMap(FLD_EXTINFO, ext);
+			setBruchteile(rest);
 		}
 	}
 	
@@ -462,12 +461,10 @@ public class Artikel extends VerrechenbarAdapter {
 	 * 
 	 * @param n
 	 */
-	@SuppressWarnings("unchecked")
 	public void einzelRuecknahme(final int n){
-		Map<Object, Object> ext = getMap(FLD_EXTINFO);
-		int anbruch = checkZero(ext.get(ANBRUCH));
-		int ve = checkZero(ext.get(VERKAUFSEINHEIT));
-		int vk = checkZero(ext.get(VERPACKUNGSEINHEIT));
+		int anbruch = getBruchteile();
+		int ve = getVerkaufseinheit();
+		int vk = getVerpackungsEinheit();
 		int num = n * ve;
 		if (vk == ve) {
 			setIstbestand(getIstbestand() + n);
@@ -477,8 +474,7 @@ public class Artikel extends VerrechenbarAdapter {
 				rest = rest - vk;
 				setIstbestand(getIstbestand() + 1);
 			}
-			ext.put(ANBRUCH, Integer.toString(rest));
-			setMap(FLD_EXTINFO, ext);
+			setBruchteile(rest);
 		}
 	}
 	
@@ -507,8 +503,7 @@ public class Artikel extends VerrechenbarAdapter {
 	}
 	
 	public String getPharmaCode(){
-		Map ext = getMap(FLD_EXTINFO);
-		return checkNull((String) ext.get(FLD_PHARMACODE));
+		return checkNull(getExt(FLD_PHARMACODE));
 	}
 	
 	public Kontakt getLieferant(){
@@ -523,10 +518,16 @@ public class Artikel extends VerrechenbarAdapter {
 		return checkZero((String) getExtInfoStoredObjectByKey(VERPACKUNGSEINHEIT));
 	}
 	
-	@SuppressWarnings("unchecked")
+	public void setVerpackungsEinheit(int ve) {
+		setExt(VERPACKUNGSEINHEIT, Integer.toString(ve));
+	}
+	
 	public int getVerkaufseinheit(){
-		Map ext = getMap(FLD_EXTINFO);
-		return checkZero((String) ext.get(VERKAUFSEINHEIT));
+		return checkZero(getExt(VERKAUFSEINHEIT));
+	}
+	
+	public void setVerkaufseinheit(int number) {
+		setExt(VERKAUFSEINHEIT, Integer.toString(number));
 	}
 	
 	public int getPackungsGroesse(){
