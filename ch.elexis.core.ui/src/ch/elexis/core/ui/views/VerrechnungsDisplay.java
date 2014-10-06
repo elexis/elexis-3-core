@@ -58,9 +58,11 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
+import ch.elexis.data.Artikel;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
@@ -239,6 +241,14 @@ public class VerrechnungsDisplay extends Composite {
 			TableItem ti = new TableItem(tVerr, SWT.WRAP);
 			ti.setText(sdg.toString());
 			ti.setData(lst);
+			
+			IVerrechenbar vr = lst.getVerrechenbar();
+			if(vr instanceof Artikel) {
+				Artikel a = (Artikel) vr;
+				if(a.getAbgabeEinheit()<a.getPackungsGroesse()) {
+					ti.setImage(Images.IMG_BLOCKS_SMALL.getImage());
+				}
+			}
 			
 			// set table item color
 			IVerrechenbar verrBar = lst.getVerrechenbar();
