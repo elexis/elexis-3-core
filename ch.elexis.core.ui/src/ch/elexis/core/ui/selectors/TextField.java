@@ -15,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.ui.UiDesk;
@@ -34,6 +35,14 @@ public class TextField extends ActiveControl {
 				fireChangedEvent();
 			}
 		});
+	}
+	
+	public TextField(Composite parent, int displayBits, String displayName, int listenerType,
+		Listener listener){
+		this(parent, displayBits, displayName);
+		if (listener != null) {
+			getTextControl().addListener(listenerType, listener);
+		}
 	}
 	
 	public Text getTextControl(){

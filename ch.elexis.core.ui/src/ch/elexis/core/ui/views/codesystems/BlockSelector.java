@@ -31,6 +31,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 
 import ch.elexis.core.data.activator.CoreHub;
@@ -60,6 +62,8 @@ public class BlockSelector extends CodeSelectorFactory {
 	IAction deleteAction, renameAction, createAction, exportAction;
 	CommonViewer cv;
 	MenuManager mgr;
+	SelectorPanelProvider slp;
+	int eventType = SWT.KeyDown;
 	
 	@Override
 	public ViewerConfigurer createViewerConfigurer(CommonViewer cv){
@@ -76,12 +80,28 @@ public class BlockSelector extends CodeSelectorFactory {
 				
 			}
 		});
+		cv.setContextMenu(mgr);
+		
 		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
 			new FieldDescriptor<Leistungsblock>("Name")
 		};
-		cv.setContextMenu(mgr);
 		
-		SelectorPanelProvider slp = new SelectorPanelProvider(lbName, true);
+		// add keyListener to search field
+		Listener keyListener = new Listener() {
+			@Override
+			public void handleEvent(Event event){
+				if (event.type == eventType) {
+					if (event.keyCode == SWT.CR || event.keyCode == SWT.KEYPAD_CR) {
+						slp.fireChangedEvent();
+					}
+				}
+			}
+		};
+		for (FieldDescriptor<?> lbn : lbName) {
+			lbn.setAssignedListener(eventType, keyListener);
+		}
+		
+		slp = new SelectorPanelProvider(lbName, true);
 		slp.addActions(createAction, exportAction);
 		ViewerConfigurer vc =
 			new ViewerConfigurer(new BlockContentProvider(cv), new DefaultLabelProvider(), slp,

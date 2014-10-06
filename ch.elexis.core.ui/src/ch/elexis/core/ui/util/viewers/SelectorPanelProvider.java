@@ -80,7 +80,9 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			switch (field.getFieldType()) {
 			case HYPERLINK:
 			case STRING:
-				ac = new TextField(panel.getFieldParent(), 0, field.getLabel());
+				ac =
+					new TextField(panel.getFieldParent(), 0, field.getLabel(),
+						field.getAssignedListenerEventType(), field.getAssignedListener());
 				break;
 			case CURRENCY:
 				ac = new MoneyField(panel.getFieldParent(), 0, field.getLabel());

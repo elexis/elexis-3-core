@@ -11,6 +11,8 @@
  *******************************************************************************/
 package ch.elexis.core.ui.selectors;
 
+import org.eclipse.swt.widgets.Listener;
+
 import ch.elexis.data.PersistentObject;
 
 public class FieldDescriptor<T extends PersistentObject> {
@@ -22,6 +24,8 @@ public class FieldDescriptor<T extends PersistentObject> {
 	String sAnzeige, sFeldname, sHashname;
 	Typ tFeldTyp;
 	Object ext;
+	Listener listener;
+	int eventType;
 	
 	/** Retrieve the visible label of the field */
 	public String getLabel(){
@@ -46,6 +50,14 @@ public class FieldDescriptor<T extends PersistentObject> {
 	/** Return any object associated with this field */
 	public Object getExtension(){
 		return ext;
+	}
+	
+	public Listener getAssignedListener(){
+		return listener;
+	}
+	
+	public int getAssignedListenerEventType(){
+		return eventType;
 	}
 	
 	public FieldDescriptor(String anzeige, String feldname, Typ feldtyp, String hashname){
@@ -85,5 +97,22 @@ public class FieldDescriptor<T extends PersistentObject> {
 		sHashname = hashname;
 		tFeldTyp = Typ.COMBO;
 		ext = comboItems;
+	}
+	
+	/**
+	 * it is possible to assign ONE listener to the field
+	 * 
+	 * @param eventType
+	 *            (i.e. KeyDown,...)
+	 * @param listener
+	 *            (listener which implements the desired behavior)
+	 */
+	public void setAssignedListener(int eventType, Listener listener){
+		if (listener == null) {
+			throw new IllegalArgumentException("Could not assign 'Null' listener to field: "
+				+ sAnzeige);
+		}
+		this.eventType = eventType;
+		this.listener = listener;
 	}
 }
