@@ -79,7 +79,7 @@ public class HL7Parser {
 		try {
 			ObservationMessage obsMessage =
 				hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
-			System.out.println("");
+			
 			pat = hl7Reader.getPatient();
 			if (pat == null) {
 				return new Result<Object>(SEVERITY.ERROR, 2,

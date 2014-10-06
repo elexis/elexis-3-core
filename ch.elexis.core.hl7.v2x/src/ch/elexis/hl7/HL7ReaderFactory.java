@@ -121,6 +121,20 @@ public enum HL7ReaderFactory {
 			mshPart[11] = "2.3";
 			splitted[0] = joinStrings(mshPart, "|");
 		}
+		
+		// #2747 BugFix as LabCube_SpotChemD sends occasionally SN which is not allowed for version
+		// 2.2
+		if (mshPart[11].equals("2.2")) {
+			for (int i = 0; i < splitted.length; i++) {
+				if (splitted[i].startsWith("OBX")) {
+					String[] obxPart = splitted[i].split("\\|", -1);
+					if (obxPart[2].equals("SN")) {
+						obxPart[2] = "NM";
+						splitted[i] = joinStrings(obxPart, "|");
+					}
+				}
+			}
+		}
 		return joinStrings(splitted, separator);
 	}
 	
