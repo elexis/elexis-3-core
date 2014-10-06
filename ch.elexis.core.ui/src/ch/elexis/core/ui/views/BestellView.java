@@ -24,10 +24,12 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -90,7 +92,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		form = tk.createForm(parent);
 		Composite body = form.getBody();
 		body.setLayout(new GridLayout());
-		Table table = new Table(body, SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
+		Table table = new Table(body, SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
 		TableColumn tc0 = new TableColumn(table, SWT.CENTER);
 		tc0.setText(Messages.BestellView_Number); //$NON-NLS-1$
 		tc0.setWidth(40);
@@ -163,6 +165,18 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				tv.refresh();
 			}
 			
+		});
+		tv.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+				if (sel.toList().size() > 1) {
+					countAction.setEnabled(false);
+				} else {
+					countAction.setEnabled(true);
+				}
+			}
 		});
 		makeActions();
 		viewmenus = new ViewMenus(getViewSite());
@@ -239,9 +253,12 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
 					if ((sel != null) && (!sel.isEmpty())) {
 						if (actBestellung != null) {
-							actBestellung.removeItem((Item) sel.getFirstElement());
+							List<Item> selections = sel.toList();
+							for (Item item : selections) {
+								actBestellung.removeItem(item);
+							}
+							tv.refresh();
 						}
-						tv.refresh();
 					}
 				}
 			};
