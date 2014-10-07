@@ -399,6 +399,8 @@ public class Messages extends NLS {
 	public static String ReminderView_newReminderToolTip;
 	public static String ReminderView_onlyDueAction;
 	public static String ReminderView_onlyDueToolTip;
+	public static String ReminderView_onePatOnly;
+	public static String ReminderView_onlyOnePatientForActivation;
 	public static String RezeptBlatt_4;
 	public static String RezeptBlatt_6;
 	public static String RezeptBlatt_TemplateNameList;

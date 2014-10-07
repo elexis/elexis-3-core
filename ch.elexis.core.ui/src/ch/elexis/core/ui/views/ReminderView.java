@@ -17,6 +17,9 @@ import java.util.SortedSet;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -174,7 +177,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}, new ReminderLabelProvider(), null, // new DefaultControlFieldProvider(cv,new
 			// String[]{"Fällig"}),
 			new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
-				SimpleWidgetProvider.TYPE_TABLE, SWT.SINGLE, cv));
+				SimpleWidgetProvider.TYPE_TABLE, SWT.MULTI, cv));
+		
 		makeActions();
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createToolbar(newReminderAction);
@@ -200,6 +204,14 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		cv.getViewerWidget().addFilter(filter);
 		GlobalEventDispatcher.addActivationListener(this, getViewSite().getPart());
 		
+		cv.getViewerWidget().addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				selectPatientAction.setEnabled(selection.size() <= 1);
+			}
+		});
 	}
 	
 	@Override
@@ -261,10 +273,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				
 				@Override
 				public void run(){
-					Object[] sel = cv.getSelection();
-					if ((sel != null) && (sel.length > 0)) {
-						Reminder r = (Reminder) sel[0];
-						r.delete();
+					Object[] selections = cv.getSelection();
+					if ((selections != null) && (selections.length > 0)) {
+						for (Object sel : selections) {
+							Reminder r = (Reminder) sel;
+							r.delete();
+						}
 						cv.notify(CommonViewer.Message.update_keeplabels);
 					}
 				}
@@ -322,7 +336,10 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				
 				public void doRun(){
 					Object[] sel = cv.getSelection();
-					if (sel != null && sel.length > 0) {
+					if (sel != null && sel.length > 1) {
+						SWTHelper.showInfo(Messages.ReminderView_onePatOnly,
+							Messages.ReminderView_onlyOnePatientForActivation);
+					} else if (sel != null && sel.length > 0) {
 						Reminder reminder = (Reminder) sel[0];
 						Patient patient = reminder.getKontakt();
 						if (patient != null) {
