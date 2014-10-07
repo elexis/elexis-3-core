@@ -348,7 +348,8 @@
                name="DocumentLink">
          </Link>
          <Makro
-               KonsMakro="ch.elexis.core.ui.text.BlockMakro">
+               KonsMakro="ch.elexis.core.ui.text.BlockMakro"
+               name="enabled">
          </Makro>
       </extension>
       <extension

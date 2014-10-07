@@ -57,6 +57,7 @@ import ch.elexis.core.text.model.SSDRange;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.preferences.UserTextPref;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
@@ -74,6 +75,7 @@ import ch.rgw.tools.StringTool;
  * 
  */
 public class EnhancedTextField extends Composite implements IRichTextDisplay {
+	public static final String MACRO_ENABLED = "enhancedtextfield/macro_enabled"; //$NON-NLS-1$
 	public static final String MACRO_KEY = "enhancedtextfield/macro_key"; //$NON-NLS-1$
 	public static final String MACRO_KEY_DEFAULT = "$"; //$NON-NLS-1$
 	
@@ -101,10 +103,12 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		externalMakros = makros;
 	}
 	
+	@Override
 	public void setXrefHandlers(Map<String, IKonsExtension> xrefs){
 		hXrefs = xrefs;
 	}
 	
+	@Override
 	public void addXrefHandler(String id, IKonsExtension xref){
 		if (hXrefs == null) {
 			hXrefs = new Hashtable<String, IKonsExtension>();
@@ -130,6 +134,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(), cutAction);
 		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
 		globalMenuListener = new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				if (text.getSelectionCount() == 0) {
 					copyAction.setEnabled(false);
@@ -157,6 +162,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		
 	}
 	
+	@Override
 	public void addDropReceiver(Class clazz, IKonsExtension ext){
 		dropper.addReceiver(clazz, ext);
 	}
@@ -178,6 +184,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			
+			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				manager.add(GlobalActions.cutAction);
 				manager.add(GlobalActions.copyAction);
@@ -262,6 +269,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		text.setWordWrap(true);
 		text.addMouseListener(new MouseAdapter() {
 			
+			@Override
 			public void mouseDoubleClick(MouseEvent e){
 				// System.out.println("Line="+e.y/text.getLineHeight());
 				// System.out.println("Caret="+text.getCaretOffset());
@@ -427,6 +435,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	 * @param id
 	 *            vom Provider vergebene Identifikation für diesen Querverweis (beliebiger String)
 	 */
+	@Override
 	public void insertXRef(int pos, String string, String provider, String id){
 		if (pos == -1) {
 			pos = text.getCaretOffset();
@@ -472,6 +481,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	}
 	
 	class ETFVerifyListener implements VerifyListener {
+		@Override
 		public void verifyText(VerifyEvent e){
 			
 			// if(e.text.length()<2){ wieso das??? weiss nicht mehr, was ich
@@ -510,7 +520,9 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 					StringBuilder replace = new StringBuilder();
 					
 					for (IKonsMakro extMakro : externalMakros) {
-						replace.append(extMakro.executeMakro(makro));
+						if (isMakroEnabled(extMakro)) {
+							replace.append(extMakro.executeMakro(makro));
+						}
 					}
 					
 					text.replaceTextRange(start, (e.end - start), replace.toString());
@@ -563,6 +575,12 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 				
 			}
 			
+		}
+		
+		private boolean isMakroEnabled(IKonsMakro extMakro){
+			UserTextPref.setMakroEnabledDefaults();
+			return CoreHub.userCfg.get(EnhancedTextField.MACRO_ENABLED + "/"
+				+ extMakro.getClass().getName(), false);
 		}
 		
 	}
@@ -628,6 +646,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	 * @return Das mit dem Cursor berührte Wort des Textfelds, <code>String.empty</code> falls kein
 	 *         Wort berührt wird
 	 */
+	@Override
 	public String getWordUnderCursor(){
 		return StringTool.getWordAtIndex(text.getText(), text.getCaretOffset());
 	}
@@ -664,6 +683,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	 */
 	class RangeTracker implements ExtendedModifyListener {
 		
+		@Override
 		public void modifyText(ExtendedModifyEvent event){
 			if (ranges != null) {
 				int pos = event.start;
@@ -708,8 +728,10 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	class UserChangeListener implements ElexisEventListener {
 		ElexisEvent filter = new ElexisEvent(null, null, ElexisEvent.EVENT_USER_CHANGED);
 		
+		@Override
 		public void catchElexisEvent(ElexisEvent ev){
 			UiDesk.asyncExec(new Runnable() {
+				@Override
 				public void run(){
 					text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 					
@@ -717,6 +739,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 			});
 		}
 		
+		@Override
 		public ElexisEvent getElexisEventFilter(){
 			return filter;
 		}

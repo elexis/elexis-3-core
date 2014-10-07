@@ -72,6 +72,16 @@
 
    <element name="Makro">
       <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Ein Titel, der diesen Makro-Provider eindeutig bezeichnet.
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
          <attribute name="KonsMakro" type="string" use="required">
             <annotation>
                <documentation>
