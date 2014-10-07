@@ -82,6 +82,11 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 		}
 	}
 	
+	/**
+	 * Set default enabled preferences to false for the makro extensions.
+	 * 
+	 * @since 3.1
+	 */
 	public static void setMakroEnabledDefaults(){
 		List<IConfigurationElement> makroExtensions =
 			Extensions.getExtensions(ExtensionPointConstantsUi.KONSEXTENSION);
