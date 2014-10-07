@@ -563,17 +563,30 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	/** Eine Diagnose aus der Diagnoseliste entfernen */
 	public void removeDiagnose(IDiagnose dg){
 		if (isEditable(true)) {
-			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT ID FROM DIAGNOSEN WHERE DG_CODE=")
-				.append(JdbcLink.wrap(dg.getCode())).append(" AND ").append("KLASSE=")
-				.append(JdbcLink.wrap(dg.getClass().getName()));
-			String dgid = j.queryString(sql.toString());
+			String dgid =
+				prepareDiagnoseSelectWithCodeAndClass(dg.getCode(), dg.getClass().getName());
 			
-			sql.setLength(0);
+			if (dgid == null) {
+				String code = dg.getCode();
+				// chapter of a TI-Code
+				if (code != null && code.length() == 2 && code.charAt(1) == '0') {
+					code = code.substring(0, 1);
+					dgid = prepareDiagnoseSelectWithCodeAndClass(code, dg.getClass().getName());
+				}
+			}
+			
+			StringBuilder sql = new StringBuilder();
 			sql.append("DELETE FROM BEHDL_DG_JOINT WHERE BEHANDLUNGSID=").append(getWrappedId())
 				.append(" AND ").append("DIAGNOSEID=").append(JdbcLink.wrap(dgid));
 			j.exec(sql.toString());
 		}
+	}
+	
+	private String prepareDiagnoseSelectWithCodeAndClass(String code, String classname){
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT ID FROM DIAGNOSEN WHERE DG_CODE=").append(JdbcLink.wrap(code))
+			.append(" AND ").append("KLASSE=").append(JdbcLink.wrap(classname));
+		return j.queryString(sql.toString());
 	}
 	
 	/** Die zu dieser Konsultation gehörenden Leistungen holen */
