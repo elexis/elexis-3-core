@@ -63,6 +63,7 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 	PatientComparator patientComparator = new PatientComparator();
 	RechnungsListeView rlv;
 	String[] constraints;
+	String[] val;
 	
 	private final Log log = Log.get("Rechnungenlader"); //$NON-NLS-1$
 	
@@ -83,12 +84,28 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 	public Object[] getElements(final Object inputElement){
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 		try {
-			progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
-				new IRunnableWithProgress() {
-					public void run(final IProgressMonitor monitor){
-						reload(monitor);
+			progressService.run(true, true, new IRunnableWithProgress() {
+				
+				@Override
+				public void run(final IProgressMonitor monitor){
+					reload(monitor);
+					if (monitor.isCanceled()) {
+						monitor.done();
 					}
-				}, null);
+					
+					rlv.getSite().getShell().getDisplay().syncExec(new Runnable() {
+						@Override
+						public void run(){
+							if (rlv.tPat != null) {
+								rlv.tPat.setText(Integer.toString(iPat));
+								rlv.tRn.setText(Integer.toString(iRn));
+								rlv.tSum.setText(mAmount.getAmountAsString());
+								rlv.tOpen.setText(mOpen.getAmountAsString());
+							}
+						}
+					});
+				}
+			});
 		} catch (Throwable ex) {
 			ExHandler.handle(ex);
 		}
@@ -195,7 +212,13 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 	}
 	
 	public Query<Rechnung> prepareQuery(){
-		final String[] val = cv.getConfigurer().getControlFieldProvider().getValues();
+		cv.getParent().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run(){
+				val = null;
+				val = cv.getConfigurer().getControlFieldProvider().getValues();
+			}
+		});
 		Query<Rechnung> q1 = new Query<Rechnung>(Rechnung.class);
 		if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
 			if (CoreHub.actMandant == null) {
@@ -307,6 +330,12 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		mAmount = new Money();
 		mOpen = new Money();
 		for (Rechnung rn : rechnungen) {
+			if (monitor.isCanceled()) {
+				monitor.worked(1);
+				monitor.done();
+				return;
+			}
+			
 			if ((rn == null) || (!rn.exists())) {
 				log.log("Fehlerhafte Rechnung", Log.ERRORS); //$NON-NLS-1$
 				continue;
@@ -338,12 +367,6 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 			monitor.worked(multiplyer);
 		}
 		
-		if (rlv.tPat != null) {
-			rlv.tPat.setText(Integer.toString(iPat));
-			rlv.tRn.setText(Integer.toString(iRn));
-			rlv.tSum.setText(mAmount.getAmountAsString());
-			rlv.tOpen.setText(mOpen.getAmountAsString());
-		}
 		monitor.worked(1);
 		monitor.subTask(Messages.RnContentProvider_prepareSort); //$NON-NLS-1$
 		result = root.getChildren().toArray(new Tree[0]);
