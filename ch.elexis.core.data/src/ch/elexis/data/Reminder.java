@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -50,6 +51,31 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	public static final String STATE_OVERDUE = "überfällig";
 	public static final String DONE = "erledigt";
 	public static final String UNDONE = "unerledigt";
+	
+	public enum LabelFields {
+		PAT_ID("PatientNr"), FIRSTNAME("Vorname"), LASTNAME("Name");
+		
+		private final String text;
+		
+		private LabelFields(final String text){
+			this.text = text;
+		}
+		
+		@Override
+		public String toString(){
+			return text;
+		}
+		
+		public String getKontaktEquivalent(){
+			if (text.equals(FIRSTNAME.toString())) {
+				return Kontakt.FLD_NAME2;
+			} else if (text.equals(LASTNAME.toString())) {
+				return Kontakt.FLD_NAME1;
+			} else {
+				return "";
+			}
+		}
+	}
 	
 	@Override
 	protected String getTableName(){
@@ -153,8 +179,24 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		Kontakt k = Kontakt.load(get(KONTAKT_ID));
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append(get(DUE)).append(" (").append(k.get("Bezeichnung1")).append("): ")
+		sb.append(get(DUE)).append(" (").append(getConfiguredKontaktLabel(k)).append("): ")
 			.append(get(MESSAGE));
+		return sb.toString();
+	}
+	
+	private String getConfiguredKontaktLabel(Kontakt k){
+		String[] configLabel =
+			CoreHub.userCfg.get(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
+				LabelFields.LASTNAME.toString()).split(",");
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < configLabel.length; i++) {
+			sb.append(k.get(configLabel[i]));
+			
+			if (i != configLabel.length - 1) {
+				sb.append(", ");
+			}
+		}
 		return sb.toString();
 	}
 	

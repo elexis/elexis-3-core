@@ -136,7 +136,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	
 	public ReminderView(){
 		qbe = new Query<Reminder>(Reminder.class);
-		
+		Patient.load("0");
 	}
 	
 	@Override
