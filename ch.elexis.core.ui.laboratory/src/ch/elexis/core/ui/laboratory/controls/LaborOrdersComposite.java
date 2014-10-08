@@ -61,9 +61,7 @@ public class LaborOrdersComposite extends Composite {
 		Composite body = form.getBody();
 		body.setLayout(new GridLayout());
 		
-		viewer =
-			new TreeViewer(body, SWT.FULL_SELECTION | SWT.MULTI | SWT.LEFT | SWT.V_SCROLL
-				| SWT.H_SCROLL);
+		viewer = new TreeViewer(body, SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		viewer.getTree().setHeaderVisible(true);
 		viewer.getTree().setLinesVisible(true);

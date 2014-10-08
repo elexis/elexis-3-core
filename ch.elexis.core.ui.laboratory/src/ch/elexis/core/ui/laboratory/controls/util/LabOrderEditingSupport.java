@@ -5,7 +5,7 @@ import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
+import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -97,8 +97,9 @@ public class LabOrderEditingSupport extends EditingSupport {
 			}
 		});
 		
-		focusCell =
-			new TreeViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
+		focusCell = new TreeViewerFocusCellManager(viewer, new FocusCellHighlighter(viewer) {
+			
+		});
 		
 		ColumnViewerEditorActivationStrategy actSupport =
 			new ColumnViewerEditorActivationStrategy(viewer) {
@@ -112,8 +113,7 @@ public class LabOrderEditingSupport extends EditingSupport {
 				}
 			};
 		
-		TreeViewerEditor.create(viewer, focusCell, actSupport,
-			ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR | ColumnViewerEditor.TABBING_VERTICAL
+		TreeViewerEditor.create(viewer, focusCell, actSupport, ColumnViewerEditor.TABBING_VERTICAL
 				| ColumnViewerEditor.KEYBOARD_ACTIVATION);
 	}
 
@@ -144,25 +144,26 @@ public class LabOrderEditingSupport extends EditingSupport {
 				return "Doc"; //$NON-NLS-1$
 			} else if (labItem.getTyp() == typ.TEXT) {
 				LabResult result = ((LabOrder) element).getLabResult();
-				if (result == null) {
-					result = createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
+				if (result != null) {
+					return result.getComment();
 				}
-				return result.getComment();
 			} else {
 				LabResult result = ((LabOrder) element).getLabResult();
-				if (result == null) {
-					result = createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
+				if (result != null) {
+					return result.getResult();
 				}
-				return result.getResult();
 			}
 		}
-		return "???"; //$NON-NLS-1$
+		return ""; //$NON-NLS-1$
 	}
 	
 	@Override
 	protected void setValue(Object element, Object value){
 		if (element instanceof LabOrder && value != null) {
 			LabResult result = ((LabOrder) element).getLabResult();
+			if (result == null) {
+				result = createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
+			}
 			
 			if (result.getItem().getTyp() == typ.TEXT) {
 				result.setResult("Text"); //$NON-NLS-1$
