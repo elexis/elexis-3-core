@@ -289,6 +289,18 @@
             name="%Textvorlagen">
       </page>
       <page
+            category="ch.elexis.preferences.security"
+            class="ch.elexis.core.ui.preferences.UserManagementPreferencePage"
+            id="ch.elexis.core.ui.UserManagementPreferencePage"
+            name="Benutzerverwaltung">
+      </page>
+      <page
+            category="ch.elexis.preferences.security"
+            class="ch.elexis.core.ui.preferences.RolesToAccessRightsPreferencePage"
+            id="ch.elexis.core.ui.preferences.RolesToAccessRightsPreferencePage"
+            name="Rollen und Rechte">
+      </page>
+      <page
             class="ch.elexis.core.ui.preferences.SystemPreferencePage"
             id="ch.elexis.core.ui.preferences.SystemPreferencePage"
             name="System">
