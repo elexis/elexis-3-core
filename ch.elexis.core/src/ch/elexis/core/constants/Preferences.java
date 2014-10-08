@@ -110,6 +110,7 @@ public class Preferences {
 	public static final String USR_MANDATOR_COLORS_PREFIX = "mandanten/farben/";
 	public static final String USR_MESSAGES_SOUND_ON = "messages/playsound";
 	public static final String USR_MESSAGES_SOUND_PATH = "messages/soundpath";
+	public static final String USR_MESSAGES_ANSWER_AUTOCLEAR = "messages/answer/autoclear";
 	
 	// Menu item "lock perspectives" (GlobalActions.fixLayoutAction)
 	public static final String USR_FIX_LAYOUT = "perspectives/fix_layout"; //$NON-NLS-1$
