@@ -1,8 +1,8 @@
-package ch.elexis.core.ui.laboratory.controls;
+package ch.elexis.core.ui.laboratory.controls.util;
 
 import java.util.Comparator;
 
-import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite.LaborItemResults;
+import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.data.LabItem;
 
 public class LaborItemResultsComparator implements Comparator<LaborItemResults> {

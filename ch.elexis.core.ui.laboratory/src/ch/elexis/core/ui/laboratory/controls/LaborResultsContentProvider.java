@@ -9,7 +9,8 @@ import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite.LaborItemResults;
+import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
+import ch.elexis.core.ui.laboratory.controls.util.LaborItemResultsComparator;
 import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 
@@ -18,8 +19,7 @@ class LaborResultsContentProvider implements ITreeContentProvider {
 	private HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> grouped;
 	private ArrayList<String> groups = new ArrayList<String>();
 	
-	private HashMap<String, LaborItemResults> itemResults =
-		new HashMap<String, LaborResultsComposite.LaborItemResults>();
+	private HashMap<String, LaborItemResults> itemResults = new HashMap<String, LaborItemResults>();
 	
 	private HashSet<String> dates = new HashSet<String>();
 	

@@ -52,6 +52,11 @@ public class LaborblattView extends ViewPart implements ICallback {
 	}
 	
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows){
+		return createLaborblatt(pat, header, rows, null);
+	}
+	
+	public boolean createLaborblatt(final Patient pat, final String[] header,
+		final TreeItem[] rows, int[] skipColumnsIndex){
 		Brief br =
 			text.createFromTemplateName(Konsultation.getAktuelleKons(),
 				Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null);
@@ -59,7 +64,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 			return false;
 		}
 		Tree tree = rows[0].getParent();
-		int cols = tree.getColumnCount();
+		int cols = tree.getColumnCount() - skipColumnsIndex.length;
 		int[] colsizes = new int[cols];
 		float first = 25;
 		float second = 10;
@@ -77,9 +82,14 @@ public class LaborblattView extends ViewPart implements ICallback {
 		for (int i = 0; i < rows.length; i++) {
 			boolean used = false;
 			String[] row = new String[cols];
-			for (int j = 0; j < cols; j++) {
-				row[j] = rows[i].getText(j);
-				if ((j > 1) && (row[j].length() > 0)) {
+			for (int j = 0, skipped = 0; j < cols + skipped; j++) {
+				if (skipColumn(j, skipColumnsIndex)) {
+					skipped++;
+					continue;
+				}
+				int destIndex = j - skipped;
+				row[destIndex] = rows[i].getText(j);
+				if ((destIndex > 1) && (row[destIndex].length() > 0)) {
 					used = true;
 					// break;
 				}
@@ -95,6 +105,15 @@ public class LaborblattView extends ViewPart implements ICallback {
 		return ret;
 	}
 	
+	private boolean skipColumn(int index, int[] skip){
+		for (int i : skip) {
+			if (index == i) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows){
 		Brief br =
 			text.createFromTemplateName(Konsultation.getAktuelleKons(),
@@ -191,11 +210,13 @@ public class LaborblattView extends ViewPart implements ICallback {
 		
 	}
 	
+	@Override
 	public void save(){
 		// TODO Automatisch erstellter Methoden-Stub
 		
 	}
 	
+	@Override
 	public boolean saveAs(){
 		// TODO Automatisch erstellter Methoden-Stub
 		return false;

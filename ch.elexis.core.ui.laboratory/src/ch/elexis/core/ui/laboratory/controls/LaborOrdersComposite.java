@@ -7,25 +7,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
-import org.eclipse.jface.viewers.ICellEditorListener;
-import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.TreeViewerEditor;
-import org.eclipse.jface.viewers.TreeViewerFocusCellManager;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerRow;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -33,7 +19,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -41,9 +26,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
+import ch.elexis.core.ui.laboratory.controls.util.LabOrderEditingSupport;
 import ch.elexis.core.ui.laboratory.preferences.LabSettings;
-import ch.elexis.data.Kontakt;
-import ch.elexis.data.LabItem;
 import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
@@ -53,33 +37,21 @@ import ch.rgw.tools.TimeTool;
 
 public class LaborOrdersComposite extends Composite {
 	
-	private final String SMALLER = "<";
-	private final String BIGGER = ">";
-	
 	private final FormToolkit tk = UiDesk.getToolkit();
 	private Form form;
 	
 	private TreeViewer viewer;
-	private TreeViewerFocusCellManager focusCell;
 	
 	private int sortColumn = 1;
 	private boolean revert = false;
 	
 	private Patient actPatient;
 	
-	private TextCellEditor textCellEditor;
-	
 	public LaborOrdersComposite(Composite parent, int style){
 		super(parent, style);
 		
 		createContent();
 		selectPatient(ElexisEventDispatcher.getSelectedPatient());
-	}
-	
-	private LabResult createResult(LabOrder order, Kontakt origin){
-		LabResult result = order.createResult(origin);
-		result.setTransmissionTime(new TimeTool());
-		return result;
 	}
 	
 	private void createContent(){
@@ -99,79 +71,10 @@ public class LaborOrdersComposite extends Composite {
 		viewer.setContentProvider(new LaborOrdersContentProvider());
 		viewer.setSorter(new LaborOrdersSorter(this));
 		
-		focusCell =
-			new TreeViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
-		
-		ColumnViewerEditorActivationStrategy actSupport =
-			new ColumnViewerEditorActivationStrategy(viewer) {
-				protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event){
-					return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
-						|| event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
-						|| (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR)
-						|| (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.KEYPAD_CR)
-						|| event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
-				}
-			};
-		
-		TreeViewerEditor.create(viewer, focusCell, actSupport,
-			ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR | ColumnViewerEditor.TABBING_VERTICAL
-				| ColumnViewerEditor.KEYBOARD_ACTIVATION);
-		
-		// set up validation of the cell editors
-		textCellEditor = new TextCellEditor(viewer.getTree());
-		textCellEditor.setValidator(new ICellEditorValidator() {
-			@Override
-			public String isValid(Object value){
-				IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
-				LabOrder order = (LabOrder) selection.getFirstElement();
-				if (order != null && value instanceof String) {
-					if (order.getLabItem().getTyp() == typ.NUMERIC
-						|| order.getLabItem().getTyp() == typ.ABSOLUTE) {
-						try {
-							String editedValue = (String) value;
-							if (editedValue.startsWith(SMALLER) || editedValue.startsWith(BIGGER)) {
-								String nrValue =
-									editedValue.replace(SMALLER, "").replace(BIGGER, "");
-								editedValue = nrValue.trim();
-							}
-							Float.parseFloat(editedValue);
-							
-						} catch (NumberFormatException e) {
-							return Messages.LaborOrdersComposite_validatorNotNumber;
-						}
-					}
-				}
-				return null;
-			}
-		});
-		textCellEditor.addListener(new ICellEditorListener() {
-			@Override
-			public void editorValueChanged(boolean oldValidState, boolean newValidState){
-				if (newValidState) {
-					textCellEditor.getControl().setBackground(
-						Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-				} else {
-					textCellEditor.getControl().setBackground(
-						Display.getCurrent().getSystemColor(SWT.COLOR_RED));
-				}
-			}
-			
-			@Override
-			public void cancelEditor(){
-				textCellEditor.getControl().setBackground(
-					Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-			}
-			
-			@Override
-			public void applyEditorValue(){
-				textCellEditor.getControl().setBackground(
-					Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-			}
-		});
-		
 		final MenuManager mgr = new MenuManager();
 		mgr.setRemoveAllWhenShown(true);
 		mgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				if (selection != null && !selection.isEmpty()) {
@@ -197,6 +100,7 @@ public class LaborOrdersComposite extends Composite {
 		column.getColumn().setText(Messages.LaborOrdersComposite_columnState);
 		column.setLabelProvider(new ColumnLabelProvider() {
 			
+			@Override
 			public String getText(Object element){
 				if (element instanceof State) {
 					return LabOrder.getStateLabel(((State) element));
@@ -211,6 +115,7 @@ public class LaborOrdersComposite extends Composite {
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(1, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
 			
+			@Override
 			public String getText(Object element){
 				if (element instanceof LabOrder) {
 					TimeTool time = ((LabOrder) element).getTime();
@@ -230,6 +135,7 @@ public class LaborOrdersComposite extends Composite {
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(2, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
 			
+			@Override
 			public String getText(Object element){
 				if (element instanceof LabOrder) {
 					return ((LabOrder) element).get(LabOrder.FLD_ORDERID);
@@ -244,6 +150,7 @@ public class LaborOrdersComposite extends Composite {
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(3, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
 			
+			@Override
 			public String getText(Object element){
 				if (element instanceof LabOrder) {
 					return ((LabOrder) element).get(LabOrder.FLD_GROUPNAME);
@@ -258,6 +165,7 @@ public class LaborOrdersComposite extends Composite {
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(4, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
 			
+			@Override
 			public String getText(Object element){
 				if (element instanceof LabOrder) {
 					if (((LabOrder) element).getLabItem() != null) {
@@ -273,6 +181,7 @@ public class LaborOrdersComposite extends Composite {
 		column.getColumn().setText(Messages.LaborOrdersComposite_columnValue);
 		column.setLabelProvider(new ColumnLabelProvider() {
 			
+			@Override
 			public String getText(Object element){
 				if (element instanceof LabOrder) {
 					LabResult result = ((LabOrder) element).getLabResult();
@@ -300,73 +209,7 @@ public class LaborOrdersComposite extends Composite {
 			}
 		});
 		
-		column.setEditingSupport(new EditingSupport(viewer) {
-			protected boolean canEdit(Object element){
-				return (element instanceof LabOrder)
-					&& (((LabOrder) element).getLabItem().getTyp() != typ.FORMULA);
-			}
-			
-			protected CellEditor getCellEditor(Object element){
-				if (element instanceof LabOrder) {
-					LabItem labItem = ((LabOrder) element).getLabItem();
-					if (labItem.getTyp() == typ.DOCUMENT) {
-						return null;
-					} else {
-						return textCellEditor;
-					}
-				}
-				return null;
-			}
-			
-			protected Object getValue(Object element){
-				if (element instanceof LabOrder) {
-					LabItem labItem = ((LabOrder) element).getLabItem();
-					if (labItem.getTyp() == typ.DOCUMENT) {
-						return "Doc"; //$NON-NLS-1$
-					} else if (labItem.getTyp() == typ.TEXT) {
-						LabResult result = ((LabOrder) element).getLabResult();
-						if (result == null) {
-							result =
-								createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
-						}
-						return result.getComment();
-					} else {
-						LabResult result = ((LabOrder) element).getLabResult();
-						if (result == null) {
-							result =
-								createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
-						}
-						return result.getResult();
-					}
-				}
-				return "???"; //$NON-NLS-1$
-			}
-			
-			protected void setValue(Object element, Object value){
-				if (element instanceof LabOrder && value != null) {
-					LabResult result = ((LabOrder) element).getLabResult();
-					
-					if (result.getItem().getTyp() == typ.TEXT) {
-						result.setResult("Text"); //$NON-NLS-1$
-						result.set(LabResult.COMMENT, value.toString());
-						((LabOrder) element).setState(LabOrder.State.DONE);
-					} else if (result.getItem().getTyp() == typ.DOCUMENT) {
-						// dont know what todo ...
-					} else {
-						result.setResult(value.toString());
-						((LabOrder) element).setState(LabOrder.State.DONE);
-					}
-					int columnIdx = focusCell.getFocusCell().getColumnIndex();
-					ViewerRow row = focusCell.getFocusCell().getViewerRow();
-					ViewerRow nextRow = row.getNeighbor(ViewerRow.BELOW, true);
-					viewer.refresh();
-					if (nextRow != null) {
-						viewer.setSelection(new StructuredSelection(nextRow.getElement()), true);
-						viewer.editElement(nextRow.getElement(), columnIdx);
-					}
-				}
-			}
-		});
+		column.setEditingSupport(new LabOrderEditingSupport(viewer));
 		
 		form.setText(Messages.LaborOrdersComposite_NoPatientSelected);
 	}
@@ -427,78 +270,6 @@ public class LaborOrdersComposite extends Composite {
 	
 	public void setRevert(boolean revert){
 		this.revert = revert;
-	}
-	
-	private static class LaborOrdersContentProvider implements ITreeContentProvider {
-		private List<LabOrder> orders;
-		
-		private List<LabOrder> open = new ArrayList<LabOrder>();
-		private List<LabOrder> done = new ArrayList<LabOrder>();
-		
-		private State[] roots = {
-			State.ORDERED, State.DONE
-		};
-		
-		@Override
-		public void dispose(){
-			// TODO Auto-generated method stub
-			
-		}
-		
-		@SuppressWarnings("unchecked")
-		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
-			if (newInput instanceof List<?>) {
-				orders = (List<LabOrder>) newInput;
-			}
-		}
-		
-		private void updateLists(){
-			open.clear();
-			done.clear();
-			for (LabOrder labOrder : orders) {
-				if (labOrder.getState() == State.ORDERED) {
-					open.add(labOrder);
-				} else {
-					done.add(labOrder);
-				}
-			}
-		}
-		
-		@Override
-		public Object[] getElements(Object inputElement){
-			updateLists();
-			return roots;
-		}
-		
-		@Override
-		public Object[] getChildren(Object parentElement){
-			if (parentElement instanceof State) {
-				if (parentElement == State.DONE) {
-					return done.toArray();
-				} else if (parentElement == State.ORDERED) {
-					return open.toArray();
-				}
-			}
-			return null;
-		}
-		
-		@Override
-		public Object getParent(Object element){
-			return null;
-		}
-		
-		@Override
-		public boolean hasChildren(Object element){
-			if (element instanceof State) {
-				if (element == State.DONE) {
-					return !done.isEmpty();
-				} else if (element == State.ORDERED) {
-					return !open.isEmpty();
-				}
-			}
-			return false;
-		}
 	}
 	
 	private static class LaborOrdersSortSelection extends SelectionAdapter {

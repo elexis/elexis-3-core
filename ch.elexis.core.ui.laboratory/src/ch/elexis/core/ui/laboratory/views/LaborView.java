@@ -92,10 +92,11 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 	private LaborOrdersComposite ordersComposite;
 	
 	private Action fwdAction, backAction, printAction, importAction, xmlAction, newAction,
-			refreshAction, expandAllAction, collapseAllAction;
+			newColumnAction, refreshAction, expandAllAction, collapseAllAction;
 	private ViewMenus menu;
 	
 	private ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
+		@Override
 		public void runInUi(ElexisEvent ev){
 			resultsComposite.selectPatient((Patient) ev.getObject());
 			ordersComposite.selectPatient((Patient) ev.getObject());
@@ -106,12 +107,15 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 		private final ElexisEvent eetmpl = new ElexisEvent(null, LabItem.class,
 			ElexisEvent.EVENT_RELOAD);
 		
+		@Override
 		public ElexisEvent getElexisEventFilter(){
 			return eetmpl;
 		}
 		
+		@Override
 		public void catchElexisEvent(ElexisEvent ev){
 			UiDesk.getDisplay().asyncExec(new Runnable() {
+				@Override
 				public void run(){
 					resultsComposite.reload();
 				}
@@ -123,12 +127,15 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 		private final ElexisEvent eetmpl = new ElexisEvent(null, LabResult.class,
 			ElexisEvent.EVENT_RELOAD);
 		
+		@Override
 		public ElexisEvent getElexisEventFilter(){
 			return eetmpl;
 		}
 		
+		@Override
 		public void catchElexisEvent(ElexisEvent ev){
 			UiDesk.getDisplay().asyncExec(new Runnable() {
+				@Override
 				public void run(){
 					resultsComposite.reload();
 					ordersComposite.reload();
@@ -141,12 +148,15 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 		private final ElexisEvent eetmpl = new ElexisEvent(null, LabOrder.class,
 			ElexisEvent.EVENT_RELOAD);
 		
+		@Override
 		public ElexisEvent getElexisEventFilter(){
 			return eetmpl;
 		}
 		
+		@Override
 		public void catchElexisEvent(ElexisEvent ev){
 			UiDesk.getDisplay().asyncExec(new Runnable() {
+				@Override
 				public void run(){
 					ordersComposite.reload();
 				}
@@ -212,6 +222,7 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 			tm.add(new Separator());
 		}
 		tm.add(refreshAction);
+		tm.add(newColumnAction);
 		tm.add(newAction);
 		tm.add(backAction);
 		tm.add(fwdAction);
@@ -266,7 +277,7 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 						(LaborblattView) getViewSite().getPage().showView(LaborblattView.ID);
 					Patient pat = ElexisEventDispatcher.getSelectedPatient();
 					lb.createLaborblatt(pat, resultsComposite.getPrintHeaders(),
-						resultsComposite.getPrintRows());
+						resultsComposite.getPrintRows(), resultsComposite.getSkipIndex());
 				} catch (Exception ex) {
 					ExHandler.handle(ex);
 				}
@@ -315,6 +326,13 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 						}
 					}
 				}
+			}
+		};
+		newColumnAction = new Action(Messages.LaborView_newDate) {
+			@Override
+			public void run(){
+				tabFolder.setSelection(0);
+				resultsComposite.toggleNewColumn();
 			}
 		};
 		newAction = new Action(Messages.LaborView_newDate) {
@@ -371,6 +389,7 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 			}
 		};
 		
+		newColumnAction.setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 		newAction.setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 		fwdAction.setImageDescriptor(Images.IMG_NEXT.getImageDescriptor());
 		backAction.setImageDescriptor(Images.IMG_PREVIOUS.getImageDescriptor());
@@ -386,7 +405,7 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 			Element r = new Element("Laborblatt"); //$NON-NLS-1$
 			r.setAttribute("Erstellt", new TimeTool() //$NON-NLS-1$
 				.toString(TimeTool.FULL_GER));
-			Patient actpat = (Patient) ElexisEventDispatcher.getSelectedPatient();
+			Patient actpat = ElexisEventDispatcher.getSelectedPatient();
 			if (actpat == null) {
 				return doc;
 			}
@@ -498,25 +517,31 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(final IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}

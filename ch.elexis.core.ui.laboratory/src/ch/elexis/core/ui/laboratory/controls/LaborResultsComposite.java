@@ -1,8 +1,6 @@
 package ch.elexis.core.ui.laboratory.controls;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jface.action.IMenuListener;
@@ -10,37 +8,33 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.TreeViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.dialogs.DisplayLabDokumenteDialog;
-import ch.elexis.core.ui.dialogs.DisplayTextDialog;
 import ch.elexis.core.ui.laboratory.actions.LaborResultDeleteAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.actions.TogglePathologicAction;
+import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
+import ch.elexis.core.ui.laboratory.controls.util.ChangeNewDateSelection;
+import ch.elexis.core.ui.laboratory.controls.util.DisplayDoubleClickListener;
+import ch.elexis.core.ui.laboratory.controls.util.LabResultEditingSupport;
+import ch.elexis.core.ui.laboratory.controls.util.LaborResultsLabelProvider;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.data.LabItem;
-import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
@@ -57,7 +51,10 @@ public class LaborResultsComposite extends Composite {
 	private TreeViewer viewer;
 	private TreeViewerFocusCellManager focusCell;
 	
-	private final static String COLUMN_DATE_KEY = "labresult.date"; //$NON-NLS-1$
+	private TreeViewerColumn newColumn;
+	private int newColumnIndex;
+
+	public final static String COLUMN_DATE_KEY = "labresult.date"; //$NON-NLS-1$
 	private List<TreeViewerColumn> resultColumns = new ArrayList<TreeViewerColumn>();
 	
 	private LaborResultsContentProvider contentProvider = new LaborResultsContentProvider();
@@ -119,6 +116,7 @@ public class LaborResultsComposite extends Composite {
 		final MenuManager mgr = new MenuManager();
 		mgr.setRemoveAllWhenShown(true);
 		mgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				List<LabResult> results = getSelectedResults();
 				if (results != null) {
@@ -176,6 +174,16 @@ public class LaborResultsComposite extends Composite {
 			}
 		});
 		
+		newColumn = new TreeViewerColumn(viewer, SWT.NONE);
+		newColumn.getColumn().setWidth(5);
+		TimeTool now = new TimeTool();
+		newColumn.getColumn().setText("Neu (" + now.toString(TimeTool.DATE_GER) + ")");
+		newColumn.getColumn().setData(COLUMN_DATE_KEY, now);
+		newColumn.getColumn().addSelectionListener(new ChangeNewDateSelection(newColumn, this));
+		newColumn.setLabelProvider(new LaborResultsLabelProvider(newColumn));
+		newColumn.setEditingSupport(new LabResultEditingSupport(this, viewer, newColumn));
+		newColumnIndex = 2;
+
 		for (int i = 0; i < COLUMNS_PER_PAGE; i++) {
 			column = new TreeViewerColumn(viewer, SWT.NONE);
 			column.getColumn().setWidth(75);
@@ -191,8 +199,8 @@ public class LaborResultsComposite extends Composite {
 	}
 	
 	private List<LabResult> getSelectedResults(ViewerCell cell){
-		if (cell != null && cell.getColumnIndex() > 1) {
-			TreeViewerColumn column = resultColumns.get(cell.getColumnIndex() - 2);
+		if (cell != null && cell.getColumnIndex() > 2) {
+			TreeViewerColumn column = resultColumns.get(cell.getColumnIndex() - 3);
 			TimeTool time = (TimeTool) column.getColumn().getData(COLUMN_DATE_KEY);
 			if ((time != null) && (cell.getElement() instanceof LaborItemResults)) {
 				LaborItemResults results = (LaborItemResults) cell.getElement();
@@ -202,258 +210,14 @@ public class LaborResultsComposite extends Composite {
 		return null;
 	}
 	
-	private static class LaborResultsLabelProvider extends ColumnLabelProvider {
-		
-		private TreeViewerColumn column;
-		
-		public LaborResultsLabelProvider(TreeViewerColumn column){
-			this.column = column;
-		}
-		
-		@Override
-		public String getText(Object element){
-			if (element instanceof LaborItemResults) {
-				TimeTool date = (TimeTool) column.getColumn().getData(COLUMN_DATE_KEY);
-				if (date != null) {
-					List<LabResult> results =
-						((LaborItemResults) element)
-							.getResult(date.toString(TimeTool.DATE_COMPACT));
-					if (results != null) {
-						StringBuilder sb = new StringBuilder();
-						for (LabResult labResult : results) {
-							if (sb.length() == 0) {
-								sb.append(getResultString(labResult));
-							} else {
-								sb.append(" / "); //$NON-NLS-1$
-								sb.append(getResultString(labResult));
-							}
-						}
-						return sb.toString();
-					}
-				}
-			}
-			return ""; //$NON-NLS-1$
-		}
-		
-		private String getResultString(LabResult labResult){
-			if (labResult.getItem().getTyp() == typ.DOCUMENT) {
-				return Messages.LaborResultsComposite_Open;
-			} else if (labResult.getItem().getTyp() == typ.TEXT) {
-				return getNonEmptyResultString(labResult);
-			} else {
-				int digits = labResult.getItem().getDigits();
-				String result = getNonEmptyResultString(labResult);
-				if (digits == 0) {
-					return result;
-				} else {
-					try {
-						Float resultNumeric = Float.parseFloat(result);
-						return String.format("%." + digits + "f", resultNumeric); //$NON-NLS-1$ //$NON-NLS-2$
-					} catch (NumberFormatException e) {
-						return result;
-					}
-				}
-			}
-		}
-		
-		private String getNonEmptyResultString(LabResult labResult){
-			String result = labResult.getResult();
-			if (result != null && result.isEmpty()) {
-				result = "?"; //$NON-NLS-1$
-			}
-			if (labResult.getItem().getTyp() == typ.TEXT) {
-				if (labResult.isLongText()) {
-					result = labResult.getComment();
-					if (result.length() > 20) {
-						result = result.substring(0, 20);
-					}
-				}
-			}
-			return result;
-		}
-		
-		private String getUnitAndReferenceString(LabResult labResult){
-			StringBuilder sb = new StringBuilder();
-			sb.append("[").append(labResult.getUnit()).append("]");
-			if (labResult.getPatient().getGeschlecht().equals(Patient.MALE)) {
-				sb.append("[").append(labResult.getRefMale()).append("]");
-			} else {
-				sb.append("[").append(labResult.getRefFemale()).append("]");
-			}
-			return sb.toString();
-		}
-		
-		private String getCommentString(LabResult labResult){
-			StringBuilder sb = new StringBuilder();
-			String comment = labResult.getComment();
-			if (!comment.isEmpty()) {
-				sb.append("\n").append(comment);
-			}
-			return sb.toString();
-		}
-		
-		@Override
-		public String getToolTipText(Object element){
-			if (element instanceof LaborItemResults) {
-				TimeTool date = (TimeTool) column.getColumn().getData(COLUMN_DATE_KEY);
-				if (date != null) {
-					List<LabResult> results =
-						((LaborItemResults) element)
-							.getResult(date.toString(TimeTool.DATE_COMPACT));
-					if (results != null) {
-						StringBuilder sb = new StringBuilder();
-						for (LabResult labResult : results) {
-							TimeTool time = labResult.getObservationTime();
-							if (time == null) {
-								time = labResult.getDateTime();
-							}
-							if (sb.length() == 0) {
-								sb.append(time.toString(TimeTool.TIME_FULL));
-								sb.append(" - "); //$NON-NLS-1$
-								sb.append(getResultString(labResult));
-								sb.append(getUnitAndReferenceString(labResult));
-								sb.append(getCommentString(labResult));
-							} else {
-								sb.append(",\n"); //$NON-NLS-1$
-								sb.append(time.toString(TimeTool.TIME_FULL));
-								sb.append(" - "); //$NON-NLS-1$
-								sb.append(getResultString(labResult));
-								sb.append(getUnitAndReferenceString(labResult));
-								sb.append(getCommentString(labResult));
-							}
-						}
-						return sb.toString();
-					}
-				}
-			}
-			return null;
-		}
-		
-		@Override
-		public Color getForeground(Object element){
-			if (element instanceof LaborItemResults) {
-				TimeTool date = (TimeTool) column.getColumn().getData(COLUMN_DATE_KEY);
-				if (date != null) {
-					List<LabResult> results =
-						((LaborItemResults) element)
-							.getResult(date.toString(TimeTool.DATE_COMPACT));
-					if (results != null) {
-						boolean pathologic = false;
-						for (LabResult labResult : results) {
-							if (labResult.isFlag(LabResult.PATHOLOGIC)) {
-								pathologic = true;
-								break;
-							}
-						}
-						if (pathologic) {
-							return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-						}
-					}
-				}
-			}
-			return Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
-		}
-	}
-	
-	static class LaborItemResults implements Comparable<LaborItemResults> {
-		
-		private HashMap<String, List<LabResult>> results;
-		private String item;
-		
-		public LaborItemResults(String item, HashMap<String, List<LabResult>> results){
-			this.results = results;
-			this.item = item;
-		}
-		
-		public String getItem(){
-			return item;
-		}
-		
-		public boolean isVisible(){
-			return results.values().iterator().next().get(0).getItem().isVisible();
-		}
-		
-		public LabResult getFirstResult(){
-			return results.values().iterator().next().get(0);
-		}
-		
-		public List<LabResult> getResult(String date){
-			return results.get(date);
-		}
-		
-		public List<String> getDays(){
-			return new ArrayList<String>(results.keySet());
-		}
-		
-		@Override
-		public int compareTo(LaborItemResults o){
-			return item.compareTo(o.getItem());
-		}
-	}
-	
-	private static class DisplayDoubleClickListener implements IDoubleClickListener {
-		private static Font dialogFont = null;
-		private LaborResultsComposite composite;
-		
-		public DisplayDoubleClickListener(LaborResultsComposite composite){
-			this.composite = composite;
-		}
-		
-		@Override
-		public void doubleClick(DoubleClickEvent event){
-			List<LabResult> results = composite.getSelectedResults();
-			if (results != null) {
-				for (LabResult labResult : results) {
-					openDisplayDialog(labResult);
-				}
-			}
-		}
-		
-		private void openDisplayDialog(LabResult labResult){
-			LabItem labItem = labResult.getItem();
-			if (labItem.getTyp().equals(LabItem.typ.TEXT) || (labResult.getComment().length() > 0)) {
-				DisplayTextDialog dlg =
-					new DisplayTextDialog(composite.getShell(),
-						Messages.LaborResultsComposite_textResultTitle, labItem.getName(),
-						labResult.getComment());
-				// HL7 Befunde enthalten oft mit Leerzeichen formatierte Bemerkungen,
-				// die nur mit nicht-proportionalen Fonts dargestellt werden k��nnen
-				// Wir versuchen also, die Anzeige mit Courier New, ohne zu wissen ob die
-				// auf Mac und Linux auch drauf sind.
-				// Falls der Font nicht geladen werden kann, wird der System-Default Font
-				// verwendet
-				// Hier die Fonts, welche getestet worden sind:
-				// Windows: Courier New (getestet=
-				// Mac: nicht getestet
-				// Linux: nicht getestet
-				try {
-					if (dialogFont == null) {
-						dialogFont = new Font(null, "Courier New", 9, SWT.NORMAL); //$NON-NLS-1$
-					}
-				} catch (Exception ex) {
-					// Do nothing -> Use System Default font
-				} finally {
-					dlg.setFont(dialogFont);
-				}
-				dlg.setWhitespaceNormalized(false);
-				dlg.open();
-			} else if (labItem.getTyp().equals(LabItem.typ.DOCUMENT)) {
-				Patient patient = ElexisEventDispatcher.getSelectedPatient();
-				if (patient != null) {
-					new DisplayLabDokumenteDialog(composite.getShell(),
-						Messages.LaborResultsComposite_Documents,
-						Collections.singletonList(labResult)).open();//$NON-NLS-1$
-				}
-			}
-		}
-	}
-	
 	public String[] getPrintHeaders(){
 		ArrayList<String> ret = new ArrayList<String>();
 		
 		TreeColumn[] columns = viewer.getTree().getColumns();
 		for (TreeColumn treeColumn : columns) {
-			ret.add(treeColumn.getText());
+			if (treeColumn != newColumn.getColumn()) {
+				ret.add(treeColumn.getText());
+			}
 		}
 		return ret.toArray(new String[ret.size()]);
 	}
@@ -482,8 +246,7 @@ public class LaborResultsComposite extends Composite {
 	 * Reload all content and update the Viewer
 	 */
 	public void reload(){
-		setRedraw(false);
-		viewer.setInput(LabResult.getGrouped(actPatient));
+		viewer.getContentProvider().inputChanged(viewer, null, LabResult.getGrouped(actPatient));
 		
 		for (int i = 0; i < resultColumns.size(); i++) {
 			resultColumns.get(i).getColumn().setData(COLUMN_DATE_KEY, null);
@@ -497,9 +260,7 @@ public class LaborResultsComposite extends Composite {
 				.setText(dates.get(i + columnOffset).toString(TimeTool.DATE_GER));
 			resultColumns.get(i).getColumn().setData(COLUMN_DATE_KEY, dates.get(i + columnOffset));
 		}
-		
-		viewer.expandAll();
-		setRedraw(true);
+		viewer.refresh();
 	}
 	
 	/**
@@ -542,5 +303,20 @@ public class LaborResultsComposite extends Composite {
 		if (viewer != null && !viewer.getControl().isDisposed()) {
 			viewer.collapseAll();
 		}
+	}
+	
+	public void toggleNewColumn(){
+		if ((newColumn.getColumn().getWidth() > 10)) {
+			newColumn.getColumn().setWidth(5);
+		} else {
+			newColumn.getColumn().setWidth(100);
+		}
+		viewer.refresh();
+	}
+	
+	public int[] getSkipIndex(){
+		int[] ret = new int[1];
+		ret[0] = newColumnIndex;
+		return ret;
 	}
 }
