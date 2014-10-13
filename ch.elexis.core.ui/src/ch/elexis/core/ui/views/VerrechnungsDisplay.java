@@ -243,9 +243,10 @@ public class VerrechnungsDisplay extends Composite {
 			ti.setData(lst);
 			
 			IVerrechenbar vr = lst.getVerrechenbar();
-			if(vr instanceof Artikel) {
+			if (vr instanceof Artikel) {
 				Artikel a = (Artikel) vr;
-				if(a.getAbgabeEinheit()<a.getPackungsGroesse()) {
+				int abgabeEinheit = a.getAbgabeEinheit();
+				if (abgabeEinheit > 0 && abgabeEinheit < a.getPackungsGroesse()) {
 					ti.setImage(Images.IMG_BLOCKS_SMALL.getImage());
 				}
 			}
