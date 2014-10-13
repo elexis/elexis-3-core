@@ -140,6 +140,7 @@ public class Messages extends NLS {
 	public static String LaborPrefs_mergeLabItems;
 	public static String LaborPrefs_importLabMapping;
 	public static String LaborPrefs_mappingFrom2_1_7;
+	public static String LabGroupPrefs_showLabGroupsOnly;
 	public static String LagerverwaltungPrefs_checkForInvalid;
 	public static String LagerverwaltungPrefs_orderCriteria;
 	public static String LagerverwaltungPrefs_orderWhenAtMin;

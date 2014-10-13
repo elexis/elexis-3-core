@@ -30,6 +30,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -43,7 +44,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.ui.preferences.Messages;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.LabGroup;
@@ -51,6 +52,7 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.Query;
 
 public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferencePage {
+	public static final String SHOW_GROUPS_ONLY = "lab/showGroupsOnly"; //$NON-NLS-1$
 	
 	private LabGroup actGroup = null;
 	
@@ -66,6 +68,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		super(Messages.LabGroupPrefs_groups);
 	}
 	
+	@Override
 	protected Control createContents(Composite parent){
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -99,6 +102,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		groupsViewer.getControl().setLayoutData(gd);
 		
 		groupsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event){
 				IStructuredSelection sel = (IStructuredSelection) groupsViewer.getSelection();
 				Object element = sel.getFirstElement();
@@ -125,6 +129,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		newButton = new Button(groupButtonArea, SWT.PUSH);
 		newButton.setText(Messages.LabGroupPrefs_new);
 		newButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e){
 				InputDialog dialog =
 					new InputDialog(
@@ -141,6 +146,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 				}
 			}
 			
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e){
 				widgetSelected(e);
 			}
@@ -149,6 +155,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		removeButton = new Button(groupButtonArea, SWT.PUSH);
 		removeButton.setText(Messages.LabGroupPrefs_delete);
 		removeButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e){
 				if (actGroup != null) {
 					if (SWTHelper.askYesNo(
@@ -167,11 +174,22 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 				}
 			}
 			
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e){
 				widgetSelected(e);
 			}
 		});
 		
+		final Button showGroups = new Button(topArea, SWT.NONE | SWT.CHECK);
+		showGroups.setText(Messages.LabGroupPrefs_showLabGroupsOnly);
+		showGroups.setSelection(CoreHub.userCfg.get(SHOW_GROUPS_ONLY, false));
+		showGroups.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				CoreHub.userCfg.set(SHOW_GROUPS_ONLY, showGroups.getSelection());
+			}
+		});
+
 		Composite bottomArea = new Composite(composite, SWT.NONE);
 		bottomArea.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		bottomArea.setLayout(new GridLayout(1, false));
@@ -184,6 +202,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		itemsViewer.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		
 		itemsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event){
 				updateItemButtonsState();
 			}
@@ -207,6 +226,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		removeItemButton.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
 		addItemButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e){
 				if (actGroup != null) {
 					ItemsSelectionDialog dialog =
@@ -218,12 +238,14 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 				}
 			}
 			
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e){
 				widgetSelected(e);
 			}
 		});
 		
 		removeItemButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e){
 				if (actGroup != null) {
 					IStructuredSelection sel = (IStructuredSelection) itemsViewer.getSelection();
@@ -238,6 +260,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 				}
 			}
 			
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e){
 				widgetSelected(e);
 			}
@@ -248,6 +271,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		return composite;
 	}
 	
+	@Override
 	public void init(IWorkbench workbench){
 		// nothing to do
 	}
@@ -290,6 +314,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 	}
 	
 	static class GroupsContentProvider implements IStructuredContentProvider {
+		@Override
 		public Object[] getElements(Object inputElement){
 			Query<LabGroup> query = new Query<LabGroup>(LabGroup.class);
 			query.orderBy(false, new String[] {
@@ -303,10 +328,12 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 			return groups.toArray();
 		}
 		
+		@Override
 		public void dispose(){
 			// nothing to do
 		}
 		
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
 			// nothing to do
 		}
@@ -322,6 +349,9 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 				sb.append(item.getGroup());
 				sb.append(" - "); //$NON-NLS-1$
 				sb.append(item.get("titel")); //$NON-NLS-1$
+				sb.append(" (").append(item.getRefM()).append("/").append(item.getRefW()) //$NON-NLS-1$ //$NON-NLS-2$
+					.append(")"); //$NON-NLS-1$
+				sb.append(" [").append(item.getEinheit()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				return sb.toString();
 			} else {
@@ -331,6 +361,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 	}
 	
 	class GroupItemsContentProvider implements IStructuredContentProvider {
+		@Override
 		public Object[] getElements(Object inputElement){
 			if (actGroup != null) {
 				List<LabItem> items = actGroup.getItems();
@@ -341,10 +372,12 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 			}
 		}
 		
+		@Override
 		public void dispose(){
 			// nothing to do
 		}
 		
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
 			// nothing to do
 		}
@@ -360,6 +393,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 			this.group = group;
 		}
 		
+		@Override
 		protected Control createContents(Composite parent){
 			Control contents = super.createContents(parent);
 			
@@ -369,6 +403,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 			return contents;
 		}
 		
+		@Override
 		protected Control createDialogArea(Composite parent){
 			Composite composite = (Composite) super.createDialogArea(parent);
 			composite.setLayout(new GridLayout(1, false));
@@ -388,6 +423,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 			return composite;
 		}
 		
+		@Override
 		protected void buttonPressed(int buttonId){
 			if (buttonId == OK) {
 				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
@@ -413,6 +449,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		}
 		
 		class ItemsContentProvider implements IStructuredContentProvider {
+			@Override
 			public Object[] getElements(Object inputElement){
 				Query<LabItem> query = new Query<LabItem>(LabItem.class);
 				query.orderBy(false, new String[] {
@@ -430,10 +467,12 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 				return items.toArray();
 			}
 			
+			@Override
 			public void dispose(){
 				// nothing to do
 			}
 			
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
 				// nothing to do
 			}

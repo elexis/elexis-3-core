@@ -1,6 +1,8 @@
 package ch.elexis.core.ui.laboratory.dialogs;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +36,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.laboratory.laborlink.LaborLink;
+import ch.elexis.core.ui.laboratory.preferences.LabGroupPrefs;
 import ch.elexis.core.ui.util.IExternLaborOrder;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Anwender;
@@ -87,14 +90,16 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 			return allGroups;
 		}
 		
-		for (LabItem it : lItems) {
-			String groupName = it.getGroup();
-			LaborVerordnungDialog.Group group = allGroups.get(groupName);
-			if (group == null) {
-				group = new Group(groupName, new ArrayList<LabItem>());
-				allGroups.put(groupName, group);
+		if (!CoreHub.userCfg.get(LabGroupPrefs.SHOW_GROUPS_ONLY, false)) {
+			for (LabItem it : lItems) {
+				String groupName = it.getGroup();
+				LaborVerordnungDialog.Group group = allGroups.get(groupName);
+				if (group == null) {
+					group = new Group(groupName, new ArrayList<LabItem>());
+					allGroups.put(groupName, group);
+				}
+				group.addItem(it);
 			}
-			group.addItem(it);
 		}
 		
 		allGroups.putAll(loadCustomGroups());
@@ -168,6 +173,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 			new ContainerCheckedTreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.BORDER);
 		laborViewer.addCheckStateListener(new ICheckStateListener() {
+			@Override
 			public void checkStateChanged(CheckStateChangedEvent event){
 				// We use an additive check state cache so we need to remove
 				// previously checked items if the user unchecked them.
@@ -460,10 +466,20 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	private static class LabItemsContentProvider implements ITreeContentProvider {
 		private Hashtable<String, Group> items;
 		
+		@Override
 		public Object[] getElements(Object inputElement){
-			return items.values().toArray();
+			ArrayList<Group> ret = new ArrayList<LaborVerordnungDialog.Group>();
+			ret.addAll(items.values());
+			Collections.sort(ret, new Comparator<Group>() {
+				@Override
+				public int compare(Group o1, Group o2){
+					return o1.shortName.compareTo(o2.shortName);
+				}
+			});
+			return ret.toArray();
 		}
 		
+		@Override
 		public Object[] getChildren(Object parentElement){
 			if (parentElement instanceof Group) {
 				Group group = (Group) parentElement;
@@ -473,18 +489,22 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 			}
 		}
 		
+		@Override
 		public boolean hasChildren(Object element){
 			return (element instanceof LaborVerordnungDialog.Group);
 		}
 		
+		@Override
 		public Object[] getParent(Object element){
 			return null;
 		}
 		
+		@Override
 		public void dispose(){
 			// nothing to do
 		}
 		
+		@Override
 		@SuppressWarnings("unchecked")
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
 			if (newInput instanceof Hashtable<?, ?>) {
@@ -534,6 +554,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 			return groupItems;
 		}
 		
+		@Override
 		public String toString(){
 			return shortName;
 		}
