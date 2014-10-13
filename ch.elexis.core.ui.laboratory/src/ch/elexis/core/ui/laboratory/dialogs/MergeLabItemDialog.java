@@ -77,6 +77,7 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 		destinationFilterTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		destinationFilterTxt.setMessage("Filter"); //$NON-NLS-1$
 		destinationFilterTxt.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e){
 				if (destinationFilterTxt.getText().length() > 1) {
 					destinationFilter.setSearchText(destinationFilterTxt.getText());
@@ -104,6 +105,7 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 		sourceFilterTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		sourceFilterTxt.setMessage("Filter"); //$NON-NLS-1$
 		sourceFilterTxt.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e){
 				if (sourceFilterTxt.getText().length() > 1) {
 					sourceFilter.setSearchText(sourceFilterTxt.getText());
@@ -158,6 +160,7 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 		
 		if (confirm) {
 			destination.mergeWith(source);
+			source.delete();
 		} else {
 			return;
 		}
