@@ -214,8 +214,10 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 			if (element instanceof LabItem) {
 				String refW = shortenString(((LabItem) element).getRefW());
 				String refM = shortenString(((LabItem) element).getRefM());
-				sb.append(((LabItem) element).getKuerzel()).append(", ") //$NON-NLS-1$
-					.append(((LabItem) element).getName()).append(" [") //$NON-NLS-1$
+				sb.append(((LabItem) element).getKuerzel())
+					.append(", ") //$NON-NLS-1$
+					.append(((LabItem) element).getName())
+					.append(" - ").append(((LabItem) element).getGroup()).append(" [") //$NON-NLS-1$ //$NON-NLS-2$
 					.append(((LabItem) element).getEinheit()).append("]").append(" ").append(refW) //$NON-NLS-1$ //$NON-NLS-2$
 					.append(" / ").append(refM); //$NON-NLS-1$
 			}
