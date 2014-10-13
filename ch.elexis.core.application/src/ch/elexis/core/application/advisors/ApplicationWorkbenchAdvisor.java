@@ -79,6 +79,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		if (reminderList.size() > 0) {
 			StringBuilder sb = new StringBuilder();
 			for (Reminder reminder : reminderList) {
+				sb.append(reminder.getKontakt().getLabel() + ", Id["
+					+ reminder.getKontakt().getPatCode() + "]:\n");
 				sb.append(reminder.getMessage()).append("\n\n"); //$NON-NLS-1$		
 			}
 			
