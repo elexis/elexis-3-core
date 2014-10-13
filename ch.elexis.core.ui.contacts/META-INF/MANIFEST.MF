@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.core.runtime,
  ch.rgw.utility;bundle-version="3.0.0",
  ch.elexis.core;bundle-version="3.0.0",
  ch.elexis.core.data;bundle-version="3.0.0",
- ch.elexis.core.ui;bundle-version="3.0.0",
+ ch.elexis.core.ui;bundle-version="3.1.0",
  ch.elexis.core.ui.icons;bundle-version="3.0.0",
  ch.elexis.core.ui.medication;bundle-version="3.0.0",
  org.apache.commons.jexl;bundle-version="2.1.1"

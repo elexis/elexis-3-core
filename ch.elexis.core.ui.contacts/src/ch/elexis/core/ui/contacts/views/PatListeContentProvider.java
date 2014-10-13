@@ -51,6 +51,16 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	public PatListeContentProvider(CommonViewer cv, String[] fieldsToOrder, ViewPart s){
 		viewer = cv;
 		site = s;
+		updateFields(fieldsToOrder);
+	}
+	
+	/**
+	 * Update the used fields to order the content.
+	 * 
+	 * @param fieldsToOrder
+	 * @since 3.0.0
+	 */
+	public void updateFields(String[] fieldsToOrder){
 		orderLabels = new String[fieldsToOrder.length];
 		orderFields = new String[fieldsToOrder.length];
 		for (int i = 0; i < fieldsToOrder.length; i++) {
@@ -61,11 +71,13 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		firstOrder = orderFields[0];
 	}
 	
+	@Override
 	public void startListening(){
 		viewer.getConfigurer().getControlFieldProvider().addChangeListener(this);
 		qbe = new Query<Patient>(Patient.class);
 	}
 	
+	@Override
 	public void stopListening(){
 		if (viewer != null) {
 			viewer.getConfigurer().getControlFieldProvider().removeChangeListener(this);
@@ -84,6 +96,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		bValid = false;
 	}
 	
+	@Override
 	public Object[] getElements(Object inputElement){
 		if (bValid || bUpdating) {
 			return pats;
@@ -138,6 +151,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 					}
 					UiDesk.getDisplay().syncExec(new Runnable() {
 						
+						@Override
 						public void run(){
 							((TableViewer) viewer.getViewerWidget()).setItemCount(pats.length);
 							bValid = true;
@@ -170,12 +184,15 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		return pats;
 	}
 	
+	@Override
 	public void dispose(){
 		stopListening();
 	}
 	
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
 	
+	@Override
 	public void changed(HashMap<String, String> vals){
 		bValid = false;
 		getElements(viewer);
@@ -187,6 +204,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		// viewer.notify(CommonViewer.Message.update);
 	}
 	
+	@Override
 	public void reorder(String field){
 		int idx = StringTool.getIndex(orderLabels, field);
 		if (idx > -1) {
@@ -196,11 +214,13 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		
 	}
 	
+	@Override
 	public void selected(){
 		// TODO Auto-generated method stub
 		
 	}
 	
+	@Override
 	public void updateElement(int index){
 		if (!bValid) {
 			getElements(viewer);

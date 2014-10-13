@@ -31,7 +31,6 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -102,13 +101,16 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private IAction filterAction, newPatAction, copySelectedPatInfosToClipboardAction,
 			copySelectedAddressesToClipboardAction;
 	private Patient actPatient;
+	private boolean initiated = false;
 	PatListFilterBox plfb;
 	PatListeContentProvider plcp;
+	DefaultControlFieldProvider dcfp;
 	Composite parent;
 	
 	ElexisEventListener eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
 		ElexisEvent.EVENT_USER_CHANGED) {
 		
+		@Override
 		public void runInUi(ElexisEvent ev){
 			UserChanged();
 		}
@@ -143,44 +145,26 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	}
 	
 	@Override
-	public void createPartControl(final Composite op){
-		op.setLayout(new FillLayout());
-		parent = new Composite(op, SWT.NONE);
-		
+	public void createPartControl(final Composite parent){
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		layout.verticalSpacing = 0;
 		
-		parent.setLayout(layout);
+		this.parent = parent;
+		this.parent.setLayout(layout);
 		
 		cv = new CommonViewer();
-		ArrayList<String> fields = new ArrayList<String>();
-		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, false)) {
-			fields.add(Patient.FLD_PATID + Query.EQUALS + Messages.PatientenListeView_PatientNr); //$NON-NLS-1$
-		}
-		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWNAME, true)) {
-			fields.add(Patient.FLD_NAME + Query.EQUALS + Messages.PatientenListeView_PatientName); //$NON-NLS-1$
-		}
-		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
-			fields.add(Patient.FLD_FIRSTNAME + Query.EQUALS
-				+ Messages.PatientenListeView_PantientFirstName); //$NON-NLS-1$
-		}
-		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWDOB, true)) {
-			fields.add(Patient.BIRTHDATE + Query.EQUALS
-				+ Messages.PatientenListeView_PatientBirthdate); //$NON-NLS-1$
-		}
-		plcp = new PatListeContentProvider(cv, fields.toArray(new String[0]), this);
+
+		plcp = new PatListeContentProvider(cv, collectFields(), this);
 		makeActions();
 		plfb = new PatListFilterBox(parent);
 		plfb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		((GridData) plfb.getLayoutData()).heightHint = 0;
 		
-		DefaultControlFieldProvider dcfp =
-			new DefaultControlFieldProvider(cv, fields.toArray(new String[0]));
-		String ff = CoreHub.userCfg.get(Preferences.USR_PATLIST_FOCUSFIELD, null);
-		if (ff != null)
-			dcfp.setFocusField(ff);
+		dcfp = new DefaultControlFieldProvider(cv, collectFields());
+		updateFocusField();
+
 		vc = new ViewerConfigurer(
 		// new LazyContentProvider(cv,loader,
 		// AccessControlDefaults.PATIENT_DISPLAY),
@@ -192,23 +176,11 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			.addChangeListener(new ControlFieldSelectionListener());
 		cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 		
-		menus = new ViewMenus(getViewSite());
-		
-		menus.createToolbar(newPatAction, filterAction);
-		
-		menus.createToolbar(copySelectedPatInfosToClipboardAction);
-		menus.createToolbar(copySelectedAddressesToClipboardAction);
-		
-		menus.createControlContextMenu(cv.getViewerWidget().getControl(), new PatientMenuPopulator(
-			this));
-		
-		menus.createMenu(newPatAction, filterAction);
-		menus.createMenu(copySelectedPatInfosToClipboardAction);
-		menus.createMenu(copySelectedAddressesToClipboardAction);
-		
 		plcp.startListening();
 		ElexisEventDispatcher.getInstance().addListeners(eeli_user);
 		GlobalEventDispatcher.addActivationListener(this, this);
+		
+		populateViewMenu();
 		
 		StructuredViewer viewer = cv.getViewerWidget();
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -242,6 +214,49 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		// });
 	}
 	
+	private void updateFocusField(){
+		String ff = CoreHub.userCfg.get(Preferences.USR_PATLIST_FOCUSFIELD, null);
+		if (ff != null) {
+			dcfp.setFocusField(ff);
+		}
+	}
+
+	private String[] collectFields(){
+		ArrayList<String> fields = new ArrayList<String>();
+		initiated = !("".equals(CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, "")));
+		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, false)) {
+			fields.add(Patient.FLD_PATID + Query.EQUALS + Messages.PatientenListeView_PatientNr); //$NON-NLS-1$
+		}
+		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWNAME, true)) {
+			fields.add(Patient.FLD_NAME + Query.EQUALS + Messages.PatientenListeView_PatientName); //$NON-NLS-1$
+		}
+		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
+			fields.add(Patient.FLD_FIRSTNAME + Query.EQUALS
+				+ Messages.PatientenListeView_PantientFirstName); //$NON-NLS-1$
+		}
+		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWDOB, true)) {
+			fields.add(Patient.BIRTHDATE + Query.EQUALS
+				+ Messages.PatientenListeView_PatientBirthdate); //$NON-NLS-1$
+		}
+		return fields.toArray(new String[fields.size()]);
+	}
+
+	private void populateViewMenu(){
+		menus = new ViewMenus(getViewSite());
+		
+		menus.createToolbar(newPatAction, filterAction);
+		
+		menus.createToolbar(copySelectedPatInfosToClipboardAction);
+		menus.createToolbar(copySelectedAddressesToClipboardAction);
+		
+		menus.createControlContextMenu(cv.getViewerWidget().getControl(), new PatientMenuPopulator(
+			this));
+		
+		menus.createMenu(newPatAction, filterAction);
+		menus.createMenu(copySelectedPatInfosToClipboardAction);
+		menus.createMenu(copySelectedAddressesToClipboardAction);
+	}
+
 	public PatListeContentProvider getContentProvider(){
 		return plcp;
 	}
@@ -277,6 +292,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			}
 		}
 		
+		@Override
 		public Color getBackground(final Object element, final int columnIndex){
 			if (element instanceof Patient) {
 				Patient pat = (Patient) element;
@@ -288,6 +304,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			return null;
 		}
 		
+		@Override
 		public Color getForeground(final Object element, final int columnIndex){
 			if (element instanceof Patient) {
 				Patient pat = (Patient) element;
@@ -490,7 +507,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 									selectedPatInfosText.append(k.getVorname());
 								}
 								
-								String thisPatientBIRTHDATE = (String) k.get(k.BIRTHDATE);
+								String thisPatientBIRTHDATE = k.get(k.BIRTHDATE);
 								if (!StringTool.isNothing(thisPatientBIRTHDATE)) {
 									// This would add the term "geb." (born on the) before the date
 									// of birth:
@@ -504,19 +521,19 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 											.toString(TimeTool.DATE_GER));
 								}
 								
-								String thisAddressFLD_STREET = (String) k.get(k.FLD_STREET);
+								String thisAddressFLD_STREET = k.get(k.FLD_STREET);
 								if (!StringTool.isNothing(thisAddressFLD_STREET)) {
 									selectedPatInfosText.append("," + StringTool.space
 										+ thisAddressFLD_STREET);
 								}
 								
-								String thisAddressFLD_COUNTRY = (String) k.get(k.FLD_COUNTRY);
+								String thisAddressFLD_COUNTRY = k.get(k.FLD_COUNTRY);
 								if (!StringTool.isNothing(thisAddressFLD_COUNTRY)) {
 									selectedPatInfosText.append("," + StringTool.space
 										+ thisAddressFLD_COUNTRY + "-");
 								}
 								
-								String thisAddressFLD_ZIP = (String) k.get(k.FLD_ZIP);
+								String thisAddressFLD_ZIP = k.get(k.FLD_ZIP);
 								if (!StringTool.isNothing(thisAddressFLD_ZIP)) {
 									if (StringTool.isNothing(thisAddressFLD_COUNTRY)) {
 										selectedPatInfosText.append("," + StringTool.space);
@@ -526,7 +543,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 								}
 								;
 								
-								String thisAddressFLD_PLACE = (String) k.get(k.FLD_PLACE);
+								String thisAddressFLD_PLACE = k.get(k.FLD_PLACE);
 								if (!StringTool.isNothing(thisAddressFLD_PLACE)) {
 									if (StringTool.isNothing(thisAddressFLD_COUNTRY)
 										&& StringTool.isNothing(thisAddressFLD_ZIP)) {
@@ -537,20 +554,20 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 										+ thisAddressFLD_PLACE);
 								}
 								
-								String thisAddressFLD_PHONE1 = (String) k.get(k.FLD_PHONE1);
+								String thisAddressFLD_PHONE1 = k.get(k.FLD_PHONE1);
 								if (!StringTool.isNothing(thisAddressFLD_PHONE1)) {
 									selectedPatInfosText.append("," + StringTool.space
 										+ StringTool.space + thisAddressFLD_PHONE1);
 								}
 								
-								String thisAddressFLD_PHONE2 = (String) k.get(k.FLD_PHONE2);
+								String thisAddressFLD_PHONE2 = k.get(k.FLD_PHONE2);
 								if (!StringTool.isNothing(thisAddressFLD_PHONE2)) {
 									selectedPatInfosText.append("," + StringTool.space
 										+ StringTool.space + thisAddressFLD_PHONE2);
 								}
 								
 								String thisAddressFLD_MOBILEPHONE =
-									(String) k.get(k.FLD_MOBILEPHONE);
+									k.get(k.FLD_MOBILEPHONE);
 								if (!StringTool.isNothing(thisAddressFLD_MOBILEPHONE)) {
 									// With a colon after the label:
 									// selectedPatInfosText.append(","+StringTool.space+k.FLD_MOBILEPHONE+":"+StringTool.space+thisAddressFLD_MOBILEPHONE);
@@ -560,7 +577,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 										+ thisAddressFLD_MOBILEPHONE);
 								}
 								
-								String thisAddressFLD_FAX = (String) k.get(k.FLD_FAX);
+								String thisAddressFLD_FAX = k.get(k.FLD_FAX);
 								if (!StringTool.isNothing(thisAddressFLD_FAX)) {
 									// With a colon after the label:
 									// selectedPatInfosText.append(","+StringTool.space+k.FLD_FAX+":"+StringTool.space+thisAddressFLD_FAX);
@@ -569,7 +586,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 										+ StringTool.space + thisAddressFLD_FAX);
 								}
 								
-								String thisAddressFLD_E_MAIL = (String) k.get(k.FLD_E_MAIL);
+								String thisAddressFLD_E_MAIL = k.get(k.FLD_E_MAIL);
 								if (!StringTool.isNothing(thisAddressFLD_E_MAIL)) {
 									selectedPatInfosText.append("," + StringTool.space
 										+ thisAddressFLD_E_MAIL);
@@ -734,6 +751,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		
 	}
 	
+	@Override
 	public void activation(final boolean mode){
 		if (mode == true) {
 			newPatAction.setEnabled(CoreHub.acl.request(AccessControlDefaults.PATIENT_INSERT));
@@ -744,6 +762,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		}
 	}
 	
+	@Override
 	public void visible(final boolean mode){
 		// TODO Auto-generated method stub
 		
@@ -754,29 +773,36 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(final IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return GlobalActions.fixLayoutAction.isChecked();
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}
 	
+	@Override
 	public void heartbeat(){
 		cv.notify(CommonViewer.Message.update);
 	}
@@ -786,10 +812,12 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	 * listed, the first one is selected. (This listener only implements selected().)
 	 */
 	class ControlFieldSelectionListener implements ControlFieldListener {
+		@Override
 		public void changed(HashMap<String, String> values){
 			// nothing to do (handled by LazyContentProvider)
 		}
 		
+		@Override
 		public void reorder(final String field){
 			// nothing to do (handled by LazyContentProvider)
 		}
@@ -798,6 +826,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		 * ENTER has been pressed in the control fields, select the first listed patient
 		 */
 		// this is also implemented in KontakteView
+		@Override
 		public void selected(){
 			StructuredViewer viewer = cv.getViewerWidget();
 			Object[] elements =
@@ -819,15 +848,17 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	}
 	
 	public void UserChanged(){
-		/*
-		 * Not really pretty, but should do the job, basically we just
-		 * throw the out view content away and recreate it with the
-		 * appropriate settings.
-		 */
-		Composite par = parent.getParent();
-		parent.dispose();
-		createPartControl(par);
-		par.layout(true);
+		if (!initiated)
+			SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID);
+		if (!cv.getViewerWidget().getControl().isDisposed()) {
+			cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+			cv.notify(CommonViewer.Message.update);
+			
+			dcfp.updateFields(collectFields(), true);
+			plcp.updateFields(collectFields());
+
+			updateFocusField();
+		}
 	}
 	
 }

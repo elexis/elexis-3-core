@@ -25,6 +25,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -64,11 +65,29 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	protected int focusField;
 	boolean bCeaseFire;
 	
+	private Composite inner;
+
 	public DefaultControlFieldProvider(final CommonViewer viewer, final String[] flds){
+		myViewer = viewer;
+		updateFields(flds, false);
+		ml = new ModListener();
+		sl = new SelListener();
+		listeners = new LinkedList<ControlFieldListener>();
+		tk = UiDesk.getToolkit();
+	}
+	
+	/**
+	 * Update and optionally redraw the control fields to order the content.
+	 * 
+	 * @param flds
+	 * @param redraw
+	 *            redraw the fields
+	 * @since 3.1.0
+	 */
+	public void updateFields(String[] flds, boolean redraw){
 		fields = new String[flds.length];
 		dbFields = new String[fields.length];
 		focusField = 0;
-		myViewer = viewer;
 		// this.fields=new String[fields.length];
 		lastFiltered = new String[fields.length];
 		for (int i = 0; i < flds.length; i++) {
@@ -81,12 +100,44 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 				fields[i] = dbFields[i] = flds[i];
 			}
 		}
-		ml = new ModListener();
-		sl = new SelListener();
-		listeners = new LinkedList<ControlFieldListener>();
-		tk = UiDesk.getToolkit();
+		if (redraw) {
+			inner.setRedraw(false);
+			Control[] children = inner.getChildren();
+			for (Control control : children) {
+				control.dispose();
+			}
+			populateInnerComposite();
+			inner.setRedraw(true);
+		}
 	}
 	
+	private void populateInnerComposite(){
+		for (String l : fields) {
+			Hyperlink hl = tk.createHyperlink(inner, l, SWT.NONE);
+			hl.addHyperlinkListener(new HyperlinkAdapter() {
+				
+				@Override
+				public void linkActivated(final HyperlinkEvent e){
+					Hyperlink h = (Hyperlink) e.getSource();
+					fireSortEvent(h.getText());
+				}
+				
+			});
+			hl.setBackground(inner.getBackground());
+		}
+		
+		createSelectors(fields.length);
+		for (int i = 0; i < selectors.length; i++) {
+			selectors[i] = new ElexisText(tk.createText(inner, "", SWT.BORDER)); //$NON-NLS-1$
+			selectors[i].addModifyListener(ml);
+			selectors[i].addSelectionListener(sl);
+			selectors[i].setToolTipText(Messages.DefaultControlFieldProvider_enterFilter); //$NON-NLS-1$
+			selectors[i].setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			SWTHelper.setSelectOnFocus((Text) selectors[i].getWidget());
+		}
+	}
+	
+	@Override
 	public Composite createControl(final Composite parent){
 		// Form form=tk.createForm(parent);
 		// form.setLayoutData(SWTHelper.getFillGridData(1,true,1,false));
@@ -109,34 +160,12 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		});
 		hClr.setBackground(parent.getBackground());
 		
-		Composite inner = new Composite(ret, SWT.NONE);
+		inner = new Composite(ret, SWT.NONE);
 		GridLayout lRet = new GridLayout(fields.length, true);
 		inner.setLayout(lRet);
 		inner.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		
-		for (String l : fields) {
-			Hyperlink hl = tk.createHyperlink(inner, l, SWT.NONE);
-			hl.addHyperlinkListener(new HyperlinkAdapter() {
-				
-				@Override
-				public void linkActivated(final HyperlinkEvent e){
-					Hyperlink h = (Hyperlink) e.getSource();
-					fireSortEvent(h.getText());
-				}
-				
-			});
-			hl.setBackground(parent.getBackground());
-		}
-		
-		createSelectors(fields.length);
-		for (int i = 0; i < selectors.length; i++) {
-			selectors[i] = new ElexisText(tk.createText(inner, "", SWT.BORDER)); //$NON-NLS-1$
-			selectors[i].addModifyListener(ml);
-			selectors[i].addSelectionListener(sl);
-			selectors[i].setToolTipText(Messages.DefaultControlFieldProvider_enterFilter); //$NON-NLS-1$
-			selectors[i].setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			SWTHelper.setSelectOnFocus((Text) selectors[i].getWidget());
-		}
+		populateInnerComposite();
 		
 		return ret;
 	}
@@ -170,6 +199,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		}
 	}
 	
+	@Override
 	public void setFocus(){
 		selectors[focusField].setFocus();
 	}
@@ -187,6 +217,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	 * eingegeben wurden oder das Feld geleert wurde.
 	 * */
 	class ModListener implements ModifyListener {
+		@Override
 		public void modifyText(final ModifyEvent e){
 			modified = true;
 			Text t = (Text) e.getSource();
@@ -208,18 +239,22 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	 * Reaktion auf ENTER den Filterfelder. Weist den Viewer an, eine Selektion vorzunehmen.
 	 */
 	class SelListener implements SelectionListener {
+		@Override
 		public void widgetSelected(final SelectionEvent e){
 			fireSelectedEvent();
 		}
 		
+		@Override
 		public void widgetDefaultSelected(final SelectionEvent e){
 			widgetSelected(e);
 		}
 	}
 	
+	@Override
 	public void fireChangedEvent(){
 		if (!bCeaseFire) {
 			UiDesk.getDisplay().syncExec(new Runnable() {
+				@Override
 				public void run(){
 					HashMap<String, String> hm = new HashMap<String, String>();
 					for (int i = 0; i < fields.length; i++) {
@@ -233,6 +268,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		}
 	}
 	
+	@Override
 	public void fireSortEvent(final String text){
 		if (!bCeaseFire) {
 			for (ControlFieldListener ls : listeners) {
@@ -249,14 +285,17 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		}
 	}
 	
+	@Override
 	public void addChangeListener(final ControlFieldListener cl){
 		listeners.add(cl);
 	}
 	
+	@Override
 	public void removeChangeListener(final ControlFieldListener cl){
 		listeners.remove(cl);
 	}
 	
+	@Override
 	public String[] getValues(){
 		return lastFiltered;
 	}
@@ -265,6 +304,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	 * Alle Eingabefelder löschen und einen "changeEvent" feuern". Aber nur, wenn die Felder nicht
 	 * schon vorher leer waren.
 	 */
+	@Override
 	public void clearValues(){
 		if (!isEmpty()) {
 			bCeaseFire = true;
@@ -278,6 +318,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		}
 	}
 	
+	@Override
 	public void setQuery(final Query q){
 		boolean ch = false;
 		for (int i = 0; i < fields.length; i++) {
@@ -293,6 +334,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		
 	}
 	
+	@Override
 	public IFilter createFilter(){
 		return new DefaultFilter();
 	}
@@ -304,6 +346,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 			return select(element);
 		}
 		
+		@Override
 		public boolean select(Object element){
 			PersistentObject po = null;
 			if (element instanceof Tree) {
@@ -330,6 +373,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		
 	}
 	
+	@Override
 	public boolean isEmpty(){
 		for (String s : lastFiltered) {
 			if (!s.equals(StringTool.leer)) {
