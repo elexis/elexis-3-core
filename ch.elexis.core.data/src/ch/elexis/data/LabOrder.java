@@ -139,8 +139,43 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	
 	public void setState(State state){
 		set(FLD_STATE, Integer.toString(state.ordinal()));
+		// check if there is a reminder to set done ...
+		if (state != State.ORDERED) {
+			if (isOrderDone()) {
+				closeOrderReminder();
+			}
+		}
 	}
 	
+	/**
+	 * Test if all the orders with this order id are done
+	 * 
+	 * @return
+	 */
+	private boolean isOrderDone(){
+		return getLabOrders(getPatient(), null, null, null, get(FLD_ORDERID), null, State.ORDERED) != null;
+	}
+
+	/**
+	 * Close all {@link Reminder} which have the order id set as params field. Setting the params
+	 * field happens in LaborVerordnungDialog.
+	 * 
+	 */
+	private void closeOrderReminder(){
+		List<Reminder> reminders = Reminder.findForPatient(getPatient(), null);
+		for (Reminder reminder : reminders) {
+			String params = reminder.get("Params"); //$NON-NLS-1$
+			if (params.startsWith(LabOrder.FLD_ORDERID)) {
+				String[] parts = params.split("="); //$NON-NLS-1$
+				if (parts.length == 2) {
+					if (parts[1].equals(get(FLD_ORDERID))) {
+						reminder.setStatus(Reminder.Status.STATE_DONE);
+					}
+				}
+			}
+		}
+	}
+
 	public State getState(){
 		String stateStr = checkNull(get(FLD_STATE));
 		if (stateStr.isEmpty()) {
