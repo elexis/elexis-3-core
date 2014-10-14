@@ -88,7 +88,14 @@ public enum HL7ReaderFactory {
 		CharsetDetector detector = new CharsetDetector();
 		detector.setText(bytes);
 		CharsetMatch match = detector.detect();
+		
 		if (match != null) {
+			if (match.getName().equals("IBM424_rtl")) {
+				logger.warn("Reading HL7 file " + file.getAbsolutePath()
+					+ " with unsupported encoding " + match.getName()
+					+ " - trying to use ISO-8859-1 instead");
+				return new ByteArrayInputStream(detector.getString(bytes, "ISO-8859-1").getBytes());
+			}
 			logger.info("Reading HL7 file " + file.getAbsolutePath() + " encoded "
 				+ match.getName() + " " + match.getLanguage());
 			return new ByteArrayInputStream(match.getString().getBytes());
