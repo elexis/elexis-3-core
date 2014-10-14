@@ -333,7 +333,12 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	}
 	
 	/** Aktuellen patient setzen */
-	private void setPatient(Patient pat){
+	private synchronized void setPatient(Patient pat){
+		if (pat != null && actPat != null) {
+			if (pat.getId().equals(actPat.getId())) {
+				return;
+			}
+		}
 		for (Control cc : cEtiketten.getChildren()) {
 			cc.dispose();
 		}
@@ -370,7 +375,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	/**
 	 * Aktuelle Konsultation setzen.
 	 */
-	private void setKons(final Konsultation b){
+	private synchronized void setKons(final Konsultation b){
 		
 		if (actKons != null && text.isDirty()) {
 			actKons.updateEintrag(text.getContentsAsXML(), false);
@@ -536,6 +541,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		}
 	}
 	
+	@Override
 	public void activation(final boolean mode){
 		if ((mode == false) && (text.isDirty())) {
 			if (actKons != null) {
@@ -549,6 +555,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		
 	}
 	
+	@Override
 	public void visible(final boolean mode){
 		if (mode == true) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_pat, eeli_user);
@@ -572,25 +579,31 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(final IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}
