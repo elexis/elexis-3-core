@@ -43,6 +43,7 @@ import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.data.Anwender;
+import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;
@@ -355,15 +356,23 @@ public class CoreHub implements BundleActivator {
 		if (newMandant == null) {
 			mandantCfg = userCfg;
 		} else {
-			mandantCfg =
-				new SqlSettings(PersistentObject.getConnection(), "USERCONFIG", "Param", "Value",
-					"UserID=" + newMandant.getWrappedId());
+			mandantCfg = getUserSetting(newMandant);
 		}
 		
 		actMandant = newMandant;
 		
 		ElexisEventDispatcher.getInstance().fire(
 			new ElexisEvent(newMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
+	}
+	
+	public static Settings getUserSetting(Kontakt user){
+		if (StringConstants.ONE.equals(user.get(Kontakt.FLD_IS_USER))) {
+			Settings settings =
+				new SqlSettings(PersistentObject.getConnection(), "USERCONFIG", "Param", "Value",
+					"UserID=" + user.getWrappedId());
+			return settings;
+		}
+		return null;
 	}
 	
 	public Bundle getBundle(){

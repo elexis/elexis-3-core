@@ -20,9 +20,12 @@ import org.eclipse.core.commands.ExecutionException;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
+import ch.rgw.io.Settings;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
@@ -37,12 +40,16 @@ public class MahnlaufCommand extends AbstractHandler {
 		Query<Rechnung> qbe = new Query<Rechnung>(Rechnung.class);
 		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.OFFEN_UND_GEDRUCKT)); //$NON-NLS-1$
 		qbe.add(STR_MANDANT_I_D, "=", CoreHub.actMandant.getId()); //$NON-NLS-1$
+		
+		Mandant mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
+		Settings rnsSettings = CoreHub.getUserSetting(mandant.getRechnungssteller());
+		
 		TimeTool tt = new TimeTool();
 		// Rechnung zu 1. Mahnung
-		int days = CoreHub.mandantCfg.get(Preferences.RNN_DAYSUNTIL1ST, 30);
+		int days = rnsSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30);
 		Money betrag = new Money();
 		try {
-			betrag = new Money(CoreHub.mandantCfg.get(Preferences.RNN_AMOUNT1ST, "0.00")); //$NON-NLS-1$
+			betrag = new Money(rnsSettings.get(Preferences.RNN_AMOUNT1ST, "0.00")); //$NON-NLS-1$
 		} catch (ParseException ex) {
 			ExHandler.handle(ex);
 			
@@ -62,9 +69,9 @@ public class MahnlaufCommand extends AbstractHandler {
 		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.MAHNUNG_1_GEDRUCKT)); //$NON-NLS-1$
 		qbe.add(STR_MANDANT_I_D, "=", CoreHub.actMandant.getId()); //$NON-NLS-1$
 		tt = new TimeTool();
-		days = CoreHub.mandantCfg.get(Preferences.RNN_DAYSUNTIL2ND, 10);
+		days = rnsSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10);
 		try {
-			betrag = new Money(CoreHub.mandantCfg.get(Preferences.RNN_AMOUNT2ND, "0.00")); //$NON-NLS-1$
+			betrag = new Money(rnsSettings.get(Preferences.RNN_AMOUNT2ND, "0.00")); //$NON-NLS-1$
 		} catch (ParseException ex) {
 			ExHandler.handle(ex);
 			betrag = new Money();
@@ -84,9 +91,9 @@ public class MahnlaufCommand extends AbstractHandler {
 		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.MAHNUNG_2_GEDRUCKT)); //$NON-NLS-1$
 		qbe.add(STR_MANDANT_I_D, "=", CoreHub.actMandant.getId()); //$NON-NLS-1$
 		tt = new TimeTool();
-		days = CoreHub.mandantCfg.get(Preferences.RNN_DAYSUNTIL3RD, 10);
+		days = rnsSettings.get(Preferences.RNN_DAYSUNTIL3RD, 10);
 		try {
-			betrag = new Money(CoreHub.mandantCfg.get(Preferences.RNN_AMOUNT3RD, "0.00")); //$NON-NLS-1$
+			betrag = new Money(rnsSettings.get(Preferences.RNN_AMOUNT3RD, "0.00")); //$NON-NLS-1$
 		} catch (ParseException ex) {
 			ExHandler.handle(ex);
 			betrag = new Money();

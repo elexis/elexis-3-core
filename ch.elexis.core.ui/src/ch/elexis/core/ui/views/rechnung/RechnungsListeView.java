@@ -38,6 +38,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.UiResourceConstants;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.NumberInput;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -48,9 +49,11 @@ import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.data.Fall;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
+import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Tree;
 
@@ -81,6 +84,26 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 	MoneyInput mi1st, mi2nd, mi3rd;
 	SelectionListener mahnWizardListener;
 	FormToolkit tk = UiDesk.getToolkit();
+	Settings rnStellerSettings;
+	
+	private ElexisEventListener eeli_mandant = new ElexisUiEventListenerImpl(Mandant.class,
+		ElexisEvent.EVENT_MANDATOR_CHANGED) {
+		
+		@Override
+		public void runInUi(ElexisEvent ev){
+			System.out.println("hallo");
+			Mandant m = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
+			rnStellerSettings = CoreHub.getUserSetting(m.getRechnungssteller());
+			cv.notify(CommonViewer.Message.update);
+			updateMahnAutomatic();
+		}
+	};
+	
+	public RechnungsListeView(){
+		Mandant currMandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
+		rnStellerSettings = CoreHub.getUserSetting(currMandant.getRechnungssteller());
+		ElexisEventDispatcher.getInstance().addListeners(eeli_mandant);
+	}
 	
 	@Override
 	public void createPartControl(final Composite p){
@@ -148,15 +171,16 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		mahnWizardListener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.mandantCfg.set(Preferences.RNN_DAYSUNTIL1ST, niDaysTo1st.getValue());
-				CoreHub.mandantCfg.set(Preferences.RNN_DAYSUNTIL2ND, niDaysTo2nd.getValue());
-				CoreHub.mandantCfg.set(Preferences.RNN_DAYSUNTIL3RD, niDaysTo3rd.getValue());
-				CoreHub.mandantCfg.set(Preferences.RNN_AMOUNT1ST, mi1st.getMoney(false)
+				rnStellerSettings.set(Preferences.RNN_DAYSUNTIL1ST, niDaysTo1st.getValue());
+				rnStellerSettings.set(Preferences.RNN_DAYSUNTIL2ND, niDaysTo2nd.getValue());
+				rnStellerSettings.set(Preferences.RNN_DAYSUNTIL3RD, niDaysTo3rd.getValue());
+				rnStellerSettings.set(Preferences.RNN_AMOUNT1ST, mi1st.getMoney(false)
 					.getAmountAsString());
-				CoreHub.mandantCfg.set(Preferences.RNN_AMOUNT2ND, mi2nd.getMoney(false)
+				rnStellerSettings.set(Preferences.RNN_AMOUNT2ND, mi2nd.getMoney(false)
 					.getAmountAsString());
-				CoreHub.mandantCfg.set(Preferences.RNN_AMOUNT3RD, mi3rd.getMoney(false)
+				rnStellerSettings.set(Preferences.RNN_AMOUNT3RD, mi3rd.getMoney(false)
 					.getAmountAsString());
+				rnStellerSettings.flush();
 			}
 			
 		};
@@ -188,27 +212,27 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		niDaysTo1st = new NumberInput(cW, REMINDER_1);
 		niDaysTo1st.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		niDaysTo1st.getControl().addSelectionListener(mahnWizardListener);
-		niDaysTo1st.setValue(CoreHub.mandantCfg.get(Preferences.RNN_DAYSUNTIL1ST, 30));
+		niDaysTo1st.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30));
 		niDaysTo2nd = new NumberInput(cW, REMINDER_2);
 		niDaysTo2nd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		niDaysTo2nd.getControl().addSelectionListener(mahnWizardListener);
-		niDaysTo2nd.setValue(CoreHub.mandantCfg.get(Preferences.RNN_DAYSUNTIL2ND, 10));
+		niDaysTo2nd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10));
 		niDaysTo3rd = new NumberInput(cW, REMINDER_3);
 		niDaysTo3rd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		niDaysTo3rd.getControl().addSelectionListener(mahnWizardListener);
-		niDaysTo3rd.setValue(CoreHub.mandantCfg.get(Preferences.RNN_DAYSUNTIL3RD, 5));
+		niDaysTo3rd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL3RD, 5));
 		tk.createLabel(cW, Messages.RechnungsListeView_fine); //$NON-NLS-1$
 		mi1st = new MoneyInput(cW, REMINDER_1);
 		mi1st.addSelectionListener(mahnWizardListener);
-		mi1st.setMoney(CoreHub.mandantCfg.get(Preferences.RNN_AMOUNT1ST,
+		mi1st.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT1ST,
 			new Money().getAmountAsString()));
 		mi2nd = new MoneyInput(cW, REMINDER_2);
 		mi2nd.addSelectionListener(mahnWizardListener);
-		mi2nd.setMoney(CoreHub.mandantCfg.get(Preferences.RNN_AMOUNT2ND,
+		mi2nd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT2ND,
 			new Money().getAmountAsString()));
 		mi3rd = new MoneyInput(cW, REMINDER_3);
 		mi3rd.addSelectionListener(mahnWizardListener);
-		mi3rd.setMoney(CoreHub.mandantCfg.get(Preferences.RNN_AMOUNT3RD,
+		mi3rd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT3RD,
 			new Money().getAmountAsString()));
 		
 		ElexisEventDispatcher.getInstance().addListeners(this);
@@ -230,6 +254,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 	@Override
 	public void dispose(){
 		ElexisEventDispatcher.getInstance().removeListeners(this);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_mandant);
 		cntp.stopListening();
 		super.dispose();
 	}
@@ -274,4 +299,17 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 	public ElexisEvent getElexisEventFilter(){
 		return eetmpl;
 	}
+	
+	private void updateMahnAutomatic(){
+		niDaysTo1st.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30));
+		niDaysTo2nd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10));
+		niDaysTo3rd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL3RD, 5));
+		mi1st.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT1ST,
+			new Money().getAmountAsString()));
+		mi2nd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT2ND,
+			new Money().getAmountAsString()));
+		mi3rd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT3RD,
+			new Money().getAmountAsString()));
+	}
+	
 }

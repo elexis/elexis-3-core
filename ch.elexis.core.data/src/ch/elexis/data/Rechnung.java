@@ -27,8 +27,10 @@ import java.util.regex.Pattern;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.rgw.io.Settings;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.Money;
@@ -646,17 +648,20 @@ public class Rechnung extends PersistentObject {
 	}
 	
 	public String getRnDatumFrist(){
+		Mandant currMandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
+		Settings rnsSettings = CoreHub.getUserSetting(currMandant.getRechnungssteller());
+		
 		String stat = get(BILL_STATE_DATE);
 		int frist = 0;
 		switch (getStatus()) {
 		case RnStatus.OFFEN_UND_GEDRUCKT:
-			frist = CoreHub.mandantCfg.get(Preferences.RNN_DAYSUNTIL1ST, 30);
+			frist = rnsSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30);
 			break;
 		case RnStatus.MAHNUNG_1_GEDRUCKT:
-			frist = CoreHub.mandantCfg.get(Preferences.RNN_DAYSUNTIL2ND, 10);
+			frist = rnsSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10);
 			break;
 		case RnStatus.MAHNUNG_2_GEDRUCKT:
-			frist = CoreHub.mandantCfg.get(Preferences.RNN_DAYSUNTIL3RD, 10);
+			frist = rnsSettings.get(Preferences.RNN_DAYSUNTIL3RD, 10);
 			break;
 		}
 		TimeTool tm = new TimeTool(stat);
