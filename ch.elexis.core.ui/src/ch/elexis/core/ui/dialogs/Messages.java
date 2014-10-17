@@ -39,6 +39,7 @@ public class Messages extends NLS {
 	public static String AssignStickerDialog_StickerName;
 	public static String AssignStickerDialog_StickerWert;
 	public static String DateSelectorDialog_enterDate;
+	public static String DateTimeSelectorDialog_enterDate;
 	public static String DocumentSelectDialog_askForAddressee;
 	public static String DocumentSelectDialog_changeSubjectAction;
 	public static String DocumentSelectDialog_createLetterWithTemplate;

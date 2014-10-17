@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.laboratory.dialogs;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
@@ -27,6 +28,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -67,6 +69,9 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	
 	private ComboViewer externViewer = null;
 	
+	private DateTime observationTime;
+	private DateTime observationDate;
+
 	private Text filterText;
 	private Text orderId;
 	
@@ -256,6 +261,22 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		externViewer.setInput(getExternLaborOrder());
 		
 		label = new Label(composite, SWT.NONE);
+		label.setText("Entnahme-/Beobachtungszeitpunkt");
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+		Composite dateComposite = new Composite(composite, SWT.NONE);
+		dateComposite.setLayout(new GridLayout(2, true));
+		dateComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		observationTime = new DateTime(dateComposite, SWT.TIME);
+		observationTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		observationDate = new DateTime(dateComposite, SWT.DATE);
+		observationDate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		observationTime.setTime(date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE),
+			date.get(Calendar.SECOND));
+		observationDate.setDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH),
+			date.get(Calendar.DAY_OF_MONTH));
+
+		label = new Label(composite, SWT.NONE);
 		label.setText(Messages.LaborVerordnungDialog_labelOrderNumber);
 		orderId = new Text(composite, SWT.SEARCH);
 		orderId.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -346,15 +367,33 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	
 	private List<LabOrder> createLabOrders(List<GroupItem> items){
 		List<LabOrder> ret = new ArrayList<LabOrder>();
+		getTime(observationTime, date);
+		getDate(observationDate, date);
+		TimeTool now = new TimeTool();
 		if (items != null) {
 			for (GroupItem groupItem : items) {
-				ret.add(new LabOrder(CoreHub.actUser, CoreHub.actMandant, patient,
-					groupItem.labItem, null, orderId.getText(), groupItem.groupname, date));
+				LabOrder order =
+					new LabOrder(CoreHub.actUser, CoreHub.actMandant, patient, groupItem.labItem,
+						null, orderId.getText(), groupItem.groupname, now);
+				order.setObservationTimeWithResults(date);
+				ret.add(order);
 			}
 		}
 		return ret;
 	}
 	
+	private void getTime(DateTime widget, TimeTool time){
+		time.set(Calendar.HOUR_OF_DAY, widget.getHours());
+		time.set(Calendar.MINUTE, widget.getMinutes());
+		time.set(Calendar.SECOND, widget.getSeconds());
+	}
+	
+	private void getDate(DateTime widget, TimeTool date){
+		date.set(Calendar.YEAR, widget.getYear());
+		date.set(Calendar.MONTH, widget.getMonth());
+		date.set(Calendar.DAY_OF_MONTH, widget.getDay());
+	}
+
 	private void createReminder(Anwender user, List<LabOrder> orders){
 		StringBuilder message = new StringBuilder("Labor"); //$NON-NLS-1$
 		if (orders != null && !orders.isEmpty()) {

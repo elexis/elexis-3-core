@@ -25,6 +25,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.laboratory.actions.LabOrderSetObservationDateAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.controls.util.LabOrderEditingSupport;
 import ch.elexis.core.ui.laboratory.preferences.LabSettings;
@@ -76,9 +77,6 @@ public class LaborOrdersComposite extends Composite {
 			public void menuAboutToShow(IMenuManager manager){
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				if (selection != null && !selection.isEmpty()) {
-					mgr.add(new RemoveLaborOrdersAction(selection.toList()));
-				}
-				if (selection != null && !selection.isEmpty()) {
 					ArrayList<LabOrder> orders = new ArrayList<LabOrder>();
 					for (Object object : selection.toList()) {
 						if (object instanceof LabOrder) {
@@ -86,6 +84,8 @@ public class LaborOrdersComposite extends Composite {
 						}
 					}
 					if (!orders.isEmpty()) {
+						mgr.add(new RemoveLaborOrdersAction(selection.toList()));
+						mgr.add(new LabOrderSetObservationDateAction(orders, viewer));
 						mgr.add(new LaborResultEditDetailAction(orders, viewer));
 					}
 				}
@@ -218,7 +218,9 @@ public class LaborOrdersComposite extends Composite {
 			actPatient = patient;
 			form.setText(actPatient.getLabel());
 			viewer.setInput(getOrders());
-			viewer.expandAll();
+			viewer.setExpandedElements(new Object[] {
+				LabOrder.State.ORDERED
+			});
 		} else {
 			actPatient = patient;
 			form.setText(Messages.LaborOrdersComposite_NoPatientSelected);
@@ -230,7 +232,9 @@ public class LaborOrdersComposite extends Composite {
 		setRedraw(false);
 		if (actPatient != null) {
 			viewer.setInput(getOrders());
-			viewer.expandAll();
+			viewer.setExpandedElements(new Object[] {
+				LabOrder.State.ORDERED
+			});
 		}
 		setRedraw(true);
 	}
@@ -311,12 +315,27 @@ public class LaborOrdersComposite extends Composite {
 						return labOrder2.getTime().compareTo(labOrder1.getTime());
 					}
 				case 2:
+					String orderId1 = labOrder1.get(LabOrder.FLD_ORDERID);
+					String orderId2 = labOrder2.get(LabOrder.FLD_ORDERID);
+
 					if (composite.isRevert()) {
-						return (labOrder1.get(LabOrder.FLD_ORDERID).compareTo(labOrder2
-							.get(LabOrder.FLD_ORDERID)));
+						if (orderId1 != null && orderId2 != null) {
+							try {
+							return Integer.decode(orderId1).compareTo(Integer.decode(orderId2));
+							} catch (NumberFormatException ne) {
+								// ignore just compare the strings ...
+							}
+						}
+						return (orderId1.compareTo(orderId2));
 					} else {
-						return (labOrder2.get(LabOrder.FLD_ORDERID).compareTo(labOrder1
-							.get(LabOrder.FLD_ORDERID)));
+						if (orderId1 != null && orderId2 != null) {
+							try {
+								return Integer.decode(orderId2).compareTo(Integer.decode(orderId1));
+							} catch (NumberFormatException ne) {
+								// ignore just compare the strings ...
+							}
+						}
+						return (orderId2.compareTo(orderId1));
 					}
 				case 3:
 					if (composite.isRevert()) {

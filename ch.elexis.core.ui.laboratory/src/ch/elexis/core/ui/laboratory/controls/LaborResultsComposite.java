@@ -30,6 +30,7 @@ import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.actions.TogglePathologicAction;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.core.ui.laboratory.controls.util.ChangeNewDateSelection;
+import ch.elexis.core.ui.laboratory.controls.util.ChangeResultsDateSelection;
 import ch.elexis.core.ui.laboratory.controls.util.DisplayDoubleClickListener;
 import ch.elexis.core.ui.laboratory.controls.util.LabResultEditingSupport;
 import ch.elexis.core.ui.laboratory.controls.util.LaborResultsLabelProvider;
@@ -189,6 +190,7 @@ public class LaborResultsComposite extends Composite {
 			column.getColumn().setWidth(75);
 			column.getColumn().setText(""); //$NON-NLS-1$
 			column.setLabelProvider(new LaborResultsLabelProvider(column));
+			column.getColumn().addSelectionListener(new ChangeResultsDateSelection(column, this));
 			resultColumns.add(column);
 		}
 	}

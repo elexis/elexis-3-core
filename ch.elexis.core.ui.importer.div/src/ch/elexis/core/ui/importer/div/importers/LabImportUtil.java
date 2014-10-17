@@ -131,16 +131,13 @@ public class LabImportUtil {
 	 */
 	public static void importLabResults(List<TransientLabResult> results, ImportUiHandler uiHandler){
 		boolean overWriteAll = false;
-		String orderId = null;
+		String orderId = LabOrder.getNextOrderId();
 		for (TransientLabResult transientLabResult : results) {
 			List<LabResult> existing =
 				LabImportUtil.getLabResults(transientLabResult.patient, transientLabResult.labItem,
 					transientLabResult.date, transientLabResult.analyseTime,
 					transientLabResult.observationTime);
 			if (existing.isEmpty()) {
-				if (orderId == null) {
-					orderId = LabOrder.getNextOrderId();
-				}
 				createLabResult(transientLabResult, orderId);
 			} else {
 				for (LabResult labResult : existing) {

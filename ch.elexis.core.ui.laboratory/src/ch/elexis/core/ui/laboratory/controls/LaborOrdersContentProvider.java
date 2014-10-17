@@ -37,7 +37,7 @@ public class LaborOrdersContentProvider implements ITreeContentProvider {
 		open.clear();
 		done.clear();
 		for (LabOrder labOrder : orders) {
-			if (labOrder.getState() == State.ORDERED) {
+			if (labOrder.getState() != State.DONE) {
 				open.add(labOrder);
 			} else {
 				done.add(labOrder);
