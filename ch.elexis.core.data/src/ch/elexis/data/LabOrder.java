@@ -1,12 +1,16 @@
 package ch.elexis.data;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ch.elexis.data.LabItem.typ;
+import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
+import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionInfo;
 
@@ -18,16 +22,20 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	public static final String FLD_ITEM = "item"; //$NON-NLS-1$
 	public static final String FLD_RESULT = "result"; //$NON-NLS-1$
 	public static final String FLD_TIME = "time"; //$NON-NLS-1$
+	public static final String FLD_OBSERVATIONTIME = "observationtime"; //$NON-NLS-1$
 	public static final String FLD_STATE = "state"; //$NON-NLS-1$
 	public static final String FLD_ORDERID = "orderid"; //$NON-NLS-1$
 	public static final String FLD_GROUPNAME = "groupname"; //$NON-NLS-1$
 	
 	public static final String VERSIONID = "VERSION"; //$NON-NLS-1$
 	private static final String TABLENAME = "LABORDER"; //$NON-NLS-1$
-	public static final String VERSION = "1.1.0"; //$NON-NLS-1$
+	public static final String VERSION = "1.2.0"; //$NON-NLS-1$
 	public static final String VERSION110 = "1.1.0"; //$NON-NLS-1$
+	public static final String VERSION120 = "1.2.0"; //$NON-NLS-1$
 	private static final String UPD110 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
 		+ " ADD groupname VARCHAR(255);"; //$NON-NLS-1$
+	private static final String UPD120 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
+		+ " ADD observationtime VARCHAR(24);"; //$NON-NLS-1$
 	
 	// do not change order, as we save the ordinal to the db, only adding new state is allowed
 	public enum State {
@@ -62,6 +70,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			"orderid VARCHAR(128)," + //$NON-NLS-1$
 			"groupname VARCHAR(255)," + //$NON-NLS-1$
 			"time VARCHAR(24)," + //$NON-NLS-1$
+			"observationtime VARCHAR(24)," + //$NON-NLS-1$
 			"state CHAR(1)" + //$NON-NLS-1$		
 			");" + //$NON-NLS-1$
 			"CREATE INDEX laborder1 ON " + TABLENAME + " (" + FLD_TIME + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -72,7 +81,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	
 	static {
 		addMapping(TABLENAME, FLD_USER, FLD_MANDANT, FLD_PATIENT, FLD_ITEM, FLD_RESULT,
-			FLD_ORDERID, FLD_GROUPNAME, FLD_TIME, FLD_STATE);
+			FLD_ORDERID, FLD_GROUPNAME, FLD_TIME, FLD_STATE, FLD_OBSERVATIONTIME);
 		
 		if (!tableExists(TABLENAME)) {
 			createOrModifyTable(create);
@@ -82,6 +91,9 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			if (vi.isOlder(VERSION)) {
 				if (vi.isOlder(new VersionInfo(VERSION110))) {
 					createOrModifyTable(UPD110);
+				}
+				if (vi.isOlder(new VersionInfo(VERSION120))) {
+					createOrModifyTable(UPD120);
 				}
 				version.set(FLD_USER, VERSION);
 			}
@@ -113,6 +125,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 		set(FLD_PATIENT, patient.getId());
 		set(FLD_ITEM, item.getId());
 		set(FLD_TIME, time.toString(TimeTool.TIMESTAMP));
+		set(FLD_OBSERVATIONTIME, time.toString(TimeTool.TIMESTAMP));
 		set(FLD_ORDERID, orderId);
 		set(FLD_GROUPNAME, groupname);
 		setState(State.ORDERED);
@@ -124,15 +137,17 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			setState(State.DONE);
 		}
 	}
-	
+
 	public LabResult createResult(){
 		LabResult result = new LabResult(getPatient(), null, getLabItem(), "", null);
+		result.setObservationTime(getObservationTime());
 		setLabResult(result);
 		return result;
 	}
 	
 	public LabResult createResult(Kontakt origin){
 		LabResult result = new LabResult(getPatient(), null, getLabItem(), "", null, origin);
+		result.setObservationTime(getObservationTime());
 		setLabResult(result);
 		return result;
 	}
@@ -147,6 +162,18 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 		}
 	}
 	
+	public void setObservationTime(TimeTool time){
+		set(FLD_OBSERVATIONTIME, time.toString(TimeTool.TIMESTAMP));
+	}
+
+	public void setObservationTimeWithResults(TimeTool time){
+		setObservationTime(time);
+		List<LabResult> results = getLabResults();
+		for (LabResult labResult : results) {
+			labResult.setObservationTime(time);
+		}
+	}
+
 	/**
 	 * Test if all the orders with this order id are done
 	 * 
@@ -185,6 +212,15 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 		}
 	}
 	
+	public TimeTool getObservationTime(){
+		String string = get(FLD_OBSERVATIONTIME);
+		if (string != null && !string.isEmpty()) {
+			return new TimeTool(string);
+		} else {
+			return null;
+		}
+	}
+
 	public LabItem getLabItem(){
 		LabItem ret = new LabItem(get(FLD_ITEM));
 		if (ret.exists()) {
@@ -360,8 +396,22 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	}
 	
 	public static String getNextOrderId(){
-		Map<String, List<LabOrder>> map = getMapByOrderId();
-		int orderId = map.keySet().size() + 1;
+		JdbcLink link = PersistentObject.getConnection();
+		Stm statement = link.getStatement();
+		ResultSet result =
+			statement
+				.query("SELECT COUNT(DISTINCT " + FLD_ORDERID + ") AS total FROM " + TABLENAME); //$NON-NLS-1$ //$NON-NLS-2$
+		int numberOfIds = 0;
+		try {
+			if (result.next()) {
+				numberOfIds = result.getInt("total"); //$NON-NLS-1$
+			}
+		} catch (SQLException ex) {
+			ExHandler.handle(ex);
+		} finally {
+			link.releaseStatement(statement);
+		}
+		int orderId = numberOfIds + 1;
 		List<LabOrder> existing =
 			getLabOrders(null, null, null, null, Integer.toString(orderId), null, null);
 		while (existing != null) {

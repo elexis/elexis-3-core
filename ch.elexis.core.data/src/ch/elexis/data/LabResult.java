@@ -208,6 +208,7 @@ public class LabResult extends PersistentObject {
 	/**
 	 * @deprecated use analysetime, observationtime and transmissiontime
 	 */
+	@Deprecated
 	public String getDate(){
 		return get(DATE);
 	}
@@ -215,6 +216,7 @@ public class LabResult extends PersistentObject {
 	/**
 	 * @deprecated use analysetime, observationtime and transmissiontime
 	 */
+	@Deprecated
 	public TimeTool getDateTime(){
 		String temp = get(TIME);
 		if ((temp == null) || ("".equals(temp))) //$NON-NLS-1$
@@ -358,7 +360,9 @@ public class LabResult extends PersistentObject {
 	 * @param time
 	 */
 	public void setObservationTime(TimeTool time){
-		set(OBSERVATIONTIME, time.toString(TimeTool.TIMESTAMP));
+		if (time != null) {
+			set(OBSERVATIONTIME, time.toString(TimeTool.TIMESTAMP));
+		}
 	}
 	
 	/**
@@ -658,5 +662,24 @@ public class LabResult extends PersistentObject {
 		}
 		resultList.add(result);
 		dateMap.put(date, resultList);
+	}
+	
+	public static void changeObservationTime(Patient patient, TimeTool from, TimeTool to){
+		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
+		qbe.add(PATIENT_ID, Query.EQUALS, patient.getId());
+		List<LabResult> res = qbe.execute();
+		ArrayList<LabResult> changeList = new ArrayList<LabResult>();
+		for (LabResult labResult : res) {
+			TimeTool obsTime = labResult.getObservationTime();
+			if(obsTime == null) {
+				obsTime = labResult.getDateTime();
+			}
+			if(obsTime.isSameDay(from)) {
+				changeList.add(labResult);
+			}
+		}
+		for (LabResult labResult : changeList) {
+			labResult.setObservationTime(to);
+		}
 	}
 }
