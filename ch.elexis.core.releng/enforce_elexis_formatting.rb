@@ -299,7 +299,7 @@ org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_switch=inser
 
 # ECLIPSE=`which eclipse`.chomp
 ECLIPSE='eclipse'
-if ARGV.length != 1
+if ARGV.length == 0
   puts "Missing dir argument. "
   puts "   #{__FILE__} will enforce the ElexisFormatterProfile for all *.java files below"
   exit 2
@@ -319,14 +319,18 @@ def system(cmd, mayFail=false)
 end
 
 puts "ARGV #{ARGV.inspect} in #{Dir.pwd}"
-dir = ARGV.shift
-Dir.chdir(dir)
+if ARGV.length == 1 and File.directory?(ARGV[0])
+  dir = ARGV.shift
+  Dir.chdir(dir)
+  files = Dir.glob("*/src/**/*.java")
+else
+  files = Dir.glob(ARGV)
+end
 tmpName = 'profile.tmp'
 tmpProfile = File.open(tmpName, 'w+') { |f| f.puts Profile }
-files = Dir.glob("*/src/**/*.java")
-
 cmd="#{ECLIPSE} -application org.eclipse.jdt.core.JavaCodeFormatter -verbose " +
     "-config #{tmpName} #{files.join(' ')}"
+puts cmd
 system(cmd)
 cmd="git commit -m 'JavaCodeFormatter enforced' #{files.join(' ')}"
 system(cmd) # fails if nothing has changed, which is good as jenkins will not push a commit in this case
