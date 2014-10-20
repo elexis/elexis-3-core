@@ -43,11 +43,11 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.FlatDataLoader;
 import ch.elexis.core.ui.actions.PersistentObjectLoader;
 import ch.elexis.core.ui.actions.PersistentObjectLoader.QueryFilter;
+import ch.elexis.core.ui.dialogs.provider.KontaktSelektorLabelProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
-import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.data.BezugsKontakt;
@@ -244,7 +244,7 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 					// nothing to do
 				}
 			});
-			bezugsKontaktViewer.setLabelProvider(new DefaultLabelProvider());
+			bezugsKontaktViewer.setLabelProvider(new KontaktSelektorLabelProvider());
 			bezugsKontaktViewer.setInput(this);
 			bezugsKontaktViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event){
@@ -274,10 +274,11 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 		vc =
 			new ViewerConfigurer(
 			// new LazyContentProvider(cv,dataloader, null),
-				kl, new DefaultLabelProvider(), new DefaultControlFieldProvider(cv, new String[] {
-					Messages.KontaktSelector_abbreviation, Messages.KontaktSelector_expression1,
-					Messages.KontaktSelector_birthDate
-				}), new ViewerConfigurer.ButtonProvider() {
+				kl, new KontaktSelektorLabelProvider(), new DefaultControlFieldProvider(cv,
+					new String[] {
+						Messages.KontaktSelector_abbreviation,
+						Messages.KontaktSelector_expression1, Messages.KontaktSelector_birthDate
+					}), new ViewerConfigurer.ButtonProvider() {
 					
 					public Button createButton(final Composite parent){
 						Button ret = new Button(parent, SWT.PUSH);
