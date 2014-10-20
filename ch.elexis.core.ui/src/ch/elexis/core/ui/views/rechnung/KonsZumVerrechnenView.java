@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -53,8 +54,10 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -67,6 +70,7 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.commands.ErstelleRnnCommand;
+import ch.elexis.core.ui.commands.KonsZumVerrechnenLinkCommand;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.KonsZumVerrechnenWizardDialog;
 import ch.elexis.core.ui.icons.Images;
@@ -130,6 +134,10 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		tSelection = new Tree<PersistentObject>(null, null);
 		tAll = new LazyTree<PersistentObject>(null, null, ltl);
 		self = this;
+		ICommandService commandService =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		Command command = commandService.getCommand(KonsZumVerrechnenLinkCommand.CMD_ID);
+		command.getState(RegistryToggleState.STATE_ID).setValue(Boolean.FALSE);
 	}
 	
 	@Override
@@ -937,5 +945,14 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 			// TODO Auto-generated method stub
 			return false;
 		}
+		
+	}
+	
+	public CommonViewer getLeftSide(){
+		return cv;
+	}
+	
+	public TreeViewer getRightSide(){
+		return tvSel;
 	}
 }
