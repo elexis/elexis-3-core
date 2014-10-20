@@ -28,10 +28,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -51,12 +49,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISaveablePart2;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
@@ -134,10 +135,6 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		tSelection = new Tree<PersistentObject>(null, null);
 		tAll = new LazyTree<PersistentObject>(null, null, ltl);
 		self = this;
-		ICommandService commandService =
-			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		Command command = commandService.getCommand(KonsZumVerrechnenLinkCommand.CMD_ID);
-		command.getState(RegistryToggleState.STATE_ID).setValue(Boolean.FALSE);
 	}
 	
 	@Override
@@ -209,23 +206,6 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 						e.printStackTrace();
 					}
 				}
-			}
-		});
-		
-		cv.getViewerWidget().addSelectionChangedListener(new ISelectionChangedListener() {
-			
-			@Override
-			public void selectionChanged(SelectionChangedEvent event){
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				Patient selPatient = (Patient) ((Tree) selection.getFirstElement()).contents;
-				
-				for (TreeItem i : tvSel.getTree().getItems()) {
-					Patient p = (Patient) ((Tree) i.getData()).contents;
-					if (p.getId().equals(selPatient.getId())) {
-						tvSel.getTree().setSelection(i);
-					}
-				}
-				tvSel.refresh();
 			}
 		});
 		
@@ -331,13 +311,11 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		menu.createToolbar(refreshAction, wizardAction, printAction, clearAction, null, billAction);
 		menu.createMenu(wizardAction, selectByDateAction);
 		menu.createViewerContextMenu(cv.getViewerWidget(), detailAction);
+		addPartActivationListener();
 	}
 	
 	@Override
-	public void setFocus(){
-		// TODO Auto-generated method stub
-		
-	}
+	public void setFocus(){}
 	
 	class RLazyTreeListener implements LazyTreeListener {
 		final LazyTreeListener self = this;
@@ -954,5 +932,45 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 	
 	public TreeViewer getRightSide(){
 		return tvSel;
+	}
+	
+	private void addPartActivationListener(){
+		getViewSite().getPage().addPartListener(new IPartListener() {
+			@Override
+			public void partActivated(IWorkbenchPart part){
+				ICommandService commandService =
+					(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+				Command command = commandService.getCommand("ch.elexis.core.command.linkViews");
+				boolean state = (boolean) command.getState(RegistryToggleState.STATE_ID).getValue();
+				
+				if (state == true) {
+					try {
+						command.getState(RegistryToggleState.STATE_ID).setValue(Boolean.FALSE);
+						// execute the command
+						IHandlerService handlerService =
+							(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								.getService(IHandlerService.class);
+						
+						handlerService.executeCommand(KonsZumVerrechnenLinkCommand.CMD_ID, null);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+				
+				getViewSite().getPage().removePartListener(this);
+			}
+			
+			@Override
+			public void partBroughtToTop(IWorkbenchPart part){}
+			
+			@Override
+			public void partClosed(IWorkbenchPart part){}
+			
+			@Override
+			public void partDeactivated(IWorkbenchPart part){}
+			
+			@Override
+			public void partOpened(IWorkbenchPart part){}
+		});
 	}
 }

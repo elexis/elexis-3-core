@@ -233,7 +233,7 @@
             id="ch.elexis.core.command.linkViews"
             name="Patientenauswahl verlinken">
          <state
-               class="org.eclipse.ui.handlers.RegistryToggleState:false"
+               class="org.eclipse.ui.handlers.RegistryToggleState:true"
                id="org.eclipse.ui.commands.toggleState">
          </state>
       </command>
