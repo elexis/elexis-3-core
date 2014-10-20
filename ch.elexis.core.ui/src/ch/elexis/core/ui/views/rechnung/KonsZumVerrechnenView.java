@@ -27,8 +27,10 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -199,6 +201,23 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 						e.printStackTrace();
 					}
 				}
+			}
+		});
+		
+		cv.getViewerWidget().addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				Patient selPatient = (Patient) ((Tree) selection.getFirstElement()).contents;
+				
+				for (TreeItem i : tvSel.getTree().getItems()) {
+					Patient p = (Patient) ((Tree) i.getData()).contents;
+					if (p.getId().equals(selPatient.getId())) {
+						tvSel.getTree().setSelection(i);
+					}
+				}
+				tvSel.refresh();
 			}
 		});
 		
