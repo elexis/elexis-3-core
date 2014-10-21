@@ -16,6 +16,8 @@ import ch.elexis.data.Patient;
 import ch.elexis.hl7.HL7PatientResolver;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;
+import ch.elexis.hl7.model.IValueType;
+import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
 
 public class Test_HL7_Imports {
@@ -52,6 +54,12 @@ public class Test_HL7_Imports {
 			ObservationMessage obs = hl7Readers.get(0).readObservation(resolver, false);
 			assertNotNull(obs);
 			assertNotNull(obs.getObservations());
+			for (IValueType iValueType : obs.getObservations()) {
+				if (iValueType instanceof LabResultData) {
+					LabResultData hl7LabResult = (LabResultData) iValueType;
+					assertNotNull(hl7LabResult.getValue());
+				}
+			}
 			assertNotNull(hl7Readers.get(0).getPatient());
 			assertEquals(resolver.getPatient().getVorname(), hl7Readers.get(0).getPatient()
 				.getVorname());

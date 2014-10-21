@@ -1,0 +1,10 @@
+MSH|^~\&|LABCH007|10|MED|HL7|20141016161528||ORU^R01|15249805|P|2.3||||||8859/1
+PID||1171|012587712^^^GLIMS||SCHMIDIG^HEDY||19471211000000|F|||Gätzlistr. 61^^Brunnen^6440^CH
+ORC|NW||10-00683437S^10||CM||^^^20141016093152|||||10DETTB^Dettling Benedikt^^^^^^^^GLIMS|||20141016000000
+OBR|1||10-00683437S^10||||20141016084500|||||||20141016093152||10DETTB^Dettling Benedikt^^^^^^GLIMS||||10DETTB||20141016000000|||F|||
+OBX|1|SN|ca^Calcium^GLIMS||2.16|mmol/l|2.20-2.55|L|||F||||||
+OBX|2|SN|cakor^Calcium korrigiert^GLIMS||2.04|mmol/l|2.20-2.55|L|||F||||||
+OBX|3|SN|albu^Albumin^GLIMS||45.0|g/l|35.0-52.0|N|||F||||||
+OBX|4|SN|ph^Phosphat^GLIMS||1.74|mmol/l|0.87-1.45|H|||F||||||
+OBX|5|SN|tsh^TSH^GLIMS||1.65|mIU/l|0.27-4.20|N|||F||||||
+OBX|6|SN|ft4^Freies T4^GLIMS||17.1|pmol/l|12.0-22.0|N|||F||||||
