@@ -24,6 +24,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
+import ch.elexis.data.Rechnungssteller;
 import ch.elexis.data.RnStatus;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.ExHandler;
@@ -36,13 +37,27 @@ public class MahnlaufCommand extends AbstractHandler {
 	private static final String STR_RN_STATUS = "RnStatus"; //$NON-NLS-1$
 	public final static String ID = "bill.reminder"; //$NON-NLS-1$
 	
+	private Settings rnsSettings;
+	
 	public Object execute(ExecutionEvent arg0) throws ExecutionException{
+		Mandant mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
+		Rechnungssteller rechnungssteller = mandant.getRechnungssteller();
+		rnsSettings = CoreHub.getUserSetting(rechnungssteller);
+		
+		Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
+		List<Mandant> allMandants = qbe.execute();
+		
+		for (Mandant m : allMandants) {
+			if (m.getRechnungssteller().equals(rechnungssteller))
+				performMahnlaufForMandant(m.getId());
+		}
+		return null;
+	}
+	
+	private void performMahnlaufForMandant(String mandantId){
 		Query<Rechnung> qbe = new Query<Rechnung>(Rechnung.class);
 		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.OFFEN_UND_GEDRUCKT)); //$NON-NLS-1$
-		qbe.add(STR_MANDANT_I_D, "=", CoreHub.actMandant.getId()); //$NON-NLS-1$
-		
-		Mandant mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
-		Settings rnsSettings = CoreHub.getUserSetting(mandant.getRechnungssteller());
+		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
 		
 		TimeTool tt = new TimeTool();
 		// Rechnung zu 1. Mahnung
@@ -67,7 +82,7 @@ public class MahnlaufCommand extends AbstractHandler {
 		// 1. Mahnung zu 2. Mahnung
 		qbe.clear();
 		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.MAHNUNG_1_GEDRUCKT)); //$NON-NLS-1$
-		qbe.add(STR_MANDANT_I_D, "=", CoreHub.actMandant.getId()); //$NON-NLS-1$
+		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
 		tt = new TimeTool();
 		days = rnsSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10);
 		try {
@@ -89,7 +104,7 @@ public class MahnlaufCommand extends AbstractHandler {
 		// 2. Mahnung zu 3. Mahnung
 		qbe.clear();
 		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.MAHNUNG_2_GEDRUCKT)); //$NON-NLS-1$
-		qbe.add(STR_MANDANT_I_D, "=", CoreHub.actMandant.getId()); //$NON-NLS-1$
+		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
 		tt = new TimeTool();
 		days = rnsSettings.get(Preferences.RNN_DAYSUNTIL3RD, 10);
 		try {
@@ -108,8 +123,5 @@ public class MahnlaufCommand extends AbstractHandler {
 					Messages.MahnlaufCommand_Mahngebuehr3, null);
 			}
 		}
-		
-		return null;
 	}
-	
 }
