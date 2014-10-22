@@ -12,7 +12,13 @@ public class LaborItemResultsComparator implements Comparator<LaborItemResults> 
 		LabItem leftItem = left.getFirstResult().getItem();
 		LabItem rightItem = right.getFirstResult().getItem();
 		
-		return leftItem.getPrio().compareTo(rightItem.getPrio());
+		try {
+			Integer no1 = Integer.parseInt(leftItem.getPrio());
+			Integer no2 = Integer.parseInt(rightItem.getPrio());
+			
+			return no1.compareTo(no2);
+		} catch (NumberFormatException nfe) {
+			return leftItem.getPrio().compareToIgnoreCase(rightItem.getPrio());
+		}
 	}
-	
 }

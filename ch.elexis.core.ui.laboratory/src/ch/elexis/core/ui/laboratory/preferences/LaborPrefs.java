@@ -165,7 +165,14 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				}
 				int res = s1.compareToIgnoreCase(s2);
 				if (res == 0) {
-					return li1.getPrio().compareToIgnoreCase(li2.getPrio());
+					try {
+						Integer no1 = Integer.parseInt(li1.getPrio());
+						Integer no2 = Integer.parseInt(li2.getPrio());
+						
+						return no1.compareTo(no2);
+					} catch (NumberFormatException nfe) {
+						return li1.getPrio().compareToIgnoreCase(li2.getPrio());
+					}
 				}
 				return res;
 			}
