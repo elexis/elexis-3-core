@@ -12,6 +12,7 @@
 package ch.elexis.core.ui.medication.views;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -159,6 +160,16 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 		return menuManager;
 	}
 	
+	public void sortList(){
+		String[] items = list.getItems();
+		Arrays.sort(items);
+		list.removeAll();
+		list.setItems(items);
+		
+		update();
+		redraw();
+	}
+	
 	public void reload(){
 		clear();
 		Patient act = ElexisEventDispatcher.getSelectedPatient();
@@ -219,6 +230,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				}
 			}
 		}
+		sortList();
 	}
 	
 	static float getNum(String num){
