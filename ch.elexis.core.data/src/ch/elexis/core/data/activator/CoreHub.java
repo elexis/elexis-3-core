@@ -243,7 +243,7 @@ public class CoreHub implements BundleActivator {
 		} catch (IOException e) {
 			log.warn("Error reading build version information from " + url_name);
 		}
-		return elexis_version.replace("-SNAPSHOT", "") + " " + qualifier;
+		return elexis_version.replace("-SNAPSHOT", ".qualifier");
 	}
 	
 	@Override
