@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.GenericMessage.V23;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
@@ -42,11 +43,15 @@ public enum HL7ReaderFactory {
 	private static Logger logger = LoggerFactory.getLogger(HL7ReaderFactory.class);
 	
 	public List<HL7Reader> getReader(File file){
+		checkClassLoader();
+
 		messageList = new ArrayList<Message>();
 		return load(file);
 	}
 	
 	public HL7Reader getReader(String message){
+		checkClassLoader();
+
 		messageList = new ArrayList<Message>();
 		return loadMessage(message);
 	}
@@ -83,6 +88,14 @@ public enum HL7ReaderFactory {
 		return Collections.emptyList();
 	}
 	
+	private void checkClassLoader(){
+		ClassLoader modelLoader = V23.class.getClassLoader();
+		ClassLoader parserLoader = Parser.class.getClassLoader();
+		if (modelLoader != parserLoader) {
+			throw new IllegalStateException("Model and Parser loaded by different ClassLoader");
+		}
+	}
+
 	private InputStream getFileInputStream(File file) throws IOException{
 		byte[] bytes = Files.readAllBytes(file.toPath());
 		CharsetDetector detector = new CharsetDetector();
