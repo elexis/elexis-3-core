@@ -104,6 +104,11 @@
 							<value>${groovyBuildQualifier}</value>
 						</replacement>
 						<replacement>
+							<token>versionFromPomViaGroovy</token>
+							<!-- we want to take versionFromPomViaGroovy from ch.elexis.core.data/pom.xml -->
+							<value>${versionFromPomViaGroovy}</value>
+						</replacement>
+						<replacement>
 							<token>unqualifiedVersion</token>
 							<value>${unqualifiedVersion}</value>
 						</replacement>
