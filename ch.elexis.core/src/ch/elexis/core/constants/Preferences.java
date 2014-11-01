@@ -58,6 +58,7 @@ public class Preferences {
 	
 	// Texterstellung
 	public static final String P_TEXTMODUL = "briefe/Textmodul"; //$NON-NLS-1$
+	public static final String P_TEXT_MULTIPLE = "briefe/Textmodul_Multiple"; //$NON-NLS-1$
 	public final static String P_OOBASEDIR = "briefe/OOBasis"; //$NON-NLS-1$
 	
 	// Gruppen und Rechte
