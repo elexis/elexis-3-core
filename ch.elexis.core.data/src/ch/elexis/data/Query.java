@@ -55,7 +55,7 @@ public class Query<T> {
 	// private boolean restrictions;
 	private PersistentObject template;
 	private Method load;
-	private final static String left = "SELECT ID FROM ";
+	private final static String SELECT_ID_FROM = "SELECT ID FROM ";
 	private String link = " WHERE ";
 	private String lastQuery = "";
 	private final LinkedList<IFilter> postQueryFilters = new LinkedList<IFilter>();
@@ -169,7 +169,7 @@ public class Query<T> {
 	public void clear(boolean includeDeletedEntriesInQuery){
 		sql = new StringBuilder(500);
 		String table = template.getTableName();
-		sql.append(left).append(table);
+		sql.append(SELECT_ID_FROM).append(table);
 		String cns = template.getConstraint();
 		if (cns.equals("")) {
 			if (includeDeletedEntriesInQuery) {
@@ -297,7 +297,7 @@ public class Query<T> {
 			String firsttable = template.getTableName() + ".";
 			if (!exttables.contains(table)) {
 				exttables.add(table);
-				sql.insert(left.length(), table + ",");
+				sql.insert(SELECT_ID_FROM.length(), table + ",");
 				ix = sql.indexOf("deleted=");
 				if (ix != -1) {
 					sql.insert(ix, firsttable);
