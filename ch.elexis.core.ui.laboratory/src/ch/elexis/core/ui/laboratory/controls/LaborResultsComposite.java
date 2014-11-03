@@ -273,8 +273,11 @@ public class LaborResultsComposite extends Composite {
 		actPatient = patient;
 		viewer.setInput(LabResult.getGrouped(actPatient));
 		
-		setInitialColumnOffset();
+		TimeTool now = new TimeTool();
+		newColumn.getColumn().setData(COLUMN_DATE_KEY, now);
+		newColumn.getColumn().setText("Neu (" + now.toString(TimeTool.DATE_GER) + ")");
 		
+		setInitialColumnOffset();
 		for (int i = 0; i < resultColumns.size(); i++) {
 			resultColumns.get(i).getColumn().setData(COLUMN_DATE_KEY, null);
 			resultColumns.get(i).getColumn().setText(""); //$NON-NLS-1$
