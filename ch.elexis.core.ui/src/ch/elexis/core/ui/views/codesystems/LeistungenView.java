@@ -225,4 +225,8 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}
+	
+	public void setSelected(CTabItem ctab){
+		selected = ctab;
+	}
 }
