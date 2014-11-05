@@ -95,6 +95,8 @@
       xsi:type="setup.p2:P2Task">
     <requirement
         name="org.sonatype.tycho.m2e.feature.feature.group"/>
+    <requirement
+        name="org.eclipse.mylyn.github.feature.feature.group"/>
     <repository
         url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.8.0/N/LATEST/"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
@@ -114,6 +116,45 @@
           project="at.medevit.ch.artikelstamm"/>
     </workingSet>
   </setupTask>
+  <setupTask
+      xsi:type="mylyn:MylynBuildsTask"
+      id="srv.elexis.info.core"
+      serverURL="https://srv.elexis.info/jenkins/"
+      userID="">
+    <buildPlan
+        name="Elexis-3.0-Core"/>
+    <buildPlan
+        name="Elexis-3.0-Base"/>
+  </setupTask>
+  <setupTask
+      xsi:type="mylyn:MylynQueriesTask"
+      id="github.elexis-3-core.pullrequests"
+      connectorKind="githubPullRequests"
+      repositoryURL="https://github.com/elexis/elexis-3-core"
+      userID="${github.user.id}"
+      password="">
+    <query summary="core pull requests"
+        url="">
+      <attribute
+          key="state"
+          value="open::"/>
+    </query>
+    <description>elexis/elexis-3-core pull requests</description>
+  </setupTask>
+  <setupTask
+      xsi:type="mylyn:MylynQueriesTask"
+      id="github.elexis-3-base.pullrequests"
+      connectorKind="githubPullRequests"
+      repositoryURL="https://github.com/elexis/elexis-3-base"
+      userID="${github.user.id}"
+      password="">
+    <query summary="base pull requests">
+      <attribute
+          key="state"
+          value="open::"/>
+    </query>
+    <description>elexis/elexis-3-base pull requests</description>
+  </setupTask>
   <stream name="snapshot"
       label="">
     <setupTask
@@ -132,8 +173,6 @@
         <repositoryList
             name="Luna">
           <repository
-              url="http://download.eclipse.org/releases/luna"/>
-          <repository
               url="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository"/>
           <repository
               url="http://download.elexis.info/mirror.4.elexis/snapshot"/>
@@ -146,14 +185,6 @@
               url="http://download.eclipse.org/releases/kepler"/>
         </repositoryList>
       </targlet>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynBuildsTask"
-        id="srv.elexis.info.core"
-        serverURL="https://srv.elexis.info/jenkins/"
-        userID="">
-      <buildPlan
-          name="Elexis-3.0-Core"/>
     </setupTask>
     <description></description>
   </stream>
