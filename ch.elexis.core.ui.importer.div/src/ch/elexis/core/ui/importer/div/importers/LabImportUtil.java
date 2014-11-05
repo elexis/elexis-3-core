@@ -304,6 +304,7 @@ public class LabImportUtil {
 		
 		private LabResult persist(){
 			LabResult labResult = new LabResult(patient, date, labItem, result, comment, origin);
+			flags = labResult.getFlags(); // pathologic check takes place in labResult
 			setFields(labResult);
 			return labResult;
 		}
