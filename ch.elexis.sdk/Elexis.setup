@@ -36,7 +36,8 @@
   <setupTask
       xsi:type="setup:EclipseIniTask"
       option="-Doomph.redirection.elexissetup"
-      value="=https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.sdk/Elexis.setup->${core.git.clone.location|uri}/ch.elexis.sdk/"/>
+      value="=https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.sdk/Elexis.setup->${core.git.clone.location|uri}/ch.elexis.sdk/Elexis.setup"
+      vm="true"/>
   <setupTask
       xsi:type="setup:ResourceCreationTask"
       excludedTriggers="STARTUP MANUAL"
