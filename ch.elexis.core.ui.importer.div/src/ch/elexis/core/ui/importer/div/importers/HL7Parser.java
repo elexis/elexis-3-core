@@ -73,10 +73,29 @@ public class HL7Parser {
 	
 	public Result<Object> parse(final HL7Reader hl7Reader, ILabItemResolver labItemResolver,
 		boolean createPatientIfNotFound){
+		return parse(hl7Reader, null, null, createPatientIfNotFound);
+	}
+	
+	public Result<Object> parse(final HL7Reader hl7Reader, ILabItemResolver labItemResolver,
+		ILabContactResolver labContactResolver, boolean createPatientIfNotFound){
 		final TimeTool transmissionTime = new TimeTool();
-		final Labor labor = LabImportUtil.getOrCreateLabor(myLab);
+		
+		// assure resolvers are initialized
+		if (labContactResolver == null) {
+			labContactResolver = new DefaultLabContactResolver();
+		}
+		if (labItemResolver == null) {
+			labItemResolver = new DefaultLabItemResolver();
+		}
 		
 		try {
+			Labor labor = labContactResolver.getLabContact(myLab, hl7Reader.getSender());
+			// stop here if lab does not exist
+			if (labor == null) {
+				logger.info("Exiting parsing process as labor is null");
+				return new Result<Object>("OK");
+			}
+			
 			ObservationMessage obsMessage =
 				hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
 			
@@ -84,10 +103,6 @@ public class HL7Parser {
 			if (pat == null) {
 				return new Result<Object>(SEVERITY.ERROR, 2,
 					Messages.getString("HL7_PatientNotInDatabase"), obsMessage.getPatientId(), true);
-			}
-			
-			if (labItemResolver == null) {
-				labItemResolver = new DefaultLabItemResolver();
 			}
 			
 			int number = 0;
@@ -220,47 +235,19 @@ public class HL7Parser {
 	}
 	
 	/**
-	 * Import the given HL7 file. Optionally, move the file into the given archive directory
-	 * 
-	 * @param file
-	 *            the file to be imported (full path)
-	 * @param archiveDir
-	 *            a directory where the file should be moved to on success, or null if it should not
-	 *            be moved.
-	 * @return the result as type Result
+	 * @see HL7Parser#importFile(File, File, ILabItemResolver, ILabContactResolver, boolean)
 	 */
 	public Result<?> importFile(final File file, final File archiveDir,
 		boolean bCreatePatientIfNotExists){
-		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
-		
-		for (HL7Reader hl7Reader : hl7Readers) {
-			this.hl7Reader = hl7Reader;
-			Result<?> ret = parse(hl7Reader, bCreatePatientIfNotExists);
-			// move result to archive
-			if (ret.isOK()) {
-				if (archiveDir != null) {
-					if (archiveDir.exists() && archiveDir.isDirectory()) {
-						if (file.exists() && file.isFile() && file.canRead()) {
-							File newFile = new File(archiveDir, file.getName());
-							if (!file.renameTo(newFile)) {
-								SWTHelper
-									.showError(
-										ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorArchiving,
-										ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_TheFile
-											+ file.getAbsolutePath()
-											+ ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_CouldNotMoveToArchive);
-							}
-						}
-					}
-				}
-			} else {
-				ResultAdapter.displayResult(ret,
-					ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorReading);
-			}
-			ElexisEventDispatcher.reload(LabItem.class);
-			return ret;
-		}
-		return new Result<Object>("OK"); //$NON-NLS-1$
+		return importFile(file, archiveDir, null, null, bCreatePatientIfNotExists);
+	}
+	
+	/**
+	 * @see HL7Parser#importFile(File, File, ILabItemResolver, ILabContactResolver, boolean)
+	 */
+	public Result<?> importFile(final File file, final File archiveDir,
+		ILabItemResolver labItemResolver, boolean bCreatePatientIfNotExists){
+		return importFile(file, archiveDir, labItemResolver, null, bCreatePatientIfNotExists);
 	}
 	
 	/**
@@ -271,15 +258,25 @@ public class HL7Parser {
 	 * @param archiveDir
 	 *            a directory where the file should be moved to on success, or null if it should not
 	 *            be moved.
+	 * @param labItemResolver
+	 *            implementation of the {@link ILabItemResolver}, or null if
+	 *            {@link DefaultLabItemResolver} should be used
+	 * @param labContactResolver
+	 *            implementation of {@link ILabContactResolver}, or null if
+	 *            {@link DefaultLabContactResovler} should be used
+	 * @param bCreatePatientIfNotExists
+	 *            indicates whether a patient should be created if not existing
 	 * @return the result as type Result
 	 */
-	public Result<?> importFile(final File file, final File archiveDir, ILabItemResolver resolver,
+	public Result<?> importFile(final File file, final File archiveDir,
+		ILabItemResolver labItemResolver, ILabContactResolver labContactResolver,
 		boolean bCreatePatientIfNotExists){
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
 		
 		for (HL7Reader hl7Reader : hl7Readers) {
 			this.hl7Reader = hl7Reader;
-			Result<?> ret = parse(hl7Reader, resolver, bCreatePatientIfNotExists);
+			Result<?> ret =
+				parse(hl7Reader, labItemResolver, labContactResolver, bCreatePatientIfNotExists);
 			// move result to archive
 			if (ret.isOK()) {
 				if (archiveDir != null) {

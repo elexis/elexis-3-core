@@ -55,6 +55,25 @@ public class HL7ReaderV251 extends HL7Reader {
 	}
 	
 	@Override
+	public String getSender() throws ElexisException{
+		String sender;
+		sender = msh.getMsh4_SendingFacility().getNamespaceID().getValue();
+		try {
+			Integer.parseInt(sender);
+			String tmp = msh.getMsh3_SendingApplication().getNamespaceID().getValue();
+			if (tmp != null) {
+				sender = tmp;
+			}
+		} catch (NumberFormatException nfe) {
+			// OK we got a name not id
+		}
+		if (sender == null) {
+			sender = "";
+		}
+		return sender;
+	}
+	
+	@Override
 	public ObservationMessage readObservation(HL7PatientResolver patientResolver,
 		boolean createIfNotFound) throws ElexisException{
 		observation = null;

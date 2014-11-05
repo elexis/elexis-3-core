@@ -47,6 +47,7 @@ import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Kontakt;
+import ch.elexis.data.Labor;
 import ch.elexis.data.Organisation;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
@@ -112,6 +113,8 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 						if ((k.istPerson() && xd.isDisplayedFor(Person.class))
 							|| (k.istOrganisation() && xd.isDisplayedFor(Organisation.class))) {
 							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
+						} else if (k.istOrganisation() && xd.isDisplayedFor(Labor.class)) {
+							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom);
 						}
 					}
 					KontaktExtDialog dlg =

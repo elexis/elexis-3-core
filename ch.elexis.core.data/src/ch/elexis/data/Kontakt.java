@@ -76,6 +76,8 @@ public class Kontakt extends PersistentObject {
 	public static final String XID_KONTAKT_ANREDE = DOMAIN_KONTAKT + "anrede";
 	public static final String XID_KONTAKT_KANTON = DOMAIN_KONTAKT + "kanton";
 	public static final String XID_KONTAKT_SPEZ = DOMAIN_KONTAKT + "spez";
+	public static final String XID_KONTAKT_LAB_SENDING_FACILITY = DOMAIN_KONTAKT
+		+ "lab/sendingfacility";
 	
 	volatile String Bezug;
 	
@@ -100,10 +102,13 @@ public class Kontakt extends PersistentObject {
 		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_KANTON, "Kanton", Xid.ASSIGNMENT_REGIONAL);
 		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_SPEZ, "Spezialität",
 			Xid.ASSIGNMENT_REGIONAL);
+		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_LAB_SENDING_FACILITY,
+			"Sendende Institution", Xid.ASSIGNMENT_REGIONAL);
 		
 		Xid.getDomain(XID_KONTAKT_ANREDE).addDisplayOption(Person.class);
 		Xid.getDomain(XID_KONTAKT_KANTON).addDisplayOption(Person.class);
 		Xid.getDomain(XID_KONTAKT_SPEZ).addDisplayOption(Person.class);
+		Xid.getDomain(XID_KONTAKT_LAB_SENDING_FACILITY).addDisplayOption(Labor.class);
 	}
 	
 	/**

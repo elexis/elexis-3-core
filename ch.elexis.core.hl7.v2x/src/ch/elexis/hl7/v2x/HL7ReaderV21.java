@@ -19,6 +19,7 @@ import ca.uhn.hl7v2.model.v21.datatype.TX;
 import ca.uhn.hl7v2.model.v21.group.ORU_R01_OBSERVATION;
 import ca.uhn.hl7v2.model.v21.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v21.message.ORU_R01;
+import ca.uhn.hl7v2.model.v21.segment.MSH;
 import ca.uhn.hl7v2.model.v21.segment.NTE;
 import ca.uhn.hl7v2.model.v21.segment.OBR;
 import ca.uhn.hl7v2.model.v21.segment.OBX;
@@ -44,6 +45,22 @@ public class HL7ReaderV21 extends HL7Reader {
 	
 	public HL7ReaderV21(Message message){
 		super(message);
+	}
+	
+	@Override
+	public String getSender() throws ElexisException{
+		String sender;
+		MSH msh;
+		try {
+			msh = (MSH) message.get("MSH");
+			sender = msh.getMsh4_SENDINGFACILITY().getValue();
+			if (sender == null) {
+				sender = "";
+			}
+		} catch (HL7Exception e) {
+			throw new ElexisException(e.getMessage(), e);
+		}
+		return sender;
 	}
 	
 	@Override

@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabMapping;
@@ -20,6 +23,7 @@ import ch.elexis.data.LabResult;
 import ch.elexis.data.Labor;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
+import ch.elexis.data.Xid;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -58,6 +62,39 @@ public class LabImportUtil {
 			if (results.size() > 1) {
 				logger.warn("Found more than one Labor for identifier [" + identifier
 					+ "]. This can cause problems when importing results.");
+			}
+		}
+		return labor;
+	}
+	
+	/**
+	 * find or set the labor this identifier is linked to
+	 * 
+	 * @param identifier
+	 *            the value to match to a labor
+	 * @return the found or new set labor contact or null if no lab could be found AND none was
+	 *         selected
+	 */
+	public static Labor getLinkLabor(String identifier){
+		if (identifier == null || identifier.isEmpty()) {
+			throw new IllegalArgumentException("Labor identifier [" + identifier + "] invalid.");
+		}
+		Labor labor = null;
+		// check if there is a connection to an XID
+		Kontakt k = (Kontakt) Xid.findObject(Kontakt.XID_KONTAKT_LAB_SENDING_FACILITY, identifier);
+		if (k != null) {
+			labor = Labor.load(k.getId());
+		}
+		
+		// if no connection exists ask to which lab it should be linked
+		if (labor == null) {
+			KontaktSelektor ks =
+				new KontaktSelektor(UiDesk.getTopShell(), Labor.class,
+					Messages.LabImporterUtil_Select, Messages.LabImporterUtil_SelectLab,
+					Kontakt.DEFAULT_SORT);
+			if (ks.open() == Dialog.OK) {
+				labor = (Labor) ks.getSelection();
+				labor.addXid(Kontakt.XID_KONTAKT_LAB_SENDING_FACILITY, identifier, true);
 			}
 		}
 		return labor;

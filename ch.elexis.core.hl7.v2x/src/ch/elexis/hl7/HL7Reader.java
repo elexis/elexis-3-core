@@ -26,6 +26,8 @@ public abstract class HL7Reader {
 		this.message = message;
 	}
 	
+	public abstract String getSender() throws ElexisException;
+	
 	public abstract ObservationMessage readObservation(HL7PatientResolver patientResolver,
 		boolean createIfNotFound) throws ElexisException;
 	

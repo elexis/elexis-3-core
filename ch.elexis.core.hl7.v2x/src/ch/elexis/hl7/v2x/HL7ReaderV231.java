@@ -22,6 +22,7 @@ import ca.uhn.hl7v2.model.v231.datatype.XAD;
 import ca.uhn.hl7v2.model.v231.group.ORU_R01_OBXNTE;
 import ca.uhn.hl7v2.model.v231.group.ORU_R01_ORCOBRNTEOBXNTECTI;
 import ca.uhn.hl7v2.model.v231.message.ORU_R01;
+import ca.uhn.hl7v2.model.v231.segment.MSH;
 import ca.uhn.hl7v2.model.v231.segment.NTE;
 import ca.uhn.hl7v2.model.v231.segment.OBR;
 import ca.uhn.hl7v2.model.v231.segment.OBX;
@@ -49,6 +50,21 @@ public class HL7ReaderV231 extends HL7Reader {
 	
 	public HL7ReaderV231(Message message){
 		super(message);
+	}
+	
+	@Override
+	public String getSender() throws ElexisException{
+		String sender;
+		try {
+			MSH msh = (MSH) message.get("MSH");
+			sender = msh.getMsh4_SendingFacility().getNamespaceID().getValue();
+			if (sender == null) {
+				sender = "";
+			}
+		} catch (HL7Exception e) {
+			throw new ElexisException(e.getMessage(), e);
+		}
+		return sender;
 	}
 	
 	@Override
@@ -357,5 +373,4 @@ public class HL7ReaderV231 extends HL7Reader {
 			logger.error(MessageFormat.format("Value type {0} is not implemented!", valueType));
 		}
 	}
-	
 }

@@ -56,6 +56,8 @@ public class Messages extends NLS {
 	public static String HL7Parser_LabAlreadyImported;
 	public static String HL7Parser_LabNotFound;
 	public static String HL7Parser_TheFile;
+	public static String HL7Parser_NoLab;
+	public static String HL7Parser_AskUseOwnLab;
 	public static String KontaktImporter_AskSameAnd;
 	public static String KontaktImporter_AskSameText1;
 	public static String KontaktImporter_AskSameText2;
@@ -89,6 +91,9 @@ public class Messages extends NLS {
 	public static String Presets_Unfall;
 	public static String Presets_Unfallnummer;
 	public static String Presets_UVGAbkuerzung;
+	public static String LabImporterUtil_Select;
+	public static String LabImporterUtil_SelectLab;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

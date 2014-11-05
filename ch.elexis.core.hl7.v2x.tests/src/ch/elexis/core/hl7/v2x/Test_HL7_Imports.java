@@ -52,6 +52,7 @@ public class Test_HL7_Imports {
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
 			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(f);
 			ObservationMessage obs = hl7Readers.get(0).readObservation(resolver, false);
+			assertNotNull(hl7Readers.get(0).getSender());
 			assertNotNull(obs);
 			assertNotNull(obs.getObservations());
 			for (IValueType iValueType : obs.getObservations()) {
