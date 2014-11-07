@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
@@ -47,16 +46,7 @@ import ch.rgw.crypt.Base64Coder;
  */
 
 public class XMLTool {
-	static final String JAXP_SCHEMA_LANGUAGE =
-		"http://java.sun.com/xml/jaxp/properties/schemaLanguage"; //$NON-NLS-1$
-	
-	static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource"; //$NON-NLS-1$
-	
 	static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema"; //$NON-NLS-1$
-	
-	public static List<String> validateSchema(String xmlDocumentUrl){
-		return validateSchema(null, xmlDocumentUrl);
-	}
 	
 	public static List<String> validateSchema(String schemaUrl, Source source){
 		MyErrorHandler errorHandler = new MyErrorHandler();
@@ -85,28 +75,26 @@ public class XMLTool {
 		return errorHandler.getMessageList();
 	}
 	
-	public static List<String> validateSchema(String schemaUrl, String xmlDocumentUrl){
-		Source source = new StreamSource(xmlDocumentUrl);
-		return validateSchema(schemaUrl, source);
-	}
-	
 	private static class MyErrorHandler implements ErrorHandler {
 		public List<Exception> exceptions = new Vector<Exception>();
 		
+		@Override
 		public void error(SAXParseException exception) throws SAXException{
 			exceptions.add(exception);
 		}
 		
+		@Override
 		public void fatalError(SAXParseException exception) throws SAXException{
 			exceptions.add(exception);
 		}
 		
+		@Override
 		public void warning(SAXParseException exception) throws SAXException{
 			// Nothing
 		}
 		
 		public void exception(Exception exception){
-			exceptions.add(exception);
+			// Nothing this is not an xml related error
 		}
 		
 		public List<String> getMessageList(){
