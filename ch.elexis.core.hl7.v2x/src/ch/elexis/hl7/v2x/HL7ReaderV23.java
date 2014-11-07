@@ -336,6 +336,8 @@ public class HL7ReaderV23 extends HL7Reader {
 				if (value == null) {
 					value = ((SN) tmp).getSn1_Comparator().getValue();
 				}
+			} else if (tmp instanceof CE) {
+				value = ((CE) tmp).getCe2_Text().getValue();
 			}
 			
 			itemCode = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();

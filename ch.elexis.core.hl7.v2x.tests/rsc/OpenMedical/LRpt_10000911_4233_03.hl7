@@ -1,0 +1,20 @@
+﻿MSH|^~\&|zlab|medica|||20141106125709||ORU^R01|10000911|P|2.2|
+PID||4233|2546421||Kohli^Bettina||19700620|F|||Schafisheimerstr. 26^^5502 Hunzenschwil|
+ORC|1|10000911^ZURA|10000911^medica||CM|||||||ZURA^Zurbuchen^Andreas|
+OBR|1|?Auftrag?^ZURA|10000911^medica|ENDB^Endbefund||20141024094500|20141024140700|||||||20141024140700||ZURA^Zurbuchen^Andreas||||||20141027115700|||F
+OBX|1|CE|CTRDQ^Chlam. trachomatis, DNA (PCR)|1|NN^nicht nachweisbar||||||F||0^6000^MIMO^Molekularbiologie|20141024140700||WJF|
+OBX|2|CE|NGODQ^Neiss. gonorrhoeae, DNA (PCR)|1|NN^nicht nachweisbar||||||F||0^6000^MIMO^Molekularbiologie|20141024140700||WJF|
+OBX|3|CE|LEUK^Leukozyten|1|NN^nicht nachweisbar||||||F||0^7100^MIMI^Mikroskopie|20141024140700||WJF|
+OBX|4|CE|ERYT^Erythrozyten|1|M^mässig||||||F||10^7100^MIMI^Mikroskopie|20141027114700||WJF|
+OBX|5|CE|EPIT^Epithelien|1|NN^nicht nachweisbar||||||F||30^7100^MIMI^Mikroskopie|20141024140700||WJF|
+OBX|6|CE|MO^Mikroorganismen|1|NN^nicht nachweisbar||||||F||50^7100^MIMI^Mikroskopie|20141027114700||WJF|
+OBX|7|CE|VAGHEF^Hefezellen|1|NN^nicht nachweisbar||||||F||100^7100^MIMI^Mikroskopie|20141024140700||WJF|
+OBX|8|CE|CLUE^Clue Zellen|1|NN^nicht nachweisbar||||||F||6001^7100^MIMI^Mikroskopie|20141024140700||WJF|
+OBX|9|CE|GARDMO^Gardnerella Morphotyp|1|NN^nicht nachweisbar||||||F||6002^7100^MIMI^Mikroskopie|20141024140700||WJF|
+OBX|10|CE|DOED^Döderlein-Laktobazillen|1|NN^nicht nachweisbar|||L|||F||6005^7100^MIMI^Mikroskopie|20141024140700||WJF|
+NTE|1|DOE0|Keine respektive nur wenig Döderlein-Normalflora.|
+OBX|11|CE|BSTRE^ß-hämolytische Streptokokken|1|NN^nicht nachweisbar||||||F||1190^7200^MIKU^Kultur|20141024140700||WJF|
+OBX|12|CE|VAGCAS^Candida spezies|1|NN^nicht nachweisbar||||||F||1530^7200^MIKU^Kultur|20141024140700||WJF|
+OBX|13|CE|GAVA^Gardnerella vaginalis|1|NN^nicht nachweisbar||||||F||6000^7200^MIKU^Kultur|20141024140700||WJF|
+OBX|14|CE|VALA^Normale Vaginalflora|1|NN^nicht nachweisbar||||||F||6740^7200^MIKU^Kultur|20141024140700||WJF|
+OBX|15|CE|OMISCH^Ortsübliche Mischflora|1|VE^vereinzelt||||||F||8000^7200^MIKU^Kultur|20141027114700||WJF|

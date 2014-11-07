@@ -294,7 +294,6 @@ public class HL7ReaderV22 extends HL7Reader {
 			}
 			String value = "";
 			Object tmp = obx.getObx5_ObservationValue().getData();
-			
 			if (tmp instanceof ST) {
 				value = ((ST) tmp).getValue();
 			} else if (tmp instanceof TX) {
@@ -303,6 +302,8 @@ public class HL7ReaderV22 extends HL7Reader {
 				value = ((FT) tmp).getValue();
 			} else if (tmp instanceof NM) {
 				value = ((NM) tmp).getValue();
+			} else if (tmp instanceof CE) {
+				value = ((CE) tmp).getCe2_Text().getValue();
 			}
 			
 			itemCode = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();

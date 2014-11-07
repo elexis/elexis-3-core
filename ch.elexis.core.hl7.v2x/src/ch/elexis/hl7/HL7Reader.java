@@ -42,6 +42,8 @@ public abstract class HL7Reader {
 			return true;
 		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN))
 			return true;
+		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_CE))
+			return true;
 		
 		return false;
 	}

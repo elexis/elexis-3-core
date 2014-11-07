@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.model.v23.datatype.CE;
 import ca.uhn.hl7v2.model.v26.datatype.CWE;
 import ca.uhn.hl7v2.model.v26.datatype.ED;
 import ca.uhn.hl7v2.model.v26.datatype.FT;
@@ -336,6 +337,8 @@ public class HL7ReaderV26 extends HL7Reader {
 				value = ((NM) tmp).getValue();
 			} else if (tmp instanceof SN) {
 				value = ((SN) tmp).getSn2_Num1().getValue();
+			} else if (tmp instanceof CE) {
+				value = ((CE) tmp).getCe2_Text().getValue();
 			}
 			
 			itemCode = obx.getObx3_ObservationIdentifier().getCwe1_Identifier().getValue();

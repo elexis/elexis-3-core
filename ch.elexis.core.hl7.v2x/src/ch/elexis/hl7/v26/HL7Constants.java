@@ -5,6 +5,7 @@ public interface HL7Constants {
 	/**
 	 * OBX VALUE TYPES <br>
 	 * AD Address <br>
+	 * CE Code Element <br>
 	 * CWE Coded Entry <br>
 	 * CF Coded Element With Formatted Values <br>
 	 * CK Composite ID With Check Digit <br>
@@ -65,6 +66,11 @@ public interface HL7Constants {
 	 * Structured Numeric
 	 */
 	public static String OBX_VALUE_TYPE_SN = "SN";
+	
+	/**
+	 * Code Element
+	 */
+	public static String OBX_VALUE_TYPE_CE = "CE";
 	
 	/**
 	 * Comment Definitions
