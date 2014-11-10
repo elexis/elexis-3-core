@@ -235,9 +235,14 @@ public abstract class PersistentObject implements IPersistentObject {
 			runningFromScratch = true;
 		}
 		
-		log.info("osgi.install.area: " + System.getProperty("osgi.install.area"));
+		log.debug("osgi.install.area: " + System.getProperty("osgi.install.area"));
 		
-		File demo = new File(CoreHub.getWritableUserDir() + File.separator + "demoDB");
+		String demoDBLocation = System.getProperty(ElexisSystemPropertyConstants.DEMO_DB_LOCATION);
+		if(demoDBLocation == null) {
+			demoDBLocation = CoreHub.getWritableUserDir() + File.separator + "demoDB";
+		}
+		
+		File demo = new File(demoDBLocation);
 		log.info("Checking demo database availability in " + demo.getAbsolutePath());
 		
 		// --
@@ -248,7 +253,17 @@ public abstract class PersistentObject implements IPersistentObject {
 			log.info("Using demoDB in " + demo.getAbsolutePath());
 			j = JdbcLink.createH2Link(demo.getAbsolutePath() + File.separator + "db");
 			try {
-				getConnection().connect("sa", StringTool.leer);
+				String username =
+					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME);
+				if (username == null)
+					username = "sa";
+				
+				String password =
+					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD);
+				if (password == null)
+					password = StringTool.leer;
+				
+				getConnection().connect(username, password);
 				return connect(getConnection());
 			} catch (JdbcLinkException je) {
 				ElexisStatus status = translateJdbcException(je);
