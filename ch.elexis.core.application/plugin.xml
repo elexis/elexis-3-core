@@ -23,6 +23,10 @@
                name="aboutText"
                value="Elexis 3.0 Development Version - www.elexis.info">
          </property>
+         <property
+               name="aboutImage"
+               value="rsc/elexis-logo-small.gif">
+         </property>
       </product>
    </extension>
    <extension
