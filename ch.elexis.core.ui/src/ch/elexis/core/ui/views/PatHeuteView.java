@@ -17,8 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -77,6 +79,7 @@ import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.ListDisplay;
+import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -363,12 +366,16 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			tTime2.setText("");
 			tMoney2.setText("");
 		} else {
-			tTime2.setText(Integer.toString(k.getMinutes()));
-			Money mon = new Money();
-			for (Verrechnet ver : k.getLeistungen()) {
-				mon = mon.addMoney(ver.getNettoPreis().multiply(ver.getZahl()));
+			try {
+				tTime2.setText(Integer.toString(k.getMinutes()));
+				Money mon = new Money();
+				for (Verrechnet ver : k.getLeistungen()) {
+					mon = mon.addMoney(ver.getNettoPreis().multiply(ver.getZahl()));
+				}
+				tMoney2.setText(mon.getAmountAsString());
+			} catch (NullPointerException e) {
+				// ignore -> handled during update
 			}
-			tMoney2.setText(mon.getAmountAsString());
 		}
 	}
 	
@@ -508,6 +515,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	
 	class KonsLoader extends AbstractDataLoaderJob {
 		IVerrechenbar[] lfiltered;
+		Set<Konsultation> corruptKons;
+		Set<Konsultation> missingCaseKons;
 		
 		KonsLoader(final Query<Konsultation> qbe){
 			super(Messages.PatHeuteView_loadConsultations, qbe, new String[] {
@@ -522,6 +531,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			if (CoreHub.actUser == null) {
 				return Status.CANCEL_STATUS;
 			}
+			corruptKons = new HashSet<Konsultation>();
+			missingCaseKons = new HashSet<Konsultation>();
 			monitor.beginTask(Messages.PatHeuteView_loadKons, 1000); //$NON-NLS-1$
 			qbe.clear();
 			qbe.add(Konsultation.DATE, Query.GREATER_OR_EQUAL,
@@ -591,37 +602,72 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				}
 				int i = 0;
 				for (PersistentObject o : list) {
-					ret[i++] = (Konsultation) o;
-					if (lfiltered != null) {
-						List<Verrechnet> lstg = ((Konsultation) o).getLeistungen();
-						for (Verrechnet v : lstg) {
-							int num = v.getZahl();
-							Money preis = v.getEffPreis().multiply(num);
-							for (int j = 0; j < lfiltered.length; j++) {
-								if (lfiltered[j].equals(v.getVerrechenbar())) {
-									sumAll += preis.getCents();
-									sumTime += v.getVerrechenbar().getMinutes();
+					if (((Konsultation) o).getFall() == null) {
+						missingCaseKons.add((Konsultation) o);
+					}
+					try {
+						ret[i++] = (Konsultation) o;
+						if (lfiltered != null) {
+							List<Verrechnet> lstg = ((Konsultation) o).getLeistungen();
+							for (Verrechnet v : lstg) {
+								int num = v.getZahl();
+								Money preis = v.getEffPreis().multiply(num);
+								for (int j = 0; j < lfiltered.length; j++) {
+									if (lfiltered[j].equals(v.getVerrechenbar())) {
+										sumAll += preis.getCents();
+										sumTime += v.getVerrechenbar().getMinutes();
+									}
 								}
 							}
+						} else {
+							for (Verrechnet verr : ((Konsultation) o).getLeistungen()) {
+								sumAll +=
+									verr.getNettoPreis().multiply(verr.getZahl()).doubleValue();
+							}
+							sumTime += ((Konsultation) o).getMinutes();
 						}
-					} else {
-						for (Verrechnet verr : ((Konsultation) o).getLeistungen()) {
-							sumAll += verr.getNettoPreis().multiply(verr.getZahl()).doubleValue();
+						monitor.worked(1);
+						
+						if (monitor.isCanceled()) {
+							monitor.done();
+							result = new Konsultation[0];
+							return Status.CANCEL_STATUS;
 						}
-						sumTime += ((Konsultation) o).getMinutes();
-					}
-					monitor.worked(1);
-					
-					if (monitor.isCanceled()) {
-						monitor.done();
-						result = new Konsultation[0];
-						return Status.CANCEL_STATUS;
+					} catch (NullPointerException np) {
+						corruptKons.add((Konsultation) o);
 					}
 				}
 				numPat = ret.length;
 				result = ret;
 				monitor.done();
 			}
+			
+			// show message in case there are corrupt consultations
+			StringBuilder sb = new StringBuilder();
+			if (corruptKons.size() > 0) {
+				sb.append("Folgende Konsultationen enthalten ungültige Leistungen: \n");
+				for (Konsultation k : corruptKons) {
+					sb.append(k.getLabel() + ", " + k.getFall().getPatient().getLabel());
+					sb.append("\n");
+				}
+				sb.append("\n");
+			}
+			
+			if (missingCaseKons.size() > 0) {
+				sb.append("Folgende Konsultationen sind keinem Fall zugewiesen: \n");
+				for (Konsultation k : missingCaseKons) {
+					sb.append(k.getLabel());
+					sb.append("\n");
+				}
+			}
+			
+			if (sb.length() > 0) {
+				SWTHelper.showError("Achtung",
+					"Fehlerhafte Konsultation(en) vorhanden!\n" + sb.toString());
+				log.log("The following consultations contain invalid values...\n" + sb.toString(),
+					Log.ERRORS);
+			}
+			
 			return Status.OK_STATUS;
 		}
 		
