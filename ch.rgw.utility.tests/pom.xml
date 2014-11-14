@@ -22,13 +22,8 @@
           <useUIHarness>true</useUIHarness>
           <dependencies>
             <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.ui.navigator</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.ui.views</artifactId>
+              <type>eclipse-feature</type>
+              <artifactId>org.eclipse.platform</artifactId>
               <version>0.0.0</version>
             </dependency>
           </dependencies>

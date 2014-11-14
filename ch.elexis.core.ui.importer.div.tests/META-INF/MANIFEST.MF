@@ -6,5 +6,6 @@ Bundle-Version: 3.0.0.qualifier
 Bundle-Vendor: ch.elexis
 Fragment-Host: ch.elexis.core.ui.importer.div;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.junit;bundle-version="[4.0.0,5.0.0)"
+Require-Bundle: org.junit;bundle-version="[4.0.0,5.0.0)",
+ ch.elexis.core.application
 Import-Package: ch.elexis.data

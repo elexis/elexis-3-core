@@ -12,7 +12,7 @@
   <properties>
     <elexis.run.dbtests>false</elexis.run.dbtests>
   </properties>
-  
+
   <!-- comment out to enable headless tests and add additional dependencies if needed
     -->
   <build>
@@ -28,11 +28,6 @@
           <useUIHarness>false</useUIHarness>
           <useUIThread>true</useUIThread>
           <dependencies>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>ch.elexis.core.console.application</artifactId>
-              <version>0.0.0</version>
-            </dependency>
               <dependency>
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-reflect</artifactId>
