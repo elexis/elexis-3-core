@@ -12,6 +12,8 @@
 
 package ch.elexis.data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -131,8 +133,66 @@ public class Prescription extends PersistentObject {
 		
 	}
 	
+	/**
+	 * return the dose of a drugs. Up to Version 3.1 (hopefully) Elexis did not specify exactly the
+	 * dose of a drug, but used a String where many doctors used shortcuts like 1-0-1-1 to specify
+	 * that the number of entities (e.g. a tablet) for breakfast, lunch, supper, before night Other
+	 * examples are 0-0- 1/4-1/2 0.5/-/- 0-0-0- 40E 0.5 Stk alle 3 Tage
+	 * 
+	 * @return String
+	 */
 	public String getDosis(){
 		return checkNull(get(DOSAGE));
+	}
+	
+	/*
+	 * return the dose of a drugs as a list of up to 4 floats. 
+	 * Up to Version 3.0.10 (hopefully) Elexis did not specify exactly the dose of a drug, but used a String where many doctors used 
+	 * shortcuts like
+	 * 1-0-1-1 to specify that the number of entities (e.g. a tablet) for breakfast, lunch, supper, before night
+	 * Here are some examples how this procedure deals with the some input.
+	 * 0-0- 1/4-1/2        => <0.0,0.0,0.25>
+	 * 0.5/-/-			   => <0.5>
+	 * 0-0-0- 40E		   => <0.0,0.0,0.0,40.0>
+	 * 0.5 Stk alle 3 Tage => <0.5>
+	 * 1inj Wo             => <>
+	 * 
+	 * More examples can be found in the unit test.
+	 * 
+	 * @return a list of (upto 4) floats
+	 */
+	public static ArrayList<Float> getDoseAsFloats(String dosis){
+		ArrayList<Float> list = new ArrayList<Float>();
+		float num = 0;
+		if (dosis != null) {
+			// Match stuff like '1/2', '7/8'
+			if (dosis.matches("^[0-9]/[0-9]$"))
+			{
+				float value = getNum(dosis.substring(0, 1)) / getNum(dosis.substring(2));
+				list.add(value);
+
+			} else if (dosis.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
+				String[] dose = dosis.split("[xX]"); //$NON-NLS-1$
+				float count = getNum(dose[0]);
+				if (dose.length > 1)
+					num = getNum(dose[1]) * count;
+				else
+					num = getNum(dose[0]);
+				list.add(num);
+			} else if (dosis.indexOf('-') != -1) {
+				String[] dos = dosis.split("-"); //$NON-NLS-1$
+				if (dos.length > 2) {
+					for (String d : dos) {
+						list.add(getNum(d));
+					}
+				} else if (dos.length > 1) {
+					list.add(getNum(dos[1]));
+				} else {
+					// nothing to add
+				}
+			}
+		}
+		return list;
 	}
 	
 	public void setDosis(String newDose){
@@ -206,7 +266,7 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
-	 * A listing of all adinistration periods of this prescription. This is to retrieve later when
+	 * A listing of all administration periods of this prescription. This is to retrieve later when
 	 * and how the article was prescribed
 	 * 
 	 * @return a Map of TimeTools and Doses (Sorted by date)
@@ -235,29 +295,19 @@ public class Prescription extends PersistentObject {
 		return ret;
 	}
 	
+	/**
+	 * A listing of all administration periods of this prescription. This is to retrieve later when
+	 * and how the article was prescribed
+	 * 
+	 * @return a Map of TimeTools and Doses (Sorted by date)
+	 */
 	public static float calculateTagesDosis(String dosis) throws NumberFormatException{
-		float num = 0f;
-		if (dosis != null) {
-			if (dosis.matches("[0-9]+[xX][0-9]+(/[0-9]+)?")) { //$NON-NLS-1$
-				String[] dose = dosis.split("[xX]"); //$NON-NLS-1$
-				int count = Integer.parseInt(dose[0]);
-				num = getNum(dose[1]) * count;
-			} else if (dosis.indexOf('-') != -1) {
-				String[] dos = dosis.split("-"); //$NON-NLS-1$
-				if (dos.length > 2) {
-					for (String d : dos) {
-						num += getNum(d);
-					}
-				} else {
-					num = getNum(dos[1]);
-				}
-			} else {
-				return 0f;
-			}
-		} else {
-			return 0f;
+		float total = 0f;
+		List<Float> res = getDoseAsFloats(dosis);
+		for (int j = 0; j < res.size(); j++) {
+			total += res.get(j);
 		}
-		return num;
+		return total;
 	}
 	
 	private static float getNum(String num){
@@ -271,6 +321,9 @@ public class Prescription extends PersistentObject {
 				return 1.5F;
 			
 			if (n.indexOf('/') != -1) {
+				if (n.length() == 1) {
+					return 0.0f;
+				}
 				String[] bruch = n.split(StringConstants.SLASH);
 				float zaehler = Float.parseFloat(bruch[0]);
 				float nenner = Float.parseFloat(bruch[1]);
