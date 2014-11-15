@@ -32,6 +32,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -71,7 +72,7 @@ public class DBConnectFirstPage extends WizardPage {
 		body.setLayout(new TableWrapLayout());
 		FormText alt = tk.createFormText(body, false);
 		StringBuilder old = new StringBuilder();
-		old.append("<form>Aktuelle Verbindung:<br/>"); //$NON-NLS-1$
+		old.append("<form>"); //$NON-NLS-1$
 		String driver = "";
 		String user = "";
 		String typ = "";
@@ -91,15 +92,27 @@ public class DBConnectFirstPage extends WizardPage {
 				typ = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
 			}
 		}
+		// Check whether we were overridden
+		String dbUser = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME);
+		String dbPw = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD);
+		String dbFlavor = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR);
+		String dbSpec = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC);
+		if (dbUser != null && dbPw != null && dbFlavor != null && dbSpec != null) {
+			old.append("<br/><li><b>Aktuelle Verbindung wurde via Übergabeparameter ans Programm gesetzt!</b></li><br/>"); //$NON-NLS-1$
+		}
 		if (ch.rgw.tools.StringTool.isNothing(connectString)) {
-			old.append("Keine.</form>"); //$NON-NLS-1$
+			old.append("<form>:<br/>"); //$NON-NLS-1$
+			old.append("Keine konfigurierte Verbindung."); //$NON-NLS-1$
 		} else {
+			old.append("Konfigurierte Verbindung ist:<br/>"); //$NON-NLS-1$
 			old.append("<li><b>Typ:</b>       ").append(typ).append("</li>"); //$NON-NLS-1$ //$NON-NLS-2$
 			old.append("<li><b>Treiber</b>    ").append(driver).append("</li>"); //$NON-NLS-1$ //$NON-NLS-2$
 			old.append("<li><b>Verbinde</b>   ").append(connectString).append("</li>"); //$NON-NLS-1$ //$NON-NLS-2$
 			old.append("<li><b>Username</b>   ").append(user).append("</li>"); //$NON-NLS-1$ //$NON-NLS-2$
-			old.append("</form>"); //$NON-NLS-1$
 		}
+		old.append("<li><b>Effektiv</b> verwendet wird:").append( //$NON-NLS-1$
+			PersistentObject.getConnection().getConnectString()).append("</li>"); //$NON-NLS-1$
+		old.append("</form>"); //$NON-NLS-1$
 		alt.setText(old.toString(), true, false);
 		// Composite form=new Composite(parent, SWT.BORDER);
 		Label sep = tk.createSeparator(body, SWT.NONE);
