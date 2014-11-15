@@ -168,8 +168,7 @@ public class Prescription extends PersistentObject {
 			// Match stuff like '1/2', '7/8'
 			if (dosis.matches("^[0-9]/[0-9]$"))
 			{
-				float value = getNum(dosis.substring(0, 1)) / getNum(dosis.substring(2));
-				list.add(value);
+				list.add(getNum(dosis));
 
 			} else if (dosis.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
 				String[] dose = dosis.split("[xX]"); //$NON-NLS-1$
@@ -180,10 +179,16 @@ public class Prescription extends PersistentObject {
 					num = getNum(dose[0]);
 				list.add(num);
 			} else if (dosis.indexOf('-') != -1) {
-				String[] dos = dosis.split("-"); //$NON-NLS-1$
+				String[] dos = dosis.split("[- ]"); //$NON-NLS-1$
 				if (dos.length > 2) {
 					for (String d : dos) {
-						list.add(getNum(d));
+						boolean hasDigit = d.matches("^[~/.]*[½¼0-9].*");
+						if (d.indexOf(' ') != -1)
+							list.add(getNum(d.substring(0, d.indexOf(' '))));
+						else if (d.length() > 0 && hasDigit)
+							list.add(getNum(d));
+						if (list.size() >= 4)
+							return list;
 					}
 				} else if (dos.length > 1) {
 					list.add(getNum(dos[1]));
@@ -313,6 +318,10 @@ public class Prescription extends PersistentObject {
 	private static float getNum(String num){
 		try {
 			String n = num.trim();
+			if (n.matches("^[0-9]/[0-9]$")) {
+				float value = getNum(n.substring(0, 1)) / getNum(n.substring(2));
+				return value;
+			}
 			if (n.equalsIgnoreCase("½"))
 				return 0.5F;
 			if (n.equalsIgnoreCase("¼"))

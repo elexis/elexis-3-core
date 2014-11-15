@@ -188,19 +188,20 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		testItems.add(new TestItem("1 (ev 2)", empty));
 		testItems.add(new TestItem("1 /3Tg", empty));
 		testItems.add(new TestItem("1 1/2", empty));
-		testItems.add(new TestItem("1 1/2-0-0", Arrays.asList(0.0f, 0.0f, 0.0f)));
-		testItems.add(new TestItem("1 3-mtl", Arrays.asList(0.0f)));
-		testItems.add(new TestItem("1 3-tgl", Arrays.asList(0.0f)));
-		testItems.add(new TestItem("1 3-tägl", Arrays.asList(0.0f)));
+		testItems.add(new TestItem("1 1/2-0-0", Arrays.asList(1.0f, 0.5f, 0.0f, 0.0f)));
+		testItems.add(new TestItem("-8 tgl", Arrays.asList(8.0f)));
+		testItems.add(new TestItem("1-0-0-0 (bis 08/15)", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
+		testItems.add(new TestItem("1 3-mtl", Arrays.asList(1.0f, 3.0f)));
+		testItems.add(new TestItem("1 3-tgl", Arrays.asList(1.0f, 3.0f)));
+		testItems.add(new TestItem("1 3-tägl", Arrays.asList(1.0f, 3.0f)));
 		testItems.add(new TestItem("0.5/-/-", Arrays.asList(0.0f)));
-		testItems.add(new TestItem("(1)-0-1", Arrays.asList(0.0f, 0.0f, 1.0f)));
-		testItems.add(new TestItem("-8 tgl", Arrays.asList(0.0f)));
+		testItems.add(new TestItem("(1)-0-1", Arrays.asList(0.0f, 1.0f)));
 		testItems.add(new TestItem(".5", empty));
 		testItems.add(new TestItem("1 Amp 3 monatlich", empty));
 		testItems.add(new TestItem("1 MAT/72 h", empty));
 		testItems.add(new TestItem("1 So", empty));
 		testItems
-			.add(new TestItem("bis 06.07.14: 0.5-0-0-1", Arrays.asList(0.0f, 0.0f, 0.0f, 1.0f)));
+			.add(new TestItem("bis 06.07.14: 0.5-0-0-1", Arrays.asList(0.0f, 0.5f, 0.0f, 0.0f)));
 		
 		// From here I think the human and the algorithm arrive at the same conclusion
 		// for a daily dosage
@@ -222,15 +223,14 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		testItems.add(new TestItem("1-0-0-0 (bis 08/15)", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
 		testItems.add(new TestItem("1-0-0-0 jeden 2. Tag", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
 		testItems
-.add(new TestItem("1-0-0-0, Sa+So 1.5-0-0", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f,
-			0.0f, 0.0f)));
+			.add(new TestItem("1-0-0-0, Sa+So 1.5-0-0", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
 		testItems.add(new TestItem("0-0-1-0 bis INR2x therapeutisch", Arrays.asList(0.0f, 0.0f,
 			1.0f, 0.0f)));
 		testItems.add(new TestItem(".5-.5-1", Arrays.asList(0.5f, 0.5f, 1.0f)));
 		testItems.add(new TestItem("0-0- 1/2", Arrays.asList(0.0f, 0.0f, 0.5f)));
 		testItems.add(new TestItem("0-0- 1/4-1/2", Arrays.asList(0.0f, 0.0f, 0.25f, 0.5f)));
 		testItems.add(new TestItem("0-0- 1/8", Arrays.asList(0.0f, 0.0f, 0.125f)));
-		testItems.add(new TestItem("0-0-*-0", Arrays.asList(0.0f, 0.0f, 0.0f, 0.0f)));
+		testItems.add(new TestItem("0-0-*-0", Arrays.asList(0.0f, 0.0f, 0.0f)));
 		testItems.add(new TestItem("0-0-0- 40E", Arrays.asList(0.0f, 0.0f, 0.0f, 0.0f)));
 		testItems.add(new TestItem("0 (bis 08", empty));
 		testItems.add(new TestItem("½", Arrays.asList(0.5f)));
@@ -262,6 +262,10 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		res = Prescription.getDoseAsFloats("0 (bis 08/15)");
 		assert (res != null);
 		assertEquals(0, res.size());
+		res = Prescription.getDoseAsFloats("1-0-0-0 (bis 08/15)");
+		assert (res != null);
+		assertEquals(4, res.size());
+		assertEquals(Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f), res);
 
 	}
 	
@@ -275,7 +279,7 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 			assert (res != null);
 			if (expected.size() != res.size()) {
 				System.out.println("Testing size: " + res.size() + " != " + expected.size()
-					+ " dose " + item2test.getDose() + " " + res);
+					+ " dose '" + item2test.getDose() + "' " + res);
 				System.out.println("Failed!!! " + test_line);
 			}
 			assertEquals(expected.size(), res.size());
