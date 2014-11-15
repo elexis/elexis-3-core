@@ -10,7 +10,7 @@ Require-Bundle: org.junit;bundle-version="4.10.0",
  ch.rgw.utility,
  org.eclipse.swt,
  ch.elexis.core,
- ch.elexis.core.application;bundle-version="3.0.0";resolution:=optional
+ ch.elexis.core.console.application;bundle-version="3.0.0";resolution:=optional
 Bundle-ClassPath: .,
  rsc/
 Import-Package: ch.elexis.core.data.activator
