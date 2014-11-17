@@ -609,42 +609,48 @@ public abstract class PersistentObject implements IPersistentObject {
 		Stm stm = getConnection().getStatement();
 		String lockname = "lock" + name;
 		String lockid = StringTool.unique("lock");
-		while (true) {
-			long timestamp = System.currentTimeMillis();
-			// Gibt es das angeforderte Lock schon?
-			String oldlock =
-				stm.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
-			if (!StringTool.isNothing(oldlock)) {
-				// Ja, wie alt ist es?
-				String[] def = oldlock.split("#");
-				long locktime = Long.parseLong(def[1]);
-				long age = timestamp - locktime;
-				if (age > 2000L) { // Älter als zwei Sekunden -> Löschen
-					stm.exec("DELETE FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
-				} else {
-					if (wait == false) {
-						return null;
+		try {
+			while (true) {
+				long timestamp = System.currentTimeMillis();
+				// Gibt es das angeforderte Lock schon?
+				String oldlock =
+					stm.queryString("SELECT wert FROM CONFIG WHERE param="
+						+ JdbcLink.wrap(lockname));
+				if (!StringTool.isNothing(oldlock)) {
+					// Ja, wie alt ist es?
+					String[] def = oldlock.split("#");
+					long locktime = Long.parseLong(def[1]);
+					long age = timestamp - locktime;
+					if (age > 2000L) { // Älter als zwei Sekunden -> Löschen
+						stm.exec("DELETE FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
 					} else {
-						continue;
+						if (wait == false) {
+							return null;
+						} else {
+							continue;
+						}
 					}
 				}
+				// Neues Lock erstellen
+				String lockstring = lockid + "#" + Long.toString(System.currentTimeMillis());
+				StringBuilder sb = new StringBuilder();
+				sb.append("INSERT INTO CONFIG (param,wert) VALUES (")
+					.append(JdbcLink.wrap(lockname)).append(",").append("'").append(lockstring)
+					.append("')");
+				stm.exec(sb.toString());
+				// Prüfen, ob wir es wirklich haben, oder ob doch jemand anders
+				// schneller war.
+				String check =
+					stm.queryString("SELECT wert FROM CONFIG WHERE param="
+						+ JdbcLink.wrap(lockname));
+				if (check.equals(lockstring)) {
+					break;
+				}
 			}
-			// Neues Lock erstellen
-			String lockstring = lockid + "#" + Long.toString(System.currentTimeMillis());
-			StringBuilder sb = new StringBuilder();
-			sb.append("INSERT INTO CONFIG (param,wert) VALUES (").append(JdbcLink.wrap(lockname))
-				.append(",").append("'").append(lockstring).append("')");
-			stm.exec(sb.toString());
-			// Prüfen, ob wir es wirklich haben, oder ob doch jemand anders
-			// schneller war.
-			String check =
-				stm.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
-			if (check.equals(lockstring)) {
-				break;
-			}
+			return lockid;
+		} finally {
+			stm.delete();
 		}
-		stm.delete();
-		return lockid;
 	}
 	
 	/**
