@@ -306,7 +306,7 @@ public class CoreHub implements BundleActivator {
 			if (n == 0) {
 				MessageEvent.fireLoggedError("Too many instances",
 					"Too many concurrent instances of Elexis running. Will exit.");
-				log.error("Too many concurent instances. Check elexis.lock files");
+				log.error("Too many concurent instances. Check elexis.lock files in " + userDir);
 				System.exit(2);
 			} else {
 				HeartListener lockListener = new HeartListener() {
@@ -348,7 +348,7 @@ public class CoreHub implements BundleActivator {
 	}
 	
 	public static void setMandant(Mandant newMandant){
-		if (actMandant != null) {
+		if (actMandant != null && mandantCfg != null) {
 			mandantCfg.flush();
 		}
 		if (newMandant == null) {
