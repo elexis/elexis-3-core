@@ -119,7 +119,7 @@
         name="elexis-3-base">
       <predicate
           xsi:type="predicates:RepositoryPredicate"
-          project="at.medevit.ch.artikelstamm"/>
+          project="at.medevit.ch.artikelstamm.elexis.common"/>
     </workingSet>
   </setupTask>
   <setupTask
