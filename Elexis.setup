@@ -220,16 +220,16 @@
   </project>
   <stream name="master">
     <setupTask
-        xsi:type="pde:TargetPlatformTask"
-        id="ch.elexis.target.juno-target.target"
-        name="Juno for Elexis 3.0"/>
-    <setupTask
         xsi:type="projects:ProjectsImportTask">
       <sourceLocator
           rootFolder="${core.git.clone.location}"/>
       <sourceLocator
           rootFolder="${base.git.clone.location}"/>
     </setupTask>
+    <setupTask
+        xsi:type="pde:TargetPlatformTask"
+        id="ch.elexis.target.juno-target.target"
+        name="Juno for Elexis 3.0"/>
   </stream>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
