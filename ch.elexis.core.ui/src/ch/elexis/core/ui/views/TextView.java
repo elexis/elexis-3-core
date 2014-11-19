@@ -27,7 +27,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,16 +120,16 @@ public class TextView extends ViewPart implements IActivationListener {
 			return true;
 		} else {
 			actBrief = null;
-			if (CoreHub.localCfg.get(Preferences.P_TEXT_MULTIPLE, false) == true) {
+			if (CoreHub.localCfg.get(Preferences.P_TEXT_SUPPORT_LEGACY, false) == true) {
 				setName();
 				String ext = MimeTool.getExtension(doc.getMimeType());
 				if (ext.length() == 0) {
+					log.warn("TextView.openDocument no extension found for mime type: " + doc.getMimeType()); //$NON-NLS-1$
 					ext = "odt"; //$NON-NLS-1$
 				}
 				try {
 					File tmp = File.createTempFile("elexis", "brief." + ext); //$NON-NLS-1$ //$NON-NLS-2$
 					log.debug("TextView.openDocument createTempFile: " + tmp.getAbsolutePath() + " mime " + doc.getMimeType()); //$NON-NLS-1$
-					System.out.println(tmp.getAbsolutePath());
 					tmp.deleteOnExit();
 					byte[] buffer = doc.loadBinary();
 					if (buffer == null) {
@@ -149,7 +148,7 @@ public class TextView extends ViewPart implements IActivationListener {
 				}
 				return false;
 			} else {
-				log.debug("TextView.openDocument: Not allowed to open multiple documents");
+				log.warn("TextView.openDocument: Preferences do not allow alternative method of documents created with legacy text-plugins");
 				// Do not show a message box, as this happens often when you load a document
 				// with an invalid content. Eg. with demoDB and Rezept of Absolut Erfunden
 				return false;

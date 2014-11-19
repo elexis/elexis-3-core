@@ -43,8 +43,8 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		
 		List<IConfigurationElement> list =
 			Extensions.getExtensions(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
-		addField(new BooleanFieldEditor(Preferences.P_TEXT_MULTIPLE,
-			Messages.Texterstellung_Allow_Multiple, getFieldEditorParent()));
+		addField(new BooleanFieldEditor(Preferences.P_TEXT_SUPPORT_LEGACY,
+			Messages.Texterstellung_Support_Legacy, getFieldEditorParent()));
 		String[][] rows = new String[list.size()][];
 		int i = 0;
 		for (IConfigurationElement ice : list) {
