@@ -183,20 +183,20 @@
         name="Application"
         label="">
       <setupTask
-          xsi:type="setup.workingsets:WorkingSetTask">
-        <workingSet
-            name="medelexis-3-application">
-          <predicate
-              xsi:type="predicates:RepositoryPredicate"
-              project="ch.medelexis.application.feature"/>
-        </workingSet>
-      </setupTask>
-      <setupTask
           xsi:type="git:GitCloneTask"
           id="medelexis.application.git.clone"
           remoteURI="https://gitext.medelexis.ch/medelexis-3-application.git"
           pushURI="https://gitext.medelexis.ch/medelexis-3-application.git">
         <description>Medelexis 3 application</description>
+      </setupTask>
+      <setupTask
+          xsi:type="setup.workingsets:WorkingSetTask">
+        <workingSet
+            name="medelexis-3-application">
+          <predicate
+              xsi:type="predicates:RepositoryPredicate"
+              project="ch.medelexis.application"/>
+        </workingSet>
       </setupTask>
       <stream
           name="master">
