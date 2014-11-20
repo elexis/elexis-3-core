@@ -298,7 +298,8 @@ public class LabImportUtil {
 		
 		private void overwriteExisting(LabResult labResult){
 			labResult.set(LabResult.COMMENT, comment);
-			labResult.set(LabResult.RESULT, result);
+			labResult.setResult(result);
+			flags = labResult.getFlags(); // pathologic check takes place in labResult
 			setFields(labResult);
 		}
 		
