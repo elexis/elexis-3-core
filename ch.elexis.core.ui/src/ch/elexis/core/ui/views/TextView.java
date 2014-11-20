@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
@@ -113,34 +114,45 @@ public class TextView extends ViewPart implements IActivationListener {
 			return false;
 		}
 		if (txt.open(doc) == true) {
-			log.debug("TextView.openDocument: "); //$NON-NLS-1$		
+			log.debug("TextView.openDocument: "); //$NON-NLS-1$
 			actBrief = doc;
 			setName();
 			return true;
 		} else {
 			actBrief = null;
-			setName();
-			String ext = MimeTool.getExtension(doc.getMimeType());
-			if (ext.length() == 0) {
-				ext = "odt"; //$NON-NLS-1$
-			}
-			try {
-				log.debug("TextView.openDocument createTempFile: "); //$NON-NLS-1$		
-				File tmp = File.createTempFile("elexis", "brief." + ext); //$NON-NLS-1$ //$NON-NLS-2$
-				tmp.deleteOnExit();
-				byte[] buffer = doc.loadBinary();
-				if (buffer == null) {
-					return false;
+			if (CoreHub.localCfg.get(Preferences.P_TEXT_SUPPORT_LEGACY, false) == true) {
+				setName();
+				String ext = MimeTool.getExtension(doc.getMimeType());
+				if (ext.length() == 0) {
+					log.warn("TextView.openDocument no extension found for mime type: " + doc.getMimeType()); //$NON-NLS-1$
+					ext = "odt"; //$NON-NLS-1$
 				}
-				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-				FileOutputStream fos = new FileOutputStream(tmp);
-				FileTool.copyStreams(bais, fos);
-				return Program.launch(tmp.getAbsolutePath());
-			} catch (IOException e) {
-				ExHandler.handle(e);
+				try {
+					File tmp = File.createTempFile("elexis", "brief." + ext); //$NON-NLS-1$ //$NON-NLS-2$
+					log.debug("TextView.openDocument createTempFile: " + tmp.getAbsolutePath() + " mime " + doc.getMimeType()); //$NON-NLS-1$
+					tmp.deleteOnExit();
+					byte[] buffer = doc.loadBinary();
+					if (buffer == null) {
+						return false;
+					}
+					ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+					FileOutputStream fos = new FileOutputStream(tmp);
+					FileTool.copyStreams(bais, fos);
+					File file = new File(tmp.getAbsolutePath());
+					file.setReadable(true);
+					file.setExecutable(false);
+					file.setWritable(false);
+					return Program.launch(tmp.getAbsolutePath());
+				} catch (IOException e) {
+					ExHandler.handle(e);
+				}
+				return false;
+			} else {
+				log.warn("TextView.openDocument: Preferences do not allow alternative method of documents created with legacy text-plugins");
+				// Do not show a message box, as this happens often when you load a document
+				// with an invalid content. Eg. with demoDB and Rezept of Absolut Erfunden
+				return false;
 			}
-			
-			return false;
 		}
 	}
 	
