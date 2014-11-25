@@ -23,8 +23,10 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
@@ -115,9 +117,11 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		cbAmount = new Button(ret, SWT.CHECK);
 		cbAmount.setText(TREATMENT_AMOUNTHIGHER);
 		mi1 = new MoneyInput(ret);
-		mi1.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+		mi1.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+		mi1.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		
 		cbQuartal = new Button(ret, SWT.CHECK);
+		cbQuartal.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
 		cbQuartal.setText(TREATMENT_TRIMESTER);
 		
 		cbTimespan = new Button(ret, SWT.CHECK);
@@ -143,12 +147,18 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 			}
 		});
 		cAccountingSys = new ComboViewer(ret, SWT.NONE);
+		Combo combo = cAccountingSys.getCombo();
+		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		cAccountingSys.setContentProvider(ArrayContentProvider.getInstance());
 		cAccountingSys.setLabelProvider(new LabelProvider());
 		String[] accSystems = Fall.getAbrechnungsSysteme();
 		cAccountingSys.setInput(accSystems);
 		cAccountingSys.setSelection(new StructuredSelection(accSystems[0]));
 		
+		new Label(ret, SWT.NONE);
+		new Label(ret, SWT.NONE);
+		new Label(ret, SWT.NONE);
+		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);

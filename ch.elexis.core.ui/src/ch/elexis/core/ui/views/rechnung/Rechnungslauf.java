@@ -13,23 +13,21 @@ package ch.elexis.core.ui.views.rechnung;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.commands.Handler;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.elexis.data.Verrechnet;
@@ -44,56 +42,90 @@ import ch.rgw.tools.TimeTool;
  * 
  */
 public class Rechnungslauf implements IRunnableWithProgress {
+	private static Logger log = LoggerFactory.getLogger(Rechnungslauf.class);
 	
-	String accountSys;
-	TimeTool ttFirstBefore, ttLastBefore, ttHeute, limitQuartal, ttFrom, ttTo;
-	Money mLimit;
-	boolean bQuartal, bMarked, bSkip;
-	Hashtable<Konsultation, Patient> hKons;
-	KonsZumVerrechnenView kzv;
+	private KonsZumVerrechnenView kzv;
+	private Mandant mandant;
 	
-	public Rechnungslauf(KonsZumVerrechnenView kzv, boolean bMarked, TimeTool ttFirstBefore,
-		TimeTool ttLastBefore, Money mLimit, boolean bQuartal, boolean bSkip, TimeTool ttFrom,
-		TimeTool ttTo, String accountSys){
+	private List<Konsultation> kons;
+	private List<Konsultation> subResults;
+	private List<Fall> skipCase;
+	private TimeTool tmpTime, now, ttFirstBefore, ttLastBefore, quarterLimit, ttFrom, ttTo;
+	private boolean quarterFilter, billFlagged, skip;
+	private Money lowerLimit;
+	private String accountSys;
+	
+	public Rechnungslauf(KonsZumVerrechnenView kzv, boolean billFlagged, TimeTool ttFirstBefore,
+		TimeTool ttLastBefore, Money lowerLimit, boolean quarterFilter, boolean skip,
+		TimeTool ttFrom, TimeTool ttTo, String accountSys){
 		this.ttFirstBefore = ttFirstBefore;
 		this.ttLastBefore = ttLastBefore;
 		this.ttFrom = ttFrom;
 		this.ttTo = ttTo;
-		this.mLimit = mLimit;
-		this.bQuartal = bQuartal;
-		this.bSkip = bSkip;
+		this.lowerLimit = lowerLimit;
+		this.quarterFilter = quarterFilter;
+		this.skip = skip;
 		this.accountSys = accountSys;
-		hKons = new Hashtable<Konsultation, Patient>(1000);
-		ttHeute = new TimeTool();
-		limitQuartal = new TimeTool();
-		String heute = ttHeute.toString(TimeTool.DATE_COMPACT).substring(4);
-		if (heute.compareTo("0930") > 0) { //$NON-NLS-1$
-			limitQuartal.set(TimeTool.MONTH, 9); // 1.10.
-		} else if (heute.compareTo("0630") > 0) { //$NON-NLS-1$
-			limitQuartal.set(TimeTool.MONTH, 6);
-		} else if (heute.compareTo("0331") > 0) { //$NON-NLS-1$
-			limitQuartal.set(TimeTool.MONTH, 3);
-		} else {
-			limitQuartal.set(TimeTool.MONTH, 1);
-		}
-		this.bMarked = bMarked;
+		
+		this.billFlagged = billFlagged;
 		this.kzv = kzv;
+		
+		now = new TimeTool();
+		calcQuarterLimit();
 	}
 	
 	public void run(IProgressMonitor monitor) throws InvocationTargetException,
 		InterruptedException{
-		String kMandantID = CoreHub.actMandant.getId();
-		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
-		qbe.add(Konsultation.FLD_BILL_ID, StringConstants.EMPTY, null);
-		monitor.beginTask(Messages.Rechnungslauf_analyzingConsultations, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-		monitor.subTask(Messages.Rechnungslauf_readingConsultations); //$NON-NLS-1$
-		List<Konsultation> dblist = qbe.execute();
-		// filter the list of Konsultationen based on the Rechnungssteller of the current Mandant
-		String rsId = CoreHub.actMandant.getRechnungssteller().getId();
-		ArrayList<Konsultation> list = new ArrayList<Konsultation>();
-		for (Konsultation kons : dblist) {
-			// skip kons if it has no valid mandant
-			if (kons.getMandant() == null) {
+		mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
+		
+		List<Konsultation> dbList = getAllKonsultationen(monitor);
+		kons = skipInvalidConsultations(dbList);
+		subResults = new ArrayList<Konsultation>();
+		skipCase = new ArrayList<Fall>();
+		tmpTime = new TimeTool();
+		
+		applyBillingFlagFilter(monitor);
+		applyAccountSystemFilter(monitor);
+		applyStartedFilter(monitor);
+		applyFinishedFilter(monitor);
+		applyMinPaymentLimit(monitor);
+		applyQuarterFilter(monitor);
+		applyTimespanFilter(monitor);
+		
+		// make sure any kons that could be from a skip case is removed
+		for (Fall f : skipCase) {
+			for (Konsultation k : f.getBehandlungen(false)) {
+				kons.remove(k);
+			}
+		}
+		
+		monitor.subTask(Messages.Rechnungslauf_creatingLists); //$NON-NLS-1$
+		for (Konsultation k : kons) {
+			kzv.selectKonsultation(k);
+			monitor.worked(1);
+		}
+		
+		if (skip) {
+			monitor.subTask(Messages.Rechnungslauf_creatingBills); //$NON-NLS-1$
+			Handler.executeWithProgress(kzv.getViewSite(), "bill.create", kzv.tSelection, monitor); //$NON-NLS-1$
+		}
+		monitor.done();
+	}
+	
+	/**
+	 * skip invalid consultations
+	 * 
+	 * @param dbList
+	 * @return a list of relevant (valid)konsultations
+	 */
+	private List<Konsultation> skipInvalidConsultations(List<Konsultation> dbList){
+		// get Rechnungssteller of current Mandant
+		String rsId = mandant.getRechnungssteller().getId();
+		List<Konsultation> list = new ArrayList<Konsultation>();
+		
+		for (Konsultation k : dbList) {
+			// skip if no valid mandant is set
+			if (k.getMandant() == null) {
 				ElexisStatus status =
 					new ElexisStatus(ElexisStatus.WARNING, "ch.elexis",
 						ElexisStatus.CODE_NOFEEDBACK, Messages.Rechnungslauf_warnInvalidMandant,
@@ -102,153 +134,275 @@ public class Rechnungslauf implements IRunnableWithProgress {
 				continue;
 			}
 			
-			if (kons.getMandant().getRechnungssteller().getId().equals(rsId)) {
-				if (accountSys != null) {
-					if (kons.getFall() != null
-						&& kons.getFall().getAbrechnungsSystem().equals(accountSys)) {
-						list.add(kons);
-					}
-				} else {
-					list.add(kons);
-				}
+			// skip if fall is not set or inexisting
+			Fall fall = k.getFall();
+			if ((fall == null) || (!fall.exists())) {
+				continue;
+			}
+			
+			Patient pat = fall.getPatient();
+			if ((pat == null) || (!pat.exists())) {
+				continue;
+			}
+			
+			if (rsId.equals(k.getMandant().getRechnungssteller().getId())) {
+				list.add(k);
 			}
 		}
+		return list;
+	}
+	
+	/**
+	 * get all kons. that are not billed yet
+	 * 
+	 * @param monitor
+	 * @return list of all not yet billed konsultationen
+	 */
+	private List<Konsultation> getAllKonsultationen(IProgressMonitor monitor){
+		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		qbe.add(Konsultation.FLD_BILL_ID, StringConstants.EMPTY, null);
+		monitor.beginTask(Messages.Rechnungslauf_analyzingConsultations, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+		monitor.subTask(Messages.Rechnungslauf_readingConsultations); //$NON-NLS-1$
 		
-		ArrayList<Konsultation> listbasic = new ArrayList<Konsultation>(list);
-		HashMap<Fall, Object> hSkipCase = new HashMap<Fall, Object>();
-		TimeTool now = new TimeTool();
-		TimeTool cmp = new TimeTool();
-		Iterator<Konsultation> it = listbasic.iterator();
-		while (it.hasNext()) {
-			Konsultation k = it.next();
-			monitor.worked(1);
-			if (hKons.get(k) != null) {
-				continue;
-			}
-			Fall kFall = k.getFall();
-			if ((kFall == null) || (!kFall.exists())) {
-				continue;
-			}
-			if (accountSys != null) {
-				if (!kFall.getAbrechnungsSystem().equals(accountSys)) {
-					continue;
-				}
-			}
-			if (hSkipCase.get(kFall) != null) {
-				continue;
-			}
-			String kfID = kFall.getId();
-			Patient kPatient = kFall.getPatient();
-			
-			if ((kPatient == null) || (!kPatient.exists())) {
-				continue;
-			}
-			
-			if (bMarked) { // Alle zur Verrechnung markierten Fälle abrechnen
-				TimeTool bd = kFall.getBillingDate();
-				if ((bd != null) && (bd.isBeforeOrEqual(now))) {
-					Iterator<Konsultation> i2 = list.iterator();
-					while (i2.hasNext()) {
-						Konsultation k2 = i2.next();
-						String fid = k2.get(Konsultation.FLD_CASE_ID);
-						if ((fid != null) && (fid.equals(kfID))) {
-							hKons.put(k2, kPatient);
-							i2.remove();
-						}
-					}
-				}
-			}
-			if (ttFrom != null && ttTo != null) { // alle serien zwischen xy datum und yz datum
-				cmp.set(k.getDatum());
-				if (cmp.isAfterOrEqual(ttFrom) && cmp.isBeforeOrEqual(ttTo)) {
-					hKons.put(k, kPatient);
-				}
-			}
-			
-			if (ttFirstBefore != null) { // Alle Serien mit Beginn vor einem
-				// bestimmten Datum
-				cmp.set(k.getDatum());
-				if (cmp.isBefore(ttFirstBefore)) {
-					Iterator<Konsultation> i2 = list.iterator();
-					while (i2.hasNext()) {
-						Konsultation k2 = i2.next();
-						String fid = k2.get(Konsultation.FLD_CASE_ID);
-						if ((fid != null) && (fid.equals(kfID))) {
-							hKons.put(k2, kPatient);
-							i2.remove();
-						}
-					}
-				}
-			}
-			
-			if (ttLastBefore != null) { // Alle Serien mit letzter Kons vor einem bestimmten Datum
-				cmp.set(k.getDatum());
-				if (cmp.isBefore(ttLastBefore)) {
-					Iterator<Konsultation> i2 = list.iterator();
-					while (i2.hasNext()) {
-						Konsultation k2 = i2.next();
-						String fid = k2.get(Konsultation.FLD_CASE_ID);
-						if ((fid != null) && (fid.equals(kfID))) {
-							cmp.set(k2.getDatum());
-							if (cmp.isAfter(ttLastBefore)) {
-								hSkipCase.put(kFall, "1"); //$NON-NLS-1$
-								i2.remove();
-								break;
-							} else {
-								hKons.put(k2, kPatient);
-								i2.remove();
+		return qbe.execute();
+	}
+	
+	/**
+	 * calculate the past quarter
+	 */
+	private void calcQuarterLimit(){
+		String today = now.toString(TimeTool.DATE_COMPACT).substring(4);
+		quarterLimit = new TimeTool();
+		
+		if (today.compareTo("0930") > 0) {
+			quarterLimit.set(TimeTool.MONTH, 9);
+		} else if (today.compareTo("0630") > 0) {
+			quarterLimit.set(TimeTool.MONTH, 6);
+		} else if (today.compareTo("0331") > 0) {
+			quarterLimit.set(TimeTool.MONTH, 3);
+		} else {
+			quarterLimit.set(TimeTool.MONTH, 1);
+		}
+	}
+	
+	/**
+	 * removes all kons. that are not flagged for billing
+	 * 
+	 * @param monitor
+	 */
+	private void applyBillingFlagFilter(IProgressMonitor monitor){
+		if (billFlagged) {
+			log.debug("filter all that are flagged for billing");
+			monitor.subTask("Filtern zum Abrechnen vorgemerkter Fälle ...");
+			for (Konsultation k : kons) {
+				if (accepted(k)) {
+					Fall fall = k.getFall();
+					tmpTime = fall.getBillingDate();
+					
+					if ((tmpTime != null) && tmpTime.isBeforeOrEqual(now)) {
+						for (Konsultation k2 : kons) {
+							String fid = k2.get(Konsultation.FLD_CASE_ID);
+							if ((fid != null) && (fid.equals(fall.getId()))) {
+								if (!subResults.contains(k2)) {
+									subResults.add(k2);
+								}
 							}
 						}
 					}
 				}
 			}
-			if (mLimit != null) {
-				Money sum = new Money();
-				Map<Konsultation, Patient> list2 = new HashMap<Konsultation, Patient>(100);
-				for (Konsultation k2 : list) {
-					String fid = k2.get(Konsultation.FLD_CASE_ID);
-					if ((fid != null) && (fid.equals(kfID))) {
-						list2.put(k2, kPatient);
-						List<Verrechnet> lstg = k2.getLeistungen();
-						for (Verrechnet v : lstg) {
-							sum.addMoney(v.getNettoPreis().multiply(v.getZahl()));
+			updateKonsList();
+			if (tmpTime == null) {
+				tmpTime = new TimeTool();
+			}
+		}
+	}
+	
+	/**
+	 * only keeps the ones that match the selected account system
+	 * 
+	 * @param monitor
+	 */
+	private void applyAccountSystemFilter(IProgressMonitor monitor){
+		if (accountSys != null) {
+			log.debug("apply filter for accounting system: " + accountSys);
+			monitor.subTask("Filtern nach Abrechnungssystem ...");
+			for (Konsultation k : kons) {
+				if (accepted(k)) {
+					Fall fall = k.getFall();
+					
+					if (fall != null && fall.getAbrechnungsSystem().equals(accountSys)) {
+						subResults.add(k);
+					}
+				}
+			}
+			updateKonsList();
+		}
+	}
+	
+	/**
+	 * all series which started before a specific date
+	 * 
+	 * @param monitor
+	 */
+	private void applyStartedFilter(IProgressMonitor monitor){
+		if (ttFirstBefore != null) {
+			log.debug("apply start time [" + ttFirstBefore.toString(TimeTool.DATE_COMPACT)
+				+ "] filter");
+			monitor.subTask("Filtern nach Anfangsdatum ...");
+			for (Konsultation k : kons) {
+				if (accepted(k)) {
+					tmpTime.set(k.getFall().getBeginnDatum());
+					if (tmpTime.isBefore(ttFirstBefore)) {
+						subResults.add(k);
+					} else {
+						skipCase.add(k.getFall());
+					}
+				}
+			}
+			updateKonsList();
+		}
+	}
+	
+	/**
+	 * all series which finished after a specific date
+	 * 
+	 * @param monitor
+	 */
+	private void applyFinishedFilter(IProgressMonitor monitor){
+		if (ttLastBefore != null) {
+			log.debug("apply finish time [" + ttLastBefore.toString(TimeTool.DATE_COMPACT)
+				+ "] filter");
+			monitor.subTask("Filtern Enddatum ...");
+			for (Konsultation k : kons) {
+				if (accepted(k)) {
+					tmpTime.set(k.getDatum());
+					if (tmpTime.isBefore(ttLastBefore)) {
+						for (Konsultation k2 : kons) {
+							String fId = k.get(Konsultation.FLD_CASE_ID);
+							if ((fId != null) && (fId.equals(k.getFall().getId()))) {
+								tmpTime.set(k2.getDatum());
+								if (tmpTime.isAfter(ttLastBefore)) {
+									skipCase.add(k.getFall());
+									break;
+								} else {
+									if (!subResults.contains(k2)) {
+										subResults.add(k2);
+									}
+								}
+							}
 						}
 					}
 				}
-				if (sum.isMoreThan(mLimit)) {
-					hKons.putAll(list2);
-				}
 			}
-			
-			if (bQuartal) {
-				cmp.set(k.getDatum());
-				if (cmp.isBefore(limitQuartal)) {
-					hKons.put(k, kPatient);
-				}
-			}
+			updateKonsList();
 		}
-		if (ttLastBefore != null) {
-			for (Fall fall : hSkipCase.keySet()) {
-				for (Konsultation kd : fall.getBehandlungen(false)) {
-					hKons.remove(kd);
+	}
+	
+	/**
+	 * all series between the given timespan
+	 * 
+	 * @param monitor
+	 */
+	private void applyTimespanFilter(IProgressMonitor monitor){
+		if (ttFrom != null && ttTo != null) {
+			log.debug("apply filter for timestpan [" + ttFrom.toString(TimeTool.DATE_COMPACT)
+				+ " - " + ttTo.toString(TimeTool.DATE_COMPACT));
+			monitor.subTask("Filtern nach Zeitspanne ...");
+			for (Konsultation k : kons) {
+				if (accepted(k)) {
+					tmpTime.set(k.getDatum());
+					if (tmpTime.isAfterOrEqual(ttFrom) && tmpTime.isBeforeOrEqual(ttTo)) {
+						subResults.add(k);
+					}
 				}
 			}
+			updateKonsList();
 		}
 		
-		monitor.subTask(Messages.Rechnungslauf_creatingLists); //$NON-NLS-1$
-		for (Konsultation konsultation : hKons.keySet()) {
-			System.out.println(konsultation.getFall().getAbrechnungsSystem());
+	}
+	
+	/**
+	 * minimal payment amount filter
+	 * 
+	 * @param monitor
+	 */
+	private void applyMinPaymentLimit(IProgressMonitor monitor){
+		if (lowerLimit != null) {
+			log.debug("apply filter for minimal payment amount");
+			monitor.subTask("Filtern nach Betragshöhe ...");
+			for (Konsultation k : kons) {
+				if (accepted(k)) {
+					Money sum = new Money();
+					String konsFallId = k.get(Konsultation.FLD_CASE_ID);
+					List<Konsultation> matchingKons = new ArrayList<Konsultation>();
+					
+					for (Konsultation k2 : kons) {
+						String fallId = k2.get(Konsultation.FLD_CASE_ID);
+						
+						if ((fallId != null) && (fallId.equals(konsFallId))) {
+							matchingKons.add(k2);
+							List<Verrechnet> leistungen = k2.getLeistungen();
+							for (Verrechnet vr : leistungen) {
+								sum.addMoney(vr.getNettoPreis().multiply(vr.getZahl()));
+							}
+						}
+					}
+					
+					if (sum.isMoreThan(lowerLimit)) {
+						for (Konsultation match : matchingKons) {
+							if (!subResults.contains(match)) {
+								subResults.add(match);
+							}
+						}
+					} else {
+						if (!skipCase.contains(k.getFall())) {
+							skipCase.add(k.getFall());
+						}
+					}
+				}
+			}
+			updateKonsList();
 		}
-		Enumeration<Konsultation> en = hKons.keys();
-		while (en.hasMoreElements()) {
-			kzv.selectKonsultation(en.nextElement());
-			monitor.worked(1);
+	}
+	
+	/**
+	 * applies the filter for the past quarter
+	 * 
+	 * @param monitor
+	 */
+	private void applyQuarterFilter(IProgressMonitor monitor){
+		if (quarterFilter) {
+			log.debug("applying quarter filter");
+			monitor.subTask("Filtern nach Quartal ...");
+			for (Konsultation k : kons) {
+				if (accepted(k)) {
+					tmpTime.set(k.getDatum());
+					if (tmpTime.isBefore(quarterLimit)) {
+						subResults.add(k);
+					}
+				}
+			}
+			updateKonsList();
 		}
-		if (bSkip) {
-			monitor.subTask(Messages.Rechnungslauf_creatingBills); //$NON-NLS-1$
-			Handler.executeWithProgress(kzv.getViewSite(), "bill.create", kzv.tSelection, monitor); //$NON-NLS-1$
+	}
+	
+	/**
+	 * check if it isn't already in the list or on the skip list
+	 * 
+	 * @param k
+	 * @return
+	 */
+	private boolean accepted(Konsultation k){
+		if (subResults.contains(k) || skipCase.contains(k.getFall())) {
+			return false;
 		}
-		monitor.done();
-		
+		return true;
+	}
+	
+	private void updateKonsList(){
+		kons.clear();
+		kons.addAll(subResults);
+		subResults.clear();
 	}
 }
