@@ -14,6 +14,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.views.rechnung.KonsZumVerrechnenView;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.Tree;
 
@@ -60,15 +62,32 @@ public class KonsZumVerrechnenLinkCommand extends AbstractHandler {
 		@Override
 		public void selectionChanged(SelectionChangedEvent event){
 			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-			Patient selPatient = (Patient) ((Tree) selection.getFirstElement()).contents;
+			Object selObj = ((Tree) selection.getFirstElement()).contents;
+			Patient selPatient = null;
 			
-			for (TreeItem i : treeViewer.getTree().getItems()) {
-				Patient p = (Patient) ((Tree) i.getData()).contents;
-				if (p.getId().equals(selPatient.getId())) {
-					treeViewer.getTree().setSelection(i);
+			// get belonging patient
+			if (selObj instanceof Patient) {
+				selPatient = (Patient) selObj;
+			} else if (selObj instanceof Fall) {
+				Fall fall = (Fall) selObj;
+				selPatient = fall.getPatient();
+			} else if (selObj instanceof Konsultation) {
+				Konsultation kons = (Konsultation) selObj;
+				Fall fall = kons.getFall();
+				if (fall != null && fall.exists()) {
+					selPatient = fall.getPatient();
 				}
 			}
-			treeViewer.refresh();
+			
+			if (selPatient != null) {
+				for (TreeItem i : treeViewer.getTree().getItems()) {
+					Patient p = (Patient) ((Tree) i.getData()).contents;
+					if (p.getId().equals(selPatient.getId())) {
+						treeViewer.getTree().setSelection(i);
+					}
+				}
+				treeViewer.refresh();
+			}
 		}
 	}
 	
