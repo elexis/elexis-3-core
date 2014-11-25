@@ -1,0 +1,13 @@
+MSH|^~\&|OPMED|12342|OPMED|15425|20080130133300||ORU^R01|0801301333000001|P|2.2|||||||D
+PID|1|785|00123012|00022012^785|Muster^Heidi^^^^||19251214|||||||||
+ORC|||60470733^280108||CM|||||LG1||mustra7|||20080128141400|||N2_LABOR^001||
+OBR|1||60470733^280108|||20080128|20080128|||||||||mustra7|||||||||||
+OBX|1|TX|fe^Eisen^HT||17.5|mcmol/l|8.8 - 27.0||||F|||20080130133300|||
+OBX|2|NM|K^Kalium||4.4|mmol/L|3.5-5.3||||F|||201410031310||
+OBX|3|ST|trarz_B^lösl. Transf.-Rezeptor||2.9|mg/l|1.8 - 4.6|N|||F|||200906151649|||
+OBX|4|FT|BAKBEFUND^Mikrobiologie||Untersuchungsmaterial\.BR\\.BR\Urin (nativ)\.BR\\.BR\Gesamtkeimzahl im Urin\.BR\\.BR\>100'000/ml\.BR\\.BR\Kulturelle Untersuchung\.BR\\.BR\1.Citrobacter freundii              reichlich\.BR\\.BR\Antibiogramm           1.2.3.4.5.6.                        1.2.3.4.5.6.\.BR\-----------------------------------------------------------------------\.BR\Ampicillin             R\.BR\Amox./Clavulansr.      R\.BR\Cefazolin              I\.BR\Cefuroxim (i.v.)       S\.BR\Cefuroxim (oral)       I\.BR\Cefprozil              S\.BR\Cefpodoxim             I\.BR\Ceftazidim             S\.BR\Tetracyclin            R\.BR\Ciprofloxacin          S\.BR\Norfloxacin            S\.BR\Tobramycin             S\.BR\Cotrimoxazol           S\.BR\Nitrofurantoin         S\.BR\-----------------------------------------------------------------------\.BR\                       1.2.3.4.5.6.                        1.2.3.4.5.6.\.BR\\.BR\                                  (S=sensibel R=resistent I=intermediär)\.BR\\.BR\\.BR\Bei Enterobacter, Citrobacter, Serratia, Morganella und Proteus sp.\.BR\(nicht Proteus mirabilis) kann durch Drittgenerations-Cephalosporine\.BR\die Bildung von Betalaktamasen induziert werden, sodass unter Therapie\.BR\innerhalb von wenigen Tagen eine Resistenzentwicklung möglich ist.\.BR\\.BR\Befundbemerkung\.BR\\.BR\Daneben noch Wachstum von zwei grampositiven Keimen in nicht signifi-\.BR\kanter Keimzahl.\.BR\\.BR\Keimzahlbestimmung mit Vorbehalt, da sich die Erreger auf dem Transport\.BR\vermehrt haben können. Nativurinproben die nicht gekühlt werden, müssen\.BR\spätestens nach zwei Stunden im Labor eintreffen!\.BR\||||||F|||200604251400|||
+OBX|5|CE|EPIT^Epithelien|1|NN^nicht nachweisbar||||||F||30^7100^MIMI^Mikroskopie|20141024140700||WJF|
+OBX|6|SN|N^Natrium||4.4|mmol/L|3.5-5.3||||F|||201410031310||
+NTE|6|L|< 4  normal
+NTE|6|L|4 - 10 Grauzone
+NTE|6|L|  > 10 erhöht
