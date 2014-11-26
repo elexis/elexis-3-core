@@ -217,7 +217,9 @@ public enum Images {
 	/** a syringe, nozzle, injection icon */
 	IMG_SYRINGE, 
 	/** small blocks */
-	IMG_BLOCKS_SMALL;
+	IMG_BLOCKS_SMALL, 
+	/** sync icon **/
+	IMG_SYNC;
 	
 	private Images(){}
 	

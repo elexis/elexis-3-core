@@ -354,7 +354,7 @@
             locationURI="toolbar:ch.elexis.BehandlungenVerrechnenView">
          <command
                commandId="ch.elexis.core.command.linkViews"
-               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/synced.gif"
+               icon="icon://IMG_SYNC"
                label="Patientenauswahl verlinken"
                style="toggle">
          </command>
