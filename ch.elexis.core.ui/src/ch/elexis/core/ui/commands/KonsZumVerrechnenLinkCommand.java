@@ -62,31 +62,35 @@ public class KonsZumVerrechnenLinkCommand extends AbstractHandler {
 		@Override
 		public void selectionChanged(SelectionChangedEvent event){
 			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-			Object selObj = ((Tree) selection.getFirstElement()).contents;
-			Patient selPatient = null;
+			Tree treeElement = (Tree) selection.getFirstElement();
 			
-			// get belonging patient
-			if (selObj instanceof Patient) {
-				selPatient = (Patient) selObj;
-			} else if (selObj instanceof Fall) {
-				Fall fall = (Fall) selObj;
-				selPatient = fall.getPatient();
-			} else if (selObj instanceof Konsultation) {
-				Konsultation kons = (Konsultation) selObj;
-				Fall fall = kons.getFall();
-				if (fall != null && fall.exists()) {
+			if (treeElement != null) {
+				Object selObj = treeElement.contents;
+				Patient selPatient = null;
+				
+				// get belonging patient
+				if (selObj instanceof Patient) {
+					selPatient = (Patient) selObj;
+				} else if (selObj instanceof Fall) {
+					Fall fall = (Fall) selObj;
 					selPatient = fall.getPatient();
-				}
-			}
-			
-			if (selPatient != null) {
-				for (TreeItem i : treeViewer.getTree().getItems()) {
-					Patient p = (Patient) ((Tree) i.getData()).contents;
-					if (p.getId().equals(selPatient.getId())) {
-						treeViewer.getTree().setSelection(i);
+				} else if (selObj instanceof Konsultation) {
+					Konsultation kons = (Konsultation) selObj;
+					Fall fall = kons.getFall();
+					if (fall != null && fall.exists()) {
+						selPatient = fall.getPatient();
 					}
 				}
-				treeViewer.refresh();
+				
+				if (selPatient != null) {
+					for (TreeItem i : treeViewer.getTree().getItems()) {
+						Patient p = (Patient) ((Tree) i.getData()).contents;
+						if (p.getId().equals(selPatient.getId())) {
+							treeViewer.getTree().setSelection(i);
+						}
+					}
+					treeViewer.refresh();
+				}
 			}
 		}
 	}
