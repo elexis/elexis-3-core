@@ -22,10 +22,17 @@ public class CreateMappingFrom2_1_7 extends AbstractHandler {
 			if (item.getLabor() != null) {
 				LabMapping mapping =
 					LabMapping.getByContactAndItemId(item.getLabor().getId(), item.getId());
+				// found no mapping on this item by the lab contact
 				if (mapping == null) {
+					mapping =
+						LabMapping.getByContactAndItemName(item.getLabor().getId(),
+							item.getKuerzel());
+					// found no mapping of the lab contact with this item name
+					if (mapping == null) {
 					mapping =
 						new LabMapping(item.getLabor().getId(), item.getKuerzel(), item.getId(),
 							false);
+					}
 				}
 			}
 		}
