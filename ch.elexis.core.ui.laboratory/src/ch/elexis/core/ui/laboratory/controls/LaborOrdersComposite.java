@@ -1,6 +1,8 @@
 package ch.elexis.core.ui.laboratory.controls;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -248,6 +250,17 @@ public class LaborOrdersComposite extends Composite {
 		} else {
 			orders = LabOrder.getLabOrders(actPatient, null, null, null, null, null, null);
 		}
+		
+		// Sorting by priority of labItem
+		Collections.sort(orders, new Comparator<LabOrder>() {
+			@Override
+			public int compare(LabOrder lo1, LabOrder lo2){
+				String prio1 = lo1.getLabItem().getPrio();
+				String prio2 = lo2.getLabItem().getPrio();
+				return prio1.compareTo(prio2);
+			}
+		});
+		
 		if (orders != null) {
 			ret.addAll(orders);
 		}
@@ -317,11 +330,11 @@ public class LaborOrdersComposite extends Composite {
 				case 2:
 					String orderId1 = labOrder1.get(LabOrder.FLD_ORDERID);
 					String orderId2 = labOrder2.get(LabOrder.FLD_ORDERID);
-
+					
 					if (composite.isRevert()) {
 						if (orderId1 != null && orderId2 != null) {
 							try {
-							return Integer.decode(orderId1).compareTo(Integer.decode(orderId2));
+								return Integer.decode(orderId1).compareTo(Integer.decode(orderId2));
 							} catch (NumberFormatException ne) {
 								// ignore just compare the strings ...
 							}
