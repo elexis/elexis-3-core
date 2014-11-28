@@ -47,6 +47,7 @@ import ch.elexis.core.ui.actions.TreeDataLoader;
 import ch.elexis.core.ui.commands.ExportiereBloeckeCommand;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
+import ch.elexis.core.ui.selectors.SelectorPanel;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
@@ -57,12 +58,14 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
+import ch.rgw.tools.IFilter;
+import ch.rgw.tools.Tree;
 
 public class BlockSelector extends CodeSelectorFactory {
 	IAction deleteAction, renameAction, createAction, exportAction;
 	CommonViewer cv;
 	MenuManager mgr;
-	SelectorPanelProvider slp;
+	static SelectorPanelProvider slp;
 	int eventType = SWT.KeyDown;
 	
 	@Override
@@ -246,7 +249,7 @@ public class BlockSelector extends CodeSelectorFactory {
 				cv.notify(CommonViewer.Message.empty);
 			} else {
 				cv.notify(CommonViewer.Message.notempty);
-				filter = (ViewerFilter) cv.getConfigurer().getControlFieldProvider().createFilter();
+				filter = new BlockFilter(slp.getPanel());
 				tv.addFilter(filter);
 				
 			}
@@ -290,6 +293,53 @@ public class BlockSelector extends CodeSelectorFactory {
 		}
 		
 	};
+	
+	static class BlockFilter extends ViewerFilter implements IFilter {
+		SelectorPanel slp;
+		
+		public BlockFilter(SelectorPanel panel){
+			slp = panel;
+		}
+		
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element){
+			return select(element);
+		}
+		
+		public boolean select(Object element){
+			PersistentObject po = null;
+			if (element instanceof Tree) {
+				po = (PersistentObject) ((Tree) element).contents;
+			} else if (element instanceof PersistentObject) {
+				po = (PersistentObject) element;
+			} else {
+				return false;
+			}
+			HashMap<String, String> vals = slp.getValues();
+			if (po.isMatching(vals, PersistentObject.MATCH_START, true)) {
+				return true;
+			} else {
+				if (element instanceof Tree) {
+					Tree p = ((Tree) element).getParent();
+					if (p == null) {
+						return false;
+					}
+					return select(p);
+				} else if (element instanceof Leistungsblock) {
+					Leistungsblock lb = (Leistungsblock) element;
+					List<ICodeElement> elements = lb.getElements();
+					String value = vals.get("Name");
+					for (ICodeElement ice : elements) {
+						if (ice.getText().startsWith(value)) {
+							return true;
+						}
+					}
+					return false;
+				}
+			}
+			return false;
+		}
+	}
 	
 	public static class bsPage extends cPage {
 		bsPage(CTabFolder ctab, CodeSelectorFactory cs){
