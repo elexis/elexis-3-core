@@ -252,16 +252,15 @@ public class LaborOrdersComposite extends Composite {
 		}
 		
 		// Sorting by priority of labItem
-		Collections.sort(orders, new Comparator<LabOrder>() {
-			@Override
-			public int compare(LabOrder lo1, LabOrder lo2){
-				String prio1 = lo1.getLabItem().getPrio();
-				String prio2 = lo2.getLabItem().getPrio();
-				return prio1.compareTo(prio2);
-			}
-		});
-		
 		if (orders != null) {
+			Collections.sort(orders, new Comparator<LabOrder>() {
+				@Override
+				public int compare(LabOrder lo1, LabOrder lo2){
+					String prio1 = lo1.getLabItem().getPrio();
+					String prio2 = lo2.getLabItem().getPrio();
+					return prio1.compareTo(prio2);
+				}
+			});
 			ret.addAll(orders);
 		}
 		return ret;
