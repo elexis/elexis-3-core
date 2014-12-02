@@ -253,7 +253,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
 					tmpTime.set(k.getFall().getBeginnDatum());
-					if (tmpTime.isBefore(ttFirstBefore)) {
+					if (tmpTime.isAfter(ttFirstBefore)) {
 						subResults.add(k);
 					} else {
 						skipCase.add(k.getFall());
