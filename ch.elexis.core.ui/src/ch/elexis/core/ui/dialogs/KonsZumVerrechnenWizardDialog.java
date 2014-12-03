@@ -100,10 +100,12 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		cbBefore = new Button(ret, SWT.CHECK);
 		cbBefore.setText(TREATMENTBEGINBEFORE);
 		ddc1 = new DayDateCombo(ret, "", TAGEN_BZW_DEM); //$NON-NLS-1$
+		ddc1.spinDaysBack();
 		cbTime = new Button(ret, SWT.CHECK);
 		cbTime.setText(TREATMENTENDBEFORE);
 		
 		ddc2 = new DayDateCombo(ret, "", TAGEN_BZW_DEM); //$NON-NLS-1$
+		ddc2.spinDaysBack();
 		int prev = CoreHub.localCfg.get(CONFIG + "beginBefore", 30) * -1; //$NON-NLS-1$
 		TimeTool ttNow = new TimeTool();
 		ttNow.addDays(prev);

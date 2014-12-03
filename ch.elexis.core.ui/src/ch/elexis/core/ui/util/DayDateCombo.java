@@ -43,6 +43,7 @@ public class DayDateCombo extends Composite {
 	private SpinnerListener spl;
 	private DateListener dl;
 	private TimeTool ttBase, ttNow;
+	private boolean spinBack;
 	
 	/**
 	 * Create the Composite
@@ -66,6 +67,10 @@ public class DayDateCombo extends Composite {
 		UiDesk.getToolkit().createLabel(this, text2);
 		dp = new DatePickerCombo(this, SWT.NONE);
 		setListeners();
+	}
+	
+	public void spinDaysBack(){
+		spinBack = true;
 	}
 	
 	public void setEnabled(boolean bEnable){
@@ -171,7 +176,7 @@ public class DayDateCombo extends Composite {
 		public void modifyText(ModifyEvent me){
 			removeListeners();
 			int d = spinner.getSelection();
-			if (ttBase.isBefore(ttNow)) {
+			if (ttBase.isBefore(ttNow) || spinBack) {
 				d *= -1;
 			}
 			ttBase = new TimeTool(ttNow);
