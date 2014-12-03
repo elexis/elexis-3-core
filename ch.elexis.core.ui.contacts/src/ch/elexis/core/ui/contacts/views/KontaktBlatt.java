@@ -77,23 +77,23 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 	AutoForm afDetails;
 	
 	static final InputData[] def = new InputData[] {
-	new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Bez2, Kontakt.FLD_NAME2, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Sex, Person.SEX, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Street, "Strasse", Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Zip, Kontakt.FLD_ZIP, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Place, Kontakt.FLD_PLACE, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Fax, Kontakt.FLD_FAX, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null), //$NON-NLS-1$
+		new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null),
+		new InputData(Messages.KontaktBlatt_Bez2, Kontakt.FLD_NAME2, Typ.STRING, null),
+		new InputData(Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null),
+		new InputData(Messages.KontaktBlatt_Sex, Person.SEX, Typ.STRING, null),
+		new InputData(Messages.KontaktBlatt_Street, Kontakt.FLD_STREET, Typ.STRING, null),
+		new InputData(Messages.KontaktBlatt_Zip, Kontakt.FLD_ZIP, Typ.STRING, null, 6),
+		new InputData(Messages.KontaktBlatt_Place, Kontakt.FLD_PLACE, Typ.STRING, null),
+		new InputData(Messages.KontaktBlatt_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null, 3),
+		new InputData(Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null, 30),
+		new InputData(Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null, 30),
+		new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null, 30),
+		new InputData(Messages.KontaktBlatt_Fax, Kontakt.FLD_FAX, Typ.STRING, null, 30),
+		new InputData(Messages.KontaktBlatt_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
+		new InputData(Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null),
+		new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null),
+		new InputData(Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null),
+		new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null),
 		new InputData(Messages.KontaktBlatt_extid,
 			"UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 			

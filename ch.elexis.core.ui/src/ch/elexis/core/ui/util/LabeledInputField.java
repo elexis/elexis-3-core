@@ -32,8 +32,11 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
@@ -51,6 +54,8 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
  * 
  */
 public class LabeledInputField extends Composite {
+	final static Logger logger = LoggerFactory.getLogger(LabeledInputField.class);
+	
 	static public enum Typ {
 		TEXT, CHECKBOX, CHECKBOXTRISTATE, LIST, LINK, DATE, MONEY, COMBO, EXECLINK
 	};
@@ -68,7 +73,22 @@ public class LabeledInputField extends Composite {
 	 *            the label to show above the field
 	 */
 	public LabeledInputField(Composite parent, String label){
-		this(parent, label, Typ.TEXT);
+		this(parent, label, Typ.TEXT, Text.LIMIT);
+	}
+	
+	public LabeledInputField(Composite parent, String label, Typ typ){
+		this(parent, label, typ, Text.LIMIT);
+	}
+	
+	/**
+	 * Create a {@link LabeledInputField} of {@link Typ#TEXT} with a limited
+	 * amount of input characters
+	 * @param parent
+	 * @param label
+	 * @param limit the limit, or Text.LIMIT if not applicable
+	 */
+	public LabeledInputField(Composite parent, String label, int limit){
+		this(parent, label, Typ.TEXT, limit);
 	}
 	
 	/**
@@ -80,7 +100,7 @@ public class LabeledInputField extends Composite {
 	 * @param typ
 	 *            the type of field to create. One of LabeledInputField.Typ
 	 */
-	public LabeledInputField(Composite parent, String label, Typ typ){
+	public LabeledInputField(Composite parent, String label, Typ typ, int limit){
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(1, false));
 		
@@ -106,6 +126,7 @@ public class LabeledInputField extends Composite {
 		case TEXT:
 		case MONEY:
 			ctl = tk.createText(this, "", SWT.BORDER);
+			((Text) ctl).setTextLimit(limit);
 			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			break;
 		case LIST:
@@ -279,6 +300,10 @@ public class LabeledInputField extends Composite {
 		public LabeledInputField addComponent(String l, LabeledInputField.Typ typ){
 			return new LabeledInputField(this, l, typ);
 		}
+		
+		public LabeledInputField addComponent(String l, int limit){
+			return new LabeledInputField(this, l, limit);
+		}
 	}
 	
 	/**
@@ -294,6 +319,7 @@ public class LabeledInputField extends Composite {
 		Typ tFeldTyp;
 		Object ext;
 		LabeledInputField mine;
+		int sLimit;
 		
 		/**
 		 * create control of different types.
@@ -308,10 +334,29 @@ public class LabeledInputField extends Composite {
 		 *            the name of the field in the hashfield, set to null if feldname is not a hash
 		 */
 		public InputData(String anzeige, String feldname, Typ feldtyp, String hashname){
+			this(anzeige, feldname, feldtyp, hashname, Text.LIMIT);
+		}
+		
+		/**
+		 * create control of different types.
+		 * 
+		 * @param anzeige
+		 *            String, the label shown above the field
+		 * @param feldname
+		 *            the database field name
+		 * @param feldtyp
+		 *            field type to use, one of InputData.Typ
+		 * @param hashname
+		 *            the name of the field in the hashfield, set to null if feldname is not a hash
+		 * @param limit
+		 *            the max. allow characters for this field
+		 */
+		public InputData(String anzeige, String feldname, Typ feldtyp, String hashname, int limit){
 			sAnzeige = anzeige;
 			sFeldname = feldname;
 			tFeldTyp = feldtyp;
 			sHashname = hashname;
+			sLimit = limit;
 		}
 		
 		/**
@@ -321,10 +366,7 @@ public class LabeledInputField extends Composite {
 		 *            the fieldname, also used for the label
 		 */
 		public InputData(String all){
-			sAnzeige = all;
-			sFeldname = all;
-			tFeldTyp = Typ.STRING;
-			sHashname = null;
+			this(all, all, Typ.STRING, null, Text.LIMIT);
 		}
 		
 		/**
@@ -342,6 +384,7 @@ public class LabeledInputField extends Composite {
 			sFeldname = feldname;
 			ext = cp;
 			tFeldTyp = Typ.HYPERLINK;
+			sLimit = Text.LIMIT;
 		}
 		
 		/**
@@ -359,11 +402,8 @@ public class LabeledInputField extends Composite {
 		 * @author M. Descher
 		 */
 		public InputData(String anzeige, String feldname, IExecLinkProvider cp){
-			sAnzeige = anzeige;
-			sFeldname = feldname;
-			sHashname = null;
+			this(anzeige, feldname, Typ.EXECSTRING, null, Text.LIMIT);
 			ext = cp;
-			tFeldTyp = Typ.EXECSTRING;
 		}
 		
 		/**
@@ -379,10 +419,7 @@ public class LabeledInputField extends Composite {
 		 *            the items to be displayed in the list
 		 */
 		public InputData(String anzeige, String feldname, String hashname, String[] choices){
-			sAnzeige = anzeige;
-			sFeldname = feldname;
-			sHashname = hashname;
-			tFeldTyp = Typ.LIST;
+			this(anzeige, feldname, Typ.LIST, hashname, Text.LIMIT);
 			ext = choices;
 		}
 		
@@ -402,10 +439,7 @@ public class LabeledInputField extends Composite {
 		 */
 		public InputData(String anzeige, String feldname, String hashname, String[] comboItems,
 			boolean bDropDown){
-			sAnzeige = anzeige;
-			sFeldname = feldname;
-			sHashname = hashname;
-			tFeldTyp = Typ.COMBO;
+			this(anzeige, feldname, Typ.COMBO, hashname, Text.LIMIT);
 			ext = comboItems;
 		}
 		
@@ -512,7 +546,7 @@ public class LabeledInputField extends Composite {
 						});
 						((Text) ltf.ctl).setEditable(false);
 					} else {
-						ltf = addComponent(def[i].sAnzeige);
+						ltf = addComponent(def[i].sAnzeige, def[i].sLimit);
 					}
 					
 				}
@@ -564,7 +598,19 @@ public class LabeledInputField extends Composite {
 								break;
 							}
 							if (inp.sHashname == null) {
-								act.set(inp.sFeldname, val);
+								try {
+									act.set(inp.sFeldname, val);
+								} catch (PersistenceException pe) {
+									logger.error("Could not persist [" + val + "] for field ["
+										+ inp.sAnzeige + "]\nCause: " + pe.getCause().getMessage(),
+										pe);
+									
+									if (inp.tFeldTyp.equals(ch.elexis.core.ui.util.LabeledInputField.InputData.Typ.STRING)) {
+										// clear cache to always get the actual the DB value
+										PersistentObject.clearCache();
+										inp.mine.setText(act.get(inp.sFeldname));
+									}
+								}
 							} else {
 								Map ext = act.getMap(inp.sFeldname);
 								ext.put(inp.sHashname, val);
