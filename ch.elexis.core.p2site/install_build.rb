@@ -6,18 +6,18 @@
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License v1.0
 # and Apache License v2.0 which accompanies this distribution.
-# The Eclipse Public License is available at 
+# The Eclipse Public License is available at
 # http://www.eclipse.org/legal/epl-v10.html
 # The Apache License v2.0 is available at
 # http://www.opensource.org/licenses/apache2.0.php
-# You may elect to redistribute this code under either of these licenses. 
+# You may elect to redistribute this code under either of these licenses.
 # ========================================================================
-# 
-# Based on Sources published by: 
-# Author hmalphettes
-# github.com/intalio/tycho-p2-scripts 
 #
-# Adapted for the needs of Elexis by Niklaus Giger, niklaus.giger@member.fsf.org 2013 
+# Based on Sources published by:
+# Author hmalphettes
+# github.com/intalio/tycho-p2-scripts
+#
+# Adapted for the needs of Elexis by Niklaus Giger, niklaus.giger@member.fsf.org 2013
 #
 
 require "find"
@@ -33,11 +33,11 @@ class CompositeRepository
     @basefolder = Pathname.new(basefolder).expand_path
     @name = name
     @version = version
-    @test = test  
+    @test = test
 
     #contain the list of relative path to the linked versioned repos
     @children_repo = [ ]
-    
+
     #contains the parent folders of each repo already in the composite repo so we don't duplicate
     @already_indexed_parents = Set.new
 
@@ -46,11 +46,11 @@ class CompositeRepository
     #we read it in the last released composite repo.
     #if nothing has changed then we don't need to make a new release.
     @currently_released_repo = []
-    
+
     @ArtifactOrMetadata="Artifact"
     @timestamp=Time.now.to_i
     @date=Time.now.utc
-    
+
     @versionned_output_dir=nil
     compute_versioned_output
     Find.find(@basefolder) do |path|
@@ -69,7 +69,7 @@ class CompositeRepository
       end
     end
   end
-  
+
   def add_childrepo( compositeMkrepoFile, version_glob="*" )
     if File.directory? compositeMkrepoFile
       compositeRepoParentFolder=Pathname.new compositeMkrepoFile.path
@@ -85,7 +85,8 @@ class CompositeRepository
     if last_version.nil?
       raise "Could not locate a version directory in #{compositeRepoParentFolder.to_s}/#{version_glob}"
     end
-    /snapshot/i.match(compositeRepoParentFolder.to_s) ? nrVersions = 3 : nrVersions = 0
+    nrVersions ||= ENV['P2_MAX_VERSIONS'].to_i
+    /snapshot/i.match(compositeRepoParentFolder.to_s) ? nrVersions ||= 3 : nrVersions ||= 0
     addedVersions = 0
     all.sort.reverse.each{|version|
               newVersion = File.join(relative.to_s, version)
@@ -103,7 +104,7 @@ class CompositeRepository
               end
             }
   end
-    
+
   def get_versionned_output_dir()
     return @versionned_output_dir
   end
@@ -117,11 +118,11 @@ class CompositeRepository
   def get_binding
     binding
   end
-  
+
   def set_ArtifactOrMetaData(artifactOrMetadata)
     @ArtifactOrMetadata=artifactOrMetadata
   end
-  
+
   def compute_version()
     if @version
       return
@@ -156,7 +157,7 @@ class CompositeRepository
     end
     return sortedversions.last, sortedversions
   end
-  
+
   def compute_versioned_output()
     compute_version
     @versionned_output_dir = "#{@outputPath}/#{@version}"
@@ -168,7 +169,7 @@ class CompositeRepository
       FileUtils.mkdir_p @versionned_output_dir
     end
   end
-  
+
   # increment a version. if the version passed is 1.0.0.019, returns 1.0.0.020
   # keeps the padded zeros
   def increment_version(version)
@@ -180,7 +181,7 @@ class CompositeRepository
     toks.push inc_str_padded
     return toks.join "."
   end
-  
+
   def compute_children_repos(compositeRepoFolder)
     children_repos = Array.new
     compositeArtifacts=File.join(compositeRepoFolder,"compositeArtifacts.xml")
@@ -189,7 +190,7 @@ class CompositeRepository
       return;
     end
     file = File.new(compositeArtifacts, "r")
-      
+
     while (line = file.gets)
       #look for a line that contains <child location="../../be/3.0.0.178"/>
       #extract the location attribute.
@@ -203,7 +204,7 @@ class CompositeRepository
     file.close
     children_repos.sort!
   end
-  
+
   COMPOSITE_XML_RHTML = %(<?xml version="1.0" encoding="UTF-8"?>
 <?composite<%=@ArtifactOrMetadata%>Repository version="1.0.0"?>
 <repository name="&quot;<%=@name%>-<%=@version%>&quot;"
@@ -272,7 +273,7 @@ class CompositeRepository
     p2_index = "version = 1
 metadata.repository.factory.order = compositeContent.xml,\!
 artifact.repository.factory.order = compositeArtifacts.xml,\!
-" 
+"
 
     if @test == "true"
       puts "=== compositeArtifacts.xml:"
@@ -293,7 +294,7 @@ artifact.repository.factory.order = compositeArtifacts.xml,\!
       puts "Wrote the composite repository in #{out_dir}"
     end
   end
-end  
+end
 
 property_file = File.join(File.dirname(__FILE__), 'repo.properties')
 ini_lines = IO.readlines(property_file)
