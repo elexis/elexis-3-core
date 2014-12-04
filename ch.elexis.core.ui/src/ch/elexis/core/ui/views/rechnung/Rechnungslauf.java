@@ -250,13 +250,26 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			log.debug("apply start time [" + ttFirstBefore.toString(TimeTool.DATE_COMPACT)
 				+ "] filter");
 			monitor.subTask("Filtern nach Anfangsdatum ...");
+			List<Fall> treated = new ArrayList<Fall>();
+			
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
-					tmpTime.set(k.getFall().getBeginnDatum());
+					tmpTime.set(k.getDatum());
+					Fall kCase = k.getFall();
 					if (tmpTime.isBefore(ttFirstBefore)) {
-						subResults.add(k);
+						if (kCase != null && !(treated.contains(kCase))
+							&& !(skipCase.contains(kCase))) {
+							treated.add(kCase);
+							
+							Konsultation[] caseKons = kCase.getBehandlungen(false);
+							for (Konsultation cK : caseKons) {
+								if (!subResults.contains(cK)) {
+									subResults.add(cK);
+								}
+							}
+						}
 					} else {
-						skipCase.add(k.getFall());
+						skipCase.add(kCase);
 					}
 				}
 			}
@@ -280,7 +293,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 					if (tmpTime.isBefore(ttLastBefore)) {
 						for (Konsultation k2 : kons) {
 							String fId = k.get(Konsultation.FLD_CASE_ID);
-							if ((fId != null) && (fId.equals(k.getFall().getId()))) {
+							if ((fId != null) && (fId.equals(k2.getFall().getId()))) {
 								tmpTime.set(k2.getDatum());
 								if (tmpTime.isAfter(ttLastBefore)) {
 									skipCase.add(k.getFall());

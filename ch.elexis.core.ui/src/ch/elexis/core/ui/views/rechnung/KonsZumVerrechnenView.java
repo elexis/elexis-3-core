@@ -378,7 +378,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 						while ((rs != null) && rs.next()) {
 							String s = rs.getString(1);
 							Fall f = Fall.load(s);
-							if (f.exists() && (tSelection.find(f, true) == null)) {
+							if (f != null && f.exists() && (tSelection.find(f, true) == null)) {
 								new LazyTree(l, f, this);
 							}
 						}
