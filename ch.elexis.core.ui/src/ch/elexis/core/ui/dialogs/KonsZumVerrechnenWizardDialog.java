@@ -96,7 +96,6 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		cbMarked = new Button(ret, SWT.CHECK);
 		cbMarked.setText(ALLMARKED);
 		cbMarked.setLayoutData(SWTHelper.getFillGridData(4, true, 1, false));
-		cbMarked.setSelection(true);
 		cbBefore = new Button(ret, SWT.CHECK);
 		cbBefore.setText(TREATMENTBEGINBEFORE);
 		ddc1 = new DayDateCombo(ret, "", TAGEN_BZW_DEM); //$NON-NLS-1$
