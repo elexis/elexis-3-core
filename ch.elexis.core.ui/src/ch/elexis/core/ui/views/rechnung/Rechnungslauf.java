@@ -263,8 +263,10 @@ public class Rechnungslauf implements IRunnableWithProgress {
 							
 							Konsultation[] caseKons = kCase.getBehandlungen(false);
 							for (Konsultation cK : caseKons) {
-								if (!subResults.contains(cK)) {
-									subResults.add(cK);
+								if (kons.contains(cK)) {
+									if (!subResults.contains(cK)) {
+										subResults.add(cK);
+									}
 								}
 							}
 						}
