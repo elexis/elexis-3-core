@@ -256,8 +256,14 @@ public class LaborOrdersComposite extends Composite {
 			Collections.sort(orders, new Comparator<LabOrder>() {
 				@Override
 				public int compare(LabOrder lo1, LabOrder lo2){
-					String prio1 = lo1.getLabItem().getPrio();
-					String prio2 = lo2.getLabItem().getPrio();
+					String prio1 = "";
+					String prio2 = "";
+					if (lo1.getLabItem() != null && lo1.getLabItem().getPrio() != null) {
+						prio1 = lo1.getLabItem().getPrio();
+					}
+					if (lo2.getLabItem() != null && lo2.getLabItem().getPrio() != null) {
+						prio2 = lo2.getLabItem().getPrio();
+					}
 					return prio1.compareTo(prio2);
 				}
 			});
