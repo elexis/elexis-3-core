@@ -110,8 +110,11 @@ public class DBConnectFirstPage extends WizardPage {
 			old.append("<li><b>Verbinde</b>   ").append(connectString).append("</li>"); //$NON-NLS-1$ //$NON-NLS-2$
 			old.append("<li><b>Username</b>   ").append(user).append("</li>"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		old.append("<li><b>Effektiv</b> verwendet wird:").append( //$NON-NLS-1$
-			PersistentObject.getConnection().getConnectString()).append("</li>"); //$NON-NLS-1$
+		if (PersistentObject.getConnection() != null
+			&& PersistentObject.getConnection().getConnectString() != null) {
+			old.append("<li><b>Effektiv</b> verwendet wird:").append( //$NON-NLS-1$
+				PersistentObject.getConnection().getConnectString()).append("</li>"); //$NON-NLS-1$
+		}
 		old.append("</form>"); //$NON-NLS-1$
 		alt.setText(old.toString(), true, false);
 		// Composite form=new Composite(parent, SWT.BORDER);
