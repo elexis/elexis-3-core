@@ -101,7 +101,7 @@ public class DBConnectFirstPage extends WizardPage {
 			old.append("<br/><li><b>Aktuelle Verbindung wurde via Übergabeparameter ans Programm gesetzt!</b></li><br/>"); //$NON-NLS-1$
 		}
 		if (ch.rgw.tools.StringTool.isNothing(connectString)) {
-			old.append("<form>:<br/>"); //$NON-NLS-1$
+			old.append("<br/>"); //$NON-NLS-1$
 			old.append("Keine konfigurierte Verbindung."); //$NON-NLS-1$
 		} else {
 			old.append("Konfigurierte Verbindung ist:<br/>"); //$NON-NLS-1$
