@@ -113,6 +113,7 @@ public class FallDetailBlatt2 extends Composite {
 	Text tBezeichnung, tGarant;
 	Hyperlink autoFill, hlGarant;
 	List<Control> lReqs = new ArrayList<Control>();
+	List<Control> keepEditable = new ArrayList<Control>();
 	
 	public FallDetailBlatt2(final Composite parent){
 		super(parent, SWT.NONE);
@@ -524,6 +525,7 @@ public class FallDetailBlatt2 extends Composite {
 			c.dispose();
 		}
 		lReqs.clear();
+		keepEditable.clear();
 		
 		boolean allowFieldUpdate = true;
 		if (actFall != null) {
@@ -581,12 +583,13 @@ public class FallDetailBlatt2 extends Composite {
 		if ((reqs != null) && (reqs.length() > 0)) {
 			// *** do not display a title bar since this is already displayed
 			// above Rechnungsempfänger!
-			setExtendedFields(f, reqs, StringTool.leer, false, false);
+			setExtendedFields(f, reqs, StringTool.leer, false, false, false);
 		}
 		// *** adding optional fields defined in prefs
 		String optionals = f.getOptionals();
 		if ((optionals != null) && (optionals.length() > 0)) {
-			setExtendedFields(f, optionals, Messages.FallDetailBlatt2_optionalData, false, false); //$NON-NLS-1$
+			setExtendedFields(f, optionals, Messages.FallDetailBlatt2_optionalData, false, false,
+				true); //$NON-NLS-1$
 		}
 		
 		// ****** show any other fields from extinfo - ONLY FOR ADMINS, NOT
@@ -691,7 +694,7 @@ public class FallDetailBlatt2 extends Composite {
 		if (otherFieldsList_2.length() > 0) {
 			if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY_SPECIALS) == true) {
 				setExtendedFields(f, otherFieldsList_2,
-					Messages.FallDetailBlatt2_unusedFieldsWithDefinition, true, true); //$NON-NLS-1$
+					Messages.FallDetailBlatt2_unusedFieldsWithDefinition, true, true, false); //$NON-NLS-1$
 			}
 		}
 		
@@ -779,7 +782,7 @@ public class FallDetailBlatt2 extends Composite {
 			// *** only for admins!
 			if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY_SPECIALS) == true) {
 				setExtendedFields(f, otherFieldsList,
-					Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true, true); //$NON-NLS-1$
+					Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true, true, false); //$NON-NLS-1$
 			}
 		}
 		allowFieldUpdate(allowFieldUpdate);
@@ -796,7 +799,13 @@ public class FallDetailBlatt2 extends Composite {
 			if (req instanceof Label) {
 				continue;
 			}
-			req.setEnabled(enable);
+			
+			// keep editable in case it's an optional parameter of accident date/no
+			if (keepEditable.contains(req)) {
+				req.setEnabled(true);
+			} else {
+				req.setEnabled(enable);
+			}
 		}
 	}
 	
@@ -850,7 +859,7 @@ public class FallDetailBlatt2 extends Composite {
 	 *            </ul>
 	 */
 	private void setExtendedFields(final Fall f, final String fieldList, String TitleBarText,
-		boolean deletable, boolean dangerous){
+		boolean deletable, boolean dangerous, boolean optional){
 		// *** kind "numeric" or "string" is saved in the dataField of the
 		// control
 		
@@ -887,13 +896,14 @@ public class FallDetailBlatt2 extends Composite {
 			Hyperlink hl = null;
 			if (r[1].equals("K")) { //$NON-NLS-1$  // *** Kontakt
 				hl = tk.createHyperlink(form.getBody(), r[0], SWT.NONE);
-				lReqs.add(hl);
+				addControl(hl, optional, r[0]);
+				
 				if (!val.startsWith("**ERROR")) { //$NON-NLS-1$
 					Kontakt k = Kontakt.load(val);
 					val = k.getLabel();
 				}
 			} else {
-				lReqs.add(tk.createLabel(form.getBody(), r[0]));
+				addControl(tk.createLabel(form.getBody(), r[0]), optional, r[0]);
 			}
 			
 			// *** create/get parent for data part (right part)
@@ -1084,7 +1094,7 @@ public class FallDetailBlatt2 extends Composite {
 				stretchComposite.setBackground(new Color(stretchComposite.getDisplay(), 255, 255,
 					255));
 				stretchComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-				lReqs.add(stretchComposite);
+				addControl(stretchComposite, optional, r[0]);
 				GridLayout radioLayout = new GridLayout(1, false);
 				radioLayout.marginWidth = 0;
 				stretchComposite.setLayout(radioLayout);
@@ -1242,7 +1252,7 @@ public class FallDetailBlatt2 extends Composite {
 						}
 						checks[rIx].addFocusListener(new Focusreact(r[0] + "_" + items[rIx])); //$NON-NLS-1$
 						checks[rIx].addSelectionListener(new TristateSelection());
-						lReqs.add(checks[rIx]);
+						addControl(checks[rIx], optional, r[0]);
 					}
 					dataField = checkBoxComposite;
 				} else {
@@ -1275,9 +1285,9 @@ public class FallDetailBlatt2 extends Composite {
 			
 			// *** add stretchComposite and dataField to controlList
 			if (stretchComposite != null) {
-				lReqs.add(stretchComposite);
+				addControl(stretchComposite, optional, r[0]);
 			}
-			lReqs.add(dataField);
+			addControl(dataField, optional, r[0]);
 		}
 		
 		TimeTool bt = f.getBillingDate();
@@ -1343,6 +1353,16 @@ public class FallDetailBlatt2 extends Composite {
 			lReqs.add(tmpButton);
 			lReqs.add(parent);
 		}
+	}
+	
+	private boolean addControl(Control control, boolean optional, String value){
+		String accidentNo = "Unfallnummer";
+		String accidentDate = "Unfalldatum";
+		
+		if (optional || accidentNo.equalsIgnoreCase(value) || accidentDate.equalsIgnoreCase(value)) {
+			keepEditable.add(control);
+		}
+		return lReqs.add(control);
 	}
 	
 	public Fall getFall(){
