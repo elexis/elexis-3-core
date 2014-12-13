@@ -44,7 +44,9 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		List<IConfigurationElement> list =
 			Extensions.getExtensions(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
 		addField(new BooleanFieldEditor(Preferences.P_TEXT_SUPPORT_LEGACY,
-			Messages.Texterstellung_Support_Legacy, getFieldEditorParent()));
+				Messages.Texterstellung_Support_Legacy, getFieldEditorParent()));
+		addField(new BooleanFieldEditor(Preferences.P_TEXT_RENAME_WITH_F2,
+				Messages.Texterstellung_Rename_with_F2, getFieldEditorParent()));
 		String[][] rows = new String[list.size()][];
 		int i = 0;
 		for (IConfigurationElement ice : list) {

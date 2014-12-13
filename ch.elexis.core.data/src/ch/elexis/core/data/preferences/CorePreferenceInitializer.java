@@ -66,6 +66,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 			userhome.getAbsolutePath());
 		
 		// Texterstellung
+		CoreHub.localCfg.set(Preferences.P_TEXT_RENAME_WITH_F2, false);
 		if (System.getProperty("os.name").toLowerCase().startsWith("win")) { //$NON-NLS-1$ //$NON-NLS-2$
 			if (CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null) == null
 				|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, "").equals(StringTool.leer)) {

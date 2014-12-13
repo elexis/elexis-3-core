@@ -28,12 +28,16 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
@@ -232,6 +236,20 @@ public class BriefAuswahl extends ViewPart implements
 			createColumns();
 			comparator = new LetterViewerComparator();
 			tableViewer.setComparator(comparator);
+			if (CoreHub.localCfg.get(Preferences.P_TEXT_RENAME_WITH_F2, false))
+			{
+				tableViewer.getTable().addKeyListener(new KeyListener() {
+					@Override
+					public void keyPressed(KeyEvent e){}
+					@Override
+					public void keyReleased(KeyEvent e){
+						if (e.keyCode == SWT.F2)
+						{
+							editNameAction.run();
+						}
+					}
+				});
+			}
 			
 			vc.getContentProvider().startListening();
 			Button bLoad = tk.createButton(this, Messages.BriefAuswahlLoadButtonText, SWT.PUSH); //$NON-NLS-1$
