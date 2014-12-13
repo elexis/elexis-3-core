@@ -27,6 +27,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -34,11 +36,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -84,6 +88,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 	private static final int AMOUNT_DUE = 3;
 	private static final int STATUS = 4;
 	private static final int GARANT = 5;
+	private static boolean bReverse = true;
 	
 	private static final String[] COLUMN_TEXT = {
 		Messages.BillSummary_number, // NUMBER //$NON-NLS-1$
@@ -102,6 +107,15 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		80, // STATUS
 		80, // GARANT
 	};
+
+	class SortListener extends SelectionAdapter {
+	
+		@Override
+		public void widgetSelected(SelectionEvent e){
+			bReverse = !bReverse;
+			billsViewer.refresh();
+		}
+	}
 	
 	private List<Rechnung> getRechnungen(Patient patient){
 		List<Rechnung> rechnungen = patient.getRechnungen();
@@ -115,22 +129,18 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 				
 				// r1 is null, r2 not. sort r2 before r1
 				if (r1 == null) {
-					return 1;
+					return bReverse ? -1 : 1;
 				}
 				
 				// r2 is null, r1 not. sort r1 before r2
 				if (r2 == null) {
-					return -1;
+					return bReverse ? 1 : -1;
 				}
-				
-				// r1 and r2 not null
-				String sNumber1 = r1.getNr();
-				String sNumber2 = r2.getNr();
 				
 				try {
 					Integer number1 = new Integer(r1.getNr());
 					Integer number2 = new Integer(r2.getNr());
-					return number1.compareTo(number2);
+					return bReverse ? number2.compareTo(number1) : number1.compareTo(number2);
 				} catch (NumberFormatException ex) {
 					// error, consider equal
 					return 0;
@@ -185,6 +195,10 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 			tc[i].setText(COLUMN_TEXT[i]);
 			tc[i].setWidth(COLUMN_WIDTH[i]);
 		}
+		
+		// Allow sorting on date ascending and descending
+		SortListener sortListener = new SortListener();
+		tc[1].addSelectionListener(sortListener);
 		
 		billsViewer.setContentProvider(new IStructuredContentProvider() {
 			public Object[] getElements(Object inputElement){
