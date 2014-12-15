@@ -68,6 +68,7 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 		text.setWhitespaceNormalized(true);
 		text.setColor(UiDesk.COL_BLUE, UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
 		text.setColor(UiDesk.COL_GREEN, UiDesk.getColorRegistry().get(UiDesk.COL_LIGHTGREY));
+		text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 		setContent(text);
 		text.addHyperlinkListener(new HyperlinkAdapter() {
 			
