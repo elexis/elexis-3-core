@@ -21,8 +21,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
@@ -219,7 +217,11 @@ public enum Images {
 	/** small blocks */
 	IMG_BLOCKS_SMALL, 
 	/** sync icon **/
-	IMG_SYNC;
+	IMG_SYNC,
+	/** a star icon **/
+	IMG_STAR,
+	/** a non-filed star icon **/
+	IMG_STAR_EMPTY;
 	
 	private Images(){}
 	
