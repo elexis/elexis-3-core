@@ -28,6 +28,8 @@ public class Messages extends NLS {
 	public static String FixMediDisplay_Stop;
 	public static String FixMediDisplay_StopThisMedicament;
 	public static String FixMediDisplay_UsageList;
+	public static String FixMediDisplay_AddDefaultSignature;
+	public static String FixMediDisplay_AddDefaultSignature_Tooltip;
 	
 	static {
 		// load message values from bundle file

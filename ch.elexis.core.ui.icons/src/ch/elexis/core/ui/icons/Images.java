@@ -122,6 +122,7 @@ public enum Images {
 	/** a book */
 	IMG_BOOK,
 	/** a person */
+	IMG_BOOKMARK_PENCIL,
 	IMG_PERSON,
 	/** a person with an OK mark */
 	IMG_PERSON_OK,

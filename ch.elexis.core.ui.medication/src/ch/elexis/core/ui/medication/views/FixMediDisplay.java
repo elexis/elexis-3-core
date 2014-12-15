@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.window.Window;
@@ -27,15 +26,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.ElexisConfigurationConstants;
-import ch.elexis.core.ui.Hub;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.dialogs.MediDetailDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.ListDisplay;
@@ -67,7 +65,8 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 	public static final String ID = "ch.elexis.FixMediDisplay";
 	private static final String TTCOST = Messages.FixMediDisplay_DailyCost; //$NON-NLS-1$
 	private final LDListener dlisten;
-	private IAction stopMedicationAction, changeMedicationAction, removeMedicationAction;
+	private IAction stopMedicationAction, changeMedicationAction, removeMedicationAction,
+			addDefaultSignatureAction;
 	FixMediDisplay self;
 	Label lCost;
 	PersistentObjectDropTarget target;
@@ -76,7 +75,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 	static final String LISTE = Messages.FixMediDisplay_UsageList; //$NON-NLS-1$
 	static final String HINZU = Messages.FixMediDisplay_AddItem; //$NON-NLS-1$
 	static final String KOPIEREN = Messages.FixMediDisplay_Copy; //$NON-NLS-1$
-
+	
 	public FixMediDisplay(Composite parent, IViewSite s){
 		super(parent, SWT.NONE, null);
 		lCost = new Label(this, SWT.NONE);
@@ -87,13 +86,13 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 		addHyperlinks(HINZU, LISTE, REZEPT);
 		makeActions();
 		ViewMenus menu = new ViewMenus(s);
-		menu.createControlContextMenu(list, stopMedicationAction, changeMedicationAction, null,
-			removeMedicationAction);
+		menu.createControlContextMenu(list, stopMedicationAction, changeMedicationAction,
+			addDefaultSignatureAction, null, removeMedicationAction);
 		menuManager = menu.getContextMenu();
 		setDLDListener(dlisten);
 		target = new PersistentObjectDropTarget(Messages.FixMediDisplay_FixMedikation, this, //$NON-NLS-1$
 			new PersistentObjectDropTarget.IReceiver() {
-
+				
 				public boolean accept(PersistentObject o){
 					if (o instanceof Prescription) {
 						return true;
@@ -103,9 +102,9 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					}
 					return false;
 				}
-
+				
 				public void dropped(PersistentObject o, DropTargetEvent e){
-
+					
 					if (o instanceof Artikel) {
 						Prescription pre =
 							new Prescription((Artikel) o, (Patient) ElexisEventDispatcher
@@ -116,7 +115,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 							// self.add(pre);
 							reload();
 						}
-
+						
 					} else if (o instanceof Prescription) {
 						Prescription[] existing =
 							((Patient) ElexisEventDispatcher.getSelected(Patient.class))
@@ -137,7 +136,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				}
 			});
 		new PersistentObjectDragSource(list, new PersistentObjectDragSource.ISelectionRenderer() {
-
+			
 			public List<PersistentObject> getSelection(){
 				Prescription pr = FixMediDisplay.this.getSelection();
 				ArrayList<PersistentObject> ret = new ArrayList<PersistentObject>(1);
@@ -147,7 +146,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				return ret;
 			}
 		});
-
+		
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
@@ -155,21 +154,21 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 			}
 		});
 	}
-
+	
 	public MenuManager getMenuManager(){
 		return menuManager;
 	}
-
+	
 	public void sortList(){
 		String[] items = list.getItems();
 		Arrays.sort(items);
 		list.removeAll();
 		list.setItems(items);
-
+		
 		update();
 		redraw();
 	}
-
+	
 	public void reload(){
 		clear();
 		Patient act = ElexisEventDispatcher.getSelectedPatient();
@@ -178,7 +177,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 		if (act != null) {
 			Prescription[] pre = act.getFixmedikation();
 			for (Prescription pr : pre) {
-				float num = pr.calculateTagesDosis(pr.getDosis());
+				float num = Prescription.calculateTagesDosis(pr.getDosis());
 				try {
 					Artikel art = pr.getArtikel();
 					if (art != null) {
@@ -214,18 +213,18 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 	
 	class DauerMediListener implements LDListener {
 		IViewSite site;
-
+		
 		DauerMediListener(IViewSite s){
 			site = s;
 		}
-
+		
 		public void hyperlinkActivated(String l){
 			try {
 				if (l.equals(HINZU)) {
 					site.getPage().showView(LeistungenView.ID);
 					CodeSelectorHandler.getInstance().setCodeSelectorTarget(target);
 				} else if (l.equals(LISTE)) {
-
+					
 					RezeptBlatt rpb = (RezeptBlatt) site.getPage().showView(RezeptBlatt.ID);
 					rpb.createEinnahmeliste(ElexisEventDispatcher.getSelectedPatient(), getAll()
 						.toArray(new Prescription[0]));
@@ -238,7 +237,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 						 */
 						rp.addPrescription(new Prescription(p));
 					}
-
+					
 					// PMDI - Dependency Injection through ElexisConfigurationConstants
 					RezeptBlatt rpb =
 						(RezeptBlatt) site.getPage().showView(
@@ -251,9 +250,9 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 			} catch (Exception ex) {
 				ExHandler.handle(ex);
 			}
-
+			
 		}
-
+		
 		public String getLabel(Object o){
 			if (o instanceof Prescription) {
 				return ((Prescription) o).getLabel();
@@ -261,9 +260,9 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 			return o.toString();
 		}
 	}
-
+	
 	private void makeActions(){
-
+		
 		changeMedicationAction =
 			new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
 				Messages.FixMediDisplay_Change) { //$NON-NLS-1$
@@ -271,7 +270,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 					setToolTipText(Messages.FixMediDisplay_Modify); //$NON-NLS-1$
 				}
-
+				
 				public void doRun(){
 					Prescription pr = getSelection();
 					if (pr != null) {
@@ -281,7 +280,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					}
 				}
 			};
-
+		
 		stopMedicationAction =
 			new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
 				Messages.FixMediDisplay_Stop) { //$NON-NLS-1$
@@ -289,7 +288,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					setImageDescriptor(Images.IMG_REMOVEITEM.getImageDescriptor());
 					setToolTipText(Messages.FixMediDisplay_StopThisMedicament); //$NON-NLS-1$
 				}
-
+				
 				public void doRun(){
 					Prescription pr = getSelection();
 					if (pr != null) {
@@ -300,7 +299,24 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					}
 				}
 			};
-
+		
+		addDefaultSignatureAction = new Action(Messages.FixMediDisplay_AddDefaultSignature) {
+			{
+				setImageDescriptor(Images.IMG_BOOKMARK_PENCIL.getImageDescriptor());
+				setToolTipText(Messages.FixMediDisplay_AddDefaultSignature_Tooltip);
+			}
+			@Override
+			public void run(){
+				Prescription pr = getSelection();
+				if (pr != null) {
+					ArticleDefaultSignatureTitleAreaDialog adtad =
+						new ArticleDefaultSignatureTitleAreaDialog(UiDesk.getTopShell(),
+							pr);
+					adtad.open();
+				}
+			}
+		};
+		
 		removeMedicationAction =
 			new RestrictedAction(AccessControlDefaults.DELETE_MEDICATION,
 				Messages.FixMediDisplay_Delete) { //$NON-NLS-1$
@@ -308,7 +324,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 					setToolTipText(Messages.FixMediDisplay_DeleteUnrecoverable); //$NON-NLS-1$
 				}
-
+				
 				public void doRun(){
 					Prescription pr = getSelection();
 					if (pr != null) {
@@ -319,7 +335,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					}
 				}
 			};
-
+		
 	}
-
+	
 }

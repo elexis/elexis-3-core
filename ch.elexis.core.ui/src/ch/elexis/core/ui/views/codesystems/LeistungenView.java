@@ -40,6 +40,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
 import ch.elexis.data.Leistungsblock;
 import ch.rgw.tools.StringTool;
@@ -69,6 +70,10 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				selected = ctab.getSelection();
+				
+				if (selected instanceof FavoritenCTabItem)
+					return;
+				
 				if (selected != null) {
 					cPage page = (cPage) selected.getControl();
 					if (page == null) {
@@ -86,6 +91,8 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 			}
 			
 		});
+		
+		new FavoritenCTabItem(ctab, SWT.None);
 		
 		// menu to select & define color
 		Menu tabFolderMenu = new Menu(ctab);
@@ -137,10 +144,15 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 	
 	@Override
 	public void setFocus(){
+		System.out.println("setFocus "+selected);
 		if (selected == null) {
 			if (ctab.getItems().length > 0) {
 				selected = ctab.getSelection();
 			}
+		}
+		if(selected instanceof FavoritenCTabItem) {
+			((FavoritenCTabItem)selected).update();
+			return;
 		}
 		if (selected != null) {
 			cPage page = (cPage) selected.getControl();
@@ -179,6 +191,7 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 	}
 	
 	public void activation(boolean mode){
+		if(selected instanceof FavoritenCTabItem) return;
 		if (mode == false) {
 			if (selected != null) {
 				cPage page = (cPage) selected.getControl();

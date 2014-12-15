@@ -13,10 +13,12 @@
 package ch.elexis.data;
 
 import java.util.Comparator;
+import java.util.List;
 
 import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.MultiplikatorList;
+import ch.elexis.data.VerrechenbarFavorites.Favorite;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -119,4 +121,38 @@ public abstract class VerrechenbarAdapter extends PersistentObject implements IV
 	public VatInfo getVatInfo(){
 		return VatInfo.VAT_DEFAULT;
 	}
+	
+	/**
+	 * Add this element to the list of user favorites
+	 * 
+	 * @since 3.1
+	 */
+	public void addAsFavorite(){
+		if(isFavorite()!=null) return;
+		VerrechenbarFavorites.getFavorites().add(new Favorite(storeToString(), "", 0));
+		VerrechenbarFavorites.storeFavorites();
+	}
+	
+	/**
+	 * Removes this element from the list of user favorites
+	 * @since 3.1
+	 */
+	public void removeAsFavorite() {
+		Favorite fav = isFavorite();
+		if(fav!=null) VerrechenbarFavorites.getFavorites().remove(fav);
+		VerrechenbarFavorites.storeFavorites();
+	}
+	
+	/**
+	 * 
+	 * @return the {@link Favorite} if a favorite {@link VerrechenbarAdapter} of this user, else null
+	 */
+	public Favorite isFavorite() {
+		List<Favorite> favorites = VerrechenbarFavorites.getFavorites();
+		for (Favorite favorite : favorites) {
+			if(storeToString().equalsIgnoreCase(favorite.storeToString)) return favorite;
+		}
+		return null;
+	}
+	
 }

@@ -242,6 +242,7 @@ public class Messages extends NLS {
 	public static String LoginDialog_4;
 	public static String LoginDialog_login;
 	public static String LoginDialog_terminate;
+	public static String MediDetailDialog_lblNewLabel_text;
 	
 	static {
 		// load message values from bundle file
