@@ -53,6 +53,14 @@
         storageURI="scope://Workspace"/>
   </setupTask>
   <setupTask
+      xsi:type="setup:CompoundTask"
+      name="Preferences">
+    <setupTask
+        xsi:type="setup:PreferenceTask"
+        key="/instance/org.eclipse.ui.ide/WORKSPACE_NAME"
+        value="Elexis"/>
+  </setupTask>
+  <setupTask
       xsi:type="git:GitCloneTask"
       id="core.git.clone"
       remoteURI="elexis/elexis-3-core"
@@ -103,8 +111,12 @@
         name="org.sonatype.tycho.m2e.feature.feature.group"/>
     <requirement
         name="org.eclipse.mylyn.github.feature.feature.group"/>
+    <requirement
+        name="fr.obeo.releng.targetplatform-feature.feature.group"/>
     <repository
         url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.8.0/N/LATEST/"/>
+    <repository
+        url="http://mbarbero.github.io/fr.obeo.releng.targetplatform/p2/latest/"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
