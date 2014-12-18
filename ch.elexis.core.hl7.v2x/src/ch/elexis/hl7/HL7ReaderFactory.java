@@ -107,7 +107,8 @@ public enum HL7ReaderFactory {
 				logger.warn("Reading HL7 file " + file.getAbsolutePath()
 					+ " with unsupported encoding " + match.getName()
 					+ " - trying to use ISO-8859-1 instead");
-				return new ByteArrayInputStream(detector.getString(bytes, "ISO-8859-1").getBytes());
+				
+				return new ByteArrayInputStream(new String(bytes, "ISO-8859-1").getBytes());
 			}
 			logger.info("Reading HL7 file " + file.getAbsolutePath() + " encoded "
 				+ match.getName() + " " + match.getLanguage());
