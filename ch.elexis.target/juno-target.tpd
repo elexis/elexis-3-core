@@ -1,6 +1,6 @@
 target "Juno for Elexis 3.0" 
 
-with source
+with source allEnvironments
 
 location "http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/" {
 	ca.odell.glazedlists
