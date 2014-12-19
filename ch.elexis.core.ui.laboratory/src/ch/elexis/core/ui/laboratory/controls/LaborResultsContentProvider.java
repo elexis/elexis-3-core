@@ -56,7 +56,7 @@ class LaborResultsContentProvider implements ITreeContentProvider {
 			for (String item : itemMap.keySet()) {
 				LaborItemResults results = new LaborItemResults(item, itemMap.get(item));
 				if (results.isVisible()) {
-					itemResults.put(item, results);
+					itemResults.put(group + "::" + item, results);
 					dates.addAll(results.getDays());
 				}
 			}
@@ -76,8 +76,8 @@ class LaborResultsContentProvider implements ITreeContentProvider {
 			HashMap<String, HashMap<String, List<LabResult>>> itemMap = grouped.get(parentElement);
 			ArrayList<LaborItemResults> ret = new ArrayList<LaborItemResults>();
 			for (String item : itemMap.keySet()) {
-				if (itemResults.get(item) != null) {
-					ret.add(itemResults.get(item));
+				if (itemResults.get(parentElement + "::" + item) != null) {
+					ret.add(itemResults.get(parentElement + "::" + item));
 				}
 			}
 			Collections.sort(ret, new LaborItemResultsComparator());
