@@ -200,9 +200,11 @@ public class LaborOrdersComposite extends Composite {
 					return "?"; //$NON-NLS-1$
 				}
 				if (labResult.getItem().getTyp() == typ.TEXT) {
-					result = labResult.getComment();
-					if (result.length() > 20) {
-						result = result.substring(0, 20);
+					if (labResult.isLongText()) {
+						result = labResult.getComment();
+						if (result.length() > 20) {
+							result = result.substring(0, 20);
+						}
 					}
 				}
 				return result;
