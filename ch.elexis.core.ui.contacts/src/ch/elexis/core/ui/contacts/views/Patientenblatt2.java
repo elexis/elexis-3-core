@@ -246,6 +246,12 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 		ipp.changed(ipp.getChildren());
 		// cUserfields.setRedraw(true);
 		cUserfields.setBounds(ipp.getBounds());
+		
+		refresh();
+		if (actPatient != null) {
+			setPatient(actPatient);
+		}
+		layout(true);
 	}
 	
 	Patientenblatt2(final Composite parent, final IViewSite site){

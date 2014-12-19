@@ -106,6 +106,10 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 			for (Control control : children) {
 				control.dispose();
 			}
+			
+			GridLayout lRet = new GridLayout(fields.length, true);
+			inner.setLayout(lRet);
+			
 			populateInnerComposite();
 			inner.setRedraw(true);
 		}
@@ -298,6 +302,10 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	@Override
 	public String[] getValues(){
 		return lastFiltered;
+	}
+	
+	public Composite getParent(){
+		return inner;
 	}
 	
 	/**

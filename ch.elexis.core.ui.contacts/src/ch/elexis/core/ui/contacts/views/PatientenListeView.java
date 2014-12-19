@@ -858,6 +858,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			plcp.updateFields(collectFields());
 
 			updateFocusField();
+			dcfp.getParent().layout(true);
 		}
 	}
 	
