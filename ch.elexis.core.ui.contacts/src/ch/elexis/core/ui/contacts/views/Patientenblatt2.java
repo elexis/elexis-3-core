@@ -164,13 +164,13 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 			Person.FEMALE, Person.MALE
 		}, false)); //$NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_phone1, Patient.FLD_PHONE1,
-			InputData.Typ.STRING, null)); //$NON-NLS-1$
+			InputData.Typ.STRING, null, 30)); //$NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_phone2, Patient.FLD_PHONE2,
-			InputData.Typ.STRING, null)); //$NON-NLS-1$
+			InputData.Typ.STRING, null, 30)); //$NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_mobile, Patient.MOBILE,
-			InputData.Typ.STRING, null)); //$NON-NLS-1$
+			InputData.Typ.STRING, null, 30)); //$NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_fax, Patient.FLD_FAX,
-			InputData.Typ.STRING, null)); //$NON-NLS-1$
+			InputData.Typ.STRING, null, 30)); //$NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_email, Patient.FLD_E_MAIL, //$NON-NLS-1$
 			new LabeledInputField.IExecLinkProvider() {
 				@Override
