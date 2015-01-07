@@ -134,9 +134,20 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		new ElexisUiEventListenerImpl(Konsultation.class) {
 			@Override
 			public void runInUi(ElexisEvent ev){
-				setKons((Konsultation) ev.getObject());
+				Konsultation k = (Konsultation) ev.getObject();
+				if (k != null) {
+					setKons((Konsultation) ev.getObject());
+				}
 			}
 		};
+	
+	private final ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class,
+		ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
+		@Override
+		public void runInUi(ElexisEvent ev){
+			updateFallCombo();
+		};
+	};
 	
 	@Override
 	public void saveState(IMemento memento){
@@ -336,7 +347,9 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	private synchronized void setPatient(Patient pat){
 		if (pat != null && actPat != null) {
 			if (pat.getId().equals(actPat.getId())) {
-				return;
+				if (!form.getText().equals(Messages.KonsDetailView_NoConsSelected)) {
+					return;
+				}
 			}
 		}
 		for (Control cc : cEtiketten.getChildren()) {
@@ -357,6 +370,14 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 					}
 				}
 			}
+			updateFallCombo();
+		}
+		form.layout();
+	}
+	
+	private void updateFallCombo(){
+		Patient pat = ElexisEventDispatcher.getSelectedPatient();
+		if (pat != null) {
 			Fall[] faelle = pat.getFaelle();
 			cbFall.removeAll();
 			cbFall.setData(faelle);
@@ -364,7 +385,6 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 				cbFall.add(f.getLabel());
 			}
 		}
-		form.layout();
 	}
 	
 	@Override
@@ -558,10 +578,12 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	@Override
 	public void visible(final boolean mode){
 		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_pat, eeli_user);
+			ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_pat, eeli_user,
+				eeli_fall);
 			adaptMenus();
 		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_pat, eeli_user);
+			ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_pat, eeli_user,
+				eeli_fall);
 		}
 		
 	}
