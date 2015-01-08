@@ -149,6 +149,14 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		};
 	};
 	
+	private final ElexisEventListener eeli_dateChange = new ElexisUiEventListenerImpl(
+		Konsultation.class, ElexisEvent.EVENT_UPDATE) {
+		@Override
+		public void runInUi(ElexisEvent ev){
+			setKons((Konsultation) ev.getObject());
+		}
+	};
+	
 	@Override
 	public void saveState(IMemento memento){
 		int[] w = sash.getWeights();
@@ -579,11 +587,11 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	public void visible(final boolean mode){
 		if (mode == true) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_pat, eeli_user,
-				eeli_fall);
+				eeli_dateChange, eeli_fall);
 			adaptMenus();
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_pat, eeli_user,
-				eeli_fall);
+				eeli_dateChange, eeli_fall);
 		}
 		
 	}

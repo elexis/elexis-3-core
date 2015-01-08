@@ -75,7 +75,8 @@ public class KonsListe extends ViewPart implements IActivationListener, ISaveabl
 	
 	private ElexisEventListener eeli_kons = new ElexisEventListener() {
 		private final ElexisEvent eetempl = new ElexisEvent(null, Konsultation.class,
-			ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE);
+			ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_CREATE
+				| ElexisEvent.EVENT_DELETE);
 		
 		public ElexisEvent getElexisEventFilter(){
 			return eetempl;
