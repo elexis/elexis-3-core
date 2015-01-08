@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Juno for Elexis 3.0" sequenceNumber="51">
+<?pde version="3.8"?><target name="Juno for Elexis 3.0" sequenceNumber="50">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="ca.odell.glazedlists" version="1.9.0.v201303080712"/>
@@ -26,7 +26,7 @@
 <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.0.v20121119-201001-7P7OG2BFLWUl7UnqBnO8V4Of"/>
 <unit id="org.eclipse.gyrex.features.addons.jersey.jaxrs.feature.group" version="1.0.0.v20120604-1901"/>
 <unit id="org.eclipse.pde.junit.runtime.standalone.feature.group" version="1.1.0.v20121207-183635-7a81FKwFBBqyauz0GKeGkIx3IS70"/>
-<unit id="org.eclipse.platform.feature.group" version="4.2.1.v20130118-173121-9MF7GHYdG0B5kx4E_SkfZV-1mNjVATf67ZAb7"/>
+<unit id="org.eclipse.platform.feature.group" version="3.8.1.v20130118-180812-9jF7oIBFG8eU2pim-VbIlTuQjY0RWWK3x-bv4I"/>
 <unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="0.0.0"/>
 <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
 <unit id="org.slf4j.ext" version="1.7.2.v20121108-1250"/>
@@ -39,7 +39,7 @@
 <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="0.0.0"/>
-<unit id="com.google.guava" version="15.0.0.v201403281430"/>
+<unit id="com.google.guava" version="12.0.0.v201212092141"/>
 <unit id="org.aspectj.feature.group" version="1.7.3.20130613144500-a"/>
 <repository location="http://download.elexis.info/mirror.4.elexis/snapshot"/>
 </location>
