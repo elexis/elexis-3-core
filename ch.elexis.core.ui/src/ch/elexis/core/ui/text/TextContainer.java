@@ -698,7 +698,7 @@ public class TextContainer {
 		
 		// execute query
 		if (queryConn == null) {
-			queryConn = j.getConnection();
+			queryConn = j.getKeepAliveConnection();
 		}
 		Statement statement = null;
 		ResultSet rs = null;

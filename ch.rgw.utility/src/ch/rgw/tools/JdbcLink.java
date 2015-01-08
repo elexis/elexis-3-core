@@ -25,6 +25,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 import java.util.logging.Level;
 
@@ -58,6 +60,32 @@ public class JdbcLink {
 	// prepared statements are not released properly up until now, so keep 1 connection open
 	private Connection preparedStatementConnection;
 	
+	private int keepAliveCount;
+	private Timer keepAliveTimer = new Timer();
+	private class KeepAliveTask extends TimerTask {
+		
+		private Connection connection;
+		private PreparedStatement keapAliveStatement;
+		
+		public KeepAliveTask(Connection connection) throws SQLException{
+			this.connection = connection;
+			this.keapAliveStatement = connection.prepareStatement(VALIDATION_QUERY);
+		}
+		
+		@Override
+		public void run(){
+			try {
+				keapAliveStatement.execute();
+			} catch (SQLException e) {
+				lastErrorCode = CONNECTION_SQL_ERROR;
+				lastErrorString = e.getMessage();
+				throw JdbcLinkExceptionTranslation.translateException(lastErrorString, e);
+			}
+		}
+	}
+
+	PreparedStatement preparedStatementKeepAlive;
+	
 	private static Log log;
 	
 	public static final int CONNECT_SUCCESS = 0;
@@ -74,6 +102,8 @@ public class JdbcLink {
 	public static final String DBFLAVOR_MYSQL = "mysql";
 	public static final String DBFLAVOR_POSTGRESQL = "postgresql";
 	public static final String DBFLAVOR_H2 = "h2";
+	
+	public static final String VALIDATION_QUERY = "SELECT 1 from dual;";
 	
 	static {
 		log = Log.get("jdbcLink");
@@ -241,14 +271,17 @@ public class JdbcLink {
 			connectionPool.setMaxActive(32);
 			connectionPool.setMinIdle(2);
 			connectionPool.setMaxWait(10000);
+			connectionPool.setTestOnBorrow(true);
 			
-			new PoolableConnectionFactory(connectionFactory, connectionPool, null, null, false,
+			new PoolableConnectionFactory(connectionFactory, connectionPool, null,
+				VALIDATION_QUERY, false,
 				true);
 			dataSource = new PoolingDataSource(connectionPool);
 			
-			// creating prepared statement also checks if connection can be established
-			preparedStatementConnection = dataSource.getConnection();
-			
+			// test establishing a connection
+			Connection conn = dataSource.getConnection();
+			conn.close();
+
 			lastErrorCode = CONNECT_SUCCESS;
 			lastErrorString = "Connect successful";
 			log.log("Connect successful", Log.DEBUGMSG);
@@ -352,6 +385,21 @@ public class JdbcLink {
 		}
 	}
 	
+	public Connection getKeepAliveConnection(){
+		log.log(Level.INFO, "Creating new keep alive connection [" + keepAliveCount + "]");
+		Connection conncetion;
+		try {
+			conncetion = dataSource.getConnection();
+			keepAliveTimer.scheduleAtFixedRate(new KeepAliveTask(conncetion), 5000, 5000);
+		} catch (SQLException ex) {
+			lastErrorCode = CONNECT_FAILED;
+			lastErrorString = "SQL exception: " + ex.getMessage();
+			throw JdbcLinkExceptionTranslation.translateException("Connect failed: "
+				+ lastErrorString, ex);
+		}
+		return conncetion;
+	}
+
 	public Connection getConnection(){
 		try {
 			return dataSource.getConnection();
@@ -418,9 +466,12 @@ public class JdbcLink {
 	 *            Abfrage für das statement (eizusetzende Parameter müssen als ? gesetzt sein
 	 * @return das vorkompilierte PreparedStatement
 	 */
-	public PreparedStatement prepareStatement(String sql){
+	public synchronized PreparedStatement prepareStatement(String sql){
 		checkLink();
 		try {
+			if (preparedStatementConnection == null) {
+				preparedStatementConnection = getKeepAliveConnection();
+			}
 			return preparedStatementConnection.prepareStatement(sql);
 		} catch (SQLException ex) {
 			lastErrorCode = CONNECTION_CANT_PREPARE_STAMENT;
@@ -489,7 +540,9 @@ public class JdbcLink {
 	 */
 	public synchronized void disconnect(){
 		try {
-			preparedStatementConnection.close();
+			if (preparedStatementConnection != null) {
+				preparedStatementConnection.close();
+			}
 			connectionPool.close();
 		} catch (Exception e) {
 			// ignore
@@ -591,20 +644,20 @@ public class JdbcLink {
 		
 		private boolean reconnect(){
 			try {
-				if (conn != null) {
+				if (conn != null && !conn.isClosed()) {
 					conn.close();
 				}
-				log.log(Level.WARNING, "Stm()Trying reconnect");
+				log.log(Level.WARNING, "JdbcLink.Stm - trying reconnect");
 				conn = getConnection();
 				stm = conn.createStatement();
 				return true;
 			} catch (SQLException ex) {
-				log.log(Level.WARNING, "Reconnect failed " + ex.getMessage());
+				log.log(Level.SEVERE, "JdbcLink.Stm - reconnect failed " + ex.getMessage());
 				lastErrorCode = ex.getErrorCode();
 				lastErrorString = ex.getMessage();
 				return false;
 			} catch (JdbcLinkException je) {
-				log.log(Level.WARNING, "Reconnect failed " + je.getMessage());
+				log.log(Level.SEVERE, "JdbcLink.Stm - Reconnect failed " + je.getMessage());
 				return false;
 			}
 		}
@@ -640,10 +693,10 @@ public class JdbcLink {
 		public void delete(){
 			try {
 				// stm.cancel();
-				if (stm != null) {
+				if (stm != null && !stm.isClosed()) {
 					stm.close();
 				}
-				if (conn != null) {
+				if (conn != null && !conn.isClosed()) {
 					conn.close();
 				}
 			} catch (SQLException ex) {
