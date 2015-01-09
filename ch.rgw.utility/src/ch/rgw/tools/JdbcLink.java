@@ -103,7 +103,7 @@ public class JdbcLink {
 	public static final String DBFLAVOR_POSTGRESQL = "postgresql";
 	public static final String DBFLAVOR_H2 = "h2";
 	
-	public static final String VALIDATION_QUERY = "SELECT 1 from dual;";
+	public static final String VALIDATION_QUERY = "SELECT 1;";
 	
 	static {
 		log = Log.get("jdbcLink");
