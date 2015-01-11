@@ -7,7 +7,9 @@ set -e
 . /usr/share/debconf/confmodule
 
 # Ask questions
-db_input high elexis/db_name || true
+db_input high elexis/db_type || true
+db_input high elexis/db_server || true
+db_input high elexis/db_names || true
 db_input high elexis/db_password || true
 
 # Show interface

@@ -48,17 +48,19 @@ task "deb" => [:clean] do
   else
     binaries = Dir.glob('../*/target/products')[0]
     exit 1 unless Dir.exists?(binaries)
+    FileUtils.cp('../ch.elexis.core.application/rsc/elexislogo2.png', "#{binaries}/elexis.png", :verbose => true)
     workdir = "/tmp/#{File.basename(__FILE__, '.rb')}"
     FileUtils.rm_rf(workdir)
     cmd = %(bundle exec fpm \
         #{COMMON_OPTIONS} \
         --workdir #{workdir} \
         --depends java7-runtime \
-        --depends 'postgresql-client|mysql-client' \
+        --depends postgresql-client \
+        --depends mysql-client \
         --deb-user elexis \
         --deb-group elexis \
         --vendor niklaus.giger@member.fsf.org \
-        --deb-config debian/config \
+        --deb-config    debian/config \
         --deb-changelog debian/changelog \
         --deb-templates debian/templates \
         --after-install debian/after_install \
