@@ -1,0 +1,3 @@
+#/bin/sh
+rm -f /usr/bin/Elexis3
+ln -s /usr/lib/elexis3/x86_64/Elexis3 /usr/bin

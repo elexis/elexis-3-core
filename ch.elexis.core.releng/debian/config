@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Exit on error
+set -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# Ask questions
+db_input high elexis/db_name || true
+db_input high elexis/db_password || true
+
+# Show interface
+db_go || true

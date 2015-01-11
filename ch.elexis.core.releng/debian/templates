@@ -1,0 +1,12 @@
+Template: elexis/db_name
+Type: string
+Default: elexis
+Description: Name of the postgresql database to create
+ If it is empty, we will not create a PostgreSQL database.
+ No support for MySQL available at this time.
+
+Template: elexis/db_password
+Type: password
+Default: elexisTest
+Description: Password to access the postgresql database. Defaults to elexisTest
+
