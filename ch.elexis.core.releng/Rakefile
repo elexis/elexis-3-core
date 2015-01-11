@@ -57,8 +57,6 @@ task "deb" => [:clean] do
         --depends java7-runtime \
         --depends postgresql-client \
         --depends mysql-client \
-        --deb-user elexis \
-        --deb-group elexis \
         --vendor niklaus.giger@member.fsf.org \
         --deb-config    debian/config \
         --deb-changelog debian/changelog \
