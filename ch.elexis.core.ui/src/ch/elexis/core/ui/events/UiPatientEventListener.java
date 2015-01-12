@@ -10,8 +10,12 @@
  ******************************************************************************/
 package ch.elexis.core.ui.events;
 
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.services.ISourceProviderService;
+
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.ui.Hub;
+import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
 import ch.elexis.data.Patient;
 
 /**
@@ -21,13 +25,24 @@ import ch.elexis.data.Patient;
  */
 public class UiPatientEventListener extends ElexisUiEventListenerImpl {
 	
+	private static ISourceProviderService sps = null;
+	
 	public UiPatientEventListener(){
 		super(Patient.class);
 	}
 	
 	@Override
 	public void runInUi(final ElexisEvent ev){
-		Hub.setWindowText((Patient) ev.getObject());
+		Patient pat = (Patient) ev.getObject();
+		Hub.setWindowText(pat);
+		
+		if (sps == null) {
+			sps =
+				(ISourceProviderService) PlatformUI.getWorkbench().getService(
+					ISourceProviderService.class);
+		}
+		((PatientSelectionStatus) sps.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE))
+			.setState(pat != null);
 	}
 	
 }
