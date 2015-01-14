@@ -91,11 +91,12 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		
 		@Override
 		public void runInUi(ElexisEvent ev){
-			System.out.println("hallo");
 			Mandant m = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
-			rnStellerSettings = CoreHub.getUserSetting(m.getRechnungssteller());
-			cv.notify(CommonViewer.Message.update);
-			updateMahnAutomatic();
+			if (m != null) {
+				rnStellerSettings = CoreHub.getUserSetting(m.getRechnungssteller());
+				cv.notify(CommonViewer.Message.update);
+				updateMahnAutomatic();
+			}
 		}
 	};
 	
