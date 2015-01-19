@@ -22,6 +22,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
@@ -637,7 +638,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			// auf <>0.00 prüfen, entweder verteilt in den Optifiern,
 			// TODO: oder an dieser Stelle zentral, dann ggf. auch die schon
 			// existierenden Prüfungen durch eine zentrale hier mitersetzen.
-			Result<IVerrechenbar> result = l.getOptifier().add(l, this);
+			IOptifier optifier = l.getOptifier();
+			Result<IVerrechenbar> result = optifier.add(l, this);
 			if (result.isOK()) {
 				// Statistik nachführen
 				getFall().getPatient().countItem(l);
@@ -647,7 +649,18 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					Artikel art = (Artikel) l;
 					// art.einzelAbgabe(1); -> this is done by the optifier now
 					Prescription p = new Prescription(art, getFall().getPatient(), "", "");
-					p.set(Prescription.REZEPT_ID, "Direktabgabe");
+					p.set(
+						new String[] {
+							Prescription.FLD_REZEPT_ID, Prescription.FLD_DATE_UNTIL
+						},
+						new String[] {
+							Prescription.FLD_REZEPTID_VAL_DIREKTABGABE,
+							new TimeTool().toString(TimeTool.DATE_GER)
+						});
+					Verrechnet verrechnet = optifier.getCreatedVerrechnet();
+					p.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID,
+						verrechnet.getId());
+					verrechnet.setDetail(Verrechnet.FLD_EXT_PRESC_ID, p.getId());
 				}
 			}
 			return result;

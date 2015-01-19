@@ -166,10 +166,14 @@ CREATE TABLE PATIENT_ARTIKEL_JOINT(
 	Artikel			VARCHAR(255),					# cheap copy of article. replaces ArtikelID
 	RezeptID		VARCHAR(25),					# prescription where this article was last given
 	DateFrom		CHAR(8),						# first date
-	DateUntil		CHAR(8),						# last date
+	DateUntil		CHAR(8),						# date the medication was stopped
 	Dosis			VARCHAR(255),					# number
 	Anzahl			CHAR(3),
 	Bemerkung		VARCHAR(255),
+	prescType		CHAR(2),						# the type of medication (fixed, prn)
+	sortOrder		CHAR(3),						# manual sort order
+	prescDate		CHAR(8),						# date medication was prescribed
+	prescriptor		VARCHAR(25),					# the contact that prescribed this 
 	ExtInfo			BLOB
 );
 

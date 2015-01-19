@@ -79,8 +79,8 @@ public class PatFilterImpl implements IPatFilter {
 			return REJECT;
 		} else if (o instanceof Artikel) {
 			Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
-			qbe.add(Prescription.PATIENT_ID, Query.EQUALS, p.getId());
-			qbe.add(Prescription.ARTICLE, Query.EQUALS, o.storeToString());
+			qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, p.getId());
+			qbe.add(Prescription.FLD_ARTICLE, Query.EQUALS, o.storeToString());
 			if (qbe.execute().size() > 0) {
 				return ACCEPT;
 			}
@@ -88,8 +88,8 @@ public class PatFilterImpl implements IPatFilter {
 		} else if (o instanceof Prescription) {
 			Artikel art = ((Prescription) o).getArtikel();
 			Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
-			qbe.add(Prescription.PATIENT_ID, Query.EQUALS, p.getId());
-			qbe.add(Prescription.ARTICLE, Query.EQUALS, art.storeToString());
+			qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, p.getId());
+			qbe.add(Prescription.FLD_ARTICLE, Query.EQUALS, art.storeToString());
 			if (qbe.execute().size() > 0) {
 				return ACCEPT;
 			}

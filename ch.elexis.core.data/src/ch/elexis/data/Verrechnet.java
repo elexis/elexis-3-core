@@ -58,14 +58,16 @@ public class Verrechnet extends PersistentObject {
 	public static final String TABLENAME = "LEISTUNGEN";
 	
 	public static final String VATSCALE = "vat_scale";
+	/** the prescription ID of this if it is an article*/
+	public static final String FLD_EXT_PRESC_ID = "prescriptionId";
 	
 	// keep a list of all ch.elexis.VerrechnetAdjuster extensions
 	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<IVerrechnetAdjuster>();
 	
 	static {
-		addMapping(TABLENAME, "Konsultation=Behandlung", LEISTG_TXT, LEISTG_CODE, CLASS, COUNT,
+		addMapping(TABLENAME, KONSULTATION+"=Behandlung", LEISTG_TXT, LEISTG_CODE, CLASS, COUNT,
 			COST_BUYING, SCALE_TP_SELLING, SCALE_SELLING, PRICE_SELLING, SCALE, SCALE2,
-			"ExtInfo=Detail", USERID);
+			"ExtInfo="+DETAIL, USERID);
 		
 		List<IConfigurationElement> adjustersConfigurations =
 			Extensions.getExtensions(ExtensionPointConstantsData.VERRECHNUNGSCODE_ADJUSTER);

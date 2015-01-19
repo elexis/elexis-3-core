@@ -98,7 +98,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed(){
 		prescription.setDosis(dosis.getText());
-		prescription.set(Prescription.REMARK, einnahme.getText());
+		prescription.set(Prescription.FLD_REMARK, einnahme.getText());
 		super.okPressed();
 	}
 	

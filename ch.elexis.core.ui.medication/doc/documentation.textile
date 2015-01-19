@@ -1,0 +1,31 @@
+
+h1. Medikationsliste
+
+
+h2. Begriffsdefinitionen
+
+* **Signatur**  Eine Einnahme-Regel in der Form morgens-mittags-abends-nachts (bspw. 1-2-1/2 oder 1-2-2-1).
+
+
+h3. Medikationsstatus
+
+* **Einmalige Medikation** Die Abgabe des Medikaments erfolgt im Rahmen der Verrechnung in einer Konsultation oder bei einmaliger Rezepterstellung. Es ist keine dauerhafte Medikation durch diesen Artikel vorgesehen. 
+* **Fixmedikation** Es erfolgt eine länger andauernde Behandlung mit diesem Medikament, die durch eine Signatur definiert ist. Im Rahmen dieser Behandlung erhält der Patient durch ein Rezept oder Selbstdispensation (siehe Abgabetypen) den notwendigen Wirkstoff.
+* **Reservemedikation (Bedarfsmedikation)**  Es erfolgt eine länger andauernde Behandlung mit diesem Medikament. Die Einnahme des Medikaments ist jedoch symptom-bezogen (also auf Bedarf). Der Patient erhält durch ein Rezept oder Selbstdispensation den notwendigen Wirkstoff. Reservemedikationen sind Fixmedikationen ohne direkte Einnahmeregel.
+
+h3. Abgabetypen
+
+* *Selbstdispensation*  Das Medikament wird direkt in der Praxis abgegeben und mit MWSt verrechnet. 
+* *Applikation*  Das Medikament wird im Rahmen einer Konsultation direkt auf den Patienten appliziert, die entsprechende Teilpackung wird mit 0 % MWSt verrechnet.
+* *Rezeptierung* Für das Medikament wird ein Rezept erstellt. Es erfolgt keine Verrechnung.
+* *Keine Abgabe* Eine Medikation wurde definiert, es ist aber keine Abgabe des Wirkstoffes erfolgt.
+
+h2. Grundlegendes
+
+Artikel können in Elexis auf drei Arten verschrieben werden:
+
+# Verschreibung im Rahmen einer Konsultation (als Selbstdispensation oder Applikation)
+# Direkte Rezeptierung
+# Definition als Medikation durch Einfügen in die Fixmedikations-View oder die Medikationsliste
+
+Bei jeder dieser Verschreibungsarten wird als Start-Zustand die einmalige Medikation angemommen. 

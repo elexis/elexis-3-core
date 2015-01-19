@@ -144,7 +144,6 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 	
 	@Override
 	public void setFocus(){
-		System.out.println("setFocus "+selected);
 		if (selected == null) {
 			if (ctab.getItems().length > 0) {
 				selected = ctab.getSelection();

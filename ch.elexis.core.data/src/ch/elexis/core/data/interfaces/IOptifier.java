@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.data.interfaces;
 
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Result;
@@ -48,5 +49,12 @@ public interface IOptifier {
 	 * @return Result mit der möglicherweise veränderten Liste
 	 */
 	public Result<Verrechnet> remove(Verrechnet code, Konsultation kons);
+	
+	/**
+	 * @return the {@link Verrechnet} that may have been created during
+	 *         {@link IOptifier#add(IVerrechenbar, Konsultation)}
+	 * @since 3.1.0
+	 */
+	public @Nullable Verrechnet getCreatedVerrechnet();
 	
 }

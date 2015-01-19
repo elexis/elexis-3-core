@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.common.feature"
       label="Elexis OpenSource Common Bundles Feature"
-      version="3.0.0.qualifier"
+      version="3.1.0.qualifier"
       provider-name="elexis.info">
 
    <description>

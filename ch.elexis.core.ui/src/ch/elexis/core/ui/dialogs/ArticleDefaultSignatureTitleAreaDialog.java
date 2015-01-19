@@ -1,6 +1,6 @@
 package ch.elexis.core.ui.dialogs;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -83,7 +83,7 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 		
 		if(prescription!=null) {
 			// set initial values from prescription
-			 ArrayList<Float> doseAsFloats = Prescription.getDoseAsFloats(prescription.getDosis());
+			List<Float> doseAsFloats = Prescription.getDoseAsFloats(prescription.getDosis());
 			 for (int i = 0; i < doseAsFloats.size(); i++) {
 				String val = trimTrailingZeros(Float.toString(doseAsFloats.get(i)));
 				switch (i) {

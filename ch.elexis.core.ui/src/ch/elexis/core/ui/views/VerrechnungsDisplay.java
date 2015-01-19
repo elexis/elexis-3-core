@@ -80,12 +80,13 @@ public class VerrechnungsDisplay extends Composite {
 	private IWorkbenchPage page;
 	private final Hyperlink hVer;
 	private final PersistentObjectDropTarget dropTarget;
-	private IAction chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
-	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice; //$NON-NLS-1$
-	private static final String CHCOUNT = Messages.VerrechnungsDisplay_changeNumber; //$NON-NLS-1$
-	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements; //$NON-NLS-1$
-	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText; //$NON-NLS-1$
-	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll; //$NON-NLS-1$
+	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
+	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
+	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
+	private static final String CHCOUNT = Messages.VerrechnungsDisplay_changeNumber;
+	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
+	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
+	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
 	
 	private final ElexisEventListener eeli_update = new ElexisUiEventListenerImpl(
 		Konsultation.class, ElexisEvent.EVENT_UPDATE) {
@@ -138,6 +139,14 @@ public class VerrechnungsDisplay extends Composite {
 				TableItem[] selection = tVerr.getSelection();
 				Verrechnet verrechnet = (Verrechnet) selection[0].getData();
 				ElexisEventDispatcher.fireSelectionEvent(verrechnet);
+				
+				applyMedicationAction.setEnabled(false);
+				
+				IVerrechenbar verrechenbar = verrechnet.getVerrechenbar();
+				boolean isApplicable = (verrechnet != null && (verrechenbar instanceof Artikel));
+				if(!isApplicable) return;
+				// we can only do this if we know about the resp. prescription id
+				applyMedicationAction.setEnabled(verrechnet.getDetail(Verrechnet.FLD_EXT_PRESC_ID)!=null);
 			}
 		});
 		tVerr.addKeyListener(new KeyListener() {
@@ -178,9 +187,9 @@ public class VerrechnungsDisplay extends Composite {
 	public void addPersistentObject(PersistentObject o){
 		Konsultation actKons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 		if (actKons != null) {
-			// System.out.println(actKons.getLabel());
 			if (o instanceof Prescription) {
-				o = ((Prescription) o).getArtikel();
+				Prescription presc = (Prescription) o;
+				o = presc.getArtikel();
 			}
 			if (o instanceof IVerrechenbar) {
 				if (CoreHub.acl.request(AccessControlDefaults.LSTG_VERRECHNEN) == false) {
@@ -285,6 +294,7 @@ public class VerrechnungsDisplay extends Composite {
 					if (sel != -1) {
 						TableItem ti = tVerr.getItem(sel);
 						Verrechnet v = (Verrechnet) ti.getData();
+						manager.add(applyMedicationAction);
 						manager.add(chPriceAction);
 						manager.add(chCountAction);
 						IVerrechenbar vbar = v.getVerrechenbar();
@@ -310,6 +320,27 @@ public class VerrechnungsDisplay extends Composite {
 	}
 	
 	private void makeActions(){
+		// #3278
+		applyMedicationAction = new Action(APPLY_MEDICATION) {
+			@Override
+			public void run(){
+				int sel = tVerr.getSelectionIndex();
+				TableItem ti = tVerr.getItem(sel);
+				Verrechnet v = (Verrechnet) ti.getData();
+				v.setDetail(Verrechnet.VATSCALE, Double.toString(0.0));
+				
+				String prescId = v.getDetail(Verrechnet.FLD_EXT_PRESC_ID);
+				Prescription presc = Prescription.load(prescId);
+				presc.stop(null);
+				presc.setPrescType(Prescription.PRESC_TYPE_FLAG_APPLICATION, true);
+				presc.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID, v.getId());
+				
+				int packungsGroesse = presc.getArtikel().getPackungsGroesse();
+				String proposal = (packungsGroesse > 0) ? "1/" + packungsGroesse : "1";
+				changeQuantityDialog(proposal, v);
+			}
+		};
+		
 		removeAction = new Action(REMOVE) {
 			@Override
 			public void run(){
@@ -346,6 +377,7 @@ public class VerrechnungsDisplay extends Composite {
 				setLeistungen((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class));
 			}
 		};
+		
 		chPriceAction = new Action(CHPRICE) {
 			
 			@Override
@@ -385,6 +417,7 @@ public class VerrechnungsDisplay extends Composite {
 			}
 			
 		};
+		
 		chCountAction = new Action(CHCOUNT) {
 			@Override
 			public void run(){
@@ -392,47 +425,7 @@ public class VerrechnungsDisplay extends Composite {
 				TableItem ti = tVerr.getItem(sel);
 				Verrechnet v = (Verrechnet) ti.getData();
 				String p = Integer.toString(v.getZahl());
-				InputDialog dlg =
-					new InputDialog(UiDesk.getTopShell(),
-						Messages.VerrechnungsDisplay_changeNumberCaption, //$NON-NLS-1$
-						Messages.VerrechnungsDisplay_changeNumberBody, //$NON-NLS-1$
-						p, null);
-				if (dlg.open() == Dialog.OK) {
-					try {
-						String val = dlg.getValue();
-						if (!StringTool.isNothing(val)) {
-							if (val.indexOf('/') > 0) {
-								String[] frac = val.split("/"); //$NON-NLS-1$
-								v.changeAnzahl(1);
-								double scale =
-									Double.parseDouble(frac[0]) / Double.parseDouble(frac[1]);
-								v.setSecondaryScaleFactor(scale);
-								v.setText(v.getText()
-									+ " (" + val + Messages.VerrechnungsDisplay_Orininalpackungen); //$NON-NLS-1$ //$NON-NLS-2$
-							} else if (val.indexOf('.') > 0) {
-								double scale = Double.parseDouble(val);
-								v.changeAnzahl(1);
-								v.setSecondaryScaleFactor(scale);
-								v.setText(v.getText() + " (" + Double.toString(scale) + ")");
-							} else {
-								int neu = Integer.parseInt(dlg.getValue());
-								v.changeAnzahl(neu);
-								v.setSecondaryScaleFactor(1.0);
-								v.setText(v.getVerrechenbar().getText());
-							}
-						}
-						setLeistungen((Konsultation) ElexisEventDispatcher
-							.getSelected(Konsultation.class));
-						v.getVerrechenbar()
-							.getOptifier()
-							.optify(
-								(Konsultation) ElexisEventDispatcher
-									.getSelected(Konsultation.class));
-					} catch (NumberFormatException ne) {
-						SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, //$NON-NLS-1$
-							Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$
-					}
-				}
+				changeQuantityDialog(p, v);
 			}
 		};
 		
@@ -463,5 +456,49 @@ public class VerrechnungsDisplay extends Composite {
 				}
 			}
 		};
+	}
+	
+	private void changeQuantityDialog(String p, Verrechnet v) {
+		InputDialog dlg =
+				new InputDialog(UiDesk.getTopShell(),
+					Messages.VerrechnungsDisplay_changeNumberCaption, //$NON-NLS-1$
+					Messages.VerrechnungsDisplay_changeNumberBody, //$NON-NLS-1$
+					p, null);
+			if (dlg.open() == Dialog.OK) {
+				try {
+					String val = dlg.getValue();
+					if (!StringTool.isNothing(val)) {
+						if (val.indexOf('/') > 0) {
+							String[] frac = val.split("/"); //$NON-NLS-1$
+							v.changeAnzahl(1);
+							double scale =
+								Double.parseDouble(frac[0]) / Double.parseDouble(frac[1]);
+							v.setSecondaryScaleFactor(scale);
+							v.setText(v.getText()
+								+ " (" + val + Messages.VerrechnungsDisplay_Orininalpackungen); //$NON-NLS-1$ //$NON-NLS-2$
+						} else if (val.indexOf('.') > 0) {
+							double scale = Double.parseDouble(val);
+							v.changeAnzahl(1);
+							v.setSecondaryScaleFactor(scale);
+							v.setText(v.getText() + " (" + Double.toString(scale) + ")");
+						} else {
+							int neu = Integer.parseInt(dlg.getValue());
+							v.changeAnzahl(neu);
+							v.setSecondaryScaleFactor(1.0);
+							v.setText(v.getVerrechenbar().getText());
+						}
+					}
+					setLeistungen((Konsultation) ElexisEventDispatcher
+						.getSelected(Konsultation.class));
+					v.getVerrechenbar()
+						.getOptifier()
+						.optify(
+							(Konsultation) ElexisEventDispatcher
+								.getSelected(Konsultation.class));
+				} catch (NumberFormatException ne) {
+					SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, //$NON-NLS-1$
+						Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$
+				}
+			}
 	}
 }

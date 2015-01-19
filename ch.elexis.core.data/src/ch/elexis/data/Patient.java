@@ -177,13 +177,13 @@ public class Patient extends Person {
 	 */
 	public Prescription[] getFixmedikation(){
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
-		qbe.add(Prescription.PATIENT_ID, Query.EQUALS, getId());
-		qbe.add(Prescription.REZEPT_ID, StringTool.leer, null);
+		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
+		qbe.add(Prescription.FLD_REZEPT_ID, StringTool.leer, null);
 		String today = new TimeTool().toString(TimeTool.DATE_COMPACT);
 		qbe.startGroup();
-		qbe.add(Prescription.DATE_UNTIL, Query.GREATER_OR_EQUAL, today);
+		qbe.add(Prescription.FLD_DATE_UNTIL, Query.GREATER_OR_EQUAL, today);
 		qbe.or();
-		qbe.add(Prescription.DATE_UNTIL, StringTool.leer, null);
+		qbe.add(Prescription.FLD_DATE_UNTIL, StringTool.leer, null);
 		qbe.endGroup();
 		List<Prescription> l = qbe.execute();
 		return l.toArray(new Prescription[0]);

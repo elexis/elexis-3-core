@@ -149,6 +149,7 @@ public interface IVerrechenbar extends ICodeElement {
 	public static class DefaultOptifier implements IOptifier {
 		
 		private Logger log;
+		private Verrechnet newVerrechnet;
 		
 		public Result<Object> optify(final Konsultation kons){
 			return new Result<Object>(kons);
@@ -180,7 +181,8 @@ public interface IVerrechenbar extends ICodeElement {
 			if (foundVerrechnet != null) {
 				foundVerrechnet.changeAnzahl(foundVerrechnet.getZahl() + 1);
 			} else {
-				old.add(new Verrechnet(code, kons, 1));
+				newVerrechnet = new Verrechnet(code, kons, 1);
+				old.add(newVerrechnet);
 			}
 			return new Result<IVerrechenbar>(code);
 		}
@@ -190,6 +192,11 @@ public interface IVerrechenbar extends ICodeElement {
 			old.remove(v);
 			v.delete();
 			return new Result<Verrechnet>(null);
+		}
+
+		@Override
+		public Verrechnet getCreatedVerrechnet(){
+			return newVerrechnet;
 		}
 	}
 }

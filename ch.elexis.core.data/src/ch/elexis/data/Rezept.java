@@ -126,14 +126,14 @@ public class Rezept extends PersistentObject {
 	 * Eine Rezeptzeile entfernen
 	 */
 	public void removePrescription(final Prescription p){
-		p.set(Prescription.REZEPT_ID, StringTool.leer);
+		p.set(Prescription.FLD_REZEPT_ID, StringTool.leer);
 	}
 	
 	/**
 	 * Eine Rezeptzeile hinzufügen
 	 */
 	public void addPrescription(final Prescription p){
-		p.set(Prescription.REZEPT_ID, getId());
+		p.set(Prescription.FLD_REZEPT_ID, getId());
 	}
 	
 	@Override

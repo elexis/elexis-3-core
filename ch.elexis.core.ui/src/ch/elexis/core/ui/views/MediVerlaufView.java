@@ -193,7 +193,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 							IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 						monitor.subTask(Messages.MediVerlaufView_findPrescriptions); //$NON-NLS-1$
 						Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
-						qbe.add(Prescription.PATIENT_ID, Query.EQUALS, ElexisEventDispatcher
+						qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, ElexisEventDispatcher
 							.getSelectedPatient().getId());
 						List<Prescription> list = qbe.execute();
 						mListe.clear();

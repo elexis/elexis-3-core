@@ -500,6 +500,7 @@ public class Messages extends NLS {
 	public static String VerrechnungsDisplay_missingRightsCaption;
 	public static String VerrechnungsDisplay_removeAll;
 	public static String VerrechnungsDisplay_removeElements;
+	public static String VerrechnungsDisplay_applyMedication;
 	public static String BriefAuswahlNotAllowedToRunStresstess;
 	
 	static {

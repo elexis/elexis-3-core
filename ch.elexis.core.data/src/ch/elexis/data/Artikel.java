@@ -530,6 +530,9 @@ public class Artikel extends VerrechenbarAdapter {
 		setExt(VERKAUFSEINHEIT, Integer.toString(number));
 	}
 	
+	/**
+	 * @return the package size, zero if not defined
+	 */
 	public int getPackungsGroesse(){
 		return checkZero(getExt(VERPACKUNGSEINHEIT));
 	}

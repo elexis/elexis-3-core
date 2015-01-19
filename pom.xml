@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0 </modelVersion>
 	<groupId>ch.elexis</groupId>
 	<artifactId>elexis-3-core</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>3.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<profiles>
 		<profile>
@@ -253,7 +253,7 @@
 	</modules>
 	<properties>
 		<scm_url>git@github.com:elexis/elexis-3-core.git</scm_url>
-		<tycho-version>0.21.0</tycho-version>
+		<tycho-version>0.22.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-extras.version>${tycho-version}</tycho-extras.version>
 		<repo_name>elexis.3.core</repo_name>
@@ -368,7 +368,7 @@
 						<artifact>
 							<groupId>ch.elexis</groupId>
 							<artifactId>juno-target</artifactId>
-							<version>3.0.0-SNAPSHOT</version>
+							<version>3.1.0-SNAPSHOT</version>
 							<!-- we cannot use a classifier here, or mvn compile would file in
 								any other project!! classifier>elexis-3</classifier -->
 						</artifact>
