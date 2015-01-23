@@ -29,6 +29,7 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Labor;
 import ch.elexis.data.Patient;
+import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;
@@ -40,6 +41,7 @@ import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.Messages;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
+import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class HL7Parser {
@@ -52,6 +54,7 @@ public class HL7Parser {
 	public HL7Reader hl7Reader;
 	private Patient pat;
 	private TimeTool date;
+	private TimeTool commentDate;
 	
 	public HL7Parser(String mylab){
 		myLab = mylab;
@@ -76,9 +79,20 @@ public class HL7Parser {
 		return parse(hl7Reader, null, null, createPatientIfNotFound);
 	}
 	
+	/**
+	 * Parser the content using the HL7Reader and create or merge LabResults.
+	 * 
+	 * @param hl7Reader
+	 * @param labItemResolver
+	 * @param labContactResolver
+	 * @param createPatientIfNotFound
+	 * 
+	 * @return the orderId of the import
+	 */
 	public Result<Object> parse(final HL7Reader hl7Reader, ILabItemResolver labItemResolver,
 		ILabContactResolver labContactResolver, boolean createPatientIfNotFound){
 		final TimeTool transmissionTime = new TimeTool();
+		String orderId = "";
 		
 		// assure resolvers are initialized
 		if (labContactResolver == null) {
@@ -108,12 +122,17 @@ public class HL7Parser {
 			int number = 0;
 			List<TransientLabResult> results = new ArrayList<TransientLabResult>();
 			List<IValueType> observations = obsMessage.getObservations();
-			
+			initCommentDate(obsMessage);
+
 			for (IValueType iValueType : observations) {
 				if (iValueType instanceof LabResultData) {
 					LabResultData hl7LabResult = (LabResultData) iValueType;
 					if (hl7LabResult.getDate() == null) {
-						hl7LabResult.setDate(transmissionTime.getTime());
+						if (obsMessage.getDateTimeOfMessage() != null) {
+							hl7LabResult.setDate(obsMessage.getDateTimeOfMessage());
+						} else {
+							hl7LabResult.setDate(transmissionTime.getTime());
+						}
 					}
 					date = new TimeTool(hl7LabResult.getDate());
 					if (hl7LabResult.getAlternativeDateTime() == null) {
@@ -130,9 +149,12 @@ public class HL7Parser {
 						}
 						labItem =
 							new LabItem(hl7LabResult.getCode(), hl7LabResult.getName(), labor,
-								hl7LabResult.getRange(), hl7LabResult.getRange(),
-								hl7LabResult.getUnit(), typ, hl7LabResult.getGroup(),
-								hl7LabResult.getSequence());
+								pat.getGeschlecht().equals(Person.MALE) ? hl7LabResult.getRange()
+										: "",
+								pat.getGeschlecht().equals(Person.FEMALE) ? hl7LabResult.getRange()
+										: "", hl7LabResult.getUnit(), typ,
+								labItemResolver.getTestGroupName(hl7LabResult),
+								labItemResolver.getNextTestGroupSequence(hl7LabResult));
 					}
 					
 					boolean importAsLongText =
@@ -153,7 +175,9 @@ public class HL7Parser {
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem, "text")
 								.date(baseDateTime)
-								.comment(hl7LabResult.getValue() + "\n" + hl7LabResult.getComment())
+								.comment(
+									StringTool.unNull(hl7LabResult.getValue()) + "\n"
+										+ StringTool.unNull(hl7LabResult.getComment()))
 								.flags(hl7LabResult.isFlagged() ? LabResult.PATHOLOGIC : 0)
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 								.observationTime(obsDateTime).transmissionTime(transmissionTime)
@@ -166,7 +190,7 @@ public class HL7Parser {
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem,
 								hl7LabResult.getValue()).date(baseDateTime)
-								.comment(hl7LabResult.getComment())
+								.comment(StringTool.unNull(hl7LabResult.getComment()))
 								.flags(hl7LabResult.isFlagged() ? LabResult.PATHOLOGIC : 0)
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 								.observationTime(obsDateTime).transmissionTime(transmissionTime)
@@ -188,22 +212,31 @@ public class HL7Parser {
 			}
 			
 			if (testMode) {
-				LabImportUtil.importLabResults(results, new OverwriteAllImportUiHandler());
+				orderId = LabImportUtil.importLabResults(results, new OverwriteAllImportUiHandler());
 			} else {
-				LabImportUtil.importLabResults(results, new DefaultLabImportUiHandler());
+				orderId = LabImportUtil.importLabResults(results, new DefaultLabImportUiHandler());
 			}
 		} catch (ElexisException e) {
 			logger.error("Parsing HL7 failed", e);
 			return new Result<Object>(SEVERITY.ERROR, 2,
 				Messages.getString("HL7_ExceptionWhileProcessingData"), e.getMessage(), true);
 		}
-		
-		return new Result<Object>("OK"); //$NON-NLS-1$
+		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
 	}
 	
+	private void initCommentDate(ObservationMessage obsMessage){
+		if (obsMessage.getDateTimeOfTransaction() != null) {
+			commentDate = new TimeTool(obsMessage.getDateTimeOfTransaction());
+		} else if (obsMessage.getDateTimeOfMessage() != null) {
+			commentDate = new TimeTool(obsMessage.getDateTimeOfMessage());
+		} else {
+			commentDate = new TimeTool();
+		}
+	}
+
 	private void createCommentsLabResult(TextData hl7TextData, Patient pat, Labor labor, int number){
 		if (hl7TextData.getDate() == null) {
-			hl7TextData.setDate(new TimeTool().getTime());
+			hl7TextData.setDate(commentDate.getTime());
 		}
 		TimeTool commentsDate = new TimeTool(hl7TextData.getDate());
 		
@@ -229,8 +262,13 @@ public class HL7Parser {
 		qr.add("Datum", "=", commentsDate.toString(TimeTool.DATE_GER)); //$NON-NLS-1$ //$NON-NLS-2$
 		qr.add("ItemID", "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		if (qr.execute().size() == 0) {
+			StringBuilder comment = new StringBuilder();
+			comment.append(hl7TextData.getText());
+			comment.append(hl7TextData.getComment());
 			// only add coments not yet existing
-			new LabResult(pat, commentsDate, li, "Text", hl7TextData.getComment(), labor); //$NON-NLS-1$
+			LabResult result =
+				new LabResult(pat, commentsDate, li, "text", comment.toString(), labor); //$NON-NLS-1$
+			result.setObservationTime(commentsDate);
 		}
 	}
 	
