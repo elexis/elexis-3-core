@@ -97,7 +97,7 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 					adsc.setSignatureEvening(val);
 					break;
 				case 3:
-					adsc.setSignatureEvening(val);
+					adsc.setSignatureNight(val);
 					break;
 				default:
 					break;
