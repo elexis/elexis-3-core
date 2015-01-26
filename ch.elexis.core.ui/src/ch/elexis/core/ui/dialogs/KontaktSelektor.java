@@ -61,7 +61,6 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListener {
-	private static final String SELECT_CONTACT = "Kontakt auswählen";
 	
 	// Name, Vorname, gebdat, strasse, plz, ort, tel, zusatz, fax, email
 	public static final int HINTSIZE = 12;
@@ -362,7 +361,7 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 	@Override
 	public void create(){
 		super.create();
-		getShell().setText(SELECT_CONTACT);
+		getShell().setText(Messages.KontaktSelector_title);
 	}
 	
 	/*

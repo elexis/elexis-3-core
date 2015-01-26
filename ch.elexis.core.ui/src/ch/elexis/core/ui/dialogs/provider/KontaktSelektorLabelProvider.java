@@ -2,6 +2,7 @@ package ch.elexis.core.ui.dialogs.provider;
 
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Kontakt;
+import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 
 public class KontaktSelektorLabelProvider extends DefaultLabelProvider {
@@ -15,6 +16,9 @@ public class KontaktSelektorLabelProvider extends DefaultLabelProvider {
 				label = label + " (" + k.get(Person.BIRTHDATE) + ")";
 			}
 			return label;
+		} else if (element instanceof PersistentObject) {
+			PersistentObject po = (PersistentObject) element;
+			return po.getLabel();
 		}
 		return element.toString();
 	}
