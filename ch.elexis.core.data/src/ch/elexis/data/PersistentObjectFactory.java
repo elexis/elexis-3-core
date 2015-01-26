@@ -29,7 +29,7 @@ import ch.rgw.tools.ExHandler;
 
 public class PersistentObjectFactory implements IExecutableExtension {
 	
-	private HashMap<String, PersistentObjectFactory> poFactoryCache = new HashMap<>();
+	private static HashMap<String, PersistentObjectFactory> poFactoryCache = new HashMap<>();
 	
 	private static final String CLASS = "Class";
 	
