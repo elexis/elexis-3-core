@@ -1935,13 +1935,13 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
-	 * Mehrere Felder auf einmal auslesen
+	 * Read multiple fields, as defined in fields into the values array
 	 * 
 	 * @param fields
-	 *            die Felder
+	 *            the field to read
 	 * @param values
-	 *            String Array für die gelesenen Werte
-	 * @return true ok, values wurden gesetzt
+	 *            the storage array for the fields
+	 * @return true if values were set, else <code>false</code> and exception is created
 	 */
 	public boolean get(final String[] fields, final String[] values){
 		if ((fields == null) || (values == null) || (fields.length != values.length)) {
