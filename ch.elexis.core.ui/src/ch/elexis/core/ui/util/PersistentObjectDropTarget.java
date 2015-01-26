@@ -26,7 +26,7 @@ import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.data.PersistentObject;
 
 /**
- * Universelles DropTarget für PersistentObjects
+ * Universal {@link DropTarget} for {@link PersistentObject}
  * 
  * @author gerry
  * 
@@ -38,9 +38,23 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 	private final Color highlightColor;
 	private final Control mine;
 	
-	public PersistentObjectDropTarget(Control target, IReceiver r){
-		normalColor = target.getBackground();
-		highlightColor = target.getDisplay().getSystemColor(SWT.COLOR_RED);
+	/**
+	 * Register the provided target as {@link DropTarget} for a {@link PersistentObject}
+	 * @param target
+	 * @param r
+	 * @param colorizeControl whether the target control should change color during selection
+	 * @since 3.1.0
+	 */
+	public PersistentObjectDropTarget(String name, Control target, IReceiver r, boolean colorizeControl){
+		if (colorizeControl) {
+			normalColor = target.getBackground();
+			highlightColor = target.getDisplay().getSystemColor(SWT.COLOR_RED);
+		} else {
+			normalColor = null;
+			highlightColor = null;
+		}
+		
+		this.name = name;
 		mine = target;
 		rc = r;
 		DropTarget dtarget = new DropTarget(target, DND.DROP_COPY);
@@ -52,16 +66,19 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 		dtarget.addDropListener(this);
 	}
 	
+	public PersistentObjectDropTarget(Control target, IReceiver r){
+		this("", target, r, true);
+	}
+	
 	public PersistentObjectDropTarget(String name, Control target, IReceiver r){
-		this(target, r);
-		this.name = name;
+		this(name, target, r, true);
 	}
 	
 	public void dragEnter(DropTargetEvent event){
 		
 		boolean bOk = false;
 		PersistentObject dropped = PersistentObjectDragSource.getDraggedObject();
-		;
+
 		if (rc.accept(dropped)) {
 			bOk = true;
 		}
@@ -70,10 +87,7 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 			event.detail = DND.DROP_COPY;
 		} else {
 			event.detail = DND.DROP_NONE;
-		}
-		
-		// event.detail=DND.DROP_COPY;
-		
+		}		
 	}
 	
 	public void dragLeave(DropTargetEvent event){
@@ -88,7 +102,6 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 	
 	public void dragOver(DropTargetEvent event){
 		// TODO Auto-generated method stub
-		
 	}
 	
 	public void drop(DropTargetEvent event){
@@ -98,20 +111,12 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 			PersistentObject dropped = CoreHub.poFactory.createFromString(obj);
 			rc.dropped(dropped, event);
 		}
-		
 	}
 	
 	public void dropAccept(DropTargetEvent event){
 		if (!rc.accept(PersistentObjectDragSource.getDraggedObject())) {
 			event.detail = DND.DROP_NONE;
 		}
-		
-	}
-	
-	public interface IReceiver {
-		public void dropped(PersistentObject o, DropTargetEvent e);
-		
-		public boolean accept(PersistentObject o);
 	}
 	
 	public void codeSelected(PersistentObject obj){
@@ -123,7 +128,8 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 	}
 	
 	public void registered(boolean bIsRegistered){
-		highlight(bIsRegistered);
+		if (normalColor != null)
+			highlight(bIsRegistered);
 		
 	}
 	
@@ -135,4 +141,9 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 		}
 	}
 	
+	public interface IReceiver {
+		public void dropped(PersistentObject o, DropTargetEvent e);
+		
+		public boolean accept(PersistentObject o);
+	}
 }
