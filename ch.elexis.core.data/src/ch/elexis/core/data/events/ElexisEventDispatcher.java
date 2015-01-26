@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
@@ -329,9 +330,20 @@ public final class ElexisEventDispatcher extends Job {
 		}
 	}
 	
-	/** shortcut */
-	public static Patient getSelectedPatient(){
+	/**
+	 * @return the currently selected {@link Patient}
+	 */
+	public @Nullable static Patient getSelectedPatient(){
 		return (Patient) getSelected(Patient.class);
+	}
+	
+	/**
+	 * 
+	 * @return the currently selected {@link Mandant}
+	 * @since 3.1
+	 */
+	public @Nullable static Mandant getSelectedMandator() {
+		return (Mandant) getSelected(Mandant.class);
 	}
 	
 	public void shutDown(){
