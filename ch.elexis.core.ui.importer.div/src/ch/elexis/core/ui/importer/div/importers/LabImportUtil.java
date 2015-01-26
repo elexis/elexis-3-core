@@ -16,6 +16,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
+import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabMapping;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
@@ -166,7 +167,8 @@ public class LabImportUtil {
 	/**
 	 * Import a list of TransientLabResults. Create LabOrder objects for new results.
 	 */
-	public static void importLabResults(List<TransientLabResult> results, ImportUiHandler uiHandler){
+	public static String importLabResults(List<TransientLabResult> results,
+		ImportUiHandler uiHandler){
 		boolean overWriteAll = false;
 		String orderId = LabOrder.getNextOrderId();
 		for (TransientLabResult transientLabResult : results) {
@@ -200,6 +202,8 @@ public class LabImportUtil {
 		}
 		ElexisEventDispatcher.getInstance().fire(
 			new ElexisEvent(null, LabResult.class, ElexisEvent.EVENT_RELOAD));
+		
+		return orderId;
 	}
 	
 	/**
@@ -299,13 +303,19 @@ public class LabImportUtil {
 		private void overwriteExisting(LabResult labResult){
 			labResult.set(LabResult.COMMENT, comment);
 			labResult.setResult(result);
-			flags = labResult.getFlags(); // pathologic check takes place in labResult
+			// pathologic check takes place in labResult if it is numeric
+			if (labItem.getTyp() == typ.NUMERIC) {
+				flags = labResult.getFlags();
+			}
 			setFields(labResult);
 		}
 		
 		private LabResult persist(){
 			LabResult labResult = new LabResult(patient, date, labItem, result, comment, origin);
-			flags = labResult.getFlags(); // pathologic check takes place in labResult
+			// pathologic check takes place in labResult if it is numeric
+			if (labItem.getTyp() == typ.NUMERIC) {
+				flags = labResult.getFlags();
+			}
 			setFields(labResult);
 			return labResult;
 		}
