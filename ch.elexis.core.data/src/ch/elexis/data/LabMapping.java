@@ -188,8 +188,17 @@ public class LabMapping extends PersistentObject {
 			return null;
 		} else {
 			if (res.size() > 1) {
-				throw new IllegalArgumentException(String.format(
-					"Found more then 1 mapping for origin id [%s] - [%s]", contactId, itemId)); //$NON-NLS-1$
+				logger.warn(String.format("Found more then 1 mapping for origin id [%s] - [%s]",
+					contactId, itemId));
+				LabItem item = LabItem.load(itemId);
+				for (LabMapping labMapping : res) {
+					if (labMapping.getItemName().equals(item.getKuerzel())) {
+						logger.info(String.format("Using mapping with item name [%s]",
+							labMapping.getItemName()));
+						return labMapping;
+					}
+				}
+				return null;
 			}
 			return res.get(0);
 		}
