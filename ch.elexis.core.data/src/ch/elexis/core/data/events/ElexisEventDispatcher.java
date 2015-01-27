@@ -31,6 +31,7 @@ import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -228,6 +229,8 @@ public final class ElexisEventDispatcher extends Job {
 				continue;
 			} else if (eventType == ElexisEvent.EVENT_MANDATOR_CHANGED) {
 				elexisUIContext.setSelection(Mandant.class, ee.getObject());
+			} else if (eventType == ElexisEvent.EVENT_USER_CHANGED) {
+				elexisUIContext.setSelection(Anwender.class, ee.getObject());
 			}
 			
 			IElexisEventDispatcher ied = dispatchers.get(ee.getObjectClass());

@@ -193,6 +193,8 @@ public class Anwender extends Person {
 			Person.NAME, FLD_LABEL, Kontakt.FLD_IS_USER
 		}, ADMINISTRATOR, ADMINISTRATOR, StringConstants.ONE);
 		CoreHub.actUser = admin;
+		ElexisEventDispatcher.getInstance().fire(
+			new ElexisEvent(admin, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 		CoreHub.acl.grant(admin, new ACE(ACE.ACE_IMPLICIT, "WriteInfoStore"), new ACE(
 			ACE.ACE_IMPLICIT, "LoadInfoStore"), new ACE(ACE.ACE_IMPLICIT, "WriteGroups"), new ACE(
 			ACE.ACE_IMPLICIT, "ReadGroups"));
@@ -222,6 +224,8 @@ public class Anwender extends Person {
 	public static boolean login(final String username, final String password){
 		logoff();
 		CoreHub.actUser = null;
+		ElexisEventDispatcher.getInstance().fire(
+			new ElexisEvent(null, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 		cod.adaptForUser();
 		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
 		qbe.add(FLD_LABEL, StringTool.equals, username);
@@ -246,6 +250,8 @@ public class Anwender extends Person {
 		}
 		if (pwd.equals(password)) {
 			CoreHub.actUser = a;
+			ElexisEventDispatcher.getInstance().fire(
+				new ElexisEvent(a, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 			String MandantLabel = (String) km.get("Mandant");
 			String MandantID = null;
 			if (!StringTool.isNothing(MandantLabel)) {

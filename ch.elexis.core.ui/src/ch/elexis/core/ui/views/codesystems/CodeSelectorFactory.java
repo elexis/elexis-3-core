@@ -164,7 +164,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 					ICodeElement codeElement =
 						(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
 					if (codeElement == null) {
-						SWTHelper.alert(CAPTION_ERROR, "CodeElement is null"); //$NON-NLS-1$
+						SWTHelper.alert(CAPTION_ERROR, "CodeElement is null for "+codeSelectorFactory.getElementClass()); //$NON-NLS-1$
 					}
 					String codeSystemName = codeElement.getCodeSystemName();
 					if (StringTool.isNothing(codeSystemName)) {
