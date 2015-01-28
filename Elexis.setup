@@ -113,10 +113,14 @@
         name="org.eclipse.mylyn.github.feature.feature.group"/>
     <requirement
         name="fr.obeo.releng.targetplatform-feature.feature.group"/>
+    <requirement
+        name="com.essiembre.eclipse.rbe.feature.group"/>
     <repository
         url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.8.0/N/LATEST/"/>
     <repository
         url="http://mbarbero.github.io/fr.obeo.releng.targetplatform/p2/latest/"/>
+    <repository
+        url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
