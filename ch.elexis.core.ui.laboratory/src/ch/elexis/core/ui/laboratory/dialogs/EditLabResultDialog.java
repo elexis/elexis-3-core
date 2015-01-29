@@ -243,8 +243,11 @@ public class EditLabResultDialog extends TitleAreaDialog {
 				} else {
 					resultTxt.setText(result.getResult());
 				}
+				unitTxt.setText(getUnit());
 				unitTxt.setEnabled(false);
+				refMaleTxt.setText(getRefMale());
 				refMaleTxt.setEnabled(false);
+				refFemaleTxt.setText(getRefFemale());
 				refFemaleTxt.setEnabled(false);
 			}
 			updateDateTimeModelToTarget();
