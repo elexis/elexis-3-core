@@ -334,8 +334,14 @@ public class Prescription extends PersistentObject {
 					return 0.0f;
 				}
 				String[] bruch = n.split(StringConstants.SLASH);
+				if (bruch.length < 2) {
+					return 0.0f;
+				}
 				float zaehler = Float.parseFloat(bruch[0]);
 				float nenner = Float.parseFloat(bruch[1]);
+				if (nenner == 0.0f) {
+					return 0.0f;
+				}
 				return zaehler / nenner;
 			} else {
 				return Float.parseFloat(n);
