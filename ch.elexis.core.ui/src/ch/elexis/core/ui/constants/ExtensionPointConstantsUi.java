@@ -27,4 +27,5 @@ public class ExtensionPointConstantsUi {
 	public static final String XCHANGE_CONTRIBUTION = "ch.elexis.core.ui.xCHangeContribution";
 	public static final String TRANSPORTER = "ch.elexis.core.ui.Transporter";
 	public static final String GENERICCODE = "ch.elexis.core.ui.Genericcode";
+	public static final String RECHNUNGSDETAIL = "ch.elexis.core.ui.Rechnungsdetail";
 }

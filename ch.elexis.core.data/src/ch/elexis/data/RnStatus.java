@@ -40,6 +40,7 @@ public class RnStatus {
 	public static final int AUSSTEHEND = 24;
 	public static final int MAHNSTOPP = 25;
 	public static final int ABGESCHRIEBEN = 26; // Storniert und Kons nicht mehr freigegeben
+	public static final int ZURUECKGEWIESEN = 27;
 	
 	/**
 	 * Decide whether this state means an "active" state, i.e. the bill ist not paid or closed by
@@ -66,7 +67,7 @@ public class RnStatus {
 		"2. Mahnung gedruckt", "3. Mahnung", "3. Mahnung gedruckt", "In Betreibung", "Teilverlust",
 		"Totalverlust", "Teilw. bezahlt", "Bezahlt", "Zuviel bezahlt", "Storniert", "von heute",
 		"nicht von heute", "nicht von Ihnen", "fehlerhaft", "zu Drucken", "ausstehend",
-		"mahnstopp", "abgeschrieben"
+		"mahnstopp", "abgeschrieben", "zurückgewiesen"
 	};
 	
 	public static enum REJECTCODE {

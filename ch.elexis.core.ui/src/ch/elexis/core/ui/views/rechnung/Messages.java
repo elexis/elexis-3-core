@@ -200,6 +200,7 @@ public class Messages extends NLS {
 	public static String RnControlFieldProvider_toPrint;
 	public static String RnControlFieldProvider_totallyLost;
 	public static String RnControlFieldProvider_writtenOff;
+	public static String RnControlFieldProvider_rejected;
 	public static String RnDialogs_35;
 	public static String RnDialogs_addExpense;
 	public static String RnDialogs_addTransaction;

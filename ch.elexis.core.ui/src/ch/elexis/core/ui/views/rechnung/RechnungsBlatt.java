@@ -46,11 +46,13 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
@@ -367,6 +369,15 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		konsultationenViewer.setInput(this);
 		// form.getToolBarManager().add()
 		buchungen.setInput(site);
+		
+		// add extension points
+		@SuppressWarnings("unchecked")
+		List<IRechnungsdetail> invDetails =
+			Extensions.getClasses(ExtensionPointConstantsUi.RECHNUNGSDETAIL, "Class");
+		for (IRechnungsdetail invDetail : invDetails) {
+			invDetail.getExpandableComposite(tk, form);
+		}
+		
 		GlobalEventDispatcher.addActivationListener(this, site.getPart());
 	}
 	

@@ -14,6 +14,7 @@
    <extension-point id="xCHangeContribution" name="xCHange Contribution" schema="schema/xCHangeContribution.exsd"/>
    <extension-point id="LaborOrder" name="%elexis.laborOrder" schema="schema/LaborOrder.exsd"/>
    <extension-point id="LoginNews" name="%elexis.loginNews" schema="schema/LoginNews.exsd"/>
+   <extension-point id="Rechnungsdetail" name="Rechnungsdetail" schema="schema/Rechnungsdetail.exsd"/>
       <extension
          point="org.eclipse.ui.preferencePages">
       <page
