@@ -16,9 +16,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.rgw.tools.Log;
 
 /**
  * Heartbeat is an event source, that fires events at user-definable intervals to all
@@ -60,7 +62,8 @@ public class Heartbeat {
 	private CopyOnWriteArrayList<HeartListener> highFrequencyListeners;
 	private CopyOnWriteArrayList<HeartListener> mediumFrequencyListeners;
 	private CopyOnWriteArrayList<HeartListener> lowFrequencyListeners;
-	private static Log log = Log.get("Heartbeat"); //$NON-NLS-1$
+	
+	private static Logger log = LoggerFactory.getLogger(Heartbeat.class);
 	
 	private Heartbeat(){
 		theBeat = new beat();
@@ -93,7 +96,7 @@ public class Heartbeat {
 	 */
 	public void resume(boolean immediately){
 		isSuspended = false;
-		log.log("resume", Log.DEBUGMSG); //$NON-NLS-1$
+		log.debug("resume"); //$NON-NLS-1$
 		if (immediately) {
 			theBeat.run();
 		}
@@ -103,7 +106,7 @@ public class Heartbeat {
 	 * Heartbeat aussetzen (geht im Hintergrund weiter, wird aber nicht mehr weitergeleitet)
 	 */
 	public void suspend(){
-		log.log("suspending", Log.DEBUGMSG); //$NON-NLS-1$
+		log.debug("suspending"); //$NON-NLS-1$
 		isSuspended = true;
 	}
 	
@@ -111,7 +114,7 @@ public class Heartbeat {
 	 * Heartbeat stoppen (kann dann nicht mehr gestartet werden)
 	 */
 	public void stop(){
-		log.log("stopping", Log.DEBUGMSG); //$NON-NLS-1$
+		log.debug("stopping"); //$NON-NLS-1$
 		pacer.cancel();
 	}
 	
@@ -187,21 +190,21 @@ public class Heartbeat {
 			if (!isSuspended) {
 				// low frequency
 				if (counter % FREQUENCY_LOW_MULTIPLIER == 0) {
-					log.log("Heartbeat low", Log.DEBUGMSG); //$NON-NLS-1$
+					log.debug("Heartbeat low"); //$NON-NLS-1$
 					for (HeartListener l : lowFrequencyListeners) {
 						l.heartbeat();
 					}
 				}
 				// medium frequency
 				if (counter % FREQUENCY_MEDIUM_MULTIPLIER == 0) {
-					log.log("Heartbeat medium", Log.DEBUGMSG); //$NON-NLS-1$
+					log.debug("Heartbeat medium"); //$NON-NLS-1$
 					for (HeartListener l : mediumFrequencyListeners) {
 						l.heartbeat();
 					}
 				}
 				// high frequency
 				if (counter % FREQUENCY_HIGH_MULTIPLIER == 0) {
-					log.log("Heartbeat high", Log.DEBUGMSG); //$NON-NLS-1$
+					log.debug("Heartbeat high"); //$NON-NLS-1$
 					for (HeartListener l : highFrequencyListeners) {
 						l.heartbeat();
 					}
