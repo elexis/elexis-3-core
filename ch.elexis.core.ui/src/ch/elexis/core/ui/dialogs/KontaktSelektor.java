@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -362,6 +363,24 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 	public void create(){
 		super.create();
 		getShell().setText(Messages.KontaktSelector_title);
+	}
+	
+	@Override
+	protected void createButtonsForButtonBar(Composite parent){
+		parent.setLayout(new GridLayout(3, false));
+		Button btnClear =
+			createButton(parent, IDialogConstants.NO_ID, Messages.KontaktSelector_clearField, false);
+		btnClear.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				selection = null;
+				vc.getContentProvider().stopListening();
+				close();
+			}
+		});
+		
+		createButton(parent, IDialogConstants.OK_ID, "OK", false);
+		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
 	}
 	
 	/*

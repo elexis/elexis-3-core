@@ -201,6 +201,7 @@ public class Messages extends NLS {
 	public static String KontaktSelector_expression1;
 	public static String KontaktSelector_title;
 	public static String KontaktSelector_birthDate;
+	public static String KontaktSelector_clearField;
 	public static String MediDetailDialog_articleDetail;
 	public static String MediDetailDialog_dosage;
 	public static String MediDetailDialog_pleaseEnterPrescription;
