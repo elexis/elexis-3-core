@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-   <!--  this file must be edited in a text editor, not with the eclipse PDE !!!  -->
 <?pde version="3.5"?>
 
-<product name="Elexis OpenSource" uid="ch.elexis.core.application.ElexisApp" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Elexis OpenSource" uid="ch.elexis.core.application.ElexisApp" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.1.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/ch.elexis.core.application/rsc/elexislogo2.png"/>
@@ -15,8 +14,10 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Dosgi.console.enable.builtin=true -Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8</vmArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8</vmArgsMac>
+      <vmArgs>-Dosgi.console.enable.builtin=true -Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8
+      </vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8
+      </vmArgsMac>
    </launcherArgs>
 
    <windowImages i16="/ch.elexis.core.application/rsc/elexis2_16.gif" i32="/ch.elexis.core.application/rsc/elexis32_2.gif" i48="/ch.elexis.core.application/rsc/elexis48.gif"/>
@@ -24,8 +25,7 @@
    <splash
       location="ch.elexis.core.application" />
    <launcher name="Elexis3">
-     <!-- see https://bugs.eclipse.org/bugs/show_bug.cgi?id=424805 -->
-     <linux icon="/rsc/elexis48.xpm"/>
+      <linux icon="/rsc/elexis48.xpm"/>
       <macosx icon="/rsc/elexis-mac.icns"/>
       <solaris/>
       <win useIco="true">

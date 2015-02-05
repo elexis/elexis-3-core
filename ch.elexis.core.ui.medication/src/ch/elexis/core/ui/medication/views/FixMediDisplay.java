@@ -107,11 +107,10 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				public void dropped(PersistentObject o, DropTargetEvent e){
 					
 					if (o instanceof Artikel) {
-						Prescription pre =
-							new Prescription((Artikel) o, (Patient) ElexisEventDispatcher
-								.getSelected(Patient.class), StringTool.leer, StringTool.leer);
-						MediDetailDialog dlg = new MediDetailDialog(getShell(), pre);
+						MediDetailDialog dlg = new MediDetailDialog(getShell(), (Artikel) o);
 						if (dlg.open() == Window.OK) {
+								new Prescription((Artikel) o, (Patient) ElexisEventDispatcher
+									.getSelected(Patient.class), dlg.getDosis(), dlg.getEinnahme());
 							// self.add(pre);
 							reload();
 						}

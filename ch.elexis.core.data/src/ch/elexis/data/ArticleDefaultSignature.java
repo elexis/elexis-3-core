@@ -2,6 +2,7 @@ package ch.elexis.data;
 
 import java.util.List;
 
+import ch.elexis.core.jdt.Nullable;
 import ch.rgw.tools.JdbcLink;
 
 /**
@@ -98,7 +99,8 @@ public class ArticleDefaultSignature extends PersistentObject {
 	 * @return the default signature for the specific article or the specific ATC code (in order),
 	 *         <code>null</code> if either not available
 	 */
-	public static ArticleDefaultSignature getDefaultsignatureForArticle(Artikel artikel){
+	public static @Nullable ArticleDefaultSignature getDefaultsignatureForArticle(@Nullable Artikel artikel){
+		if(artikel==null) return null;
 		Query<ArticleDefaultSignature> qbe =
 			new Query<ArticleDefaultSignature>(ArticleDefaultSignature.class);
 		qbe.add(FLD_ARTICLE, Query.LIKE, "%" + artikel.storeToString());

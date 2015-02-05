@@ -74,9 +74,9 @@ public class MedicationView extends ViewPart implements IActivationListener {
 		menuManager.add(new Separator());
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		
-//		MenuManager alternativeMenuManager = new MenuManager("Alternative Medikation");
-//		alternativeMenuManager.add(new AlternativMedicationContributionItem(medicationTableViewer));
-//		menuManager.add(alternativeMenuManager);
+		//		MenuManager alternativeMenuManager = new MenuManager("Alternative Medikation");
+		//		alternativeMenuManager.add(new AlternativMedicationContributionItem(medicationTableViewer));
+		//		menuManager.add(alternativeMenuManager);
 		
 		menuManager.add(new Separator());
 		menuManager.add(new Action() {
@@ -97,7 +97,7 @@ public class MedicationView extends ViewPart implements IActivationListener {
 			}
 		});
 		Menu menu = menuManager.createContextMenu(medicationTableViewer.getTable());
-	
+		
 		medicationTableViewer.getTable().setMenu(menu);
 		getSite().registerContextMenu(menuManager, medicationTableViewer);
 		getSite().setSelectionProvider(medicationTableViewer);
@@ -111,24 +111,23 @@ public class MedicationView extends ViewPart implements IActivationListener {
 					ArticleDefaultSignature defSig =
 						ArticleDefaultSignature.getDefaultsignatureForArticle((Artikel) article);
 					
-					Prescription presc =
-						new Prescription((Artikel) article, (Patient) ElexisEventDispatcher
-							.getSelected(Patient.class), StringTool.leer, StringTool.leer);
-					presc.set(new String[] {
-						Prescription.FLD_DATE_FROM
-					}, new String[] {
-						new TimeTool().toString(TimeTool.DATE_GER)
-					});
+					String dosage = StringTool.leer;
+					String remark = StringTool.leer;
 					if (defSig != null) {
-						presc.set(Prescription.FLD_DOSAGE, defSig.getSignatureAsDosisString());
+						dosage = defSig.getSignatureAsDosisString();
+						remark = defSig.getSignatureComment();
 					}
+					
+					new Prescription((Artikel) article, (Patient) ElexisEventDispatcher
+						.getSelected(Patient.class), dosage, remark);
 					
 					medicationTableViewer.refresh();
 				}
 				
 				@Override
 				public boolean accept(PersistentObject o){
-					if(!(o instanceof Artikel)) return false;
+					if (!(o instanceof Artikel))
+						return false;
 					// we do not accept vaccination articles
 					Artikel a = (Artikel) o;
 					return (!a.getATC_code().startsWith("J07"));
