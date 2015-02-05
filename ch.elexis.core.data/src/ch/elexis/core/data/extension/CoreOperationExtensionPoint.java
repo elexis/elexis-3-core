@@ -36,7 +36,8 @@ public class CoreOperationExtensionPoint {
 		if (config.length != 1) {
 			// we must have exactly one CoreOperationAdvisor extension contribution
 			for (IConfigurationElement ic : config) {
-				log.error("CoreOperationExtensionPoint contribution in " + ic.getName());
+				log.error("CoreOperationExtensionPoint contribution in "
+					+ ic.getNamespaceIdentifier() + "." + ic.getName());
 			}
 			throw new Error(
 				"Error at CoreOperationExtensionPoint initialization, not exactly one, but "
