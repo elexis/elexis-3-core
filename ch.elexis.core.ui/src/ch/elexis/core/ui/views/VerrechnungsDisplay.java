@@ -24,6 +24,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -338,6 +339,11 @@ public class VerrechnungsDisplay extends Composite {
 				int packungsGroesse = presc.getArtikel().getPackungsGroesse();
 				String proposal = (packungsGroesse > 0) ? "1/" + packungsGroesse : "1";
 				changeQuantityDialog(proposal, v);
+			}
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_SYRINGE.getImageDescriptor();
 			}
 		};
 		
