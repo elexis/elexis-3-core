@@ -21,6 +21,7 @@ import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.data.BezugsKontakt;
+import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.Prescription;
 import ch.rgw.tools.Log;
 import ch.rgw.tools.VersionInfo;
@@ -378,7 +379,9 @@ public class DBUpdate {
 			ALTER_TABLE+Prescription.TABLENAME+ADD+Prescription.FLD_PRESC_TYPE+" CHAR(2);"+
 			ALTER_TABLE+Prescription.TABLENAME+ADD+Prescription.FLD_SORT_ORDER+" CHAR(3);"+
 			ALTER_TABLE+Prescription.TABLENAME+ADD+Prescription.FLD_DATE_PRESC+" CHAR(8);"+
-			ALTER_TABLE+Prescription.TABLENAME+ADD+Prescription.FLD_PRESCRIPTOR+" VARCHAR(25);"
+			ALTER_TABLE+Prescription.TABLENAME+ADD+Prescription.FLD_PRESCRIPTOR+" VARCHAR(25);"+
+			ALTER_TABLE+Leistungsblock.TABLENAME+ADD+Leistungsblock.FLD_MACRO+" VARCHAR(30);"+
+			"CREATE INDEX block3 on "+Leistungsblock.TABLENAME+"("+Leistungsblock.FLD_MACRO+");"
 			};
 	//@formatter:on
 	

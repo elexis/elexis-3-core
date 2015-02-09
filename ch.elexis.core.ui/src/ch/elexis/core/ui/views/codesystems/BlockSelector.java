@@ -86,7 +86,7 @@ public class BlockSelector extends CodeSelectorFactory {
 		cv.setContextMenu(mgr);
 		
 		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
-			new FieldDescriptor<Leistungsblock>("Name")
+			new FieldDescriptor<Leistungsblock>(Leistungsblock.FLD_NAME)
 		};
 		
 		// add keyListener to search field

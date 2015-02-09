@@ -14,12 +14,19 @@ package ch.elexis.core.ui.views.codesystems;
 
 import java.util.List;
 
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -29,6 +36,8 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -43,6 +52,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -54,7 +64,6 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.CreateEigenleistungUi;
 import ch.elexis.core.ui.commands.EditEigenleistungUi;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.IDetailDisplay;
@@ -66,35 +75,55 @@ import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 public class BlockDetailDisplay implements IDetailDisplay {
-	ScrolledForm form;
-	FormToolkit tk;
-	Text tName;
-	Combo cbMandant;
-	ListViewer lLst;
-	Button bNew, bEigen, bDiag;
-	List<Mandant> lMandanten;
-	private static Log log = Log.get("BlockDetail"); //$NON-NLS-1$
+	
+	private ScrolledForm form;
+	private FormToolkit tk;
+	private Text tName;
+	private Text tMacro;
+	private Combo cbMandant;
+	private TableViewer lLst;
+	private Button bNew, bEigen, bDiag;
+	private List<Mandant> lMandanten;
+	private DataBindingContext dbc = new DataBindingContext();
+	private WritableValue master = new WritableValue(null, Leistungsblock.class);
+	
 	private Action removeLeistung, moveUpAction, moveDownAction, editAction;
-	IViewSite site;
 	
 	public Composite createDisplay(final Composite parent, final IViewSite site){
 		tk = UiDesk.getToolkit();
-		this.site = site;
 		form = tk.createScrolledForm(parent);
+		
 		Composite body = form.getBody();
 		body.setBackground(parent.getBackground());
 		body.setLayout(new GridLayout(2, false));
+		
 		tk.createLabel(body, Messages.BlockDetailDisplay_name)
-			.setBackground(parent.getBackground()); //$NON-NLS-1$
-		tName = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
+			.setBackground(parent.getBackground());
+		tName = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		IObservableValue txtNameObservableUi =
+			WidgetProperties.text(SWT.Modify).observeDelayed(100, tName);
+		IObservableValue txtNameObservable =
+			PojoProperties.value("name", String.class).observeDetail(master);
+		dbc.bindValue(txtNameObservableUi, txtNameObservable);
+		
+		tk.createLabel(body, Messages.BlockDetailDisplay_macro).setBackground(
+			parent.getBackground());
+		tMacro = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
+		tMacro.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		IObservableValue txtMacroObservableUi =
+			WidgetProperties.text(SWT.Modify).observeDelayed(100, tMacro);
+		IObservableValue txtMacroObservable =
+			PojoProperties.value("macro", String.class).observeDetail(master);
+		dbc.bindValue(txtMacroObservableUi, txtMacroObservable);
+		
 		tk.createLabel(body, StringConstants.MANDATOR).setBackground(parent.getBackground());
 		cbMandant = new Combo(body, SWT.NONE);
 		cbMandant.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.adapt(cbMandant);
 		Query<Mandant> qm = new Query<Mandant>(Mandant.class);
 		lMandanten = qm.execute();
-		cbMandant.add(Messages.BlockDetailDisplay_all); //$NON-NLS-1$
+		cbMandant.add(Messages.BlockDetailDisplay_all);
 		for (PersistentObject m : lMandanten) {
 			cbMandant.add(m.getLabel());
 		}
@@ -107,11 +136,10 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
 				if (idx > 0) {
 					PersistentObject m = lMandanten.get(idx - 1);
-					lb.set(Leistungsblock.MANDANT_ID, m.getId());
+					lb.set(Leistungsblock.FLD_MANDANT_ID, m.getId());
 				} else {
-					lb.set(Leistungsblock.MANDANT_ID, StringConstants.EMPTY);
+					lb.set(Leistungsblock.FLD_MANDANT_ID, StringConstants.EMPTY);
 				}
-				
 			}
 			
 		});
@@ -120,7 +148,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		gList.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 		gList.setLayout(new FillLayout());
 		tk.adapt(gList);
-		lLst = new ListViewer(gList, SWT.NONE);
+		lLst = new TableViewer(gList, SWT.NONE);
 		tk.adapt(lLst.getControl(), true, true);
 		
 		lLst.setContentProvider(new IStructuredContentProvider() {
@@ -143,15 +171,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 			
 		});
-		lLst.setLabelProvider(new LabelProvider() {
-			
-			@Override
-			public String getText(final Object element){
-				ICodeElement v = (ICodeElement) element;
-				return v.getCode() + StringConstants.SPACE + v.getText();
-			}
-			
-		});
+		lLst.setLabelProvider(new ColorizedLabelProvider());
 		final TextTransfer textTransfer = TextTransfer.getInstance();
 		Transfer[] types = new Transfer[] {
 			textTransfer
@@ -188,7 +208,6 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			
 			public void dropAccept(final DropTargetEvent event){
 				// TODO Automatisch erstellter Methoden-Stub
-				
 			}
 			
 		});
@@ -276,14 +295,14 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	}
 	
 	public void display(final Object obj){
+		Leistungsblock lb = (Leistungsblock) obj;
+		master.setValue(lb);
+		
 		if (obj == null) {
 			bNew.setEnabled(false);
-			tName.setText(StringConstants.EMPTY);
 			cbMandant.select(0);
 		} else {
-			Leistungsblock lb = (Leistungsblock) obj;
-			tName.setText(lb.get(Messages.BlockDetailDisplay_name)); //$NON-NLS-1$
-			String mId = lb.get(Leistungsblock.MANDANT_ID);
+			String mId = lb.get(Leistungsblock.FLD_MANDANT_ID);
 			int sel = 0;
 			if (!StringTool.isNothing(mId)) {
 				String[] items = cbMandant.getItems();
@@ -340,6 +359,35 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					EditEigenleistungUi.executeWithParams(parameter);
 				}
 			};
+	}
+	
+	private class ColorizedLabelProvider extends LabelProvider implements IColorProvider {
+		
+		@Override
+		public String getText(final Object element){
+			ICodeElement v = (ICodeElement) element;
+			return v.getCode() + StringConstants.SPACE + v.getText();
+		}
+		
+		@Override
+		public Color getForeground(Object element){
+			return null;
+		}
+		
+		@Override
+		public Color getBackground(Object element){
+			ICodeElement v = (ICodeElement) element;
+			String codeSystemName = v.getCodeSystemName();
+			if (codeSystemName != null) {
+				String rgbColor =
+					CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeSystemName,
+						"ffffff");
+				return UiDesk.getColorFromRGB(rgbColor);
+			}
+			
+			return null;
+		}
+		
 	}
 	
 	private void moveElement(final int off){

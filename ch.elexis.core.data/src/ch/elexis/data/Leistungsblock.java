@@ -13,36 +13,101 @@
 package ch.elexis.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICodeElement;
 import ch.rgw.compress.CompEx;
 import ch.rgw.tools.ExHandler;
+import ch.rgw.tools.StringTool;
 
 public class Leistungsblock extends PersistentObject implements ICodeElement {
 	public static final String TABLENAME = "LEISTUNGSBLOCK"; //$NON-NLS-1$
-	public static final String LEISTUNGEN = "Leistungen"; //$NON-NLS-1$
-	public static final String MANDANT_ID = "MandantID"; //$NON-NLS-1$
-	public static final String NAME = "Name"; //$NON-NLS-1$
+	
+	public static final String FLD_MANDANT_ID = "MandantID"; //$NON-NLS-1$
+	public static final String FLD_NAME = "Name"; //$NON-NLS-1$
+	public static final String FLD_LEISTUNGEN = "Leistungen"; //$NON-NLS-1$
+	public static final String FLD_MACRO = "Macro"; //$NON-NLS-1$
+	
 	public static final String XIDDOMAIN = "www.xid.ch/id/elexis_leistungsblock"; //$NON-NLS-1$
+	public static final String XIDDOMAIN_SIMPLENAME = "Leistungsblock";//$NON-NLS-1$
 	
 	static {
-		addMapping(TABLENAME, NAME, MANDANT_ID, LEISTUNGEN);
-		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, "Leistungsblock", Xid.ASSIGNMENT_LOCAL //$NON-NLS-1$
+		addMapping(TABLENAME, FLD_NAME, FLD_MANDANT_ID, FLD_LEISTUNGEN, FLD_MACRO);
+		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, XIDDOMAIN_SIMPLENAME, Xid.ASSIGNMENT_LOCAL
 			| Xid.QUALITY_GUID);
 	}
+	
+	@Override
+	protected String getTableName(){
+		return TABLENAME;
+	}
+	
+	protected Leistungsblock(String id){
+		super(id);
+	}
+	
+	protected Leistungsblock(){}
 	
 	public Leistungsblock(String Name, Mandant m){
 		create(null);
 		String[] f = new String[] {
-			NAME, MANDANT_ID
+			FLD_NAME, FLD_MANDANT_ID, FLD_MACRO
 		};
-		set(f, Name, m.getId());
+		set(f, Name, m.getId(), Name);
+	}
+	
+	public static Leistungsblock load(String id){
+		return new Leistungsblock(id);
 	}
 	
 	public String getName(){
-		return checkNull(get(NAME));
+		return checkNull(get(FLD_NAME));
+	}
+	
+	/**
+	 * @param name
+	 * @since 3.1
+	 */
+	public void setName(String name){
+		set(FLD_NAME, name);
+	}
+	
+	@Override
+	public String getLabel(){
+		String name = getName();
+		String macro = getMacro();
+		if (macro.length() == 0)
+			return name;
+		return name + " [" + macro + "]";
+	}
+	
+	public String getText(){
+		return get(FLD_NAME);
+	}
+	
+	public String getCode(){
+		return get(FLD_NAME);
+	}
+	
+	/**
+	 * @return
+	 * @since 3.1
+	 */
+	public String getMacro(){
+		return checkNull(get(FLD_MACRO));
+	}
+	
+	/**
+	 * @param macro
+	 * @since 3.1
+	 */
+	public void setMacro(String macro){
+		set(FLD_MACRO, macro);
 	}
 	
 	/**
@@ -124,41 +189,13 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		
 	}
 	
-	@Override
-	public String getLabel(){
-		return get(NAME);
-	}
-	
-	public String getText(){
-		return get(NAME);
-	}
-	
-	public String getCode(){
-		return get(NAME);
-	}
-	
-	@Override
-	protected String getTableName(){
-		return TABLENAME;
-	}
-	
-	public static Leistungsblock load(String id){
-		return new Leistungsblock(id);
-	}
-	
-	protected Leistungsblock(String id){
-		super(id);
-	}
-	
-	protected Leistungsblock(){}
-	
 	private boolean flush(List<ICodeElement> lst){
 		try {
 			if (lst == null) {
 				lst = new ArrayList<ICodeElement>();
 			}
 			String storable = toString(lst);
-			setBinary(LEISTUNGEN, CompEx.Compress(storable, CompEx.ZIP));
+			setBinary(FLD_LEISTUNGEN, CompEx.Compress(storable, CompEx.ZIP));
 			return true;
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
@@ -170,7 +207,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		ArrayList<ICodeElement> lst = new ArrayList<ICodeElement>();
 		try {
 			lst = new ArrayList<ICodeElement>();
-			byte[] compressed = getBinary(LEISTUNGEN);
+			byte[] compressed = getBinary(FLD_LEISTUNGEN);
 			if (compressed != null) {
 				String storable = new String(CompEx.expand(compressed), "UTF-8"); //$NON-NLS-1$
 				for (String p : storable.split(",")) { //$NON-NLS-1$
@@ -185,7 +222,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	
 	@Deprecated
 	public boolean isEmpty(){
-		byte[] comp = getBinary(LEISTUNGEN);
+		byte[] comp = getBinary(FLD_LEISTUNGEN);
 		return (comp == null);
 	}
 	
@@ -206,5 +243,44 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	public List<Object> getActions(Object kontext){
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param macro
+	 *            the macro name
+	 * @return all {@link Leistungsblock} elements that are registered for the provided macro. This
+	 *         includes all specifically registered for the given {@link Mandant} and all that are
+	 *         available in general (no {@link Mandant} declaration)
+	 * @since 3.1
+	 */
+	public static @NonNull List<Leistungsblock> findMacrosValidForCurrentMandator(
+		@Nullable String macro){
+		if (macro == null)
+			return Collections.emptyList();
+		
+		Query<Leistungsblock> qbe = new Query<Leistungsblock>(Leistungsblock.class);
+		qbe.startGroup();
+		qbe.add(Leistungsblock.FLD_NAME, Query.EQUALS, macro);
+		qbe.or();
+		qbe.add(Leistungsblock.FLD_MACRO, Query.EQUALS, macro);
+		qbe.endGroup();
+		qbe.startGroup();
+		qbe.add(Leistungsblock.FLD_MANDANT_ID, Query.EQUALS, ElexisEventDispatcher
+			.getSelectedMandator().getId());
+		qbe.or();
+		qbe.add(Leistungsblock.FLD_MANDANT_ID, Query.EQUALS, StringTool.leer);
+		qbe.endGroup();
+		
+		List<Leistungsblock> execute = qbe.execute();
+		ArrayList<Leistungsblock> ret = new ArrayList<>();
+		for (Leistungsblock lb : execute) {
+			String macro2 = checkNull(lb.getMacro());
+			if (macro.equals(macro2) || macro2.length() == 0) {
+				ret.add(lb);
+			}
+		}
+		
+		return ret;
 	}
 }

@@ -28,6 +28,7 @@ public class Messages extends NLS {
 	public static String BlockDetailDisplay_moveDown;
 	public static String BlockDetailDisplay_moveUp;
 	public static String BlockDetailDisplay_name;
+	public static String BlockDetailDisplay_macro;
 	public static String BlockDetailDisplay_priceInCents;
 	public static String BlockDetailDisplay_remove;
 	public static String BlockDetailDisplay_SerlfDefinedService;
