@@ -134,10 +134,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		new ElexisUiEventListenerImpl(Konsultation.class) {
 			@Override
 			public void runInUi(ElexisEvent ev){
-				Konsultation k = (Konsultation) ev.getObject();
-				if (k != null) {
-					setKons((Konsultation) ev.getObject());
-				}
+				setKons((Konsultation) ev.getObject());
 			}
 		};
 	
