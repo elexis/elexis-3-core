@@ -396,16 +396,18 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 
 	private void createReminder(Anwender user, List<LabOrder> orders){
 		StringBuilder message = new StringBuilder("Labor"); //$NON-NLS-1$
+		StringBuilder params = new StringBuilder();
 		if (orders != null && !orders.isEmpty()) {
 			message
 				.append(" ")
 				.append(
 					ch.elexis.core.ui.laboratory.controls.Messages.LaborOrdersComposite_columnOrdernumber)
 				.append(": ").append(orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
+			params.append(LabOrder.FLD_ORDERID + "=" + orders.get(0).get(LabOrder.FLD_ORDERID));
 		}
 		Reminder reminder =
 			new Reminder(patient, date.toString(TimeTool.DATE_ISO), Reminder.Typ.anzeigeTodoAll,
-				LabOrder.FLD_ORDERID + "=" + orders.get(0).get(LabOrder.FLD_ORDERID), message.toString()); //$NON-NLS-1$
+				params.toString(), message.toString()); //$NON-NLS-1$
 		if (user != null) {
 			reminder.set("Responsible", user.getId()); //$NON-NLS-1$
 		}
