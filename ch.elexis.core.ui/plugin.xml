@@ -15,6 +15,96 @@
    <extension-point id="LaborOrder" name="%elexis.laborOrder" schema="schema/LaborOrder.exsd"/>
    <extension-point id="LoginNews" name="%elexis.loginNews" schema="schema/LoginNews.exsd"/>
    <extension-point id="Rechnungsdetail" name="Rechnungsdetail" schema="schema/Rechnungsdetail.exsd"/>
+   
+      <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="%context.description.0"
+            id="ch.elexis.context.billing"
+            name="%context.name.0"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+   </extension>
+      <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="ch.elexis.toolbar1">
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/new_wiz.gif"
+                  label="Views anzeigen"
+                  style="push"
+                  tooltip="%command.showViews">
+               <visibleWhen
+                     checkEnabled="false">
+                  <test
+                        args="AC_SHOWVIEW"
+                        property="ch.elexis.commands.propertyTester.ACE">
+                  </test>
+               </visibleWhen>
+            </command>
+         </toolbar>
+         <toolbar
+               id="ch.elexis.coolbar.MandantSelection">
+            <dynamic
+                  class="ch.elexis.core.ui.coolbar.MandantSelectionContributionItem"
+                  id="ch.elexis.core.ui.coolbar.MandantSelectionContributionItem">
+            </dynamic>
+         </toolbar>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.LeistungenView">
+         <command
+               commandId="org.eclipse.ui.file.properties"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/system-search-3.png"
+               label="%properties"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.PatListView">
+         <command
+               commandId="org.eclipse.ui.file.properties"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/system-search-3.png"
+               label="%properties"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.codedetailview">
+         <command
+               commandId="org.eclipse.ui.file.properties"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/system-search-3.png"
+               label="%properties"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:help">
+         <command
+               commandId="org.eclipse.ui.window.showKeyAssist"
+               label="Key Assist..."
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.BehandlungenVerrechnenView">
+         <command
+               commandId="ch.elexis.core.command.linkViews"
+               icon="icon://IMG_SYNC"
+               label="Patientenauswahl verlinken"
+               style="toggle">
+         </command>
+      </menuContribution>
+   </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
       <page
@@ -139,6 +229,49 @@
             name="System">
       </page>
    </extension>
+      <extension
+            point="org.eclipse.ui.bindings">
+         <key
+               commandId="org.eclipse.ui.window.showKeyAssist"
+               schemeId="ch.elexis.ui.keybindingScheme"
+               sequence="M1+SHIFT+L">
+         </key>
+         <scheme
+               description="KeyBindings that use this scheme will be displayed by the KeyAssistant in Elexis"
+               id="ch.elexis.ui.keybindingScheme"
+               name="Elexis Keybinding Scheme">
+         </scheme>
+      </extension>
+      <extension
+            point="org.eclipse.ui.services">
+         <sourceProvider
+               provider="ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus">
+            <variable
+                  name="ch.elexis.core.ui.commands.sourceprovider.patientSelectionActive"
+                  priorityLevel="workbench">
+            </variable>
+         </sourceProvider>
+      </extension>
+   <extension
+         point="ch.elexis.core.data.coreOperation">
+      <coreOperation
+            advisor="ch.elexis.core.ui.CoreOperationAdvisor">
+      </coreOperation>
+   </extension>
+      <extension
+            point="ch.elexis.core.data.OutputLogDescriptor">
+         <OutputLogDescriptor
+               Outputter="ch.elexis.core.ui.views.RezeptBlatt"
+               id="ch.elexis.RezeptBlatt">
+         </OutputLogDescriptor>
+      </extension>
+   <extension
+         point="ch.elexis.core.data.RechnungsManager">
+      <Rechnung
+            name="Fall-Standard"
+            outputter="ch.elexis.core.ui.views.rechnung.DefaultOutputter">
+      </Rechnung>
+   </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -239,128 +372,6 @@
          </state>
       </command>
    </extension>
-   <extension
-         point="ch.elexis.core.data.coreOperation">
-      <coreOperation
-            advisor="ch.elexis.core.ui.CoreOperationAdvisor">
-      </coreOperation>
-   </extension>
-   <extension
-         point="ch.elexis.core.data.RechnungsManager">
-      <Rechnung
-            name="Fall-Standard"
-            outputter="ch.elexis.core.ui.views.rechnung.DefaultOutputter">
-      </Rechnung>
-   </extension>
-   
-      <extension
-         point="org.eclipse.ui.contexts">
-      <context
-            description="%context.description.0"
-            id="ch.elexis.context.billing"
-            name="%context.name.0"
-            parentId="org.eclipse.ui.contexts.window">
-      </context>
-   </extension>
-      <extension
-            point="org.eclipse.ui.services">
-         <sourceProvider
-               provider="ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus">
-            <variable
-                  name="ch.elexis.core.ui.commands.sourceprovider.patientSelectionActive"
-                  priorityLevel="workbench">
-            </variable>
-         </sourceProvider>
-      </extension>
-      <extension
-            point="ch.elexis.core.ui.Verrechnungscode">
-             <Leistung
-            CodeDetailDisplay="ch.elexis.core.ui.eigenleistung.EigenleistungDetailDisplay"
-            CodeSelectorFactory="ch.elexis.core.ui.eigenleistung.EigenleistungCodeSelectorFactory"
-            ElementFactory="ch.elexis.data.PersistentObjectFactory"
-            name="Eigenleistung">
-      </Leistung>
-      </extension>
-      <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:org.eclipse.ui.main.toolbar">
-         <toolbar
-               id="ch.elexis.toolbar1">
-            <command
-                  commandId="org.eclipse.ui.views.showView"
-                  icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/new_wiz.gif"
-                  label="Views anzeigen"
-                  style="push"
-                  tooltip="%command.showViews">
-               <visibleWhen
-                     checkEnabled="false">
-                  <test
-                        args="AC_SHOWVIEW"
-                        property="ch.elexis.commands.propertyTester.ACE">
-                  </test>
-               </visibleWhen>
-            </command>
-         </toolbar>
-         <toolbar
-               id="ch.elexis.coolbar.MandantSelection">
-            <dynamic
-                  class="ch.elexis.core.ui.coolbar.MandantSelectionContributionItem"
-                  id="ch.elexis.core.ui.coolbar.MandantSelectionContributionItem">
-            </dynamic>
-         </toolbar>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:ch.elexis.LeistungenView">
-         <command
-               commandId="org.eclipse.ui.file.properties"
-               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/system-search-3.png"
-               label="%properties"
-               style="push">
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:ch.elexis.PatListView">
-         <command
-               commandId="org.eclipse.ui.file.properties"
-               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/system-search-3.png"
-               label="%properties"
-               style="push">
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:ch.elexis.codedetailview">
-         <command
-               commandId="org.eclipse.ui.file.properties"
-               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/system-search-3.png"
-               label="%properties"
-               style="push">
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:help">
-         <command
-               commandId="org.eclipse.ui.window.showKeyAssist"
-               label="Key Assist..."
-               style="push">
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:ch.elexis.BehandlungenVerrechnenView">
-         <command
-               commandId="ch.elexis.core.command.linkViews"
-               icon="icon://IMG_SYNC"
-               label="Patientenauswahl verlinken"
-               style="toggle">
-         </command>
-      </menuContribution>
-   </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
          <Link
@@ -377,11 +388,13 @@
          </Makro>
       </extension>
       <extension
-            point="ch.elexis.core.data.OutputLogDescriptor">
-         <OutputLogDescriptor
-               Outputter="ch.elexis.core.ui.views.RezeptBlatt"
-               id="ch.elexis.RezeptBlatt">
-         </OutputLogDescriptor>
+            point="ch.elexis.core.ui.Verrechnungscode">
+             <Leistung
+            CodeDetailDisplay="ch.elexis.core.ui.eigenleistung.EigenleistungDetailDisplay"
+            CodeSelectorFactory="ch.elexis.core.ui.eigenleistung.EigenleistungCodeSelectorFactory"
+            ElementFactory="ch.elexis.data.PersistentObjectFactory"
+            name="Eigenleistung">
+      </Leistung>
       </extension>
       <extension
             point="org.eclipse.ui.propertyPages">
@@ -424,18 +437,5 @@
                id="at.medevit.elexis.properties.propertyPage.ExtInfoPropertyPage"
                name="ExtInfo">
          </page>
-      </extension>
-      <extension
-            point="org.eclipse.ui.bindings">
-         <key
-               commandId="org.eclipse.ui.window.showKeyAssist"
-               schemeId="ch.elexis.ui.keybindingScheme"
-               sequence="M1+SHIFT+L">
-         </key>
-         <scheme
-               description="KeyBindings that use this scheme will be displayed by the KeyAssistant in Elexis"
-               id="ch.elexis.ui.keybindingScheme"
-               name="Elexis Keybinding Scheme">
-         </scheme>
       </extension>
 </plugin>
