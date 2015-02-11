@@ -146,6 +146,7 @@ public class Messages extends NLS {
 	public static String FallDetailBlatt2_reallyFromTheCase;
 	public static String FallDetailBlatt2_unusedFieldsWithDefinition;
 	public static String FallDetailBlatt2_unusedFieldsWithoutDefinition;
+	public static String FallDetailBlatt2_CopyToPatient;
 	public static String FallListeView_Cases;
 	public static String FallListeView_Date;
 	public static String FallListeView_Illness;

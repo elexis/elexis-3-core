@@ -347,7 +347,7 @@ public class FallDetailBlatt2 extends Composite {
 		lbReq.setText(Messages.Leistungscodes_necessaryData);
 		
 		btnCopyForPatient = new Button(top, SWT.CHECK);
-		btnCopyForPatient.setText("Kopie an Patineten");
+		btnCopyForPatient.setText(Messages.FallDetailBlatt2_CopyToPatient);
 		btnCopyForPatient.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e){
 				boolean b = btnCopyForPatient.getSelection();
