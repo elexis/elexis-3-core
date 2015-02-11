@@ -264,20 +264,11 @@ public class Fall extends PersistentObject {
 	}
 	
 	public boolean getCopyForPatient(){
-		String needCopy = getInfoString(FLD_COPY_FOR_PATIENT);
-		if (needCopy != null && needCopy.equals("1")) {
-			return true;
-		} else {
-			return false;
-		}
+		return StringConstants.ONE.equals(getInfoString(FLD_COPY_FOR_PATIENT));
 	}
 	
 	public void setCopyForPatient(boolean copy){
-		if (copy) {
-			setInfoString(FLD_COPY_FOR_PATIENT, "1");
-		} else {
-			setInfoString(FLD_COPY_FOR_PATIENT, "0");
-		}
+		setInfoString(FLD_COPY_FOR_PATIENT, copy ? "1" : "0");
 		
 	}
 	
