@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dialogs.provider;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
@@ -14,6 +15,9 @@ public class KontaktSelektorLabelProvider extends DefaultLabelProvider {
 			String label = k.getLabel();
 			if (k.istPerson()) {
 				label = label + " (" + k.get(Person.BIRTHDATE) + ")";
+			}
+			if (StringConstants.ONE.equals(k.get(Kontakt.FLD_IS_USER))) {
+				label = k.get(Kontakt.FLD_NAME1) + " " + k.get(Kontakt.FLD_NAME2) + " - " + label;
 			}
 			return label;
 		} else if (element instanceof PersistentObject) {

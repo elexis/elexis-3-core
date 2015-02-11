@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -38,6 +40,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.UiResourceConstants;
+import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.NumberInput;
@@ -48,7 +51,9 @@ import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FallDetailView;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
+import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -94,6 +99,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 			Mandant m = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
 			if (m != null) {
 				rnStellerSettings = CoreHub.getUserSetting(m.getRechnungssteller());
+				checkRnStellerSettingsValidity(m);
 				cv.notify(CommonViewer.Message.update);
 				updateMahnAutomatic();
 			}
@@ -103,7 +109,36 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 	public RechnungsListeView(){
 		Mandant currMandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
 		rnStellerSettings = CoreHub.getUserSetting(currMandant.getRechnungssteller());
+		checkRnStellerSettingsValidity(currMandant);
 		ElexisEventDispatcher.getInstance().addListeners(eeli_mandant);
+	}
+	
+	private void checkRnStellerSettingsValidity(Mandant mandant){
+		if (rnStellerSettings == null) {
+			Kontakt k = null;
+			
+			KontaktSelektor ksDialog =
+				new KontaktSelektor(UiDesk.getTopShell(), Anwender.class,
+					Messages.RechnungsListeView_selectRnSteller,
+					Messages.RechnungsListeView_selectRnStellerMsg, new String[] {
+						Anwender.FLD_NAME1, Anwender.FLD_NAME2
+					});
+			
+			if (ksDialog.open() == Dialog.OK) {
+				if (ksDialog.getSelection() != null) {
+					k = (Kontakt) ksDialog.getSelection();
+					if (k != null) {
+						mandant.setRechnungssteller(k);
+						rnStellerSettings = CoreHub.getUserSetting(k);
+					}
+				}
+			}
+		}
+		
+		if (rnStellerSettings == null) {
+			MessageDialog.openError(UiDesk.getTopShell(), Messages.RechnungsListeView_error,
+				Messages.RechnungsListeView_errorNoRnStellerSelected);
+		}
 	}
 	
 	@Override

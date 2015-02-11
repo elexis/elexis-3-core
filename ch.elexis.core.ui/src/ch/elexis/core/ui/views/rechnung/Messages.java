@@ -121,6 +121,10 @@ public class Messages extends NLS {
 	public static String RechnungsListeView_reminder3;
 	public static String RechnungsListeView_sum;
 	public static String RechnungsListeView_sumInList;
+	public static String RechnungsListeView_selectRnSteller;
+	public static String RechnungsListeView_selectRnStellerMsg;
+	public static String RechnungsListeView_error;
+	public static String RechnungsListeView_errorNoRnStellerSelected;
 	public static String Rechnungslauf_analyzingConsultations;
 	public static String Rechnungslauf_creatingBills;
 	public static String Rechnungslauf_creatingLists;
