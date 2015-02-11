@@ -323,7 +323,9 @@ public class FallDetailBlatt2 extends Composite {
 		});
 		ddc =
 			new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
-				Messages.FallDetailBlatt2_DaysOrAfter); //$NON-NLS-1$ //$NON-NLS-2$
+				Messages.FallDetailBlatt2_DaysOrAfter,
+				Messages.FallDetailBlatt2_ProposeForBillingNeg,
+				Messages.FallDetailBlatt2_DaysOrAfterNeg);
 		ddc.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		ddc.addSelectionListener(new SelectionAdapter() {
 			@Override

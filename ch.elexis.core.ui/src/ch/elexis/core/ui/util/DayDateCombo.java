@@ -20,6 +20,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TypedListener;
 
@@ -44,6 +45,9 @@ public class DayDateCombo extends Composite {
 	private DateListener dl;
 	private TimeTool ttBase, ttNow;
 	private boolean spinBack;
+	private Label frontLabel;
+	private Label middleLabel;
+	private final String text1, text2, text1Neg, text2Neg;
 	
 	/**
 	 * Create the Composite
@@ -56,15 +60,38 @@ public class DayDateCombo extends Composite {
 	 *            the text to display between spinner and DatePicker
 	 */
 	public DayDateCombo(Composite parent, String text1, String text2){
+		this(parent, text1, text2, null, null);
+	}
+	
+	/**
+	 * @param parent
+	 * @param text1
+	 *            the text to display in front of the spinner
+	 * @param text2
+	 *            the text to display between spinner and DatePicker
+	 * @param text1Neg
+	 *            the text to display in front of the spinner if date is before today
+	 * @param text2Neg
+	 *            the text to display between spinner and DatePicker if date is before today
+	 * @since 3.1
+	 */
+	public DayDateCombo(Composite parent, String text1, String text2, String text1Neg,
+		String text2Neg){
 		super(parent, SWT.NONE);
+		
+		this.text1 = text1;
+		this.text2 = text2;
+		this.text1Neg = text1Neg;
+		this.text2Neg = text2Neg;
+		
 		ttNow = new TimeTool();
 		ttNow.chop(3);
 		setLayout(new RowLayout(SWT.HORIZONTAL));
-		UiDesk.getToolkit().createLabel(this, text1);
+		frontLabel = UiDesk.getToolkit().createLabel(this, text1);
 		spl = new SpinnerListener();
 		dl = new DateListener();
 		spinner = new Spinner(this, SWT.NONE);
-		UiDesk.getToolkit().createLabel(this, text2);
+		middleLabel = UiDesk.getToolkit().createLabel(this, text2);
 		dp = new DatePickerCombo(this, SWT.NONE);
 		setListeners();
 	}
@@ -97,8 +124,25 @@ public class DayDateCombo extends Composite {
 		
 		dp.setDate(ttBase.getTime());
 		int days = ttBase.daysTo(ttNow);
+		updateLabels(days);
 		spinner.setValues(Math.abs(days), 0, 999, 0, 1, 10);
 		setListeners();
+	}
+	
+	/**
+	 * Updates the labels for negative or positive values
+	 * @param days
+	 */
+	private void updateLabels(int days){
+		if (text1Neg != null && text2Neg != null) {
+			if (days < 0) {
+				frontLabel.setText(text1);
+				middleLabel.setText(text2);
+			} else {
+				frontLabel.setText(text1Neg);
+				middleLabel.setText(text2Neg);
+			}
+		}
 	}
 	
 	/**
@@ -114,6 +158,8 @@ public class DayDateCombo extends Composite {
 		ttBase = new TimeTool(ttNow);
 		ttBase.addDays(days);
 		dp.setDate(ttBase.getTime());
+		int diff = ttBase.daysTo(ttNow);
+		updateLabels(diff);
 		spinner.setValues(Math.abs(days), 0, 999, 0, 1, 10);
 		setListeners();
 	}

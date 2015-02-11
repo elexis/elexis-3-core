@@ -136,6 +136,8 @@ public class Messages extends NLS {
 	public static String FallDetailBlatt2_PleaseSelectContactFor;
 	public static String FallDetailBlatt2_PleaseSelectCpntactCaption;
 	public static String FallDetailBlatt2_ProposeForBillingIn;
+	public static String FallDetailBlatt2_ProposeForBillingNeg;
+	public static String FallDetailBlatt2_DaysOrAfterNeg;
 	public static String FallDetailBlatt2_ReasonForInsurance;
 	public static String FallDetailBlatt2_SelectGuarantorBody;
 	public static String FallDetailBlatt2_SelectGuarantorCaption;
