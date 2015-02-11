@@ -114,6 +114,7 @@ public class FallDetailBlatt2 extends Composite {
 	Hyperlink autoFill, hlGarant;
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
+	Button btnCopyForPatient;
 	
 	public FallDetailBlatt2(final Composite parent){
 		super(parent, SWT.NONE);
@@ -345,6 +346,16 @@ public class FallDetailBlatt2 extends Composite {
 		lbReq.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		lbReq.setText(Messages.Leistungscodes_necessaryData);
 		
+		btnCopyForPatient = new Button(top, SWT.CHECK);
+		btnCopyForPatient.setText("Kopie an Patineten");
+		btnCopyForPatient.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e){
+				boolean b = btnCopyForPatient.getSelection();
+				getFall().setCopyForPatient(b);
+			};
+		});
+		new Label(top, SWT.NONE);
+		
 		hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
 		hlGarant.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -574,6 +585,9 @@ public class FallDetailBlatt2 extends Composite {
 		} else {
 			dpBis.setDate(null);
 		}
+		
+		// *** set copy for patient
+		btnCopyForPatient.setSelection(f.getCopyForPatient());
 		
 		// *** set Garant
 		tGarant.setText(f.getGarant().getLabel());

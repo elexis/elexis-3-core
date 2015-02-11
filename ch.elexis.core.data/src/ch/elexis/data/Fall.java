@@ -69,6 +69,7 @@ public class Fall extends PersistentObject {
 	public static final String TYPE_PREVENTION = Messages.Fall_Prevention; //$NON-NLS-1$
 	public static final String TYPE_BIRTHDEFECT = Messages.Fall_Birthdefect; //$NON-NLS-1$
 	public static final String TYPE_OTHER = Messages.Fall_Other;
+	public static final String FLD_COPY_FOR_PATIENT = "CopyForPatient";
 	
 	@Override
 	protected String getTableName(){
@@ -260,6 +261,24 @@ public class Fall extends PersistentObject {
 	
 	public void setRechnungssteller(final Kontakt r){
 		setInfoString(FLD_RECHNUNGSSTELLER_ID, r.getId());
+	}
+	
+	public boolean getCopyForPatient(){
+		String needCopy = getInfoString(FLD_COPY_FOR_PATIENT);
+		if (needCopy != null && needCopy.equals("1")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void setCopyForPatient(boolean copy){
+		if (copy) {
+			setInfoString(FLD_COPY_FOR_PATIENT, "1");
+		} else {
+			setInfoString(FLD_COPY_FOR_PATIENT, "0");
+		}
+		
 	}
 	
 	/**
