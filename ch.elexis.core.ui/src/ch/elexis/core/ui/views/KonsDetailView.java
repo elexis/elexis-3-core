@@ -119,6 +119,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		@Override
 		public void runInUi(ElexisEvent ev){
 			setPatient((Patient) ev.getObject());
+			setKons((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class));
 		};
 	};
 	
