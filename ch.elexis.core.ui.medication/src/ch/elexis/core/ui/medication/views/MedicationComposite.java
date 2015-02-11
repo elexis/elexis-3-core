@@ -427,8 +427,6 @@ public class MedicationComposite extends Composite {
 				PersistentObject po = (PersistentObject) lastDisposalPO.getValue();
 				if (po == null)
 					return;
-				
-				System.out.println(po);
 			}
 		});
 		lblLastDisposalLink.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));

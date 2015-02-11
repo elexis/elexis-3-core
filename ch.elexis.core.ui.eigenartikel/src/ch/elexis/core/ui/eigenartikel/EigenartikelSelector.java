@@ -11,10 +11,15 @@
  *******************************************************************************/
 package ch.elexis.core.ui.eigenartikel;
 
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 
 import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.eigenartikel.EigenartikelPersistentObjectFactory;
+import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
@@ -27,12 +32,25 @@ import ch.elexis.data.PersistentObject;
 
 public class EigenartikelSelector extends CodeSelectorFactory {
 	
+	private ToggleVerrechenbarFavoriteAction tvfa = new ToggleVerrechenbarFavoriteAction();
+	private ISelectionChangedListener selChangeListener = new ISelectionChangedListener() {
+		@Override
+		public void selectionChanged(SelectionChangedEvent event){
+			TableViewer tv = (TableViewer) event.getSource();
+			StructuredSelection ss = (StructuredSelection) tv.getSelection();
+			tvfa.updateSelection(ss.isEmpty() ? null : ss.getFirstElement());
+		}
+	};
+	
 	@Override
 	public ViewerConfigurer createViewerConfigurer(CommonViewer cv){
-		new ArtikelContextMenu(
-			(Eigenartikel) new EigenartikelPersistentObjectFactory()
-				.createTemplate(Eigenartikel.class),
-			cv, null);
+		ArtikelContextMenu artikelContextMenu =
+			new ArtikelContextMenu(
+				(Eigenartikel) new EigenartikelPersistentObjectFactory()
+					.createTemplate(Eigenartikel.class),
+				cv, null);
+		artikelContextMenu.addAction(tvfa);
+		cv.setSelectionChangedListener(selChangeListener);
 		
 		EigenartikelLoader eal = new EigenartikelLoader(cv);
 		DefaultControlFieldProvider dcfp = new DefaultControlFieldProvider(cv, new String[] {
@@ -52,9 +70,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 	}
 	
 	@Override
-	public void dispose(){
-		// TODO Auto-generated method stub
-	}
+	public void dispose(){}
 	
 	@Override
 	public String getCodeSystemName(){

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006-2011, G. Weirich and Elexis
+ * Copyright (c) 2006-2015, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 	  M. Descher - extracted Eigenartikel to ch.elexis.eigenartikel
- * 
+ * 	  M. Descher - several modifications
  *******************************************************************************/
 
 package ch.elexis.core.ui.views.artikel;
@@ -49,6 +48,7 @@ import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 import ch.rgw.tools.ExHandler;
@@ -67,23 +67,30 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 		parent.setLayout(new FillLayout());
 		ctab = new CTabFolder(parent, SWT.NONE);
 		importers = new Hashtable<String, ImporterPage>();
-		addPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
+		
+		new FavoritenCTabItem(ctab, SWT.None);
+		addPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
+		
 		if (ctab.getItemCount() > 0) {
 			ctab.setSelection(0);
-			
 		}
 		ctab.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				CTabItem top = ctab.getSelection();
-				if (top != null) {
-					String t = top.getText();
+				CTabItem selected = ctab.getSelection();
+				
+				if (selected instanceof FavoritenCTabItem)
+					return;
+				
+				if (selected != null) {
+					String t = selected.getText();
 					
-					MasterDetailsPage page = (MasterDetailsPage) top.getControl();
+					MasterDetailsPage page = (MasterDetailsPage) selected.getControl();
 					if (page == null) {
 						try {
-							IDetailDisplay det = (IDetailDisplay) top.getData(KEY_DETAIL);
-							IConfigurationElement ce = (IConfigurationElement) top.getData(KEY_CE);
+							IDetailDisplay det = (IDetailDisplay) selected.getData(KEY_DETAIL);
+							IConfigurationElement ce =
+								(IConfigurationElement) selected.getData(KEY_CE);
 							CodeSelectorFactory cs =
 								(CodeSelectorFactory) ce
 									.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
@@ -97,12 +104,11 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 							}
 							
 							page = new MasterDetailsPage(ctab, cs, det);
-							top.setControl(page);
-							top.setData(det);
+							selected.setControl(page);
+							selected.setData(det);
 						} catch (Exception ex) {
 							ExHandler.handle(ex);
 						}
-						
 					}
 					importAction.setEnabled(importers.get(t) != null);
 					ViewerConfigurer vc = page.cv.getConfigurer();
@@ -281,9 +287,10 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 	
 	/** Vom ActivationListener */
 	public void activation(boolean mode){
-		CTabItem top = ctab.getSelection();
-		if (top != null) {
-			MasterDetailsPage page = (MasterDetailsPage) top.getControl();
+		CTabItem selected = ctab.getSelection();
+		if(selected instanceof FavoritenCTabItem) return;
+		if (selected != null) {
+			MasterDetailsPage page = (MasterDetailsPage) selected.getControl();
 			ViewerConfigurer vc = page.cv.getConfigurer();
 			if (mode == true) {
 				vc.getControlFieldProvider().setFocus();
@@ -291,7 +298,6 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 				vc.getControlFieldProvider().clearValues();
 			}
 		}
-		
 	}
 	
 	public void visible(boolean mode){

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.jdt.NonNull;
@@ -81,7 +82,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	public String getLabel(){
 		String name = getName();
 		String macro = getMacro();
-		if (macro.length() == 0)
+		if (macro.length() == 0 || macro.equals(name))
 			return name;
 		return name + " [" + macro + "]";
 	}
@@ -95,11 +96,13 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	}
 	
 	/**
-	 * @return
+	 * @return the current valid macro, that is the value of {@link #FLD_MACRO} if defined, else {@link #FLD_NAME}
 	 * @since 3.1
 	 */
 	public String getMacro(){
-		return checkNull(get(FLD_MACRO));
+		String[] vals = get(true, FLD_MACRO, FLD_NAME);
+		if(vals[0].length()==0) return vals[1];
+		return vals[0];
 	}
 	
 	/**
@@ -175,6 +178,10 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		}
 	}
 	
+	/**
+	 * DOES NOT DELIVER the storeToString of this {@link Leistungsblock}, but
+	 * a comma separated list of all contained {@link ICodeElement} objects
+	 */
 	@Override
 	public String storeToString(){
 		return toString(load());
@@ -183,10 +190,9 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	public String toString(List<ICodeElement> lst){
 		StringBuilder st = new StringBuilder();
 		for (ICodeElement v : lst) {
-			st.append(((PersistentObject) v).storeToString()).append(","); //$NON-NLS-1$
+			st.append(((PersistentObject) v).storeToString()).append(StringConstants.COMMA);
 		}
-		return st.toString().replaceFirst(",$", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		
+		return st.toString().replaceFirst(",$", StringConstants.EMPTY); //$NON-NLS-1$
 	}
 	
 	private boolean flush(List<ICodeElement> lst){

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007-2010, G. Weirich and Elexis
+ * Copyright (c) 2007-2015, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ * 	  M. Descher - several changes
  *******************************************************************************/
 
 package ch.elexis.core.ui.util;
@@ -24,6 +24,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Control;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.data.PersistentObject;
 
 public class PersistentObjectDragSource implements DragSourceListener {
@@ -68,21 +69,16 @@ public class PersistentObjectDragSource implements DragSourceListener {
 	}
 	
 	public void dragSetData(final DragSourceEvent event){
-		
 		StringBuilder sb = new StringBuilder();
 		for (PersistentObject s : selection) {
-			sb.append(s.storeToString()).append(","); //$NON-NLS-1$
+			sb.append(s.storeToString()).append(StringConstants.COMMA);
 		}
 		
-		event.data = sb.toString().replace(",$", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		event.data = sb.toString().replace(",$", StringConstants.EMPTY); //$NON-NLS-1$
 	}
 	
 	public void dragStart(final DragSourceEvent event){
-		
 		selection = renderer.getSelection();
-		// IStructuredSelection
-		// select=(IStructuredSelection)viewer.getSelection();
-		// Object[] sel=select.toArray();
 		if ((selection == null) || (selection.isEmpty())) {
 			event.doit = false;
 		} else {
@@ -91,6 +87,16 @@ public class PersistentObjectDragSource implements DragSourceListener {
 		if (event.doit) {
 			PersistentObjectDragSource.draggedObject = selection.get(0);
 		}
+	}
+	
+	/**
+	 * Externally set the dragged object; this is required to support external drag source
+	 * compatibility with {@link PersistentObjectDropTarget}
+	 * @param iPersistentObject
+	 * @since 3.1
+	 */
+	public static void setDraggedObject(PersistentObject persistentObject) {
+		draggedObject = persistentObject;
 	}
 	
 	public static PersistentObject getDraggedObject(){

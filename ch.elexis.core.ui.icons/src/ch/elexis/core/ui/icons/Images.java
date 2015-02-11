@@ -270,10 +270,10 @@ public enum Images {
 	 * @return an {@link Image}
 	 */
 	public Image getImage(ImageSize is){
-		Image image = JFaceResources.getImageRegistry().get(this.name());
+		Image image = JFaceResources.getImageRegistry().get(this.name()+is.name);
 		if (image == null) {
 			addIconImageDescriptor(this.name(), is);
-			image = JFaceResources.getImageRegistry().get(this.name());
+			image = JFaceResources.getImageRegistry().get(this.name()+is.name);
 		}
 		return image;
 	}
@@ -283,10 +283,10 @@ public enum Images {
 	 */
 	public ImageDescriptor getImageDescriptor(ImageSize is){
 		ImageDescriptor id = null;
-		id = JFaceResources.getImageRegistry().getDescriptor(this.name());
+		id = JFaceResources.getImageRegistry().getDescriptor(this.name()+is.name);
 		if (id == null) {
 			addIconImageDescriptor(this.name(), is);
-			id = JFaceResources.getImageRegistry().getDescriptor(this.name());
+			id = JFaceResources.getImageRegistry().getDescriptor(this.name()+is.name);
 		}
 		return id;
 	}
@@ -334,7 +334,7 @@ public enum Images {
 				FileLocator.find(Activator.getContext().getBundle(), new Path("icons/" + is.name
 					+ "/" + fileName), null);
 			ImageDescriptor id = ImageDescriptor.createFromURL(fileLocation);
-			JFaceResources.getImageRegistry().put(name, id);
+			JFaceResources.getImageRegistry().put(name+is.name, id);
 		} catch (MissingResourceException | IllegalArgumentException e) {
 			return false;
 		}

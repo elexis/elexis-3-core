@@ -122,37 +122,4 @@ public abstract class VerrechenbarAdapter extends PersistentObject implements IV
 		return VatInfo.VAT_DEFAULT;
 	}
 	
-	/**
-	 * Add this element to the list of user favorites
-	 * 
-	 * @since 3.1
-	 */
-	public void addAsFavorite(){
-		if(isFavorite()!=null) return;
-		VerrechenbarFavorites.getFavorites().add(new Favorite(storeToString(), "", 0));
-		VerrechenbarFavorites.storeFavorites();
-	}
-	
-	/**
-	 * Removes this element from the list of user favorites
-	 * @since 3.1
-	 */
-	public void removeAsFavorite() {
-		Favorite fav = isFavorite();
-		if(fav!=null) VerrechenbarFavorites.getFavorites().remove(fav);
-		VerrechenbarFavorites.storeFavorites();
-	}
-	
-	/**
-	 * 
-	 * @return the {@link Favorite} if a favorite {@link VerrechenbarAdapter} of this user, else null
-	 */
-	public Favorite isFavorite() {
-		List<Favorite> favorites = VerrechenbarFavorites.getFavorites();
-		for (Favorite favorite : favorites) {
-			if(storeToString().equalsIgnoreCase(favorite.storeToString)) return favorite;
-		}
-		return null;
-	}
-	
 }

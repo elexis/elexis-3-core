@@ -89,6 +89,8 @@ public class Messages extends NLS {
 	public static String HistoryLoader_Sorting;
 	public static String ListLoader_CouldntLoadData;
 	public static String PersistentObjectLoader_LoadingData;
+	public static String ToggleVerrechenbarFavoriteAction_Favorize;
+	public static String ToggleVerrechenbarFavoriteAction_DeFavorize;
 	
 	static {
 		// load message values from bundle file

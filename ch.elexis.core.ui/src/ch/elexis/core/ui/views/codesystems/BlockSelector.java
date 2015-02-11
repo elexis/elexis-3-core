@@ -22,27 +22,29 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
+import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.actions.TreeDataLoader;
 import ch.elexis.core.ui.commands.ExportiereBloeckeCommand;
 import ch.elexis.core.ui.icons.Images;
@@ -58,19 +60,32 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
+import ch.elexis.data.VerrechenbarFavorites;
+import ch.elexis.data.VerrechenbarFavorites.Favorite;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.Tree;
 
 public class BlockSelector extends CodeSelectorFactory {
-	IAction deleteAction, renameAction, createAction, exportAction;
+	IAction deleteAction, createAction, exportAction;
 	CommonViewer cv;
 	MenuManager mgr;
 	static SelectorPanelProvider slp;
 	int eventType = SWT.KeyDown;
 	
+	ToggleVerrechenbarFavoriteAction tvfa = new ToggleVerrechenbarFavoriteAction();
+	ISelectionChangedListener selChangeListener = new ISelectionChangedListener() {
+		@Override
+		public void selectionChanged(SelectionChangedEvent event){
+			TreeViewer tv = (TreeViewer) event.getSource();
+			StructuredSelection ss = (StructuredSelection) tv.getSelection();
+			tvfa.updateSelection(ss.isEmpty() ? null : ss.getFirstElement());
+		}
+	};
+	
 	@Override
 	public ViewerConfigurer createViewerConfigurer(CommonViewer cv){
 		this.cv = cv;
+		cv.setSelectionChangedListener(selChangeListener);
 		makeActions();
 		mgr = new MenuManager();
 		mgr.setRemoveAllWhenShown(true);
@@ -78,11 +93,11 @@ public class BlockSelector extends CodeSelectorFactory {
 		mgr.addMenuListener(new IMenuListener() {
 			
 			public void menuAboutToShow(IMenuManager manager){
-				manager.add(renameAction);
+				manager.add(tvfa);
 				manager.add(deleteAction);
-				
 			}
 		});
+
 		cv.setContextMenu(mgr);
 		
 		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
@@ -107,7 +122,16 @@ public class BlockSelector extends CodeSelectorFactory {
 		slp = new SelectorPanelProvider(lbName, true);
 		slp.addActions(createAction, exportAction);
 		ViewerConfigurer vc =
-			new ViewerConfigurer(new BlockContentProvider(cv), new DefaultLabelProvider(), slp,
+			new ViewerConfigurer(new BlockContentProvider(cv), new DefaultLabelProvider() {
+				@Override
+				public Image getImage(Object element){
+					if(element instanceof Leistungsblock) {
+						Favorite fav = VerrechenbarFavorites.isFavorite((IPersistentObject) element);
+						if(fav!=null) return Images.IMG_STAR.getImage();
+					}
+					return null;
+				}
+			}, slp,
 				new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
 					SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
 		return vc;
@@ -134,24 +158,6 @@ public class BlockSelector extends CodeSelectorFactory {
 				}
 			}
 		};
-		renameAction = new Action("umbenennen") {
-			@Override
-			public void run(){
-				Object o = cv.getSelection()[0];
-				if (o instanceof Leistungsblock) {
-					Leistungsblock lb = (Leistungsblock) o;
-					InputDialog dlg =
-						new InputDialog(UiDesk.getTopShell(), "Block umbenennen",
-							"Geben Sie bitte einen neuen Namen für den Block ein", lb.get("Name"),
-							null);
-					if (dlg.open() == Dialog.OK) {
-						lb.set("Name", dlg.getValue());
-						cv.notify(CommonViewer.Message.update);
-					}
-					
-				}
-			}
-		};
 		createAction = new Action("neu erstellen") {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
@@ -162,7 +168,7 @@ public class BlockSelector extends CodeSelectorFactory {
 			public void run(){
 				String[] v = cv.getConfigurer().getControlFieldProvider().getValues();
 				if (v != null && v.length > 0 && v[0] != null && v[0].length() > 0) {
-					Leistungsblock lb = new Leistungsblock(v[0], CoreHub.actMandant);
+					new Leistungsblock(v[0], ElexisEventDispatcher.getSelectedMandator());
 					cv.notify(CommonViewer.Message.update_keeplabels);
 				}
 			}

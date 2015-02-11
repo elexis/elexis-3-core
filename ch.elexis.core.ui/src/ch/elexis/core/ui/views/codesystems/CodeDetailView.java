@@ -49,6 +49,7 @@ import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
 
 public class CodeDetailView extends ViewPart implements IActivationListener, ISaveablePart2 {
@@ -63,6 +64,8 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		parent.setLayout(new FillLayout());
 		ctab = new CTabFolder(parent, SWT.NONE);
 		importers = new Hashtable<String, ImporterPage>();
+		new FavoritenCTabItem(ctab, SWT.None);
+		
 		addCustomBlocksPage();
 		importers.put(ctab.getItem(0).getText(), new BlockImporter());
 		
@@ -75,22 +78,24 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		ctab.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				CTabItem top = ctab.getSelection();
-				if (top != null) {
-					String t = top.getText();
+				CTabItem selected = ctab.getSelection();
+				
+				if (selected instanceof FavoritenCTabItem)
+					return;
+				
+				if (selected != null) {
+					String t = selected.getText();
 					importAction.setEnabled(importers.get(t) != null);
-					MasterDetailsPage page = (MasterDetailsPage) top.getControl();
+					MasterDetailsPage page = (MasterDetailsPage) selected.getControl();
 					ViewerConfigurer vc = page.cv.getConfigurer();
 					vc.getControlFieldProvider().setFocus();
 				}
 			}
-			
 		});
 		makeActions();
 		viewmenus = new ViewMenus(getViewSite());
 		viewmenus.createMenu(importAction /* ,deleteAction */);
 		GlobalEventDispatcher.addActivationListener(this, this);
-		
 	}
 	
 	private void addCustomBlocksPage(){
@@ -127,11 +132,8 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 							}
 						}
 					}
-					
 				}
-				
 			};
-		
 	}
 	
 	private class ImportDialog extends TitleAreaDialog {
@@ -153,7 +155,6 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		List<IConfigurationElement> list = Extensions.getExtensions(point);
 		for (IConfigurationElement ce : list) {
 			try {
-				System.out.println(ce.getName());
 				if ("Artikel".equals(ce.getName())) { //$NON-NLS-1$
 					continue;
 				}
@@ -248,9 +249,10 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 	
 	/** Vom ActivationListener */
 	public void activation(boolean mode){
-		CTabItem top = ctab.getSelection();
-		if (top != null) {
-			MasterDetailsPage page = (MasterDetailsPage) top.getControl();
+		CTabItem selected = ctab.getSelection();
+		if(selected instanceof FavoritenCTabItem) return;
+		if (selected != null) {
+			MasterDetailsPage page = (MasterDetailsPage) selected.getControl();
 			ViewerConfigurer vc = page.cv.getConfigurer();
 			if (mode == true) {
 				vc.getControlFieldProvider().setFocus();
@@ -258,7 +260,6 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 				vc.getControlFieldProvider().clearValues();
 			}
 		}
-		
 	}
 	
 	public void visible(boolean mode){

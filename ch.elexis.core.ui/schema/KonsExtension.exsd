@@ -71,11 +71,16 @@
    </element>
 
    <element name="Makro">
+      <annotation>
+         <documentation>
+            Extend the consultation editor with additional macros.
+         </documentation>
+      </annotation>
       <complexType>
-         <attribute name="name" type="string" use="required">
+         <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  Ein Titel, der diesen Makro-Provider eindeutig bezeichnet.
+                  A title uniquely describing this macro extension or &quot;enabled&quot;. If &quot;enabled&quot; the makro can not be manually de-/activated but is instead always active. (See UserTextPref:105)
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
@@ -85,7 +90,7 @@
          <attribute name="KonsMakro" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Class implementint IKonsMakro to perform the actual macro extension.
                </documentation>
                <appinfo>
                   <meta.attribute kind="java" basedOn=":ch.elexis.core.ui.util.IKonsMakro"/>

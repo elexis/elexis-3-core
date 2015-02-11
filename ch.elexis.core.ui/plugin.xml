@@ -371,6 +371,10 @@
                KonsMakro="ch.elexis.core.ui.text.BlockMakro"
                name="enabled">
          </Makro>
+         <Makro
+               KonsMakro="ch.elexis.core.ui.text.FavoritenKonsMakro"
+               name="Makros Verrechenbar Favoriten">
+         </Makro>
       </extension>
       <extension
             point="ch.elexis.core.data.OutputLogDescriptor">

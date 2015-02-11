@@ -1935,6 +1935,26 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
+	 * @param checkNulls
+	 *            wether the returned values should be <code>null</code> safe, that is no
+	 *            <code>null</code> values, but only ""
+	 * @param fields
+	 * @return array containing the required fields in order
+	 * @since 3.1
+	 */
+	public String[] get(boolean checkNulls, String... fields){
+		String[] ret = new String[fields.length];
+		get(fields, ret);
+		if (checkNulls) {
+			for (int i = 0; i < ret.length; i++) {
+				ret[i] = checkNull(ret[i]);
+			}
+		}
+		
+		return ret;
+	}
+	
+	/**
 	 * Read multiple fields, as defined in fields into the values array
 	 * 
 	 * @param fields

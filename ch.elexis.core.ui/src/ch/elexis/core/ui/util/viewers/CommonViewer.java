@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
@@ -64,6 +65,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	protected Button bNew;
 	private IAction createObjectAction;
 	private Composite parent;
+	private ISelectionChangedListener selChangeListener;
 	
 	public enum Message {
 		update, empty, notempty, update_keeplabels
@@ -280,6 +282,8 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				ElexisEventDispatcher.fireSelectionEvent((PersistentObject) sel[0]);
 			}
 		}
+		if (selChangeListener != null)
+			selChangeListener.selectionChanged(event);
 	}
 	
 	public void dispose(){
@@ -294,6 +298,17 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			getViewerWidget().addDoubleClickListener(this);
 		}
 		dlListeners.add(dl);
+	}
+	
+	/**
+	 * Register an additional selection changed listener to get informed
+	 * 
+	 * @param selChangeListener
+	 *            the {@link ISelectionChangedListener} or <code>null</code> to unset
+	 * @since 3.1
+	 */
+	public void setSelectionChangedListener(@Nullable ISelectionChangedListener selChangeListener){
+		this.selChangeListener = selChangeListener;
 	}
 	
 	public void removeDoubleClickListener(DoubleClickListener dl){

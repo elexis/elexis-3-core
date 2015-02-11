@@ -39,7 +39,6 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
-import ch.rgw.tools.TimeTool;
 
 public class MedicationView extends ViewPart implements IActivationListener {
 	public MedicationView(){}

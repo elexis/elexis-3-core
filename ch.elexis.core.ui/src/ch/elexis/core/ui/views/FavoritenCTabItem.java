@@ -14,7 +14,6 @@ public class FavoritenCTabItem extends CTabItem {
 		
 		fc = new FavoritenComposite(this.getParent(), SWT.None);
 		setControl(fc);
-		
 	}
 
 	public void update(){
