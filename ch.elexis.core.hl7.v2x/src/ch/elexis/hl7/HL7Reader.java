@@ -68,6 +68,8 @@ public abstract class HL7Reader {
 				.append("\n").append(Messages.getString("HL7_Database")).append(pat.getLabel());
 			pat = null;
 			logger.warn(sb.toString());
+			
+			resolvePatient(firstName, lastName, birthDate);
 		}
 	}
 	

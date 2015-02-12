@@ -58,6 +58,7 @@ public class Messages extends NLS {
 	public static String HL7Parser_TheFile;
 	public static String HL7Parser_NoLab;
 	public static String HL7Parser_AskUseOwnLab;
+	public static String HL7Parser_ExceptionWhileProcessingData;
 	public static String KontaktImporter_AskSameAnd;
 	public static String KontaktImporter_AskSameText1;
 	public static String KontaktImporter_AskSameText2;

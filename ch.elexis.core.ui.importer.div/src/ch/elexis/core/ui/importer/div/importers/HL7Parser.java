@@ -38,7 +38,6 @@ import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
 import ch.elexis.hl7.model.TextData;
 import ch.elexis.hl7.v26.HL7Constants;
-import ch.elexis.hl7.v26.Messages;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.StringTool;
@@ -115,8 +114,9 @@ public class HL7Parser {
 			
 			pat = hl7Reader.getPatient();
 			if (pat == null) {
-				return new Result<Object>(SEVERITY.ERROR, 2,
-					Messages.getString("HL7_PatientNotInDatabase"), obsMessage.getPatientId(), true);
+				return new Result<Object>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
+					obsMessage.getPatientId(), true);
+				
 			}
 			
 			int number = 0;
@@ -219,7 +219,7 @@ public class HL7Parser {
 		} catch (ElexisException e) {
 			logger.error("Parsing HL7 failed", e);
 			return new Result<Object>(SEVERITY.ERROR, 2,
-				Messages.getString("HL7_ExceptionWhileProcessingData"), e.getMessage(), true);
+				Messages.HL7Parser_ExceptionWhileProcessingData, e.getMessage(), true);
 		}
 		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
 	}
