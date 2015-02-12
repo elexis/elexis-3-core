@@ -96,6 +96,7 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 	private ListViewer bezugsKontaktViewer = null;
 	private boolean isSelecting = false;
 	private final PersistentObjectLoader kl;
+	private boolean enableEmptyField = false;
 	
 	@SuppressWarnings("unchecked")
 	public KontaktSelektor(Shell parentShell, Class which, String title, String message,
@@ -367,17 +368,22 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent){
-		parent.setLayout(new GridLayout(3, false));
-		Button btnClear =
-			createButton(parent, IDialogConstants.NO_ID, Messages.KontaktSelector_clearField, false);
-		btnClear.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				selection = null;
-				vc.getContentProvider().stopListening();
-				close();
-			}
-		});
+		if (enableEmptyField) {
+			parent.setLayout(new GridLayout(3, false));
+			Button btnClear =
+				createButton(parent, IDialogConstants.NO_ID, Messages.KontaktSelector_clearField,
+					false);
+			btnClear.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					selection = null;
+					vc.getContentProvider().stopListening();
+					close();
+				}
+			});
+		} else {
+			parent.setLayout(new GridLayout(2, false));
+		}
 		
 		createButton(parent, IDialogConstants.OK_ID, "OK", false);
 		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
@@ -553,5 +559,9 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 			}
 		}
 		
+	}
+	
+	public void enableEmptyFieldButton(){
+		enableEmptyField = true;
 	}
 }
