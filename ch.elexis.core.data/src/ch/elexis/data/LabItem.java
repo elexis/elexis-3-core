@@ -12,6 +12,8 @@
 
 package ch.elexis.data;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -226,12 +228,11 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 	public String evaluateNew(Patient pat, TimeTool date, List<LabResult> results){
 		String formel = getFormula();
 		formel = formel.substring(Script.SCRIPT_MARKER.length());
-		boolean bMatched = false;
+		results = sortResultsDescending(results);
 		for (LabResult result : results) {
 			String var = result.getItem().makeVarName();
 			if (formel.indexOf(var) != -1) {
 				formel = formel.replaceAll(var, result.getResult());
-				bMatched = true;
 			}
 		}
 		
@@ -252,6 +253,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 			return evaluateNew(pat, null, results);
 		}
 		boolean bMatched = false;
+		results = sortResultsDescending(results);
 		for (LabResult result : results) {
 			String var = result.getItem().makeVarName();
 			if (formel.indexOf(var) != -1) {
@@ -288,6 +290,24 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 		} catch (ElexisException e) {
 			return "?formel?"; //$NON-NLS-1$
 		}
+	}
+	
+	private List<LabResult> sortResultsDescending(List<LabResult> results){
+		Collections.sort(results, new Comparator<LabResult>() {
+			@Override
+			public int compare(LabResult lr1, LabResult lr2){
+				int var1Length = lr1.getItem().makeVarName().length();
+				int var2Length = lr2.getItem().makeVarName().length();
+				
+				if (var1Length < var2Length) {
+					return 1;
+				} else if (var1Length > var2Length) {
+					return -1;
+				}
+				return 0;
+			}
+		});
+		return results;
 	}
 	
 	/**
