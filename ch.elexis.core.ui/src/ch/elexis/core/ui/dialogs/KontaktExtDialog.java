@@ -63,6 +63,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 		ExtInfoTable ret = new ExtInfoTable(parent, f);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setKontakt(k);
+		ret.pack();
 		return ret;
 	}
 	
