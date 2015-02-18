@@ -18,6 +18,8 @@ location "http://download.eclipse.org/tools/orbit/downloads/drops/R2015012407374
 }
 
 location "http://download.elexis.info/mirror.4.elexis/snapshot" {
+	ch.qos.logback.classic [1.0.7,1.0.8)
+	ch.qos.logback.core [1.0.7,1.0.8)
 	ch.qos.logback.slf4j [1.0.7,1.0.8)
 	javax.ws.rs [1.1.1,1.1.2)
 	org.eclipse.emf.sdk.feature.group [2.8.3,2.8.4)

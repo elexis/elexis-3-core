@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Juno for Elexis 3.0" sequenceNumber="1424251682">
+<target name="Juno for Elexis 3.0" sequenceNumber="1424253592">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="ca.odell.glazedlists" version="1.9.0.v201303080712"/>
@@ -19,6 +19,8 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150124073747/repository/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
+      <unit id="ch.qos.logback.core" version="1.0.7.v20121108-1250"/>
       <unit id="ch.qos.logback.slf4j" version="1.0.7.v20121108-1250"/>
       <unit id="javax.ws.rs" version="1.1.1.v20130318-1750"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="2.8.3.v20130125-0826"/>
