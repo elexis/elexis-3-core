@@ -42,8 +42,6 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
-import ch.elexis.data.Leistungsblock;
-import ch.rgw.tools.StringTool;
 
 public class LeistungenView extends ViewPart implements IActivationListener, ISaveablePart2 {
 	
@@ -92,8 +90,6 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 			
 		});
 		
-		new FavoritenCTabItem(ctab, SWT.None);
-		
 		// menu to select & define color
 		Menu tabFolderMenu = new Menu(ctab);
 		MenuItem miColor = new MenuItem(tabFolderMenu, SWT.POP_UP);
@@ -112,25 +108,6 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 			}
 		});
 		ctab.setMenu(tabFolderMenu);
-		
-		BlockSelector cs = new BlockSelector();
-		CTabItem ct = new CTabItem(ctab, SWT.NONE);
-		ICodeElement ics = (ICodeElement) CoreHub.poFactory.createTemplate(Leistungsblock.class);
-		if (ics == null) {
-			SWTHelper.alert(CAPTION_ERROR, "ICodeElement=null"); //$NON-NLS-1$
-			throw new NullPointerException("ICodeElement; LeistungenView"); //$NON-NLS-1$
-		}
-		if (StringTool.isNothing(ics.getCodeSystemName())) {
-			SWTHelper.alert(CAPTION_ERROR, "CodeSystemname=null"); //$NON-NLS-1$
-		}
-		ct.setText(ics.getCodeSystemName());
-		ct.setData(ics);
-		// cPage page=new cPage(ctab, getViewSite(),ics,cs);
-		BlockSelector.bsPage bspage = new BlockSelector.bsPage(ctab, cs);
-		ct.setControl(bspage);
-		
-		getSite().registerContextMenu(cs.getMgr(), cs.getCv().getViewerWidget());
-		getSite().setSelectionProvider(cs.getCv().getViewerWidget());
 		
 		CodeSelectorFactory.makeTabs(ctab, getViewSite(),
 			ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$

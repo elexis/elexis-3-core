@@ -13,6 +13,8 @@ package ch.elexis.core.ui.views.codesystems;
 
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,6 +36,8 @@ import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
@@ -64,14 +68,8 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		parent.setLayout(new FillLayout());
 		ctab = new CTabFolder(parent, SWT.NONE);
 		importers = new Hashtable<String, ImporterPage>();
-		new FavoritenCTabItem(ctab, SWT.None);
 		
-		addCustomBlocksPage();
-		importers.put(ctab.getItem(0).getText(), new BlockImporter());
-		
-		addPagesFor(ExtensionPointConstantsUi.DIAGNOSECODE);
-		addPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
-		addPagesFor(ExtensionPointConstantsUi.GENERICCODE);
+		addAllPages();
 		if (ctab.getItemCount() > 0) {
 			ctab.setSelection(0);
 		}
@@ -96,22 +94,6 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		viewmenus = new ViewMenus(getViewSite());
 		viewmenus.createMenu(importAction /* ,deleteAction */);
 		GlobalEventDispatcher.addActivationListener(this, this);
-	}
-	
-	private void addCustomBlocksPage(){
-		BlockSelector cs = new BlockSelector();
-		BlockDetailDisplay bdd = new BlockDetailDisplay();
-		MasterDetailsPage page = new MasterDetailsPage(ctab, cs, bdd);
-		CTabItem ct = new CTabItem(ctab, SWT.NONE);
-		ct.setText(bdd.getTitle());
-		ct.setControl(page);
-		ct.setData(bdd);
-		page.sash.setWeights(new int[] {
-			30, 70
-		});
-		
-		getSite().registerContextMenu(cs.getMgr(), cs.getCv().getViewerWidget());
-		getSite().setSelectionProvider(cs.getCv().getViewerWidget());
 	}
 	
 	private void makeActions(){
@@ -149,6 +131,89 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 			return importer.createPage(parent);
 		}
 		
+	}
+	
+	private void addAllPages(){
+		String settings = CoreHub.userCfg.get(Preferences.USR_SERVICES_DIAGNOSES_CODES, null);
+		if (settings == null) {
+			new FavoritenCTabItem(ctab, SWT.None);
+			addPagesFor(ExtensionPointConstantsUi.DIAGNOSECODE);
+			addPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
+			addPagesFor(ExtensionPointConstantsUi.GENERICCODE);
+		} else {
+			addUserSpecifiedPages(settings);
+		}
+		
+	}
+	
+	private void addUserSpecifiedPages(String settings){
+		String[] userSettings = settings.split(",");
+		Map<Integer, IConfigurationElement> iceMap = new TreeMap<Integer, IConfigurationElement>();
+		
+		iceMap = collectNeededPages(ExtensionPointConstantsUi.DIAGNOSECODE, userSettings, iceMap);
+		iceMap =
+			collectNeededPages(ExtensionPointConstantsUi.VERRECHNUNGSCODE, userSettings, iceMap);
+		iceMap = collectNeededPages(ExtensionPointConstantsUi.GENERICCODE, userSettings, iceMap);
+		
+		// add favorites tab if settings desire it
+		for (int i = 0; i < userSettings.length; i++) {
+			if (userSettings[i].equals("Favoriten")) {
+				iceMap.put(i, null);
+			}
+		}
+		
+		for (Integer key : iceMap.keySet()) {
+			IConfigurationElement ce = iceMap.get(key);
+			if (ce == null) {
+				new FavoritenCTabItem(ctab, SWT.None);
+				continue;
+			}
+			
+			try {
+				IDetailDisplay d =
+					(IDetailDisplay) ce.createExecutableExtension("CodeDetailDisplay"); //$NON-NLS-1$
+				CodeSelectorFactory cs =
+					(CodeSelectorFactory) ce.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
+				
+				MasterDetailsPage page = new MasterDetailsPage(ctab, cs, d);
+				CTabItem ct = new CTabItem(ctab, SWT.NONE);
+				ct.setText(d.getTitle());
+				ct.setControl(page);
+				ct.setData(d);
+			} catch (Exception ex) {
+				ElexisStatus status =
+					new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+						"Fehler beim Initialisieren von " + ce.getName(), ex,
+						ElexisStatus.LOG_WARNINGS);
+				StatusManager.getManager().handle(status, StatusManager.SHOW);
+			}
+		}
+	}
+	
+	private Map<Integer, IConfigurationElement> collectNeededPages(String point,
+		String[] userSettings, Map<Integer, IConfigurationElement> iceMap){
+		List<IConfigurationElement> list = Extensions.getExtensions(point);
+		for (IConfigurationElement ce : list) {
+			try {
+				if ("Artikel".equals(ce.getName())) { //$NON-NLS-1$
+					continue;
+				}
+				IDetailDisplay d =
+					(IDetailDisplay) ce.createExecutableExtension("CodeDetailDisplay"); //$NON-NLS-1$
+				for (int i = 0; i < userSettings.length; i++) {
+					if (userSettings[i].equals(d.getTitle().trim())) {
+						iceMap.put(i, ce);
+					}
+				}
+			} catch (Exception ex) {
+				ElexisStatus status =
+					new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+						"Fehler beim Initialisieren von " + ce.getName(), ex,
+						ElexisStatus.LOG_WARNINGS);
+				StatusManager.getManager().handle(status, StatusManager.SHOW);
+			}
+		}
+		return iceMap;
 	}
 	
 	private void addPagesFor(String point){

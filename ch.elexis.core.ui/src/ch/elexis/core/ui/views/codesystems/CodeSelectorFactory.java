@@ -14,6 +14,7 @@ package ch.elexis.core.ui.views.codesystems;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -61,6 +62,8 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.core.ui.views.FavoritenCTabItem;
+import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
@@ -147,9 +150,42 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	}
 	
 	public static void makeTabs(CTabFolder ctab, IViewSite site, String point){
-		ITEMS_TO_SHOW_IN_MFU_LIST = CoreHub.userCfg.get(Preferences.USR_MFU_LIST_SIZE, 15);
+		String settings = null;
+		if (point.equals(ExtensionPointConstantsUi.VERRECHNUNGSCODE)) {
+			settings = CoreHub.userCfg.get(Preferences.USR_SERVICES_DIAGNOSES_SRV, null);
+		} else if (point.equals(ExtensionPointConstantsUi.DIAGNOSECODE)) {
+			settings = CoreHub.userCfg.get(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE, null);
+		}
+		
 		java.util.List<IConfigurationElement> list = Extensions.getExtensions(point);
+		if (settings == null) {
+			addAllTabs(list, ctab, point);
+		} else {
+			addUserSpecifiedTabs(list, settings, ctab, point);
+		}
+		
+		if (ctab.getItemCount() > 0) {
+			ctab.setSelection(0);
+		}
+	}
+	
+	/**
+	 * add all available tabs as they occur (independent from any user settings)
+	 * 
+	 * @param list
+	 *            list of tabs to add
+	 * @param ctab
+	 *            parent
+	 */
+	private static void addAllTabs(java.util.List<IConfigurationElement> list, CTabFolder ctab,
+		String point){
+		ITEMS_TO_SHOW_IN_MFU_LIST = CoreHub.userCfg.get(Preferences.USR_MFU_LIST_SIZE, 15);
 		ctab.setSimple(false);
+		
+		//add favorites tab first
+		if (point.equals(ExtensionPointConstantsUi.VERRECHNUNGSCODE)) {
+			new FavoritenCTabItem(ctab, SWT.None);
+		}
 		
 		if (list != null) {
 			for (IConfigurationElement ic : list) {
@@ -176,20 +212,88 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 						codeSystemName = "??"; //$NON-NLS-1$
 					}
 					CTabItem tabItem = new CTabItem(ctab, SWT.NONE);
-					
 					tabItem.setText(codeSystemName);
 					tabItem.setData(codeElement);
 					tabItem.setData("csf", codeSelectorFactory);
-					// cPage page = new cPage(ctab, codeElement,
-					// codeSelectorFactory);
-					// tabItem.setControl(page);
-					
 				} catch (CoreException ex) {
 					ExHandler.handle(ex);
 				}
 			}
-			if (ctab.getItemCount() > 0) {
-				ctab.setSelection(0);
+		}
+	}
+	
+	/**
+	 * add tabs dependent on user settings (user defines which tabs are displayed and in which
+	 * position)
+	 * 
+	 * @param list
+	 * @param settings
+	 *            user defined tabs and order
+	 * @param ctab
+	 *            parent
+	 * @param point
+	 *            in case its a VERRECHNUNGSCODE add favorite tab
+	 */
+	private static void addUserSpecifiedTabs(java.util.List<IConfigurationElement> list,
+		String settings, CTabFolder ctab, String point){
+		String[] userSettings = settings.split(",");
+		Map<Integer, IConfigurationElement> icMap = new TreeMap<Integer, IConfigurationElement>();
+		
+		for (IConfigurationElement ic : list) {
+			try {
+				IDetailDisplay d =
+					(IDetailDisplay) ic.createExecutableExtension("CodeDetailDisplay"); //$NON-NLS-1$
+				
+				for (int i = 0; i < userSettings.length; i++) {
+					if (userSettings[i].equals(d.getTitle().trim())) {
+						icMap.put(i, ic);
+					}
+				}
+				
+			} catch (Exception e) {
+				ExHandler.handle(e);
+			}
+		}
+		
+		for (Integer key : icMap.keySet()) {
+			try {
+				IConfigurationElement ic = icMap.get(key);
+				PersistentObjectFactory po =
+					(PersistentObjectFactory) ic.createExecutableExtension("ElementFactory"); //$NON-NLS-1$
+				CodeSelectorFactory codeSelectorFactory =
+					(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
+				if (codeSelectorFactory == null) {
+					SWTHelper.alert(CAPTION_ERROR, "CodeSelectorFactory is null"); //$NON-NLS-1$
+				}
+				ICodeElement codeElement =
+					(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
+				if (codeElement == null) {
+					String message =
+						"null code element for " + codeSelectorFactory.getElementClass() + " in " + po.getClass(); //$NON-NLS-1$
+					SWTHelper.alert(CAPTION_ERROR, message); //$NON-NLS-1$
+					log.error(message);
+					continue;
+				}
+				String codeSystemName = codeElement.getCodeSystemName();
+				if (StringTool.isNothing(codeSystemName)) {
+					SWTHelper.alert(CAPTION_ERROR, "codesystemname"); //$NON-NLS-1$
+					codeSystemName = "??"; //$NON-NLS-1$
+				}
+				CTabItem tabItem = new CTabItem(ctab, SWT.NONE);
+				
+				tabItem.setText(codeSystemName);
+				tabItem.setData(codeElement);
+				tabItem.setData("csf", codeSelectorFactory);
+			} catch (CoreException ex) {
+				ExHandler.handle(ex);
+			}
+		}
+		
+		if (point.equals(ExtensionPointConstantsUi.VERRECHNUNGSCODE)) {
+			for (int i = 0; i < userSettings.length; i++) {
+				if (userSettings[i].equals("Favoriten")) {
+					new FavoritenCTabItem(ctab, SWT.NONE, i);
+				}
 			}
 		}
 	}

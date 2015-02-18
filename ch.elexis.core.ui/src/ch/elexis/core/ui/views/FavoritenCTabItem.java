@@ -10,6 +10,15 @@ public class FavoritenCTabItem extends CTabItem {
 	
 	public FavoritenCTabItem(CTabFolder parent, int style){
 		super(parent, style);
+		init();
+	}
+	
+	public FavoritenCTabItem(CTabFolder parent, int style, int idx){
+		super(parent, style, idx);
+		init();
+	}
+	
+	private void init(){
 		setText("Favoriten");
 		
 		fc = new FavoritenComposite(this.getParent(), SWT.None);
@@ -17,7 +26,8 @@ public class FavoritenCTabItem extends CTabItem {
 	}
 
 	public void update(){
-		if(fc!=null) fc.update();
+		if (fc != null)
+			fc.update();
 	}
 	
 }

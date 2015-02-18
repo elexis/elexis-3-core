@@ -332,6 +332,11 @@ public class Messages extends NLS {
 	public static String XIDEdit_XidOpetions;
 	public static String Zugriff_AccessRights;
 	public static String UserCasePreferences_LoadConsultationAll;
+	public static String ServiceDiagnosis_Displayed;
+	public static String ServiceDiagnosis_Available;
+	public static String ServiceDiagnosis_UpTooltip;
+	public static String ServiceDiagnosis_DownTooltip;
+	public static String ServiceDiagnosis_View;
 	
 	static {
 		// load message values from bundle file
