@@ -1,0 +1,15 @@
+[[Kategorie:Basis-System]]
+'''Bitte Dokumentation erstellen!'''
+
+
+
+{{PluginInfo
+|plugin=ch.rgw.utility
+| name=Elexis Utilities
+| description=Basisfunktionen für Elexis
+| category=invisible
+| responsible=weirich@elexis.ch
+| type=Basis-System
+
+
+}}

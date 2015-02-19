@@ -1,0 +1,61 @@
+
+
+<table style="width:100%; border: 1px solid; padding: 10px">
+	
+	<tr>
+		<td>Version:</td>
+		<td>3.0.0.v20140422-1306</td>
+	</tr>
+	<tr>
+		<td style="width:150px;">Kategorie:</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Beschreibung:</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Author:</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Letzte Bearbeitung:</td>
+		<td>10. Juni 2014</td>
+	</tr>
+	<tr>
+		<td>Voraussetzungen:</td>
+		<td>Elexis 3.0</td>
+	</tr>
+	<tr>
+		<td>Betriebssystem:</td>
+		<td>Windows, Mac, Linus</td>
+	</tr>
+	<tr>
+		<td>Lizenz:</td>
+		<td></td>
+	</tr>
+</table>
+
+
+
+
+== Installation / Deinstallation==
+ToDo
+
+
+== Konfiguration ==
+ToDo
+
+
+== Einführung ==
+ToDo
+
+
+== Funktionen ==
+ToDo
+
+
+== ev andere Untertitel ==
+ToDo
+
+=

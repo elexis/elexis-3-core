@@ -1,0 +1,19 @@
+[[Kategorie:Basis-System]]
+== View: Bestellblatt==
+{{PluginInfo
+|plugin=ch.elexis
+| category=ch.elexis.datenKategorie
+| wikiName=ChElexisViewsBestellblatt
+| Iatrix-Hilfe=nicht vorhanden
+| view_name=View
+| name=elexis
+| description=Elexis Basismodul
+| category=invisible
+| license=EPL
+| first_commit_date=2007-06-24
+| first_commit_author=rgw_ch
+| responsible=weirich@elexis.ch
+| type=Basis-System
+
+
+}}

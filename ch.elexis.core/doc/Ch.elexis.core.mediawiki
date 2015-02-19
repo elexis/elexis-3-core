@@ -1,0 +1,15 @@
+[[Kategorie:Basis-System]]
+'''Bitte Dokumentation erstellen!'''
+
+
+
+{{PluginInfo
+|plugin=ch.elexis.core
+| name=Elexis DB-Abkapselung
+| description=Elexis-Kern-Modul
+| category=invisible
+| responsible=weirich@elexis.ch
+| type=Basis-System
+
+
+}}
