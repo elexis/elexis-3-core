@@ -58,6 +58,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.SelectBestellungDialog;
 import ch.elexis.core.ui.exchange.IDataSender;
@@ -72,7 +73,6 @@ import ch.elexis.data.Bestellung.Item;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
-import ch.rgw.tools.StringTool;
 
 public class BestellView extends ViewPart implements ISaveablePart2 {
 	public static final String ID = "ch.elexis.BestellenView"; //$NON-NLS-1$
@@ -145,13 +145,12 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				String drp = (String) event.data;
 				String[] dl = drp.split(","); //$NON-NLS-1$
 				if (actBestellung == null) {
-					InputDialog dlg =
-						new InputDialog(getViewSite().getShell(),
-							Messages.BestellView_CreateNewOrder, //$NON-NLS-1$
-							Messages.BestellView_EnterOrderTitle, //$NON-NLS-1$
-							StringTool.leer, null);
-					if (dlg.open() == Dialog.OK) {
-						setBestellung(new Bestellung(dlg.getValue(), CoreHub.actUser));
+					NeueBestellungDialog nbDlg =
+						new NeueBestellungDialog(getViewSite().getShell(),
+							Messages.BestellView_CreateNewOrder,
+							Messages.BestellView_EnterOrderTitle);
+					if (nbDlg.open() == Dialog.OK) {
+						setBestellung(new Bestellung(nbDlg.getTitle(), CoreHub.actUser));
 					} else {
 						return;
 					}
@@ -349,13 +348,12 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					if (actBestellung != null) {
 						actBestellung.save();
 					}
-					InputDialog dlg =
-						new InputDialog(getViewSite().getShell(),
-							Messages.BestellView_CreateNewOrder, //$NON-NLS-1$
-							Messages.BestellView_EnterOrderTitle, //$NON-NLS-1$
-							Messages.BestellView_Automatic, null); //$NON-NLS-1$
-					if (dlg.open() == Dialog.OK) {
-						setBestellung(new Bestellung(dlg.getValue(), CoreHub.actUser));
+					NeueBestellungDialog nbDlg =
+						new NeueBestellungDialog(getViewSite().getShell(),
+							Messages.BestellView_CreateNewOrder,
+							Messages.BestellView_EnterOrderTitle);
+					if (nbDlg.open() == Dialog.OK) {
+						setBestellung(new Bestellung(nbDlg.getTitle(), CoreHub.actUser));
 					} else {
 						return;
 					}

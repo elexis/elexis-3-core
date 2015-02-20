@@ -57,6 +57,7 @@ public class Messages extends NLS {
 	public static String TreeContentProvider_loadData;
 	public static String ViewerConfigurer_createNew;
 	public static String WikipediaSearchAction_DisplayName;
+	public static String LimitedText_MaxLengthReached;
 	
 	static {
 		// load message values from bundle file
