@@ -50,7 +50,7 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	FormText text;
 	ArrayList<Konsultation> lKons;
 	StringBuilder sb;
-	HistoryLoader loader;
+	private HistoryLoader loader;
 	private boolean bLock;
 	HistoryDisplay self = this;
 	
@@ -120,7 +120,6 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 		if (loader != null) {
 			loader.removeListener(this);
 			loader.cancel();
-			loader = null;
 		}
 	}
 	
@@ -150,7 +149,6 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 		UiDesk.getDisplay().asyncExec(new Runnable() {
 			public void run(){
 				String s = (String) loader.getData();
-				// System.out.println(s);
 				
 				// check if widget is valid
 				if (!isDisposed()) {
