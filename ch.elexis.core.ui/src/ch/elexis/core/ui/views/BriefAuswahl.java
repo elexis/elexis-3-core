@@ -12,6 +12,9 @@
 
 package ch.elexis.core.ui.views;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,7 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
@@ -439,7 +443,20 @@ public class BriefAuswahl extends ViewPart implements
 							Object[] o = cv.getSelection();
 							if ((o != null) && (o.length > 0)) {
 								Brief brief = (Brief) o[0];
-								if (tv.openDocument(brief) == false) {
+								if (brief.getMimeType().equalsIgnoreCase("pdf")) {
+									try {
+										File temp = File.createTempFile("letter_", ".pdf"); //$NON-NLS-1$ //$NON-NLS-2$
+										temp.deleteOnExit();
+										FileOutputStream fos = new FileOutputStream(temp);
+									
+										fos.write(brief.loadBinary());
+										fos.close();
+										Program.launch(temp.getAbsolutePath());
+									} catch (IOException e) {
+										SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
+											Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
+									}
+								} else if (tv.openDocument(brief) == false) {
 									SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
 										Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
 								}
