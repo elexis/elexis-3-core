@@ -242,26 +242,11 @@ public class BriefAuswahl extends ViewPart implements
 			bLoad.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent e){
-					try {
-						TextView tv = (TextView) getViewSite().getPage().showView(TextView.ID);
-						Object[] o = cv.getSelection();
-						if ((o != null) && (o.length > 0)) {
-							Brief brief = (Brief) o[0];
-							if (tv.openDocument(brief) == false) {
-								SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
-									Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
-							}
-						} else {
-							tv.createDocument(null, null);
-						}
-					} catch (Throwable ex) {
-						ExHandler.handle(ex);
-					}
+					briefLadenAction.run();
 				}
 				
 			});
 			bLoad.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			
 		}
 		
 		// create the columns for the table
@@ -432,6 +417,7 @@ public class BriefAuswahl extends ViewPart implements
 					}
 				}
 			};
+		
 		briefLadenAction = new Action(Messages.BriefAuswahlOpenButtonText) { //$NON-NLS-1$
 				@Override
 				public void run(){
