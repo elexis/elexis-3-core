@@ -156,13 +156,21 @@ public class MedicationComposite extends Composite {
 		Table medicationTable = medicationTableViewer.getTable();
 		medicationTable.setHeaderVisible(true);
 		medicationTableViewer.setSorter(new MedicationTableViewerSorter(medicationTableViewer));
-		medicationTable.addSelectionListener(new SelectionAdapter() {
+		medicationTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void selectionChanged(SelectionChangedEvent e){
 				IStructuredSelection is =
 					(IStructuredSelection) medicationTableViewer.getSelection();
 				Prescription presc = (Prescription) is.getFirstElement();
 				
+				if (presc == null) {
+					if (selectedMedication.getValue() != null) {
+						medicationTableViewer.setSelection(new StructuredSelection(
+							selectedMedication.getValue()));
+					}
+					return;
+				}
 				// set last disposition information
 				IPersistentObject po = presc.getLastDisposed();
 				lastDisposalPO.setValue(po);
@@ -188,8 +196,6 @@ public class MedicationComposite extends Composite {
 				
 				signatureArray = Prescription.getSignatureAsStringArray(presc.getDosis());
 				setValuesForTextSignatureArray(signatureArray);
-				
-				super.widgetSelected(e);
 			}
 		});
 		medicationTableViewer.addFilter(new ViewerFilter() {
@@ -714,17 +720,27 @@ public class MedicationComposite extends Composite {
 	}
 	
 	public void updateUi(final List<Prescription> prescriptionList){
+		Prescription selPres = (Prescription) selectedMedication.getValue();
+		
 		selectedMedication.setValue(null);
 		lastDisposalPO.setValue(null);
 		medicationTableViewer.setInput(prescriptionList);
-		lblLastDisposalLink.setText("");
-		showMedicationDetailComposite(null);
+		if (prescriptionList.contains(selPres)) {
+			// the new list contains the last selected element
+			// so lets keep this selection
+			selectedMedication.setValue(selPres);
+			medicationTableViewer.setSelection(new StructuredSelection(selPres));
+			showMedicationDetailComposite(selPres);
+		} else {
+			lblLastDisposalLink.setText("");
+			showMedicationDetailComposite(null);
+		}
 		
 		if (prescriptionList != null) {
 			// TODO re-activate on Java 8
-//			List<Prescription> fix =
-//				prescriptionList.stream().filter(p -> p.isFixedMediation())
-//					.collect(Collectors.toList());
+			//			List<Prescription> fix =
+			//				prescriptionList.stream().filter(p -> p.isFixedMediation())
+			//					.collect(Collectors.toList());
 			
 			lblDailyTherapyCost.setText(MedicationViewHelper.calculateDailyCostAsString(prescriptionList));
 		}
