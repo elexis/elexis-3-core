@@ -39,7 +39,12 @@ To deploy this site have a look at the excellent "Eclipse Tycho - Tutorial for b
 
 h3. Commonly used maven parameters
 
-@clean install@ cleans and rebuilds everything. 
+@clean install@ cleans and rebuilds everything.
+
+To build a specific build branch (we have snapshot=default, beta, prerelease, release) use e.g @clean install -Drepo_variant=release@. We used the following conventions:
+
+* Repo_variants snapshot and beta use the git-branch master and produce the corresponding P2-Repository-Variant, eg. http://download.elexis.info/Elexis-3.0-Core/beta or  http://download.elexis.info/Elexis-3.0-Core/snapshot
+* Repo_variants prerelease and release use the git-branch release and produce the corresponding P2-Repository-Variant, eg. http://download.elexis.info/Elexis-3.0-Core/release or  http://download.elexis.info/Elexis-3.0-Core/prerelease
 
 @-Dmaven.test.skip@ skips tests (if you want to finish faster).
 
