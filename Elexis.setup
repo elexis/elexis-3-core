@@ -175,6 +175,17 @@
     </query>
     <description>elexis/elexis-3-base pull requests</description>
   </setupTask>
+  <setupTask
+      xsi:type="projects:ProjectsImportTask">
+    <sourceLocator
+        rootFolder="${core.git.clone.location}"/>
+    <sourceLocator
+        rootFolder="${base.git.clone.location}"/>
+  </setupTask>
+  <setupTask
+      xsi:type="pde:TargetPlatformTask"
+      id="ch.elexis.target.juno-target.target"
+      name="Juno for Elexis 3.0"/>
   <project name="Medelexis"
       label="">
     <setupTask
@@ -192,6 +203,11 @@
             xsi:type="predicates:RepositoryPredicate"
             project="ch.medelexis.releng"/>
       </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="projects:ProjectsImportTask">
+      <sourceLocator
+          rootFolder="${medelexis.git.clone.location}"/>
     </setupTask>
     <project
         name="Application"
@@ -212,24 +228,21 @@
               project="ch.medelexis.application"/>
         </workingSet>
       </setupTask>
-      <stream
-          name="master">
-        <setupTask
-            xsi:type="projects:ProjectsImportTask">
-          <sourceLocator
-              rootFolder="${medelexis.application.git.clone.location}"/>
-        </setupTask>
-      </stream>
-      <description>Core Application development setup for Medelexis</description>
-    </project>
-    <stream
-        name="master">
       <setupTask
           xsi:type="projects:ProjectsImportTask">
         <sourceLocator
-            rootFolder="${medelexis.git.clone.location}"/>
+            rootFolder="${medelexis.application.git.clone.location}"/>
       </setupTask>
-    </stream>
+      <stream
+          name="master"/>
+      <stream
+          name="release"/>
+      <description>Core Application development setup for Medelexis</description>
+    </project>
+    <stream
+        name="master"/>
+    <stream
+        name="release"/>
     <description>Commercially developed version of Elexis, development environment</description>
   </project>
   <project name="Austria">
@@ -259,25 +272,24 @@
       <sourceLocator
           rootFolder="${austria.git.clone.location}"/>
     </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask"
+        id="">
+      <workingSet
+          name="elexis-3-austria">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="at.medevit.elexis.at"/>
+      </workingSet>
+    </setupTask>
     <stream
         name="master"/>
     <stream
         name="release"/>
     <description>Elexis Österreich Plug-Ins</description>
   </project>
-  <stream name="master">
-    <setupTask
-        xsi:type="projects:ProjectsImportTask">
-      <sourceLocator
-          rootFolder="${core.git.clone.location}"/>
-      <sourceLocator
-          rootFolder="${base.git.clone.location}"/>
-    </setupTask>
-    <setupTask
-        xsi:type="pde:TargetPlatformTask"
-        id="ch.elexis.target.juno-target.target"
-        name="Juno for Elexis 3.0"/>
-  </stream>
+  <stream name="master"/>
+  <stream name="release"/>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
