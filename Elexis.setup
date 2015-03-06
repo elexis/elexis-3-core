@@ -64,7 +64,7 @@
       xsi:type="git:GitCloneTask"
       id="core.git.clone"
       remoteURI="elexis/elexis-3-core"
-      checkoutBranch="master">
+      checkoutBranch="${scope.project.stream.name} ">
     <annotation
         source="http://www.eclipse.org/oomph/setup/InducedChoices">
       <detail
@@ -87,7 +87,7 @@
       id="base.git.clone"
       remoteURI="elexis/elexis-3-base"
       pushURI=""
-      checkoutBranch="master">
+      checkoutBranch="${scope.project.stream.name} ">
     <annotation
         source="http://www.eclipse.org/oomph/setup/InducedChoices">
       <detail
