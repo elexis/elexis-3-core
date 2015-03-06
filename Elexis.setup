@@ -232,6 +232,39 @@
     </stream>
     <description>Commercially developed version of Elexis, development environment</description>
   </project>
+  <project name="Austria">
+    <setupTask
+        xsi:type="git:GitCloneTask"
+        id="austria.git.clone"
+        remoteURI="elexis/elexis-3-austria">
+      <annotation
+          source="http://www.eclipse.org/oomph/setup/InducedChoices">
+        <detail
+            key="inherit">
+          <value>github.remoteURIs</value>
+        </detail>
+        <detail
+            key="label">
+          <value>${scope.project.label} Github repository</value>
+        </detail>
+        <detail
+            key="target">
+          <value>remoteURI</value>
+        </detail>
+      </annotation>
+      <description>Elexis 3 Österreich Plug-Ins</description>
+    </setupTask>
+    <setupTask
+        xsi:type="projects:ProjectsImportTask">
+      <sourceLocator
+          rootFolder="${austria.git.clone.location}"/>
+    </setupTask>
+    <stream
+        name="master"/>
+    <stream
+        name="release"/>
+    <description>Elexis Österreich Plug-Ins</description>
+  </project>
   <stream name="master">
     <setupTask
         xsi:type="projects:ProjectsImportTask">
