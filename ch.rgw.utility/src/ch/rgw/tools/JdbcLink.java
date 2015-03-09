@@ -729,7 +729,14 @@ public class JdbcLink {
 						return internalExec(SQLText, true);
 					}
 				}
-				throw JdbcLinkExceptionTranslation.translateException("Fehler bei: " + SQLText, e);
+				
+				boolean throwException =
+					DatabaseNativeExceptionHandler.handleException(DBFlavor, e);	
+				if (throwException) {
+					throw JdbcLinkExceptionTranslation.translateException("Fehler bei: " + SQLText,
+						e);
+				}
+				return 1;
 			}
 		}
 		
