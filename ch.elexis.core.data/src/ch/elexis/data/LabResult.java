@@ -495,7 +495,7 @@ public class LabResult extends PersistentObject {
 		// log.log(limit.dump(),Log.INFOS);
 		TimeTool tr = new TimeTool();
 		for (LabResult lr : o) {
-			log.info(lr.getDate());
+			//	log.info(lr.getDate());
 			if (tr.set(lr.getDate())) {
 				if (tr.isAfter(limit)) {
 					n.add(lr.getId());
