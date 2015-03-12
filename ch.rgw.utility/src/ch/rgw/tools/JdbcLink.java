@@ -24,6 +24,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -79,6 +80,7 @@ public class JdbcLink {
 			} catch (SQLException e) {
 				lastErrorCode = CONNECTION_SQL_ERROR;
 				lastErrorString = e.getMessage();
+				keepAliveTimer.cancel();
 				throw JdbcLinkExceptionTranslation.translateException(lastErrorString, e);
 			}
 		}
@@ -400,6 +402,12 @@ public class JdbcLink {
 		return conncetion;
 	}
 
+	/**
+	 * This method is deprecated. Use the methods getStatement and releaseStatement instead.
+	 * 
+	 * @deprecated
+	 * @return
+	 */
 	public Connection getConnection(){
 		try {
 			return dataSource.getConnection();
@@ -459,9 +467,54 @@ public class JdbcLink {
 		}
 	}
 	
+	private HashMap<PreparedStatement, Connection> preparedConnections =
+		new HashMap<PreparedStatement, Connection>();
+	
+	/**
+	 * Create a new PreparedStatement.
+	 * 
+	 * <b>IMPORTANT</b> Release the resource after using, with releasePreparedStatement mehtod.
+	 * 
+	 * @param sql
+	 * @return
+	 */
+	public PreparedStatement getPreparedStatement(String sql){
+		try {
+			Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql);
+			preparedConnections.put(statement, connection);
+			return statement;
+		} catch (SQLException e) {
+			lastErrorCode = CONNECTION_CANT_PREPARE_STAMENT;
+			lastErrorString = e.getMessage();
+			throw JdbcLinkExceptionTranslation.translateException(lastErrorString, e);
+		}
+	}
+	
+	/**
+	 * Release the resources of a PreparedStatement.
+	 * 
+	 * @param statement
+	 */
+	public void releasePreparedStatement(PreparedStatement statement){
+		Connection connection = preparedConnections.get(statement);
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				throw JdbcLinkExceptionTranslation.translateException(e);
+			}
+		}
+		preparedConnections.remove(statement);
+	}
+
 	/**
 	 * Ein Prepared Statement anlegen
 	 * 
+	 * This method is deprecated. Use the methods getPreparedStatement and releasePreparedStatement
+	 * instead.
+	 * 
+	 * @deprecated
 	 * @param sql
 	 *            Abfrage für das statement (eizusetzende Parameter müssen als ? gesetzt sein
 	 * @return das vorkompilierte PreparedStatement

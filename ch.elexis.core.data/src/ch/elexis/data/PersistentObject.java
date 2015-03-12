@@ -939,7 +939,6 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	private static String queryStickersString = "SELECT etikette FROM " + Sticker.FLD_LINKTABLE
 		+ " WHERE obj=?";
-	private static PreparedStatement queryStickers = null;
 	
 	/**
 	 * Return all Stickers attributed to this objecz
@@ -954,9 +953,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			return ret;
 		}
 		ret = new ArrayList<ISticker>();
-		if (queryStickers == null) {
-			queryStickers = j.prepareStatement(queryStickersString);
-		}
+		PreparedStatement queryStickers = j.getPreparedStatement(queryStickersString);
 		
 		try {
 			queryStickers.setString(1, id);
@@ -971,6 +968,13 @@ public abstract class PersistentObject implements IPersistentObject {
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return ret;
+		} finally {
+			try {
+				queryStickers.close();
+			} catch (SQLException e) {
+				// ignore
+			}
+			j.releasePreparedStatement(queryStickers);
 		}
 		Collections.sort(ret);
 		cache.put(ID, ret, getCacheTime());
@@ -1543,7 +1547,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		sql.append("=?, lastupdate=? WHERE ID=").append(getWrappedId());
 		String cmd = sql.toString();
-		PreparedStatement pst = getConnection().prepareStatement(cmd);
+		PreparedStatement pst = getConnection().getPreparedStatement(cmd);
 		
 		encode(1, pst, field, value);
 		if (tracetable != null) {
@@ -1572,6 +1576,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			try {
 				pst.close();
 			} catch (SQLException e) {}
+			getConnection().releasePreparedStatement(pst);
 		}
 		
 	}
@@ -1623,7 +1628,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (tracetable != null) {
 			doTrace(cmd);
 		}
-		PreparedStatement stm = getConnection().prepareStatement(cmd);
+		PreparedStatement stm = getConnection().getPreparedStatement(cmd);
 		try {
 			stm.setBytes(1, value);
 			stm.setLong(2, System.currentTimeMillis());
@@ -1640,6 +1645,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				ExHandler.handle(e);
 				throw new PersistenceException("Could not close statement " + e.getMessage());
 			}
+			getConnection().releasePreparedStatement(stm);
 		}
 	}
 	
@@ -1896,7 +1902,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		// sql.delete(sql.length() - 1, 100000);
 		sql.append(" WHERE ID=").append(getWrappedId());
 		String cmd = sql.toString();
-		PreparedStatement pst = getConnection().prepareStatement(cmd);
+		PreparedStatement pst = getConnection().getPreparedStatement(cmd);
 		for (int i = 0; i < fields.length; i++) {
 			encode(i + 1, pst, fields[i], values[i]);
 		}
@@ -1931,6 +1937,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			try {
 				pst.close();
 			} catch (SQLException e) {}
+			getConnection().releasePreparedStatement(pst);
 		}
 	}
 	
