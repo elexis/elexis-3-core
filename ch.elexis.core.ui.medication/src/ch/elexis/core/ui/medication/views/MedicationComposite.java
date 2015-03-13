@@ -11,6 +11,8 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
@@ -35,6 +37,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -93,6 +96,14 @@ public class MedicationComposite extends Composite {
 	private Button btnStopMedication;
 	private Label lblLastDisposalLink;
 	private Label lblDailyTherapyCost;
+	
+	private Color defaultBtnColor;
+	private Color tagBtnColor = UiDesk.getColor(UiDesk.COL_GREEN);
+	private Color stopBGColor = UiDesk.getColorFromRGB("FF7256");
+	private Color defaultBGColor = UiDesk.getColorFromRGB("F0F0F0");
+	private Color prnBGColor = UiDesk.getColorFromRGB("66CDAA");
+	private Color prnFGColor = UiDesk.getColor(UiDesk.COL_BLUE);
+	private ControlDecoration ctrlDecor;
 	
 	/**
 	 * Create the composite.
@@ -295,7 +306,7 @@ public class MedicationComposite extends Composite {
 			new TableViewerColumn(medicationTableViewer, SWT.NONE);
 		TableColumn tblclmnPackage = tableViewerColumnPackage.getColumn();
 		tblclmnPackage.setAlignment(SWT.CENTER);
-		tcl_compositeMedicationTable.setColumnData(tblclmnPackage, new ColumnPixelData(8, true,
+		tcl_compositeMedicationTable.setColumnData(tblclmnPackage, new ColumnPixelData(30, true,
 			true));
 		tblclmnPackage.setText("#");
 		tableViewerColumnPackage.setLabelProvider(new MedicationCellLabelProvider() {
@@ -323,7 +334,7 @@ public class MedicationComposite extends Composite {
 		});
 		TableColumn tblclmnDosage = tableViewerColumnDosage.getColumn();
 		tblclmnDosage.setToolTipText(Messages.TherapieplanComposite_tblclmnDosage_toolTipText);
-		tcl_compositeMedicationTable.setColumnData(tblclmnDosage, new ColumnPixelData(40, true,
+		tcl_compositeMedicationTable.setColumnData(tblclmnDosage, new ColumnPixelData(60, true,
 			true));
 		tableViewerColumnDosage.getColumn().setText(
 			Messages.TherapieplanComposite_tblclmnDosage_text);
@@ -332,7 +343,7 @@ public class MedicationComposite extends Composite {
 		TableViewerColumn tableViewerColumnEnacted =
 			new TableViewerColumn(medicationTableViewer, SWT.CENTER);
 		TableColumn tblclmnEnacted = tableViewerColumnEnacted.getColumn();
-		tcl_compositeMedicationTable.setColumnData(tblclmnEnacted, new ColumnPixelData(45, true,
+		tcl_compositeMedicationTable.setColumnData(tblclmnEnacted, new ColumnPixelData(60, true,
 			true));
 		tblclmnEnacted.setImage(Images.resize(Images.IMG_NEXT_WO_SHADOW.getImage(),
 			ImageSize._12x12_TableColumnIconSize));
@@ -348,11 +359,11 @@ public class MedicationComposite extends Composite {
 		
 		// supplied until
 		TableViewerColumn tableViewerColumnSuppliedUntil =
-			new TableViewerColumn(medicationTableViewer, SWT.NONE);
+			new TableViewerColumn(medicationTableViewer, SWT.CENTER);
 		TableColumn tblclmnSufficient = tableViewerColumnSuppliedUntil.getColumn();
-		tcl_compositeMedicationTable.setColumnData(tblclmnSufficient, new ColumnPixelData(10, true,
+		tcl_compositeMedicationTable.setColumnData(tblclmnSufficient, new ColumnPixelData(45, true,
 			true));
-		tblclmnSufficient.setText("");
+		tblclmnSufficient.setText(Messages.TherapieplanComposite_tblclmnSupplied_text);
 		tableViewerColumnSuppliedUntil.setLabelProvider(new MedicationCellLabelProvider() {
 			
 			@Override
@@ -376,7 +387,7 @@ public class MedicationComposite extends Composite {
 		TableColumn tblclmnComment = tableViewerColumnComment.getColumn();
 		tcl_compositeMedicationTable.setColumnData(tblclmnComment, new ColumnWeightData(1,
 			ColumnWeightData.MINIMUM_WIDTH, true));
-		tblclmnComment.setText("comment");
+		tblclmnComment.setText(Messages.TherapieplanComposite_tblclmnComment_text);
 		tableViewerColumnComment.setLabelProvider(new MedicationCellLabelProvider() {
 			
 			@Override
@@ -394,7 +405,7 @@ public class MedicationComposite extends Composite {
 	private void createStopTableViewerColumn(int index){
 		tableViewerColumnStop = new TableViewerColumn(medicationTableViewer, SWT.CENTER, index);
 		TableColumn tblclmnStop = tableViewerColumnStop.getColumn();
-		ColumnPixelData stopColumnPixelData = new ColumnPixelData(45, true, true);
+		ColumnPixelData stopColumnPixelData = new ColumnPixelData(60, true, true);
 		tcl_compositeMedicationTable.setColumnData(tblclmnStop, stopColumnPixelData);
 		tblclmnStop.setImage(Images.resize(Images.IMG_ARROWSTOP_WO_SHADOW.getImage(),
 			ImageSize._12x12_TableColumnIconSize));
@@ -555,47 +566,12 @@ public class MedicationComposite extends Composite {
 			txtNight.addModifyListener(new SignatureArrayModifyListener(3));
 		}
 		
-		Composite compositePRNMedication = new Composite(compositeMedicationDetail, SWT.NONE);
-		compositePRNMedication.setBackground(UiDesk.getColorFromRGB("66CDAA"));
-		compositePRNMedication.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		GridLayout gl_compositePRNMedication = new GridLayout(1, false);
-		gl_compositePRNMedication.marginRight = 2;
-		gl_compositePRNMedication.marginTop = 2;
-		gl_compositePRNMedication.horizontalSpacing = 0;
-		gl_compositePRNMedication.verticalSpacing = 0;
-		gl_compositePRNMedication.marginWidth = 0;
-		gl_compositePRNMedication.marginHeight = 0;
-		compositePRNMedication.setLayout(gl_compositePRNMedication);
-		
-		btnPRNMedication = new Button(compositePRNMedication, SWT.CHECK);
-		btnPRNMedication.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
-		btnPRNMedication
-			.setToolTipText(Messages.TherapieplanComposite_btnPRNMedication_toolTipText);
-		btnPRNMedication.setText(Messages.MedicationComposite_btnPRNMedication_text);
-		IObservableValue uiprnObs = WidgetProperties.selection().observe(btnPRNMedication);
-		IObservableValue prescprnObs =
-			PojoProperties.value("reserveMedication", Boolean.class).observeDetail(
-				selectedMedication);
-		dbc.bindValue(uiprnObs, prescprnObs);
-		
-		btnStopMedication = new Button(compositeMedicationDetail, SWT.FLAT | SWT.TOGGLE);
-		btnStopMedication.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		btnStopMedication.setText(Messages.MedicationComposite_btnNewButton_text_1);
-		btnStopMedication.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				if (btnStopMedication.getSelection()) {
-					stackLayout.topControl = compositeStopMedicationTextDetails;
-				} else {
-					stackLayout.topControl = compositeMedicationTextDetails;
-				}
-				btnConfirm.setEnabled(btnStopMedication.getSelection());
-				stackedMedicationDetailComposite.layout();
-			}
-		});
-		
 		btnConfirm = new Button(compositeMedicationDetail, SWT.FLAT);
-		btnConfirm.setText(Messages.MedicationComposite_btnNewButton_text);
+		btnConfirm.setText(Messages.MedicationComposite_btnConfirm);
+		GridData gdBtnConfirm = new GridData();
+		gdBtnConfirm.horizontalIndent = 5;
+		btnConfirm.setLayoutData(gdBtnConfirm);
+		defaultBtnColor = btnConfirm.getBackground();
 		btnConfirm.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
@@ -614,11 +590,55 @@ public class MedicationComposite extends Composite {
 				
 				setValuesForTextSignatureArray(Prescription.getSignatureAsStringArray(newDose));
 				pres.addTerm(null, newDose);
-				btnConfirm.setEnabled(false);
+				activateConfirmButton(false);
+				if (btnStopMedication.isEnabled())
+					showMedicationDetailComposite(null);
+				
 				medicationTableViewer.refresh();
 			}
 		});
 		btnConfirm.setEnabled(false);
+		
+		btnPRNMedication = new Button(compositeMedicationDetail, SWT.CHECK);
+		btnPRNMedication.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+		btnPRNMedication
+			.setToolTipText(Messages.TherapieplanComposite_btnPRNMedication_toolTipText);
+		btnPRNMedication.setText(Messages.MedicationComposite_btnPRNMedication_text);
+		btnPRNMedication.setBackground(prnBGColor);
+		btnPRNMedication.setForeground(prnFGColor);
+		IObservableValue uiprnObs = WidgetProperties.selection().observe(btnPRNMedication);
+		IObservableValue prescprnObs =
+			PojoProperties.value("reserveMedication", Boolean.class).observeDetail(
+				selectedMedication);
+		dbc.bindValue(uiprnObs, prescprnObs);
+		
+		btnStopMedication = new Button(compositeMedicationDetail, SWT.FLAT | SWT.TOGGLE);
+		btnStopMedication.setImage(Images.IMG_STOP.getImage());
+		btnStopMedication.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		btnStopMedication.setToolTipText(Messages.MedicationComposite_btnStop);
+		btnStopMedication.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				if (btnStopMedication.getSelection()) {
+					stackLayout.topControl = compositeStopMedicationTextDetails;
+					// change color
+					compositeMedicationDetail.setBackground(stopBGColor);
+					compositeStopMedicationTextDetails.setBackground(stopBGColor);
+					
+					// highlight confirm button
+					activateConfirmButton(true);
+				} else {
+					// change color
+					compositeMedicationDetail.setBackground(defaultBGColor);
+					compositeStopMedicationTextDetails.setBackground(defaultBGColor);
+					stackLayout.topControl = compositeMedicationTextDetails;
+					
+					//set confirm button defaults
+					activateConfirmButton(false);
+				}
+				stackedMedicationDetailComposite.layout();
+			}
+		});
 		
 		stackedMedicationDetailComposite = new Composite(compositeMedicationDetail, SWT.NONE);
 		stackedMedicationDetailComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
@@ -709,6 +729,11 @@ public class MedicationComposite extends Composite {
 			}
 			btnStopMedication.setEnabled(!stopped && presc.isFixedMediation());
 			stackedMedicationDetailComposite.layout();
+			
+			//set default color
+			compositeMedicationDetail.setBackground(defaultBGColor);
+			compositeStopMedicationTextDetails.setBackground(defaultBGColor);
+			btnStopMedication.setSelection(false);
 		}
 		
 		this.layout(true);
@@ -725,7 +750,7 @@ public class MedicationComposite extends Composite {
 		selectedMedication.setValue(null);
 		lastDisposalPO.setValue(null);
 		medicationTableViewer.setInput(prescriptionList);
-		if (prescriptionList.contains(selPres)) {
+		if (prescriptionList != null && prescriptionList.contains(selPres)) {
 			// the new list contains the last selected element
 			// so lets keep this selection
 			selectedMedication.setValue(selPres);
@@ -762,10 +787,10 @@ public class MedicationComposite extends Composite {
 	 */
 	private String getDosisStringFromSignatureTextArray(){
 		String[] values = new String[4];
-		values[0] = txtMorning.getText();
-		values[1] = txtNoon.getText();
-		values[2] = txtEvening.getText();
-		values[3] = txtNight.getText();
+		values[0] = txtMorning.getText().isEmpty() ? "0" : txtMorning.getText();
+		values[1] = txtNoon.getText().isEmpty() ? "0" : txtNoon.getText();
+		values[2] = txtEvening.getText().isEmpty() ? "0" : txtEvening.getText();
+		values[3] = txtNight.getText().isEmpty() ? "0" : txtNight.getText();
 		
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < values.length; i++) {
@@ -778,6 +803,31 @@ public class MedicationComposite extends Composite {
 			}
 		}
 		return sb.toString();
+	}
+	
+	private void activateConfirmButton(boolean activate){
+		if (ctrlDecor == null)
+			initControlDecoration();
+		
+		if (activate) {
+			btnConfirm.setBackground(tagBtnColor);
+			btnConfirm.setEnabled(true);
+			ctrlDecor.show();
+		} else {
+			btnConfirm.setBackground(defaultBGColor);
+			btnConfirm.setEnabled(false);
+			ctrlDecor.hide();
+		}
+		
+	}
+	
+	private void initControlDecoration(){
+		ctrlDecor = new ControlDecoration(btnConfirm, SWT.TOP);
+		ctrlDecor.setDescriptionText(Messages.MedicationComposite_decorConfirm);
+		Image imgWarn =
+			FieldDecorationRegistry.getDefault()
+				.getFieldDecoration(FieldDecorationRegistry.DEC_WARNING).getImage();
+		ctrlDecor.setImage(imgWarn);
 	}
 	
 	/**
@@ -794,7 +844,7 @@ public class MedicationComposite extends Composite {
 		@Override
 		public void modifyText(ModifyEvent e){
 			String text = ((Text) e.getSource()).getText();
-			btnConfirm.setEnabled(!signatureArray[index].equals(text));
+			activateConfirmButton(!signatureArray[index].equals(text));
 		}
 	}
 }

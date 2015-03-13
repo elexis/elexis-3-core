@@ -37,17 +37,21 @@ public class Messages extends NLS {
 	public static String TherapieplanComposite_btnPRNMedication_toolTipText;
 	public static String TherapieplanComposite_tblclmnDosage_text;
 	public static String TherapieplanComposite_tblclmnDosage_toolTipText;
+	public static String TherapieplanComposite_tblclmnComment_text;
+	public static String TherapieplanComposite_tblclmnSupplied_text;
 	public static String MedicationComposite_txtComment_message;
 	public static String MedicationComposite_txtIntakeOrder_message;
 	public static String MedicationComposite_lblNewLabel_text;
 	public static String MedicationComposite_lblNewLabel_text_1;
 	public static String MedicationComposite_btnNewButton_text;
+	public static String MedicationComposite_btnConfirm;
+	public static String MedicationComposite_btnStop;
 	public static String MedicationComposite_btnPRNMedication_text;
+	public static String MedicationComposite_decorConfirm;
 	public static String MovePrescriptionPositionInTableUpAction_Label;
 	public static String MovePrescriptionPositionInTableDownAction_Label;
 	public static String MedicationComposite_btnCheckButton_text;
 	public static String MedicationComposite_btnShowHistory_toolTipText;
-	public static String MedicationComposite_btnNewButton_text_1;
 	public static String MedicationComposite_btnIsFixmedication_toolTipText;
 	
 	static {

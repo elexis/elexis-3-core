@@ -598,6 +598,10 @@ public class Prescription extends PersistentObject {
 			return (isAppliedMedication()) ? EntryType.APPLICATION : EntryType.SELF_DISPENSED;
 			// SD OR APP
 		}
+		
+		if (getDosis().equals(StringConstants.ZERO) && !isAppliedMedication()) {
+			return EntryType.FIXED_MEDICATION;
+		}
 		return EntryType.RECIPE;
 	}
 	

@@ -3,20 +3,14 @@ package ch.elexis.core.ui.medication.views;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.data.events.ElexisEvent;
@@ -30,21 +24,15 @@ import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableDownAction;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpAction;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget;
-import ch.elexis.core.ui.views.codesystems.LeistungenView;
-import ch.elexis.data.ArticleDefaultSignature;
-import ch.elexis.data.Artikel;
 import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Query;
-import ch.rgw.tools.StringTool;
 
 public class MedicationView extends ViewPart implements IActivationListener {
 	public MedicationView(){}
 	
 	private MedicationComposite tpc;
-	private IViewSite viewSite;
+	private TableViewer medicationTableViewer;
 	
 	public static final String PART_ID = "ch.elexis.core.ui.medication.views.MedicationView"; //$NON-NLS-1$
 	
@@ -55,7 +43,7 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	};
 	
 	private ElexisEventListener eeli_presc = new ElexisUiEventListenerImpl(Prescription.class,
-		ElexisEvent.EVENT_CREATE) {
+		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE) {
 		public void runInUi(ElexisEvent ev){
 			updateUi(ElexisEventDispatcher.getSelectedPatient());
 		}
@@ -66,17 +54,12 @@ public class MedicationView extends ViewPart implements IActivationListener {
 		tpc = new MedicationComposite(parent, SWT.NONE);
 		
 		// register context menu for table viewer
-		final TableViewer medicationTableViewer = tpc.getMedicationTableViewer();
+		medicationTableViewer = tpc.getMedicationTableViewer();
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(new MovePrescriptionPositionInTableUpAction(medicationTableViewer));
 		menuManager.add(new MovePrescriptionPositionInTableDownAction(medicationTableViewer));
 		menuManager.add(new Separator());
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		
-		//		MenuManager alternativeMenuManager = new MenuManager("Alternative Medikation");
-		//		alternativeMenuManager.add(new AlternativMedicationContributionItem(medicationTableViewer));
-		//		menuManager.add(alternativeMenuManager);
-		
 		menuManager.add(new Separator());
 		menuManager.add(new Action() {
 			{
@@ -101,43 +84,6 @@ public class MedicationView extends ViewPart implements IActivationListener {
 		getSite().registerContextMenu(menuManager, medicationTableViewer);
 		getSite().setSelectionProvider(medicationTableViewer);
 		
-		// register drop target for incoming article selections
-		new PersistentObjectDropTarget("", medicationTableViewer.getTable(),
-			new PersistentObjectDropTarget.IReceiver() {
-				
-				@Override
-				public void dropped(PersistentObject article, DropTargetEvent e){
-					ArticleDefaultSignature defSig =
-						ArticleDefaultSignature.getDefaultsignatureForArticle((Artikel) article);
-					
-					String dosage = StringTool.leer;
-					String remark = StringTool.leer;
-					if (defSig != null) {
-						dosage = defSig.getSignatureAsDosisString();
-						remark = defSig.getSignatureComment();
-					}
-					
-					new Prescription((Artikel) article, (Patient) ElexisEventDispatcher
-						.getSelected(Patient.class), dosage, remark);
-					
-					medicationTableViewer.refresh();
-				}
-				
-				@Override
-				public boolean accept(PersistentObject o){
-					if (!(o instanceof Artikel))
-						return false;
-					// we do not accept vaccination articles
-					Artikel a = (Artikel) o;
-					return (!a.getATC_code().startsWith("J07"));
-				}
-			}, false);
-		
-		viewSite = getViewSite();
-		IActionBars actionBars = viewSite.getActionBars();
-		IToolBarManager toolBar = actionBars.getToolBarManager();
-		toolBar.add(new AddVerrechenbarAction());
-		
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 	
@@ -154,23 +100,6 @@ public class MedicationView extends ViewPart implements IActivationListener {
 			tpc.updateUi(result);
 		} else {
 			tpc.updateUi(null);
-		}
-	}
-	
-	public class AddVerrechenbarAction extends Action {
-		
-		@Override
-		public void run(){
-			try {
-				viewSite.getPage().showView(LeistungenView.ID);
-			} catch (PartInitException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		@Override
-		public ImageDescriptor getImageDescriptor(){
-			return Images.IMG_NEW.getImageDescriptor();
 		}
 	}
 	
@@ -191,4 +120,7 @@ public class MedicationView extends ViewPart implements IActivationListener {
 		
 	}
 	
+	public void refresh(){
+		medicationTableViewer.refresh();
+	}
 }

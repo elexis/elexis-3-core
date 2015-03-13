@@ -122,8 +122,7 @@ public enum Images {
 	/** a book */
 	IMG_BOOK,
 	/** a person */
-	IMG_BOOKMARK_PENCIL,
-	IMG_PERSON,
+	IMG_BOOKMARK_PENCIL, IMG_PERSON,
 	/** a person with an OK mark */
 	IMG_PERSON_OK,
 	/** a person with an ADD sign */
@@ -139,8 +138,7 @@ public enum Images {
 	/** Clipboard symbol */
 	IMG_CLIPBOARD,
 	/** Arrow right */
-	IMG_NEXT,
-	IMG_NEXT_WO_SHADOW,
+	IMG_NEXT, IMG_NEXT_WO_SHADOW,
 	/** Arrow left */
 	IMG_PREVIOUS,
 	/** Arrow up */
@@ -150,9 +148,7 @@ public enum Images {
 	/** Arrow down to rectangle */
 	IMG_ARROWDOWNTORECT,
 	/** Arrow to stop */
-	IMG_ARROWSTOP,
-	IMG_ARROWSTOP_WO_SHADOW,
-	IMG_EYE_WO_SHADOW,
+	IMG_ARROWSTOP, IMG_ARROWSTOP_WO_SHADOW, IMG_EYE_WO_SHADOW,
 	/** undo */
 	IMG_UNDO,
 	/** a 8px pencil symbol */
@@ -196,33 +192,23 @@ public enum Images {
 	/** remove document */
 	IMG_DOCUMENT_REMOVE, IMG_MENUBAR, IMG_TOOLBAR,
 	/** a bill */
-	IMG_BILL, 
-	IMG_VIEW_WORK_INCAPABLE, 
-	IMG_VIEW_CONSULTATION_DETAIL, 
-	IMG_VIEW_LABORATORY,
-	IMG_VIEW_PATIENT_DETAIL, 
-	IMG_VIEW_RECIPES, 
-	IMG_DATABASE, 
-	IMG_CONFLICT, 
-	IMG_QUESTION_MARK,
-	IMG_FLAG_AT, 
-	IMG_FLAG_DE, 
-	IMG_FLAG_CH, 
-	IMG_FLAG_FR, 
-	IMG_FLAG_IT, 
-	IMG_FLAG_FL,
-	/** a generic group icon */
-	IMG_CATEGORY_GROUP,
-	/** a syringe, nozzle, injection icon */
-	IMG_SYRINGE, 
-	/** small blocks */
-	IMG_BLOCKS_SMALL, 
-	/** sync icon **/
-	IMG_SYNC,
-	/** a star icon **/
-	IMG_STAR,
-	/** a non-filed star icon **/
-	IMG_STAR_EMPTY;
+	IMG_BILL, IMG_VIEW_WORK_INCAPABLE, IMG_VIEW_CONSULTATION_DETAIL, IMG_VIEW_LABORATORY,
+		IMG_VIEW_PATIENT_DETAIL, IMG_VIEW_RECIPES, IMG_DATABASE, IMG_CONFLICT, IMG_QUESTION_MARK,
+		IMG_FLAG_AT, IMG_FLAG_DE, IMG_FLAG_CH, IMG_FLAG_FR, IMG_FLAG_IT, IMG_FLAG_FL,
+		/** a generic group icon */
+		IMG_CATEGORY_GROUP,
+		/** a syringe, nozzle, injection icon */
+		IMG_SYRINGE,
+		/** small blocks */
+		IMG_BLOCKS_SMALL,
+		/** sync icon **/
+		IMG_SYNC,
+		/** a star icon **/
+		IMG_STAR,
+		/** a non-filed star icon **/
+		IMG_STAR_EMPTY,
+		/** stop icon **/
+		IMG_STOP;
 	
 	private Images(){}
 	
@@ -270,10 +256,10 @@ public enum Images {
 	 * @return an {@link Image}
 	 */
 	public Image getImage(ImageSize is){
-		Image image = JFaceResources.getImageRegistry().get(this.name()+is.name);
+		Image image = JFaceResources.getImageRegistry().get(this.name() + is.name);
 		if (image == null) {
 			addIconImageDescriptor(this.name(), is);
-			image = JFaceResources.getImageRegistry().get(this.name()+is.name);
+			image = JFaceResources.getImageRegistry().get(this.name() + is.name);
 		}
 		return image;
 	}
@@ -283,10 +269,10 @@ public enum Images {
 	 */
 	public ImageDescriptor getImageDescriptor(ImageSize is){
 		ImageDescriptor id = null;
-		id = JFaceResources.getImageRegistry().getDescriptor(this.name()+is.name);
+		id = JFaceResources.getImageRegistry().getDescriptor(this.name() + is.name);
 		if (id == null) {
 			addIconImageDescriptor(this.name(), is);
-			id = JFaceResources.getImageRegistry().getDescriptor(this.name()+is.name);
+			id = JFaceResources.getImageRegistry().getDescriptor(this.name() + is.name);
 		}
 		return id;
 	}
@@ -334,7 +320,7 @@ public enum Images {
 				FileLocator.find(Activator.getContext().getBundle(), new Path("icons/" + is.name
 					+ "/" + fileName), null);
 			ImageDescriptor id = ImageDescriptor.createFromURL(fileLocation);
-			JFaceResources.getImageRegistry().put(name+is.name, id);
+			JFaceResources.getImageRegistry().put(name + is.name, id);
 		} catch (MissingResourceException | IllegalArgumentException e) {
 			return false;
 		}
@@ -344,8 +330,10 @@ public enum Images {
 	/**
 	 * Return a resized (software scaled) version of an image, image will not be e
 	 * 
-	 * @param image the image to resize
-	 * @param is the target {@link ImageSize}
+	 * @param image
+	 *            the image to resize
+	 * @param is
+	 *            the target {@link ImageSize}
 	 * @return
 	 */
 	public static Image resize(Image image, ImageSize is){
@@ -355,12 +343,13 @@ public enum Images {
 	/**
 	 * Return a resized (software scaled) version of an image, image will not be disposed
 	 * 
-	 * @param image the image to resize
+	 * @param image
+	 *            the image to resize
 	 * @param width
 	 * @param height
 	 * @return
 	 */
-	public static Image resize(Image image, int width, int height){	
+	public static Image resize(Image image, int width, int height){
 		return new Image(Display.getDefault(), image.getImageData().scaledTo(width, height));
 	}
 	

@@ -7,6 +7,11 @@
             allPopups="false"
             locationURI="toolbar:ch.elexis.core.ui.medication.views.MedicationView">
          <command
+               commandId="ch.elexis.core.ui.medication.AddFixMedication"
+               icon="icon://IMG_NEW"
+               style="push">
+         </command>
+         <command
                commandId="ch.elexis.core.ui.medication.PrintRecipe"
                icon="icon://IMG_VIEW_RECIPES"
                style="push">
@@ -33,6 +38,11 @@
          <command
                commandId="ch.elexis.core.ui.medication.PrintTakingsList"
                icon="icon://IMG_PRINTER"
+               style="push">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.Delete"
+               icon="icon://IMG_DELETE"
                style="push">
          </command>
       </menuContribution>
@@ -62,6 +72,16 @@
             description="Ausgewählte Medikamente dispensieren (werden zu aktueller Konsultation verrechnet)"
             id="ch.elexis.core.ui.medication.Dispense"
             name="Dispensieren">
+      </command>
+      <command
+            description="Ausgewählten Eintrag entfernen"
+            id="ch.elexis.core.ui.medication.Delete"
+            name="Löschen">
+      </command>
+      <command
+            description="FixMedikation hinzufügen"
+            id="ch.elexis.core.ui.medication.AddFixMedication"
+            name="FixMedikation hinzufügen">
       </command>
    </extension>
    <extension
@@ -93,6 +113,33 @@
       <handler
             class="ch.elexis.core.ui.medication.handlers.DispenseHandler"
             commandId="ch.elexis.core.ui.medication.Dispense">
+         <activeWhen>
+            <with
+                  variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
+               <equals
+                     value="TRUE">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.DeleteHandler"
+            commandId="ch.elexis.core.ui.medication.Delete">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="ch.elexis.data.Prescription">
+                  </instanceof>
+               </iterate>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.AddFixMedicationHandler"
+            commandId="ch.elexis.core.ui.medication.AddFixMedication">
          <activeWhen>
             <with
                   variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
