@@ -619,9 +619,12 @@ public class LabResult extends PersistentObject {
 		
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(PATIENT_ID, Query.EQUALS, pat.getId());
+		qbe.orderBy(false, ITEM_ID);
 		List<LabResult> res = qbe.execute();
 		if (!res.isEmpty()) {
 			for (LabResult labResult : res) {
+				// cache fields by loading together
+				labResult.get(false, ITEM_ID, OBSERVATIONTIME, TIME);
 				addGroupLabResult(labResult, ret);
 			}
 		}

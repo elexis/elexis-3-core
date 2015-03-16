@@ -48,6 +48,8 @@ public class LaborOrdersComposite extends Composite {
 	private int sortColumn = 1;
 	private boolean revert = false;
 	
+	private boolean reloadPending;
+
 	private Patient actPatient;
 	
 	public LaborOrdersComposite(Composite parent, int style){
@@ -221,10 +223,7 @@ public class LaborOrdersComposite extends Composite {
 		if (patient != null) {
 			actPatient = patient;
 			form.setText(actPatient.getLabel());
-			viewer.setInput(getOrders());
-			viewer.setExpandedElements(new Object[] {
-				LabOrder.State.ORDERED
-			});
+			reload();
 		} else {
 			actPatient = patient;
 			form.setText(Messages.LaborOrdersComposite_NoPatientSelected);
@@ -233,7 +232,12 @@ public class LaborOrdersComposite extends Composite {
 	}
 	
 	public void reload(){
+		if (!isVisible()) {
+			reloadPending = true;
+			return;
+		}
 		setRedraw(false);
+		reloadPending = false;
 		if (actPatient != null) {
 			viewer.setInput(getOrders());
 			viewer.setExpandedElements(new Object[] {
@@ -243,6 +247,14 @@ public class LaborOrdersComposite extends Composite {
 		setRedraw(true);
 	}
 	
+	@Override
+	public boolean setFocus(){
+		if (reloadPending) {
+			reload();
+		}
+		return super.setFocus();
+	}
+
 	private List<LabOrder> getOrders(){
 		List<LabOrder> ret = new ArrayList<LabOrder>();
 		List<LabOrder> orders = null;
