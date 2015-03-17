@@ -69,6 +69,7 @@ import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
+import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
@@ -85,9 +86,13 @@ import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Kontakt;
+import ch.elexis.data.Labor;
+import ch.elexis.data.Organisation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
+import ch.elexis.data.Xid;
+import ch.elexis.data.Xid.XIDDomain;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -229,6 +234,35 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 						((Patient) po).setStammarzt(k);
 						ltf.setText(k.getLabel(true));
 					}
+				}
+			}));
+		
+		fields.add(new InputData(Messages.Patientenblatt2_ahvNumber, Xid.DOMAIN_AHV,
+			new LabeledInputField.IContentProvider() {
+				public void displayContent(PersistentObject po, InputData ltf){
+					Patient p = (Patient) po;
+					ltf.setText(p.getXid(Xid.DOMAIN_AHV));
+				}
+				
+				public void reloadContent(final PersistentObject po, final InputData ltf){
+					ArrayList<String> extFlds = new ArrayList<String>();
+					Kontakt k = (Kontakt) po;
+					for (String dom : Xid.getXIDDomains()) {
+						XIDDomain xd = Xid.getDomain(dom);
+						if ((k.istPerson() && xd.isDisplayedFor(Person.class))
+							|| (k.istOrganisation() && xd.isDisplayedFor(Organisation.class))) {
+							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
+						} else if (k.istOrganisation() && xd.isDisplayedFor(Labor.class)) {
+							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom);
+						}
+					}
+					
+					KontaktExtDialog dlg =
+						new KontaktExtDialog(UiDesk.getTopShell(), (Kontakt) po, extFlds
+							.toArray(new String[0]));
+					dlg.open();
+					Patient p = (Patient) po;
+					ltf.setText(p.getXid(Xid.DOMAIN_AHV));
 				}
 			}));
 		
@@ -676,7 +710,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 							}
 							
 							if (!StringTool.isNothing(salutation)) { // salutation should currently
-							// never be empty, but paranoia...
+								// never be empty, but paranoia...
 								SelectedContactInfosText.append(salutation);
 								SelectedContactInfosText.append(StringTool.space);
 							}
