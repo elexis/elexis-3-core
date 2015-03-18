@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.WeakHashMap;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -31,6 +32,7 @@ import ch.elexis.core.ui.laboratory.actions.LabOrderSetObservationDateAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.controls.util.LabOrderEditingSupport;
 import ch.elexis.core.ui.laboratory.preferences.LabSettings;
+import ch.elexis.data.LabItem;
 import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
@@ -268,21 +270,38 @@ public class LaborOrdersComposite extends Composite {
 		// Sorting by priority of labItem
 		if (orders != null) {
 			Collections.sort(orders, new Comparator<LabOrder>() {
+				// keep a cache with LabOrder to prio
+				private WeakHashMap<LabOrder, String> cache = new WeakHashMap<LabOrder, String>();
 				@Override
 				public int compare(LabOrder lo1, LabOrder lo2){
-					String prio1 = "";
-					String prio2 = "";
-					if (lo1.getLabItem() != null && lo1.getLabItem().getPrio() != null) {
-						prio1 = lo1.getLabItem().getPrio();
+					String prio1 = cache.get(lo1);
+					String prio2 = cache.get(lo2);
+					if (prio1 == null) {
+						LabItem item1 = lo1.getLabItem();
+						if (item1 != null && item1.getPrio() != null) {
+							prio1 = item1.getPrio();
+							cache.put(lo1, prio1);
+						} else {
+							prio1 = "";
+							cache.put(lo1, prio1);
+						}
 					}
-					if (lo2.getLabItem() != null && lo2.getLabItem().getPrio() != null) {
-						prio2 = lo2.getLabItem().getPrio();
+					if (prio2 == null) {
+						LabItem item2 = lo2.getLabItem();
+						if (item2 != null && item2.getPrio() != null) {
+							prio2 = item2.getPrio();
+							cache.put(lo2, prio2);
+						} else {
+							prio2 = "";
+							cache.put(lo2, prio2);
+						}
 					}
 					return prio1.compareTo(prio2);
 				}
 			});
 			ret.addAll(orders);
 		}
+
 		return ret;
 	}
 	
