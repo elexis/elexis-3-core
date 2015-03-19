@@ -53,7 +53,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 	public static final String BILLINGCODE = "billingcode"; //$NON-NLS-1$
 	public static final String LOINCCODE = "loinccode"; //$NON-NLS-1$
 	
-	private static final String LABITEMS = "LABORITEMS"; //$NON-NLS-1$
+	static final String LABITEMS = "LABORITEMS"; //$NON-NLS-1$
 	private static final Pattern varPattern = Pattern
 		.compile(TextContainerConstants.MATCH_TEMPLATE);
 	

@@ -12,6 +12,9 @@
 
 package ch.elexis.data;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,6 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.data.LabItem.typ;
@@ -62,6 +66,8 @@ public class LabResult extends PersistentObject {
 		"positiv", "negativ", "pos.", "neg.", "pos", "neg", ">0", "<0"
 	};
 	
+	private static final String QUERY_GROUP_ORDER;
+	
 	@Override
 	protected String getTableName(){
 		return TABLENAME;
@@ -72,6 +78,13 @@ public class LabResult extends PersistentObject {
 			"Quelle=Origin", TIME, UNIT, ANALYSETIME, OBSERVATIONTIME, TRANSMISSIONTIME, REFMALE, //$NON-NLS-1$
 			REFFEMALE, ORIGIN_ID);
 		
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT LW.ID, LW." + OBSERVATIONTIME + ", LW." + DATE + ", LW." + TIME + ", ");
+		sb.append("LI." + LabItem.GROUP + ", LI." + LabItem.SHORTNAME + " ");
+		sb.append("FROM " + TABLENAME + " AS LW LEFT JOIN ");
+		sb.append(LabItem.LABITEMS + " AS LI ON LW." + ITEM_ID + "=LI.ID ");
+		sb.append("WHERE LW." + PATIENT_ID + " LIKE ? AND LW.DELETED LIKE 0");
+		QUERY_GROUP_ORDER = sb.toString();
 	}
 	
 	/**
@@ -218,14 +231,22 @@ public class LabResult extends PersistentObject {
 	 */
 	@Deprecated
 	public TimeTool getDateTime(){
-		String temp = get(TIME);
-		if ((temp == null) || ("".equals(temp))) //$NON-NLS-1$
-			temp = "000000"; //$NON-NLS-1$
-		while (temp.length() < 6) {
-			temp += "0"; //$NON-NLS-1$
+		String[] vals = get(false, TIME, DATE);
+		return translateDateTime(vals[0], vals[1]);
+	}
+	
+	/**
+	 * @since 3.1
+	 */
+	private static TimeTool translateDateTime(String time, String date){
+		if ((time == null) || ("".equals(time))) //$NON-NLS-1$
+			time = "000000"; //$NON-NLS-1$
+		while (time.length() < 6) {
+			time += StringConstants.ZERO;
 		}
-		return new TimeTool(get(DATE) + " " + temp.substring(0, 2) + ":" + temp.substring(2, 4) //$NON-NLS-1$ //$NON-NLS-2$
-			+ ":" + temp.substring(4, 6)); //$NON-NLS-1$
+		return new TimeTool(date + StringConstants.SPACE + time.substring(0, 2)
+			+ StringConstants.COLON + time.substring(2, 4) + StringConstants.COLON
+			+ time.substring(4, 6));
 	}
 	
 	public LabItem getItem(){
@@ -616,55 +637,56 @@ public class LabResult extends PersistentObject {
 		if (pat == null) {
 			return ret;
 		}
-		
-		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
-		qbe.add(PATIENT_ID, Query.EQUALS, pat.getId());
-		qbe.orderBy(false, ITEM_ID);
-		List<LabResult> res = qbe.execute();
-		if (!res.isEmpty()) {
-			for (LabResult labResult : res) {
-				// cache fields by loading together
-				labResult.get(false, ITEM_ID, OBSERVATIONTIME, TIME);
-				addGroupLabResult(labResult, ret);
+
+		PreparedStatement ps = PersistentObject.getConnection().getPreparedStatement(QUERY_GROUP_ORDER);
+		try {
+			ps.setString(1, pat.getId());
+			log.debug(ps.toString());
+			ResultSet resi = ps.executeQuery();
+			
+			while ((resi != null) && (resi.next() == true)) {
+				String val_id = resi.getString(1); // ID
+				String val_ot = resi.getString(2); // Observationtime
+				String val_date = resi.getString(3); // datum
+				String val_time = resi.getString(4); // zeit
+				String val_group = resi.getString(5); // grupppe
+				String val_item = resi.getString(6); // kurzel
+				
+				HashMap<String, HashMap<String, List<LabResult>>> groupMap = ret.get(val_group);
+				if (groupMap == null) {
+					groupMap = new HashMap<String, HashMap<String, List<LabResult>>>();
+					ret.put(val_group, groupMap);
+				}
+				
+				HashMap<String, List<LabResult>> itemMap = groupMap.get(val_item);
+				if (itemMap == null) {
+					itemMap = new HashMap<String, List<LabResult>>();
+					groupMap.put(val_item, itemMap);
+				}
+				
+				TimeTool time = null;
+				if (val_ot != null) {
+					time = new TimeTool(val_ot);
+				} else {
+					time = translateDateTime(val_time, val_date);
+				}
+
+				String date = time.toString(TimeTool.DATE_COMPACT);
+				List<LabResult> resultList = itemMap.get(date);
+				if (resultList == null) {
+					resultList = new ArrayList<LabResult>();
+					itemMap.put(date, resultList);
+				}
+
+				resultList.add(new LabResult(val_id));
 			}
+		} catch (SQLException e) {
+			log.error("Error in fetching labitem groups", e);
+		} finally {
+			PersistentObject.getConnection().releasePreparedStatement(ps);
 		}
+		
 		return ret;
-	}
-	
-	private static void addGroupLabResult(LabResult result,
-		HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> groupMap){
-		String group = result.getItem().getGroup();
-		HashMap<String, HashMap<String, List<LabResult>>> itemMap = groupMap.get(group);
-		if (itemMap == null) {
-			itemMap = new HashMap<String, HashMap<String, List<LabResult>>>();
-		}
-		addItemLabResult(result, itemMap);
-		groupMap.put(group, itemMap);
-	}
-	
-	private static void addItemLabResult(LabResult result,
-		HashMap<String, HashMap<String, List<LabResult>>> itemMap){
-		String item = result.getItem().getKuerzel();
-		HashMap<String, List<LabResult>> dateMap = itemMap.get(item);
-		if (dateMap == null) {
-			dateMap = new HashMap<String, List<LabResult>>();
-		}
-		addDateLabResult(result, dateMap);
-		itemMap.put(item, dateMap);
-	}
-	
-	private static void addDateLabResult(LabResult result, HashMap<String, List<LabResult>> dateMap){
-		TimeTool time = result.getObservationTime();
-		if (time == null) {
-			time = result.getDateTime();
-		}
-		String date = time.toString(TimeTool.DATE_COMPACT);
-		List<LabResult> resultList = dateMap.get(date);
-		if (resultList == null) {
-			resultList = new ArrayList<LabResult>();
-		}
-		resultList.add(result);
-		dateMap.put(date, resultList);
 	}
 	
 	public static void changeObservationTime(Patient patient, TimeTool from, TimeTool to){
