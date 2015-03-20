@@ -13,6 +13,7 @@ package ch.elexis.core.ui.util.viewers;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.Viewer;
@@ -172,7 +173,13 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 	}
 	
 	public void setFocus(){
-		panel.setFocus();
+		List<ActiveControl> controls = panel.getControls();
+		if (controls != null && !controls.isEmpty()) {
+			// if available set the focus on the first control
+			controls.get(0).getCtl().setFocus();
+		} else {
+			panel.setFocus();
+		}
 	}
 	
 	public void setQuery(final Query<? extends PersistentObject> q){
