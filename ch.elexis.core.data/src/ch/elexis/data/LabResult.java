@@ -649,8 +649,8 @@ public class LabResult extends PersistentObject {
 				String val_ot = resi.getString(2); // Observationtime
 				String val_date = resi.getString(3); // datum
 				String val_time = resi.getString(4); // zeit
-				String val_group = resi.getString(5); // grupppe
-				String val_item = resi.getString(6); // kurzel
+				String val_group = getNotNull(resi, 5); // grupppe
+				String val_item = getNotNull(resi, 6); // kurzel
 				
 				HashMap<String, HashMap<String, List<LabResult>>> groupMap = ret.get(val_group);
 				if (groupMap == null) {
@@ -689,6 +689,14 @@ public class LabResult extends PersistentObject {
 		return ret;
 	}
 	
+	private static String getNotNull(ResultSet set, int index) throws SQLException{
+		String ret = set.getString(index);
+		if (ret == null) {
+			ret = "";
+		}
+		return ret;
+	}
+
 	public static void changeObservationTime(Patient patient, TimeTool from, TimeTool to){
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(PATIENT_ID, Query.EQUALS, patient.getId());
