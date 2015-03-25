@@ -56,7 +56,6 @@ public class Query<T> {
 	public static final String NOT_EQUAL = "<>";
 	public static final String LIKE = "LIKE";
 	private StringBuilder sql;
-	
 	private PersistentObject template;
 	private Method load;
 	private final static String SELECT_ID_FROM = "SELECT ID FROM ";
