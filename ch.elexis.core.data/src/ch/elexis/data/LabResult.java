@@ -83,7 +83,7 @@ public class LabResult extends PersistentObject {
 		sb.append("LI." + LabItem.GROUP + ", LI." + LabItem.SHORTNAME + " ");
 		sb.append("FROM " + TABLENAME + " AS LW LEFT JOIN ");
 		sb.append(LabItem.LABITEMS + " AS LI ON LW." + ITEM_ID + "=LI.ID ");
-		sb.append("WHERE LW." + PATIENT_ID + " LIKE ? AND LW.DELETED LIKE 0");
+		sb.append("WHERE LW." + PATIENT_ID + " LIKE ? AND LW.DELETED = '0'");
 		QUERY_GROUP_ORDER = sb.toString();
 	}
 	
