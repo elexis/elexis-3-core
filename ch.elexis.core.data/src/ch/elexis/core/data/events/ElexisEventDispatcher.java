@@ -54,13 +54,14 @@ import ch.elexis.data.PersistentObject;
  * @since 3.0.0 major changes, switch to {@link ElexisContext}
  */
 public final class ElexisEventDispatcher extends Job {
+	private static Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
+	
 	private final List<ElexisEventListener> listeners;
 	private static ElexisEventDispatcher theInstance;
 	private final Map<Class<?>, IElexisEventDispatcher> dispatchers;
 	private final PriorityQueue<ElexisEvent> eventQueue;
 	private final ArrayList<ElexisEvent> eventCopy;
 	private transient boolean bStop = false;
-	private final Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class.getName());
 	
 	private final ElexisContext elexisUIContext;
 	
@@ -101,6 +102,7 @@ public final class ElexisEventDispatcher extends Job {
 	
 	public void registerDispatcher(final Class<? extends PersistentObject> eventClass,
 		final IElexisEventDispatcher ied) throws ElexisException{
+		log.debug("Registering dispatcher for "+eventClass);
 		if (dispatchers.get(eventClass) != null) {
 			throw new ElexisException(getClass(), "Duplicate dispatcher for "
 				+ eventClass.getName(), ElexisException.EE_DUPLICATE_DISPATCHER);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2010, G. Weirich and Elexis
+ * Copyright (c) 2005-2015, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *    G. Weirich - initial implementation
  *    D. Lutz    - case insenitive add()
- * 
+ * 	  MEDEVIT <office@medevit.at>
  *******************************************************************************/
 
 package ch.elexis.data;
@@ -21,6 +21,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
@@ -28,7 +33,6 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
-import ch.rgw.tools.Log;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -38,10 +42,12 @@ import ch.rgw.tools.TimeTool;
  * Die Query-Klasse erledigt alle Datenbankabfragen auf PersistentObjects und davon abgeleitete
  * Klassen.
  * 
- * @author Gerry
+ * @author Gerry Weirich
  */
 
 public class Query<T> {
+	private static Logger log = LoggerFactory.getLogger(Query.class);
+	
 	public static final String EQUALS = "=";
 	public static final String GREATER = ">";
 	public static final String LESS = "<";
@@ -51,7 +57,7 @@ public class Query<T> {
 	public static final String LIKE = "LIKE";
 	// private Query(){/* leer */}
 	private StringBuilder sql;
-	private static Log log = Log.get(Query.class.getName());
+
 	// private boolean restrictions;
 	private PersistentObject template;
 	private Method load;
@@ -289,7 +295,7 @@ public class Query<T> {
 		} else if (mapped.startsWith("EXT:")) {
 			int ix = mapped.indexOf(':', 5);
 			if (ix == -1) {
-				log.log("Ungültiges Feld " + feld, Log.ERRORS);
+				log.error("Ungültiges Feld " + feld);
 				return false;
 			}
 			String table = mapped.substring(4, ix);
@@ -312,7 +318,7 @@ public class Query<T> {
 			// append(mapped,operator,wert);
 			
 		} else if (mapped.matches(".*:.*")) {
-			log.log("Ungültiges Feld " + feld, Log.ERRORS);
+			log.error("Ungültiges Feld " + feld);
 			return false;
 		}
 		
@@ -450,7 +456,7 @@ public class Query<T> {
 			for (String s : n1) {
 				String mapped = template.map(s);
 				if (mapped.matches("[A-Z]{2,}:.+")) {
-					log.log("Ungültiges Feld " + s, Log.ERRORS);
+					log.error("Ungültiges Feld " + s);
 					return;
 				}
 				if (mapped.startsWith("S:D:")) {
@@ -521,7 +527,7 @@ public class Query<T> {
 			 * ().getSimpleName(),Log.ERRORS); return null; }
 			 */
 			ResultSet res = stm.query(expr);
-			log.log("Executed " + expr, Log.DEBUGMSG);
+			log.debug("Executed " + expr);
 			while ((res != null) && (res.next() == true)) {
 				String id = res.getString(1);
 				T o = (T) load.invoke(null, new Object[] {
@@ -549,7 +555,7 @@ public class Query<T> {
 			ElexisStatus status =
 				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					"Fehler bei Datenbankabfrage " + ex.getMessage(), ex, ElexisStatus.LOG_ERRORS);
-			log.log("Fehler bei Datenbankabfrage: " + ex.getMessage(), Log.WARNINGS);
+			log.warn("Fehler bei Datenbankabfrage: " + ex.getMessage());
 			throw new PersistenceException(status);
 		} finally {
 			PersistentObject.getConnection().releaseStatement(stm);
