@@ -49,6 +49,8 @@ public class DatabaseNativeExceptionHandler {
 	
 	// ----------- MYSQL
 	public static final String MYSQL_ERRORCODE_TABLE_EXISTS = "42S01";
+	public static final String MYSQL_ERRORCODE_DUPLICATE_COLUMN = "42S21";
+	public static final String MYSQL_ERRORCODE_DUPLICATE_KEY_NAME = "42000";
 	
 	/**
 	 * 
@@ -60,7 +62,16 @@ public class DatabaseNativeExceptionHandler {
 		String sqlState = e.getSQLState();
 		switch (sqlState) {
 		case MYSQL_ERRORCODE_TABLE_EXISTS:
-			log.info("Found table exists, mitigating error code " + sqlState + ".");
+			log.info("Found table exists, mitigating error code " + sqlState + ": "
+				+ e.getMessage());
+			return false;
+		case MYSQL_ERRORCODE_DUPLICATE_COLUMN:
+			log.info("Found duplicate column, mitigating error code " + sqlState + ": "
+				+ e.getMessage());
+			return false;
+		case MYSQL_ERRORCODE_DUPLICATE_KEY_NAME:
+			log.info("Found duplicate key name, mitigating error code " + sqlState + ": "
+				+ e.getMessage());
 			return false;
 		default:
 		}
@@ -81,12 +92,12 @@ public class DatabaseNativeExceptionHandler {
 		switch (sqlState) {
 		case POSTGRES_ERRORCODE_DUPLICATE_TABLE:
 		case POSTGRES_ERRORCODE_DUPLICATE_COLUMN:
-			log.info("Found duplicate element, mitigating error code " + sqlState + ".");
+			log.info("Found duplicate element, mitigating error code " + sqlState + ": "
+				+ e.getMessage());
 			return false;
 		default:
 		}
 		
 		return true;
 	}
-	
 }
