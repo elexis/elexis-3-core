@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -362,8 +363,6 @@ public class LabMapping extends PersistentObject {
 	
 	private static List<Labor> lookupLabor(String labName){
 		Query<Labor> qbe = new Query<Labor>(Labor.class);
-		qbe.add(Kontakt.FLD_SHORT_LABEL, Query.LIKE, "%" + labName + "%"); //$NON-NLS-1$ //$NON-NLS-2$
-		qbe.or();
 		qbe.add(Kontakt.FLD_NAME1, Query.LIKE, "%" + labName + "%"); //$NON-NLS-1$ //$NON-NLS-2$
 		List<Labor> list = qbe.execute();
 		return list;
@@ -386,7 +385,21 @@ public class LabMapping extends PersistentObject {
 	
 	private static List<LabItem> lookupLabItem(String laborId, String shortDesc, String refM,
 		String refW, String unit){
-		return LabItem.getLabItems(laborId, shortDesc, refM, refW, unit);
+		// dont use laborId of LabItem ... it is in the mappings now
+		List<LabItem> items = LabItem.getLabItems(null, shortDesc, refM, refW, unit);
+		if (!items.isEmpty()) {
+			ArrayList<LabItem> ret = new ArrayList<LabItem>();
+			for (LabItem labItem : items) {
+				List<LabMapping> mappings = getByLabItemId(labItem.getId());
+				for (LabMapping labMapping : mappings) {
+					if (labMapping.get(LabMapping.FLD_ORIGINID).equals(laborId)) {
+						ret.add(labItem);
+					}
+				}
+			}
+			return ret;
+		}
+		return items;
 	}
 	
 	private static void createMapping(Kontakt origin, String itemName, LabItem item){
