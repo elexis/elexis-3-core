@@ -21,14 +21,14 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.jdt.Nullable;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.JdbcLink;
@@ -55,10 +55,8 @@ public class Query<T> {
 	public static final String GREATER_OR_EQUAL = ">=";
 	public static final String NOT_EQUAL = "<>";
 	public static final String LIKE = "LIKE";
-	// private Query(){/* leer */}
 	private StringBuilder sql;
-
-	// private boolean restrictions;
+	
 	private PersistentObject template;
 	private Method load;
 	private final static String SELECT_ID_FROM = "SELECT ID FROM ";
@@ -75,23 +73,7 @@ public class Query<T> {
 	 *            Die Klasse, auf die die Abfrage angewendet werden soll (z.B. Patient.class)
 	 */
 	public Query(final Class<? extends PersistentObject> cl){
-		
-		try {
-			template = CoreHub.poFactory.createTemplate(cl);
-			// template=cl.newInstance();
-			load = cl.getMethod("load", new Class[] {
-				String.class
-			});
-			clear();
-			
-		} catch (Exception ex) {
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					"Query: Konnte Methode load auf " + cl.getName() + " nicht auflösen", ex,
-					ElexisStatus.LOG_ERRORS);
-			throw new PersistenceException(status);
-		}
-		
+		this(cl, null, null);
 	}
 	
 	/**
@@ -104,15 +86,17 @@ public class Query<T> {
 	 * @param value
 	 *            Gesuchter Wert von Feldname
 	 */
-	public Query(final Class<? extends PersistentObject> cl, final String field, final String value){
+	public Query(@NonNull final Class<? extends PersistentObject> cl, @Nullable final String field,
+		@Nullable final String value){
 		try {
 			template = CoreHub.poFactory.createTemplate(cl);
-			// template=cl.newInstance();
 			load = cl.getMethod("load", new Class[] {
 				String.class
 			});
 			clear();
-			add(field, "=", value);
+			if (field != null && value != null) {
+				add(field, "=", value);
+			}
 			
 		} catch (Exception ex) {
 			ElexisStatus status =
@@ -121,7 +105,6 @@ public class Query<T> {
 					ElexisStatus.LOG_ERRORS);
 			throw new PersistenceException(status);
 		}
-		
 	}
 	
 	/**
@@ -246,7 +229,7 @@ public class Query<T> {
 		link = " OR ";
 	}
 	
-/**
+	/**
 	 * Bedingung zufügen. Mehrere Bedingungen können hinzugefügt werden, indem jeweils zwischen
 	 * zwei add() Aufrufen and() oder or() aufgerufen wird.
 	 * Die Abfrage wird noch nicht ausgeführt, sondern erst beim abschliessenden execute()
@@ -255,7 +238,7 @@ public class Query<T> {
 	 * @param wert Der Wert, der gesucht wird. Für Wildcard suche kann der Wert % enthalten,
 	 * der Operator muss dann aber "LIKE" sein
 	 * @param toLower bei true werden die Parameter mit der SQL-Funktion "lower()" in
-+     * Kleinschreibung umgewandelt, so dass die Gross-/Kleinschreibung egal ist.
+     * Kleinschreibung umgewandelt, so dass die Gross-/Kleinschreibung egal ist.
 	 * @return false bei Fehler in der Syntax oder nichtexistenten Feldern
 	 */
 	public boolean add(final String feld, String operator, String wert, final boolean toLower){
@@ -514,18 +497,12 @@ public class Query<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<T> queryExpression(final String expr, Collection<T> ret){
-		// LinkedList<T> ret=new LinkedList<T>();
 		if (ret == null) {
 			ret = new LinkedList<T>();
 		}
 		Stm stm = null;
 		try {
 			stm = PersistentObject.getConnection().getStatement();
-			/*
-			 * if(CoreHub.acl.request("Query"+template.getClass().getSimpleName())== false){
-			 * log.log("Nicht genügend Rechte zum Lesen von "+template.getClass
-			 * ().getSimpleName(),Log.ERRORS); return null; }
-			 */
 			ResultSet res = stm.query(expr);
 			log.debug("Executed " + expr);
 			while ((res != null) && (res.next() == true)) {
@@ -561,12 +538,7 @@ public class Query<T> {
 			PersistentObject.getConnection().releaseStatement(stm);
 		}
 	}
-	
-	/*
-	 * public PersistentObject createFromID(String id){ try{
-	 * return(PersistentObject)load.invoke(null,new Object[]{id}); }catch(Exception ex){
-	 * ExHandler.handle(ex); log.log("Konnte Objekt nicht erzeugen",Log.ERRORS); return null; } }
-	 */
+
 	/**
 	 * Die Grösse des zu erwartenden Resultats abfragen. Dieses Resultat stimmt nur ungefähr, da es
 	 * bis zur tatsächlichen Abfrage noch Änderungen geben kann, und da allfällige postQueryFilter

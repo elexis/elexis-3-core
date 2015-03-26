@@ -171,13 +171,6 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		
 		cache = new SoftCache<String>(3000, 0.7f);
-		// cache=new EhBasedCache<String>(null);
-		/*
-		 * cacheCleaner=new Job("CacheCleaner"){ @Override protected IStatus run(final
-		 * IProgressMonitor monitor) { cache.purge(); schedule(60000L); return Status.OK_STATUS; }
-		 * }; cacheCleaner.setUser(false); cacheCleaner.setPriority(Job.DECORATE);
-		 */
-		// cacheCleaner.schedule(300000L);
 		log.info("Cache setup: default_lifetime " + default_lifetime);
 	}
 	
@@ -485,7 +478,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				ExHandler.handle(ex);
 				return false;
 			} finally {
-				stm.delete();
+				getConnection().releaseStatement(stm);
 				try {
 					is.close();
 				} catch (Exception ex) {
@@ -649,7 +642,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 			return lockid;
 		} finally {
-			stm.delete();
+			getConnection().releaseStatement(stm);
 		}
 	}
 	
@@ -1206,7 +1199,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		} finally {
 			try {
 				rs.close();
-				stm.delete();
+				getConnection().releaseStatement(stm);
 			} catch (SQLException e) {
 				// ignore
 			}
@@ -1243,7 +1236,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		} finally {
 			try {
 				rs.close();
-				stm.delete();
+				getConnection().releaseStatement(stm);
 			} catch (SQLException e) {
 				// ignore
 			}
@@ -1485,7 +1478,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			} finally {
 				try {
 					rs.close();
-					stm.delete();
+					getConnection().releaseStatement(stm);
 				} catch (SQLException e) {
 					// ignore
 				}
@@ -2023,7 +2016,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		} finally {
 			try {
 				rs.close();
-				stm.delete();
+				getConnection().releaseStatement(stm);
 			} catch (SQLException e) {
 				// ignore
 			}
@@ -2286,16 +2279,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            the field to get a key for
 	 * @return a unique key
 	 */
-	private String getKey(final String field){
-		StringBuffer key = new StringBuffer();
-		
-		key.append(getTableName());
-		key.append(".");
-		key.append(getId());
-		key.append("#");
-		key.append(field);
-		
-		return key.toString();
+	private String getKey(final String field){	
+		return getTableName()+"."+getId()+"#"+field;
 	}
 	
 	/**
