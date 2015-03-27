@@ -76,6 +76,7 @@ public class Kontakt extends PersistentObject {
 	public static final String XID_KONTAKT_ANREDE = DOMAIN_KONTAKT + "anrede";
 	public static final String XID_KONTAKT_KANTON = DOMAIN_KONTAKT + "kanton";
 	public static final String XID_KONTAKT_SPEZ = DOMAIN_KONTAKT + "spez";
+	public static final String XID_KONTAKT_ROLLE = DOMAIN_KONTAKT + "rolle";
 	public static final String XID_KONTAKT_LAB_SENDING_FACILITY = DOMAIN_KONTAKT
 		+ "lab/sendingfacility";
 	
@@ -102,6 +103,7 @@ public class Kontakt extends PersistentObject {
 		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_KANTON, "Kanton", Xid.ASSIGNMENT_REGIONAL);
 		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_SPEZ, "Spezialität",
 			Xid.ASSIGNMENT_REGIONAL);
+		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_ROLLE, "Rolle", Xid.ASSIGNMENT_REGIONAL);
 		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_LAB_SENDING_FACILITY,
 			"Sendende Institution", Xid.ASSIGNMENT_REGIONAL);
 		
@@ -196,6 +198,10 @@ public class Kontakt extends PersistentObject {
 		}
 	}
 	
+	public String getPostAnschrift(){
+		return getPostAnschrift(false);
+	}
+
 	public String getPostAnschrift(boolean multiline){
 		String an = get(FLD_ANSCHRIFT);
 		if (StringTool.isNothing(an)) {
