@@ -96,7 +96,7 @@ public class RnActions {
 					Handler.execute(view.getViewSite(), MahnlaufCommand.ID, null);
 					view.cfp.clearValues();
 					view.cfp.cbStat
-						.setText(RnControlFieldProvider.stats[RnControlFieldProvider.stats.length - 4]);
+						.setText(RnControlFieldProvider.stats[RnControlFieldProvider.stats.length - 5]);
 					view.cfp.fireChangedEvent();
 				}
 			};
