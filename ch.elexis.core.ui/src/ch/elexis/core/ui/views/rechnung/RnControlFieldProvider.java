@@ -130,10 +130,14 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 					lPatient.setText(ALLE);
 					cbStat.setText(stats[1]);
 				}
-				if (((actPatient == null) && (oldPatient != null))
-					|| (!actPatient.equals(oldPatient))) {
-					fireChangedEvent();
+				
+				if (actPatient == null && oldPatient == null) {
+					return;
+				} else if (actPatient != null && oldPatient != null
+					&& actPatient.equals(oldPatient)) {
+					return;
 				}
+				fireChangedEvent();
 			}
 		};
 		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_state); //$NON-NLS-1$
