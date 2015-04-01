@@ -37,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -51,8 +52,8 @@ import ch.elexis.admin.AccessControl;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.cache.GuavaCache;
 import ch.elexis.core.data.cache.IPersistentObjectCache;
-import ch.elexis.core.data.cache.SoftCache;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -137,8 +138,11 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	protected static final String DATE_COMPOUND = "Datum=S:D:Datum";
 	
+	// initialize cache
 	public static final int CACHE_DEFAULT_LIFETIME = 15;
 	public static final int CACHE_MIN_LIFETIME = 5;
+	protected static int default_lifetime;
+	private static IPersistentObjectCache<String> cache = new GuavaCache<String>(CACHE_DEFAULT_LIFETIME, TimeUnit.SECONDS);
 	
 	// maximum character length of int fields in tables
 	private static int MAX_INT_LENGTH = 10;
@@ -147,12 +151,11 @@ public abstract class PersistentObject implements IPersistentObject {
 	private static JdbcLink testJdbcLink = null;
 	protected static Logger log = LoggerFactory.getLogger(PersistentObject.class.getName());
 	private String id;
+	
 	private static Hashtable<String, String> mapping;
-	private static IPersistentObjectCache<String> cache;
 	private static String username;
 	private static String pcname;
 	private static String tracetable;
-	protected static int default_lifetime;
 	private static boolean runningFromScratch = false;
 	private static String dbUser;
 	private static String dbPw;
@@ -169,8 +172,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			default_lifetime = CACHE_MIN_LIFETIME;
 			CoreHub.localCfg.set(Preferences.ABL_CACHELIFETIME, CACHE_MIN_LIFETIME);
 		}
-		
-		cache = new SoftCache<String>(3000, 0.7f);
+
 		log.info("Cache setup: default_lifetime " + default_lifetime);
 	}
 	

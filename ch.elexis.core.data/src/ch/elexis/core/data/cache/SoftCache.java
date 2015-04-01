@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 import ch.rgw.tools.Log;
 
 /**
- * A Cache with soft references and optional expiring items The cache keeps count on numbes of items
+ * A Cache with soft references and optional expiring items The cache keeps count on numbers of items
  * that are added, removed or expired and can display its statistic
  * 
  * @author Gerry
@@ -39,6 +39,11 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 		cache = Collections.synchronizedMap(new HashMap<K, CacheEntry>());
 	}
 	
+	/**
+	 * 
+	 * @param num the initial cache capcity
+	 * @param load the load factor
+	 */
 	public SoftCache(final int num, final float load){
 		cache = Collections.synchronizedMap(new HashMap<K, CacheEntry>(num, load));
 	}
