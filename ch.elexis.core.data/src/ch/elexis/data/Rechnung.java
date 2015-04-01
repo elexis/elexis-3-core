@@ -768,13 +768,16 @@ public class Rechnung extends PersistentObject {
 	
 	@Override
 	public String getLabel(){
+		String[] vals = get(true, CASE_ID, BILL_NUMBER, BILL_DATE, BILL_AMOUNT_CENTS);
+		
 		StringBuilder sb = new StringBuilder();
-		sb.append(getNr()).append(" ").append(getDatumRn());
-		Fall fall = getFall();
+		sb.append(vals[1]).append(" ").append(vals[2]);
+		Fall fall = Fall.load(vals[0]);
 		if ((fall != null) && fall.exists()) {
 			sb.append(": ").append(fall.getPatient().getLabel()).append(" ");
 		}
-		sb.append(getBetrag());
+		int value = checkZero(vals[3]);
+		sb.append(new Money(value));
 		return sb.toString();
 	}
 	
