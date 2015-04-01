@@ -12,3 +12,4 @@ Require-Bundle: org.eclipse.core.runtime,
  uk.org.lidalia.sysout-over-slf4j;bundle-version="1.0.2"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: elexis.info
