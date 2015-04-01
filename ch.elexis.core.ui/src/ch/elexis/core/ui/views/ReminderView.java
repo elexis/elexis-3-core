@@ -388,8 +388,9 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				}
 				Patient act = ElexisEventDispatcher.getSelectedPatient();
 				if (act != null) {
-					if (!check.get("IdentID").equals(act.getId())) { //$NON-NLS-1$
-						if (check.getTyp() != Reminder.Typ.anzeigeTodoAll) {
+					String[] vals = check.get(true, Reminder.KONTAKT_ID, Reminder.TYPE);
+					if (!vals[0].equals(act.getId())) {
+						if (Reminder.convertTypStringToTyp(vals[1]) != Reminder.Typ.anzeigeTodoAll) {
 							return false;
 						}
 					}

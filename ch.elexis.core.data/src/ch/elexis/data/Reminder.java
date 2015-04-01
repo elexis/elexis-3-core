@@ -176,12 +176,9 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	
 	@Override
 	public String getLabel(){
-		Kontakt k = Kontakt.load(get(KONTAKT_ID));
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append(get(DUE)).append(" (").append(getConfiguredKontaktLabel(k)).append("): ")
-			.append(get(MESSAGE));
-		return sb.toString();
+		String[] vals = get(true, KONTAKT_ID, DUE, MESSAGE);		
+		Kontakt k = Kontakt.load(vals[0]);
+		return vals[1]+" ("+getConfiguredKontaktLabel(k)+"): "+vals[2];
 	}
 	
 	private String getConfiguredKontaktLabel(Kontakt k){
@@ -201,11 +198,21 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	}
 	
 	public Typ getTyp(){
-		String t = get(TYPE);
-		if (StringTool.isNothing(t)) {
-			t = "1";
+		return convertTypStringToTyp(get(TYPE));
+	}
+	
+	/**
+	 * Convert the string value returned from {@link TYPE} into 
+	 * an element {@link Typ}
+	 * @param typString
+	 * @return
+	 * @since 3.1
+	 */
+	public static Typ convertTypStringToTyp(String typString){
+		if (StringTool.isNothing(typString)) {
+			typString = "1";
 		}
-		Typ ret = Typ.values()[Byte.parseByte(t)];
+		Typ ret = Typ.values()[Byte.parseByte(typString)];
 		return ret;
 	}
 	
