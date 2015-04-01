@@ -9,10 +9,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheStats;
 
 /**
- * A short-term guava cache automatically expiring objects after a certain
- * amount of time. Resembles the behaviour of the original {@link SoftCache};
- * however, not considering single object deviating cache times as propagated
- * by {@link PersistentObject#getCacheTime()}
+ * A short-term guava cache automatically expiring objects after a certain amount of time. Resembles
+ * the behaviour of the original {@link SoftCache}; however, not considering single object deviating
+ * cache times as propagated by {@link PersistentObject#getCacheTime()}
  *
  * @param <K>
  */
@@ -27,6 +26,8 @@ public class GuavaCache<K> implements IPersistentObjectCache<K> {
 	
 	@Override
 	public void put(K key, Object object, int timeToCacheInSeconds){
+		if (key == null || object == null)
+			return;
 		shortTermCache.put(key, object);
 	}
 	
