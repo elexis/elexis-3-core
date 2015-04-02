@@ -375,13 +375,14 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	
 	@Override
 	public String getTitelSuffix(){
-		return entity.get(Person.FLD_TITLE_SUFFIX);
+		return cache.titelSuffix;
 	}
 	
 	@Override
 	public void setTitelSuffix(String value){
-		// TODO Auto-generated method stub
-		
+		String old = getTitel();
+		entity.set(Person.FLD_TITLE_SUFFIX, value);
+		firePropertyChange("titelSuffix", old, value);
 	}
 	
 	// Patient -----------------------
@@ -493,17 +494,17 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	 */
 	private class ContactCache {
 		boolean isDeleted, isPerson, isOrganization, isMandator, isUser, isPatient;
-		String patientNr, description1, description2, description3, titel;
+		String patientNr, description1, description2, description3, titel, titelSuffix;
 		TimeTool dateOfBirth;
 		ContactGender sex;
 		
 		public ContactCache(){
-			String[] labels = new String[13];
+			String[] labels = new String[14];
 			entity.get(new String[] {
 				Kontakt.FLD_DELETED, Kontakt.FLD_IS_PERSON, Kontakt.FLD_IS_ORGANIZATION,
 				Kontakt.FLD_IS_MANDATOR, Kontakt.FLD_IS_USER, Kontakt.FLD_IS_PATIENT,
 				Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3, Person.BIRTHDATE,
-				Person.SEX, Patient.FLD_PATID, Person.TITLE
+				Person.SEX, Patient.FLD_PATID, Person.TITLE, Person.FLD_TITLE_SUFFIX
 			}, labels);
 			
 			isDeleted = labels[0].equals(StringConstants.ONE);
@@ -519,6 +520,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 			sex = switchSex(labels[10]);
 			patientNr = labels[11];
 			titel = labels[12];
+			titelSuffix = labels[13];
 		}
 		
 		private ContactGender switchSex(String labels){

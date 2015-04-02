@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.views;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,7 @@ import ch.elexis.core.ui.contacts.views.provider.ContactSelectorObservableMapLab
 import ch.elexis.core.ui.contacts.views.provider.TableDecoratingLabelProvider;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
+import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 
 /**
@@ -276,7 +278,12 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 		public void run(){
 			// Date d, e, f, g, h, i, j;
 			// d = new Date();
-			Query<Kontakt> qbe = new Query<>(Kontakt.class);
+			Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class, null, null, Kontakt.TABLENAME, new String[] {
+				Kontakt.FLD_DELETED, Kontakt.FLD_IS_PERSON, Kontakt.FLD_IS_ORGANIZATION,
+				Kontakt.FLD_IS_MANDATOR, Kontakt.FLD_IS_USER, Kontakt.FLD_IS_PATIENT,
+				Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3, Person.BIRTHDATE,
+				Person.SEX, Patient.FLD_PATID, Person.TITLE, Person.FLD_TITLE_SUFFIX
+			});
 			// e = new Date();
 			List<Kontakt> qre = qbe.execute();
 			// f = new Date(); // 2598
