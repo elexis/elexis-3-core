@@ -1038,7 +1038,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
-	 * Aus einem Feldnamen das dazugehörige Datenbankfeld ermitteln
+	 * Aus einem Feldnamen das dazugehörige Datenbankfeld ermitteln, beinhaltet das jeweilige Prefix
 	 * 
 	 * @param f
 	 *            Der Feldname
@@ -1046,15 +1046,26 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         existiert.
 	 */
 	public String map(final String f){
-		if (f.equals("ID")) {
-			return f;
-		}
 		String prefix = getTableName();
-		String res = mapping.get(prefix + f);
-		if (res == null) {
-			log.info("field is not mapped " + f);
-			return MAPPING_ERROR_MARKER + f + "**";
+		return map(prefix, f);
+	}
+	
+	/**
+	 * Return the database field corresponding to an internal Elexis field valud
+	 * @param tableName the tableName
+	 * @param field the field name
+	 * @return the database field or **ERROR** if no mapping exists
+	 * @since 3.1
+	 */
+	public static String map(final String tableName, final String field) {
+		if(field.equals("ID")) return field;
+		
+		String res = mapping.get(tableName + field);
+		if(res==null) {
+			log.info("field is not mapped " + field);
+			return MAPPING_ERROR_MARKER + field + "**";
 		}
+		
 		return res;
 	}
 	
@@ -1298,6 +1309,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public @Nullable
 	Object getExtInfoStoredObjectByKey(final Object key){
+		// query cache?
 		byte[] binaryRaw = getBinaryRaw(FLD_EXTINFO);
 		if (binaryRaw == null)
 			return null;
@@ -2788,6 +2800,23 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	public void removeChangeListener(IChangeListener listener, String fieldObserved){
 		
+	}
+
+	/**
+	 * put the value into the cache, will use the cache time as delievered by
+	 * {@link PersistentObject#getCacheTime()}
+	 * 
+	 * @param field
+	 *            name, must map to a database column, see {@link PersistentObject#map(String)}
+	 * @param value
+	 *            the value to cache
+	 * @since 3.1
+	 */
+	public void putInCache(String field, Object value){
+		String key = getKey(field);
+		if (value == null)
+			value = "";
+		cache.put(key, value, getCacheTime());
 	}
 	
 }

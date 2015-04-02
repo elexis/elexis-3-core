@@ -67,7 +67,7 @@ public class Kontakt extends PersistentObject {
 	public static final String FLD_NAME3 = "Bezeichnung3"; //$NON-NLS-1$
 	public static final String FLD_NAME2 = "Bezeichnung2"; //$NON-NLS-1$
 	public static final String FLD_NAME1 = "Bezeichnung1"; //$NON-NLS-1$
-	protected static final String TABLENAME = "KONTAKT"; //$NON-NLS-1$
+	public static final String TABLENAME = "KONTAKT"; //$NON-NLS-1$
 	public static final String[] DEFAULT_SORT = {
 		FLD_NAME1, FLD_NAME2, FLD_STREET, FLD_PLACE
 	};

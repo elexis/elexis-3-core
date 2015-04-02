@@ -17,13 +17,16 @@ import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
@@ -54,47 +57,94 @@ public class Query<T> {
 	public static final String LESS_OR_EQUAL = "<=";
 	public static final String GREATER_OR_EQUAL = ">=";
 	public static final String NOT_EQUAL = "<>";
+	
+	private final static String SELECT_ID_FROM = "SELECT ID FROM ";
 	public static final String LIKE = "LIKE";
+	private String link = " WHERE ";
+
 	private StringBuilder sql;
 	private PersistentObject template;
 	private Method load;
-	private final static String SELECT_ID_FROM = "SELECT ID FROM ";
-	private String link = " WHERE ";
 	private String lastQuery = "";
 	private final LinkedList<IFilter> postQueryFilters = new LinkedList<IFilter>();
 	private String ordering;
 	private final ArrayList<String> exttables = new ArrayList<String>(2);
 	
+	private final String[] ID_FETCH_VAL = new String[] {
+		"ID"
+	};
+	private final String[] fetchVals;
+	
 	/**
-	 * Konstruktor
-	 * 
 	 * @param cl
-	 *            Die Klasse, auf die die Abfrage angewendet werden soll (z.B. Patient.class)
+	 *            the class to apply the query on
 	 */
-	public Query(final Class<? extends PersistentObject> cl){
+	public Query(@NonNull final Class<? extends PersistentObject> cl){
 		this(cl, null, null);
 	}
 	
 	/**
-	 * Bequemlichkeits-Konstruktor, der gleich eine Bedingung einträgt
+	 * convenience constructor adding a query condition
 	 * 
 	 * @param cl
-	 *            Klasse, auf die Abfrage angewendet wird
+	 *            the class to apply the query on
 	 * @param field
-	 *            Feldname
 	 * @param value
-	 *            Gesuchter Wert von Feldname
+	 *            value that field should be equal with
 	 */
-	public Query(@NonNull final Class<? extends PersistentObject> cl, @Nullable final String field,
+	public Query(final Class<? extends PersistentObject> cl, @Nullable final String field,
 		@Nullable final String value){
+		this(cl, field, value, null, (String[]) null);
+	}
+	
+	/**
+	 * Initialize a query with optional pre-fetch
+	 * @param cl
+	 * @param field
+	 * @param value
+	 * @param tableName
+	 *            the name of the database table the values are stored in
+	 * @param prefetch
+	 *            array of values to pre-fetch. These must map to columns in the database.
+	 * @throws UnsupportedOperationException
+	 *             for unsupported pre-fetch fields
+	 * @since 3.1
+	 */
+	public Query(final Class<? extends PersistentObject> cl, @Nullable final String field,
+		@Nullable final String value, @Nullable final String tableName,
+		@Nullable final String[] prefetch){
+		
 		try {
+			if (prefetch != null) {
+				// resolve the delivered field names to the real database columns
+				// consider the resp. datatypes stored
+				List<String> mappedPrefetchValues =
+					new ArrayList<String>(Arrays.asList(ID_FETCH_VAL));
+				for (int i = 0; i < prefetch.length; i++) {
+					String map = PersistentObject.map(tableName, prefetch[i]);
+					if (!map.contains(":")) {
+						mappedPrefetchValues.add(map);
+					} else if (map.startsWith("S:")) {
+						mappedPrefetchValues.add(map.substring(4));
+					} else {
+						throw new UnsupportedOperationException("prefetch value not supported: "
+							+ prefetch[i] + " maps to " + map);
+					}
+				}
+				
+				fetchVals = mappedPrefetchValues.toArray(new String[] {});
+			} else {
+				fetchVals = ID_FETCH_VAL;
+			}
+			
 			template = CoreHub.poFactory.createTemplate(cl);
 			load = cl.getMethod("load", new Class[] {
 				String.class
 			});
-			clear();
+			clear(false);
+			
 			if (field != null && value != null) {
-				add(field, "=", value);
+				add(field, EQUALS, value);
 			}
 			
 		} catch (Exception ex) {
@@ -120,13 +170,13 @@ public class Query<T> {
 	public Query(Class<? extends PersistentObject> cl, final String string){
 		try {
 			template = CoreHub.poFactory.createTemplate(cl);
-			// template=cl.newInstance();
 			load = cl.getMethod("load", new Class[] {
 				String.class
 			});
 			sql = new StringBuilder(500);
 			sql.append(string);
 			ordering = null;
+			fetchVals = ArrayUtils.EMPTY_STRING_ARRAY;
 		} catch (Exception ex) {
 			ElexisStatus status =
 				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
@@ -134,7 +184,6 @@ public class Query<T> {
 					ElexisStatus.LOG_ERRORS);
 			throw new PersistenceException(status);
 		}
-		
 	}
 	
 	/**
@@ -157,7 +206,16 @@ public class Query<T> {
 	public void clear(boolean includeDeletedEntriesInQuery){
 		sql = new StringBuilder(500);
 		String table = template.getTableName();
-		sql.append(SELECT_ID_FROM).append(table);
+		
+		sql.append("SELECT ");
+		for (int i = 0; i < fetchVals.length; i++) {
+			sql.append(fetchVals[i]);
+			if (i + 1 < fetchVals.length) {
+				sql.append(", ");
+			}
+		}
+		sql.append(" FROM ").append(table);
+		
 		String cns = template.getConstraint();
 		if (cns.equals("")) {
 			if (includeDeletedEntriesInQuery) {
@@ -180,9 +238,9 @@ public class Query<T> {
 	private void append(final String... s){
 		sql.append(link);
 		for (String a : s) {
-			sql.append(" ").append(a);
+			sql.append(StringConstants.SPACE).append(a);
 		}
-		if (link.equals(" WHERE ") || link.equals("")) {
+		if (link.equals(" WHERE ") || link.equals(StringConstants.EMPTY)) {
 			link = " AND ";
 		}
 	}
@@ -192,7 +250,7 @@ public class Query<T> {
 	 */
 	public void startGroup(){
 		append("(");
-		link = "";
+		link = StringConstants.EMPTY;
 	}
 	
 	/**
@@ -228,17 +286,19 @@ public class Query<T> {
 		link = " OR ";
 	}
 	
+
 	/**
 	 * Bedingung zufügen. Mehrere Bedingungen können hinzugefügt werden, indem jeweils zwischen
-	 * zwei add() Aufrufen and() oder or() aufgerufen wird.
-	 * Die Abfrage wird noch nicht ausgeführt, sondern erst beim abschliessenden execute()
-	 * @param feld	Das Feld, für das die Bedingung gilt
+	 * zwei add() Aufrufen and() oder or() aufgerufen wird. Die Abfrage wird noch nicht ausgeführt, 
+	 * sondern erst beim abschliessenden execute().
+	 *
+	 * @param feld Das Feld, für das die Bedingung gilt
 	 * @param operator Vergleich (z.B. "=", "LIKE", ">", "<")
-	 * @param wert Der Wert, der gesucht wird. Für Wildcard suche kann der Wert % enthalten,
+	 * @param wert Der Wert, der gesucht wird. Für Wildcard suche kann der Wert % enthalten, 
 	 * der Operator muss dann aber "LIKE" sein
-	 * @param toLower bei true werden die Parameter mit der SQL-Funktion "lower()" in
-     * Kleinschreibung umgewandelt, so dass die Gross-/Kleinschreibung egal ist.
-	 * @return false bei Fehler in der Syntax oder nichtexistenten Feldern
+	 * @param toLower ei true werden die Parameter mit der SQL-Funktion "lower()" in 
+	 * Kleinschreibung umgewandelt, so dass die Gross-/Kleinschreibung egal ist.
+	 * @return bei Fehler in der Syntax oder nichtexistenten Feldern
 	 */
 	public boolean add(final String feld, String operator, String wert, final boolean toLower){
 		String mapped;
@@ -312,7 +372,6 @@ public class Query<T> {
 			append(mapped, "is", operator, "null");
 		} else {
 			wert = PersistentObject.getConnection().wrapFlavored(wert);
-			// wert = JdbcLink.wrap(wert);
 			if (toLower) {
 				mapped = "lower(" + mapped + ")";
 				wert = "lower(" + wert + ")";
@@ -368,7 +427,7 @@ public class Query<T> {
 	 */
 	public List<T> queryFields(final String[] fields, final String[] values, final boolean exact){
 		clear();
-		String op = "=";
+		String op = EQUALS;
 		if (exact == false) {
 			op = " LIKE ";
 		}
@@ -396,29 +455,6 @@ public class Query<T> {
 					"Fehler beim PreparedStatement " + ex.getMessage(), ex, ElexisStatus.LOG_ERRORS);
 			throw new PersistenceException(status);
 		}
-	}
-	
-	public ArrayList<String> execute(final PreparedStatement ps, final String[] values){
-		
-		try {
-			for (int i = 0; i < values.length; i++) {
-				ps.setString(i + 1, values[i]);
-			}
-			if (ps.execute() == true) {
-				ArrayList<String> ret = new ArrayList<String>();
-				ResultSet res = ps.getResultSet();
-				while (res.next()) {
-					ret.add(res.getString(1));
-				}
-				return ret;
-			}
-		} catch (Exception ex) {
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					"Fehler beim Ausführen von " + sql.toString(), ex, ElexisStatus.LOG_ERRORS);
-			throw new PersistenceException(status);
-		}
-		return null;
 	}
 	
 	/**
@@ -465,13 +501,8 @@ public class Query<T> {
 	 * @return eine Liste aus Objekten, die das Resultat der Abfrage sind.
 	 */
 	public List<T> execute(){
-		if (ordering != null) {
-			sql.append(ordering);
-		}
-		lastQuery = sql.toString();
-		// log.log("Executing query: "+lastQuery,Log.DEBUGMSG);
 		LinkedList<T> ret = new LinkedList<T>();
-		return (List<T>) queryExpression(lastQuery, ret);
+		return (List<T>) execute(ret);
 	}
 	
 	public Collection<T> execute(final Collection<T> collection){
@@ -480,6 +511,28 @@ public class Query<T> {
 		}
 		lastQuery = sql.toString();
 		return queryExpression(lastQuery, collection);
+	}
+	
+	public ArrayList<String> execute(final PreparedStatement ps, final String[] values){
+		try {
+			for (int i = 0; i < values.length; i++) {
+				ps.setString(i + 1, values[i]);
+			}
+			if (ps.execute() == true) {
+				ArrayList<String> ret = new ArrayList<String>();
+				ResultSet res = ps.getResultSet();
+				while (res.next()) {
+					ret.add(res.getString(1));
+				}
+				return ret;
+			}
+		} catch (Exception ex) {
+			ElexisStatus status =
+				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+					"Fehler beim Ausführen von " + sql.toString(), ex, ElexisStatus.LOG_ERRORS);
+			throw new PersistenceException(status);
+		}
+		return null;
 	}
 	
 	/**
@@ -502,16 +555,26 @@ public class Query<T> {
 		Stm stm = null;
 		try {
 			stm = PersistentObject.getConnection().getStatement();
+			
 			ResultSet res = stm.query(expr);
 			log.debug("Executed " + expr);
 			while ((res != null) && (res.next() == true)) {
-				String id = res.getString(1);
+				final String id = res.getString(1);
 				T o = (T) load.invoke(null, new Object[] {
 					id
 				});
 				if (o == null) {
 					continue;
 				}
+				
+				if (fetchVals.length > 1) {
+					final PersistentObject po = (PersistentObject) o;
+					for (int i = 1; i < fetchVals.length; i++) {
+						Object prefetchVal = res.getObject(i + 1);
+						po.putInCache(fetchVals[i], prefetchVal);
+					}
+				}
+				
 				boolean bAdd = true;
 				for (IFilter fi : postQueryFilters) {
 					if (fi.select(o) == false) {
@@ -537,7 +600,7 @@ public class Query<T> {
 			PersistentObject.getConnection().releaseStatement(stm);
 		}
 	}
-
+	
 	/**
 	 * Die Grösse des zu erwartenden Resultats abfragen. Dieses Resultat stimmt nur ungefähr, da es
 	 * bis zur tatsächlichen Abfrage noch Änderungen geben kann, und da allfällige postQueryFilter
