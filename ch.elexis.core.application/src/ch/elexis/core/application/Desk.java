@@ -58,12 +58,19 @@ public class Desk implements IApplication {
 			Shell shell = PlatformUI.createDisplay().getActiveShell();
 			StringBuilder sb = new StringBuilder();
 			sb.append("Could not open database connection. Quitting Elexis.\n\n");
-			sb.append("Message: " + pe.getMessage()+"\n\n");
+			sb.append("Message: " + pe.getMessage() + "\n\n");
 			while (pe.getCause() != null) {
 				pe = pe.getCause();
-				sb.append("Reason: "+pe.getMessage()+"\n");
+				sb.append("Reason: " + pe.getMessage() + "\n");
 			}
-			MessageDialog.openError(shell, "Error in database connection", sb.toString());
+			sb.append("\n\nWould you like to re-configure the database connection?");
+			boolean retVal = MessageDialog.openQuestion(shell,
+				"Error in database connection",
+				sb.toString());
+			
+			if(retVal) {
+				cod.requestDatabaseConnectionConfiguration();
+			}
 			
 			return IApplication.EXIT_OK;
 		}

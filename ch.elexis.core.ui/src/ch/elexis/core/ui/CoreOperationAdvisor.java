@@ -23,6 +23,7 @@ import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
+import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.ErsterMandantDialog;
@@ -43,6 +44,9 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		wd.create();
 		SWTHelper.center(wd.getShell());
 		wd.open();
+		CoreHub.localCfg.flush();
+		MessageEvent.fireInformation("Datenbankverbindung geändert",
+			"Bitte starten Sie Elexis erneut");
 	}
 	
 	@Override
