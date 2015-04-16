@@ -18,6 +18,8 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -28,6 +30,7 @@ import ch.elexis.core.exceptions.PersistenceException;
 import ch.rgw.tools.ExHandler;
 
 public class PersistentObjectFactory implements IExecutableExtension {
+	private static Logger log = LoggerFactory.getLogger(PersistentObjectFactory.class);
 	
 	private static HashMap<String, PersistentObjectFactory> poFactoryCache = new HashMap<>();
 	
@@ -48,7 +51,12 @@ public class PersistentObjectFactory implements IExecutableExtension {
 		// try to resolve factory from cache
 		PersistentObjectFactory persistentObjectFactory = poFactoryCache.get(type.getName());
 		if (persistentObjectFactory != null) {
-			return persistentObjectFactory.doCreateTemplate(type);
+			PersistentObject poTemplate = persistentObjectFactory.doCreateTemplate(type);
+			if (poTemplate != null) {
+				return poTemplate;
+			}
+			log.info("Could not create template for [" + type.getName() + "] with cached factory ["
+				+ persistentObjectFactory + "]");
 		}
 		
 		try {
