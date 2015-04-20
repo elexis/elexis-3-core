@@ -219,12 +219,21 @@ public class RnActions {
 				@Override
 				public void run(){
 					List<Rechnung> list = view.createList();
-					if (list.size() > 0) {
-						Rechnung actRn = list.get(0);
+					if (!list.isEmpty()) {
 						try {
-							if (new RnDialogs.GebuehrHinzuDialog(view.getViewSite().getShell(),
-								actRn).open() == Dialog.OK) {
-								ElexisEventDispatcher.update(actRn);
+							if (list.size() == 1) {
+								Rechnung actRn = list.get(0);
+								if (new RnDialogs.GebuehrHinzuDialog(view.getViewSite().getShell(),
+									actRn).open() == Dialog.OK) {
+									ElexisEventDispatcher.update(actRn);
+								}
+							} else {
+								if (new RnDialogs.MultiGebuehrHinzuDialog(view.getViewSite()
+									.getShell(), list).open() == Dialog.OK) {
+									for (Rechnung rn : list) {
+										ElexisEventDispatcher.update(rn);
+									}
+								}
 							}
 						} catch (ElexisException e) {
 							SWTHelper.showError("Zahlung hinzufügen ist nicht möglich",
@@ -245,11 +254,20 @@ public class RnActions {
 				@Override
 				public void doRun(){
 					List<Rechnung> list = view.createList();
-					if (list.size() > 0) {
-						Rechnung actRn = list.get(0);
-						if (new RnDialogs.StatusAendernDialog(view.getViewSite().getShell(), actRn)
-							.open() == Dialog.OK) {
-							ElexisEventDispatcher.update(actRn);
+					if (!list.isEmpty()) {
+						if (list.size() == 1) {
+							Rechnung actRn = list.get(0);
+							if (new RnDialogs.StatusAendernDialog(view.getViewSite().getShell(),
+								actRn).open() == Dialog.OK) {
+								ElexisEventDispatcher.update(actRn);
+							}
+						} else {
+							if (new RnDialogs.MultiStatusAendernDialog(view.getViewSite()
+								.getShell(), list).open() == Dialog.OK) {
+								for (Rechnung rn : list) {
+									ElexisEventDispatcher.update(rn);
+								}
+							}
 						}
 					}
 				}
@@ -263,7 +281,7 @@ public class RnActions {
 				@Override
 				public void run(){
 					List<Rechnung> list = view.createList();
-					if (list.size() > 0) {
+					if (!list.isEmpty()) {
 						Rechnung actRn = list.get(0);
 						if (new RnDialogs.StornoDialog(view.getViewSite().getShell(), actRn).open() == Dialog.OK) {
 							ElexisEventDispatcher.update(actRn);
@@ -280,20 +298,21 @@ public class RnActions {
 				public void run(){
 					List<Rechnung> list = view.createList();
 					if (list.size() > 0) {
-						Rechnung actRn = list.get(0);
-						switch (actRn.getStatus()) {
-						case RnStatus.OFFEN_UND_GEDRUCKT:
-							actRn.setStatus(RnStatus.MAHNUNG_1);
-							break;
-						case RnStatus.MAHNUNG_1_GEDRUCKT:
-							actRn.setStatus(RnStatus.MAHNUNG_2);
-							break;
-						case RnStatus.MAHNUNG_2_GEDRUCKT:
-							actRn.setStatus(RnStatus.MAHNUNG_3);
-							break;
-						default:
-							SWTHelper.showInfo(Messages.RnActions_changeStateErrorCaption, //$NON-NLS-1$
-								Messages.RnActions_changeStateErrorMessage); //$NON-NLS-1$
+						for (Rechnung actRn : list) {
+							switch (actRn.getStatus()) {
+							case RnStatus.OFFEN_UND_GEDRUCKT:
+								actRn.setStatus(RnStatus.MAHNUNG_1);
+								break;
+							case RnStatus.MAHNUNG_1_GEDRUCKT:
+								actRn.setStatus(RnStatus.MAHNUNG_2);
+								break;
+							case RnStatus.MAHNUNG_2_GEDRUCKT:
+								actRn.setStatus(RnStatus.MAHNUNG_3);
+								break;
+							default:
+								SWTHelper.showInfo(Messages.RnActions_changeStateErrorCaption, //$NON-NLS-1$
+									Messages.RnActions_changeStateErrorMessage); //$NON-NLS-1$
+							}
 						}
 					}
 					

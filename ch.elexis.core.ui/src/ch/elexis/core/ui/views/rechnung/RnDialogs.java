@@ -21,7 +21,12 @@ import java.util.Properties;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -101,6 +106,98 @@ public class RnDialogs {
 			if (ret != null) {
 				ret = ret.multiply(-1.0);
 				rn.addZahlung(ret, bemerkung.getText(), new TimeTool(dp.getDate().getTime()));
+				super.okPressed();
+			} else {
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid,
+					Messages.RnDialogs_invalidFormat, //$NON-NLS-1$ //$NON-NLS-2$
+					new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			
+		}
+	}
+	
+	public static class MultiGebuehrHinzuDialog extends TitleAreaDialog {
+		private List<Rechnung> rechnungen;
+		private List<String> rnNumbers;
+		
+		private DatePickerCombo dp;
+		private Text amount;
+		private Text bemerkung;
+		private TableViewer tableViewer;
+		
+		public MultiGebuehrHinzuDialog(Shell shell, List<Rechnung> rechnungen)
+			throws ElexisException{
+			super(shell);
+			this.rechnungen = rechnungen;
+			
+			rnNumbers = new ArrayList<String>();
+			for (Rechnung rn : rechnungen) {
+				if (rn.getStatus() == RnStatus.STORNIERT) {
+					throw new ElexisException(getClass(), RECHNUNG_IST_STORNIERT, ERR_STORNO);
+				}
+				rnNumbers.add(rn.getNr());
+			}
+		}
+		
+		@Override
+		protected Control createDialogArea(Composite parent){
+			Composite ret = new Composite(parent, SWT.NONE);
+			ret.setLayout(new GridLayout());
+			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+			
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); //$NON-NLS-1$
+			dp = new DatePickerCombo(ret, SWT.NONE);
+			dp.setDate(new Date());
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); //$NON-NLS-1$
+			// nf=NumberFormat.getCurrencyInstance();
+			amount = new Text(ret, SWT.BORDER);
+			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
+			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); //$NON-NLS-1$
+			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
+			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+			amount.setFocus();
+			
+			tableViewer = new TableViewer(ret, SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+			GridData gd_Table = new GridData();
+			gd_Table.grabExcessHorizontalSpace = true;
+			gd_Table.horizontalSpan = 1;
+			gd_Table.minimumHeight = 100;
+			gd_Table.heightHint = 100;
+			tableViewer.getTable().setLayoutData(gd_Table);
+			tableViewer.getTable().setHeaderVisible(true);
+			tableViewer.getTable().setLinesVisible(false);
+			tableViewer.setContentProvider(new ArrayContentProvider());
+			TableViewerColumn colRnNumber = new TableViewerColumn(tableViewer, SWT.NONE);
+			colRnNumber.getColumn().setWidth(200);
+			colRnNumber.getColumn().setText(Messages.RnDialogs_invoiceNumber);
+			colRnNumber.setLabelProvider(new ColumnLabelProvider());
+			
+			tableViewer.setInput(rnNumbers);
+			
+			return ret;
+		}
+		
+		@Override
+		public void create(){
+			super.create();
+			setTitle(Messages.RnDialogs_addExpenseMulti); //$NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_addExpense); //$NON-NLS-1$
+			setMessage(Messages.RnDialogs_enterAmount); //$NON-NLS-1$
+			setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
+		}
+		
+		@Override
+		protected void okPressed(){
+			
+			// Number num=df.parse(amount.getText());
+			Money ret = MoneyInput.getFromTextField(amount);
+			if (ret != null) {
+				ret = ret.multiply(-1.0);
+				TimeTool ttDate = new TimeTool(dp.getDate().getTime());
+				for (Rechnung rn : rechnungen) {
+					rn.addZahlung(ret, bemerkung.getText(), ttDate);
+				}
 				super.okPressed();
 			} else {
 				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid,
@@ -215,6 +312,77 @@ public class RnDialogs {
 			super.okPressed();
 		}
 		
+	}
+	
+	public static class MultiStatusAendernDialog extends TitleAreaDialog {
+		private List<Rechnung> rechnungen;
+		private List<String> rnNumbers;
+		private Combo cbStates;
+		private TableViewer tableViewer;
+		
+		public MultiStatusAendernDialog(Shell shell, List<Rechnung> rechnungen){
+			super(shell);
+			this.rechnungen = rechnungen;
+			
+			rnNumbers = new ArrayList<String>();
+			for (Rechnung rn : rechnungen) {
+				rnNumbers.add(rn.getNr());
+			}
+		}
+		
+		@Override
+		protected Control createDialogArea(Composite parent){
+			Composite ret = new Composite(parent, SWT.NONE);
+			ret.setLayout(new GridLayout());
+			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+			Label lblSelectState = new Label(ret, SWT.NONE);
+			lblSelectState.setText(Messages.RnDialogs_pleaseNewStateForMulti);
+			
+			cbStates = new Combo(ret, SWT.READ_ONLY);
+			cbStates.setItems(RnStatus.getStatusTexts());
+			cbStates.setVisibleItemCount(RnStatus.getStatusTexts().length);
+			cbStates.select(rechnungen.get(0).getStatus());
+			cbStates.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			
+			tableViewer = new TableViewer(ret, SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+			GridData gd_Table = new GridData();
+			gd_Table.grabExcessHorizontalSpace = true;
+			gd_Table.horizontalSpan = 1;
+			gd_Table.minimumHeight = 150;
+			gd_Table.heightHint = 150;
+			tableViewer.getTable().setLayoutData(gd_Table);
+			tableViewer.getTable().setHeaderVisible(true);
+			tableViewer.getTable().setLinesVisible(false);
+			
+			tableViewer.setContentProvider(new ArrayContentProvider());
+			TableViewerColumn colRnNumber = new TableViewerColumn(tableViewer, SWT.NONE);
+			colRnNumber.getColumn().setWidth(200);
+			colRnNumber.getColumn().setText(Messages.RnDialogs_invoiceNumber);
+			colRnNumber.setLabelProvider(new ColumnLabelProvider());
+			
+			tableViewer.setInput(rnNumbers);
+			
+			return ret;
+		}
+		
+		@Override
+		public void create(){
+			super.create();
+			getShell().setText(Messages.RnDialogs_modifyInvoiceState); //$NON-NLS-1$
+			setTitle(Messages.RnDialogs_modifyInvoiceStateMulti); //$NON-NLS-1$
+			setMessage(Messages.RnDialogs_warningDontChangeManually);
+		}
+		
+		@Override
+		protected void okPressed(){
+			int idx = cbStates.getSelectionIndex();
+			if (idx != -1) {
+				for (Rechnung rn : rechnungen) {
+					rn.setStatus(idx);
+				}
+			}
+			super.okPressed();
+		}
 	}
 	
 	public static class StornoDialog extends TitleAreaDialog {

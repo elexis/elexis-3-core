@@ -207,6 +207,7 @@ public class Messages extends NLS {
 	public static String RnControlFieldProvider_rejected;
 	public static String RnDialogs_35;
 	public static String RnDialogs_addExpense;
+	public static String RnDialogs_addExpenseMulti;
 	public static String RnDialogs_addTransaction;
 	public static String RnDialogs_amount;
 	public static String RnDialogs_amountInvalid;
@@ -227,9 +228,11 @@ public class Messages extends NLS {
 	public static String RnDialogs_invoiceNumber;
 	public static String RnDialogs_invoicesInList;
 	public static String RnDialogs_modifyInvoiceState;
+	public static String RnDialogs_modifyInvoiceStateMulti;
 	public static String RnDialogs_no;
 	public static String RnDialogs_paymentOrder;
 	public static String RnDialogs_pleaseNewState;
+	public static String RnDialogs_pleaseNewStateForMulti;
 	public static String RnDialogs_printFormat;
 	public static String RnDialogs_printInvoice;
 	public static String RnDialogs_reactivateConsultations;

@@ -310,16 +310,24 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 			if (t.contents instanceof Patient) {
 				for (Tree<PersistentObject> tp : t.getChildren()) {
 					for (Tree<PersistentObject> tf : tp.getChildren()) {
-						ret.add((Rechnung) tf.contents);
+						Rechnung rn = (Rechnung) tf.contents;
+						if (!ret.contains(rn)) {
+							ret.add(rn);
+						}
 					}
 				}
 			} else if (t.contents instanceof Fall) {
 				for (Tree<PersistentObject> tr : t.getChildren()) {
-					ret.add((Rechnung) tr.contents);
+					Rechnung rn = (Rechnung) tr.contents;
+					if (!ret.contains(rn)) {
+						ret.add(rn);
+					}
 				}
 			} else if (t.contents instanceof Rechnung) {
-				Rechnung r = (Rechnung) t.contents;
-				ret.add(r);
+				Rechnung rn = (Rechnung) t.contents;
+				if (!ret.contains(rn)) {
+					ret.add(rn);
+				}
 			}
 		}
 		return ret;
