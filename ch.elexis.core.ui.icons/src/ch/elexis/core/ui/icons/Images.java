@@ -208,7 +208,9 @@ public enum Images {
 		/** a non-filed star icon **/
 		IMG_STAR_EMPTY,
 		/** stop icon **/
-		IMG_STOP;
+		IMG_STOP,
+		/** covercard png **/
+		IMG_COVERCARD;
 	
 	private Images(){}
 	

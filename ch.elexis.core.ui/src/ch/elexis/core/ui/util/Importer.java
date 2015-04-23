@@ -94,4 +94,18 @@ public class Importer extends TitleAreaDialog {
 		}
 		super.okPressed();
 	}
+	
+	/**
+	 * focuses the tab with the given name if it can be found
+	 * 
+	 * @param title
+	 *            of the tab
+	 */
+	public void setFocusedTab(String title){
+		for (CTabItem cTabItem : ctab.getItems()) {
+			if (cTabItem.getText().equals(title)) {
+				ctab.setSelection(cTabItem);
+			}
+		}
+	}
 }
