@@ -16,6 +16,7 @@ import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -27,6 +28,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.KeyAdapter;
@@ -88,6 +90,7 @@ public class MedicationComposite extends Composite {
 	private Composite compositeStopMedicationTextDetails;
 	private Composite stackedMedicationDetailComposite;
 	private TableViewerColumn tableViewerColumnStop;
+	private ComboViewer comboViewerSortOrder;
 	
 	private DataBindingContext dbc = new DataBindingContext();
 	private WritableValue selectedMedication = new WritableValue(null, Prescription.class);
@@ -166,6 +169,7 @@ public class MedicationComposite extends Composite {
 			new TableViewer(compositeMedicationTable, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		Table medicationTable = medicationTableViewer.getTable();
 		medicationTable.setHeaderVisible(true);
+		ColumnViewerToolTipSupport.enableFor(medicationTableViewer, ToolTip.NO_RECREATE);
 		medicationTableViewer.setSorter(new MedicationTableViewerSorter(medicationTableViewer));
 		medicationTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
@@ -192,7 +196,11 @@ public class MedicationComposite extends Composite {
 						label = "Rezept vom " + rp.getDate();
 					} else if (po instanceof Verrechnet) {
 						Verrechnet v = (Verrechnet) po;
-						label = "Kons vom " + v.getKons().getDatum();
+						if (v.getKons() == null) {
+							label = "Kons fehlt";
+						} else {
+							label = "Kons vom " + v.getKons().getDatum();
+						}
 					}
 					lblLastDisposalLink.setText(label);
 				} else {
@@ -220,12 +228,12 @@ public class MedicationComposite extends Composite {
 			}
 		});
 		
-		mppita_up = new MovePrescriptionPositionInTableUpAction(medicationTableViewer);
-		mppita_down = new MovePrescriptionPositionInTableDownAction(medicationTableViewer);
+		mppita_up = new MovePrescriptionPositionInTableUpAction(medicationTableViewer, this);
+		mppita_down = new MovePrescriptionPositionInTableDownAction(medicationTableViewer, this);
 		medicationTableViewer.getTable().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e){
-				if (e.stateMask == SWT.COMMAND
+				if ((e.stateMask == SWT.COMMAND || e.stateMask == SWT.CTRL)
 					&& (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN)) {
 					if (e.keyCode == SWT.ARROW_UP) {
 						mppita_up.run();
@@ -299,6 +307,38 @@ public class MedicationComposite extends Composite {
 				}
 				return label;
 			}
+			
+			@Override
+			public String getToolTipText(Object element){
+				Prescription pres = (Prescription) element;
+				String label = "";
+				
+				if (pres.isFixedMediation()) {
+					String date = pres.getBeginDate();
+					if (date != null && !date.isEmpty()) {
+						label = "Gestartet am " + date;
+					}
+				} else {
+					IPersistentObject po = pres.getLastDisposed();
+					if (po != null) {
+						if (po instanceof Rezept) {
+							Rezept rp = (Rezept) po;
+							label = "Letzte Abgabe am " + rp.getDate();
+						} else if (po instanceof Verrechnet) {
+							Verrechnet v = (Verrechnet) po;
+							if (v.getKons() != null) {
+								label = "Letzte Abgabe am " + v.getKons().getDatum();
+							}
+						}
+					} else {
+						String date = pres.getEndDate();
+						String reason =
+							pres.getStopReason() == null ? "" : ", Grund: " + pres.getStopReason();
+						label = "Gestoppt am " + date + reason;
+					}
+				}
+				return label;
+			}
 		});
 		
 		// package size
@@ -306,9 +346,9 @@ public class MedicationComposite extends Composite {
 			new TableViewerColumn(medicationTableViewer, SWT.NONE);
 		TableColumn tblclmnPackage = tableViewerColumnPackage.getColumn();
 		tblclmnPackage.setAlignment(SWT.CENTER);
-		tcl_compositeMedicationTable.setColumnData(tblclmnPackage, new ColumnPixelData(30, true,
+		tcl_compositeMedicationTable.setColumnData(tblclmnPackage, new ColumnPixelData(45, true,
 			true));
-		tblclmnPackage.setText("#");
+		tblclmnPackage.setText(Messages.TherapieplanComposite_tblclmnAmount_text);
 		tableViewerColumnPackage.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -402,6 +442,16 @@ public class MedicationComposite extends Composite {
 		medicationTableViewer.setContentProvider(ArrayContentProvider.getInstance());
 	}
 	
+	public void switchToManualComparatorIfNotActive(){
+		StructuredSelection ss = (StructuredSelection) comboViewerSortOrder.getSelection();
+		ComboViewerSortOrder order = (ComboViewerSortOrder) ss.getFirstElement();
+		
+		if (ComboViewerSortOrder.DEFAULT.equals(order)) {
+			StructuredSelection sel = new StructuredSelection(ComboViewerSortOrder.MANUAL);
+			comboViewerSortOrder.setSelection(sel, true);
+		}
+	}
+	
 	private void createStopTableViewerColumn(int index){
 		tableViewerColumnStop = new TableViewerColumn(medicationTableViewer, SWT.CENTER, index);
 		TableColumn tblclmnStop = tableViewerColumnStop.getColumn();
@@ -469,7 +519,7 @@ public class MedicationComposite extends Composite {
 			}
 		});
 		
-		ComboViewer comboViewerSortOrder = new ComboViewer(compositeState, SWT.None);
+		comboViewerSortOrder = new ComboViewer(compositeState, SWT.None);
 		comboViewerSortOrder.setContentProvider(ArrayContentProvider.getInstance());
 		comboViewerSortOrder.setInput(ComboViewerSortOrder.values());
 		comboViewerSortOrder.setLabelProvider(new LabelProvider() {
@@ -747,7 +797,6 @@ public class MedicationComposite extends Composite {
 	public void updateUi(final List<Prescription> prescriptionList){
 		Prescription selPres = (Prescription) selectedMedication.getValue();
 		
-		selectedMedication.setValue(null);
 		lastDisposalPO.setValue(null);
 		medicationTableViewer.setInput(prescriptionList);
 		if (prescriptionList != null && prescriptionList.contains(selPres)) {
@@ -846,5 +895,9 @@ public class MedicationComposite extends Composite {
 			String text = ((Text) e.getSource()).getText();
 			activateConfirmButton(!signatureArray[index].equals(text));
 		}
+	}
+	
+	public void resetSelectedMedication(){
+		selectedMedication.setValue(null);
 	}
 }

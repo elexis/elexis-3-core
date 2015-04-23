@@ -56,8 +56,8 @@ public class MedicationView extends ViewPart implements IActivationListener {
 		// register context menu for table viewer
 		medicationTableViewer = tpc.getMedicationTableViewer();
 		MenuManager menuManager = new MenuManager();
-		menuManager.add(new MovePrescriptionPositionInTableUpAction(medicationTableViewer));
-		menuManager.add(new MovePrescriptionPositionInTableDownAction(medicationTableViewer));
+		menuManager.add(new MovePrescriptionPositionInTableUpAction(medicationTableViewer, tpc));
+		menuManager.add(new MovePrescriptionPositionInTableDownAction(medicationTableViewer, tpc));
 		menuManager.add(new Separator());
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		menuManager.add(new Separator());
@@ -122,5 +122,10 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	public void refresh(){
 		medicationTableViewer.refresh();
+	}
+	
+	public void resetSelection(){
+		tpc.resetSelectedMedication();
+		
 	}
 }

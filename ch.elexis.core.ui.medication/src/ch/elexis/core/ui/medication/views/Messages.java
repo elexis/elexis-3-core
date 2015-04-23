@@ -39,6 +39,7 @@ public class Messages extends NLS {
 	public static String TherapieplanComposite_tblclmnDosage_toolTipText;
 	public static String TherapieplanComposite_tblclmnComment_text;
 	public static String TherapieplanComposite_tblclmnSupplied_text;
+	public static String TherapieplanComposite_tblclmnAmount_text;
 	public static String MedicationComposite_txtComment_message;
 	public static String MedicationComposite_txtIntakeOrder_message;
 	public static String MedicationComposite_lblNewLabel_text;

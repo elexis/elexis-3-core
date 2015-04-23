@@ -27,10 +27,11 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 	@Override
 	public Color getForeground(Object element){
 		Prescription pres = (Prescription) element;
-		if(!MedicationCellLabelProvider.isNotHistorical((Prescription) element)) {
+		if (!isNotHistorical((Prescription) element)) {
 			return UiDesk.getColor(UiDesk.COL_DARKGREY);
 		}
-		if(!pres.isFixedMediation()) return UiDesk.getColor(UiDesk.COL_RED);
+		if (!pres.isFixedMediation() && !hasDateUntil(pres))
+			return UiDesk.getColor(UiDesk.COL_RED);
 		return super.getForeground(element);
 	}
 
@@ -42,8 +43,6 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 			Prescription.FLD_DATE_FROM, Prescription.FLD_DATE_UNTIL
 		}, dates);
 		
-		if (dates[1].length() != 0)
-			return false;
 		TimeTool tt = new TimeTool(dates[0]);
 		int daysTo = tt.daysTo(new TimeTool());
 		if (daysTo > FILTER_PRESCRIPTION_AFTER_N_DAYS)
@@ -51,4 +50,11 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 		return true;
 	}
 	
+	private boolean hasDateUntil(Prescription presc){
+		String date = presc.get(Prescription.FLD_DATE_UNTIL);
+		if (date.length() == 0) {
+			return false;
+		}
+		return true;
+	}
 }

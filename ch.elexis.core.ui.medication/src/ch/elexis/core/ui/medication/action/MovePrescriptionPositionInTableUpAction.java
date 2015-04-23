@@ -9,20 +9,23 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableItem;
 
+import ch.elexis.core.ui.medication.views.MedicationComposite;
 import ch.elexis.core.ui.medication.views.Messages;
 import ch.elexis.data.Prescription;
 
 public class MovePrescriptionPositionInTableUpAction extends Action {
 	
 	private TableViewer tv;
+	private MedicationComposite mediComposite;
 	
-	public MovePrescriptionPositionInTableUpAction(TableViewer tv){
+	public MovePrescriptionPositionInTableUpAction(TableViewer tv, MedicationComposite mediComposite){
 		this.tv = tv;
+		this.mediComposite = mediComposite;
 	}
 	
 	@Override
 	public int getAccelerator(){
-		return SWT.COMMAND | SWT.ARROW_UP;
+		return SWT.COMMAND | SWT.CTRL | SWT.ARROW_UP;
 	}
 	
 	@Override
@@ -32,6 +35,8 @@ public class MovePrescriptionPositionInTableUpAction extends Action {
 	
 	@Override
 	public void run(){
+		mediComposite.switchToManualComparatorIfNotActive();
+		
 		int selectionIndex = tv.getTable().getSelectionIndex();
 		if (selectionIndex == 0)
 			return;
