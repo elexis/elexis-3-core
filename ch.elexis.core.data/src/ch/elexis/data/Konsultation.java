@@ -350,7 +350,10 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			rechnungsIds.add(rechnungsId);
 		}
 		for (String rechnungsId : rechnungsIds) {
-			ret.add(Rechnung.load(rechnungsId));
+			Rechnung rechnung = Rechnung.load(rechnungsId);
+			if (rechnung != null) {
+				ret.add(rechnung);
+			}
 		}
 		return ret;
 	}
