@@ -11,14 +11,14 @@ public class LabResultData extends AbstractData {
 	private String unit;
 	private String value;
 	private String range;
-	private Date alternativeDateTime;
+	private Date obrDateTime;
 	private boolean flag;
 	private boolean isNumeric = false;
 	private boolean isFormatedText = false;
 	private boolean isPlainText = false;
 	
 	public LabResultData(String code, String name, String unit, String value, String range,
-		boolean flag, String alternativeDateTime, String dateStr, String comment, String group,
+		boolean flag, String obrDateTime, String dateStr, String comment, String group,
 		String sequence) throws ParseException{
 		super(name, dateStr, comment, group, sequence);
 		
@@ -27,8 +27,8 @@ public class LabResultData extends AbstractData {
 		this.setValue(value);
 		this.setRange(range);
 		this.setFlagged(flag);
-		if (alternativeDateTime != null && alternativeDateTime.length() > 0) {
-			this.alternativeDateTime = HL7Helper.stringToDate(alternativeDateTime);
+		if (obrDateTime != null && obrDateTime.length() > 0) {
+			this.obrDateTime = HL7Helper.stringToDate(obrDateTime);
 		}
 	}
 	
@@ -64,14 +64,14 @@ public class LabResultData extends AbstractData {
 		this.range = range;
 	}
 	
-	public Date getAlternativeDateTime(){
-		return alternativeDateTime;
+	public Date getOBRDateTime(){
+		return obrDateTime;
 	}
 	
-	public void setAlternativeDateTime(String altDateTime) throws ElexisException{
+	public void setOBRDateTime(String obrDateTime) throws ElexisException{
 		try {
-			if (altDateTime != null && altDateTime.length() > 0) {
-				this.alternativeDateTime = HL7Helper.stringToDate(altDateTime);
+			if (obrDateTime != null && obrDateTime.length() > 0) {
+				this.obrDateTime = HL7Helper.stringToDate(obrDateTime);
 			}
 		} catch (ParseException e) {
 			throw new ElexisException(e.getMessage(), e);

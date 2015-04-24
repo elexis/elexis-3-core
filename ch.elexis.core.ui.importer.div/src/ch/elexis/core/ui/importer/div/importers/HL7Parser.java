@@ -135,9 +135,8 @@ public class HL7Parser {
 						}
 					}
 					date = new TimeTool(hl7LabResult.getDate());
-					if (hl7LabResult.getAlternativeDateTime() == null) {
-						hl7LabResult.setAlternativeDateTime(transmissionTime
-							.toString(TimeTool.TIMESTAMP));
+					if (hl7LabResult.getOBRDateTime() == null) {
+						hl7LabResult.setOBRDateTime(transmissionTime.toString(TimeTool.TIMESTAMP));
 					}
 					
 					LabItem labItem =
@@ -170,31 +169,31 @@ public class HL7Parser {
 						}
 					}
 					if (importAsLongText) {
-						TimeTool baseDateTime = new TimeTool(hl7LabResult.getAlternativeDateTime());
-						TimeTool obsDateTime = new TimeTool(hl7LabResult.getDate());
+						TimeTool obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
+						TimeTool obxDateTime = new TimeTool(hl7LabResult.getDate());
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem, "text")
-								.date(baseDateTime)
+								.date(obrDateTime)
 								.comment(
 									StringTool.unNull(hl7LabResult.getValue()) + "\n"
 										+ StringTool.unNull(hl7LabResult.getComment()))
 								.flags(hl7LabResult.isFlagged() ? LabResult.PATHOLOGIC : 0)
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
-								.observationTime(obsDateTime).transmissionTime(transmissionTime)
-								.build();
+								.observationTime(obrDateTime).analyseTime(obxDateTime)
+								.transmissionTime(transmissionTime).build();
 						results.add(importedResult);
 						logger.debug(importedResult.toString());
 					} else {
-						TimeTool baseDateTime = new TimeTool(hl7LabResult.getAlternativeDateTime());
-						TimeTool obsDateTime = new TimeTool(hl7LabResult.getDate());
+						TimeTool obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
+						TimeTool obxDateTime = new TimeTool(hl7LabResult.getDate());
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem,
-								hl7LabResult.getValue()).date(baseDateTime)
+								hl7LabResult.getValue()).date(obrDateTime)
 								.comment(StringTool.unNull(hl7LabResult.getComment()))
 								.flags(hl7LabResult.isFlagged() ? LabResult.PATHOLOGIC : 0)
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
-								.observationTime(obsDateTime).transmissionTime(transmissionTime)
-								.build();
+								.observationTime(obrDateTime).analyseTime(obxDateTime)
+								.transmissionTime(transmissionTime).build();
 						results.add(importedResult);
 						logger.debug(importedResult.toString());
 					}
