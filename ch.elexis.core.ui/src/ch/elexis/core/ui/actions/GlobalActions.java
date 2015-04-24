@@ -48,7 +48,6 @@ import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -473,14 +472,7 @@ public class GlobalActions {
 					String printer = CoreHub.localCfg.get("Drucker/Einzelblatt/Name", null); //$NON-NLS-1$
 					String tray = CoreHub.localCfg.get("Drucker/Einzelblatt/Schacht", null); //$NON-NLS-1$
 					
-					MessageBox mb =
-						new MessageBox(UiDesk.getDisplay().getActiveShell(), SWT.ICON_INFORMATION
-							| SWT.OK | SWT.CANCEL);
-					mb.setText("Papier einlegen"); //$NON-NLS-1$
-					mb.setMessage("Bitte legen Sie im Einzelblatteinzug Papier ein."); //$NON-NLS-1$
-					if (mb.open() == SWT.OK) {
-						new TemplateDrucker("KG-Deckblatt", printer, tray).doPrint(actPatient); //$NON-NLS-1$
-					}
+					new TemplateDrucker("KG-Deckblatt", printer, tray).doPrint(actPatient); //$NON-NLS-1$
 				}
 			};
 		printRoeBlatt = new Action(Messages.GlobalActions_PrintXRay) { //$NON-NLS-1$
