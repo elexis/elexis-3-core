@@ -147,6 +147,7 @@ public class Preferences {
 	// Labsettings
 	public static final String LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS = "lab/keepUnseen"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_LABNEW_HEARTRATE = "lab/heartrate_unseen"; //$NON-NLS-1$
+	public static final String LABSETTINGS_CFG_LOCAL_REFVALUES = "lab/localRefValues"; //$NON-NLS-1$
 	
 	// Scanner
 	public static final String SCANNER_PREFIX_CODE = "scanner/prefixcode"; //$NON-NLS-1$

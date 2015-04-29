@@ -166,9 +166,9 @@ public class LaborResultsComposite extends Composite {
 			public String getText(Object element){
 				if (element instanceof LaborItemResults) {
 					if (actPatient.getGeschlecht().equals(Person.MALE)) {
-						return ((LaborItemResults) element).getFirstResult().getItem().getRefM();
+						return ((LaborItemResults) element).getFirstResult().getRefMale();
 					} else {
-						return ((LaborItemResults) element).getFirstResult().getItem().getRefW();
+						return ((LaborItemResults) element).getFirstResult().getRefFemale();
 					}
 				}
 				return ""; //$NON-NLS-1$

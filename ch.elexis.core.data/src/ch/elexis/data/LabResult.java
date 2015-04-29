@@ -27,6 +27,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.data.LabItem.typ;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -88,24 +89,58 @@ public class LabResult extends PersistentObject {
 	}
 	
 	/**
-	 * create a new LabResult. If the type is numeric, we'll check whether it's pathologic
+	 * Creates a new LabResult. If the type is numeric, a pathologic check will be applied.
+	 * 
+	 * @param p
+	 * @param date
+	 * @param item
+	 * @param result
+	 * @param comment
+	 * @param refVal
+	 *            valid for gender of {@link Patient} p
+	 * @param origin
+	 *            sending facility
+	 * @since 3.1
 	 */
 	public LabResult(final Patient p, final TimeTool date, final LabItem item, final String result,
-		final String comment){
+		final String comment, @Nullable String refVal, @Nullable
+		final Kontakt origin){
 		create(null);
 		String[] fields = {
-			PATIENT_ID, DATE, ITEM_ID, RESULT, COMMENT, FLAGS
+			PATIENT_ID, DATE, ITEM_ID, RESULT, COMMENT
 		};
-		int flags = isPathologic(p, item, result) ? PATHOLOGIC : 0;
 		String[] vals =
 			new String[] {
 				p.getId(),
 				date == null ? new TimeTool().toString(TimeTool.DATE_GER) : date
-					.toString(TimeTool.DATE_GER), item.getId(), result, comment,
-				Integer.toString(flags)
+					.toString(TimeTool.DATE_GER), item.getId(), result, comment
 			};
 		set(fields, vals);
+		// do we have an initial reference value?
+		if (refVal != null) {
+			if (Person.MALE.equalsIgnoreCase(p.getGeschlecht())) {
+				setRefMale(refVal);
+			} else {
+				setRefFemale(refVal);
+			}
+		}
+		
+		int flags = isPathologic(p, item, result) ? PATHOLOGIC : 0;
+		set(FLAGS, Integer.toString(flags));
+		
+		// do we have an initial origin (sending facility)
+		if (origin != null) {
+			setOrigin(origin);
+		}
 		addToUnseen();
+	}
+	
+	/**
+	 * create a new LabResult. If the type is numeric, we'll check whether it's pathologic
+	 */
+	public LabResult(final Patient p, final TimeTool date, final LabItem item, final String result,
+		final String comment){
+		this(p, date, item, result, comment, null, null);
 	}
 	
 	/**
@@ -113,8 +148,7 @@ public class LabResult extends PersistentObject {
 	 */
 	public LabResult(final Patient p, final TimeTool date, final LabItem item, final String result,
 		final String comment, final Kontakt origin){
-		this(p, date, item, result, comment);
-		setOrigin(origin);
+		this(p, date, item, result, comment, null, origin);
 	}
 	
 	private boolean isPathologic(final Patient p, final LabItem item, final String result){
@@ -410,11 +444,7 @@ public class LabResult extends PersistentObject {
 	}
 	
 	public String getRefMale(){
-		String ret = checkNull(get(REFMALE));
-		if (ret.isEmpty()) {
-			ret = getItem().getRefM();
-		}
-		return ret;
+		return resolvePreferedRefValue(getItem().getRefM(), REFMALE);
 	}
 	
 	public void setRefMale(String value){
@@ -423,16 +453,39 @@ public class LabResult extends PersistentObject {
 	}
 	
 	public String getRefFemale(){
-		String ret = checkNull(get(REFFEMALE));
-		if (ret.isEmpty()) {
-			ret = getItem().getRefW();
-		}
-		return ret;
+		return resolvePreferedRefValue(getItem().getRefW(), REFFEMALE);
 	}
 	
 	public void setRefFemale(String value){
 		set(REFFEMALE, value);
 		setFlag(PATHOLOGIC, isPathologic(getPatient(), getItem(), getResult()));
+	}
+	
+	/**
+	 * get reference value based on user settings (either from local system (LabItem) or device sent
+	 * (LabResult))
+	 * 
+	 * @param localRef
+	 *            {@link LabItem} reference
+	 * @param refField
+	 *            male or female field of {@link LabResult}
+	 * @return Preferred refValue. Per default reference of {@link LabItem} is returned
+	 */
+	private String resolvePreferedRefValue(String localRef, String refField){
+		boolean useLocalRefs =
+			CoreHub.userCfg.get(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+		
+		if (useLocalRefs && localRef != null && !localRef.isEmpty()) {
+			return localRef;
+		} else {
+			String ref = checkNull(get(refField));
+			if (ref.isEmpty()) {
+				log.info("using local LabRefVal [" + localRef
+					+ "] as none could be resolved from labResult");
+				return localRef;
+			}
+			return ref;
+		}
 	}
 	
 	/**
@@ -637,8 +690,9 @@ public class LabResult extends PersistentObject {
 		if (pat == null) {
 			return ret;
 		}
-
-		PreparedStatement ps = PersistentObject.getConnection().getPreparedStatement(QUERY_GROUP_ORDER);
+		
+		PreparedStatement ps =
+			PersistentObject.getConnection().getPreparedStatement(QUERY_GROUP_ORDER);
 		try {
 			ps.setString(1, pat.getId());
 			log.debug(ps.toString());
@@ -670,14 +724,14 @@ public class LabResult extends PersistentObject {
 				} else {
 					time = translateDateTime(val_time, val_date);
 				}
-
+				
 				String date = time.toString(TimeTool.DATE_COMPACT);
 				List<LabResult> resultList = itemMap.get(date);
 				if (resultList == null) {
 					resultList = new ArrayList<LabResult>();
 					itemMap.put(date, resultList);
 				}
-
+				
 				resultList.add(new LabResult(val_id));
 			}
 		} catch (SQLException e) {
@@ -696,7 +750,7 @@ public class LabResult extends PersistentObject {
 		}
 		return ret;
 	}
-
+	
 	public static void changeObservationTime(Patient patient, TimeTool from, TimeTool to){
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(PATIENT_ID, Query.EQUALS, patient.getId());
@@ -704,10 +758,10 @@ public class LabResult extends PersistentObject {
 		ArrayList<LabResult> changeList = new ArrayList<LabResult>();
 		for (LabResult labResult : res) {
 			TimeTool obsTime = labResult.getObservationTime();
-			if(obsTime == null) {
+			if (obsTime == null) {
 				obsTime = labResult.getDateTime();
 			}
-			if(obsTime.isSameDay(from)) {
+			if (obsTime.isSameDay(from)) {
 				changeList.add(labResult);
 			}
 		}

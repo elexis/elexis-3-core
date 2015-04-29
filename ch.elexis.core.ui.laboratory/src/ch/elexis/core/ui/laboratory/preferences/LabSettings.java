@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.preferences.Messages;
 import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
@@ -63,6 +64,8 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 					Messages.LabSettings_normal, "1"}, { Messages.LabSettings_medium, "2"}, { Messages.LabSettings_slow, "3"}}, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			getFieldEditorParent()));
 		
+		addField(new BooleanFieldEditor(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES,
+			Messages.LabSettings_useLocalLabRefValues, getFieldEditorParent()));
 	}
 	
 	public void init(final IWorkbench workbench){

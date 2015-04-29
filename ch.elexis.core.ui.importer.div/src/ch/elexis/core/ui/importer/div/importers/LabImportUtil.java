@@ -23,6 +23,7 @@ import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Labor;
 import ch.elexis.data.Patient;
+import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.elexis.data.Xid;
 import ch.rgw.tools.TimeTool;
@@ -311,7 +312,16 @@ public class LabImportUtil {
 		}
 		
 		private LabResult persist(){
-			LabResult labResult = new LabResult(patient, date, labItem, result, comment, origin);
+			// determine gender, set refVal
+			String refVal;
+			if (Person.MALE.equalsIgnoreCase(patient.getGeschlecht())) {
+				refVal = refMale;
+			} else {
+				refVal = refFemale;
+			}
+			
+			LabResult labResult =
+				new LabResult(patient, date, labItem, result, comment, refVal, origin);
 			// pathologic check takes place in labResult if it is numeric
 			if (labItem.getTyp() == typ.NUMERIC) {
 				flags = labResult.getFlags();
