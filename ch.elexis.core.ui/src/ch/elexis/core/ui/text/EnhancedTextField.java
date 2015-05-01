@@ -518,10 +518,11 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 					start += 1;
 					String makro = s.reverse().toString();
 					StringBuilder replace = new StringBuilder();
-					
-					for (IKonsMakro extMakro : externalMakros) {
-						if (isMakroEnabled(extMakro)) {
-							replace.append(extMakro.executeMakro(makro));
+					if ( externalMakros!= null) {
+						for (IKonsMakro extMakro : externalMakros) {
+							if (isMakroEnabled(extMakro)) {
+								replace.append(extMakro.executeMakro(makro));
+							}
 						}
 					}
 					
