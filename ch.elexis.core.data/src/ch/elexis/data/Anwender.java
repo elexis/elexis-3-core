@@ -46,10 +46,12 @@ public class Anwender extends Person {
 	public static final String FLD_EXTINFO_PASSWORD = "UsrPwd";
 	public static final String FLD_EXTINFO_GROUPS = "Groups";
 	
+	public static final String FLD_JOINT_REMINDERS = "Reminders";
+	
 	static {
 		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER,
 			FLD_LABEL + "=Bezeichnung3",
-			"Reminders=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
+			FLD_JOINT_REMINDERS+"=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
 	}
 	
 	public Anwender(final String Username, final String Password){
@@ -138,7 +140,7 @@ public class Anwender extends Person {
 	 */
 	public SortedSet<Reminder> getReminders(final Kontakt k){
 		TreeSet<Reminder> ret = new TreeSet<Reminder>();
-		List<String[]> rem = getList("Reminders", (String[]) null);
+		List<String[]> rem = getList(FLD_JOINT_REMINDERS, (String[]) null);
 		if (rem != null) {
 			String kid = k == null ? null : k.getId();
 			for (String[] l : rem) {
