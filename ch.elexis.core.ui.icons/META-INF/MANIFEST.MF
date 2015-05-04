@@ -11,4 +11,5 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui.icons
-Import-Package: org.slf4j
+Import-Package: ch.elexis.core.jdt,
+ org.slf4j

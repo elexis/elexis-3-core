@@ -24,6 +24,8 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
+import ch.elexis.core.jdt.NonNull;
+
 /**
  * Central image repository. Supersedes the images managed in {@link Desk}. This image registry
  * takes its values from a properties file, namely <code>ch.elexis.iconset.properties</code>. This
@@ -252,6 +254,18 @@ public enum Images {
 	}
 	
 	/**
+	 * Opportunistic lookup for a probably existing key.<br>
+	 * 
+	 * @param iconKey
+	 * @param is
+	 * @return
+	 */
+	public static ImageDescriptor lookupImageDescriptor(@NonNull String iconKey,
+		@NonNull ImageSize is){
+		return getImageDescriptor(iconKey, is);
+	}
+	
+	/**
 	 * Returns an image. Clients do not need to dispose the image, it will be disposed
 	 * automatically.
 	 * 
@@ -270,11 +284,22 @@ public enum Images {
 	 * @return {@link ImageDescriptor} for the current image
 	 */
 	public ImageDescriptor getImageDescriptor(ImageSize is){
+		return getImageDescriptor(this.name(), is);
+	}
+	
+	/**
+	 * resolve the image
+	 * 
+	 * @param imageName
+	 * @param is
+	 * @return
+	 */
+	private static ImageDescriptor getImageDescriptor(String imageName, ImageSize is){
 		ImageDescriptor id = null;
-		id = JFaceResources.getImageRegistry().getDescriptor(this.name() + is.name);
+		id = JFaceResources.getImageRegistry().getDescriptor(imageName + is.name);
 		if (id == null) {
-			addIconImageDescriptor(this.name(), is);
-			id = JFaceResources.getImageRegistry().getDescriptor(this.name() + is.name);
+			addIconImageDescriptor(imageName, is);
+			id = JFaceResources.getImageRegistry().getDescriptor(imageName + is.name);
 		}
 		return id;
 	}
@@ -315,17 +340,21 @@ public enum Images {
 	 * @return <code>true</code> if successfully added, else <code>false</code>
 	 */
 	private static boolean addIconImageDescriptor(String name, ImageSize is){
+		String fileName;
 		try {
 			ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset");
-			String fileName = iconsetProperties.getString(name);
-			URL fileLocation =
-				FileLocator.find(Activator.getContext().getBundle(), new Path("icons/" + is.name
-					+ "/" + fileName), null);
-			ImageDescriptor id = ImageDescriptor.createFromURL(fileLocation);
-			JFaceResources.getImageRegistry().put(name + is.name, id);
+			fileName = iconsetProperties.getString(name);
 		} catch (MissingResourceException | IllegalArgumentException e) {
-			return false;
+			fileName = name;
 		}
+		
+		Path path = new Path("icons/" + is.name + "/" + fileName);
+		URL fileLocation = FileLocator.find(Activator.getContext().getBundle(), path, null);
+		if (fileLocation == null)
+			return false;
+		ImageDescriptor id = ImageDescriptor.createFromURL(fileLocation);
+		JFaceResources.getImageRegistry().put(name + is.name, id);
+		
 		return true;
 	}
 	
