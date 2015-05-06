@@ -637,5 +637,5 @@ CREATE TABLE DBIMAGE (
 );
 CREATE INDEX DBIMAGE1 on DBIMAGE(Title);     
 
-INSERT INTO CONFIG (param,wert) VALUES ('dbversion','3.0.0');
-INSERT INTO CONFIG (param,wert) VALUES ('ElexisVersion','3.0.0');
+INSERT INTO CONFIG (param,wert) VALUES ('dbversion','3.1.0');
+INSERT INTO CONFIG (param,wert) VALUES ('ElexisVersion','3.1.0');
