@@ -212,7 +212,9 @@ public enum Images {
 		/** stop icon **/
 		IMG_STOP,
 		/** covercard png **/
-		IMG_COVERCARD;
+		IMG_COVERCARD,
+		/** document copy png **/
+		IMG_COPY;
 	
 	private Images(){}
 	

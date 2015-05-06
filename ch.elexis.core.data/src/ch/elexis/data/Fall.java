@@ -56,7 +56,7 @@ public class Fall extends PersistentObject {
 	public static final String FLD_DATUM_BIS = "DatumBis"; //$NON-NLS-1$
 	public static final String FLD_DATUM_VON = "DatumVon"; //$NON-NLS-1$
 	public static final String FLD_RN_PLANUNG = "RnPlanung"; //$NON-NLS-1$
-	private static final String FLD_FALL_NUMMER = "FallNummer"; //$NON-NLS-1$
+	public static final String FLD_FALL_NUMMER = "FallNummer"; //$NON-NLS-1$
 	public static final String FLD_VERS_NUMMER = "VersNummer"; //$NON-NLS-1$
 	public static final String FLD_BEZEICHNUNG = "Bezeichnung"; //$NON-NLS-1$
 	public static final String FLD_GARANT_ID = "GarantID"; //$NON-NLS-1$
@@ -70,20 +70,32 @@ public class Fall extends PersistentObject {
 	public static final String TYPE_BIRTHDEFECT = Messages.Fall_Birthdefect; //$NON-NLS-1$
 	public static final String TYPE_OTHER = Messages.Fall_Other;
 	public static final String FLD_COPY_FOR_PATIENT = "CopyForPatient";
+	public static final String FLD_RES = "res";//$NON-NLS-2$
+	public static final String FLD_XGESETZ = "xGesetz";//$NON-NLS-2$
 	
 	@Override
 	protected String getTableName(){
 		return TABLENAME;
 	}
 	
+	//@formatter:off
 	static {
-		addMapping(TABLENAME, PATIENT_ID, "res=Diagnosen", //$NON-NLS-1$
-			"DatumVon=S:D:DatumVon", "DatumBis=S:D:DatumBis", FLD_GARANT_ID, //$NON-NLS-1$ //$NON-NLS-2$
-			"Behandlungen=LIST:FallID:BEHANDLUNGEN:Datum", FLD_BEZEICHNUNG, //$NON-NLS-1$
-			FLD_GRUND, "xGesetz=Gesetz", "Kostentraeger=KostentrID", //$NON-NLS-1$ //$NON-NLS-2$
-			FLD_VERS_NUMMER, FLD_FALL_NUMMER, "RnPlanung=BetriebsNummer", //$NON-NLS-1$
+		addMapping(TABLENAME, PATIENT_ID, 
+			FLD_RES 			+"=Diagnosen", //$NON-NLS-1$
+			FLD_DATUM_VON		+"=S:D:DatumVon", //$NON-NLS-2$
+			FLD_DATUM_BIS 		+"=S:D:DatumBis", //$NON-NLS-2$
+			FLD_GARANT_ID,  	
+			FLD_BEHANDLUNGEN	+"=LIST:FallID:BEHANDLUNGEN:Datum", //$NON-NLS-2$
+			FLD_BEZEICHNUNG, 	
+			FLD_GRUND, 			
+			FLD_XGESETZ			+"=Gesetz", 	//$NON-NLS-2$
+			FLD_KOSTENTRAEGER	+"=KostentrID",  //$NON-NLS-2$
+			FLD_VERS_NUMMER, 
+			FLD_FALL_NUMMER, 
+			FLD_RN_PLANUNG 		+"=BetriebsNummer", //$NON-NLS-1$
 			FLD_EXTINFO);
 	}
+	//@formatter:on
 	
 	/**
 	 * Vorgeschlagenen Zeitpunkt für Rechnungsstellung holen (Eine Vorgabe die im fall gemacht wird)

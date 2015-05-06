@@ -143,4 +143,7 @@ public class FallDetailView extends ViewPart implements ISaveablePart2, IActivat
 		}
 	}
 	
+	public Fall getActiveFall(){
+		return fdb.getFall();
+	}
 }

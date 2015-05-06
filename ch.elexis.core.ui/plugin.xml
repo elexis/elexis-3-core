@@ -104,6 +104,16 @@
                style="toggle">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.FallDetailView">
+         <command
+               commandId="ch.elexis.core.command.copyFall"
+               icon="icon://IMG_COPY"
+               label="Fall kopieren"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -376,6 +386,11 @@
                class="org.eclipse.ui.handlers.RegistryToggleState:true"
                id="org.eclipse.ui.commands.toggleState">
          </state>
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.FallCopyCommand"
+            id="ch.elexis.core.command.copyFall"
+            name="Fall kopieren">
       </command>
    </extension>
       <extension
