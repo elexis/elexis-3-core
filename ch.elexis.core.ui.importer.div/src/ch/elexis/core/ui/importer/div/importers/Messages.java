@@ -71,14 +71,18 @@ public class Messages extends NLS {
 	public static String KontaktImporterBlatt_DatatypeErrorExplanation;
 	public static String KontaktImporterBlatt_DatatypeErrorHeading;
 	public static String KontaktImporterBlatt_DatatypeErrorText;
+	public static String KontaktImporterBlatt_DatatypeErrorNoCSV;
 	public static String KontaktImporterBlatt_Datei;
 	public static String KontaktImporterBlatt_DateiTyp;
 	public static String KontaktImporterBlatt_Importing;
 	public static String KontaktImporterBlatt_KeepID;
+	public static String KontaktImporterBlatt_MediportInsurer;
 	public static String KontaktImporterBlatt_KKKuerzel;
 	public static String KontaktImporterBlatt_kklistHeading;
 	public static String KontaktImporterBlatt_PleaseChooseTypeAndFile;
 	public static String KontaktImporterBlatt_xmlImportNotSupported;
+	public static String KontaktImporterBlatt_csvImportMediportInsurerDone;
+	public static String KontaktImporterBlatt_csvImportMediportInsurerMsg;
 	public static String KontaktImporterDialog_ImporterCaption;
 	public static String KontaktImporterDialog_ImportingContact;
 	public static String KontaktImporterDialog_PleaseEnterFileTypeAndFile;

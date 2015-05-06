@@ -246,6 +246,13 @@ public class Messages extends NLS {
 	public static String KontaktBlatt_shortLabel;
 	public static String KontaktBlatt_title;
 	public static String KontaktBlatt_www;
+	public static String KontaktBlatt_titleSuffix;
+	public static String KontaktBlatt_XMLName;
+	public static String KontaktBlatt_MediportSupport;
+	public static String KontaktBlatt_LawCode;
+	public static String KontaktBlatt_Group;
+	public static String KontaktBlatt_Allergies;
+	
 	public static String KontakteView_create;
 	public static String KontakteView_delete;
 	public static String KontakteView_duplicate;
@@ -462,6 +469,7 @@ public class Messages extends NLS {
 	public static String TextView_enterTitle;
 	public static String TextView_exportText;
 	public static String TextView_importText;
+	public static String TextView_importMultiText;
 	public static String TextView_newDocument;
 	public static String TextView_noLetterSelected;
 	public static String TextView_noTemplateSelected;

@@ -84,8 +84,9 @@ public class Xid extends PersistentObject implements IXid {
 	public static final String DOMAIN_SWISS_PASSPORT = "www.xid.ch/id/passport/ch";
 	public static final String DOMAIN_AUSTRIAN_PASSPORT = "www.xid.ch/id/passport/at";
 	public static final String DOMAIN_GERMAN_PASSPORT = "www.xid.ch/id/passport/de";
-	public final static String DOMAIN_EAN = "www.xid.ch/id/ean";
-	public final static String DOMAIN_OID = "www.xid.ch/id/oid";
+	public static final String DOMAIN_EAN = "www.xid.ch/id/ean";
+	public static final String DOMAIN_RECIPIENT_EAN = "www.xid.ch/id/recipient_ean";
+	public static final String DOMAIN_OID = "www.xid.ch/id/oid";
 	
 	static {
 		addMapping(TABLENAME, FLD_TYPE, FLD_OBJECT, FLD_DOMAIN, FLD_ID_IN_DOMAIN, FLD_QUALITY);

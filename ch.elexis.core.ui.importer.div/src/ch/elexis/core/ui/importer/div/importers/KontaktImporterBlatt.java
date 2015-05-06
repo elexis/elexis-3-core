@@ -14,7 +14,9 @@
 package ch.elexis.core.ui.importer.div.importers;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.security.MessageDigest;
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,7 +53,7 @@ public class KontaktImporterBlatt extends Composite {
 	String filename;
 	Label lbFileName;
 	Combo cbMethods;
-	boolean bKeepID;
+	boolean bKeepID, mediportInsuererList;
 	int method;
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getName());
 	static final String[] methods = new String[] {
@@ -90,6 +92,18 @@ public class KontaktImporterBlatt extends Composite {
 		bLoad.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		lbFileName.setText(Messages.KontaktImporterBlatt_PleaseChooseTypeAndFile);
 		lbFileName.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
+		
+		final Button btnMediportInsuranceList = new Button(this, SWT.CHECK);
+		btnMediportInsuranceList.setText(Messages.KontaktImporterBlatt_MediportInsurer);
+		btnMediportInsuranceList.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+		btnMediportInsuranceList.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				mediportInsuererList = btnMediportInsuranceList.getSelection();
+			}
+		});
+		
 		final Button bKeep = new Button(this, SWT.CHECK);
 		bKeep.setText(Messages.KontaktImporterBlatt_KeepID);
 		bKeep.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
@@ -221,10 +235,41 @@ public class KontaktImporterBlatt extends Composite {
 	
 	public boolean importCSV(final String file){
 		// Please keep in sync with doc/import.textile !!
-		SWTHelper.showError(Messages.KontaktImporterBlatt_DatatypeErrorHeading,
-			Messages.KontaktImporterBlatt_DatatypeErrorText,
-			Messages.KontaktImporterBlatt_csvImportNotSupported);
-		return false;
+		if (mediportInsuererList) {
+			if (file == null) {
+				log.warn("No file selected");
+				SWTHelper.showError(Messages.KontaktImporterBlatt_ChoseFile,
+					Messages.KontaktImporterBlatt_ChoseFile,
+					Messages.KontaktImporterBlatt_PleaseChooseTypeAndFile);
+				return false;
+			}
+			
+			try {
+				// check if it's actually a csv
+				String filename = file.toLowerCase();
+				if (!filename.endsWith("csv")) {
+					SWTHelper.showError(Messages.KontaktImporterBlatt_DateiTyp, MessageFormat
+						.format(Messages.KontaktImporterBlatt_DatatypeErrorNoCSV, file));
+					return false;
+				}
+				
+				// read csv file
+				List<Organisation> importedInsurer =
+					MediportInsurerImporter.importCSVFromStream(new FileInputStream(file));
+				SWTHelper.showInfo(Messages.KontaktImporterBlatt_csvImportMediportInsurerDone,
+					MessageFormat.format(Messages.KontaktImporterBlatt_csvImportMediportInsurerMsg,
+						importedInsurer.size()));
+				return true;
+			} catch (FileNotFoundException e) {
+				log.error("Error parsing expected mediport insurer csv file [" + file + "]", e);
+				return false;
+			}
+		} else {
+			SWTHelper.showError(Messages.KontaktImporterBlatt_DatatypeErrorHeading,
+				Messages.KontaktImporterBlatt_DatatypeErrorText,
+				Messages.KontaktImporterBlatt_csvImportNotSupported);
+			return false;
+		}
 	}
 	
 	public boolean importVCard(final String file){

@@ -49,6 +49,7 @@ import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
 import ch.elexis.data.Organisation;
+import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.elexis.data.Xid;
@@ -76,56 +77,64 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 	private final FormToolkit tk;
 	AutoForm afDetails;
 	
-	static final InputData[] def = new InputData[] {
-		new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_Bez2, Kontakt.FLD_NAME2, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_Sex, Person.SEX, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_Street, Kontakt.FLD_STREET, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_Zip, Kontakt.FLD_ZIP, Typ.STRING, null, 6),
-		new InputData(Messages.KontaktBlatt_Place, Kontakt.FLD_PLACE, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null, 3),
-		new InputData(Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null, 30),
-		new InputData(Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null, 30),
-		new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null, 30),
-		new InputData(Messages.KontaktBlatt_Fax, Kontakt.FLD_FAX, Typ.STRING, null, 30),
-		new InputData(Messages.KontaktBlatt_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null),
-		new InputData(Messages.KontaktBlatt_extid,
-			"UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
-			
-				public void displayContent(PersistentObject po, InputData ltf){
-					StringBuilder sb = new StringBuilder();
-					IXid xid = po.getXid();
-					String dom = Xid.getSimpleNameForXIDDomain(xid.getDomain());
-					sb.append(dom).append(": ").append(xid.getDomainId()); //$NON-NLS-1$
-					ltf.setText(sb.toString());
-				}
+	static final InputData[] def =
+		new InputData[] {
+			new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Bez2, Kontakt.FLD_NAME2, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Sex, Person.SEX, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_LawCode, Person.FLD_TITLE_SUFFIX, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Street, Kontakt.FLD_STREET, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Zip, Kontakt.FLD_ZIP, Typ.STRING, null, 6),
+			new InputData(Messages.KontaktBlatt_Place, Kontakt.FLD_PLACE, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null, 3),
+			new InputData(Messages.KontaktBlatt_XMLName, Patient.FLD_ALLERGIES, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null, 30),
+			new InputData(Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null, 30),
+			new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null,
+				30),
+			new InputData(Messages.KontaktBlatt_Fax, Kontakt.FLD_FAX, Typ.STRING, null, 30),
+			new InputData(Messages.KontaktBlatt_MediportSupport, Patient.FLD_GROUP, Typ.CHECKBOX,
+				null),
+			new InputData(Messages.KontaktBlatt_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING,
+				null),
+			new InputData(Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null),
+			new InputData("", "", Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_extid,
+				"UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 				
-				public void reloadContent(PersistentObject po, InputData ltf){
-					ArrayList<String> extFlds = new ArrayList<String>();
-					Kontakt k = (Kontakt) po;
-					for (String dom : Xid.getXIDDomains()) {
-						XIDDomain xd = Xid.getDomain(dom);
-						if ((k.istPerson() && xd.isDisplayedFor(Person.class))
-							|| (k.istOrganisation() && xd.isDisplayedFor(Organisation.class))) {
-							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
-						} else if (k.istOrganisation() && xd.isDisplayedFor(Labor.class)) {
-							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom);
-						}
+					public void displayContent(PersistentObject po, InputData ltf){
+						StringBuilder sb = new StringBuilder();
+						IXid xid = po.getXid();
+						String dom = Xid.getSimpleNameForXIDDomain(xid.getDomain());
+						sb.append(dom).append(": ").append(xid.getDomainId()); //$NON-NLS-1$
+						ltf.setText(sb.toString());
 					}
-					KontaktExtDialog dlg =
-						new KontaktExtDialog(UiDesk.getTopShell(), (Kontakt) po, extFlds
-							.toArray(new String[0]));
-					dlg.open();
 					
-				}
-				
-			}),
-	};
+					public void reloadContent(PersistentObject po, InputData ltf){
+						ArrayList<String> extFlds = new ArrayList<String>();
+						Kontakt k = (Kontakt) po;
+						for (String dom : Xid.getXIDDomains()) {
+							XIDDomain xd = Xid.getDomain(dom);
+							if ((k.istPerson() && xd.isDisplayedFor(Person.class))
+								|| (k.istOrganisation() && xd.isDisplayedFor(Organisation.class))) {
+								extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
+							} else if (k.istOrganisation() && xd.isDisplayedFor(Labor.class)) {
+								extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom);
+							}
+						}
+						KontaktExtDialog dlg =
+							new KontaktExtDialog(UiDesk.getTopShell(), (Kontakt) po, extFlds
+								.toArray(new String[0]));
+						dlg.open();
+						
+					}
+					
+				}),
+		};
 	private Kontakt actKontakt;
 	private final Label lbAnschrift;
 	
@@ -169,6 +178,8 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 		});
 		lbAnschrift = tk.createLabel(cAnschrift, StringConstants.EMPTY, SWT.WRAP);
 		lbAnschrift.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		setOrganisationFieldsVisible(false);
+		def[19].getWidget().setVisible(false);
 		GlobalEventDispatcher.addActivationListener(this, site.getPart());
 	}
 	
@@ -195,6 +206,7 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 					def[2].setLabel(ANSPRECHPERSON);
 					def[3].setText(""); //$NON-NLS-1$
 					def[10].setLabel(TEL_DIREKT);
+					setOrganisationFieldsVisible(true);
 				} else if (type.equals("istLabor")) { //$NON-NLS-1$
 					select("1", "1", "0", "0", "0", "0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					def[0].setLabel(BEZEICHNUNG);
@@ -206,6 +218,7 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 					def[1].setLabel(VORNAME);
 					def[2].setLabel(ZUSATZ);
 					def[10].setLabel(MOBIL);
+					setOrganisationFieldsVisible(false);
 					if ("istPerson".equals(type)) { //$NON-NLS-1$
 						select("0", "0", "1", "x", "x", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					} else if (type.equals("istPatient")) { //$NON-NLS-1$
@@ -234,6 +247,12 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 			}
 			actKontakt.set(alTypes.toArray(new String[0]), alValues.toArray(new String[0]));
 		}
+	}
+	
+	private void setOrganisationFieldsVisible(boolean visible){
+		def[4].getWidget().setVisible(visible);
+		def[9].getWidget().setVisible(visible);
+		def[14].getWidget().setVisible(visible);
 	}
 	
 	public void activation(boolean mode){
@@ -284,12 +303,14 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 						def[3].setEditable(false);
 						def[3].setText(StringConstants.EMPTY);
 						def[10].setLabel(TEL_DIREKT);
+						setOrganisationFieldsVisible(true);
 					} else {
 						def[0].setLabel(NAME);
 						def[1].setLabel(VORNAME);
 						def[2].setLabel(ZUSATZ);
 						def[3].setEditable(true);
 						def[10].setLabel(MOBIL);
+						setOrganisationFieldsVisible(false);
 					}
 					lbAnschrift.setText(actKontakt.getPostAnschrift(false));
 					form.reflow(true);
