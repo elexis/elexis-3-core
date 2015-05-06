@@ -40,20 +40,16 @@ public class VersionedResource {
 	
 	@SuppressWarnings("unchecked")
 	private VersionedResource(byte[] in){
-		if ((in == null) || (in.length == 0)) {
-			items = new ArrayList<ResourceItem>();
-		} else {
-			try {
-				ByteArrayInputStream bais = new ByteArrayInputStream(in);
-				ObjectInputStream ois = new ObjectInputStream(bais);
-				items = (ArrayList<ResourceItem>) ois.readObject();
-			} catch (StreamCorruptedException se) {
-				items = new ArrayList<ResourceItem>();
-				update(new String(in), "(k)");
-			} catch (Exception ex) {
-				ExHandler.handle(ex);
-				
-			}
+		items = new ArrayList<ResourceItem>();
+		
+		try {
+			ByteArrayInputStream bais = new ByteArrayInputStream(in);
+			ObjectInputStream ois = new ObjectInputStream(bais);
+			items = (ArrayList<ResourceItem>) ois.readObject();
+		} catch (StreamCorruptedException se) {
+			update(new String(in), "(k)");
+		} catch (Exception ex) {
+			ExHandler.handle(ex);
 		}
 	}
 	
