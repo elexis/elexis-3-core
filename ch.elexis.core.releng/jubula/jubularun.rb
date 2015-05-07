@@ -16,7 +16,7 @@ if $0.index(File.basename(__FILE__))
 end
 
 class JubulaRun
-  DefaultSleepTime =  /linux/.match(RbConfig::CONFIG['host_os']) ? 15 : 30
+  DefaultSleepTime =  WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os']) ? 30 : 10
 public
     JubulaOptions::Fields.each { 
       |x|
@@ -29,7 +29,7 @@ public
     )
   }
     
-  @@myFail = true
+  @@mayFail = true
 
   # pass JubulaOptions like this: :autid = 'myAutId', :instDest = '/opt/myInstallation'
   def initialize(options = nil) 
@@ -91,17 +91,18 @@ public
         @plugins_dir = File.expand_path(File.join(@exeFile, '..', '..', '..', 'plugins'))
       end
     else # Try to find the Elexis exe in our workspace
-      puts "Try to find the Elexis exe in our workspace"
+      workspace = File.expand_path(File.join(__FILE__, '..', '..', '..'))
+      puts "Try to find the Elexis exe in our workspace #{workspace}"      
       pathname = ''; @exeFile = ''
       case RbConfig::CONFIG['host_os']
         when WINDOWS_REGEXP
-        pathname = File.expand_path(File.join('..', '..', '**',@winType, '**', @cpu, "*elexis*.exe"))
+        pathname = File.expand_path(File.join(workspace, '*site*','**', @winType, '**', @cpu, "*elexis*.exe"))
         if (Dir.glob(File.expand_path(pathname)).size == 1)
           @exeFile = Dir.glob(File.expand_path(pathname))[0]
           @instDest =  File.dirname(@exeFile)
         end
         when MACOSX_REGEXP
-        pathname = File.expand_path("../../*/target/products/*/#{@os}/#{@winType}/#{@cpu}/*app/configuration/config.ini")
+        pathname = File.expand_path(File.join(workspace, "*site*/target/products/*/#{@os}/*/*/*app/configuration/config.ini"))
         files = Dir.glob(File.expand_path(pathname))
         if (files.size == 1)
           pathname =files[0].sub('.app/Contents/macos/configuration/config.ini', '')
@@ -111,7 +112,7 @@ public
           @instDest =  pathname
         end
       else
-        pathname = File.expand_path(File.join(__FILE__, "../../../*site*/target/products/*/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"))
+        pathname = File.expand_path(File.join(workspace, "*site*/target/products/*/#{@os}/#{@winType}/#{@cpu}/configuration/config.ini"))
         if (Dir.glob(File.expand_path(pathname)).size == 1)
           pathname = pathname.sub('configuration/config.ini', '*.ini')
           if (Dir.glob(File.expand_path(pathname)).size == 1)
@@ -123,7 +124,6 @@ public
       raise "Could not find an exefile using #{pathname}" unless File.exists?(@exeFile)
     end
     @plugins_dir = File.join(@instDest, 'plugins')
-    puts "self #{self.inspect}"
     if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
       @plugins_dir = File.expand_path(File.join(@exeFile, '..', '..', '..', 'plugins'))
     end
@@ -133,7 +133,7 @@ public
   def installFromZip
     if @installer
       @installer = File.expand_path(@installer)
-      if File.directory?(@instDest)
+      if File.directory?(@instDest) and Dir.glob(File.join(@instDest, '*')).size > 4
         puts "Skip unzipping from #{@installer} as #{@instDest} already present"
       else
         saved = Dir.pwd
@@ -219,7 +219,7 @@ public
       |line|
         needsJubulaRcpSupport = false if /^osgi.bundles=/.match(line) and /#{rcpStart}/.match(line)
     }   
-    puts "#{File.expand_path(ini_name)}: #{needsJubulaRcpSupport ? ' Will patch to add' : ' Already patched to'} start " + jubula_jar
+    puts "#{File.expand_path(ini_name)}: #{needsJubulaRcpSupport ? ' Will patch to add' : ' Already patched to'} start " + rcpStart
     if needsJubulaRcpSupport
       FileUtils.cp(ini_name, ini_name + '.bak', :verbose => true);
       found = false
@@ -244,7 +244,7 @@ public
       dbDir = File.dirname(@dburl.split(';')[0].split(':')[-1])
       FileUtils.rm_rf(File.expand_path(dbDir), :verbose => true, :noop => @dryRun)
     else
-      system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -delete #{project} #{version} #{dbSpec}", @@myFail)
+      system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -delete #{project} #{version} #{dbSpec}", @@mayFail)
     end
   end
   
@@ -264,7 +264,7 @@ public
       |tcModule|
       tcs = Dir.glob("#{JubulaOptions::jubulaHome}/examples/testCaseLibrary/#{tcModule}_*.xml")
       raise "Should have found exactly 1 one file. Got #{tcs.inspect}" if tcs.size != 1
-      system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{tcs[0]} #{dbSpec}", @@myFail)
+      system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{tcs[0]} #{dbSpec}", @@mayFail)
     }
     system("#{JubulaOptions::jubulaHome}/#{@application}/dbtool -data #{@data} -import #{xmlFile} #{dbSpec}")
   end
@@ -331,7 +331,8 @@ public
   
   def stopAgent(sleepTime = 3)
     cmd = adaptCmdForMacOSx("#{JubulaOptions::jubulaHome}/server/stopautagent")
-    system("#{cmd} -p #{@portNumber} -stop", @@myFail)
+    system("#{cmd} -p #{@portNumber} -stop", @@mayFail)
+    system("killall -9 autagent", @@mayFail) if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
     sleep(sleepTime)
   end
 
@@ -351,9 +352,9 @@ public
     stopAgent(10)
     if @exeFile and not WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
       # killit if it is still alive
-      system("ps -ef | grep #{@exeFile}")
-      system("ps -ef | grep #{File.basename(@exeFile)}")
-      system("killall #{File.basename(@exeFile)}")
+      system("ps -ef | grep #{@exeFile}", @@mayFail)
+      system("ps -ef | grep #{File.basename(@exeFile)}", @@mayFail)
+      system("killall #{File.basename(@exeFile)}", @@mayFail)
     end
     okay
   end
@@ -396,14 +397,19 @@ public
 
   def saveImages(dest = @testResults)
     FileUtils.makedirs(dest)
-    puts "Would save images/htm/log to #{dest}" if DryRun
-    (Dir.glob("**/*shot*/*.png")+Dir.glob("**/*.log")+Dir.glob("**/*htm")+Dir.glob(File.join(@dataDir, '*.log'))).each{
+    puts "Would save images/htm/log and screenshots to #{dest}" if DryRun
+    (Dir.glob("**/*shot*/*.png")+Dir.glob("**/*.log")+Dir.glob("**/*htm")+
+        Dir.glob(File.join(@dataDir, '*.log'))+Dir.glob(File.join(Dir.home, 'elexis', 'logs', '*.log'))).each{
       |x|
           next if /images/.match(x)
           next if /plugins/.match(x)
           next if /#{File.basename(@testResults)}/.match(x)
           FileUtils.cp(x, dest, :verbose => true, :noop => DryRun)
     }
+    if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os'])
+      orig = File.join(File.dirname(@exeFile),'screenshots')
+      FileUtils.cp_r(orig, @testResults, :preserve => true, :verbose => true, :noop => DryRun) if File.exists?(orig)
+    end
   end
 
 end

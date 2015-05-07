@@ -56,60 +56,51 @@ jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
 # Instead we also start from a fresh, empty workspace and an empty embedded H2 db
 # Costs me a good minute
 
-wsDir = "#{jubula.workspace}/test-ws"
-FileUtils.rm_rf(wsDir, :verbose => true, :noop => DryRun)
-
-def save_images(destination = File.join(WORKSPACE, 'my-screenshots'))
-  Dir.glob("**/*shot*/*.png").each{
-    |x|
-        next if /images/.match(x)
-        next if /plugins/.match(x)
-        next if /#{File.basename(destination)}/.match(x)
-        FileUtils.cp(x, "#{destination}", :verbose => true, :noop => DryRun)
-  }
-end
-
 def installArtikelStamm(jubula)
   stamm = File.expand_path(File.join(File.dirname(__FILE__), 'artikelstamm_first_v2.xml'))
-  ENV['TEST_UDV_ARTIKEL_STAMM'] = stamm
   FileUtils.makedirs(jubula.dataDir, :verbose => true, :noop => DryRun)
   FileUtils.makedirs(jubula.testResults, :verbose => true, :noop => DryRun)
   FileUtils.cp(stamm, jubula.testResults, :verbose => true, :noop => DryRun)
   if MACOSX_REGEXP.match(RbConfig::CONFIG['host_os']) # MacOSX seems to set the file dialog to its home directory
     FileUtils.cp(stamm, Dir.home, :verbose => true, :noop => DryRun)
+    jubula.getInfoForExe
+    wohin = File.expand_path(File.join(jubula.instDest, 'Elexis3.app/Contents/MacOS'))
+    wohin = File.expand_path(File.dirname(jubula.exeFile))
+    FileUtils.cp(stamm, wohin, :verbose => true, :noop => DryRun)
   end
 end
 
-def run_upgrade_local_core_and_remote_base(jubula, label)
-  res = true
-  ENV['TEST_UDV_SW_MUST_UPGRADE'] = 'true' # we want installing all SW-features to succeed
+def run_test_suite(jubula, test_suite_name)
+  jubula.useH2(Dir.pwd)
+  jubula.patchXML # must be before loadTestcases
+  jubula.rmTestcases  # only if using h2
+  jubula.loadTestcases    # only if using h2
+  res = jubula.runOneTestcase(test_suite_name)
+  jubula.saveImages
+  jubula.checkOutcome(res, test_suite_name)
+end
+
+def cleanup_and_install_from_zip(jubula)
   jubula.cleanup_from_old_runs
-  installArtikelStamm(jubula)
   jubula.installFromZip
+  installArtikelStamm(jubula)
   jubula.cleanDemoDb unless @hasDemoDb
   jubula.genWrapper
   jubula.prepareRcpSupport
-#  jubula.patchXML # not needed for SW-Upgrade
   jubula.useH2(Dir.pwd)
-  jubula.rmTestcases  # only if using h2
-  jubula.loadTestcases    # only if using h2
-  res = jubula.runOneTestcase(label, 15)
-  jubula.saveImages
-  jubula.checkOutcome(res, label)
 end
 
-def run_fulltest(jubula, label)
-  installArtikelStamm(jubula)
-  jubula.useH2(Dir.pwd)
-  jubula.patchXML
-  jubula.rmTestcases  # only if using h2
-  jubula.loadTestcases    # only if using h2
-  res = jubula.runOneTestcase(label, 15)
-  jubula.saveImages
-  jubula.checkOutcome(res, label)
-  # TODO: Check for other *.jubula*.xml files to execute as TestCases, eg. Omnivore, KG-Iatrix
+unless ARGV.size > 0
+  puts "useage: You must specify a test-suite(s) to be run"
+  puts "  If the name of the first test-suite contains UPGRADE Elexis will be installed and prepared"
+  puts "  the environment 'VARIANT' allows you to choose between h2, postgres, mysql demoDB as database used by Elexis"
+  exit 2
 end
-
-run_upgrade_local_core_and_remote_base(jubula, 'TST_UPGRADE')
-run_fulltest(jubula, 'FULLTEST')
+if ARGV[0].match(/UPGRADE/)
+  cleanup_and_install_from_zip(jubula)
+  ENV['TEST_UDV_SW_MUST_UPGRADE'] = 'true' # we want installing all SW-features to succeed
+  run_test_suite(jubula, ARGV[0])
+  ARGV.delete_at(0)
+end
+ARGV.each{ |name| run_test_suite(jubula, name) }
 

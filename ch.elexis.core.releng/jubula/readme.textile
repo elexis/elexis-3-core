@@ -44,7 +44,9 @@ h3. requirements (s.a. docker/Dockerfile and docker/install.sh)
 
 h2. Running via Jenkins-CI
 
-Running the GUI-tests via Jenkins-CI consumed much time to find the best setup. Here my experiences.
+Running the GUI-tests via Jenkins-CI consumed much time to find the best setup. Here my experiences. I used a matrix build to enable specifying various TEST_SUITE.
+
+I was unable to find a unified setup for Windows, MacOSX and Jubula, as some use %VAR% or $VAR and Linux needs to start an xvfb for an headless build.
 
 Common steps for each slave
 * Install Java version 1.7.55
@@ -59,7 +61,15 @@ Common steps for each slave
 Verify manually that the following commands run (which we will run via Jenkins CI)
 * @git checkout https://github.com/elexis/elexis-3-core.git && cd elexis-3-core@
 * @mvn clean install -Pall-arch -Dmaven.test.skip@
-* @cd ch.elexis.core.releng/jubula && ruby ./run_jenkins.rb@
+* @bundle install@
+* @@bundle exec ruby ch.elexis.core.releng/jubula/run_jenkins.rb NAME_OF_TEST_SUITE_TO_RUN@
+
+If you want to use a downloaded *.zip file change it
+* @wget URL_to_zip@
+* @mvn clean install -Pall-arch -Dmaven.test.skip@
+* @bundle install@
+* @@bundle exec ruby ch.elexis.core.releng/jubula/run_jenkins.rb -i downloaded.zip NAME_OF_TEST_SUITE_TO_RUN@
+
 OS-specific considerations
 
 h3. Windows slave
@@ -76,7 +86,55 @@ It is also necessary to ensure that the MacOSX does enter sleep mode or active t
 
 h3. Linux slave
 
-Linux has no problems running the tests fully headless. In an ssh shell I started the slave using @wget --timestamping https://srv.elexis.info/jenkins/jnlpJars/slave.jar && java -jar slave.jar -noCertificateCheck -jnlpUrl https://srv.elexis.info/jenkins/computer/MacOSX-64-bit/slave-agent.jnlp@ -noCertificateCheck only because srv.elexis.info has no official Certificate.
+In theory using xvfb under Linux to enable a headless build should be easy. I found however that this does not work correctly. Therefore I use start manually the a linux slave on a separate screen.
 
 
-TODO: Use daemontools
+h2. TODO
+
+* Decide on how to handle more feature. Do we want one jubula-testsuite per feature
+* Speed up tests. Maybe requiring a mysql per slave or even a common one would allow to reload only when the SHA of the Test-XML has changed.
+** On Linux take 1'40" till TST_UPGRADE starts
+** After 3'15 TST_UPGRADE is finished
+** SMOKETEST takes about 1 minute + 3'15 for TST_UPGRADE
+** FULLTEST takes about 18 minutes + 3'15 for TST_UPGRADE
+* Rework some dialogs, eg. date entry of new Fall to accept text values. Testing the date entry is impossible with Jubula.
+* Some timing are quite conservative as especially the Windows slave is often very slow
+* Design for testability. See this chapter in the Jubula manual, where it says
+bc. Although components can be located in the AUT even when they are not named by the developers, naming components is nevertheless a good idea.
+In SWT and RCP there is no method like the Swing setName method to name components in the program code.
+However, you can improve the testability of your application by using the following method in your SWT or RCP code for the current component class: setData(String key, String ComponentName). For the key, use TEST_COMP_NAME.
+Even if you do not name components, you can choose to have unique names generated for your components in the AUT in the AUT dialog 3.6.
+* Adding support for text retrieval
+bc. You can add support for renderers for SWT components or items without the getText() method in order to access text that is otherwise non-readable during test execution.
+Use the method "setData(String key, Object value)" on the instance of the component or item whose text you want to access. The key is "TEST_TESTABLE_TEXT"
+For example, to access an otherwise unreachable text on a label:
+"myLabel.setData("TEST_TESTABLE_TEXT", label);"
+If you are making text in e.g. a table accessible, then you will need to add a dynamic part for the column, e.g.: 
+myTableItemInstance.setData("TEST_TESTABLE_TEXT_" + colIdx, text);
+* Should we rework iterating over all Preferences/Vies using the available feature and throw away the ruby script for patching the xml file?
+
+
+bc. Example diff
+diff --git a/ch.elexis.core.ui/src/ch/elexis/core/ui/views/artikel/ArtikelView.java b/ch.elexis.core.ui/src/ch/elexis/core/ui/views/artikel/ArtikelView.java
+index 50d314f..103e9f2 100644
+--- a/ch.elexis.core.ui/src/ch/elexis/core/ui/views/artikel/ArtikelView.java
++++ b/ch.elexis.core.ui/src/ch/elexis/core/ui/views/artikel/ArtikelView.java
+@@ -65,6 +65,7 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
+        @Override
+        public void createPartControl(Composite parent){
+                parent.setLayout(new FillLayout());
++               parent.setData("TEST_COMP_NAME", "Elexis_Core_UI_ArtikelView");
+                ctab = new CTabFolder(parent, SWT.NONE);
+                ctab.setData("TEST_COMP_NAME", "Elexis_Core_UI_ArtikelView_CTab");
+                importers = new Hashtable<String, ImporterPage>();
+@@ -188,6 +189,7 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
+                                                (CodeSelectorFactory) ce.createExecutableExtension("CodeSelectorFactory");
+                                        MasterDetailsPage page = new MasterDetailsPage(ctab, csf, d);
+                                        CTabItem ct = new CTabItem(ctab, SWT.None);
++                                       ct.setData("TEST_COMP_NAME", "Elexis_Core_UI_ArtikelView"+d.getTitle());
+                                        ct.setText(d.getTitle());
+                                        ct.setControl(page);
+                                        ct.setData(d);
+
+    control.setData("TEST_COMP_NAME", "Elexis_Core_UI_ArtikelView_CTab");
+cv.getViewerWidget().getControl().setData("TEST_COMP_NAME", "Elexis_Core_UI_ArtikelView_CTab");
