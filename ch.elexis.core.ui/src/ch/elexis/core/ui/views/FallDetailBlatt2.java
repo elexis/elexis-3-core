@@ -820,7 +820,16 @@ public class FallDetailBlatt2 extends Composite {
 			if (keepEditable.contains(req)) {
 				req.setEnabled(true);
 			} else {
-				req.setEnabled(enable);
+				if (req instanceof Text) {
+					if(enable) {
+						req.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
+					} else {
+						req.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
+					}
+					((Text) req).setEditable(enable);
+				} else {
+					req.setEnabled(enable);
+				}
 			}
 		}
 	}
