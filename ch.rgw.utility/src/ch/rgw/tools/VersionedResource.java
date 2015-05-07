@@ -42,6 +42,8 @@ public class VersionedResource {
 	private VersionedResource(byte[] in){
 		items = new ArrayList<ResourceItem>();
 		
+		if ((in == null) || (in.length == 0)) return;
+		
 		try {
 			ByteArrayInputStream bais = new ByteArrayInputStream(in);
 			ObjectInputStream ois = new ObjectInputStream(bais);
