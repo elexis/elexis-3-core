@@ -6,7 +6,8 @@
 require 'optparse'
 require 'fileutils'
 require 'pp'
-require "#{File.dirname(__FILE__)}/helpers"
+$: << File.dirname(__FILE__) unless $:.index(File.dirname(__FILE__))
+require "helpers.rb"
 
 module JubulaOptions
 
@@ -170,8 +171,11 @@ module JubulaOptions
       opts.on("-s", "--server server", "server to run. Defaults to '#{@server}'") do |v|
 	@server = v
       end
+      opts.on("--testResults testResults", "testsuite to run. Defaults to '#{@testResults}'") do |v|
+  @testResults = v
+      end
       opts.on("-t", "--testsuite testsuite", "testsuite to run. Defaults to '#{@testsuite}'") do |v|
-	@testsuite = v
+  @testsuite = v
       end
       opts.on("--vm vm", "Java virtual machine (VM) to use. Defaults to '#{@vm}'") do |v|
 	@vm = v

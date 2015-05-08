@@ -71,6 +71,10 @@ def installArtikelStamm(jubula)
 end
 
 def run_test_suite(jubula, test_suite_name)
+  jubula.testsuite = test_suite_name
+  jubula.testResults = "#{jubula.workspace}/test-results/#{jubula.testsuite}"
+  puts "jubula ist #{jubula.testResults}"
+  installArtikelStamm(jubula)
   jubula.useH2(Dir.pwd)
   jubula.patchXML # must be before loadTestcases
   jubula.rmTestcases  # only if using h2
@@ -83,7 +87,6 @@ end
 def cleanup_and_install_from_zip(jubula)
   jubula.cleanup_from_old_runs
   jubula.installFromZip
-  installArtikelStamm(jubula)
   jubula.cleanDemoDb unless @hasDemoDb
   jubula.genWrapper
   jubula.prepareRcpSupport
