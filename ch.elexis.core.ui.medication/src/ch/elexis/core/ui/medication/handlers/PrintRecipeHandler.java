@@ -37,7 +37,7 @@ public class PrintRecipeHandler extends AbstractHandler {
 		
 		ISelection selection =
 			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
-		if(selection.isEmpty()) {
+		if(selection == null || selection.isEmpty()) {
 			prescRecipes = Arrays.asList(patient.getFixmedikation());
 		} else {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
