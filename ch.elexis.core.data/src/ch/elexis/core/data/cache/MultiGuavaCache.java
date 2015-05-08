@@ -24,6 +24,8 @@ public class MultiGuavaCache<K> implements IPersistentObjectCache<K> {
 	
 	@Override
 	public void put(K key, Object object, int timeToCacheInSeconds){
+		if (key == null || object == null)
+			return;
 		if (timeToCacheInSeconds <= PersistentObject.CACHE_DEFAULT_LIFETIME) {
 			shortTermCache.put(key, object);
 		} else {
