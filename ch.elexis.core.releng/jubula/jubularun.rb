@@ -4,10 +4,10 @@
 # Copyright Niklaus Giger, 2011, niklaus.giger@member.fsf.org
 require 'fileutils'
 require 'tempfile'
-require "#{File.dirname(__FILE__)}/helpers"
 require 'rexml/document'
 require 'pp'
-require "#{File.dirname(__FILE__)}/jubulaoptions"
+$: << File.dirname(__FILE__) unless $:.index(File.dirname(__FILE__))
+require "jubulaoptions"
 include REXML
 
 if $0.index(File.basename(__FILE__))
@@ -23,7 +23,10 @@ public
     eval(
       %(
       def #{x}
-	@#{x}
+  @#{x}
+      end
+      def #{x}=(value)
+  @#{x} = value
       end
 	)
     )
@@ -317,7 +320,7 @@ public
     puts("# Sleeping for #{sleepTime} after startAUT" )
     @@nrRun ||= 0
     @@nrRun += 1
-    log = "#{@testResults}/test-console-#{@@nrRun}.log"
+    log = "#{@testResults}/test-console.log"
     cmd = "#{JubulaOptions::jubulaHome}/server/autrun --workingdir #{@testResults} -rcp --kblayout #{@kblayout} -i #{@autid} --exec #{@wrapper} --generatename true --autagentport #{@portNumber}"
     if WINDOWS_REGEXP.match(RbConfig::CONFIG['host_os'])
       cmd = "start #{cmd}"
