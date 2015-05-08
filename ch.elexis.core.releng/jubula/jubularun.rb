@@ -349,6 +349,7 @@ public
   end
   
   def runOneTestcase(testcase, sleepTime = DefaultSleepTime)
+    FileUtils.rm_f(Dir.glob(File.join(Dir.home, 'elexis', 'logs', '*.log')), :verbose => true, :noop => DryRun)
     startAgent
     startAUT(sleepTime)
     okay = runTestsuite(testcase)
