@@ -30,6 +30,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
@@ -52,8 +53,8 @@ import ch.elexis.admin.AccessControl;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.cache.GuavaCache;
 import ch.elexis.core.data.cache.IPersistentObjectCache;
+import ch.elexis.core.data.cache.MultiGuavaCache;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -141,8 +142,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	// initialize cache
 	public static final int CACHE_DEFAULT_LIFETIME = 15;
 	public static final int CACHE_MIN_LIFETIME = 5;
+	public static final int CACHE_TIME_MAX = 300;
 	protected static int default_lifetime;
-	private static IPersistentObjectCache<String> cache = new GuavaCache<String>(CACHE_DEFAULT_LIFETIME, TimeUnit.SECONDS);
+	private static IPersistentObjectCache<String> cache = new MultiGuavaCache<String>(CACHE_DEFAULT_LIFETIME, TimeUnit.SECONDS);
 	
 	// maximum character length of int fields in tables
 	private static int MAX_INT_LENGTH = 10;
@@ -940,7 +942,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	@SuppressWarnings("unchecked")
 	public List<ISticker> getStickers(){
 		String ID = new StringBuilder().append("ETK").append(getId()).toString();
-		ArrayList<ISticker> ret = (ArrayList<ISticker>) cache.get(ID);
+		ArrayList<ISticker> ret = (ArrayList<ISticker>) cache.get(ID, getCacheTime());
 		if (ret != null) {
 			return ret;
 		}
@@ -982,7 +984,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	@SuppressWarnings("unchecked")
 	public void removeSticker(ISticker et){
 		String ID = new StringBuilder().append("ETK").append(getId()).toString();
-		ArrayList<Sticker> ret = (ArrayList<Sticker>) cache.get(ID);
+		ArrayList<Sticker> ret = (ArrayList<Sticker>) cache.get(ID, getCacheTime());
 		if (ret != null) {
 			ret.remove(et);
 		}
@@ -1001,7 +1003,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	@SuppressWarnings("unchecked")
 	public void addSticker(ISticker st){
 		String ID = new StringBuilder().append("STK").append(getId()).toString();
-		List<ISticker> ret = (List<ISticker>) cache.get(ID);
+		List<ISticker> ret = (List<ISticker>) cache.get(ID, getCacheTime());
 		if (ret == null) {
 			ret = getStickers();
 		}
@@ -1093,7 +1095,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public String get(final String field){
 		String key = getKey(field);
-		Object ret = cache.get(key);
+		Object ret = cache.get(key, getCacheTime());
 		if (ret instanceof String) {
 			return (String) ret;
 		}
@@ -1219,7 +1221,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	public byte[] getBinary(final String field){
 		String key = getKey(field);
-		Object o = cache.get(key);
+		Object o = cache.get(key, getCacheTime());
 		if (o instanceof byte[]) {
 			return (byte[]) o;
 		}
@@ -1257,7 +1259,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	protected VersionedResource getVersionedResource(final String field, final boolean flushCache){
 		String key = getKey(field);
 		if (flushCache == false) {
-			Object o = cache.get(key);
+			Object o = cache.get(key, getCacheTime());
 			if (o instanceof VersionedResource) {
 				return (VersionedResource) o;
 			}
@@ -1281,7 +1283,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	public @NonNull
 	Map getMap(final String field){
 		String key = getKey(field);
-		Object o = cache.get(key);
+		Object o = cache.get(key, getCacheTime());
 		if (o instanceof Hashtable) {
 			return (Hashtable) o;
 		}
@@ -1984,7 +1986,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		boolean[] decode = new boolean[fields.length];
 		for (int i = 0; i < fields.length; i++) {
 			String key = getKey(fields[i]);
-			Object ret = cache.get(key);
+			Object ret = cache.get(key, getCacheTime());
 			if (ret instanceof String) {
 				values[i] = (String) ret;
 			} else {

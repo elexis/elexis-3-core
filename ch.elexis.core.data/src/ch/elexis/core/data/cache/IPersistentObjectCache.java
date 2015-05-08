@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.data.cache;
 
+
 public interface IPersistentObjectCache<K> {
 	
 	/**
@@ -24,6 +25,15 @@ public interface IPersistentObjectCache<K> {
 	 * @return the object or null, if the object was expired or removed bei the garbage collector.
 	 */
 	public Object get(final K key);
+	
+	/**
+	 * 
+	 * @param key
+	 * @param timeToCacheInSeconds
+	 * @return
+	 * @since 3.1
+	 */
+	public Object get(final K key, final int timeToCacheInSeconds);
 	
 	public void remove(final K key);
 	
@@ -45,5 +55,5 @@ public interface IPersistentObjectCache<K> {
 	 * completely delete cache
 	 */
 	public void reset();
-	
+
 }

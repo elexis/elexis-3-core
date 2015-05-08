@@ -21,7 +21,7 @@ public class GuavaCache<K> implements IPersistentObjectCache<K> {
 	
 	public GuavaCache(long duration, TimeUnit unit){
 		shortTermCache =
-			CacheBuilder.newBuilder().recordStats().expireAfterWrite(duration, unit).build();
+			CacheBuilder.newBuilder().softValues().recordStats().expireAfterWrite(duration, unit).build();
 	}
 	
 	@Override
@@ -32,8 +32,14 @@ public class GuavaCache<K> implements IPersistentObjectCache<K> {
 	}
 	
 	@Override
-	public Object get(K key){
+	public Object get(K key, int cacheTime){
 		return shortTermCache.getIfPresent(key);
+	}
+	
+	
+	@Override
+	public Object get(K key){
+		return get(key, 0);
 	}
 	
 	@Override
@@ -49,24 +55,23 @@ public class GuavaCache<K> implements IPersistentObjectCache<K> {
 	@Override
 	public void stat(){
 		CacheStats shortStats = shortTermCache.stats();
-		System.out.println("--- GUAVA CACHE Statistics ---");
-		System.out.println("Hits (count/rate): " + shortStats.hitCount() + "/"
-			+ shortStats.hitRate());
-		System.out.println("Misses (count/rate): " + shortStats.missCount() + "/"
-			+ shortStats.missRate());
-		System.out.println("Avg load penalty: " + shortStats.averageLoadPenalty());
-		System.out.println("Load (count/successcount): " + shortStats.loadCount() + "/"
-			+ shortStats.loadSuccessCount());
+		System.out.println("--------- GUAVA CACHE Statistics ---------");
+		System.out.println("Hits (count/rate): " + shortStats.hitCount() + " / "
+			+ String.format("%.2f%%", shortStats.hitRate() * 100));
+		System.out.println("Misses (count/rate): " + shortStats.missCount() + " / "
+			+ String.format("%.2f%%", shortStats.missRate() * 100));
+		System.out.println("------------------------------------------");
 	}
 	
 	@Override
 	public void purge(){
-		shortTermCache.invalidateAll();
+		clear();
 	}
 	
 	@Override
 	public void reset(){
-		shortTermCache.invalidateAll();
+		clear();
 	}
-	
+
+
 }

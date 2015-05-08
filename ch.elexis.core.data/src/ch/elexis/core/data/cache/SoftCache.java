@@ -64,6 +64,10 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 		}
 	}
 	
+	public Object get(final K key, final int timeToCacheInSeconds) {
+		return get(key);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
