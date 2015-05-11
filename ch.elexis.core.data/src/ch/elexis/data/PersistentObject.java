@@ -750,9 +750,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         das Objekt erstellt werden kann
 	 */
 	public String storeToString(){
-		StringBuilder sb = new StringBuilder();
-		sb.append(getClass().getName()).append("::").append(getId());
-		return sb.toString();
+		return getClass().getName()+StringConstants.DOUBLECOLON+getId();
 	}
 	
 	/** An object with this ID does not exist */
@@ -1448,13 +1446,20 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return eine Liste aus String-Arrays, welche jeweils die ID des gefundenen Objekts und den
 	 *         Inhalt der Extra-Felder enthalten. Null bei Mapping-Fehler
 	 */
+	@SuppressWarnings("unchecked")
 	public List<String[]> getList(final String field, String[] extra){
 		if (extra == null) {
 			extra = new String[0];
 		}
-		StringBuffer sql = new StringBuffer();
+		
 		String mapped = map(field);
 		if (mapped.startsWith("JOINT:")) {
+			// query cache
+			String cacheId = field+"$"+mapped+"$"+Arrays.toString(extra)+"$"+getWrappedId();
+			Object cached = cache.get(cacheId, getCacheTime());
+			if(cached != null) return (List<String[]>) cached;
+			
+			StringBuffer sql = new StringBuffer();
 			String[] abfr = mapped.split(":");
 			sql.append("SELECT ").append(abfr[1]);
 			for (String ex : extra) {
@@ -1476,8 +1481,8 @@ public abstract class PersistentObject implements IPersistentObject {
 					list.add(line);
 				}
 				rs.close();
-				return list;
-				
+				cache.put(cacheId, list, getCacheTime());
+				return list;				
 			} catch (Exception ex) {
 				ElexisStatus status =
 					new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
@@ -1528,7 +1533,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			getConnection().exec(sql.toString());
 			return true;
 		}
-		Object oldval = cache.get(key);
+		Object oldval = cache.get(key, getCacheTime());
 		cache.put(key, value, getCacheTime()); // refresh cache
 		if (value.equals(oldval)) {
 			return true; // no need to write data if it ws already in cache
