@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2010, G. Weirich and Elexis
+ * Copyright (c) 2005-2015, G. Weirich, MEDEVIT and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,86 +7,236 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *    MEDEVIT <office@medevit.at> - re-implementation
  *******************************************************************************/
 
 package ch.elexis.core.ui.wizards;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.statushandlers.StatusManager;
+import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.status.ElexisStatus;
-import ch.elexis.core.ui.Hub;
+import ch.elexis.core.data.util.DBConnection;
+import ch.elexis.core.data.util.DBConnection.DBType;
+import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.PersistentObject;
-import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.JdbcLinkException;
 import ch.rgw.tools.StringTool;
 
 public class DBConnectWizard extends Wizard {
-	DBConnectFirstPage first = new DBConnectFirstPage(Messages.DBConnectWizard_typeOfDB); //$NON-NLS-1$
-	DBConnectSecondPage sec = new DBConnectSecondPage(Messages.DBConnectWizard_Credentials); //$NON-NLS-1$
+	private List<DBConnection> storedConnectionList;
+	private DBConnection targetedConnection;
+	private boolean canFinish;
+	private boolean restartAfterChange = true;
 	
+	private DBConnectSelectionConnectionWizardPage dbConnSelectionPage;
+	private DBConnectNewOrEditConnectionWizardPage dbConnNewConnPage;
+
 	public DBConnectWizard(){
 		super();
-		setWindowTitle(Messages.DBConnectWizard_connectDB); //$NON-NLS-1$
+		setWindowTitle(Messages.DBConnectWizard_connectDB);
+		dbConnSelectionPage =
+			new DBConnectSelectionConnectionWizardPage(Messages.DBConnectWizard_typeOfDB);
+		dbConnNewConnPage = new DBConnectNewOrEditConnectionWizardPage();
+		initStoredJDBCConnections();
+		targetedConnection = getCurrentConnection();
 	}
 	
 	@Override
 	public void addPages(){
-		addPage(first);
-		addPage(sec);
+		addPage(dbConnSelectionPage);
+		addPage(dbConnNewConnPage);
+	}
+	
+	public List<DBConnection> getStoredConnectionList(){
+		ArrayList<DBConnection> arrayList = new ArrayList<DBConnection>(storedConnectionList);
+		arrayList.add(0, new DBConnection());
+		return arrayList;
 	}
 	
 	@Override
 	public boolean performFinish(){
-		int ti = first.dbTypes.getSelectionIndex();
-		String server = first.server.getText();
-		String db = first.dbName.getText();
-		String user = sec.name.getText();
-		String pwd = sec.pwd.getText();
-		JdbcLink j = null;
-		switch (ti) {
-		case 0:
-			j = JdbcLink.createMySqlLink(server, db);
-			break;
-		case 1:
-			j = JdbcLink.createPostgreSQLLink(server, db);
-			break;
-		case 2:
-			j = JdbcLink.createH2Link(db);
-			break;
-		default:
-			j = null;
-			return false;
-		}
-		try {
-			j.connect(user, pwd);
-		} catch (JdbcLinkException je) {
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NOFEEDBACK,
-					Messages.DBConnectWizard_couldntConnect, je);
-			StatusManager.getManager().handle(status, StatusManager.BLOCK);
-			return false;
-		}
-		Hashtable<String, String> h = new Hashtable<String, String>();
-		h.put(Preferences.CFG_FOLDED_CONNECTION_DRIVER, j.getDriverName());
-		h.put(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING, j.getConnectString());
-		h.put(Preferences.CFG_FOLDED_CONNECTION_USER, user);
-		h.put(Preferences.CFG_FOLDED_CONNECTION_PASS, pwd);
-		h.put(Preferences.CFG_FOLDED_CONNECTION_TYPE, first.dbTypes.getItem(ti));
-		try {
-			String conn = StringTool.enPrintable(PersistentObject.flatten(h));
-			CoreHub.localCfg.set(Preferences.CFG_FOLDED_CONNECTION, conn);
-			CoreHub.localCfg.flush();
-		} catch (Exception ex) {
-			ExHandler.handle(ex);
+		if (!storedConnectionList.contains(targetedConnection)) {
+			// this is a new entry
+			storedConnectionList.add(targetedConnection);
+			storeJDBCConnections();
 		}
 		
-		return PersistentObject.connect(j);
+		setUsedConnection();
+		
+		if (restartAfterChange) {
+			UiDesk.asyncExec(new Runnable() {
+				@Override
+				public void run(){
+					PlatformUI.getWorkbench().restart();
+				}
+			});
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public boolean canFinish(){
+		return canFinish;
+	}
+	
+	public void setTargetedConnection(DBConnection targetedConnection){
+		this.targetedConnection = targetedConnection;
+	}
+	
+	public DBConnection getTargetedConnection(){
+		return targetedConnection;
+	}
+	
+	public void setRestartAfterConnectionChange(boolean restartAfterChange){
+		this.restartAfterChange = restartAfterChange;
+	}
+	
+	public boolean getRestartAfterConnectionChange(){
+		return restartAfterChange;
+	}
+	
+	/**
+	 * load the stored connections from the local config, initializes {@link #storedConnectionList}
+	 * if there are not yet any connections it initializes the list starting with the current
+	 * connection (if available)
+	 */
+	@SuppressWarnings("unchecked")
+	private void initStoredJDBCConnections(){
+		String storage = CoreHub.localCfg.get(Preferences.CFG_STORED_JDBC_CONN, null);
+		if (storage != null) {
+			storedConnectionList =
+				(List<DBConnection>) PersistentObject.foldObject(StringTool.dePrintable(storage));
+		} else {
+			// initialize the current connection (if available)
+			storedConnectionList = new ArrayList<DBConnection>();
+			String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
+			if (cnt != null) {
+				Hashtable<Object, Object> hConn =
+					PersistentObject.fold(StringTool.dePrintable(cnt));
+				if (hConn != null) {
+					String connectionString =
+						PersistentObject.checkNull(hConn
+							.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
+					String user =
+						PersistentObject.checkNull(hConn
+							.get(Preferences.CFG_FOLDED_CONNECTION_USER));
+					String pwd =
+						PersistentObject.checkNull(hConn
+							.get(Preferences.CFG_FOLDED_CONNECTION_PASS));
+					
+					DBConnection dbc = new DBConnection();
+					dbc.connectionString = connectionString;
+					dbc.rdbmsType = parseDBTyp(connectionString);
+					dbc.hostName = parseHostname(connectionString);
+					dbc.username = user;
+					dbc.password = pwd;
+					
+					storedConnectionList.add(dbc);
+					
+					storeJDBCConnections();
+				}
+			} else {
+				// TODO skip selection page!
+			}
+		}
+	}
+	
+	private String parseHostname(String connectionString){
+		int i = connectionString.indexOf("//")+2;
+		if(i==-1) return "";
+		String woHeader = connectionString.substring(i);
+		int ij = woHeader.indexOf(":");
+		if(ij==-1) return "";
+		return woHeader.substring(0, ij);
+	}
+
+	private @Nullable DBType parseDBTyp(String connectionString){
+		if (connectionString.contains(StringConstants.COLON + JdbcLink.DBFLAVOR_H2
+			+ StringConstants.COLON)) {
+			return DBType.H2;
+		} else if (connectionString.contains(StringConstants.COLON + JdbcLink.DBFLAVOR_MYSQL
+			+ StringConstants.COLON)) {
+			return DBType.MySQL;
+		} else if (connectionString.contains(StringConstants.COLON + JdbcLink.DBFLAVOR_POSTGRESQL
+			+ StringConstants.COLON)) {
+			return DBType.PostgreSQL;
+		}
+		return null;
+	}
+	
+	/**
+	 * serialize the {@link #storedConnectionList} to the local config file
+	 */
+	void storeJDBCConnections(){
+		Assert.isNotNull(storedConnectionList);
+		byte[] flatten = PersistentObject.flattenObject(storedConnectionList);
+		String enPrintable = StringTool.enPrintable(flatten);
+		CoreHub.localCfg.set(Preferences.CFG_STORED_JDBC_CONN, enPrintable);
+		CoreHub.localCfg.flush();
+	}
+	
+	/**
+	 * retrieve the current {@link DBConnection} by parsing the value stored in the local
+	 * configuration with key {@link Preferences#CFG_FOLDED_CONNECTION}
+	 * 
+	 * @return the respective {@link DBConnection} from {@link #storedConnectionList} or
+	 *         <code>null</code>
+	 */
+	public @Nullable DBConnection getCurrentConnection(){
+		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
+		if (cnt != null) {
+			Hashtable<Object, Object> hConn = PersistentObject.fold(StringTool.dePrintable(cnt));
+			if (hConn != null) {
+				String currConnString =
+					PersistentObject.checkNull(hConn
+						.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
+				String user =
+					PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
+				String combined = user + "@" + currConnString;
+				
+				for (DBConnection dbConnection : storedConnectionList) {
+					if (combined.equalsIgnoreCase(dbConnection.username + "@"
+						+ dbConnection.connectionString)) {
+						return dbConnection;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	public void setCanFinish(boolean canFinish){
+		this.canFinish = canFinish;
+		getContainer().updateButtons();
+	}
+	
+	private boolean setUsedConnection(){
+		Hashtable<String, String> h = new Hashtable<String, String>();
+		h.put(Preferences.CFG_FOLDED_CONNECTION_DRIVER, targetedConnection.rdbmsType.driverName);
+		h.put(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING, targetedConnection.connectionString);
+		h.put(Preferences.CFG_FOLDED_CONNECTION_USER, targetedConnection.username);
+		h.put(Preferences.CFG_FOLDED_CONNECTION_PASS, targetedConnection.password);
+		h.put(Preferences.CFG_FOLDED_CONNECTION_TYPE, targetedConnection.rdbmsType.dbType);
+		
+		String conn = StringTool.enPrintable(PersistentObject.flatten(h));
+		CoreHub.localCfg.set(Preferences.CFG_FOLDED_CONNECTION, conn);
+		CoreHub.localCfg.flush();
+		
+		return true;
+	}
+
+	public void removeConnection(DBConnection connection){
+		storedConnectionList.remove(connection);
+		storeJDBCConnections();
 	}
 }

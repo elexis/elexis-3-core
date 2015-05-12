@@ -2532,12 +2532,22 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public static byte[] flatten(final Hashtable hash){
+		return flattenObject(hash);
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @return
+	 * @since 3.1
+	 */
+	public static byte[] flattenObject(final Object object) {
 		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream(hash.size() * 30);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ZipOutputStream zos = new ZipOutputStream(baos);
 			zos.putNextEntry(new ZipEntry("hash"));
 			ObjectOutputStream oos = new ObjectOutputStream(zos);
-			oos.writeObject(hash);
+			oos.writeObject(object);
 			zos.close();
 			baos.close();
 			return baos.toByteArray();
@@ -2556,12 +2566,22 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Hashtable<Object, Object> fold(final byte[] flat){
+		return (Hashtable<Object, Object>) foldObject(flat);
+	}
+	
+	/**
+	 * 
+	 * @param flat
+	 * @return
+	 * @since 3.1
+	 */
+	public static Object foldObject(final byte[] flat) {
 		try {
 			ByteArrayInputStream bais = new ByteArrayInputStream(flat);
 			ZipInputStream zis = new ZipInputStream(bais);
 			zis.getNextEntry();
 			ObjectInputStream ois = new ObjectInputStream(zis);
-			Hashtable<Object, Object> res = (Hashtable<Object, Object>) ois.readObject();
+			Object res = ois.readObject();
 			ois.close();
 			bais.close();
 			return res;

@@ -25,6 +25,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.ui.icons.urihandler.IconURLConnection;
 
 /**
  * Central image repository. Supersedes the images managed in {@link Desk}. This image registry
@@ -214,7 +215,12 @@ public enum Images {
 		/** covercard png **/
 		IMG_COVERCARD,
 		/** document copy png **/
-		IMG_COPY;
+		IMG_COPY, 
+		IMG_USER_SILHOUETTE, 
+		IMG_TABLE, 
+		IMG_NODE, 
+		IMG_NW_STATUS, 
+		IMG_GEAR;
 	
 	private Images(){}
 	

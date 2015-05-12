@@ -34,6 +34,8 @@ public class Messages extends NLS {
 	public static String DBConnectWizard_connectDB;
 	public static String DBConnectWizard_couldntConnect;
 	public static String DBConnectWizard_typeOfDB;
+	public static String DBConnectWizard_newConnection;
+	public static String DBConnectWizardPage_enterSettings;
 	public static String DBImportFirstPage_Connection;
 	public static String DBImportFirstPage_EnterType;
 	public static String DBImportFirstPage_connection;
@@ -48,6 +50,21 @@ public class Messages extends NLS {
 	public static String DBImportSecondPage_userDetails;
 	public static String DBImportWizard_connectDB;
 	public static String DBImportWizard_typeOfDB;
+	public static String DBConnectWizardPage_lblGespeicherteVerbindungen_text;
+	public static String DBConnectWizardPage_btnNewButton_text;
+	public static String DBConnectWizardPage_lblUsername_text;
+	public static String DBConnectWizardPage_lblPassword_text;
+	public static String DBConnectWizardPage_btnCheckButton_text;
+	public static String DBConnectWizardPage_btnDatenbankErstellen_text;
+	public static String DBConnectWizardPage_grpAdministratorRoot_text;
+	public static String DBConnectWizardPage_lblUsername_1_text;
+	public static String DBConnectWizardPage_lblPasswort_text;
+	public static String DBConnectWizardPage_grpCurrentConnection_text;
+	public static String DBConnectWizardPage_grpStatCurrentConnection_text;
+	public static String DBConnectSelectionConnectionWizardPage_lblOderAufDer_text;
+	public static String DBConnectSelectionConnectionWizardPage_this_message;
+	public static String DBConnectNewOrEditConnectionWizardPage_this_message;
+	public static String DBConnectNewOrEditConnectionWizardPage_this_title;
 	
 	static {
 		// load message values from bundle file

@@ -48,6 +48,7 @@ public class UiDesk {
 	
 	public static final String COL_RED = "rot"; //$NON-NLS-1$
 	public static final String COL_GREEN = "gruen"; //$NON-NLS-1$
+	public static final String COL_DARKGREEN = "dunkelgruen"; //$NON-NLS-1$
 	public static final String COL_BLUE = "blau"; //$NON-NLS-1$
 	public static final String COL_SKYBLUE = "himmelblau"; //$NON-NLS-1$
 	public static final String COL_LIGHTBLUE = "hellblau"; //$NON-NLS-1$

@@ -37,6 +37,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDisplayPreferences(Display display){
 		UiDesk.getColorRegistry().put(UiDesk.COL_RED, new RGB(255, 0, 0));
 		UiDesk.getColorRegistry().put(UiDesk.COL_GREEN, new RGB(0, 255, 0));
+		UiDesk.getColorRegistry().put(UiDesk.COL_DARKGREEN, new RGB(0, 88, 0));
 		UiDesk.getColorRegistry().put(UiDesk.COL_BLUE, new RGB(0, 0, 255));
 		UiDesk.getColorRegistry().put(UiDesk.COL_SKYBLUE, new RGB(135, 206, 250));
 		UiDesk.getColorRegistry().put(UiDesk.COL_LIGHTBLUE, new RGB(0, 191, 255));
