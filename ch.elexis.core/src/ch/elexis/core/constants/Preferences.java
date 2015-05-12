@@ -37,7 +37,8 @@ public class Preferences {
 	public static final String CFG_FOLDED_CONNECTION_USER = "user";
 	public static final String CFG_FOLDED_CONNECTION_PASS = "pwd";
 	public static final String CFG_FOLDED_CONNECTION_TYPE = "typ";
-	public static final String CFG_FOLDED_CONNECTION_CONNECTSTRING = "connectionstring";
+	public static final String CFG_FOLDED_CONNECTION_CONNECTSTRING = "connectionstring";	
+	public static final String CFG_STORED_JDBC_CONN = "verbindung/storedJDBCConnections/connection";
 	
 	// Ablauf
 	public static final String ABL_LANGUAGE = "ablauf/sprache"; //$NON-NLS-1$
