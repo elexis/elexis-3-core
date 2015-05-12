@@ -141,6 +141,7 @@ public class DBConnectSelectionConnectionWizardPage extends WizardPage {
 	}
 	
 	private void setCurrentSelection(){
+		if(getDBConnectWizard().getCurrentConnection()==null) return;
 		cViewerConns.setSelection(new StructuredSelection(getDBConnectWizard()
 			.getCurrentConnection()));
 	}
