@@ -122,15 +122,15 @@ public class DBConnectSelectionConnectionWizardPage extends WizardPage {
 				if (selection.size() > 0) {
 					Object firstElement = selection.getFirstElement();
 					if (firstElement != null) {
-						getDBConnectWizard().setTargetedConnection((DBConnection) firstElement);
-						btnDelStoredConn.setEnabled(!getDBConnectWizard().getCurrentConnection()
-							.equals(getDBConnectWizard().getTargetedConnection()));
+						DBConnection targetedConnection = (DBConnection) firstElement;
+						getDBConnectWizard().setTargetedConnection(targetedConnection);
+						btnDelStoredConn.setEnabled(!targetedConnection.equals(getDBConnectWizard()
+							.getCurrentConnection()));
 					}
 				}
 			}
 		});
 		setCurrentSelection();
-		
 		
 		Label lblOderAufDer = new Label(cmpExistConnSelector, SWT.NONE);
 		lblOderAufDer.setText(Messages.DBConnectSelectionConnectionWizardPage_lblOderAufDer_text);
@@ -141,11 +141,12 @@ public class DBConnectSelectionConnectionWizardPage extends WizardPage {
 	}
 	
 	private void setCurrentSelection(){
-		if(getDBConnectWizard().getCurrentConnection()==null) return;
+		if (getDBConnectWizard().getCurrentConnection() == null)
+			return;
 		cViewerConns.setSelection(new StructuredSelection(getDBConnectWizard()
 			.getCurrentConnection()));
 	}
-
+	
 	private void createEntityArea(Group grpEntity){
 		String driver = "";
 		String user = "";
