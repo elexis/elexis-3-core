@@ -74,18 +74,6 @@ import ch.elexis.data.Reminder;
 import ch.elexis.data.Sticker;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
-//Hier ist mglw. nicht data.Messages, sondern views.Messages nötig.
-//Jedenfalls fehlt im ersten z.B. PatientenListeView.PatientNr etc.,
-//während das im zweiten dann definiert ist. Ohne diese Strings erscheinen
-//in der GUI von PatientenListeView die entsprechenden Identifier mit Ausdrufezeichen
-//drumherum, jedoch nicht der gewünschte Inhalt.
-//Nach dem Austausch fehlen allerdings Angaben wie Kontakt.Salutation,
-//die von dem neuen Code zum Kopieren von Patientenanschriften und -Infos in die Zwischenablage
-//benötigt würden! Deshalb funktionieren  die entsprechenden neuen Funktionen so nicht mehr.
-//beide können nicht gleichzeitig (ohne Namensdiversifikation) importiert werden.
-//Und JA, nach dem Austausch erscheinen die Labels in PatientListeView.java korrekt.
-//import ch.elexis.data.Messages;
-//20120214js Ende.
 
 /**
  * Display of Patients
