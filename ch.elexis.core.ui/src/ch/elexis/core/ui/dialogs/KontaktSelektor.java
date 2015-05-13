@@ -54,6 +54,7 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
+import ch.elexis.data.Organisation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
@@ -98,11 +99,13 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 	private final PersistentObjectLoader kl;
 	private boolean enableEmptyField = false;
 	
+	private Class targetClass;
+	
 	@SuppressWarnings("unchecked")
 	public KontaktSelektor(Shell parentShell, Class which, String title, String message,
 		String[] orderFields){
 		super(parentShell);
-		// clazz=which;
+		targetClass = which;
 		cv = new CommonViewer();
 		fba = new FilterButtonAdapter();
 		this.title = title;
@@ -316,13 +319,14 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 		bAll = new Button(types, SWT.RADIO);
 		bPersons = new Button(types, SWT.RADIO);
 		bOrgs = new Button(types, SWT.RADIO);
-		bAll.setSelection(true);
 		bAll.setText("Alle");
 		bPersons.setText("Personen");
 		bOrgs.setText("Organisationen");
 		bAll.addSelectionListener(fba);
 		bPersons.addSelectionListener(fba);
 		bOrgs.addSelectionListener(fba);
+		initContactTypeSelection();
+		
 		cv.create(vc, ret, SWT.NONE, "1");
 		GridData gd = SWTHelper.getFillGridData(1, true, 1, true);
 		gd.heightHint = 100;
@@ -354,6 +358,17 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 			});
 		}
 		return ret;
+	}
+	
+	private void initContactTypeSelection(){
+		if (Person.class.isAssignableFrom(targetClass)) {
+			bPersons.setSelection(true);
+		} else if (Organisation.class.isAssignableFrom(targetClass)) {
+			bOrgs.setSelection(true);
+		} else {
+			bAll.setSelection(true);
+		}
+		
 	}
 	
 	public Object getSelection(){
