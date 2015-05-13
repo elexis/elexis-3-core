@@ -86,6 +86,9 @@ public class TestDBConnectionGroup extends Group {
 		try {			
 			String hostname = (tdbc.port != null) ? tdbc.hostName + ":" + tdbc.port : tdbc.hostName;
 			
+			if(tdbc.databaseName==null || tdbc.databaseName.isEmpty()) {
+				throw new IllegalArgumentException("No database name provided.");
+			}
 			
 			switch (tdbc.rdbmsType) {
 			case H2:
