@@ -1,6 +1,23 @@
-This project is used to automatically set-up an Elexis 3 development environment by employing
-the Eclipse Oomph Installer (http://wiki.eclipse.org/Eclipse_Oomph_Installer). More documentation to follow.
+h1. Elexis SDK
 
-It integrates both core and base resources, this project is not used outside of the oomph installer tool.
+**The setup file is currently broken due to a change in Oomph - "https://www.eclipse.org/forums/index.php/m/1695488/#msg_1695488":https://www.eclipse.org/forums/index.php/m/1695488/#msg_1695488** 
 
-descher@medevit.at
+This project is used to automatically set-up an Elexis 3 development environment using
+the "Eclipse Oomph Installer":http://wiki.eclipse.org/Eclipse_Oomph_Installer.
+
+It integrates both core, base and "Medelexis":http://www.medelexis.ch  resources. This project is not used outside of the Oomph installer tool.
+
+This documentation was verified with Oomph v1.1 (May 15, 2015).
+
+h2. Usage
+
+Eclipse Oomph is a toolkit to realize automated installations of project specific Eclipse installations. It is hence used to set-up Eclipse for a specific project. In order to employ Oomph to setup an Elexis development environment we proceed as follows:
+
+
+# Download Oomph specific to your system from "https://wiki.eclipse.org/Eclipse_Installer":https://wiki.eclipse.org/Eclipse_Installer 
+# Start Oomph (eclipse installer) and switch to the __Advanced__  wizard  <br> !images/switchToAdvanced.png! 
+# In the advanced wizard select __Eclipse for RCP and RAP developers__ as @Product@   and select **Next>** 
+# Now you see the list of @Projects@, here you have to add the setup file for Elexis. The setup file can be accessed in raw format using the link "https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.sdk/Elexis3.setup":https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.sdk/Elexis3.setup . Add it as follows
+
+
+
