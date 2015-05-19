@@ -7,10 +7,26 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.hl7.util.HL7Helper;
 
 public class LabResultData extends AbstractData {
+	public enum LabResultStatus {
+		UNDEFINED, FINAL, INTERMEDIATE, CHANGE;
+		
+		public static LabResultStatus getStatus(String code){
+			if("F".equals(code)) {
+				return FINAL;
+			} else if ("I".equals(code)) {
+				return INTERMEDIATE;
+			} else if ("C".equals(code)) {
+				return CHANGE;
+			}
+			return UNDEFINED;
+		}
+	};
+	
 	private String code;
 	private String unit;
 	private String value;
 	private String range;
+	private LabResultStatus resultStatus;
 	private Date obrDateTime;
 	private boolean flag;
 	private boolean isNumeric = false;
@@ -19,7 +35,7 @@ public class LabResultData extends AbstractData {
 	
 	public LabResultData(String code, String name, String unit, String value, String range,
 		boolean flag, String obrDateTime, String dateStr, String comment, String group,
-		String sequence) throws ParseException{
+		String sequence, String resultStatus) throws ParseException{
 		super(name, dateStr, comment, group, sequence);
 		
 		this.setCode(code);
@@ -27,11 +43,16 @@ public class LabResultData extends AbstractData {
 		this.setValue(value);
 		this.setRange(range);
 		this.setFlagged(flag);
+		this.resultStatus = LabResultStatus.getStatus(resultStatus);
 		if (obrDateTime != null && obrDateTime.length() > 0) {
 			this.obrDateTime = HL7Helper.stringToDate(obrDateTime);
 		}
 	}
 	
+	public LabResultStatus getResultStatus(){
+		return resultStatus;
+	}
+
 	public String getCode(){
 		return code;
 	}
