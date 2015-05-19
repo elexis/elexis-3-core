@@ -7,11 +7,6 @@ location "http://download.eclipse.org/eclipse/updates/4.3/" {
 	org.eclipse.osgi [3.9.1.v20140110-1610,3.9.1.v20140110-1610]
 	org.eclipse.osgi.services [3.3.100.v20130513-1956,3.3.100.v20130513-1956]
 	org.eclipse.osgi.util [3.2.300.v20130513-1956,3.2.300.v20130513-1956]
-	// requires manual de-selection of the corresponding osgi of other repositories
-	// in the created target file!!
-	// TYCHO
-	// this is currently not supported by tycho: https://bugs.eclipse.org/bugs/show_bug.cgi?id=373776
-	// realize with a filter https://wiki.eclipse.org/index.php?title=Tycho/Target_Platform#Filtering
 }
 
 location "http://download.eclipse.org/tools/orbit/downloads/drops/R20150124073747/repository/" {

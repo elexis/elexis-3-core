@@ -184,52 +184,6 @@
 									<arch>x86_64</arch>
 								</environment>
 							</environments>
-							<!-- START [3376] make ready for Java 8 -->
-							<filters>
-								<filter>
-									<type>eclipse-plugin</type>
-            						<id>org.eclipse.osgi</id>
-           							<restrictTo>
-              							<version>3.9.1.v20140110-1610</version>
-           							</restrictTo>
-								</filter>
-								<filter>
-									<type>eclipse-plugin</type>
-            						<id>org.eclipse.osgi.source</id>
-           							<restrictTo>
-              							<version>3.9.1.v20140110-1610</version>
-           							</restrictTo>
-								</filter>
-								<filter>
-									<type>eclipse-plugin</type>
-            						<id>org.eclipse.osgi.services</id>
-           							<restrictTo>
-              							<version>3.3.100.v20130513-1956</version>
-           							</restrictTo>
-								</filter>
-								<filter>
-									<type>eclipse-plugin</type>
-            						<id>org.eclipse.osgi.services.source</id>
-           							<restrictTo>
-              							<version>3.3.100.v20130513-1956</version>
-           							</restrictTo>
-								</filter>
-								<filter>
-									<type>eclipse-plugin</type>
-            						<id>org.eclipse.osgi.util</id>
-           							<restrictTo>
-              							<version>3.2.300.v20130513-1956</version>
-           							</restrictTo>
-								</filter>
-								<filter>
-									<type>eclipse-plugin</type>
-            						<id>org.eclipse.osgi.util.source</id>
-           							<restrictTo>
-              							<version>3.2.300.v20130513-1956</version>
-           							</restrictTo>
-								</filter>
-							</filters>
-							<!-- END [3376] make ready for Java 8 -->
 						</configuration>
 					</plugin>
 				</plugins>
