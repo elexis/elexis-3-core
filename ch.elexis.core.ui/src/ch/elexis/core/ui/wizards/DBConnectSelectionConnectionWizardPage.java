@@ -19,8 +19,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -32,18 +33,13 @@ import org.eclipse.swt.widgets.Label;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.DBConnection;
-import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.StringTool;
 
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-
-public class DBConnectSelectionConnectionWizardPage extends WizardPage {
+public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage {
 	private Label lblConnection, lblUser, lblDriver, lblTyp;
 	private ComboViewer cViewerConns;
-	private TestDBConnectionGroup tdbg;
 	private Button btnDelStoredConn;
 	
 	/**
@@ -54,8 +50,6 @@ public class DBConnectSelectionConnectionWizardPage extends WizardPage {
 		
 		setTitle(Messages.DBConnectFirstPage_Connection);
 		setMessage(Messages.DBConnectSelectionConnectionWizardPage_this_message);
-		setImageDescriptor(Images.lookupImageDescriptor("db_configure_banner.png",
-			ImageSize._75x66_TitleDialogIconSize));
 	}
 	
 	@Override

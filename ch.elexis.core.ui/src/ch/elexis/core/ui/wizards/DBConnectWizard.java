@@ -34,11 +34,10 @@ import ch.rgw.tools.StringTool;
 public class DBConnectWizard extends Wizard {
 	private List<DBConnection> storedConnectionList;
 	private DBConnection targetedConnection;
-	private boolean canFinish;
-	private boolean restartAfterChange = true;
+	private boolean restartAfterChange = false;
 	
-	private DBConnectSelectionConnectionWizardPage dbConnSelectionPage;
-	private DBConnectNewOrEditConnectionWizardPage dbConnNewConnPage;
+	private DBConnectWizardPage dbConnSelectionPage;
+	private DBConnectWizardPage dbConnNewConnPage;
 
 	public DBConnectWizard(){
 		super();
@@ -64,12 +63,14 @@ public class DBConnectWizard extends Wizard {
 	
 	@Override
 	public boolean performFinish(){
+		if(testDatabaseConnection()==false) return false;
+		
 		if (!storedConnectionList.contains(targetedConnection)) {
 			// this is a new entry
 			storedConnectionList.add(targetedConnection);
-			storeJDBCConnections();
 		}
-		
+
+		storeJDBCConnections();
 		setUsedConnection();
 		
 		if (restartAfterChange) {
@@ -86,11 +87,12 @@ public class DBConnectWizard extends Wizard {
 	
 	@Override
 	public boolean canFinish(){
-		return canFinish;
+		return targetedConnection.allValuesSet();
 	}
 	
 	public void setTargetedConnection(DBConnection targetedConnection){
 		this.targetedConnection = targetedConnection;
+		if(getContainer().getCurrentPage()!=null) getContainer().updateButtons();
 	}
 	
 	public DBConnection getTargetedConnection(){
@@ -215,11 +217,6 @@ public class DBConnectWizard extends Wizard {
 		return null;
 	}
 	
-	public void setCanFinish(boolean canFinish){
-		this.canFinish = canFinish;
-		getContainer().updateButtons();
-	}
-	
 	private boolean setUsedConnection(){
 		Hashtable<String, String> h = new Hashtable<String, String>();
 		h.put(Preferences.CFG_FOLDED_CONNECTION_DRIVER, targetedConnection.rdbmsType.driverName);
@@ -238,5 +235,60 @@ public class DBConnectWizard extends Wizard {
 	public void removeConnection(DBConnection connection){
 		storedConnectionList.remove(connection);
 		storeJDBCConnections();
+	}
+	
+	/**
+	 * test the {@link #targetedConnection} for its validity
+	 * @return
+	 */
+	private boolean testDatabaseConnection(){
+		boolean error = true;
+		
+		JdbcLink j = null;
+		String text = null;
+		
+		try {
+			String hostname =
+				(targetedConnection.port != null) ? targetedConnection.hostName + ":"
+					+ targetedConnection.port : targetedConnection.hostName;
+			
+			if (targetedConnection.databaseName == null
+				|| targetedConnection.databaseName.isEmpty()) {
+				throw new IllegalArgumentException("No database name provided.");
+			}
+			
+			switch (targetedConnection.rdbmsType) {
+			case H2:
+				j = JdbcLink.createH2Link(targetedConnection.databaseName);
+				break;
+			case MySQL:
+				j = JdbcLink.createMySqlLink(hostname, targetedConnection.databaseName);
+				break;
+			case PostgreSQL:
+				j = JdbcLink.createPostgreSQLLink(hostname, targetedConnection.databaseName);
+				break;
+			default:
+				j = null;
+				break;
+			}
+			
+			Assert.isNotNull(j);
+			
+			j.connect(targetedConnection.username, targetedConnection.password);
+			
+			text = "Verbindung hergestellt";
+			error = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			text = "Exception " + e.getMessage();
+		}
+		
+		dbConnNewConnPage.getTdbg().setTestResult(error, text);
+		
+		if(!error) {
+			targetedConnection.connectionString = j.getConnectString();
+		}
+		
+		return !error;
 	}
 }

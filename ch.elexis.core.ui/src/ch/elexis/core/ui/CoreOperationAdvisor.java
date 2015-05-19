@@ -45,8 +45,6 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		SWTHelper.center(wd.getShell());
 		wd.open();
 		CoreHub.localCfg.flush();
-		MessageEvent.fireInformation("Datenbankverbindung geändert",
-			"Bitte starten Sie Elexis erneut");
 	}
 	
 	@Override

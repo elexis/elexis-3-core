@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.application.advisors.ApplicationWorkbenchAdvisor;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
@@ -45,6 +46,10 @@ public class Desk implements IApplication {
 		// register ElexisEvent and MessageEvent listeners
 		log.debug("Registering " + CoreEventListenerRegistrar.class.getName());
 		new CoreEventListenerRegistrar();
+		
+		if(System.getProperty(ElexisSystemPropertyConstants.OPEN_DB_WIZARD)!=null) {
+			cod.requestDatabaseConnectionConfiguration();
+		}
 		
 		// connect to the database
 		try {

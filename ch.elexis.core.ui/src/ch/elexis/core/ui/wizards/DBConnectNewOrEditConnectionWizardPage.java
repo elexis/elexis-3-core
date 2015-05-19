@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -29,17 +28,14 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.data.util.DBConnection;
 import ch.elexis.core.data.util.DBConnection.DBType;
-import ch.elexis.core.ui.icons.ImageSize;
-import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.PersistentObject;
 
-public class DBConnectNewOrEditConnectionWizardPage extends WizardPage {
+public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage {
 	private Text txtDBName;
 	private Text txtDBHost;
 	private Text txtDBPort;
 	private Text txtDBUsername;
 	private Text txtDBPassword;
-	private TestDBConnectionGroup tdbg;
 	private ComboViewer comboViewerDBType;
 	
 	/**
@@ -50,8 +46,6 @@ public class DBConnectNewOrEditConnectionWizardPage extends WizardPage {
 		
 		setMessage(Messages.DBConnectNewOrEditConnectionWizardPage_this_message);
 		setTitle(Messages.DBConnectNewOrEditConnectionWizardPage_this_title);
-		setImageDescriptor(Images.lookupImageDescriptor(
-			"db_configure_banner.png", ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$
 	}
 	
 	/**

@@ -39,4 +39,23 @@ public class DBConnection implements Serializable {
 	public String username;
 	public String password;
 	public String text;
+	
+	/**
+	 * are all required values for the DBConnection set?
+	 * @return
+	 */
+	public boolean allValuesSet(){
+		boolean result = true;
+		
+		result = (rdbmsType!=null);
+		
+		if (!DBType.H2.equals(rdbmsType)) {
+			result = (hostName != null);
+		}
+		
+		result = (databaseName != null);
+		result = (username != null);
+		
+		return result;
+	}
 }

@@ -321,6 +321,8 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		if (StringTool.leer.equals(driver)) {
 			cod.requestDatabaseConnectionConfiguration();
+			MessageEvent.fireInformation("Datenbankverbindung geändert",
+					"Bitte starten Sie Elexis erneut");
 			System.exit(-1);
 		} else {
 			j = new JdbcLink(driver, connectstring, typ);

@@ -22,6 +22,9 @@ public class ElexisSystemPropertyConstants {
 	// Run-mode related properties
 	public static final String RUN_MODE = "elexis-run-mode";
 	
+	// open db selection wizard on startup
+	public static final String OPEN_DB_WIZARD = "openDBWizard";
+	
 	// The Elexis run mode - from scratch
 	public static final String RUN_MODE_FROM_SCRATCH = "RunFromScratch";
 	
