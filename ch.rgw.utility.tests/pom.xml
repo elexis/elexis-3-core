@@ -17,14 +17,7 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-          <useUIHarness>true</useUIHarness>
-          <dependencies>
-            <dependency>
-              <type>eclipse-feature</type>
-              <artifactId>org.eclipse.platform</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-          </dependencies>
+          <useUIHarness>false</useUIHarness>
         </configuration>
       </plugin>
     </plugins>

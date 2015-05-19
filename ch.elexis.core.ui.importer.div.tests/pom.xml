@@ -21,16 +21,8 @@
           <useUIThread>true</useUIThread>
           <useUIHarness>true</useUIHarness>
           <showEclipseLog>true</showEclipseLog>
-          <dependencies>
-            <dependency>
-              <type>eclipse-feature</type>
-              <artifactId>org.eclipse.platform</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-          </dependencies>
         </configuration>
       </plugin>
     </plugins>
   </build>
-
 </project>
