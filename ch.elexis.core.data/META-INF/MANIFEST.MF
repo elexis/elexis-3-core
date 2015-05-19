@@ -31,5 +31,5 @@ Export-Package: .,
  ch.elexis.core.data.util,
  ch.elexis.data,
  ch.elexis.util
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: ch.elexis.core.data.activator.CoreHub
