@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LaborResultDeleteAction;
@@ -34,7 +36,6 @@ import ch.elexis.core.ui.laboratory.controls.util.ChangeResultsDateSelection;
 import ch.elexis.core.ui.laboratory.controls.util.DisplayDoubleClickListener;
 import ch.elexis.core.ui.laboratory.controls.util.LabResultEditingSupport;
 import ch.elexis.core.ui.laboratory.controls.util.LaborResultsLabelProvider;
-import ch.elexis.core.ui.util.Log;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
@@ -42,7 +43,7 @@ import ch.elexis.data.Person;
 import ch.rgw.tools.TimeTool;
 
 public class LaborResultsComposite extends Composite {
-	private static Log log = Log.get("LaborView"); //$NON-NLS-1$
+	private static Logger logger = LoggerFactory.getLogger(LaborResultsComposite.class); //$NON-NLS-1$
 	
 	private final FormToolkit tk = UiDesk.getToolkit();
 	private Form form;
@@ -61,6 +62,8 @@ public class LaborResultsComposite extends Composite {
 	private LaborResultsContentProvider contentProvider = new LaborResultsContentProvider();
 	
 	private int columnOffset = 0;
+	
+	private boolean reloadPending;
 	private static final int COLUMNS_PER_PAGE = 7;
 	
 	public LaborResultsComposite(Composite parent, int style){
@@ -269,8 +272,12 @@ public class LaborResultsComposite extends Composite {
 	 * Reload all content and update the Viewer with the data of the Patient.
 	 */
 	public void selectPatient(Patient patient){
-		setRedraw(false);
 		actPatient = patient;
+		if (!isVisible()) {
+			reloadPending = true;
+			return;
+		}
+		setRedraw(false);
 		viewer.setInput(LabResult.getGrouped(actPatient));
 		
 		TimeTool now = new TimeTool();
@@ -294,6 +301,15 @@ public class LaborResultsComposite extends Composite {
 		setRedraw(true);
 	}
 	
+	@Override
+	public boolean setFocus(){
+		if (reloadPending) {
+			selectPatient(actPatient);
+			reloadPending = false;
+		}
+		return super.setFocus();
+	}
+
 	public Patient getPatient(){
 		return actPatient;
 	}

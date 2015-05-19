@@ -248,8 +248,11 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 	
 	@Override
 	public void setFocus(){
-		// TODO Automatisch erstellter Methoden-Stub
-		
+		if (resultsComposite.isVisible()) {
+			resultsComposite.setFocus();
+		} else if (ordersComposite.isVisible()) {
+			ordersComposite.setFocus();
+		}
 	}
 	
 	private void makeActions(){
