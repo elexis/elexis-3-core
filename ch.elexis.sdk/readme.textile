@@ -2,10 +2,7 @@ h1. Elexis SDK
 
 __MEDEVIT <office@medevit.at>__ Last update: 15.5.2015
 
-This project is used to automatically set-up an Elexis 3 development environment using
-the "Eclipse Oomph Installer":http://wiki.eclipse.org/Eclipse_Oomph_Installer.
-
-It integrates both core, base and "Medelexis":http://www.medelexis.ch  resources. This project is not used outside of the Oomph installer tool.
+This project is used to automatically set-up an Elexis 3 development environment using the "Eclipse Oomph Installer":http://wiki.eclipse.org/Eclipse_Oomph_Installer. It integrates both core, base and "Medelexis":http://www.medelexis.ch  resources. This project is not used outside of the Oomph installer tool.
 
 This documentation was verified with Oomph v1.1. The setup file referenced in this document is located in the root of this git repository (that is @../Elexis.setup@ )
 
@@ -23,6 +20,7 @@ Eclipse Oomph is a toolkit to realize automated installations of project specifi
 ## @Medelexis Application@  - the core Medelexis application, only accessible to core Medelexis developers
 ## @Austria@ ( "elexis-3-austria":https://github.com/elexis/elexis-3-austria ) - setup for plugins specific to Austrian requirements , requires github account
 # for a default open source development environment in the master stream select the projects as follows <br> !images/selectProjects.png!
+# the first time you use the installer you have to provide some additional information, please be careful to select the correct github username and/or access type, otherwise the installationw will fail. <br> !images/oomphConfiguration.png!
 # After pressing **Next>** again you have to select the installation folder name, use @elexis@ or whatever fits you. Here you will finally find your pre-configured development environment for Elexis open source.
 # Pressing **Next>** again you can verify the settings and start the installation with **Finish**. This will take a while.
 # After the basic product installation was done, the newly installed Eclipse IDE is started and the setup tasks are executed (source checkout, IDE configuration etc.).
