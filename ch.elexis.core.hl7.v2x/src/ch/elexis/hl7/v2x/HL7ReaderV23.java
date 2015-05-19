@@ -296,6 +296,7 @@ public class HL7ReaderV23 extends HL7Reader {
 		String unit = "";
 		String range = "";
 		String observationTime = "";
+		String status = "";
 		boolean flag = false;
 		
 		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
@@ -346,10 +347,11 @@ public class HL7ReaderV23 extends HL7Reader {
 			flag = isPathologic(obx.getObx8_AbnormalFlags(0).getValue());
 			observationTime =
 				obx.getObx14_DateTimeOfTheObservation().getTs1_TimeOfAnEvent().getValue();
+			status = obx.getObx11_ObservResultStatus().getValue();
 			
 			LabResultData lrd =
 				new LabResultData(itemCode, name, unit, value, range, flag, defaultDateTime,
-					observationTime, commentNTE, group, sequence);
+					observationTime, commentNTE, group, sequence, status);
 			
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)
 				|| valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN)) {

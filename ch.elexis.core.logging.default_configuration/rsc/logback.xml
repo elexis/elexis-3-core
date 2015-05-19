@@ -47,6 +47,7 @@
  <logger name="net.kornr.log.LogbackAdaptor" level="WARN"/>
  <logger name="ch.qos.logback.classic.joran.action.LoggerAction" level="WARN" />
  <logger name="ch.elexis.core.data.events.Heartbeat" level="WARN" />
+ <logger name="ca.uhn.hl7v2.parser" level="INFO" />
  
  <logger name="org.apache.commons.httpclient" level="WARN"/>
  <logger name="httpclient.wire" level="WARN"/>

@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.importer.div.importers;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,10 +174,7 @@ public class LabImportUtil {
 		boolean overWriteAll = false;
 		String orderId = LabOrder.getNextOrderId();
 		for (TransientLabResult transientLabResult : results) {
-			List<LabResult> existing =
-				LabImportUtil.getLabResults(transientLabResult.patient, transientLabResult.labItem,
-					transientLabResult.date, transientLabResult.analyseTime,
-					transientLabResult.observationTime);
+			List<LabResult> existing = getExistingResults(transientLabResult);
 			if (existing.isEmpty()) {
 				createLabResult(transientLabResult, orderId);
 			} else {
@@ -207,6 +205,32 @@ public class LabImportUtil {
 		return orderId;
 	}
 	
+	/**
+	 * Match for existing result with same item and date. Matching dates are checked for validitiy
+	 * (not same as transmission date).
+	 * 
+	 * @param transientLabResult
+	 * @return
+	 */
+	private static List<LabResult> getExistingResults(TransientLabResult transientLabResult){
+		List<LabResult> ret = Collections.emptyList();
+
+		if (transientLabResult.isObservationTime()) {
+			ret =
+				LabImportUtil.getLabResults(transientLabResult.patient, transientLabResult.labItem,
+					null, null, transientLabResult.observationTime);
+		} else if (transientLabResult.isAnalyseTime()) {
+			ret =
+				LabImportUtil.getLabResults(transientLabResult.patient, transientLabResult.labItem,
+					null, transientLabResult.analyseTime, null);
+		} else {
+			ret =
+				LabImportUtil.getLabResults(transientLabResult.patient, transientLabResult.labItem,
+					transientLabResult.date, null, null);
+		}
+		return ret;
+	}
+
 	/**
 	 * Create the LabResult from the TransientLabResult. Also lookup if there is a matching
 	 * LabOrder. If it is in State.ORDERED the created LabResult is set to that LabOrder, else
@@ -436,10 +460,28 @@ public class LabImportUtil {
 			return analyseTime;
 		}
 		
+		/**
+		 * Check if analyse time is valid, by comparing it with the transmission time.
+		 * 
+		 * @return
+		 */
+		public boolean isAnalyseTime(){
+			return !analyseTime.isEqual(transmissionTime);
+		}
+		
 		public TimeTool getObservationTime(){
 			return observationTime;
 		}
 		
+		/**
+		 * Check if observation time is valid, by comparing it with the transmission time.
+		 * 
+		 * @return
+		 */
+		public boolean isObservationTime(){
+			return !observationTime.isEqual(transmissionTime);
+		}
+
 		public TimeTool getTransmissionTime(){
 			return transmissionTime;
 		}

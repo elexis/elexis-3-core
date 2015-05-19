@@ -284,6 +284,7 @@ public class HL7ReaderV21 extends HL7Reader {
 		String unit = "";
 		String range = "";
 		String observationTime = "";
+		String status = "";
 		boolean flag = false;
 		
 		if (isTextOrNumeric(valueType)) {
@@ -314,10 +315,11 @@ public class HL7ReaderV21 extends HL7Reader {
 			range = obx.getObx7_REFERENCESRANGE().getValue();
 			flag = isPathologic(obx.getObx8_ABNORMALFLAGS(0).getValue());
 			observationTime = defaultDateTime;
+			status = obx.getObx11_OBSERVRESULTSTATUS().getValue();
 			
 			LabResultData lrd =
 				new LabResultData(itemCode, name, unit, value, range, flag, defaultDateTime,
-					observationTime, commentNTE, group, sequence);
+					observationTime, commentNTE, group, sequence, status);
 			
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)) {
 				lrd.setIsNumeric(true);
