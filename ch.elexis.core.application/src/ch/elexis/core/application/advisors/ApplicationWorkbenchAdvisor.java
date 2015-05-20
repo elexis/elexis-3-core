@@ -26,12 +26,12 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.data.Reminder;
 import ch.rgw.tools.ExHandler;
@@ -113,7 +113,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public boolean preShutdown(){
-		GlobalActions.fixLayoutAction.setChecked(false);
+		CoreHub.userCfg.set(Preferences.USR_FIX_LAYOUT, false);
 		return super.preShutdown();
 	}
 	
