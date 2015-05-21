@@ -7,16 +7,15 @@
   </parent>
   <artifactId>ch.elexis.core.ui.importer.div.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
+  
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-surefire-plugin</artifactId>
-        <version>${tycho-version}</version>
         <configuration>
           <application>ch.elexis.core.application.ElexisApp</application>
-          <!--product>ch.elexis.ElexisProduct</product-->
           <argLine>-debug -DjdbcLink=org.h2.Driver:mem:mem_test;AUTO_SERVER=TRUE -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
           <useUIThread>true</useUIThread>
           <useUIHarness>true</useUIHarness>
