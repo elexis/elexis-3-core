@@ -502,6 +502,9 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 			} else if (type == 2) {
 				qbe.add(Kontakt.FLD_IS_PERSON, Query.EQUALS, StringConstants.ZERO);
 			}
+			qbe.orderBy(false, new String[] {
+				Kontakt.FLD_NAME1, Kontakt.FLD_NAME2
+			});
 		}
 		
 	}
