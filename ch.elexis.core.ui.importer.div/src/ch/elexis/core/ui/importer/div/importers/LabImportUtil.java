@@ -466,6 +466,9 @@ public class LabImportUtil {
 		 * @return
 		 */
 		public boolean isAnalyseTime(){
+			if (analyseTime == null) {
+				return false;
+			}
 			return !analyseTime.isEqual(transmissionTime);
 		}
 		
@@ -479,6 +482,9 @@ public class LabImportUtil {
 		 * @return
 		 */
 		public boolean isObservationTime(){
+			if (observationTime == null) {
+				return false;
+			}
 			return !observationTime.isEqual(transmissionTime);
 		}
 
