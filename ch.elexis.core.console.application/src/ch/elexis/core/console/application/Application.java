@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.console.application.test.ApplicationTestCode;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
@@ -37,6 +38,9 @@ public class Application implements IApplication {
 		// register ElexisEvent and MessageEvent listeners
 		log.debug("Registering " + CoreEventListenerRegistrar.class.getName());
 		new CoreEventListenerRegistrar();
+		
+		// Check if we "are complete" - throws Error if not
+		CoreOperationExtensionPoint.getCoreOperationAdvisor();
 		
 		// connect to the database
 		try {

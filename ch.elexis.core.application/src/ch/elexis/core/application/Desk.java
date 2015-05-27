@@ -35,8 +35,7 @@ public class Desk implements IApplication {
 	private Logger log = LoggerFactory.getLogger(Desk.class);
 	private static Map<String, String> args = null;
 	
-	protected static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
-		.getCoreOperationAdvisor();
+	protected static AbstractCoreOperationAdvisor cod = null;
 	
 	/**
 	 * @since 3.0.0 log-in has been moved from ApplicationWorkbenchAdvisor to this method
@@ -46,6 +45,9 @@ public class Desk implements IApplication {
 		// register ElexisEvent and MessageEvent listeners
 		log.debug("Registering " + CoreEventListenerRegistrar.class.getName());
 		new CoreEventListenerRegistrar();
+		
+		// Check if we "are complete" - throws Error if not
+		cod = CoreOperationExtensionPoint.getCoreOperationAdvisor();
 		
 		if(System.getProperty(ElexisSystemPropertyConstants.OPEN_DB_WIZARD)!=null) {
 			cod.requestDatabaseConnectionConfiguration();

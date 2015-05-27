@@ -20,9 +20,11 @@ import java.util.Properties;
 import java.util.UUID;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.equinox.internal.app.CommandLineArgs;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,7 +133,7 @@ public class CoreHub implements BundleActivator {
 	 *         retrieved
 	 */
 	public static String getBasePath(){
-		return PlatformHelper.getBasePath(PLUGIN_ID);
+		return FrameworkUtil.getBundle(CoreHub.class).getEntry("/").toString();
 	}
 	
 	/**
@@ -197,9 +199,6 @@ public class CoreHub implements BundleActivator {
 		log.debug("Starting " + CoreHub.class.getName());
 		plugin = this;
 		
-		// Check if we "are complete" - throws Error if not
-		CoreOperationExtensionPoint.getCoreOperationAdvisor();
-		
 		startUpBundle();
 		setUserDir(userDir);
 		heart = Heartbeat.getInstance();
@@ -263,7 +262,7 @@ public class CoreHub implements BundleActivator {
 	}
 	
 	private void startUpBundle(){
-		String[] args = Platform.getApplicationArgs();
+		String[] args = CommandLineArgs.getApplicationArgs();
 		String config = "default"; //$NON-NLS-1$
 		for (String s : args) {
 			if (s.startsWith("--use-config=")) { //$NON-NLS-1$
