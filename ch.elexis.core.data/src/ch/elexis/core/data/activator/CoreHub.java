@@ -133,7 +133,7 @@ public class CoreHub implements BundleActivator {
 	 *         retrieved
 	 */
 	public static String getBasePath(){
-		return FrameworkUtil.getBundle(CoreHub.class).getEntry("/").toString();
+		return PlatformHelper.getBasePath(PLUGIN_ID);
 	}
 	
 	/**

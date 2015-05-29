@@ -434,10 +434,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			java.io.InputStream is = null;
 			Stm stm = null;
 			try {
-				String createscript =
-					CoreHub.getBasePath() + File.separator + "rsc" + File.separator
-						+ "createDB.script";
-				is = new FileInputStream(createscript);
+				is = PersistentObject.class.getResourceAsStream("/rsc/createDB.script");
 				stm = getConnection().getStatement();
 				if (stm.execScript(is, true, true) == true) {
 					CoreHub.globalCfg = new SqlSettings(getConnection(), "CONFIG");
