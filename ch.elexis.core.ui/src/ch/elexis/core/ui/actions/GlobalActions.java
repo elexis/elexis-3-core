@@ -22,6 +22,11 @@ import static ch.elexis.admin.AccessControlDefaults.AC_NEWWINDOW;
 import static ch.elexis.admin.AccessControlDefaults.AC_PREFS;
 import static ch.elexis.admin.AccessControlDefaults.AC_SHOWPERSPECTIVE;
 import static ch.elexis.admin.AccessControlDefaults.AC_SHOWVIEW;
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_ADDRESS_LABEL;
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_KG_COVER_SHEET;
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PATIENT_LABEL;
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PATIENT_LABEL_ORDER;
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_XRAY;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -336,7 +341,7 @@ public class GlobalActions {
 						return;
 					}
 					EtiketteDruckenDialog dlg =
-						new EtiketteDruckenDialog(mainWindow.getShell(), kontakt, "AdressEtikette");
+						new EtiketteDruckenDialog(mainWindow.getShell(), kontakt, TT_ADDRESS_LABEL);
 					dlg.setTitle(Messages.GlobalActions_PrintContactLabel);
 					dlg.setMessage(Messages.GlobalActions_PrintContactLabelToolTip);
 					if (isDirectPrint()) {
@@ -373,7 +378,7 @@ public class GlobalActions {
 					
 					EtiketteDruckenDialog dlg =
 						new EtiketteDruckenDialog(mainWindow.getShell(), actPatient,
-							"AdressEtikette");
+							TT_ADDRESS_LABEL);
 					dlg.setTitle(Messages.GlobalActions_PrintAddressLabel);
 					dlg.setMessage(Messages.GlobalActions_PrintAddressLabelToolTip);
 					if (isDirectPrint()) {
@@ -409,7 +414,7 @@ public class GlobalActions {
 					}
 					EtiketteDruckenDialog dlg =
 						new EtiketteDruckenDialog(mainWindow.getShell(), actPatient,
-							"PatientEtiketteAuftrag");
+							TT_PATIENT_LABEL_ORDER);
 					dlg.setTitle(Messages.GlobalActions_PrintVersionedLabel);
 					dlg.setMessage(Messages.GlobalActions_PrintVersionedLabelToolTip);
 					if (isDirectPrint()) {
@@ -445,7 +450,7 @@ public class GlobalActions {
 					}
 					EtiketteDruckenDialog dlg =
 						new EtiketteDruckenDialog(mainWindow.getShell(), actPatient,
-							"PatientEtikette");
+							TT_PATIENT_LABEL);
 					dlg.setTitle(Messages.GlobalActions_PrintLabel);
 					dlg.setMessage(Messages.GlobalActions_PrintLabelToolTip);
 					if (isDirectPrint()) {
@@ -472,7 +477,7 @@ public class GlobalActions {
 					String printer = CoreHub.localCfg.get("Drucker/Einzelblatt/Name", null); //$NON-NLS-1$
 					String tray = CoreHub.localCfg.get("Drucker/Einzelblatt/Schacht", null); //$NON-NLS-1$
 					
-					new TemplateDrucker("KG-Deckblatt", printer, tray).doPrint(actPatient); //$NON-NLS-1$
+					new TemplateDrucker(TT_KG_COVER_SHEET, printer, tray).doPrint(actPatient); //$NON-NLS-1$
 				}
 			};
 		printRoeBlatt = new Action(Messages.GlobalActions_PrintXRay) { //$NON-NLS-1$
@@ -482,7 +487,7 @@ public class GlobalActions {
 					String printer = CoreHub.localCfg.get("Drucker/A4/Name", null); //$NON-NLS-1$
 					String tray = CoreHub.localCfg.get("Drucker/A4/Schacht", null); //$NON-NLS-1$
 					
-					new TemplateDrucker("Roentgen-Blatt", printer, tray).doPrint(actPatient); //$NON-NLS-1$
+					new TemplateDrucker(TT_XRAY, printer, tray).doPrint(actPatient); //$NON-NLS-1$
 				}
 			};
 		

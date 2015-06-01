@@ -100,7 +100,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 			if (m != null) {
 				rnStellerSettings = CoreHub.getUserSetting(m.getRechnungssteller());
 				checkRnStellerSettingsValidity(m);
-				cv.notify(CommonViewer.Message.update);
+				//				cv.notify(CommonViewer.Message.update);
 				updateMahnAutomatic();
 			}
 		}

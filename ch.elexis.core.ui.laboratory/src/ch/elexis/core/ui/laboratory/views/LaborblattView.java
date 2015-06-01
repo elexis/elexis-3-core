@@ -12,6 +12,8 @@
 
 package ch.elexis.core.ui.laboratory.views;
 
+import static ch.elexis.core.ui.laboratory.LaboratoryTextTemplateRequirement.TT_LABPAPER;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,8 +60,8 @@ public class LaborblattView extends ViewPart implements ICallback {
 	public boolean createLaborblatt(final Patient pat, final String[] header,
 		final TreeItem[] rows, int[] skipColumnsIndex){
 		Brief br =
-			text.createFromTemplateName(Konsultation.getAktuelleKons(),
-				Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null);
+			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_LABPAPER, Brief.LABOR,
+				pat, null);
 		if (br == null) {
 			return false;
 		}
@@ -113,11 +115,11 @@ public class LaborblattView extends ViewPart implements ICallback {
 		}
 		return false;
 	}
-
+	
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows){
 		Brief br =
-			text.createFromTemplateName(Konsultation.getAktuelleKons(),
-				Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null);
+			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_LABPAPER, Brief.LABOR,
+				pat, null);
 		if (br == null) {
 			return false;
 		}
@@ -160,8 +162,8 @@ public class LaborblattView extends ViewPart implements ICallback {
 	
 	@SuppressWarnings("unchecked")
 	public boolean createLaborblatt(Patient pat, Document doc){
-		/* Brief br= */text.createFromTemplateName(Konsultation.getAktuelleKons(),
-			Messages.LaborblattView_LabTemplateName, Brief.LABOR, pat, null);
+		/* Brief br= */text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_LABPAPER,
+			Brief.LABOR, pat, null);
 		
 		ArrayList<String[]> rows = new ArrayList<String[]>();
 		Element root = doc.getRootElement();

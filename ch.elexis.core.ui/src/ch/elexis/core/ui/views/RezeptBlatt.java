@@ -12,6 +12,9 @@
 
 package ch.elexis.core.ui.views;
 
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_INTAKE_LIST;
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PRESCRIPTION;
+
 import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
@@ -110,7 +113,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	}
 	
 	public boolean createRezept(Rezept rp){
-		if (createList(rp, Messages.RezeptBlatt_TemplateNamePrescription, Messages.RezeptBlatt_4)) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (createList(rp, TT_PRESCRIPTION, Messages.RezeptBlatt_4)) { //$NON-NLS-1$ //$NON-NLS-2$
 			new OutputLog(rp, this);
 			return true;
 		}
@@ -126,7 +129,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			 */
 			rp.addPrescription(new Prescription(p));
 		}
-		return createList(rp, Messages.RezeptBlatt_TemplateNameList, Messages.RezeptBlatt_6); //$NON-NLS-1$ //$NON-NLS-2$
+		return createList(rp, TT_INTAKE_LIST, Messages.RezeptBlatt_6); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public void save(){

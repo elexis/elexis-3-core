@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_LIST;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -60,7 +62,7 @@ public class GenericPrintDialog extends Dialog implements ICallback {
 		text.getPlugin().createContainer(ret, this);
 		text.getPlugin().showMenu(true);
 		text.getPlugin().showToolbar(true);
-		brief = text.createFromTemplateName(null, "Liste", Brief.UNKNOWN, CoreHub.actUser, subject); //$NON-NLS-1$ 
+		brief = text.createFromTemplateName(null, TT_LIST, Brief.UNKNOWN, CoreHub.actUser, subject); //$NON-NLS-1$ 
 		text.getPlugin().insertText("[Titel]", subject, SWT.LEFT);
 		return ret;
 	}

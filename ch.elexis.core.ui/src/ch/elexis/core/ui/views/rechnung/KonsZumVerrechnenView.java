@@ -13,6 +13,8 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_LIST;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -864,8 +866,8 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 			text.getPlugin().createContainer(ret, this);
 			text.getPlugin().showMenu(false);
 			text.getPlugin().showToolbar(false);
-			text.createFromTemplateName(null,
-				"Liste", Brief.UNKNOWN, CoreHub.actUser, Messages.KonsZumVerrechnenView_billsTitle); //$NON-NLS-1$ //$NON-NLS-2$
+			text.createFromTemplateName(null, TT_LIST, Brief.UNKNOWN, CoreHub.actUser,
+				Messages.KonsZumVerrechnenView_billsTitle); //$NON-NLS-1$ //$NON-NLS-2$
 			Tree[] all = (Tree[]) tSelection.getChildren().toArray(new Tree[0]);
 			String[][] table = new String[all.length][];
 			

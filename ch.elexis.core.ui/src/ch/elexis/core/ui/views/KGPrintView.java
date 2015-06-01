@@ -12,6 +12,8 @@
 
 package ch.elexis.core.ui.views;
 
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_KG_COVER_SHEET;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -31,8 +33,6 @@ import ch.elexis.data.Patient;
 
 public class KGPrintView extends ViewPart {
 	public static final String ID = "ch.elexis.views.KGPrintView"; //$NON-NLS-1$
-	
-	private static final String TEMPLATE = Messages.KGPrintView_CoverSheet; //$NON-NLS-1$
 	
 	CTabFolder ctab;
 	private int existing;
@@ -122,10 +122,10 @@ public class KGPrintView extends ViewPart {
 		TextContainer text;
 		
 		if (--existing < 0) {
-			ctKG = addItem(TEMPLATE, Messages.KGPrintView_EMR, null); //$NON-NLS-1$
+			ctKG = addItem(TT_KG_COVER_SHEET, Messages.KGPrintView_EMR, null); //$NON-NLS-1$
 		} else {
 			ctKG = ctab.getItem(0);
-			useItem(0, TEMPLATE, null);
+			useItem(0, TT_KG_COVER_SHEET, null);
 		}
 		
 		text = (TextContainer) ctKG.getData("text"); //$NON-NLS-1$

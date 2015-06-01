@@ -11,6 +11,8 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_BILLING_LIST;
+
 import java.io.FileWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -842,7 +844,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 					perLeistung[i] = new Money();
 				}
 			}
-			text.createFromTemplateName(null, Messages.PatHeuteView_billingList, //$NON-NLS-1$
+			text.createFromTemplateName(null, TT_BILLING_LIST, //$NON-NLS-1$
 				Brief.UNKNOWN, CoreHub.actUser, Messages.PatHeuteView_billing); //$NON-NLS-1$
 			String[][] table = new String[kons.length + add][];
 			table[0] = new String[2];

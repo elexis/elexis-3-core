@@ -12,6 +12,8 @@
 
 package ch.elexis.core.ui.views;
 
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_ORDER;
+
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
@@ -33,7 +35,6 @@ public class BestellBlatt extends ViewPart implements ICallback {
 	public final static String ID = "ch.elexis.BestellBlatt"; //$NON-NLS-1$
 	TextContainer text;
 	Brief actBest;
-	private final static String TEMPLATENAME = Messages.BestellBlatt_TemplateName; //$NON-NLS-1$
 	private static final String ERRMSG_CAPTION = Messages.BestellBlatt_CouldNotCreateOrder; //$NON-NLS-1$
 	private static final String ERRMSG_BODY = Messages.BestellBlatt_CouldNotCreateOrderBody; //$NON-NLS-1$
 	
@@ -73,12 +74,12 @@ public class BestellBlatt extends ViewPart implements ICallback {
 				sum.getAmountAsString()
 			//$NON-NLS-1$
 			};
-		actBest = text.createFromTemplateName(null, TEMPLATENAME, Brief.BESTELLUNG, adressat, null);
+		actBest = text.createFromTemplateName(null, TT_ORDER, Brief.BESTELLUNG, adressat, null);
 		if (actBest == null) {
-			SWTHelper.showError(ERRMSG_CAPTION, ERRMSG_BODY + "'" + TEMPLATENAME + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(ERRMSG_CAPTION, ERRMSG_BODY + "'" + TT_ORDER + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			actBest.setPatient(CoreHub.actUser);
-			text.getPlugin().insertTable("[" + TEMPLATENAME + "]", //$NON-NLS-1$ //$NON-NLS-2$
+			text.getPlugin().insertTable("[" + TT_ORDER + "]", //$NON-NLS-1$ //$NON-NLS-2$
 				ITextPlugin.FIRST_ROW_IS_HEADER | ITextPlugin.GRID_VISIBLE, tbl, null);
 			if (text.getPlugin().isDirectOutput()) {
 				text.getPlugin().print(null, null, true);

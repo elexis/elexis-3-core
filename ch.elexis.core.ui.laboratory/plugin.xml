@@ -63,5 +63,11 @@
             name="Zuordnung importieren">
       </command>
    </extension>
+      <extension
+            point="ch.elexis.core.ui.TextTemplateRequirement">
+         <TextTemplateRequirement
+               element="ch.elexis.core.ui.laboratory.LaboratoryTextTemplateRequirement">
+         </TextTemplateRequirement>
+      </extension>
    
 </plugin>

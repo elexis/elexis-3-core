@@ -12,6 +12,8 @@
 
 package ch.elexis.core.ui.views;
 
+import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_AUF_CERT;
+
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
@@ -52,7 +54,7 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 	
 	public void createAUZ(final AUF auf){
 		actBrief =
-			text.createFromTemplateName(Konsultation.getAktuelleKons(), "AUF-Zeugnis", Brief.AUZ, //$NON-NLS-1$
+			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_AUF_CERT, Brief.AUZ, //$NON-NLS-1$
 				null, null);
 		// text.getPlugin().setFormat(PageFormat.A5);
 		if (text.getPlugin().isDirectOutput()) {
