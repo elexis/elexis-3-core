@@ -19,7 +19,6 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.CountryCode;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -478,16 +477,6 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		firePropertyChange("username", old, value);
 	}
 	
-	@Override
-	public String getPassword(){
-		return (String) entity.getInfoElement(Anwender.FLD_EXTINFO_PASSWORD);
-	}
-	
-	@Override
-	public void setPassword(String value){
-		// TODO Auto-generated method stub
-	}
-	
 	/**
 	 * This class caches contact properties to speed up the current {@link PersistentObject}
 	 * dependent implementation, where every access is executed synchronous to the DB.
@@ -539,5 +528,17 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 				return ContactGender.UNKNOWN;
 			}
 		}
+	}
+
+	@Override
+	public String getPassword(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPassword(String value){
+		// TODO Auto-generated method stub
+		
 	}
 }

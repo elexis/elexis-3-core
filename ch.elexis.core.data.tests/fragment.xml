@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<fragment>
+   <extension
+         point="ch.elexis.core.data.ACLContribution">
+      <ACLContribution
+            ACLContributor="ch.elexis.admin.RoleBasedAccessControlTestACLContribution"
+            name="ch.elexis.core.data.tests.ACLContribution">
+      </ACLContribution>
+   </extension>
+
+</fragment>

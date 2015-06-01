@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2014, G. Weirich and Elexis
+ * Copyright (c) 2009-2015, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,22 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ * 	  MEDEVIT <office@medevit.at> - major refactorings #2112
  *******************************************************************************/
 package ch.elexis.admin;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
+import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.jdt.Nullable;
 
 /**
  * AcessControlElement
@@ -29,12 +40,35 @@ import java.io.Serializable;
 public class ACE implements Serializable {
 	private static final long serialVersionUID = 34320020090119L;
 	
-	public static final ACE ACE_ROOT = new ACE(null, "root", Messages.ACE_root); //$NON-NLS-1$ //$NON-NLS-2$
-	public static final ACE ACE_IMPLICIT = new ACE(ACE.ACE_ROOT, "implicit", Messages.ACE_implicit); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final String ACE_ROOT_LITERAL = "root";//$NON-NLS-1$	
+	public static final ACE ACE_ROOT = new ACE(null, ACE_ROOT_LITERAL, Messages.ACE_root);
+	public static final ACE ACE_IMPLICIT = new ACE(ACE.ACE_ROOT, "implicit", Messages.ACE_implicit); //$NON-NLS-1$
+	
+	private static Map<String, ACE> allDefinedACEs;
 	
 	private final String name;
 	private String localizedName;
 	private final ACE parent;
+	private List<ACE> children = new ArrayList<ACE>();
+	
+	/**
+	 * initialize all defined ACEs, only performed once
+	 * 
+	 * @return
+	 */
+	private static void initAllDefinedACEs(){
+		if (allDefinedACEs != null)
+			return;
+		
+		@SuppressWarnings("unchecked")
+		List<IACLContributor> acls =
+			Extensions.getClasses(ExtensionPointConstantsData.ACL_CONTRIBUTION, "ACLContributor"); //$NON-NLS-1$
+		
+		List<ACE> temp =
+			acls.stream().flatMap(acl -> Arrays.asList(acl.getACL()).stream())
+				.collect(Collectors.toList());
+		allDefinedACEs = temp.stream().collect(Collectors.toMap(a -> a.getCanonicalName(), a -> a));
+	}
 	
 	/**
 	 * Create a new ACE. This is the recommended constructor for most cases.
@@ -51,6 +85,12 @@ public class ACE implements Serializable {
 		this.parent = parent;
 		this.name = name;
 		this.localizedName = localizedName;
+		if (parent != null)
+			parent.addChild(this);
+	}
+	
+	private void addChild(ACE ace){
+		children.add(ace);
 	}
 	
 	/**
@@ -89,6 +129,34 @@ public class ACE implements Serializable {
 	}
 	
 	/**
+	 * @param deep
+	 *            recurse to bottom, or <code>false</code> deliver direct children
+	 * @return a list of all children to this, in unspecific order, including self
+	 * @since 3.1
+	 */
+	public List<ACE> getChildren(boolean deep){
+		if (deep) {
+			return getChildrenRecursive();
+		} else {
+			return new ArrayList<ACE>(children);
+		}
+	}
+	
+	/**
+	 * recursively fetch all children, adding self
+	 * 
+	 * @return
+	 */
+	private List<ACE> getChildrenRecursive(){
+		List<ACE> ret = new ArrayList<ACE>();
+		ret.add(this);
+		for (ACE ace : children) {
+			ret.addAll(ace.getChildrenRecursive());
+		}
+		return ret;
+	}
+	
+	/**
 	 * Change the localized name of this ACE
 	 * 
 	 * @param lName
@@ -111,5 +179,68 @@ public class ACE implements Serializable {
 			parent = parent.getParent();
 		}
 		return sp.toString();
+	}
+	
+	/**
+	 * @return a unique hex string for the ACE that is derived by its canonical name and name, if
+	 *         {@link #ACE_ROOT} returns <code>root</code>
+	 * @since 3.1
+	 */
+	public String getUniqueHashFromACE(){
+		if (ACE_ROOT.equals(this))
+			return ACE_ROOT_LITERAL;
+		int valCan = Math.abs(getCanonicalName().hashCode());
+		int valNam = Math.abs(getName().hashCode());
+		BigInteger valI = new BigInteger(valCan + "" + valNam);
+		return valI.toString(16);
+	}
+	
+	/**
+	 * @return all defined ACE elements
+	 * @since 3.1
+	 */
+	public static @NonNull List<ACE> getAllDefinedACElements(){
+		initAllDefinedACEs();
+		return new ArrayList<ACE>(allDefinedACEs.values());
+	}
+	
+	/**
+	 * @return the root elements of all ACElements
+	 * @since 3.1
+	 */
+	public static @NonNull ACE[] getAllDefinedRootACElements(){
+		return ACE.getAllDefinedACElements().stream()
+			.filter(p -> ACE.ACE_ROOT.equals(p.getParent())).toArray(size -> new ACE[size]);
+	}
+	
+	/**
+	 * @return this element and its entire parent chain
+	 */
+	public List<ACE> getParentChainIncludingSelf(){
+		List<ACE> aces = new ArrayList<ACE>();
+		aces.add(this);
+		if (this.equals(ACE_ROOT))
+			return aces;
+		ACE parent = getParent();
+		while (parent != ACE_ROOT) {
+			aces.add(parent);
+			parent = parent.getParent();
+		}
+		
+		return aces;
+	}
+	
+	@Override
+	public String toString(){
+		return getUniqueHashFromACE() + " " + getName() + " " + getCanonicalName();
+	}
+	
+	/**
+	 * @param uniqueHash
+	 * @return
+	 */
+	public static @Nullable ACE getACEByCanonicalName(String canonicalName){
+		initAllDefinedACEs();
+		return allDefinedACEs.get(canonicalName);
 	}
 }

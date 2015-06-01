@@ -39,6 +39,9 @@ import ch.elexis.data.Anwender;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.Tree;
 
+/**
+ * @deprecated
+ */
 public class ACLPreferenceTree extends Composite {
 	private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 	
@@ -136,10 +139,10 @@ public class ACLPreferenceTree extends Composite {
 		for (Anwender an : lUsers) {
 			lbUsers.add(an.getLabel());
 		}
-		List<String> lGroups = CoreHub.acl.getGroups();
-		for (String s : lGroups) {
-			lbGroups.add(s);
-		}
+//		List<String> lGroups = CoreHub.acl.getGroups();
+//		for (String s : lGroups) {
+//			lbGroups.add(s);
+//		}
 		tv.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			/**
@@ -150,24 +153,24 @@ public class ACLPreferenceTree extends Composite {
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				lbGroups.deselectAll();
 				lbUsers.deselectAll();
-				if (!sel.isEmpty()) {
-					Tree<ACE> acl = (Tree<ACE>) sel.getFirstElement();
-					ACE right = acl.contents;
-					List<String> grps = CoreHub.acl.groupsForGrant(right);
-					List<Anwender> users = CoreHub.acl.usersForGrant(right);
-					for (String g : grps) {
-						int idx = StringTool.getIndex(lbGroups.getItems(), g);
-						if (idx != -1) {
-							lbGroups.select(idx);
-						}
-					}
-					for (Anwender an : users) {
-						int idx = StringTool.getIndex(lbUsers.getItems(), an.getLabel());
-						if (idx != -1) {
-							lbUsers.select(idx);
-						}
-					}
-				}
+//				if (!sel.isEmpty()) {
+//					Tree<ACE> acl = (Tree<ACE>) sel.getFirstElement();
+//					ACE right = acl.contents;
+//					List<String> grps = CoreHub.acl.groupsForGrant(right);
+//					List<Anwender> users = CoreHub.acl.usersForGrant(right);
+//					for (String g : grps) {
+//						int idx = StringTool.getIndex(lbGroups.getItems(), g);
+//						if (idx != -1) {
+//							lbGroups.select(idx);
+//						}
+//					}
+//					for (Anwender an : users) {
+//						int idx = StringTool.getIndex(lbUsers.getItems(), an.getLabel());
+//						if (idx != -1) {
+//							lbUsers.select(idx);
+//						}
+//					}
+//				}
 				
 			}
 			
@@ -181,7 +184,7 @@ public class ACLPreferenceTree extends Composite {
 					ACE right = acl.contents;
 					String[] gsel = lbGroups.getSelection();
 					for (String g : lbGroups.getItems()) {
-						CoreHub.acl.revoke(g, right);
+//						CoreHub.acl.revoke(g, right);
 					}
 					for (String g : gsel) {
 						CoreHub.acl.grant(g, right);
@@ -199,10 +202,10 @@ public class ACLPreferenceTree extends Composite {
 					ACE right = acl.contents;
 					int[] uSel = lbUsers.getSelectionIndices();
 					for (Anwender an : lUsers) {
-						CoreHub.acl.revoke(an, right);
+//						CoreHub.acl.revoke(an, right);
 					}
 					for (int i : uSel) {
-						CoreHub.acl.grant(lUsers.get(i), right);
+//						CoreHub.acl.grant(lUsers.get(i), right);
 					}
 				}
 			}
