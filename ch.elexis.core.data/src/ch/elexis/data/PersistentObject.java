@@ -144,7 +144,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	public static final int CACHE_MIN_LIFETIME = 5;
 	public static final int CACHE_TIME_MAX = 300;
 	protected static int default_lifetime;
-	private static IPersistentObjectCache<String> cache = new MultiGuavaCache<String>(CACHE_DEFAULT_LIFETIME, TimeUnit.SECONDS);
+	private static IPersistentObjectCache<String> cache = new MultiGuavaCache<String>(
+		CACHE_DEFAULT_LIFETIME, TimeUnit.SECONDS);
 	
 	// maximum character length of int fields in tables
 	private static int MAX_INT_LENGTH = 10;
@@ -174,7 +175,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			default_lifetime = CACHE_MIN_LIFETIME;
 			CoreHub.localCfg.set(Preferences.ABL_CACHELIFETIME, CACHE_MIN_LIFETIME);
 		}
-
+		
 		log.info("Cache setup: default_lifetime " + default_lifetime);
 	}
 	
@@ -235,7 +236,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		log.debug("osgi.install.area: " + System.getProperty("osgi.install.area"));
 		
 		String demoDBLocation = System.getProperty(ElexisSystemPropertyConstants.DEMO_DB_LOCATION);
-		if(demoDBLocation == null) {
+		if (demoDBLocation == null) {
 			demoDBLocation = CoreHub.getWritableUserDir() + File.separator + "demoDB";
 		}
 		
@@ -322,7 +323,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (StringTool.leer.equals(driver)) {
 			cod.requestDatabaseConnectionConfiguration();
 			MessageEvent.fireInformation("Datenbankverbindung geändert",
-					"Bitte starten Sie Elexis erneut");
+				"Bitte starten Sie Elexis erneut");
 			System.exit(-1);
 		} else {
 			j = new JdbcLink(driver, connectstring, typ);
@@ -344,8 +345,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         {@link Preferences#CFG_FOLDED_CONNECTION} to retrieve the required parameters,
 	 *         castable to {@link String}
 	 */
-	public static @NonNull
-	Hashtable<Object, Object> getConnectionHashtable(){
+	public static @NonNull Hashtable<Object, Object> getConnectionHashtable(){
 		Hashtable<Object, Object> ret = new Hashtable<>();
 		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
@@ -440,8 +440,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					CoreHub.globalCfg = new SqlSettings(getConnection(), "CONFIG");
 					CoreHub.globalCfg.undo();
 					CoreHub.globalCfg.set("created", new TimeTool().toString(TimeTool.FULL_GER));
-					CoreHub.acl.load();
-					Mandant.init();
+					Mandant.initializeAdministratorUser();
 					CoreHub.pin.initializeGrants();
 					CoreHub.pin.initializeGlobalPreferences();
 					if (runningFromScratch) {
@@ -456,10 +455,6 @@ public abstract class PersistentObject implements IPersistentObject {
 							Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE
 						}, "Bond", "James", "Dr. med.", Person.MALE, clientEmail, "0061 555 55 55",
 							"0061 555 55 56", "10, Baker Street", "9999", "Elexikon");
-						String gprs = m.getInfoString(AccessControl.KEY_GROUPS); //$NON-NLS-1$
-						gprs = StringConstants.ROLE_ADMIN + "," + StringConstants.ROLE_USERS;
-						m.setInfoElement(AccessControl.KEY_GROUPS, gprs);
-						
 					} else {
 						cod.requestInitialMandatorConfiguration();
 					}
@@ -487,7 +482,6 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		}
 		// Zugriffskontrolle initialisieren
-		CoreHub.acl.load();
 		VersionInfo vi = new VersionInfo(CoreHub.globalCfg.get("dbversion", "0.0.0"));
 		log.info("Verlangte Datenbankversion: " + CoreHub.DBVersion);
 		log.info("Gefundene Datenbankversion: " + vi.version());
@@ -539,18 +533,20 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
-	 * Die Zuordnung von Membervariablen zu Datenbankfeldern geschieht über statische mappings: Jede
-	 * abgeleitete Klassen muss ihre mappings in folgender Form deklarieren:
-	 * addMapping("Tabellenname","Variable=Feld"...); wobei:
+	 * Die Zuordnung von Membervariablen zu Datenbankfeldern geschieht über statische mappings:<br>
+	 * Jede abgeleitete Klassen muss ihre mappings in folgender Form deklarieren:
+	 * <code>addMapping("Tabellenname","Variable=Feld"...)</code>; wobei:
 	 * <ul>
-	 * <li>"Variable=Feld" - Einfache Zuordnung, Variable wird zu Feld</li>
-	 * <li>"Variable=S:x:Feld" - Spezielle Abspeicherung<br>
-	 * x=D - Datumsfeld, wird automatisch in Standardformat gebracht<br>
-	 * x=C - Feld wird vor Abspeicherung komprimiert</li>
-	 * X=N - Feld wird als Long interrpetiert
-	 * <li>"Variable=JOINT:FremdID:EigeneID:Tabelle[:type]" - n:m - Zuordnungen</li>
-	 * <li>"Variable=LIST:EigeneID:Tabelle:orderby[:type]" - 1:n - Zuordnungen</li>
-	 * <li>"Variable=EXT:tabelle:feld" - Das Feld ist in der genannten externen Tabelle
+	 * <li><code>Variable=Feld</code> - Einfache Zuordnung, Variable wird zu Feld</li>
+	 * <li><code>Variable=S:x:Feld</code> - Spezielle Abspeicherung
+	 * <ul>
+	 * <li><code>x=D</code> - Datumsfeld, wird automatisch in Standardformat gebracht></li>
+	 * <li><code>x=C</code> - Feld wird vor Abspeicherung komprimiert</li>
+	 * <li><code>X=N</code> - Feld wird als Long interrpetiert</li>
+	 * </ul>
+	 * <li><code>Variable=JOINT:FremdID:EigeneID:Tabelle[:type]</code> - n:m - Zuordnungen</li>
+	 * <li><code>Variable=LIST:EigeneID:Tabelle:orderby[:type]</code> - 1:n - Zuordnungen</li>
+	 * <li><code>Variable=EXT:tabelle:feld</code> - Das Feld ist in der genannten externen Tabelle
 	 * </ul>
 	 */
 	static protected void addMapping(final String prefix, final String... map){
@@ -749,7 +745,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         das Objekt erstellt werden kann
 	 */
 	public String storeToString(){
-		return getClass().getName()+StringConstants.DOUBLECOLON+getId();
+		return getClass().getName() + StringConstants.DOUBLECOLON + getId();
 	}
 	
 	/** An object with this ID does not exist */
@@ -1048,16 +1044,20 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	/**
 	 * Return the database field corresponding to an internal Elexis field valud
-	 * @param tableName the tableName
-	 * @param field the field name
+	 * 
+	 * @param tableName
+	 *            the tableName
+	 * @param field
+	 *            the field name
 	 * @return the database field or **ERROR** if no mapping exists
 	 * @since 3.1
 	 */
-	public static String map(final String tableName, final String field) {
-		if(field.equals("ID")) return field;
+	public static String map(final String tableName, final String field){
+		if (field.equals("ID"))
+			return field;
 		
 		String res = mapping.get(tableName + field);
-		if(res==null) {
+		if (res == null) {
 			log.info("field is not mapped " + field);
 			return MAPPING_ERROR_MARKER + field + "**";
 		}
@@ -1277,8 +1277,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	@SuppressWarnings({
 		"rawtypes", "unchecked"
 	})
-	public @NonNull
-	Map getMap(final String field){
+	public @NonNull Map getMap(final String field){
 		String key = getKey(field);
 		Object o = cache.get(key, getCacheTime());
 		if (o instanceof Hashtable) {
@@ -1303,8 +1302,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return the {@link Object} stored for the given key in ExtInfo, or <code>null</code>
 	 * @since 3.0
 	 */
-	public @Nullable
-	Object getExtInfoStoredObjectByKey(final Object key){
+	public @Nullable Object getExtInfoStoredObjectByKey(final Object key){
 		// query cache?
 		byte[] binaryRaw = getBinaryRaw(FLD_EXTINFO);
 		if (binaryRaw == null)
@@ -1336,6 +1334,19 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public int getInt(final String field){
 		return checkZero(get(field));
+	}
+	
+	/**
+	 * convenience method to read a boolean value, write it using {@link #ts(Object)} and
+	 * {@link #set(String, String)}
+	 * 
+	 * @param field
+	 * @return <code>true</code> iff the stored value is <code>1</code>
+	 * @since 3.1
+	 */
+	public boolean getBoolean(final String field){
+		String val = get(field);
+		return (StringConstants.ONE.equals(val)) ? true : false;
 	}
 	
 	/**
@@ -1407,12 +1418,12 @@ public abstract class PersistentObject implements IPersistentObject {
 		StringBuffer sql = new StringBuffer();
 		String mapped = map(field);
 		if (mapped.startsWith("LIST:")) {
+			// LIST:EigeneID:Tabelle:orderby[:type]
 			String[] m = mapped.split(":");
 			if (m.length > 2) {
 				// String order=null;
 				
 				sql.append("SELECT ID FROM ").append(m[2]).append(" WHERE ");
-				
 				sql.append("deleted=").append(JdbcLink.wrap("0")).append(" AND ");
 				
 				sql.append(m[1]).append("=").append(getWrappedId());
@@ -1454,9 +1465,11 @@ public abstract class PersistentObject implements IPersistentObject {
 		String mapped = map(field);
 		if (mapped.startsWith("JOINT:")) {
 			// query cache
-			String cacheId = field+"$"+mapped+"$"+Arrays.toString(extra)+"$"+getWrappedId();
+			String cacheId =
+				field + "$" + mapped + "$" + Arrays.toString(extra) + "$" + getWrappedId();
 			Object cached = cache.get(cacheId, getCacheTime());
-			if(cached != null) return (List<String[]>) cached;
+			if (cached != null)
+				return (List<String[]>) cached;
 			
 			StringBuffer sql = new StringBuffer();
 			String[] abfr = mapped.split(":");
@@ -1481,7 +1494,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				}
 				rs.close();
 				cache.put(cacheId, list, getCacheTime());
-				return list;				
+				return list;
 			} catch (Exception ex) {
 				ElexisStatus status =
 					new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
@@ -1709,6 +1722,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			if (m.length > 3) {
 				StringBuffer head = new StringBuffer(100);
 				StringBuffer tail = new StringBuffer(100);
+				
 				head.append("INSERT INTO ").append(m[3]).append("(ID,").append(m[2]).append(",")
 					.append(m[1]);
 				tail.append(") VALUES (").append(JdbcLink.wrap(StringTool.unique("aij")))
@@ -1731,6 +1745,23 @@ public abstract class PersistentObject implements IPersistentObject {
 					return getConnection().exec(sql);
 				}
 				return getConnection().exec(head.toString());
+			}
+		} else if (mapped.startsWith("LIST:")) {
+			// LIST:EigeneID:Tabelle:orderby[:type]
+			String[] m = mapped.split(":");
+			if (m.length > 2) {
+				try {
+					String psString =
+						"INSERT INTO " + m[2] + " (ID, deleted, " + m[1] + ") VALUES (?, 0, ?);";
+					PreparedStatement ps = getConnection().getPreparedStatement(psString);
+					ps.setString(1, oID);
+					ps.setString(2, getId());
+					int result = ps.executeUpdate();
+					getConnection().releasePreparedStatement(ps);
+					return result;
+				} catch (SQLException e) {
+					log.error("Error executing prepared statement.", e);
+				}
 			}
 		}
 		log.error("Fehlerhaftes Mapping: " + mapped);
@@ -1770,9 +1801,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public void removeFromList(String field, String oID){
 		String mapped = map(field);
+		String[] m = mapped.split(":");
 		if (mapped.startsWith("JOINT:")) {
-			String[] m = mapped.split(":");// m[1] FremdID, m[2] eigene ID, m[3]
-			// Name Joint
+			//m: m[1] FremdID, m[2] eigene ID, m[3] table
 			if (m.length > 3) {
 				StringBuilder sql = new StringBuilder(200);
 				sql.append("DELETE FROM ").append(m[3]).append(" WHERE ").append(m[2]).append("=")
@@ -1783,6 +1814,22 @@ public abstract class PersistentObject implements IPersistentObject {
 					doTrace(sq);
 				}
 				getConnection().exec(sql.toString());
+				return;
+			}
+		} else if (mapped.startsWith("LIST:")) {
+			//m: m[1] FremdID, m[2] table
+			if (m.length > 2) {
+				try {
+					String psString = "DELETE FROM " + m[2] + " WHERE " + m[1] + "= ? AND ID = ?;";
+					PreparedStatement ps = getConnection().getPreparedStatement(psString);
+					ps = getConnection().getPreparedStatement(psString);
+					ps.setString(1, getId());
+					ps.setString(2, oID);
+					ps.executeUpdate();
+					getConnection().releasePreparedStatement(ps);
+				} catch (SQLException e) {
+					log.error("Error executing prepared statement.", e);
+				}
 				return;
 			}
 		}
@@ -2296,8 +2343,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            the field to get a key for
 	 * @return a unique key
 	 */
-	private String getKey(final String field){	
-		return getTableName()+"."+getId()+"#"+field;
+	private String getKey(final String field){
+		return getTableName() + "." + getId() + "#" + field;
 	}
 	
 	/**
@@ -2540,7 +2587,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return
 	 * @since 3.1
 	 */
-	public static byte[] flattenObject(final Object object) {
+	public static byte[] flattenObject(final Object object){
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ZipOutputStream zos = new ZipOutputStream(baos);
@@ -2574,7 +2621,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return
 	 * @since 3.1
 	 */
-	public static Object foldObject(final byte[] flat) {
+	public static Object foldObject(final byte[] flat){
 		try {
 			ByteArrayInputStream bais = new ByteArrayInputStream(flat);
 			ZipInputStream zis = new ZipInputStream(bais);
@@ -2707,15 +2754,29 @@ public abstract class PersistentObject implements IPersistentObject {
 		try {
 			conn = j.getConnection();
 			dmd = conn.getMetaData();
-			String[] onlyTables = {
-				"TABLE"
-			};
-			ResultSet rs = dmd.getTables(null, null, "%", onlyTables);
-			if (rs != null) {
-				while (rs.next()) {
+			
+			// we drop views before dropping the tables
+			ResultSet rsViews = dmd.getTables(null, null, "%", new String[] {
+				"VIEW"
+			});
+			if (rsViews != null) {
+				while (rsViews.next()) {
 					// DatabaseMetaData#getTables() specifies TABLE_NAME is in
 					// column 3
-					tableName = rs.getString(3);
+					tableName = rsViews.getString(3);
+					getConnection().exec("DROP TABLE " + tableName);
+					nrTables++;
+				}
+			}
+			
+			ResultSet rsTables = dmd.getTables(null, null, "%", new String[] {
+				"TABLE"
+			});
+			if (rsTables != null) {
+				while (rsTables.next()) {
+					// DatabaseMetaData#getTables() specifies TABLE_NAME is in
+					// column 3
+					tableName = rsTables.getString(3);
 					getConnection().exec("DROP TABLE " + tableName);
 					nrTables++;
 				}
@@ -2789,6 +2850,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @author Marco Descher
 	 * @since 2.1.6
+	 * @since 3.1 supports {@link List}; will be returned as comma-separated-values
 	 * @param in
 	 *            {@link Object}
 	 * @return String representing the value in database storage conform format
@@ -2799,7 +2861,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (in instanceof String)
 			return (String) in;
 		if (in instanceof Boolean) {
-			return ((Boolean) in) ? "1" : "0";
+			return ((Boolean) in) ? StringConstants.ONE : StringConstants.ZERO;
 		}
 		if (in instanceof Long)
 			return Long.toString((Long) in);
@@ -2814,6 +2876,10 @@ public abstract class PersistentObject implements IPersistentObject {
 			XMLGregorianCalendar dt = (XMLGregorianCalendar) in;
 			return new SimpleDateFormat("dd.MM.yyyy").format(dt.toGregorianCalendar().getTime());
 		}
+		if (in instanceof List) {
+			List<?> inList = (List<?>) in;
+			return (String) inList.stream().reduce((t, u) -> t + "," + u).get();
+		}
 		return "";
 	}
 	
@@ -2824,7 +2890,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	public void removeChangeListener(IChangeListener listener, String fieldObserved){
 		
 	}
-
+	
 	/**
 	 * put the value into the cache, will use the cache time as delievered by
 	 * {@link PersistentObject#getCacheTime()}
@@ -2840,6 +2906,32 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (value == null)
 			value = "";
 		cache.put(key, value, getCacheTime());
+	}
+	
+	/**
+	 * 
+	 * @param clazz
+	 * @since 3.1
+	 */
+	public static void executeDBInitScriptForClass(Class<?> clazz, @Nullable VersionInfo vi){
+		String resourceName = "/rsc/dbScripts/" + clazz.getName();
+		if (vi == null) {
+			resourceName += ".sql";
+		} else {
+			resourceName += "_" + vi.version() + ".sql";
+		}
+		
+		Stm stm = getConnection().getStatement();
+		try (InputStream is = PersistentObject.class.getResourceAsStream(resourceName)) {
+			boolean result = stm.execScript(is, true, true);
+			if (!result) {
+				log.warn("Error in executing script from " + resourceName);
+			}
+		} catch (IOException e) {
+			log.error("Error executing script from " + resourceName, e);
+		} finally {
+			getConnection().releaseStatement(stm);
+		}
 	}
 	
 }

@@ -12,7 +12,7 @@ public abstract class AbstractPersistentObjectTest {
 	 * the creation script is taken from the rsc directory of the host plugin when running a
 	 * Plugin-Test
 	 */
-	protected JdbcLink initDB(){
+	protected static JdbcLink initDB(){
 		return initDB("h2");
 	}
 	
@@ -20,7 +20,7 @@ public abstract class AbstractPersistentObjectTest {
 	 * create a JdbcLink with an initialized db for elexis the creation script is taken from the rsc
 	 * directory of the host plugin when running a Plugin-Test
 	 */
-	protected JdbcLink initDB(String dbflavor){
+	protected static JdbcLink initDB(String dbflavor){
 		JdbcLink link = null;
 		ResourceManager rsc = ResourceManager.getInstance();
 		String pluginPath = rsc.getResourceLocationByName("/createDB.script");

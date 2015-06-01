@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006-2012, G. Weirich and Elexis
+ * Copyright (c) 2006-2015, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,12 @@
  *
  * Contributors:
  *    M. Descher - initial implementation
+ *    MEDEVIT 	 - adaptations according to #2112
  *******************************************************************************/
 package ch.elexis.core.ui.coolbar;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.ICoolBarManager;
@@ -32,21 +34,22 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.Hub;
-import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 
 /**
  * This class implements the {@link Mandant} selection button bar within the application toolbar
  * (coolbar). The list of colors represents the available colors to distinguish the currently
  * selected mandant.
+ * 
+ * @since 3.1 do enable items according to {@link Anwender#getExecutiveDoctorsWorkingFor()}
  */
 public class MandantSelectionContributionItem extends ContributionItem {
 	
@@ -55,8 +58,6 @@ public class MandantSelectionContributionItem extends ContributionItem {
 	private Mandant[] mandants;
 	private MenuItem[] menuItems;
 	private ToolBar fParent;
-	
-	private boolean rightToChange = false;
 	
 	private ElexisEventListener eeli_mandant = new ElexisUiEventListenerImpl(Mandant.class,
 		ElexisEvent.EVENT_MANDATOR_CHANGED) {
@@ -67,7 +68,7 @@ public class MandantSelectionContributionItem extends ContributionItem {
 			Mandant m = (Mandant) ev.getObject();
 			if (m != null && item != null) {
 				item.setText(m.getMandantLabel());
-				fParent.setBackground(getColorForMandator(m));
+				fParent.setBackground(UiMandant.getColorForMandator(m));
 				if (menuItems == null) {
 					// We have a read-only coolbar item entry
 					fParent.pack();
@@ -77,8 +78,6 @@ public class MandantSelectionContributionItem extends ContributionItem {
 				for (int i = 0; i < menuItems.length; i++) {
 					String id = (String) menuItems[i].getData();
 					if (m.getId().equalsIgnoreCase(id)) {
-						// fParent.setBackground(Display.getCurrent().getSystemColor(colors[i
-						// % cl]));
 						fParent.pack();
 						// TODO: Anordnung Elemente in Coolbar speicherbar?
 						// TODO: Programmatische Anordnung Elemente coolbar
@@ -92,13 +91,38 @@ public class MandantSelectionContributionItem extends ContributionItem {
 		}
 	};
 	
+	private ElexisEventListener eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
+		ElexisEvent.EVENT_USER_CHANGED) {
+		public void runInUi(ElexisEvent ev){
+			if (item != null) {
+				Anwender anwender = (Anwender) ev.getObject();
+				adaptForAnwender(anwender);
+			}
+		};
+	};
+	
+	private void adaptForAnwender(Anwender anwender){
+		if (anwender == null) {
+			anwender = CoreHub.actUser;
+			if (anwender == null)
+				return;
+		}
+		
+		List<String> exDocStr =
+			anwender.getExecutiveDoctorsWorkingFor().stream().map(a -> a.getId())
+				.collect(Collectors.toList());
+		for (int i = 0; i < menuItems.length; i++) {
+			String id = (String) menuItems[i].getData();
+			menuItems[i].setEnabled(exDocStr.contains(id));
+		}
+	}
+	
 	public MandantSelectionContributionItem(){
-		ElexisEventDispatcher.getInstance().addListeners(eeli_mandant);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_mandant, eeli_user);
 	}
 	
 	@Override
 	public void fill(ToolBar parent, int index){
-		
 		// dispose old items first
 		disposeItems();
 		if (item != null) {
@@ -110,7 +134,6 @@ public class MandantSelectionContributionItem extends ContributionItem {
 		
 		fParent = parent;
 		menu = new Menu(fParent);
-		rightToChange = CoreHub.acl.request(AccessControlDefaults.AC_CHANGEMANDANT);
 		
 		List<Mandant> qre = Hub.getMandantenList();
 		mandants = qre.toArray(new Mandant[] {});
@@ -126,7 +149,7 @@ public class MandantSelectionContributionItem extends ContributionItem {
 			final Mandant m = mandants[i];
 			menuItems[i] = new MenuItem(menu, SWT.RADIO);
 			menuItems[i].setText(m.getMandantLabel());
-			menuItems[i].setImage(getBoxSWTColorImage(getColorForMandator(m)));
+			menuItems[i].setImage(getBoxSWTColorImage(UiMandant.getColorForMandator(m)));
 			menuItems[i].setData(m.getId());
 			menuItems[i].addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -134,25 +157,19 @@ public class MandantSelectionContributionItem extends ContributionItem {
 					Hub.setMandant(m);
 				}
 			});
-			if (CoreHub.actMandant != null && CoreHub.actMandant.equals(m)) {
-				menuItems[i].setSelection(true);
-			} else {
-				menuItems[i].setSelection(false);
+			if (CoreHub.actMandant != null) {
+				menuItems[i].setSelection(CoreHub.actMandant.equals(m));
 			}
 		}
 		
-		if (rightToChange) {
-			item.addListener(SWT.Selection, selectionListener);
-		} else {
-			item.removeListener(SWT.Selection, selectionListener);
-		}
+		item.addListener(SWT.Selection, selectionListener);
 		
 		if (CoreHub.actMandant != null && item != null) {
 			item.setText(CoreHub.actMandant.getMandantLabel());
-			fParent.setBackground(getColorForMandator(CoreHub.actMandant));
+			fParent.setBackground(UiMandant.getColorForMandator(CoreHub.actMandant));
 		}
 		
-		item.setEnabled(rightToChange);
+		adaptForAnwender(null);
 	}
 	
 	private final Listener selectionListener = new Listener() {
@@ -183,7 +200,7 @@ public class MandantSelectionContributionItem extends ContributionItem {
 		}
 	}
 	
-	private Image getBoxSWTColorImage(Color color){
+	public static Image getBoxSWTColorImage(Color color){
 		Display display = Display.getCurrent();
 		Image image = new Image(display, 16, 16);
 		GC gc = new GC(image);
@@ -194,14 +211,9 @@ public class MandantSelectionContributionItem extends ContributionItem {
 		return image;
 	}
 	
-	private Color getColorForMandator(Mandant m){
-		return UiDesk.getColorFromRGB(CoreHub.globalCfg.get(Preferences.USR_MANDATOR_COLORS_PREFIX
-			+ m.getLabel(), UiDesk.COL_GREY60));
-	}
-	
 	@Override
 	public void dispose(){
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_mandant);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_mandant, eeli_user);
 	}
 	
 	@Override

@@ -132,9 +132,6 @@ public class ErsterMandantDialog extends TitleAreaDialog {
 			Kontakt.FLD_PLACE
 		}, tLastname.getText(), tFirstname.getText(), tTitle.getText(), g, email, tPhone.getText(),
 			tFax.getText(), tStreet.getText(), tZip.getText(), tStreet.getText());
-		String gprs = m.getInfoString(AccessControl.KEY_GROUPS); //$NON-NLS-1$
-		gprs = StringConstants.ROLE_ADMIN + "," + StringConstants.ROLE_USERS;
-		m.setInfoElement(AccessControl.KEY_GROUPS, gprs);
 		super.okPressed();
 	}
 	
