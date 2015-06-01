@@ -15,6 +15,7 @@
    <extension-point id="LaborOrder" name="%elexis.laborOrder" schema="schema/LaborOrder.exsd"/>
    <extension-point id="LoginNews" name="%elexis.loginNews" schema="schema/LoginNews.exsd"/>
    <extension-point id="Rechnungsdetail" name="Rechnungsdetail" schema="schema/Rechnungsdetail.exsd"/>
+   <extension-point id="TextTemplateRequirement" name="%elexis.textTemplate" schema="schema/TextTemplateRequirement.exsd"/>
    
       <extension
          point="org.eclipse.ui.contexts">
@@ -111,6 +112,60 @@
                commandId="ch.elexis.core.command.copyFall"
                icon="icon://IMG_COPY"
                label="Fall kopieren"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.views.textsystem.TextTemplateView">
+         <command
+               commandId="ch.elexis.core.ui.command.importTemplates"
+               icon="icon://IMG_IMPORT"
+               label="Vorlage(n) importieren"
+               style="push"
+               tooltip="Beliebige Vorlage(n)  importieren">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.views.textsystem.TextTemplateView">
+         <command
+               commandId="ch.elexis.core.ui.command.loadTemplate"
+               icon="icon://IMG_DOCUMENT_TEXT"
+               label="Vorlage öffnen"
+               style="push">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.command.createMandantTemplate"
+               icon="icon://IMG_COPY"
+               label="Mandant Vorlage erstellen"
+               style="push">
+         </command>
+         <separator
+               name="Separator1.textTemplateView"
+               visible="true">
+         </separator>
+         <command
+               commandId="ch.elexis.core.ui.command.importSelectedTemplate"
+               icon="icon://IMG_IMPORT"
+               label="Importieren"
+               style="push"
+               tooltip="Selektierte Vorlage importieren">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.command.exportTemplate"
+               icon="icon://IMG_EXPORT"
+               label="Exportieren"
+               style="push">
+         </command>
+         <separator
+               name="Separator2.textTemplateView"
+               visible="true">
+         </separator>
+         <command
+               commandId="ch.elexis.core.ui.command.deleteTemplate"
+               icon="icon://IMG_DELETE"
+               label="Löschen"
                style="push">
          </command>
       </menuContribution>
@@ -392,6 +447,35 @@
             id="ch.elexis.core.command.copyFall"
             name="Fall kopieren">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.LoadTemplateCommand"
+            id="ch.elexis.core.ui.command.loadTemplate"
+            name="Vorlage öffnen">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.ImportSelectedTemplateCommand"
+            id="ch.elexis.core.ui.command.importSelectedTemplate"
+            name="Vorlage Importieren">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.ImportTemplatesCommand"
+            id="ch.elexis.core.ui.command.importTemplates"
+            name="Vorlage(n) Importieren">
+      </command><command
+            defaultHandler="ch.elexis.core.ui.commands.ExportTemplateCommand"
+            id="ch.elexis.core.ui.command.exportTemplate"
+            name="Vorlage exportieren">ieren">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.DeleteTemplateCommand"
+            id="ch.elexis.core.ui.command.deleteTemplate"
+            name="Vorlage löschen">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.CreateMandantTemplateCommand"
+            id="ch.elexis.core.ui.command.createMandantTemplate"
+            name="Personalisierte Vorlage">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -465,5 +549,11 @@
                id="at.medevit.elexis.properties.propertyPage.ExtInfoPropertyPage"
                name="ExtInfo">
          </page>
+      </extension>
+      <extension
+            point="ch.elexis.core.ui.TextTemplateRequirement">
+         <TextTemplateRequirement
+               element="ch.elexis.core.ui.text.TextTemplateRequirement">
+         </TextTemplateRequirement>
       </extension>
 </plugin>

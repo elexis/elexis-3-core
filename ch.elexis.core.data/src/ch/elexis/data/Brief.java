@@ -47,9 +47,10 @@ public class Brief extends PersistentObject {
 	public static final String LABOR = "Labor";
 	public static final String BESTELLUNG = "Bestellung";
 	public static final String RECHNUNG = "Rechnung";
-	public static final String SYSTEMPLATE = "Systemvorlagen";
 	
 	public static final String MIMETYPE_OO2 = "application/vnd.oasis.opendocument.text";
+	public static final String SYS_TEMPLATE = "SYS";
+	public static final String DONT_ASK_FOR_ADDRESS_STICKER = "brief_dontaskforaddressee-*-&";
 	
 	@Override
 	protected String getTableName(){
@@ -175,7 +176,7 @@ public class Brief extends PersistentObject {
 	public boolean delete(){
 		getConnection().exec("UPDATE HEAP SET deleted='1' WHERE ID=" + getWrappedId());
 		String konsID = get(FLD_KONSULTATION_ID);
-		if (!StringTool.isNothing(konsID) && (!konsID.equals("SYS"))) {
+		if (!StringTool.isNothing(konsID) && (!konsID.equals(SYS_TEMPLATE))) {
 			Konsultation kons = Konsultation.load(konsID);
 			if ((kons != null) && (kons.isEditable(false))) {
 				kons.removeXRef(XRefExtensionConstants.providerID, getId());
@@ -215,6 +216,10 @@ public class Brief extends PersistentObject {
 	public Kontakt getAdressat(){
 		String dest = get(FLD_DESTINATION_ID);
 		return dest == null ? null : Kontakt.load(dest);
+	}
+	
+	public void setAdressat(String adressatId){
+		set(FLD_DESTINATION_ID, adressatId);
 	}
 	
 	public Person getPatient(){

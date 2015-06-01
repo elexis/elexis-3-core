@@ -364,6 +364,14 @@
             id="ch.elexis.abrechnungKategorie"
             name="%elexis.accountingCategory">
       </category>
+      <view
+            category="ch.elexis.textKategorie"
+            class="ch.elexis.core.ui.views.textsystem.TextTemplateView"
+            icon="icon://IMG_DOC_STAND"
+            id="ch.elexis.views.textsystem.TextTemplateView"
+            name="Textvorlagen Management"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">

@@ -215,12 +215,15 @@ public enum Images {
 		/** covercard png **/
 		IMG_COVERCARD,
 		/** document copy png **/
-		IMG_COPY, 
-		IMG_USER_SILHOUETTE, 
-		IMG_TABLE, 
-		IMG_NODE, 
-		IMG_NW_STATUS, 
-		IMG_GEAR;
+		IMG_COPY, IMG_USER_SILHOUETTE, IMG_TABLE, IMG_NODE, IMG_NW_STATUS, IMG_GEAR,
+		/** checkbox (checked) **/
+		IMG_CHECKBOX,
+		/** checkbox (unchecked) **/
+		IMG_CHECKBOX_UNCHECKED,
+		/** document stand/managemet **/
+		IMG_DOC_STAND,
+		/** system template **/
+		IMG_DOC_SYS;
 	
 	private Images(){}
 	
