@@ -19,6 +19,11 @@ public class Messages extends NLS {
 	public static String PlatzhalterProperties_tooltip_no_category;
 	public static String PlatzhalterView_menu_copy;
 	public static String PlatzhalterView_message_Info;
+	public static String TextTemplateVeiw_NoTxtPluginTitel;
+	public static String TextTemplateVeiw_NoTxtPluginDescription;
+	public static String TextTemplateVeiw_NoTxtPluginReason1;
+	public static String TextTemplateVeiw_NoTxtPluginReason2;
+	public static String TextTemplateVeiw_NoTxtPluginReason3;
 	
 	static {
 		// load message values from bundle file

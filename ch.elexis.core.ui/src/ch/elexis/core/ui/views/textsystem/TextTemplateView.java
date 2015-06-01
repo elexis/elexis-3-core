@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
@@ -50,6 +52,7 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextTemplateRequirement;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.core.ui.views.textsystem.provider.TextTemplateFilter;
 import ch.elexis.core.ui.views.textsystem.provider.TextTemplateViewerComparator;
@@ -78,6 +81,9 @@ public class TextTemplateView extends ViewPart {
 	
 	private void loadRequiredAndExistingTemplates(){
 		requiredTemplates = new ArrayList<TextTemplate>();
+		if (plugin == null) {
+			return;
+		}
 		
 		// load required text templates
 		List<ITextTemplateRequirement> requirements =
@@ -128,6 +134,12 @@ public class TextTemplateView extends ViewPart {
 	public void createPartControl(Composite parent){
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
+		
+		// only display warning if no textplugin is installed
+		if (plugin == null) {
+			createTextPluginMissingForm(composite);
+			return;
+		}
 		
 		Label lblSearch = new Label(composite, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -183,6 +195,21 @@ public class TextTemplateView extends ViewPart {
 		table.setMenu(popupMenu);
 		getSite().registerContextMenu(menuManager, tableViewer);
 		getSite().setSelectionProvider(tableViewer);
+	}
+	
+	private void createTextPluginMissingForm(Composite parent){
+		String expl =
+			Messages.TextTemplateVeiw_NoTxtPluginDescription
+				+ Messages.TextTemplateVeiw_NoTxtPluginReason1
+				+ Messages.TextTemplateVeiw_NoTxtPluginReason2
+				+ Messages.TextTemplateVeiw_NoTxtPluginReason3;
+		
+		Form form = UiDesk.getToolkit().createForm(parent);
+		form.setText(Messages.TextTemplateVeiw_NoTxtPluginTitel);
+		form.setLayoutData(SWTHelper.fillGrid(parent, 1));
+		form.getBody().setLayout(new GridLayout(1, false));
+		FormText ft = UiDesk.getToolkit().createFormText(form.getBody(), false);
+		ft.setText(expl, true, false);
 	}
 	
 	/**
