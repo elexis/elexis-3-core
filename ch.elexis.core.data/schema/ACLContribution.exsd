@@ -62,7 +62,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":ch.elexis.core.data.admin.IACLContributor"/>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.admin.IACLContributor"/>
                </appinfo>
             </annotation>
          </attribute>

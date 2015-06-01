@@ -41,8 +41,13 @@ public class UiPatientEventListener extends ElexisUiEventListenerImpl {
 				(ISourceProviderService) PlatformUI.getWorkbench().getService(
 					ISourceProviderService.class);
 		}
-		((PatientSelectionStatus) sps.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE))
-			.setState(pat != null);
+		PatientSelectionStatus provider =
+			(PatientSelectionStatus) sps.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE);
+		if (provider == null) {
+			return;
+		}
+		
+		provider.setState(pat != null);
 	}
 	
 }

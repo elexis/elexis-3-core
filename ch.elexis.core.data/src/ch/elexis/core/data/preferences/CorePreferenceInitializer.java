@@ -16,12 +16,14 @@ import java.io.File;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
+import ch.elexis.admin.AccessControl;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.data.Brief;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Role;
 import ch.rgw.tools.StringTool;
 
 public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
@@ -116,10 +118,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 	 * und erledigt die Vorkonfiguration der Zugriffsrechte Hier alle Zugriffsrechte voreinstellen
 	 */
 	public void initializeGrants(){
-		CoreHub.globalCfg.set("groups", StringConstants.ROLES_DEFAULT); //$NON-NLS-1$
-		CoreHub.acl.grant(StringConstants.ROLE_ALL, AccessControlDefaults.getAlle());
-		CoreHub.acl.grant(StringConstants.ROLE_USERS, AccessControlDefaults.getAnwender());
-		CoreHub.acl.flush();
+		Role.initBasicRoles();
 	}
 	
 	public static String getDefaultDBPath(){

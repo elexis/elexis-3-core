@@ -31,10 +31,10 @@ public class Mandant extends Anwender {
 	}
 	
 	public boolean isValid(){
-		if (get(FLD_IS_MANDATOR).equals(StringConstants.ONE)) {
-			return super.isValid();
+		if (get(FLD_IS_MANDATOR).equals(StringConstants.ZERO)) {
+			return false;
 		}
-		return false;
+		return super.isValid();
 	}
 	
 	public Rechnungssteller getRechnungssteller(){
@@ -88,4 +88,10 @@ public class Mandant extends Anwender {
 	public String getMandantLabel(){
 		return getName() + " " + getVorname() + " (" + getLabel() + ")";
 	}
+	
+	@Override
+	protected String getTableName(){
+		return Kontakt.TABLENAME;
+	}
+
 }

@@ -24,6 +24,7 @@ public class Messages extends NLS {
 	public static String AccessControlDefaults_assign;
 	public static String AccessControlDefaults_bills;
 	public static String AccessControlDefaults_Bills;
+	public static String AccessControlDefaults_CaseCopy;
 	public static String AccessControlDefaults_CaseSpecialFields;
 	public static String AccessControlDefaults_ChangeCaseSpecialFields;
 	public static String AccessControlDefaults_change;
