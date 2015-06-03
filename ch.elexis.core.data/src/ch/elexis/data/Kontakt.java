@@ -476,6 +476,8 @@ public class Kontakt extends PersistentObject {
 	 *            gesuchter Wert dieses Eintrags
 	 * @return Ein Objekt der Klasse clazz, welches einen Infostore-Eintrag field mit dem Inhalt
 	 *         value enthält, oder null wenn kein solches Objekt existiert.
+	 * 
+	 * @deprecated performance will suffer. don't query infostore - create separate table
 	 */
 	@SuppressWarnings("unchecked")
 	public static Kontakt findKontaktfromInfoStore(Class clazz, String field, String value){
