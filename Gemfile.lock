@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/ngiger/elexis-wiki-interface
-  revision: 868003799d4db2e65e171edce7cdb9f47cdaebbe
+  revision: 8db7557320af4bd5290247b590235c6c4fe60fee
   specs:
     elexis-wiki-interface (0.3)
       eclipse-plugin (>= 0.1)
@@ -19,25 +19,36 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    ffi (1.9.6-x86-mingw32)
+    domain_name (0.5.24)
+      unf (>= 0.0.5, < 1.0.0)
+    ffi (1.9.8-x86-mingw32)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
     mediawiki-gateway (1.0.0)
       rest-client (~> 1.7)
-    mime-types (2.4.3)
+    mime-types (2.6.1)
     mini_portile (0.6.2)
-    netrc (0.10.2)
+    netrc (0.10.3)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     nokogiri (1.6.6.2-java)
     nokogiri (1.6.6.2-x86-mingw32)
       mini_portile (~> 0.6.0)
-    rest-client (1.7.2)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
-    rest-client (1.7.2-x86-mingw32)
+    rest-client (1.8.0-x86-mingw32)
       ffi (~> 1.9)
+      http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
     rubyzip (0.9.9)
+    unf (0.1.4)
+      unf_ext
+    unf (0.1.4-java)
+    unf_ext (0.0.7.1)
+    unf_ext (0.0.7.1-x86-mingw32)
     unicode (0.4.4.2)
     unicode (0.4.4.2-java)
     unicode (0.4.4.2-x86-mingw32)
