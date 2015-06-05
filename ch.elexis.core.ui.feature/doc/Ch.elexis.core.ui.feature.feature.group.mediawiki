@@ -28,7 +28,7 @@
 	</tr>
 	<tr>
 		<td>Betriebssystem:</td>
-		<td>Windows, Mac, Linus</td>
+		<td>Windows, Mac, Linux</td>
 	</tr>
 	<tr>
 		<td>Lizenz:</td>
@@ -52,8 +52,90 @@ ToDo
 
 
 == Funktionen ==
-ToDo
+=== Medikationsliste ===
 
+[[Datei:Medicationsliste.png]]
+==== Definitionen ====
+
+* '''Signatur''' Eine Einnahme-Regel in der Form morgens-mittags-abends-nachts (z.B. 1-2-1/2 oder 1-2-1-1)
+
+===== Medikationsstatus =====
+
+* '''Einmalige Medikation''' Die Abgabe des Medikaments erfolgt im Rahmen der Verrechnung in einer Konsultation oder bei einmaliger Rezepterstellung. Es ist keine dauerhafte Medikation durch diesen Artikel vorgesehen. 
+* '''Fixmedikation''' Es erfolgt eine länger andauernde Behandlung mit diesem Medikament, die durch eine Signatur definiert ist. Im Rahmen dieser Behandlung erhält der Patient durch ein Rezept oder Selbstdispensation (siehe Abgabetypen) den notwendigen Wirkstoff.
+* '''Reservemedikation (Bedarfsmedikation)'''  Es erfolgt eine länger andauernde Behandlung mit diesem Medikament. Die Einnahme des Medikaments ist jedoch symptom-bezogen (also auf Bedarf). Der Patient erhält durch ein Rezept oder Selbstdispensation den notwendigen Wirkstoff. Reservemedikationen sind Fixmedikationen ohne direkte Einnahmeregel.
+
+==== Abgabetypen ====
+
+* '''Selbstdispensation'''  Das Medikament wird direkt in der Praxis abgegeben und mit MWSt verrechnet. 
+* '''Applikation'''  Das Medikament wird im Rahmen einer Konsultation direkt auf den Patienten appliziert, die entsprechende Teilpackung wird mit 0 % MWSt verrechnet. <br />[[Datei:Medikationsliste_Applikation_Action.png]]
+* '''Rezeptierung''' Für das Medikament wird ein Rezept erstellt. Es erfolgt keine Verrechnung.
+* '''Keine Abgabe''' Eine Medikation wurde definiert, es ist aber keine Abgabe des Wirkstoffes erfolgt.
+
+==== Verschreibungsarten ====
+
+Artikel können in Elexis auf drei Arten verschrieben werden:
+
+# Verschreibung im Rahmen einer Konsultation (als Selbstdispensation oder Applikation)
+# Direkte Rezeptierung
+# Definition als Medikation durch Einfügen in die Fixmedikations-View oder die Medikationsliste
+
+Bei jeder dieser Verschreibungsarten wird als Start-Zustand die einmalige Medikation angemommen.
+
+=== Medikation Stoppen ===
+Vorzugsweise Angabe einer Begründug den Stop bestätigen
+
+[[Datei:medistop.png]]
+
+=== Textvorlagen Management ===
+
+==== Definitionen ====
+In der Textvorlagen Management View werden alle vorhandenen und vom System benötigten Vorlagen dargestellt.
+[[Datei:textvorlagenmanagement.png]]
+
+===== Typen von Textvorlagen =====
+Es wird prinzipiell zwischen folgenden Typen von Vorlagen unterschieden:
+
+* [[Datei:Systemtemplate.png]]'''Systemvorlage''' bezeichnet eine Vorlage welche zum vollumfänglichen Betrieb eine Plug-Ins in Verbindung mit einer Textausgabe notwendig ist. Systemvorlagen sollten für alle Mandanten zugänglich sein. Fehlende Systemvorlagen werden ausgegraut dargestellt und sind durch ein [[Datei:Ausrufezeichen.png]] gekennzeichnet.
+* '''Benutzervorlage''' (Mandant spezifische Vorlage) bezeichnet eine Vorlage welche nur für einen (in der Spalte ''Mandant'') definieten Mandanten zugänglich ist. Dadurch kann z.B. eine Systemvorlage für einen einzelnen Mandanten speziell angepasst werden. Wird eine solche Vorlage während des Betriebs benötigt, wird bevorzugt die auf den angemeldeten Mandanten spezialisierte Vorlage verwendet. (Siehe Screenshot -> für ''dz'' würde die Benutzervorlage und nicht die Rezept Systemvorlage verwendet werden).
+* '''Formatvorlage''' eine Vorlage die zu einem beliebigen Zweck dient, jedoch von Elexis nicht zwingend benötigt wird.
+
+==== Funktionen ====
+
+===== Suchen =====
+Um nach einer bestimmten Vorlage, Beschreibung, Typ oder Mandanten zu suchen, tippen Sie den Suchtext einfach in das dafür vorgesehene Suchfeld.
+
+===== Vorlage öffnen =====
+Öffnet die selektierte Vorlage in der Briefe View
+
+===== Mandant Vorlage erstellen =====
+Über dieses Menü wird die ausgewählte, bestehende Vorlage kopiert und dem aktuell angemoldenen Mandanten zugewiesen. Danach kann die Vorlage geöffnet und an die Bedürfnisse des Mandanten angepasst werden.
+
+===== Importieren (der selektierten Vorlage) =====
+Eine Vorlage kann hiermit vom Dateisystem importiert werden und wird direkt der in der Tabelle ausgewählten Vorlage zugewiesen.
+
+===== Exportieren =====
+Ermöglicht den Export der gewählten Vorlage.
+
+===== Löschen =====
+Die ausgewählte Vorlage wird gelöscht.
+
+===== Beliebige Vorlage(n) importieren =====
+Über dieses View-Menü können auch mehrere Vorlagen auf einmal importiert werden. 
+
+====== Als Systemvorlage setzen ======
+Entspricht bei dieser Art des Imports eine Vorlage einer Systemvorlage erscheint dieser Dialog.
+
+[[Datei:ImportAsSysTemplate.png ]]
+
+Dieser Dialog ermöglicht es Ihnen eine passende Vorlage (Abgleich findet über Namen statt) direkt als Systemvorlage zu definieren.
+
+====== Namenskonflikt ======
+Besteht bereits eine Vorlage welche den selben Namen hat als die zu importierende erscheint nachfolgender Dialog.
+
+[[Datei:ConflictStrategieDialog.png‎]]
+
+Wählen Sie in diesem Falle die gewünschte Aktion und fahren Sie fort.
 
 == ev andere Untertitel ==
 ToDo
