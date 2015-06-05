@@ -4,12 +4,15 @@
 # The function of a Gemfile using bundler is explained under
 # http://bundler.io/v1.3/gemfile.html
 #
-# This is needed to synchronize the wiki.elexis.info with the source code
-# See also:
-# * https://github.com/ngiger/elexis-wiki-interface
+# This file is only needed for synchronizing the documentation with wiki.elexis.info
 #
-# The accompanying Gemfile.lock shows the exact versions of all used Ruby-Gems
+# Pulling the changes from the wiki is done using
+# bundle install && bundle exec wiki_pull_daily
 #
+# Pushing the changes to the wiki is done using
+# bundle install && bundle exec wiki_push
+#
+# The exact versions of the needed gems are found looking at Gemfile.lock
 
 source 'https://rubygems.org'
 
