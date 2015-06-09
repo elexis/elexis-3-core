@@ -131,22 +131,27 @@ public class Rechnungslauf implements IRunnableWithProgress {
 						ElexisStatus.CODE_NOFEEDBACK, Messages.Rechnungslauf_warnInvalidMandant,
 						ElexisStatus.LOG_ERRORS);
 				StatusManager.getManager().handle(status);
+				log.warn("...skip Kons [" + k.getId() + "] with invalid mandant");
 				continue;
 			}
 			
 			// skip if fall is not set or inexisting
 			Fall fall = k.getFall();
 			if ((fall == null) || (!fall.exists())) {
+				log.warn("...skip Kons [" + k.getId() + "] fall is null/inexisting");
 				continue;
 			}
 			
 			Patient pat = fall.getPatient();
 			if ((pat == null) || (!pat.exists())) {
+				log.warn("...skip Kons [" + k.getId() + "] patient is null/inexisting");
 				continue;
 			}
 			
 			if (rsId.equals(k.getMandant().getRechnungssteller().getId())) {
 				list.add(k);
+			} else {
+				log.debug("... skip Kons [" + k.getId() + "] as rechnungssteller is divergent");
 			}
 		}
 		return list;
