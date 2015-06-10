@@ -316,6 +316,7 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		if (q1 == null) {
 			return;
 		}
+		q1.orderBy(false, Rechnung.BILL_DATE);
 		List<Rechnung> rechnungen = q1.execute();
 		if (rechnungen == null) {
 			log.log(Messages.RnContentProvider_errorRetriveingBillds, Log.ERRORS); //$NON-NLS-1$
