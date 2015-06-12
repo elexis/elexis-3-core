@@ -318,7 +318,8 @@ public class EditLabResultDialog extends TitleAreaDialog {
 					setErrorMessage(Messages.EditLabItemDialog_errorRefMaleNotAbsolute);
 					return false;
 				}
-			} else if (!LabResult.isValidNumericRefValue(refMaleTxt.getText())) {
+			} else if (result.getItem().getTyp() != typ.TEXT
+				&& !LabResult.isValidNumericRefValue(refMaleTxt.getText())) {
 				setErrorMessage(Messages.EditLabResultDialog_errorRefMaleNotNumber);
 				return false;
 			}
@@ -329,7 +330,8 @@ public class EditLabResultDialog extends TitleAreaDialog {
 					setErrorMessage(Messages.EditLabItemDialog_errorRefFemaleNotAbsolute);
 					return false;
 				}
-			} else if (!LabResult.isValidNumericRefValue(refFemaleTxt.getText())) {
+			} else if (result.getItem().getTyp() != typ.TEXT
+				&& !LabResult.isValidNumericRefValue(refFemaleTxt.getText())) {
 				setErrorMessage(Messages.EditLabResultDialog_errorRefFemaleNotNumber);
 				return false;
 			}
