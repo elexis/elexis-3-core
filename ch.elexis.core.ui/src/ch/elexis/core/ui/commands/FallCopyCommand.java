@@ -1,5 +1,8 @@
 package ch.elexis.core.ui.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -63,19 +66,33 @@ public class FallCopyCommand extends AbstractHandler {
 				fall.getAbrechnungsSystem()
 			};
 		clone.set(fields, values);
-		clone = copyRequiredFields(fall, clone);
+		clone = copyFields(fall, clone);
 		
 		return clone;
 	}
 	
-	private Fall copyRequiredFields(Fall fall, Fall clone){
-		String[] requiredFields = fall.getRequirements().split(";");
-		for (String req : requiredFields) {
-			String[] reqNameType = req.split(":");
-			String reqName = reqNameType[0];
-			String value = fall.getRequiredString(reqName);
-			clone.setInfoString(reqName, value);
+	private Fall copyFields(Fall fall, Fall clone){
+		// copy required fields
+		List<String> keys = loadFieldKeys(fall.getRequirements());
+		for (String key : keys) {
+			clone.setInfoString(key, fall.getRequiredString(key));
+		}
+		
+		// copy optional fields
+		keys = loadFieldKeys(fall.getOptionals());
+		for (String key : keys) {
+			clone.setInfoString(key, fall.getInfoString(key));
 		}
 		return clone;
+	}
+	
+	private List<String> loadFieldKeys(String fieldString){
+		List<String> keys = new ArrayList<String>();
+		String[] fields = fieldString.split(";");
+		for (String field : fields) {
+			String[] nameType = field.split(":");
+			keys.add(nameType[0]);
+		}
+		return keys;
 	}
 }
