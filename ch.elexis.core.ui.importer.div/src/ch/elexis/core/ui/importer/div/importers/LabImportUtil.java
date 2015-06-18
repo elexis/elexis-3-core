@@ -183,7 +183,12 @@ public class LabImportUtil {
 						transientLabResult.overwriteExisting(labResult);
 						continue;
 					}
-					
+					// dont bother user if result has the same value
+					if (transientLabResult.isSameResult(labResult)) {
+						logger.info("Result " + labResult.toString() + " already exists.");
+						continue;
+					}
+
 					ImportUiHandler.OverwriteState retVal =
 						uiHandler.askOverwrite(transientLabResult.patient, labResult,
 							transientLabResult);
@@ -325,6 +330,36 @@ public class LabImportUtil {
 			this.setProperties = builder.setProperties;
 		}
 		
+		/**
+		 * Checks if result, ref (if set) and unit are the same in the LabResult.
+		 * 
+		 * @param labResult
+		 * @return
+		 */
+		public boolean isSameResult(LabResult labResult){
+			if (refMale != null) {
+				if (!labResult.getRefMale().equals(refMale)) {
+					return false;
+				}
+			}
+			if (refFemale != null) {
+				if (!labResult.getRefFemale().equals(refFemale)) {
+					return false;
+				}
+			}
+			if (unit != null) {
+				if (!labResult.getUnit().equals(unit)) {
+					return false;
+				}
+			}
+			String matchResult = labResult.getResult();
+			if (!matchResult.equals(result)) {
+				return false;
+			}
+			
+			return true;
+		}
+
 		private void overwriteExisting(LabResult labResult){
 			labResult.set(LabResult.COMMENT, comment);
 			labResult.setResult(result);
