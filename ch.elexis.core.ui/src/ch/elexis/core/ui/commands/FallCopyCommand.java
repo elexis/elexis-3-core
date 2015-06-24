@@ -26,6 +26,8 @@ public class FallCopyCommand extends AbstractHandler {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		FallDetailView fallDetailView = (FallDetailView) activePage.findView(FallDetailView.ID);
 		Fall activeFall = fallDetailView.getActiveFall();
+		if (activeFall == null)
+			return null;
 		Fall clone = createFallClone(activeFall);
 		
 		// only ask for consultation transfer if case is still open 
