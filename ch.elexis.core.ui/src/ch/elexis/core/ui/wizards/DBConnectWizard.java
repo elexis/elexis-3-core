@@ -47,6 +47,11 @@ public class DBConnectWizard extends Wizard {
 		dbConnNewConnPage = new DBConnectNewOrEditConnectionWizardPage();
 		initStoredJDBCConnections();
 		targetedConnection = getCurrentConnection();
+		if(targetedConnection==null && storedConnectionList.size()>0) {
+			targetedConnection = storedConnectionList.get(0);
+		} else {
+			targetedConnection = new DBConnection();
+		}
 	}
 	
 	@Override
