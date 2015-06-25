@@ -1868,7 +1868,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true on success
 	 */
 	public boolean delete(){
-		if (set("deleted", "1")) {
+		if (set(FLD_DELETED, StringConstants.ONE)) {
 			List<Xid> xids = new Query<Xid>(Xid.class, Xid.FLD_OBJECT, getId()).execute();
 			for (Xid xid : xids) {
 				xid.delete();
@@ -2878,7 +2878,8 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		if (in instanceof List) {
 			List<?> inList = (List<?>) in;
-			return (String) inList.stream().reduce((t, u) -> t + "," + u).get();
+			return (String) inList.stream().map(o -> o.toString())
+				.reduce((u, t) -> u + StringConstants.COMMA + t).get();
 		}
 		return "";
 	}
