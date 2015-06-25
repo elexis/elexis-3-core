@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.internal.app.CommandLineArgs;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -30,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.Desk;
 import ch.elexis.admin.AccessControl;
+import ch.elexis.admin.RoleBasedAccessControl;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
@@ -38,18 +38,17 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.events.PatientEventListener;
-import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
-import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;
 import ch.elexis.data.Query;
+import ch.elexis.data.User;
 import ch.rgw.io.LockFile;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SqlSettings;
@@ -119,7 +118,7 @@ public class CoreHub implements BundleActivator {
 	public static final CorePreferenceInitializer pin = new CorePreferenceInitializer();
 	
 	/** Die zentrale Zugriffskontrolle */
-	public static final AccessControl acl = new AccessControl();
+	public static final AccessControl acl = new RoleBasedAccessControl();
 	
 	/**
 	 * The listener for patient events
@@ -133,7 +132,7 @@ public class CoreHub implements BundleActivator {
 	 *         retrieved
 	 */
 	public static String getBasePath(){
-		return PlatformHelper.getBasePath(PLUGIN_ID);
+		return FrameworkUtil.getBundle(CoreHub.class).getEntry("/").toString();
 	}
 	
 	/**
@@ -246,9 +245,8 @@ public class CoreHub implements BundleActivator {
 	@Override
 	public void stop(BundleContext context) throws Exception{
 		log.debug("Stopping " + CoreHub.class.getName());
-		if (CoreHub.actUser != null) {
-			Anwender.logoff();
-		}
+
+		CoreHub.logoffAnwender();
 		
 		PersistentObject.disconnect();
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
@@ -420,5 +418,25 @@ public class CoreHub implements BundleActivator {
 	
 	public static int getSystemLogLevel(){
 		return localCfg.get(Preferences.ABL_LOGLEVEL, Log.ERRORS);
+	}
+	
+	/**
+	 * Perform the required tasks to log off the current {@link Anwender}
+	 * @since 3.1 moved from {@link Anwender} class
+	 */
+	public static void logoffAnwender(){
+		if (CoreHub.actUser == null) return; 
+		
+		if (CoreHub.userCfg != null) {
+			CoreHub.userCfg.flush();
+		}
+		CoreHub.setMandant(null);
+		CoreHub.heart.suspend();
+		CoreHub.actUser = null;
+		ElexisEventDispatcher.getInstance().fire(
+			new ElexisEvent(null, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+		ElexisEventDispatcher.getInstance().fire(
+			new ElexisEvent(null, User.class, ElexisEvent.EVENT_DESELECTED));
+		CoreHub.userCfg = CoreHub.localCfg;
 	}
 }

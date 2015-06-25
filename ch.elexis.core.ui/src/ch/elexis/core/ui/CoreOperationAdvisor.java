@@ -61,9 +61,6 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		}
 		
 		UiDesk.updateFont(Preferences.USR_DEFAULTFONT);
-		
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 	}
 	
 	@Override

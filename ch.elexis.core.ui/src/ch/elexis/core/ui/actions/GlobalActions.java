@@ -257,7 +257,7 @@ public class GlobalActions {
 								w.close();
 							}
 						}
-						ch.elexis.data.Anwender.logoff();
+						CoreHub.logoffAnwender();
 						
 						LoginDialog dlg = new LoginDialog(win.getShell());
 						dlg.create();

@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.admin.AccessControl;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -116,7 +115,7 @@ public class ErsterMandantDialog extends TitleAreaDialog {
 			return;
 		}
 		String username = tUsername.getText();
-		if (username.equals("")) { //$NON-NLS-1$
+		if (StringConstants.EMPTY.equals(username)) {
 			SWTHelper.showError(Messages.ErsterMandantDialog_noUsernameCaption,
 				Messages.ErsterMandantDialog_noUsernameBody); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
@@ -132,9 +131,6 @@ public class ErsterMandantDialog extends TitleAreaDialog {
 			Kontakt.FLD_PLACE
 		}, tLastname.getText(), tFirstname.getText(), tTitle.getText(), g, email, tPhone.getText(),
 			tFax.getText(), tStreet.getText(), tZip.getText(), tStreet.getText());
-		String gprs = m.getInfoString(AccessControl.KEY_GROUPS); //$NON-NLS-1$
-		gprs = StringConstants.ROLE_ADMIN + "," + StringConstants.ROLE_USERS;
-		m.setInfoElement(AccessControl.KEY_GROUPS, gprs);
 		super.okPressed();
 	}
 	

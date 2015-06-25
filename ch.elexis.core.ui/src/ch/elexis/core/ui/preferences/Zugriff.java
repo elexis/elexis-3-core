@@ -11,7 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.preference.PreferencePage;
@@ -22,10 +21,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.admin.ACE;
 import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.admin.IACLContributor;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.constants.ExtensionPointConstantsData;
-import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.preferences.inputs.ACLPreferenceTree;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
 
@@ -38,23 +34,11 @@ public class Zugriff extends PreferencePage implements IWorkbenchPreferencePage 
 		super(Messages.Zugriff_AccessRights);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected Control createContents(Composite parent){
-		CoreHub.acl.load();
 		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
-			List<IACLContributor> acls =
-				Extensions.getClasses(ExtensionPointConstantsData.ACL_CONTRIBUTION,
-					"ACLContributor"); //$NON-NLS-1$ //$NON-NLS-2$
-			ArrayList<ACE> lAcls = new ArrayList<ACE>(100);
-			for (IACLContributor acl : acls) {
-				for (ACE s : acl.getACL()) {
-					lAcls.add(s);
-					// TODO collision detection
-				}
-			}
-			
-			apt = new ACLPreferenceTree(parent, (ACE[]) lAcls.toArray(new ACE[0]));
+			List<ACE> lAcls = ACE.getAllDefinedACElements();
+			apt = new ACLPreferenceTree(parent,lAcls.toArray(new ACE[lAcls.size()]));
 			return apt;
 		} else {
 			return new PrefAccessDenied(parent);
@@ -63,7 +47,6 @@ public class Zugriff extends PreferencePage implements IWorkbenchPreferencePage 
 	
 	public void init(IWorkbench workbench){
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override

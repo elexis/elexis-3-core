@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2011, G. Weirich and Elexis
+ * Copyright (c) 2005-2015, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,22 +7,24 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
+ *    M. Descher - #2112
  *******************************************************************************/
 package ch.elexis.data;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
-import ch.elexis.admin.ACE;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.jdt.NonNull;
 import ch.rgw.io.SqlSettings;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
@@ -41,28 +43,36 @@ import ch.rgw.tools.StringTool;
 public class Anwender extends Person {
 	
 	public static final String ADMINISTRATOR = "Administrator";
+	
 	public static final String FLD_LABEL = "Label"; // contains username
-	
-	public static final String FLD_EXTINFO_PASSWORD = "UsrPwd";
-	public static final String FLD_EXTINFO_GROUPS = "Groups";
-	
 	public static final String FLD_JOINT_REMINDERS = "Reminders";
+	public static final String FLD_EXTINFO_MANDATORS = "Mandant";
 	
 	static {
 		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER,
-			FLD_LABEL + "=Bezeichnung3",
-			FLD_JOINT_REMINDERS+"=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
+			FLD_LABEL + "=Bezeichnung3", FLD_JOINT_REMINDERS
+				+ "=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
 	}
 	
-	public Anwender(final String Username, final String Password){
+	public Anwender(String Username, String Password){
+		this(Username, Password, false);	
+	}
+	
+	/**
+	 * 
+	 * @param username
+	 * @param password
+	 * @param isExecutiveDoctor
+	 *            additionally assign the {@link Role#ROLE_LITERAL_EXECUTIVE_DOCTOR}
+	 * @since 3.1
+	 */
+	public Anwender(String username, String password, boolean isExecutiveDoctor){
 		create(null);
-		set(new String[] {
-			Person.NAME
-		}, Username);
-		setLabel(Username);
-		setPwd(Password);
-		setInfoElement(FLD_EXTINFO_GROUPS, "Anwender");
 		super.setConstraint();
+		
+		User user = new User(this, username, password);
+		if (isExecutiveDoctor)
+			user.setAssignedRole(Role.load(Role.ROLE_LITERAL_EXECUTIVE_DOCTOR), true);
 	}
 	
 	public Anwender(final String Name, final String Vorname, final String Geburtsdatum,
@@ -70,25 +80,13 @@ public class Anwender extends Person {
 		super(Name, Vorname, Geburtsdatum, s);
 	}
 	
-	/**
-	 * Check if this Anwender is valid.
-	 * <p>
-	 * We check wheter the object exists in the database and whether the login name ("Label") is
-	 * available.
-	 * </p>
-	 */
-	@Override
-	public boolean isValid(){
-		String label = get(FLD_LABEL);
-		if (StringTool.isNothing(label)) {
-			return false;
+	public static Anwender load(final String id){
+		Anwender ret = new Anwender(id);
+		if (ret.state() > PersistentObject.INVALID_ID) {
+			return ret;
 		}
-		if (label.equals(ADMINISTRATOR)) {
-			return true; // Admin is always valid
-		}
-		return super.isValid();
+		return null;
 	}
-	
 	/**
 	 * Return a short or long label for this Anwender
 	 * 
@@ -119,18 +117,6 @@ public class Anwender extends Person {
 		}
 	}
 	
-	/** Passwort setzen */
-	public void setPwd(final String pwd){
-		setInfoElement(FLD_EXTINFO_PASSWORD, pwd);
-	}
-	
-	/**
-	 * @since 3.0.0
-	 */
-	public String getPwd(){
-		return (String) getInfoElement(FLD_EXTINFO_PASSWORD);
-	}
-	
 	/**
 	 * Get Reminders for this user, related to a specific Kontakt
 	 * 
@@ -156,14 +142,40 @@ public class Anwender extends Person {
 		return ret;
 	}
 	
-	public static Anwender load(final String id){
-		Anwender ret = new Anwender(id);
-		if (ret.state() > PersistentObject.INVALID_ID) {
-			return ret;
-		}
-		return null;
+	/**
+	 * 
+	 * @return
+	 * @since 3.1
+	 */
+	public @NonNull List<Mandant> getExecutiveDoctorsWorkingFor(){
+		List<Mandant> mandantenList = CoreHub.getMandantenList();
+		String mandators = (String) getExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS);
+		if (mandators == null)
+			return Collections.emptyList();
+		
+		List<String> man = Arrays.asList(mandators.split(","));
+		return mandantenList.stream().filter(p -> man.contains(p.getLabel()))
+			.collect(Collectors.toList());
 	}
 	
+	/**
+	 * 
+	 * @param m
+	 * @param checked
+	 *            <code>true</code> add or <code>false</code> remove
+	 * @since 3.1
+	 */
+	public void addOrRemoveExecutiveDoctorWorkingFor(Mandant m, boolean checked){
+		HashSet<Mandant> hashSet = new HashSet<Mandant>(getExecutiveDoctorsWorkingFor());
+		if (checked) {
+			hashSet.add(m);
+		} else {
+			hashSet.remove(m);
+		}
+		List<String> edList = hashSet.stream().map(p -> p.getLabel()).collect(Collectors.toList());
+		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, ts(edList));
+	}
+
 	@Override
 	protected String getConstraint(){
 		return Kontakt.FLD_IS_USER + StringTool.equals + JdbcLink.wrap(StringConstants.ONE);
@@ -182,33 +194,21 @@ public class Anwender extends Person {
 	}
 	
 	/**
-	 * Den ersten Benutzer anlegen und initiale Zugriffsrechte setzen Wird von PersistentObject()
-	 * aufgerufen, wenn die Datenbank neu angelegt wurde.
+	 * Initializes the first user to the system, the administrator
 	 */
-	@SuppressWarnings("unchecked")
-	protected static void init(){
-		// Administrator muss "zu fuss" erstellt werden, da noch keine
-		// Rechteverwaltung vorhanden ist
+	protected static void initializeAdministratorUser(){
+		new User();
+		
 		Anwender admin = new Anwender();
 		admin.create(null);
 		admin.set(new String[] {
 			Person.NAME, FLD_LABEL, Kontakt.FLD_IS_USER
 		}, ADMINISTRATOR, ADMINISTRATOR, StringConstants.ONE);
+		User.load(ADMINISTRATOR).setAssignedContact(admin);
+		
 		CoreHub.actUser = admin;
 		ElexisEventDispatcher.getInstance().fire(
 			new ElexisEvent(admin, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-		CoreHub.acl.grant(admin, new ACE(ACE.ACE_IMPLICIT, "WriteInfoStore"), new ACE(
-			ACE.ACE_IMPLICIT, "LoadInfoStore"), new ACE(ACE.ACE_IMPLICIT, "WriteGroups"), new ACE(
-			ACE.ACE_IMPLICIT, "ReadGroups"));
-		
-		admin.setExtInfoStoredObjectByKey(FLD_EXTINFO_PASSWORD, "admin");
-		admin.setExtInfoStoredObjectByKey(FLD_EXTINFO_GROUPS, "Admin,Anwender");
-
-		CoreHub.acl.grant("Admin", new ACE(ACE.ACE_IMPLICIT, "ReadUsrPwd"), new ACE(
-			ACE.ACE_IMPLICIT, "WriteUsrPwd"), new ACE(ACE.ACE_IMPLICIT, "CreateAndDelete"),
-			new ACE(ACE.ACE_IMPLICIT, "WriteGroups"));
-		CoreHub.acl.grant("System", new ACE(ACE.ACE_IMPLICIT, "ReadUsrPwd"));
-		
 	}
 	
 	/**
@@ -221,90 +221,101 @@ public class Anwender extends Person {
 	 *            Passwort
 	 * @return <code>true</code> erfolgreich angemeldet, CoreHub.actUser gesetzt, else
 	 *         <code>false</code>
+	 * @since 3.1 queries {@link User}
 	 */
-	@SuppressWarnings("unchecked")
 	public static boolean login(final String username, final String password){
-		logoff();
-		CoreHub.actUser = null;
+		CoreHub.logoffAnwender();
+		
+		// check if user exists
+		User user = User.load(username);
+		if (user == null)
+			return false;
+		
+		// is the user currently active, or locked?
+		if (!user.isActive())
+			return false;
+		
+		// check if password is valid
+		boolean result = user.verifyPassword(password);
+		if (!result)
+			return false;
+		
+		// set user in system
 		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(null, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-		cod.adaptForUser();
-		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
-		qbe.add(FLD_LABEL, StringTool.equals, username);
-		List<Anwender> list = qbe.execute();
-		if ((list == null) || (list.size() < 1)) {
-			return false;
-		}
-		Anwender a = list.get(0);
-		Map<Object, Object> km = a.getMap(FLD_EXTINFO);
-		if (km == null) {
-			MessageEvent.fireLoggedError("Interner Fehler",
-				"Die Datenstruktur ExtInfo von " + a.getLabel() + " ist beschädigt.");
-			try {
-				a.setMap("ExtInfo", new HashMap<Object, Object>());
-			} catch (PersistenceException e) {
-				MessageEvent.fireLoggedError("Fatal error", "Can't store user map", e);
-			}
-		}
-		String pwd = (String) km.get(FLD_EXTINFO_PASSWORD);
-		if (pwd == null) {
-			return false;
-		}
-		if (pwd.equals(password)) {
-			CoreHub.actUser = a;
-			ElexisEventDispatcher.getInstance().fire(
-				new ElexisEvent(a, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-			String MandantLabel = (String) km.get("Mandant");
-			String MandantID = null;
-			if (!StringTool.isNothing(MandantLabel)) {
-				MandantLabel = MandantLabel.split(",")[0];
-				for (Mandant m : CoreHub.getMandantenList()) {
-					if (m.getLabel().equals(MandantLabel)) {
-						MandantID = m.getId();
-						break;
-					}
-				}
-			}
-			if (MandantID != null) {
-				CoreHub.setMandant(Mandant.load(MandantID));
-			} else {
-				Mandant m = Mandant.load(a.getId());
-				if ((m != null) && m.isValid()) {
-					CoreHub.setMandant(m);
-				} else {
-					List<Mandant> ml = new Query<Mandant>(Mandant.class).execute();
-					if ((ml != null) && (ml.size() > 0)) {
-						m = ml.get(0);
-						CoreHub.setMandant(m);
-						
-					} else {
-						MessageEvent
-							.fireError("Kein Mandant definiert",
-								"Sie können Elexis erst normal benutzen, wenn Sie mindestens einen Mandanten definiert haben");
-					}
-				}
-			}
-			
-			CoreHub.userCfg =
-				new SqlSettings(getConnection(), "USERCONFIG", "Param", "Value", "UserID="
-					+ a.getWrappedId());
-			
-			cod.adaptForUser();
-			CoreHub.heart.resume(true);
-			return true;
-		}
-		return false;
-	}
-	
-	public static void logoff(){
-		if (CoreHub.userCfg != null) {
-			CoreHub.userCfg.flush();
-		}
-		CoreHub.setMandant(null);
-		CoreHub.heart.suspend();
-		CoreHub.actUser = null;
+			new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
+		CoreHub.actUser = Anwender.load(user.getAssignedContactId());
 		ElexisEventDispatcher.getInstance().fire(
 			new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-		CoreHub.userCfg = CoreHub.localCfg;
+		
+		cod.adaptForUser();
+		
+		CoreHub.actUser.setInitialMandator();
+		
+		CoreHub.userCfg =
+			new SqlSettings(getConnection(), "USERCONFIG", "Param", "Value", "UserID="
+				+ CoreHub.actUser.getWrappedId());
+		
+		CoreHub.heart.resume(true);
+		
+		return true;
+	}
+	
+	/**
+	 * @since 3.1
+	 */
+	public static void logoff() {
+		CoreHub.logoffAnwender();
+	}
+	
+	private void setInitialMandator(){
+		String MandantLabel = (String) getExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS);
+		String MandantID = null;
+		if (!StringTool.isNothing(MandantLabel)) {
+			MandantLabel = MandantLabel.split(",")[0];
+			for (Mandant m : CoreHub.getMandantenList()) {
+				if (m.getLabel().equals(MandantLabel)) {
+					MandantID = m.getId();
+					break;
+				}
+			}
+		}
+		if (MandantID != null) {
+			CoreHub.setMandant(Mandant.load(MandantID));
+		} else {
+			Mandant m = Mandant.load(CoreHub.actUser.getId());
+			if ((m != null) && m.isValid()) {
+				CoreHub.setMandant(m);
+			} else {
+				List<Mandant> ml = new Query<Mandant>(Mandant.class).execute();
+				if ((ml != null) && (ml.size() > 0)) {
+					m = ml.get(0);
+					CoreHub.setMandant(m);
+					
+				} else {
+					MessageEvent
+						.fireError("Kein Mandant definiert",
+							"Sie können Elexis erst normal benutzen, wenn Sie mindestens einen Mandanten definiert haben");
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @return <code>true</code> if {@link Anwender} is also {@link Mandant}
+	 * @since 3.1
+	 */
+	public boolean isExecutiveDoctor(){
+		Mandant m = Mandant.load(getId());
+		return ((m != null) && m.isValid());
+	}
+	
+	/**
+	 * 
+	 * @param value <code>true</code> to define as {@link Mandant}, else <code>false</code>
+	 * @since 3.1
+	 */
+	public void setExecutiveDoctor(boolean value) {
+		set(FLD_IS_MANDATOR, ts(value));
 	}
 }

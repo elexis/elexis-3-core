@@ -42,7 +42,7 @@
                <visibleWhen
                      checkEnabled="false">
                   <test
-                        args="AC_SHOWVIEW"
+                        args="Aktionen/Viewauswahl"
                         property="ch.elexis.commands.propertyTester.ACE">
                   </test>
                </visibleWhen>
@@ -289,6 +289,18 @@
             name="%Textvorlagen">
       </page>
       <page
+            category="ch.elexis.preferences.security"
+            class="ch.elexis.core.ui.preferences.UserManagementPreferencePage"
+            id="ch.elexis.core.ui.UserManagementPreferencePage"
+            name="Benutzerverwaltung">
+      </page>
+      <page
+            category="ch.elexis.preferences.security"
+            class="ch.elexis.core.ui.preferences.RolesToAccessRightsPreferencePage"
+            id="ch.elexis.core.ui.preferences.RolesToAccessRightsPreferencePage"
+            name="Rollen und Rechte">
+      </page>
+      <page
             class="ch.elexis.core.ui.preferences.SystemPreferencePage"
             id="ch.elexis.core.ui.preferences.SystemPreferencePage"
             name="System">
@@ -443,7 +455,6 @@
          </state>
       </command>
       <command
-            defaultHandler="ch.elexis.core.ui.commands.FallCopyCommand"
             id="ch.elexis.core.command.copyFall"
             name="Fall kopieren">
       </command>
@@ -555,5 +566,18 @@
          <TextTemplateRequirement
                element="ch.elexis.core.ui.text.TextTemplateRequirement">
          </TextTemplateRequirement>
+      </extension>
+      <extension
+            point="org.eclipse.ui.handlers">
+         <handler
+               class="ch.elexis.core.ui.commands.FallCopyCommand"
+               commandId="ch.elexis.core.command.copyFall">
+            <enabledWhen>
+               <test
+                     args="Fall/copy"
+                     property="ch.elexis.commands.propertyTester.ACE">
+               </test>
+            </enabledWhen>
+         </handler>
       </extension>
 </plugin>

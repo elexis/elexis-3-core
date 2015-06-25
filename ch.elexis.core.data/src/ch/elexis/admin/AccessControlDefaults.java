@@ -37,8 +37,7 @@ public class AccessControlDefaults {
 	public static final ACE ACCOUNTING_MODIFY = new ACE(ACCOUNTING,
 		"bearbeiten", Messages.AccessControlDefaults_edit); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE ACCOUNTING_STATS = new ACE(ACCOUNTING, "statistiken", "statistics");
-	public static final ACE ACE_ACCESS = new ACE(ADMIN,
-		"Zugriff", Messages.AccessControlDefaults_Access); //$NON-NLS-1$ //$NON-NLS-2$
+	
 	public static final ACE ACCOUNTING_GLOBAL = new ACE(ACE.ACE_ROOT,
 		"AccountingGlobal", Messages.AccessControlDefaults_accountingGlobal); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE ACCOUNTING_READ = new ACE(ACCOUNTING_GLOBAL,
@@ -47,12 +46,16 @@ public class AccessControlDefaults {
 		"createBills", Messages.AccessControlDefaults_createBills); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE ACCOUNTING_BILLMODIFY = new ACE(ACCOUNTING_GLOBAL,
 		"modifyBills", Messages.AccessControlDefaults_modifyBills); //$NON-NLS-1$ //$NON-NLS-2$
-	public static final ACE ADMIN_ACE = new ACE(ADMIN, "ACE", "ACE modifizieren");
+	
 	public final static ACE LABITEM_MERGE = new ACE(ADMIN, "Laborparamter vereinen", //$NON-NLS-1$
 		Messages.AccessControlDefaults_mergeLabItems); //$NON-NLS-1$
 	
+	public static final ACE ACE_ACCESS = new ACE(ADMIN,
+		"Zugriff", Messages.AccessControlDefaults_Access); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE ACL_USERS = new ACE(ACE_ACCESS,
 		"Rechte erteilen", Messages.AccessControlDefaults_grantRights); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final ACE ADMIN_ACE = new ACE(ACE_ACCESS, "ACE", "ACE modifizieren");
+	
 	public static final ACE DELETE = new ACE(ACE.ACE_ROOT,
 		"Löschen", Messages.AccessControlDefaults_delete); //$NON-NLS-1$ //$NON-NLS-2$
 	public final static ACE DELETE_FORCED = new ACE(DELETE,
@@ -132,6 +135,8 @@ public class AccessControlDefaults {
 		"Fall", Messages.AccessControlDefaults_main_case); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE CASE_MODIFY = new ACE(CASE,
 		"Ändern", Messages.AccessControlDefaults_change); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final ACE CASE_COPY = new ACE(CASE,
+		"copy", Messages.AccessControlDefaults_CaseCopy); //$NON-NLS-1$
 	public static final ACE CASE_SPECIALS = new ACE(CASE,
 		"Specials", Messages.AccessControlDefaults_CaseSpecialFields); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE CASE_DEFINE_SPECIALS = new ACE(CASE_SPECIALS,
@@ -156,9 +161,16 @@ public class AccessControlDefaults {
 		"changeManually", Messages.AccessControlDefaults_changeStateManually); //$NON-NLS-1$ //$NON-NLS-2$
 	
 	public static final ACE DOCUMENT = new ACE(ACE.ACE_ROOT,
-		"Dokumente", Messages.AccessControlDefaults_documents); //$NON-NLS-1$ //$NON-NLS-2$
+		"Dokumente", Messages.AccessControlDefaults_documents); //$NON-NLS-1$
 	public static final ACE DOCUMENT_CREATE = new ACE(DOCUMENT,
-		"Erstellen", Messages.AccessControlDefaults_create); //$NON-NLS-1$ //$NON-NLS-2$
+		"create", Messages.AccessControlDefaults_create); //$NON-NLS-1$
+	public static final ACE ACE_DOC_DELETE = new ACE(DOCUMENT, "delete",
+		Messages.AccessControlDefaults_documentsDelete);
+	public static final ACE ACE_DOC_CATCREATE = new ACE(DOCUMENT, "createCategory", //$NON-NLS-1$
+		Messages.AccessControlDefaults_documentsCreateCat);
+	public static final ACE ACE_DOC_CATDELETE = new ACE(DOCUMENT, "deleteCategory", //$NON-NLS-1$
+		Messages.AccessControlDefaults_documentsDeleteCat);
+	
 	public static final ACE DOCUMENT_TEMPLATE = new ACE(DOCUMENT,
 		"Vorlagen ändern", Messages.AccessControlDefaults_changeTemplates); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE DOCUMENT_SYSTEMPLATE = new ACE(DOCUMENT,
@@ -191,16 +203,6 @@ public class AccessControlDefaults {
 		"Perspektivenauswahl", Messages.AccessControlDefaults_selectPerspective); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final ACE AC_SHOWVIEW = new ACE(ACTIONS,
 		"Viewauswahl", Messages.AccessControlDefaults_selectView); //$NON-NLS-1$ //$NON-NLS-2$
-	public static final ACE ACE_DOCUMENTS = new ACE(ACE.ACE_ROOT, "Dokumente",
-		Messages.AccessControlDefaults_documents);
-	public static final ACE ACE_DOC_CREATE = new ACE(ACE_DOCUMENTS, "Erstellen",
-		Messages.AccessControlDefaults_documentsCreate);
-	public static final ACE ACE_DOC_DELETE = new ACE(ACE_DOCUMENTS, "Loeschen",
-		Messages.AccessControlDefaults_documentsDelete);
-	public static final ACE ACE_DOC_CATCREATE = new ACE(ACE_DOCUMENTS, "KatErstellen",
-		Messages.AccessControlDefaults_documentsCreateCat);
-	public static final ACE ACE_DOC_CATDELETE = new ACE(ACE_DOCUMENTS, "KatLoeschen",
-		Messages.AccessControlDefaults_documentsDeleteCat);
 	
 	private static final ACE[] Alle = {
 		AC_EXIT, AC_ABOUT, AC_HELP, AC_LOGIN,
