@@ -21,6 +21,6 @@ CREATE TABLE USER_ (
 # default password is 'administrator'
 # http://java.dzone.com/articles/secure-password-storage-lots
 INSERT INTO USER_ (ID, IS_ADMINISTRATOR, SALT, HASHED_PASSWORD) 
-	VALUES ('Administrator', '1', 'c208dc3fce5d020b', 'b34f0bff3ad19541addcd674e234426cdf7a2e1e');
+	VALUES ('Administrator', '1', '1254bb9a05856b9e', 'b94a0b6fc7be97e0a1585ac85e814d3852668968');
 
 # DROP TABLE USER_;

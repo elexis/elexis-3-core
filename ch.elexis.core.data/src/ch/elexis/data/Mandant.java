@@ -67,7 +67,7 @@ public class Mandant extends Anwender {
 	}
 	
 	public Mandant(String name, String pwd){
-		super(name, pwd);
+		super(name, pwd, true);
 	}
 	
 	protected String getConstraint(){

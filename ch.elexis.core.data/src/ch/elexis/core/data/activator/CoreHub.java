@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.Desk;
 import ch.elexis.admin.AccessControl;
-import ch.elexis.admin.AccessControlImpl;
 import ch.elexis.admin.RoleBasedAccessControl;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;

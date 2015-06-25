@@ -122,7 +122,7 @@ public class RoleBasedAccessControl extends AccessControl {
 		if (user == null) {
 			user = (User) ElexisEventDispatcher.getSelected(User.class);
 			if (user == null) {
-				throw new IllegalStateException("No user provided, and none set in context");
+				return false;
 			}
 		}
 		

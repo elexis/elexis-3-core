@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2011, G. Weirich and Elexis
+ * Copyright (c) 2005-2015, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
+ *    M. Descher - #2112
  *******************************************************************************/
 package ch.elexis.data;
 
@@ -42,10 +43,9 @@ import ch.rgw.tools.StringTool;
 public class Anwender extends Person {
 	
 	public static final String ADMINISTRATOR = "Administrator";
+	
 	public static final String FLD_LABEL = "Label"; // contains username
-	
 	public static final String FLD_JOINT_REMINDERS = "Reminders";
-	
 	public static final String FLD_EXTINFO_MANDATORS = "Mandant";
 	
 	static {
@@ -54,11 +54,25 @@ public class Anwender extends Person {
 				+ "=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
 	}
 	
-	public Anwender(final String Username, final String Password){
+	public Anwender(String Username, String Password){
+		this(Username, Password, false);	
+	}
+	
+	/**
+	 * 
+	 * @param username
+	 * @param password
+	 * @param isExecutiveDoctor
+	 *            additionally assign the {@link Role#ROLE_LITERAL_EXECUTIVE_DOCTOR}
+	 * @since 3.1
+	 */
+	public Anwender(String username, String password, boolean isExecutiveDoctor){
 		create(null);
 		super.setConstraint();
 		
-		new User(this, Username, Password);
+		User user = new User(this, username, password);
+		if (isExecutiveDoctor)
+			user.setAssignedRole(Role.load(Role.ROLE_LITERAL_EXECUTIVE_DOCTOR), true);
 	}
 	
 	public Anwender(final String Name, final String Vorname, final String Geburtsdatum,
@@ -73,26 +87,6 @@ public class Anwender extends Person {
 		}
 		return null;
 	}
-
-	/**
-	 * Check if this Anwender is valid.
-	 * <p>
-	 * We check wheter the object exists in the database and whether the login name ("Label") is
-	 * available.
-	 * </p>
-	 */
-	@Override
-	public boolean isValid(){
-		String label = get(FLD_LABEL);
-		if (StringTool.isNothing(label)) {
-			return false;
-		}
-		if (label.equals(ADMINISTRATOR)) {
-			return true; // Admin is always valid
-		}
-		return super.isValid();
-	}
-	
 	/**
 	 * Return a short or long label for this Anwender
 	 * 
