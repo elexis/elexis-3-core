@@ -437,6 +437,9 @@ public abstract class PersistentObject implements IPersistentObject {
 				is = PersistentObject.class.getResourceAsStream("/rsc/createDB.script");
 				stm = getConnection().getStatement();
 				if (stm.execScript(is, true, true) == true) {
+					executeDBInitScriptForClass(User.class, null);
+					executeDBInitScriptForClass(Role.class, null);
+					
 					CoreHub.globalCfg = new SqlSettings(getConnection(), "CONFIG");
 					CoreHub.globalCfg.undo();
 					CoreHub.globalCfg.set("created", new TimeTool().toString(TimeTool.FULL_GER));
@@ -458,6 +461,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					} else {
 						cod.requestInitialMandatorConfiguration();
 					}
+					
 					CoreHub.globalCfg.flush();
 					CoreHub.localCfg.flush();
 					if (!runningFromScratch) {
@@ -2795,6 +2799,16 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		log.info("Deleted " + nrTables + " tables");
 		return true;
+	}
+	
+	public static boolean tableExistsSelect(String tableName) {
+		try {
+			getConnection().exec("SELECT 1 FROM " + tableName);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+		
 	}
 	
 	/**
