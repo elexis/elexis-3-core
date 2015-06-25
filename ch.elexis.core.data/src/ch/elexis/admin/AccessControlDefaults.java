@@ -164,11 +164,11 @@ public class AccessControlDefaults {
 		"Dokumente", Messages.AccessControlDefaults_documents); //$NON-NLS-1$
 	public static final ACE DOCUMENT_CREATE = new ACE(DOCUMENT,
 		"create", Messages.AccessControlDefaults_create); //$NON-NLS-1$
-	public static final ACE ACE_DOC_DELETE = new ACE(DOCUMENT, "delete",
+	public static final ACE DOCUMENT_DELETE = new ACE(DOCUMENT, "delete",
 		Messages.AccessControlDefaults_documentsDelete);
-	public static final ACE ACE_DOC_CATCREATE = new ACE(DOCUMENT, "createCategory", //$NON-NLS-1$
+	public static final ACE DOCUMENT_CATCREATE = new ACE(DOCUMENT, "createCategory", //$NON-NLS-1$
 		Messages.AccessControlDefaults_documentsCreateCat);
-	public static final ACE ACE_DOC_CATDELETE = new ACE(DOCUMENT, "deleteCategory", //$NON-NLS-1$
+	public static final ACE DOCUMENT_CATDELETE = new ACE(DOCUMENT, "deleteCategory", //$NON-NLS-1$
 		Messages.AccessControlDefaults_documentsDeleteCat);
 	
 	public static final ACE DOCUMENT_TEMPLATE = new ACE(DOCUMENT,
