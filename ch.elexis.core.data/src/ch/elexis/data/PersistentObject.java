@@ -2768,7 +2768,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					// DatabaseMetaData#getTables() specifies TABLE_NAME is in
 					// column 3
 					tableName = rsViews.getString(3);
-					getConnection().exec("DROP TABLE " + tableName);
+					getConnection().exec("DROP VIEW " + tableName);
 					nrTables++;
 				}
 			}
