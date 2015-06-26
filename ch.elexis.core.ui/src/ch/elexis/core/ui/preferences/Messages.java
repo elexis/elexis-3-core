@@ -325,6 +325,7 @@ public class Messages extends NLS {
 	public static String UserSettings2_RememberLastState;
 	public static String UserTextPref_MacroKey;
 	public static String UserTextPref_UserPreferences;
+	public static String UserManagementPreferencePage_MandatorColorSelectTitle;
 	public static String XIDEdit_Display;
 	public static String XIDEdit_DomainName;
 	public static String XIDEdit_Organizations;

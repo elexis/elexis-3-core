@@ -21,13 +21,17 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -40,9 +44,9 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
@@ -225,6 +229,23 @@ public class UserManagementPreferencePage extends PreferencePage implements
 		lblRespPhysColor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		lblRespPhysColor.setText("zugeordnete Farbe");
 		lblRespPhysColorDefColor = lblRespPhysColor.getBackground();
+		lblRespPhysColor.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if(!btnIsExecutiveDoctor.getSelection()) {
+					return;
+				}
+				ColorDialog cd = new ColorDialog(UiDesk.getTopShell());
+				cd.setRGB(lblRespPhysColor.getBackground().getRGB());
+				cd.setText(Messages.UserManagementPreferencePage_MandatorColorSelectTitle);
+				RGB rgb = cd.open();
+				
+				User user = (User) wvUser.getValue();
+				Mandant m = Mandant.load(user.getAssignedContactId());		
+				UiMandant.setColorForMandator(m, rgb);
+				lblRespPhysColor.setBackground(UiMandant.getColorForMandator(m));
+			}
+		});
 		
 		Label lblRechnungssteller = new Label(compositeIsRespPhys, SWT.NONE);
 		lblRechnungssteller.setText("Rechnungssteller");
@@ -371,13 +392,10 @@ public class UserManagementPreferencePage extends PreferencePage implements
 				checkboxTableViewerAssociation.setCheckedElements(anw
 					.getExecutiveDoctorsWorkingFor().toArray());
 				if (anw.isExecutiveDoctor()) {
-					String col =
-						CoreHub.globalCfg.get(
-							Preferences.USR_MANDATOR_COLORS_PREFIX + anw.getKuerzel(),
-							UiDesk.COL_GREY60);
-					lblRespPhysColor.setBackground(UiDesk.getColorFromRGB(col));
-					
 					Mandant m = Mandant.load(anw.getId());
+					Color color = UiMandant.getColorForMandator(m);
+					lblRespPhysColor.setBackground(color);
+					
 					Rechnungssteller rs = m.getRechnungssteller();
 					String rst = (rs != null) ? rs.getLabel() : "Nicht gesetzt";
 					linkRechnungssteller.setText(rst + " " + CHANGE_LINK);
