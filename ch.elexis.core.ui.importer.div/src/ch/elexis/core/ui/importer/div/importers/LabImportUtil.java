@@ -504,7 +504,11 @@ public class LabImportUtil {
 			if (analyseTime == null) {
 				return false;
 			}
-			return !analyseTime.isEqual(transmissionTime);
+			if (transmissionTime != null) {
+				return !analyseTime.isEqual(transmissionTime);
+			} else {
+				return true;
+			}
 		}
 		
 		public TimeTool getObservationTime(){
@@ -520,7 +524,11 @@ public class LabImportUtil {
 			if (observationTime == null) {
 				return false;
 			}
-			return !observationTime.isEqual(transmissionTime);
+			if (transmissionTime != null) {
+				return !observationTime.isEqual(transmissionTime);
+			} else {
+				return true;
+			}
 		}
 
 		public TimeTool getTransmissionTime(){
