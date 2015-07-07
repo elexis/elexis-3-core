@@ -75,5 +75,8 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 		CoreHub.logoffAnwender();
 		boolean rightFalse = Anwender.login(USERNAME, PASSWORD);
 		assertFalse(rightFalse);
+		
+		// activate user again
+		user.setActive(true);
 	}
 }
