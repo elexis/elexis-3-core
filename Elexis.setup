@@ -58,13 +58,12 @@
     <setupTask
         xsi:type="setup:PreferenceTask"
         key="/instance/org.eclipse.ui.ide/WORKSPACE_NAME"
-        value="Elexis"/>
+        value="Elexis (${scope.project.stream.name})"/>
   </setupTask>
   <setupTask
       xsi:type="git:GitCloneTask"
       id="core.git.clone"
-      remoteURI="elexis/elexis-3-core"
-      checkoutBranch="${elexis.git.branch}">
+      remoteURI="elexis/elexis-3-core">
     <annotation
         source="http://www.eclipse.org/oomph/setup/InducedChoices">
       <detail
@@ -86,8 +85,7 @@
       xsi:type="git:GitCloneTask"
       id="base.git.clone"
       remoteURI="elexis/elexis-3-base"
-      pushURI=""
-      checkoutBranch="${elexis.git.branch}">
+      pushURI="">
     <annotation
         source="http://www.eclipse.org/oomph/setup/InducedChoices">
       <detail
@@ -117,6 +115,8 @@
         name="com.essiembre.eclipse.rbe.feature.group"/>
     <requirement
         name="org.eclipse.m2e.feature.feature.group"/>
+    <requirement
+        name="org.eclipse.wb.rcp.feature.feature.group"/>
     <repository
         url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.9.0/N/LATEST/"/>
     <repository
@@ -196,8 +196,7 @@
         xsi:type="git:GitCloneTask"
         id="medelexis.git.clone"
         remoteURI="https://git.medelexis.ch/medelexis-3.git"
-        pushURI="https://git.medelexis.ch/medelexis-3.git"
-        checkoutBranch="${elexis.git.branch}">
+        pushURI="https://git.medelexis.ch/medelexis-3.git">
       <description>Medelexis 3 plug-ins</description>
     </setupTask>
     <setupTask
@@ -221,8 +220,7 @@
           xsi:type="git:GitCloneTask"
           id="medelexis.application.git.clone"
           remoteURI="https://gitext.medelexis.ch/medelexis-3-application.git"
-          pushURI="https://gitext.medelexis.ch/medelexis-3-application.git"
-          checkoutBranch="${elexis.git.branch}">
+          pushURI="https://gitext.medelexis.ch/medelexis-3-application.git">
         <description>Medelexis 3 application</description>
       </setupTask>
       <setupTask
@@ -239,24 +237,15 @@
         <sourceLocator
             rootFolder="${medelexis.application.git.clone.location}"/>
       </setupTask>
-      <stream
-          name="parent">
-        <description>Value is determined by selected Elexis parent project stream</description>
-      </stream>
       <description>Core Application development setup for Medelexis</description>
     </project>
-    <stream
-        name="parent">
-      <description>Value is determined by selected Elexis parent project stream</description>
-    </stream>
     <description>Commercially developed version of Elexis, development environment</description>
   </project>
   <project name="Austria">
     <setupTask
         xsi:type="git:GitCloneTask"
         id="austria.git.clone"
-        remoteURI="elexis/elexis-3-austria"
-        checkoutBranch="${austria.git.branch}">
+        remoteURI="elexis/elexis-3-austria">
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -289,29 +278,10 @@
             project="at.medevit.elexis.at"/>
       </workingSet>
     </setupTask>
-    <stream
-        name="parent">
-      <description>Value is determined by selected Elexis parent project stream</description>
-    </stream>
     <description>Elexis Österreich Plug-Ins</description>
   </project>
-  <stream name="master">
-    <setupTask
-        xsi:type="setup:VariableTask"
-        name="elexis.git.branch"
-        value="master"/>
-  </stream>
-  <stream name="release">
-    <setupTask
-        xsi:type="setup:VariableTask"
-        name="elexis.git.branch"
-        value="release"/>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        name="austria.git.branch"
-        value="master"
-        defaultValue=""/>
-  </stream>
+  <stream name="master"/>
+  <stream name="release"/>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
