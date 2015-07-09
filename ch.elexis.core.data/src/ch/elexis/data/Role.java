@@ -17,6 +17,8 @@ import java.util.Locale;
 import ch.elexis.admin.ACE;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.jdt.Nullable;
+import ch.rgw.tools.JdbcLink.Stm;
 
 public class Role extends PersistentObject {
 	
@@ -25,32 +27,42 @@ public class Role extends PersistentObject {
 	public static final String FLD_EXT_I18N_LABEL = "LAB_" + Locale.getDefault().getLanguage();
 	public static final String FLD_JOINT_RIGHTS = "Rights";
 	
-	public static final String ROLE_LITERAL_USER = "user";
-	public static final String ROLE_LITERAL_EXECUTIVE_DOCTOR = "executive_doctor";
+	public static final String SYSTEMROLE_LITERAL_USER = "user";
+	public static final String SYSTEMROLE_LITERAL_DOCTOR = "doctor";
+	public static final String SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR = "executive_doctor";
+	public static final String SYSTEMROLE_LITERAL_ASSISTANT = "assistant";
+	public static final String SYSTEMROLE_LITERAL_USER_EXTERNAL = "user_external";
+	public static final String SYSTEMROLE_LITERAL_PATIENT = "patient";
 	
 	static {
-		addMapping(TABLENAME, FLD_SYSTEM_ROLE, FLD_EXTINFO, FLD_JOINT_RIGHTS
-			+ "=LIST:ROLE_ID:ROLE_RIGHT_JOINT");
-		
+		addMapping(TABLENAME, FLD_ID, FLD_SYSTEM_ROLE, FLD_EXTINFO,
+			FLD_JOINT_RIGHTS + "=LIST:ROLE_ID:ROLE_RIGHT_JOINT");
+			
 		if (!tableExists(TABLENAME)) {
 			executeDBInitScriptForClass(Role.class, null);
 			initBasicRoles();
 		}
 	}
 	
-	protected Role(){}
+	public Role(){}
+	
+	public Role(boolean isSystemRole) {
+		create(null);
+		
+		setSystemRole(false);
+	}
 	
 	/**
 	 * Configure the basic system role user
 	 */
 	public static void initBasicRoles(){
-		Role ur = Role.load(ROLE_LITERAL_USER);
+		Role ur = Role.load(SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR);
 		ACE[] anwender = AccessControlDefaults.getAnwender();
 		Arrays.asList(anwender).forEach(ace -> ur.grantAccessRight(ace));
 		ACE[] alle = AccessControlDefaults.getAlle();
 		Arrays.asList(alle).forEach(ace -> ur.grantAccessRight(ace));
 		
-		Role ed = Role.load(ROLE_LITERAL_EXECUTIVE_DOCTOR);
+		Role ed = Role.load(SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR);
 		ed.grantAccessRight(AccessControlDefaults.ACE_ACCESS);
 	}
 	
@@ -64,7 +76,7 @@ public class Role extends PersistentObject {
 	
 	@Override
 	public String getLabel(){
-		return getId();
+		return get(FLD_ID);
 	}
 	
 	@Override
@@ -76,6 +88,43 @@ public class Role extends PersistentObject {
 		return getBoolean(FLD_SYSTEM_ROLE);
 	}
 	
+	public void setSystemRole(boolean val) {
+		// ignored, for databinding only
+	}
+	
+	public String getRoleName(){
+		return get(FLD_ID);
+	}
+	
+	/**
+	 * renames the role, which effectively changes the id resulting in a new object returned
+	 * 
+	 * @param rolename
+	 * @return
+	 */
+	public @Nullable Role setRoleName(String rolename){
+		if (verifyRoleNameNotTaken(rolename)) {
+			List<ACE> ar = Arrays.asList(getAssignedAccessRights());
+			ar.stream().forEachOrdered(a -> revokeAccessRight(a));
+			
+			set(FLD_ID, rolename);
+			Role r = Role.load(rolename);
+			ar.stream().forEachOrdered(a -> r.grantAccessRight(a));
+			return r;
+		}
+		return null;
+	}
+	
+	/**
+	 * verify whether the proposed rolename is not already in use
+	 * 
+	 * @param rolename
+	 * @return <code>true</code> if the given rolename is available for use
+	 */
+	public static boolean verifyRoleNameNotTaken(String rolename){
+		return new Query<Role>(Role.class, FLD_ID, rolename).execute().size() == 0;
+	}
+	
 	public String getTranslatedLabel(){
 		return (String) getExtInfoStoredObjectByKey(FLD_EXT_I18N_LABEL);
 	}
@@ -85,10 +134,8 @@ public class Role extends PersistentObject {
 	}
 	
 	public ACE[] getAssignedAccessRights(){
-		ACE[] array =
-			ACE.getAllDefinedACElements().stream()
-				.filter(p -> CoreHub.acl.request(this, p))
-				.toArray(size -> new ACE[size]);
+		ACE[] array = ACE.getAllDefinedACElements().stream()
+			.filter(p -> CoreHub.acl.request(this, p)).toArray(size -> new ACE[size]);
 		return array;
 	}
 	
@@ -119,9 +166,21 @@ public class Role extends PersistentObject {
 	 * @param ace
 	 *            revokes the respective right, all associated child rights if applicable
 	 */
-	public void revokeAccessRight(ACE ace){		
+	public void revokeAccessRight(ACE ace){
 		ace.getChildren(true).stream().map(p -> Right.getOrCreateRightByACE(p))
 			.forEach(r -> removeFromList(FLD_JOINT_RIGHTS, r.getId()));
 	}
 	
+	@Override
+	public boolean delete(){
+		if (isSystemRole())
+			return false;
+			
+		Arrays.asList(getAssignedAccessRights()).stream().forEachOrdered(a -> revokeAccessRight(a));
+		
+		Stm stm = getConnection().getStatement();
+		int res = stm.exec("DELETE FROM " + TABLENAME + " WHERE ID=" + getWrappedId());
+		getConnection().releaseStatement(stm);
+		return res == 1;
+	}
 }

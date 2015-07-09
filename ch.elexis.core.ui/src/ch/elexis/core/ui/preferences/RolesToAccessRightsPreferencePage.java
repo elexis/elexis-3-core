@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -25,10 +26,16 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -36,16 +43,17 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.admin.ACE;
 import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.admin.RoleBasedAccessControl;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
+import ch.elexis.core.ui.util.BooleanNotConverter;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Query;
 import ch.elexis.data.Role;
 
-public class RolesToAccessRightsPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage, IValueChangeListener, ICheckStateListener {
+public class RolesToAccessRightsPreferencePage extends PreferencePage
+		implements IWorkbenchPreferencePage, IValueChangeListener, ICheckStateListener {
 	private DataBindingContext m_bindingContext;
 	
 	private WritableValue wv = new WritableValue(null, Role.class);
@@ -54,6 +62,9 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage implements
 	private CheckboxTreeViewer checkboxTreeViewer;
 	
 	private ACETreeCheckStateProvider acecsp = new ACETreeCheckStateProvider();
+	private Text txtRoleName;
+	private MenuItem mntmNewRole;
+	private TableViewer tableViewerRoles;
 	
 	/**
 	 * Create the preference page.
@@ -77,7 +88,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage implements
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
 		
-		SashForm sashForm = new SashForm(container, SWT.VERTICAL);
+		SashForm sashForm = new SashForm(container, SWT.NONE);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeRoles = new Composite(sashForm, SWT.NONE);
@@ -87,30 +98,73 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage implements
 		gl_compositeRoles.marginHeight = 0;
 		compositeRoles.setLayout(gl_compositeRoles);
 		
-		TableViewer tableViewerRoles = new TableViewer(compositeRoles, SWT.BORDER);
+		tableViewerRoles = new TableViewer(compositeRoles, SWT.BORDER);
 		Table tableRoles = tableViewerRoles.getTable();
 		tableRoles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		Menu menu = new Menu(tableRoles);
+		tableRoles.setMenu(menu);
+		
+		mntmNewRole = new MenuItem(menu, SWT.NONE);
+		mntmNewRole.setText("Rolle hinzufügen");
+		mntmNewRole.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				Role newRole = new Role(false);
+				updateRolesList();
+				tableViewerRoles.setSelection(new StructuredSelection(newRole));
+			}
+		});
+		
+		Composite composite = new Composite(compositeRoles, SWT.NONE);
+		GridLayout gl_composite = new GridLayout(2, false);
+		gl_composite.marginWidth = 0;
+		gl_composite.horizontalSpacing = 0;
+		gl_composite.verticalSpacing = 0;
+		gl_composite.marginHeight = 0;
+		composite.setLayout(gl_composite);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		
+		txtRoleName = new Text(composite, SWT.BORDER);
+		txtRoleName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtRoleName.setMessage("Bezeichnung");
+		
+		Link linkChangeRoleName = new Link(composite, SWT.NONE);
+		linkChangeRoleName.setText(UserManagementPreferencePage.CHANGE_LINK);
+		linkChangeRoleName.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				String newRoleName = txtRoleName.getText();
+				if (Role.verifyRoleNameNotTaken(newRoleName)) {
+					setErrorMessage(null);
+					Role r = (Role) wv.getValue();
+					Role changedRole = r.setRoleName(newRoleName);
+					updateRolesList();
+					tableViewerRoles.setSelection(new StructuredSelection(changedRole));
+				} else {
+					setErrorMessage("Rollenname bereits vergeben.");
+				}
+			}
+		});
+		
 		txti18n = new Text(compositeRoles, SWT.BORDER);
-		txti18n.setMessage("Lokale Bezeichnung");
 		txti18n.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txti18n.setMessage("Lokale Bezeichnung");
 		txti18n.setBounds(0, 0, 64, 19);
 		
 		tableViewerRoles.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewerRoles.setLabelProvider(new DefaultLabelProvider() {
 			@Override
-			public String getColumnText(Object element, int columnIndex){
+			public Image getColumnImage(Object element, int columnIndex){
 				Role r = (Role) element;
-				String val = super.getColumnText(element, columnIndex);
-				if (r.isSystemRole())
-					val = val + " (S)";
-				return val;
+				if (r.isSystemRole()) {
+					return Images.IMG_LOCK_CLOSED.getImage();
+				} else {
+					return Images.IMG_EMPTY_TRANSPARENT.getImage();
+				}
 			}
-			
 		});
-		Query<Role> qbe = new Query<Role>(Role.class);
-		System.out.println(qbe.getActualQuery());
-		tableViewerRoles.setInput(qbe.execute());
+		
 		tableViewerRoles.addSelectionChangedListener((e) -> {
 			StructuredSelection ss = (StructuredSelection) e.getSelection();
 			wv.setValue(ss == null ? null : ss.getFirstElement());
@@ -139,14 +193,21 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage implements
 		});
 		
 		sashForm.setWeights(new int[] {
-			3, 7
+			4, 6
 		});
 		
 		m_bindingContext = initDataBindings();
 		wv.addValueChangeListener(this);
 		checkboxTreeViewer.setInput(ACE.getAllDefinedRootACElements());
 		
+		updateRolesList();
+		
 		return container;
+	}
+	
+	private void updateRolesList(){
+		Query<Role> qbe = new Query<Role>(Role.class);
+		tableViewerRoles.setInput(qbe.execute());
 	}
 	
 	/**
@@ -156,23 +217,12 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage implements
 		// Initialize the preference page
 	}
 	
-	protected DataBindingContext initDataBindings(){
-		DataBindingContext bindingContext = new DataBindingContext();
-		//
-		IObservableValue observeTextTxti18nObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txti18n);
-		IObservableValue wvTranslatedLabelObserveDetailValue =
-			PojoProperties.value(Role.class, "translatedLabel", String.class).observeDetail(wv);
-		bindingContext.bindValue(observeTextTxti18nObserveWidget,
-			wvTranslatedLabelObserveDetailValue, null, null);
-		//
-		return bindingContext;
-	}
-	
 	// the user selected a different role
 	@Override
 	public void handleValueChange(ValueChangeEvent event){
 		refreshViewer();
+		Role r = (Role) wv.getValue();
+		txtRoleName.setText((r==null) ? "" : r.getRoleName());
 	}
 	
 	@Override
@@ -183,7 +233,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage implements
 		ACE ace = (ACE) event.getElement();
 		
 		boolean grayed = acecsp.isGrayed(ace);
-		if(grayed) {
+		if (grayed) {
 			refreshViewer();
 			return;
 		}
@@ -197,7 +247,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage implements
 		refreshViewer();
 	}
 	
-	private void refreshViewer(){;
+	private void refreshViewer(){
 		checkboxTreeViewer.refresh();
 	}
 	
@@ -246,9 +296,9 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage implements
 			Role r = (Role) wv.getValue();
 			if (r == null || ace == null)
 				return false;
-			
+				
 			int state = determineChildAndSelfStates(r, ace);
-			return (state>0);
+			return (state > 0);
 		}
 		
 		@Override
@@ -257,35 +307,60 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage implements
 			Role r = (Role) wv.getValue();
 			if (r == null || ace == null)
 				return false;
-			
+				
 			int state = determineChildAndSelfStates(r, ace);
 			return (state == 1 || state == 2);
 		}
 		
 		/**
-		 * Check the state of the current ACE its parents and children, where <code>state</code> is 
+		 * Check the state of the current ACE its parents and children, where <code>state</code> is
 		 * <ul>
 		 * <li><code>0</code>: not allowed, none of the children, and no parents</li>
 		 * <li><code>1</code>: allowed via grant to a parent</li>
 		 * <li><code>2</code>: allowed by self</li>
 		 * <li><code>3</code>: allowed, by entire chain (all children are allowed)</li>
 		 * </ul>
+		 * 
 		 * @param r
 		 * @param ace
 		 * @return <code>state</code> as determined
 		 */
 		private int determineChildAndSelfStates(@NonNull Role r, @NonNull ACE ace){
-			if(CoreHub.acl.request(r, ace.getParent())) return 1;
-			
+			if (CoreHub.acl.request(r, ace.getParent()))
+				return 1;
+				
 			List<ACE> chain = ace.getChildren(true);
-			List<Boolean> chainRights =
-				chain.stream().map(ace2 -> CoreHub.acl.request(r, ace2))
-					.collect(Collectors.toList());
-			long trues = chainRights.stream().filter(p->p.booleanValue()==true).count();
-			if(trues==0) return 0;
-			if(trues==chainRights.size()) return 3;
+			List<Boolean> chainRights = chain.stream().map(ace2 -> CoreHub.acl.request(r, ace2))
+				.collect(Collectors.toList());
+			long trues = chainRights.stream().filter(p -> p.booleanValue() == true).count();
+			if (trues == 0)
+				return 0;
+			if (trues == chainRights.size())
+				return 3;
 			return 2;
 		}
 	}
 	
+	protected DataBindingContext initDataBindings(){
+		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		IObservableValue observeTextTxti18nObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txti18n);
+		IObservableValue wvTranslatedLabelObserveDetailValue =
+			PojoProperties.value(Role.class, "translatedLabel", String.class).observeDetail(wv);
+		bindingContext.bindValue(observeTextTxti18nObserveWidget,
+			wvTranslatedLabelObserveDetailValue, null, null);
+		//
+		IObservableValue observeEnabledTxtRoleNameObserveWidget =
+			WidgetProperties.enabled().observe(txtRoleName);
+		IObservableValue wvSystemRoleObserveDetailValue =
+			PojoProperties.value(Role.class, "systemRole", boolean.class).observeDetail(wv);
+		UpdateValueStrategy strategy = new UpdateValueStrategy();
+		strategy.setConverter(new BooleanNotConverter());
+		bindingContext.bindValue(observeEnabledTxtRoleNameObserveWidget,
+			wvSystemRoleObserveDetailValue,
+			new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), strategy);
+		//
+		return bindingContext;
+	}
 }

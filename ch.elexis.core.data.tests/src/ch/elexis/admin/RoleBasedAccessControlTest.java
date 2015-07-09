@@ -59,7 +59,7 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 	@Test
 	public void testUserAddAndRevokeParentRightInvolvesChildRights() {
 		User user = setContext();
-		Role userRole = Role.load(Role.ROLE_LITERAL_USER);
+		Role userRole = Role.load(Role.SYSTEMROLE_LITERAL_USER);
 		userRole.grantAccessRight(RoleBasedAccessControlTestACLContribution.parent);
 		boolean rightTrue = RoleBasedAccessControl.queryRightForUser(user, RoleBasedAccessControlTestACLContribution.child1child1);
 		assertTrue(rightTrue);

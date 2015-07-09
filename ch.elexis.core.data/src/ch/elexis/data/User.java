@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.codec.DecoderException;
 
 import ch.elexis.core.jdt.Nullable;
+import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.PasswordEncryptionService;
 
 public class User extends PersistentObject {
@@ -36,16 +37,11 @@ public class User extends PersistentObject {
 	private static PasswordEncryptionService pes = new PasswordEncryptionService();
 	
 	static {
-		addMapping(TABLENAME, 
-			FLD_IS_ACTIVE, 
-			FLD_IS_ADMINISTRATOR, 
-			FLD_ASSOC_CONTACT, 
-			FLD_HASHED_PASSWORD, 
-			FLD_SALT, 
-			FLD_KEYSTORE,
+		addMapping(TABLENAME, FLD_ID, FLD_IS_ACTIVE, FLD_IS_ADMINISTRATOR, FLD_ASSOC_CONTACT,
+			FLD_HASHED_PASSWORD, FLD_SALT, FLD_KEYSTORE,
 			FLD_JOINT_ROLES + "=LIST:USER_ID:USER_ROLE_JOINT");
-		
-		if(!tableExists(TABLENAME)) {
+			
+		if (!tableExists(TABLENAME)) {
 			executeDBInitScriptForClass(User.class, null);
 			User.migrateToNewStructure();
 		}
@@ -54,7 +50,7 @@ public class User extends PersistentObject {
 	public User(){}
 	
 	/**
-	 * Every new {@link User} is assigned the {@link Role#ROLE_LITERAL_USER}
+	 * Every new {@link User} is assigned the {@link Role#SYSTEMROLE_LITERAL_USER}
 	 * 
 	 * @param anw
 	 * @param username
@@ -65,7 +61,7 @@ public class User extends PersistentObject {
 		setAssignedContact(anw);
 		setPassword(password);
 		
-		setAssignedRole(Role.load(Role.ROLE_LITERAL_USER), true);
+		setAssignedRole(Role.load(Role.SYSTEMROLE_LITERAL_USER), true);
 	}
 	
 	protected User(final String id){
@@ -78,9 +74,9 @@ public class User extends PersistentObject {
 	
 	/**
 	 * Transfer existing users into the new separated table.<br>
-	 * Every {@link Anwender} is automatically assigned to the role {@link Role#ROLE_LITERAL_USER}.
+	 * Every {@link Anwender} is automatically assigned to the role {@link Role#SYSTEMROLE_LITERAL_USER}.
 	 * Every {@link Mandant} is additionally assigned to the role
-	 * {@link Role#ROLE_LITERAL_EXECUTIVE_DOCTOR}.
+	 * {@link Role#SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR}.
 	 * 
 	 * @see https://redmine.medelexis.ch/issues/771
 	 */
@@ -102,7 +98,7 @@ public class User extends PersistentObject {
 			}
 			boolean isMandator = anwender.getBoolean(Anwender.FLD_IS_MANDATOR);
 			if (isMandator) {
-				u.setAssignedRole(Role.load(Role.ROLE_LITERAL_EXECUTIVE_DOCTOR), true);
+				u.setAssignedRole(Role.load(Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
 			}
 			
 			// TODO delete the information from contact table?
@@ -114,7 +110,7 @@ public class User extends PersistentObject {
 	 * @return
 	 * @since 3.1
 	 */
-	public List<Role> getAssignedRoles() {
+	public List<Role> getAssignedRoles(){
 		List<String> roles = getList(FLD_JOINT_ROLES, false);
 		return roles.stream().map(p -> Role.load(p)).collect(Collectors.toList());
 	}
@@ -124,13 +120,15 @@ public class User extends PersistentObject {
 	 * @param role
 	 * @since 3.1
 	 */
-	public void setAssignedRole(Role role, boolean isAssigned) {
+	public void setAssignedRole(Role role, boolean isAssigned){
 		List<Role> assignedRoles = getAssignedRoles();
-		if(isAssigned) {
-			if(assignedRoles.contains(role)) return;
+		if (isAssigned) {
+			if (assignedRoles.contains(role))
+				return;
 			addToList(FLD_JOINT_ROLES, role.getId());
 		} else {
-			if(!assignedRoles.contains(role)) return;
+			if (!assignedRoles.contains(role))
+				return;
 			removeFromList(FLD_JOINT_ROLES, role.getId());
 		}
 	}
@@ -140,7 +138,7 @@ public class User extends PersistentObject {
 	 * @param attemptedPassword
 	 * @return
 	 */
-	public boolean verifyPassword(String attemptedPassword) {
+	public boolean verifyPassword(String attemptedPassword){
 		boolean ret = false;
 		String[] values = get(false, FLD_HASHED_PASSWORD, FLD_SALT);
 		try {
@@ -151,12 +149,38 @@ public class User extends PersistentObject {
 		return ret;
 	}
 	
-	public String getUsername() {
-		return getId();
+	public String getUsername(){
+		return get(FLD_ID);
 	}
 	
-	public void setUsername(String username) {
-		set(FLD_ID, username);
+	/**
+	 * verify whether the proposed username is not already in use
+	 * 
+	 * @param username
+	 * @return <code>true</code> if the given username may be used
+	 */
+	public static boolean verifyUsernameNotTaken(String username){
+		return new Query<User>(User.class, FLD_ID, username).execute().size() == 0;
+	}
+	
+	/**
+	 * set the new username, where the username is equivalent to the ID, invalidates the given
+	 * object returning the new one
+	 * 
+	 * @param username
+	 * @return the new {@link User} object as a result of the rename
+	 */
+	public @Nullable User setUsername(String username){
+		if (verifyUsernameNotTaken(username)) {
+			// we have to re-target the assigned roles to the new username
+			List<Role> assignedRoles = getAssignedRoles();
+			assignedRoles.stream().forEachOrdered(r -> setAssignedRole(r, false));
+			set(FLD_ID, username);
+			User u = User.load(username);
+			assignedRoles.stream().forEachOrdered(r -> u.setAssignedRole(r, true));
+			return u;
+		}
+		return null;
 	}
 	
 	/** Passwort setzen */
@@ -172,48 +196,60 @@ public class User extends PersistentObject {
 		}
 	}
 	
-	public void setAssignedContact(Kontakt contact){
+	public void setAssignedContact(@Nullable Kontakt contact){
+		if (contact == null)
+			return;
 		set(FLD_ASSOC_CONTACT, contact.getId());
 	}
 	
 	/**
 	 * @return contact, castable to {@link Anwender}
 	 */
-	public @Nullable String getAssignedContactId() {
+	public @Nullable String getAssignedContactId(){
 		return get(FLD_ASSOC_CONTACT);
 	}
 	
-	public boolean isAdministrator() {
+	public boolean isAdministrator(){
 		return getBoolean(FLD_IS_ADMINISTRATOR);
 	}
 	
-	public void setAdministrator(boolean val) {
+	public void setAdministrator(boolean val){
 		set(FLD_IS_ADMINISTRATOR, ts(val));
 	}
 	
 	@Override
 	public String getLabel(){
-		return getId();
+		return getUsername();
 	}
 	
 	@Override
 	protected String getTableName(){
 		return TABLENAME;
 	}
-
+	
 	public @Nullable Anwender getAssignedContact(){
 		String assocId = getAssignedContactId();
-		if(assocId!=null && assocId.length()>1) {
-			return Anwender.load(assocId); 
+		if (assocId != null && assocId.length() > 1) {
+			return Anwender.load(assocId);
 		}
 		return null;
 	}
-
+	
 	public boolean isActive(){
 		return getBoolean(FLD_IS_ACTIVE);
 	}
 	
-	public void setActive(boolean val) {
+	public void setActive(boolean val){
 		set(FLD_IS_ACTIVE, ts(val));
+	}
+	
+	@Override
+	public boolean delete(){
+		getAssignedRoles().stream().forEachOrdered(r -> setAssignedRole(r, false));
+		
+		Stm stm = getConnection().getStatement();
+		int res = stm.exec("DELETE FROM " + TABLENAME + " WHERE ID=" + getWrappedId());
+		getConnection().releaseStatement(stm);
+		return res == 1;
 	}
 }

@@ -18,8 +18,8 @@ import ch.elexis.data.User;
  */
 public abstract class AccessControl {
 	
-	public static final String USER_GROUP = Role.ROLE_LITERAL_USER;
-	public static final String ADMIN_GROUP = Role.ROLE_LITERAL_EXECUTIVE_DOCTOR;
+	public static final String USER_GROUP = Role.SYSTEMROLE_LITERAL_USER;
+	public static final String ADMIN_GROUP = Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR;
 	
 	public abstract boolean request(ACE ace);
 	

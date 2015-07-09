@@ -21,6 +21,8 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuAdapter;
+import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -37,6 +39,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -46,6 +50,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.coolbar.MandantSelectionContributionItem;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
@@ -60,8 +65,8 @@ import ch.elexis.data.Rechnungssteller;
 import ch.elexis.data.Role;
 import ch.elexis.data.User;
 
-public class UserManagementPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+public class UserManagementPreferencePage extends PreferencePage
+		implements IWorkbenchPreferencePage {
 	private DataBindingContext m_bindingContext;
 	private TableViewer tableViewerUsers;
 	
@@ -73,16 +78,18 @@ public class UserManagementPreferencePage extends PreferencePage implements
 	
 	private Group grpAccounting;
 	
-	private static final String CHANGE_LINK = "<a>ändern</a>";
+	public static final String CHANGE_LINK = "<a>ändern</a>";
 	private Link linkContact;
 	private Text txtPassword;
 	private Text txtPassword2;
 	private CheckboxTableViewer checkboxTableViewerAssociation;
 	private CheckboxTableViewer checkboxTableViewerRoles;
-	private Link linkPasswordInfo;
+	private Link linkChangePassword;
 	private Button btnUserIsAdmin;
 	private Color lblRespPhysColorDefColor;
 	private Link linkRechnungssteller;
+	private MenuItem addUserMenuItem;
+	private MenuItem deleteUserMenuItem;
 	
 	/**
 	 * Create the preference page.
@@ -127,6 +134,39 @@ public class UserManagementPreferencePage extends PreferencePage implements
 		tcl_compositeSelectorTable.setColumnData(tblclmnName, new ColumnWeightData(100));
 		tableViewerColumnName.setLabelProvider(new AnwenderCellLabelProvider());
 		
+		Menu tableUsersMenu = new Menu(tableUsers);
+		tableUsers.setMenu(tableUsersMenu);
+		tableUsersMenu.addMenuListener(new MenuAdapter() {
+			@Override
+			public void menuShown(MenuEvent e){
+				StructuredSelection ss = (StructuredSelection) tableViewerUsers.getSelection();
+				deleteUserMenuItem.setEnabled(!ss.isEmpty());
+			}
+		});
+		
+		addUserMenuItem = new MenuItem(tableUsersMenu, SWT.NONE);
+		addUserMenuItem.setText("Benutzer hinzufügen");
+		addUserMenuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				User newUser = new User(null, null, "");
+				updateUserList();
+				tableViewerUsers.setSelection(new StructuredSelection(newUser));
+			}
+		});
+		
+		deleteUserMenuItem = new MenuItem(tableUsersMenu, SWT.NONE);
+		deleteUserMenuItem.setText("Benutzer löschen");
+		deleteUserMenuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				StructuredSelection ss = (StructuredSelection) tableViewerUsers.getSelection();
+				User u = (User) ss.getFirstElement();
+				u.delete();
+				updateUserList();
+			}
+		});
+		
 		Composite compositeEdit = new Composite(container, SWT.NONE);
 		GridLayout gl_compositeEdit = new GridLayout(2, false);
 		gl_compositeEdit.marginHeight = 0;
@@ -143,8 +183,30 @@ public class UserManagementPreferencePage extends PreferencePage implements
 		lblBenutzername.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblBenutzername.setText("Benutzername");
 		
-		txtUsername = new Text(grpSysAccess, SWT.BORDER);
-		txtUsername.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		Composite compUsername = new Composite(grpSysAccess, SWT.NONE);
+		compUsername.setLayout(new FillLayout(SWT.HORIZONTAL));
+		compUsername.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		
+		txtUsername = new Text(compUsername, SWT.BORDER);
+		
+		Link linkChangeUsername = new Link(compUsername, SWT.NONE);
+		linkChangeUsername.setText(CHANGE_LINK);
+		linkChangeUsername.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				String newUsername = txtUsername.getText();
+				boolean isFree = User.verifyUsernameNotTaken(newUsername);
+				if (isFree) {
+					setErrorMessage(null);
+					User u = (User) wvUser.getValue();
+					User changedUser = u.setUsername(newUsername);
+					updateUserList();
+					tableViewerUsers.setSelection(new StructuredSelection(changedUser));
+				} else {
+					setErrorMessage("Dieser Username ist bereits vergeben.");
+				}
+			}
+		});
 		
 		btnUserIsAdmin = new Button(grpSysAccess, SWT.CHECK);
 		btnUserIsAdmin.setToolTipText("Administratoren unterliegen keinerlei Beschränkungen.");
@@ -164,9 +226,9 @@ public class UserManagementPreferencePage extends PreferencePage implements
 		txtPassword = new Text(composite, SWT.BORDER | SWT.PASSWORD);
 		txtPassword2 = new Text(composite, SWT.BORDER | SWT.PASSWORD);
 		
-		linkPasswordInfo = new Link(grpSysAccess, SWT.NONE);
-		linkPasswordInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-		linkPasswordInfo.addSelectionListener(new SelectionAdapter() {
+		linkChangePassword = new Link(grpSysAccess, SWT.NONE);
+		linkChangePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		linkChangePassword.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				String pw1 = txtPassword.getText();
@@ -175,9 +237,10 @@ public class UserManagementPreferencePage extends PreferencePage implements
 					setErrorMessage(null);
 					User u = (User) wvUser.getValue();
 					u.setPassword(pw1);
-					linkPasswordInfo.setText(CHANGE_LINK + " OK");
+					linkChangePassword.setText(CHANGE_LINK + " OK");
 				} else {
-					setErrorMessage("Passwörter nicht ident, oder Passwort zu kurz (min 3 Zeichen)");
+					setErrorMessage(
+						"Passwörter nicht ident, oder Passwort zu kurz (min 3 Zeichen)");
 				}
 			}
 		});
@@ -200,7 +263,9 @@ public class UserManagementPreferencePage extends PreferencePage implements
 						"Bitte selektieren Sie den zugeordneten Kontakt", new String[] {});
 				int ret = ks.open();
 				if (ret == Window.OK) {
-					user.setAssignedContact((Kontakt) ks.getSelection());
+					Person p = (Person) ks.getSelection();
+					user.setAssignedContact(p);
+					linkContact.setText(p.getPersonalia() + " " + CHANGE_LINK);
 				}
 			}
 		});
@@ -231,8 +296,8 @@ public class UserManagementPreferencePage extends PreferencePage implements
 		lblRespPhysColorDefColor = lblRespPhysColor.getBackground();
 		lblRespPhysColor.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
-				if(!btnIsExecutiveDoctor.getSelection()) {
+			public void mouseDown(MouseEvent e){
+				if (!btnIsExecutiveDoctor.getSelection()) {
 					return;
 				}
 				ColorDialog cd = new ColorDialog(UiDesk.getTopShell());
@@ -241,7 +306,7 @@ public class UserManagementPreferencePage extends PreferencePage implements
 				RGB rgb = cd.open();
 				
 				User user = (User) wvUser.getValue();
-				Mandant m = Mandant.load(user.getAssignedContactId());		
+				Mandant m = Mandant.load(user.getAssignedContactId());
 				UiMandant.setColorForMandator(m, rgb);
 				lblRespPhysColor.setBackground(UiMandant.getColorForMandator(m));
 			}
@@ -273,15 +338,15 @@ public class UserManagementPreferencePage extends PreferencePage implements
 						return;
 					Mandant mand = Mandant.load(ac.getId());
 					mand.setRechnungssteller(kontakt);
-					linkRechnungssteller.setText(mand.getRechnungssteller().getLabel() + " "
-						+ CHANGE_LINK);
+					linkRechnungssteller
+						.setText(mand.getRechnungssteller().getLabel() + " " + CHANGE_LINK);
 				}
 			}
 		});
 		
 		Label lblFrVerantwortlichenArzt = new Label(grpAccounting, SWT.NONE);
-		lblFrVerantwortlichenArzt.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2,
-			1));
+		lblFrVerantwortlichenArzt
+			.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		lblFrVerantwortlichenArzt.setText("tätig für");
 		
 		Composite compositeAssociation = new Composite(grpAccounting, SWT.NONE);
@@ -326,7 +391,6 @@ public class UserManagementPreferencePage extends PreferencePage implements
 			Role r = (Role) e.getElement();
 			if (r == null)
 				return;
-			System.out.println(r + " " + e.getChecked());
 			User user = (User) wvUser.getValue();
 			user.setAssignedRole(r, e.getChecked());
 		});
@@ -335,15 +399,15 @@ public class UserManagementPreferencePage extends PreferencePage implements
 			@Override
 			public String getColumnText(Object element, int columnIndex){
 				Mandant m = (Mandant) element;
-				return m.getLabel() + " (" + m.getName() + " " + m.getVorname() + ")";
+				return m.getName() + " " + m.getVorname();
 			}
 		});
-		
-		tableViewerUsers.setInput(new Query<User>(User.class).execute());
 		
 		m_bindingContext = initDataBindings();
 		
 		wvUser.addValueChangeListener(new ValueChangedAdapter());
+		
+		updateUserList();
 		
 		return container;
 	}
@@ -352,8 +416,11 @@ public class UserManagementPreferencePage extends PreferencePage implements
 	 * Initialize the preference page.
 	 */
 	public void init(IWorkbench workbench){
-		
 		// Initialize the preference page
+	}
+	
+	private void updateUserList(){
+		tableViewerUsers.setInput(new Query<User>(User.class).execute());
 	}
 	
 	private class ValueChangedAdapter implements IValueChangeListener {
@@ -370,7 +437,8 @@ public class UserManagementPreferencePage extends PreferencePage implements
 			
 			txtPassword.setText("");
 			txtPassword2.setText("");
-			linkPasswordInfo.setText(CHANGE_LINK + " (Passwort gesetzt)");
+			txtUsername.setText(user.getUsername());
+			linkChangePassword.setText(CHANGE_LINK + " (Passwort gesetzt)");
 			
 			Anwender anw = user.getAssignedContact();
 			wvAnwender.setValue(anw);
@@ -383,14 +451,14 @@ public class UserManagementPreferencePage extends PreferencePage implements
 			checkboxTableViewerRoles.setCheckedElements(assignedRoles);
 			
 			checkboxTableViewerAssociation.setInput(new Query<Mandant>(Mandant.class).execute());
-			checkboxTableViewerAssociation.setCheckedElements(new Mandant[]{});
+			checkboxTableViewerAssociation.setCheckedElements(new Mandant[] {});
 			
 			linkRechnungssteller.setText("- " + CHANGE_LINK);
 			lblRespPhysColor.setBackground(lblRespPhysColorDefColor);
 			
 			if (anw != null) {
-				checkboxTableViewerAssociation.setCheckedElements(anw
-					.getExecutiveDoctorsWorkingFor().toArray());
+				checkboxTableViewerAssociation
+					.setCheckedElements(anw.getExecutiveDoctorsWorkingFor().toArray());
 				if (anw.isExecutiveDoctor()) {
 					Mandant m = Mandant.load(anw.getId());
 					Color color = UiMandant.getColorForMandator(m);
@@ -414,7 +482,11 @@ public class UserManagementPreferencePage extends PreferencePage implements
 			}
 			Anwender ac = user.getAssignedContact();
 			if (ac != null && ac.isExecutiveDoctor()) {
-				cell.setForeground(UiDesk.getColor(UiDesk.COL_RED));
+				Mandant m = Mandant.load(ac.getId());
+				Color mc = UiMandant.getColorForMandator(m);
+				cell.setImage(MandantSelectionContributionItem.getBoxSWTColorImage(mc));
+			} else {
+				cell.setImage(Images.IMG_EMPTY_TRANSPARENT.getImage());
 			}
 		}
 	}
@@ -422,25 +494,17 @@ public class UserManagementPreferencePage extends PreferencePage implements
 	protected DataBindingContext initDataBindings(){
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		IObservableValue observeTextTxtUsernameObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txtUsername);
-		IObservableValue wvPostAnschriftObserveDetailValue =
-			PojoProperties.value(User.class, "username", String.class).observeDetail(wvUser);
-		bindingContext.bindValue(observeTextTxtUsernameObserveWidget,
-			wvPostAnschriftObserveDetailValue, null, null);
-		//
 		IObservableValue observeSelectionBtnIsAdminObserveWidget =
 			WidgetProperties.selection().observe(btnUserIsAdmin);
 		IObservableValue wvAdminObserveDetailValue =
 			PojoProperties.value(User.class, "administrator", boolean.class).observeDetail(wvUser);
-		bindingContext.bindValue(observeSelectionBtnIsAdminObserveWidget,
-			wvAdminObserveDetailValue, null, null);
+		bindingContext.bindValue(observeSelectionBtnIsAdminObserveWidget, wvAdminObserveDetailValue,
+			null, null);
 		//
 		IObservableValue observeSelectionBtnIsMandatorObserveWidget =
 			WidgetProperties.selection().observe(btnIsExecutiveDoctor);
-		IObservableValue wvMandatorObserveDetailValue =
-			PojoProperties.value(Anwender.class, "executiveDoctor", boolean.class).observeDetail(
-				wvAnwender);
+		IObservableValue wvMandatorObserveDetailValue = PojoProperties
+			.value(Anwender.class, "executiveDoctor", boolean.class).observeDetail(wvAnwender);
 		bindingContext.bindValue(observeSelectionBtnIsMandatorObserveWidget,
 			wvMandatorObserveDetailValue, null, null);
 		//
