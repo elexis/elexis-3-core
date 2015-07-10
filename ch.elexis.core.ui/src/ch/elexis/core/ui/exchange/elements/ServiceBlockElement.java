@@ -56,13 +56,14 @@ public class ServiceBlockElement extends XChangeElement {
 					(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory");
 				if (cs == null) {
 					SWTHelper.alert("Fehler", "CodeSelectorFactory is null");
+				} else {
+					ICodeElement ics = (ICodeElement) po.createTemplate(cs.getElementClass());
+					if (ics == null) {
+						SWTHelper.alert("Fehler", "CodeElement is null");
+					}
+					codeElements.add(ics);
+					factories.put(ics, cs);
 				}
-				ICodeElement ics = (ICodeElement) po.createTemplate(cs.getElementClass());
-				if (ics == null) {
-					SWTHelper.alert("Fehler", "CodeElement is null");
-				}
-				codeElements.add(ics);
-				factories.put(ics, cs);
 				
 			} catch (CoreException ex) {
 				ExHandler.handle(ex);

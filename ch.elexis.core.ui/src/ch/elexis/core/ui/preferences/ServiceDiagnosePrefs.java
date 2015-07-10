@@ -195,7 +195,7 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 	}
 	
 	private void loadInput(ViewType view){
-		String[] settings = null;
+		String[] settings = new String[]{};
 		input = new ArrayList<String>();
 		aInput = new ArrayList<String>();
 		

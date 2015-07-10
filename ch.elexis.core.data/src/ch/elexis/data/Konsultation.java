@@ -114,20 +114,20 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	public Konsultation(Fall fall){
 		if (fall == null) {
 			fall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-			if (fall == null) {
-				MessageEvent
-					.fireError("Kein Fall ausgewählt",
-						"Bitte zunächst einen Fall auswählen, dem die neue Konsultation zugeordnet werden soll");
-			}
 		}
-		if (fall.isOpen() == false) {
+		
+		if (fall == null) {
+			MessageEvent.fireError("Kein Fall ausgewählt",
+				"Bitte zunächst einen Fall auswählen, dem die neue Konsultation zugeordnet werden soll");
+		} else if (fall.isOpen() == false) {
 			MessageEvent.fireError("Fall geschlossen",
 				"Zu einem abgeschlossenen Fall kann keine neue Konsultation erstellt werden");
 		} else {
 			create(null);
 			set(new String[] {
 				DATE, FLD_CASE_ID, FLD_MANDATOR_ID
-			}, new TimeTool().toString(TimeTool.DATE_GER), fall.getId(), CoreHub.actMandant.getId());
+			}, new TimeTool().toString(TimeTool.DATE_GER), fall.getId(),
+				CoreHub.actMandant.getId());
 			fall.getPatient().setInfoElement("LetzteBehandlung", getId());
 		}
 	}
@@ -222,9 +222,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		for (Samdas.XRef xref : xrefs) {
 			if ((xref.getProvider().equals(provider)) && (xref.getID().equals(id))) {
 				if (recText.length() > xref.getPos() + xref.getLength()) {
-					recText =
-						recText.substring(0, xref.getPos())
-							+ recText.substring(xref.getPos() + xref.getLength());
+					recText = recText.substring(0, xref.getPos())
+						+ recText.substring(xref.getPos() + xref.getLength());
 					record.setText(recText);
 				}
 				record.remove(xref);
@@ -494,8 +493,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	public ArrayList<IDiagnose> getDiagnosen(){
 		ArrayList<IDiagnose> ret = new ArrayList<IDiagnose>();
 		Stm stm = j.getStatement();
-		ResultSet rs1 =
-			stm.query("SELECT DIAGNOSEID FROM BEHDL_DG_JOINT inner join BEHANDLUNGEN on BehandlungsID=BEHANDLUNGEN.id where BEHDL_DG_JOINT.deleted='0' and BEHANDLUNGEN.deleted='0' AND BEHANDLUNGSID="
+		ResultSet rs1 = stm.query(
+			"SELECT DIAGNOSEID FROM BEHDL_DG_JOINT inner join BEHANDLUNGEN on BehandlungsID=BEHANDLUNGEN.id where BEHDL_DG_JOINT.deleted='0' and BEHANDLUNGEN.deleted='0' AND BEHANDLUNGSID="
 				+ JdbcLink.wrap(getId()));
 		StringBuilder sb = new StringBuilder();
 		try {
@@ -503,9 +502,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				String dgID = rs1.getString(1);
 				
 				Stm stm2 = j.getStatement();
-				ResultSet rs2 =
-					stm2.query("SELECT DG_CODE,KLASSE FROM DIAGNOSEN WHERE ID="
-						+ JdbcLink.wrap(dgID));
+				ResultSet rs2 = stm2
+					.query("SELECT DG_CODE,KLASSE FROM DIAGNOSEN WHERE ID=" + JdbcLink.wrap(dgID));
 				if (rs2.next()) {
 					sb.setLength(0);
 					sb.append(rs2.getString(2)).append("::");
@@ -539,10 +537,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (!isEditable(true)) {
 			return;
 		}
-		String exists =
-			j.queryString("SELECT ID FROM DIAGNOSEN WHERE KLASSE="
-				+ JdbcLink.wrap(dg.getClass().getName()) + " AND DG_CODE="
-				+ JdbcLink.wrap(dg.getCode()));
+		String exists = j.queryString(
+			"SELECT ID FROM DIAGNOSEN WHERE KLASSE=" + JdbcLink.wrap(dg.getClass().getName())
+				+ " AND DG_CODE=" + JdbcLink.wrap(dg.getCode()));
 		StringBuilder sql = new StringBuilder(200);
 		if (StringTool.isNothing(exists)) {
 			exists = StringTool.unique("bhdl");
@@ -569,7 +566,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (isEditable(true)) {
 			String dgid =
 				prepareDiagnoseSelectWithCodeAndClass(dg.getCode(), dg.getClass().getName());
-			
+				
 			if (dgid == null) {
 				String code = dg.getCode();
 				// chapter of a TI-Code
@@ -652,14 +649,12 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					Artikel art = (Artikel) l;
 					// art.einzelAbgabe(1); -> this is done by the optifier now
 					Prescription p = new Prescription(art, getFall().getPatient(), "", "");
-					p.set(
-						new String[] {
-							Prescription.FLD_REZEPT_ID, Prescription.FLD_DATE_UNTIL
-						},
-						new String[] {
-							Prescription.FLD_REZEPTID_VAL_DIREKTABGABE,
-							new TimeTool().toString(TimeTool.DATE_GER)
-						});
+					p.set(new String[] {
+						Prescription.FLD_REZEPT_ID, Prescription.FLD_DATE_UNTIL
+					}, new String[] {
+						Prescription.FLD_REZEPTID_VAL_DIREKTABGABE,
+						new TimeTool().toString(TimeTool.DATE_GER)
+					});
 					Verrechnet verrechnet = optifier.getCreatedVerrechnet();
 					p.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID,
 						verrechnet.getId());
@@ -734,14 +729,14 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * Wieviel Umsatz (in Rappen) bringt uns diese Konsultation ein?
 	 * 
 	 * @deprecated not accurate. use getLeistungen()
-	 * */
+	 */
 	@Deprecated
 	public double getUmsatz(){
 		double sum = 0.0;
 		Stm stm = j.getStatement();
 		try {
-			ResultSet res =
-				stm.query("SELECT VK_PREIS,ZAHL,SCALE FROM LEISTUNGEN WHERE deleted='0' AND BEHANDLUNG="
+			ResultSet res = stm.query(
+				"SELECT VK_PREIS,ZAHL,SCALE FROM LEISTUNGEN WHERE deleted='0' AND BEHANDLUNG="
 					+ getWrappedId());
 			while ((res != null) && res.next()) {
 				double scale = res.getDouble(3) / 100.0;
@@ -760,7 +755,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	/**
 	 * Wieviel vom Umsatz bleibt uns von dieser Konsultation?
 	 * 
-	 * */
+	 */
 	@Deprecated
 	public double getGewinn(){
 		return getUmsatz() - getKosten();
@@ -775,7 +770,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 										 * JdbcLink . wrap (v .getClass ( ).getName ()))
 										 */
 				.append(" AND LEISTG_CODE=").append(JdbcLink.wrap(v.getId()));
-			
+				
 			j.exec(sb.toString());
 		}
 	}
@@ -785,10 +780,10 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (isEditable(true)) {
 			StringBuilder sql = new StringBuilder();
 			sql.append("UPDATE LEISTUNGEN SET ZAHL=").append(nz)
-			/*
-			 * .append(" WHERE KLASSE=").append(JdbcLink.wrap(v.getClass().getName ()))
-			 */
-			.append(" WHERE LEISTG_CODE=").append(JdbcLink.wrap(v.getId()))
+				/*
+				 * .append(" WHERE KLASSE=").append(JdbcLink.wrap(v.getClass().getName ()))
+				 */
+				.append(" WHERE LEISTG_CODE=").append(JdbcLink.wrap(v.getId()))
 				.append(" AND BEHANDLUNG=").append(getWrappedId());
 			j.exec(sql.toString());
 		}
@@ -909,9 +904,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				} else {
 					Fall[] faelle = actPatient.getFaelle();
 					if ((faelle == null) || (faelle.length == 0)) {
-						actFall =
-							actPatient.neuerFall(Fall.getDefaultCaseLabel(),
-								Fall.getDefaultCaseReason(), Fall.getDefaultCaseLaw());
+						actFall = actPatient.neuerFall(Fall.getDefaultCaseLabel(),
+							Fall.getDefaultCaseReason(), Fall.getDefaultCaseLaw());
 					} else {
 						actFall = faelle[0];
 					}
@@ -950,7 +944,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		}
 		if (getDefaultDiagnose() != null)
 			n.addDiagnose(getDefaultDiagnose());
-		
+			
 		ElexisEventDispatcher.fireSelectionEvent(actFall);
 		ElexisEventDispatcher.fireSelectionEvent(n);
 	}

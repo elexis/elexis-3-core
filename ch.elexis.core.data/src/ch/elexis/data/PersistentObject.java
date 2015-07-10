@@ -144,9 +144,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	public static final int CACHE_MIN_LIFETIME = 5;
 	public static final int CACHE_TIME_MAX = 300;
 	protected static int default_lifetime;
-	private static IPersistentObjectCache<String> cache = new MultiGuavaCache<String>(
-		CACHE_DEFAULT_LIFETIME, TimeUnit.SECONDS);
-	
+	private static IPersistentObjectCache<String> cache =
+		new MultiGuavaCache<String>(CACHE_DEFAULT_LIFETIME, TimeUnit.SECONDS);
+		
 	// maximum character length of int fields in tables
 	private static int MAX_INT_LENGTH = 10;
 	
@@ -164,9 +164,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	private static String dbPw;
 	private static File runFromScratchDB = null;
 	
-	protected static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
-		.getCoreOperationAdvisor();
-	
+	protected static AbstractCoreOperationAdvisor cod =
+		CoreOperationExtensionPoint.getCoreOperationAdvisor();
+		
 	static {
 		mapping = new Hashtable<String, String>();
 		default_lifetime =
@@ -180,17 +180,17 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	public static enum FieldType {
-		TEXT, LIST, JOINT
+			TEXT, LIST, JOINT
 	};
 	
 	/**
-	 * the possible states of a tristate checkbox: true/checked, false/unchecked,
-	 * undefined/"filled with a square"/"partly selected"
+	 * the possible states of a tristate checkbox: true/checked, false/unchecked, undefined/
+	 * "filled with a square"/"partly selected"
 	 * 
 	 * @since 3.0.0
 	 */
 	static public enum TristateBoolean {
-		TRUE, FALSE, UNDEF
+			TRUE, FALSE, UNDEF
 	};
 	
 	/**
@@ -215,7 +215,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * like ""drop database miniDB; create dabase miniDB;" before starting Elexis.
 	 * 
 	 * @return true on success
-	 * 
+	 * 		
 	 *         Verbindung mit der Datenbank herstellen. Die Verbindungsparameter werden aus den
 	 *         übergebenen Settings entnommen. Falls am angegebenen Ort keine Datenbank gefunden
 	 *         wird, wird eine neue erstellt, falls ein create-Script für diesen Datenbanktyp unter
@@ -228,8 +228,8 @@ public abstract class PersistentObject implements IPersistentObject {
 		dbPw = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD);
 		String dbFlavor = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR);
 		String dbSpec = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC);
-		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH.equals(System
-			.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
+		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
+			.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
 			runningFromScratch = true;
 		}
 		
@@ -255,19 +255,18 @@ public abstract class PersistentObject implements IPersistentObject {
 					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME);
 				if (username == null)
 					username = "sa";
-				
+					
 				String password =
 					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD);
 				if (password == null)
 					password = StringTool.leer;
-				
+					
 				getConnection().connect(username, password);
 				return connect(getConnection());
 			} catch (JdbcLinkException je) {
 				ElexisStatus status = translateJdbcException(je);
-				status
-					.setMessage(status.getMessage()
-						+ " Fehler mit Demo-Datenbank: Es wurde zwar ein demoDB-Verzeichnis gefunden, aber dort ist keine verwendbare Datenbank");
+				status.setMessage(status.getMessage()
+					+ " Fehler mit Demo-Datenbank: Es wurde zwar ein demoDB-Verzeichnis gefunden, aber dort ist keine verwendbare Datenbank");
 				throw new PersistenceException(status);
 			}
 		} else if (dbFlavor != null && dbFlavor.length() >= 2 && dbSpec != null
@@ -401,9 +400,8 @@ public abstract class PersistentObject implements IPersistentObject {
 					return false;
 				}
 			} catch (Exception ex) {
-				msg =
-					"Exception connecting to test database:" + dbSpec + " using " + dbFlavor + ": "
-						+ ex.getMessage();
+				msg = "Exception connecting to test database:" + dbSpec + " using " + dbFlavor
+					+ ": " + ex.getMessage();
 				log.error(msg);
 				System.out.println(msg);
 				if (exitOnFail)
@@ -431,10 +429,9 @@ public abstract class PersistentObject implements IPersistentObject {
 			log.debug("Database version " + created);
 		} else {
 			log.debug("No Version found. Creating new Database");
-			java.io.InputStream is = null;
 			Stm stm = null;
-			try {
-				is = PersistentObject.class.getResourceAsStream("/rsc/createDB.script");
+			try (InputStream is =
+				PersistentObject.class.getResourceAsStream("/rsc/createDB.script")) {
 				stm = getConnection().getStatement();
 				if (stm.execScript(is, true, true) == true) {
 					executeDBInitScriptForClass(User.class, null);
@@ -478,11 +475,6 @@ public abstract class PersistentObject implements IPersistentObject {
 				return false;
 			} finally {
 				getConnection().releaseStatement(stm);
-				try {
-					is.close();
-				} catch (Exception ex) {
-					/* Janusode */
-				}
 			}
 		}
 		// Zugriffskontrolle initialisieren
@@ -498,11 +490,9 @@ public abstract class PersistentObject implements IPersistentObject {
 		log.info("Vorhandene Elexis-Version: " + CoreHub.Version);
 		VersionInfo v2 = new VersionInfo(CoreHub.Version);
 		if (vi.isNewerMinor(v2)) {
-			String msg =
-				String
-					.format(
-						"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Wollen Sie trotzdem fortsetzen?",
-						jd.getConnectString(), vi.version().toString(), v2.version().toString());
+			String msg = String.format(
+				"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Wollen Sie trotzdem fortsetzen?",
+				jd.getConnectString(), vi.version().toString(), v2.version().toString());
 			log.error(msg);
 			if (!cod.openQuestion("Diskrepanz in der Datenbank-Version ", msg)) {
 				System.exit(2);
@@ -606,9 +596,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			while (true) {
 				long timestamp = System.currentTimeMillis();
 				// Gibt es das angeforderte Lock schon?
-				String oldlock =
-					stm.queryString("SELECT wert FROM CONFIG WHERE param="
-						+ JdbcLink.wrap(lockname));
+				String oldlock = stm
+					.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
 				if (!StringTool.isNothing(oldlock)) {
 					// Ja, wie alt ist es?
 					String[] def = oldlock.split("#");
@@ -633,9 +622,8 @@ public abstract class PersistentObject implements IPersistentObject {
 				stm.exec(sb.toString());
 				// Prüfen, ob wir es wirklich haben, oder ob doch jemand anders
 				// schneller war.
-				String check =
-					stm.queryString("SELECT wert FROM CONFIG WHERE param="
-						+ JdbcLink.wrap(lockname));
+				String check = stm
+					.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
 				if (check.equals(lockstring)) {
 					break;
 				}
@@ -657,9 +645,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public static synchronized boolean unlock(final String name, final String id){
 		String lockname = "lock" + name;
-		String lock =
-			getConnection().queryString(
-				"SELECT wert from CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+		String lock = getConnection()
+			.queryString("SELECT wert from CONFIG WHERE param=" + JdbcLink.wrap(lockname));
 		if (StringTool.isNothing(lock)) {
 			return false;
 		}
@@ -887,7 +874,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            method will fail if a collision occurs.
 	 * @return true on success, false on failure
 	 */
-	public boolean addXid(final String domain, final String domain_id, final boolean updateIfExists){
+	public boolean addXid(final String domain, final String domain_id,
+		final boolean updateIfExists){
 		Xid oldXID = Xid.findXID(this, domain);
 		if (oldXID != null) {
 			if (updateIfExists) {
@@ -928,9 +916,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @return a List of Sticker objects
 	 */
-	private static String queryStickersString = "SELECT etikette FROM " + Sticker.FLD_LINKTABLE
-		+ " WHERE obj=?";
-	
+	private static String queryStickersString =
+		"SELECT etikette FROM " + Sticker.FLD_LINKTABLE + " WHERE obj=?";
+		
 	/**
 	 * Return all Stickers attributed to this objecz
 	 * 
@@ -949,7 +937,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		try {
 			queryStickers.setString(1, id);
 			ResultSet res = queryStickers.executeQuery();
-			while (res != null && res.next()) {
+			while (res.next()) {
 				Sticker et = Sticker.load(res.getString(1));
 				if (et != null && et.exists()) {
 					ret.add(Sticker.load(res.getString(1)));
@@ -1059,7 +1047,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	public static String map(final String tableName, final String field){
 		if (field.equals("ID"))
 			return field;
-		
+			
 		String res = mapping.get(tableName + field);
 		if (res == null) {
 			log.info("field is not mapped " + field);
@@ -1177,9 +1165,8 @@ public abstract class PersistentObject implements IPersistentObject {
 				}
 			} catch (NoSuchMethodException nmex) {
 				log.warn("Fehler bei Felddefinition " + field);
-				ElexisStatus status =
-					new ElexisStatus(ElexisStatus.WARNING, CoreHub.PLUGIN_ID,
-						ElexisStatus.CODE_NOFEEDBACK, "Fehler bei Felddefinition", nmex);
+				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, CoreHub.PLUGIN_ID,
+					ElexisStatus.CODE_NOFEEDBACK, "Fehler bei Felddefinition", nmex);
 				ElexisEventDispatcher.fireElexisStatusEvent(status);
 				return mapped;
 			} catch (Exception ex) {
@@ -1191,11 +1178,11 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		sql.append("SELECT ").append(mapped).append(" FROM ").append(table).append(" WHERE ID='")
 			.append(id).append("'");
-		
+			
 		Stm stm = getConnection().getStatement();
-		ResultSet rs = executeSqlQuery(sql.toString(), stm);
+		
 		String res = null;
-		try {
+		try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
 			if ((rs != null) && (rs.next() == true)) {
 				if (decrypt) {
 					res = decode(field, rs);
@@ -1210,12 +1197,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		} catch (SQLException ex) {
 			ExHandler.handle(ex);
 		} finally {
-			try {
-				rs.close();
-				getConnection().releaseStatement(stm);
-			} catch (SQLException e) {
-				// ignore
-			}
+			getConnection().releaseStatement(stm);
 		}
 		return res;
 	}
@@ -1237,22 +1219,17 @@ public abstract class PersistentObject implements IPersistentObject {
 		String table = getTableName();
 		sql.append("SELECT ").append(mapped).append(" FROM ").append(table).append(" WHERE ID='")
 			.append(id).append("'");
-		
+			
 		Stm stm = getConnection().getStatement();
-		ResultSet rs = executeSqlQuery(sql.toString(), stm);
-		try {
+		
+		try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
 			if ((rs != null) && (rs.next() == true)) {
 				return rs.getBytes(mapped);
 			}
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 		} finally {
-			try {
-				rs.close();
-				getConnection().releaseStatement(stm);
-			} catch (SQLException e) {
-				// ignore
-			}
+			getConnection().releaseStatement(stm);
 		}
 		return null;
 	}
@@ -1311,7 +1288,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		byte[] binaryRaw = getBinaryRaw(FLD_EXTINFO);
 		if (binaryRaw == null)
 			return null;
-		
+			
 		@SuppressWarnings("unchecked")
 		Map<Object, Object> ext = getMap(FLD_EXTINFO);
 		return ext.get(key);
@@ -1398,10 +1375,11 @@ public abstract class PersistentObject implements IPersistentObject {
 			saveVal = StringConstants.EMPTY;
 		boolean result = set(field, saveVal);
 		if (!result) {
-			throw new PersistenceException(new ElexisStatus(Status.ERROR, CoreHub.PLUGIN_ID,
-				ElexisStatus.CODE_NONE,
-				"PersistentObject.setTriStateBoolean(): Error on saving value " + newVal
-					+ " to field " + field, null));
+			throw new PersistenceException(
+				new ElexisStatus(Status.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+					"PersistentObject.setTriStateBoolean(): Error on saving value " + newVal
+						+ " to field " + field,
+					null));
 		}
 	}
 	
@@ -1474,7 +1452,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			Object cached = cache.get(cacheId, getCacheTime());
 			if (cached != null)
 				return (List<String[]>) cached;
-			
+				
 			StringBuffer sql = new StringBuffer();
 			String[] abfr = mapped.split(":");
 			sql.append("SELECT ").append(abfr[1]);
@@ -1483,11 +1461,10 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 			sql.append(" FROM ").append(abfr[3]).append(" WHERE ").append(abfr[2]).append("=")
 				.append(getWrappedId());
-			
+				
 			Stm stm = getConnection().getStatement();
-			ResultSet rs = executeSqlQuery(sql.toString(), stm);
 			LinkedList<String[]> list = new LinkedList<String[]>();
-			try {
+			try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
 				while ((rs != null) && rs.next()) {
 					String[] line = new String[extra.length + 1];
 					line[0] = rs.getString(abfr[1]);
@@ -1496,7 +1473,6 @@ public abstract class PersistentObject implements IPersistentObject {
 					}
 					list.add(line);
 				}
-				rs.close();
 				cache.put(cacheId, list, getCacheTime());
 				return list;
 			} catch (Exception ex) {
@@ -1510,12 +1486,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				// throw new PersistenceException(status);
 				return null;
 			} finally {
-				try {
-					rs.close();
-					getConnection().releaseStatement(stm);
-				} catch (SQLException e) {
-					// ignore
-				}
+				getConnection().releaseStatement(stm);
 			}
 		} else {
 			log.error("Fehlerhaftes Mapping " + mapped);
@@ -1591,14 +1562,13 @@ public abstract class PersistentObject implements IPersistentObject {
 			// ElexisEvent(this,this.getClass(),ElexisEvent.EVENT_UPDATE));
 			return true;
 		} catch (Exception ex) {
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					"Fehler bei: " + cmd + "(" + field + "=" + value + ")", ex,
-					ElexisStatus.LOG_ERRORS);
+			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID,
+				ElexisStatus.CODE_NONE, "Fehler bei: " + cmd + "(" + field + "=" + value + ")", ex,
+				ElexisStatus.LOG_ERRORS);
 			throw new PersistenceException(status); // See api doc. check this
 													// whether it breaks
-			// existing code.
-			// return false; // See api doc. Return false on errors.
+													// existing code.
+													// return false; // See api doc. Return false on errors.
 		} finally {
 			try {
 				pst.close();
@@ -1649,8 +1619,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	private void setBinaryRaw(final String field, final byte[] value){
 		StringBuilder sql = new StringBuilder(1000);
-		sql.append("UPDATE ").append(getTableName()).append(" SET ").append(
-		/* map */(field)).append("=?, lastupdate=?").append(" WHERE ID=").append(getWrappedId());
+		sql.append("UPDATE ").append(getTableName()).append(" SET ").append(/* map */(field))
+			.append("=?, lastupdate=?").append(" WHERE ID=").append(getWrappedId());
 		String cmd = sql.toString();
 		if (tracetable != null) {
 			doTrace(cmd);
@@ -1662,9 +1632,10 @@ public abstract class PersistentObject implements IPersistentObject {
 			stm.executeUpdate();
 		} catch (Exception ex) {
 			log.error("Fehler beim Ausführen der Abfrage " + cmd, ex);
-			throw new PersistenceException(new ElexisStatus(Status.ERROR, CoreHub.PLUGIN_ID,
-				ElexisStatus.CODE_NONE, "setBytes: Es trat ein Fehler beim Schreiben auf. "
-					+ ex.getMessage(), ex, Log.ERRORS));
+			throw new PersistenceException(
+				new ElexisStatus(Status.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+					"setBytes: Es trat ein Fehler beim Schreiben auf. " + ex.getMessage(), ex,
+					Log.ERRORS));
 		} finally {
 			try {
 				stm.close();
@@ -1858,8 +1829,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			.append(getWrappedId()).append(")");
 		if (getConnection().exec(sql.toString()) != 0) {
 			setConstraint();
-			ElexisEventDispatcher.getInstance().fire(
-				new ElexisEvent(this, getClass(), ElexisEvent.EVENT_CREATE));
+			ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_CREATE));
 			return true;
 		}
 		return false;
@@ -1882,8 +1853,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			if ((sel != null) && sel.equals(this)) {
 				ElexisEventDispatcher.clearSelection(this.getClass());
 			}
-			ElexisEventDispatcher.getInstance().fire(
-				new ElexisEvent(this, getClass(), ElexisEvent.EVENT_DELETE));
+			ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_DELETE));
 			return true;
 		}
 		return false;
@@ -1926,8 +1897,8 @@ public abstract class PersistentObject implements IPersistentObject {
 				xid.undelete();
 			}
 			new DBLog(this, DBLog.TYP.UNDELETE);
-			ElexisEventDispatcher.getInstance().fire(
-				new ElexisEvent(this, getClass(), ElexisEvent.EVENT_CREATE));
+			ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_CREATE));
 			return true;
 		}
 		return false;
@@ -1977,8 +1948,8 @@ public abstract class PersistentObject implements IPersistentObject {
 		try {
 			pst.setLong(fields.length + 1, System.currentTimeMillis());
 			pst.executeUpdate();
-			ElexisEventDispatcher.getInstance().fire(
-				new ElexisEvent(this, this.getClass(), ElexisEvent.EVENT_UPDATE));
+			ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(this, this.getClass(), ElexisEvent.EVENT_UPDATE));
 			return true;
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
@@ -1987,9 +1958,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			for (int i = 0; i < fields.length; i++) {
 				sb.append(fields[i]).append("=").append(values[i]).append("\n");
 			}
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					sb.toString(), ex, ElexisStatus.LOG_ERRORS);
+			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID,
+				ElexisStatus.CODE_NONE, sb.toString(), ex, ElexisStatus.LOG_ERRORS);
 			// DONT Throw an Exception. The API doc states: return false on
 			// errors!!
 			// throw new PersistenceException(status);
@@ -2062,8 +2032,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.append(" FROM ").append(getTableName()).append(" WHERE ID=").append(getWrappedId());
 		
 		Stm stm = getConnection().getStatement();
-		ResultSet rs = executeSqlQuery(sql.toString(), stm);
-		try {
+		try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
 			if ((rs != null) && rs.next()) {
 				for (int i = 0; i < values.length; i++) {
 					if (values[i] == null) {
@@ -2075,19 +2044,13 @@ public abstract class PersistentObject implements IPersistentObject {
 						cache.put(getKey(fields[i]), values[i], getCacheTime());
 					}
 				}
-				
 			}
 			return true;
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return false;
 		} finally {
-			try {
-				rs.close();
-				getConnection().releaseStatement(stm);
-			} catch (SQLException e) {
-				// ignore
-			}
+			getConnection().releaseStatement(stm);
 		}
 	}
 	
@@ -2177,9 +2140,8 @@ public abstract class PersistentObject implements IPersistentObject {
 				pst.setString(num, value);
 			}
 		} catch (Exception ex) {
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					"Fehler beim String encoder", ex, ElexisStatus.LOG_ERRORS);
+			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID,
+				ElexisStatus.CODE_NONE, "Fehler beim String encoder", ex, ElexisStatus.LOG_ERRORS);
 			// Dont throw an exeption. returning the original value is an
 			// acceptable way if encoding
 			// is not possible. Frequently it's just
@@ -2223,7 +2185,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true wenn this und other vom selben typ sind und alle interessierenden Felder genäss
 	 *         mode übereinstimmen.
 	 */
-	public boolean isMatching(final IPersistentObject other, final int mode, final String... fields){
+	public boolean isMatching(final IPersistentObject other, final int mode,
+		final String... fields){
 		if (getClass().equals(other.getClass())) {
 			String[] others = new String[fields.length];
 			other.get(fields, others);
@@ -2412,7 +2375,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		try {
 			return Integer.parseInt(((String) in).trim()); // We're sure in is a
 															// String at this
-			// point
+															// point
 		} catch (NumberFormatException ex) {
 			ExHandler.handle(ex);
 			return 0;
@@ -2672,8 +2635,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 */
 	protected String getExportUIDValue(){
-		throw new IllegalArgumentException("No export uid value for " + getClass().getSimpleName()
-			+ " available");
+		throw new IllegalArgumentException(
+			"No export uid value for " + getClass().getSimpleName() + " available");
 	}
 	
 	/**
@@ -2801,7 +2764,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		return true;
 	}
 	
-	public static boolean tableExistsSelect(String tableName) {
+	public static boolean tableExistsSelect(String tableName){
 		try {
 			getConnection().exec("SELECT 1 FROM " + tableName);
 			return true;
@@ -2899,11 +2862,11 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	public void addChangeListener(IChangeListener listener, String fieldToObserve){
-		
+	
 	}
 	
 	public void removeChangeListener(IChangeListener listener, String fieldObserved){
-		
+	
 	}
 	
 	/**

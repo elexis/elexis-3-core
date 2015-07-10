@@ -309,8 +309,10 @@ public class Rechnung extends PersistentObject {
 		if (ret.getOffenerBetrag().isZero()) {
 			ret.setStatus(RnStatus.BEZAHLT);
 		} else {
-			new AccountTransaction(f.getPatient(), ret, summe.negate(), Datum, "Rn " + nr
-				+ " erstellt.");
+			if(f!=null) {
+				new AccountTransaction(f.getPatient(), ret, summe.negate(), Datum, "Rn " + nr
+					+ " erstellt.");
+			}
 		}
 		
 		return result.add(Result.SEVERITY.OK, 0, "OK", ret, false);

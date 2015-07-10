@@ -204,7 +204,7 @@ public class XML2Database {
 				tableNode.getAttributes().getNamedItem(CLASS_ATTRIBUTE).getNodeValue();
 			Class javaClass = Class.forName(className);
 			String uidValue = null;
-			String uidVersion = null;
+			String uidVersion = "";
 			
 			// Read fields
 			List<DataField> fieldList = new Vector<DataField>();

@@ -2,6 +2,7 @@ package ch.elexis.hl7.v2x;
 
 import java.text.MessageFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -212,7 +213,7 @@ public class HL7ReaderV251 extends HL7Reader {
 	private void setPatient(PID pid, String orderNumber, final boolean createIfNotFound)
 		throws ParseException, HL7Exception{
 		Query<Patient> qbe = new Query<Patient>(Patient.class);
-		List<Patient> list = null;
+		List<Patient> list = new ArrayList<Patient>();
 		String lastName = ""; //$NON-NLS-1$
 		String firstName = ""; //$NON-NLS-1$
 		String birthDate = ""; //$NON-NLS-1$

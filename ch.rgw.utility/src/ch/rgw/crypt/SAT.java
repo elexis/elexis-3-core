@@ -97,7 +97,7 @@ public class SAT {
 		Result<byte[]> dec = crypt.decrypt(encrypted);
 		if ((dec == null) || (!dec.isOK())) {
 			throw new CryptologistException("Decryption failed: " + dec == null ? "dec is null"
-					: dec.toString(), CryptologistException.ERR_DECRYPTION_FAILURE);
+					: String.valueOf(dec), CryptologistException.ERR_DECRYPTION_FAILURE);
 		}
 		byte[] decrypted = dec.get();
 		SoapConverter sc = new SoapConverter();

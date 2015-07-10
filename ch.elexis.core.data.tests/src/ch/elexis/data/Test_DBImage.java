@@ -14,15 +14,16 @@ public class Test_DBImage extends AbstractPersistentObjectTest {
 		JdbcLink link = initDB();
 		if (link == null)
 			fail("initDB should not return null");
-		
+			
 		try {
 			DBImage img = new DBImage("", "test");
 			// TODO: does not work under Elexis 3.0
 			// fail("Expected Exception not thrown!");
 		} catch (PersistenceException pe) {
-			
+		
 		}
-		link.disconnect();
+		if (link != null)
+			link.disconnect();
 	}
 	
 }

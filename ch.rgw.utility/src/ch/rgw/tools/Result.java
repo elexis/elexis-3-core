@@ -73,15 +73,17 @@ public class Result<T> {
 	 * @return
 	 */
 	public T get(){
-		msg result = list.size() == 0 ? null : list.get(0);
-		if (list.size() > 1) {
+		if(list.size()==0) return null;
+		
+		msg result = list.get(0);
+		if(list.size()>1) {
 			for (msg m : list) {
-				if (m.severity.ordinal() > result.severity.ordinal()) {
+				if (m.severity.ordinal() > list.get(0).severity.ordinal()) {
 					result = m;
 				}
 			}
 		}
-		return result == null ? null : result.result;
+		return result.result;
 	}
 	
 	/**

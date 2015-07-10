@@ -75,15 +75,14 @@ public class MultiplikatorEditor extends Composite {
 	public void reload(final String typeName){
 		this.typeName = typeName;
 		ArrayList<String[]> daten = new ArrayList<String[]>();
-		ResultSet res = stm.query("SELECT * FROM VK_PREISE WHERE TYP=" + JdbcLink.wrap(typeName)); //$NON-NLS-1$
-		try {
+		try (ResultSet res =
+			stm.query("SELECT * FROM VK_PREISE WHERE TYP=" + JdbcLink.wrap(typeName))) {
 			while ((res != null) && (res.next() == true)) {
 				String[] row = new String[2];
 				row[0] = res.getString("DATUM_VON"); //$NON-NLS-1$
 				row[1] = res.getString("MULTIPLIKATOR"); //$NON-NLS-1$
 				daten.add(row);
 			}
-			res.close();
 			
 			Collections.sort(daten, new Comparator() {
 				

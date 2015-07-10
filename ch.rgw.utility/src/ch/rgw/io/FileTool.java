@@ -43,7 +43,7 @@ import ch.rgw.tools.StringTool;
 
 /**
  * @author Gerry
- * 
+ * 		
  *         TODO To change the template for this generated type comment go to Window - Preferences -
  *         Java - Code Style - Code Templates
  */
@@ -144,8 +144,8 @@ public class FileTool {
 			}
 		} else {
 			if (!dir.mkdirs()) {
-				throw new IllegalArgumentException("Verzeichnis <" + path
-					+ "> kann nicht erstellt werden!", null);
+				throw new IllegalArgumentException(
+					"Verzeichnis <" + path + "> kann nicht erstellt werden!", null);
 			}
 		}
 	}
@@ -209,27 +209,17 @@ public class FileTool {
 	 * Liest gezippte Datei
 	 */
 	public static byte[] readZippedFile(final String filenamePath) throws IOException{
-		GZIPInputStream in = null;
-		ByteArrayOutputStream out = null;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] daten = new byte[1024];
-		try {
+		try (GZIPInputStream in = new GZIPInputStream(new FileInputStream(filenamePath))) {
 			// Original-Datei mit Stream verbinden
-			in = new GZIPInputStream(new FileInputStream(filenamePath));
-			out = new ByteArrayOutputStream();
 			// Alle Daten aus der Original-Datei einlesen und
 			// in die Ausgabe schreiben
 			int read = 0;
 			while ((read = in.read(daten, 0, 1024)) != -1)
 				out.write(daten, 0, read);
-			in.close();
-			out.close();
 		} finally {
-			if (in != null) {
-				in.close();
-			}
-			if (out != null) {
-				out.close();
-			}
+			out.close();
 		}
 		return out.toByteArray();
 	}
@@ -287,16 +277,16 @@ public class FileTool {
 	 * @param dest
 	 *            Zieldatei
 	 * @param if_exists
-	 * <br>
-	 *            <li>REPLACE_IF_EXISTS</li> <li>BACKUP_IF_EXISTS</li> <li>
-	 *            FAIL_IF_EXISTS</li>
+	 *            <br>
+	 *            <li>REPLACE_IF_EXISTS</li>
+	 *            <li>BACKUP_IF_EXISTS</li>
+	 *            <li>FAIL_IF_EXISTS</li>
 	 * @return
 	 */
 	public static boolean copyFile(File src, File dest, int if_exists){
 		if (src.canRead() == false) {
-			log.log(
-				MessageFormat.format(
-					Messages.getString("FileTool.cantReadSource"), src.getAbsolutePath()), Log.ERRORS); //$NON-NLS-1$
+			log.log(MessageFormat.format(Messages.getString("FileTool.cantReadSource"), //$NON-NLS-1$
+				src.getAbsolutePath()), Log.ERRORS);
 			return false;
 		}
 		if (dest.exists()) {
@@ -307,9 +297,8 @@ public class FileTool {
 			switch (if_exists) {
 			case REPLACE_IF_EXISTS:
 				if (dest.delete() == false) {
-					log.log(
-						MessageFormat.format(
-							Messages.getString("FileTool.cantDeleteTarget"), dest.getAbsolutePath()), Log.ERRORS); //$NON-NLS-1$
+					log.log(MessageFormat.format(Messages.getString("FileTool.cantDeleteTarget"), //$NON-NLS-1$
+						dest.getAbsolutePath()), Log.ERRORS);
 					return false;
 				}
 				break;
@@ -317,29 +306,25 @@ public class FileTool {
 				File bak = new File(pname + ".bak");
 				if (bak.exists() == true) {
 					if (bak.delete() == false) {
-						log.log(
-							MessageFormat.format(
-								Messages.getString("FileTool.backupExists"), bak.getAbsolutePath()), Log.ERRORS); //$NON-NLS-1$
+						log.log(MessageFormat.format(Messages.getString("FileTool.backupExists"), //$NON-NLS-1$
+							bak.getAbsolutePath()), Log.ERRORS);
 						return false;
 					}
 				}
 				if (dest.renameTo(bak) == false) {
-					log.log(
-						MessageFormat.format(
-							Messages.getString("FileTool.cantRenameTarget"), bak.getAbsolutePath()), Log.ERRORS); //$NON-NLS-1$
+					log.log(MessageFormat.format(Messages.getString("FileTool.cantRenameTarget"), //$NON-NLS-1$
+						bak.getAbsolutePath()), Log.ERRORS);
 					return false;
 				}
 				dest = new File(pname);
 				break;
 			case FAIL_IF_EXISTS:
-				log.log(
-					MessageFormat.format(
-						Messages.getString("FileTool.targetExists"), dest.getAbsolutePath()), Log.ERRORS); //$NON-NLS-1$
+				log.log(MessageFormat.format(Messages.getString("FileTool.targetExists"), //$NON-NLS-1$
+					dest.getAbsolutePath()), Log.ERRORS);
 				return false;
 			default:
-				log.log(
-					MessageFormat.format(
-						Messages.getString("FileTool.badCopyMode"), src.getAbsolutePath(), if_exists), Log.ERRORS); //$NON-NLS-1$
+				log.log(MessageFormat.format(Messages.getString("FileTool.badCopyMode"), //$NON-NLS-1$
+					src.getAbsolutePath(), if_exists), Log.ERRORS);
 				return false;
 			}
 		}
@@ -349,15 +334,13 @@ public class FileTool {
 		BufferedInputStream bis = null;
 		try {
 			if (dest.createNewFile() == false) {
-				log.log(
-					MessageFormat.format(
-						Messages.getString("FileTool.couldnotcreate"), dest.getAbsolutePath()), Log.ERRORS); //$NON-NLS-1$
+				log.log(MessageFormat.format(Messages.getString("FileTool.couldnotcreate"), //$NON-NLS-1$
+					dest.getAbsolutePath()), Log.ERRORS);
 				return false;
 			}
 			if (dest.canWrite() == false) {
-				log.log(
-					MessageFormat.format(
-						Messages.getString("FileTool.cantWriteTarget"), dest.getAbsolutePath()), Log.ERRORS); //$NON-NLS-1$
+				log.log(MessageFormat.format(Messages.getString("FileTool.cantWriteTarget"), //$NON-NLS-1$
+					dest.getAbsolutePath()), Log.ERRORS);
 				return false;
 			}
 			
@@ -373,9 +356,8 @@ public class FileTool {
 			}
 		} catch (IOException ex) {
 			ExHandler.handle(ex);
-			log.log(
-				MessageFormat.format(
-					Messages.getString("FileTool.cantCopy"), dest.getAbsolutePath(), ex.getMessage()), Log.ERRORS); //$NON-NLS-1$
+			log.log(MessageFormat.format(Messages.getString("FileTool.cantCopy"), //$NON-NLS-1$
+				dest.getAbsolutePath(), ex.getMessage()), Log.ERRORS);
 			return false;
 		} finally {
 			try {
@@ -634,7 +616,7 @@ public class FileTool {
 				
 				// Check entry file
 				String entryFilename = getFilename(entryFilenamePath);
-				if (entryFilename != null & entryFilename.length() > 0) {
+				if (entryFilename != null && entryFilename.length() > 0) {
 					File outputFile =
 						new File(baseZipDirName + DIRECTORY_SEPARATOR + entryFilenamePath);
 					if (!outputFile.exists()) {
@@ -740,7 +722,7 @@ public class FileTool {
 				
 				// Check entry file
 				String entryFilename = getFilename(entryFilenamePath);
-				if (entryFilename != null & entryFilename.length() > 0) {
+				if (entryFilename != null && entryFilename.length() > 0) {
 					File outputFile =
 						new File(baseJarDirName + DIRECTORY_SEPARATOR + entryFilenamePath);
 					if (!outputFile.exists()) {

@@ -100,9 +100,11 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			case INT:
 				ac = new IntegerField(panel.getFieldParent(), 0, field.getLabel());
 			}
-			ac.setData(ActiveControl.PROP_FIELDNAME, field.getFieldname());
-			ac.setData(ActiveControl.PROP_HASHNAME, field.getHashname());
-			panel.addField(ac);
+			if(ac!=null) {
+				ac.setData(ActiveControl.PROP_FIELDNAME, field.getFieldname());
+				ac.setData(ActiveControl.PROP_HASHNAME, field.getHashname());
+				panel.addField(ac);
+			}
 		}
 		/*
 		 * if (actions != null) { panel.addActions(actions); }

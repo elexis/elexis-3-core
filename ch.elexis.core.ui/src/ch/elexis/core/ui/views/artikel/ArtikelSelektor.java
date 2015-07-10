@@ -115,13 +115,14 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
 				if ((sel == null) || sel.isEmpty()) {
 					event.doit = false;
-				}
-				Object s = sel.getFirstElement();
-				if (s instanceof PersistentObject) {
-					PersistentObject po = (PersistentObject) s;
-					event.doit = po.isDragOK();
 				} else {
-					event.doit = false;
+					Object s = sel.getFirstElement();
+					if (s instanceof PersistentObject) {
+						PersistentObject po = (PersistentObject) s;
+						event.doit = po.isDragOK();
+					} else {
+						event.doit = false;
+					}
 				}
 			}
 			

@@ -123,7 +123,7 @@ public class SqlSettings extends Settings {
 				}
 				sql.append(") VALUES (").append(JdbcLink.wrap(a)).append(",")
 					.append(JdbcLink.wrap(v));
-				if (constraint != null) {
+				if (cn != null && cn.length > 1) {
 					sql.append(",").append(cn[1]);
 				}
 				sql.append(")");

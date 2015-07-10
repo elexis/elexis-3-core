@@ -16,6 +16,7 @@ import org.quartz.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.scheduler.AbstractElexisSchedulerJob;
 
 public class ElexisSchedulerExtensionPoint {
@@ -50,8 +51,8 @@ public class ElexisSchedulerExtensionPoint {
 		
 	}
 	
-	private static void addJob(AbstractElexisSchedulerJob aesj, Scheduler scheduler){
-		if (aesj == null || aesj.getJob() == null || aesj.getJobTriggers() == null
+	private static void addJob(@NonNull AbstractElexisSchedulerJob aesj, Scheduler scheduler){
+		if (aesj.getJob() == null || aesj.getJobTriggers() == null
 			|| scheduler == null) {
 			log.error("Invalid state in class " + aesj.getClass(), new IllegalArgumentException(
 				"A required value is null"));

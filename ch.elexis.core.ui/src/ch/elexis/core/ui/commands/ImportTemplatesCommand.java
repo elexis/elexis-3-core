@@ -68,10 +68,9 @@ public class ImportTemplatesCommand extends AbstractHandler {
 					File file = new File(filterPath + filename);
 					if (file.exists()) {
 						String name = filename.substring(0, filename.lastIndexOf('.'));
-						TextTemplate sysTemplate =
-							matchesRequiredSystemTemplate(ttView.getRequiredTextTemplates(), name,
-								mimeType);
-						
+						TextTemplate sysTemplate = matchesRequiredSystemTemplate(
+							ttView.getRequiredTextTemplates(), name, mimeType);
+							
 						// check existence of same template
 						List<Brief> equivalentTemplates =
 							findExistingEquivalentTemplates(sysTemplate != null, name, mimeType);
@@ -96,7 +95,8 @@ public class ImportTemplatesCommand extends AbstractHandler {
 						fis.read(contentToStore);
 						fis.close();
 						
-						if (replaceExisting) {
+						if (replaceExisting && equivalentTemplates != null
+							&& equivalentTemplates.size() > 0) {
 							// only switch template content
 							equivalentTemplates.get(0).save(contentToStore, mimeType);
 						} else {
@@ -105,8 +105,8 @@ public class ImportTemplatesCommand extends AbstractHandler {
 							template.save(contentToStore, mimeType);
 							// add general form tempalte
 							if (sysTemplate == null) {
-								template.setAdressat(ElexisEventDispatcher.getSelectedMandator()
-									.getId());
+								template.setAdressat(
+									ElexisEventDispatcher.getSelectedMandator().getId());
 								TextTemplate tt = new TextTemplate(name, "", mimeType);
 								tt.addFormTemplateReference(template);
 								ttView.update(tt);
@@ -130,8 +130,8 @@ public class ImportTemplatesCommand extends AbstractHandler {
 		for (TextTemplate sysTemplate : reqTextTemplates) {
 			// same name and mimetype as required text template
 			if (sysTemplate.getName().equals(name) && sysTemplate.getMimeType().equals(mimeType)) {
-				if (MessageDialog.openQuestion(UiDesk.getTopShell(), "Systemvorlage", "Soll "
-					+ name + " als Systemvorlage importiert werden?")) {
+				if (MessageDialog.openQuestion(UiDesk.getTopShell(), "Systemvorlage",
+					"Soll " + name + " als Systemvorlage importiert werden?")) {
 					return sysTemplate;
 				}
 				return null;
@@ -149,8 +149,8 @@ public class ImportTemplatesCommand extends AbstractHandler {
 		
 		// treat as system template
 		if (isSysTemplate) {
-			qbe.addToken(Brief.FLD_DESTINATION_ID + " is NULL OR " + Brief.FLD_DESTINATION_ID
-				+ " = ''");
+			qbe.addToken(
+				Brief.FLD_DESTINATION_ID + " is NULL OR " + Brief.FLD_DESTINATION_ID + " = ''");
 		} else {
 			// treat as form template
 			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, mandantId);

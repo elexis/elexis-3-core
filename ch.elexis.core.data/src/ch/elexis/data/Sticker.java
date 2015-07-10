@@ -133,16 +133,15 @@ public class Sticker extends PersistentObject implements ISticker {
 			queryClasses = getConnection().prepareStatement(queryClassStickerString);
 		}
 		
-		try {
+		try  {
 			queryClasses.setString(1, getId());
 			ResultSet res = queryClasses.executeQuery();
-			while (res != null && res.next()) {
+			while (res.next()) {
 				ret.add(res.getString(1));
 			}
 			res.close();
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
-			return ret;
 		}
 		return ret;
 		
@@ -171,7 +170,7 @@ public class Sticker extends PersistentObject implements ISticker {
 		try {
 			queryStickers.setString(1, clazz.getName());
 			ResultSet res = queryStickers.executeQuery();
-			while (res != null && res.next()) {
+			while (res.next()) {
 				Sticker et = Sticker.load(res.getString(1));
 				if (et != null && et.exists()) {
 					uniqueRet.add(Sticker.load(res.getString(1)));

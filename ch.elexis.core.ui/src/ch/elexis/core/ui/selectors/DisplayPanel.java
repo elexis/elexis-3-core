@@ -34,7 +34,7 @@ import ch.rgw.tools.LimitSizeStack;
  * A Panel to display ActiveControls as views to fields of a single PersistentObject
  * 
  * @author gerry
- * 
+ * 		
  */
 public class DisplayPanel extends Composite implements ActiveControlListener {
 	private boolean bCeaseFire, bExclusive, bAutosave;
@@ -105,16 +105,18 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 			case DATE:
 				ac = new DateField(cFields, 0, field.getLabel());
 				break;
-			
+				
 			case COMBO:
 				ac = new ComboField(cFields, 0, field.getLabel(), (String[]) field.getExtension());
 				break;
 			case INT:
 				ac = new IntegerField(cFields, 0, field.getLabel());
 			}
-			ac.setData(ActiveControl.PROP_FIELDNAME, field.getFieldname());
-			ac.setData(ActiveControl.PROP_HASHNAME, field.getHashname());
-			addField(ac);
+			if (ac != null) {
+				ac.setData(ActiveControl.PROP_FIELDNAME, field.getFieldname());
+				ac.setData(ActiveControl.PROP_HASHNAME, field.getHashname());
+				addField(ac);
+			}
 			pack();
 		}
 	}
@@ -182,7 +184,7 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		if (!bCeaseFire) {
 			bCeaseFire = true;
 			if (bAutosave) {
-				if (actObject != null) {
+				if (actObject != null && ac != null) {
 					String field = ac.getProperty(ActiveControl.PROP_FIELDNAME);
 					actObject.set(field, ac.getText());
 				}

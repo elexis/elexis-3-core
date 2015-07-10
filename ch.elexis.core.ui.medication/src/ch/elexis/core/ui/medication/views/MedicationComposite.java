@@ -770,7 +770,7 @@ public class MedicationComposite extends Composite {
 		compositeMedicationDetail.setVisible(showDetailComposite);
 		compositeMedicationDetailLayoutData.exclude = !(showDetailComposite);
 		
-		if (showDetailComposite) {
+		if (showDetailComposite && presc!=null) {
 			boolean stopped = presc.get(Prescription.FLD_DATE_UNTIL).length() > 1;
 			if (stopped) {
 				stackLayout.topControl = compositeStopMedicationTextDetails;

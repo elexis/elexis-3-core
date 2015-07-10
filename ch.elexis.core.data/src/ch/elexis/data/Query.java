@@ -552,11 +552,8 @@ public class Query<T> {
 		if (ret == null) {
 			ret = new LinkedList<T>();
 		}
-		Stm stm = null;
-		try {
-			stm = PersistentObject.getConnection().getStatement();
-			
-			ResultSet res = stm.query(expr);
+		Stm stm = PersistentObject.getConnection().getStatement();
+		try (ResultSet res = stm.query(expr)) {
 			log.debug("Executed " + expr);
 			while ((res != null) && (res.next() == true)) {
 				final String id = res.getString(1);
@@ -587,7 +584,6 @@ public class Query<T> {
 				}
 				
 			}
-			res.close();
 			return ret;
 			
 		} catch (Exception ex) {

@@ -25,6 +25,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.rgw.tools.StringTool;
 
@@ -32,9 +34,11 @@ import ch.rgw.tools.StringTool;
  * Simplified Handler for execution of Commands
  * 
  * @author gerry
- * 
+ * 		
  */
 public class Handler {
+	protected static Logger log = LoggerFactory.getLogger(Handler.class);
+	
 	private static final String STR_MONITOR = "monitor"; //$NON-NLS-1$
 	private static final String STR_PARAM = "param"; //$NON-NLS-1$
 	private static HashMap<String, Object> paramMap = new HashMap<String, Object>();
@@ -134,7 +138,8 @@ public class Handler {
 	
 	private static Object execute(IViewSite origin, String commandID, Map<String, Object> params){
 		if (origin == null) {
-			// Hub.plugin.getWorkbench().getWorkbenchWindows();
+			log.error("origin is null");
+			return null;
 		}
 		IHandlerService handlerService = (IHandlerService) origin.getService(IHandlerService.class);
 		ICommandService cmdService = (ICommandService) origin.getService(ICommandService.class);
@@ -146,7 +151,7 @@ public class Handler {
 			ParameterizedCommand parmCommand =
 				new ParameterizedCommand(command, new Parameterization[] {
 					px
-				});
+			});
 			
 			return handlerService.executeCommand(parmCommand, null);
 			
