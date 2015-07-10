@@ -56,7 +56,7 @@ public class Role extends PersistentObject {
 	 * Configure the basic system role user
 	 */
 	public static void initBasicRoles(){
-		Role ur = Role.load(SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR);
+		Role ur = Role.load(SYSTEMROLE_LITERAL_USER);
 		ACE[] anwender = AccessControlDefaults.getAnwender();
 		Arrays.asList(anwender).forEach(ace -> ur.grantAccessRight(ace));
 		ACE[] alle = AccessControlDefaults.getAlle();
