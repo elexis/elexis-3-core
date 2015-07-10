@@ -245,11 +245,30 @@ public class UserManagementPreferencePage extends PreferencePage
 			}
 		});
 		
-		Label lblKontakt = new Label(grpSysAccess, SWT.NONE);
+		Composite sashComposite = new Composite(compositeEdit, SWT.NONE);
+		sashComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		sashComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		grpAccounting = new Group(sashComposite, SWT.NONE);
+		grpAccounting.setText("Verrechnung");
+		GridLayout gl_grpAccounting = new GridLayout(1, false);
+		gl_grpAccounting.marginHeight = 0;
+		grpAccounting.setLayout(gl_grpAccounting);
+		
+		Composite compositeContact = new Composite(grpAccounting, SWT.NONE);
+		GridLayout gl_compositeContact = new GridLayout(2, false);
+		gl_compositeContact.horizontalSpacing = 0;
+		gl_compositeContact.verticalSpacing = 0;
+		gl_compositeContact.marginWidth = 0;
+		gl_compositeContact.marginHeight = 0;
+		compositeContact.setLayout(gl_compositeContact);
+		compositeContact.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		
+		Label lblKontakt = new Label(compositeContact, SWT.NONE);
 		lblKontakt.setText("Kontakt");
 		
-		linkContact = new Link(grpSysAccess, SWT.NONE);
-		linkContact.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		linkContact = new Link(compositeContact, SWT.NONE);
+		linkContact.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		linkContact.setText("nicht gesetzt " + CHANGE_LINK);
 		linkContact.addSelectionListener(new SelectionAdapter() {
 			
@@ -269,16 +288,6 @@ public class UserManagementPreferencePage extends PreferencePage
 				}
 			}
 		});
-		
-		Composite sashComposite = new Composite(compositeEdit, SWT.NONE);
-		sashComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		sashComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		grpAccounting = new Group(sashComposite, SWT.NONE);
-		grpAccounting.setText("Verrechnung");
-		GridLayout gl_grpAccounting = new GridLayout(1, false);
-		gl_grpAccounting.marginHeight = 0;
-		grpAccounting.setLayout(gl_grpAccounting);
 		
 		btnIsExecutiveDoctor = new Button(grpAccounting, SWT.CHECK);
 		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
