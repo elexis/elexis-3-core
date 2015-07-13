@@ -30,4 +30,9 @@ public class FavoritenCTabItem extends CTabItem {
 			fc.update();
 	}
 	
+	@Override
+	public boolean isShowing(){
+		update();
+		return super.isShowing();
+	}
 }

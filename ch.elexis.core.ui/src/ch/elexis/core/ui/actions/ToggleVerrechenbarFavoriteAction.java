@@ -17,8 +17,6 @@ public class ToggleVerrechenbarFavoriteAction extends Action {
 	public void run(){
 		Favorite favorite = VerrechenbarFavorites.isFavorite(currentSelection);
 		VerrechenbarFavorites.setFavorite(currentSelection, favorite == null);
-		
-		// TODO update table in favoriten LeistungenView#95
 	}
 	
 	public void updateSelection(Object object){
