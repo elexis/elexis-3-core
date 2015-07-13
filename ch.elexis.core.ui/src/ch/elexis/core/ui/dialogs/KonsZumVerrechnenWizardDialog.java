@@ -216,8 +216,8 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 			mAmount = mi1.getMoney(false);
 		}
 		if (cbTimespan.getSelection()) {
-			ttFrom = getDate(timespanFrom);
-			ttTo = getDate(timespanTo);
+			ttFrom = getDate(timespanFrom, 0, 0, 0);
+			ttTo = getDate(timespanTo, 23, 59, 59);
 		}
 		if (cbAccountingSys.getSelection()) {
 			IStructuredSelection sel = (IStructuredSelection) cAccountingSys.getSelection();
@@ -230,15 +230,15 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
-	private TimeTool getDate(DateTime selDate){
+	private TimeTool getDate(DateTime selDate, int hour, int minute, int second){
 		Calendar cal = GregorianCalendar.getInstance();
 		cal.set(Calendar.DAY_OF_MONTH, selDate.getDay());
 		cal.set(Calendar.MONTH, selDate.getMonth());
 		cal.set(Calendar.YEAR, selDate.getYear());
 		
-		cal.set(Calendar.HOUR_OF_DAY, selDate.getHours());
-		cal.set(Calendar.MINUTE, selDate.getMinutes());
-		cal.set(Calendar.SECOND, selDate.getSeconds());
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		cal.set(Calendar.MINUTE, minute);
+		cal.set(Calendar.SECOND, second);
 		
 		TimeTool date = new TimeTool(cal.getTime());
 		
