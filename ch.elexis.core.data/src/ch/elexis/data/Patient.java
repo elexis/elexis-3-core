@@ -67,7 +67,7 @@ public class Patient extends Person {
 	public static final String FLD_PERS_ANAMNESE = "PersAnamnese";
 	public static final String FLD_SYS_ANAMNESE = "SysAnamnese";
 	public static final String FLD_FAM_ANAMNESE = "FamilienAnamnese";
-	public static final String FLD_EXTINFO_STAMMARZT = "Stammarzt";
+	public static final String FLD_EXTINFO_STAMMARZT = "Stammarzt_";
 	
 	public static final String[] DEFAULT_SORT = {
 		FLD_NAME, FLD_FIRSTNAME, FLD_DOB
@@ -654,12 +654,16 @@ public class Patient extends Person {
 		set(FLD_RISKS, risk);
 	}
 	
+	public void removeStammarzt(){
+		setExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT, "");
+	}
+	
 	public void setStammarzt(Kontakt stammarzt){
 		if (stammarzt == null)
 			return;
 		// we override the name to force PersistentObject#get(String) to revert
 		// to the method getStammarzt to fetch the entry
-		setInfoElement(FLD_EXTINFO_STAMMARZT + "_", stammarzt.getId());
+		setExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT, stammarzt.getId());
 	}
 	
 	/**
@@ -670,7 +674,7 @@ public class Patient extends Person {
 		// to the method getStammarzt to fetch the entry
 		// unfortunately lots of PersistentObject: field is not mapped Stammarzt
 		// will be thrown ..
-		return (getInfoElement(FLD_EXTINFO_STAMMARZT + "_") != null) ? Kontakt
-			.load((String) getInfoElement(FLD_EXTINFO_STAMMARZT + "_")) : null;
+		return (getExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT) != null) ? Kontakt
+			.load((String) getExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT)) : null;
 	}
 }

@@ -219,8 +219,10 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 			
 				public void displayContent(PersistentObject po, InputData ltf){
 					Patient p = (Patient) po;
-					String result =
-						(p.getStammarzt() != null) ? p.getStammarzt().getLabel(true) : "";
+					String result = "";
+					if (p.getStammarzt() != null && p.getStammarzt().exists()) {
+						result = p.getStammarzt().getLabel(true);
+					}
 					ltf.setText(result);
 				}
 				
@@ -229,10 +231,17 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 						new KontaktSelektor(getShell(), Kontakt.class,
 							Messages.Patientenblatt2_selectRegularPhysicianTitle,
 							Messages.Patientenblatt2_selectRegularPhysicianMessage, null);
+					ks.enableEmptyFieldButton();
 					if (ks.open() == Dialog.OK) {
-						Kontakt k = (Kontakt) ks.getSelection();
-						((Patient) po).setStammarzt(k);
-						ltf.setText(k.getLabel(true));
+						Object contactSel = ks.getSelection();
+						if (contactSel == null) {
+							((Patient) po).removeStammarzt();
+							ltf.setText("");
+						} else {
+							Kontakt k = (Kontakt) contactSel;
+							((Patient) po).setStammarzt(k);
+							ltf.setText(k.getLabel(true));
+						}
 					}
 				}
 			}));
