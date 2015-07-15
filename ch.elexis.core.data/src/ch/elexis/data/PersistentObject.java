@@ -1853,8 +1853,9 @@ public abstract class PersistentObject implements IPersistentObject {
 			if ((sel != null) && sel.equals(this)) {
 				ElexisEventDispatcher.clearSelection(this.getClass());
 			}
-			ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_DELETE));
+			ElexisEventDispatcher.getInstance().fire(
+				new ElexisEvent(this, getClass(), ElexisEvent.EVENT_DELETE));
+			cache.remove(getKey(FLD_DELETED));
 			return true;
 		}
 		return false;
