@@ -136,13 +136,29 @@
                style="push">
          </command>
          <command
+               commandId="ch.elexis.core.ui.command.templatePrintSettings"
+               icon="icon://IMG_PRINTER"
+               label="Druckeinstellungen"
+               style="push">
+         </command>
+         <command
                commandId="ch.elexis.core.ui.command.createMandantTemplate"
                icon="icon://IMG_COPY"
                label="Mandant Vorlage erstellen"
                style="push">
          </command>
+         <command
+               commandId="ch.elexis.core.ui.command.deleteTemplate"
+               icon="icon://IMG_DELETE"
+               label="Löschen"
+               style="push">
+         </command>
          <separator
                name="Separator1.textTemplateView"
+               visible="true">
+         </separator>
+         <separator
+               name="Separator2.textTemplateView"
                visible="true">
          </separator>
          <command
@@ -156,16 +172,6 @@
                commandId="ch.elexis.core.ui.command.exportTemplate"
                icon="icon://IMG_EXPORT"
                label="Exportieren"
-               style="push">
-         </command>
-         <separator
-               name="Separator2.textTemplateView"
-               visible="true">
-         </separator>
-         <command
-               commandId="ch.elexis.core.ui.command.deleteTemplate"
-               icon="icon://IMG_DELETE"
-               label="Löschen"
                style="push">
          </command>
       </menuContribution>
@@ -486,6 +492,11 @@
             defaultHandler="ch.elexis.core.ui.commands.CreateMandantTemplateCommand"
             id="ch.elexis.core.ui.command.createMandantTemplate"
             name="Personalisierte Vorlage">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.TemplatePrintSettingsCommand"
+            id="ch.elexis.core.ui.command.templatePrintSettings"
+            name="Druckeinstellungen">
       </command>
    </extension>
       <extension

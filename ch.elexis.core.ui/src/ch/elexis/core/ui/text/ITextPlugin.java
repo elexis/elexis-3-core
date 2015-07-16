@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.data.interfaces.text.ReplaceCallback;
+import ch.elexis.core.ui.views.textsystem.TextTemplateView;
 
 /**
  * Contract for embedding a text plugin Warning: Preliminary interface
@@ -272,4 +273,18 @@ public interface ITextPlugin extends IExecutableExtension {
 		public boolean saveAs();
 	}
 	
+	/**
+	 * Does load printer and tray preferences if they are defined (can be done in
+	 * {@link TextTemplateView}). Settings will be considered when
+	 * {@link ITextPlugin#print(String, String, boolean)} is called or
+	 * {@link ITextPlugin#createContainer(Composite, ICallback)} is executed (applied as default
+	 * printer/tray).
+	 * 
+	 * If settings are {@code null} defaults will be applied.
+	 * 
+	 * @param template
+	 *            name to identify the template
+	 * @since 3.1
+	 */
+	public void initTemplatePrintSettings(String template);
 }

@@ -82,6 +82,8 @@ public enum Images {
 	IMG_VIP_OVERLAY,
 	/** a printer */
 	IMG_PRINTER,
+	/** a big printer icon */
+	IMG_PRINTER_BIG,
 	/** a filter */
 	IMG_FILTER,
 	/** creating a new Object */

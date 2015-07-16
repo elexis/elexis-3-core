@@ -1,8 +1,10 @@
 package ch.elexis.core.ui.views.textsystem.model;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.text.MimeTypeUtil;
+import ch.elexis.core.ui.views.textsystem.TextTemplatePrintSettings;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -20,9 +22,13 @@ public class TextTemplate {
 	private String mimeTypePrintname;
 	private String mandantId;
 	private String templateId;
+	private String printer;
+	private String tray;
 	private boolean exists;
 	private boolean systemTemplate;
 	private boolean askForAddress;
+	
+	private String cfgTemplateBase;
 	
 	public TextTemplate(String name, String description, String mimeType){
 		this(name, description, mimeType, null, null, false, false, false);
@@ -42,6 +48,7 @@ public class TextTemplate {
 		this.askForAddress = askForAddress;
 		this.templateId = templateId;
 		setMimeType(mimeType);
+		updateConfigTemplateBase();
 	}
 	
 	private void addTemplateReference(Brief template, boolean systemTemplate){
@@ -63,6 +70,29 @@ public class TextTemplate {
 		} else {
 			setAskForAddress(true);
 		}
+		
+		// set printer and tray info
+		updateConfigTemplateBase();
+		printer =
+			CoreHub.localCfg.get(cfgTemplateBase
+				+ TextTemplatePrintSettings.TXT_TEMPLATE_PRINTER_SUFFIX, null);
+		tray =
+			CoreHub.localCfg.get(cfgTemplateBase
+				+ TextTemplatePrintSettings.TXT_TEMPLATE_TRAY_SUFFIX, null);
+	}
+	
+	public void removeTemplateReference(){
+		templateId = null;
+		exists = false;
+		removePrintSettings();
+	}
+	
+	private void removePrintSettings(){
+		CoreHub.localCfg.remove(cfgTemplateBase
+			+ TextTemplatePrintSettings.TXT_TEMPLATE_PRINTER_SUFFIX);
+		CoreHub.localCfg.remove(cfgTemplateBase
+			+ TextTemplatePrintSettings.TXT_TEMPLATE_TRAY_SUFFIX);
+		CoreHub.localCfg.flush();
 	}
 	
 	public void addFormTemplateReference(Brief template){
@@ -112,19 +142,25 @@ public class TextTemplate {
 	}
 	
 	public void setMandant(String mandantId){
-		if (mandantId != null && mandantId.isEmpty()) {
-			mandantId = null;
+		if (mandantId == null) {
+			mandantId = "";
 		}
 		this.mandantId = mandantId;
 		updateTemplateReference(UPDATE_TYPE.MANDANT);
+		// update printConfigBase if for new mandant
+		updateConfigTemplateBase();
 	}
 	
 	public void setMandant(Mandant mandant){
-		setMandant(mandant.getId());
+		if (mandant == null) {
+			setMandant("");
+		} else {
+			setMandant(mandant.getId());
+		}
 	}
 	
 	public Mandant getMandant(){
-		return mandantId == null ? null : Mandant.load(mandantId);
+		return mandantId == "" ? null : Mandant.load(mandantId);
 	}
 	
 	public String getMandantLabel(){
@@ -145,6 +181,32 @@ public class TextTemplate {
 	
 	public void setTemplateId(String templateId){
 		this.templateId = templateId;
+	}
+	
+	public String getPrinter(){
+		return printer;
+	}
+	
+	public void setPrinter(String printer){
+		this.printer = printer;
+		CoreHub.localCfg.set(cfgTemplateBase
+			+ TextTemplatePrintSettings.TXT_TEMPLATE_PRINTER_SUFFIX, printer);
+		CoreHub.localCfg.flush();
+	}
+	
+	public String getTray(){
+		return tray;
+	}
+	
+	public void setTray(String tray){
+		this.tray = tray;
+		CoreHub.localCfg.set(cfgTemplateBase + TextTemplatePrintSettings.TXT_TEMPLATE_TRAY_SUFFIX,
+			tray);
+		CoreHub.localCfg.flush();
+	}
+	
+	public String getCfgTemplateBase(){
+		return cfgTemplateBase;
 	}
 	
 	public boolean exists(){
@@ -181,7 +243,7 @@ public class TextTemplate {
 				bt.setAdressat(mandantId);
 				break;
 			case ADDRESS:
-				DocumentSelectDialog.setDontAskForAddresseeForThisTemplate(bt, askForAddress);
+				DocumentSelectDialog.setDontAskForAddresseeForThisTemplate(bt, !askForAddress);
 				break;
 			case SYS_TEMPLATE:
 				String sysTemplate = systemTemplate ? Brief.SYS_TEMPLATE : "";
@@ -191,5 +253,30 @@ public class TextTemplate {
 				break;
 			}
 		}
+	}
+	
+	private void updateConfigTemplateBase(){
+		String type = MimeTypeUtil.getSimpleName(mimeType);
+		
+		// don't keep old print setting refs
+		if (printer != null) {
+			removePrintSettings();
+		}
+		
+		if (systemTemplate || mandantId == null || mandantId.isEmpty()) {
+			cfgTemplateBase =
+				TextTemplatePrintSettings.TXT_TEMPLATE_PREFIX_PUBLIC + type + "/" + name;
+		} else {
+			cfgTemplateBase =
+				TextTemplatePrintSettings.TXT_TEMPLATE_PREFIX_PRIVATE + mandantId + "/" + type
+					+ "/" + name;
+		}
+		
+		if (printer != null)
+			setPrinter(printer);
+		
+		if (tray != null)
+			setTray(tray);
+		
 	}
 }

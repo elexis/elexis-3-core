@@ -266,6 +266,7 @@ public class TextContainer {
 				final Brief ret =
 					new Brief(subject == null ? template.getBetreff() : subject, null,
 						CoreHub.actUser, adressat, kons, typ);
+				plugin.initTemplatePrintSettings(template.getBetreff());
 				
 				plugin.findOrReplace(MATCH_TEMPLATE, new ReplaceCallback() {
 					public Object replace(final String in){
@@ -1270,6 +1271,12 @@ public class TextContainer {
 			// TODO Auto-generated method stub
 			
 		}
+		
+		@Override
+		public void initTemplatePrintSettings(String template){
+			// TODO Auto-generated method stub
+		}
+		
 	}
 	
 }

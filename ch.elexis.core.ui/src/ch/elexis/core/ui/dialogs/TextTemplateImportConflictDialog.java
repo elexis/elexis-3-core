@@ -16,14 +16,16 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class TextTemplateImportConflictDialog extends TitleAreaDialog {
+	private String name;
 	private Button btnReplace, btnChangeName, btnSkip;
 	private Text txtNewName;
 	
 	private String newFilename;
 	private boolean replaceTemplate, changeTemplateName, skipTemplate;
 	
-	public TextTemplateImportConflictDialog(Shell parentShell){
+	public TextTemplateImportConflictDialog(Shell parentShell, String name){
 		super(parentShell);
+		this.name = name;
 	}
 	
 	@Override
@@ -31,7 +33,8 @@ public class TextTemplateImportConflictDialog extends TitleAreaDialog {
 		Composite area = new Composite(parent, SWT.NONE);
 		area.setLayout(new GridLayout(1, false));
 		area.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		setMessage("Eine Vorlage mit dem selben Namen besteht bereits. Wie soll vorgegangen werden?");
+		setMessage("Eine Vorlage mit dem Namen '" + name
+			+ "' besteht bereits. Wie soll vorgegangen werden?");
 		setTitle("Vorlage existiert bereits");
 		
 		btnReplace = new Button(area, SWT.RADIO);

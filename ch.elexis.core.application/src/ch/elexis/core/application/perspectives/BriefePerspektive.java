@@ -21,6 +21,7 @@ import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.views.BriefAuswahl;
 import ch.elexis.core.ui.views.KonsDetailView;
 import ch.elexis.core.ui.views.TextView;
+import ch.elexis.core.ui.views.textsystem.TextTemplateView;
 
 public class BriefePerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.BriefePerspektive"; //$NON-NLS-1$
@@ -33,6 +34,7 @@ public class BriefePerspektive implements IPerspectiveFactory {
 		IFolderLayout main = layout.createFolder("Haupt.Folder", SWT.RIGHT, 0.7f, editorArea); //$NON-NLS-1$
 		left.addView(BriefAuswahl.ID);
 		main.addView(TextView.ID);
+		main.addView(TextTemplateView.ID);
 		// layout.addFastView(BriefErstellen.ID);
 		layout.addFastView(UiResourceConstants.PatientDetailView2_ID);
 		layout.addFastView(KonsDetailView.ID);

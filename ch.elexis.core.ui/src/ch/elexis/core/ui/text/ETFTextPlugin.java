@@ -204,4 +204,10 @@ public class ETFTextPlugin implements ITextPlugin {
 		
 	}
 	
+	@Override
+	public void initTemplatePrintSettings(String template){
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

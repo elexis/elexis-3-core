@@ -10,8 +10,13 @@ public class MimeTypeUtil {
 	public static final String MIME_TYPE_MSWORD = "docx";
 	public static final String MIME_TYPE_TEMPLATOR = "text/xml";
 	
+	public static final String SIMPLE_NAME_MSWORD = "MSWord";
+	public static final String SIMPLE_NAME_OPENOFFICE = "OpenOffice";
+	public static final String SIMPLE_NAME_TEMPLATOR = "Templator";
+	
 	private static final Map<String, String> mimeNameMap;
 	private static final Map<String, String> mimeExtensionsMap;
+	private static final Map<String, String> mimeSimpleNameMap;
 	
 	static {
 		// init mimeType-human readable name map
@@ -27,6 +32,13 @@ public class MimeTypeUtil {
 		mimeExtensionsMap.put(MIME_TYPE_MSWORD, "*.docx");
 		mimeExtensionsMap.put(MIME_TYPE_OPENOFFICE, "*.odt");
 		mimeExtensionsMap.put(MIME_TYPE_TEMPLATOR, "*.xml");
+		
+		// init mimeType-SimpleName map
+		mimeSimpleNameMap = new HashMap<String, String>();
+		mimeSimpleNameMap.put(MIME_TYPE_MSWORD, SIMPLE_NAME_MSWORD);
+		mimeSimpleNameMap.put(MIME_TYPE_MSWORD_97_2003, SIMPLE_NAME_MSWORD);
+		mimeSimpleNameMap.put(MIME_TYPE_OPENOFFICE, SIMPLE_NAME_OPENOFFICE);
+		mimeSimpleNameMap.put(MIME_TYPE_TEMPLATOR, SIMPLE_NAME_TEMPLATOR);
 	}
 	
 	public static String getPrettyPrintName(String mimeType){
@@ -43,5 +55,13 @@ public class MimeTypeUtil {
 			return "*.*";
 		}
 		return extension;
+	}
+	
+	public static String getSimpleName(String mimeType){
+		String simpleName = mimeSimpleNameMap.get(mimeType);
+		if (simpleName == null || simpleName.isEmpty()) {
+			return "unbekannt";
+		}
+		return simpleName;
 	}
 }

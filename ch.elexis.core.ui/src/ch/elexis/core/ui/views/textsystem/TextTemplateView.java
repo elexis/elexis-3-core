@@ -219,11 +219,13 @@ public class TextTemplateView extends ViewPart {
 	 * @param viewer
 	 */
 	private void createColumns(final Composite parent){
-		String[] titles = {
-			"", "Name der Vorlage", "Typ", "Mandant", "Adressabfrage", "Beschreibung"
-		};
+		String[] titles =
+			{
+				"", "Name der Vorlage", "Typ", "Mandant", "Adressabfrage", "Drucker/Schacht",
+				"Beschreibung"
+			};
 		int[] bounds = {
-			30, 200, 170, 70, 80, 700
+			30, 200, 170, 80, 90, 300, 600
 		};
 		
 		// template exists or missing
@@ -341,8 +343,35 @@ public class TextTemplateView extends ViewPart {
 		});
 		col.setEditingSupport(new AddressRequiredEditingSupport(tableViewer));
 		
-		// description
+		// printer
 		col = createTableViewerColumn(titles[5], bounds[5], 5);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				if (element instanceof TextTemplate) {
+					TextTemplate template = (TextTemplate) element;
+					String label = "";
+					String printer = template.getPrinter();
+					String tray = template.getTray();
+					if (printer != null) {
+						label += printer;
+					}
+					if (tray != null) {
+						label += "/ " + tray;
+					}
+					return label;
+				}
+				return super.getText(element);
+			}
+			
+			@Override
+			public Color getForeground(Object element){
+				return getForegroundColor(element);
+			}
+		});
+		
+		// description
+		col = createTableViewerColumn(titles[6], bounds[6], 6);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -553,7 +582,7 @@ public class TextTemplateView extends ViewPart {
 		templates = txtTemplates;
 		if (tableViewer != null) {
 			tableViewer.setInput(templates);
-			tableViewer.refresh();
+			tableViewer.refresh(true);
 		}
 	}
 }
