@@ -25,6 +25,7 @@ public class DeleteTemplateCommand extends AbstractHandler {
 			if (firstElement != null && firstElement instanceof TextTemplate) {
 				TextTemplate textTemplate = (TextTemplate) firstElement;
 				Brief template = textTemplate.getTemplate();
+				textTemplate.removeTemplateReference();
 				
 				if (template != null) {
 					template.delete();

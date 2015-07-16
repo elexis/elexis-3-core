@@ -23,6 +23,8 @@ public class Messages extends NLS {
 	public static String FallCopyCommand_RelatedConsultations;
 	public static String FallCopyCommand_TransferConsultations;
 	public static String FallCopyCommand_AttentionTransferConsultations;
+	public static String LoadTemplateCommand_Error;
+	public static String LoadTemplateCommand_NoTextTemplate;
 	
 	static {
 		// load message values from bundle file

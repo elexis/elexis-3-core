@@ -77,7 +77,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 						boolean replaceExisting = false;
 						if (equivalentTemplates != null && !equivalentTemplates.isEmpty()) {
 							TextTemplateImportConflictDialog ttiConflictDialog =
-								new TextTemplateImportConflictDialog(UiDesk.getTopShell());
+								new TextTemplateImportConflictDialog(UiDesk.getTopShell(), name);
 							ttiConflictDialog.open();
 							
 							if (ttiConflictDialog.doSkipTemplate()) {
@@ -95,8 +95,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 						fis.read(contentToStore);
 						fis.close();
 						
-						if (replaceExisting && equivalentTemplates != null
-							&& equivalentTemplates.size() > 0) {
+						if (replaceExisting) {
 							// only switch template content
 							equivalentTemplates.get(0).save(contentToStore, mimeType);
 						} else {
@@ -105,14 +104,14 @@ public class ImportTemplatesCommand extends AbstractHandler {
 							template.save(contentToStore, mimeType);
 							// add general form tempalte
 							if (sysTemplate == null) {
-								template.setAdressat(
-									ElexisEventDispatcher.getSelectedMandator().getId());
+								template.setAdressat(mandant.getId());
 								TextTemplate tt = new TextTemplate(name, "", mimeType);
 								tt.addFormTemplateReference(template);
 								ttView.update(tt);
 							} else {
 								// add system template
 								sysTemplate.addSystemTemplateReference(template);
+								ttView.update(sysTemplate);
 							}
 						}
 					}
@@ -149,8 +148,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 		
 		// treat as system template
 		if (isSysTemplate) {
-			qbe.addToken(
-				Brief.FLD_DESTINATION_ID + " is NULL OR " + Brief.FLD_DESTINATION_ID + " = ''");
+			qbe.addToken(Brief.FLD_DESTINATION_ID + " is NULL");
 		} else {
 			// treat as form template
 			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, mandantId);

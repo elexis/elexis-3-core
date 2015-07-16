@@ -40,6 +40,11 @@ public class LoadTemplateCommand extends AbstractHandler {
 		
 		// show template in textview
 		try {
+			if (template == null) {
+				SWTHelper.alert(ch.elexis.core.ui.commands.Messages.LoadTemplateCommand_Error,
+					ch.elexis.core.ui.commands.Messages.LoadTemplateCommand_NoTextTemplate);
+				return null;
+			}
 			IWorkbenchPage activePage =
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			TextView textView = (TextView) activePage.showView(TextView.ID);
