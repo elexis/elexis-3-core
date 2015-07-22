@@ -179,15 +179,8 @@ public class MedicationComposite extends Composite {
 					(IStructuredSelection) medicationTableViewer.getSelection();
 				Prescription presc = (Prescription) is.getFirstElement();
 				
-				if (presc == null) {
-					if (selectedMedication.getValue() != null) {
-						medicationTableViewer.setSelection(new StructuredSelection(
-							selectedMedication.getValue()));
-					}
-					return;
-				}
 				// set last disposition information
-				IPersistentObject po = presc.getLastDisposed();
+				IPersistentObject po = (presc != null) ? presc.getLastDisposed() : null;
 				lastDisposalPO.setValue(po);
 				if (po != null) {
 					String label = "";
@@ -213,7 +206,8 @@ public class MedicationComposite extends Composite {
 				showMedicationDetailComposite(presc);
 				ElexisEventDispatcher.fireSelectionEvent(presc);
 				
-				signatureArray = Prescription.getSignatureAsStringArray(presc.getDosis());
+				signatureArray = Prescription
+					.getSignatureAsStringArray((presc != null) ? presc.getDosis() : null);
 				setValuesForTextSignatureArray(signatureArray);
 			}
 		});
