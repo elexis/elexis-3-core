@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.codec.DecoderException;
 
+import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.PasswordEncryptionService;
@@ -87,15 +88,29 @@ public class User extends PersistentObject {
 		List<Anwender> users = qbe.execute();
 		for (Anwender anwender : users) {
 			String username = anwender.get(Kontakt.FLD_NAME3);
+			if(username==null || username.length()==0) {
+				log.warn("Username for Anwender "+anwender.getLabel()+" not set. Skipping user creation.");
+				continue;
+			}
+			
 			String password = (String) anwender.getExtInfoStoredObjectByKey("UsrPwd");
+			boolean setActive=true;
+			if(password==null || password.length()==0) {
+				password = "pass";
+				log.warn("Password for Anwender "+anwender.getLabel()+" is empty, setting 'pass' and deactivating user.");
+				setActive = false;
+			}
+			
 			User u;
 			if (username.equals(USERNAME_ADMINISTRATOR)) {
 				u = User.load(USERNAME_ADMINISTRATOR);
-				u.setPassword(password);
 				u.setAssignedContact(anwender);
+				u.setPassword(password);
 			} else {
 				u = new User(anwender, username, password);
 			}
+			u.setActive(setActive);
+			
 			boolean isMandator = anwender.getBoolean(Anwender.FLD_IS_MANDATOR);
 			if (isMandator) {
 				u.setAssignedRole(Role.load(Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
@@ -183,8 +198,11 @@ public class User extends PersistentObject {
 		return null;
 	}
 	
-	/** Passwort setzen */
-	public void setPassword(final String pwd){
+	/**
+	 * set the password
+	 * @param pwd
+	 */
+	public void setPassword(@NonNull final String pwd){
 		try {
 			String salt = pes.generateSaltAsHexString();
 			String hashed_pw = pes.getEncryptedPasswordAsHexString(pwd, salt);
