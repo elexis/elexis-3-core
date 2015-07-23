@@ -74,4 +74,20 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="ch.elexis.core.ui.importer.div.native32"
+         arch="x86"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="ch.elexis.core.ui.importer.div.native64"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
 </feature>

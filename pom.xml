@@ -231,15 +231,17 @@
 		<module>ch.elexis.core.ui.eigenartikel</module>
 		<module>ch.elexis.core.ui.eigendiagnosen</module>
 		<module>ch.elexis.core.ui.contacts</module>
-		<module>ch.elexis.core.ui.feature</module>
 		<module>ch.elexis.core.ui.icons</module>
 		<module>ch.elexis.core.ui.laboratory</module>
 		<module>ch.elexis.core.ui.medication</module>
 		<module>ch.elexis.core.ui.p2</module>
 		<module>ch.elexis.core.ui.p2.feature</module>
 		<module>ch.elexis.core.ui.importer.div</module>
+		<module>ch.elexis.core.ui.importer.div.native32</module>
+		<module>ch.elexis.core.ui.importer.div.native64</module>
 		<module>ch.elexis.core.hl7.v2x</module>
 		<module>ch.rgw.utility</module>
+		<module>ch.elexis.core.ui.feature</module>
     <!-- now follow the unit tests in a more or less logical order -->
     <module>ch.rgw.utility.tests</module>
     <module>ch.elexis.core.data.tests</module>
@@ -251,7 +253,7 @@
 	</modules>
 	<properties>
 		<scm_url>git@github.com:elexis/elexis-3-core.git</scm_url>
-		<tycho-version>0.23.0</tycho-version>
+		<tycho-version>0.22.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-extras.version>${tycho-version}</tycho-extras.version>
 		<repo_name>elexis.3.core</repo_name>
