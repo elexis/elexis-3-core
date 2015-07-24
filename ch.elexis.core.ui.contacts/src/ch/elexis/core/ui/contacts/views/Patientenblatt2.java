@@ -275,6 +275,46 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 				}
 			}));
 		
+		fields.add(new InputData(Messages.Patientenblatt2_legalGuardian,
+			Patient.FLD_EXTINFO_LEGAL_GUARDIAN, new LabeledInputField.IContentProvider() {
+				@Override
+				public void displayContent(PersistentObject po, InputData ltf){
+					Patient p = (Patient) po;
+					String guardianLabel = "";
+					Kontakt legalGuardian = p.getLegalGuardian();
+					if (legalGuardian != null && legalGuardian.exists()) {
+						guardianLabel =
+							legalGuardian.get(Kontakt.FLD_NAME1) + " "
+								+ legalGuardian.get(Kontakt.FLD_NAME2);
+					}
+					ltf.setText(guardianLabel);
+				}
+				
+				@Override
+				public void reloadContent(PersistentObject po, InputData ltf){
+					KontaktSelektor ks =
+						new KontaktSelektor(getShell(), Kontakt.class,
+							Messages.Patientenblatt2_selectLegalGuardianTitle,
+							Messages.Patientenblatt2_selectLegalGuardianMessage, null);
+					ks.enableEmptyFieldButton();
+					if (ks.open() == Dialog.OK) {
+						String guardianLabel = "";
+						Object contactSel = ks.getSelection();
+						Kontakt legalGuardian = null;
+						
+						// get legal guardian if one is defined
+						if (contactSel != null) {
+							legalGuardian = (Kontakt) contactSel;
+							guardianLabel =
+								legalGuardian.get(Kontakt.FLD_NAME1) + " "
+									+ legalGuardian.get(Kontakt.FLD_NAME2);
+						}
+						((Patient) po).setLegalGuardian(legalGuardian);
+						ltf.setText(guardianLabel);
+					}
+				}
+			}));
+		
 		String[] userfields =
 			CoreHub.userCfg.get(CFG_EXTRAFIELDS, StringConstants.EMPTY)
 				.split(StringConstants.COMMA);

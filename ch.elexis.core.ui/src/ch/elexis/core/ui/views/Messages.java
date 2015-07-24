@@ -396,6 +396,9 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_sex;
 	public static String Patientenblatt2_showAddress;
 	public static String Patientenblatt2_ahvNumber;
+	public static String Patientenblatt2_legalGuardian;
+	public static String Patientenblatt2_selectLegalGuardianTitle;
+	public static String Patientenblatt2_selectLegalGuardianMessage;
 	public static String ReminderView_activatePatientAction;
 	public static String ReminderView_activatePatientTooltip;
 	public static String ReminderView_deleteAction;

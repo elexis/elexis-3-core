@@ -15,6 +15,7 @@ package ch.elexis.data;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
@@ -68,6 +69,7 @@ public class Patient extends Person {
 	public static final String FLD_SYS_ANAMNESE = "SysAnamnese";
 	public static final String FLD_FAM_ANAMNESE = "FamilienAnamnese";
 	public static final String FLD_EXTINFO_STAMMARZT = "Stammarzt_";
+	public static final String FLD_EXTINFO_LEGAL_GUARDIAN = "LegalGuardian";
 	
 	public static final String[] DEFAULT_SORT = {
 		FLD_NAME, FLD_FIRSTNAME, FLD_DOB
@@ -655,7 +657,7 @@ public class Patient extends Person {
 	}
 	
 	public void removeStammarzt(){
-		setExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT, "");
+		removeFromExtInfo(FLD_EXTINFO_STAMMARZT);
 	}
 	
 	public void setStammarzt(Kontakt stammarzt){
@@ -676,5 +678,28 @@ public class Patient extends Person {
 		// will be thrown ..
 		return (getExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT) != null) ? Kontakt
 			.load((String) getExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT)) : null;
+	}
+	
+	public void setLegalGuardian(Kontakt legalGuardian){
+		if (legalGuardian == null) {
+			removeFromExtInfo(FLD_EXTINFO_LEGAL_GUARDIAN);
+			return;
+		}
+		setExtInfoStoredObjectByKey(FLD_EXTINFO_LEGAL_GUARDIAN, legalGuardian.getId());
+	}
+	
+	public Kontakt getLegalGuardian(){
+		Object guardianId = getExtInfoStoredObjectByKey(FLD_EXTINFO_LEGAL_GUARDIAN);
+		if (guardianId != null && !((String) guardianId).isEmpty()) {
+			return Kontakt.load((String) guardianId);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void removeFromExtInfo(String key){
+		Map h = getMap(FLD_EXTINFO);
+		h.remove(key);
+		setMap(FLD_EXTINFO, h);
 	}
 }
