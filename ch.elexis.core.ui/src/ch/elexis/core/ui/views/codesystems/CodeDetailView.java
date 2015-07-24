@@ -174,6 +174,14 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 					(IDetailDisplay) ce.createExecutableExtension("CodeDetailDisplay"); //$NON-NLS-1$
 				CodeSelectorFactory cs =
 					(CodeSelectorFactory) ce.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
+				String a = ce.getAttribute("ImporterClass"); //$NON-NLS-1$
+				ImporterPage ip = null;
+				if (a != null) {
+					ip = (ImporterPage) ce.createExecutableExtension("ImporterClass"); //$NON-NLS-1$
+					if (ip != null) {
+						importers.put(d.getTitle(), ip);
+					}
+				}
 				
 				MasterDetailsPage page = new MasterDetailsPage(ctab, cs, d);
 				CTabItem ct = new CTabItem(ctab, SWT.NONE);
