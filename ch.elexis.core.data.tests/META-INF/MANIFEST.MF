@@ -14,3 +14,4 @@ Require-Bundle: org.junit;bundle-version="4.10.0",
 Bundle-ClassPath: .,
  rsc/
 Import-Package: ch.elexis.core.data.activator
+Export-Package: ch.elexis.admin
