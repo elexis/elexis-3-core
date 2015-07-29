@@ -1,27 +1,16 @@
-GIT
-  remote: https://github.com/ngiger/eclipse-plugin
-  revision: 3304128c0deae0c1a5f8af5f7f621be5858d5395
-  specs:
-    eclipse-plugin (0.3)
-      nokogiri
-      rubyzip (< 1.0.0)
-
-GIT
-  remote: https://github.com/ngiger/elexis-wiki-interface
-  revision: 8db7557320af4bd5290247b590235c6c4fe60fee
-  specs:
-    elexis-wiki-interface (0.3)
-      eclipse-plugin (>= 0.1)
-      mediawiki-gateway
-      rubyzip (< 1.0.0)
-      unicode
-
 GEM
   remote: https://rubygems.org/
   specs:
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
-    ffi (1.9.8-x86-mingw32)
+    eclipse-plugin (0.3)
+      nokogiri
+      rubyzip (< 1.0.0)
+    elexis-wiki-interface (0.4)
+      eclipse-plugin (>= 0.1)
+      mediawiki-gateway
+      rubyzip (< 1.0.0)
+      unicode
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     mediawiki-gateway (1.0.0)
@@ -31,36 +20,25 @@ GEM
     netrc (0.10.3)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
-    nokogiri (1.6.6.2-java)
-    nokogiri (1.6.6.2-x86-mingw32)
-      mini_portile (~> 0.6.0)
     rest-client (1.8.0)
-      http-cookie (>= 1.0.2, < 2.0)
-      mime-types (>= 1.16, < 3.0)
-      netrc (~> 0.7)
-    rest-client (1.8.0-x86-mingw32)
-      ffi (~> 1.9)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
     rubyzip (0.9.9)
     unf (0.1.4)
       unf_ext
-    unf (0.1.4-java)
     unf_ext (0.0.7.1)
-    unf_ext (0.0.7.1-x86-mingw32)
     unicode (0.4.4.2)
-    unicode (0.4.4.2-java)
-    unicode (0.4.4.2-x86-mingw32)
-    xml-simple (1.1.4)
+    xml-simple (1.1.5)
 
 PLATFORMS
-  java
   ruby
-  x86-mingw32
 
 DEPENDENCIES
-  eclipse-plugin!
-  elexis-wiki-interface!
+  eclipse-plugin (= 0.3)
+  elexis-wiki-interface (= 0.4)
   rubyzip (< 1.0)
   xml-simple
+
+BUNDLED WITH
+   1.10.5
