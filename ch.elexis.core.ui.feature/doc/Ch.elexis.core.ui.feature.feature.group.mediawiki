@@ -1,10 +1,8 @@
-
-
 <table style="width:100%; border: 1px solid; padding: 10px">
 	
 	<tr>
 		<td>Version:</td>
-		<td>3.0.0.v20140422-1306</td>
+		<td>3.1.0</td>
 	</tr>
 	<tr>
 		<td style="width:150px;">Kategorie:</td>
@@ -13,14 +11,6 @@
 	<tr>
 		<td>Beschreibung:</td>
 		<td></td>
-	</tr>
-	<tr>
-		<td>Author:</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>Letzte Bearbeitung:</td>
-		<td>10. Juni 2014</td>
 	</tr>
 	<tr>
 		<td>Voraussetzungen:</td>
@@ -42,19 +32,59 @@
 == Installation / Deinstallation==
 ToDo
 
+=== Datenbank Verbindung ===
 
 == Konfiguration ==
 ToDo
 
+=== Benutzer, Rollen und Rechte ===
+Nicht jede Funktion in Elexis sollen von jedem durchführbar sein, sowohl aus Gründen der Sicherheit vor unerlaubtem Zugang als auch Schutz vor unabsichtlichen Aktionen. Elexis implementiert ein Rollen-basiertes Rechtesystem, dessen Verwendung hier erklärt wird. Zuerst müssen jedoch die Grundbegriffe definiert werden:
+
+* '''Anwender''' Eine Person die in Elexis registriert ist und mit Elexis arbeiten kann. Diese Person kann sich jedoch nur an Elexis anmelden, wenn ein Benutzer für sie existiert.
+* '''Rolle''' Spezifische Funktion einer Person im Unternehmen. Einer Rolle werden die Rechte zugeordnet die sie zum Ausführen Ihrer Rollen-Funktion benötigt.
+* '''Benutzer''' Die Verbindung von einem Anwender mit mehreren Rollen, kann sich am System anmelden. Es können für einen Anwender mehrere Benutzer existieren, wenn dieser bspw. mit unterschiedlichen Rollen tätig sein will.
+* '''Recht''' Die Erlaubnis eine Aktion bzw. Funktion in Elexis auszuführen.
+
+==== Konfiguration ====
+Die Konfiguration ist unterteilt in die Einstellungsseiten '''Benutzerverwaltung''' und '''Rollen und Rechte'''. Die Benutzerverwaltung erstellt und konfiguriert Benutzer und weißt Ihnen Rollen zu, die Rollenverwaltung definiert welche Rechte für eine Rolle erlaubt sind.
+
+===== Benutzerverwaltung =====
+[[Datei:Benutzerverwaltung.png|rechts|Benutzerverwaltung]] 
+
+# '''Benutzer-Auswahlliste''' Hier wird der zu bearbeitende Benutzer ausgewählt. Benutzer in roter Farbe sind als verantwortliche Ärzte definiert. Ein Rufezeichen bedeutet das der Benutzer als Administrator definiert wurde.
+# '''Kontaktzuordnung''' Jedem Benutzer muss für eine gültige Anmeldung ein Kontakt zugewiesen werden. Es können bspw. mehrere Benutzer für einen Kontakt existieren um sich mit unterschiedlichen Rechten anzumelden.
+# '''Benutzername''' Der Benutzername für die Anmeldung, darf sich nicht mit einem anderen Benutzernamen überschneiden.
+# '''Definition als Administrator''' Hier kann der Benutzer als Administrator definiert werden. ACHTUNG: Administratoren haben ALLE Rechte, das bedeutet, es erfolgt keine Rechte-Prüfung, sie erhalten standardmässig die Erlaubnis alles durchzuführen. Administrator-Anmeldungen sollten keinesfalls für die tägliche Arbeit verwendet werden.
+# '''Benutzer-Sperre''' Das setzen dieses Flags deaktiviert die Anmeldung des Benutzers in Elexis. 
+# '''Passwort ändern''' Nach dem Setzen des neuen Passwortes in den beiden linken Text-Feldern (zwei mal zur Verifikation) ändert das Drücken dieses Buttons das für den Benutzer gespeicherte Passwort.
+# '''Definition als verantwortl. Arzt (Mandant)''' Hier wird ein Benutzer bzw. Anwender als verantwortl. Arzt (früher Mandant) definiert. Andere Benutzer können im Auftrag dieses verantwortl. Arztes tätig sein. Hier kann auch eine spezifische Farbe für den verantwortl. Arzt gesetzt werden.
+# '''Zuordnung Rechnungssteller''' Die Zuweisung des Kontaktes unter wessen Namen die Rechnungslegung erfolgen soll. Meist ident mit dem verantwortl. Arzt, bei größeren Gruppenpraxen kann dies jedoch bspw. der Kontakt der Organisation sein.
+# '''Tätigkeitszuweisung''' Im Namen wessen verantwortl. Arztes kann der Benutzer Leistungen verbuchen? Hier ausgewählte verantwortl. Ärzte werden in der oberen Leiste zur auswahl geboten.
+# '''Rollenzuordnung''' Hier erfolgt die Zuteilung von Rollen zu einem Benutzer. Die Rechte eines Benutzers summieren sich aus der Summe der Rechte die pro ausgewählte Rolle gestattet sind.
+
+'''ACHTUNG''' Per Standard existiert eine Administrator-Konto mit Benutzernamen ''Administrator'' und Password ''administrator'' - ändern Sie dieses Passwort sobald als möglich, und setzen Sie ein [https://www.bsi-fuer-buerger.de/BSIFB/DE/MeinPC/Passwoerter/passwoerter_node.html sicheres Passwort].
+
+TODO Popup-Menü Benutzer anlegen, Benutzer löschen
+
+{{Absatz}}
+
+===== Rollen und Rechte =====
+Nach der Auswahl der spezifischen Rolle im oberen Bereich (der Zusatz (S) kennzeichnet eine System-Rolle, diese kann nicht entfernt werden), kann eine lokale Übersetzung dieser Rolle im mittleren Feld angegeben werden (bspw. User -> Benutzer). Rechte werden der ausgewählten Rolle über die Baum-Struktur im unteren Fenster zugeteilt.
+
+Ein Elter-Recht definiert hierbei die Vererbung an alle Kinder. In der linken Grafik bei (1) ist bspw. das Elter-Recht ''Daten'' ausgewählt. Die Markierung ''-'' für alle Kinder zeigt hierbei an, dass das Recht über einen Elter vererbt wird. Die Markierung ''-'' bei einem Elter zeigt jedoch dass ein Subset der ihn ihm definierten Rechte ausgewählt wurde. Das Beispiel auf der rechten Seite zeigt hier dass das Kind-Element ''Zugriff'' (rechts 2) im Unterbaum ''Administration'' (rechts 1) ausgewählt wurde.  
+
+[[Datei:RolleAnwender.png]]  [[Datei:RolleExecArzt.png]]
 
 == Einführung ==
-ToDo
 
+=== Perspektiven ===
+
+=== Views ===
 
 == Funktionen ==
 === Medikationsliste ===
 
-[[Datei:Medicationsliste.png]]
+[[Datei:Medicationsliste.png|rechts]]
 ==== Definitionen ====
 
 * '''Signatur''' Eine Einnahme-Regel in der Form morgens-mittags-abends-nachts (z.B. 1-2-1/2 oder 1-2-1-1)
@@ -82,7 +112,7 @@ Artikel können in Elexis auf drei Arten verschrieben werden:
 
 Bei jeder dieser Verschreibungsarten wird als Start-Zustand die einmalige Medikation angemommen.
 
-=== Medikation Stoppen ===
+==== Medikation Stoppen ====
 Vorzugsweise Angabe einer Begründug den Stop bestätigen
 
 [[Datei:medistop.png]]
