@@ -10,16 +10,40 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
+import java.io.OutputStream;
 import java.io.Serializable;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+import org.xml.sax.InputSource;
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = {
+	"rdbmsType", "hostName", "port", "databaseName", "connectionString", "username", "password",
+	"text"
+})
 public class DBConnection implements Serializable {
 	
 	private static final long serialVersionUID = -7571011690246990109L;
 	
+	@XmlType
+	@XmlEnum(String.class)
 	public enum DBType {
-		MySQL("com.mysql.jdbc.Driver", "mySQl", "3306"), PostgreSQL("org.postgresql.Driver",
-			"PostgreSQL", "5432"), H2("org.h2.Driver", "H2", "");
-		
+			@XmlEnumValue("MYSQL") MySQL("com.mysql.jdbc.Driver", "mySQl", "3306"),
+			@XmlEnumValue("PostgreSQL") PostgreSQL("org.postgresql.Driver", "PostgreSQL", "5432"),
+			@XmlEnumValue("H2") H2("org.h2.Driver", "H2", "");
+			
 		public final String driverName;
 		public final String dbType;
 		public final String defaultPort;
@@ -32,22 +56,30 @@ public class DBConnection implements Serializable {
 	}
 	
 	public DBType rdbmsType;
+	@XmlAttribute
 	public String hostName;
+	@XmlAttribute
 	public String port;
+	@XmlAttribute
 	public String databaseName;
+	@XmlAttribute
 	public String connectionString;
+	@XmlAttribute
 	public String username;
+	@XmlAttribute
 	public String password;
+	@XmlAttribute
 	public String text;
 	
 	/**
 	 * are all required values for the DBConnection set?
+	 * 
 	 * @return
 	 */
 	public boolean allValuesSet(){
 		boolean result = true;
 		
-		result = (rdbmsType!=null);
+		result = (rdbmsType != null);
 		
 		if (!DBType.H2.equals(rdbmsType)) {
 			result = (hostName != null);
@@ -57,5 +89,32 @@ public class DBConnection implements Serializable {
 		result = (username != null);
 		
 		return result;
+	}
+	
+	/**
+	 * Marshall this object into a storable xml
+	 * 
+	 * @param os
+	 * @throws JAXBException
+	 */
+	public void marshall(OutputStream os) throws JAXBException{
+		JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
+		Marshaller m = jaxbContext.createMarshaller();
+		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		m.marshal(this, os);
+	}
+	
+	/**
+	 * Unmarshall a DBConnection object created by {@link #marshall()}
+	 * 
+	 * @param is
+	 * @return
+	 * @throws JAXBException
+	 */
+	public static DBConnection unmarshall(InputSource is) throws JAXBException{
+		JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
+		Unmarshaller um = jaxbContext.createUnmarshaller();
+		Object o = um.unmarshal(is);
+		return (DBConnection) o;
 	}
 }
