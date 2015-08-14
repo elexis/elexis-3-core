@@ -6,7 +6,7 @@ GEM
     eclipse-plugin (0.3)
       nokogiri
       rubyzip (< 1.0.0)
-    elexis-wiki-interface (0.4)
+    elexis-wiki-interface (0.4.6)
       eclipse-plugin (>= 0.1)
       mediawiki-gateway
       rubyzip (< 1.0.0)
@@ -35,8 +35,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  eclipse-plugin (= 0.3)
-  elexis-wiki-interface (= 0.4)
+  eclipse-plugin
+  elexis-wiki-interface
   rubyzip (< 1.0)
   xml-simple
 

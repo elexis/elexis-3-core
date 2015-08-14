@@ -18,5 +18,5 @@ source 'https://rubygems.org'
 
 gem 'rubyzip', '<1.0'
 gem 'xml-simple'
-gem 'eclipse-plugin', '0.3'
-gem 'elexis-wiki-interface', '0.4'
+gem 'eclipse-plugin'
+gem 'elexis-wiki-interface'
