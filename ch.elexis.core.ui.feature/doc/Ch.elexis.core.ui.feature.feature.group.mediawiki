@@ -49,7 +49,7 @@ Nicht jede Funktion in Elexis sollen von jedem durchführbar sein, sowohl aus Gr
 Die Konfiguration ist unterteilt in die Einstellungsseiten '''Benutzerverwaltung''' und '''Rollen und Rechte'''. Die Benutzerverwaltung erstellt und konfiguriert Benutzer und weißt Ihnen Rollen zu, die Rollenverwaltung definiert welche Rechte für eine Rolle erlaubt sind.
 
 ===== Benutzerverwaltung =====
-[[Datei:Benutzerverwaltung.png|rechts|Benutzerverwaltung]] 
+[[File:benutzerverwaltung.png|rechts|Benutzerverwaltung]] 
 
 # '''Benutzer-Auswahlliste''' Hier wird der zu bearbeitende Benutzer ausgewählt. Benutzer in roter Farbe sind als verantwortliche Ärzte definiert. Ein Rufezeichen bedeutet das der Benutzer als Administrator definiert wurde.
 # '''Kontaktzuordnung''' Jedem Benutzer muss für eine gültige Anmeldung ein Kontakt zugewiesen werden. Es können bspw. mehrere Benutzer für einen Kontakt existieren um sich mit unterschiedlichen Rechten anzumelden.
@@ -73,7 +73,7 @@ Nach der Auswahl der spezifischen Rolle im oberen Bereich (der Zusatz (S) kennze
 
 Ein Elter-Recht definiert hierbei die Vererbung an alle Kinder. In der linken Grafik bei (1) ist bspw. das Elter-Recht ''Daten'' ausgewählt. Die Markierung ''-'' für alle Kinder zeigt hierbei an, dass das Recht über einen Elter vererbt wird. Die Markierung ''-'' bei einem Elter zeigt jedoch dass ein Subset der ihn ihm definierten Rechte ausgewählt wurde. Das Beispiel auf der rechten Seite zeigt hier dass das Kind-Element ''Zugriff'' (rechts 2) im Unterbaum ''Administration'' (rechts 1) ausgewählt wurde.  
 
-[[Datei:RolleAnwender.png]]  [[Datei:RolleExecArzt.png]]
+[[File:rolleanwender.png]]  [[File:RolleExecArzt.png]]
 
 == Einführung ==
 
@@ -84,7 +84,7 @@ Ein Elter-Recht definiert hierbei die Vererbung an alle Kinder. In der linken Gr
 == Funktionen ==
 === Medikationsliste ===
 
-[[Datei:Medicationsliste.png|rechts]]
+[[File:medicationsliste.png|rechts]]
 ==== Definitionen ====
 
 * '''Signatur''' Eine Einnahme-Regel in der Form morgens-mittags-abends-nachts (z.B. 1-2-1/2 oder 1-2-1-1)
@@ -98,7 +98,7 @@ Ein Elter-Recht definiert hierbei die Vererbung an alle Kinder. In der linken Gr
 ==== Abgabetypen ====
 
 * '''Selbstdispensation'''  Das Medikament wird direkt in der Praxis abgegeben und mit MWSt verrechnet. 
-* '''Applikation'''  Das Medikament wird im Rahmen einer Konsultation direkt auf den Patienten appliziert, die entsprechende Teilpackung wird mit 0 % MWSt verrechnet. <br />[[Datei:Medikationsliste_Applikation_Action.png]]
+* '''Applikation'''  Das Medikament wird im Rahmen einer Konsultation direkt auf den Patienten appliziert, die entsprechende Teilpackung wird mit 0 % MWSt verrechnet. <br />[[File:medikationsliste_applikation_action.png]]
 * '''Rezeptierung''' Für das Medikament wird ein Rezept erstellt. Es erfolgt keine Verrechnung.
 * '''Keine Abgabe''' Eine Medikation wurde definiert, es ist aber keine Abgabe des Wirkstoffes erfolgt.
 
@@ -115,18 +115,18 @@ Bei jeder dieser Verschreibungsarten wird als Start-Zustand die einmalige Medika
 ==== Medikation Stoppen ====
 Vorzugsweise Angabe einer Begründug den Stop bestätigen
 
-[[Datei:medistop.png]]
+[[File:medistop.png]]
 
 === Textvorlagen Management ===
 
 ==== Definitionen ====
 In der Textvorlagen Management View werden alle vorhandenen und vom System benötigten Vorlagen dargestellt.
-[[Datei:textvorlagenmanagement.png]]
+[[File:textvorlagenmanagement.png]]
 
 ===== Typen von Textvorlagen =====
 Es wird prinzipiell zwischen folgenden Typen von Vorlagen unterschieden:
 
-* [[Datei:Systemtemplate.png]]'''Systemvorlage''' bezeichnet eine Vorlage welche zum vollumfänglichen Betrieb eine Plug-Ins in Verbindung mit einer Textausgabe notwendig ist. Systemvorlagen sollten für alle Mandanten zugänglich sein. Fehlende Systemvorlagen werden ausgegraut dargestellt und sind durch ein [[Datei:Ausrufezeichen.png]] gekennzeichnet.
+* [[File:systemtemplate.png]]'''Systemvorlage''' bezeichnet eine Vorlage welche zum vollumfänglichen Betrieb eine Plug-Ins in Verbindung mit einer Textausgabe notwendig ist. Systemvorlagen sollten für alle Mandanten zugänglich sein. Fehlende Systemvorlagen werden ausgegraut dargestellt und sind durch ein [[File:Ausrufezeichen.png]] gekennzeichnet.
 * '''Benutzervorlage''' (Mandant spezifische Vorlage) bezeichnet eine Vorlage welche nur für einen (in der Spalte ''Mandant'') definieten Mandanten zugänglich ist. Dadurch kann z.B. eine Systemvorlage für einen einzelnen Mandanten speziell angepasst werden. Wird eine solche Vorlage während des Betriebs benötigt, wird bevorzugt die auf den angemeldeten Mandanten spezialisierte Vorlage verwendet. (Siehe Screenshot -> für ''dz'' würde die Benutzervorlage und nicht die Rezept Systemvorlage verwendet werden).
 * '''Formatvorlage''' eine Vorlage die zu einem beliebigen Zweck dient, jedoch von Elexis nicht zwingend benötigt wird.
 
@@ -156,14 +156,14 @@ Die ausgewählte Vorlage wird gelöscht.
 ====== Als Systemvorlage setzen ======
 Entspricht bei dieser Art des Imports eine Vorlage einer Systemvorlage erscheint dieser Dialog.
 
-[[Datei:ImportAsSysTemplate.png ]]
+[[File:importassystemplate.png ]]
 
 Dieser Dialog ermöglicht es Ihnen eine passende Vorlage (Abgleich findet über Namen statt) direkt als Systemvorlage zu definieren.
 
 ====== Namenskonflikt ======
 Besteht bereits eine Vorlage welche den selben Namen hat als die zu importierende erscheint nachfolgender Dialog.
 
-[[Datei:ConflictStrategieDialog.png‎]]
+[[File:conflictstrategiedialog.png]]
 
 Wählen Sie in diesem Falle die gewünschte Aktion und fahren Sie fort.
 
