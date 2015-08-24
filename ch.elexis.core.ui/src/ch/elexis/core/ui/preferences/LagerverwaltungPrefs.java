@@ -35,6 +35,8 @@ public class LagerverwaltungPrefs extends FieldEditorPreferencePage implements
 		setDescription(Messages.LagerverwaltungPrefs_storageManagement);
 		getPreferenceStore().setDefault(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES,
 			Preferences.INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT);
+		getPreferenceStore().setDefault(Preferences.INVENTORY_MARK_AS_ORDERED,
+			Preferences.INVENTORY_MARK_AS_ORDERED_DEFAULT);
 	}
 	
 	@Override
@@ -53,6 +55,8 @@ public class LagerverwaltungPrefs extends FieldEditorPreferencePage implements
 				},
 			}, getFieldEditorParent()));
 		
+		addField(new BooleanFieldEditor(Preferences.INVENTORY_MARK_AS_ORDERED,
+			Messages.LagerverwaltungPrefs_markOrdered, getFieldEditorParent()));
 	}
 	
 	public void init(final IWorkbench workbench){}

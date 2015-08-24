@@ -58,6 +58,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.dialogs.DailyOrderDialog;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.SelectBestellungDialog;
@@ -82,8 +83,8 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 	TableViewer tv;
 	Bestellung actBestellung;
 	ViewMenus viewmenus;
-	private IAction removeAction, wizardAction, countAction, loadAction, saveAction, printAction,
-			sendAction, newAction;
+	private IAction removeAction, dailyWizardAction, wizardAction, countAction, loadAction,
+			saveAction, printAction, sendAction, newAction;
 	private IAction exportClipboardAction, checkInAction;
 	
 	@Override
@@ -179,10 +180,10 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		});
 		makeActions();
 		viewmenus = new ViewMenus(getViewSite());
-		viewmenus.createToolbar(newAction, wizardAction, saveAction, loadAction, printAction,
-			sendAction);
-		viewmenus.createMenu(newAction, wizardAction, saveAction, loadAction, printAction,
-			sendAction, exportClipboardAction);
+		viewmenus.createToolbar(newAction, dailyWizardAction, wizardAction, saveAction, loadAction,
+			printAction, sendAction);
+		viewmenus.createMenu(newAction, dailyWizardAction, wizardAction, saveAction, loadAction,
+			printAction, sendAction, exportClipboardAction);
 		viewmenus.createViewerContextMenu(tv, new IAction[] {
 			removeAction, countAction
 		});
@@ -261,6 +262,34 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					}
 				}
 			};
+		dailyWizardAction = new Action(Messages.BestellView_AutomaticDailyOrder) {
+			{
+				setToolTipText(Messages.BestellView_CreateAutomaticDailyOrder);
+				setImageDescriptor(Images.IMG_WIZ_DAY.getImageDescriptor());
+			}
+			
+			@Override
+			public void run(){
+				if (actBestellung == null) {
+					setBestellung(new Bestellung(Messages.BestellView_AutomaticDaily,
+						CoreHub.actUser)); //$NON-NLS-1$
+				}
+				
+				DailyOrderDialog doDlg = new DailyOrderDialog(UiDesk.getTopShell(), actBestellung);
+				doDlg.open();
+				tv.refresh(true);
+			}
+			
+			@Override
+			public boolean isEnabled(){
+				boolean considerOrdered =
+					CoreHub.globalCfg.get(Preferences.INVENTORY_MARK_AS_ORDERED,
+						Preferences.INVENTORY_MARK_AS_ORDERED_DEFAULT);
+				return !considerOrdered;
+			}
+			
+		};
+		
 		wizardAction = new Action(Messages.BestellView_AutomaticOrder) { //$NON-NLS-1$
 				{
 					setToolTipText(Messages.BestellView_CreateAutomaticOrder); //$NON-NLS-1$
@@ -304,8 +333,16 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 							order = (ist < min);
 						}
 						if (order) {
-							Boolean alreadyOrdered =
-								a.getExt(Bestellung.ISORDERED).equalsIgnoreCase("true");
+							boolean considerOrdered =
+								CoreHub.globalCfg.get(Preferences.INVENTORY_MARK_AS_ORDERED,
+									Preferences.INVENTORY_MARK_AS_ORDERED_DEFAULT);
+							
+							boolean alreadyOrdered = false;
+							if (considerOrdered) {
+								alreadyOrdered =
+									a.getExt(Bestellung.ISORDERED).equalsIgnoreCase("true");
+							}
+							
 							int toOrder = max - ist;
 							if (toOrder > 0 && !alreadyOrdered) {
 								actBestellung.addItem(a, toOrder);
@@ -392,8 +429,14 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 								(BestellBlatt) getViewSite().getPage().showView(BestellBlatt.ID);
 							bb.createOrder(adressat, best);
 							tv.refresh();
-							// mark ordered articles
-							Bestellung.markAsOrdered(bkpList);
+							
+							// mark ordered articles if preferences wish so
+							boolean markAsOrdered =
+								CoreHub.globalCfg.get(Preferences.INVENTORY_MARK_AS_ORDERED,
+									Preferences.INVENTORY_MARK_AS_ORDERED_DEFAULT);
+							if (markAsOrdered) {
+								Bestellung.markAsOrdered(bkpList);
+							}
 						} catch (PartInitException e) {
 							ExHandler.handle(e);
 							
@@ -425,8 +468,14 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 								SWTHelper.showInfo(Messages.BestellView_OrderSentCaption, //$NON-NLS-1$
 									Messages.BestellView_OrderSentBody); //$NON-NLS-1$
 								tv.refresh();
-								// mark ordered articles
-								Bestellung.markAsOrdered(bkpList);
+								
+								// mark ordered articles if prefs say so
+								boolean markAsOrdered =
+									CoreHub.globalCfg.get(Preferences.INVENTORY_MARK_AS_ORDERED,
+										Preferences.INVENTORY_MARK_AS_ORDERED_DEFAULT);
+								if (markAsOrdered) {
+									Bestellung.markAsOrdered(bkpList);
+								}
 							} catch (CoreException ex) {
 								ExHandler.handle(ex);
 							} catch (XChangeException xx) {

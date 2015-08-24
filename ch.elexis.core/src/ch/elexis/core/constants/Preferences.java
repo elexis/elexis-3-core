@@ -37,7 +37,7 @@ public class Preferences {
 	public static final String CFG_FOLDED_CONNECTION_USER = "user";
 	public static final String CFG_FOLDED_CONNECTION_PASS = "pwd";
 	public static final String CFG_FOLDED_CONNECTION_TYPE = "typ";
-	public static final String CFG_FOLDED_CONNECTION_CONNECTSTRING = "connectionstring";	
+	public static final String CFG_FOLDED_CONNECTION_CONNECTSTRING = "connectionstring";
 	public static final String CFG_STORED_JDBC_CONN = "verbindung/storedJDBCConnections/connection";
 	
 	// Ablauf
@@ -141,6 +141,8 @@ public class Preferences {
 	public static final int INVENTORY_ORDER_TRIGGER_DEFAULT = INVENTORY_ORDER_TRIGGER_BELOW;
 	public static final String INVENTORY_CHECK_ILLEGAL_VALUES = "inventory/check_values"; //$NON-NLS-1$
 	public static final boolean INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT = true;
+	public static final String INVENTORY_MARK_AS_ORDERED = "inventory/set_orderstate";
+	public static final boolean INVENTORY_MARK_AS_ORDERED_DEFAULT = true;
 	
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "7"; //$NON-NLS-1$

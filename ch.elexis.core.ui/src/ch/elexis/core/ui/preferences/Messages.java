@@ -135,6 +135,7 @@ public class Messages extends NLS {
 	public static String LagerverwaltungPrefs_orderWhenAtMin;
 	public static String LagerverwaltungPrefs_orderWhenBelowMi;
 	public static String LagerverwaltungPrefs_storageManagement;
+	public static String LagerverwaltungPrefs_markOrdered;
 	public static String Leistungscodes_0;
 	public static String Leistungscodes_EnterItems;
 	public static String Leistungscodes_ErrorAtLeast2Items;

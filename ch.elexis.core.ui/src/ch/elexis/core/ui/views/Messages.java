@@ -54,11 +54,14 @@ public class Messages extends NLS {
 	public static String BestellBlatt_UnitPrice;
 	public static String BestellView_Article;
 	public static String BestellView_Automatic;
+	public static String BestellView_AutomaticDaily;
 	public static String BestellView_AutomaticOrder;
+	public static String BestellView_AutomaticDailyOrder;
 	public static String BestellView_ChangeNumber;
 	public static String BestellView_CheckInBody;
 	public static String BestellView_CheckInCaption;
 	public static String BestellView_CreateAutomaticOrder;
+	public static String BestellView_CreateAutomaticDailyOrder;
 	public static String BestellView_CreateNewOrder;
 	public static String BestellView_Dealer;
 	public static String BestellView_EnterNewNumber;

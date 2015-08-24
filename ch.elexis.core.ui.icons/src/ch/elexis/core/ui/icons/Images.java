@@ -229,7 +229,9 @@ public enum Images {
 		/** jar icon **/
 		IMG_JAR,
 		/** fixmedi icon **/
-		IMG_FIXMEDI;
+		IMG_FIXMEDI,
+		/** wizard for some day event **/
+		IMG_WIZ_DAY;
 	
 	private Images(){}
 	
