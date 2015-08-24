@@ -64,7 +64,7 @@ public class MedicationView extends ViewPart implements IActivationListener {
 		menuManager.add(new Action() {
 			{
 				setImageDescriptor(Images.IMG_BOOKMARK_PENCIL.getImageDescriptor());
-				setText("Standard-Signatur setzen");
+				setText(Messages.FixMediDisplay_AddDefaultSignature);
 			}
 			
 			@Override

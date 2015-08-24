@@ -225,7 +225,11 @@ public enum Images {
 		/** document stand/managemet **/
 		IMG_DOC_STAND,
 		/** system template **/
-		IMG_DOC_SYS;
+		IMG_DOC_SYS,
+		/** jar icon **/
+		IMG_JAR,
+		/** fixmedi icon **/
+		IMG_FIXMEDI;
 	
 	private Images(){}
 	

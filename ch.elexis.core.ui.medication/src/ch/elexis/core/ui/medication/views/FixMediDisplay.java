@@ -110,7 +110,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 						MediDetailDialog dlg = new MediDetailDialog(getShell(), (Artikel) o);
 						if (dlg.open() == Window.OK) {
 								new Prescription((Artikel) o, (Patient) ElexisEventDispatcher
-									.getSelected(Patient.class), dlg.getDosis(), dlg.getEinnahme());
+									.getSelected(Patient.class), dlg.getDosis(), dlg.getIntakeOrder());
 							// self.add(pre);
 							reload();
 						}

@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.medication.handlers;
 
+import java.util.Iterator;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -28,8 +30,11 @@ public class DeleteHandler extends AbstractHandler {
 		
 		if (selection != null && !selection.isEmpty()) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
-			Prescription prescription = (Prescription) strucSelection.getFirstElement();
-			prescription.remove();
+			Iterator<Prescription> selectionList = strucSelection.iterator();
+			while (selectionList.hasNext()) {
+				Prescription presc = selectionList.next();
+				presc.remove();
+			}
 		}
 		return null;
 	}

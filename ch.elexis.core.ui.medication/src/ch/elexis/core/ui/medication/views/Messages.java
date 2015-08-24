@@ -49,6 +49,7 @@ public class Messages extends NLS {
 	public static String MedicationComposite_btnStop;
 	public static String MedicationComposite_btnPRNMedication_text;
 	public static String MedicationComposite_decorConfirm;
+	public static String MedicationComposite_search;
 	public static String MovePrescriptionPositionInTableUpAction_Label;
 	public static String MovePrescriptionPositionInTableDownAction_Label;
 	public static String MedicationComposite_btnCheckButton_text;

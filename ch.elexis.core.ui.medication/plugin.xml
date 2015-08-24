@@ -26,6 +26,20 @@
             allPopups="false"
             locationURI="popup:ch.elexis.core.ui.medication.views.MedicationView">
          <command
+               commandId="ch.elexis.core.ui.medication.SetAsFixMedication"
+               icon="icon://IMG_PILL"
+               style="push">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.SetAsPRNMedication"
+               icon="icon://IMG_JAR"
+               style="push">
+         </command>
+         <separator
+               name="ch.elexis.core.ui.medication.separator1"
+               visible="true">
+         </separator>
+         <command
                commandId="ch.elexis.core.ui.medication.PrintRecipe"
                icon="icon://IMG_VIEW_RECIPES"
                style="push">
@@ -82,6 +96,21 @@
             description="FixMedikation hinzufügen"
             id="ch.elexis.core.ui.medication.AddFixMedication"
             name="FixMedikation hinzufügen">
+      </command>
+       <command
+            description="Medikamenteninteraktion prüfen ..."
+            id="ch.elexis.core.ui.medication.InteractionsCheck"
+            name="Medikamenteninteraktion prüfen ...">
+      </command>
+      <command
+            description="FixMedikation"
+            id="ch.elexis.core.ui.medication.SetAsFixMedication"
+            name="FixMedikation">
+      </command>
+      <command
+            description="Medikation auf Reserve"
+            id="ch.elexis.core.ui.medication.SetAsPRNMedication"
+            name="Bedarfsmedikation (setzen/entfernen)">
       </command>
    </extension>
    <extension
@@ -148,6 +177,18 @@
                </equals>
             </with>
          </activeWhen>
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.InteractionsCheckHandler"
+            commandId="ch.elexis.core.ui.medication.InteractionsCheck">
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.SetAsFixMedicationHandler"
+            commandId="ch.elexis.core.ui.medication.SetAsFixMedication">
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.SetAsPRNMedicationHandler"
+            commandId="ch.elexis.core.ui.medication.SetAsPRNMedication">
       </handler>
    </extension>
 

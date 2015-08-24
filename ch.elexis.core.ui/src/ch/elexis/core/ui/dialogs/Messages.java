@@ -206,6 +206,12 @@ public class Messages extends NLS {
 	public static String MediDetailDialog_dosage;
 	public static String MediDetailDialog_pleaseEnterPrescription;
 	public static String MediDetailDialog_prescription;
+	public static String MediDetailDialog_morning;
+	public static String MediDetailDialog_lunch;
+	public static String MediDetailDialog_evening;
+	public static String MediDetailDialog_night;
+	public static String MediDetailDialog_intakeOrder;
+	public static String MediDetailDialog_disposalComment;
 	public static String MultiplikatorEditor_BeginDate;
 	public static String MultiplikatorEditor_NewMultipilcator;
 	public static String MultiplikatorEditor_PleaseEnterBeginDate;
