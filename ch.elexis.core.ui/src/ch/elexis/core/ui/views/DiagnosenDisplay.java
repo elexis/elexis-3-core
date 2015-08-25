@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views;
@@ -64,17 +64,19 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 	private final Hyperlink hDg;
 	private final Log log = Log.get("DiagnosenDisplay"); //$NON-NLS-1$
 	private final PersistentObjectDropTarget dropTarget;
-	
+
 	private final ElexisEventListener eeli_update = new ElexisUiEventListenerImpl(
 		Konsultation.class, ElexisEvent.EVENT_UPDATE) {
 		@Override
 		public void runInUi(ElexisEvent ev){
 			Konsultation actKons =
 				(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-			setDiagnosen(actKons);
+			if (actKons != null) {
+				setDiagnosen(actKons);
+			}
 		}
 	};
-	
+
 	public DiagnosenDisplay(final IWorkbenchPage page, final Composite parent, final int style){
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
@@ -113,25 +115,26 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 				}
 			}
 		});
-		
+
 		tDg = UiDesk.getToolkit().createTable(this, SWT.SINGLE | SWT.WRAP);
 		tDg.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		tDg.setMenu(createDgMenu());
-		
+
 		// new PersistentObjectDragSource()
 		dropTarget =
 			new PersistentObjectDropTarget(Messages.DiagnosenDisplay_DiagnoseTarget, tDg,
 				new DropReceiver()); //$NON-NLS-1$
 		new PersistentObjectDragSource(tDg, this);
-		
+
 		ElexisEventDispatcher.getInstance().addListeners(eeli_update);
 	}
-	
+
 	public void clear(){
 		tDg.removeAll();
 	}
-	
+
 	private final class DropReceiver implements PersistentObjectDropTarget.IReceiver {
+		@Override
 		public void dropped(final PersistentObject o, final DropTargetEvent ev){
 			Konsultation actKons =
 				(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
@@ -145,7 +148,8 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 				}
 			}
 		}
-		
+
+		@Override
 		public boolean accept(final PersistentObject o){
 			if (o instanceof IVerrechenbar) {
 				return true;
@@ -156,7 +160,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 			return false;
 		}
 	}
-	
+
 	public void setDiagnosen(final Konsultation b){
 		List<IDiagnose> dgl = b.getDiagnosen();
 		tDg.removeAll();
@@ -166,9 +170,9 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 			ti.setData(dg);
 		}
 		// tDg.setEnabled(b.getStatus()==RnStatus.NICHT_VON_HEUTE);
-		
+
 	}
-	
+
 	private Menu createDgMenu(){
 		Menu ret = new Menu(tDg);
 		MenuItem delDg = new MenuItem(ret, SWT.NONE);
@@ -176,7 +180,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 		delDg.addSelectionListener(new delDgListener());
 		return ret;
 	}
-	
+
 	class delDgListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(final SelectionEvent e){
@@ -190,7 +194,8 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 			// setBehandlung(actBehandlung);
 		}
 	}
-	
+
+	@Override
 	public List<PersistentObject> getSelection(){
 		TableItem[] sel = tDg.getSelection();
 		ArrayList<PersistentObject> ret = new ArrayList<PersistentObject>();
