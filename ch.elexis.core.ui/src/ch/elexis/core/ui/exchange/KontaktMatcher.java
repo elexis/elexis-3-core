@@ -160,7 +160,7 @@ public class KontaktMatcher {
 	 * @param ort
 	 * @param natel
 	 * @param createIfNotExists
-	 * @return the found person or null if no matching person wasd found
+	 * @return the found person or null if no matching person wasn't found
 	 */
 	public static Person findPerson(final String name, final String vorname, final String gebdat,
 		final String gender, final String strasse, final String plz, final String ort,
@@ -176,6 +176,8 @@ public class KontaktMatcher {
 		if (isPatient) {
 			hints[HINT_PATIENT] = StringConstants.ONE;
 		}
+		
+		boolean hasSignificantValue = false;
 		Query<Person> qbe = new Query<Person>(Person.class);
 		String sex = StringTool.leer;
 		String birthdate = StringTool.leer;
@@ -190,6 +192,7 @@ public class KontaktMatcher {
 			}
 			qbe.endGroup();
 			qbe.and();
+			hasSignificantValue = true;
 		}
 		
 		if (!StringTool.isNothing(vorname)) {
@@ -202,6 +205,7 @@ public class KontaktMatcher {
 			}
 			qbe.endGroup();
 			qbe.and();
+			hasSignificantValue = true;
 		}
 		if (!StringTool.isNothing(gebdat)) {
 			TimeTool tt = new TimeTool();
@@ -209,6 +213,7 @@ public class KontaktMatcher {
 				birthdate = tt.toString(TimeTool.DATE_GER);
 				qbe.add(Person.BIRTHDATE, Query.EQUALS, tt.toString(TimeTool.DATE_COMPACT));
 			}
+			hasSignificantValue = true;
 		}
 		if (!StringTool.isNothing(gender)) {
 			String gl = gender.toLowerCase();
@@ -225,6 +230,11 @@ public class KontaktMatcher {
 			}
 			qbe.add(Person.SEX, Query.EQUALS, sex);
 		}
+		
+		if (!hasSignificantValue) {
+			return null;
+		}
+		
 		List<Person> found = qbe.execute();
 		if (found.size() == 0) {
 			if (createMode == CreateMode.CREATE) {
