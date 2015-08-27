@@ -204,13 +204,25 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		
 		public String getColumnText(Object element, int columnIndex){
 			LabItem li = (LabItem) element;
+			
+			String[] values =
+				li.get(true, LabItem.TITLE, LabItem.SHORTNAME, LabItem.LOINCCODE, LabItem.UNIT,
+					LabItem.REF_MALE, LabItem.REF_FEMALE_OR_TEXT, LabItem.GROUP, LabItem.PRIO);
+			String name = values[0];
+			String kuerzel = values[1];
+			String loinccode = values[2];
+			String einheit = values[3];
+			String refM = values[4];
+			String refF = values[5].split("##")[0];
+			String groupPrio = values[6] + " - " + values[7];
+			
 			switch (columnIndex) {
 			case 0:
-				return li.getName();
+				return name;
 			case 1:
-				return li.getKuerzel();
+				return kuerzel;
 			case 2:
-				return li.getLoincCode();
+				return loinccode;
 			case 3:
 				LabItem.typ typ = li.getTyp();
 				if (typ == LabItem.typ.NUMERIC) {
@@ -224,13 +236,13 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				}
 				return Messages.LaborPrefs_absolute;
 			case 4:
-				return li.getEinheit();
+				return einheit;
 			case 5:
-				return li.getRefM();
+				return refM;
 			case 6:
-				return li.getRefW();
+				return refF;
 			case 7:
-				return li.getGroup() + " - " + li.getPrio(); //$NON-NLS-1$
+				return groupPrio; //$NON-NLS-1$
 			default:
 				return "?col?"; //$NON-NLS-1$
 			}
