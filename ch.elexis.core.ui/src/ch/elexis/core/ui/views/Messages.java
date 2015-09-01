@@ -86,6 +86,9 @@ public class Messages extends NLS {
 	public static String BestellView_loadEarlierOrder;
 	public static String BestellView_saveOrder;
 	public static String BestellView_transmitOrder;
+	public static String BestellView_NoSupplierArticle;
+	public static String BestellView_NoSupplierArticleMsg;
+	public static String BestellView_CantOrderNoSupplier;
 	public static String BriefAuswahlAllLetters;
 	public static String BriefAuswahlAllLetters2;
 	public static String BriefAuswahlCouldNotLoadText;

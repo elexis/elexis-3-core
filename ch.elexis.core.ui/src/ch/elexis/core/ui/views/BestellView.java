@@ -13,6 +13,7 @@
 
 package ch.elexis.core.ui.views;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -450,40 +452,68 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					if (actBestellung == null)
 						return;
 					actBestellung.save();
-					// make backup of list
-					Item[] bkpList = actBestellung.asList().toArray(new Item[0]);
 					
-					List<IConfigurationElement> list =
-						Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER); //$NON-NLS-1$
-					for (IConfigurationElement ic : list) {
-						String handler = ic.getAttribute("type"); //$NON-NLS-1$
-						
-						if (handler != null && handler.contains("ch.elexis.data.Bestellung")) { //$NON-NLS-1$
-							try {
-								IDataSender sender =
-									(IDataSender) ic.createExecutableExtension("ExporterClass"); //$NON-NLS-1$
-								
-								sender.store(actBestellung);
-								sender.finalizeExport();
-								SWTHelper.showInfo(Messages.BestellView_OrderSentCaption, //$NON-NLS-1$
-									Messages.BestellView_OrderSentBody); //$NON-NLS-1$
-								tv.refresh();
-								
-								// mark ordered articles if prefs say so
-								boolean markAsOrdered =
-									CoreHub.globalCfg.get(Preferences.INVENTORY_MARK_AS_ORDERED,
-										Preferences.INVENTORY_MARK_AS_ORDERED_DEFAULT);
-								if (markAsOrdered) {
-									Bestellung.markAsOrdered(bkpList);
+					// organise items in supplier and non-supplier lists
+					List<Item> orderableItems = new ArrayList<Bestellung.Item>();
+					List<Item> noSupplierItems = new ArrayList<Bestellung.Item>();
+					for (Item item : actBestellung.asList()) {
+						Kontakt supplier = item.art.getLieferant();
+						if (supplier != null && supplier.exists()) {
+							orderableItems.add(item);
+						} else {
+							noSupplierItems.add(item);
+						}
+					}
+					
+					boolean runOrder = true;
+					if (!noSupplierItems.isEmpty()) {
+						StringBuilder sb = new StringBuilder();
+						for (Item noSupItem : noSupplierItems) {
+							sb.append(noSupItem.art.getLabel());
+							sb.append("\n");
+						}
+						runOrder =
+							SWTHelper.askYesNo(
+								Messages.BestellView_NoSupplierArticle,
+								MessageFormat.format(Messages.BestellView_NoSupplierArticleMsg,
+									sb.toString()));
+					}
+					
+					if (runOrder) {
+						List<IConfigurationElement> list =
+							Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER); //$NON-NLS-1$
+						for (IConfigurationElement ic : list) {
+							String handler = ic.getAttribute("type"); //$NON-NLS-1$
+							if (handler != null && handler.contains("ch.elexis.data.Bestellung")) { //$NON-NLS-1$
+								try {
+									IDataSender sender =
+										(IDataSender) ic.createExecutableExtension("ExporterClass"); //$NON-NLS-1$
+									
+									sender.store(actBestellung);
+									sender.finalizeExport();
+									SWTHelper.showInfo(Messages.BestellView_OrderSentCaption, //$NON-NLS-1$
+										Messages.BestellView_OrderSentBody); //$NON-NLS-1$
+									tv.refresh();
+									
+									// mark ordered articles if prefs say so
+									boolean markAsOrdered =
+										CoreHub.globalCfg.get(
+											Preferences.INVENTORY_MARK_AS_ORDERED,
+											Preferences.INVENTORY_MARK_AS_ORDERED_DEFAULT);
+									if (markAsOrdered) {
+										Item[] bkpList =
+											orderableItems.toArray(new Item[orderableItems.size()]);
+										Bestellung.markAsOrdered(bkpList);
+									}
+								} catch (CoreException ex) {
+									ExHandler.handle(ex);
+								} catch (XChangeException xx) {
+									SWTHelper.showError(
+										Messages.BestellView_OrderNotPossible, //$NON-NLS-1$
+										Messages.BestellView_NoAutomaticOrderAvailable
+											+ xx.getLocalizedMessage()); //$NON-NLS-1$
+									
 								}
-							} catch (CoreException ex) {
-								ExHandler.handle(ex);
-							} catch (XChangeException xx) {
-								SWTHelper.showError(
-									Messages.BestellView_OrderNotPossible, //$NON-NLS-1$
-									Messages.BestellView_NoAutomaticOrderAvailable
-										+ xx.getLocalizedMessage()); //$NON-NLS-1$
-								
 							}
 						}
 					}
@@ -625,5 +655,28 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 	 */
 	public Bestellung getActBestellung(){
 		return actBestellung;
+	}
+	
+	/**
+	 * Find the default supplier. Shows a warning if supplier is null or inexisting
+	 * 
+	 * @param cfgSupplier
+	 *            value delivered from the plugins configured supplier field
+	 * @param selDialogTitle
+	 *            title of the dialog
+	 * @return the supplier or null if none could be resolved.
+	 */
+	public static Kontakt resolveDefaultSupplier(String cfgSupplier, String selDialogTitle){
+		Kontakt supplier = null;
+		if (cfgSupplier != null && !cfgSupplier.isEmpty()) {
+			supplier = Kontakt.load(cfgSupplier);
+		}
+		
+		//warn that there is no supplier
+		if (supplier == null || !supplier.exists()) {
+			MessageDialog.openWarning(UiDesk.getTopShell(), selDialogTitle,
+				Messages.BestellView_CantOrderNoSupplier);
+		}
+		return supplier;
 	}
 }
