@@ -61,11 +61,13 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 		if (presc.getDosis().equals(StringConstants.ZERO))
 			return false;
 		
-		String atcCode = presc.getArtikel().getATC_code();
-		if (atcCode != null && atcCode.length() > 4) {
-			// vaccinations start with atcCode J07
-			if (atcCode.toUpperCase().startsWith("J07")) {
-				return false;
+		if (presc.getArtikel() != null) {
+			String atcCode = presc.getArtikel().getATC_code();
+			if (atcCode != null && atcCode.length() > 4) {
+				// vaccinations start with atcCode J07
+				if (atcCode.toUpperCase().startsWith("J07")) {
+					return false;
+				}
 			}
 		}
 		return true;
