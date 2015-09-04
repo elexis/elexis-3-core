@@ -15,6 +15,7 @@ package ch.elexis.core.ui.actions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -92,7 +93,14 @@ public class HistoryLoader extends BackgroundJob {
 				}
 			});
 			monitor.worked(50);
-			Iterator<Konsultation> it = lKons.iterator();
+			
+			List<Konsultation> konsList = new ArrayList<Konsultation>(lKons);
+			HashSet<Konsultation> hsKons = new HashSet<Konsultation>();
+			hsKons.addAll(konsList);
+			konsList.clear();
+			konsList.addAll(hsKons);
+			
+			Iterator<Konsultation> it = konsList.iterator();
 			sb.append("<form>"); //$NON-NLS-1$
 			globalFilter = ObjectFilterRegistry.getInstance().getFilterFor(Konsultation.class);
 			while (!monitor.isCanceled()) {
