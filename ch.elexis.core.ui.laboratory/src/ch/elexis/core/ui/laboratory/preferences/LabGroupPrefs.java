@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -39,12 +39,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.laboratory.dialogs.LabItemSelektor;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.LabGroup;
@@ -229,10 +229,22 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				if (actGroup != null) {
-					ItemsSelectionDialog dialog =
-						new ItemsSelectionDialog(PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getShell(), actGroup);
-					if (dialog.open() == ItemsSelectionDialog.OK) {
+					LabItemSelektor selektor = new LabItemSelektor(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+					if (selektor.open() == Dialog.OK) {
+						List<LabItem> items = selektor.getSelection();
+						
+						// list of existing items
+						List<LabItem> existingItems = actGroup.getItems();
+						
+						for (Object obj : items) {
+							if (obj instanceof LabItem) {
+								LabItem item = (LabItem) obj;
+								if (!existingItems.contains(item)) {
+									actGroup.addItem(item);
+								}
+							}
+						}
 						itemsViewer.refresh();
 					}
 				}
@@ -380,102 +392,6 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
 			// nothing to do
-		}
-	}
-	
-	class ItemsSelectionDialog extends TitleAreaDialog {
-		private LabGroup group;
-		
-		private ListViewer viewer;
-		
-		ItemsSelectionDialog(Shell parentShell, LabGroup group){
-			super(parentShell);
-			this.group = group;
-		}
-		
-		@Override
-		protected Control createContents(Composite parent){
-			Control contents = super.createContents(parent);
-			
-			setMessage(Messages.LabGroupPrefs_pleaseSelectLabItems);
-			setTitle(Messages.LabGroupPrefs_selectLabItems);
-			
-			return contents;
-		}
-		
-		@Override
-		protected Control createDialogArea(Composite parent){
-			Composite composite = (Composite) super.createDialogArea(parent);
-			composite.setLayout(new GridLayout(1, false));
-			
-			Label label = new Label(composite, SWT.NONE);
-			label.setText(Messages.LabGroupPrefs_group1 + group.getName());
-			
-			viewer =
-				new ListViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-			viewer.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			
-			viewer.setContentProvider(new ItemsContentProvider());
-			viewer.setLabelProvider(new ItemsLabelProvider());
-			
-			viewer.setInput(this);
-			
-			return composite;
-		}
-		
-		@Override
-		protected void buttonPressed(int buttonId){
-			if (buttonId == OK) {
-				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-				
-				// list of existing items
-				List<LabItem> existingItems = group.getItems();
-				
-				List<LabItem> items = new ArrayList<LabItem>();
-				for (Object obj : sel.toList()) {
-					if (obj instanceof LabItem) {
-						LabItem item = (LabItem) obj;
-						if (!existingItems.contains(item)) {
-							items.add(item);
-						}
-					}
-				}
-				
-				group.addItems(items);
-			}
-			
-			setReturnCode(buttonId);
-			close();
-		}
-		
-		class ItemsContentProvider implements IStructuredContentProvider {
-			@Override
-			public Object[] getElements(Object inputElement){
-				Query<LabItem> query = new Query<LabItem>(LabItem.class);
-				query.orderBy(false, new String[] {
-					"Gruppe", "prio", "titel"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				
-				List<LabItem> items = query.execute();
-				if (items == null) {
-					items = new ArrayList<LabItem>();
-				}
-				
-				// remove items already contained in the group
-				List<LabItem> contained = group.getItems();
-				items.removeAll(contained);
-				
-				return items.toArray();
-			}
-			
-			@Override
-			public void dispose(){
-				// nothing to do
-			}
-			
-			@Override
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
-				// nothing to do
-			}
 		}
 	}
 }

@@ -10,21 +10,14 @@
  ******************************************************************************/
 package ch.elexis.core.ui.laboratory.dialogs;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -36,25 +29,25 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.statushandlers.StatusManager;
 
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.data.LabItem;
-import ch.elexis.data.LabResult;
-import ch.elexis.data.PersistentObject;
 
 public class MergeLabItemDialog extends TitleAreaDialog {
 	
 	private TableViewer destinationItems;
 	private Text destinationFilterTxt;
-	private LabItemViewerFilter destinationFilter = new LabItemViewerFilter();
+	private LabItemViewerFilter destinationFilter;
 	private TableViewer sourceItems;
 	private Text sourceFilterTxt;
-	private LabItemViewerFilter sourceFilter = new LabItemViewerFilter();
+	private LabItemViewerFilter sourceFilter;
+	
+	private LabItemLabelProvider labelProvider;
 	
 	public MergeLabItemDialog(Shell parentShell, LabItem act){
 		super(parentShell);
-		
+		labelProvider = new LabItemLabelProvider(true);
+		destinationFilter = new LabItemViewerFilter(labelProvider);
+		sourceFilter = new LabItemViewerFilter(labelProvider);
 	}
 	
 	@Override
@@ -92,8 +85,8 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 		destinationItems = new TableViewer(ret, SWT.BORDER);
 		destinationItems.getTable().setLayoutData(layoutData);
 		destinationItems.setContentProvider(new ArrayContentProvider());
-		destinationItems.setLabelProvider(new LabItemLabelProvider());
-		destinationItems.setSorter(new LabItemViewerSorter());
+		destinationItems.setLabelProvider(new LabItemLabelProvider(true));
+		destinationItems.setSorter(new LabItemViewerSorter(labelProvider));
 		destinationItems.addFilter(destinationFilter);
 		
 		ColumnViewerToolTipSupport.enableFor(destinationItems, ToolTip.NO_RECREATE);
@@ -120,8 +113,8 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 		sourceItems = new TableViewer(ret, SWT.BORDER);
 		sourceItems.getTable().setLayoutData(layoutData);
 		sourceItems.setContentProvider(new ArrayContentProvider());
-		sourceItems.setLabelProvider(new LabItemLabelProvider());
-		sourceItems.setSorter(new LabItemViewerSorter());
+		sourceItems.setLabelProvider(new LabItemLabelProvider(true));
+		sourceItems.setSorter(new LabItemViewerSorter(labelProvider));
 		sourceItems.addFilter(sourceFilter);
 		
 		ColumnViewerToolTipSupport.enableFor(sourceItems, ToolTip.NO_RECREATE);
@@ -166,94 +159,5 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 		}
 		
 		super.okPressed();
-	}
-	
-	private class LabItemViewerFilter extends ViewerFilter {
-		protected String searchString;
-		protected LabItemLabelProvider labelProvider = new LabItemLabelProvider();
-		
-		public void setSearchText(String s){
-			// Search must be a substring of the existing value
-			this.searchString = ".*" + s + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		
-		@Override
-		public boolean select(Viewer viewer, Object parentElement, Object element){
-			if (searchString == null || searchString.length() == 0) {
-				return true;
-			}
-			String label = labelProvider.getText(element);
-			if (label != null && label.matches(searchString)) {
-				return true;
-			}
-			return false;
-		}
-	}
-	
-	private class LabItemViewerSorter extends ViewerSorter {
-		private LabItemLabelProvider labelProvider = new LabItemLabelProvider();
-		
-		@Override
-		public int compare(Viewer viewer, Object e1, Object e2){
-			LabItem left = (LabItem) e1;
-			LabItem right = (LabItem) e2;
-			
-			return labelProvider.getText(left).compareTo(labelProvider.getText(right));
-		}
-	}
-	
-	private class LabItemLabelProvider extends ColumnLabelProvider {
-		private StringBuilder sb = new StringBuilder();
-		
-		private PreparedStatement ps = PersistentObject.getConnection().prepareStatement(
-			"SELECT COUNT(*) AS results FROM LABORWERTE WHERE " + LabResult.ITEM_ID + "=?"); //$NON-NLS-1$ //$NON-NLS-2$
-		
-		@Override
-		public String getText(Object element){
-			sb.setLength(0);
-			if (element instanceof LabItem) {
-				String refW = shortenString(((LabItem) element).getRefW());
-				String refM = shortenString(((LabItem) element).getRefM());
-				sb.append(((LabItem) element).getKuerzel())
-					.append(", ") //$NON-NLS-1$
-					.append(((LabItem) element).getName())
-					.append(" - ").append(((LabItem) element).getGroup()).append(" [") //$NON-NLS-1$ //$NON-NLS-2$
-					.append(((LabItem) element).getEinheit()).append("]").append(" ").append(refW) //$NON-NLS-1$ //$NON-NLS-2$
-					.append(" / ").append(refM); //$NON-NLS-1$
-			}
-			return sb.toString();
-		}
-		
-		private String shortenString(String string){
-			if (string.length() > 15) {
-				return string.substring(0, 14) + "..."; //$NON-NLS-1$
-			}
-			return string;
-		}
-		
-		@Override
-		public String getToolTipText(Object element){
-			if (element instanceof LabItem) {
-				int results = 0;
-				try {
-					ps.setString(1, ((LabItem) element).getId());
-					if (ps.execute()) {
-						ResultSet resultSet = ps.getResultSet();
-						while (resultSet.next()) {
-							results = resultSet.getInt("results"); //$NON-NLS-1$
-						}
-						resultSet.close();
-					}
-				} catch (SQLException e) {
-					StatusManager.getManager().handle(
-						new ElexisStatus(ElexisStatus.WARNING,
-							"ch.elexis", //$NON-NLS-1$
-							ElexisStatus.CODE_NOFEEDBACK,
-							"Could not determine count of LabResult.", e)); //$NON-NLS-1$
-				}
-				return String.format(Messages.MergeLabItemDialog_toolTipResultsCount, results);
-			}
-			return null;
-		}
 	}
 }
