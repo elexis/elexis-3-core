@@ -24,6 +24,8 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.compress.bzip2.CBZip2InputStream;
 import org.apache.commons.compress.bzip2.CBZip2OutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.rgw.tools.BinConverter;
 import ch.rgw.tools.ExHandler;
@@ -33,6 +35,8 @@ import ch.rgw.tools.StringTool;
  * Compressor/Expander
  */
 public class CompEx {
+	public static final Logger log = LoggerFactory.getLogger(CompEx.class);
+	
 	public static final int NONE = 0;
 	public static final int GLZ = 1 << 29;
 	public static final int RLL = 2 << 29;
@@ -151,6 +155,12 @@ public class CompEx {
 			long size = BinConverter.byteArrayToInt(siz, 0);
 			long typ = size & ~0x1fffffff;
 			size &= 0x1fffffff;
+			// more than 100 MB
+			if (size > 100000000) {
+				log.warn("Given InputStream exceeds 100 MB please check DB");
+				String empty = "... Text nicht lesbar. \nBitte Datenbankeintrag prüfen!";
+				return empty.getBytes();
+			}
 			byte[] ret = new byte[(int) size];
 			
 			switch ((int) typ) {
