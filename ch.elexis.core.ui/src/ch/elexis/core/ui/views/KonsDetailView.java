@@ -115,9 +115,11 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	private int[] sashWeights = null;
 	private SashForm sash;
 	
-	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
+	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class,
+		ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_RELOAD) {
 		@Override
 		public void runInUi(ElexisEvent ev){
+			actPat = null; //make sure patient will be updated
 			setPatient((Patient) ev.getObject());
 		};
 	};
