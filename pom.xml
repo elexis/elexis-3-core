@@ -361,7 +361,16 @@
 				<artifactId>target-platform-configuration </artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<!-- see http://wiki.eclipse.org/Tycho/Target_Platform we want to use
+				<dependency-resolution>
+					<extraRequirements>
+							<requirement>
+								<type>eclipse-feature</type>
+								<id>org.eclipse.equinox.executable</id>
+								<versionRange>1.0.0</versionRange>
+							</requirement>
+					</extraRequirements>
+				</dependency-resolution>
+				<!-- see http://wiki.eclipse.org/Tycho/Target_Platform we want to use
 						the first alternative: If you are already using a target file in Eclipse,
 						and that target file only contains "Software Site" locations (i.e. location
 						elements with type="InstallableUnit"), use that target file for the Tycho
