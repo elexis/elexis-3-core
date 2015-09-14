@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
@@ -44,7 +45,6 @@ import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.laboratory.preferences.LabSettings;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
@@ -131,9 +131,9 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createToolbar(markPersonAction, markAllAction);
 		heartbeat();
-		CoreHub.heart.addListener(this,
-			CoreHub.userCfg.get(LabSettings.LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
-		
+		CoreHub.heart.addListener(this, CoreHub.userCfg
+			.get(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
+			
 		tv.setInput(this);
 	}
 	

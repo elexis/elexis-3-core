@@ -25,13 +25,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LabOrderSetObservationDateAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.controls.util.LabOrderEditingSupport;
-import ch.elexis.core.ui.laboratory.preferences.LabSettings;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabOrder;
@@ -260,7 +260,7 @@ public class LaborOrdersComposite extends Composite {
 	private List<LabOrder> getOrders(){
 		List<LabOrder> ret = new ArrayList<LabOrder>();
 		List<LabOrder> orders = null;
-		if (CoreHub.userCfg.get(LabSettings.LABORDERS_SHOWMANDANTONLY, false)) {
+		if (CoreHub.userCfg.get(Preferences.LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY, false)) {
 			orders =
 				LabOrder.getLabOrders(actPatient, CoreHub.actMandant, null, null, null, null, null);
 		} else {
