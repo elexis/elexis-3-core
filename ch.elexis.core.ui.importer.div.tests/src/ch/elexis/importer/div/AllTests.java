@@ -20,7 +20,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	Test_HL7_parser.class
+	Test_HL7_parser.class, MultiFileParserTests.class
 })
 public class AllTests {
 	public static Test suite() throws ClassNotFoundException{

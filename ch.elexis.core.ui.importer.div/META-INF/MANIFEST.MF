@@ -20,6 +20,8 @@ Export-Package: ch.elexis.core.ui.importer.div.importers;
    org.eclipse.jface.viewers,
    org.eclipse.swt.widgets,
    org.eclipse.jface.dialogs",
+ ch.elexis.core.ui.importer.div.importers.multifile,
+ ch.elexis.core.ui.importer.div.importers.multifile.strategy,
  ch.elexis.core.ui.importer.div.matchers;
   uses:="org.eclipse.osgi.util,
    ch.elexis.data,

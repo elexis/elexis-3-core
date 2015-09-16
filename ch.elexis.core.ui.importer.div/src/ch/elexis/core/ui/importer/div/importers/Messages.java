@@ -98,6 +98,15 @@ public class Messages extends NLS {
 	public static String Presets_UVGAbkuerzung;
 	public static String LabImporterUtil_Select;
 	public static String LabImporterUtil_SelectLab;
+	public static String MultiFileParser_InvalidFile;
+	public static String DefaultPDFImportStrategy_NoDocManager;
+	public static String DefaultPDFImportStrategy_InitContextFailed;
+	public static String DefaultPDFImportStrategy_Patient;
+	public static String DefaultPDFImportStrategy_Lab;
+	public static String DefaultPDFImportStrategy_LabName;
+	public static String DefaultPDFImportStrategy_Date;
+	public static String DefaultPDFImportStrategy_Group;
+	public static String DefaultPDFImportStrategy_Prio;
 	
 	static {
 		// initialize resource bundle
