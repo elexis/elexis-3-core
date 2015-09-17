@@ -10,8 +10,14 @@
  ******************************************************************************/
 package ch.elexis.core.ui.wizards;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Hashtable;
 
+import javax.xml.bind.JAXBException;
+
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -20,6 +26,9 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -33,6 +42,7 @@ import org.eclipse.swt.widgets.Label;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.DBConnection;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.StringTool;
@@ -41,6 +51,7 @@ public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage 
 	private Label lblConnection, lblUser, lblDriver, lblTyp;
 	private ComboViewer cViewerConns;
 	private Button btnDelStoredConn;
+	private Button btnCopyStoredConn;
 	
 	/**
 	 * @wbp.parser.constructor
@@ -69,12 +80,13 @@ public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage 
 		
 		Composite cmpExistConnSelector = new Composite(area, SWT.BORDER);
 		cmpExistConnSelector.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		cmpExistConnSelector.setLayout(new GridLayout(2, false));
+		cmpExistConnSelector.setLayout(new GridLayout(3, false));
 		
 		Label lblGespeicherteVerbindungen = new Label(cmpExistConnSelector, SWT.NONE);
+		lblGespeicherteVerbindungen.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 		lblGespeicherteVerbindungen
 			.setText(Messages.DBConnectWizardPage_lblGespeicherteVerbindungen_text);
-		new Label(cmpExistConnSelector, SWT.NONE);
+
 		cViewerConns = new ComboViewer(cmpExistConnSelector, SWT.READ_ONLY);
 		Combo combo = cViewerConns.getCombo();
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -109,6 +121,34 @@ public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage 
 			}
 		});
 		
+		btnCopyStoredConn = new Button(cmpExistConnSelector, SWT.FLAT);
+		btnCopyStoredConn.setImage(Images.IMG_COPY.getImage());
+		btnCopyStoredConn.setToolTipText("Verbindungsdaten in Zwischenablage kopieren");
+		btnCopyStoredConn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				IStructuredSelection selection = (IStructuredSelection) cViewerConns.getSelection();
+				if (selection.size() > 0) {
+					Object firstElement = selection.getFirstElement();
+					if (firstElement != null) {
+						DBConnection dbc = (DBConnection) firstElement;
+						Clipboard cb = new Clipboard(UiDesk.getDisplay());
+						TextTransfer textTransfer = TextTransfer.getInstance();
+						try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+							dbc.marshall(bos);
+							cb.setContents(new Object[] {
+								bos.toString()
+							}, new Transfer[] {
+								textTransfer
+							});
+						} catch (JAXBException | IOException e1) {
+							MessageDialog.openError(UiDesk.getTopShell(), "Error", e1.getMessage());
+						}
+					}
+				}
+			}
+		});
+		
 		cViewerConns.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
@@ -127,8 +167,8 @@ public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage 
 		setCurrentSelection();
 		
 		Label lblOderAufDer = new Label(cmpExistConnSelector, SWT.NONE);
+		lblOderAufDer.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 		lblOderAufDer.setText(Messages.DBConnectSelectionConnectionWizardPage_lblOderAufDer_text);
-		new Label(cmpExistConnSelector, SWT.NONE);
 		
 		tdbg = new TestDBConnectionGroup(area, SWT.NONE, getDBConnectWizard());
 		tdbg.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
