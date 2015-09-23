@@ -9,10 +9,10 @@ import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
 import ch.rgw.tools.TimeTool;
 
-public enum ComboViewerSortOrder {
-	MANUAL("manuell", 0, new ManualViewerComparator()), DEFAULT("standard", 1,
-		new DefaultViewerComparator());
-	
+public enum ViewerSortOrder {
+		MANUAL("manuell", 0, new ManualViewerComparator()),
+		DEFAULT("standard", 1, new DefaultViewerComparator());
+		
 	final String label;
 	final int val;
 	final ViewerComparator vc;
@@ -23,7 +23,7 @@ public enum ComboViewerSortOrder {
 	private static TimeTool time1 = new TimeTool();
 	private static TimeTool time2 = new TimeTool();
 	
-	private ComboViewerSortOrder(String label, int val, ViewerComparator vc){
+	private ViewerSortOrder(String label, int val, ViewerComparator vc){
 		this.label = label;
 		this.val = val;
 		this.vc = vc;
@@ -58,7 +58,7 @@ public enum ComboViewerSortOrder {
 			
 			if (sos1.length() == 0 && sos2.length() == 0)
 				return 0;
-			
+				
 			int val1 = Integer.MAX_VALUE;
 			int val2 = Integer.MAX_VALUE;
 			
@@ -100,32 +100,22 @@ public enum ComboViewerSortOrder {
 				rc = l1.compareTo(l2);
 				break;
 			case 2:
-				String pkgSize1 = getPackageSize(p1.getArtikel());
-				String pkgSize2 = getPackageSize(p2.getArtikel());
-				rc = pkgSize1.compareTo(pkgSize2);
-				break;
-			case 3:
 				String dose1 = getDose(p1.getDosis());
 				String dose2 = getDose(p2.getDosis());
 				rc = dose1.compareTo(dose2);
 				break;
-			case 4:
+			case 3:
 				time1.set(p1.getBeginDate());
 				time2.set(p2.getBeginDate());
 				rc = time1.compareTo(time2);
 				break;
-			case 5:
+			case 4:
 				String supUntil1 = getSuppliedUntil(p1);
 				String supUntil2 = getSuppliedUntil(p2);
 				rc = supUntil1.compareTo(supUntil2);
 				break;
-			case 6:
-				String com1 = p1.getBemerkung();
-				String com2 = p2.getBemerkung();
-				rc = com1.compareTo(com2);
-				break;
-			case 7:
-				// stopped column is optional and therefore added at the end here
+			case 5:
+				// stopped column is optional 
 				boolean stop1IsValid = isStopped(p1.getEndDate());
 				boolean stop2IsValid = isStopped(p2.getEndDate());
 				
@@ -141,6 +131,22 @@ public enum ComboViewerSortOrder {
 					else
 						rc = 0;
 				}
+				break;
+			case 6:
+				String com1 = p1.getBemerkung();
+				String com2 = p2.getBemerkung();
+				rc = com1.compareTo(com2);
+				break;
+			case 7:
+				String stopReason1 = p1.getStopReason();
+				if (stopReason1 == null)
+					stopReason1 = "";
+					
+				String stopReason2 = p2.getStopReason();
+				if (stopReason2 == null)
+					stopReason2 = "";
+					
+				rc = stopReason1.compareTo(stopReason2);
 				break;
 			default:
 				rc = 0;
@@ -161,16 +167,12 @@ public enum ComboViewerSortOrder {
 			return label;
 		}
 		
-		private String getPackageSize(Artikel arti){
-			return (arti != null) ? arti.getPackungsGroesse() + "" : "?";
-		}
-		
 		private String getDose(String dose){
 			return (dose.equals(StringConstants.ZERO) ? "gestoppt" : dose);
 		}
 		
 		private String getSuppliedUntil(Prescription p){
-			if (!p.isFixedMediation() || p.getReserveMedication()) {
+			if (!p.isFixedMediation() || p.isReserveMedication()) {
 				return "";
 			}
 			
@@ -193,11 +195,11 @@ public enum ComboViewerSortOrder {
 	/**
 	 * 
 	 * @param i
-	 * @return the respective {@link ComboViewerSortOrder} for i, or
-	 *         {@link ComboViewerSortOrder#DEFAULT} if invalid or not found
+	 * @return the respective {@link ViewerSortOrder} for i, or {@link ViewerSortOrder#DEFAULT} if
+	 *         invalid or not found
 	 */
-	public static ComboViewerSortOrder getSortOrderPerValue(int i){
-		for (ComboViewerSortOrder cvso : ComboViewerSortOrder.values()) {
+	public static ViewerSortOrder getSortOrderPerValue(int i){
+		for (ViewerSortOrder cvso : ViewerSortOrder.values()) {
 			if (cvso.val == i)
 				return cvso;
 		}

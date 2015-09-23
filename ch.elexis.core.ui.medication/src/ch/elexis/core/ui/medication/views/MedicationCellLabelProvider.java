@@ -14,18 +14,22 @@ import ch.rgw.tools.TimeTool;
 
 public class MedicationCellLabelProvider extends ColumnLabelProvider {
 	
-	private Color prnColor;
+	private Color reserveColor, needColor;
 	private static final int FILTER_PRESCRIPTION_AFTER_N_DAYS = 30;
-	private static MedicationComposite mediComposite;
 	
 	public MedicationCellLabelProvider(){
-		prnColor = UiDesk.getColorFromRGB("66CDAA");
+		reserveColor = UiDesk.getColorFromRGB("DDEFFF");
+		needColor = UiDesk.getColorFromRGB("FFFFC6");
 	}
 
 	@Override
 	public Color getBackground(Object element){
 		Prescription pres = (Prescription) element;
-		if(pres.getReserveMedication()) return prnColor;
+		if (pres.isReserveMedication()) {
+			return reserveColor;
+		} else if (pres.isNeedMedication()) {
+			return needColor;
+		}
 		
 		return null;
 	}
@@ -42,32 +46,63 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 	}
 
 	
+	/**
+	 * Medication is not Historical if it is... <br>
+	 * <ul style="list-style-type:disc">
+	 * <li>a FixMedication</li>
+	 * <ul>
+	 * <li>EXPECT stopped FixMedication</li>
+	 * </ul>
+	 * <li>from the past 30 days</li>
+	 * <ul>
+	 * <li>applied</li>
+	 * <li>self dispensed</li>
+	 * <li>recipe</li>
+	 * <li>EXPECT vaccinations (ATC codes starting with 'J07')</li>
+	 * </ul>
+	 * <li>a ReserveMedication</li>
+	 * <li>a NeedMedication</li>
+	 * </ul>
+	 * 
+	 * @param presc
+	 * @return {@link <code>true</code>} if to be displayed, {@link <code>false</code>} if
+	 *         historical
+	 */
 	public static boolean isNotHistorical(Prescription presc){
+		// get start and end date
 		String[] dates = new String[2];
 		presc.get(new String[] {
 			Prescription.FLD_DATE_FROM, Prescription.FLD_DATE_UNTIL
 		}, dates);
 		
-		if (presc.getEntryType() == EntryType.FIXED_MEDICATION) {
+		// is it a active FixMedication
+		EntryType type = presc.getEntryType();
+		if (type == EntryType.FIXED_MEDICATION) { //check if backward compatible
+			// stopped?
+			if (StringConstants.ZERO.equals(presc.getDosis())) {
+				return false;
+			}
 			return true;
 		}
 		
-		TimeTool tt = new TimeTool(dates[0]);
-		int daysTo = tt.daysTo(new TimeTool());
-		if (daysTo > FILTER_PRESCRIPTION_AFTER_N_DAYS)
-			return false;
+		// is a ReserveMedication or NeedMedication
+		if (type == EntryType.RESERVE_MEDICATION || type == EntryType.NEED_MEDICATION) {
+			return true;
+		}
 		
-		// stopped
-		if (presc.getDosis().equals(StringConstants.ZERO))
+		// medicine from the past 30 days
+		TimeTool time = new TimeTool(dates[0]);
+		int daysTo = time.daysTo(new TimeTool());
+		if (daysTo > FILTER_PRESCRIPTION_AFTER_N_DAYS) {
 			return false;
+		}
 		
+		// is no vaccination (atc starting with 'J07')
 		if (presc.getArtikel() != null) {
 			String atcCode = presc.getArtikel().getATC_code();
-			if (atcCode != null && atcCode.length() > 4) {
-				// vaccinations start with atcCode J07
-				if (atcCode.toUpperCase().startsWith("J07")) {
-					return false;
-				}
+			if (atcCode != null && atcCode.length() > 4
+				&& atcCode.toUpperCase().startsWith("J07")) {
+				return false;
 			}
 		}
 		return true;

@@ -12,6 +12,7 @@ import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
+import ch.elexis.data.Prescription.EntryType;
 
 public class SetAsFixMedicationHandler extends AbstractHandler {
 	
@@ -40,10 +41,10 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 						}
 					}
 					
-					Prescription fixMediPresc =
-						new Prescription(article,
-							(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage,
-							remark);
+					Prescription fixMediPresc = new Prescription(article,
+						(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
+					fixMediPresc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
+					
 					if (disposalComment != null && !disposalComment.isEmpty())
 						fixMediPresc.setDisposalComment(disposalComment);
 					

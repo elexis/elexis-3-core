@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -22,6 +23,7 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.medication.PreferenceConstants;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableDownAction;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpAction;
 import ch.elexis.data.Patient;
@@ -87,6 +89,11 @@ public class MedicationView extends ViewPart implements IActivationListener {
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 	
+	public void setMedicationTableViewerComparator(ViewerSortOrder order){
+		medicationTableViewer.setComparator(order.vc);
+		CoreHub.userCfg.set(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, order.val);
+	}
+	
 	@Override
 	public void setFocus(){
 		updateUi(ElexisEventDispatcher.getSelectedPatient());
@@ -107,6 +114,8 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	public void activation(boolean mode){
 		if (mode) {
 			setFocus();
+			int sorter = CoreHub.userCfg.get(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, 1);
+			medicationTableViewer.setComparator(ViewerSortOrder.getSortOrderPerValue(sorter).vc);
 		}
 	}
 	

@@ -18,6 +18,7 @@ import ch.elexis.data.Artikel;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
+import ch.elexis.data.Prescription.EntryType;
 import ch.rgw.tools.StringTool;
 
 public class AddFixMedicationHandler extends AbstractHandler {
@@ -68,8 +69,9 @@ public class AddFixMedicationHandler extends AbstractHandler {
 				remark = defSig.getSignatureComment();
 			}
 			
-			new Prescription((Artikel) article,
+			Prescription presc = new Prescription((Artikel) article,
 				(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
+			presc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
 			
 			medicationView.refresh();
 		}

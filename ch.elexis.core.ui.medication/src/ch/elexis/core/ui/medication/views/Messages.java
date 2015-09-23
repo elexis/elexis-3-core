@@ -50,6 +50,17 @@ public class Messages extends NLS {
 	public static String MedicationComposite_btnPRNMedication_text;
 	public static String MedicationComposite_decorConfirm;
 	public static String MedicationComposite_search;
+	public static String MedicationComposite_stopped;
+	public static String MedicationComposite_stopReason;
+	public static String MedicationComposite_intolerance;
+	public static String MedicationComposite_lastReceived;
+	public static String MedicationComposite_lastReceivedAt;
+	public static String MedicationComposite_startedAt;
+	public static String MedicationComposite_stopDateAndReason;
+	public static String MedicationComposite_recipeFrom;
+	public static String MedicationComposite_consMissing;
+	public static String MedicationComposite_consFrom;
+	
 	public static String MovePrescriptionPositionInTableUpAction_Label;
 	public static String MovePrescriptionPositionInTableDownAction_Label;
 	public static String MedicationComposite_btnCheckButton_text;

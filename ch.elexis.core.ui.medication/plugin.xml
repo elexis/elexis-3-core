@@ -21,6 +21,11 @@
                icon="icon://IMG_PRINTER"
                style="push">
          </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.ApplyCustomSorting"
+               icon="icon://IMG_SORT_STAR"
+               style="toggle">
+         </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -31,12 +36,38 @@
                style="push">
          </command>
          <command
-               commandId="ch.elexis.core.ui.medication.SetAsPRNMedication"
-               icon="icon://IMG_JAR"
+               commandId="ch.elexis.core.ui.medication.SetAsNeedMedication"
+               icon="icon://IMG_NEED_MEDI"
+               style="push">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.SetAsReserveMedication"
+               icon="icon://IMG_RESERVE_MEDI"
                style="push">
          </command>
          <separator
                name="ch.elexis.core.ui.medication.separator1"
+               visible="true">
+         </separator>
+         <command
+               commandId="ch.elexis.core.ui.medication.MentionInConsultation"
+               icon="icon://IMG_DATA"
+               style="push"
+               tooltip="erstellt einen Vermerk in der aktuellen Konsultation">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.SwitchMedication"
+               icon="icon://IMG_BALANCE_EDIT"
+               style="push"
+               tooltip="die ausgewählte Medikation durch eine andere ersetzten">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.AddArticleToOrder"
+               icon="icon://IMG_CART"
+               style="push">
+         </command>
+         <separator
+               name="ch.elexis.core.ui.medication.separator2"
                visible="true">
          </separator>
          <command
@@ -108,9 +139,35 @@
             name="FixMedikation">
       </command>
       <command
+            description="Medikation für Bedarf"
+            id="ch.elexis.core.ui.medication.SetAsNeedMedication"
+            name="Bedarfsmedikation">
+      </command>
+      <command
             description="Medikation auf Reserve"
-            id="ch.elexis.core.ui.medication.SetAsPRNMedication"
-            name="Bedarfsmedikation (setzen/entfernen)">
+            id="ch.elexis.core.ui.medication.SetAsReserveMedication"
+            name="Reservemedikation">
+      </command>
+      <command
+            id="ch.elexis.core.ui.medication.ApplyCustomSorting"
+            name="Persönliche Sortierung anwenden">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:false"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            description="Vermerk in Konsultation erstellen"
+            id="ch.elexis.core.ui.medication.MentionInConsultation"
+            name="Vermerk in Konsultation">
+      </command>
+      <command
+            id="ch.elexis.core.ui.medication.SwitchMedication"
+            name="Medikation anpassen">
+      </command>
+      <command
+            id="ch.elexis.core.ui.medication.AddArticleToOrder"
+            name="Artikel auf Bestellliste setzen">
       </command>
    </extension>
    <extension
@@ -148,6 +205,17 @@
                <equals
                      value="TRUE">
                </equals>
+               <and>
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false">
+                        <instanceof
+                              value="ch.elexis.data.Prescription">
+                        </instanceof>
+                     </iterate>
+                  </with>
+               </and>
             </with>
          </activeWhen>
       </handler>
@@ -179,17 +247,154 @@
          </activeWhen>
       </handler>
       <handler
+            class="ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler"
+            commandId="ch.elexis.core.ui.medication.ApplyCustomSorting">
+         <activeWhen>
+            <with
+                  variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
+               <equals
+                     value="TRUE">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
             class="ch.elexis.core.ui.medication.handlers.InteractionsCheckHandler"
             commandId="ch.elexis.core.ui.medication.InteractionsCheck">
+         <activeWhen>
+            <with
+                  variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
+               <equals
+                     value="TRUE">
+               </equals>
+            </with>
+         </activeWhen>
       </handler>
       <handler
             class="ch.elexis.core.ui.medication.handlers.SetAsFixMedicationHandler"
             commandId="ch.elexis.core.ui.medication.SetAsFixMedication">
+         <activeWhen>
+            <with
+                  variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
+               <equals
+                     value="TRUE">
+               </equals>
+               <and>
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false">
+                        <instanceof
+                              value="ch.elexis.data.Prescription">
+                        </instanceof>
+                     </iterate>
+                  </with>
+               </and>
+            </with></activeWhen>
       </handler>
       <handler
-            class="ch.elexis.core.ui.medication.handlers.SetAsPRNMedicationHandler"
-            commandId="ch.elexis.core.ui.medication.SetAsPRNMedication">
+            class="ch.elexis.core.ui.medication.handlers.SetAsNeedMedicationHandler"
+            commandId="ch.elexis.core.ui.medication.SetAsNeedMedication">
+         <activeWhen>
+            <with
+                  variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
+               <equals
+                     value="TRUE">
+               </equals>
+               <and>
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false">
+                        <instanceof
+                              value="ch.elexis.data.Prescription">
+                        </instanceof>
+                     </iterate>
+                  </with>
+               </and>
+            </with></activeWhen>
       </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.SetAsReserveMedicationHandler"
+            commandId="ch.elexis.core.ui.medication.SetAsReserveMedication">
+         <activeWhen>
+            <with
+                  variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
+               <equals
+                     value="TRUE">
+               </equals>
+               <and>
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false">
+                        <instanceof
+                              value="ch.elexis.data.Prescription">
+                        </instanceof>
+                     </iterate>
+                  </with>
+               </and>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.MentionInConsultationHandler"
+            commandId="ch.elexis.core.ui.medication.MentionInConsultation">
+         <activeWhen>
+            <with
+                  variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
+               <equals
+                     value="TRUE">
+               </equals>
+               <and>
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false">
+                        <instanceof
+                              value="ch.elexis.data.Prescription">
+                        </instanceof>
+                     </iterate>
+                  </with>
+               </and>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.SwitchMedicationHandler"
+            commandId="ch.elexis.core.ui.medication.SwitchMedication">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="ch.elexis.data.Prescription">
+                  </instanceof>
+               </iterate>
+               <and>
+                  <count
+                        value="1">
+                  </count>
+               </and>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.AddArticleToOrderHandler"
+            commandId="ch.elexis.core.ui.medication.AddArticleToOrder">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="ch.elexis.data.Prescription">
+                  </instanceof>
+               </iterate>
+            </with>
+         </activeWhen>
+      </handler>    
    </extension>
 
 </plugin>

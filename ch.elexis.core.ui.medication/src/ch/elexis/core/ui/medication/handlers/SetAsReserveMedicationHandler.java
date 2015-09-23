@@ -11,7 +11,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.data.Prescription;
 
-public class SetAsPRNMedicationHandler extends AbstractHandler {
+public class SetAsReserveMedicationHandler extends AbstractHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
@@ -23,7 +23,7 @@ public class SetAsPRNMedicationHandler extends AbstractHandler {
 			
 			if (firstElement instanceof Prescription) {
 				Prescription presc = (Prescription) firstElement;
-				presc.setReserveMedication(presc.getReserveMedication() ? false : true);
+				presc.setReserveMedication(presc.isReserveMedication() ? false : true);
 				
 				MedicationView medicationView =
 					(MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
