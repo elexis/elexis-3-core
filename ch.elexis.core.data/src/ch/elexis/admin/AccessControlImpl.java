@@ -57,7 +57,7 @@ import ch.rgw.tools.StringTool;
  * @see ACE
  * @deprecated 3.1 replaced by {@link RoleBasedAccessControl}
  */
-public class AccessControlImpl extends AccessControl {
+public class AccessControlImpl extends AbstractAccessControl {
 	public static final String KEY_GROUPS = "Groups";
 	
 	public static final String DB_UID = "dbUID";

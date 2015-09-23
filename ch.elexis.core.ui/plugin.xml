@@ -193,21 +193,6 @@
             id="ch.elexis.preferences.security"
             name="%elexis.groupPrefs"/>
       <page
-            category="ch.elexis.preferences.security"
-            class="ch.elexis.core.ui.preferences.Zugriff"
-            id="ch.elexis.preferences.acl"
-            name="%elexis.securityPrefs"/>
-      <page
-            category="ch.elexis.preferences.security"
-            class="ch.elexis.core.ui.preferences.AnwenderPref"
-            id="ch.elexis.anwenderprefs"
-            name="%elexis.userPrefs"/>
-      <page
-            category="ch.elexis.preferences.security"
-            class="ch.elexis.core.ui.preferences.Mandanten"
-            id="ch.elexis.MandantenPref"
-            name="%elexis.mandatorPrefs"/>
-      <page
             class="ch.elexis.core.ui.preferences.Texterstellung"
             id="ch.elexis.preferences.Texterstellung"
             name="%elexis.textPrefs"/>

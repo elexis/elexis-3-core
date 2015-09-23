@@ -82,7 +82,7 @@ public class User extends PersistentObject {
 	 * @see https://redmine.medelexis.ch/issues/771
 	 */
 	private static void migrateToNewStructure(){
-		new Role(); // to call the static init header
+		new Role(); // to call the static init header and init the roles
 		
 		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
 		List<Anwender> users = qbe.execute();
@@ -114,6 +114,7 @@ public class User extends PersistentObject {
 			boolean isMandator = anwender.getBoolean(Anwender.FLD_IS_MANDATOR);
 			if (isMandator) {
 				u.setAssignedRole(Role.load(Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
+				u.setAssignedRole(Role.load(Role.SYSTEMROLE_LITERAL_DOCTOR), true);
 			}
 			
 			// TODO delete the information from contact table?

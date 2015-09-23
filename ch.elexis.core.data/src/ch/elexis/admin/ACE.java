@@ -19,10 +19,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.data.Query;
+import ch.elexis.data.Right;
+import ch.elexis.data.Role;
 
 /**
  * AcessControlElement
@@ -31,11 +35,11 @@ import ch.elexis.core.jdt.Nullable;
  * (AccessControlLists). An ACE has a parent, an internal name and a (probably localized) external
  * name that will be shown to the user. <br>
  * <br>
- * ACEs are loaded within {@link AccessControl#load()}
+ * ACEs are loaded within {@link AbstractAccessControl#load()}
  * 
  * @since 2.0
  * @author gerry
- * 
+ * 		
  */
 public class ACE implements Serializable {
 	private static final long serialVersionUID = 34320020090119L;
@@ -59,15 +63,35 @@ public class ACE implements Serializable {
 	private static void initAllDefinedACEs(){
 		if (allDefinedACEs != null)
 			return;
-		
-		@SuppressWarnings("unchecked")
-		List<IACLContributor> acls =
-			Extensions.getClasses(ExtensionPointConstantsData.ACL_CONTRIBUTION, "ACLContributor"); //$NON-NLS-1$
-		
-		List<ACE> temp =
-			acls.stream().flatMap(acl -> Arrays.asList(acl.getACL()).stream())
-				.collect(Collectors.toList());
+			
+		List<ACE> temp = getACLContributionExtensions().stream()
+			.flatMap(acl -> Arrays.asList(acl.getACL()).stream()).collect(Collectors.toList());
 		allDefinedACEs = temp.stream().collect(Collectors.toMap(a -> a.getCanonicalName(), a -> a));
+	}
+	
+	/**
+	 * initialize the default ACE values
+	 * 
+	 * @param reset
+	 *            resets all configured rights before installing the defaults
+	 * @since 3.1
+	 */
+	public static void initializeACEDefaults(boolean reset){
+		if (reset) {
+			Query<Role> arq = new Query<Role>(Role.class);
+			List<Role> allRoles = arq.execute();
+			for (Role role : allRoles) {
+				role.revokeAllRightsForRole();
+			}
+			Right.resetTable();
+		}
+		getACLContributionExtensions().stream().forEach(ace -> ace.initializeDefaults(CoreHub.acl));
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static List<IACLContributor> getACLContributionExtensions(){
+		return Extensions.getClasses(ExtensionPointConstantsData.ACL_CONTRIBUTION,
+			ExtensionPointConstantsData.ACL_CONTRIBUTION_PT_CONTRIBUTOR);
 	}
 	
 	/**

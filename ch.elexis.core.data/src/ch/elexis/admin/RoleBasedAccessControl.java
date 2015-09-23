@@ -30,7 +30,7 @@ import ch.rgw.tools.JdbcLink.Stm;
 /**
  * @since 3.1
  */
-public class RoleBasedAccessControl extends AccessControl {
+public class RoleBasedAccessControl extends AbstractAccessControl {
 	
 	private static Logger log = LoggerFactory.getLogger(RoleBasedAccessControl.class);
 	

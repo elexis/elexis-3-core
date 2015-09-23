@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.Desk;
-import ch.elexis.admin.AccessControl;
+import ch.elexis.admin.AbstractAccessControl;
 import ch.elexis.admin.RoleBasedAccessControl;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -118,7 +118,7 @@ public class CoreHub implements BundleActivator {
 	public static final CorePreferenceInitializer pin = new CorePreferenceInitializer();
 	
 	/** Die zentrale Zugriffskontrolle */
-	public static final AccessControl acl = new RoleBasedAccessControl();
+	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
 	
 	/**
 	 * The listener for patient events

@@ -25,28 +25,29 @@ import ch.elexis.core.ui.preferences.inputs.StringListFieldEditor;
 public class Gruppen extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	
 	public Gruppen(){
-		super(GRID);
-		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
-		setDescription(Messages.Gruppen_GruppenUndRechte);
+//		super(GRID);
+//		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
+//		setDescription(Messages.Gruppen_GruppenUndRechte);
+		setDescription("Bitte konfigurieren Sie die Daten in den entsprechenden Unterpunkten");
 	}
 	
 	public void init(IWorkbench workbench){
-		String groups = CoreHub.globalCfg.get(Preferences.ACC_GROUPS, null);
-		if (groups == null) {
-			CoreHub.globalCfg.set(Preferences.ACC_GROUPS, StringConstants.ROLES_DEFAULT);
-		}
+//		String groups = CoreHub.globalCfg.get(Preferences.ACC_GROUPS, null);
+//		if (groups == null) {
+//			CoreHub.globalCfg.set(Preferences.ACC_GROUPS, StringConstants.ROLES_DEFAULT);
+//		}
 		
 	}
 	
 	@Override
 	protected void createFieldEditors(){
-		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
-			addField(new StringListFieldEditor(Preferences.ACC_GROUPS,
-				StringConstants.ROLES_NAMING, Messages.Gruppen_BitteGebenSieNameEin,
-				Messages.Gruppen_Gruppen, getFieldEditorParent()));
-		} else {
-			new PrefAccessDenied(getFieldEditorParent());
-		}
+//		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
+//			addField(new StringListFieldEditor(Preferences.ACC_GROUPS,
+//				StringConstants.ROLES_NAMING, Messages.Gruppen_BitteGebenSieNameEin,
+//				Messages.Gruppen_Gruppen, getFieldEditorParent()));
+//		} else {
+//			new PrefAccessDenied(getFieldEditorParent());
+//		}
 		
 	}
 	

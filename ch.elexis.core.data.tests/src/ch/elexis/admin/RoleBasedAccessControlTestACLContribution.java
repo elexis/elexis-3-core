@@ -17,10 +17,11 @@ public class RoleBasedAccessControlTestACLContribution implements IACLContributo
 			parent, child1, child2, child1child1
 		};
 	}
-	
+
 	@Override
-	public ACE[] reject(ACE[] acl){
-		return null;
+	public void initializeDefaults(AbstractAccessControl ac){
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

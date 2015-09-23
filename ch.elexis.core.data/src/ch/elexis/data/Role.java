@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Locale;
 
 import ch.elexis.admin.ACE;
-import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.jdt.Nullable;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -40,7 +39,7 @@ public class Role extends PersistentObject {
 			
 		if (!tableExists(TABLENAME)) {
 			executeDBInitScriptForClass(Role.class, null);
-			initBasicRoles();
+			ACE.initializeACEDefaults(false);
 		}
 	}
 	
@@ -50,20 +49,6 @@ public class Role extends PersistentObject {
 		create(null);
 		
 		setSystemRole(false);
-	}
-	
-	/**
-	 * Configure the basic system role user
-	 */
-	public static void initBasicRoles(){
-		Role ur = Role.load(SYSTEMROLE_LITERAL_USER);
-		ACE[] anwender = AccessControlDefaults.getAnwender();
-		Arrays.asList(anwender).forEach(ace -> ur.grantAccessRight(ace));
-		ACE[] alle = AccessControlDefaults.getAlle();
-		Arrays.asList(alle).forEach(ace -> ur.grantAccessRight(ace));
-		
-		Role ed = Role.load(SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR);
-		ed.grantAccessRight(AccessControlDefaults.ACE_ACCESS);
 	}
 	
 	protected Role(final String id){
@@ -168,7 +153,7 @@ public class Role extends PersistentObject {
 	 */
 	public void revokeAccessRight(ACE ace){
 		ace.getChildren(true).stream().map(p -> Right.getOrCreateRightByACE(p))
-			.forEach(r -> removeFromList(FLD_JOINT_RIGHTS, r.getId()));
+			.forEachOrdered(r -> removeFromList(FLD_JOINT_RIGHTS, r.getId()));
 	}
 	
 	@Override
@@ -182,5 +167,14 @@ public class Role extends PersistentObject {
 		int res = stm.exec("DELETE FROM " + TABLENAME + " WHERE ID=" + getWrappedId());
 		getConnection().releaseStatement(stm);
 		return res == 1;
+	}
+
+	/**
+	 * Revokes all rights of this role
+	 */
+	public void revokeAllRightsForRole(){
+		Stm stm = getConnection().getStatement();
+		stm.exec("DELETE FROM ROLE_RIGHT_JOINT WHERE ROLE_ID=" + getWrappedId());
+		getConnection().releaseStatement(stm);
 	}
 }

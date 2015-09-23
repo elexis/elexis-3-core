@@ -14,16 +14,20 @@ package ch.elexis.admin;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.data.Role;
+
 /**
  * Contribution of the basic system's ACLs
  * 
  * @author gerry
- * @since 3.1 changed behaviour to fetch access rights in {@link AccessControlDefaults} via reflection
+ * @since 3.1 changed behaviour to fetch access rights in {@link AccessControlDefaults} via
+ *        reflection
  */
 public class ACLContributor implements IACLContributor {
 	private static Logger log = LoggerFactory.getLogger(ACLContributor.class);
@@ -37,11 +41,6 @@ public class ACLContributor implements IACLContributor {
 		}
 	}
 	
-	public ACE[] reject(final ACE[] acl){
-		// TODO Management of collisions
-		return null;
-	}
-	
 	/**
 	 * we collect all access rights as defined in {@link AccessControlDefaults} via reflection
 	 * 
@@ -50,8 +49,8 @@ public class ACLContributor implements IACLContributor {
 	 * @throws IllegalAccessException
 	 * @since 3.1
 	 */
-	private ACE[] findAllRightsThroughReflection() throws IllegalArgumentException,
-		IllegalAccessException{
+	private ACE[] findAllRightsThroughReflection()
+		throws IllegalArgumentException, IllegalAccessException{
 		List<ACE> list = new ArrayList<ACE>();
 		Field[] declaredFields = AccessControlDefaults.class.getFields();
 		for (Field field : declaredFields) {
@@ -64,5 +63,16 @@ public class ACLContributor implements IACLContributor {
 			}
 		}
 		return list.toArray(new ACE[list.size()]);
+	}
+	
+	@Override
+	public void initializeDefaults(AbstractAccessControl ac){
+		Role ur = Role.load(Role.SYSTEMROLE_LITERAL_USER);
+		ACE[] anwender = AccessControlDefaults.getAnwender();
+		Arrays.asList(anwender).stream().forEachOrdered(ace -> ac.grant(ur, ace));
+		ACE[] alle = AccessControlDefaults.getAlle();
+		Arrays.asList(alle).stream().forEachOrdered(ace -> ac.grant(ur, ace));
+		
+		ac.grant(Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR, AccessControlDefaults.ACE_ACCESS);
 	}
 }

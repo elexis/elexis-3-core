@@ -14,10 +14,11 @@ import java.util.Locale;
 
 import ch.elexis.admin.ACE;
 import ch.elexis.core.jdt.NonNull;
+import ch.rgw.tools.JdbcLink.Stm;
 
 /**
  * 
- * @since 3.1
+ *  @since 3.1
  */
 public class Right extends PersistentObject {
 	
@@ -39,10 +40,10 @@ public class Right extends PersistentObject {
 		super(id);
 	}
 	
-	protected Right(final ACE ace) {
+	protected Right(final ACE ace){
 		create(ace.getUniqueHashFromACE());
 		set(FLD_NAME, ace.getName());
-
+		
 		Right parentRight = Right.getOrCreateRightByACE(ace.getParent());
 		set(FLD_PARENTID, parentRight.getId());
 		setTranslatedLabel(ace.getLocalizedName());
@@ -52,10 +53,20 @@ public class Right extends PersistentObject {
 		return new Right(id);
 	}
 	
-	public static @NonNull Right getOrCreateRightByACE(ACE ace) {
+	public static @NonNull Right getOrCreateRightByACE(ACE ace){
 		Right right = Right.load(ace.getUniqueHashFromACE());
-		if(right.exists()) return right;
+		if (right.exists())
+			return right;
 		return new Right(ace);
+	}
+	
+	/**
+	 * Reset the table, effectively removing all rights
+	 */
+	public static void resetTable(){
+		Stm stm = getConnection().getStatement();
+		stm.exec("DELETE FROM " + TABLENAME + " WHERE ID NOT EQUALS 'root'");
+		getConnection().releaseStatement(stm);
 	}
 	
 	@Override

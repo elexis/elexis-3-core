@@ -16,7 +16,7 @@ import ch.elexis.data.User;
 /**
  * @since 3.1 replaced the original AccessControl, which is kept in {@link AccessControlImpl}
  */
-public abstract class AccessControl {
+public abstract class AbstractAccessControl {
 	
 	public static final String USER_GROUP = Role.SYSTEMROLE_LITERAL_USER;
 	public static final String ADMIN_GROUP = Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR;
@@ -67,9 +67,9 @@ public abstract class AccessControl {
 	public abstract void revoke(Role r, ACE ace);
 	
 	/**
-	 * @param s
+	 * Grant a specific right to a Role id
+	 * @param s the id, resolvable to a {@link Role}
 	 * @param ace
-	 * @deprecated 3.1 for compatibility
 	 */
 	public abstract void grant(String s, ACE ace);
 	

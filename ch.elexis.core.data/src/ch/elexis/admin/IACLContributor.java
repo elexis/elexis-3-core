@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007-2009, G. Weirich and Elexis
+ * Copyright (c) 2007-2015, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,11 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *    MEDEVIT <office@medevit.at> - modifications to 3.1
  *******************************************************************************/
-
-// This interface is to be used with the ACLContribution expension point
-
 package ch.elexis.admin;
+
+import ch.elexis.data.Role;
 
 /**
  * An ACLContributor declares a List of AccessControlElements it will use. Such Elements will define
@@ -21,26 +20,28 @@ package ch.elexis.admin;
  * such case, the framework will assign them on a first-come-first-serve basis. Thus, the second
  * client requesting the same verb will get a reject.
  * 
- * @author gerry
+ * This interface is used with the ACLContribution extension point
  * 
+ * @author gerry
+ * @since 3.1 removal of reject method, addition of initializeDefaults
  */
 public interface IACLContributor {
 	
 	/**
-	 * return the ACL to be used by this extension
+	 * return all ACLs to be used by this extension
 	 * 
 	 * @return an array of all ACE's to insert
 	 */
 	public ACE[] getACL();
 	
 	/**
-	 * The framework will call this method if one ore more of the transmitted ACL's could not be
-	 * integrated (illegal name or duplicate)
+	 * Initialize the default rights to system {@link Role}s for the ACLs provided in
+	 * {@link #getACL()}. Use calls like {@link AbstractAccessControl#grant(String, ACE)} where the String
+	 * argument is e.g. {@link Role#SYSTEMROLE_LITERAL_USER}
 	 * 
-	 * @param acl
-	 *            array of all rejected acls (these have not been integrated)
-	 * @return the plugin can return an array of corrected acls or null.
+	 * @param ac
+	 *            the {@link AbstractAccessControl} instance to grant against
 	 */
-	public ACE[] reject(ACE[] acl);
+	public void initializeDefaults(AbstractAccessControl ac);
 	
 }
