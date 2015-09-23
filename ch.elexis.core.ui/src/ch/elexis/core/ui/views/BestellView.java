@@ -147,23 +147,16 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 			public void drop(final DropTargetEvent event){
 				String drp = (String) event.data;
 				String[] dl = drp.split(","); //$NON-NLS-1$
-				if (actBestellung == null) {
-					NeueBestellungDialog nbDlg =
-						new NeueBestellungDialog(getViewSite().getShell(),
-							Messages.BestellView_CreateNewOrder,
-							Messages.BestellView_EnterOrderTitle);
-					if (nbDlg.open() == Dialog.OK) {
-						setBestellung(new Bestellung(nbDlg.getTitle(), CoreHub.actUser));
-					} else {
-						return;
-					}
-				}
+				List<Artikel> articlesToOrder = new ArrayList<Artikel>();
+				
 				for (String obj : dl) {
 					PersistentObject dropped = CoreHub.poFactory.createFromString(obj);
 					if (dropped instanceof Artikel) {
-						actBestellung.addItem((Artikel) dropped, 1);
+						articlesToOrder.add((Artikel) dropped);
 					}
 				}
+				addItemsToOrder(articlesToOrder);
+				
 				tv.refresh();
 			}
 			
@@ -193,6 +186,23 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		form.updateToolBar();
 		setBestellung(null);
 		tv.setInput(getViewSite());
+	}
+	
+	public void addItemsToOrder(List<Artikel> articlesToOrder){
+		if (actBestellung == null) {
+			NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
+				Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
+			if (nbDlg.open() == Dialog.OK) {
+				setBestellung(new Bestellung(nbDlg.getTitle(), CoreHub.actUser));
+			} else {
+				return;
+			}
+		}
+		
+		for (Artikel arti : articlesToOrder) {
+			actBestellung.addItem(arti, 1);
+		}
+		tv.refresh();
 	}
 	
 	private void setBestellung(final Bestellung b){

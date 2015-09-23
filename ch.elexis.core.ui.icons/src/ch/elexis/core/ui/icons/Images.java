@@ -229,7 +229,19 @@ public enum Images {
 		/** jar icon **/
 		IMG_JAR,
 		/** fixmedi icon **/
-		IMG_FIXMEDI,
+		IMG_FIX_MEDI,
+		/** reserve medi icon **/
+		IMG_RESERVE_MEDI, 
+		/** need medi icon **/
+		IMG_NEED_MEDI, 
+		/** sort after personal favorites **/
+		IMG_SORT_STAR, 
+		/** daten gif **/
+		IMG_DATA, 
+		/** edit a balance*/
+		IMG_BALANCE_EDIT, 
+		/** shopping cart**/
+		IMG_CART,
 		/** wizard for some day event **/
 		IMG_WIZ_DAY;
 	

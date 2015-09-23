@@ -83,22 +83,14 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				template + " " + rp.getDate());
 		List<Prescription> lines = rp.getLines();
 		String[][] fields = new String[lines.size()][];
+		if (replace.equals(Messages.RezeptBlatt_4)) {
+			fields = createRezeptListFields(lines);
+		} else {
+			fields = createTakingListFields(lines);
+		}
 		int[] wt = new int[] {
 			10, 70, 20
 		};
-		for (int i = 0; i < fields.length; i++) {
-			Prescription p = lines.get(i);
-			fields[i] = new String[3];
-			fields[i][0] = p.get(Messages.RezeptBlatt_number); //$NON-NLS-1$
-			String bem = p.getBemerkung();
-			if (StringTool.isNothing(bem)) {
-				fields[i][1] = p.getSimpleLabel();
-			} else {
-				fields[i][1] = p.getSimpleLabel() + "\n" + bem; //$NON-NLS-1$
-			}
-			fields[i][2] = p.getDosis();
-			
-		}
 		rp.setBrief(actBrief);
 		if (text.getPlugin().insertTable(replace, 0, fields, wt)) {
 			if (text.getPlugin().isDirectOutput()) {
@@ -110,6 +102,48 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		}
 		text.saveBrief(actBrief, Brief.RP);
 		return false;
+	}
+	
+	public String[][] createRezeptListFields(List<Prescription> lines){
+		String[][] fields = new String[lines.size()][];
+		
+		for (int i = 0; i < fields.length; i++) {
+			Prescription p = lines.get(i);
+			fields[i] = new String[3];
+			fields[i][0] = p.get(Messages.RezeptBlatt_number); //$NON-NLS-1$
+			String bem = p.getBemerkung();
+			if (StringTool.isNothing(bem)) {
+				fields[i][1] = p.getSimpleLabel();
+			} else {
+				fields[i][1] = p.getSimpleLabel() + "\t\r" + bem; //$NON-NLS-1$
+			}
+			fields[i][2] = p.getDosis();
+			
+		}
+		return fields;
+	}
+	
+	public String[][] createTakingListFields(List<Prescription> lines){
+		String[][] fields = new String[lines.size()][];
+		
+		for (int i = 0; i < fields.length; i++) {
+			Prescription p = lines.get(i);
+			fields[i] = new String[3];
+			fields[i][0] = p.get(Messages.RezeptBlatt_number); //$NON-NLS-1$
+			String bem = p.getBemerkung();
+			String patInfo = p.getDisposalComment();
+			if (StringTool.isNothing(bem)) {
+				fields[i][1] = p.getSimpleLabel();
+			} else {
+				if (patInfo == null || patInfo.isEmpty()) {
+					fields[i][1] = p.getSimpleLabel() + "\t\r" + bem; //$NON-NLS-1$
+				} else {
+					fields[i][1] = p.getSimpleLabel() + "\t\r" + bem + "\r" + patInfo; //$NON-NLS-1$
+				}
+			}
+			fields[i][2] = p.getDosis();
+		}
+		return fields;
 	}
 	
 	public boolean createRezept(Rezept rp){

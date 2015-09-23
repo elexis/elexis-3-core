@@ -56,8 +56,6 @@ public class Prescription extends PersistentObject {
 	public static final String FLD_DATE_PRESC = "prescDate"; // prescription date
 	public static final String FLD_SORT_ORDER = "sortOrder"; // manual sort order in the UI table
 	public static final String FLD_PRESC_TYPE = "prescType"; // prescription type, see flags
-	private static final int PRESC_TYPE_FLAG_PRN_MEDICATION = 1; // reserve medication
-	public static final int PRESC_TYPE_FLAG_APPLICATION = 4; // directly applied
 	public static final String FLD_PRESCRIPTOR = "prescriptor"; // contact that prescribed this
 	public static final String FLD_EXT_STOP_REASON = "stopReason"; // reason for stopping medication
 	public static final String FLD_EXT_STOPPED_BY = "stopper"; // who stopped the prescription
@@ -115,6 +113,10 @@ public class Prescription extends PersistentObject {
 			
 			IPersistentObject prescriptor = ElexisEventDispatcher.getSelected(Anwender.class);
 			set(FLD_PRESCRIPTOR, prescriptor.getId());
+			String comment = other.getDisposalComment();
+			if (comment != null && !comment.isEmpty()) {
+				setDisposalComment(comment);
+			}
 		}
 	}
 	
@@ -500,8 +502,7 @@ public class Prescription extends PersistentObject {
 	 * set prescription type flag
 	 * 
 	 * @param flagVal
-	 *            either {@link #PRESC_TYPE_FLAG_PRN_MEDICATION},
-	 *            {@link #PRESC_TYPE_FLAG_FIXED_MEDICATION} or {@link #PRESC_TYPE_FLAG_APPLICATION}
+	 *            {@link EntryType#flag}
 	 * @param b
 	 *            the boolean value to set to
 	 * @since 3.1.0
@@ -519,8 +520,7 @@ public class Prescription extends PersistentObject {
 	 * get the boolean value of a prescription type flag
 	 * 
 	 * @param flag
-	 *            either {@link #PRESC_TYPE_FLAG_PRN_MEDICATION},
-	 *            {@link #PRESC_TYPE_FLAG_FIXED_MEDICATION} or {@link #PRESC_TYPE_FLAG_APPLICATION}
+	 *            {@link EntryType#flag}
 	 * @return
 	 */
 	public boolean isPrescType(int flag){
@@ -529,12 +529,12 @@ public class Prescription extends PersistentObject {
 	
 	/**
 	 * 
-	 * @param defined
-	 *            this as pro re nata (as needed) medication or "Reservemedikation"
+	 * @param reserve
+	 *            this is a medication to keep as reserve or "Reservemedikation"
 	 * @since 3.1.0
 	 */
-	public void setReserveMedication(boolean b){
-		setPrescType(PRESC_TYPE_FLAG_PRN_MEDICATION, b);
+	public void setReserveMedication(boolean reserve){
+		setPrescType(EntryType.RESERVE_MEDICATION.getFlag(), reserve);
 	}
 	
 	/**
@@ -542,8 +542,26 @@ public class Prescription extends PersistentObject {
 	 * 
 	 * @since 3.1.0
 	 */
-	public boolean getReserveMedication(){
-		return isPrescType(PRESC_TYPE_FLAG_PRN_MEDICATION);
+	public boolean isReserveMedication(){
+		return isPrescType(EntryType.RESERVE_MEDICATION.getFlag());
+	}
+	
+	/**
+	 * 
+	 * @param needed
+	 *            this is a medication for some need or "Bedarfsmedikation"
+	 * @since 3.1.0
+	 */
+	public void setNeedMedication(boolean needed){
+		setPrescType(EntryType.NEED_MEDICATION.getFlag(), needed);
+	}
+	
+	/**
+	 * 
+	 * @since 3.1.0
+	 */
+	public boolean isNeedMedication(){
+		return isPrescType(EntryType.NEED_MEDICATION.getFlag());
 	}
 	
 	/**
@@ -568,7 +586,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public boolean isAppliedMedication(){
-		return isPrescType(PRESC_TYPE_FLAG_APPLICATION);
+		return isPrescType(EntryType.APPLICATION.getFlag());
 	}
 	
 	/**
@@ -590,8 +608,13 @@ public class Prescription extends PersistentObject {
 	 */
 	public EntryType getEntryType(){
 		if (isFixedMediation()) {
-			return (getReserveMedication()) ? EntryType.RESERVE_MEDICATION
-					: EntryType.FIXED_MEDICATION;
+			if (isReserveMedication()) {
+				return EntryType.RESERVE_MEDICATION;
+			} else if (isNeedMedication()) {
+				return EntryType.NEED_MEDICATION;
+			} else {
+				return EntryType.FIXED_MEDICATION;
+			}
 		}
 		String rezeptId = get(FLD_REZEPT_ID);
 		if (rezeptId.equals(FLD_REZEPTID_VAL_DIREKTABGABE)) {
@@ -609,7 +632,30 @@ public class Prescription extends PersistentObject {
 	 * The allowed prescription and disposal types  @since 3.1.0
 	 */
 	public enum EntryType {
-		FIXED_MEDICATION, RESERVE_MEDICATION, APPLICATION, SELF_DISPENSED, RECIPE;
+		//@formatter:off
+		/** Medicine to take over a longer period. <br> i.e. against too high blood pressure, heart medicine **/
+		FIXED_MEDICATION (0), 
+		/** Medicine given in case a need occurs."Reservemedikation" <br>i.e. patient plans a journey and gets medicine against pain, sickness, insect bites to take in case something happens  **/
+		RESERVE_MEDICATION (1), 
+		/** Medicine given cause of some specific need. "Bedarfsmedikation" <br>i.e. flue -> antibiotics, cough -> cough syrup **/
+		NEED_MEDICATION (2), 
+		/** For self dispensation **/
+		SELF_DISPENSED (3), 
+		/** Directly applied during consultation **/
+		APPLICATION (4), 
+		/** Written a recipe for this medicine **/
+		RECIPE (5);
+		//@formatter:on
+		
+		private final int flag;
+		
+		private EntryType(int flag){
+			this.flag = flag;
+		}
+		
+		public int getFlag(){
+			return flag;
+		}
 	}
 	
 	/**
