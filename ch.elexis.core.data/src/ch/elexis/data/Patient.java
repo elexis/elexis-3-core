@@ -45,10 +45,9 @@ import ch.rgw.tools.TimeTool.TimeFormatException;
  * </ul>
  * 
  * @author gerry
- * 
+ * 		
  */
 public class Patient extends Person {
-	private final JdbcLink j = getConnection();
 	
 	public static final String FLD_ALLERGIES = "Allergien";
 	public static final String FLD_RISKS = "Risiken";
@@ -76,20 +75,16 @@ public class Patient extends Person {
 	};
 	
 	static {
-		addMapping(
-			Kontakt.TABLENAME,
-			FLD_DIAGNOSES + "    	=S:C:Diagnosen",
-			FLD_PERS_ANAMNESE + "	=S:C:PersAnamnese",
-			"SystemAnamnese	 	=S:C:SysAnamnese",
-			"FamilienAnamnese	=S:C:FamAnamnese",
-			FLD_RISKS,
-			FLD_ALLERGIES,
+		addMapping(Kontakt.TABLENAME, FLD_DIAGNOSES + "    	=S:C:Diagnosen",
+			FLD_PERS_ANAMNESE + "	=S:C:PersAnamnese", "SystemAnamnese	 	=S:C:SysAnamnese",
+			"FamilienAnamnese	=S:C:FamAnamnese", FLD_RISKS, FLD_ALLERGIES,
 			"Faelle				=LIST:PatientID:FAELLE:DatumVon",
 			"Garanten			=JOINT:GarantID:PatientID:PATIENT_GARANT_JOINT:"
 				+ Kontakt.class.getCanonicalName(),
 			"Dauermedikation	=JOINT:ArtikelID:PatientID:PATIENT_ARTIKEL_JOINT:"
-				+ Artikel.class.getCanonicalName(), FLD_BALANCE + "			=LIST:PatientID:KONTO",
-			FLD_GROUP, FLD_PATID, Kontakt.FLD_IS_PATIENT);
+				+ Artikel.class.getCanonicalName(),
+			FLD_BALANCE + "			=LIST:PatientID:KONTO", FLD_GROUP, FLD_PATID,
+			Kontakt.FLD_IS_PATIENT);
 	}
 	
 	public String getDiagnosen(){
@@ -255,9 +250,8 @@ public class Patient extends Person {
 	}
 	
 	public Konsultation createFallUndKons(){
-		Fall fall =
-			neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
-				Fall.getDefaultCaseLaw());
+		Fall fall = neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
+			Fall.getDefaultCaseLaw());
 		Konsultation k = fall.neueKonsultation();
 		k.setMandant(CoreHub.actMandant);
 		return k;
@@ -267,7 +261,7 @@ public class Patient extends Person {
 	 * Einen neuen Fall erstellen und an den Patienten binden
 	 * 
 	 * @return der eben erstellte Fall oder null bei Fehler
-	 * */
+	 */
 	public Fall neuerFall(final String Bezeichnung, final String grund,
 		final String Abrechnungsmethode){
 		Fall fall = new Fall(getId(), Bezeichnung, grund, Abrechnungsmethode);
@@ -292,17 +286,20 @@ public class Patient extends Person {
 		if (CoreHub.globalCfg.get("PatIDMode", "number").equals("number")) {
 			while (true) {
 				String lockid = PersistentObject.lock("PatNummer", true);
-				String pid = j.queryString("SELECT WERT FROM CONFIG WHERE PARAM='PatientNummer'");
+				String pid = getDBConnection()
+					.queryString("SELECT WERT FROM CONFIG WHERE PARAM='PatientNummer'");
 				if (StringTool.isNothing(pid)) {
 					pid = "0";
-					j.exec("INSERT INTO CONFIG (PARAM,WERT) VALUES ('PatientNummer','0')");
+					getDBConnection()
+						.exec("INSERT INTO CONFIG (PARAM,WERT) VALUES ('PatientNummer','0')");
 				}
 				int lastNum = Integer.parseInt(pid) + 1;
 				rc = Integer.toString(lastNum);
-				j.exec("UPDATE CONFIG set wert='" + rc + "' where param='PatientNummer'");
+				getDBConnection()
+					.exec("UPDATE CONFIG set wert='" + rc + "' where param='PatientNummer'");
 				PersistentObject.unlock("PatNummer", lockid);
-				String exists =
-					j.queryString("SELECT ID FROM KONTAKT WHERE PatientNr=" + JdbcLink.wrap(rc));
+				String exists = getDBConnection()
+					.queryString("SELECT ID FROM KONTAKT WHERE PatientNr=" + JdbcLink.wrap(rc));
 				if (exists == null) {
 					break;
 				}
@@ -344,7 +341,7 @@ public class Patient extends Person {
 	public Money getKontostand(){
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT betrag FROM KONTO WHERE PatientID=").append(getWrappedId());
-		Stm stm = j.getStatement();
+		Stm stm = getDBConnection().getStatement();
 		Money konto = new Money();
 		try {
 			ResultSet res = stm.query(sql.toString());
@@ -357,7 +354,7 @@ public class Patient extends Person {
 			ExHandler.handle(ex);
 			return null;
 		} finally {
-			j.releaseStatement(stm);
+			getDBConnection().releaseStatement(stm);
 		}
 	}
 	
@@ -461,9 +458,8 @@ public class Patient extends Person {
 	 * @return Patient falls gefunden, <code>null</code> wenn nicht gefunden
 	 */
 	public static Patient loadByPatientID(String patientNr){
-		String patID =
-			new Query<Patient>(Patient.class)
-				.findSingle(Patient.FLD_PATID, Query.EQUALS, patientNr);
+		String patID = new Query<Patient>(Patient.class).findSingle(Patient.FLD_PATID, Query.EQUALS,
+			patientNr);
 		return Patient.load(patID);
 	}
 	
@@ -521,8 +517,8 @@ public class Patient extends Person {
 	 */
 	public boolean delete(final boolean force){
 		Fall[] fl = getFaelle();
-		if ((fl.length == 0)
-			|| ((force == true) && (CoreHub.acl.request(AccessControlDefaults.DELETE_FORCED) == true))) {
+		if ((fl.length == 0) || ((force == true)
+			&& (CoreHub.acl.request(AccessControlDefaults.DELETE_FORCED) == true))) {
 			for (Fall f : fl) {
 				f.delete(true);
 			}
@@ -676,8 +672,8 @@ public class Patient extends Person {
 		// to the method getStammarzt to fetch the entry
 		// unfortunately lots of PersistentObject: field is not mapped Stammarzt
 		// will be thrown ..
-		return (getExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT) != null) ? Kontakt
-			.load((String) getExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT)) : null;
+		return (getExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT) != null)
+				? Kontakt.load((String) getExtInfoStoredObjectByKey(FLD_EXTINFO_STAMMARZT)) : null;
 	}
 	
 	public void setLegalGuardian(Kontakt legalGuardian){

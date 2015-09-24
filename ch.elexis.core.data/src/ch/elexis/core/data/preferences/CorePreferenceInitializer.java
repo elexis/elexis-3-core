@@ -20,7 +20,7 @@ import ch.elexis.admin.ACE;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.data.Brief;
-import ch.elexis.data.PersistentObject;
+import ch.elexis.data.DBConnection;
 import ch.rgw.tools.StringTool;
 
 public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
@@ -59,7 +59,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		CoreHub.localCfg.set(Preferences.ABL_BASEPATH + SETTINGS_PREFERENCE_STORE_DEFAULT,
 			userhome.getAbsolutePath());
 		CoreHub.localCfg.set(Preferences.ABL_CACHELIFETIME + SETTINGS_PREFERENCE_STORE_DEFAULT,
-			PersistentObject.CACHE_DEFAULT_LIFETIME);
+			DBConnection.CACHE_DEFAULT_LIFETIME);
 		CoreHub.localCfg.set(Preferences.ABL_HEARTRATE + SETTINGS_PREFERENCE_STORE_DEFAULT, 30);
 		CoreHub.localCfg.set(Preferences.ABL_BASEPATH + SETTINGS_PREFERENCE_STORE_DEFAULT,
 			userhome.getAbsolutePath());

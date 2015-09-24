@@ -1,0 +1,322 @@
+package ch.elexis.data;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.cache.IPersistentObjectCache;
+import ch.elexis.core.data.cache.MultiGuavaCache;
+import ch.rgw.tools.JdbcLink;
+import ch.rgw.tools.JdbcLink.Stm;
+import ch.rgw.tools.StringTool;
+import ch.rgw.tools.net.NetTool;
+
+/**
+ * Class managing a connection to a DB using a {@link JdbcLink}, and also the cache used by
+ * {@link PersistentObject} loaded. </br>
+ * </br>
+ * By introducing this class it is possible to manage {@link PersistentObject} from different DBs in
+ * one Elexis instance.
+ * 
+ * @author thomas
+ * 		
+ */
+public class DBConnection {
+	
+	private static Logger logger = LoggerFactory.getLogger(DBConnection.class);
+	
+	public static final int CACHE_DEFAULT_LIFETIME = 15;
+	public static final int CACHE_MIN_LIFETIME = 5;
+	public static final int CACHE_TIME_MAX = 300;
+	
+	protected int default_lifetime;
+	private IPersistentObjectCache<String> cache;
+	
+	private JdbcLink jdbcLink;
+	
+	private String username;
+	private String pcname;
+	private String tracetable;
+	
+	private boolean runningFromScratch = false;
+	
+	private String dbUser;
+	private String dbPw;
+	private String dbFlavor;
+	private String dbSpec;
+	
+	private String dbConnectString;
+	private String dbDriver;
+	private String dbTyp;
+	
+	private File runFromScratchDB = null;
+	
+	public DBConnection(){
+		default_lifetime =
+			CoreHub.localCfg.get(Preferences.ABL_CACHELIFETIME, CACHE_DEFAULT_LIFETIME);
+		if (default_lifetime < CACHE_MIN_LIFETIME) {
+			default_lifetime = CACHE_MIN_LIFETIME;
+			CoreHub.localCfg.set(Preferences.ABL_CACHELIFETIME, CACHE_MIN_LIFETIME);
+		}
+		
+		cache = new MultiGuavaCache<String>(default_lifetime, TimeUnit.SECONDS);
+		
+		logger.info("Cache setup: default_lifetime " + default_lifetime);
+	}
+	
+	/**
+	 * Lookup if {@link Preferences.ABL_TRACE} in global and local config, and start trace if set.
+	 * 
+	 */
+	public void initTrace(){
+		// Wenn trace global eingeschaltet ist, gilt es für alle
+		setTrace(CoreHub.globalCfg.get(Preferences.ABL_TRACE, null));
+		// wenn trace global nicht eingeschaltet ist, kann es immer noch für
+		// diese Station eingeschaltet sein
+		if (tracetable == null) {
+			setTrace(CoreHub.localCfg.get(Preferences.ABL_TRACE, null));
+		}
+	}
+	
+	public void setDBPassword(String password){
+		this.dbPw = password;
+	}
+	
+	public void setDBUser(String username){
+		this.dbUser = username;
+	}
+	
+	public void setDBSpec(String dbSpec){
+		this.dbSpec = dbSpec;
+	}
+	
+	public String getDBSpec(){
+		return dbSpec;
+	}
+	
+	public void setDBFlavor(String dbFlavor){
+		this.dbFlavor = dbFlavor;
+	}
+	
+	public String getDBFlavor(){
+		return jdbcLink.DBFlavor;
+	}
+	
+	public Object getConnectString(){
+		return jdbcLink.getConnectString();
+	}
+	
+	public void setConnectString(String connectString){
+		this.dbConnectString = connectString;
+	}
+	
+	public void setDriver(String driver){
+		this.dbDriver = driver;
+	}
+	
+	public String getDBDriver(){
+		return dbDriver;
+	}
+	
+	public void setTyp(String dbTyp){
+		this.dbTyp = dbTyp;
+	}
+	
+	/**
+	 * Check if the configured values of dbFlavor, dbSpec, dbUser & dbPw allow connecting directly
+	 * to a database.
+	 * 
+	 * @return
+	 */
+	public boolean isDirectConnectConfigured(){
+		return dbFlavor != null && dbFlavor.length() >= 2 && dbSpec != null && dbSpec.length() > 5
+			&& dbUser != null && dbPw != null;
+	}
+	
+	/**
+	 * Try connecting directly to a database using the configured dbFlavor, dbSpec, dbUser & dbPw
+	 * values.
+	 * 
+	 * @return
+	 */
+	public boolean directConnect(){
+		String msg = "Connecting to DB using " + dbFlavor + " " + dbSpec + " " + dbUser;
+		logger.info(msg);
+		
+		if (dbFlavor.equalsIgnoreCase("mysql"))
+			dbDriver = "com.mysql.jdbc.Driver";
+		else if (dbFlavor.equalsIgnoreCase("postgresql"))
+			dbDriver = "org.postgresql.Driver";
+		else if (dbFlavor.equalsIgnoreCase("h2"))
+			dbDriver = "org.h2.Driver";
+		else
+			dbDriver = "invalid";
+		if (!dbDriver.equalsIgnoreCase("invalid")) {
+			jdbcLink = new JdbcLink(dbDriver, dbSpec, dbFlavor);
+			boolean ret = jdbcLink.connect(dbUser, dbPw);
+			if (ret) {
+				logger.debug("Verbunden mit " + dbDriver + ", " + dbConnectString);
+			} else {
+				logger.debug("Verbindung fehlgeschlagen mit " + dbDriver + ", " + dbConnectString);
+			}
+			return ret;
+		} else {
+			msg = "can't connect to test database invalid. dbFlavor" + dbFlavor;
+			logger.error(msg);
+		}
+		return false;
+	}
+	
+	/**
+	 * Directly set the {@link JdbcLink} used.
+	 * 
+	 * @param jdbcLink
+	 */
+	public void setJdbcLink(JdbcLink jdbcLink){
+		this.jdbcLink = jdbcLink;
+	}
+	
+	/**
+	 * Create a H2 db {@link JdbcLink}. It is not connected, but driver, connection string, etc. is
+	 * configured.
+	 * 
+	 * @param string
+	 */
+	public void createH2Link(String string){
+		jdbcLink = JdbcLink.createH2Link(string);
+	}
+	
+	/**
+	 * Connect to the database using a {@link JdbcLink}.
+	 * 
+	 * @return success
+	 */
+	public boolean connect(){
+		if (jdbcLink == null && dbDriver != null && dbConnectString != null && dbTyp != null) {
+			jdbcLink = new JdbcLink(dbDriver, dbConnectString, dbTyp);
+		}
+		boolean ret = jdbcLink.connect(dbUser, dbPw);
+		if (ret) {
+			logger.debug("Verbunden mit " + dbDriver + ", " + dbConnectString);
+		} else {
+			logger.debug("Verbindung fehlgeschlagen mit " + dbDriver + ", " + dbConnectString);
+		}
+		return ret;
+	}
+	
+	public void setRunningFromScratch(boolean runningFromScratch){
+		this.runningFromScratch = runningFromScratch;
+	}
+	
+	public boolean isRunningFromScratch(){
+		return runningFromScratch;
+	}
+	
+	public void runFromScatch() throws IOException{
+		runFromScratchDB = File.createTempFile("elexis", "db");
+		logger
+			.info("RunFromScratch test database created in " + runFromScratchDB.getAbsolutePath());
+		dbUser = "sa";
+		dbPw = StringTool.leer;
+		jdbcLink = JdbcLink.createH2Link(runFromScratchDB.getAbsolutePath());
+	}
+	
+	/**
+	 * Trace (protokollieren aller Schreibvorgänge) ein- und ausschalten. Die Trace-Tabelle muss
+	 * folgende Spalten haben: logtime (long), Workstation (VARCHAR), Username(Varchar), action
+	 * (Text/Longvarchar)
+	 * 
+	 * @param Tablename
+	 *            Name der Trace-tabelle oder null: Trace aus.
+	 */
+	public void setTrace(String Tablename){
+		if ((Tablename != null) && (Tablename.equals("none") || Tablename.equals(""))) {
+			Tablename = null;
+		}
+		tracetable = Tablename;
+		username = JdbcLink.wrap(System.getProperty("user.name"));
+		pcname = JdbcLink.wrap(NetTool.hostname);
+	}
+	
+	public void disconnect(){
+		if (jdbcLink.DBFlavor.startsWith("hsqldb")) {
+			jdbcLink.exec("SHUTDOWN COMPACT");
+		}
+		jdbcLink.disconnect();
+		logger.info("Verbindung zur Datenbank " + jdbcLink.getConnectString() + " getrennt.");
+		jdbcLink = null;
+		if (runFromScratchDB != null) {
+			File dbFile = new File(runFromScratchDB.getAbsolutePath() + ".h2.db");
+			logger.info("Deleting runFromScratchDB was " + runFromScratchDB + " and " + dbFile);
+			dbFile.delete();
+			runFromScratchDB.delete();
+		}
+		cache.stat();
+	}
+	
+	public String queryString(String sql){
+		return jdbcLink.queryString(sql);
+	}
+	
+	public IPersistentObjectCache<String> getCache(){
+		return cache;
+	}
+	
+	public PreparedStatement getPreparedStatement(String sql){
+		return jdbcLink.getPreparedStatement(sql);
+	}
+	
+	public void releasePreparedStatement(PreparedStatement statement){
+		jdbcLink.releasePreparedStatement(statement);
+	}
+	
+	public Stm getStatement(){
+		return jdbcLink.getStatement();
+	}
+	
+	public void releaseStatement(Stm stm){
+		jdbcLink.releaseStatement(stm);
+	}
+	
+	public int exec(String sql){
+		return jdbcLink.exec(sql);
+	}
+	
+	public String wrapFlavored(String wert){
+		return jdbcLink.wrapFlavored(wert);
+	}
+	
+	public boolean isTrace(){
+		return tracetable != null;
+	}
+	
+	public int getDefaultLifeTime(){
+		return default_lifetime;
+	}
+	
+	public void doTrace(String sql){
+		StringBuffer tracer = new StringBuffer();
+		tracer.append("INSERT INTO ").append(tracetable);
+		tracer.append(" (logtime,Workstation,Username,action) VALUES (");
+		tracer.append(System.currentTimeMillis()).append(",");
+		tracer.append(pcname).append(",");
+		tracer.append(username).append(",");
+		tracer.append(JdbcLink.wrap(sql.replace('\'', '/'))).append(")");
+		exec(tracer.toString());
+	}
+	
+	public JdbcLink getJdbcLink(){
+		return jdbcLink;
+	}
+	
+	public Connection getConnection(){
+		return jdbcLink.getConnection();
+	}
+}

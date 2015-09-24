@@ -2,11 +2,11 @@ package ch.elexis.core.data.cache;
 
 import java.util.concurrent.TimeUnit;
 
-import ch.elexis.data.PersistentObject;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheStats;
+
+import ch.elexis.data.DBConnection;
 
 public class MultiGuavaCache<K> implements IPersistentObjectCache<K> {
 	
@@ -26,7 +26,7 @@ public class MultiGuavaCache<K> implements IPersistentObjectCache<K> {
 	public void put(K key, Object object, int timeToCacheInSeconds){
 		if (key == null || object == null)
 			return;
-		if (timeToCacheInSeconds <= PersistentObject.CACHE_DEFAULT_LIFETIME) {
+		if (timeToCacheInSeconds <= DBConnection.CACHE_DEFAULT_LIFETIME) {
 			shortTermCache.put(key, object);
 		} else {
 			longTermCache.put(key, object);
@@ -35,7 +35,7 @@ public class MultiGuavaCache<K> implements IPersistentObjectCache<K> {
 	
 	@Override
 	public Object get(K key, int cacheTime){
-		if(cacheTime <= PersistentObject.CACHE_DEFAULT_LIFETIME) {
+		if (cacheTime <= DBConnection.CACHE_DEFAULT_LIFETIME) {
 			return shortTermCache.getIfPresent(key);
 		}
 		return longTermCache.getIfPresent(key);

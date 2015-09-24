@@ -185,7 +185,7 @@ public class Query<T> {
 			throw new PersistenceException(status);
 		}
 	}
-	
+
 	/**
 	 * Delete query to e.g. re-use the query for a new execution run
 	 * 
@@ -371,7 +371,7 @@ public class Query<T> {
 			}
 			append(mapped, "is", operator, "null");
 		} else {
-			wert = PersistentObject.getConnection().wrapFlavored(wert);
+			wert = PersistentObject.getDefaultConnection().wrapFlavored(wert);
 			if (toLower) {
 				mapped = "lower(" + mapped + ")";
 				wert = "lower(" + wert + ")";
@@ -441,22 +441,6 @@ public class Query<T> {
 		return execute();
 	}
 	
-	public PreparedStatement getPreparedStatement(final PreparedStatement previous){
-		try {
-			if (previous != null) {
-				previous.close();
-			}
-			PreparedStatement ps =
-				PersistentObject.getConnection().prepareStatement(sql.toString());
-			return ps;
-		} catch (Exception ex) {
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					"Fehler beim PreparedStatement " + ex.getMessage(), ex, ElexisStatus.LOG_ERRORS);
-			throw new PersistenceException(status);
-		}
-	}
-	
 	/**
 	 * Sortierung angeben. Dies muss als letzter Befehl nach einer Reihe von add() Sequenzen
 	 * erfolgen.
@@ -501,11 +485,32 @@ public class Query<T> {
 	 * @return eine Liste aus Objekten, die das Resultat der Abfrage sind.
 	 */
 	public List<T> execute(){
+		return execute(PersistentObject.getDefaultConnection());
+	}
+	
+	/**
+	 * Execute the query on the specified DBConnection.
+	 * 
+	 * @param connection
+	 * @return
+	 */
+	public List<T> execute(DBConnection connection){
 		LinkedList<T> ret = new LinkedList<T>();
-		return (List<T>) execute(ret);
+		return (List<T>) execute(ret, connection);
 	}
 	
 	public Collection<T> execute(final Collection<T> collection){
+		return execute(collection, PersistentObject.getDefaultConnection());
+	}
+	
+	/**
+	 * Execute the query on the specified DBConnection. The collection will be used to store the
+	 * results.
+	 * 
+	 * @param connection
+	 * @return
+	 */
+	public Collection<T> execute(final Collection<T> collection, DBConnection connection){
 		if (ordering != null) {
 			sql.append(ordering);
 		}
@@ -513,6 +518,13 @@ public class Query<T> {
 		return queryExpression(lastQuery, collection);
 	}
 	
+	/**
+	 * Execute the {@link PreparedStatement} on the database.
+	 * 
+	 * @param ps
+	 * @param values
+	 * @return
+	 */
 	public ArrayList<String> execute(final PreparedStatement ps, final String[] values){
 		try {
 			for (int i = 0; i < values.length; i++) {
@@ -549,10 +561,26 @@ public class Query<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<T> queryExpression(final String expr, Collection<T> ret){
+		return queryExpression(expr, ret, PersistentObject.getDefaultConnection());
+	}
+	
+	/**
+	 * Execute the query on the database using the specified {@link DBConnection}.
+	 * 
+	 * @param expr
+	 * @param ret
+	 * @param connection
+	 * @return
+	 */
+	public Collection<T> queryExpression(final String expr, Collection<T> ret,
+		DBConnection connection){
 		if (ret == null) {
 			ret = new LinkedList<T>();
 		}
-		Stm stm = PersistentObject.getConnection().getStatement();
+		// loaded objects should use provided connection if it is not the default connection
+		boolean setConnection = connection != PersistentObject.getDefaultConnection();
+		
+		Stm stm = connection.getStatement();
 		try (ResultSet res = stm.query(expr)) {
 			log.debug("Executed " + expr);
 			while ((res != null) && (res.next() == true)) {
@@ -562,10 +590,12 @@ public class Query<T> {
 				});
 				if (o == null) {
 					continue;
+				} else if (setConnection) {
+					((PersistentObject) o).setDBConnection(connection);
 				}
 				
 				if (fetchVals.length > 1) {
-					final PersistentObject po = (PersistentObject) o;
+					PersistentObject po = (PersistentObject) o;
 					for (int i = 1; i < fetchVals.length; i++) {
 						Object prefetchVal = res.getObject(i + 1);
 						po.putInCache(fetchVals[i], prefetchVal);
@@ -593,7 +623,7 @@ public class Query<T> {
 			log.warn("Fehler bei Datenbankabfrage: " + ex.getMessage());
 			throw new PersistenceException(status);
 		} finally {
-			PersistentObject.getConnection().releaseStatement(stm);
+			connection.releaseStatement(stm);
 		}
 	}
 	

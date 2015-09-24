@@ -126,6 +126,23 @@ public class PersistentObjectFactory implements IExecutableExtension {
 	 */
 	@SuppressWarnings("unchecked")
 	public PersistentObject createFromString(final String code){
+		return createFromString(code, null);
+	}
+	
+	/**
+	 * Create an object of a derived class given a pseudo de-serialization code, e.g.
+	 * <code>ch.elexis.artikel_ch.data.Medikament::ca8bb5c27bdd67d5f011821</code>. If the object can
+	 * not be created by the core, all plug-ins contributing a {@link #PersistentObjectFactory()}
+	 * are queried.
+	 * 
+	 * @param code
+	 *            the storeToString as shown in the above example
+	 * @param dbConnection
+	 *            the db connection used by the created PersistenObject, if not defined default is
+	 *            used
+	 * @return the de-serialized object, or <code>null</code>
+	 */
+	public PersistentObject createFromString(String code, DBConnection dbConnection){
 		if (code == null) {
 			return null;
 		}
@@ -134,10 +151,13 @@ public class PersistentObjectFactory implements IExecutableExtension {
 		if (ci.length != 2)
 			return null;
 		
+		PersistentObject ret = null;
 		// try to resolve factory from cache
 		PersistentObjectFactory persistentObjectFactory = poFactoryCache.get(ci[0]);
 		if (persistentObjectFactory != null) {
-			return persistentObjectFactory.createFromString(code);
+			ret = persistentObjectFactory.createFromString(code);
+			ret.setDBConnection(dbConnection);
+			return ret;
 		}
 		
 		try {
@@ -145,26 +165,28 @@ public class PersistentObjectFactory implements IExecutableExtension {
 			Method load = clazz.getMethod("load", new Class[] {
 				String.class
 			});
-			return (PersistentObject) (load.invoke(null, new Object[] {
+			ret = (PersistentObject) (load.invoke(null, new Object[] {
 				ci[1]
 			}));
+			ret.setDBConnection(dbConnection);
+			return ret;
 		} catch (ClassNotFoundException ex) {
 			List<PersistentObjectFactory> contributedFactories =
 				Extensions.getClasses(ExtensionPointConstantsData.PERSISTENT_REFERENCE, CLASS);
 			for (PersistentObjectFactory po : contributedFactories) {
-				PersistentObject ret = po.createFromString(code);
+				ret = po.createFromString(code);
 				if (ret != null) {
 					// found a responsible factory, cache it
 					poFactoryCache.put(ci[0], po);
+					ret.setDBConnection(dbConnection);
 					return ret;
 				}
 			}
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
-			return null;
+			return ret;
 		}
-		return null;
-		
+		return ret;
 	}
 	
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)

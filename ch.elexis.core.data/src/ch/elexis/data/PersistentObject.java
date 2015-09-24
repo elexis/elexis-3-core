@@ -38,7 +38,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -52,8 +51,6 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.cache.IPersistentObjectCache;
-import ch.elexis.core.data.cache.MultiGuavaCache;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -86,7 +83,6 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionInfo;
 import ch.rgw.tools.VersionedResource;
-import ch.rgw.tools.net.NetTool;
 
 /**
  * Base class for all objects to be stored in the database. A PersistentObject has an unique ID,
@@ -138,46 +134,35 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	protected static final String DATE_COMPOUND = "Datum=S:D:Datum";
 	
-	// initialize cache
-	public static final int CACHE_DEFAULT_LIFETIME = 15;
-	public static final int CACHE_MIN_LIFETIME = 5;
-	public static final int CACHE_TIME_MAX = 300;
-	protected static int default_lifetime;
-	private static IPersistentObjectCache<String> cache =
-		new MultiGuavaCache<String>(CACHE_DEFAULT_LIFETIME, TimeUnit.SECONDS);
-		
 	// maximum character length of int fields in tables
 	private static int MAX_INT_LENGTH = 10;
 	
-	private static JdbcLink j = null;
-	private static JdbcLink testJdbcLink = null;
 	protected static Logger log = LoggerFactory.getLogger(PersistentObject.class.getName());
+	
 	private String id;
 	
-	private static Hashtable<String, String> mapping;
-	private static String username;
-	private static String pcname;
-	private static String tracetable;
-	private static boolean runningFromScratch = false;
-	private static String dbUser;
-	private static String dbPw;
-	private static File runFromScratchDB = null;
+	private static DBConnection defaultConnection;
+	
+	protected static DBConnection getDefaultConnection(){
+		return defaultConnection;
+	}
+	
+	private DBConnection connection;
+	
+	protected DBConnection getDBConnection(){
+		if (connection == null) {
+			connection = defaultConnection;
+		}
+		return connection;
+	}
+	
+	public void setDBConnection(DBConnection connection){
+		this.connection = connection;
+	}
 	
 	protected static AbstractCoreOperationAdvisor cod =
 		CoreOperationExtensionPoint.getCoreOperationAdvisor();
 		
-	static {
-		mapping = new Hashtable<String, String>();
-		default_lifetime =
-			CoreHub.localCfg.get(Preferences.ABL_CACHELIFETIME, CACHE_DEFAULT_LIFETIME);
-		if (default_lifetime < CACHE_MIN_LIFETIME) {
-			default_lifetime = CACHE_MIN_LIFETIME;
-			CoreHub.localCfg.set(Preferences.ABL_CACHELIFETIME, CACHE_MIN_LIFETIME);
-		}
-		
-		log.info("Cache setup: default_lifetime " + default_lifetime);
-	}
-	
 	public static enum FieldType {
 			TEXT, LIST, JOINT
 	};
@@ -191,6 +176,12 @@ public abstract class PersistentObject implements IPersistentObject {
 	static public enum TristateBoolean {
 			TRUE, FALSE, UNDEF
 	};
+	
+	private static Hashtable<String, String> mapping;
+	
+	static {
+		mapping = new Hashtable<String, String>();
+	}
 	
 	/**
 	 * Connect to a database.
@@ -223,13 +214,15 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true für ok, false wenn keine Verbindung hergestellt werden konnte.
 	 */
 	public static boolean connect(final Settings cfg){
-		dbUser = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME);
-		dbPw = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD);
-		String dbFlavor = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR);
-		String dbSpec = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC);
+		DBConnection dbConnection = new DBConnection();
+		dbConnection.setDBUser(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME));
+		dbConnection
+			.setDBPassword(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD));
+		dbConnection.setDBFlavor(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR));
+		dbConnection.setDBSpec(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC));
 		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
 			.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
-			runningFromScratch = true;
+			dbConnection.setRunningFromScratch(true);
 		}
 		
 		log.debug("osgi.install.area: " + System.getProperty("osgi.install.area"));
@@ -248,42 +241,37 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (demo.exists() && demo.isDirectory()) {
 			// open demo database connection
 			log.info("Using demoDB in " + demo.getAbsolutePath());
-			j = JdbcLink.createH2Link(demo.getAbsolutePath() + File.separator + "db");
+			dbConnection.createH2Link(demo.getAbsolutePath() + File.separator + "db");
 			try {
 				String username =
 					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME);
-				if (username == null)
-					username = "sa";
-					
+				if (username == null) {
+					dbConnection.setDBUser("sa");
+				}
+				
 				String password =
 					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD);
-				if (password == null)
-					password = StringTool.leer;
-					
-				getConnection().connect(username, password);
-				return connect(getConnection());
+				if (password == null) {
+					dbConnection.setDBPassword(StringTool.leer);
+				}
+				
+				dbConnection.connect();
+				return connect(dbConnection);
 			} catch (JdbcLinkException je) {
 				ElexisStatus status = translateJdbcException(je);
 				status.setMessage(status.getMessage()
 					+ " Fehler mit Demo-Datenbank: Es wurde zwar ein demoDB-Verzeichnis gefunden, aber dort ist keine verwendbare Datenbank");
 				throw new PersistenceException(status);
 			}
-		} else if (dbFlavor != null && dbFlavor.length() >= 2 && dbSpec != null
-			&& dbSpec.length() > 5 && dbUser != null && dbPw != null) {
+		} else if (dbConnection.isDirectConnectConfigured()) {
 			// open direct database connection according to system properties
-			return PersistentObject.connect(dbFlavor, dbSpec, dbUser, dbPw, true);
-		} else if (runningFromScratch) {
+			return PersistentObject.connect(dbConnection, true);
+		} else if (dbConnection.isRunningFromScratch()) {
 			// run from scratch configuration with a temporary database
 			try {
-				runFromScratchDB = File.createTempFile("elexis", "db");
-				log.info("RunFromScratch test database created in "
-					+ runFromScratchDB.getAbsolutePath());
-				dbUser = "sa";
-				dbPw = StringTool.leer;
-				j = JdbcLink.createH2Link(runFromScratchDB.getAbsolutePath());
-				if (getConnection().connect(dbUser, dbPw)) {
-					testJdbcLink = j;
-					return connect(getConnection());
+				dbConnection.runFromScatch();
+				if (dbConnection.connect()) {
+					return connect(dbConnection);
 				} else {
 					log.error("can't create test database");
 					System.exit(-6);
@@ -297,44 +285,40 @@ public abstract class PersistentObject implements IPersistentObject {
 		// --
 		// initialize a regular database connection
 		// --
-		String driver = "";
-		String user = "";
-		String pwd = "";
-		String typ = "";
-		String connectstring = "";
-		
 		Hashtable<Object, Object> hConn = getConnectionHashtable();
 		if (hConn != null) {
-			driver = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
-			user = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
-			pwd = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS));
-			typ = checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
-			connectstring =
-				checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
+			dbConnection
+				.setDriver(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER)));
+			dbConnection
+				.setDBUser(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER)));
+			dbConnection.setDBPassword(
+				checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS)));
+			dbConnection
+				.setTyp(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE)));
+			dbConnection.setConnectString(
+				checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING)));
 		}
-		log.info("Driver is " + driver);
+		log.info("Driver is " + dbConnection.getDBDriver());
 		try {
 			log.info("Current work directory is " + new java.io.File(".").getCanonicalPath());
 		} catch (IOException e) {
 			log.error("Error determining current work directory", e);
 		}
-		if (StringTool.leer.equals(driver)) {
+		if (StringTool.leer.equals(dbConnection.getDBDriver())) {
 			cod.requestDatabaseConnectionConfiguration();
 			MessageEvent.fireInformation("Datenbankverbindung geändert",
 				"Bitte starten Sie Elexis erneut");
 			System.exit(-1);
-		} else {
-			j = new JdbcLink(driver, connectstring, typ);
 		}
+		
 		try {
-			getConnection().connect(user, pwd);
+			dbConnection.connect();
 		} catch (JdbcLinkException je) {
 			ElexisStatus status = translateJdbcException(je);
 			status.setLogLevel(ElexisStatus.LOG_FATALS);
 			throw new PersistenceException(status);
 		}
-		log.debug("Verbunden mit " + getConnection().dbDriver() + ", " + connectstring);
-		return connect(getConnection());
+		return connect(dbConnection);
 	}
 	
 	/**
@@ -369,61 +353,60 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return
 	 * @since 3.0.0
 	 */
-	private static boolean connect(String dbFlavor, String dbSpec, String dbUser, String dbPw,
-		boolean exitOnFail){
-		String msg = "Connecting to DB using " + dbFlavor + " " + dbSpec + " " + dbUser;
-		System.out.println(msg);
-		log.info(msg);
-		String driver;
-		
-		if (dbFlavor.equalsIgnoreCase("mysql"))
-			driver = "com.mysql.jdbc.Driver";
-		else if (dbFlavor.equalsIgnoreCase("postgresql"))
-			driver = "org.postgresql.Driver";
-		else if (dbFlavor.equalsIgnoreCase("h2"))
-			driver = "org.h2.Driver";
-		else
-			driver = "invalid";
-		if (!driver.equalsIgnoreCase("invalid")) {
-			try {
-				j = new JdbcLink(driver, dbSpec, dbFlavor);
-				if (getConnection().connect(dbUser, dbPw)) {
-					testJdbcLink = j;
-					return connect(getConnection());
-				} else {
-					msg = "can't connect to test database: " + dbSpec + " using " + dbFlavor;
-					log.error(msg);
-					System.out.println(msg);
-					if (exitOnFail)
-						System.exit(-6);
-					return false;
-				}
-			} catch (Exception ex) {
-				msg = "Exception connecting to test database:" + dbSpec + " using " + dbFlavor
-					+ ": " + ex.getMessage();
+	private static boolean connect(DBConnection dbConnection, boolean exitOnFail){
+		String msg;
+		try {
+			boolean connected = dbConnection.directConnect();
+			if (!connected) {
+				msg = "can't connect to test database: " + dbConnection.getDBSpec() + " using "
+					+ dbConnection.getDBFlavor();
 				log.error(msg);
-				System.out.println(msg);
-				if (exitOnFail)
-					System.exit(-7);
-				return false;
+				if (exitOnFail) {
+					System.exit(-6);
+				}
 			}
+			return connected;
+		} catch (Exception ex) {
+			msg = "Exception connecting to test database:" + dbConnection.getDBSpec() + " using "
+				+ dbConnection.getDBFlavor() + ": " + ex.getMessage();
+			log.error(msg);
+			if (exitOnFail) {
+				System.exit(-7);
+			}
+			return false;
 		}
-		msg = "can't connect to test database invalid. dbFlavor" + dbFlavor;
-		log.error(msg);
-		System.out.println(msg);
-		if (exitOnFail) {
-			System.exit(-7);
-		}
-		return false;
 	}
 	
-	public static boolean connect(final JdbcLink jd){
-		j = jd;
-		if (runningFromScratch) {
+	/**
+	 * Connect using an already connected {@link JdbcLink}. Creates a new {@link DBConnection} and
+	 * passes uses it as default connection.
+	 * 
+	 * @param jdbcLink
+	 * @return
+	 */
+	public static boolean connect(final JdbcLink jdbcLink){
+		DBConnection dbConnection = new DBConnection();
+		dbConnection.setJdbcLink(jdbcLink);
+		return connect(dbConnection);
+	}
+	
+	/**
+	 * Set the default {@link DBConnection} used by all PersistentObject instances. </br>
+	 * </br>
+	 * For connecting to other Elexis Databases use {@link Query} with another DBConnection
+	 * instance.
+	 * 
+	 * @param connection
+	 *            the already connected DBConnection
+	 * @return
+	 */
+	public static boolean connect(final DBConnection connection){
+		defaultConnection = connection;
+		if (connection.isRunningFromScratch()) {
 			deleteAllTables();
 		}
 		if (tableExists("CONFIG")) {
-			CoreHub.globalCfg = new SqlSettings(getConnection(), "CONFIG");
+			CoreHub.globalCfg = new SqlSettings(connection.getJdbcLink(), "CONFIG");
 			String created = CoreHub.globalCfg.get("created", null);
 			log.debug("Database version " + created);
 		} else {
@@ -431,18 +414,18 @@ public abstract class PersistentObject implements IPersistentObject {
 			Stm stm = null;
 			try (InputStream is =
 				PersistentObject.class.getResourceAsStream("/rsc/createDB.script")) {
-				stm = getConnection().getStatement();
+				stm = connection.getStatement();
 				if (stm.execScript(is, true, true) == true) {
 					executeDBInitScriptForClass(User.class, null);
 					executeDBInitScriptForClass(Role.class, null);
 					
-					CoreHub.globalCfg = new SqlSettings(getConnection(), "CONFIG");
+					CoreHub.globalCfg = new SqlSettings(connection.getJdbcLink(), "CONFIG");
 					CoreHub.globalCfg.undo();
 					CoreHub.globalCfg.set("created", new TimeTool().toString(TimeTool.FULL_GER));
 					Mandant.initializeAdministratorUser();
 					CoreHub.pin.initializeGrants();
 					CoreHub.pin.initializeGlobalPreferences();
-					if (runningFromScratch) {
+					if (connection.isRunningFromScratch()) {
 						Mandant m = new Mandant("007", "topsecret");
 						String clientEmail =
 							System.getProperty(ElexisSystemPropertyConstants.CLIENT_EMAIL);
@@ -460,12 +443,12 @@ public abstract class PersistentObject implements IPersistentObject {
 					
 					CoreHub.globalCfg.flush();
 					CoreHub.localCfg.flush();
-					if (!runningFromScratch) {
+					if (!connection.isRunningFromScratch()) {
 						MessageEvent.fireInformation("Neue Datenbank",
 							"Es wurde eine neue Datenbank angelegt.");
 					}
 				} else {
-					log.error("Kein create script für Datenbanktyp " + getConnection().DBFlavor
+					log.error("Kein create script für Datenbanktyp " + connection.getDBFlavor()
 						+ " gefunden.");
 					return false;
 				}
@@ -473,7 +456,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				ExHandler.handle(ex);
 				return false;
 			} finally {
-				getConnection().releaseStatement(stm);
+				connection.releaseStatement(stm);
 			}
 		}
 		// Zugriffskontrolle initialisieren
@@ -491,7 +474,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (vi.isNewerMinor(v2)) {
 			String msg = String.format(
 				"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Wollen Sie trotzdem fortsetzen?",
-				jd.getConnectString(), vi.version().toString(), v2.version().toString());
+				connection.getConnectString(), vi.version().toString(), v2.version().toString());
 			log.error(msg);
 			if (!cod.openQuestion("Diskrepanz in der Datenbank-Version ", msg)) {
 				System.exit(2);
@@ -499,30 +482,24 @@ public abstract class PersistentObject implements IPersistentObject {
 				log.error("User continues with Elexis / database version mismatch");
 			}
 		}
-		// Wenn trace global eingeschaltet ist, gilt es für alle
-		setTrace(CoreHub.globalCfg.get(Preferences.ABL_TRACE, null));
-		// wenn trace global nicht eingeschaltet ist, kann es immer noch für
-		// diese
-		// Station eingeschaltet sein
-		if (tracetable == null) {
-			setTrace(CoreHub.localCfg.get(Preferences.ABL_TRACE, null));
-		}
+		connection.initTrace();
 		return true;
 	}
 	
 	/**
-	 * Return the Object containing the cdecodeonnection. This should only in very specific
-	 * conditions be neccessary, if one needs a direkt access to the database. It is strongly
-	 * recommended to use this only very carefully, as callers must ensure for themselves that their
-	 * code works with different database engines equally.
+	 * Return the Object containing the connection. This should only in very specific conditions be
+	 * neccessary, if one needs a direct access to the database. It is strongly recommended to use
+	 * this only very carefully, as callers must ensure for themselves that their code works with
+	 * different database engines equally.
 	 * 
 	 * Das Objekt, das die Connection enthält zurückliefern. Sollte nur in Ausnahmefällen nötig
 	 * sein, wenn doch mal ein direkter Zugriff auf die Datenbank erforderlich ist.
 	 * 
+	 * @deprecated do not use direct JdbcLink access
 	 * @return den JdbcLink, der die Verbindung zur Datenbank enthält
 	 */
 	public static JdbcLink getConnection(){
-		return j;
+		return defaultConnection.getJdbcLink();
 	}
 	
 	/**
@@ -553,23 +530,6 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		mapping.put(prefix + "deleted", "deleted");
 		mapping.put(prefix + "lastupdate", "lastupdate");
-	}
-	
-	/**
-	 * Trace (protokollieren aller Schreibvorgänge) ein- und ausschalten. Die Trace-Tabelle muss
-	 * folgende Spalten haben: logtime (long), Workstation (VARCHAR), Username(Varchar), action
-	 * (Text/Longvarchar)
-	 * 
-	 * @param Tablename
-	 *            Name der Trace-tabelle oder null: Trace aus.
-	 */
-	public static void setTrace(String Tablename){
-		if ((Tablename != null) && (Tablename.equals("none") || Tablename.equals(""))) {
-			Tablename = null;
-		}
-		tracetable = Tablename;
-		username = JdbcLink.wrap(System.getProperty("user.name"));
-		pcname = JdbcLink.wrap(NetTool.hostname);
 	}
 	
 	/**
@@ -749,7 +709,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	/**
 	 * Check the state of an object with this ID Note: This method accesses the database and
-	 * therefore is much more costly than the simple instantaniation of a PersistentObject
+	 * therefore is much more costly than the simple instantiation of a PersistentObject
 	 * 
 	 * @return a value between INEXISTENT and EXISTS
 	 */
@@ -762,7 +722,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		StringBuilder sb = new StringBuilder("SELECT ID FROM ");
 		sb.append(getTableName()).append(" WHERE ID=").append(getWrappedId());
 		try {
-			String obj = j.queryString(sb.toString());
+			String obj = getDBConnection().queryString(sb.toString());
 			
 			if (id.equalsIgnoreCase(obj)) {
 				String deleted = get("deleted");
@@ -925,14 +885,15 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<ISticker> getStickers(){
+		DBConnection dbConnection = getDBConnection();
 		String ID = new StringBuilder().append("ETK").append(getId()).toString();
-		ArrayList<ISticker> ret = (ArrayList<ISticker>) cache.get(ID, getCacheTime());
+		ArrayList<ISticker> ret =
+			(ArrayList<ISticker>) dbConnection.getCache().get(ID, getCacheTime());
 		if (ret != null) {
 			return ret;
 		}
 		ret = new ArrayList<ISticker>();
-		PreparedStatement queryStickers = j.getPreparedStatement(queryStickersString);
-		
+		PreparedStatement queryStickers = dbConnection.getPreparedStatement(queryStickersString);
 		try {
 			queryStickers.setString(1, id);
 			ResultSet res = queryStickers.executeQuery();
@@ -952,10 +913,10 @@ public abstract class PersistentObject implements IPersistentObject {
 			} catch (SQLException e) {
 				// ignore
 			}
-			j.releasePreparedStatement(queryStickers);
+			dbConnection.releasePreparedStatement(queryStickers);
 		}
 		Collections.sort(ret);
-		cache.put(ID, ret, getCacheTime());
+		dbConnection.getCache().put(ID, ret, getCacheTime());
 		return ret;
 	}
 	
@@ -967,15 +928,17 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public void removeSticker(ISticker et){
+		DBConnection dbConnection = getDBConnection();
 		String ID = new StringBuilder().append("ETK").append(getId()).toString();
-		ArrayList<Sticker> ret = (ArrayList<Sticker>) cache.get(ID, getCacheTime());
+		ArrayList<Sticker> ret =
+			(ArrayList<Sticker>) dbConnection.getCache().get(ID, getCacheTime());
 		if (ret != null) {
 			ret.remove(et);
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("DELETE FROM ").append(Sticker.FLD_LINKTABLE).append(" WHERE obj=")
 			.append(getWrappedId()).append(" AND etikette=").append(JdbcLink.wrap(et.getId()));
-		getConnection().exec(sb.toString());
+		dbConnection.exec(sb.toString());
 	}
 	
 	/**
@@ -986,8 +949,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public void addSticker(ISticker st){
+		DBConnection dbConnection = getDBConnection();
 		String ID = new StringBuilder().append("STK").append(getId()).toString();
-		List<ISticker> ret = (List<ISticker>) cache.get(ID, getCacheTime());
+		List<ISticker> ret = (List<ISticker>) dbConnection.getCache().get(ID, getCacheTime());
 		if (ret == null) {
 			ret = getStickers();
 		}
@@ -998,7 +962,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			sb.append("INSERT INTO ").append(Sticker.FLD_LINKTABLE)
 				.append("(obj,etikette) VALUES (").append(getWrappedId()).append(",")
 				.append(JdbcLink.wrap(st.getId())).append(");");
-			getConnection().exec(sb.toString());
+			dbConnection.exec(sb.toString());
 		}
 	}
 	
@@ -1082,8 +1046,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         sollte, ein nicht existierendes Feld auszulesen
 	 */
 	public String get(final String field){
+		DBConnection dbConnection = getDBConnection();
 		String key = getKey(field);
-		Object ret = cache.get(key, getCacheTime());
+		Object ret = dbConnection.getCache().get(key, getCacheTime());
 		if (ret instanceof String) {
 			return (String) ret;
 		}
@@ -1110,7 +1075,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				List<String[]> list = getList(field, new String[0]);
 				PersistentObjectFactory fac = new PersistentObjectFactory();
 				for (String[] s : list) {
-					PersistentObject po = fac.createFromString(objdef + s[0]);
+					PersistentObject po = fac.createFromString(objdef + s[0], getDBConnection());
 					sb.append(po.getLabel()).append("\n");
 				}
 				return sb.toString();
@@ -1124,7 +1089,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				List<String> list = getList(field, false);
 				PersistentObjectFactory fac = new PersistentObjectFactory();
 				for (String s : list) {
-					PersistentObject po = fac.createFromString(objdef + s);
+					PersistentObject po = fac.createFromString(objdef + s, getDBConnection());
 					sb.append(po.getLabel()).append("\n");
 				}
 				return sb.toString();
@@ -1178,7 +1143,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.append("SELECT ").append(mapped).append(" FROM ").append(table).append(" WHERE ID='")
 			.append(id).append("'");
 			
-		Stm stm = getConnection().getStatement();
+		Stm stm = getDBConnection().getStatement();
 		
 		String res = null;
 		try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
@@ -1191,24 +1156,24 @@ public abstract class PersistentObject implements IPersistentObject {
 				if (res == null) {
 					res = "";
 				}
-				cache.put(key, res, getCacheTime());
+				getDBConnection().getCache().put(key, res, getCacheTime());
 			}
 		} catch (SQLException ex) {
 			ExHandler.handle(ex);
 		} finally {
-			getConnection().releaseStatement(stm);
+			getDBConnection().releaseStatement(stm);
 		}
 		return res;
 	}
 	
 	public byte[] getBinary(final String field){
 		String key = getKey(field);
-		Object o = cache.get(key, getCacheTime());
+		Object o = getDBConnection().getCache().get(key, getCacheTime());
 		if (o instanceof byte[]) {
 			return (byte[]) o;
 		}
 		byte[] ret = getBinaryRaw(field);
-		cache.put(key, ret, getCacheTime());
+		getDBConnection().getCache().put(key, ret, getCacheTime());
 		return ret;
 	}
 	
@@ -1219,7 +1184,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.append("SELECT ").append(mapped).append(" FROM ").append(table).append(" WHERE ID='")
 			.append(id).append("'");
 			
-		Stm stm = getConnection().getStatement();
+		Stm stm = getDBConnection().getStatement();
 		
 		try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
 			if ((rs != null) && (rs.next() == true)) {
@@ -1228,7 +1193,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 		} finally {
-			getConnection().releaseStatement(stm);
+			getDBConnection().releaseStatement(stm);
 		}
 		return null;
 	}
@@ -1236,14 +1201,14 @@ public abstract class PersistentObject implements IPersistentObject {
 	protected VersionedResource getVersionedResource(final String field, final boolean flushCache){
 		String key = getKey(field);
 		if (flushCache == false) {
-			Object o = cache.get(key, getCacheTime());
+			Object o = getDBConnection().getCache().get(key, getCacheTime());
 			if (o instanceof VersionedResource) {
 				return (VersionedResource) o;
 			}
 		}
 		byte[] blob = getBinaryRaw(field);
 		VersionedResource ret = VersionedResource.load(blob);
-		cache.put(key, ret, getCacheTime());
+		getDBConnection().getCache().put(key, ret, getCacheTime());
 		return ret;
 	}
 	
@@ -1259,7 +1224,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	})
 	public @NonNull Map getMap(final String field){
 		String key = getKey(field);
-		Object o = cache.get(key, getCacheTime());
+		Object o = getDBConnection().getCache().get(key, getCacheTime());
 		if (o instanceof Hashtable) {
 			return (Hashtable) o;
 		}
@@ -1271,7 +1236,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (ret == null) {
 			return new Hashtable();
 		}
-		cache.put(key, ret, getCacheTime());
+		getDBConnection().getCache().put(key, ret, getCacheTime());
 		return ret;
 	}
 	
@@ -1414,11 +1379,11 @@ public abstract class PersistentObject implements IPersistentObject {
 						sql.append(" DESC");
 					}
 				}
-				Stm stm = getConnection().getStatement();
+				Stm stm = getDBConnection().getStatement();
 				List<String> ret = stm.queryList(sql.toString(), new String[] {
 					"ID"
 				});
-				getConnection().releaseStatement(stm);
+				getDBConnection().releaseStatement(stm);
 				return ret;
 			}
 		} else {
@@ -1448,7 +1413,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			// query cache
 			String cacheId =
 				field + "$" + mapped + "$" + Arrays.toString(extra) + "$" + getWrappedId();
-			Object cached = cache.get(cacheId, getCacheTime());
+			Object cached = getDBConnection().getCache().get(cacheId, getCacheTime());
 			if (cached != null)
 				return (List<String[]>) cached;
 				
@@ -1461,7 +1426,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			sql.append(" FROM ").append(abfr[3]).append(" WHERE ").append(abfr[2]).append("=")
 				.append(getWrappedId());
 				
-			Stm stm = getConnection().getStatement();
+			Stm stm = getDBConnection().getStatement();
 			LinkedList<String[]> list = new LinkedList<String[]>();
 			try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
 				while ((rs != null) && rs.next()) {
@@ -1472,7 +1437,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					}
 					list.add(line);
 				}
-				cache.put(cacheId, list, getCacheTime());
+				getDBConnection().getCache().put(cacheId, list, getCacheTime());
 				return list;
 			} catch (Exception ex) {
 				ElexisStatus status =
@@ -1485,7 +1450,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				// throw new PersistenceException(status);
 				return null;
 			} finally {
-				getConnection().releaseStatement(stm);
+				getDBConnection().releaseStatement(stm);
 			}
 		} else {
 			log.error("Fehlerhaftes Mapping " + mapped);
@@ -1512,15 +1477,15 @@ public abstract class PersistentObject implements IPersistentObject {
 		long ts = System.currentTimeMillis();
 		
 		if (value == null) {
-			cache.remove(key);
+			getDBConnection().getCache().remove(key);
 			sql.append("UPDATE ").append(table).append(" SET ").append(mapped)
 				.append("=NULL, lastupdate=" + Long.toString(ts) + " WHERE ID=")
 				.append(getWrappedId());
-			getConnection().exec(sql.toString());
+			getDBConnection().exec(sql.toString());
 			return true;
 		}
-		Object oldval = cache.get(key, getCacheTime());
-		cache.put(key, value, getCacheTime()); // refresh cache
+		Object oldval = getDBConnection().getCache().get(key, getCacheTime());
+		getDBConnection().getCache().put(key, value, getCacheTime()); // refresh cache
 		if (value.equals(oldval)) {
 			return true; // no need to write data if it ws already in cache
 		}
@@ -1544,15 +1509,16 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		sql.append("=?, lastupdate=? WHERE ID=").append(getWrappedId());
 		String cmd = sql.toString();
-		PreparedStatement pst = getConnection().getPreparedStatement(cmd);
+		DBConnection dbConnection = getDBConnection();
+		PreparedStatement pst = dbConnection.getPreparedStatement(cmd);
 		
 		encode(1, pst, field, value);
-		if (tracetable != null) {
+		if (dbConnection.isTrace()) {
 			StringBuffer params = new StringBuffer();
 			params.append("[");
 			params.append(value);
 			params.append("]");
-			doTrace(cmd + " " + params);
+			dbConnection.doTrace(cmd + " " + params);
 		}
 		try {
 			pst.setLong(2, ts);
@@ -1572,7 +1538,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			try {
 				pst.close();
 			} catch (SQLException e) {}
-			getConnection().releasePreparedStatement(pst);
+			dbConnection.releasePreparedStatement(pst);
 		}
 		
 	}
@@ -1591,7 +1557,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				ElexisStatus.CODE_NONE, "Attempt to store Null map", null));
 		}
 		byte[] bin = flatten((Hashtable) map);
-		cache.put(getKey(field), map, getCacheTime());
+		getDBConnection().getCache().put(getKey(field), map, getCacheTime());
 		setBinary(field, bin);
 	}
 	
@@ -1604,7 +1570,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		String lockid = lock("VersionedResource", true);
 		VersionedResource old = getVersionedResource(field, true);
 		if (old.update(entry, CoreHub.actUser.getLabel()) == true) {
-			cache.put(getKey(field), old, getCacheTime());
+			getDBConnection().getCache().put(getKey(field), old, getCacheTime());
 			setBinary(field, old.serialize());
 		}
 		unlock("VersionedResource", lockid);
@@ -1612,7 +1578,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	public void setBinary(final String field, final byte[] value){
 		String key = getKey(field);
-		cache.put(key, value, getCacheTime());
+		getDBConnection().getCache().put(key, value, getCacheTime());
 		setBinaryRaw(field, value);
 	}
 	
@@ -1621,10 +1587,11 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.append("UPDATE ").append(getTableName()).append(" SET ").append(/* map */(field))
 			.append("=?, lastupdate=?").append(" WHERE ID=").append(getWrappedId());
 		String cmd = sql.toString();
-		if (tracetable != null) {
-			doTrace(cmd);
+		DBConnection dbConnection = getDBConnection();
+		if (dbConnection.isTrace()) {
+			dbConnection.doTrace(cmd);
 		}
-		PreparedStatement stm = getConnection().getPreparedStatement(cmd);
+		PreparedStatement stm = dbConnection.getPreparedStatement(cmd);
 		try {
 			stm.setBytes(1, value);
 			stm.setLong(2, System.currentTimeMillis());
@@ -1642,7 +1609,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				ExHandler.handle(e);
 				throw new PersistenceException("Could not close statement " + e.getMessage());
 			}
-			getConnection().releasePreparedStatement(stm);
+			dbConnection.releasePreparedStatement(stm);
 		}
 	}
 	
@@ -1664,17 +1631,6 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 	}
 	
-	private void doTrace(final String sql){
-		StringBuffer tracer = new StringBuffer();
-		tracer.append("INSERT INTO ").append(tracetable);
-		tracer.append(" (logtime,Workstation,Username,action) VALUES (");
-		tracer.append(System.currentTimeMillis()).append(",");
-		tracer.append(pcname).append(",");
-		tracer.append(username).append(",");
-		tracer.append(JdbcLink.wrap(sql.replace('\'', '/'))).append(")");
-		getConnection().exec(tracer.toString());
-	}
-	
 	/**
 	 * Eine Element einer n:m Verknüpfung eintragen. Zur Tabellendefinition wird das mapping
 	 * verwendet.
@@ -1690,6 +1646,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public int addToList(final String field, final String oID, final String... extra){
 		String mapped = map(field);
+		DBConnection dbConnection = getDBConnection();
 		if (mapped.startsWith("JOINT:")) {
 			String[] m = mapped.split(":");// m[1] FremdID, m[2] eigene ID, m[3]
 			// Name Joint
@@ -1713,28 +1670,30 @@ public abstract class PersistentObject implements IPersistentObject {
 					}
 				}
 				head.append(tail).append(")");
-				if (tracetable != null) {
+				if (dbConnection.isTrace()) {
 					String sql = head.toString();
-					doTrace(sql);
-					return getConnection().exec(sql);
+					dbConnection.doTrace(sql);
+					return dbConnection.exec(sql);
 				}
-				return getConnection().exec(head.toString());
+				return dbConnection.exec(head.toString());
 			}
 		} else if (mapped.startsWith("LIST:")) {
 			// LIST:EigeneID:Tabelle:orderby[:type]
 			String[] m = mapped.split(":");
 			if (m.length > 2) {
+				PreparedStatement ps = null;
 				try {
 					String psString =
 						"INSERT INTO " + m[2] + " (ID, deleted, " + m[1] + ") VALUES (?, 0, ?);";
-					PreparedStatement ps = getConnection().getPreparedStatement(psString);
+					ps = dbConnection.getPreparedStatement(psString);
 					ps.setString(1, oID);
 					ps.setString(2, getId());
 					int result = ps.executeUpdate();
-					getConnection().releasePreparedStatement(ps);
 					return result;
 				} catch (SQLException e) {
 					log.error("Error executing prepared statement.", e);
+				} finally {
+					dbConnection.releasePreparedStatement(ps);
 				}
 			}
 		}
@@ -1749,6 +1708,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public void removeFromList(String field){
 		String mapped = map(field);
+		DBConnection dbConnection = getDBConnection();
 		if (mapped.startsWith("JOINT:")) {
 			String[] m = mapped.split(":");// m[1] FremdID, m[2] eigene ID, m[3]
 			// Name Joint
@@ -1756,11 +1716,11 @@ public abstract class PersistentObject implements IPersistentObject {
 				StringBuilder sql = new StringBuilder(200);
 				sql.append("DELETE FROM ").append(m[3]).append(" WHERE ").append(m[2]).append("=")
 					.append(getWrappedId());
-				if (tracetable != null) {
+				if (dbConnection.isTrace()) {
 					String sq = sql.toString();
-					doTrace(sq);
+					dbConnection.doTrace(sq);
 				}
-				getConnection().exec(sql.toString());
+				dbConnection.exec(sql.toString());
 				return;
 			}
 		}
@@ -1776,6 +1736,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	public void removeFromList(String field, String oID){
 		String mapped = map(field);
 		String[] m = mapped.split(":");
+		DBConnection dbConnection = getDBConnection();
 		if (mapped.startsWith("JOINT:")) {
 			//m: m[1] FremdID, m[2] eigene ID, m[3] table
 			if (m.length > 3) {
@@ -1783,26 +1744,28 @@ public abstract class PersistentObject implements IPersistentObject {
 				sql.append("DELETE FROM ").append(m[3]).append(" WHERE ").append(m[2]).append("=")
 					.append(getWrappedId()).append(" AND ").append(m[1]).append("=")
 					.append(JdbcLink.wrap(oID));
-				if (tracetable != null) {
+				if (dbConnection.isTrace()) {
 					String sq = sql.toString();
-					doTrace(sq);
+					dbConnection.doTrace(sq);
 				}
-				getConnection().exec(sql.toString());
+				dbConnection.exec(sql.toString());
 				return;
 			}
 		} else if (mapped.startsWith("LIST:")) {
 			//m: m[1] FremdID, m[2] table
 			if (m.length > 2) {
+				PreparedStatement ps = null;
 				try {
 					String psString = "DELETE FROM " + m[2] + " WHERE " + m[1] + "= ? AND ID = ?;";
-					PreparedStatement ps = getConnection().getPreparedStatement(psString);
-					ps = getConnection().getPreparedStatement(psString);
+					ps = dbConnection.getPreparedStatement(psString);
+					ps = dbConnection.getPreparedStatement(psString);
 					ps.setString(1, getId());
 					ps.setString(2, oID);
 					ps.executeUpdate();
-					getConnection().releasePreparedStatement(ps);
 				} catch (SQLException e) {
 					log.error("Error executing prepared statement.", e);
+				} finally {
+					dbConnection.releasePreparedStatement(ps);
 				}
 				return;
 			}
@@ -1826,7 +1789,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		StringBuffer sql = new StringBuffer(300);
 		sql.append("INSERT INTO ").append(getTableName()).append("(ID) VALUES (")
 			.append(getWrappedId()).append(")");
-		if (getConnection().exec(sql.toString()) != 0) {
+		if (getDBConnection().exec(sql.toString()) != 0) {
 			setConstraint();
 			ElexisEventDispatcher.getInstance()
 				.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_CREATE));
@@ -1852,9 +1815,9 @@ public abstract class PersistentObject implements IPersistentObject {
 			if ((sel != null) && sel.equals(this)) {
 				ElexisEventDispatcher.clearSelection(this.getClass());
 			}
-			ElexisEventDispatcher.getInstance().fire(
-				new ElexisEvent(this, getClass(), ElexisEvent.EVENT_DELETE));
-			cache.remove(getKey(FLD_DELETED));
+			ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_DELETE));
+			getDBConnection().getCache().remove(getKey(FLD_DELETED));
 			return true;
 		}
 		return false;
@@ -1878,7 +1841,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		String[] m = mapped.split(":");// m[1] FremdID, m[2] eigene ID, m[3]
 		// Name Joint
-		getConnection().exec("DELETE FROM " + m[3] + " WHERE " + m[2] + "=" + getWrappedId());
+		getDBConnection().exec("DELETE FROM " + m[3] + " WHERE " + m[2] + "=" + getWrappedId());
 		return true;
 	}
 	
@@ -1918,6 +1881,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			log.error("Falsche Felddefinition für set");
 			return false;
 		}
+		DBConnection dbConnection = getDBConnection();
 		StringBuffer sql = new StringBuffer(200);
 		sql.append("UPDATE ").append(getTableName()).append(" SET ");
 		for (int i = 0; i < fields.length; i++) {
@@ -1928,22 +1892,22 @@ public abstract class PersistentObject implements IPersistentObject {
 				sql.append(mapped);
 			}
 			sql.append("=?,");
-			cache.put(getKey(fields[i]), values[i], getCacheTime());
+			dbConnection.getCache().put(getKey(fields[i]), values[i], getCacheTime());
 		}
 		sql.append("lastupdate=?");
 		// sql.delete(sql.length() - 1, 100000);
 		sql.append(" WHERE ID=").append(getWrappedId());
 		String cmd = sql.toString();
-		PreparedStatement pst = getConnection().getPreparedStatement(cmd);
+		PreparedStatement pst = dbConnection.getPreparedStatement(cmd);
 		for (int i = 0; i < fields.length; i++) {
 			encode(i + 1, pst, fields[i], values[i]);
 		}
-		if (tracetable != null) {
+		if (dbConnection.isTrace()) {
 			StringBuffer params = new StringBuffer();
 			params.append("[");
 			params.append(StringTool.join(values, ", "));
 			params.append("]");
-			doTrace(cmd + " " + params);
+			dbConnection.doTrace(cmd + " " + params);
 		}
 		try {
 			pst.setLong(fields.length + 1, System.currentTimeMillis());
@@ -1968,7 +1932,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			try {
 				pst.close();
 			} catch (SQLException e) {}
-			getConnection().releasePreparedStatement(pst);
+			dbConnection.releasePreparedStatement(pst);
 		}
 	}
 	
@@ -2006,12 +1970,13 @@ public abstract class PersistentObject implements IPersistentObject {
 			log.error("Falscher Aufruf von get(String[],String[]");
 			return false;
 		}
+		DBConnection dbConnection = getDBConnection();
 		StringBuffer sql = new StringBuffer(200);
 		sql.append("SELECT ");
 		boolean[] decode = new boolean[fields.length];
 		for (int i = 0; i < fields.length; i++) {
 			String key = getKey(fields[i]);
-			Object ret = cache.get(key, getCacheTime());
+			Object ret = dbConnection.getCache().get(key, getCacheTime());
 			if (ret instanceof String) {
 				values[i] = (String) ret;
 			} else {
@@ -2031,7 +1996,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.delete(sql.length() - 1, 1000);
 		sql.append(" FROM ").append(getTableName()).append(" WHERE ID=").append(getWrappedId());
 		
-		Stm stm = getConnection().getStatement();
+		Stm stm = dbConnection.getStatement();
 		try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
 			if ((rs != null) && rs.next()) {
 				for (int i = 0; i < values.length; i++) {
@@ -2041,7 +2006,7 @@ public abstract class PersistentObject implements IPersistentObject {
 						} else {
 							values[i] = checkNull(rs.getString(map(fields[i])));
 						}
-						cache.put(getKey(fields[i]), values[i], getCacheTime());
+						dbConnection.getCache().put(getKey(fields[i]), values[i], getCacheTime());
 					}
 				}
 			}
@@ -2050,7 +2015,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			ExHandler.handle(ex);
 			return false;
 		} finally {
-			getConnection().releaseStatement(stm);
+			dbConnection.releaseStatement(stm);
 		}
 	}
 	
@@ -2319,21 +2284,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 */
 	public static void disconnect(){
-		if (getConnection() != null) {
-			if (getConnection().DBFlavor.startsWith("hsqldb")) {
-				getConnection().exec("SHUTDOWN COMPACT");
-			}
-			getConnection().disconnect();
-			j = null;
-			log.info("Verbindung zur Datenbank getrennt.");
-			if (runFromScratchDB != null) {
-				File dbFile = new File(runFromScratchDB.getAbsolutePath() + ".h2.db");
-				log.info("Deleting runFromScratchDB was " + runFromScratchDB + " and " + dbFile);
-				dbFile.delete();
-				runFromScratchDB.delete();
-			}
-			cache.stat();
-		}
+		defaultConnection.disconnect();
 	}
 	
 	@Override
@@ -2422,14 +2373,14 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	public static void clearCache(){
-		synchronized (cache) {
-			cache.clear();
+		synchronized (defaultConnection.getCache()) {
+			defaultConnection.getCache().clear();
 		}
 	}
 	
 	public static void resetCache(){
-		synchronized (cache) {
-			cache.reset();
+		synchronized (defaultConnection.getCache()) {
+			defaultConnection.getCache().reset();
 		}
 	}
 	
@@ -2439,15 +2390,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return the time in seconds
 	 */
 	public int getCacheTime(){
-		return default_lifetime;
-	}
-	
-	public static void setDefaultCacheLifetime(int seconds){
-		default_lifetime = seconds;
-	}
-	
-	public static int getDefaultCacheLifetime(){
-		return default_lifetime;
+		return getDBConnection().getDefaultLifeTime();
 	}
 	
 	/**
@@ -2504,7 +2447,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * "Cannot execute db script: " + sqlScript, Log.ERRORS); } }
 	 */
 	protected static boolean executeScript(final String pathname){
-		Stm stm = getConnection().getStatement();
+		Stm stm = defaultConnection.getStatement();
 		try {
 			FileInputStream is = new FileInputStream(pathname);
 			return stm.execScript(is, true, true);
@@ -2512,7 +2455,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			ExHandler.handle(ex);
 			return false;
 		} finally {
-			getConnection().releaseStatement(stm);
+			defaultConnection.releaseStatement(stm);
 		}
 	}
 	
@@ -2532,7 +2475,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		for (Object o : qbe.execute()) {
 			((PersistentObject) o).delete();
 		}
-		getConnection().exec("DROP TABLE " + name);
+		defaultConnection.exec("DROP TABLE " + name);
 	}
 	
 	/**
@@ -2609,9 +2552,11 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * Used for export functionality
 	 */
 	protected String[] getExportFields(){
+		DBConnection dbConnection = getDBConnection();
+		Stm stm = null;
 		try {
-			ResultSet res =
-				getConnection().getStatement().query("Select count(id) from " + getTableName());
+			stm = dbConnection.getStatement();
+			ResultSet res = stm.query("Select count(id) from " + getTableName());
 			ResultSetMetaData rmd = res.getMetaData();
 			String[] ret = new String[rmd.getColumnCount()];
 			for (int i = 0; i < ret.length; i++) {
@@ -2621,6 +2566,8 @@ public abstract class PersistentObject implements IPersistentObject {
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return null;
+		} finally {
+			dbConnection.releaseStatement(stm);
 		}
 		/*
 		 * throw new IllegalArgumentException("No export fields for " + getClass().getSimpleName() +
@@ -2719,7 +2666,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		DatabaseMetaData dmd;
 		Connection conn = null;
 		try {
-			conn = j.getConnection();
+			conn = defaultConnection.getConnection();
 			dmd = conn.getMetaData();
 			
 			// we drop views before dropping the tables
@@ -2731,7 +2678,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					// DatabaseMetaData#getTables() specifies TABLE_NAME is in
 					// column 3
 					tableName = rsViews.getString(3);
-					getConnection().exec("DROP VIEW " + tableName);
+					defaultConnection.exec("DROP VIEW " + tableName);
 					nrTables++;
 				}
 			}
@@ -2744,7 +2691,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					// DatabaseMetaData#getTables() specifies TABLE_NAME is in
 					// column 3
 					tableName = rsTables.getString(3);
-					getConnection().exec("DROP TABLE " + tableName);
+					defaultConnection.exec("DROP TABLE " + tableName);
 					nrTables++;
 				}
 			}
@@ -2766,7 +2713,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	public static boolean tableExistsSelect(String tableName){
 		try {
-			getConnection().exec("SELECT 1 FROM " + tableName);
+			defaultConnection.exec("SELECT 1 FROM " + tableName);
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -2786,7 +2733,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		// schon H2-DB gesehen hat, wo entweder alles gross oder alles klein war
 		Connection conn = null;
 		try {
-			conn = j.getConnection();
+			conn = defaultConnection.getConnection();
 			DatabaseMetaData dmd = conn.getMetaData();
 			String[] onlyTables = {
 				"TABLE"
@@ -2883,7 +2830,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		String key = getKey(field);
 		if (value == null)
 			value = "";
-		cache.put(key, value, getCacheTime());
+		getDBConnection().getCache().put(key, value, getCacheTime());
 	}
 	
 	/**
@@ -2899,7 +2846,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			resourceName += "_" + vi.version() + ".sql";
 		}
 		
-		Stm stm = getConnection().getStatement();
+		Stm stm = defaultConnection.getStatement();
 		try (InputStream is = PersistentObject.class.getResourceAsStream(resourceName)) {
 			boolean result = stm.execScript(is, true, true);
 			if (!result) {
@@ -2908,8 +2855,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		} catch (IOException e) {
 			log.error("Error executing script from " + resourceName, e);
 		} finally {
-			getConnection().releaseStatement(stm);
+			defaultConnection.releaseStatement(stm);
 		}
 	}
-	
 }

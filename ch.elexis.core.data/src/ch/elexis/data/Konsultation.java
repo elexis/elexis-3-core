@@ -54,7 +54,6 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	public static final String FLD_MANDATOR_ID = "MandantID";
 	private static final String TABLENAME = "BEHANDLUNGEN";
 	volatile int actEntry;
-	private final JdbcLink j = getConnection();
 	
 	protected String getTableName(){
 		return TABLENAME;
@@ -492,7 +491,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	/** Eine Liste der Diagnosen zu dieser Konsultation holen */
 	public ArrayList<IDiagnose> getDiagnosen(){
 		ArrayList<IDiagnose> ret = new ArrayList<IDiagnose>();
-		Stm stm = j.getStatement();
+		Stm stm = getDBConnection().getStatement();
 		ResultSet rs1 = stm.query(
 			"SELECT DIAGNOSEID FROM BEHDL_DG_JOINT inner join BEHANDLUNGEN on BehandlungsID=BEHANDLUNGEN.id where BEHDL_DG_JOINT.deleted='0' and BEHANDLUNGEN.deleted='0' AND BEHANDLUNGSID="
 				+ JdbcLink.wrap(getId()));
@@ -501,7 +500,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			while (rs1.next() == true) {
 				String dgID = rs1.getString(1);
 				
-				Stm stm2 = j.getStatement();
+				Stm stm2 = getDBConnection().getStatement();
 				ResultSet rs2 = stm2
 					.query("SELECT DG_CODE,KLASSE FROM DIAGNOSEN WHERE ID=" + JdbcLink.wrap(dgID));
 				if (rs2.next()) {
@@ -518,7 +517,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					}
 				}
 				rs2.close();
-				j.releaseStatement(stm2);
+				getDBConnection().releaseStatement(stm2);
 			}
 			rs1.close();
 		} catch (Exception ex) {
@@ -527,7 +526,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					"Persistence error: " + ex.getMessage(), ex, ElexisStatus.LOG_ERRORS);
 			throw new PersistenceException(status);
 		} finally {
-			j.releaseStatement(stm);
+			getDBConnection().releaseStatement(stm);
 		}
 		return ret;
 	}
@@ -537,7 +536,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (!isEditable(true)) {
 			return;
 		}
-		String exists = j.queryString(
+		String exists = getDBConnection().queryString(
 			"SELECT ID FROM DIAGNOSEN WHERE KLASSE=" + JdbcLink.wrap(dg.getClass().getName())
 				+ " AND DG_CODE=" + JdbcLink.wrap(dg.getCode()));
 		StringBuilder sql = new StringBuilder(200);
@@ -547,13 +546,13 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				.append(JdbcLink.wrap(exists)).append(",").append(JdbcLink.wrap(dg.getCode()))
 				.append(",").append(JdbcLink.wrap(dg.getText())).append(",")
 				.append(JdbcLink.wrap(dg.getClass().getName())).append(")");
-			j.exec(sql.toString());
+			getDBConnection().exec(sql.toString());
 			sql.setLength(0);
 		}
 		sql.append("INSERT INTO BEHDL_DG_JOINT (ID,BEHANDLUNGSID,DIAGNOSEID) VALUES (")
 			.append(JdbcLink.wrap(StringTool.unique("bhdx"))).append(",").append(getWrappedId())
 			.append(",").append(JdbcLink.wrap(exists)).append(")");
-		j.exec(sql.toString());
+		getDBConnection().exec(sql.toString());
 		
 		// Statistik nachführen
 		getFall().getPatient().countItem(dg);
@@ -579,7 +578,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			StringBuilder sql = new StringBuilder();
 			sql.append("DELETE FROM BEHDL_DG_JOINT WHERE BEHANDLUNGSID=").append(getWrappedId())
 				.append(" AND ").append("DIAGNOSEID=").append(JdbcLink.wrap(dgid));
-			j.exec(sql.toString());
+			getDBConnection().exec(sql.toString());
 		}
 	}
 	
@@ -587,7 +586,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ID FROM DIAGNOSEN WHERE DG_CODE=").append(JdbcLink.wrap(code))
 			.append(" AND ").append("KLASSE=").append(JdbcLink.wrap(classname));
-		return j.queryString(sql.toString());
+		return getDBConnection().queryString(sql.toString());
 	}
 	
 	/** Die zu dieser Konsultation gehörenden Leistungen holen */
@@ -693,7 +692,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		 * TimeTool mine=new TimeTool(getDatum()); List<Verrechenbar> l=getLeistungen();
 		 * for(Verrechenbar v:l){ sum+=(v.getZahl()v.getKosten(mine)); }
 		 */
-		Stm stm = j.getStatement();
+		Stm stm = getDBConnection().getStatement();
 		try {
 			ResultSet res =
 				stm.query("SELECT EK_KOSTEN FROM LEISTUNGEN WHERE deleted='0' AND BEHANDLUNG="
@@ -705,7 +704,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			ExHandler.handle(ex);
 			return 0;
 		} finally {
-			j.releaseStatement(stm);
+			getDBConnection().releaseStatement(stm);
 		}
 		return sum;
 		
@@ -733,7 +732,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	@Deprecated
 	public double getUmsatz(){
 		double sum = 0.0;
-		Stm stm = j.getStatement();
+		Stm stm = getDBConnection().getStatement();
 		try {
 			ResultSet res = stm.query(
 				"SELECT VK_PREIS,ZAHL,SCALE FROM LEISTUNGEN WHERE deleted='0' AND BEHANDLUNG="
@@ -746,7 +745,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			ExHandler.handle(ex);
 			return 0;
 		} finally {
-			j.releaseStatement(stm);
+			getDBConnection().releaseStatement(stm);
 		}
 		return sum;
 		
@@ -771,7 +770,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 										 */
 				.append(" AND LEISTG_CODE=").append(JdbcLink.wrap(v.getId()));
 				
-			j.exec(sb.toString());
+			getDBConnection().exec(sb.toString());
 		}
 	}
 	
@@ -785,7 +784,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				 */
 				.append(" WHERE LEISTG_CODE=").append(JdbcLink.wrap(v.getId()))
 				.append(" AND BEHANDLUNG=").append(getWrappedId());
-			j.exec(sql.toString());
+			getDBConnection().exec(sql.toString());
 		}
 	}
 	
@@ -812,7 +811,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			getId()).execute()) {
 			vv.delete();
 		}
-		j.exec("DELETE FROM BEHDL_DG_JOINT WHERE BEHANDLUNGSID=" + getWrappedId());
+		getDBConnection().exec("DELETE FROM BEHDL_DG_JOINT WHERE BEHANDLUNGSID=" + getWrappedId());
 		return true;
 	}
 	
