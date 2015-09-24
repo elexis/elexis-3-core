@@ -2,6 +2,7 @@ package ch.elexis.data;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.concurrent.TimeUnit;
@@ -50,11 +51,9 @@ public class DBConnection {
 	private String dbUser;
 	private String dbPw;
 	private String dbFlavor;
-	private String dbSpec;
 	
 	private String dbConnectString;
 	private String dbDriver;
-	private String dbTyp;
 	
 	private File runFromScratchDB = null;
 	
@@ -93,14 +92,6 @@ public class DBConnection {
 		this.dbUser = username;
 	}
 	
-	public void setDBSpec(String dbSpec){
-		this.dbSpec = dbSpec;
-	}
-	
-	public String getDBSpec(){
-		return dbSpec;
-	}
-	
 	public void setDBFlavor(String dbFlavor){
 		this.dbFlavor = dbFlavor;
 	}
@@ -109,24 +100,24 @@ public class DBConnection {
 		return jdbcLink.DBFlavor;
 	}
 	
-	public Object getConnectString(){
-		return jdbcLink.getConnectString();
+	public String getDBConnectString(){
+		if (jdbcLink != null) {
+			return jdbcLink.getConnectString();
+		} else {
+			return dbConnectString;
+		}
 	}
 	
-	public void setConnectString(String connectString){
+	public void setDBConnectString(String connectString){
 		this.dbConnectString = connectString;
 	}
 	
-	public void setDriver(String driver){
+	public void setDBDriver(String driver){
 		this.dbDriver = driver;
 	}
 	
 	public String getDBDriver(){
 		return dbDriver;
-	}
-	
-	public void setTyp(String dbTyp){
-		this.dbTyp = dbTyp;
 	}
 	
 	/**
@@ -136,8 +127,8 @@ public class DBConnection {
 	 * @return
 	 */
 	public boolean isDirectConnectConfigured(){
-		return dbFlavor != null && dbFlavor.length() >= 2 && dbSpec != null && dbSpec.length() > 5
-			&& dbUser != null && dbPw != null;
+		return dbFlavor != null && dbFlavor.length() >= 2 && dbConnectString != null
+			&& dbConnectString.length() > 5 && dbUser != null && dbPw != null;
 	}
 	
 	/**
@@ -147,7 +138,7 @@ public class DBConnection {
 	 * @return
 	 */
 	public boolean directConnect(){
-		String msg = "Connecting to DB using " + dbFlavor + " " + dbSpec + " " + dbUser;
+		String msg = "Connecting to DB using " + dbFlavor + " " + dbConnectString + " " + dbUser;
 		logger.info(msg);
 		
 		if (dbFlavor.equalsIgnoreCase("mysql"))
@@ -159,7 +150,7 @@ public class DBConnection {
 		else
 			dbDriver = "invalid";
 		if (!dbDriver.equalsIgnoreCase("invalid")) {
-			jdbcLink = new JdbcLink(dbDriver, dbSpec, dbFlavor);
+			jdbcLink = new JdbcLink(dbDriver, dbConnectString, dbFlavor);
 			boolean ret = jdbcLink.connect(dbUser, dbPw);
 			if (ret) {
 				logger.debug("Verbunden mit " + dbDriver + ", " + dbConnectString);
@@ -194,21 +185,46 @@ public class DBConnection {
 	}
 	
 	/**
-	 * Connect to the database using a {@link JdbcLink}.
+	 * Connect to the database using a {@link JdbcLink}.</br>
+	 * </br>
+	 * Following configurations are possible:</br>
+	 * - dbDriver, dbConnectString, dbFlavor, dbUser, dbPass</br>
+	 * - dbConnectString, dbUser, dbPass</br>
+	 * - jdbcLink, dbUser, dbPass</br>
 	 * 
 	 * @return success
 	 */
 	public boolean connect(){
-		if (jdbcLink == null && dbDriver != null && dbConnectString != null && dbTyp != null) {
-			jdbcLink = new JdbcLink(dbDriver, dbConnectString, dbTyp);
+		if (jdbcLink == null && dbDriver != null && dbConnectString != null && dbFlavor != null) {
+			jdbcLink = new JdbcLink(dbDriver, dbConnectString, dbFlavor);
+		} else if (jdbcLink == null && dbConnectString != null && dbFlavor == null
+			&& dbDriver == null) {
+			if (parseConnectString()) {
+				return directConnect();
+			}
 		}
-		boolean ret = jdbcLink.connect(dbUser, dbPw);
-		if (ret) {
-			logger.debug("Verbunden mit " + dbDriver + ", " + dbConnectString);
-		} else {
-			logger.debug("Verbindung fehlgeschlagen mit " + dbDriver + ", " + dbConnectString);
+		if (jdbcLink != null && dbUser != null && dbPw != null) {
+			boolean ret = jdbcLink.connect(dbUser, dbPw);
+			if (ret) {
+				logger.debug("Verbunden mit " + dbDriver + ", " + dbConnectString);
+			} else {
+				logger.debug("Verbindung fehlgeschlagen mit " + dbDriver + ", " + dbConnectString);
+			}
+			return ret;
 		}
-		return ret;
+		return false;
+	}
+	
+	private boolean parseConnectString(){
+		if (dbConnectString != null && dbConnectString.length() > 5) {
+			String url = dbConnectString;
+			String cleanURI = url.substring(5);
+			
+			URI uri = URI.create(cleanURI);
+			setDBFlavor(uri.getScheme());
+			return true;
+		}
+		return false;
 	}
 	
 	public void setRunningFromScratch(boolean runningFromScratch){

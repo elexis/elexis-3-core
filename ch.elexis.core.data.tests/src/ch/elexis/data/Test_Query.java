@@ -1,8 +1,10 @@
 package ch.elexis.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +90,37 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		query.add(Organisation.FLD_NAME1, "=", "orgname");
 		List<Organisation> result = query.execute();
 		assertEquals(1, result.size());
+	}
+	
+	@Test
+	public void testExecuteOnDBConnection() throws IOException{
+		Query<Organisation> query = new Query<Organisation>(Organisation.class);
+		query.clear();
+		query.add(Organisation.FLD_NAME1, "=", "orgname2");
+		
+		// create a new DBConnection
+		DBConnection connection = new DBConnection();
+		connection.setDBConnectString("jdbc:h2:mem:test_query_mem");
+		connection.setDBUser("sa");
+		connection.setDBPassword("");
+		assertTrue(connection.connect());
+		initElexisDatabase(connection);
+		
+		List<Organisation> result = query.execute(connection);
+		assertEquals(0, result.size());
+		
+		DBConnection initialConnection = PersistentObject.getDefaultConnection();
+		
+		// change default connection of PersistenObject and create an Organization
+		PersistentObject.connect(connection);
+		new Organisation("orgname2", "orgzusatz1");
+		
+		result = query.execute(connection);
+		assertEquals(1, result.size());
+		
+		// cleanup new connection and reset to initial connection
+		PersistentObject.disconnect();
+		PersistentObject.connect(initialConnection);
 	}
 	
 	@Test

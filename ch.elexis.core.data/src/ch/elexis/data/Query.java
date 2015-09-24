@@ -515,7 +515,7 @@ public class Query<T> {
 			sql.append(ordering);
 		}
 		lastQuery = sql.toString();
-		return queryExpression(lastQuery, collection);
+		return queryExpression(lastQuery, collection, connection);
 	}
 	
 	/**

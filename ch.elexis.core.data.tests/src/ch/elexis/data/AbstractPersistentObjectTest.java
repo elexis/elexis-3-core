@@ -1,8 +1,12 @@
 package ch.elexis.data;
 
 import static org.junit.Assert.assertNotNull;
-import ch.elexis.ResourceManager;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 import ch.rgw.tools.JdbcLink;
+import ch.rgw.tools.JdbcLink.Stm;
 
 public abstract class AbstractPersistentObjectTest {
 	
@@ -22,11 +26,7 @@ public abstract class AbstractPersistentObjectTest {
 	 */
 	protected static JdbcLink initDB(String dbflavor){
 		JdbcLink link = null;
-		ResourceManager rsc = ResourceManager.getInstance();
-		String pluginPath = rsc.getResourceLocationByName("/createDB.script");
-		int end = pluginPath.lastIndexOf('/');
-		end = pluginPath.lastIndexOf('/', end - 1);
-		pluginPath = pluginPath.substring(0, end);
+		
 		if (dbflavor == "h2")
 			link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "hsql");
 		else if (dbflavor == "mysql")
@@ -40,4 +40,13 @@ public abstract class AbstractPersistentObjectTest {
 		return link;
 	}
 	
+	protected static void initElexisDatabase(DBConnection connection) throws IOException{
+		Stm stm = null;
+		try (InputStream is = PersistentObject.class.getResourceAsStream("/rsc/createDB.script")) {
+			stm = connection.getStatement();
+			stm.execScript(is, true, true);
+		} finally {
+			connection.releaseStatement(stm);
+		}
+	}
 }

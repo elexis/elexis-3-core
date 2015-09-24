@@ -219,7 +219,8 @@ public abstract class PersistentObject implements IPersistentObject {
 		dbConnection
 			.setDBPassword(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD));
 		dbConnection.setDBFlavor(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR));
-		dbConnection.setDBSpec(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC));
+		dbConnection
+			.setDBConnectString(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC));
 		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
 			.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
 			dbConnection.setRunningFromScratch(true);
@@ -287,15 +288,15 @@ public abstract class PersistentObject implements IPersistentObject {
 		// --
 		Hashtable<Object, Object> hConn = getConnectionHashtable();
 		if (hConn != null) {
-			dbConnection
-				.setDriver(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER)));
+			dbConnection.setDBDriver(
+				checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER)));
 			dbConnection
 				.setDBUser(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER)));
 			dbConnection.setDBPassword(
 				checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS)));
 			dbConnection
-				.setTyp(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE)));
-			dbConnection.setConnectString(
+				.setDBFlavor(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE)));
+			dbConnection.setDBConnectString(
 				checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING)));
 		}
 		log.info("Driver is " + dbConnection.getDBDriver());
@@ -358,8 +359,8 @@ public abstract class PersistentObject implements IPersistentObject {
 		try {
 			boolean connected = dbConnection.directConnect();
 			if (!connected) {
-				msg = "can't connect to test database: " + dbConnection.getDBSpec() + " using "
-					+ dbConnection.getDBFlavor();
+				msg = "can't connect to test database: " + dbConnection.getDBConnectString()
+					+ " using " + dbConnection.getDBFlavor();
 				log.error(msg);
 				if (exitOnFail) {
 					System.exit(-6);
@@ -367,8 +368,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 			return connected;
 		} catch (Exception ex) {
-			msg = "Exception connecting to test database:" + dbConnection.getDBSpec() + " using "
-				+ dbConnection.getDBFlavor() + ": " + ex.getMessage();
+			msg = "Exception connecting to test database:" + dbConnection.getDBConnectString()
+				+ " using " + dbConnection.getDBFlavor() + ": " + ex.getMessage();
 			log.error(msg);
 			if (exitOnFail) {
 				System.exit(-7);
@@ -379,7 +380,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	/**
 	 * Connect using an already connected {@link JdbcLink}. Creates a new {@link DBConnection} and
-	 * passes uses it as default connection.
+	 * uses it as default connection.
 	 * 
 	 * @param jdbcLink
 	 * @return
@@ -474,7 +475,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (vi.isNewerMinor(v2)) {
 			String msg = String.format(
 				"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Wollen Sie trotzdem fortsetzen?",
-				connection.getConnectString(), vi.version().toString(), v2.version().toString());
+				connection.getDBConnectString(), vi.version().toString(), v2.version().toString());
 			log.error(msg);
 			if (!cod.openQuestion("Diskrepanz in der Datenbank-Version ", msg)) {
 				System.exit(2);
@@ -2284,7 +2285,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 */
 	public static void disconnect(){
-		defaultConnection.disconnect();
+		if (defaultConnection != null) {
+			defaultConnection.disconnect();
+		}
 	}
 	
 	@Override
