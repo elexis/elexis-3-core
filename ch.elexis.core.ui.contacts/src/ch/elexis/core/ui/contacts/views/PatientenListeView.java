@@ -66,6 +66,7 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Anwender;
+import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
@@ -476,7 +477,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 								selectedPatInfosText.append(salutation);
 								selectedPatInfosText.append(StringTool.space);
 								
-								String titel = k.get(k.TITLE); //$NON-NLS-1$
+								String titel = k.get(Person.TITLE); //$NON-NLS-1$
 								if (!StringTool.isNothing(titel)) {
 									selectedPatInfosText.append(titel).append(StringTool.space);
 								}
@@ -495,7 +496,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 									selectedPatInfosText.append(k.getVorname());
 								}
 								
-								String thisPatientBIRTHDATE = k.get(k.BIRTHDATE);
+								String thisPatientBIRTHDATE = k.get(Person.BIRTHDATE);
 								if (!StringTool.isNothing(thisPatientBIRTHDATE)) {
 									// This would add the term "geb." (born on the) before the date
 									// of birth:
@@ -509,19 +510,19 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 											.toString(TimeTool.DATE_GER));
 								}
 								
-								String thisAddressFLD_STREET = k.get(k.FLD_STREET);
+								String thisAddressFLD_STREET = k.get(Kontakt.FLD_STREET);
 								if (!StringTool.isNothing(thisAddressFLD_STREET)) {
 									selectedPatInfosText.append("," + StringTool.space
 										+ thisAddressFLD_STREET);
 								}
 								
-								String thisAddressFLD_COUNTRY = k.get(k.FLD_COUNTRY);
+								String thisAddressFLD_COUNTRY = k.get(Kontakt.FLD_COUNTRY);
 								if (!StringTool.isNothing(thisAddressFLD_COUNTRY)) {
 									selectedPatInfosText.append("," + StringTool.space
 										+ thisAddressFLD_COUNTRY + "-");
 								}
 								
-								String thisAddressFLD_ZIP = k.get(k.FLD_ZIP);
+								String thisAddressFLD_ZIP = k.get(Kontakt.FLD_ZIP);
 								if (!StringTool.isNothing(thisAddressFLD_ZIP)) {
 									if (StringTool.isNothing(thisAddressFLD_COUNTRY)) {
 										selectedPatInfosText.append("," + StringTool.space);
@@ -531,7 +532,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 								}
 								;
 								
-								String thisAddressFLD_PLACE = k.get(k.FLD_PLACE);
+								String thisAddressFLD_PLACE = k.get(Kontakt.FLD_PLACE);
 								if (!StringTool.isNothing(thisAddressFLD_PLACE)) {
 									if (StringTool.isNothing(thisAddressFLD_COUNTRY)
 										&& StringTool.isNothing(thisAddressFLD_ZIP)) {
@@ -542,39 +543,39 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 										+ thisAddressFLD_PLACE);
 								}
 								
-								String thisAddressFLD_PHONE1 = k.get(k.FLD_PHONE1);
+								String thisAddressFLD_PHONE1 = k.get(Kontakt.FLD_PHONE1);
 								if (!StringTool.isNothing(thisAddressFLD_PHONE1)) {
 									selectedPatInfosText.append("," + StringTool.space
 										+ StringTool.space + thisAddressFLD_PHONE1);
 								}
 								
-								String thisAddressFLD_PHONE2 = k.get(k.FLD_PHONE2);
+								String thisAddressFLD_PHONE2 = k.get(Kontakt.FLD_PHONE2);
 								if (!StringTool.isNothing(thisAddressFLD_PHONE2)) {
 									selectedPatInfosText.append("," + StringTool.space
 										+ StringTool.space + thisAddressFLD_PHONE2);
 								}
 								
 								String thisAddressFLD_MOBILEPHONE =
-									k.get(k.FLD_MOBILEPHONE);
+									k.get(Kontakt.FLD_MOBILEPHONE);
 								if (!StringTool.isNothing(thisAddressFLD_MOBILEPHONE)) {
 									// With a colon after the label:
 									// selectedPatInfosText.append(","+StringTool.space+k.FLD_MOBILEPHONE+":"+StringTool.space+thisAddressFLD_MOBILEPHONE);
 									// Without a colon after the label:
 									selectedPatInfosText.append("," + StringTool.space
-										+ k.FLD_MOBILEPHONE + StringTool.space
+										+ Kontakt.FLD_MOBILEPHONE + StringTool.space
 										+ thisAddressFLD_MOBILEPHONE);
 								}
 								
-								String thisAddressFLD_FAX = k.get(k.FLD_FAX);
+								String thisAddressFLD_FAX = k.get(Kontakt.FLD_FAX);
 								if (!StringTool.isNothing(thisAddressFLD_FAX)) {
 									// With a colon after the label:
 									// selectedPatInfosText.append(","+StringTool.space+k.FLD_FAX+":"+StringTool.space+thisAddressFLD_FAX);
 									// Without a colon after the label:
-									selectedPatInfosText.append("," + StringTool.space + k.FLD_FAX
+									selectedPatInfosText.append("," + StringTool.space + Kontakt.FLD_FAX
 										+ StringTool.space + thisAddressFLD_FAX);
 								}
 								
-								String thisAddressFLD_E_MAIL = k.get(k.FLD_E_MAIL);
+								String thisAddressFLD_E_MAIL = k.get(Kontakt.FLD_E_MAIL);
 								if (!StringTool.isNothing(thisAddressFLD_E_MAIL)) {
 									selectedPatInfosText.append("," + StringTool.space
 										+ thisAddressFLD_E_MAIL);
@@ -602,8 +603,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 						 * addresses have been selected. (However, I may disable the toolbar icon /
 						 * menu entry for this action in that case later on.)
 						 */
-						
-						// System.out.print("jsdebug: selectedPatInfosText: \n"+selectedPatInfosText+"\n");
 						
 						// Adopted from BestellView.exportClipboardAction:
 						// Copy some generated object.toString() to the clipoard
@@ -753,7 +752,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	@Override
 	public void visible(final boolean mode){
 		// TODO Auto-generated method stub
-		
 	}
 	
 	/*
