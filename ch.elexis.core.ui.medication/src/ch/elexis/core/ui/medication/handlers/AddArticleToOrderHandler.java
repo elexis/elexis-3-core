@@ -63,6 +63,7 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 	 *            from the current view
 	 * @return a list of selected articles or an {@code EMPTY} list
 	 */
+	@SuppressWarnings("unchecked")
 	private List<Artikel> getArticlesToOrder(ISelection selection){
 		List<Artikel> articlesToOrder = new ArrayList<Artikel>();
 		

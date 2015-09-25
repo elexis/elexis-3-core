@@ -16,6 +16,7 @@ import ch.elexis.data.Prescription;
 
 public class DeleteHandler extends AbstractHandler {
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
 		IWorkbenchPage activePage = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage();

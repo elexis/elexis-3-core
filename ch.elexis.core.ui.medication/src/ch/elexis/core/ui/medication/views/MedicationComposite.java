@@ -331,8 +331,6 @@ public class MedicationComposite extends Composite {
 				switch (et) {
 				case FIXED_MEDICATION:
 					return Images.IMG_FIX_MEDI.getImage();
-				case NEED_MEDICATION:
-					return Images.IMG_NEED_MEDI.getImage();
 				case RESERVE_MEDICATION:
 					return Images.IMG_RESERVE_MEDI.getImage();
 				case SELF_DISPENSED:

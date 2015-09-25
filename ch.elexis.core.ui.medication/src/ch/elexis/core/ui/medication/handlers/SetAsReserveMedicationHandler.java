@@ -8,8 +8,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.medication.views.MedicationView;
+import ch.elexis.data.ArticleDefaultSignature;
+import ch.elexis.data.Artikel;
+import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
+import ch.elexis.data.Prescription.EntryType;
 
 public class SetAsReserveMedicationHandler extends AbstractHandler {
 	
@@ -23,12 +29,43 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 			
 			if (firstElement instanceof Prescription) {
 				Prescription presc = (Prescription) firstElement;
-				presc.setReserveMedication(presc.isReserveMedication() ? false : true);
 				
-				MedicationView medicationView =
-					(MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage().findView(MedicationView.PART_ID);
-				medicationView.refresh();
+				// is no ReserveMedication yet
+				if (!presc.isReserveMedication()) {
+					Artikel article = presc.getArtikel();
+					String dose = presc.getDosis();
+					String remark = presc.getBemerkung();
+					String disposalComment = presc.getDisposalComment();
+					
+					if (dose.isEmpty() && remark.isEmpty()) {
+						ArticleDefaultSignature defSig =
+							ArticleDefaultSignature.getDefaultsignatureForArticle(article);
+						if (defSig != null) {
+							dose = defSig.getSignatureAsDosisString();
+							remark = defSig.getSignatureComment();
+						}
+					}
+					
+					// create ReserveMedication
+					Prescription reserveMedi = new Prescription(article,
+						(Patient) ElexisEventDispatcher.getSelected(Patient.class), dose, remark);
+					reserveMedi.setPrescType(EntryType.RESERVE_MEDICATION.getFlag(), true);
+					// add disposal comment if present
+					if (disposalComment != null && !disposalComment.isEmpty())
+						reserveMedi.setDisposalComment(disposalComment);
+						
+					// if selection is FixMedication -> stop it
+					if (presc.isFixedMediation()) {
+						String stopDose = StringConstants.ZERO;
+						presc.addChangeListener(null, stopDose);
+						presc.setStopReason("Umgestellt auf ReserveMedikation");
+					}
+					
+					MedicationView medicationView =
+						(MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getActivePage().findView(MedicationView.PART_ID);
+					medicationView.refresh();
+				}
 			}
 		}
 		return null;

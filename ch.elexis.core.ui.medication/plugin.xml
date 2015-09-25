@@ -36,11 +36,6 @@
                style="push">
          </command>
          <command
-               commandId="ch.elexis.core.ui.medication.SetAsNeedMedication"
-               icon="icon://IMG_NEED_MEDI"
-               style="push">
-         </command>
-         <command
                commandId="ch.elexis.core.ui.medication.SetAsReserveMedication"
                icon="icon://IMG_RESERVE_MEDI"
                style="push">
@@ -137,11 +132,6 @@
             description="FixMedikation"
             id="ch.elexis.core.ui.medication.SetAsFixMedication"
             name="FixMedikation">
-      </command>
-      <command
-            description="Medikation für Bedarf"
-            id="ch.elexis.core.ui.medication.SetAsNeedMedication"
-            name="Bedarfsmedikation">
       </command>
       <command
             description="Medikation auf Reserve"
@@ -273,28 +263,6 @@
       <handler
             class="ch.elexis.core.ui.medication.handlers.SetAsFixMedicationHandler"
             commandId="ch.elexis.core.ui.medication.SetAsFixMedication">
-         <activeWhen>
-            <with
-                  variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
-               <equals
-                     value="TRUE">
-               </equals>
-               <and>
-                  <with
-                        variable="selection">
-                     <iterate
-                           ifEmpty="false">
-                        <instanceof
-                              value="ch.elexis.data.Prescription">
-                        </instanceof>
-                     </iterate>
-                  </with>
-               </and>
-            </with></activeWhen>
-      </handler>
-      <handler
-            class="ch.elexis.core.ui.medication.handlers.SetAsNeedMedicationHandler"
-            commandId="ch.elexis.core.ui.medication.SetAsNeedMedication">
          <activeWhen>
             <with
                   variable="ch.elexis.commands.sourceprovider.patientSelectionActive">

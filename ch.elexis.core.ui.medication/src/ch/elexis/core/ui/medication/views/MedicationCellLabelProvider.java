@@ -14,12 +14,11 @@ import ch.rgw.tools.TimeTool;
 
 public class MedicationCellLabelProvider extends ColumnLabelProvider {
 	
-	private Color reserveColor, needColor;
+	private Color reserveColor;
 	private static final int FILTER_PRESCRIPTION_AFTER_N_DAYS = 30;
 	
 	public MedicationCellLabelProvider(){
 		reserveColor = UiDesk.getColorFromRGB("DDEFFF");
-		needColor = UiDesk.getColorFromRGB("FFFFC6");
 	}
 
 	@Override
@@ -27,8 +26,6 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 		Prescription pres = (Prescription) element;
 		if (pres.isReserveMedication()) {
 			return reserveColor;
-		} else if (pres.isNeedMedication()) {
-			return needColor;
 		}
 		
 		return null;
@@ -61,7 +58,6 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 	 * <li>EXPECT vaccinations (ATC codes starting with 'J07')</li>
 	 * </ul>
 	 * <li>a ReserveMedication</li>
-	 * <li>a NeedMedication</li>
 	 * </ul>
 	 * 
 	 * @param presc
@@ -85,8 +81,8 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 			return true;
 		}
 		
-		// is a ReserveMedication or NeedMedication
-		if (type == EntryType.RESERVE_MEDICATION || type == EntryType.NEED_MEDICATION) {
+		// is a ReserveMedication
+		if (type == EntryType.RESERVE_MEDICATION) {
 			return true;
 		}
 		

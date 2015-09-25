@@ -547,24 +547,6 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
-	 * 
-	 * @param needed
-	 *            this is a medication for some need or "Bedarfsmedikation"
-	 * @since 3.1.0
-	 */
-	public void setNeedMedication(boolean needed){
-		setPrescType(EntryType.NEED_MEDICATION.getFlag(), needed);
-	}
-	
-	/**
-	 * 
-	 * @since 3.1.0
-	 */
-	public boolean isNeedMedication(){
-		return isPrescType(EntryType.NEED_MEDICATION.getFlag());
-	}
-	
-	/**
 	 * @return the reason for stopping the medication
 	 * @since 3.1.0
 	 */
@@ -610,11 +592,8 @@ public class Prescription extends PersistentObject {
 		if (isFixedMediation()) {
 			if (isReserveMedication()) {
 				return EntryType.RESERVE_MEDICATION;
-			} else if (isNeedMedication()) {
-				return EntryType.NEED_MEDICATION;
-			} else {
-				return EntryType.FIXED_MEDICATION;
 			}
+			return EntryType.FIXED_MEDICATION;
 		}
 		String rezeptId = get(FLD_REZEPT_ID);
 		if (rezeptId.equals(FLD_REZEPTID_VAL_DIREKTABGABE)) {
@@ -637,14 +616,12 @@ public class Prescription extends PersistentObject {
 		FIXED_MEDICATION (0), 
 		/** Medicine given in case a need occurs."Reservemedikation" <br>i.e. patient plans a journey and gets medicine against pain, sickness, insect bites to take in case something happens  **/
 		RESERVE_MEDICATION (1), 
-		/** Medicine given cause of some specific need. "Bedarfsmedikation" <br>i.e. flue -> antibiotics, cough -> cough syrup **/
-		NEED_MEDICATION (2), 
+		/** Written a recipe for this medicine **/
+		RECIPE (2),
 		/** For self dispensation **/
 		SELF_DISPENSED (3), 
 		/** Directly applied during consultation **/
-		APPLICATION (4), 
-		/** Written a recipe for this medicine **/
-		RECIPE (5);
+		APPLICATION (4);
 		//@formatter:on
 		
 		private final int flag;
