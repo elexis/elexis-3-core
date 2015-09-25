@@ -57,7 +57,7 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 					// if selection is FixMedication -> stop it
 					if (presc.isFixedMediation()) {
 						String stopDose = StringConstants.ZERO;
-						presc.addChangeListener(null, stopDose);
+						presc.addTerm(null, stopDose);
 						presc.setStopReason("Umgestellt auf ReserveMedikation");
 					}
 					
