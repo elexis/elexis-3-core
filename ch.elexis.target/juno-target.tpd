@@ -47,6 +47,7 @@ location "http://download.elexis.info/mirror.4.elexis/snapshot" {
 	com.google.guava [15.0.0,16.0.0)
 	org.aspectj.feature.group
 	org.eclipse.mylyn.wikitext.textile.core
+	org.eclipse.ui.workbench [3.104.0.v20130204-164612,3.104.0.v20130204-164612]
 }
 
 location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {
