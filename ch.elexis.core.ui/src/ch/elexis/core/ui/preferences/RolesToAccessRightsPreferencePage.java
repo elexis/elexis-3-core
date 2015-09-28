@@ -16,23 +16,18 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CellLabelProvider;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.TreeViewerEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
@@ -66,7 +61,7 @@ import ch.elexis.data.Query;
 import ch.elexis.data.Role;
 
 public class RolesToAccessRightsPreferencePage extends PreferencePage
-		implements IWorkbenchPreferencePage, IValueChangeListener, ICheckStateListener {
+		implements IWorkbenchPreferencePage, IValueChangeListener {
 	private DataBindingContext m_bindingContext;
 	
 	private WritableValue wv = new WritableValue(null, Role.class);
@@ -217,14 +212,6 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 			}
 		});
 		
-		// edit on double-click
-		TreeViewerEditor.create(treeViewer, new ColumnViewerEditorActivationStrategy(treeViewer) {
-			@Override
-			protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event){
-				return event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION;
-			}
-		}, ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR);
-		
 		treeViewer.setSorter(new ViewerSorter() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2){
@@ -240,7 +227,6 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		tc_right.setWidth(280);
 		tc_right.setText("Recht");
 		tvc_right.setLabelProvider(new CellLabelProvider() {
-			
 			@Override
 			public void update(ViewerCell cell){
 				ACE a = (ACE) cell.getElement();
@@ -250,7 +236,6 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		
 		final CheckboxCellEditor cbce = new CheckboxCellEditor();
 		final CellLabelProvider clp = new CellLabelProvider() {
-			
 			@Override
 			public void update(ViewerCell cell){
 				TreeColumn tc = tree.getColumn(cell.getColumnIndex());
@@ -278,7 +263,6 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 					cell.setText("");
 					cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 				}
-				
 			}
 		};
 		
@@ -296,16 +280,20 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 				
 				@Override
 				protected void setValue(Object element, Object value){
-					Role role = (Role) tc.getData("role");
-					ACE ace = (ACE) element;
-					
-					if (isChecked(ace, role)) {
-						CoreHub.acl.revoke(role, ace);
-					} else {
-						CoreHub.acl.grant(role, ace);
-					}
-					
-					refreshViewer();
+					BusyIndicator.showWhile(UiDesk.getDisplay(), new Runnable() {
+						@Override
+						public void run(){
+							Role role = (Role) tc.getData("role");
+							ACE ace = (ACE) element;
+							
+							if (isChecked(ace, role)) {
+								CoreHub.acl.revoke(role, ace);
+							} else {
+								CoreHub.acl.grant(role, ace);
+							}
+							getViewer().update(element, null);
+						}
+					});
 				}
 				
 				@Override
@@ -356,7 +344,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		wv.addValueChangeListener(this);
 		treeViewer.setInput(ACE.getAllDefinedRootACElements());
 		
-		updateRolesList();
+		tableViewerRoles.setInput(roles);
 		
 		return container;
 	}
@@ -380,28 +368,6 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		txtRoleName.setText((r == null) ? "" : r.getRoleName());
 	}
 	
-	@Override
-	public void checkStateChanged(CheckStateChangedEvent event){
-		Role r = (Role) wv.getValue();
-		if (r == null)
-			return;
-		ACE ace = (ACE) event.getElement();
-		
-		boolean grayed = isGrayed(ace, r);
-		if (grayed) {
-			refreshViewer();
-			return;
-		}
-		
-		if (event.getChecked()) {
-			CoreHub.acl.grant(r, ace);
-		} else {
-			CoreHub.acl.revoke(r, ace);
-		}
-		
-		refreshViewer();
-	}
-	
 	private void refreshViewer(){
 		treeViewer.refresh();
 	}
@@ -414,12 +380,10 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
 		
-		@Override
 		public Object[] getElements(Object inputElement){
 			return (Object[]) inputElement;
 		}
 		
-		@Override
 		public Object[] getChildren(Object parentElement){
 			ACE a = (ACE) parentElement;
 			return ACE.getAllDefinedACElements().stream().filter(p -> p.getParent().equals(a))
@@ -435,14 +399,13 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 			return parent;
 		}
 		
-		@Override
 		public boolean hasChildren(Object element){
 			ACE a = (ACE) element;
 			return ACE.getAllDefinedACElements().stream().filter(p -> p.getParent().equals(a))
 				.count() > 0d;
 		}
 	}
-
+	
 	private boolean isGrayed(ACE ace, Role role){
 		if (role == null || ace == null)
 			return false;
@@ -476,8 +439,8 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 			return 1;
 			
 		List<ACE> chain = ace.getChildren(true);
-		List<Boolean> chainRights = chain.stream().map(ace2 -> CoreHub.acl.request(r, ace2))
-			.collect(Collectors.toList());
+		List<Boolean> chainRights =
+			chain.stream().map(ace2 -> CoreHub.acl.request(r, ace2)).collect(Collectors.toList());
 		long trues = chainRights.stream().filter(p -> p.booleanValue() == true).count();
 		if (trues == 0)
 			return 0;
