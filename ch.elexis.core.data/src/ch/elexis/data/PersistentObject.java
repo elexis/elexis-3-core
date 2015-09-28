@@ -1759,7 +1759,6 @@ public abstract class PersistentObject implements IPersistentObject {
 				try {
 					String psString = "DELETE FROM " + m[2] + " WHERE " + m[1] + "= ? AND ID = ?;";
 					ps = dbConnection.getPreparedStatement(psString);
-					ps = dbConnection.getPreparedStatement(psString);
 					ps.setString(1, getId());
 					ps.setString(2, oID);
 					ps.executeUpdate();
