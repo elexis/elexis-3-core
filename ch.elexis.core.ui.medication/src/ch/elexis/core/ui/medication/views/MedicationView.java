@@ -42,12 +42,12 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		public void runInUi(ElexisEvent ev){
 			Patient sp = ElexisEventDispatcher.getSelectedPatient();
-			if(sp==null) {
+			if (sp == null) {
 				updateUi(sp);
 				return;
-			} 
-
-			if(sp.equals(currentPat)) {
+			}
+			
+			if (sp.equals(currentPat)) {
 				return;
 			}
 			
@@ -62,7 +62,6 @@ public class MedicationView extends ViewPart implements IActivationListener {
 			updateUi(ElexisEventDispatcher.getSelectedPatient());
 		}
 	};
-
 	
 	@Override
 	public void createPartControl(Composite parent){
@@ -109,11 +108,11 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void setFocus(){
-		if(currentPat==null) {
+		if (currentPat == null) {
 			Patient sp = ElexisEventDispatcher.getSelectedPatient();
 			updateUi(sp);
 			currentPat = sp;
-		}	
+		}
 	}
 	
 	private void updateUi(Patient pat){
@@ -122,8 +121,11 @@ public class MedicationView extends ViewPart implements IActivationListener {
 			return;
 		}
 		
-		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
-		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, pat.getId());
+		Query<Prescription> qbe = new Query<Prescription>(Prescription.class,
+			Prescription.FLD_PATIENT_ID, pat.getId(), Prescription.TABLENAME, new String[] {
+				Prescription.FLD_DOSAGE, Prescription.FLD_DATE_FROM, Prescription.FLD_DATE_UNTIL,
+				Prescription.FLD_REZEPT_ID, Prescription.FLD_PRESC_TYPE, Prescription.FLD_REMARK
+		});
 		List<Prescription> result = qbe.execute();
 		tpc.updateUi(result);
 	}

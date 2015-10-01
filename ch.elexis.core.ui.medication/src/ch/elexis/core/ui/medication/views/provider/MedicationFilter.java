@@ -7,10 +7,19 @@ import ch.elexis.data.Prescription;
 
 public class MedicationFilter extends ViewerFilter {
 	private String searchString;
+	private Viewer viewer;
+	
+	public MedicationFilter(Viewer viewer){
+		this.viewer = viewer;
+	}
 	
 	public void setSearchText(String s){
 		s = s.replace("*", "");
 		this.searchString = ".*" + s.toLowerCase() + ".*";
+		
+		viewer.getControl().setRedraw(false);
+		viewer.refresh();
+		viewer.getControl().setRedraw(true);
 	}
 	
 	@Override
@@ -33,6 +42,10 @@ public class MedicationFilter extends ViewerFilter {
 			return true;
 		}
 		return false;
+	}
+
+	public void clearSearchText(){
+		this.searchString = "";	
 	}
 	
 }
