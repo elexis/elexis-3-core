@@ -35,12 +35,24 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	private MedicationComposite tpc;
 	private TableViewer medicationTableViewer;
+	private Patient currentPat;
 	
 	public static final String PART_ID = "ch.elexis.core.ui.medication.views.MedicationView"; //$NON-NLS-1$
 	
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		public void runInUi(ElexisEvent ev){
-			updateUi(ElexisEventDispatcher.getSelectedPatient());
+			Patient sp = ElexisEventDispatcher.getSelectedPatient();
+			if(sp==null) {
+				updateUi(sp);
+				return;
+			} 
+
+			if(sp.equals(currentPat)) {
+				return;
+			}
+			
+			currentPat = sp;
+			updateUi(sp);
 		}
 	};
 	
@@ -50,6 +62,7 @@ public class MedicationView extends ViewPart implements IActivationListener {
 			updateUi(ElexisEventDispatcher.getSelectedPatient());
 		}
 	};
+
 	
 	@Override
 	public void createPartControl(Composite parent){
@@ -96,18 +109,23 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void setFocus(){
-		updateUi(ElexisEventDispatcher.getSelectedPatient());
+		if(currentPat==null) {
+			Patient sp = ElexisEventDispatcher.getSelectedPatient();
+			updateUi(sp);
+			currentPat = sp;
+		}	
 	}
 	
 	private void updateUi(Patient pat){
-		if (pat != null) {
-			Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
-			qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, pat.getId());
-			List<Prescription> result = qbe.execute();
-			tpc.updateUi(result);
-		} else {
+		if (pat == null) {
 			tpc.updateUi(null);
+			return;
 		}
+		
+		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, pat.getId());
+		List<Prescription> result = qbe.execute();
+		tpc.updateUi(result);
 	}
 	
 	@Override
@@ -135,6 +153,5 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	public void resetSelection(){
 		tpc.resetSelectedMedication();
-		
 	}
 }
