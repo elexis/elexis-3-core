@@ -130,9 +130,10 @@ public class ArticleDefaultSignature extends PersistentObject {
 		}, values);
 		
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < values.length; i++) {
-			String string = values[i];
-			if (string.length()>0) {
+		if (signatureInfoExists(values)) {
+			for (int i = 0; i < values.length; i++) {
+				String string = values[i].isEmpty() ? "0" : values[i];
+				
 				if (i > 0) {
 					sb.append("-");
 				}
@@ -140,6 +141,15 @@ public class ArticleDefaultSignature extends PersistentObject {
 			}
 		}
 		return sb.toString();
+	}
+	
+	private boolean signatureInfoExists(String[] values){
+		for (String val : values) {
+			if (val != null && !val.isEmpty()) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public String getSignatureMorning(){
