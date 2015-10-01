@@ -66,6 +66,7 @@ import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
+import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;
@@ -431,7 +432,18 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 					ICodeSelectorTarget target =
 						CodeSelectorHandler.getInstance().getCodeSelectorTarget();
 					if (target != null) {
-						target.codeSelected(obj);
+						if (obj instanceof Leistungsblock) {
+							Leistungsblock block = (Leistungsblock) obj;
+							java.util.List<ICodeElement> elements = block.getElements();
+							for (ICodeElement codeElement : elements) {
+								if (codeElement instanceof PersistentObject) {
+									PersistentObject po = (PersistentObject) codeElement;
+									target.codeSelected(po);
+								}
+							}
+						} else {
+							target.codeSelected(obj);
+						}
 					}
 				}
 			});

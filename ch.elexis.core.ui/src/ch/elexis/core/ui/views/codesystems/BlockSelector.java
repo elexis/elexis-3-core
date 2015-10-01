@@ -347,46 +347,6 @@ public class BlockSelector extends CodeSelectorFactory {
 		}
 	}
 	
-	public static class bsPage extends cPage {
-		bsPage(CTabFolder ctab, CodeSelectorFactory cs){
-			super(ctab);
-			setLayout(new GridLayout());
-			cv = new CommonViewer();
-			vc = cs.createViewerConfigurer(cv);
-			cv.create(vc, this, SWT.NONE, this);
-			cv.getViewerWidget().getControl()
-				.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			vc.getContentProvider().startListening();
-			
-			// add double click listener for CodeSelectorTarget
-			cv.addDoubleClickListener(new DoubleClickListener() {
-				public void doubleClicked(PersistentObject obj, CommonViewer cv){
-					ICodeSelectorTarget target =
-						CodeSelectorHandler.getInstance().getCodeSelectorTarget();
-					if (target != null) {
-						if (obj instanceof Leistungsblock) {
-							Leistungsblock block = (Leistungsblock) obj;
-							List<ICodeElement> elements = block.getElements();
-							for (ICodeElement codeElement : elements) {
-								if (codeElement instanceof PersistentObject) {
-									PersistentObject po = (PersistentObject) codeElement;
-									target.codeSelected(po);
-								}
-							}
-						} else {
-							target.codeSelected(obj);
-						}
-					}
-				}
-			});
-		}
-		
-		public void refresh(){
-			cv.notify(CommonViewer.Message.update);
-		}
-		
-	}
-	
 	@Override
 	public String getCodeSystemName(){
 		return "Block";
