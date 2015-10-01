@@ -121,11 +121,8 @@ public class MedicationView extends ViewPart implements IActivationListener {
 			return;
 		}
 		
-		Query<Prescription> qbe = new Query<Prescription>(Prescription.class,
-			Prescription.FLD_PATIENT_ID, pat.getId(), Prescription.TABLENAME, new String[] {
-				Prescription.FLD_DOSAGE, Prescription.FLD_DATE_FROM, Prescription.FLD_DATE_UNTIL,
-				Prescription.FLD_REZEPT_ID, Prescription.FLD_PRESC_TYPE, Prescription.FLD_REMARK
-		});
+		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, pat.getId());
 		List<Prescription> result = qbe.execute();
 		tpc.updateUi(result);
 	}
@@ -146,7 +143,6 @@ public class MedicationView extends ViewPart implements IActivationListener {
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_presc);
 		}
-		
 	}
 	
 	public void refresh(){
