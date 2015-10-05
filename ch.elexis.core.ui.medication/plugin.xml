@@ -123,11 +123,6 @@
             id="ch.elexis.core.ui.medication.AddFixMedication"
             name="FixMedikation hinzufügen">
       </command>
-       <command
-            description="Medikamenteninteraktion prüfen ..."
-            id="ch.elexis.core.ui.medication.InteractionsCheck"
-            name="Medikamenteninteraktion prüfen ...">
-      </command>
       <command
             description="FixMedikation"
             id="ch.elexis.core.ui.medication.SetAsFixMedication"
@@ -239,18 +234,6 @@
       <handler
             class="ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler"
             commandId="ch.elexis.core.ui.medication.ApplyCustomSorting">
-         <activeWhen>
-            <with
-                  variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
-               <equals
-                     value="TRUE">
-               </equals>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="ch.elexis.core.ui.medication.handlers.InteractionsCheckHandler"
-            commandId="ch.elexis.core.ui.medication.InteractionsCheck">
          <activeWhen>
             <with
                   variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
