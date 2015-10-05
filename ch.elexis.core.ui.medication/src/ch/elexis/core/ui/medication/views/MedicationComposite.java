@@ -68,6 +68,7 @@ import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpActi
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
 import ch.elexis.core.ui.medication.views.provider.MedicationFilter;
 import ch.elexis.data.Artikel;
+import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Prescription.EntryType;
@@ -252,16 +253,6 @@ public class MedicationComposite extends Composite {
 				signatureArray = Prescription
 					.getSignatureAsStringArray((presc != null) ? presc.getDosis() : null);
 				setValuesForTextSignatureArray(signatureArray);
-			}
-		});
-		medicationTableViewer.addFilter(new ViewerFilter() {
-			
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element){
-				if (btnShowHistory.getSelection())
-					return true;
-					
-				return MedicationCellLabelProvider.isNotHistorical((Prescription) element);
 			}
 		});
 		
@@ -647,7 +638,9 @@ public class MedicationComposite extends Composite {
 					showSearchFilterComposite(false);
 					medicationTableViewer.removeFilter(mediFilter);
 				}
-				medicationTableViewer.refresh();
+				Patient pat = ElexisEventDispatcher.getSelectedPatient();
+				String patId = (pat != null) ? pat.getId() : null;
+				updateUi(MedicationViewHelper.loadInputData(btnShowHistory.getSelection(), patId));
 				compositeMedicationTable.layout(true);
 			}
 		});
@@ -1041,5 +1034,9 @@ public class MedicationComposite extends Composite {
 	
 	public void resetSelectedMedication(){
 		selectedMedication.setValue(null);
+	}
+	
+	public boolean getShowHistoryState(){
+		return btnShowHistory.getSelection();
 	}
 }

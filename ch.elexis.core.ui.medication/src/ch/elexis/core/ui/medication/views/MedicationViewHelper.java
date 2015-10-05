@@ -1,13 +1,18 @@
 package ch.elexis.core.ui.medication.views;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
+import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.TimeTool;
 
 public class MedicationViewHelper {
+	private static final int FILTER_PRESCRIPTION_AFTER_N_DAYS = 30;
 	
 	public static String calculateDailyCostAsString(List<Prescription> pres){
 		String TTCOST = Messages.FixMediDisplay_DailyCost;
@@ -46,5 +51,72 @@ public class MedicationViewHelper {
 				return TTCOST + " >" + Double.toString(rounded);
 			}
 		}
+	}
+	
+	/**
+	 * <pre>
+	 * SELECT * FROM PATIENT_ARTIKEL_JOINT 
+	 * WHERE deleted='0' AND PatientId='C7dc8b102d96407ed0632' 
+	 * AND (
+	 * 	(DateFrom >= '20150922' AND RezeptID is not null)
+	 * 	OR
+	 * 	# FIXED MEDICATION
+	 * 	(RezeptID is null AND DateUntil is null)
+	 * )
+	 * </pre>
+	 * 
+	 * @param patId
+	 * @return
+	 */
+	public static List<Prescription> loadInputData(boolean loadFullHistory, String patId){
+		if (patId == null)
+			return Collections.emptyList();
+			
+		if (loadFullHistory) {
+			return loadAllHistorical(patId);
+		}
+		return loadNonHistorical(patId);
+	}
+	
+	private static List<Prescription> loadNonHistorical(String patId){
+		TimeTool thirtyDaysAgo = new TimeTool();
+		thirtyDaysAgo.addDays(-FILTER_PRESCRIPTION_AFTER_N_DAYS);
+		//SELECT * FROM PATIENT_ARTIKEL_JOINT WHERE deleted='0' AND PatientId='C7dc8b102d96407ed0632' 
+		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, patId);
+		
+		qbe.startGroup();
+		//(DateFrom >= '20150922' AND RezeptID is not null)
+		qbe.startGroup();
+		qbe.add(Prescription.FLD_DATE_FROM, Query.GREATER_OR_EQUAL,
+			thirtyDaysAgo.toString(TimeTool.DATE_COMPACT));
+		qbe.add(Prescription.FLD_REZEPT_ID, "not", null);
+		qbe.endGroup();
+		qbe.or();
+		//(RezeptID is null AND DateUntil is null)
+		qbe.startGroup();
+		qbe.add(Prescription.FLD_REZEPT_ID, Query.EQUALS, null);
+		qbe.add(Prescription.FLD_DATE_UNTIL, Query.EQUALS, null);
+		qbe.endGroup();
+		qbe.endGroup();
+		
+		List<Prescription> tmpPrescs = qbe.execute();
+		
+		List<Prescription> result = new ArrayList<Prescription>();
+		for (Prescription p : tmpPrescs) {
+			if (p.getArtikel() != null && p.getArtikel().getATC_code() != null) {
+				if (p.getArtikel().getATC_code().toUpperCase().startsWith("J07"))
+					continue;
+			}
+			
+			result.add(p);
+		}
+		return result;
+	}
+	
+	private static List<Prescription> loadAllHistorical(String patId){
+		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, patId);
+		return qbe.execute();
 	}
 }
