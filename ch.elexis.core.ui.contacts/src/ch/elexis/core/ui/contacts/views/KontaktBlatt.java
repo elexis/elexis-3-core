@@ -101,7 +101,7 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 			new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING,
 				null),
 			new InputData(Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null),
-			new InputData("", "", Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null), // helper field (non-visible) but needs a resolvable value to avoid exception
 			new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_extid,
 				"UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
@@ -179,7 +179,7 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 		lbAnschrift = tk.createLabel(cAnschrift, StringConstants.EMPTY, SWT.WRAP);
 		lbAnschrift.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		setOrganisationFieldsVisible(false);
-		def[19].getWidget().setVisible(false);
+		def[19].getWidget().setVisible(false); //field is only added for UI presentation reasons
 		GlobalEventDispatcher.addActivationListener(this, site.getPart());
 	}
 	
