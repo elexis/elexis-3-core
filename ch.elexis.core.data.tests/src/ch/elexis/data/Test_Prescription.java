@@ -215,7 +215,7 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		testItems.add(new TestItem("nur nach Verordnung", empty));
 		
 		// here at last we have valid numerical values 
-		testItems.add(new TestItem("~6-4-2", Arrays.asList(0.0f, 4.0f, 2.0f)));
+		testItems.add(new TestItem("~6-4-2", Arrays.asList(6.0f, 4.0f, 2.0f)));
 		testItems
 			.add(new TestItem("1-1-1-0 (KoGu erhalten)", Arrays.asList(1.0f, 1.0f, 1.0f, 0.0f)));
 		testItems
@@ -231,7 +231,7 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		testItems.add(new TestItem("0-0- 1/4-1/2", Arrays.asList(0.0f, 0.0f, 0.25f, 0.5f)));
 		testItems.add(new TestItem("0-0- 1/8", Arrays.asList(0.0f, 0.0f, 0.125f)));
 		testItems.add(new TestItem("0-0-*-0", Arrays.asList(0.0f, 0.0f, 0.0f)));
-		testItems.add(new TestItem("0-0-0- 40E", Arrays.asList(0.0f, 0.0f, 0.0f, 0.0f)));
+		testItems.add(new TestItem("0-0-0- 40E", Arrays.asList(0.0f, 0.0f, 0.0f, 40.0f)));
 		testItems.add(new TestItem("0 (bis 08", empty));
 		testItems.add(new TestItem("½", Arrays.asList(0.5f)));
 		testItems.add(new TestItem("¼", Arrays.asList(0.25f)));
