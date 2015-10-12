@@ -800,7 +800,9 @@ public class FallDetailBlatt2 extends Composite {
 		cAbrechnung.setEnabled(enable);
 		cReason.setEnabled(enable);
 		hlGarant.setEnabled(enable);
-		tGarant.setEnabled(enable);
+		tGarant.setForeground(
+			enable ? UiDesk.getColor(UiDesk.COL_BLACK) : UiDesk.getColor(UiDesk.COL_GREY60));
+		tGarant.setEditable(enable);
 		autoFill.setEnabled(enable);
 		
 		for (Control req : lReqs) {
