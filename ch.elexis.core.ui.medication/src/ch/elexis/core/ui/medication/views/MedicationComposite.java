@@ -84,8 +84,11 @@ public class MedicationComposite extends Composite {
 	private GridData compositeSearchFilterLayoutData;
 	
 	private Composite compositeMedicationDetail;
-	private Composite compositeDosage;
-	private Text txtMorning, txtNoon, txtEvening, txtNight;
+	private Composite stackCompositeDosage;
+	private Composite compositeDayTimeDosage;
+	private Composite compositeFreeTextDosage;
+	private StackLayout stackLayoutDosage;
+	private Text txtMorning, txtNoon, txtEvening, txtNight, txtFreeText;
 	private Composite compositeMedicationTable;
 	private TableViewer medicationTableViewer;
 	
@@ -252,7 +255,7 @@ public class MedicationComposite extends Composite {
 				
 				signatureArray = Prescription
 					.getSignatureAsStringArray((presc != null) ? presc.getDosis() : null);
-				setValuesForTextSignatureArray(signatureArray);
+				setValuesForTextSignature(signatureArray);
 			}
 		});
 		
@@ -660,41 +663,48 @@ public class MedicationComposite extends Composite {
 		compositeMedicationDetail.setLayoutData(compositeMedicationDetailLayoutData);
 		
 		{
-			compositeDosage = new Composite(compositeMedicationDetail, SWT.NONE);
-			compositeDosage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			GridLayout gl_compositeDosage = new GridLayout(7, false);
-			gl_compositeDosage.marginWidth = 0;
-			gl_compositeDosage.marginHeight = 0;
-			gl_compositeDosage.verticalSpacing = 1;
-			gl_compositeDosage.horizontalSpacing = 0;
-			compositeDosage.setLayout(gl_compositeDosage);
+			stackCompositeDosage = new Composite(compositeMedicationDetail, SWT.NONE);
+			stackCompositeDosage
+				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+			stackLayoutDosage = new StackLayout();
+			stackCompositeDosage.setLayout(stackLayoutDosage);
 			
-			txtMorning = new Text(compositeDosage, SWT.BORDER);
-			txtMorning.setTextLimit(6);
+			compositeDayTimeDosage = new Composite(stackCompositeDosage, SWT.NONE);
+			compositeDayTimeDosage
+				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+			GridLayout gl_compositeDayTimeDosage = new GridLayout(7, false);
+			gl_compositeDayTimeDosage.marginWidth = 0;
+			gl_compositeDayTimeDosage.marginHeight = 0;
+			gl_compositeDayTimeDosage.verticalSpacing = 1;
+			gl_compositeDayTimeDosage.horizontalSpacing = 0;
+			compositeDayTimeDosage.setLayout(gl_compositeDayTimeDosage);
+			
+			txtMorning = new Text(compositeDayTimeDosage, SWT.BORDER);
+			txtMorning.setTextLimit(60); //varchar 255 divided by 4 minus 3 '-'
 			txtMorning.setMessage("morn");
 			GridData gd_txtMorning = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 			gd_txtMorning.widthHint = 40;
 			txtMorning.setLayoutData(gd_txtMorning);
 			txtMorning.addModifyListener(new SignatureArrayModifyListener(0));
 			
-			Label lblStop = new Label(compositeDosage, SWT.HORIZONTAL);
+			Label lblStop = new Label(compositeDayTimeDosage, SWT.HORIZONTAL);
 			lblStop.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 			lblStop.setText("-");
 			
-			txtNoon = new Text(compositeDosage, SWT.BORDER);
-			txtNoon.setTextLimit(6);
+			txtNoon = new Text(compositeDayTimeDosage, SWT.BORDER);
+			txtNoon.setTextLimit(60);
 			txtNoon.setMessage("noon");
 			GridData gd_txtNoon = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 			gd_txtNoon.widthHint = 40;
 			txtNoon.setLayoutData(gd_txtNoon);
 			txtNoon.addModifyListener(new SignatureArrayModifyListener(1));
 			
-			Label lblStop2 = new Label(compositeDosage, SWT.NONE);
+			Label lblStop2 = new Label(compositeDayTimeDosage, SWT.NONE);
 			lblStop2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 			lblStop2.setText("-");
 			
-			txtEvening = new Text(compositeDosage, SWT.BORDER);
-			txtEvening.setTextLimit(6);
+			txtEvening = new Text(compositeDayTimeDosage, SWT.BORDER);
+			txtEvening.setTextLimit(60);
 			txtEvening.setMessage("eve");
 			GridData gd_txtEvening = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 			gd_txtEvening.widthHint = 40;
@@ -713,12 +723,12 @@ public class MedicationComposite extends Composite {
 				};
 			});
 			
-			Label lblStop3 = new Label(compositeDosage, SWT.NONE);
+			Label lblStop3 = new Label(compositeDayTimeDosage, SWT.NONE);
 			lblStop3.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 			lblStop3.setText("-");
 			
-			txtNight = new Text(compositeDosage, SWT.BORDER);
-			txtNight.setTextLimit(6);
+			txtNight = new Text(compositeDayTimeDosage, SWT.BORDER);
+			txtNight.setTextLimit(60);
 			txtNight.setMessage("night");
 			GridData gd_txtNight = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 			gd_txtNight.widthHint = 40;
@@ -736,7 +746,55 @@ public class MedicationComposite extends Composite {
 					}
 				};
 			});
+			
+			compositeFreeTextDosage = new Composite(stackCompositeDosage, SWT.NONE);
+			compositeFreeTextDosage
+				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+			GridLayout gl_compositeFreeTextDosage = new GridLayout(1, false);
+			gl_compositeFreeTextDosage.marginWidth = 0;
+			gl_compositeFreeTextDosage.marginHeight = 0;
+			gl_compositeFreeTextDosage.verticalSpacing = 1;
+			gl_compositeFreeTextDosage.horizontalSpacing = 0;
+			compositeFreeTextDosage.setLayout(gl_compositeFreeTextDosage);
+			
+			txtFreeText = new Text(compositeFreeTextDosage, SWT.BORDER);
+			txtFreeText.setMessage(Messages.MedicationComposite_freetext);
+			GridData gd_txtFreeText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+			gd_txtFreeText.widthHint = 210;
+			txtFreeText.setLayoutData(gd_txtFreeText);
+			txtFreeText.setTextLimit(255);
+			txtFreeText.addModifyListener(new SignatureArrayModifyListener(0));
+			txtFreeText.addKeyListener(new KeyAdapter() {
+				public void keyPressed(KeyEvent e){
+					switch (e.keyCode) {
+					case SWT.CR:
+						if (btnConfirm.isEnabled())
+							applyDetailChanges();
+						break;
+					default:
+						break;
+					}
+				};
+			});
+			
+			stackLayoutDosage.topControl = compositeDayTimeDosage;
+			stackCompositeDosage.layout();
 		}
+		
+		Button btnDoseSwitch = new Button(compositeMedicationDetail, SWT.PUSH);
+		btnDoseSwitch.setImage(Images.IMG_SYNC.getImage());
+		btnDoseSwitch.setToolTipText(Messages.MedicationComposite_tooltipDosageType);
+		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
+			
+			public void widgetSelected(SelectionEvent e){
+				if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
+					stackLayoutDosage.topControl = compositeFreeTextDosage;
+				} else {
+					stackLayoutDosage.topControl = compositeDayTimeDosage;
+				}
+				stackCompositeDosage.layout();
+			};
+		});
 		
 		btnConfirm = new Button(compositeMedicationDetail, SWT.FLAT);
 		btnConfirm.setText(Messages.MedicationComposite_btnConfirm);
@@ -860,7 +918,7 @@ public class MedicationComposite extends Composite {
 			newDose = getDosisStringFromSignatureTextArray();
 		}
 		
-		setValuesForTextSignatureArray(Prescription.getSignatureAsStringArray(newDose));
+		setValuesForTextSignature(Prescription.getSignatureAsStringArray(newDose));
 		pres.addTerm(null, newDose);
 		activateConfirmButton(false);
 		if (btnStopMedication.isEnabled())
@@ -960,34 +1018,59 @@ public class MedicationComposite extends Composite {
 		return medicationTableViewer;
 	}
 	
-	private void setValuesForTextSignatureArray(String[] signatureArray){
-		txtMorning.setText(signatureArray[0]);
-		txtNoon.setText(signatureArray[1]);
-		txtEvening.setText(signatureArray[2]);
-		txtNight.setText(signatureArray[3]);
+	private void setValuesForTextSignature(String[] signatureArray){
+		boolean isFreetext = !signatureArray[0].isEmpty() && signatureArray[1].isEmpty()
+			&& signatureArray[2].isEmpty() && signatureArray[3].isEmpty();
+		if (isFreetext) {
+			txtFreeText.setText(signatureArray[0]);
+			txtMorning.setText("");
+			txtNoon.setText("");
+			txtEvening.setText("");
+			txtNight.setText("");
+			
+			if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
+				stackLayoutDosage.topControl = compositeFreeTextDosage;
+				stackCompositeDosage.layout();
+			}
+		} else {
+			txtFreeText.setText("");
+			txtMorning.setText(signatureArray[0]);
+			txtNoon.setText(signatureArray[1]);
+			txtEvening.setText(signatureArray[2]);
+			txtNight.setText(signatureArray[3]);
+			
+			if (stackLayoutDosage.topControl == compositeFreeTextDosage) {
+				stackLayoutDosage.topControl = compositeDayTimeDosage;
+				stackCompositeDosage.layout();
+			}
+		}
 	}
 	
 	/**
 	 * @return the values in the signature text array as dose string
 	 */
 	private String getDosisStringFromSignatureTextArray(){
-		String[] values = new String[4];
-		values[0] = txtMorning.getText().isEmpty() ? "0" : txtMorning.getText();
-		values[1] = txtNoon.getText().isEmpty() ? "0" : txtNoon.getText();
-		values[2] = txtEvening.getText().isEmpty() ? "0" : txtEvening.getText();
-		values[3] = txtNight.getText().isEmpty() ? "0" : txtNight.getText();
-		
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < values.length; i++) {
-			String string = values[i];
-			if (string.length() > 0) {
-				if (i > 0) {
-					sb.append("-");
+		if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
+			String[] values = new String[4];
+			values[0] = txtMorning.getText().isEmpty() ? "0" : txtMorning.getText();
+			values[1] = txtNoon.getText().isEmpty() ? "0" : txtNoon.getText();
+			values[2] = txtEvening.getText().isEmpty() ? "0" : txtEvening.getText();
+			values[3] = txtNight.getText().isEmpty() ? "0" : txtNight.getText();
+			
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < values.length; i++) {
+				String string = values[i];
+				if (string.length() > 0) {
+					if (i > 0) {
+						sb.append("-");
+					}
+					sb.append(string);
 				}
-				sb.append(string);
 			}
+			return sb.toString();
+		} else {
+			return txtFreeText.getText();
 		}
-		return sb.toString();
 	}
 	
 	private void activateConfirmButton(boolean activate){

@@ -262,21 +262,81 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public static String[] getSignatureAsStringArray(String signature){
-		String[] retVal = new String[4];
-		Arrays.fill(retVal, "");
+		String[] daytimeSignature = new String[4];
+		Arrays.fill(daytimeSignature, "");
 		if (signature != null) {
 			// Match stuff like '1/2', '7/8'
-			if (signature.matches("^[0-9]/[0-9]$")) {
-				retVal[0] = signature;
-			} else if (signature.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
-				String[] split = signature.split("[xX]");
-				System.arraycopy(split, 0, retVal, 0, split.length);
+			//			if (signature.matches("^[0-9]/[0-9]$")) {
+			if (signature.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
+				String[] split = signature.split("[xX]");//$NON-NLS-1$
+				System.arraycopy(split, 0, daytimeSignature, 0, split.length);
 			} else if (signature.indexOf('-') != -1) {
-				String[] split = signature.split("[- ]"); //$NON-NLS-1$
-				System.arraycopy(split, 0, retVal, 0, split.length);
+				String[] split = signature.split("[-]"); //$NON-NLS-1$
+				System.arraycopy(split, 0, daytimeSignature, 0, split.length);
+			} else if (signature.indexOf("/") != -1) {
+				String[] split = signature.split("[/]"); //$NON-NLS-1$
+				System.arraycopy(split, 0, daytimeSignature, 0, split.length);
+			} else {
+				daytimeSignature[0] = signature;
 			}
 		}
-		return retVal;
+		return getDayTimeOrFreetextSignatureArray(daytimeSignature);
+	}
+	
+	/**
+	 * Only specific numeric dosage values are allowed as day time dosage<br>
+	 * Accepted: 1, 1.5, 1/2 or 1,5<br>
+	 * <br>
+	 * Regex Explanation: <br>
+	 * [0-9]([,.]{1}[0-9]+)? one or multiple digits that might be splitted by one , or .<br>
+	 * ([/]{1}[0-9]*([,.]{1}[0-9]+)?)? zero or one occurrence of a slash followed by a numeric
+	 * expression like described above
+	 * 
+	 * @param morn
+	 * @param noon
+	 * @param eve
+	 * @param night
+	 * @return 4 field array in case of a dayTime signatue. 1 field array if freetext
+	 */
+	private static String[] getDayTimeOrFreetextSignatureArray(String[] signature){
+		String[] values = new String[4];
+		Arrays.fill(values, "");
+		
+		String morn = signature[0];
+		String noon = signature[1];
+		String eve = signature[2];
+		String night = signature[3];
+		String doseExpr = "[0-9]*([,.]{1}[0-9]+)?([/]{1}[0-9]+([,.]{1}[0-9]+)?)?";
+		
+		// valid day time dosage was subscribed so 4 field array can be populated
+		if (morn.matches(doseExpr) && noon.matches(doseExpr) && eve.matches(doseExpr)
+			&& night.matches(doseExpr)) {
+			if (morn.isEmpty() && noon.isEmpty() && eve.isEmpty() && night.isEmpty()) {
+				return values;
+			}
+			values[0] = morn.isEmpty() ? "0" : morn;
+			values[1] = noon.isEmpty() ? "0" : noon;
+			values[2] = eve.isEmpty() ? "0" : eve;
+			values[3] = night.isEmpty() ? "0" : night;
+			return values;
+		}
+		
+		// build up freetext field
+		String freetext = createFreetextString(morn, noon, eve, night);
+		freetext.trim();
+		values[0] = freetext;
+		return values;
+	}
+	
+	private static String createFreetextString(String... values){
+		StringBuilder sb = new StringBuilder();
+		for (String val : values) {
+			if (!val.isEmpty() && !sb.toString().isEmpty()) {
+				sb.append("-");
+			}
+			sb.append(val);
+		}
+		return sb.toString();
 	}
 	
 	public void setDosis(String newDose){
@@ -445,15 +505,14 @@ public class Prescription extends PersistentObject {
 			if (n.matches("^[0-9]/[0-9]$")) {
 				float value = getNum(n.substring(0, 1)) / getNum(n.substring(2));
 				return value;
-			}
-			if (n.equalsIgnoreCase("½"))
+			} else if (n.equalsIgnoreCase("½"))
 				return 0.5F;
-			if (n.equalsIgnoreCase("¼"))
+			else if (n.equalsIgnoreCase("¼"))
 				return 0.25F;
-			if (n.equalsIgnoreCase("1½"))
+			else if (n.equalsIgnoreCase("1½"))
 				return 1.5F;
-			
-			if (n.indexOf('/') != -1) {
+				
+			else if (n.indexOf('/') != -1) {
 				if (n.length() == 1) {
 					return 0.0f;
 				}
@@ -467,7 +526,27 @@ public class Prescription extends PersistentObject {
 					return 0.0f;
 				}
 				return zaehler / nenner;
-			} else {
+			}
+			// matching for values like 2x1, 2,5x1 or 20x1
+			else if (n.toLowerCase().matches("^[0-9][,.]*[0-9]*x[0-9][,.]*[0-9]*$")) {
+				n = n.replace("\\s", "");
+				String[] nums = n.toLowerCase().split("x");
+				float num1 = Float.parseFloat(nums[0].replace(",", "."));
+				float num2 = Float.parseFloat(nums[1].replace(",", "."));
+				return num1 * num2;
+			}
+			// matching numbers with comma i.e. 1,5 and parses it to 1.5 for float value
+			else if (n.matches("^[0-9,]")) {
+				n = n.replace(",", ".");
+				return Float.parseFloat(n);
+			}
+			// any other digit-letter combination. replaces comma with dot and removes all non-digit chars. i.e. 1,5 p. Day becomes 1.5
+			else {
+				n = n.replace(",", ".");
+				n = n.replaceAll("[^\\d.]", "");
+				if (n.endsWith(".")) {
+					n = n.substring(0, n.length() - 1);
+				}
 				return Float.parseFloat(n);
 			}
 		} catch (NumberFormatException e) {
