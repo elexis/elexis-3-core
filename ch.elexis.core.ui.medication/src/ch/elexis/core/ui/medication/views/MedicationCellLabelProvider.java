@@ -57,7 +57,7 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 		
 		for (Prescription p : prescriptions) {
 			if (!(p.getId().equals(presc.getId()))) {
-				if (p.getArtikel().equals(arti)) {
+				if (p.getArtikel()!=null && p.getArtikel().equals(arti)) {
 					if (p.isFixedMediation()) {
 						return false;
 					} else {

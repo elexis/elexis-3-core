@@ -3,19 +3,23 @@ package ch.elexis.core.ui.medication.views.provider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
+import ch.elexis.core.jdt.NonNull;
 import ch.elexis.data.Prescription;
 
 public class MedicationFilter extends ViewerFilter {
-	private String searchString;
+	private String searchString = "";
 	private Viewer viewer;
 	
 	public MedicationFilter(Viewer viewer){
 		this.viewer = viewer;
 	}
 	
-	public void setSearchText(String s){
+	public void setSearchText(@NonNull String s){
+		if (s.equalsIgnoreCase(searchString))
+			return;
+			
 		s = s.replace("*", "");
-		this.searchString = ".*" + s.toLowerCase() + ".*";
+		searchString = ".*" + s.toLowerCase() + ".*";
 		
 		viewer.getControl().setRedraw(false);
 		viewer.refresh();
@@ -43,9 +47,9 @@ public class MedicationFilter extends ViewerFilter {
 		}
 		return false;
 	}
-
+	
 	public void clearSearchText(){
-		this.searchString = "";	
+		this.searchString = "";
 	}
 	
 }
