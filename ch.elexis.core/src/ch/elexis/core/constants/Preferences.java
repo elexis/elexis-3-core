@@ -145,7 +145,7 @@ public class Preferences {
 	public static final boolean INVENTORY_MARK_AS_ORDERED_DEFAULT = true;
 	
 	// Labor
-	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "7"; //$NON-NLS-1$
+	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$
 	
 	// Labsettings
 	public static final String LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS = "lab/keepUnseen"; //$NON-NLS-1$
