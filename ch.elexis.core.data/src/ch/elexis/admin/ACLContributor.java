@@ -67,12 +67,6 @@ public class ACLContributor implements IACLContributor {
 	
 	@Override
 	public void initializeDefaults(AbstractAccessControl ac){
-		Role ur = Role.load(Role.SYSTEMROLE_LITERAL_USER);
-		ACE[] anwender = AccessControlDefaults.getAnwender();
-		Arrays.asList(anwender).stream().forEachOrdered(ace -> ac.grant(ur, ace));
-		ACE[] alle = AccessControlDefaults.getAlle();
-		Arrays.asList(alle).stream().forEachOrdered(ace -> ac.grant(ur, ace));
-		
-		ac.grant(Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR, AccessControlDefaults.ACE_ACCESS);
+		AccessControlDefaults.initializeDefaults(ac);
 	}
 }
