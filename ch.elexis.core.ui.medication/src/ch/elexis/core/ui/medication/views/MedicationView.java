@@ -1,7 +1,5 @@
 package ch.elexis.core.ui.medication.views;
 
-import java.util.List;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -34,24 +32,12 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	private MedicationComposite tpc;
 	private TableViewer medicationTableViewer;
-	private Patient currentPat;
 	
 	public static final String PART_ID = "ch.elexis.core.ui.medication.views.MedicationView"; //$NON-NLS-1$
 	
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		public void runInUi(ElexisEvent ev){
-			Patient sp = ElexisEventDispatcher.getSelectedPatient();
-			if (sp == null) {
-				updateUi(sp);
-				return;
-			}
-			
-			if (sp.equals(currentPat)) {
-				return;
-			}
-			
-			currentPat = sp;
-			updateUi(sp);
+			updateUi(ElexisEventDispatcher.getSelectedPatient());
 		}
 	};
 	
@@ -107,22 +93,11 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void setFocus(){
-		if (currentPat == null) {
-			Patient sp = ElexisEventDispatcher.getSelectedPatient();
-			updateUi(sp);
-			currentPat = sp;
-		}
+		updateUi(ElexisEventDispatcher.getSelectedPatient());
 	}
 	
 	private void updateUi(Patient pat){
-		if (pat == null) {
-			tpc.updateUi(null);
-			return;
-		}
-		
-		List<Prescription> result =
-			MedicationViewHelper.loadInputData(tpc.getShowHistoryState(), pat.getId());
-		tpc.updateUi(result);
+		tpc.updateUi(pat);
 	}
 	
 	@Override

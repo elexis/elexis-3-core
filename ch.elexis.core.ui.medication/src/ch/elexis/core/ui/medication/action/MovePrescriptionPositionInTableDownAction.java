@@ -10,8 +10,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableItem;
 
 import ch.elexis.core.ui.medication.views.MedicationComposite;
+import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.Messages;
-import ch.elexis.data.Prescription;
+import ch.elexis.core.ui.medication.views.ViewerSortOrder;
 
 public class MovePrescriptionPositionInTableDownAction extends Action {
 	
@@ -36,19 +37,20 @@ public class MovePrescriptionPositionInTableDownAction extends Action {
 	
 	@Override
 	public void run(){
-		mediComposite.switchToManualComparatorIfNotActive();
+		mediComposite.switchToViewerSoftOrderIfNotActive(ViewerSortOrder.MANUAL);
+		
 		int selectionIndex = tv.getTable().getSelectionIndex();
 		
 		if (selectionIndex == tv.getTable().getItemCount() - 1)
 			return;
-		
+			
 		List<TableItem> asList = Arrays.asList(tv.getTable().getItems());
 		Collections.swap(asList, selectionIndex, selectionIndex + 1);
 		
 		for (int i = 0; i < asList.size(); i++) {
 			TableItem tableItem = asList.get(i);
-			Prescription pres = (Prescription) tableItem.getData();
-			pres.set(Prescription.FLD_SORT_ORDER, Integer.toString(i));
+			MedicationTableViewerItem pres = (MedicationTableViewerItem) tableItem.getData();
+			pres.setOrder(Integer.toString(i));
 		}
 		
 		tv.refresh();

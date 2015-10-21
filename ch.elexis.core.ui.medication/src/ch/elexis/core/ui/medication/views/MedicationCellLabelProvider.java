@@ -6,8 +6,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Color;
 
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Prescription;
+
 import ch.rgw.tools.TimeTool;
 
 public class MedicationCellLabelProvider extends ColumnLabelProvider {
@@ -20,7 +19,7 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 
 	@Override
 	public Color getBackground(Object element){
-		Prescription pres = (Prescription) element;
+		MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
 		if (pres.isReserveMedication()) {
 			return reserveColor;
 		}
@@ -30,34 +29,25 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 	
 	@Override
 	public Color getForeground(Object element){
-		Prescription pres = (Prescription) element;
-		if (!pres.isFixedMediation() && !hasDateUntil(pres))
+		MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
+		if (!pres.isFixedMediation() && !(pres.getEndDate().length()==0))
 			return UiDesk.getColor(UiDesk.COL_RED);
 			
 		return super.getForeground(element);
 	}
-
 	
-	private static boolean hasDateUntil(Prescription presc){
-		String date = presc.get(Prescription.FLD_DATE_UNTIL);
-		if (date.length() == 0) {
-			return false;
-		}
-		return true;
-	}
-	
-	public static boolean isNoTwin(Prescription presc, List<Prescription> prescriptions){
+	public static boolean isNoTwin(MedicationTableViewerItem presc, List<MedicationTableViewerItem> prescriptions){
 		if (presc.isFixedMediation())
 			return true;
 		
-		Artikel arti = presc.getArtikel();
+		String arti = presc.getArtikelsts();
 		TimeTool start = new TimeTool(presc.getBeginDate());
 		TimeTool tt = new TimeTool();
 		long lastUpdate = presc.getLastUpdate();
 		
-		for (Prescription p : prescriptions) {
+		for (MedicationTableViewerItem p : prescriptions) {
 			if (!(p.getId().equals(presc.getId()))) {
-				if (p.getArtikel()!=null && p.getArtikel().equals(arti)) {
+				if (p.getArtikelsts()!=null && p.getArtikelsts().equals(arti)) {
 					if (p.isFixedMediation()) {
 						return false;
 					} else {

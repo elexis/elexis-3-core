@@ -51,7 +51,6 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.rgw.tools.ExHandler;
-import ch.rgw.tools.StringTool;
 
 /**
  * Display and let the user modify the medication of the currently selected patient This is a

@@ -77,9 +77,9 @@ public class Prescription extends PersistentObject {
 	
 	static {
 		addMapping(TABLENAME, FLD_PATIENT_ID, FLD_ARTICLE, FLD_ARTICLE_ID, FLD_REZEPT_ID,
-			FLD_DATE_FROM + "=S:D:DateFrom", FLD_DATE_UNTIL + "=S:D:DateUntil", FLD_DATE_PRESC
-				+ "=S:D:" + FLD_DATE_PRESC, FLD_DOSAGE, FLD_REMARK, FLD_COUNT, FLD_PRESC_TYPE,
-			FLD_SORT_ORDER, FLD_EXTINFO, FLD_PRESCRIPTOR);
+			FLD_DATE_FROM + "=S:D:DateFrom", FLD_DATE_UNTIL + "=S:D:DateUntil",
+			FLD_DATE_PRESC + "=S:D:" + FLD_DATE_PRESC, FLD_DOSAGE, FLD_REMARK, FLD_COUNT,
+			FLD_PRESC_TYPE, FLD_SORT_ORDER, FLD_EXTINFO, FLD_PRESCRIPTOR);
 	}
 	
 	public Prescription(Artikel a, Patient p, String dosage, String remark){
@@ -210,8 +210,8 @@ public class Prescription extends PersistentObject {
 	 * Up to Version 3.0.10 (hopefully) Elexis did not specify exactly the dose of a drug, but used
 	 * a String where many doctors used shortcuts like 1-0-1-1 to specify that the number of
 	 * entities (e.g. a tablet) for breakfast, lunch, supper, before night Here are some examples
-	 * how this procedure deals with the some input. 0-0- 1/4-1/2 => <0.0,0.0,0.25> 0.5/-/- => <0.5>
-	 * 0-0-0- 40E => <0.0,0.0,0.0,40.0> 0.5 Stk alle 3 Tage => <0.5> 1inj Wo => <>
+	 * how this procedure deals with the some input. 0-0- 1/4-1/2 => <0.0,0.0,0.25> 0.5/-/- =>
+	 * <0.5> 0-0-0- 40E => <0.0,0.0,0.0,40.0> 0.5 Stk alle 3 Tage => <0.5> 1inj Wo => <>
 	 * 
 	 * More examples can be found in the unit test.
 	 * 
@@ -412,8 +412,10 @@ public class Prescription extends PersistentObject {
 	 *            the begin date of the new dose, if <code>null</code> the current date is used
 	 * @param dose
 	 *            a dosage definition of the form "1-0-0-0" or "0" to stop the article
+	 * @return String[2] with {@link #FLD_DATE_FROM} and {@link #FLD_DOSAGE}
+	 * @since 3.1 returns the newly set values
 	 */
-	public void addTerm(TimeTool begin, String dose){
+	public String[] addTerm(TimeTool begin, String dose){
 		String raw = (String) getExtInfoStoredObjectByKey(FLD_EXT_TERMS);
 		if (raw == null) {
 			raw = "";
@@ -423,21 +425,26 @@ public class Prescription extends PersistentObject {
 		StringBuilder line = new StringBuilder();
 		if (begin == null)
 			begin = new TimeTool();
-		
+			
 		get(new String[] {
 			FLD_DATE_FROM, FLD_DOSAGE
 		}, vals);
-		line.append(StringTool.flattenSeparator).append(vals[0])
-			.append(StringConstants.DOUBLECOLON).append(vals[1]);
+		line.append(StringTool.flattenSeparator).append(vals[0]).append(StringConstants.DOUBLECOLON)
+			.append(vals[1]);
 		raw += line.toString();
 		setExtInfoStoredObjectByKey(FLD_EXT_TERMS, (String) raw);
 		
+		String valN[] = new String[] {
+			begin.toString(TimeTool.DATE_GER), dose
+		};
+		
 		set(new String[] {
 			FLD_DATE_FROM, FLD_DOSAGE
-		}, begin.toString(TimeTool.DATE_GER), dose);
+		}, valN);
 		if (dose.equals(StringConstants.ZERO)) {
 			stop(begin);
 		}
+		return valN;
 	}
 	
 	/**
@@ -550,9 +557,8 @@ public class Prescription extends PersistentObject {
 				return Float.parseFloat(n);
 			}
 		} catch (NumberFormatException e) {
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.INFO, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					e.getLocalizedMessage(), e);
+			ElexisStatus status = new ElexisStatus(ElexisStatus.INFO, CoreHub.PLUGIN_ID,
+				ElexisStatus.CODE_NONE, e.getLocalizedMessage(), e);
 			ElexisEventDispatcher.fireElexisStatusEvent(status);
 			return 0.0F;
 		}
@@ -568,10 +574,22 @@ public class Prescription extends PersistentObject {
 		get(new String[] {
 			FLD_REZEPT_ID, FLD_DATE_UNTIL
 		}, vals);
-		boolean rezeptIdIsNull = vals[0].length() == 0;
-		boolean dateIsNull = vals[1].length() == 0;
+		
+		return isFixedMedication(vals[0], vals[1]);
+	}
+	
+	/**
+	 * 
+	 * @param rezeptId
+	 * @param dateUntil
+	 * @return
+	 * @since 3.1
+	 */
+	public boolean isFixedMedication(String rezeptId, String dateUntil){
+		boolean rezeptIdIsNull = rezeptId.length() == 0;
+		boolean dateIsNull = dateUntil.length() == 0;
 		if (!dateIsNull) {
-			TimeTool tt = new TimeTool(vals[1]);
+			TimeTool tt = new TimeTool(dateUntil);
 			dateIsNull = tt.isAfter(new TimeTool());
 		}
 		return (rezeptIdIsNull & dateIsNull);
@@ -651,7 +669,8 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
-	 * @return the {@link Verrechnet} for an applied medication (check {@link #isAppliedMedication()}
+	 * @return the {@link Verrechnet} for an applied medication (check
+	 *         {@link #isAppliedMedication()}
 	 * @since 3.1.0
 	 */
 	public @Nullable Verrechnet getVerrechnetForAppliedMedication(){
@@ -722,7 +741,17 @@ public class Prescription extends PersistentObject {
 	 */
 	public @Nullable IPersistentObject getLastDisposed(){
 		String rezeptId = get(Prescription.FLD_REZEPT_ID);
-		if(StringTool.leer.equals(rezeptId)) {
+		return getLastDisposed(rezeptId);
+	}
+	
+	/**
+	 * @param rezeptId
+	 * @return
+	 * @since 3.1.0
+	 * @see #getLastDisposed()
+	 */
+	public @Nullable IPersistentObject getLastDisposed(String rezeptId){
+		if (StringTool.leer.equals(rezeptId)) {
 			// fixed medication - need to find the last disposition by querying db
 			Query<Prescription> qre = new Query<Prescription>(Prescription.class);
 			qre.add(Prescription.FLD_PATIENT_ID, Query.LIKE, get(Prescription.FLD_PATIENT_ID));
@@ -730,7 +759,7 @@ public class Prescription extends PersistentObject {
 			qre.add(Prescription.FLD_REZEPT_ID, Query.NOT_EQUAL, StringTool.leer);
 			qre.orderBy(true, PersistentObject.FLD_LASTUPDATE);
 			List<Prescription> execute = qre.execute();
-			if(execute.size()>0) {
+			if (execute.size() > 0) {
 				return execute.get(0).getLastDisposed();
 			} else {
 				return null;
@@ -762,7 +791,7 @@ public class Prescription extends PersistentObject {
 		IPersistentObject po = getLastDisposed();
 		if (po == null)
 			return null;
-		
+			
 		float tagesDosis = calculateTagesDosis(getDosis());
 		
 		String disposeDateString = null;
@@ -775,10 +804,10 @@ public class Prescription extends PersistentObject {
 			return null;
 		TimeTool disposeDate = new TimeTool(disposeDateString);
 		
-		int packageSize = getArtikel().getPackungsGroesse();
+		int packageSize = (getArtikel()!=null) ? getArtikel().getPackungsGroesse() : 0;
 		if (packageSize == 0)
 			return null;
-		
+			
 		int noSuppliedDays = Math.round(packageSize / tagesDosis);
 		disposeDate.addDays(noSuppliedDays);
 		

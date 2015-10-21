@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 import ch.elexis.core.jdt.NonNull;
-import ch.elexis.data.Prescription;
+import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 
 public class MedicationFilter extends ViewerFilter {
 	private String searchString = "";
@@ -31,15 +31,14 @@ public class MedicationFilter extends ViewerFilter {
 		if (searchString == null || searchString.length() == 0) {
 			return true;
 		}
-		Prescription p = (Prescription) element;
+		MedicationTableViewerItem p = (MedicationTableViewerItem) element;
 		
 		// check match of article name
 		String mediName = "??";
-		if (p.getArtikel() != null) {
-			String label = p.getArtikel().getLabel();
-			if (label != null) {
-				mediName = label.toLowerCase();
-			}
+		
+		String label = p.getArtikelLabel();
+		if (label != null) {
+			mediName = label.toLowerCase();
 		}
 		
 		if (mediName.matches(searchString)) {

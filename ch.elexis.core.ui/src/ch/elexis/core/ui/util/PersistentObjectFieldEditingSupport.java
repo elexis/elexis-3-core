@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.medication.views;
+package ch.elexis.core.ui.util;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
