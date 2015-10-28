@@ -114,6 +114,8 @@ public class CoreHub implements BundleActivator {
 	 */
 	public static Mandant actMandant;
 	
+	private static boolean tooManyInstances;
+	
 	/** Der Initialisierer für die Voreinstellungen */
 	public static final CorePreferenceInitializer pin = new CorePreferenceInitializer();
 	
@@ -124,6 +126,10 @@ public class CoreHub implements BundleActivator {
 	 * The listener for patient events
 	 */
 	private final PatientEventListener eeli_pat = new PatientEventListener();
+	
+	public static boolean isTooManyInstances() {
+		return tooManyInstances;
+	}
 	
 	/**
 	 * get the base directory of this currently running elexis application
@@ -302,10 +308,11 @@ public class CoreHub implements BundleActivator {
 			final int n = lockfile.lock();
 			if (n == 0) {
 				MessageEvent.fireLoggedError("Too many instances",
-					"Too many concurrent instances of Elexis running. Will exit.");
-				log.error("Too many concurent instances. Check elexis.lock files in " + userDir);
-				System.exit(2);
+					"Too many concurrent instances of Elexis running. Check elexislock files in "
+						+ userDir);
+				tooManyInstances = true;
 			} else {
+				tooManyInstances = false;
 				HeartListener lockListener = new HeartListener() {
 					long timeSet;
 					

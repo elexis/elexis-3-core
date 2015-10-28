@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.application.advisors.ApplicationWorkbenchAdvisor;
+import ch.elexis.core.application.advisors.Messages;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
@@ -89,6 +90,13 @@ public class Desk implements IApplication {
 			FileTool.deltree(p);
 			CoreHub.localCfg.clear();
 			CoreHub.localCfg.flush();
+		}
+		
+		// check if we should warn of too many instances
+		if (CoreHub.isTooManyInstances()) {
+			MessageDialog.openWarning(UiDesk.getDisplay().getActiveShell(),
+				Messages.Warning_tooManyTitle,
+				Messages.Warning_tooManyMessage + CoreHub.getWritableUserDir().getAbsolutePath());
 		}
 		
 		// care for log-in

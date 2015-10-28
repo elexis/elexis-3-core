@@ -33,6 +33,8 @@ public class Messages extends NLS {
 	public static String LoginDialog_4;
 	public static String LoginDialog_login;
 	public static String LoginDialog_terminate;
+	public static String Warning_tooManyTitle;
+	public static String Warning_tooManyMessage;
 	public static String ReminderView_importantRemindersOnLogin;
 	static {
 		// load message values from bundle file
