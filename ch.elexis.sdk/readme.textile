@@ -1,10 +1,10 @@
 h1. Elexis SDK
 
-__MEDEVIT <office@medevit.at>__ Last update: 15.5.2015
+__MEDEVIT <office@medevit.at>__ Last update: 30.10.2015
 
 This project is used to automatically set-up an Elexis 3 development environment using the "Eclipse Oomph Installer":http://wiki.eclipse.org/Eclipse_Oomph_Installer. It integrates both core, base and "Medelexis":http://www.medelexis.ch  resources. This project is not used outside of the Oomph installer tool.
 
-This documentation was verified with Oomph v1.1. The setup file referenced in this document is located in the root of this git repository (that is @../Elexis.setup@ )
+This documentation was verified with Oomph v1.3.0 Build 1816. The setup file referenced in this document is located in the root of this git repository (that is @../Elexis.setup@ )
 
 h2. Usage
 
@@ -13,17 +13,18 @@ Eclipse Oomph is a toolkit to realize automated installations of project specifi
 # Download Oomph specific to your system from "https://wiki.eclipse.org/Eclipse_Installer":https://wiki.eclipse.org/Eclipse_Installer 
 # Start Oomph (eclipse installer) and switch to the __Advanced__  wizard  <br> !images/switchToAdvanced.png! 
 # In the advanced wizard select __Eclipse for RCP and RAP developers__ as @Product@   and select **Next>** 
-# Now you see the list of @Projects@, here you have to add the setup file for Elexis. The setup file can be accessed in raw format using the link "https://raw.githubusercontent.com/elexis/elexis-3-core/master/Elexis.setup":https://raw.githubusercontent.com/elexis/elexis-3-core/master/Elexis.setup . Add it as follows <br> !images/addElexisUrlToOomph.png!
-# Now you add the required Elexis parts to your installation setup. There exist four different pars
+# Now you see the list of @Projects@, here you have to add the setup file for Elexis. Save the link "https://raw.githubusercontent.com/elexis/elexis-3-core/master/Elexis.setup":https://raw.githubusercontent.com/elexis/elexis-3-core/master/Elexis.setup . e.g as /tmp/Elexis.setup. Add it as follows <br> !images/addElexisUrlToOomph.png!
+With OOMP 1.3.0 the https-URL did not work and you must add the Elexis.setup via the File system.
+# Now you add the required Elexis parts to your installation setup. There exist four different parts
 ## @Elexis@ ( "elexis-3-core":https://github.com/elexis/elexis-3-core/ and "elexis-3-base":https://github.com/elexis/elexis-3-base/ ) - contains the base open source elexis, a github account is required
 ## @Medelexis@  - the Medelexis plugins part, only accessible to users who have access to the Medelexis repo
 ## @Medelexis Application@  - the core Medelexis application, only accessible to core Medelexis developers
 ## @Austria@ ( "elexis-3-austria":https://github.com/elexis/elexis-3-austria ) - setup for plugins specific to Austrian requirements , requires github account
-# for a default open source development environment in the master stream select the projects as follows <br> !images/selectProjects.png!
-# the first time you use the installer you have to provide some additional information, please be careful to select the correct github username and/or access type, otherwise the installationw will fail. <br> !images/oomphConfiguration.png!
-# After pressing **Next>** again you have to select the installation folder name, use @elexis@ or whatever fits you. Here you will finally find your pre-configured development environment for Elexis open source.
-# Pressing **Next>** again you can verify the settings and start the installation with **Finish**. This will take a while.
+# for a default open source development environment in the master stream select the projects as follows <br> !images/selectProjects.png! and press **Next>**. 
+# the first time you use the installer you have to provide some additional information. Select "Show all variables" and please be careful to select the correct github username and/or access type, otherwise the installationw will fail. <br> !images/oomphConfiguration.png!
+# You have to select the installation folder name, use @elexis@ or whatever fits you. Here you will finally find your pre-configured development environment for Elexis open source.
+# Pressing **Next>** again you can verify the tasks being executed !images/oomphTasks.png! and start the installation with **Finish**. This will take a while.
 # After the basic product installation was done, the newly installed Eclipse IDE is started and the setup tasks are executed (source checkout, IDE configuration etc.).
-
-
+# If you some of your variables were wrong (e.g. wrong path for a Java JDK). The setup will not complete and you must correct the choices, via "Help..Performe Setup Tasks". There press **Back>** to be able to review the variables.
+#* In this case I had to manually open ch.elexis.target/juno-target.target, wait for "Resolving Target Definition" to finish, then pressing **Set as Target Platform**
 
