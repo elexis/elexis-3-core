@@ -12,7 +12,7 @@ package ch.elexis.scripting;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.core.ui.scripting.messages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "ch.elexis.scripting.messages";//$NON-NLS-1$
 	public static String ScriptEditor_editScript;
 	public static String ScriptEditor_ScriptTitle;
 	
