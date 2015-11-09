@@ -189,8 +189,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * In the first place, the method checks if there is a demoDB in the Elexis base directory. If
 	 * found, only this database will be used. If not, connection parameters are taken from the
 	 * provided Settings. If there ist no database found, it will be created newly, using the
-	 * createDB-Script. After successful connection, the global Settings (CoreHub.globalCfg) are
-	 * linked to the database.
+	 * createDB-Script. After successful connection, the defaultconnection is set and the Settings
+	 * (CoreHub.globalCfg) are linked to the database.
 	 * 
 	 * For automated testing the following rules apply:
 	 * 
@@ -205,7 +205,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * like ""drop database miniDB; create dabase miniDB;" before starting Elexis.
 	 * 
 	 * @return true on success
-	 * 		
+	 *
 	 *         Verbindung mit der Datenbank herstellen. Die Verbindungsparameter werden aus den
 	 *         übergebenen Settings entnommen. Falls am angegebenen Ort keine Datenbank gefunden
 	 *         wird, wird eine neue erstellt, falls ein create-Script für diesen Datenbanktyp unter
@@ -256,8 +256,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					dbConnection.setDBPassword(StringTool.leer);
 				}
 				
-				dbConnection.connect();
-				return connect(dbConnection);
+				return dbConnection.connect() && connect(dbConnection);
 			} catch (JdbcLinkException je) {
 				ElexisStatus status = translateJdbcException(je);
 				status.setMessage(status.getMessage()
@@ -266,7 +265,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		} else if (dbConnection.isDirectConnectConfigured()) {
 			// open direct database connection according to system properties
-			return PersistentObject.connect(dbConnection, true);
+			return (PersistentObject.connect(dbConnection, true) && connect(dbConnection));
 		} else if (dbConnection.isRunningFromScratch()) {
 			// run from scratch configuration with a temporary database
 			try {
