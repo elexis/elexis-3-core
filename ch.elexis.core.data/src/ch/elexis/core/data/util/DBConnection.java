@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
@@ -24,8 +25,6 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
-import org.xml.sax.InputSource;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -111,7 +110,7 @@ public class DBConnection implements Serializable {
 	 * @return
 	 * @throws JAXBException
 	 */
-	public static DBConnection unmarshall(InputSource is) throws JAXBException{
+	public static DBConnection unmarshall(InputStream is) throws JAXBException{
 		JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
 		Unmarshaller um = jaxbContext.createUnmarshaller();
 		Object o = um.unmarshal(is);
