@@ -10,6 +10,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
@@ -27,11 +28,12 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();
 			
-			if (firstElement instanceof Prescription) {
-				Prescription presc = (Prescription) firstElement;
+			if (firstElement instanceof MedicationTableViewerItem) {
+				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
+				Prescription presc = mtvItem.getPrescription();
 				
 				// is no ReserveMedication yet
-				if (!presc.isReserveMedication()) {
+				if (presc != null && !presc.isReserveMedication()) {
 					Artikel article = presc.getArtikel();
 					String dose = presc.getDosis();
 					String remark = presc.getBemerkung();

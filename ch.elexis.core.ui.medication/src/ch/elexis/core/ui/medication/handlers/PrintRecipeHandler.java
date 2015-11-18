@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.ElexisConfigurationConstants;
+import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.views.RezeptBlatt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
@@ -41,7 +42,13 @@ public class PrintRecipeHandler extends AbstractHandler {
 			prescRecipes = Arrays.asList(patient.getFixmedikation());
 		} else {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
-			prescRecipes = strucSelection.toList();
+			List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
+			for (MedicationTableViewerItem mtvItem : mtvItems) {
+				Prescription p = mtvItem.getPrescription();
+				if (p != null) {
+					prescRecipes.add(p);
+				}
+			}
 		}
 
 		Rezept rp = new Rezept(patient);

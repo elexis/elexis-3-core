@@ -14,6 +14,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
@@ -36,7 +37,13 @@ public class DispenseHandler extends AbstractHandler {
 			prescRecipes = Arrays.asList(patient.getFixmedikation());
 		} else {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
-			prescRecipes = strucSelection.toList();
+			List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
+			for (MedicationTableViewerItem mtvItem : mtvItems) {
+				Prescription p = mtvItem.getPrescription();
+				if (p != null) {
+					prescRecipes.add(p);
+				}
+			}
 		}
 		
 		Konsultation kons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);

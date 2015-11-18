@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.medication.handlers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -11,6 +12,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
+import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Prescription.EntryType;
@@ -23,7 +25,14 @@ public class MentionInConsultationHandler extends AbstractHandler {
 			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null && !selection.isEmpty()) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
-			List<Prescription> prescriptions = strucSelection.toList();
+			List<Prescription> prescriptions = new ArrayList<Prescription>();
+			List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
+			for (MedicationTableViewerItem mtvItem : mtvItems) {
+				Prescription p = mtvItem.getPrescription();
+				if (p != null) {
+					prescriptions.add(p);
+				}
+			}
 			
 			Konsultation cons = Konsultation.getAktuelleKons();
 			if (cons != null) {

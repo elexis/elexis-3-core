@@ -11,8 +11,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
-import ch.elexis.data.Prescription;
 
 public class DeleteHandler extends AbstractHandler {
 	
@@ -31,10 +31,10 @@ public class DeleteHandler extends AbstractHandler {
 		
 		if (selection != null && !selection.isEmpty()) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
-			Iterator<Prescription> selectionList = strucSelection.iterator();
+			Iterator<MedicationTableViewerItem> selectionList = strucSelection.iterator();
 			while (selectionList.hasNext()) {
-				Prescription presc = selectionList.next();
-				presc.remove();
+				MedicationTableViewerItem item = selectionList.next();
+				item.getPrescription().remove();
 			}
 		}
 		return null;

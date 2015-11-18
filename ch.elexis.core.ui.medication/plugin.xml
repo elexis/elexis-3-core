@@ -166,6 +166,16 @@
                <equals
                      value="TRUE">
                </equals>
+               <and>
+                  <with
+                        variable="selection">
+                     <not>
+                        <count
+                              value="0">
+                        </count>
+                     </not>
+                  </with>
+               </and>
             </with>
          </activeWhen>
       </handler>
@@ -193,12 +203,11 @@
                <and>
                   <with
                         variable="selection">
-                     <iterate
-                           ifEmpty="false">
-                        <instanceof
-                              value="ch.elexis.data.Prescription">
-                        </instanceof>
-                     </iterate>
+                     <not>
+                        <count
+                              value="0">
+                        </count>
+                     </not>
                   </with>
                </and>
             </with>
@@ -207,17 +216,16 @@
       <handler
             class="ch.elexis.core.ui.medication.handlers.DeleteHandler"
             commandId="ch.elexis.core.ui.medication.Delete">
-         <enabledWhen>
+         <activeWhen>
             <with
                   variable="selection">
-               <iterate
-                     ifEmpty="false">
-                  <instanceof
-                        value="ch.elexis.data.Prescription">
-                  </instanceof>
-               </iterate>
+               <not>
+                  <count
+                        value="0">
+                  </count>
+               </not>
             </with>
-         </enabledWhen>
+         </activeWhen>
       </handler>
       <handler
             class="ch.elexis.core.ui.medication.handlers.AddFixMedicationHandler"
@@ -255,12 +263,11 @@
                <and>
                   <with
                         variable="selection">
-                     <iterate
-                           ifEmpty="false">
-                        <instanceof
-                              value="ch.elexis.data.Prescription">
-                        </instanceof>
-                     </iterate>
+                     <not>
+                        <count
+                              value="0">
+                        </count>
+                     </not>
                   </with>
                </and>
             </with></activeWhen>
@@ -277,12 +284,11 @@
                <and>
                   <with
                         variable="selection">
-                     <iterate
-                           ifEmpty="false">
-                        <instanceof
-                              value="ch.elexis.data.Prescription">
-                        </instanceof>
-                     </iterate>
+                     <not>
+                        <count
+                              value="0">
+                        </count>
+                     </not>
                   </with>
                </and>
             </with>
@@ -300,12 +306,11 @@
                <and>
                   <with
                         variable="selection">
-                     <iterate
-                           ifEmpty="false">
-                        <instanceof
-                              value="ch.elexis.data.Prescription">
-                        </instanceof>
-                     </iterate>
+                     <not>
+                        <count
+                              value="0">
+                        </count>
+                     </not>
                   </with>
                </and>
             </with>
@@ -317,12 +322,6 @@
          <activeWhen>
             <with
                   variable="selection">
-               <iterate
-                     ifEmpty="false">
-                  <instanceof
-                        value="ch.elexis.data.Prescription">
-                  </instanceof>
-               </iterate>
                <and>
                   <count
                         value="1">
@@ -337,12 +336,11 @@
          <activeWhen>
             <with
                   variable="selection">
-               <iterate
-                     ifEmpty="false">
-                  <instanceof
-                        value="ch.elexis.data.Prescription">
-                  </instanceof>
-               </iterate>
+               <not>
+                  <count
+                        value="0">
+                  </count>
+               </not>
             </with>
          </activeWhen>
       </handler>    

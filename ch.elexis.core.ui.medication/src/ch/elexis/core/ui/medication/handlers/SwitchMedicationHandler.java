@@ -19,6 +19,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
+import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -51,10 +52,14 @@ public class SwitchMedicationHandler extends AbstractHandler {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();
 			
-			if (firstElement instanceof Prescription) {
-				originalPresc = (Prescription) firstElement;
-				copyShortArticleNameToClipboard();
-				openLeistungsView();
+			if (firstElement instanceof MedicationTableViewerItem) {
+				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
+				Prescription p = mtvItem.getPrescription();
+				if (p != null) {
+					originalPresc = p;
+					copyShortArticleNameToClipboard();
+					openLeistungsView();
+				}
 			}
 		}
 		return null;

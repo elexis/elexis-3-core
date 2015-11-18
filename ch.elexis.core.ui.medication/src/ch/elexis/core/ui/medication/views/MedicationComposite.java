@@ -643,7 +643,7 @@ public class MedicationComposite extends Composite {
 				
 				compositeMedicationTable.layout(true);
 				
-				updateUi(pat);
+				updateUi(pat, false);
 			}
 		});
 	}
@@ -970,8 +970,9 @@ public class MedicationComposite extends Composite {
 		// Disable the check that prevents subclassing of SWT components
 	}
 	
-	public void updateUi(Patient pat){
-		if ((this.pat == pat) && (btnShowHistory.getSelection() == includeHistory)) {
+	public void updateUi(Patient pat, boolean forceUpdate){
+		if ((this.pat == pat) && (btnShowHistory.getSelection() == includeHistory)
+			&& !forceUpdate) {
 			return;
 		}
 		

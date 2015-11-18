@@ -8,6 +8,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Patient;
@@ -24,9 +25,12 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();
 			
-			if (firstElement instanceof Prescription) {
-				Prescription presc = (Prescription) firstElement;
-				if (!presc.isFixedMediation()) {
+			if (firstElement instanceof MedicationTableViewerItem) {
+				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
+				Prescription presc = mtvItem.getPrescription();
+				
+				if (presc != null && (!presc.isFixedMediation()
+					|| presc.getEntryType() == EntryType.RESERVE_MEDICATION)) {
 					Artikel article = presc.getArtikel();
 					String dosage = presc.getDosis();
 					String remark = presc.getBemerkung();

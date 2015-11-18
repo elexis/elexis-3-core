@@ -15,6 +15,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.BestellView;
 import ch.elexis.data.Artikel;
@@ -73,11 +74,14 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 		
 		// add all selected articles to order list
 		IStructuredSelection structSelcection = (IStructuredSelection) selection;
-		List<Prescription> prescriptions = structSelcection.toList();
-		for (Prescription presc : prescriptions) {
-			Artikel arti = presc.getArtikel();
-			if (arti != null) {
-				articlesToOrder.add(arti);
+		List<MedicationTableViewerItem> mtvItems = structSelcection.toList();
+		for (MedicationTableViewerItem mtvItem : mtvItems) {
+			Prescription p = mtvItem.getPrescription();
+			if (p != null) {
+				Artikel arti = p.getArtikel();
+				if (arti != null) {
+					articlesToOrder.add(arti);
+				}
 			}
 		}
 		return articlesToOrder;

@@ -37,14 +37,14 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		public void runInUi(ElexisEvent ev){
-			updateUi(ElexisEventDispatcher.getSelectedPatient());
+			updateUi(ElexisEventDispatcher.getSelectedPatient(), false);
 		}
 	};
 	
 	private ElexisEventListener eeli_presc = new ElexisUiEventListenerImpl(Prescription.class,
 		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE) {
 		public void runInUi(ElexisEvent ev){
-			updateUi(ElexisEventDispatcher.getSelectedPatient());
+			updateUi(ElexisEventDispatcher.getSelectedPatient(), true);
 		}
 	};
 	
@@ -93,11 +93,11 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void setFocus(){
-		updateUi(ElexisEventDispatcher.getSelectedPatient());
+		updateUi(ElexisEventDispatcher.getSelectedPatient(), true);
 	}
 	
-	private void updateUi(Patient pat){
-		tpc.updateUi(pat);
+	private void updateUi(Patient pat, boolean forceUpdate){
+		tpc.updateUi(pat, forceUpdate);
 	}
 	
 	@Override
