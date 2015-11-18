@@ -314,6 +314,7 @@ public class HL7ReaderV24 extends HL7Reader {
 			String filename = ce.getCe1_Identifier().getValue();
 			String encoding = ce.getCe3_NameOfCodingSystem().getValue();
 			String data = ce.getCe2_Text().getValue();
+			sequence = obx.getSetIDOBX().getValue();
 			observationTime =
 				obx.getObx14_DateTimeOfTheObservation().getTs1_TimeOfAnEvent().getValue();
 			if (observationTime == null) {

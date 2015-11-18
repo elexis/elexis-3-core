@@ -12,6 +12,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
+
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.GenericMessage.V23;
 import ca.uhn.hl7v2.model.Message;
@@ -30,9 +33,6 @@ import ch.elexis.hl7.v2x.HL7ReaderV25;
 import ch.elexis.hl7.v2x.HL7ReaderV251;
 import ch.elexis.hl7.v2x.HL7ReaderV26;
 import ch.rgw.tools.ExHandler;
-
-import com.ibm.icu.text.CharsetDetector;
-import com.ibm.icu.text.CharsetMatch;
 
 public enum HL7ReaderFactory {
 	
@@ -156,6 +156,12 @@ public enum HL7ReaderFactory {
 				}
 			}
 		}
+		
+		if (mshPart[11].equals("2.7.1")) {
+			mshPart[11] = "2.6";
+			splitted[0] = joinStrings(mshPart, "|");
+		}
+		
 		return joinStrings(splitted, separator);
 	}
 	

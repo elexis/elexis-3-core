@@ -219,19 +219,19 @@ public class LabImportUtil {
 	 */
 	private static List<LabResult> getExistingResults(TransientLabResult transientLabResult){
 		List<LabResult> ret = Collections.emptyList();
-
-		if (transientLabResult.isObservationTime()) {
-			ret =
-				LabImportUtil.getLabResults(transientLabResult.patient, transientLabResult.labItem,
-					null, null, transientLabResult.observationTime);
-		} else if (transientLabResult.isAnalyseTime()) {
-			ret =
-				LabImportUtil.getLabResults(transientLabResult.patient, transientLabResult.labItem,
-					null, transientLabResult.analyseTime, null);
-		} else {
-			ret =
-				LabImportUtil.getLabResults(transientLabResult.patient, transientLabResult.labItem,
-					transientLabResult.date, null, null);
+		
+		// don't overwrite documents
+		if (!transientLabResult.getLabItem().getTyp().equals(LabItem.typ.DOCUMENT)) {
+			if (transientLabResult.isObservationTime()) {
+				ret = LabImportUtil.getLabResults(transientLabResult.patient,
+					transientLabResult.labItem, null, null, transientLabResult.observationTime);
+			} else if (transientLabResult.isAnalyseTime()) {
+				ret = LabImportUtil.getLabResults(transientLabResult.patient,
+					transientLabResult.labItem, null, transientLabResult.analyseTime, null);
+			} else {
+				ret = LabImportUtil.getLabResults(transientLabResult.patient,
+					transientLabResult.labItem, transientLabResult.date, null, null);
+			}
 		}
 		return ret;
 	}

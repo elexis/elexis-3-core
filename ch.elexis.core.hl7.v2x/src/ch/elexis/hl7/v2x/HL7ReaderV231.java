@@ -323,6 +323,7 @@ public class HL7ReaderV231 extends HL7Reader {
 			String filename = ed.getEd3_DataSubtype().getValue();
 			String encoding = ed.getEd4_Encoding().getValue();
 			String data = ed.getEd5_Data().getValue();
+			sequence = obx.getSetIDOBX().getValue();
 			observationTime =
 				obx.getObx14_DateTimeOfTheObservation().getTs1_TimeOfAnEvent().getValue();
 			observation.add(new EncapsulatedData(filename, encoding, data, observationTime,

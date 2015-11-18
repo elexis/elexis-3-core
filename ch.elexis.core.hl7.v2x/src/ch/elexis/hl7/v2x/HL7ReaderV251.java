@@ -380,6 +380,7 @@ public class HL7ReaderV251 extends HL7Reader {
 			String filename = ed.getEd3_DataSubtype().getValue();
 			String encoding = ed.getEd4_Encoding().getValue();
 			String data = ed.getEd5_Data().getValue();
+			sequence = obx.getSetIDOBX().getValue();
 			if (observationTime == null) {
 				observationTime = obx.getObx19_DateTimeOfTheAnalysis().getTs1_Time().getValue();
 			}

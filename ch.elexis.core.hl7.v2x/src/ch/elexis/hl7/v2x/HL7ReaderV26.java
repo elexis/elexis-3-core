@@ -60,7 +60,10 @@ public class HL7ReaderV26 extends HL7Reader {
 			MSH msh = (MSH) message.get("MSH");
 			sender = msh.getMsh4_SendingFacility().getNamespaceID().getValue();
 			if (sender == null) {
-				sender = "";
+				sender = msh.getMsh3_SendingApplication().getNamespaceID().getValue();
+				if (sender == null) {
+					sender = "";
+				}
 			}
 		} catch (HL7Exception e) {
 			throw new ElexisException(e.getMessage(), e);
@@ -315,6 +318,7 @@ public class HL7ReaderV26 extends HL7Reader {
 			String filename = ed.getEd3_DataSubtype().getValue();
 			String encoding = ed.getEd4_Encoding().getValue();
 			String data = ed.getEd5_Data().getValue();
+			sequence = obx.getSetIDOBX().getValue();
 			observationTime = obx.getObx14_DateTimeOfTheObservation().getValue();
 			observation.add(new EncapsulatedData(filename, encoding, data, observationTime,
 				commentNTE, group, sequence));
