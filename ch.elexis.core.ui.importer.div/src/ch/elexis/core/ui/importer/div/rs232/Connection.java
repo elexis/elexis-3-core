@@ -282,8 +282,15 @@ public class Connection implements PortEventListener {
 				switch (state) {
 				case PASS_THRU:
 					sbFrame.setLength(0);
-					while ((newData = is.read()) != -1) {
-						sbFrame.append((char) newData);
+					try {
+						while ((newData = is.read()) != -1) {
+							sbFrame.append((char) newData);
+						}
+					} catch (IOException ioe) {
+						if(!"No error in readByte".equalsIgnoreCase(ioe.getMessage())) {
+							// see https://redmine.medelexis.ch/issues/3311
+							throw ioe;
+						}
 					}
 					listener.gotChunk(this, sbFrame.toString());
 					break;
