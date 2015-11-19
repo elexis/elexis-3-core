@@ -13,13 +13,6 @@
 
 package ch.elexis.core.ui.importer.div.rs232;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.UnsupportedCommOperationException;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,11 +21,22 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
+import gnu.io.CommPortIdentifier;
+import gnu.io.NoSuchPortException;
+import gnu.io.PortInUseException;
+import gnu.io.SerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.UnsupportedCommOperationException;
 
 public class Connection implements PortEventListener {
 	private static final String simulate = null; // "c:/abx.txt";
+	
+	private static Logger log = LoggerFactory.getLogger(Connection.class);
 	
 	private CommPortIdentifier portId;
 	private SerialPort sPort;
@@ -287,10 +291,10 @@ public class Connection implements PortEventListener {
 							sbFrame.append((char) newData);
 						}
 					} catch (IOException ioe) {
-						if(!"No error in readByte".equalsIgnoreCase(ioe.getMessage())) {
-							// see https://redmine.medelexis.ch/issues/3311
-							throw ioe;
-						}
+						// Patch for RDP forwarded serial connections
+						// see https://redmine.medelexis.ch/issues/3311
+						log.debug("Catching " + ioe.getMessage()
+						+ " | See https://redmine.medelexis.ch/issues/3311");
 					}
 					listener.gotChunk(this, sbFrame.toString());
 					break;
