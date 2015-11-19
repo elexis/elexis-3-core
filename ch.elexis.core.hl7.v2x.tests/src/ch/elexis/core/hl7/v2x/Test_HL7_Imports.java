@@ -113,7 +113,7 @@ public class Test_HL7_Imports {
 			"rsc"), TestType.READ);
 	}
 	
-	private static class DummyPatientResolver extends HL7PatientResolver {
+	public static class DummyPatientResolver extends HL7PatientResolver {
 		
 		private Patient patient;
 		
