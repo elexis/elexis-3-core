@@ -42,37 +42,28 @@
 		</profile>
 	</profiles>
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.github.goldin</groupId>
-				<artifactId>properties-maven-plugin</artifactId>
-				<version>0.2.5</version>
-				<executions>
-					<execution>
-						<id>set-properties</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>set-properties</goal>
-						</goals>
-						<configuration>
-							<properties>
-								<property>
-									<name>groovyBuildQualifier</name>
-									<!-- http://evgeny-goldin.com/wiki/Properties-maven-plugin has a very confusing behaviour:
-									if you reference project.properties.repo_variant it will always report snapshot as this is default in the parent pom.xml
-									if your referenc repo_variant it will return the value passed on the command line or (if not specified there) the default-value
-									Did cost me two hours to find it and to work around!
-										!-->
-									<value>{{import java.text.SimpleDateFormat; new
-										<!-- for snapshot we want an 'a' << 'b' (beta) << 'r' (prerelease and release) -->
-										SimpleDateFormat("'"+repo_variant.substring(0,1).replaceFirst('s','a').replaceFirst('p','r')+"'yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
-										}}</value>
-								</property>
-							</properties>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.9</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <id>regex-property</id>
+            <goals>
+              <goal>timestamp-property</goal>
+            </goals>
+            <configuration>
+              <name>groovyBuildQualifier</name>
+                  <value>${buildQualifier}</value>
+              <regex>-XXXXXX</regex>
+              <replacement> pre-release development version</replacement>
+              <failIfNoMatch>false</failIfNoMatch>
+            </configuration>
+          </execution>
+        </executions>
+        </plugin>
 			<plugin>
 				<groupId>com.google.code.maven-replacer-plugin</groupId>
 				<artifactId>replacer</artifactId>
@@ -123,35 +114,30 @@
 					</replacements>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>com.github.goldin </groupId>
-				<!-- see http://evgeny-goldin.com/wiki/Copy-maven-plugin -->
-				<artifactId>copy-maven-plugin</artifactId>
-				<version>0.2.5 </version>
-				<executions>
-					<execution>
-						<id>create-archive</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<resources>
-								<!-- We have to copy the Elexis.product, as we cannot build a plug-in 
-									and a target inside the same Maven project (or at least don't know howto) 
-									Under Linux a symbolic link would suffice. But this did not work under Windows -->
-								<resource>
-									<targetPath>${basedir}</targetPath>
-									<directory>ch.elexis.core.application</directory>
-									<includes>
-										<include>Elexis.product</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+        <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.7</version>
+            <executions>
+                <execution>
+                    <id>create-archive</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}</outputDirectory>
+                        <resources>
+                            <resource>
+                                <directory>../ch.elexis.core.application</directory>
+                                <includes>
+                                    <include>Elexis.product</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+           </executions>
+        </plugin>
 			<plugin>
 				<!-- Remove Elexis.product on clean -->
 				<artifactId>maven-clean-plugin</artifactId>
@@ -220,23 +206,6 @@
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.github.goldin</groupId>
-										<artifactId>
-											copy-maven-plugin
-										</artifactId>
-										<versionRange>
-											[0.2.5,)
-										</versionRange>
-										<goals>
-											<goal>copy</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>
