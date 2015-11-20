@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -183,6 +184,17 @@ public class OrderImportDialog extends TitleAreaDialog {
 		
 		viewer.setContentProvider(new ViewerContentProvider());
 		viewer.setInput(this);
+		viewer.setComparator(new ViewerComparator() {
+			public int compare(Viewer viewer, Object e1, Object e2){
+				Artikel a1 = ((OrderElement) e1).getArtikel();
+				Artikel a2 = ((OrderElement) e2).getArtikel();
+				
+				if (a1 != null && a2 != null) {
+					return a1.getName().compareTo(a2.getName());
+				}
+				return 0;
+			};
+		});
 		
 		Composite cButtons = new Composite(mainArea, SWT.NONE);
 		cButtons.setLayout(new GridLayout(2, false));
@@ -269,7 +281,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			}
 		});
 		
-		/* Amount */
+		/* Amount delivered*/
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Geliefert");
 		column.getColumn().setWidth(60);
@@ -310,7 +322,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			}
 		});
 		
-		/* Amount */
+		/* Amount on stock*/
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Lager");
 		column.getColumn().setWidth(60);
