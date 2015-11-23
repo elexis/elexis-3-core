@@ -10,15 +10,15 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
+        <groupId>com.github.goldin</groupId>
         <artifactId>properties-maven-plugin</artifactId>
-        <version>1.0.0</version>
+        <version>0.2.5</version>
         <executions>
           <execution>
             <id>set-properties</id>
             <phase>validate</phase>
             <goals>
-              <goal>set-system-properties</goal>
+              <goal>set-properties</goal>
             </goals>
             <configuration>
               <properties>
