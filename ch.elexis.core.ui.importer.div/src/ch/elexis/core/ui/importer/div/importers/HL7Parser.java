@@ -216,9 +216,10 @@ public class HL7Parser {
 							}
 						}
 						date = new TimeTool(hl7EncData.getDate());
-						String title = "Lab-" + date.toString(TimeTool.DATE_COMPACT) + "-"
-							+ hl7EncData.getSequence();
-							
+						String dateString = date.toString(TimeTool.DATETIME_XML).replace(":", "");
+						dateString = dateString.replace("-", "");
+						String title = "Lab-" + dateString + "-" + hl7EncData.getSequence();
+						
 						String fileType = "";
 						if (hl7EncData.getName().contains("/")) {
 							String[] split = hl7EncData.getName().split("/");
