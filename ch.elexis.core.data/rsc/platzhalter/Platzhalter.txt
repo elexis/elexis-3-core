@@ -99,3 +99,4 @@ Spezial.[Rezeptzeilen]=Für den Ausdruck von 'Rezept'. Funktionieren nicht in al
 Spezial.[Medikamentenliste]=Liste für den Ausdruck von 'Einnahmeliste'. Funktionieren nicht in allgemeinen Briefen.
 Spezial.[Termine]=Die Agenda-Termine des aktuellen Tags. Funktionieren nicht in allgemeinen Briefen.
 Spezial.[Bestellung]=Bestellung für den Ausdruck von 'Bestellung' für den Ausdruck von 'Bestellung'. Funktionieren nicht in allgemeinen Briefen.
+Spezial.[Verordnung]=Für den Ausdruck von 'Verordnungen'.

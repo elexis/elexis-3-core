@@ -49,6 +49,7 @@ public class Messages extends NLS {
 	public static String LaborVerordnungDialog_message;
 	public static String LaborVerordnungDialog_shellTitle;
 	public static String LaborVerordnungDialog_title;
+	public static String LaborVerordnungDialog_printOrders;
 	
 	public static String MergeLabItemDialog_errorNoFromLabItemSelected;
 	public static String MergeLabItemDialog_errorNoToLabItemSelected;

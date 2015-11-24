@@ -42,12 +42,19 @@ public class Messages extends NLS {
 	public static String LaborView_pathologic;
 	public static String LaborView_prevPage;
 	public static String LaborView_print;
+	public static String LaborView_printOrders;
 	public static String LaborView_reference;
 	public static String LaborView_selectDataSource;
 	public static String LaborView_textResultTitle;
 	public static String LaborView_xmlExport;
 	public static String LaborblattView_LabTemplateName;
 	public static String LaborblattView_created;
+	
+	public static String LabOrderView_Order;
+	public static String LabOrderView_RefValue;
+	public static String LabOrderView_DateTime;
+	public static String LabOrderView_Value;
+	public static String LabOrderView_OrderNumber;
 	
 	static {
 		// load message values from bundle file

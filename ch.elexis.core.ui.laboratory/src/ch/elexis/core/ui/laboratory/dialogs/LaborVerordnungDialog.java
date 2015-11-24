@@ -17,20 +17,27 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite;
 import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite.Group;
 import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite.GroupItem;
 import ch.elexis.core.ui.laboratory.laborlink.LaborLink;
+import ch.elexis.core.ui.laboratory.views.LabOrderView;
 import ch.elexis.core.ui.util.IExternLaborOrder;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Anwender;
@@ -42,6 +49,7 @@ import ch.rgw.tools.TimeTool;
 
 public class LaborVerordnungDialog extends TitleAreaDialog {
 	private static final String LAST_SELECTED_USER = LaborLink.PROVIDER_ID + "/last_selected_user"; //$NON-NLS-1$
+	private static final String PREV_PRINT_SETTING = LaborLink.PROVIDER_ID + "/prev_print_setting"; //$NON-NLS-1$
 	
 	private Patient patient = null;
 	private TimeTool date = null;
@@ -56,6 +64,8 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	private DateTime observationDate;
 	
 	private Text orderId;
+	
+	private Button btnPrint;
 	
 	public LaborVerordnungDialog(Shell parentShell, Patient patient, TimeTool date){
 		super(parentShell);
@@ -160,6 +170,14 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		orderId.setText(LabOrder.getNextOrderId());
 		orderId.setEnabled(false);
 		
+		Label lblSeparator = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL);
+		lblSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		
+		btnPrint = new Button(composite, SWT.CHECK);
+		btnPrint.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		btnPrint.setText(Messages.LaborVerordnungDialog_printOrders);
+		btnPrint.setSelection(CoreHub.userCfg.get(PREV_PRINT_SETTING, false));
+		
 		return composite;
 	}
 	
@@ -263,7 +281,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 			return;
 		}
 		
-		List<LabOrder> orders = createLabOrders(selectionComposite.getSelectedItems());
+		final List<LabOrder> orders = createLabOrders(selectionComposite.getSelectedItems());
 		if (getSelectedUser() != null) {
 			createReminder(getSelectedUser(), orders);
 		}
@@ -274,6 +292,28 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		if (!externSelection.isEmpty()) {
 			IExternLaborOrder extern = (IExternLaborOrder) externSelection.getFirstElement();
 			extern.order(patient, orders);
+		}
+		
+		// save print settings
+		boolean doPrint = btnPrint.getSelection();
+		CoreHub.userCfg.set(PREV_PRINT_SETTING, doPrint);
+		
+		if (doPrint) {
+			UiDesk.getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run(){
+					Patient pat = ElexisEventDispatcher.getSelectedPatient();
+					try {
+						IWorkbenchPage page =
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+						LabOrderView labOrderView = (LabOrderView) page.showView(LabOrderView.ID);
+						labOrderView.createLabOrderPrint(pat, orders);
+					} catch (PartInitException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			
 		}
 		
 		super.okPressed();
