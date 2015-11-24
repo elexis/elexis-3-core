@@ -35,8 +35,12 @@ public class AccountTransaction extends PersistentObject {
 			date = new TimeTool().toString(TimeTool.DATE_GER);
 		}
 		set(new String[] {
-			FLD_PATIENT_ID, FLD_AMOUNT, FLD_DATE, FLD_REMARK
-		}, pat.getId(), betrag.getCentsAsString(), date, bemerkung);
+			FLD_AMOUNT, FLD_DATE, FLD_REMARK
+		}, betrag.getCentsAsString(), date, bemerkung);
+		
+		if (pat != null && pat.exists()) {
+			set(FLD_PATIENT_ID, pat.getId());
+		}
 		if (r != null) {
 			set(FLD_BILL_ID, r.getId());
 		}
