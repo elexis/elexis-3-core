@@ -3,7 +3,10 @@ package ch.elexis.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.rgw.tools.JdbcLink;
+import ch.rgw.tools.Money;
+import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionInfo;
 
 public class VerrechnetCopy extends Verrechnet {
@@ -122,5 +125,18 @@ public class VerrechnetCopy extends Verrechnet {
 		Query<VerrechnetCopy> vcQuery = new Query<VerrechnetCopy>(VerrechnetCopy.class);
 		vcQuery.add(VerrechnetCopy.BEHANDLUNGID, Query.EQUALS, consultation.getId());
 		return vcQuery.execute();
+	}
+	
+	public Money getBruttoPreis(){
+		int tp = checkZero(get(SCALE_TP_SELLING));
+		TimeTool date = new TimeTool(getLastUpdate());
+		Konsultation k = Konsultation.load(get(BEHANDLUNGID));
+		Fall fall = k.getFall();
+		IVerrechenbar v = getVerrechenbar();
+		double tpw = 1.0;
+		if (v != null) { // Unknown tax system
+			tpw = v.getFactor(date, fall);
+		}
+		return new Money((int) Math.round(tpw * tp));
 	}
 }

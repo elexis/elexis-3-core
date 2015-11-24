@@ -63,9 +63,11 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
 import ch.elexis.data.Verrechnet;
+import ch.elexis.data.VerrechnetCopy;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
@@ -84,6 +86,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	Text tRejects, tBemerkungen;
 	Label rnAdressat;
 	ListViewer konsultationenViewer;
+	ListViewer stornoViewer;
 	
 	private final ExpandableComposite ecBuchungen;
 	private final ExpandableComposite ecBemerkungen;
@@ -91,6 +94,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	private final ExpandableComposite ecFehler;
 	private final ExpandableComposite ecAusgaben;
 	private final ExpandableComposite ecKons;
+	private final ExpandableComposite ecStorno;
 	
 	static final InputData[] rndata = {
 		new InputData(Messages.RechnungsBlatt_billNumber, Rechnung.BILL_NUMBER, Typ.STRING, null), //$NON-NLS-1$
@@ -368,6 +372,75 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		});
 		konsultationenViewer.setInput(this);
 		// form.getToolBarManager().add()
+		
+		ecStorno =
+			WidgetFactory.createExpandableComposite(tk, form, Messages.RechnungsBlatt_storno);
+		ecStorno.addExpansionListener(ecExpansionListener);
+		stornoViewer = new ListViewer(ecStorno, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+		ecStorno.setClient(stornoViewer.getList());
+		
+		stornoViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+				//nothing to do
+			}
+			
+			@Override
+			public void dispose(){
+				//nothing to do
+			}
+			
+			@Override
+			public Object[] getElements(Object inputElement){
+				List<Object> elements = new ArrayList<Object>();
+				if (actRn != null) {
+					List<Konsultation> konsultationen = actRn.getKonsultationen();
+					if (konsultationen == null || konsultationen.isEmpty()) {
+						// prepare heading label that will look like this dd.MM.yyyy (cancelled) - amountOfMoney
+						StringBuilder sbHeadingLabel = new StringBuilder();
+						sbHeadingLabel.append(actRn.getDatumRn());
+						sbHeadingLabel.append(Messages.RechnungsBlatt_stornoLabel);
+						
+						// store all verrechnetCopies and add label with sum of all cancelled items
+						Query<VerrechnetCopy> vcQuery =
+							new Query<VerrechnetCopy>(VerrechnetCopy.class);
+						vcQuery.add(VerrechnetCopy.RECHNUNGID, Query.EQUALS, actRn.getId());
+						List<VerrechnetCopy> vcList = vcQuery.execute();
+						Money sum = new Money(0);
+						for (VerrechnetCopy vc : vcList) {
+							// add verrechnet to list
+							elements.add(vc);
+							// add amount of money this item/s cost
+							Money price = vc.getNettoPreis();
+							price.multiply(vc.getZahl());
+							sum.addMoney(price);
+						}
+						
+						// finalize heading label by adding sum of money of all cancellations
+						sbHeadingLabel.append(sum.toString());
+						elements.add(0, sbHeadingLabel.toString());
+					}
+				}
+				return elements.toArray();
+			}
+		});
+		stornoViewer.setLabelProvider(new LabelProvider() {
+			@Override
+			public String getText(Object element){
+				if (element instanceof VerrechnetCopy) {
+					VerrechnetCopy vc = (VerrechnetCopy) element;
+					int amount = vc.getZahl();
+					Money price = vc.getNettoPreis();
+					price.multiply(amount);
+					return "  - " + amount + " " + vc.getLabel() + " (" + price.toString() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						+ ")"; //$NON-NLS-1$
+				} else {
+					return element.toString();
+				}
+			}
+		});
+		stornoViewer.setInput(this);
+		
 		buchungen.setInput(site);
 		
 		// add extension points
@@ -478,6 +551,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		}
 		
 		konsultationenViewer.refresh();
+		stornoViewer.refresh();
 		
 		setExpandedState(ecBuchungen, KEY_RECHNUNGSBLATT + ecBuchungen.getText());
 		setExpandedState(ecBemerkungen, KEY_RECHNUNGSBLATT + ecBemerkungen.getText());
@@ -485,6 +559,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		setExpandedState(ecFehler, KEY_RECHNUNGSBLATT + ecFehler.getText());
 		setExpandedState(ecAusgaben, KEY_RECHNUNGSBLATT + ecAusgaben.getText());
 		setExpandedState(ecKons, KEY_RECHNUNGSBLATT + ecKons.getText());
+		setExpandedState(ecStorno, KEY_RECHNUNGSBLATT + ecStorno.getText());
 		
 		form.reflow(true);
 	}

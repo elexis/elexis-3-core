@@ -106,6 +106,8 @@ public class Messages extends NLS {
 	public static String RechnungsBlatt_sateChangements;
 	public static String RechnungsBlatt_treatmentsFrom;
 	public static String RechnungsBlatt_treatmentsUntil;
+	public static String RechnungsBlatt_storno;
+	public static String RechnungsBlatt_stornoLabel;
 	public static String RechnungsListeView_accountsInList;
 	public static String RechnungsListeView_delayInDays;
 	public static String RechnungsListeView_dunningAutomatics;
