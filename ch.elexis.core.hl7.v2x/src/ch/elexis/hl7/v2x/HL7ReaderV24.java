@@ -335,21 +335,8 @@ public class HL7ReaderV24 extends HL7Reader {
 				value = ((ST) tmp).getValue();
 			} else if (tmp instanceof TX) {
 				value = ((TX) tmp).getValue();
-				// seems that till now this happens very rarely in this HL7 version - see #4177
 				if (value.contains("\\.br")) {
-					value = value.replaceAll("\\\\", "");
-					String[] split = value.split("\\.br");
-					StringBuilder sb = new StringBuilder();
-					for (String s : split) {
-						if (!s.isEmpty()) {
-							sb.append(s);
-							sb.append("\n");
-						}
-					}
-					// only override if there are some values
-					if (!sb.toString().isEmpty()) {
-						value = sb.toString();
-					}
+					value = parseTextValue(value);
 				}
 			} else if (tmp instanceof FT) {
 				value = ((FT) tmp).getValue();

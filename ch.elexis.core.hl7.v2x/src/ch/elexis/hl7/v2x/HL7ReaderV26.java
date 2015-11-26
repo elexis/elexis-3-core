@@ -337,6 +337,9 @@ public class HL7ReaderV26 extends HL7Reader {
 				value = ((ST) tmp).getValue();
 			} else if (tmp instanceof TX) {
 				value = ((TX) tmp).getValue();
+				if (value.contains("\\.br")) {
+					value = parseTextValue(value);
+				}
 			} else if (tmp instanceof FT) {
 				value = ((FT) tmp).getValue();
 			} else if (tmp instanceof NM) {
