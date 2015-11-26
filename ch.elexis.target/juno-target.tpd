@@ -84,8 +84,6 @@ location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {
 	bsf 2.4.0
 	c3p0 0.9.1.1
 	c3p0.source 0.9.1.1
-	ca.uhn.hapi.base 2.2.0
-	ca.uhn.hapi.base.source 2.2.0
 	ca.uhn.hapi.osgi-base 1.2.0
 	ca.uhn.hapi.osgi-base.source 1.2.0
 	ca.uhn.hapi.structures-v21 1.2.0
