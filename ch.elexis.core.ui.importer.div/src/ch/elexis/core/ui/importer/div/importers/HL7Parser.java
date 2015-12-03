@@ -415,6 +415,15 @@ public class HL7Parser {
 					if (archiveDir.exists() && archiveDir.isDirectory()) {
 						if (file.exists() && file.isFile() && file.canRead()) {
 							File newFile = new File(archiveDir, file.getName());
+							
+							if(newFile.exists()) {
+								// on multiple move to archive dir:
+								// first time use own filename
+								// n+ times use filename_timestamp
+								String fnwts = file.getName()+"_"+new TimeTool().toString(TimeTool.TIMESTAMP);
+								newFile = new File(archiveDir, fnwts);
+							} 
+							
 							if (!file.renameTo(newFile)) {
 								SWTHelper
 									.showError(
