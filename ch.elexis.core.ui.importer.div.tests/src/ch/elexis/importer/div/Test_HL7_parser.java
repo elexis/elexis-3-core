@@ -7,32 +7,33 @@
  *
  * Contributors:
  *    N. Giger - initial implementation
- * 
+ *
  * This is a generic test for importing HL7-files.
  * For each laboratory you should create a corresponding folder under rsc
  * and add (at least one) hl7 file(s).
- * 
+ *
  * The testHL7files will try to parse all hl7 files, but will not check the imported LabResult.
  * This should be enough in most cases.
- * 
- * However it might be a good idea to add a procedure (e.g. testAnalyticaHL7)  
+ *
+ * However it might be a good idea to add a procedure (e.g. testAnalyticaHL7)
  * if you have unusual requirements or stumbled over a bug in elexis HL7 parser.
- * 
+ *
  * Side-effects: Removes all patients & LabResults before & after running each test!
- * 
+ *
  *******************************************************************************/
 package ch.elexis.importer.div;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.ui.importer.div.importers.HL7Parser;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabItem.typ;
@@ -43,23 +44,34 @@ import ch.elexis.data.Query;
 import ch.rgw.tools.Result;
 
 public class Test_HL7_parser {
-	
+
+	private static Path workDir = null;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception{}
-	
-	@After
-	public void setUpAfter() throws Exception{
-		removeAllPatientsAndDependants();
+
+	@Before
+	public void setup() throws Exception{
+		workDir = Helpers.copyRscToTempDirectory();
 	}
-	
+
+	@After
+	public void teardown() throws Exception{
+		removeAllPatientsAndDependants();
+		if (workDir != null) {
+			Helpers.removeTempDirectory(workDir);
+		}
+	}
+
 	private HL7Parser hlp = new HL7Parser("HL7_Test");
-	
+
+	@SuppressWarnings("unused")
 	private void dumpLabresult(LabResult res){
 		System.out.println("LabResult: pathological ? " + res.isFlag(LabResult.PATHOLOGIC)
 			+ " name: " + res.getItem().getName() + " label: " + res.getLabel() + " result: "
 			+ res.getResult());
 	}
-	
+
 	static private void removeAllLaboWerte(){
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
@@ -82,18 +94,18 @@ public class Test_HL7_parser {
 		qrli = new Query<LabItem>(LabItem.class);
 		qLi = qrli.execute();
 	}
-	
+
 	static private void removeAllPatientsAndDependants(){
 		Query<Patient> qr = new Query<Patient>(Patient.class);
 		List<Patient> qrr = qr.execute();
 		for (int j = 0; j < qrr.size(); j++) {
 			qrr.get(j).delete(true);
 		}
-		
+
 		qr = new Query<Patient>(Patient.class);
 		qrr = qr.execute();
 	}
-	
+
 	private void parseOneHL7file(File f, boolean deleteAll, boolean alsoFailing){
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
@@ -127,7 +139,7 @@ public class Test_HL7_parser {
 			System.out.println("Skipping Datei " + name);
 		}
 	}
-	
+
 	private void parseAllHL7files(File directory){
 		File[] files = directory.listFiles();
 		int nrFiles = 0;
@@ -136,52 +148,47 @@ public class Test_HL7_parser {
 			if (file.isDirectory()) {
 				parseAllHL7files(file);
 			} else {
-				System.out.println("TESTING..." + file.getAbsolutePath());
+				System.out.println("TESTING: " + file.getAbsolutePath());
 				parseOneHL7file(file, true, false);
 				nrFiles += 1;
 			}
 		}
 		System.out.println("testHL7files: " + nrFiles + " files in " + directory.toString());
 	}
-	
+
 	/**
 	 * Test method for {@link ch.elexis.importers.HL7#HL7(java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testHL7files(){
 		System.out.println("testHL7files in elexis-import_test/rsc: This will take some time");
-		parseAllHL7files(new File(
-			PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"), "rsc"));
+		parseAllHL7files(new File(workDir.toString()));
 	}
-	
+
 	@Test
 	public void testOverwrite(){
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(
-			PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"),
-			"rsc/overwrite_test_1.hl7"), false, true);
-		
-		parseOneHL7file(new File(
-			PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"),
-			"rsc/overwrite_test_2.hl7"), false, true);
-		
-		// test if values are imported and overwritten
+		File overwrite_test_1 = new File(workDir.toString(), "overwrite_test_1.hl7");
+		assertEquals("Must be able to read: " + overwrite_test_1.getAbsoluteFile().toString(), true,
+			overwrite_test_1.canRead());
+		parseOneHL7file(new File(workDir.toString(), "overwrite_test_1.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
 		List<LabResult> qrr = qr.execute();
-		
+
 		int foundCnt = 0;
 		for (LabResult labResult : qrr) {
 			String name = labResult.getItem().getName();
+			System.out.println(name);
 			if (name.equals("AST (GOT)")) {
-				assertEquals("33", labResult.getResult());
+				assertEquals("?", labResult.getResult());
 				foundCnt++;
 			}
 		}
 		assertEquals(1, foundCnt);
 	}
-	
+
 	/**
 	 * Rothen filled the HL7 field(8) with 'N' if there was no patholical value found
 	 */
@@ -189,14 +196,14 @@ public class Test_HL7_parser {
 	public void testRothenPatholical(){
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(
-			PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"),
-			"rsc/Rothen/1_Kunde_20090612083757162_10009977_.HL7"), false, true);
+		parseOneHL7file(
+			new File(workDir.toString(), "Rothen/1_Kunde_20090612083757162_10009977_.HL7"),
+			false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
 		List<LabResult> qrr = qr.execute();
 		assertEquals(40, qrr.size());
-		
+
 		int j = 0;
 		Query<LabItem> query = new Query<LabItem>(LabItem.class);
 		query.orderBy(false, LabItem.SHORTNAME);
@@ -209,13 +216,14 @@ public class Test_HL7_parser {
 			// dumpLabresult(qrr.get(j));
 			LabItem li = qrr.get(j).getItem();
 			String name = li.getName();
-			assertTrue(qrr.get(j).getDate().contains("11.06.2009"));
+			assertTrue(qrr.get(j).getAnalyseTime().getTime().toString().contains("2009"));
+			assertTrue(qrr.get(j).getAnalyseTime().getTime().toString().contains("Jun 11"));
 			if (name.contentEquals("Lymphozyten G/l")) {
 				foundLymphozyten = true;
 				res = qrr.get(j);
 				item = qrr.get(j).getItem();
 			}
-			
+
 			if (name.contentEquals("MCV") || name.contentEquals("Basophile%")
 				|| name.contentEquals("Triglyceride")) {
 				assertTrue(qrr.get(j).isFlag(LabResult.PATHOLOGIC));
@@ -227,6 +235,8 @@ public class Test_HL7_parser {
 			if (foundPathological && foundLymphozyten)
 				break;
 		}
+		System.out.println(qrr.size());
+		assertEquals(40, qrr.size());
 		assertTrue(foundPathological);
 		assertTrue(foundLymphozyten);
 		assertNotNull(item);
@@ -240,7 +250,7 @@ public class Test_HL7_parser {
 		assertNotNull(res);
 		assertEquals(res.getResult(), "1.6");
 	}
-	
+
 	/**
 	 * Test method Analytica HL7 (Details) Some detailed checks about how a sample hl7-file is
 	 * imported Actually Analytica has a special importer
@@ -249,9 +259,7 @@ public class Test_HL7_parser {
 	public void testAnalyticaHL7(){
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(
-			PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"),
-			"rsc/Analytica/01TEST5005.hl7"), false, true);
+		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
 		List<LabResult> qrr = qr.execute();
@@ -281,7 +289,7 @@ public class Test_HL7_parser {
 			}
 		}
 		assertTrue(found);
-		
+
 		// Test fields
 		LabItem aItem = itemArray[2];
 		assertEquals("g/dl", aItem.getEinheit());
