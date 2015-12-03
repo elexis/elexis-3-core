@@ -429,7 +429,7 @@
       <commandParameterType
             converter="ch.elexis.core.ui.commands.PersistentObjectConverter"
             id="ch.elexis.PersistentObjectType"
-            type="ch.elexis.core.data.PersistentObject">
+            type="ch.elexis.data.PersistentObject">
       </commandParameterType>
       <command
             defaultHandler="ch.elexis.core.ui.commands.CreateEigenleistungUi"

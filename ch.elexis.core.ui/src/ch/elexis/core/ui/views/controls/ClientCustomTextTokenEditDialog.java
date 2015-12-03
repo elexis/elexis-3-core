@@ -70,19 +70,22 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 		txtTokenText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		String[] arr = _token.split("\\.");
-		if (arr == null || arr.length < 2)
+		if (arr == null || arr.length < 2) {
 			txtTokenText.setText("ERR");
+			return area;
+		}
+
 		if (arr[0].equalsIgnoreCase("Patient")) {
-			if (arr[1] == null)
-				txtTokenText.setText("");
 			Patient pat = ElexisEventDispatcher.getSelectedPatient();
-			if (pat == null)
+			
+			if (arr[1] == null || pat == null) {
 				txtTokenText.setText("");
+				return area;
+			}
+
 			String result = pat.get(arr[1]);
 			txtTokenText.setText((result != null) ? result : "");
-		} else {
-			txtTokenText.setText("ERR");
-		}
+		} 
 		
 		return area;
 	}
@@ -101,7 +104,9 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed(){
 		Patient pat = ElexisEventDispatcher.getSelectedPatient();
-		pat.set(_token.split("\\.")[1], txtTokenText.getText());
+		if(pat!=null) {
+			pat.set(_token.split("\\.")[1], txtTokenText.getText());
+		}
 		super.okPressed();
 	}
 }

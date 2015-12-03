@@ -186,15 +186,16 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 				new IRunnableWithProgress() {
 					public void run(final IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException{
-						if (ElexisEventDispatcher.getSelectedPatient() == null)
+						Patient sp = ElexisEventDispatcher.getSelectedPatient();
+						if ( sp == null) {
 							return;
+						}
 						
 						monitor.beginTask(Messages.MediVerlaufView_reading,
 							IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 						monitor.subTask(Messages.MediVerlaufView_findPrescriptions); //$NON-NLS-1$
 						Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
-						qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, ElexisEventDispatcher
-							.getSelectedPatient().getId());
+						qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, sp.getId());
 						List<Prescription> list = qbe.execute();
 						mListe.clear();
 						monitor.subTask(Messages.MediVerlaufView_findMedicaments); //$NON-NLS-1$

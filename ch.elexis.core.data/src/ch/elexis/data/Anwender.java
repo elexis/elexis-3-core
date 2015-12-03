@@ -268,12 +268,12 @@ public class Anwender extends Person {
 	}
 	
 	private void setInitialMandator(){
-		String MandantLabel = (String) getExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS);
+		String mandantLabel = (String) getExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS);
 		String MandantID = null;
-		if (!StringTool.isNothing(MandantLabel)) {
-			MandantLabel = MandantLabel.split(",")[0];
+		if (mandantLabel!=null && mandantLabel.length()>0) {
+			mandantLabel = mandantLabel.split(",")[0];
 			for (Mandant m : CoreHub.getMandantenList()) {
-				if (m.getLabel().equals(MandantLabel)) {
+				if (m.getLabel().equals(mandantLabel)) {
 					MandantID = m.getId();
 					break;
 				}

@@ -21,15 +21,15 @@ public class VerrechenbarFavorites {
 	private static List<Favorite> favorites;
 	private static Logger log = LoggerFactory.getLogger(VerrechenbarFavorites.class);
 	
-	private static ElexisEventListenerImpl eeli_pat = new ElexisEventListenerImpl(Anwender.class,
-		ElexisEvent.EVENT_USER_CHANGED) {
-		
-		public void run(ElexisEvent ev){
-			log.debug("User changed, nulling favorites.");
-			favorites = null;
+	private static ElexisEventListenerImpl eeli_pat =
+		new ElexisEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
+			
+			public void run(ElexisEvent ev){
+				log.debug("User changed, nulling favorites.");
+				favorites = null;
+			};
 		};
-	};
-	
+		
 	static {
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
 	}
@@ -165,14 +165,21 @@ public class VerrechenbarFavorites {
 		
 		public String getMacroString(){
 			if (storeToString.startsWith(Leistungsblock.class.getName())) {
-				return ((Leistungsblock) getPersistentObject()).getMacro();
+				Leistungsblock po = (Leistungsblock) getPersistentObject();
+				return (po != null) ? po.getMacro() : macroString;
 			}
 			return macroString;
 		}
 		
 		public void setMacroString(String macroString){
 			if (storeToString.startsWith(Leistungsblock.class.getName())) {
-				((Leistungsblock) getPersistentObject()).setMacro(macroString);
+				Leistungsblock po = (Leistungsblock) getPersistentObject();
+				if (po != null) {
+					po.setMacro(macroString);
+				} else {
+					log.warn("Could not set macroString " + macroString
+						+ " to Leistungsblock  as po is null.");
+				}
 			}
 			this.macroString = macroString;
 		}

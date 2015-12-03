@@ -49,12 +49,14 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.coolbar.MandantSelectionContributionItem;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
@@ -371,7 +373,11 @@ public class UserManagementPreferencePage extends PreferencePage
 				return;
 			User user = (User) wvUser.getValue();
 			Anwender anw = user.getAssignedContact();
-			anw.addOrRemoveExecutiveDoctorWorkingFor(m, e.getChecked());
+			if(anw!=null) {
+				anw.addOrRemoveExecutiveDoctorWorkingFor(m, e.getChecked());
+			} else {
+				SWTHelper.showError("No contact assigned", "There is no contact assigned to user "+user.getLabel());
+			}
 		});
 		
 		Group grpRoles = new Group(sashComposite, SWT.NONE);

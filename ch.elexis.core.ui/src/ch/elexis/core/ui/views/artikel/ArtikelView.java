@@ -108,6 +108,7 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 							selected.setData(det);
 						} catch (Exception ex) {
 							ExHandler.handle(ex);
+							return;
 						}
 					}
 					importAction.setEnabled(importers.get(t) != null);

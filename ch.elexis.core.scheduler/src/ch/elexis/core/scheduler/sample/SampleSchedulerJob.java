@@ -11,6 +11,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.Trigger;
 
+import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.scheduler.AbstractElexisSchedulerJob;
 
 /**
@@ -24,7 +25,7 @@ import ch.elexis.core.scheduler.AbstractElexisSchedulerJob;
 public class SampleSchedulerJob extends AbstractElexisSchedulerJob implements Job {
 	
 	@Override
-	public Job getJob(){
+	public @NonNull Job getJob(){
 		return this;
 	}
 	

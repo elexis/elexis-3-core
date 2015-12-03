@@ -923,6 +923,7 @@ public final class DatePickerCombo extends Composite {
 		
 		if (selection == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
+			return;
 		}
 		
 		text.setSelection(selection.x, selection.y);

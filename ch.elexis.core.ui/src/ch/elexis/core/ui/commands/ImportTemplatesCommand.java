@@ -97,7 +97,12 @@ public class ImportTemplatesCommand extends AbstractHandler {
 						
 						if (replaceExisting) {
 							// only switch template content
-							equivalentTemplates.get(0).save(contentToStore, mimeType);
+							if (equivalentTemplates instanceof List) {
+								equivalentTemplates.get(0).save(contentToStore, mimeType);
+							} else {
+								logger.error(
+									"Invalid state: equivalentTemplates is " + equivalentTemplates);
+							}
 						} else {
 							Brief template =
 								new Brief(name, null, CoreHub.actUser, null, null, Brief.TEMPLATE);

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.admin;
 
+import ch.elexis.core.jdt.NonNull;
 import ch.elexis.data.Role;
 import ch.elexis.data.User;
 
@@ -38,7 +39,7 @@ public abstract class AbstractAccessControl {
 	 * @param ace
 	 * @return <code>true</code> if allowed
 	 */
-	public abstract boolean request(Role r, ACE ace);
+	public abstract boolean request(@NonNull Role r, ACE ace);
 	
 	/**
 	 * Request a right for a given {@link User}. The rights allowed for this user is the joint

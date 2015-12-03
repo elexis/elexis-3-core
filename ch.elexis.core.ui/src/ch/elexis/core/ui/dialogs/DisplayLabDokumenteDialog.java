@@ -157,7 +157,8 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 	public void create(){
 		super.create();
 		getShell().setText(this.title);
-		setTitle(ElexisEventDispatcher.getSelectedPatient().getLabel());
+		Patient sp = ElexisEventDispatcher.getSelectedPatient();
+		setTitle((sp!=null) ? sp.getLabel() : "missing patient name"); //$NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		SWTHelper.center(getShell());
 	}

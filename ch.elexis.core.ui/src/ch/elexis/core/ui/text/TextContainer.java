@@ -96,20 +96,20 @@ public class TextContainer {
 		Messages.TextContainer_TemplateNotFoundHeader;
 	private static final String TEMPLATE_NOT_FOUND_BODY =
 		Messages.TextContainer_TemplateNotFoundBody;
-	
+		
 	private ITextPlugin plugin = null;
 	private static Logger log = LoggerFactory.getLogger(TextContainer.class); //$NON-NLS-1$
 	private Shell shell;
 	private static final String DONT_SHOW_REPLACEMENT_ERRORS = "*";
-	public static final String MATCH_TEMPLATE =
-		"\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?[-a-zA-ZäöüÄÖÜéàè_ ]+\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+\\]"; //$NON-NLS-1$
-	public static final String MATCH_INDIRECT_TEMPLATE =
-		"\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?[-a-zA-ZäöüÄÖÜéàè_ ]+(\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+)+\\]"; //$NON-NLS-1$
+	public static final String MATCH_TEMPLATE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
+		+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+\\]";
+	public static final String MATCH_INDIRECT_TEMPLATE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
+		+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+(\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+)+\\]";
 	public static final String MATCH_GENDERIZE =
 		"\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?[a-zA-Z]+:mwn?:[^\\[]+\\]"; //$NON-NLS-1$
 	//public static final String MATCH_IDATACCESS = "\\[[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?.*\\]"; //$NON-NLS-1$
-	public static final String MATCH_IDATACCESS =
-		"\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?[^\\]]*\\]"; //$NON-NLS-1$
+	public static final String MATCH_IDATACCESS = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
+		+ "]?[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?[^\\]]*\\]";
 	public static final String MATCH_SQLCLAUSE =
 		"\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?SQL[^:]*:[^\\[]+\\]"; //$NON-NLS-1$
 	public static final String DISALLOWED_SQLEXPRESSIONS = "DROP,UPDATE,CREATE,INSERT"; //$NON-NLS-1$
@@ -217,8 +217,8 @@ public class TextContainer {
 			template = loadTemplate(templatenameRaw);
 		}
 		if (template == null) {
-			SWTHelper.showError(TEMPLATE_NOT_FOUND_HEADER, TEMPLATE_NOT_FOUND_BODY
-				+ templatenameRaw);
+			SWTHelper.showError(TEMPLATE_NOT_FOUND_HEADER,
+				TEMPLATE_NOT_FOUND_BODY + templatenameRaw);
 			return null;
 		}
 		
@@ -240,13 +240,12 @@ public class TextContainer {
 	 *            der Adressat
 	 * @return true bei Erfolg
 	 */
-	public Brief createFromTemplate(final Konsultation kons, final Brief template,
-		final String typ, Kontakt adressat, final String subject){
+	public Brief createFromTemplate(final Konsultation kons, final Brief template, final String typ,
+		Kontakt adressat, final String subject){
 		if (adressat == null) {
-			KontaktSelektor ksel =
-				new KontaktSelektor(shell, Kontakt.class,
-					Messages.TextContainer_SelectDestinationHeader,
-					Messages.TextContainer_SelectDestinationBody, Kontakt.DEFAULT_SORT);
+			KontaktSelektor ksel = new KontaktSelektor(shell, Kontakt.class,
+				Messages.TextContainer_SelectDestinationHeader,
+				Messages.TextContainer_SelectDestinationBody, Kontakt.DEFAULT_SORT);
 			if (ksel.open() != Dialog.OK) {
 				return null;
 			}
@@ -263,9 +262,8 @@ public class TextContainer {
 			}
 		} else {
 			if (plugin.loadFromByteArray(template.loadBinary(), true) == true) {
-				final Brief ret =
-					new Brief(subject == null ? template.getBetreff() : subject, null,
-						CoreHub.actUser, adressat, kons, typ);
+				final Brief ret = new Brief(subject == null ? template.getBetreff() : subject, null,
+					CoreHub.actUser, adressat, kons, typ);
 				plugin.initTemplatePrintSettings(template.getBetreff());
 				
 				plugin.findOrReplace(MATCH_TEMPLATE, new ReplaceCallback() {
@@ -287,8 +285,8 @@ public class TextContainer {
 				});
 				plugin.findOrReplace(MATCH_IDATACCESS, new ReplaceCallback() {
 					public Object replace(final String in){
-						return ScriptUtil.loadDataFromPlugin(in.replaceAll(MATCH_SQUARE_BRACKET,
-							StringTool.leer));
+						return ScriptUtil.loadDataFromPlugin(
+							in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 					}
 				});
 				plugin.findOrReplace(MATCH_SQLCLAUSE, new ReplaceCallback() {
@@ -346,7 +344,7 @@ public class TextContainer {
 		
 		String ret = o.get(q[1]);
 		if ((ret == null) || (ret.startsWith("**"))) { //$NON-NLS-1$
-		
+			
 			if (!(o.map(PersistentObject.FLD_EXTINFO).startsWith("**"))) { //$NON-NLS-1$
 				@SuppressWarnings("rawtypes")
 				Map ext = o.getMap(PersistentObject.FLD_EXTINFO);
@@ -692,9 +690,8 @@ public class TextContainer {
 			// this way, the query returns the contents/the hashtable right
 			// after the textSpec
 			// will be processed later
-			sql =
-				sql.replace(m.group(), "'" + stringWithoutDelim + "', " + tablePart + ".extinfo"
-					+ delim);
+			sql = sql.replace(m.group(),
+				"'" + stringWithoutDelim + "', " + tablePart + ".extinfo" + delim);
 		}
 		
 		// execute query
@@ -709,7 +706,9 @@ public class TextContainer {
 		} catch (SQLException e1) {
 			j.releaseStatement(stm);
 			try {
-				statement.close();
+				if (statement != null) {
+					statement.close();
+				}
 			} catch (SQLException e) {}
 			if (showErrors) {
 				return "[???" + bl + " ***" + e1.getMessage() + "*** ???]";
@@ -737,9 +736,8 @@ public class TextContainer {
 						fieldContent = rs.getString(i);
 						// if field starts with "extinfo:" then read data from
 						// db-field extinfo/hashtable
-						if ((fieldContent.length() >= "extinfo:".length())
-							&& fieldContent.substring(0, "extinfo:".length()).equalsIgnoreCase(
-								"extinfo:")) {
+						if ((fieldContent.length() >= "extinfo:".length()) && fieldContent
+							.substring(0, "extinfo:".length()).equalsIgnoreCase("extinfo:")) {
 							String extInfoSpec = fieldContent.substring("extinfo:".length());
 							String extInfoField = extInfoSpec.split("\\.")[1];
 							// the actual blob contents can be found in the
@@ -828,13 +826,14 @@ public class TextContainer {
 	 *            Typ des Dokuments
 	 */
 	public void saveBrief(Brief brief, final String typ){
-		log.debug("ch.elexis.views/TextContainer.java saveBrief(Brief brief, final String typ): begin");
-		
+		log.debug(
+			"ch.elexis.views/TextContainer.java saveBrief(Brief brief, final String typ): begin");
+			
 		if (brief == null) {
 			log.debug("ch.elexis.views/TextContainer.java saveBrief(): WARNING: brief == null");
 		} else {
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief == "
-				+ brief.toString());
+			log.debug(
+				"ch.elexis.views/TextContainer.java saveBrief(): brief == " + brief.toString());
 			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief.getBetreff() == "
 				+ brief.getBetreff());
 			// 20130425js: Das hier lieber nicht machen: Das öffnet interaktiv das Dialogfenster zur
@@ -847,35 +846,39 @@ public class TextContainer {
 			// TODO: 20130425js added this: Nur Hinweis auf möglichen Bedienfehler im Log (Keine
 			// Konsultation beim Erstellen eines Briefes)
 			if (Konsultation.getAktuelleKons() == null) {
-				log.debug("ch.elexis.views/TextContainer.java saveBrief(): TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW");
-				log.debug("ch.elexis.views/TextContainer.java saveBrief(): WARNING: Konsultation.getAktuelleKonsultation == null");
-				log.debug("ch.elexis.views/TextContainer.java saveBrief(): WARNING: Soll hier (oder etwas früher!!) vielleicht ein Abbruch der Brief-Erstellung in den Code?");
-				log.debug("ch.elexis.views/TextContainer.java saveBrief(): TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW;");
+				log.debug(
+					"ch.elexis.views/TextContainer.java saveBrief(): TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW");
+				log.debug(
+					"ch.elexis.views/TextContainer.java saveBrief(): WARNING: Konsultation.getAktuelleKonsultation == null");
+				log.debug(
+					"ch.elexis.views/TextContainer.java saveBrief(): WARNING: Soll hier (oder etwas früher!!) vielleicht ein Abbruch der Brief-Erstellung in den Code?");
+				log.debug(
+					"ch.elexis.views/TextContainer.java saveBrief(): TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW;");
 			} else {
-				log.debug("ch.elexis.views/TextContainer.java saveBrief(): Konsultation.getAktuelleKons()=="
-					+ Konsultation.getAktuelleKons()
-					+ ": "
-					+ Konsultation.getAktuelleKons().getDatum());
+				log.debug(
+					"ch.elexis.views/TextContainer.java saveBrief(): Konsultation.getAktuelleKons()=="
+						+ Konsultation.getAktuelleKons() + ": "
+						+ Konsultation.getAktuelleKons().getDatum());
 			}
 			
-			KontaktSelektor ksl =
-				new KontaktSelektor(shell, Kontakt.class,
-					Messages.TextContainer_SelectAdresseeHeader,
-					Messages.TextContainer_SelectAdresseeBody, Kontakt.DEFAULT_SORT);
-			
+			KontaktSelektor ksl = new KontaktSelektor(shell, Kontakt.class,
+				Messages.TextContainer_SelectAdresseeHeader,
+				Messages.TextContainer_SelectAdresseeBody, Kontakt.DEFAULT_SORT);
+				
 			if (ksl.open() == Dialog.OK) {
-				log.debug("ch.elexis.views/TextContainer.java saveBrief(): about to brief = new Brief(...)");
-				brief =
-					new Brief(Messages.TextContainer_Letter, null, CoreHub.actUser,
-						(Kontakt) ksl.getSelection(), Konsultation.getAktuelleKons(), typ);
+				log.debug(
+					"ch.elexis.views/TextContainer.java saveBrief(): about to brief = new Brief(...)");
+				brief = new Brief(Messages.TextContainer_Letter, null, CoreHub.actUser,
+					(Kontakt) ksl.getSelection(), Konsultation.getAktuelleKons(), typ);
 			}
 		}
 		
 		if (brief == null) {
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): WARNING: STILL: brief == null");
+			log.debug(
+				"ch.elexis.views/TextContainer.java saveBrief(): WARNING: STILL: brief == null");
 		} else {
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief == "
-				+ brief.toString());
+			log.debug(
+				"ch.elexis.views/TextContainer.java saveBrief(): brief == " + brief.toString());
 			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief.getBetreff() == "
 				+ brief.getBetreff());
 			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief.getAdressat() == "
@@ -884,9 +887,8 @@ public class TextContainer {
 		
 		if (brief != null) {
 			if (StringTool.isNothing(brief.getBetreff())) {
-				InputDialog dlg =
-					new InputDialog(shell, Messages.TextContainer_SaveDocumentHeader,
-						Messages.TextContainer_SaveDocumentBody, brief.getBetreff(), null);
+				InputDialog dlg = new InputDialog(shell, Messages.TextContainer_SaveDocumentHeader,
+					Messages.TextContainer_SaveDocumentBody, brief.getBetreff(), null);
 				if (dlg.open() == Dialog.OK) {
 					brief.setBetreff(dlg.getValue());
 				} else {
@@ -894,20 +896,24 @@ public class TextContainer {
 				}
 			}
 			
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): about to byte[] contents = plugin.storeToByteArray();");
+			log.debug(
+				"ch.elexis.views/TextContainer.java saveBrief(): about to byte[] contents = plugin.storeToByteArray();");
 			// TODO: js: why should this variable be named "contents" here, and "arr" in "open()"
 			// below? Please refactor and use similar names for similar things.
 			
 			byte[] contents = plugin.storeToByteArray();
 			if (contents == null) {
-				log.debug("ch.elexis.views/TextContainer.java saveBrief(): WARNING: contents == null - still proceding to brief.save(contents,...)...");
+				log.debug(
+					"ch.elexis.views/TextContainer.java saveBrief(): WARNING: contents == null - still proceding to brief.save(contents,...)...");
 				log.error(Messages.TextContainer_NullSaveHeader);
 			}
 			
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): about to brief.save(contents,plugin.getMimeType()...");
+			log.debug(
+				"ch.elexis.views/TextContainer.java saveBrief(): about to brief.save(contents,plugin.getMimeType()...");
 			brief.save(contents, plugin.getMimeType());
 			
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): about to ElexisEventDispatcher.reload(Brief.class)");
+			log.debug(
+				"ch.elexis.views/TextContainer.java saveBrief(): about to ElexisEventDispatcher.reload(Brief.class)");
 			ElexisEventDispatcher.reload(Brief.class);
 		}
 	}
@@ -944,18 +950,21 @@ public class TextContainer {
 	public boolean open(final Brief brief){
 		log.debug("ch.elexis.views/TextContainer.java open(final Brief brief): begin - brief=="
 			+ brief.toString() + ": " + brief.getBetreff());
-		log.debug("ch.elexisviews/TextContainer.java.open(): brief.getLabel())=="
-			+ brief.getLabel());
-		log.debug("ch.elexisviews/TextContainer.java.open(): about to byte[] arr = brief.loadBinary()...");
-		
+		log.debug(
+			"ch.elexisviews/TextContainer.java.open(): brief.getLabel())==" + brief.getLabel());
+		log.debug(
+			"ch.elexisviews/TextContainer.java.open(): about to byte[] arr = brief.loadBinary()...");
+			
 		byte[] arr = brief.loadBinary();
 		if (arr == null) {
-			log.debug("ch.elexis.views/TextContainer.java open(): WARNING: arr == null -> about to return false...");
+			log.debug(
+				"ch.elexis.views/TextContainer.java open(): WARNING: arr == null -> about to return false...");
 			log.warn(Messages.TextContainer_ErroneousLetter + brief.getLabel());
 			return false;
 		}
 		
-		log.debug("ch.elexis.views/TextContainer.java open(): about to return plugin.loadFromByteArray(arr, false) and end...");
+		log.debug(
+			"ch.elexis.views/TextContainer.java open(): about to return plugin.loadFromByteArray(arr, false) and end...");
 		return plugin.loadFromByteArray(arr, false);
 	}
 	
@@ -1049,9 +1058,9 @@ public class TextContainer {
 			// checkbox whether an address selection should be shown when creating the doc
 			checkBoxDontShowAddresseeSelection = new Button(ret, SWT.CHECK);
 			checkBoxDontShowAddresseeSelection.setText(Messages.TextContainer_DontAskForAddressee);
-			checkBoxDontShowAddresseeSelection.setLayoutData(SWTHelper.getFillGridData(2, true, 1,
-				false));
-			
+			checkBoxDontShowAddresseeSelection
+				.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+				
 			// at the end -> checkboxes will be set correctly by the listeners
 			if (tmplName != null)
 				name.setText(tmplName);
@@ -1161,7 +1170,7 @@ public class TextContainer {
 		private static final String expl = Messages.TextContainer_NoPlugin1
 			+ Messages.TextContainer_NoPlugin2 + Messages.TextContainer_Noplugin3
 			+ Messages.TextContainer_NoPlugin4 + Messages.TextContainer_NoPLugin5;
-		
+			
 		public Composite createContainer(final Composite parent, final ITextPlugin.ICallback h){
 			parent.setLayout(new FillLayout());
 			// Composite ret=new Composite(parent,SWT.BORDER);
@@ -1201,7 +1210,7 @@ public class TextContainer {
 		
 		public void setInitializationData(final IConfigurationElement config,
 			final String propertyName, final Object data) throws CoreException{}
-		
+			
 		public boolean loadFromStream(final InputStream is, final boolean asTemplate){
 			// TODO Automatisch erstellter Methoden-Stub
 			return false;
@@ -1218,7 +1227,7 @@ public class TextContainer {
 		}
 		
 		public void setFocus(){
-			
+		
 		}
 		
 		public PageFormat getFormat(){
@@ -1226,7 +1235,7 @@ public class TextContainer {
 		}
 		
 		public void setFormat(final PageFormat f){
-			
+		
 		}
 		
 		public Object insertTextAt(final int x, final int y, final int w, final int h,

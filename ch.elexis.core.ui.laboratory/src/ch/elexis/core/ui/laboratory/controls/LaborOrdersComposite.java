@@ -51,7 +51,7 @@ public class LaborOrdersComposite extends Composite {
 	private boolean revert = false;
 	
 	private boolean reloadPending;
-
+	
 	private Patient actPatient;
 	
 	public LaborOrdersComposite(Composite parent, int style){
@@ -256,7 +256,7 @@ public class LaborOrdersComposite extends Composite {
 		}
 		return super.setFocus();
 	}
-
+	
 	private List<LabOrder> getOrders(){
 		List<LabOrder> ret = new ArrayList<LabOrder>();
 		List<LabOrder> orders = null;
@@ -272,6 +272,7 @@ public class LaborOrdersComposite extends Composite {
 			Collections.sort(orders, new Comparator<LabOrder>() {
 				// keep a cache with LabOrder to prio
 				private WeakHashMap<LabOrder, String> cache = new WeakHashMap<LabOrder, String>();
+				
 				@Override
 				public int compare(LabOrder lo1, LabOrder lo2){
 					String prio1 = cache.get(lo1);
@@ -301,7 +302,7 @@ public class LaborOrdersComposite extends Composite {
 			});
 			ret.addAll(orders);
 		}
-
+		
 		return ret;
 	}
 	
@@ -369,40 +370,40 @@ public class LaborOrdersComposite extends Composite {
 					String orderId1 = labOrder1.get(LabOrder.FLD_ORDERID);
 					String orderId2 = labOrder2.get(LabOrder.FLD_ORDERID);
 					
+					if (orderId1 == null || orderId2 == null) {
+						return 0;
+					}
+					
 					if (composite.isRevert()) {
-						if (orderId1 != null && orderId2 != null) {
-							try {
-								return Integer.decode(orderId1).compareTo(Integer.decode(orderId2));
-							} catch (NumberFormatException ne) {
-								// ignore just compare the strings ...
-							}
+						try {
+							return Integer.decode(orderId1).compareTo(Integer.decode(orderId2));
+						} catch (NumberFormatException ne) {
+							// ignore just compare the strings ...
 						}
 						return (orderId1.compareTo(orderId2));
 					} else {
-						if (orderId1 != null && orderId2 != null) {
-							try {
-								return Integer.decode(orderId2).compareTo(Integer.decode(orderId1));
-							} catch (NumberFormatException ne) {
-								// ignore just compare the strings ...
-							}
+						try {
+							return Integer.decode(orderId2).compareTo(Integer.decode(orderId1));
+						} catch (NumberFormatException ne) {
+							// ignore just compare the strings ...
 						}
 						return (orderId2.compareTo(orderId1));
 					}
 				case 3:
 					if (composite.isRevert()) {
-						return (labOrder1.get(LabOrder.FLD_GROUPNAME).compareTo(labOrder2
-							.get(LabOrder.FLD_GROUPNAME)));
+						return (labOrder1.get(LabOrder.FLD_GROUPNAME)
+							.compareTo(labOrder2.get(LabOrder.FLD_GROUPNAME)));
 					} else {
-						return (labOrder2.get(LabOrder.FLD_GROUPNAME).compareTo(labOrder1
-							.get(LabOrder.FLD_GROUPNAME)));
+						return (labOrder2.get(LabOrder.FLD_GROUPNAME)
+							.compareTo(labOrder1.get(LabOrder.FLD_GROUPNAME)));
 					}
 				case 4:
 					if (composite.isRevert()) {
-						return (labOrder1.getLabItem().getLabel().compareTo(labOrder2.getLabItem()
-							.getLabel()));
+						return (labOrder1.getLabItem().getLabel()
+							.compareTo(labOrder2.getLabItem().getLabel()));
 					} else {
-						return (labOrder2.getLabItem().getLabel().compareTo(labOrder1.getLabItem()
-							.getLabel()));
+						return (labOrder2.getLabItem().getLabel()
+							.compareTo(labOrder1.getLabItem().getLabel()));
 					}
 				default:
 					return 0;

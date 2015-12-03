@@ -158,6 +158,11 @@ public class PatientDetailView extends ViewPart {
 					 */
 					
 					public void hyperlinkActivated(final String l){
+						Patient sp = ElexisEventDispatcher.getSelectedPatient();
+						if(sp==null) {
+							return;
+						}
+						
 						final String[] sortFields = new String[] {
 							Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_STREET
 						};
@@ -174,14 +179,12 @@ public class PatientDetailView extends ViewPart {
 							if (bza.open() == Dialog.OK) {
 								String bezug = bza.getResult();
 								BezugsKontakt bk =
-									ElexisEventDispatcher.getSelectedPatient().addBezugsKontakt(k,
+									sp.addBezugsKontakt(k,
 										bezug);
 								inpZusatzAdresse.add(bk);
 								scrldfrm.reflow(true);
 							}
-							
 						}
-						
 					}
 					
 					public String getLabel(Object o){

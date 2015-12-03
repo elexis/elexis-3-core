@@ -250,7 +250,7 @@ public class ClientCustomTextComposite extends Composite {
 		StringBuilder sb = new StringBuilder();
 		char[] rs = replaceString.toCharArray();
 		StringBuilder replace = new StringBuilder();
-		TokenMap tempTM = null;
+		TokenMap tempTM = new TokenMap();
 		boolean variable = false;
 		
 		for (int i = 0; i < rs.length; i++) {
@@ -268,7 +268,7 @@ public class ClientCustomTextComposite extends Composite {
 				sb.append(replaceValue(replace.toString()));
 				tempTM.end = sb.length();
 				tokenMap.add(tempTM);
-				tempTM = null;
+				tempTM = new TokenMap();
 				break;
 			default:
 				if (variable) {

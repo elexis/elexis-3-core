@@ -12,6 +12,8 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import java.util.Collections;
+
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -27,6 +29,7 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
+import ch.elexis.data.Patient;
 
 public class SelectFallDialog extends TitleAreaDialog {
 	Fall[] faelle;
@@ -34,7 +37,7 @@ public class SelectFallDialog extends TitleAreaDialog {
 	List list;
 	private UpdateFallListListener updateFallListener =
 		new UpdateFallListListener(Fall.class, 0xff);
-	
+		
 	public SelectFallDialog(Shell shell){
 		super(shell);
 	}
@@ -91,7 +94,8 @@ public class SelectFallDialog extends TitleAreaDialog {
 	
 	private void reloadFaelleList(){
 		list.removeAll();
-		faelle = ElexisEventDispatcher.getSelectedPatient().getFaelle();
+		Patient sp = ElexisEventDispatcher.getSelectedPatient();
+		faelle = (sp != null) ? sp.getFaelle() : new Fall[] {};
 		for (Fall f : faelle) {
 			list.add(f.getLabel());
 		}

@@ -125,8 +125,8 @@ public class FavoritenComposite extends Composite {
 					event.gc.setFont(boldFont);
 					event.gc.drawText(simpleName, event.x + 3, event.y + yOffset, true);
 					event.gc.setFont(defaultFont);
-					event.gc.drawText(label, event.x + 3, event.y
-						+ event.gc.getFontMetrics().getHeight(), true);
+					event.gc.drawText(label, event.x + 3,
+						event.y + event.gc.getFontMetrics().getHeight(), true);
 					break;
 				default:
 					break;
@@ -144,7 +144,7 @@ public class FavoritenComposite extends Composite {
 					if (!ss.isEmpty()) {
 						Favorite fav = (Favorite) ss.getFirstElement();
 						IPersistentObject po = fav.getPersistentObject();
-						if(po instanceof Leistungsblock) {
+						if (po instanceof Leistungsblock) {
 							Leistungsblock lb = (Leistungsblock) po;
 							for (ICodeElement iCodeElement : lb.getElements()) {
 								target.codeSelected((PersistentObject) iCodeElement);
@@ -192,8 +192,8 @@ public class FavoritenComposite extends Composite {
 		
 		TableViewerColumn tvcElement = new TableViewerColumn(tv, SWT.NONE);
 		TableColumn tblclmnNewColumn = tvcElement.getColumn();
-		tcl_composite.setColumnData(tblclmnNewColumn, new ColumnWeightData(1,
-			ColumnWeightData.MINIMUM_WIDTH, true));
+		tcl_composite.setColumnData(tblclmnNewColumn,
+			new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
 		tblclmnNewColumn.setText("Element");
 		
 		MenuManager mgr = new MenuManager();
@@ -225,7 +225,9 @@ public class FavoritenComposite extends Composite {
 					Favorite fav = (Favorite) ss.getFirstElement();
 					if (fav.getPersistentObject() instanceof Leistungsblock) {
 						Leistungsblock lb = (Leistungsblock) fav.getPersistentObject();
-						event.data = lb.storeToString();
+						if (lb != null) {
+							event.data = lb.storeToString();
+						}
 					} else {
 						event.data = fav.getStoreToString();
 					}
@@ -243,8 +245,8 @@ public class FavoritenComposite extends Composite {
 						Leistungsblock lb = (Leistungsblock) fav.getPersistentObject();
 						PersistentObjectDragSource.setDraggedObject(lb);
 					} else {
-						PersistentObjectDragSource.setDraggedObject((PersistentObject) fav
-							.getPersistentObject());
+						PersistentObjectDragSource
+							.setDraggedObject((PersistentObject) fav.getPersistentObject());
 					}
 					event.doit = true;
 				}
@@ -278,14 +280,18 @@ public class FavoritenComposite extends Composite {
 		public Color getBackground(Object element){
 			Favorite fav = (Favorite) element;
 			ICodeElement v = (ICodeElement) fav.getPersistentObject();
-			String codeSystemName = v.getCodeSystemName();
-			if (codeSystemName != null) {
-				String rgbColor =
-					CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeSystemName,
-						"ffffff");
-				return UiDesk.getColorFromRGB(rgbColor);
+			if (v == null) {
+				return null;
 			}
-			return null;
+			String codeSystemName = v.getCodeSystemName();
+			if (codeSystemName == null) {
+				return null;
+			}
+			
+			String rgbColor =
+				CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
+			return UiDesk.getColorFromRGB(rgbColor);
+			
 		}
 		
 		@Override

@@ -655,9 +655,16 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 						new TimeTool().toString(TimeTool.DATE_GER)
 					});
 					Verrechnet verrechnet = optifier.getCreatedVerrechnet();
-					p.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID,
-						verrechnet.getId());
-					verrechnet.setDetail(Verrechnet.FLD_EXT_PRESC_ID, p.getId());
+					if (verrechnet != null) {
+						p.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID,
+							verrechnet.getId());
+						verrechnet.setDetail(Verrechnet.FLD_EXT_PRESC_ID, p.getId());
+					} else {
+						log.error("Verrechnet is null in " + optifier.getClass().getName() + " for "
+							+ l.getCodeSystemName() + "/" + l.getCodeSystemCode() + "/"
+							+ l.getCode());
+					}
+					
 				}
 			}
 			return result;
@@ -883,7 +890,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 *            the initial text to be set, or null if no initial text should be set.
 	 */
 	public static void neueKons(final String initialText){
-		Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
+		Patient actPatient = ElexisEventDispatcher.getSelectedPatient();		
 		Fall actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 		if (actFall == null) {
 			if (actPatient == null) {
@@ -912,13 +919,15 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			}
 		} else {
 			if (!actFall.getPatient().equals(actPatient)) {
-				Konsultation lk = actPatient.getLetzteKons(false);
-				if (lk == null) {
+				if(actPatient != null) {
+					Konsultation lk = actPatient.getLetzteKons(false);
+					if(lk != null) {
+						actFall = lk.getFall();
+					}
+				} else {
 					MessageEvent.fireError(Messages.GlobalActions_CantCreateKons,
 						Messages.GlobalActions_DoSelectCase);
 					return;
-				} else {
-					actFall = lk.getFall();
 				}
 			}
 		}

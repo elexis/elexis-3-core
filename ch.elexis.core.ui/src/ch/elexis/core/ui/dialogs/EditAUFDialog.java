@@ -28,6 +28,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.AUF;
 import ch.elexis.data.Fall;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -97,8 +98,9 @@ public class EditAUFDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setTitle(Messages.EditAUFDialog_auf
-			+ " - " + ElexisEventDispatcher.getSelectedPatient().getLabel()); //$NON-NLS-1$
+		Patient sp = ElexisEventDispatcher.getSelectedPatient();
+		String patLabel = (sp != null) ? sp.getLabel() : "missing patient name"; //$NON-NLS-1$
+		setTitle(Messages.EditAUFDialog_auf + " - " + patLabel);
 		if (auf == null) {
 			setMessage(Messages.EditAUFDialog_enterNewAUF); //$NON-NLS-1$
 		} else {
@@ -124,11 +126,10 @@ public class EditAUFDialog extends TitleAreaDialog {
 			}
 		} else {
 			fall = auf.getFall();
-			String[] parms =
-				new String[] {
-					AUF.FLD_CASE_ID, AUF.FLD_DATE_FROM, AUF.FLD_DATE_UNTIL, AUF.FLD_REASON,
-					AUF.FLD_PERCENT, AUF.FLD_ZUSATZ
-				};
+			String[] parms = new String[] {
+				AUF.FLD_CASE_ID, AUF.FLD_DATE_FROM, AUF.FLD_DATE_UNTIL, AUF.FLD_REASON,
+				AUF.FLD_PERCENT, AUF.FLD_ZUSATZ
+			};
 			String[] vals = new String[] {
 				fall.getId(), von, bis, tGrund.getText(), tProzent.getText(), zus
 			};

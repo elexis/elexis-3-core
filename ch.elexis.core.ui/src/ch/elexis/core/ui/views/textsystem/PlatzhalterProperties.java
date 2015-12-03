@@ -89,9 +89,11 @@ public class PlatzhalterProperties extends AbstractProperties {
 			}
 			if (name != null && name.length() > 0) {
 				PlatzhalterTreeData categoryPtd = null;
+				int categoryLength = 0;
 				if (category == null || category.length() == 0) {
 					categoryPtd = noKategorie;
 				} else {
+					categoryLength = category.length();
 					categoryPtd = catTreeMap.get(category);
 				}
 				if (categoryPtd == null) {
@@ -104,8 +106,8 @@ public class PlatzhalterProperties extends AbstractProperties {
 				String displayName = name;
 				boolean startsWithCat = displayName.startsWith(category + ".") //$NON-NLS-1$
 					|| displayName.startsWith(category + ":"); //$NON-NLS-1$
-				if (startsWithCat && displayName.length() > category.length()) {
-					displayName = displayName.substring(category.length());
+				if (startsWithCat && displayName.length() > categoryLength) {
+					displayName = displayName.substring(categoryLength);
 					if (displayName.startsWith(".") //$NON-NLS-1$
 						|| displayName.startsWith(":")) { //$NON-NLS-1$
 						displayName = displayName.substring(1);

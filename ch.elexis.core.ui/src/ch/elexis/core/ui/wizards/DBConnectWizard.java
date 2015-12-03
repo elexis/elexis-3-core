@@ -290,6 +290,11 @@ public class DBConnectWizard extends Wizard {
 		
 		dbConnNewConnPage.getTdbg().setTestResult(error, text);
 		
+		if(j==null) {
+			// thats an error situation
+			return true;
+		}
+		
 		if(!error) {
 			targetedConnection.connectionString = j.getConnectString();
 		}

@@ -131,12 +131,18 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 					CodeSelectorFactory codeSelectorFactory =
 						(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
 					if (codeSelectorFactory == null) {
-						SWTHelper.alert(CAPTION_ERROR, "CodeSelectorFactory is null"); //$NON-NLS-1$
+						String error = "CodeSelectorFactory is null: "+ic.getClass().getName();
+						SWTHelper.alert(CAPTION_ERROR, error); //$NON-NLS-1$
+						log.error(error);
+						continue;
 					}
 					ICodeElement codeElement =
 						(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
 					if (codeElement == null) {
-						SWTHelper.alert(CAPTION_ERROR, "CodeElement is null"); //$NON-NLS-1$
+						String error = "CodeElement is null: "+po.getClass().getName(); //$NON-NLS-1$
+						SWTHelper.alert(CAPTION_ERROR, error); 
+						log.error(error);
+						continue;
 					}
 					if (codeSystemName.equals(codeElement.getCodeSystemName())) {
 						return codeSelectorFactory.getSelectionDialog(parent, data);
@@ -196,7 +202,10 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 					CodeSelectorFactory codeSelectorFactory =
 						(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
 					if (codeSelectorFactory == null) {
-						SWTHelper.alert(CAPTION_ERROR, "CodeSelectorFactory is null"); //$NON-NLS-1$
+						String error = "CodeSelectorFactory is null: "+ic.getClass().getName(); //$NON-NLS-1$
+						SWTHelper.alert(CAPTION_ERROR, error);
+						log.error(error);
+						continue;
 					}
 					ICodeElement codeElement =
 						(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
@@ -264,7 +273,10 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				CodeSelectorFactory codeSelectorFactory =
 					(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
 				if (codeSelectorFactory == null) {
-					SWTHelper.alert(CAPTION_ERROR, "CodeSelectorFactory is null"); //$NON-NLS-1$
+					String error = "CodeSelectorFactory is null: "+ic.getClass().getName(); //$NON-NLS-1$
+					SWTHelper.alert(CAPTION_ERROR, error); 
+					log.error(error);
+					continue;
 				}
 				ICodeElement codeElement =
 					(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
@@ -577,6 +589,9 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					Patient patient = ElexisEventDispatcher.getSelectedPatient();
+					if(patient==null) {
+						return;
+					}
 					
 					Map exi = patient.getMap(Kontakt.FLD_EXTINFO);
 					// get list of type

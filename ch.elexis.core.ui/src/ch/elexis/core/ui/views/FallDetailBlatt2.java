@@ -973,34 +973,39 @@ public class FallDetailBlatt2 extends Composite {
 				dataField = dp;
 			} else if (r[1].equals("K")) { //$NON-NLS-1$  // *** Kontakt
 				dataField = tk.createText(subParent, val);
-				hl.addHyperlinkListener(new HyperlinkAdapter() {
-					@Override
-					public void linkActivated(final HyperlinkEvent e){
-						KontaktSelektor ksl =
-							new KontaktSelektor(getShell(), Kontakt.class, SELECT_CONTACT_CAPTION,
+				if (hl != null) {
+					hl.addHyperlinkListener(new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(final HyperlinkEvent e){
+							KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
+								SELECT_CONTACT_CAPTION,
 								MessageFormat.format(SELECT_CONTACT_BODY, new Object[] {
 									r[0]
-						}), true, Kontakt.DEFAULT_SORT);
-						if (optional) {
-							ksl.enableEmptyFieldButton();
-						}
-						// "Bitte wählen Sie den Kontakt für " + r[0] +
-						// " aus", true);
-						if (ksl.open() == Dialog.OK) {
-							Kontakt sel = (Kontakt) ksl.getSelection();
-							Fall fall = getFall();
-							if (fall != null) {
-								if (sel != null) {
-									fall.setInfoString(r[0], sel.getId());
-								} else {
-									fall.setInfoString(r[0], StringTool.leer);
+							}), true, Kontakt.DEFAULT_SORT);
+							if (optional) {
+								ksl.enableEmptyFieldButton();
+							}
+							// "Bitte wählen Sie den Kontakt für " + r[0] +
+							// " aus", true);
+							if (ksl.open() == Dialog.OK) {
+								Kontakt sel = (Kontakt) ksl.getSelection();
+								Fall fall = getFall();
+								if (fall != null) {
+									if (sel != null) {
+										fall.setInfoString(r[0], sel.getId());
+									} else {
+										fall.setInfoString(r[0], StringTool.leer);
+									}
+									setFall(fall);
+									ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 								}
-								setFall(fall);
-								ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 							}
 						}
-					}
-				});
+					});
+				} else {
+					throw new IllegalStateException("hl is null");
+				}
+				
 				((Text) dataField).setEditable(false);
 				dataField.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			} else if (r[1].equals("TM")) { //$NON-NLS-1$  // *** multiline text
@@ -1069,38 +1074,23 @@ public class FallDetailBlatt2 extends Composite {
 								elexisEditor.addFocusListener(new Focusreact(r[0]));
 							}
 						}
-						Control[] children2 = elexisEditor.getChildren();
-						Composite page = null;
-						for (int iii = 0; iii < children2.length; iii++) {
-							Control child = children2[iii];
-							if (child.getClass().getName()
-								.equalsIgnoreCase("org.eclipse.swt.custom.ScrolledComposite")) { //$NON-NLS-1$
-								page = (Composite) child;
-								page.addFocusListener(new Focusreact(r[0]));
+						if(elexisEditor!= null) {
+							Control[] children2 = elexisEditor.getChildren();
+							Composite page = null;
+							for (int iii = 0; iii < children2.length; iii++) {
+								Control child = children2[iii];
+								if (child.getClass().getName()
+									.equalsIgnoreCase("org.eclipse.swt.custom.ScrolledComposite")) { //$NON-NLS-1$
+									page = (Composite) child;
+									page.addFocusListener(new Focusreact(r[0]));
+								}
 							}
+						} else {
+							throw new IllegalStateException("elexisEditor is null");
 						}
 						dataField = textContainer;
 					}
 				}
-				/*
-				 * // *** styled Text, variant onPositive RichTextViewer final RichTextViewer
-				 * richTextViewer = new RichTextViewer(subParent, SWT.BORDER); GridData gridData =
-				 * new GridData(GridData.FILL_BOTH); gridData.horizontalSpan = 1;
-				 * //gridData.minimumWidth = 200; gridData.minimumHeight = 200;
-				 * richTextViewer.getControl().setLayoutData(gridData); File myFile; try { myFile =
-				 * File.createTempFile("RTV", ".html"); myFile.deleteOnExit(); FileOutputStream fout
-				 * = new FileOutputStream(myFile); fout.write(val.getBytes()); fout.close();
-				 * richTextViewer.getLayerManager().openHTMLFile(myFile .getPath()); } catch
-				 * (IOException e) { e.printStackTrace(); }
-				 * richTextViewer.addRichDocumentListener(new IRichDocumentListener(){ public void
-				 * documentAboutToBeChanged(DocumentEvent event) { } public void
-				 * documentChanged(DocumentEvent event, RichDocumentChange change) { String s
-				 * =richTextViewer.getLayerManager().getSerializedString(); System.out.println(s);
-				 * Fall fall = getFall(); if (fall != null) { fall.setInfoString(r[0], s);
-				 * ElexisEventDispatcher.update(fall);
-				 * ElexisEventDispatcher.fireSelectionEvent(fall.getPatient()); } } });
-				 * //richTextViewer.getTextWidget().addFocusListener(new Focusreact(r[0]));
-				 */
 			} else if (r[1].equals("CS")) { //$NON-NLS-1$  // *** combo, selected value saved as selected string
 				stretchComposite = new Composite(subParent, SWT.NONE);
 				stretchComposite

@@ -23,10 +23,7 @@
  *******************************************************************************/
 package ch.elexis.importer.div;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.List;
@@ -232,6 +229,7 @@ public class Test_HL7_parser {
 		}
 		assertTrue(foundPathological);
 		assertTrue(foundLymphozyten);
+		assertNotNull(item);
 		assertEquals("G/l", item.getEinheit());
 		assertEquals("lymA_B", item.getKuerzel());
 		assertEquals("Lymphozyten G/l", item.getName());
@@ -239,6 +237,7 @@ public class Test_HL7_parser {
 		// assertEquals(typ.NUMERIC, item.getTyp());
 		assertTrue(item.getGroup().contains(
 			ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_AutomaticAddedGroup));
+		assertNotNull(res);
 		assertEquals(res.getResult(), "1.6");
 	}
 	

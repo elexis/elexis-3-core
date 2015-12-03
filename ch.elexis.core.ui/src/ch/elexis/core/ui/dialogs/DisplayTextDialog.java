@@ -29,6 +29,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Patient;
 
 public class DisplayTextDialog extends TitleAreaDialog {
 	String t, m, cnt;
@@ -94,7 +95,8 @@ public class DisplayTextDialog extends TitleAreaDialog {
 	public void create(){
 		super.create();
 		getShell().setText(t);
-		setTitle(ElexisEventDispatcher.getSelectedPatient().getLabel());
+		Patient sp = ElexisEventDispatcher.getSelectedPatient();
+		setTitle((sp!=null) ? sp.getLabel() : "missing patient name"); //$NON-NLS-1$
 		setMessage(m);
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		Rectangle screen = UiDesk.getDisplay().getBounds();

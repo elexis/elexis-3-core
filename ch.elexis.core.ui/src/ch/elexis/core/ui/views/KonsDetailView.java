@@ -216,9 +216,11 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 					
 					Fall actFall = null;
 					String fallId = "";
+					String fallLabel = "Current Case NOT found!!";//$NON-NLS-1$
 					if (actKons != null) {
 						actFall = actKons.getFall();
 						fallId = actFall.getId();
+						fallLabel = actFall.getLabel();
 					}
 					
 					if (!nFall.getId().equals(fallId)) {
@@ -234,7 +236,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 									MessageFormat.format(
 										Messages.KonsDetailView_ConfirmChangeConsToCase,
 										new Object[] {
-											actFall.getLabel(), nFall.getLabel()
+											fallLabel, nFall.getLabel()
 										}), MessageDialog.QUESTION, new String[] {
 										Messages.KonsDetailView_Yes, //$NON-NLS-1$
 										Messages.KonsDetailView_No

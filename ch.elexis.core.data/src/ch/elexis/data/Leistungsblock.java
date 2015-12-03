@@ -39,8 +39,8 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	
 	static {
 		addMapping(TABLENAME, FLD_NAME, FLD_MANDANT_ID, FLD_LEISTUNGEN, FLD_MACRO);
-		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, XIDDOMAIN_SIMPLENAME, Xid.ASSIGNMENT_LOCAL
-			| Xid.QUALITY_GUID);
+		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, XIDDOMAIN_SIMPLENAME,
+			Xid.ASSIGNMENT_LOCAL | Xid.QUALITY_GUID);
 	}
 	
 	@Override
@@ -96,12 +96,14 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	}
 	
 	/**
-	 * @return the current valid macro, that is the value of {@link #FLD_MACRO} if defined, else {@link #FLD_NAME}
+	 * @return the current valid macro, that is the value of {@link #FLD_MACRO} if defined, else
+	 *         {@link #FLD_NAME}
 	 * @since 3.1
 	 */
 	public String getMacro(){
 		String[] vals = get(true, FLD_MACRO, FLD_NAME);
-		if(vals[0].length()==0) return vals[1];
+		if (vals[0].length() == 0)
+			return vals[1];
 		return vals[0];
 	}
 	
@@ -179,8 +181,8 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	}
 	
 	/**
-	 * DOES NOT DELIVER the storeToString of this {@link Leistungsblock}, but
-	 * a comma separated list of all contained {@link ICodeElement} objects
+	 * DOES NOT DELIVER the storeToString of this {@link Leistungsblock}, but a comma separated list
+	 * of all contained {@link ICodeElement} objects
 	 */
 	@Override
 	public String storeToString(){
@@ -262,7 +264,8 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 */
 	public static @NonNull List<Leistungsblock> findMacrosValidForCurrentMandator(
 		@Nullable String macro){
-		if (macro == null)
+		Mandant selectedMandator = ElexisEventDispatcher.getSelectedMandator();
+		if (macro == null || selectedMandator == null)
 			return Collections.emptyList();
 		
 		Query<Leistungsblock> qbe = new Query<Leistungsblock>(Leistungsblock.class);
@@ -272,8 +275,8 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		qbe.add(Leistungsblock.FLD_MACRO, Query.EQUALS, macro);
 		qbe.endGroup();
 		qbe.startGroup();
-		qbe.add(Leistungsblock.FLD_MANDANT_ID, Query.EQUALS, ElexisEventDispatcher
-			.getSelectedMandator().getId());
+		qbe.add(Leistungsblock.FLD_MANDANT_ID, Query.EQUALS,
+			selectedMandator.getId());
 		qbe.or();
 		qbe.add(Leistungsblock.FLD_MANDANT_ID, Query.EQUALS, StringTool.leer);
 		qbe.endGroup();
