@@ -297,6 +297,23 @@ public class FallDetailBlatt2 extends Composite {
 		cReason.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(top, Messages.FallDetailBlatt2_StartDate); //$NON-NLS-1$
 		dpVon = new DatePickerCombo(top, SWT.NONE);
+		// This listener is fired when you enter directly text instead
+		// of selecting the date from the combo. This is necessary for
+		// Jubula-GUI tests, as it unable to handle the DatePickerCombo
+		dpVon.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusGained(FocusEvent e){
+			}
+			
+			@Override
+			public void focusLost(FocusEvent e){
+				Fall fall = getFall();
+				fall.setBeginnDatum(new TimeTool(dpVon.getDate().getTime())
+					.toString(TimeTool.DATE_GER));
+				ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
+			}
+		});
 		dpVon.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
