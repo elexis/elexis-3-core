@@ -54,6 +54,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import com.tiff.common.ui.datepicker.DatePickerCombo;
+import com.tiff.common.ui.datepicker.EnhancedDatePickerCombo;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
@@ -296,31 +297,31 @@ public class FallDetailBlatt2 extends Composite {
 		});
 		cReason.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(top, Messages.FallDetailBlatt2_StartDate); //$NON-NLS-1$
-		dpVon = new DatePickerCombo(top, SWT.NONE);
-		dpVon.addSelectionListener(new SelectionAdapter() {
+		dpVon = new EnhancedDatePickerCombo(top, SWT.NONE,
+			new EnhancedDatePickerCombo.ExecuteIfValidInterface() {
+				
+				@Override
+				public void doIt(){
+					Fall fall = getFall();
+					fall.setBeginnDatum(
+						new TimeTool(dpVon.getDate().getTime()).toString(TimeTool.DATE_GER));
+					ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
+				}
+			});
 			
-			@Override
-			public void widgetSelected(final SelectionEvent e){
-				Fall fall = getFall();
-				fall.setBeginnDatum(
-					new TimeTool(dpVon.getDate().getTime()).toString(TimeTool.DATE_GER));
-				ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
-			}
-			
-		});
 		tk.createLabel(top, Messages.FallDetailBlatt2_EndDate); //$NON-NLS-1$
-		dpBis = new DatePickerCombo(top, SWT.NONE);
-		dpBis.addSelectionListener(new SelectionAdapter() {
+		dpBis = new EnhancedDatePickerCombo(top, SWT.NONE,
+			new EnhancedDatePickerCombo.ExecuteIfValidInterface() {
 			
 			@Override
-			public void widgetSelected(final SelectionEvent e){
+			public void doIt(){
 				Fall fall = getFall();
 				fall.setEndDatum(
 					new TimeTool(dpBis.getDate().getTime()).toString(TimeTool.DATE_GER));
 				ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 			}
-			
 		});
+
 		ddc = new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
 			Messages.FallDetailBlatt2_DaysOrAfter, Messages.FallDetailBlatt2_ProposeForBillingNeg,
 			Messages.FallDetailBlatt2_DaysOrAfterNeg);
@@ -1074,7 +1075,7 @@ public class FallDetailBlatt2 extends Composite {
 								elexisEditor.addFocusListener(new Focusreact(r[0]));
 							}
 						}
-						if(elexisEditor!= null) {
+						if (elexisEditor != null) {
 							Control[] children2 = elexisEditor.getChildren();
 							Composite page = null;
 							for (int iii = 0; iii < children2.length; iii++) {

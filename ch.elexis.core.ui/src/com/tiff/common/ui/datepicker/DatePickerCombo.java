@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.TypedListener;
  * @author <a href="mailto:andy@tiff.ru">Andrey Onistchuk</a>
  * @version $Revision: 1.1 $
  */
-public final class DatePickerCombo extends Composite {
+public class DatePickerCombo extends Composite {
 	// ~ Static methods ---------------------------------------------------------
 	
 	/**

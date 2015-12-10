@@ -12,10 +12,13 @@
 
 package ch.rgw.tools;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Klasse zur einfachen Datum- und Zeitberarbeitung
@@ -35,18 +38,21 @@ public class TimeTool extends GregorianCalendar {
 	
 	/** formally enumerated days **/
 	public enum DAYS {
-		MONDAY(Calendar.MONDAY, Messages.getString("TimeTool.monday"), Messages
-			.getString("TimeTool.mo")), TUESDAY(Calendar.TUESDAY, Messages
-			.getString("TimeTool.tuesday"), Messages.getString("TimeTool.tu")), WEDNESDAY(
-			Calendar.WEDNESDAY, Messages.getString("TimeTool.wednesday"), Messages
-				.getString("TimeTool.we")), THURSDAY(Calendar.THURSDAY, Messages
-			.getString("TimeTool.thursday"), Messages.getString("TimeTool.th")), FRIDAY(
-			Calendar.FRIDAY, Messages.getString("TimeTool.friday"), Messages
-				.getString("TimeTool.fr")), SATURDAY(Calendar.SATURDAY, Messages
-			.getString("TimeTool.saturday"), Messages.getString("TimeTool.sa")), SUNDAY(
-			Calendar.SUNDAY, Messages.getString("TimeTool.sunday"), Messages
-				.getString("TimeTool.su"));
-		
+			MONDAY(Calendar.MONDAY, Messages.getString("TimeTool.monday"),
+				Messages.getString("TimeTool.mo")),
+			TUESDAY(Calendar.TUESDAY, Messages.getString("TimeTool.tuesday"),
+				Messages.getString("TimeTool.tu")),
+			WEDNESDAY(Calendar.WEDNESDAY, Messages.getString("TimeTool.wednesday"),
+				Messages.getString("TimeTool.we")),
+			THURSDAY(Calendar.THURSDAY, Messages.getString("TimeTool.thursday"),
+				Messages.getString("TimeTool.th")),
+			FRIDAY(Calendar.FRIDAY, Messages.getString("TimeTool.friday"),
+				Messages.getString("TimeTool.fr")),
+			SATURDAY(Calendar.SATURDAY, Messages.getString("TimeTool.saturday"),
+				Messages.getString("TimeTool.sa")),
+			SUNDAY(Calendar.SUNDAY, Messages.getString("TimeTool.sunday"),
+				Messages.getString("TimeTool.su"));
+				
 		public int numericDayValue;
 		public String fullName;
 		public String abbreviatedName;
@@ -86,27 +92,42 @@ public class TimeTool extends GregorianCalendar {
 	public static final String END_OF_UNIX_EPOCH = "20380118";
 	
 	/** Month names as full words */
-	public final static String[] Monate =
-		{
-			Messages.getString("TimeTool.january"), Messages.getString("TimeTool.february"), Messages.getString("TimeTool.march"), Messages.getString("TimeTool.april"), Messages.getString("TimeTool.may"), Messages.getString("TimeTool.june"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-			Messages.getString("TimeTool.july"), Messages.getString("TimeTool.august"), Messages.getString("TimeTool.september"), Messages.getString("TimeTool.october"), Messages.getString("TimeTool.november"), Messages.getString("TimeTool.december")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	public final static String[] Monate = {
+		Messages.getString("TimeTool.january"), Messages.getString("TimeTool.february"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.march"), Messages.getString("TimeTool.april"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.may"), Messages.getString("TimeTool.june"), //$NON-NLS-1$ //$NON-NLS-2$
+		Messages.getString("TimeTool.july"), Messages.getString("TimeTool.august"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.september"), Messages.getString("TimeTool.october"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.november"), Messages.getString("TimeTool.december") //$NON-NLS-1$//$NON-NLS-2$
+	};
 	
 	/** Month names as three-letter-abbreviations */
-	public final static String[] Mon =
-		{
-			Messages.getString("TimeTool.jan"), Messages.getString("TimeTool.feb"), Messages.getString("TimeTool.mar"), Messages.getString("TimeTool.apr"), Messages.getString("TimeTool.may"), Messages.getString("TimeTool.jun"), Messages.getString("TimeTool.jul"), Messages.getString("TimeTool.aug"), Messages.getString("TimeTool.sep"), Messages.getString("TimeTool.oct"), Messages.getString("TimeTool.nov"), Messages.getString("TimeTool.dec")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
+	public final static String[] Mon = {
+		Messages.getString("TimeTool.jan"), Messages.getString("TimeTool.feb"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.mar"), Messages.getString("TimeTool.apr"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.may"), Messages.getString("TimeTool.jun"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.jul"), Messages.getString("TimeTool.aug"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.sep"), Messages.getString("TimeTool.oct"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.nov"), Messages.getString("TimeTool.dec") //$NON-NLS-1$//$NON-NLS-2$
+	};
 	public final static String[] month_eng = {
 		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 	};
 	
 	/** Weekdays as abbreviations */
-	public final static String[] wdays =
-		{
-			Messages.getString("TimeTool.su"), Messages.getString("TimeTool.mo"), Messages.getString("TimeTool.tu"), Messages.getString("TimeTool.we"), Messages.getString("TimeTool.th"), Messages.getString("TimeTool.fr"), Messages.getString("TimeTool.sa")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+	public final static String[] wdays = {
+		Messages.getString("TimeTool.su"), Messages.getString("TimeTool.mo"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.tu"), Messages.getString("TimeTool.we"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.th"), Messages.getString("TimeTool.fr"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.sa") //$NON-NLS-1$
+	};
 	/** weekdays as full words */
-	public final static String[] Wochentage =
-		{
-			Messages.getString("TimeTool.sunday"), Messages.getString("TimeTool.monday"), Messages.getString("TimeTool.tuesday"), Messages.getString("TimeTool.wednesday"), Messages.getString("TimeTool.thursday"), Messages.getString("TimeTool.friday"), Messages.getString("TimeTool.saturday")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+	public final static String[] Wochentage = {
+		Messages.getString("TimeTool.sunday"), Messages.getString("TimeTool.monday"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.tuesday"), Messages.getString("TimeTool.wednesday"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.thursday"), Messages.getString("TimeTool.friday"), //$NON-NLS-1$//$NON-NLS-2$
+		Messages.getString("TimeTool.saturday") //$NON-NLS-1$
+	};
 	
 	/** Constant indicating a full date/time format in german notation (dd.MM.yyyyy hh:mm:ss) */
 	public static final int FULL_GER = 0;
@@ -156,14 +177,16 @@ public class TimeTool extends GregorianCalendar {
 	private static SimpleDateFormat time_compact = new SimpleDateFormat("HHmm");
 	private static final SimpleDateFormat date_compact = new SimpleDateFormat("yyyyMMdd");
 	private static final SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMddHHmmss");
-	private static final SimpleDateFormat datetime_xml = new SimpleDateFormat(
-		"yyyy-MM-dd'T'HH:mm:ss");
-	
+	private static final SimpleDateFormat datetime_xml =
+		new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		
 	private static SimpleDateFormat pref_full = full_ger;
 	private static SimpleDateFormat pref_small = date_ger;
 	private static boolean wrap = true;
 	private static int defaultResolution = 1000;
 	private long resolution;
+	
+	private static final Map<Integer, SimpleDateFormat> INT_SDF_MAP = initIntSdfMapping();
 	
 	/**
 	 * return the time as seconds
@@ -172,6 +195,25 @@ public class TimeTool extends GregorianCalendar {
 	 */
 	public static int getTimeInSeconds(){
 		return (int) (System.currentTimeMillis() / 1000L);
+	}
+	
+	private static Map<Integer, SimpleDateFormat> initIntSdfMapping(){
+		Map<Integer, SimpleDateFormat> map = new HashMap<Integer, SimpleDateFormat>();
+		map.put(DATE_SIMPLE, pref_small);
+		map.put(FULL_GER, full_ger);
+		map.put(LARGE_GER, large_ger);
+		map.put(TIME_FULL, time_full);
+		map.put(TIME_SMALL, time_small);
+		map.put(DATE_GER, date_ger);
+		map.put(FULL_MYSQL, full_mysql);
+		map.put(DATE_MYSQL, date_mysql);
+		map.put(FULL, pref_full);
+		map.put(TIME_COMPACT, time_compact);
+		map.put(DATE_COMPACT, date_compact);
+		map.put(DATETIME_XML, datetime_xml);
+		map.put(TIMESTAMP, timestamp);
+		map.put(DATE_GER_SHORT, date_ger_short);
+		return map;
 	}
 	
 	/**
@@ -198,6 +240,29 @@ public class TimeTool extends GregorianCalendar {
 			return Integer.MAX_VALUE;
 		}
 		return fld[0] * 3600 + fld[1] * 60 + fld[2];
+	}
+	
+	/**
+	 * Verifies whether the provided time-string is valid according to the given format
+	 * @param timestring
+	 * @param timestringformat
+	 * @return 
+	 */
+	public static boolean isValidDateTimeString(final String timestring, int timestringformat){
+		SimpleDateFormat sdf = INT_SDF_MAP.get(timestringformat);
+		if (sdf == null) {
+			return false;
+		}
+		
+		try {
+			sdf.setLenient(false);
+			Date parse = sdf.parse(timestring);
+			System.out.println(parse);
+		} catch (ParseException e) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -719,58 +784,16 @@ public class TimeTool extends GregorianCalendar {
 	}
 	
 	public String toString(final int f){
-		String res;
-		switch (f) {
-		case FULL:
-			res = pref_full.format(getTime());
-			break;
-		case DATE_SIMPLE:
-			res = pref_small.format(getTime());
-			break;
-		case FULL_GER:
-			res = full_ger.format(getTime());
-			break;
-		case LARGE_GER:
-			res = large_ger.format(getTime());
-			break;
-		case TIME_FULL:
-			res = time_full.format(getTime());
-			break;
-		case TIME_SMALL:
-			res = time_small.format(getTime());
-			break;
-		case FULL_MYSQL:
-			res = full_mysql.format(getTime());
-			break;
-		case DATE_MYSQL:
-			res = date_mysql.format(getTime());
-			break;
-		case DATE_GER:
-			res = date_ger.format(getTime());
-			break;
-		case TIME_COMPACT:
-			res = time_compact.format(getTime());
-			break;
-		case DATE_COMPACT:
-			res = date_compact.format(getTime());
-			break;
-		case DATETIME_XML:
-			res = datetime_xml.format(getTime());
-			break;
-		case WEEKDAY:
-			res = wdays[get(DAY_OF_WEEK) - 1];
-			break;
-		// case FULL_COMPACT: res= full_compact.format(getTime()); break;
-		case TIMESTAMP:
-			res = timestamp.format(getTime());
-			break;
-		case DATE_GER_SHORT:
-			res = date_ger_short.format(getTime());
-			break;
-		default:
-			res = "00:00";
+		if (WEEKDAY == f) {
+			return wdays[get(DAY_OF_WEEK) - 1];
 		}
-		return res;
+		
+		SimpleDateFormat sdf = INT_SDF_MAP.get(f);
+		if (sdf != null) {
+			return sdf.format(getTime());
+		}
+		
+		return "00:00";
 	}
 	
 	@Override
