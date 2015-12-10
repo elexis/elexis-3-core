@@ -256,8 +256,7 @@ public class TimeTool extends GregorianCalendar {
 		
 		try {
 			sdf.setLenient(false);
-			Date parse = sdf.parse(timestring);
-			System.out.println(parse);
+			sdf.parse(timestring);
 		} catch (ParseException e) {
 			return false;
 		}
