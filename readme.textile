@@ -7,28 +7,25 @@ h2. Install latest build
 
 Go to "Jenkins-CI Builds":https://srv.elexis.info/jenkins/view/3.0/job/Elexis-3.0-Core/lastSuccessfulBuild/artifact/ch.elexis.core.p2site/target/products/. Download and unzip the zip file for your machine.
 
-Install Oracle java 1.7.55 from "http://www.java.com/de/download/manual.jsp":http://www.java.com/de/download/manual.jsp
+Install Oracle java 1.8 from "http://www.java.com/de/download/manual.jsp":http://www.java.com/de/download/manual.jsp
 
 Start the Elexis3 application.
 
 
 h2. Building
 
-You need Java 1.7+. Maven (we use 3.0.4 for our builds, other versions might work). Then you should be able to generate the application and p2 update site using the following calls:
+You need Java 1.8+. Maven (we use 3.0.5 for our builds, other versions might work). Then you should be able to generate the application and p2 update site using the following calls:
 
 @git clone https://github.com/elexis/elexis-3-core@
 @mvn clean install@
 
 It will be built for your OS/Window-System/Architecture combination. You will find the executables under @ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp/*/*/*@ 
 
-If you want a complete development environment look at the project "bootstrap-elexis-3":https://github.com/ngiger/bootstrap-elexis-3
+If you want a complete development environment, try "Oomph":https://github.com/elexis/elexis-3-core/tree/master/ch.elexis.sdk
 
 h2. Developer Overview
 
-__*BETA STATE*__
-
-
-This repository hosts the core forming Elexis 3. It consists of the following plug-ins and features:
+This repository hosts the core Elexis 3. It consists of the following plug-ins and features:
 
 * @ch.rgw.utility@ Utilities required to drive Elexis.
 * @ch.elexis.core@ Core concepts and interface definitions.
