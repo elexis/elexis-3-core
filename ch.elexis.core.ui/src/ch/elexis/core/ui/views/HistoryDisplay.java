@@ -49,7 +49,6 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 		ElexisEventListener {
 	FormText text;
 	ArrayList<Konsultation> lKons;
-	StringBuilder sb;
 	private HistoryLoader loader;
 	private boolean bLock;
 	HistoryDisplay self = this;
@@ -81,7 +80,6 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 			
 		});
 		text.setText(Messages.HistoryDisplay_NoPatientSelected, false, false); //$NON-NLS-1$
-		sb = new StringBuilder(1000);
 		addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e){
@@ -109,8 +107,7 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	
 	public void start(KonsFilter f){
 		stop();
-		sb.setLength(0);
-		loader = new HistoryLoader(sb, lKons, multiline);
+		loader = new HistoryLoader(new StringBuilder(), lKons, multiline);
 		loader.setFilter(f);
 		loader.addListener(this);
 		loader.schedule();

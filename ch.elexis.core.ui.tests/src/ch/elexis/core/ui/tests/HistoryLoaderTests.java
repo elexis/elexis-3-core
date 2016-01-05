@@ -1,12 +1,11 @@
 package ch.elexis.core.ui.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -21,18 +20,12 @@ import ch.elexis.core.ui.actions.HistoryLoader;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
-import ch.rgw.tools.TimeTool;
 
 public class HistoryLoaderTests {
-	private static HistoryLoader loader;
-	private static StringBuilder sb;
-	private static ArrayList<Konsultation> lCons;
 	private static Patient patGriss, patSter, patKum, patPaal;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception{
-		lCons = new ArrayList<Konsultation>();
-		
 		//test patients
 		patGriss = new Patient("Grissemann", "Christoph", "17.05.66", Patient.MALE);
 		patSter = new Patient("Stermann", "Dirk", "07.12.65", Patient.MALE);
@@ -43,7 +36,7 @@ public class HistoryLoaderTests {
 	@Test
 	public void testExecuteWith3Consultations() throws InterruptedException{
 		// init some specific sample data
-		lCons = new ArrayList<Konsultation>();
+		ArrayList<Konsultation> lCons = new ArrayList<Konsultation>();
 		
 		//case and consultation 1
 		Fall c1 = patPaal.neuerFall("TstCase1-Paal", "TestAccident", "UVG");
@@ -97,8 +90,8 @@ public class HistoryLoaderTests {
 	@Test
 	public void testExecuteWithRandomConsultations() throws InterruptedException{
 		int consListSize = 13;
-		lCons = generateTestConsultationAndCases(patPaal, consListSize);
-		HistoryLoader loader = new HistoryLoader(new StringBuilder(), lCons);
+		ArrayList<Konsultation> consList = generateTestConsultationAndCases(patPaal, consListSize);
+		HistoryLoader loader = new HistoryLoader(new StringBuilder(), consList);
 		loader.schedule(0);
 		loader.join(); // wait for job to finish
 		
@@ -111,16 +104,16 @@ public class HistoryLoaderTests {
 		assertEquals(consListSize + 1, split.length);
 		
 		// check consultation date an case details
-		for (int i = 0; i < lCons.size(); i++) {
-			Konsultation cons = lCons.get(i);
+		for (int i = 0; i < consList.size(); i++) {
+			String caseConsInfo = split[i + 1];
+			String consId = getInfoConsId(caseConsInfo);
+			assertNotNull(consId);
+			Konsultation cons = getConsFromList(consId, consList);
+			assertNotNull(cons);
 			String consDate = cons.getDatum();
 			String caseBeginDate = cons.getFall().getBeginnDatum();
 			
-			String caseConsInfo = split[i + 1];
-			assertTrue(caseConsInfo.contains(cons.getId()));
 			assertTrue(caseConsInfo.contains(consDate));
-			assertTrue(caseConsInfo.contains("Bond James"));
-			assertTrue(caseConsInfo.contains("KVG: Tests - TstCase"));
 			assertTrue(caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
 		}
 		
@@ -131,80 +124,81 @@ public class HistoryLoaderTests {
 	@Test
 	public void testExecuteFromDifferentThreads() throws InterruptedException, ExecutionException{
 		// init some test data
-		int nrConsSter = 13;
-		int nrConsGriss = 4;
-		int nrOfConsKum = 24;
+		int nrConsSter = 50;
+		int nrConsGriss = 40;
+		int nrOfConsKum = 30;
 		List<Konsultation> consSter = generateTestConsultationAndCases(patSter, nrConsSter);
 		List<Konsultation> consKum = generateTestConsultationAndCases(patKum, nrOfConsKum);
 		List<Konsultation> consGriss = generateTestConsultationAndCases(patGriss, nrConsGriss);
-		sb = new StringBuilder();
 		
-		ExecutorService executorService = Executors.newSingleThreadExecutor();
-		List<Callable<String[]>> callables = new ArrayList<Callable<String[]>>();
-		callables.add(new Callable<String[]>() {
-			public String[] call() throws Exception{
-				scheduleLoaderFor(patSter, nrConsSter);
-				Thread.sleep(2000);
-				String dataString = (String) loader.getData();
-				return new String[] {
-					patSter.getName(), dataString
-				};
-			}
-		});
-		callables.add(new Callable<String[]>() {
-			public String[] call() throws Exception{
-				scheduleLoaderFor(patGriss, nrConsGriss);
-				Thread.sleep(2000);
-				String dataString = (String) loader.getData();
-				return new String[] {
-					patGriss.getName(), dataString
-				};
-			}
-		});
-		callables.add(new Callable<String[]>() {
-			public String[] call() throws Exception{
-				scheduleLoaderFor(patKum, nrOfConsKum);
-				Thread.sleep(2000);
-				String dataString = (String) loader.getData();
-				return new String[] {
-					patKum.getName(), dataString
-				};
-			}
-		});
+		ExecutorService executorService = Executors.newCachedThreadPool();
+		List<LoaderCallable> callables = new ArrayList<LoaderCallable>();
+		
+		for (int i = 0; i < 5; i++) {
+			callables.add(new LoaderCallable(patGriss, new StringBuilder()));
+			callables.add(new LoaderCallable(patSter, new StringBuilder()));
+			callables.add(new LoaderCallable(patKum, new StringBuilder()));
+		}
 		
 		// invoke all tasks and check data
-		List<Future<String[]>> futures = executorService.invokeAll(callables);
-		for (Future<String[]> future : futures) {
-			String[] result = future.get();
+		List<Future<LoaderData>> futures = executorService.invokeAll(callables);
+		for (Future<LoaderData> future : futures) {
+			LoaderData loaderData = future.get();
+			// wait till finished
+			loaderData.loader.join();
 			
-			//find which patients cons we're handling
-			List<Konsultation> consList = new ArrayList<Konsultation>();
-			if (result[0].equals(patSter.getName())) {
-				consList = consSter;
-			} else if (result[0].equals(patGriss.getName())) {
+			int consNr = -1;
+			List<Konsultation> consList = null;
+			if (loaderData.patient == patGriss) {
+				consNr = nrConsGriss;
 				consList = consGriss;
-			} else {
+			} else if (loaderData.patient == patSter) {
+				consNr = nrConsSter;
+				consList = consSter;
+			} else if (loaderData.patient == patKum) {
+				consNr = nrOfConsKum;
 				consList = consKum;
 			}
 			
-			String[] split = result[1].split("<p>");
-			assertEquals(consList.size() + 1, split.length);
+			String result = (String) loaderData.loader.getData();
+			
+			String[] split = result.split("<p>");
+			assertEquals(consNr, split.length - 1);
+			
 			// check consultation date an case details
-			for (int i = 0; i < consList.size(); i++) {
-				Konsultation cons = consList.get(i);
+			for (int i = 0; i < consNr; i++) {
+				String caseConsInfo = split[i + 1];
+				String consId = getInfoConsId(caseConsInfo);
+				assertNotNull(consId);
+				Konsultation cons = getConsFromList(consId, consList);
+				assertNotNull(cons);
 				String consDate = cons.getDatum();
 				String caseBeginDate = cons.getFall().getBeginnDatum();
 				
-				String caseConsInfo = split[i + 1];
-				assertTrue(caseConsInfo.contains(cons.getId()));
 				assertTrue(caseConsInfo.contains(consDate));
-				assertTrue(caseConsInfo.contains("Bond James"));
-				assertTrue(caseConsInfo.contains("KVG: Tests - TstCase"));
 				assertTrue(caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
 			}
 		}
-		
 		executorService.shutdown();
+	}
+	
+	private Konsultation getConsFromList(String consId, List<Konsultation> consList){
+		for (Konsultation konsultation : consList) {
+			if (konsultation.getId().equals(consId)) {
+				return konsultation;
+			}
+		}
+		return null;
+	}
+	
+	private String getInfoConsId(String caseConsInfo){
+		int endIdx = caseConsInfo.indexOf("\">");
+		int startIdx = caseConsInfo.indexOf("=\"");
+		
+		if (endIdx != -1 && startIdx != -1) {
+			return caseConsInfo.substring(startIdx + 2, endIdx);
+		}
+		return null;
 	}
 	
 	/**
@@ -214,10 +208,10 @@ public class HistoryLoaderTests {
 	 * @param expectedSize
 	 * @throws InterruptedException
 	 */
-	private static void scheduleLoaderFor(Patient pat, int expectedSize)
+	private HistoryLoader scheduleLoaderFor(Patient pat, StringBuilder sb)
 		throws InterruptedException{
 		// clear list and populate with patients consultations
-		lCons.clear();
+		ArrayList<Konsultation> lCons = new ArrayList<Konsultation>();
 		Fall[] cases = pat.getFaelle();
 		for (Fall c : cases) {
 			Konsultation[] consList = c.getBehandlungen(true);
@@ -225,15 +219,34 @@ public class HistoryLoaderTests {
 				lCons.add(cons);
 			}
 		}
-		assertEquals(expectedSize, lCons.size());
+		sb.setLength(0);
+		HistoryLoader loader = new HistoryLoader(sb, lCons, false);
+		loader.schedule();
+		return loader;
+	}
+	
+	private class LoaderData {
+		private Patient patient;
+		private HistoryLoader loader;
+	}
+	
+	private class LoaderCallable implements Callable<LoaderData> {
 		
-		if (loader != null) {
-			loader.cancel();
+		private Patient patient;
+		private StringBuilder sb;
+		
+		public LoaderCallable(Patient patient, StringBuilder sb){
+			this.patient = patient;
+			this.sb = sb;
 		}
 		
-		sb.setLength(0);
-		loader = new HistoryLoader(sb, lCons, false);
-		loader.schedule();
+		@Override
+		public LoaderData call() throws Exception{
+			LoaderData ret = new LoaderData();
+			ret.loader = scheduleLoaderFor(patient, sb);
+			ret.patient = patient;
+			return ret;
+		}
 	}
 	
 	/**
@@ -268,26 +281,6 @@ public class HistoryLoaderTests {
 			testCons.setDatum(formatCalendarToString(cal), true);
 			consList.add(testCons);
 		}
-		
-		Collections.sort(consList, new Comparator<Konsultation>() {
-			TimeTool t1 = new TimeTool();
-			TimeTool t2 = new TimeTool();
-			
-			public int compare(final Konsultation o1, final Konsultation o2){
-				if ((o1 == null) || (o2 == null)) {
-					return 0;
-				}
-				t1.set(o1.getDatum());
-				t2.set(o2.getDatum());
-				if (t1.isBefore(t2)) {
-					return 1;
-				}
-				if (t1.isAfter(t2)) {
-					return -1;
-				}
-				return 0;
-			}
-		});
 		return consList;
 	}
 	
