@@ -244,9 +244,10 @@ public class TimeTool extends GregorianCalendar {
 	
 	/**
 	 * Verifies whether the provided time-string is valid according to the given format
+	 * 
 	 * @param timestring
 	 * @param timestringformat
-	 * @return 
+	 * @return
 	 */
 	public static boolean isValidDateTimeString(final String timestring, int timestringformat){
 		SimpleDateFormat sdf = INT_SDF_MAP.get(timestringformat);
@@ -255,8 +256,10 @@ public class TimeTool extends GregorianCalendar {
 		}
 		
 		try {
-			sdf.setLenient(false);
-			sdf.parse(timestring);
+			synchronized (sdf) {
+				sdf.setLenient(false);
+				sdf.parse(timestring);
+			}
 		} catch (ParseException e) {
 			return false;
 		}
@@ -762,9 +765,13 @@ public class TimeTool extends GregorianCalendar {
 	public String toDBString(final boolean full){
 		String res;
 		if (full == true) {
-			res = pref_full.format(getTime());
+			synchronized (pref_full) {
+				res = pref_full.format(getTime());
+			}
 		} else {
-			res = pref_small.format(getTime());
+			synchronized (pref_small) {
+				res = pref_small.format(getTime());
+			}
 		}
 		if (wrap == true) {
 			return JdbcLink.wrap(res);
@@ -789,7 +796,9 @@ public class TimeTool extends GregorianCalendar {
 		
 		SimpleDateFormat sdf = INT_SDF_MAP.get(f);
 		if (sdf != null) {
-			return sdf.format(getTime());
+			synchronized (sdf) {
+				return sdf.format(getTime());
+			}
 		}
 		
 		return "00:00";
