@@ -1485,7 +1485,11 @@ public abstract class PersistentObject implements IPersistentObject {
 			return true;
 		}
 		Object oldval = getDBConnection().getCache().get(key, getCacheTime());
-		getDBConnection().getCache().put(key, value, getCacheTime()); // refresh cache
+		if (mapped.startsWith("S:")) {
+			getDBConnection().getCache().remove(key); // clear cache
+		} else {
+			getDBConnection().getCache().put(key, value, getCacheTime()); // refresh cache
+		}
 		if (value.equals(oldval)) {
 			return true; // no need to write data if it ws already in cache
 		}
@@ -1889,9 +1893,9 @@ public abstract class PersistentObject implements IPersistentObject {
 				sql.append(mapped.substring(4));
 			} else {
 				sql.append(mapped);
+				dbConnection.getCache().put(getKey(fields[i]), values[i], getCacheTime());
 			}
 			sql.append("=?,");
-			dbConnection.getCache().put(getKey(fields[i]), values[i], getCacheTime());
 		}
 		sql.append("lastupdate=?");
 		// sql.delete(sql.length() - 1, 100000);
