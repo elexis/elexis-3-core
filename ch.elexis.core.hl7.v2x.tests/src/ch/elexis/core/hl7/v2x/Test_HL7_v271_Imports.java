@@ -36,7 +36,7 @@ public class Test_HL7_v271_Imports {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception{
-		Patient dummyPatient = new Patient("Grissemann", "Christoph", "17.05.66", Patient.MALE);
+		Patient dummyPatient = new Patient("Grissemann", "Christoph", "17.05.1966", Patient.MALE);
 		resolver = new DummyPatientResolver(dummyPatient);
 	}
 	
@@ -107,7 +107,7 @@ public class Test_HL7_v271_Imports {
 		
 		Patient patient = reader.getPatient();
 		assertEquals("Grissemann", patient.getName());
-		assertEquals("17.05.66", patient.getGeburtsdatum());
+		assertEquals("17.05.1966", patient.getGeburtsdatum());
 		assertEquals(Patient.MALE, patient.getGeschlecht());
 	}
 	
