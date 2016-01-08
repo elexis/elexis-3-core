@@ -3,6 +3,7 @@ package ch.elexis.core.ui.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,12 +17,16 @@ import java.util.concurrent.Future;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.ui.actions.BackgroundJob;
+import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.HistoryLoader;
+import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
+import ch.rgw.tools.TimeTool;
 
-public class HistoryLoaderTests {
+public class HistoryLoaderTests implements BackgroundJobListener {
 	private static Patient patGriss, patSter, patKum, patPaal;
 	
 	@BeforeClass
@@ -32,6 +37,11 @@ public class HistoryLoaderTests {
 		patKum = new Patient("Kummer", "Christa", "08.09.64", Patient.FEMALE);
 		patPaal = new Patient("Paal", "Günther", "23.03.62", Patient.MALE);
 	}
+	
+	private int finishedLoaders;
+	
+	private ArrayList<Konsultation> historyDisplaylKons;
+	private HistoryLoader historyDisplayLoader;
 	
 	@Test
 	public void testExecuteWith3Consultations() throws InterruptedException{
@@ -127,6 +137,9 @@ public class HistoryLoaderTests {
 		int nrConsSter = 50;
 		int nrConsGriss = 40;
 		int nrOfConsKum = 30;
+		removeTestConsultationAndCases(patSter);
+		removeTestConsultationAndCases(patKum);
+		removeTestConsultationAndCases(patGriss);
 		List<Konsultation> consSter = generateTestConsultationAndCases(patSter, nrConsSter);
 		List<Konsultation> consKum = generateTestConsultationAndCases(patKum, nrOfConsKum);
 		List<Konsultation> consGriss = generateTestConsultationAndCases(patGriss, nrConsGriss);
@@ -134,52 +147,196 @@ public class HistoryLoaderTests {
 		ExecutorService executorService = Executors.newCachedThreadPool();
 		List<LoaderCallable> callables = new ArrayList<LoaderCallable>();
 		
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 			callables.add(new LoaderCallable(patGriss, new StringBuilder()));
 			callables.add(new LoaderCallable(patSter, new StringBuilder()));
 			callables.add(new LoaderCallable(patKum, new StringBuilder()));
 		}
 		
+		int loadersSize = callables.size();
+		finishedLoaders = 0;
 		// invoke all tasks and check data
 		List<Future<LoaderData>> futures = executorService.invokeAll(callables);
+		// wait for all loaders to finish
+		// if test is blocking here, make sure test is NOT running in UI thread
+		while (finishedLoaders < loadersSize) {
+			Thread.sleep(100);
+		}
+		
 		for (Future<LoaderData> future : futures) {
 			LoaderData loaderData = future.get();
-			// wait till finished
-			loaderData.loader.join();
 			
-			int consNr = -1;
 			List<Konsultation> consList = null;
 			if (loaderData.patient == patGriss) {
-				consNr = nrConsGriss;
 				consList = consGriss;
 			} else if (loaderData.patient == patSter) {
-				consNr = nrConsSter;
 				consList = consSter;
 			} else if (loaderData.patient == patKum) {
-				consNr = nrOfConsKum;
 				consList = consKum;
 			}
 			
 			String result = (String) loaderData.loader.getData();
 			
-			String[] split = result.split("<p>");
-			assertEquals(consNr, split.length - 1);
-			
-			// check consultation date an case details
-			for (int i = 0; i < consNr; i++) {
-				String caseConsInfo = split[i + 1];
-				String consId = getInfoConsId(caseConsInfo);
-				assertNotNull(consId);
-				Konsultation cons = getConsFromList(consId, consList);
-				assertNotNull(cons);
-				String consDate = cons.getDatum();
-				String caseBeginDate = cons.getFall().getBeginnDatum();
-				
-				assertTrue(caseConsInfo.contains(consDate));
-				assertTrue(caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
-			}
+			testLoaderResult(result, consList);
 		}
 		executorService.shutdown();
+	}
+	
+	private class ThreadSaveTimeToolRunnable implements Runnable {
+		
+		private boolean failed = false;
+		
+		private String failedToString;
+		
+		@Override
+		public void run(){
+			TimeTool tool = new TimeTool("01.01.2020");
+			while (!failed) {
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+				String toString = tool.toString(TimeTool.DATE_GER);
+				if (!toString.equals("01.01.2020")) {
+					failed = true;
+					failedToString = toString;
+				}
+			}
+		}
+		
+		public boolean isFailed(){
+			return failed;
+		}
+		
+		public String getFailedToString(){
+			return failedToString;
+		}
+	}
+	
+	@Test
+	public void testExecuteThreadSafeTimeTool() throws InterruptedException{
+		historyDisplaylKons = new ArrayList<Konsultation>(20);
+		
+		// init some test data
+		int nrConsGriss = 40;
+		removeTestConsultationAndCases(patGriss);
+		List<Konsultation> consGriss = generateTestConsultationAndCases(patGriss, nrConsGriss);
+		
+		// start Thread using TimeTool
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		
+		ThreadSaveTimeToolRunnable toolRunnable = new ThreadSaveTimeToolRunnable();
+		
+		executorService.execute(toolRunnable);
+		
+		for (int i = 0; i < 100; i++) {
+			historyDisplayStop();
+			historyDisplayLoad(patGriss);
+			historyDisplayStart();
+			
+			// wait for all loaders to finish
+			// if test is blocking here, make sure test is NOT running in UI thread
+			while (historyDisplayLoader.getData() == null) {
+				Thread.sleep(10);
+			}
+			
+			String result = (String) historyDisplayLoader.getData();
+			assertNotNull(result);
+			testLoaderResult(result, consGriss);
+			
+			if (toolRunnable.isFailed()) {
+				fail("TimeTool not 01.01.2020 but [" + toolRunnable.getFailedToString() + "]");
+			}
+		}
+		
+		executorService.shutdown();
+	}
+	
+	@Test
+	public void testExecuteLikeHistoryDisplay() throws InterruptedException{
+		historyDisplaylKons = new ArrayList<Konsultation>(20);
+		
+		// init some test data
+		int nrConsSter = 50;
+		int nrConsGriss = 40;
+		int nrOfConsKum = 30;
+		removeTestConsultationAndCases(patSter);
+		removeTestConsultationAndCases(patKum);
+		removeTestConsultationAndCases(patGriss);
+		List<Konsultation> consSter = generateTestConsultationAndCases(patSter, nrConsSter);
+		List<Konsultation> consKum = generateTestConsultationAndCases(patKum, nrOfConsKum);
+		List<Konsultation> consGriss = generateTestConsultationAndCases(patGriss, nrConsGriss);
+		
+		for (int i = 0; i < 100; i++) {
+			finishedLoaders = 0;
+			historyDisplayStop();
+			historyDisplayLoad(patSter);
+			historyDisplayStart();
+			
+			Thread.sleep(10);
+			
+			historyDisplayStop();
+			historyDisplayLoad(patKum);
+			historyDisplayStart();
+			
+			Thread.sleep(10);
+			
+			historyDisplayStop();
+			historyDisplayLoad(patGriss);
+			historyDisplayStart();
+			
+			// wait for all loaders to finish
+			// if test is blocking here, make sure test is NOT running in UI thread
+			while (historyDisplayLoader.getData() == null) {
+				Thread.sleep(500);
+			}
+			
+			String result = (String) historyDisplayLoader.getData();
+			assertNotNull(result);
+			testLoaderResult(result, consGriss);
+		}
+	}
+	
+	public void historyDisplayStart(){
+		historyDisplayStart(null);
+	}
+	
+	public void historyDisplayStart(KonsFilter f){
+		historyDisplayStop();
+		historyDisplayLoader = new HistoryLoader(new StringBuilder(), historyDisplaylKons, false);
+		historyDisplayLoader.setFilter(f);
+		historyDisplayLoader.addListener(this);
+		historyDisplayLoader.schedule();
+	}
+	
+	public void historyDisplayStop(){
+		if (historyDisplayLoader != null) {
+			historyDisplayLoader.removeListener(this);
+			historyDisplayLoader.cancel();
+		}
+	}
+	
+	public void historyDisplayLoad(Fall fall, boolean clear){
+		if (clear) {
+			historyDisplaylKons.clear();
+		}
+		if (fall != null) {
+			Konsultation[] kons = fall.getBehandlungen(true);
+			for (Konsultation k : kons) {
+				historyDisplaylKons.add(k);
+			}
+		}
+	}
+	
+	public void historyDisplayLoad(Patient pat){
+		if (pat != null) {
+			historyDisplaylKons.clear();
+			Fall[] faelle = pat.getFaelle();
+			for (Fall f : faelle) {
+				historyDisplayLoad(f, false);
+			}
+		}
 	}
 	
 	private Konsultation getConsFromList(String consId, List<Konsultation> consList){
@@ -201,6 +358,30 @@ public class HistoryLoaderTests {
 		return null;
 	}
 	
+	private void testLoaderResult(String result, List<Konsultation> consList){
+		String[] split = result.split("<p>");
+		
+		// check consultation date an case details
+		for (int i = 0; i < split.length - 1; i++) {
+			String caseConsInfo = split[i + 1];
+			String consId = getInfoConsId(caseConsInfo);
+			assertNotNull(consId);
+			Konsultation cons = getConsFromList(consId, consList);
+			assertNotNull(cons);
+			String consDate = cons.getDatum();
+			System.out.println("Cons date [" + consDate + "]");
+			String caseBeginDate = cons.getFall().getBeginnDatum();
+			System.out.println("Case date [" + consDate + "]");
+			
+			if (!caseConsInfo.contains(consDate)) {
+				System.out.println("No cons date [" + consDate + "] in [" + caseConsInfo + "]");
+			}
+			
+			assertTrue(caseConsInfo.contains(consDate));
+			assertTrue(caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
+		}
+	}
+	
 	/**
 	 * reconstruct ui event when patien is selected
 	 * 
@@ -219,8 +400,8 @@ public class HistoryLoaderTests {
 				lCons.add(cons);
 			}
 		}
-		sb.setLength(0);
 		HistoryLoader loader = new HistoryLoader(sb, lCons, false);
+		loader.addListener(this);
 		loader.schedule();
 		return loader;
 	}
@@ -271,7 +452,7 @@ public class HistoryLoaderTests {
 			cal.set(Calendar.DAY_OF_YEAR, dayOfYear);
 			
 			//  create test case and consultation
-			Fall testCase = pat.neuerFall("TstCase" + seqNr, "Tests", "KVG");
+			Fall testCase = pat.neuerFall("TstCase" + seqNr, pat.getLabel(true) + "_tests", "KVG");
 			testCase.setBeginnDatum(formatCalendarToString(cal));
 			// set cons date to next for every second testcase
 			if (seqNr % 2 == 0) {
@@ -282,6 +463,17 @@ public class HistoryLoaderTests {
 			consList.add(testCons);
 		}
 		return consList;
+	}
+	
+	private static void removeTestConsultationAndCases(Patient pat){
+		Fall[] faelle = pat.getFaelle();
+		for (Fall fall : faelle) {
+			Konsultation[] konsultationen = fall.getBehandlungen(true);
+			for (Konsultation konsultation : konsultationen) {
+				konsultation.delete();
+			}
+			fall.delete();
+		}
 	}
 	
 	/**
@@ -299,4 +491,11 @@ public class HistoryLoaderTests {
 		return start + (int) Math.round(Math.random() * (end - start));
 	}
 	
+	@Override
+	public void jobFinished(BackgroundJob j){
+		if (j instanceof HistoryLoader) {
+			HistoryLoader loader = (HistoryLoader) j;
+			finishedLoaders++;
+		}
+	}
 }
