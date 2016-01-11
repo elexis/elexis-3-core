@@ -2,14 +2,14 @@
 # abort bash on error
 set -e
 
-if [ -z "$ROOT" ]
+if [ -z "$ROOT_ELEXIS_CORE" ]
 then
-  export ROOT=/srv/www/download.elexis.info
+  export ROOT_ELEXIS_CORE=/srv/download.elexis.info/elexis.3.core
 fi
 
-if [ ! -d "$ROOT" ]
+if [ ! -d "$ROOT_ELEXIS_CORE" ]
 then
-  echo "ROOT (actually defined as $ROOT) must exist"
+  echo "ROOT_ELEXIS_CORE (actually defined as $ROOT_ELEXIS_CORE) must exist"
   exit 1
 fi
 
@@ -33,32 +33,32 @@ then
   echo "File ${act_version_file} must exist!"
   exit 1
 fi
-export backup_root=${ROOT}/backup/$VARIANT
+export backup_root=${ROOT_ELEXIS_CORE}/backup/$VARIANT
 
-echo $0: ROOT is $ROOT and VARIANT is $VARIANT.
+echo $0: ROOT_ELEXIS_CORE is $ROOT_ELEXIS_CORE and VARIANT is $VARIANT.
 
 # Check whether we have to backup the old version of the repository
-export old_version_file=${ROOT}/${VARIANT}/repo.version
+export old_version_file=${ROOT_ELEXIS_CORE}/${VARIANT}/repo.version
 if [ -f ${old_version_file}  ]
 then
   source ${old_version_file}
   if [ ! -d $backup_root/$version-$qualifier ]
   then
-    echo "Backup of version found under $ROOT/$VARIANT necessary"
+    echo "Backup of version found under $ROOT_ELEXIS_CORE/$VARIANT necessary"
     mkdir -p $backup_root
-    mv -v $ROOT/$VARIANT $backup_root/$version-$qualifier
+    mv -v $ROOT_ELEXIS_CORE/$VARIANT $backup_root/$version-$qualifier
   else
     echo Skipping backup as  $backup_root/$version-$qualifier already present
   fi
 fi
 
-rm -rf ${ROOT}/$VARIANT
-cp -rpu *p2site/target/repository/ ${ROOT}/$VARIANT
-cp -rpu *p2site/target/products ${ROOT}/$VARIANT
-cp -rpvu *p2site/repo.properties ${ROOT}/$VARIANT/repo.version
+rm -rf ${ROOT_ELEXIS_CORE}/$VARIANT
+cp -rpu *p2site/target/repository/ ${ROOT_ELEXIS_CORE}/$VARIANT
+cp -rpu *p2site/target/products ${ROOT_ELEXIS_CORE}/$VARIANT
+cp -rpvu *p2site/repo.properties ${ROOT_ELEXIS_CORE}/$VARIANT/repo.version
 export title="Elexis-Application P2-repository ($VARIANT)"
-echo "Creating repository $ROOT/$VARIANT/index.html"
-tee  ${ROOT}/$VARIANT/index.html <<EOF
+echo "Creating repository $ROOT_ELEXIS_CORE/$VARIANT/index.html"
+tee  ${ROOT_ELEXIS_CORE}/$VARIANT/index.html <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <html>
   <head><title>$title</title></head>
