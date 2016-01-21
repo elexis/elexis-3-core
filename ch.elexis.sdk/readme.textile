@@ -1,10 +1,10 @@
 h1. Elexis SDK
 
-__MEDEVIT <office@medevit.at>__ Last update: 30.10.2015
+__MEDEVIT <office@medevit.at>__ Last update: 21.01.2016
 
 This project is used to automatically set-up an Elexis 3 development environment using the "Eclipse Oomph Installer":http://wiki.eclipse.org/Eclipse_Oomph_Installer. It integrates both core, base and "Medelexis":http://www.medelexis.ch  resources. This project is not used outside of the Oomph installer tool.
 
-This documentation was verified with Oomph v1.3.0 Build 1816. The setup file referenced in this document is located in the root of this git repository (that is @../Elexis.setup@ )
+This documentation was verified with Oomph v1.3.0 Build 2066. The setup file referenced in this document is located in the root of this git repository (that is @../Elexis.setup@ )
 
 h2. Usage
 
@@ -27,4 +27,12 @@ With OOMP 1.3.0 the https-URL did not work and you must add the Elexis.setup via
 # After the basic product installation was done, the newly installed Eclipse IDE is started and the setup tasks are executed (source checkout, IDE configuration etc.).
 # If you some of your variables were wrong (e.g. wrong path for a Java JDK). The setup will not complete and you must correct the choices, via "Help..Performe Setup Tasks". There press **Back>** to be able to review the variables.
 #* In this case I had to manually open ch.elexis.target/juno-target.target, wait for "Resolving Target Definition" to finish, then pressing **Set as Target Platform**
+
+h2. Troubleshooting
+
+We have seen cases where parts of the setup could not be installed. I might help if you
+* remove the BundlePool. Its name is shown near the bottom of the first screen after switching to the Advanced mode.
+* restart the installation.
+
+If the problem persists, open a bug report or send a mail to elexis "developer mailing list":elexis-develop@lists.sourceforge.net
 
