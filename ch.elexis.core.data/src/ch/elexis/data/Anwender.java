@@ -25,6 +25,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.model.RoleConstants;
 import ch.rgw.io.SqlSettings;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
@@ -72,7 +73,7 @@ public class Anwender extends Person {
 		
 		User user = new User(this, username, password);
 		if (isExecutiveDoctor)
-			user.setAssignedRole(Role.load(Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
+			user.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
 	}
 	
 	public Anwender(final String Name, final String Vorname, final String Geburtsdatum,

@@ -11,6 +11,7 @@
 package ch.elexis.admin;
 
 import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.model.RoleConstants;
 import ch.elexis.data.Role;
 import ch.elexis.data.User;
 
@@ -19,8 +20,8 @@ import ch.elexis.data.User;
  */
 public abstract class AbstractAccessControl {
 	
-	public static final String USER_GROUP = Role.SYSTEMROLE_LITERAL_USER;
-	public static final String ADMIN_GROUP = Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR;
+	public static final String USER_GROUP = RoleConstants.SYSTEMROLE_LITERAL_USER;
+	public static final String ADMIN_GROUP = RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR;
 	
 	public abstract boolean request(ACE ace);
 	

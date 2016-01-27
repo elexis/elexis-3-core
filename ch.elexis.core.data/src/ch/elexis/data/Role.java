@@ -26,13 +26,6 @@ public class Role extends PersistentObject {
 	public static final String FLD_EXT_I18N_LABEL = "LAB_" + Locale.getDefault().getLanguage();
 	public static final String FLD_JOINT_RIGHTS = "Rights";
 	
-	public static final String SYSTEMROLE_LITERAL_USER = "user";
-	public static final String SYSTEMROLE_LITERAL_DOCTOR = "doctor";
-	public static final String SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR = "executive_doctor";
-	public static final String SYSTEMROLE_LITERAL_ASSISTANT = "assistant";
-	public static final String SYSTEMROLE_LITERAL_USER_EXTERNAL = "user_external";
-	public static final String SYSTEMROLE_LITERAL_PATIENT = "patient";
-	
 	static {
 		addMapping(TABLENAME, FLD_ID, FLD_SYSTEM_ROLE, FLD_EXTINFO,
 			FLD_JOINT_RIGHTS + "=LIST:ROLE_ID:ROLE_RIGHT_JOINT");
@@ -45,7 +38,7 @@ public class Role extends PersistentObject {
 	
 	public Role(){}
 	
-	public Role(boolean isSystemRole) {
+	public Role(boolean isSystemRole){
 		create(null);
 		
 		setSystemRole(false);
@@ -73,7 +66,7 @@ public class Role extends PersistentObject {
 		return getBoolean(FLD_SYSTEM_ROLE);
 	}
 	
-	public void setSystemRole(boolean val) {
+	public void setSystemRole(boolean val){
 		// ignored, for databinding only
 	}
 	
@@ -168,7 +161,7 @@ public class Role extends PersistentObject {
 		getConnection().releaseStatement(stm);
 		return res == 1;
 	}
-
+	
 	/**
 	 * Revokes all rights of this role
 	 */

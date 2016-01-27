@@ -19,6 +19,7 @@ import org.apache.commons.codec.DecoderException;
 
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.RoleConstants;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.PasswordEncryptionService;
 
@@ -62,7 +63,7 @@ public class User extends PersistentObject {
 		setAssignedContact(anw);
 		setPassword(password);
 		
-		setAssignedRole(Role.load(Role.SYSTEMROLE_LITERAL_USER), true);
+		setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_USER), true);
 	}
 	
 	protected User(final String id){
@@ -113,8 +114,8 @@ public class User extends PersistentObject {
 			
 			boolean isMandator = anwender.getBoolean(Anwender.FLD_IS_MANDATOR);
 			if (isMandator) {
-				u.setAssignedRole(Role.load(Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
-				u.setAssignedRole(Role.load(Role.SYSTEMROLE_LITERAL_DOCTOR), true);
+				u.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
+				u.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_DOCTOR), true);
 			}
 			
 			// TODO delete the information from contact table?

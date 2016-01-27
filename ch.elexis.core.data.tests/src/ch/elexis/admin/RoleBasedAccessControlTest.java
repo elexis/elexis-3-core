@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.RoleConstants;
 import ch.elexis.data.AbstractPersistentObjectTest;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Person;
@@ -59,7 +60,7 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 	@Test
 	public void testUserAddAndRevokeParentRightInvolvesChildRights() {
 		User user = setContext();
-		Role userRole = Role.load(Role.SYSTEMROLE_LITERAL_USER);
+		Role userRole = Role.load(RoleConstants.SYSTEMROLE_LITERAL_USER);
 		userRole.grantAccessRight(RoleBasedAccessControlTestACLContribution.parent);
 		boolean rightTrue = RoleBasedAccessControl.queryRightForUser(user, RoleBasedAccessControlTestACLContribution.child1child1);
 		assertTrue(rightTrue);

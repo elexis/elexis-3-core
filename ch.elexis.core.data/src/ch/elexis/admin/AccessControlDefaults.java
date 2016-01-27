@@ -14,6 +14,7 @@ package ch.elexis.admin;
 
 import java.util.Arrays;
 
+import ch.elexis.core.model.RoleConstants;
 import ch.elexis.data.Role;
 
 /**
@@ -225,20 +226,20 @@ public class AccessControlDefaults {
 	}
 	
 	public static void initializeDefaults(AbstractAccessControl ac){
-		Role ur = Role.load(Role.SYSTEMROLE_LITERAL_USER);
+		Role ur = Role.load(RoleConstants.SYSTEMROLE_LITERAL_USER);
 		ACE[] anwender = AccessControlDefaults.getAnwender();
 		Arrays.asList(anwender).stream().forEachOrdered(ace -> ac.grant(ur, ace));
 		ACE[] alle = AccessControlDefaults.getAlle();
 		Arrays.asList(alle).stream().forEachOrdered(ace -> ac.grant(ur, ace));
 		
-		ac.grant(Role.SYSTEMROLE_LITERAL_ASSISTANT, LSTG_CHARGE_FOR_ALL);
-		ac.grant(Role.SYSTEMROLE_LITERAL_ASSISTANT, LSTG_VERRECHNEN);
+		ac.grant(RoleConstants.SYSTEMROLE_LITERAL_ASSISTANT, LSTG_CHARGE_FOR_ALL);
+		ac.grant(RoleConstants.SYSTEMROLE_LITERAL_ASSISTANT, LSTG_VERRECHNEN);
 		
-		ac.grant(Role.SYSTEMROLE_LITERAL_DOCTOR, USER);
-		ac.grant(Role.SYSTEMROLE_LITERAL_DOCTOR, MANDANT);
-		ac.grant(Role.SYSTEMROLE_LITERAL_DOCTOR, ADMIN_KONS_EDIT_IF_BILLED);
+		ac.grant(RoleConstants.SYSTEMROLE_LITERAL_DOCTOR, USER);
+		ac.grant(RoleConstants.SYSTEMROLE_LITERAL_DOCTOR, MANDANT);
+		ac.grant(RoleConstants.SYSTEMROLE_LITERAL_DOCTOR, ADMIN_KONS_EDIT_IF_BILLED);
 		
-		ac.grant(Role.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR, ACE_ACCESS);
+		ac.grant(RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR, ACE_ACCESS);
 	}
 	
 }
