@@ -26,6 +26,7 @@ public class Messages extends NLS {
 	public static String AccessControlDefaults_Bills;
 	public static String AccessControlDefaults_CaseCopy;
 	public static String AccessControlDefaults_CaseSpecialFields;
+	public static String AccessControlDefaults_CaseReopen;
 	public static String AccessControlDefaults_ChangeCaseSpecialFields;
 	public static String AccessControlDefaults_change;
 	public static String AccessControlDefaults_changeBilled;
@@ -51,6 +52,7 @@ public class Messages extends NLS {
 	public static String AccessControlDefaults_documentsDeleteCat;
 	public static String AccessControlDefaults_DefineCaseSpecialFields;
 	public static String AccessControlDefaults_delete;
+	public static String AccessControlDefaults_deleteCase;
 	public static String AccessControlDefaults_display;
 	public static String AccessControlDefaults_doAccount;
 	public static String AccessControlDefaults_edit;

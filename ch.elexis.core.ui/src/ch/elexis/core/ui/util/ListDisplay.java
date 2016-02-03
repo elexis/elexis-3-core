@@ -40,11 +40,12 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.locks.IUnlockable;
 
 /**
  * A List of objects with UI (definable hyperlinks) Replaces DynamicListDisplay
  */
-public class ListDisplay<T> extends Composite {
+public class ListDisplay<T> extends Composite implements IUnlockable {
 	public interface LDListener {
 		public void hyperlinkActivated(String l);
 		
@@ -108,7 +109,12 @@ public class ListDisplay<T> extends Composite {
 		}
 	}
 	
-	public void enableHyperlinks(boolean bEnable){
+	@Override
+	public void setUnlocked(boolean unlock) {
+		enableHyperlinks(unlock);
+	}
+
+	private void enableHyperlinks(boolean bEnable){
 		cLinks.setEnabled(bEnable);
 		for (Control c : cLinks.getChildren()) {
 			Hyperlink hl = (Hyperlink) c;
@@ -119,6 +125,7 @@ public class ListDisplay<T> extends Composite {
 			}
 			c.setEnabled(bEnable);
 		}
+		cLinks.redraw();
 	}
 	
 	/**

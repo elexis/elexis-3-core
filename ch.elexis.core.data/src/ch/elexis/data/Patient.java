@@ -132,6 +132,8 @@ public class Patient extends Person {
 	public Patient(final String Name, final String Vorname, final String Geburtsdatum,
 		final String s){
 		super(Name, Vorname, Geburtsdatum, s);
+		
+		CoreHub.ls.acquireLock(storeToString());
 	}
 	
 	/**
@@ -150,6 +152,8 @@ public class Patient extends Person {
 	public Patient(final String name, final String vorname, final TimeTool gebDat, final String s)
 		throws PersonDataException{
 		super(name, vorname, gebDat, s);
+		
+		CoreHub.ls.acquireLock(storeToString());
 	}
 	
 	/**
@@ -209,7 +213,7 @@ public class Patient extends Person {
 	 */
 	
 	public Konsultation getLetzteKons(final boolean create){
-		if (CoreHub.actMandant == null) {
+		if (ElexisEventDispatcher.getSelectedMandator() == null) {
 			MessageEvent.fireError("Kein Mandant angemeldet", "Es ist kein Mandant angemeldet.");
 			return null;
 		}
@@ -217,7 +221,7 @@ public class Patient extends Person {
 		
 		// if not configured otherwise load only consultations of active mandant
 		if (!CoreHub.userCfg.get(Preferences.USR_DEFLOADCONSALL, false)) {
-			qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
+			qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, ElexisEventDispatcher.getSelectedMandator().getId());
 		}
 		
 		// qbe.add("Datum", "=", new
@@ -253,7 +257,7 @@ public class Patient extends Person {
 		Fall fall = neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
 			Fall.getDefaultCaseLaw());
 		Konsultation k = fall.neueKonsultation();
-		k.setMandant(CoreHub.actMandant);
+		k.setMandant(ElexisEventDispatcher.getSelectedMandator());
 		return k;
 	}
 	
@@ -283,7 +287,7 @@ public class Patient extends Person {
 		if (!StringTool.isNothing(rc)) {
 			return rc;
 		}
-		if (CoreHub.globalCfg.get("PatIDMode", "number").equals("number")) {
+//		if (CoreHub.globalCfg.get("PatIDMode", "number").equals("number")) {
 			while (true) {
 				String lockid = PersistentObject.lock("PatNummer", true);
 				String pid = getDBConnection()
@@ -304,36 +308,36 @@ public class Patient extends Person {
 					break;
 				}
 			}
-		} else {
-			String[] ret = new String[3];
-			if (get(new String[] {
-				Person.NAME, Person.FIRSTNAME, Person.BIRTHDATE
-			}, ret) == true) {
-				StringBuffer code = new StringBuffer(12);
-				if ((ret[0] != null) && (ret[0].length() > 1)) {
-					code.append(ret[0].substring(0, 2));
-				}
-				if ((ret[1] != null) && (ret[1].length() > 1)) {
-					code.append(ret[1].substring(0, 2));
-				}
-				if ((ret[2] != null) && (ret[2].length() == 10)) {
-					int quersumme = Integer.parseInt(ret[2].substring(8));
-					quersumme += Integer.parseInt(ret[2].substring(3, 5));
-					quersumme += Integer.parseInt(ret[2].substring(0, 2));
-					code.append(Integer.toString(quersumme));
-					// code.append(ret[2].substring(8)).append(ret[2].substring(3,5)).append(ret[2].substring(0,2));
-				}
-				rc = code.toString();
-				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
-				qbe.add(FLD_PATID, "LIKE", rc + "%");
-				List<Kontakt> list = qbe.execute();
-				if (!list.isEmpty()) {
-					int l = list.size() + 1;
-					code.append("-").append(l);
-					rc = code.toString();
-				}
-			}
-		}
+//		} else {
+//			String[] ret = new String[3];
+//			if (get(new String[] {
+//				Person.NAME, Person.FIRSTNAME, Person.BIRTHDATE
+//			}, ret) == true) {
+//				StringBuffer code = new StringBuffer(12);
+//				if ((ret[0] != null) && (ret[0].length() > 1)) {
+//					code.append(ret[0].substring(0, 2));
+//				}
+//				if ((ret[1] != null) && (ret[1].length() > 1)) {
+//					code.append(ret[1].substring(0, 2));
+//				}
+//				if ((ret[2] != null) && (ret[2].length() == 10)) {
+//					int quersumme = Integer.parseInt(ret[2].substring(8));
+//					quersumme += Integer.parseInt(ret[2].substring(3, 5));
+//					quersumme += Integer.parseInt(ret[2].substring(0, 2));
+//					code.append(Integer.toString(quersumme));
+//					// code.append(ret[2].substring(8)).append(ret[2].substring(3,5)).append(ret[2].substring(0,2));
+//				}
+//				rc = code.toString();
+//				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
+//				qbe.add(FLD_PATID, "LIKE", rc + "%");
+//				List<Kontakt> list = qbe.execute();
+//				if (!list.isEmpty()) {
+//					int l = list.size() + 1;
+//					code.append("-").append(l);
+//					rc = code.toString();
+//				}
+//			}
+//		}
 		set(FLD_PATID, rc);
 		return rc;
 	}
@@ -389,7 +393,7 @@ public class Patient extends Person {
 		
 		// normally do not display other mandator's balance
 		if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
-			rQuery.add(Rechnung.MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
+			rQuery.add(Rechnung.MANDATOR_ID, Query.EQUALS, ElexisEventDispatcher.getSelectedMandator().getId());
 		}
 		
 		// let the database engine do the filtering

@@ -455,7 +455,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			return r.getStatus();
 		}
 		Mandant rm = getMandant();
-		if ((rm != null) && (rm.equals(CoreHub.actMandant))) {
+		if ((rm != null) && (rm.equals(ElexisEventDispatcher.getSelected(Mandant.class)))) {
 			if (getDatum().equals(new TimeTool().toString(TimeTool.DATE_GER))) {
 				return RnStatus.VON_HEUTE;
 			} else {
@@ -590,13 +590,11 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	/** Die zu dieser Konsultation gehörenden Leistungen holen */
-	@SuppressWarnings("unchecked")
 	public List<Verrechnet> getLeistungen(){
-		Query qbe = new Query(Verrechnet.class);
+		Query<Verrechnet> qbe = new Query<Verrechnet>(Verrechnet.class);
 		qbe.add(Verrechnet.KONSULTATION, Query.EQUALS, getId());
 		qbe.orderBy(false, Verrechnet.CLASS, Verrechnet.LEISTG_CODE);
-		List ret = qbe.execute();
-		return ret;
+		return qbe.execute();
 	}
 	
 	/**

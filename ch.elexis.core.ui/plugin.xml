@@ -55,6 +55,13 @@
                   id="ch.elexis.core.ui.coolbar.MandantSelectionContributionItem">
             </dynamic>
          </toolbar>
+         <toolbar
+               id="ch.elexis.coolbar.LockStatus">
+            <dynamic
+                  class="ch.elexis.core.ui.locks.LockStatusContributionItem"
+                  id="ch.elexis.core.ui.locks.LockStatusContributionItem">
+            </dynamic>
+         </toolbar>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -315,6 +322,16 @@
                id="ch.elexis.ui.keybindingScheme"
                name="Elexis Keybinding Scheme">
          </scheme>
+         <key
+               commandId="ch.elexis.core.data.command.RequestLockCommand"
+               schemeId="ch.elexis.ui.keybindingScheme"
+               sequence="M1+L">
+         </key>
+         <key
+               commandId="ch.elexis.core.data.command.ReleaseAllLocksCommand"
+               schemeId="ch.elexis.ui.keybindingScheme"
+               sequence="M1+R">
+         </key>
       </extension>
       <extension
             point="org.eclipse.ui.services">
@@ -482,6 +499,16 @@
             defaultHandler="ch.elexis.core.ui.commands.TemplatePrintSettingsCommand"
             id="ch.elexis.core.ui.command.templatePrintSettings"
             name="Druckeinstellungen">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.data.lock.RequestLockCommand"
+            id="ch.elexis.core.data.command.RequestLockCommand"
+            name="Lock anfordern">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.data.lock.ReleaseAllLocksCommand"
+            id="ch.elexis.core.data.command.ReleaseAllLocksCommand"
+            name="Locks releasen">
       </command>
    </extension>
       <extension

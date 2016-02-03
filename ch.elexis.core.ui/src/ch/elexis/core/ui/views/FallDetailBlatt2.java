@@ -63,6 +63,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.preferences.Leistungscodes;
 import ch.elexis.core.ui.preferences.UserCasePreferences;
 import ch.elexis.core.ui.text.ITextPlugin;
@@ -82,7 +83,7 @@ import ch.rgw.tools.TimeTool;
 /**
  * Display detail data of a Fall
  */
-public class FallDetailBlatt2 extends Composite {
+public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	private static final String SELECT_CONTACT_BODY =
 		Messages.FallDetailBlatt2_PleaseSelectContactFor; //$NON-NLS-1$
 	private static final String SELECT_CONTACT_CAPTION =
@@ -116,6 +117,11 @@ public class FallDetailBlatt2 extends Composite {
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
+	
+	@Override
+	public void setUnlocked(boolean unlock) {
+		allowFieldUpdate(unlock);
+	}
 	
 	public FallDetailBlatt2(final Composite parent){
 		super(parent, SWT.NONE);
@@ -533,16 +539,7 @@ public class FallDetailBlatt2 extends Composite {
 		lReqs.clear();
 		keepEditable.clear();
 		
-		boolean allowFieldUpdate = true;
-		if (actFall != null) {
-			Query<Rechnung> rQuery = new Query<Rechnung>(Rechnung.class);
-			rQuery.add(Rechnung.CASE_ID, Query.EQUALS, actFall.getId());
-			List<Rechnung> billMatch = rQuery.execute();
-			
-			if (billMatch != null && !billMatch.isEmpty()) {
-				allowFieldUpdate = false;
-			}
-		}
+
 		
 		// *** fill billing systems into combo, set current system
 		cAbrechnung.setItems(Abrechnungstypen);
@@ -794,10 +791,24 @@ public class FallDetailBlatt2 extends Composite {
 					Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true, true, false); //$NON-NLS-1$
 			}
 		}
-		allowFieldUpdate(allowFieldUpdate);
+		
+		setUnlocked(CoreHub.ls.ownsLock(actFall.storeToString()));
 	}
 	
-	private void allowFieldUpdate(boolean enable){
+	private void allowFieldUpdate(boolean lockEnabled){
+		boolean allowFieldUpdate = true;
+		if (actFall != null) {
+			Query<Rechnung> rQuery = new Query<Rechnung>(Rechnung.class);
+			rQuery.add(Rechnung.CASE_ID, Query.EQUALS, actFall.getId());
+			List<Rechnung> billMatch = rQuery.execute();
+			
+			if (billMatch != null && !billMatch.isEmpty()) {
+				allowFieldUpdate = false;
+			}
+		}
+		
+		boolean enable = (lockEnabled && allowFieldUpdate);
+		
 		cAbrechnung.setEnabled(enable);
 		cReason.setEnabled(enable);
 		hlGarant.setEnabled(enable);
@@ -813,7 +824,7 @@ public class FallDetailBlatt2 extends Composite {
 			
 			// keep editable in case it's an optional parameter of accident date/no
 			if (keepEditable.contains(req)) {
-				req.setEnabled(true);
+				req.setEnabled(lockEnabled);
 			} else {
 				if (req instanceof Text) {
 					if (enable) {
@@ -1376,4 +1387,5 @@ public class FallDetailBlatt2 extends Composite {
 			return true;
 		}
 	}
+
 }

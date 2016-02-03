@@ -33,6 +33,8 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 
 public class FallDetailView extends ViewPart implements ISaveablePart2, IActivationListener {
+	public FallDetailView() {
+	}
 	public static final String ID = "ch.elexis.FallDetailView"; //$NON-NLS-1$
 	FallDetailBlatt2 fdb;
 	
@@ -55,7 +57,21 @@ public class FallDetailView extends ViewPart implements ISaveablePart2, IActivat
 		};
 	private final ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class) {
 		public void runInUi(final ElexisEvent ev){
-			fdb.setFall((Fall) ev.getObject());
+			Fall fall = (Fall) ev.getObject();
+			
+			switch (ev.getType()) {
+			case ElexisEvent.EVENT_SELECTED:
+				fdb.setFall(fall);
+				break;
+			case ElexisEvent.EVENT_LOCK_AQUIRED:
+			case ElexisEvent.EVENT_LOCK_RELEASED:
+				if(fall.equals(fdb.getFall())) {
+					fdb.setUnlocked(ev.getType()==ElexisEvent.EVENT_LOCK_AQUIRED);
+				}
+				break;
+			default:
+				break;
+			}
 		}
 	};
 	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
@@ -84,6 +100,7 @@ public class FallDetailView extends ViewPart implements ISaveablePart2, IActivat
 		parent.setLayout(new GridLayout());
 		fdb = new FallDetailBlatt2(parent);
 		fdb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+		fdb.setUnlocked(false);
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 	

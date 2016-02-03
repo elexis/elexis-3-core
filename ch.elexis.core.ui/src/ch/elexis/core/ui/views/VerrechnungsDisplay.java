@@ -60,6 +60,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
@@ -75,7 +76,7 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
 
-public class VerrechnungsDisplay extends Composite {
+public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	Table tVerr;
 	TableViewer viewer;
 	MenuManager contextMenuManager;
@@ -546,5 +547,11 @@ public class VerrechnungsDisplay extends Composite {
 						Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$
 				}
 			}
+	}
+
+	@Override
+	public void setUnlocked(boolean unlocked) {
+		setEnabled(unlocked);
+		redraw();
 	}
 }

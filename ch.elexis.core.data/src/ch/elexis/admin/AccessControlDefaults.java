@@ -71,6 +71,8 @@ public class AccessControlDefaults {
 		new ACE(DELETE, "Dauermedikation", Messages.AccessControlDefaults_fixedMedication); //$NON-NLS-1$
 	public static final ACE DELETE_LABITEMS =
 		new ACE(DELETE, "Laborwerte", Messages.AccessControlDefaults_labValues); //$NON-NLS-1$
+	public static final ACE DELETE_CASE = 
+		new ACE(DELETE, "Delete_Case", Messages.AccessControlDefaults_deleteCase); //$NON-NLS-1$
 		
 	public static final ACE DATA =
 		new ACE(ACE.ACE_ROOT, "Daten", Messages.AccessControlDefaults_data); //$NON-NLS-1$
@@ -140,6 +142,8 @@ public class AccessControlDefaults {
 		new ACE(ACE.ACE_ROOT, "Fall", Messages.AccessControlDefaults_main_case); //$NON-NLS-1$
 	public static final ACE CASE_MODIFY =
 		new ACE(CASE, "Ändern", Messages.AccessControlDefaults_change); //$NON-NLS-1$
+	public static final ACE CASE_REOPEN =
+		new ACE(CASE, "Reopen", Messages.AccessControlDefaults_CaseReopen); //$NON-NLS-1$
 	public static final ACE CASE_COPY =
 		new ACE(CASE, "copy", Messages.AccessControlDefaults_CaseCopy); //$NON-NLS-1$
 	public static final ACE CASE_SPECIALS =

@@ -113,6 +113,11 @@ public class ViewMenus {
 		contextMenu.setRemoveAllWhenShown(true);
 		contextMenu.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager){
+				for (IAction iAction : actions) {
+					if(iAction instanceof RestrictedAction) {
+						((RestrictedAction) iAction).reflectRight();
+					}
+				}
 				fillContextMenu(manager, actions);
 			}
 		});

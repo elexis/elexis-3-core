@@ -38,16 +38,19 @@ abstract public class RestrictedAction extends Action {
 	public RestrictedAction(ACE necessaryRight){
 		super();
 		this.necessaryRight = necessaryRight;
+		reflectRight();
 	}
 	
 	public RestrictedAction(ACE necessaryRight, String text, int style){
 		super(text, style);
 		this.necessaryRight = necessaryRight;
+		reflectRight();
 	}
 	
 	public RestrictedAction(ACE necessaryRight, String text){
 		super(text);
 		this.necessaryRight = necessaryRight;
+		reflectRight();
 	}
 	
 	/**

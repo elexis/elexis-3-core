@@ -12,7 +12,10 @@
 
 package ch.elexis.data;
 
+
+
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ICodeElement;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;

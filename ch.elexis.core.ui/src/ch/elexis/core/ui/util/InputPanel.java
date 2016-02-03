@@ -20,10 +20,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.LabeledInputField.AutoForm;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 
-public class InputPanel extends Composite {
+public class InputPanel extends Composite implements IUnlockable {
 	int min, max;
 	Composite top;
 	InputData[] fields;
@@ -51,9 +52,10 @@ public class InputPanel extends Composite {
 		return af;
 	}
 	
-	public void setLocked(boolean lock){
+	@Override
+	public void setUnlocked(boolean unlock){
 		for (InputData id : fields) {
-			id.setEditable(!lock);
+			id.setEditable(unlock);
 		}
 	}
 	

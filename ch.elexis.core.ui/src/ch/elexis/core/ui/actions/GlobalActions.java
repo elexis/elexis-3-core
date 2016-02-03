@@ -66,7 +66,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.ACE;
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -81,6 +83,8 @@ import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.elexis.core.ui.dialogs.NeuerFallDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.LockedAction;
+import ch.elexis.core.ui.locks.LockedRestrictedAction;
 import ch.elexis.core.ui.util.Importer;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
@@ -110,17 +114,15 @@ public class GlobalActions {
 	public static final String DEFAULTPERSPECTIVECFG = "/default_perspective"; //$NON-NLS-1$
 	
 	public static IWorkbenchAction exitAction, newWindowAction, copyAction, cutAction, pasteAction;
-	public static IAction loginAction, importAction, testAction, aboutAction, helpAction,
-			prefsAction;
-	public static IAction connectWizardAction, changeMandantAction, savePerspectiveAction,
-			savePerspectiveAsAction;
-	public static IAction savePerspectiveAsDefaultAction, resetPerspectiveAction, homeAction,
-			fixLayoutAction;
+	public static IAction loginAction, importAction, aboutAction, helpAction, prefsAction;
+	public static IAction connectWizardAction, changeMandantAction, savePerspectiveAction, savePerspectiveAsAction;
+	public static IAction savePerspectiveAsDefaultAction, resetPerspectiveAction, homeAction, fixLayoutAction;
 	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette;
 	public static IAction printRoeBlatt;
-	public static IAction delFallAction, delKonsAction, openFallaction, filterAction,
-			reopenFallAction, makeBillAction, planeRechnungAction;
-	public static IAction moveBehandlungAction, redateAction, neueKonsAction, neuerFallAction;
+	public static IAction openFallaction, filterAction, makeBillAction, planeRechnungAction;
+	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction, neueKonsAction, redateAction,
+			moveBehandlungAction;
+	public static IAction neuerFallAction;
 	
 	public static MenuManager perspectiveMenu, viewMenu;
 	public static IContributionItem perspectiveList, viewList;
@@ -506,7 +508,7 @@ public class GlobalActions {
 				@Override
 				public void run(){
 					Fall actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-					Mandant mnd = CoreHub.actMandant;
+					Mandant mnd = ElexisEventDispatcher.getSelectedMandator();
 					if (actFall != null && mnd != null) {
 						String rsId = mnd.getRechnungssteller().getId();
 						Konsultation[] bhdl = actFall.getBehandlungen(false);
@@ -534,82 +536,82 @@ public class GlobalActions {
 					// setFall(actFall,null);
 				}
 			};
-		moveBehandlungAction = new Action(Messages.GlobalActions_AssignCase) { //$NON-NLS-1$
+		moveBehandlungAction = new LockedAction<Konsultation>(Messages.GlobalActions_AssignCase) {
 				@Override
-				public void run(){
-					// Object[] s=behandlViewer.getSelection();
-					Konsultation k =
-						(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-					if (k == null) {
-						MessageDialog.openInformation(mainWindow.getShell(),
-							Messages.GlobalActions_NoKonsSelected,
-							Messages.GlobalActions_NoKonsSelectedMessage); //$NON-NLS-1$ //$NON-NLS-2$
-						return;
-					}
-					
+				public Konsultation getTargetedObject() {
+					return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+				}
+
+				@Override
+				public void doRun(Konsultation element) {
+					// TODO do we need to lock the fall?
 					SelectFallDialog dlg = new SelectFallDialog(mainWindow.getShell());
 					if (dlg.open() == Dialog.OK) {
 						Fall f = dlg.result;
 						if (f != null) {
-							k.setFall(f);
+							element.setFall(f);
 							ElexisEventDispatcher.fireSelectionEvent(f);
 						}
 					}
 				}
 			};
-		redateAction = new Action(Messages.GlobalActions_Redate) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					Konsultation k =
-						(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-					if (k == null) {
-						MessageDialog.openInformation(mainWindow.getShell(),
-							Messages.GlobalActions_NoKonsSelected,
-							Messages.GlobalActions_NoKonsSelectedMessage); //$NON-NLS-1$ //$NON-NLS-2$
-						return;
-					}
-					
-					DateSelectorDialog dlg = new DateSelectorDialog(mainWindow.getShell());
-					if (dlg.open() == Dialog.OK) {
-						TimeTool date = dlg.getSelectedDate();
-						k.setDatum(date.toString(TimeTool.DATE_GER), false);
-						
-						// notify listeners about change
-						ElexisEventDispatcher.getInstance().fire(
-							new ElexisEvent(k, k.getClass(), ElexisEvent.EVENT_UPDATE));
-						
-						ElexisEventDispatcher.fireSelectionEvent(k);
-					}
+		redateAction = new LockedAction<Konsultation>(Messages.GlobalActions_Redate) {
+
+			@Override
+			public Konsultation getTargetedObject() {
+				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+			}
+
+			@Override
+			public void doRun(Konsultation element) {
+				DateSelectorDialog dlg = new DateSelectorDialog(mainWindow.getShell());
+				if (dlg.open() == Dialog.OK) {
+					TimeTool date = dlg.getSelectedDate();
+					element.setDatum(date.toString(TimeTool.DATE_GER), false);
+
+					// notify listeners about change
+					ElexisEventDispatcher.getInstance()
+							.fire(new ElexisEvent(element, Konsultation.class, ElexisEvent.EVENT_UPDATE));
+
+					ElexisEventDispatcher.fireSelectionEvent(element);
 				}
-			};
-		delFallAction = new Action(Messages.GlobalActions_DeleteCase) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					Fall actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-					if ((actFall != null) && (actFall.delete(false) == false)) {
-						SWTHelper.alert(Messages.GlobalActions_CouldntDeleteCaseMessage, //$NON-NLS-1$
-							Messages.GlobalActions_CouldntDeleteCaseExplanation + //$NON-NLS-1$
-								Messages.GlobalActions_93); //$NON-NLS-1$
-					}
-					ElexisEventDispatcher.reload(Fall.class);
+			}
+		};
+		delFallAction = new LockedRestrictedAction<Fall>(AccessControlDefaults.DELETE_CASE,
+				Messages.GlobalActions_DeleteCase) {
+			@Override
+			public void doRun(Fall element) {
+				if ((element.delete(false) == false)) {
+					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteCaseMessage,
+							Messages.GlobalActions_CouldntDeleteCaseExplanation + Messages.GlobalActions_93);
 				}
-			};
-		delKonsAction = new Action(Messages.GlobalActions_DeleteKons) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					Konsultation k =
-						(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-					if ((k != null) && (k.delete(false) == false)) {
-						SWTHelper.alert(Messages.GlobalActions_CouldntDeleteKons, //$NON-NLS-1$
-							Messages.GlobalActions_CouldntDeleteKonsExplanation + //$NON-NLS-1$
-								Messages.GlobalActions_97); //$NON-NLS-1$
-					}
-					ElexisEventDispatcher.clearSelection(Konsultation.class);
-					if (k != null) {
-						ElexisEventDispatcher.fireSelectionEvent(k.getFall());
-					}
+				ElexisEventDispatcher.reload(Fall.class);
+			}
+
+			@Override
+			public Fall getTargetedObject() {
+				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+			}
+		};
+		delKonsAction = new LockedRestrictedAction<Konsultation>(AccessControlDefaults.KONS_DELETE,
+				Messages.GlobalActions_DeleteKons) {
+
+			@Override
+			public void doRun(Konsultation element) {
+				if (element.delete(false) == false) {
+					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteKons, // $NON-NLS-1$
+							Messages.GlobalActions_CouldntDeleteKonsExplanation + // $NON-NLS-1$
+									Messages.GlobalActions_97); // $NON-NLS-1$
 				}
-			};
+				ElexisEventDispatcher.clearSelection(Konsultation.class);
+				ElexisEventDispatcher.fireSelectionEvent(element.getFall());
+			}
+
+			@Override
+			public Konsultation getTargetedObject() {
+				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+			}
+		};
 		openFallaction = new Action(Messages.GlobalActions_EditCase) { //$NON-NLS-1$
 			
 				@Override
@@ -624,23 +626,26 @@ public class GlobalActions {
 				}
 				
 			};
-		reopenFallAction = new Action(Messages.GlobalActions_ReopenCase) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					Fall actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-					if (actFall != null) {
-						actFall.setEndDatum(""); //$NON-NLS-1$
-					}
-				}
-			};
-		neueKonsAction = new Action(Messages.GlobalActions_NewKons) { //$NON-NLS-1$
+		reopenFallAction = new LockedRestrictedAction<Fall>(AccessControlDefaults.CASE_REOPEN,
+				Messages.GlobalActions_ReopenCase) {
+			@Override
+			public void doRun(Fall element) {
+				element.setEndDatum(StringConstants.EMPTY);
+			}
+
+			@Override
+			public Fall getTargetedObject() {
+				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+			}
+		};
+		neueKonsAction = new RestrictedAction(AccessControlDefaults.KONS_CREATE, Messages.GlobalActions_NewKons) {
 				{
 					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 					setToolTipText(Messages.GlobalActions_NewKonsToolTip); //$NON-NLS-1$
 				}
-				
+
 				@Override
-				public void run(){
+				public void doRun() {
 					Konsultation.neueKons(null);
 				}
 			};

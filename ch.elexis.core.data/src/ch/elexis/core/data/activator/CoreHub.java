@@ -41,8 +41,8 @@ import ch.elexis.core.data.events.PatientEventListener;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
+import ch.elexis.core.data.lock.LockService;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
-import ch.elexis.core.data.services.LockService;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -110,7 +110,7 @@ public class CoreHub implements BundleActivator {
 	
 	public static Anwender actUser; // TODO set
 	/**
-	 * @deprecated please use {@link ElexisEventDispatcher#getSelected(Mandant.class)} to retrieve
+	 * @deprecated please use {@link ElexisEventDispatcher#getSelectedMandator()} to retrieve
 	 *             current mandator
 	 */
 	public static Mandant actMandant;
@@ -124,7 +124,7 @@ public class CoreHub implements BundleActivator {
 	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
 	
 	/** Lock Service **/
-	public static final LockService ls = new LockService();
+	public static LockService ls;
 	
 	/**
 	 * The listener for patient events
@@ -208,6 +208,8 @@ public class CoreHub implements BundleActivator {
 		log.debug("Starting " + CoreHub.class.getName());
 		plugin = this;
 		
+		ls = new LockService(context);
+		
 		startUpBundle();
 		setUserDir(userDir);
 		heart = Heartbeat.getInstance();
@@ -256,6 +258,8 @@ public class CoreHub implements BundleActivator {
 	public void stop(BundleContext context) throws Exception{
 		log.debug("Stopping " + CoreHub.class.getName());
 
+		CoreHub.ls.releaseAllLocks();
+		
 		CoreHub.logoffAnwender();
 		
 		PersistentObject.disconnect();
@@ -441,6 +445,9 @@ public class CoreHub implements BundleActivator {
 		if (CoreHub.userCfg != null) {
 			CoreHub.userCfg.flush();
 		}
+		
+		CoreHub.ls.releaseAllLocks();
+		
 		CoreHub.setMandant(null);
 		CoreHub.heart.suspend();
 		CoreHub.actUser = null;

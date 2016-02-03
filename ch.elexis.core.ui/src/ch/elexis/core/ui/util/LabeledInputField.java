@@ -472,7 +472,13 @@ public class LabeledInputField extends Composite {
 		}
 		
 		public void setEditable(boolean ed){
-			mine.ctl.setEnabled(ed);
+			mine.lbl.setEnabled(ed);
+			if(mine.ctl instanceof Text) {
+				((Text) mine.ctl).setEditable(ed);
+			} else {
+				mine.ctl.setEnabled(ed);
+			}
+
 		}
 		
 		public void setChoices(String... strings){

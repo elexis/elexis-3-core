@@ -398,6 +398,8 @@ public class Kontakt extends PersistentObject {
 	
 	@Override
 	public boolean delete(){
+		if(lockBarrier()) return false;
+		
 		for (Reminder r : getRelatedReminders()) {
 			r.delete();
 		}

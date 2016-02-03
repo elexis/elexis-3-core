@@ -220,6 +220,18 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		return viewer;
 	}
 	
+	/**
+	 * @return the {@link #getViewerWidget()} current selections first element or <code>null</code>
+	 * @since 3.2.0
+	 */
+	public Object getViewerWidgetFirstSelection() {
+		StructuredSelection  selection = (StructuredSelection) viewer.getSelection();
+		if(selection==null || selection.size()==0) {
+			return null;
+		}
+		return selection.getFirstElement();
+	}
+	
 	public ViewerConfigurer getConfigurer(){
 		return vc;
 	}

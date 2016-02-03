@@ -12,20 +12,16 @@
                value="Elexis OpenSource">
          </property>
          <property
-               name="preferenceCustomization"
-               value="elexisprefs.ini">
-         </property>
-         <property
                name="windowImages"
                value="rsc/elexis2_16.gif,rsc/elexis32_2.gif,rsc/elexis48.gif">
          </property>
          <property
                name="aboutText"
-               value="Elexis 3.0 Development Version - www.elexis.info">
+               value="Elexis 3.0 - www.elexis.info">
          </property>
          <property
                name="aboutImage"
-               value="rsc/elexis-logo-small.gif">
+               value="rsc/elexislogo2.png">
          </property>
       </product>
    </extension>

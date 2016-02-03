@@ -48,7 +48,7 @@ import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.FreeTextDiagnoseDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.Log;
+import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
@@ -58,11 +58,10 @@ import ch.elexis.data.FreeTextDiagnose;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
 
-public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
+public class DiagnosenDisplay extends Composite implements ISelectionRenderer, IUnlockable {
 	Table tDg;
 	private final Button addFreeTextBtn;
 	private final Hyperlink hDg;
-	private final Log log = Log.get("DiagnosenDisplay"); //$NON-NLS-1$
 	private final PersistentObjectDropTarget dropTarget;
 
 	private final ElexisEventListener eeli_update = new ElexisUiEventListenerImpl(
@@ -170,7 +169,6 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 			ti.setData(dg);
 		}
 		// tDg.setEnabled(b.getStatus()==RnStatus.NICHT_VON_HEUTE);
-
 	}
 
 	private Menu createDgMenu(){
@@ -207,5 +205,11 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer {
 			}
 		}
 		return ret;
+	}
+
+	@Override
+	public void setUnlocked(boolean unlocked) {
+		setEnabled(unlocked);
+		redraw();
 	}
 }

@@ -9,6 +9,11 @@ location "http://download.eclipse.org/eclipse/updates/4.3/" {
 	org.eclipse.osgi.util [3.2.300.v20130513-1956,3.2.300.v20130513-1956]
 }
 
+location "http://hstaudacher.github.io/osgi-jax-rs-connector/5.2.1/" {
+	com.eclipsesource.jaxrs.consumer [5.2.0.201511150719,5.2.0.201511150719]
+	com.eclipsesource.jaxrs.jersey-min [2.22.1,2.22.1]
+}
+
 location "http://download.eclipse.org/tools/orbit/downloads/drops/R20150124073747/repository/" {
 	edu.emory.mathcs.backport [3.1.0,3.1.1)
 	org.apache.xerces [2.9.0.v201101211617,2.9.0.v201101211617]

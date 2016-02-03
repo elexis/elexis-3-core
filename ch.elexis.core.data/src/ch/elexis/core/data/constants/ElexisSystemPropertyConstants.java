@@ -32,4 +32,6 @@ public class ElexisSystemPropertyConstants {
 	// provided by an elexis-server in the network. Stand-alone behaviour
 	// is the default behaviour of Elexis as known
 	public static final String STANDALONE_MODE = "stand-alone";
+	
+	public static final String ELEXIS_SERVER_REST_INTERFACE_URL = "elexisServerUrl";
 }
