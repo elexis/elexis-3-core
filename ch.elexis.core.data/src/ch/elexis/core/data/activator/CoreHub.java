@@ -42,6 +42,7 @@ import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
+import ch.elexis.core.data.services.LockService;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -121,6 +122,9 @@ public class CoreHub implements BundleActivator {
 	
 	/** Die zentrale Zugriffskontrolle */
 	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
+	
+	/** Lock Service **/
+	public static final LockService ls = new LockService();
 	
 	/**
 	 * The listener for patient events
