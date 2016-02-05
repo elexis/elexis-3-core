@@ -71,9 +71,6 @@ public class Person extends Kontakt {
 	/** Eine Person mit gegebener Id aus der Datenbank einlesen */
 	public static Person load(String id){
 		Person ret = new Person(id);
-		if (ret.get(NAME) == null) {
-			return null;
-		}
 		return ret;
 	}
 	
