@@ -27,11 +27,9 @@ public class ElexisSystemPropertyConstants {
 	
 	// The Elexis run mode - from scratch
 	public static final String RUN_MODE_FROM_SCRATCH = "RunFromScratch";
-
-	// Stand-alone mode, if not set tries to find an ILockService
-	// provided by an elexis-server in the network. Stand-alone behaviour
-	// is the default behaviour of Elexis as known
-	public static final String STANDALONE_MODE = "stand-alone";
 	
+	/**
+	 * REST URL of the elexis server, e.g. http://localhost:8380/services"
+	 */
 	public static final String ELEXIS_SERVER_REST_INTERFACE_URL = "elexisServerUrl";
 }

@@ -37,7 +37,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 8 [1.8.0_71]"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="${jrebel_args} -Dosgi.console.enable.builtin=true -Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH -Dfile.encoding=utf-8 -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="${jrebel_args} &#10;-Dosgi.console.enable.builtin=true &#10;-Xms256m -Xmx1024m &#10;-Duser.language=de &#10;-Duser.region=CH &#10;-Dfile.encoding=utf-8 &#10;-XstartOnFirstThread &#10;-Dorg.eclipse.swt.internal.carbon.smallFonts=false &#10;-Dfile.encoding=utf-8&#10;-DelexisServerUrl=http://localhost/services"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <stringAttribute key="product" value="ch.elexis.core.application.product"/>
 <stringAttribute key="productFile" value="/ch.elexis.core.application/Elexis.product"/>

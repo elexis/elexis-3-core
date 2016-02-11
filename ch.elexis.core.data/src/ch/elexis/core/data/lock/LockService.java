@@ -1,7 +1,6 @@
 package ch.elexis.core.data.lock;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,12 +15,12 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.User;
 import info.elexis.server.elexis.common.jaxrs.ILockService;
 import info.elexis.server.elexis.common.types.LockInfo;
 import info.elexis.server.elexis.common.types.LockRequest;
-
 
 public class LockService {
 
@@ -32,17 +31,18 @@ public class LockService {
 	private Logger log = LoggerFactory.getLogger(LockService.class);
 
 	public LockService(BundleContext context) {
-		if (System.getProperty(ElexisSystemPropertyConstants.STANDALONE_MODE) != null) {
+		final String restUrl = System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
+		if (restUrl != null) {
+			standalone = false;
+			log.info("Operating against elexis-server instance on " + restUrl);
+			ils = ConsumerFactory.createConsumer(restUrl, ILockService.class);
+			// TODO validate correct location
+		} else {
 			standalone = true;
 			log.info("Operating in stand-alone mode.");
-		} else {
-			// TODO add property initialization LOCK_SERVICE_URL
-			standalone = false;
-
-			ils = ConsumerFactory.createConsumer("http://localhost:8380/services", ILockService.class);
 		}
 	}
-	
+
 	public boolean acquireLock(String storeToString) {
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
 		List<LockInfo> lil = LockByPatientStrategy.createLockInfoList(storeToString, user.getId());
@@ -63,7 +63,7 @@ public class LockService {
 
 			// TODO should we release all locks on acquiring a new one?
 			// if yes, this has to be dependent upon the strategy
-			
+
 			// TODO
 			// what if lock service is gone???
 			// remove all current locks??
