@@ -45,8 +45,9 @@ public class Sticker extends PersistentObject implements ISticker {
 	static final HashMap<Class<?>, List<Sticker>> cache = new HashMap<Class<?>, List<Sticker>>();
 	
 	static {
-		addMapping(TABLENAME, DATE_COMPOUND, FLD_IMAGE_ID + "=Image", FLD_FOREGROUND
-			+ "=foreground", FLD_BACKGROUND + "=background", NAME, FLD_VALUE + "=importance");
+		addMapping(TABLENAME, DATE_COMPOUND, FLD_IMAGE_ID + "=Image",
+			FLD_FOREGROUND + "=foreground", FLD_BACKGROUND + "=background", NAME,
+			FLD_VALUE + "=importance");
 	}
 	
 	public Sticker(String name, String fg, String bg){
@@ -66,9 +67,6 @@ public class Sticker extends PersistentObject implements ISticker {
 	
 	public static Sticker load(String id){
 		Sticker ret = new Sticker(id);
-		if (!ret.exists()) {
-			return null;
-		}
 		return ret;
 	}
 	
@@ -99,12 +97,14 @@ public class Sticker extends PersistentObject implements ISticker {
 	@Override
 	public boolean delete(){
 		StringBuilder sb = new StringBuilder();
-		Stm stm = getConnection().getStatement();
-		
 		sb.append("DELETE FROM ").append(Sticker.FLD_LINKTABLE).append(" WHERE ")
 			.append("etikette = '").append(getId()).append("'");
-		stm.exec(sb.toString());
-		getConnection().releaseStatement(stm);
+		Stm stm = getDBConnection().getStatement();
+		try {
+			stm.exec(sb.toString());
+		} finally {
+			getDBConnection().releaseStatement(stm);
+		}
 		return super.delete();
 	}
 	
@@ -112,28 +112,34 @@ public class Sticker extends PersistentObject implements ISticker {
 		StringBuilder sb = new StringBuilder();
 		sb.append("INSERT INTO " + FLD_CLASSLINK + " (objclass,sticker) VALUES (")
 			.append(JdbcLink.wrap(clazz.getName())).append(",").append(getWrappedId()).append(");");
-		getConnection().exec(sb.toString());
-		
+		Stm stm = getDBConnection().getStatement();
+		try {
+			stm.exec(sb.toString());
+		} finally {
+			getDBConnection().releaseStatement(stm);
+		}
 	}
 	
 	public void removeClassForSticker(Class<?> clazz){
 		StringBuilder sb = new StringBuilder();
 		sb.append("DELETE FROM " + FLD_CLASSLINK + " WHERE objclass=")
 			.append(JdbcLink.wrap(clazz.getName())).append(" AND sticker=").append(getWrappedId());
-		getConnection().exec(sb.toString());
+		Stm stm = getDBConnection().getStatement();
+		try {
+			stm.exec(sb.toString());
+		} finally {
+			getDBConnection().releaseStatement(stm);
+		}
 	}
 	
-	private static String queryClassStickerString = "SELECT objclass FROM " + Sticker.FLD_CLASSLINK
-		+ " WHERE sticker=?";
-	private static PreparedStatement queryClasses = null;
-	
+	private static String queryClassStickerString =
+		"SELECT objclass FROM " + Sticker.FLD_CLASSLINK + " WHERE sticker=?";
+		
 	public List<String> getClassesForSticker(){
 		ArrayList<String> ret = new ArrayList<String>();
-		if (queryClasses == null) {
-			queryClasses = getConnection().prepareStatement(queryClassStickerString);
-		}
-		
-		try  {
+		PreparedStatement queryClasses = null;
+		try {
+			queryClasses = getDBConnection().getPreparedStatement(queryClassStickerString);
 			queryClasses.setString(1, getId());
 			ResultSet res = queryClasses.executeQuery();
 			while (res.next()) {
@@ -142,15 +148,16 @@ public class Sticker extends PersistentObject implements ISticker {
 			res.close();
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
+		} finally {
+			getDBConnection().releasePreparedStatement(queryClasses);
 		}
 		return ret;
 		
 	}
 	
-	private static String queryStickerClassString = "SELECT sticker FROM " + Sticker.FLD_CLASSLINK
-		+ " WHERE objclass=?";
-	private static PreparedStatement queryStickers = null;
-	
+	private static String queryStickerClassString =
+		"SELECT sticker FROM " + Sticker.FLD_CLASSLINK + " WHERE objclass=?";
+		
 	/**
 	 * Find all Stickers applicable for a given class
 	 * 
@@ -163,23 +170,23 @@ public class Sticker extends PersistentObject implements ISticker {
 			return ret;
 		}
 		HashSet<Sticker> uniqueRet = new HashSet<Sticker>();
-		if (queryStickers == null) {
-			queryStickers = getConnection().prepareStatement(queryStickerClassString);
-		}
-		
+		PreparedStatement queryStickers = null;
 		try {
+			queryStickers = getDefaultConnection().getPreparedStatement(queryStickerClassString);
 			queryStickers.setString(1, clazz.getName());
 			ResultSet res = queryStickers.executeQuery();
 			while (res.next()) {
 				Sticker et = Sticker.load(res.getString(1));
 				if (et != null && et.exists()) {
-					uniqueRet.add(Sticker.load(res.getString(1)));
+					uniqueRet.add(et);
 				}
 			}
 			res.close();
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return ret;
+		} finally {
+			getDefaultConnection().releasePreparedStatement(queryStickers);
 		}
 		cache.put(clazz, new ArrayList<Sticker>(uniqueRet));
 		return new ArrayList<Sticker>(uniqueRet);
