@@ -42,7 +42,11 @@ public class UiSticker {
 	
 	public Image getImage(){
 		Image ret = null;
-		UiDBImage image = new UiDBImage(DBImage.load(sticker.get(Sticker.FLD_IMAGE_ID)));
+		DBImage dbImage = DBImage.load(sticker.get(Sticker.FLD_IMAGE_ID));
+		if (!dbImage.exists()) {
+			dbImage = null;
+		}
+		UiDBImage image = new UiDBImage(dbImage);
 		
 		ret = UiDesk.getImageRegistry().get(image.getName());
 		if (ret == null) {
