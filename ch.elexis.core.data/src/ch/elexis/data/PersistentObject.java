@@ -899,8 +899,9 @@ public abstract class PersistentObject implements IPersistentObject {
 			ResultSet res = queryStickers.executeQuery();
 			while (res.next()) {
 				Sticker et = Sticker.load(res.getString(1));
+				et.setDBConnection(dbConnection);
 				if (et != null && et.exists()) {
-					ret.add(Sticker.load(res.getString(1)));
+					ret.add(et);
 				}
 			}
 			res.close();

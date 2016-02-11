@@ -79,9 +79,6 @@ public class DBImage extends PersistentObject {
 	
 	public static DBImage load(String id){
 		DBImage ret = new DBImage(id);
-		if (!ret.exists()) {
-			return null;
-		}
 		return ret;
 	}
 	
