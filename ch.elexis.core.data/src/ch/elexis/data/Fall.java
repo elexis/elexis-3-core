@@ -26,6 +26,7 @@ import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.FallConstants;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -50,7 +51,6 @@ public class Fall extends PersistentObject {
 	public static final String CONST_TARMED_DRUCKER = Messages.Fall_TarmedPrinter; //$NON-NLS-1$
 	public static final String CONST_TARMED_LEISTUNG = Messages.Fall_TarmedLeistung; //$NON-NLS-1$
 	public static final String FLD_BEHANDLUNGEN = "Behandlungen"; //$NON-NLS-1$
-	public static final String FLD_BILLING = "billing"; //$NON-NLS-1$
 	public static final String FLD_KOSTENTRAEGER = "Kostentraeger"; //$NON-NLS-1$
 	public static final String FLD_RECHNUNGSSTELLER_ID = "RechnungsstellerID"; //$NON-NLS-1$
 	public static final String FLD_DATUM_BIS = "DatumBis"; //$NON-NLS-1$
@@ -414,11 +414,11 @@ public class Fall extends PersistentObject {
 	}
 	
 	public void setAbrechnungsSystem(final String system){
-		setInfoString(FLD_BILLING, system);
+		setInfoString(FallConstants.FLD_EXTINFO_BILLING, system);
 	}
 	
 	public String getAbrechnungsSystem(){
-		String ret = getInfoString(FLD_BILLING);
+		String ret = getInfoString(FallConstants.FLD_EXTINFO_BILLING);
 		if (StringTool.isNothing(ret)) {
 			String[] systeme = getAbrechnungsSysteme();
 			String altGesetz = get("xGesetz"); //$NON-NLS-1$

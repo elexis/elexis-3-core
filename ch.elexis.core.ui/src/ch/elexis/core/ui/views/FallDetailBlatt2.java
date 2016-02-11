@@ -60,6 +60,7 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -715,7 +716,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + abrSystem; //$NON-NLS-1$
 			String bed = CoreHub.globalCfg.get(key + "/bedingungen", StringTool.leer); //$NON-NLS-1$
 			boolean isAlreadyShown = false;
-			if (subkey.equalsIgnoreCase(Fall.FLD_BILLING))
+			if (subkey.equalsIgnoreCase(FallConstants.FLD_EXTINFO_BILLING))
 				isAlreadyShown = true;
 			// if (subkey.equalsIgnoreCase("payment")) isAlreadyShown = true;
 			// if (subkey.equalsIgnoreCase("Fallnummer")) isAlreadyShown = true;
