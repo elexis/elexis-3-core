@@ -107,8 +107,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	String itemsErrorMessage = "parameters not supplied;please control parameters;in preferences"; //$NON-NLS-1$
 	
 	public static final String[] Reasons = {
-		Fall.TYPE_DISEASE, Fall.TYPE_ACCIDENT, Fall.TYPE_MATERNITY, Fall.TYPE_PREVENTION,
-		Fall.TYPE_BIRTHDEFECT, Fall.TYPE_OTHER
+			FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT, FallConstants.TYPE_MATERNITY, FallConstants.TYPE_PREVENTION,
+			FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER
 	};
 	public static final String[] dgsys = null;
 	Combo cAbrechnung, cReason;

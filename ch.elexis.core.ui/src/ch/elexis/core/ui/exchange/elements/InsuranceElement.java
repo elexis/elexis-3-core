@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
+import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -49,15 +50,15 @@ public class InsuranceElement extends XChangeElement {
 	}
 	
 	public String translateReason(String grund){
-		if (grund.equals(Fall.TYPE_ACCIDENT)) {
+		if (grund.equals(FallConstants.TYPE_ACCIDENT)) {
 			return "accident";
-		} else if (grund.equals(Fall.TYPE_BIRTHDEFECT)) {
+		} else if (grund.equals(FallConstants.TYPE_BIRTHDEFECT)) {
 			return "birthdefect";
-		} else if (grund.equals(Fall.TYPE_DISEASE)) {
+		} else if (grund.equals(FallConstants.TYPE_DISEASE)) {
 			return "disease";
-		} else if (grund.equals(Fall.TYPE_MATERNITY)) {
+		} else if (grund.equals(FallConstants.TYPE_MATERNITY)) {
 			return "maternity";
-		} else if (grund.equals(Fall.TYPE_PREVENTION)) {
+		} else if (grund.equals(FallConstants.TYPE_PREVENTION)) {
 			return "prevention";
 		} else {
 			return "other";
