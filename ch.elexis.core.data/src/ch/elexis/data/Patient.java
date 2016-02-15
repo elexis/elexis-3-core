@@ -162,7 +162,9 @@ public class Patient extends Person {
 		Fall[] ret = new Fall[cas.size()];
 		int i = 0;
 		for (String id : cas) {
-			ret[i++] = Fall.load(id);
+			Fall fall = Fall.load(id);
+			fall.setDBConnection(getDBConnection());
+			ret[i++] = fall;
 		}
 		return ret;
 	}

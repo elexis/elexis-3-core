@@ -954,7 +954,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			// *** get just any case
 			minID = j.queryString("select id from faelle limit 1"); //$NON-NLS-1$
 			Fall fall = Fall.load(minID);
-			if (fall == null) {
+			if (!fall.exists()) {
 				// *** there is no case yet created -> create temp dummy case
 				j.exec("insert into faelle (id) values(" + JdbcLink.wrap(tempCaseID) + ")"); //$NON-NLS-1$  //$NON-NLS-2$
 				minID = tempCaseID;
