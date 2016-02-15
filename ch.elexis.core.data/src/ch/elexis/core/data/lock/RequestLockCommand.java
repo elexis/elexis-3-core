@@ -25,7 +25,7 @@ public class RequestLockCommand extends AbstractHandler {
 		}
 
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
-		List<LockInfo> lockList = LockByPatientStrategy.createLockInfoList(patient, user.getId());
+		List<LockInfo> lockList = LockByPatientStrategy.createLockInfoList(patient, user.getId(), LockService.getSystemuuid());
 
 		boolean success = CoreHub.ls.acquireLock(lockList);
 

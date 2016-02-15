@@ -18,17 +18,20 @@ public class LockInfo {
 	private String user;
 	@XmlElement
 	private Date creationDate;
+	@XmlElement
+	private String systemUuid;
 
 	public LockInfo() {
 	}
 
-	public LockInfo(String storeToString, String userId) {
+	public LockInfo(String storeToString, String userId, String systemUuid) {
 		String[] split = storeToString.split(StringConstants.DOUBLECOLON);
 		if (split.length == 2) {
 			this.elementId = split[1];
 			this.elementType = split[0];
 			this.user = userId;
 			this.creationDate = new Date();
+			this.systemUuid = systemUuid;
 		} else {
 			throw new IllegalArgumentException(storeToString);
 		}
@@ -48,6 +51,10 @@ public class LockInfo {
 
 	public Date getCreationDate() {
 		return creationDate;
+	}
+	
+	public String getSystemUuid() {
+		return systemUuid;
 	}
 
 	public static String getElementId(String storeToString) {

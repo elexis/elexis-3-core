@@ -15,6 +15,8 @@
 package ch.elexis.core.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.ACE;
 import ch.elexis.core.data.activator.CoreHub;
@@ -34,6 +36,8 @@ import ch.elexis.core.data.activator.CoreHub;
  */
 abstract public class RestrictedAction extends Action {
 	protected ACE necessaryRight;
+	
+	protected static Logger log = LoggerFactory.getLogger(RestrictedAction.class);
 	
 	public RestrictedAction(ACE necessaryRight){
 		super();
