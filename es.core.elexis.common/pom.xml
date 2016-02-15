@@ -1,0 +1,60 @@
+<project xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+  <modelVersion> 4.0.0 </modelVersion>
+  <parent>
+    <groupId>ch.elexis</groupId>
+    <artifactId>elexis-3-core</artifactId>
+    <version>3.1.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>info.elexis.server.elexis.common</artifactId>
+  <packaging>eclipse-plugin</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.goldin</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>0.2.5</version>
+        <executions>
+          <execution>
+            <id>set-properties</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>set-properties</goal>
+            </goals>
+            <configuration>
+              <properties>
+                <property>
+                  <name>versionFromPomViaGroovy</name>
+                  <!-- http://evgeny-goldin.com/wiki/Properties-maven-plugin has a very confusing behaviour:
+                  if you reference project.properties.repo_variant it will always report snapshot as this is default in the parent pom.xml
+                  if your referenc repo_variant it will return the value passed on the command line or (if not specified there) the default-value
+                  Did cost me two hours to find it and to work around!
+                    !-->
+                  <!-- git tag - -contains | grep release | cut -d/ -f2 -->
+                  <value>{{
+import java.text.SimpleDateFormat;
+def elexis_version = "${project.version}".replace("-SNAPSHOT", "") + new SimpleDateFormat("'"+repo_variant.substring(0,1).replaceFirst('s','a').replaceFirst('p','r')+"'yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
+def tags =  "git tag --contains ".execute().text.split("\n")
+for ( i in tags ) {
+    if (i ==~/release\/(.*)/ ) {
+        elexis_version = (i=~ /release\//).replaceFirst("")
+        break
+    }
+}
+elexis_version
+}}</value>
+                </property>
+              </properties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <resources>
+      <resource>
+        <directory>rsc</directory>
+        <!-- where we have there our version.properties -->
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+</project>
