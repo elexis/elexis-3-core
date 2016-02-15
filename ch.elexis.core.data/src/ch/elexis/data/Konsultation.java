@@ -134,10 +134,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	/** Eine Konsultation anhand ihrer ID von der Datenbank einlesen */
 	public static Konsultation load(String id){
 		Konsultation ret = new Konsultation(id);
-		if (ret.exists()) {
-			return ret;
-		}
-		return null;
+		return ret;
 	}
 	
 	/**

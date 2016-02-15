@@ -514,7 +514,9 @@ public class Fall extends PersistentObject {
 		int i = 0;
 		Konsultation[] ret = new Konsultation[list.size()];
 		for (String id : list) {
-			ret[i++] = Konsultation.load(id);
+			Konsultation kons = Konsultation.load(id);
+			kons.setDBConnection(getDBConnection());
+			ret[i++] = kons;
 		}
 		// Arrays.sort(ret,new Konsultation.BehandlungsComparator(sortReverse));
 		return ret;

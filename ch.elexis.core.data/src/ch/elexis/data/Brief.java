@@ -178,7 +178,7 @@ public class Brief extends PersistentObject {
 		String konsID = get(FLD_KONSULTATION_ID);
 		if (!StringTool.isNothing(konsID) && (!konsID.equals(SYS_TEMPLATE))) {
 			Konsultation kons = Konsultation.load(konsID);
-			if ((kons != null) && (kons.isEditable(false))) {
+			if ((kons != null) && kons.exists() && (kons.isEditable(false))) {
 				kons.removeXRef(XRefExtensionConstants.providerID, getId());
 			}
 		}
