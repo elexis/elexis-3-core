@@ -59,11 +59,7 @@ public class Mandant extends Anwender {
 	
 	public static Mandant load(String id){
 		Mandant ret = new Mandant(id);
-		String ism = ret.get(FLD_IS_MANDATOR);
-		if (ism != null && ism.equals(StringConstants.ONE)) {
-			return ret;
-		}
-		return null;
+		return ret;
 	}
 	
 	public Mandant(String name, String pwd){

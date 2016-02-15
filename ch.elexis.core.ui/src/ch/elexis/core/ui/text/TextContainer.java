@@ -1020,7 +1020,7 @@ public class TextContainer {
 						String mandatorID = brief.get(Brief.FLD_DESTINATION_ID);
 						if (mandatorID != null) {
 							Mandant lMand = Mandant.load(mandatorID);
-							if (lMand != null)
+							if (lMand.exists())
 								lMandator = lMand.get(Mandant.FLD_NAME3);
 						}
 					}
