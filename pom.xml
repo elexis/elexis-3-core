@@ -214,6 +214,7 @@
 	</profiles>
 	<modules>
 		<module>ch.elexis.target</module>
+		<module>es.core.elexis.common</module>
 		<module>ch.elexis.core</module>
 		<module>ch.elexis.core.application</module>
 		<module>ch.elexis.core.application.feature</module>
