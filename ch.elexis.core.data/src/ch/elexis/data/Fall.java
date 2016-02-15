@@ -205,10 +205,7 @@ public class Fall extends PersistentObject {
 	/** Einen Fall anhand der ID aus der Datenbank laden */
 	public static Fall load(final String id){
 		Fall ret = new Fall(id);
-		if (ret.exists()) {
-			return ret;
-		}
-		return null;
+		return ret;
 	}
 	
 	/** Anfangsdatum lesen (in der Form dd.mm.yy) */
