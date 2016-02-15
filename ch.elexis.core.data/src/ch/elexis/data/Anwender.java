@@ -308,7 +308,7 @@ public class Anwender extends Person {
 	 */
 	public boolean isExecutiveDoctor(){
 		Mandant m = Mandant.load(getId());
-		return ((m != null) && m.isValid());
+		return (m.exists() && m.isValid());
 	}
 	
 	/**
