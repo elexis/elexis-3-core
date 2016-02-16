@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import static ch.elexis.core.constants.XidConstants.*;
+
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IPersistentObject;
@@ -60,33 +62,24 @@ public class Xid extends PersistentObject implements IXid {
 	/**
 	 * Quality value for an ID that is valid only in the context of the issuing program
 	 */
-	public static final int ASSIGNMENT_LOCAL = 1;
+	public static final int ASSIGNMENT_LOCAL = XidConstants.ASSIGNMENT_LOCAL;
 	/**
 	 * Quality value for an ID that is valid within a geographic or politic context (e.g. a
 	 * nationally assigned ID)
 	 */
-	public static final int ASSIGNMENT_REGIONAL = 2;
+	public static final int ASSIGNMENT_REGIONAL = XidConstants.ASSIGNMENT_REGIONAL;
 	/**
 	 * Quality value for an ID that can be used as global identifier
 	 */
-	public static final int ASSIGNMENT_GLOBAL = 3;
+	public static final int ASSIGNMENT_GLOBAL = XidConstants.ASSIGNMENT_GLOBAL;
 	
 	/**
 	 * Marker that the ID is a GUID (that is, guaranteed to exist only once through time and space)
 	 */
-	public static final int QUALITY_GUID = 4;
+	public static final int QUALITY_GUID = XidConstants.QUALITY_GUID;
 	
 	private static HashMap<String, XIDDomain> domains;
 	private static HashMap<String, String> domainMap;
-	
-	public static final String DOMAIN_ELEXIS = "www.elexis.ch/xid";
-	public static final String DOMAIN_AHV = "www.ahv.ch/xid";
-	public static final String DOMAIN_SWISS_PASSPORT = "www.xid.ch/id/passport/ch";
-	public static final String DOMAIN_AUSTRIAN_PASSPORT = "www.xid.ch/id/passport/at";
-	public static final String DOMAIN_GERMAN_PASSPORT = "www.xid.ch/id/passport/de";
-	public static final String DOMAIN_EAN = "www.xid.ch/id/ean";
-	public static final String DOMAIN_RECIPIENT_EAN = "www.xid.ch/id/recipient_ean";
-	public static final String DOMAIN_OID = "www.xid.ch/id/oid";
 	
 	static {
 		addMapping(TABLENAME, FLD_TYPE, FLD_OBJECT, FLD_DOMAIN, FLD_ID_IN_DOMAIN, FLD_QUALITY);
@@ -94,15 +87,13 @@ public class Xid extends PersistentObject implements IXid {
 		domainMap = new HashMap<String, String>();
 		String storedDomains = CoreHub.globalCfg.get("LocalXIDDomains", null);
 		if (storedDomains == null) {
-			domains.put(XidConstants.ELEXIS,
-				new XIDDomain(XidConstants.ELEXIS, "UUID", XidConstants.ELEXIS_QUALITY
-					| QUALITY_GUID, PersistentObject.class.getCanonicalName()));
-			domains.put(XidConstants.CH_AHV, new XIDDomain(XidConstants.CH_AHV, "AHV",
-				XidConstants.CH_AHV_QUALITY, Person.class.getCanonicalName()));
-			domains.put(DOMAIN_OID, new XIDDomain(DOMAIN_OID, "OID", ASSIGNMENT_GLOBAL
-				| QUALITY_GUID, PersistentObject.class.getCanonicalName()));
-			domains.put(DOMAIN_EAN, new XIDDomain(DOMAIN_EAN, "EAN", ASSIGNMENT_REGIONAL,
-				Kontakt.class.getCanonicalName()));
+			domains.put(ELEXIS, new XIDDomain(ELEXIS, "UUID", ELEXIS_QUALITY | QUALITY_GUID,
+					PersistentObject.class.getCanonicalName()));
+			domains.put(CH_AHV, new XIDDomain(CH_AHV, "AHV", CH_AHV_QUALITY, Person.class.getCanonicalName()));
+			domains.put(DOMAIN_OID, new XIDDomain(DOMAIN_OID, "OID", ASSIGNMENT_GLOBAL | QUALITY_GUID,
+					PersistentObject.class.getCanonicalName()));
+			domains.put(DOMAIN_EAN,
+					new XIDDomain(DOMAIN_EAN, "EAN", ASSIGNMENT_REGIONAL, Kontakt.class.getCanonicalName()));
 			storeDomains();
 		} else {
 			for (String dom : storedDomains.split(";")) {

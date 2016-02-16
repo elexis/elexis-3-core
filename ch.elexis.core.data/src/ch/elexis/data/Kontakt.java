@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.util.MFUList;
 import ch.rgw.tools.StringTool;
 
@@ -72,7 +73,7 @@ public class Kontakt extends PersistentObject {
 		FLD_NAME1, FLD_NAME2, FLD_STREET, FLD_PLACE
 	};
 	
-	public static final String DOMAIN_KONTAKT = Xid.DOMAIN_ELEXIS + "/kontakt/";
+	public static final String DOMAIN_KONTAKT = XidConstants.DOMAIN_ELEXIS + "/kontakt/";
 	public static final String XID_KONTAKT_ANREDE = DOMAIN_KONTAKT + "anrede";
 	public static final String XID_KONTAKT_KANTON = DOMAIN_KONTAKT + "kanton";
 	public static final String XID_KONTAKT_SPEZ = DOMAIN_KONTAKT + "spez";

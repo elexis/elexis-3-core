@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -778,7 +779,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	
 	public String getXid(final String domain){
-		if (domain.equals(Xid.DOMAIN_ELEXIS)) {
+		if (domain.equals(XidConstants.DOMAIN_ELEXIS)) {
 			return getId();
 		}
 		Query<Xid> qbe = new Query<Xid>(Xid.class);
@@ -799,7 +800,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		List<IXid> res = getXids();
 		if (res.size() == 0) {
 			try {
-				return new Xid(this, Xid.DOMAIN_ELEXIS, getId());
+				return new Xid(this, XidConstants.DOMAIN_ELEXIS, getId());
 			} catch (XIDException xex) { // Should never happen, uh?
 				ExHandler.handle(xex);
 				return null;

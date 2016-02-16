@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.jdom.Element;
 
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.core.ui.exchange.XChangeImporter;
@@ -127,7 +128,7 @@ public abstract class XChangeElement {
 	 */
 	public void setDefaultXid(String id){
 		XidElement xid = new XidElement();
-		xid.addIdentity(Xid.DOMAIN_ELEXIS, id, Xid.ASSIGNMENT_LOCAL, true);
+		xid.addIdentity(XidConstants.DOMAIN_ELEXIS, id, Xid.ASSIGNMENT_LOCAL, true);
 		xid.setMainID(null);
 		add(xid);
 	}

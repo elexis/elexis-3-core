@@ -13,6 +13,7 @@
 package ch.elexis.data;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.constants.XidConstants;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
@@ -124,18 +125,18 @@ public class Organisation extends Kontakt {
 	}
 	
 	public String getInsuranceEAN(){
-		return checkNull(getXid(Xid.DOMAIN_EAN));
+		return checkNull(getXid(XidConstants.DOMAIN_EAN));
 	}
 	
 	public void setInsurerEAN(String ean){
-		addXid(Xid.DOMAIN_EAN, ean, true);
+		addXid(XidConstants.DOMAIN_EAN, ean, true);
 	}
 	
 	public String getRecepientEAN(){
-		return checkNull(getXid(Xid.DOMAIN_RECIPIENT_EAN));
+		return checkNull(getXid(XidConstants.DOMAIN_RECIPIENT_EAN));
 	}
 	
 	public void setRecepientEAN(String ean){
-		addXid(Xid.DOMAIN_RECIPIENT_EAN, ean, true);
+		addXid(XidConstants.DOMAIN_RECIPIENT_EAN, ean, true);
 	}
 }

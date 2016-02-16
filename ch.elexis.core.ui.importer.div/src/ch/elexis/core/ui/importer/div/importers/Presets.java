@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.KontaktMatcher.CreateMode;
 import ch.elexis.data.Anschrift;
@@ -134,7 +135,7 @@ public class Presets {
 				StringTool.getSafe(row, 11), StringTool.getSafe(row, 12), natel, strasse, plz, ort,
 				StringTool.getSafe(row, 17));
 			if (EAN.matches("[0-9]{13,13}")) { //$NON-NLS-1$
-				k.addXid(Xid.DOMAIN_EAN, EAN, true);
+				k.addXid(XidConstants.DOMAIN_EAN, EAN, true);
 			}
 			moni.worked(1);
 			if (moni.isCanceled()) {
@@ -247,7 +248,7 @@ public class Presets {
 				strasse, plz, ort, land.equalsIgnoreCase(Messages.Presets_Switzerland) ? "CH" : "", //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 				telp1, telp2, tel3, email, titel, arztn, zusatz);
 			if (!StringTool.isNothing(ahvnr)) {
-				pat.addXid(Xid.DOMAIN_AHV, ahvnr, true);
+				pat.addXid(XidConstants.DOMAIN_AHV, ahvnr, true);
 			}
 			if (!StringTool.isNothing(kk)) {
 				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);

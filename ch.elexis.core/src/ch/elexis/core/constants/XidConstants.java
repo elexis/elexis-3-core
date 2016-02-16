@@ -25,28 +25,35 @@ public class XidConstants {
 	 * ELEXIS INTERNAL domain
 	 */
 	public static final String ELEXIS = "www.elexis.ch/xid";
+	public static final String DOMAIN_ELEXIS = ELEXIS;
 	public static final int ELEXIS_QUALITY = ASSIGNMENT_LOCAL | QUALITY_GUID;
 	
 	/**
 	 * GLOBAL
 	 */
 	public static final String EAN = "www.xid.ch/id/ean"; // European Article Number
+	public static final String DOMAIN_EAN = EAN;
 	public static final int EAN_QUALITY = ASSIGNMENT_REGIONAL;
+	public static final String DOMAIN_RECIPIENT_EAN = "www.xid.ch/id/recipient_ean";
 	public static final String OID = "www.xid.ch/id/oid"; // Object Identifier
+	public static final String DOMAIN_OID = OID;
 	public static final int OID_QUALITY = ASSIGNMENT_GLOBAL | QUALITY_GUID;
 	
 	/**
 	 * SWITZERLAND
 	 */
 	public static final String CH_PASSPORT = "www.xid.ch/id/passport/ch";
+	public static final String DOMAIN_SWISS_PASSPORT = CH_PASSPORT;
 	public static final int CH_PASSPORT_QUALITY = ASSIGNMENT_GLOBAL;
 	public static final String CH_AHV = "www.ahv.ch/xid"; // Alters- und Hinterbliebenenversicherung
+	public static final String DOMAIN_AHV = CH_AHV;
 	public static final int CH_AHV_QUALITY = ASSIGNMENT_REGIONAL;
 	
 	/**
 	 * AUSTRIA
 	 */
 	public static final String AT_PASSPORT = "www.xid.ch/id/passport/at";
+	public static final String DOMAIN_AUSTRIAN_PASSPORT = AT_PASSPORT;
 	public static final int AT_PASSPORT_QUALITY = ASSIGNMENT_GLOBAL;
 	public static final String AT_SVNR = "www.sozialversicherung.at/svnr"; // Sozialversicherung
 	public static final int AT_SVNR_QUALITY = ASSIGNMENT_REGIONAL;
@@ -55,5 +62,6 @@ public class XidConstants {
 	 * GERMANY
 	 */
 	public static final String DE_PASSPORT = "www.xid.ch/id/passport/de";
+	public static final String DOMAIN_GERMAN_PASSPORT = DE_PASSPORT;
 	public static final int DE_PASSPORT_QUALITY = ASSIGNMENT_GLOBAL;
 }

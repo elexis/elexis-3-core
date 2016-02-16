@@ -12,6 +12,7 @@ package ch.elexis.core.ui.exchange.elements;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.IXid;
@@ -86,7 +87,7 @@ public class XidElement extends XChangeElement {
 		setAttribute(ATTR_ID, XMLTool.idToXMLID(art.getId()));
 		String ean = art.getEAN();
 		if (!StringTool.isNothing(ean)) {
-			addIdentities(art, Xid.DOMAIN_EAN, ean, Xid.ASSIGNMENT_REGIONAL, false);
+			addIdentities(art, XidConstants.DOMAIN_EAN, ean, Xid.ASSIGNMENT_REGIONAL, false);
 		}
 		String pk = art.getPharmaCode();
 		if (!StringTool.isNothing(pk)) {
@@ -102,7 +103,7 @@ public class XidElement extends XChangeElement {
 		if ((best.getQuality() & 7) >= Xid.QUALITY_GUID) {
 			id = XMLTool.idToXMLID(best.getDomainId());
 		} else {
-			k.addXid(Xid.DOMAIN_ELEXIS, id, true);
+			k.addXid(XidConstants.DOMAIN_ELEXIS, id, true);
 		}
 		setAttribute(ATTR_ID, XMLTool.idToXMLID(k.getId()));
 		List<IXid> xids = k.getXids();
@@ -179,7 +180,7 @@ public class XidElement extends XChangeElement {
 		}
 		if (best == null || (!best.isGuid())) {
 			best =
-				new Identity().asExporter(sender, Xid.DOMAIN_ELEXIS, StringTool.unique("xidID"),
+				new Identity().asExporter(sender, XidConstants.DOMAIN_ELEXIS, StringTool.unique("xidID"),
 					Xid.ASSIGNMENT_LOCAL, true);
 			add(best);
 		}
