@@ -148,6 +148,7 @@ public class Brief extends PersistentObject {
 	/** Binärformat laden */
 	public byte[] loadBinary(){
 		contents c = contents.load(getId());
+		c.setDBConnection(getDBConnection());
 		return c.getBinary();
 	}
 	
