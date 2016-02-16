@@ -55,6 +55,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -248,11 +249,11 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 					}
 				}));
 
-		fields.add(new InputData(Messages.Patientenblatt2_ahvNumber, Xid.DOMAIN_AHV,
+		fields.add(new InputData(Messages.Patientenblatt2_ahvNumber, XidConstants.DOMAIN_AHV,
 				new LabeledInputField.IContentProvider() {
 					public void displayContent(PersistentObject po, InputData ltf) {
 						Patient p = (Patient) po;
-						ltf.setText(p.getXid(Xid.DOMAIN_AHV));
+						ltf.setText(p.getXid(XidConstants.DOMAIN_AHV));
 					}
 
 					public void reloadContent(final PersistentObject po, final InputData ltf) {
@@ -272,7 +273,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 								extFlds.toArray(new String[0]));
 						dlg.open();
 						Patient p = (Patient) po;
-						ltf.setText(p.getXid(Xid.DOMAIN_AHV));
+						ltf.setText(p.getXid(XidConstants.DOMAIN_AHV));
 					}
 				}));
 
