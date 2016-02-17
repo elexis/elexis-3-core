@@ -3,6 +3,7 @@ package ch.elexis.core.ui.locks;
 import ch.elexis.admin.ACE;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.PersistentObject;
 
 public abstract class LockRequestingRestrictedAction<T extends PersistentObject> extends RestrictedAction {
@@ -11,6 +12,10 @@ public abstract class LockRequestingRestrictedAction<T extends PersistentObject>
 
 	public LockRequestingRestrictedAction(ACE necessaryRight, String text) {
 		super(necessaryRight, text);
+	}
+
+	public LockRequestingRestrictedAction(ACE necessaryRight, String text, int val) {
+		super(necessaryRight, text, val);
 	}
 
 	public void doRun() {
@@ -31,6 +36,8 @@ public abstract class LockRequestingRestrictedAction<T extends PersistentObject>
 			log.warn("Unable to acquire lock for "+object.storeToString());
 			// we could not get the lock, what now??
 			// simple ui warning showing who currently owns the lock?
+			// TODO REASON
+			SWTHelper.showError("Lock acquisition error.", "Can't acquire lock for "+object.storeToString());
 		}
 	};
 

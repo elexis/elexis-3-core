@@ -11,11 +11,13 @@
 package ch.elexis.core.ui.events;
 
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.ISourceProviderService;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
+import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.data.Patient;
 
 /**
@@ -26,6 +28,8 @@ import ch.elexis.data.Patient;
 public class UiPatientEventListener extends ElexisUiEventListenerImpl {
 	
 	private static ISourceProviderService sps = null;
+	
+	private ICommandService commandService;
 	
 	public UiPatientEventListener(){
 		super(Patient.class);
@@ -41,6 +45,13 @@ public class UiPatientEventListener extends ElexisUiEventListenerImpl {
 				(ISourceProviderService) PlatformUI.getWorkbench().getService(
 					ISourceProviderService.class);
 		}
+		if(commandService==null) {
+			commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getService(ICommandService.class);
+		}	
+		
+		commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID, null);
+		
 		PatientSelectionStatus provider =
 			(PatientSelectionStatus) sps.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE);
 		if (provider == null) {

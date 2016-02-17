@@ -595,15 +595,6 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
-	 * 
-	 * @return <code>true</code> if NO valid lock is given, hence forming the barrier
-	 * @since 3.2.0
-	 */
-	protected boolean lockBarrier() {
-		return !CoreHub.ls.ownsLock(this.storeToString());
-	}
-	
-	/**
 	 * Exklusivzugriff wieder aufgeben
 	 * 
 	 * @param name

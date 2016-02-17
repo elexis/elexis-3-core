@@ -469,4 +469,25 @@
             icon="bestell_perspective"
             name="%sidebar.orders"/>
    </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:ch.elexis.PatientDetailView">
+       <command
+             commandId="ch.elexis.core.ui.command.ToggleCurrentPatientLockCommand"
+             icon="icon://IMG_LOCK_CLOSED"
+             style="toggle">
+       </command>
+    </menuContribution>
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:ch.elexis.PatDetail_v2">
+       <command
+             commandId="ch.elexis.core.ui.command.ToggleCurrentPatientLockCommand"
+             icon="icon://IMG_LOCK_CLOSED"
+             style="toggle">
+       </command>
+    </menuContribution>
+ </extension>
 </plugin>

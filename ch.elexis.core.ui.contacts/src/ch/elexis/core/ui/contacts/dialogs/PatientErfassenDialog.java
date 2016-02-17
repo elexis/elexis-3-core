@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.dialogs.Messages;
 import ch.elexis.core.ui.icons.ImageSize;
@@ -173,6 +174,9 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 				}
 			}
 			Patient pat = new Patient(ret[0], ret[1], check, ret[2]);
+			
+			CoreHub.ls.acquireLock(pat.storeToString());
+			
 			pat.set(new String[] {
 				Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1
 			}, new String[] {
@@ -181,16 +185,6 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 			
 			if (check != null) {
 				check.add(TimeTool.YEAR, 18);
-				// TimeTool today=new TimeTool();
-				/*
-				 * if(check.isAfter(today)){ InputDialog id=new
-				 * InputDialog(getShell(),"Patient ist minderjährig"
-				 * ,"Bitte geben Sie Name und Vorname des gesetzlichen Vertretes an","",null);
-				 * if(id.open()==Dialog.OK){ String[] name=id.getValue().split(" ,"); Person
-				 * elter=new Person(name[0],name[1],"",""); elter.set(new
-				 * String[]{"Strasse","Plz","Ort","Telefon1"}, new
-				 * String[]{ret[4],ret[5],ret[6],ret[7]}); } }
-				 */
 			}
 			
 			ElexisEventDispatcher.fireSelectionEvent(pat);

@@ -41,7 +41,7 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
 import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.exchange.XChangeException;
-import ch.elexis.core.ui.locks.LockedRestrictedAction;
+import ch.elexis.core.ui.locks.LockRequestingRestrictedAction;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus.IMenuPopulator;
 import ch.elexis.core.ui.views.Messages;
@@ -81,7 +81,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 			}
 
 		};
-		delPatAction = new LockedRestrictedAction<Patient>(AccessControlDefaults.KONTAKT_DELETE,
+		delPatAction = new LockRequestingRestrictedAction<Patient>(AccessControlDefaults.KONTAKT_DELETE,
 				Messages.PatientMenuPopulator_DeletePatientAction) {
 
 			@Override

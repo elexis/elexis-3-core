@@ -55,13 +55,6 @@
                   id="ch.elexis.core.ui.coolbar.MandantSelectionContributionItem">
             </dynamic>
          </toolbar>
-         <toolbar
-               id="ch.elexis.coolbar.LockStatus">
-            <dynamic
-                  class="ch.elexis.core.ui.locks.LockStatusContributionItem"
-                  id="ch.elexis.core.ui.locks.LockStatusContributionItem">
-            </dynamic>
-         </toolbar>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -501,14 +494,9 @@
             name="Druckeinstellungen">
       </command>
       <command
-            defaultHandler="ch.elexis.core.data.lock.RequestLockCommand"
-            id="ch.elexis.core.data.command.RequestLockCommand"
-            name="Lock anfordern">
-      </command>
-      <command
-            defaultHandler="ch.elexis.core.data.lock.ReleaseAllLocksCommand"
-            id="ch.elexis.core.data.command.ReleaseAllLocksCommand"
-            name="Locks releasen">
+            defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler"
+            id="ch.elexis.core.ui.command.ToggleCurrentPatientLockCommand"
+            name="Toggle current patient lock">
       </command>
    </extension>
       <extension

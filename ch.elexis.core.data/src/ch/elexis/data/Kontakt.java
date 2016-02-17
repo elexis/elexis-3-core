@@ -398,9 +398,7 @@ public class Kontakt extends PersistentObject {
 	}
 	
 	@Override
-	public boolean delete(){
-		if(lockBarrier()) return false;
-		
+	public boolean delete(){		
 		for (Reminder r : getRelatedReminders()) {
 			r.delete();
 		}

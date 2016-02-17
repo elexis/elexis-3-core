@@ -132,8 +132,6 @@ public class Patient extends Person {
 	public Patient(final String Name, final String Vorname, final String Geburtsdatum,
 		final String s){
 		super(Name, Vorname, Geburtsdatum, s);
-		
-		CoreHub.ls.acquireLock(storeToString());
 	}
 	
 	/**
@@ -152,8 +150,6 @@ public class Patient extends Person {
 	public Patient(final String name, final String vorname, final TimeTool gebDat, final String s)
 		throws PersonDataException{
 		super(name, vorname, gebDat, s);
-		
-		CoreHub.ls.acquireLock(storeToString());
 	}
 	
 	/**

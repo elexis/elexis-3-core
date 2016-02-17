@@ -1,6 +1,7 @@
 package ch.elexis.core.data.lock;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +18,10 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.User;
 import info.elexis.server.elexis.common.jaxrs.ILockService;
@@ -37,10 +41,23 @@ public class LockService {
 	 */
 	private static final UUID systemUuid = UUID.randomUUID();
 
+	private ElexisEventListener eeli_pat = new ElexisEventListenerImpl(Patient.class, ElexisEvent.EVENT_DESELECTED) {
+		public void run(ElexisEvent ev) {
+			if (ev.getObject() == null) {
+				return;
+			}
+			String sts = ev.getObject().storeToString();
+			if (sts != null) {
+				if(ownsLock(sts)) {
+					releaseLock(sts);
+				}
+			}
+		};
+	};
+
 	public LockService(BundleContext context) {
 		final String restUrl = System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
 		if (restUrl != null) {
-
 			standalone = false;
 			log.info("Operating against elexis-server instance on " + restUrl);
 			ils = ConsumerFactory.createConsumer(restUrl, ILockService.class);
@@ -48,17 +65,27 @@ public class LockService {
 			standalone = true;
 			log.info("Operating in stand-alone mode.");
 		}
+		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
 	}
 
 	public static String getSystemuuid() {
 		return systemUuid.toString();
 	}
 
+	public boolean acquireLock(PersistentObject po) {
+		if (po == null) {
+			return false;
+		}
+		return acquireLock(po.storeToString());
+	}
+
 	public boolean acquireLock(String storeToString) {
+		if (storeToString == null) {
+			return false;
+		}
+
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
-		List<LockInfo> lil = LockByPatientStrategy.createLockInfoList(storeToString, user.getId(),
-				systemUuid.toString());
-		return acquireLock(lil);
+		return acquireLock(Collections.singletonList(new LockInfo(storeToString, user.getId(), systemUuid.toString())));
 	}
 
 	public boolean acquireLock(List<LockInfo> lockInfos) {
@@ -70,7 +97,17 @@ public class LockService {
 		return acquireOrReleaseLock(lockRequest);
 	}
 
+	/**
+	 * 
+	 * @param storeToString
+	 *            if <code>null</code> returns false
+	 * @return
+	 */
 	public boolean ownsLock(String storeToString) {
+		if (storeToString == null) {
+			return false;
+		}
+
 		if (standalone) {
 			return true;
 		}
@@ -115,8 +152,7 @@ public class LockService {
 
 		synchronized (locks) {
 			// does the requested lock match the cache on our side?
-			if (LockRequest.Type.ACQUIRE==lockRequest.getRequestType()
-					&& locks.keySet().containsAll(elementIds)) {
+			if (LockRequest.Type.ACQUIRE == lockRequest.getRequestType() && locks.keySet().containsAll(elementIds)) {
 				return true;
 			}
 
@@ -127,7 +163,7 @@ public class LockService {
 					return false;
 				}
 
-				if (LockRequest.Type.ACQUIRE==lockRequest.getRequestType()) {
+				if (LockRequest.Type.ACQUIRE == lockRequest.getRequestType()) {
 					// ACQUIRE ACTIONS
 					// lock is granted only if we have non-exception on acquire
 					lockInfos.stream().forEach(l -> locks.put(l.getElementId(), l));
@@ -163,6 +199,13 @@ public class LockService {
 
 			return true;
 		}
+	}
+
+	public boolean releaseLock(PersistentObject po) {
+		if (po == null) {
+			return false;
+		}
+		return releaseLock(po.storeToString());
 	}
 
 	// /**
