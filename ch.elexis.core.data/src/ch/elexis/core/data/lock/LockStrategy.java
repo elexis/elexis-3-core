@@ -13,13 +13,12 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import info.elexis.server.elexis.common.types.LockInfo;
 
-
 /**
  * For first version we lock on patient, resp. whole domain so we should add all
  * dependendent locking elements
  *
  */
-public class LockByPatientStrategy {
+public class LockStrategy {
 
 	public static List<LockInfo> createLockInfoList(Patient patient, String userId, String systemUuid) {
 		ArrayList<LockInfo> lockList = new ArrayList<>();
@@ -42,22 +41,16 @@ public class LockByPatientStrategy {
 				qbeKonsen.or();
 			}
 			qbeKonsen.endGroup();
-			List<LockInfo> konsen = qbeKonsen.execute().stream().map(k -> new LockInfo(k.storeToString(), userId, systemUuid))
-					.collect(Collectors.toList());
+			List<LockInfo> konsen = qbeKonsen.execute().stream()
+					.map(k -> new LockInfo(k.storeToString(), userId, systemUuid)).collect(Collectors.toList());
 			lockList.addAll(konsen);
 		}
 
 		return lockList;
 	}
 
-	public static List<LockInfo> createLockInfoList(String storeToString, String userId, String systemUuid) {
-		PersistentObject po = CoreHub.poFactory.createFromString(storeToString);
-		if(po instanceof Patient) {
-			return createLockInfoList((Patient) po, userId, systemUuid);
-		} else {
-			// single element lock
-			return Collections.singletonList(new LockInfo(storeToString, userId, systemUuid));
-		}
+	public static LockInfo createLockInfoList(String storeToString, String userId, String systemUuid) {
+		return new LockInfo(storeToString, userId, systemUuid);
 	}
 
 }

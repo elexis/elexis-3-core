@@ -1,7 +1,5 @@
 package info.elexis.server.elexis.common.types;
 
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -12,13 +10,14 @@ public class LockRequest {
 	};
 
 	private Type requestType;
-	private List<LockInfo> lockInfos;
+	private LockInfo lockInfo;
 
-	public LockRequest() {}
-	
-	public LockRequest(Type requestType, List<LockInfo> lockInfos) {
+	public LockRequest() {
+	}
+
+	public LockRequest(Type requestType, LockInfo lockInfo) {
 		this.requestType = requestType;
-		this.lockInfos = lockInfos;
+		this.lockInfo = lockInfo;
 	}
 
 	public Type getRequestType() {
@@ -29,12 +28,12 @@ public class LockRequest {
 		this.requestType = requestType;
 	}
 
-	public List<LockInfo> getLockInfos() {
-		return lockInfos;
+	public LockInfo getLockInfo() {
+		return lockInfo;
 	}
 
-	public void setLockInfos(List<LockInfo> lockInfos) {
-		this.lockInfos = lockInfos;
+	public void setLockInfo(LockInfo lockInfo) {
+		this.lockInfo = lockInfo;
 	}
 
 }

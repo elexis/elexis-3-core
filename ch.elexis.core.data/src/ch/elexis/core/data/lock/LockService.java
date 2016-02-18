@@ -1,11 +1,9 @@
 package ch.elexis.core.data.lock;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
@@ -28,6 +26,12 @@ import info.elexis.server.elexis.common.jaxrs.ILockService;
 import info.elexis.server.elexis.common.types.LockInfo;
 import info.elexis.server.elexis.common.types.LockRequest;
 
+/**
+ * DO NOT SUPPORT LOCKING FOR MORE THAN ONE OBJECT AT ONCE!!
+ * 
+ * @author marco
+ *
+ */
 public class LockService {
 
 	private static ILockService ils;
@@ -48,7 +52,7 @@ public class LockService {
 			}
 			String sts = ev.getObject().storeToString();
 			if (sts != null) {
-				if(ownsLock(sts)) {
+				if (ownsLock(sts)) {
 					releaseLock(sts);
 				}
 			}
@@ -85,15 +89,8 @@ public class LockService {
 		}
 
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
-		return acquireLock(Collections.singletonList(new LockInfo(storeToString, user.getId(), systemUuid.toString())));
-	}
-
-	public boolean acquireLock(List<LockInfo> lockInfos) {
-		if (standalone) {
-			return true;
-		}
-
-		LockRequest lockRequest = new LockRequest(LockRequest.Type.ACQUIRE, lockInfos);
+		LockInfo lockInfo = new LockInfo(storeToString, user.getId(), systemUuid.toString());
+		LockRequest lockRequest = new LockRequest(LockRequest.Type.ACQUIRE, lockInfo);
 		return acquireOrReleaseLock(lockRequest);
 	}
 
@@ -118,8 +115,7 @@ public class LockService {
 
 	public boolean releaseLock(String storeToString) {
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
-		List<LockInfo> lil = LockByPatientStrategy.createLockInfoList(storeToString, user.getId(),
-				systemUuid.toString());
+		LockInfo lil = LockStrategy.createLockInfoList(storeToString, user.getId(), systemUuid.toString());
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lil);
 		return acquireOrReleaseLock(lockRequest);
 	}
@@ -130,8 +126,13 @@ public class LockService {
 		}
 
 		List<LockInfo> lockList = new ArrayList<LockInfo>(locks.values());
-		LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lockList);
-		return acquireOrReleaseLock(lockRequest);
+		for (LockInfo lockInfo : lockList) {
+			LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lockInfo);
+			if (!acquireOrReleaseLock(lockRequest)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private boolean acquireOrReleaseLock(LockRequest lockRequest) {
@@ -147,12 +148,12 @@ public class LockService {
 			return false;
 		}
 
-		List<LockInfo> lockInfos = lockRequest.getLockInfos();
-		List<String> elementIds = lockInfos.stream().map(l -> l.getElementId()).collect(Collectors.toList());
+		LockInfo lockInfo = lockRequest.getLockInfo();
 
 		synchronized (locks) {
 			// does the requested lock match the cache on our side?
-			if (LockRequest.Type.ACQUIRE == lockRequest.getRequestType() && locks.keySet().containsAll(elementIds)) {
+			if (LockRequest.Type.ACQUIRE == lockRequest.getRequestType()
+					&& locks.keySet().contains(lockInfo.getElementId())) {
 				return true;
 			}
 
@@ -166,13 +167,12 @@ public class LockService {
 				if (LockRequest.Type.ACQUIRE == lockRequest.getRequestType()) {
 					// ACQUIRE ACTIONS
 					// lock is granted only if we have non-exception on acquire
-					lockInfos.stream().forEach(l -> locks.put(l.getElementId(), l));
+					locks.put(lockInfo.getElementId(), lockInfo);
 
-					for (LockInfo li : lockInfos) {
-						PersistentObject po = CoreHub.poFactory.createFromString(li.getElementStoreToString());
-						ElexisEventDispatcher.getInstance()
-								.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_AQUIRED));
-					}
+					PersistentObject po = CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
+					ElexisEventDispatcher.getInstance()
+							.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_AQUIRED));
+
 				}
 			} catch (Exception e) {
 				// if we have an exception here, our lock copies never get
@@ -187,13 +187,12 @@ public class LockService {
 					// RELEASE ACTIONS
 					// releases are also to be performed on occurence of an
 					// exception
-					lockInfos.stream().forEach(l -> locks.remove(l.getElementId()));
+					locks.remove(lockInfo.getElementId());
 
-					for (LockInfo li : lockInfos) {
-						PersistentObject po = CoreHub.poFactory.createFromString(li.getElementStoreToString());
-						ElexisEventDispatcher.getInstance()
-								.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_RELEASED));
-					}
+					PersistentObject po = CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
+					ElexisEventDispatcher.getInstance()
+							.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_RELEASED));
+
 				}
 			}
 
