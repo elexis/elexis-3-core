@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.elexis.core.model.ReminderConstants;
 import ch.elexis.data.LabItem.typ;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -196,7 +197,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 				String[] parts = params.split("="); //$NON-NLS-1$
 				if (parts.length == 2) {
 					if (parts[1].equals(get(FLD_ORDERID))) {
-						reminder.setStatus(Reminder.Status.STATE_DONE);
+						reminder.setStatus(ReminderConstants.Status.STATE_DONE);
 					}
 				}
 			}

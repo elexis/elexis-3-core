@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.ReminderConstants;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -97,7 +98,7 @@ public class EditReminderDialog extends TitleAreaDialog {
 			public void widgetSelected(final SelectionEvent e){
 				// We check wether a letter reminder is selected and if so we
 				// let the user choose the template
-				if (cbType.getText().equals(Reminder.TypText[Reminder.Typ.brief.ordinal()])) {
+				if (cbType.getText().equals(Reminder.TypText[ReminderConstants.Typ.brief.ordinal()])) {
 					DocumentSelectDialog dsl =
 						new DocumentSelectDialog(getShell(), CoreHub.actMandant,
 							DocumentSelectDialog.TYPE_LOAD_TEMPLATE);
@@ -191,10 +192,10 @@ public class EditReminderDialog extends TitleAreaDialog {
 			dpDue.setDate(mine.getDateDue().getTime());
 			
 			// update current selection depending on the status
-			Reminder.Status s = mine.getStatus();
-			if (s.equals(Reminder.Status.STATE_DONE)) {
+			ReminderConstants.Status s = mine.getStatus();
+			if (s.equals(ReminderConstants.Status.STATE_DONE)) {
 				bDone.setSelection(true);
-			} else if (s.equals(Reminder.Status.STATE_UNDONE)) {
+			} else if (s.equals(ReminderConstants.Status.STATE_UNDONE)) {
 				bRejected.setSelection(true);
 			} else {
 				bDue.setSelection(true);
@@ -259,7 +260,7 @@ public class EditReminderDialog extends TitleAreaDialog {
 		if (typidx == -1) {
 			typidx = 0;
 		}
-		Reminder.Typ typ = Reminder.Typ.values()[typidx];
+		ReminderConstants.Typ typ = ReminderConstants.Typ.values()[typidx];
 		if (mine == null) {
 			mine = new Reminder(actPatient, due, typ, "", text.getText()); //$NON-NLS-1$
 		} else {
@@ -270,11 +271,11 @@ public class EditReminderDialog extends TitleAreaDialog {
 			});
 		}
 		if (bDone.getSelection()) {
-			mine.setStatus(Reminder.Status.STATE_DONE);
+			mine.setStatus(ReminderConstants.Status.STATE_DONE);
 		} else if (bRejected.getSelection()) {
-			mine.setStatus(Reminder.Status.STATE_UNDONE);
+			mine.setStatus(ReminderConstants.Status.STATE_UNDONE);
 		} else {
-			mine.setStatus(Reminder.Status.STATE_PLANNED);
+			mine.setStatus(ReminderConstants.Status.STATE_PLANNED);
 		}
 		int[] resps = lUser.getSelectionIndices();
 		

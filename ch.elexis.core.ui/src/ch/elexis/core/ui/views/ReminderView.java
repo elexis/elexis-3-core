@@ -34,6 +34,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
+import ch.elexis.core.model.ReminderConstants;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -230,13 +231,13 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		
 		public Color getBackground(final Object element){
 			if (element instanceof Reminder) {
-				Reminder.Status stat = ((Reminder) element).getStatus();
+				ReminderConstants.Status stat = ((Reminder) element).getStatus();
 				cfg = CoreHub.userCfg.getBranch(Preferences.USR_REMINDERCOLORS, true);
-				if (stat == Reminder.Status.STATE_DUE) {
+				if (stat == ReminderConstants.Status.STATE_DUE) {
 					return UiDesk.getColorFromRGB(cfg.get("fällig", "FFFFFF")); //$NON-NLS-1$ //$NON-NLS-2$
-				} else if (stat == Reminder.Status.STATE_OVERDUE) {
+				} else if (stat == ReminderConstants.Status.STATE_OVERDUE) {
 					return UiDesk.getColorFromRGB(cfg.get("überfällig", "FF0000")); //$NON-NLS-1$ //$NON-NLS-2$
-				} else if (stat == Reminder.Status.STATE_PLANNED) {
+				} else if (stat == ReminderConstants.Status.STATE_PLANNED) {
 					return UiDesk.getColorFromRGB(cfg.get("geplant", "00FF00")); //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
 					return null;
@@ -390,7 +391,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				if (act != null) {
 					String[] vals = check.get(true, Reminder.KONTAKT_ID, Reminder.TYPE);
 					if (!vals[0].equals(act.getId())) {
-						if (Reminder.convertTypStringToTyp(vals[1]) != Reminder.Typ.anzeigeTodoAll) {
+						if (Reminder.convertTypStringToTyp(vals[1]) != ReminderConstants.Typ.anzeigeTodoAll) {
 							return false;
 						}
 					}
