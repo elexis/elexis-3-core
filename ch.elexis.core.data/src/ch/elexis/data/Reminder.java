@@ -21,6 +21,9 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
+import static ch.elexis.core.model.ReminderConstants.Status;
+import static ch.elexis.core.model.ReminderConstants.Typ;
+
 /**
  * Ein Reminder ist eine Erinnerung an etwas. Ein Reminder ist an einen Kontakt gebunden. Ein
  * Reminder hat ein Fälligkeitsdatum und einen Status Es gibt mehrere Typen von Remindern:
@@ -88,18 +91,14 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			"Responsibles=JOINT:ResponsibleID:ReminderID:REMINDERS_RESPONSIBLE_LINK");
 	}
 	
-	public enum Typ {
-		anzeigeTodoPat, anzeigeTodoAll, anzeigeOeffnen, anzeigeProgstart, brief
-	}
+
 	
 	public static final String[] TypText = {
 		"Anzeige nur beim Patienten", "Immer in Pendenzen anzeigen",
 		"Popup beim Auswählen des Patienten", "Popup beim Einloggen", "Brief erstellen"
 	};
 	
-	public enum Status {
-		STATE_PLANNED, STATE_DUE, STATE_OVERDUE, STATE_DONE, STATE_UNDONE
-	}
+
 	
 	Reminder(){/* leer */}
 	
