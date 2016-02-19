@@ -49,7 +49,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.coolbar.MandantSelectionContributionItem;
 import ch.elexis.core.ui.data.UiMandant;
@@ -227,6 +226,8 @@ public class UserManagementPreferencePage extends PreferencePage
 		
 		txtPassword = new Text(composite, SWT.BORDER | SWT.PASSWORD);
 		txtPassword2 = new Text(composite, SWT.BORDER | SWT.PASSWORD);
+		txtPassword.setToolTipText("Password hier eingeben. Nur * werden angezeigt");
+		txtPassword2.setToolTipText("Zur Kontrolle Password hier nochmals eingeben. Nur * werden angezeigt");
 		
 		linkChangePassword = new Link(grpSysAccess, SWT.NONE);
 		linkChangePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
@@ -430,12 +431,15 @@ public class UserManagementPreferencePage extends PreferencePage
 	/**
 	 * Initialize the preference page.
 	 */
+	@Override
 	public void init(IWorkbench workbench){
 		// Initialize the preference page
 	}
 	
 	private void updateUserList(){
-		tableViewerUsers.setInput(new Query<User>(User.class).execute());
+		 List<User> query = new Query<User>(User.class).execute();
+		 query.sort((u1, u2) -> u1.getLabel().compareTo(u2.getLabel()));
+		 tableViewerUsers.setInput(query);
 	}
 	
 	private class ValueChangedAdapter implements IValueChangeListener {
