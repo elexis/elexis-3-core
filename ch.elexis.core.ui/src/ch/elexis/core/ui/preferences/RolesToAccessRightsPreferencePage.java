@@ -275,6 +275,12 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 			tc.setData("role", role);
 			tc.setWidth(20);
 			tc.setText(role.getLabel().charAt(0) + "");
+			String translation = role.getTranslatedLabel();
+			if (translation != null && translation.length() > 0) {
+				tc.setToolTipText(translation);
+			} else {
+				tc.setToolTipText(role.getLabel());
+			}
 			tvc.setLabelProvider(clp);
 			EditingSupport es = new EditingSupport(tvc.getViewer()) {
 				
@@ -357,6 +363,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 	/**
 	 * Initialize the preference page.
 	 */
+	@Override
 	public void init(IWorkbench workbench){
 		// Initialize the preference page
 	}
@@ -380,10 +387,12 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
 		
+		@Override
 		public Object[] getElements(Object inputElement){
 			return (Object[]) inputElement;
 		}
 		
+		@Override
 		public Object[] getChildren(Object parentElement){
 			ACE a = (ACE) parentElement;
 			return ACE.getAllDefinedACElements().stream().filter(p -> p.getParent().equals(a))
@@ -399,6 +408,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 			return parent;
 		}
 		
+		@Override
 		public boolean hasChildren(Object element){
 			ACE a = (ACE) element;
 			return ACE.getAllDefinedACElements().stream().filter(p -> p.getParent().equals(a))
