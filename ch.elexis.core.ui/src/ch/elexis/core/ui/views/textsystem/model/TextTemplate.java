@@ -160,7 +160,11 @@ public class TextTemplate {
 	}
 	
 	public Mandant getMandant(){
-		return mandantId == "" ? null : Mandant.load(mandantId);
+		Mandant ret = (mandantId == "" ? null : Mandant.load(mandantId));
+		if (ret != null && ret.exists()) {
+			return ret;
+		}
+		return null;
 	}
 	
 	public String getMandantLabel(){
