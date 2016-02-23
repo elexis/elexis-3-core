@@ -282,7 +282,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		
 		MasterDetailsPage(Composite parent, CodeSelectorFactory master, IDetailDisplay detail){
 			super(parent, SWT.NONE);
-			eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass()) {
+			eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass(), ElexisEvent.EVENT_SELECTED) {
 				@Override
 				public void runInUi(ElexisEvent ev){
 					detailDisplay.display(ev.getObject());
