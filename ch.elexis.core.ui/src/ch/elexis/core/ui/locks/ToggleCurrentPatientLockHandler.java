@@ -14,8 +14,11 @@ import org.eclipse.ui.menus.UIElement;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
+import info.elexis.server.elexis.common.types.LockResponse;
 
 public class ToggleCurrentPatientLockHandler extends AbstractHandler implements IElementUpdater {
 
@@ -30,22 +33,23 @@ public class ToggleCurrentPatientLockHandler extends AbstractHandler implements 
 					.getService(ICommandService.class);
 		}
 
-		Patient patient = ElexisEventDispatcher.getSelectedPatient();
-		if (patient == null) {
+		IPersistentObject po = ElexisEventDispatcher.getSelected(Patient.class);
+		if (po == null) {
 			commandService.refreshElements(COMMAND_ID, null);
 			return null;
 		}
 
-		String sts = patient.storeToString();
+		String sts = po.storeToString();
 
 		if (CoreHub.ls.ownsLock(sts)) {
 			CoreHub.ls.releaseLock(sts);
 		} else {
-
-			boolean success = CoreHub.ls.acquireLock(sts);
-			if (!success) {
+			LockResponse lr = CoreHub.ls.acquireLock(sts);
+			if (!lr.isOk()) {
 				ElexisEventDispatcher.fireElexisStatusEvent(new ElexisStatus(Status.WARNING, CoreHub.PLUGIN_ID,
 						ElexisStatus.CODE_NONE, "Lock could not be granted", null));
+				SWTHelper.showError("Lock acquisition error.", "Can't acquire lock for " + po.storeToString()
+						+ ". Lock currently held by " + lr.getLockInfos().getUser());
 			}
 		}
 
@@ -56,14 +60,14 @@ public class ToggleCurrentPatientLockHandler extends AbstractHandler implements 
 
 	@Override
 	public void updateElement(UIElement element, Map parameters) {
-		Patient patient = ElexisEventDispatcher.getSelectedPatient();
-		if (patient == null) {
+		IPersistentObject po = ElexisEventDispatcher.getSelected(Patient.class);
+		if (po == null) {
 			element.setIcon(Images.IMG_LOCK_CLOSED.getImageDescriptor());
 			element.setChecked(false);
 			return;
 		}
 
-		if (CoreHub.ls.ownsLock(patient.storeToString())) {
+		if (CoreHub.ls.ownsLock(po.storeToString())) {
 			element.setIcon(Images.IMG_LOCK_OPEN.getImageDescriptor());
 			element.setChecked(true);
 		} else {
