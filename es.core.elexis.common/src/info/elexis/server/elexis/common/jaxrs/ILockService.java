@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 
 import info.elexis.server.elexis.common.types.LockInfo;
 import info.elexis.server.elexis.common.types.LockRequest;
+import info.elexis.server.elexis.common.types.LockResponse;
 
 @Path("/elexis/lockservice")
 public interface ILockService {
@@ -22,7 +23,7 @@ public interface ILockService {
 	@POST
 	@Path("/acquireOrReleaseLocks")
 	@Consumes(MediaType.APPLICATION_XML)
-	public boolean acquireOrReleaseLocks(LockRequest request);
+	public LockResponse acquireOrReleaseLocks(LockRequest request);
 
 	@GET
 	@Path("/isLocked")

@@ -14,6 +14,8 @@ package ch.rgw.tools;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -353,6 +355,16 @@ public class TimeTool extends GregorianCalendar {
 	 * @param date
 	 */
 	public TimeTool(final Date date){
+		this.setTimeInMillis(date.getTime());
+		resolution = defaultResolution;
+	}
+	
+	/**
+	 * @param localDate
+	 * @since 3.2
+	 */
+	public TimeTool(final LocalDate localDate) {
+		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		this.setTimeInMillis(date.getTime());
 		resolution = defaultResolution;
 	}

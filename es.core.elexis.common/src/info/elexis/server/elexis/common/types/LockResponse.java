@@ -1,40 +1,58 @@
 package info.elexis.server.elexis.common.types;
 
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class LockResponse {
 
-	public enum Type {
-		OK, DENIED
+	public static final LockResponse OK = new LockResponse(Status.OK, null);
+	public static final LockResponse ERROR = new LockResponse(Status.ERROR, null);
+	
+	public enum Status{
+		OK, DENIED, ERROR
 	};
 
-	private Type requestType;
-	private List<LockInfo> lockInfos;
+	private Status status;
+	private LockInfo lockInfo;
 
-	public LockResponse() {}
-	
-	public LockResponse(Type requestType, List<LockInfo> lockInfos) {
-		this.requestType = requestType;
-		this.lockInfos = lockInfos;
+	public LockResponse() {
+		status = Status.OK;
 	}
 
-	public Type getRequestType() {
-		return requestType;
+	public LockResponse(Status status, LockInfo lockInfo) {
+		this.status = status;
+		this.lockInfo = lockInfo;
 	}
 
-	public void setRequestType(Type requestType) {
-		this.requestType = requestType;
+	public Status getStatus() {
+		return status;
 	}
 
-	public List<LockInfo> getLockInfos() {
-		return lockInfos;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
-	public void setLockInfos(List<LockInfo> lockInfos) {
-		this.lockInfos = lockInfos;
+	/**
+	 * @return if {@link #getStatus()} {@link Status#DENIED} contains the
+	 *         {@link LockInfo} the request failed upon, else <code>null</code>
+	 */
+	public LockInfo getLockInfos() {
+		return lockInfo;
 	}
 
+	public void setLockInfos(LockInfo lockInfo) {
+		this.lockInfo = lockInfo;
+	}
+
+	public static LockResponse OK() {
+		return new LockResponse();
+	}
+
+	public static LockResponse DENIED(LockInfo lie) {
+		return new LockResponse(Status.DENIED, lie);
+	}
+
+	public boolean isOk() {
+		return getStatus()==Status.OK;
+	}
 }
