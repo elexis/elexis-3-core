@@ -25,6 +25,7 @@ import ch.elexis.data.User;
 import info.elexis.server.elexis.common.jaxrs.ILockService;
 import info.elexis.server.elexis.common.types.LockInfo;
 import info.elexis.server.elexis.common.types.LockRequest;
+import info.elexis.server.elexis.common.types.LockResponse;
 
 /**
  * DO NOT SUPPORT LOCKING FOR MORE THAN ONE OBJECT AT ONCE!!
@@ -45,17 +46,25 @@ public class LockService {
 	 */
 	private static final UUID systemUuid = UUID.randomUUID();
 
-	private ElexisEventListener eeli_pat = new ElexisEventListenerImpl(Patient.class, ElexisEvent.EVENT_DESELECTED) {
+	/**
+	 * storage for current patient, to unlock after patient switch
+	 */
+	private Patient oldPatient = null;
+	
+	private ElexisEventListener eeli_pat = new ElexisEventListenerImpl(Patient.class, ElexisEvent.EVENT_SELECTED) {
 		public void run(ElexisEvent ev) {
 			if (ev.getObject() == null) {
 				return;
 			}
-			String sts = ev.getObject().storeToString();
-			if (sts != null) {
-				if (ownsLock(sts)) {
-					releaseLock(sts);
+			if(oldPatient instanceof Patient) {
+				String sts = oldPatient.storeToString();
+				if (sts != null) {
+					if (ownsLock(sts)) {
+						releaseLock(sts);
+					}
 				}
 			}
+			oldPatient = (Patient) ev.getObject();
 		};
 	};
 
@@ -76,16 +85,16 @@ public class LockService {
 		return systemUuid.toString();
 	}
 
-	public boolean acquireLock(PersistentObject po) {
+	public LockResponse acquireLock(PersistentObject po) {
 		if (po == null) {
-			return false;
+			return LockResponse.DENIED(null);
 		}
 		return acquireLock(po.storeToString());
 	}
 
-	public boolean acquireLock(String storeToString) {
+	public LockResponse acquireLock(String storeToString) {
 		if (storeToString == null) {
-			return false;
+			return LockResponse.DENIED(null);
 		}
 
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
@@ -113,31 +122,32 @@ public class LockService {
 		return locks.containsKey(elementId);
 	}
 
-	public boolean releaseLock(String storeToString) {
+	public LockResponse releaseLock(String storeToString) {
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
 		LockInfo lil = LockStrategy.createLockInfoList(storeToString, user.getId(), systemUuid.toString());
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lil);
 		return acquireOrReleaseLock(lockRequest);
 	}
 
-	public boolean releaseAllLocks() {
+	public LockResponse releaseAllLocks() {
 		if (standalone) {
-			return true;
+			return LockResponse.OK;
 		}
 
 		List<LockInfo> lockList = new ArrayList<LockInfo>(locks.values());
 		for (LockInfo lockInfo : lockList) {
 			LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lockInfo);
-			if (!acquireOrReleaseLock(lockRequest)) {
-				return false;
+			LockResponse lr = acquireOrReleaseLock(lockRequest);
+			if (!lr.isOk()) {
+				return lr;
 			}
 		}
-		return true;
+		return LockResponse.OK;
 	}
 
-	private boolean acquireOrReleaseLock(LockRequest lockRequest) {
+	private LockResponse acquireOrReleaseLock(LockRequest lockRequest) {
 		if (standalone) {
-			return true;
+			return LockResponse.OK;
 		}
 
 		if (ils == null) {
@@ -145,7 +155,7 @@ public class LockService {
 			log.error(message);
 			ElexisEventDispatcher.fireElexisStatusEvent(
 					new ElexisStatus(Status.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, null));
-			return false;
+			return LockResponse.ERROR;
 		}
 
 		LockInfo lockInfo = lockRequest.getLockInfo();
@@ -154,14 +164,15 @@ public class LockService {
 			// does the requested lock match the cache on our side?
 			if (LockRequest.Type.ACQUIRE == lockRequest.getRequestType()
 					&& locks.keySet().contains(lockInfo.getElementId())) {
-				return true;
+				return LockResponse.OK;
 			}
 
 			// TODO should we release all locks on acquiring a new one?
 			// if yes, this has to be dependent upon the strategy
 			try {
-				if (!ils.acquireOrReleaseLocks(lockRequest)) {
-					return false;
+				LockResponse lr = ils.acquireOrReleaseLocks(lockRequest);
+				if (!lr.isOk()) {
+					return lr;
 				}
 
 				if (LockRequest.Type.ACQUIRE == lockRequest.getRequestType()) {
@@ -181,7 +192,7 @@ public class LockService {
 				log.error(message);
 				ElexisEventDispatcher.fireElexisStatusEvent(
 						new ElexisStatus(Status.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, e));
-				return false;
+				return LockResponse.ERROR;
 			} finally {
 				if (LockRequest.Type.RELEASE.equals(lockRequest.getRequestType())) {
 					// RELEASE ACTIONS
@@ -196,13 +207,13 @@ public class LockService {
 				}
 			}
 
-			return true;
+			return LockResponse.OK;
 		}
 	}
 
-	public boolean releaseLock(PersistentObject po) {
+	public LockResponse releaseLock(PersistentObject po) {
 		if (po == null) {
-			return false;
+			return LockResponse.DENIED(null);
 		}
 		return releaseLock(po.storeToString());
 	}
