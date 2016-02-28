@@ -448,30 +448,30 @@ public class MedicationComposite extends Composite {
 		});
 		
 		// supplied until
-		TableViewerColumn tableViewerColumnSuppliedUntil =
-			new TableViewerColumn(medicationTableViewer, SWT.CENTER);
-		TableColumn tblclmnSufficient = tableViewerColumnSuppliedUntil.getColumn();
-		tcl_compositeMedicationTable.setColumnData(tblclmnSufficient,
-			new ColumnPixelData(45, true, true));
-		tblclmnSufficient.setText(Messages.TherapieplanComposite_tblclmnSupplied_text);
-		tblclmnSufficient.addSelectionListener(getSelectionAdapter(tblclmnSufficient, 4));
-		tableViewerColumnSuppliedUntil.setLabelProvider(new MedicationCellLabelProvider() {
-			
-			@Override
-			public String getText(Object element){
-				// SLLOW
-				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
-				if (!pres.isFixedMediation() || pres.isReserveMedication())
-					return "";
-					
-				TimeTool tt = pres.getSuppliedUntilDate();
-				if (tt != null && tt.isAfterOrEqual(new TimeTool())) {
-					return "OK";
-				}
-				
-				return "?";
-			}
-		});
+		//		TableViewerColumn tableViewerColumnSuppliedUntil =
+		//			new TableViewerColumn(medicationTableViewer, SWT.CENTER);
+		//		TableColumn tblclmnSufficient = tableViewerColumnSuppliedUntil.getColumn();
+		//		tcl_compositeMedicationTable.setColumnData(tblclmnSufficient,
+		//			new ColumnPixelData(45, true, true));
+		//		tblclmnSufficient.setText(Messages.TherapieplanComposite_tblclmnSupplied_text);
+		//		tblclmnSufficient.addSelectionListener(getSelectionAdapter(tblclmnSufficient, 4));
+		//		tableViewerColumnSuppliedUntil.setLabelProvider(new MedicationCellLabelProvider() {
+		//			
+		//			@Override
+		//			public String getText(Object element){
+		//				// SLLOW
+		//				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
+		//				if (!pres.isFixedMediation() || pres.isReserveMedication())
+		//					return "";
+		//					
+		//				TimeTool tt = pres.getSuppliedUntilDate();
+		//				if (tt != null && tt.isAfterOrEqual(new TimeTool())) {
+		//					return "OK";
+		//				}
+		//				
+		//				return "?";
+		//			}
+		//		});
 		
 		// comment
 		TableViewerColumn tableViewerColumnComment =
@@ -631,7 +631,7 @@ public class MedicationComposite extends Composite {
 			public void widgetSelected(SelectionEvent e){
 				if (btnShowHistory.getSelection()) {
 					showSearchFilterComposite(true);
-					createStopTableViewerColumn(5, 7);
+					createStopTableViewerColumn(5, 6);
 					medicationTableViewer.addFilter(mediFilter);
 					switchToViewerSoftOrderIfNotActive(ViewerSortOrder.DEFAULT);
 				} else {
