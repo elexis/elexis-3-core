@@ -18,6 +18,7 @@ import java.util.Iterator;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
+import ch.rgw.tools.StringTool;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.TimeTool;
 
@@ -135,7 +136,8 @@ public class MultiplikatorList {
 			sql.append("INSERT INTO ")
 				.append(table)
 				.append(
-					" (DATUM_VON,DATUM_BIS,MULTIPLIKATOR,TYP) VALUES ("
+					" (ID,DATUM_VON,DATUM_BIS,MULTIPLIKATOR,TYP) VALUES ("
+						+ JdbcLink.wrap(StringTool.unique("prso")) +","
 						+ JdbcLink.wrap(dateFrom.toString(TimeTool.DATE_COMPACT)) + ","
 						+ JdbcLink.wrap(dateTo.toString(TimeTool.DATE_COMPACT)) + ","
 						+ JdbcLink.wrap(value) + "," + JdbcLink.wrap(typ) + ");");
