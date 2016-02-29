@@ -69,11 +69,15 @@ public class MedicationView extends ViewPart implements IActivationListener {
 			@Override
 			public void run(){
 				StructuredSelection ss = (StructuredSelection) medicationTableViewer.getSelection();
-				Prescription pr = (Prescription) ss.getFirstElement();
-				if (pr != null) {
-					ArticleDefaultSignatureTitleAreaDialog adtad =
-						new ArticleDefaultSignatureTitleAreaDialog(UiDesk.getTopShell(), pr);
-					adtad.open();
+				MedicationTableViewerItem viewerItem =
+					(MedicationTableViewerItem) ss.getFirstElement();
+				if (viewerItem != null) {
+					Prescription pr = viewerItem.getPrescription();
+					if (pr != null) {
+						ArticleDefaultSignatureTitleAreaDialog adtad =
+							new ArticleDefaultSignatureTitleAreaDialog(UiDesk.getTopShell(), pr);
+						adtad.open();
+					}
 				}
 			}
 		});
