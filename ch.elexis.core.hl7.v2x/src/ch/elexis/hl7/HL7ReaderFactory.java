@@ -132,7 +132,7 @@ public enum HL7ReaderFactory {
 		
 		String[] mshPart = splitted[0].split("\\|", -1);
 		
-		if (!mshPart[8].equals("ORU^R01")) {
+		if (!mshPart[8].equals("ORU^R01") && !mshPart[11].startsWith("2.5")) {
 			mshPart[8] = "ORU^R01";
 			splitted[0] = joinStrings(mshPart, "|");
 		}
