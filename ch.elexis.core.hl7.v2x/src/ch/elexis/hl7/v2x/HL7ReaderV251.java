@@ -154,19 +154,26 @@ public class HL7ReaderV251 extends HL7Reader {
 		setPatient(pid, orderNumber, createIfNotFound);
 		int count = order.getRESULTReps();
 		
+		String lastObrObservationDateTime = null;
 		for (int idx = 0; idx < count; idx++) {
 			OBR obr = oul.getSPECIMEN(idx).getORDER().getOBR();
 			String obrObservationDateTime =
 				obr.getObr7_ObservationDateTime().getTs1_Time().getValue();
 			if (obrObservationDateTime == null) {
-				TimeTool time = new TimeTool();
-				obrObservationDateTime = time.toString(TimeTool.TIMESTAMP);
+				if (lastObrObservationDateTime != null) {
+					obrObservationDateTime = lastObrObservationDateTime;
+				} else {
+					TimeTool time = new TimeTool();
+					obrObservationDateTime = time.toString(TimeTool.TIMESTAMP);
+				}
+			} else {
+				lastObrObservationDateTime = obrObservationDateTime;
 			}
 			oul.getSPECIMEN().getORDER(idx).getNTE();
 			
+			String commentNTE = null;
 			for (int i = 0; i < oul.getSPECIMEN(idx).getORDERReps(); i++) {
 				// get notes and comments
-				String commentNTE = null;
 				for (int j = 0; j < oul.getSPECIMEN().getORDER(idx).getNTEReps(); j++) {
 					AbstractPrimitive comment =
 						oul.getSPECIMEN().getORDER(idx).getNTE(j).getNte3_Comment(0);
@@ -179,14 +186,14 @@ public class HL7ReaderV251 extends HL7Reader {
 						commentNTE += comment.getValue();
 					}
 				}
-				// groupe and sequence
-				String group = "";
-				String sequence = "";
-				
-				// result
-				readOBXResults(order.getRESULT(i).getOBX(), commentNTE, group, sequence,
-					obrObservationDateTime);
 			}
+			// groupe and sequence
+			String group = "";
+			String sequence = "";
+			
+			// result
+			readOBXResults(order.getRESULT(idx).getOBX(), commentNTE, group, sequence,
+				obrObservationDateTime);
 		}
 	}
 	
