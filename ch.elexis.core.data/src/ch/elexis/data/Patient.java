@@ -219,7 +219,10 @@ public class Patient extends Person {
 		
 		// if not configured otherwise load only consultations of active mandant
 		if (!CoreHub.userCfg.get(Preferences.USR_DEFLOADCONSALL, false)) {
-			qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, ElexisEventDispatcher.getSelectedMandator().getId());
+			Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
+			if(mandator!=null) {
+				qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, mandator.getId());
+			}
 		}
 		
 		// qbe.add("Datum", "=", new
@@ -391,7 +394,10 @@ public class Patient extends Person {
 		
 		// normally do not display other mandator's balance
 		if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
-			rQuery.add(Rechnung.MANDATOR_ID, Query.EQUALS, ElexisEventDispatcher.getSelectedMandator().getId());
+			Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
+			if(mandator!=null) {
+				rQuery.add(Rechnung.MANDATOR_ID, Query.EQUALS, mandator.getId());
+			}
 		}
 		
 		// let the database engine do the filtering
