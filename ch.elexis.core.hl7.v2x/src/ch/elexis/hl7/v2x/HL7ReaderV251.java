@@ -58,18 +58,17 @@ public class HL7ReaderV251 extends HL7Reader {
 	@Override
 	public String getSender() throws ElexisException{
 		String sender;
-		sender = msh.getMsh4_SendingFacility().getNamespaceID().getValue();
 		try {
-			Integer.parseInt(sender);
-			String tmp = msh.getMsh3_SendingApplication().getNamespaceID().getValue();
-			if (tmp != null) {
-				sender = tmp;
+			MSH msh = (MSH) message.get("MSH");
+			sender = msh.getMsh4_SendingFacility().getNamespaceID().getValue();
+			if (sender == null) {
+				sender = msh.getMsh3_SendingApplication().getNamespaceID().getValue();
+				if (sender == null) {
+					sender = "";
+				}
 			}
-		} catch (NumberFormatException nfe) {
-			// OK we got a name not id
-		}
-		if (sender == null) {
-			sender = "";
+		} catch (HL7Exception e) {
+			throw new ElexisException(e.getMessage(), e);
 		}
 		return sender;
 	}
@@ -412,6 +411,10 @@ public class HL7ReaderV251 extends HL7Reader {
 				value = ((NM) tmp).getValue();
 			} else if (tmp instanceof SN) {
 				value = ((SN) tmp).getSn2_Num1().getValue();
+				// look for non numeric value
+				if (value == null) {
+					value = ((SN) tmp).getSn1_Comparator().getValue();
+				}
 			} else if (tmp instanceof CE) {
 				value = ((CE) tmp).getCe2_Text().getValue();
 			}
