@@ -115,8 +115,6 @@ public class ElexisContext {
 				}
 			} else {
 				if (!obj1.equals(obj2)) {
-					events.add(new ElexisEvent((PersistentObject) obj2, clazz,
-							ElexisEvent.EVENT_DESELECTED));
 					events.add(new ElexisEvent((PersistentObject) obj1, clazz,
 						ElexisEvent.EVENT_SELECTED));
 					log.debug("[SEL] " + clazz + " \t|| " + obj2 + " --> \t " + obj1);
