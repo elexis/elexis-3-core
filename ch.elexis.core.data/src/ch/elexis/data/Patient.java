@@ -31,6 +31,8 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.TimeTool.TimeFormatException;
 
+import static ch.elexis.core.model.PatientConstants.*;
+
 /**
  * Ein Patient ist eine Person (und damit auch ein Kontakt), mit folgenden zusätzlichen
  * Eigenschaften
@@ -67,8 +69,6 @@ public class Patient extends Person {
 	public static final String FLD_PERS_ANAMNESE = "PersAnamnese";
 	public static final String FLD_SYS_ANAMNESE = "SysAnamnese";
 	public static final String FLD_FAM_ANAMNESE = "FamilienAnamnese";
-	public static final String FLD_EXTINFO_STAMMARZT = "Stammarzt_";
-	public static final String FLD_EXTINFO_LEGAL_GUARDIAN = "LegalGuardian";
 	
 	public static final String[] DEFAULT_SORT = {
 		FLD_NAME, FLD_FIRSTNAME, FLD_DOB

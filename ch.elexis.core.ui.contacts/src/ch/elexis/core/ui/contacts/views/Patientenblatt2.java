@@ -60,6 +60,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -218,7 +219,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 					}
 
 				}));
-		fields.add(new InputData(Messages.Patientenblatt2_regularPhysician, Patient.FLD_EXTINFO_STAMMARZT,
+		fields.add(new InputData(Messages.Patientenblatt2_regularPhysician, PatientConstants.FLD_EXTINFO_STAMMARZT,
 				new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
 					public void displayContent(PersistentObject po, InputData ltf) {
@@ -277,7 +278,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 					}
 				}));
 
-		fields.add(new InputData(Messages.Patientenblatt2_legalGuardian, Patient.FLD_EXTINFO_LEGAL_GUARDIAN,
+		fields.add(new InputData(Messages.Patientenblatt2_legalGuardian, PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN,
 				new LabeledInputField.IContentProvider() {
 					@Override
 					public void displayContent(PersistentObject po, InputData ltf) {
