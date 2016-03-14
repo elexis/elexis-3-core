@@ -16,10 +16,10 @@ package ch.elexis.core.model;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.Deleteable#isDeleted <em>Deleted</em>}</li>
  * </ul>
- * </p>
  *
  * @see ch.elexis.core.model.ModelPackage#getDeleteable()
  * @model interface="true" abstract="true"

@@ -30,10 +30,10 @@ import ca.uhn.hl7v2.model.v26.segment.OBX;
 import ca.uhn.hl7v2.model.v26.segment.PID;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.data.Anschrift;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Person;
-import ch.elexis.data.Query;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.types.Country;
+import ch.elexis.core.types.CountryCode;
+import ch.elexis.core.types.Gender;
 import ch.elexis.hl7.HL7PatientResolver;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.model.EncapsulatedData;
@@ -44,7 +44,6 @@ import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
 import ch.elexis.hl7.v26.Messages;
 import ch.rgw.tools.StringTool;
-import ch.rgw.tools.TimeTool;
 
 public class HL7ReaderV26 extends HL7Reader {
 	static Logger logger = LoggerFactory.getLogger(HL7ReaderV26.class);
@@ -142,12 +141,11 @@ public class HL7ReaderV26 extends HL7Reader {
 	
 	private void setPatient(ORU_R01 oru, final boolean createIfNotFound) throws ParseException,
 		HL7Exception{
-		Query<Patient> qbe = new Query<Patient>(Patient.class);
-		List<Patient> list = new ArrayList<Patient>();
+		List<IPatient> list = new ArrayList<IPatient>();
 		String lastName = ""; //$NON-NLS-1$
 		String firstName = ""; //$NON-NLS-1$
 		String birthDate = ""; //$NON-NLS-1$
-		String sex = Person.FEMALE;
+		String sex = Gender.FEMALE.value();
 		pat = null;
 		
 		if (pat == null) {
@@ -179,8 +177,7 @@ public class HL7ReaderV26 extends HL7Reader {
 			}
 			
 			if (patid != null) {
-				qbe.add(Patient.FLD_PATID, Query.EQUALS, patid);
-				list = qbe.execute();
+				list = patientResolver.getPatientById(patid);
 			}
 			
 			// String[] pidflds = patid.split("[\\^ ]+"); //$NON-NLS-1$
@@ -209,12 +206,7 @@ public class HL7ReaderV26 extends HL7Reader {
 			if ((patid == null) || (list.size() != 1)) {
 				// We did not find the patient using the PatID, so we try the
 				// name and birthdate
-				qbe.clear();
-				qbe.add(Person.NAME, Query.EQUALS, StringTool.normalizeCase(lastName));
-				qbe.add(Person.FIRSTNAME, Query.EQUALS, StringTool.normalizeCase(firstName));
-				qbe.add(Person.BIRTHDATE, Query.EQUALS,
-					new TimeTool(birthDate).toString(TimeTool.DATE_COMPACT));
-				list = qbe.execute();
+				list = patientResolver.findPatientByNameAndBirthdate(lastName, firstName, birthDate);
 				
 				if ((list != null) && (list.size() == 1)) {
 					pat = list.get(0);
@@ -225,26 +217,26 @@ public class HL7ReaderV26 extends HL7Reader {
 						XAD adr = pid.getPatientAddress(0);
 						phone = pid.getPhoneNumberHome(0).getTelephoneNumber().getValue();
 						
-						pat = new Patient(lastName, firstName, birthDate, sex);
-						pat.set(Patient.FLD_PATID, patid);
-						Anschrift an = pat.getAnschrift();
+						pat = patientResolver.createPatient(lastName, firstName, birthDate, sex);
+						pat.setPatientNr(patid);
+
 						if (adr != null) {
 							if (adr.getStreetAddress() != null) {
-								an.setStrasse(adr.getStreetAddress().getComponent(0).toString());
+								pat.setStreet(adr.getStreetAddress().getComponent(0).toString());
 							}
 							if (adr.getZipOrPostalCode() != null) {
-								an.setPlz(adr.getZipOrPostalCode().getValue());
+								pat.setZip(adr.getZipOrPostalCode().getValue());
 							}
 							if (adr.getCity() != null) {
-								an.setOrt(adr.getCity().getValue());
+								pat.setCity(adr.getCity().getValue());
 							}
 							if (adr.getCountry() != null) {
-								an.setLand(adr.getCountry().getValue());
+								CountryCode cc = CountryCode.valueOf(adr.getCountry().getValue());
+								pat.setCountry(cc);
 							}
 						}
 						
-						pat.setAnschrift(an);
-						pat.set(Patient.FLD_PHONE1, phone);
+						pat.setPhone1(phone);
 					} else {
 						resolvePatient(firstName, lastName, birthDate);
 					}

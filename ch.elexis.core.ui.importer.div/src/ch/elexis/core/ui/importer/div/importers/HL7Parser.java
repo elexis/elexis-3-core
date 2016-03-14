@@ -16,13 +16,16 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.services.GlobalServiceDescriptors;
 import ch.elexis.core.data.services.IDocumentManager;
 import ch.elexis.core.data.util.Extensions;
@@ -93,7 +96,7 @@ public class HL7Parser {
 	 * @param labItemResolver
 	 * @param labContactResolver
 	 * @param createPatientIfNotFound
-	 * 
+	 * 			
 	 * @return the orderId of the import
 	 */
 	public Result<Object> parse(final HL7Reader hl7Reader, ILabItemResolver labItemResolver,
@@ -119,19 +122,19 @@ public class HL7Parser {
 			
 			ObservationMessage obsMessage =
 				hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
-			
-			pat = hl7Reader.getPatient();
+				
+			ContactBean cb = (ContactBean) hl7Reader.getPatient();
+			pat = cb.getPatientEntity();
 			if (pat == null) {
 				return new Result<Object>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
 					obsMessage.getPatientId(), true);
-				
 			}
 			
 			int number = 0;
 			List<TransientLabResult> results = new ArrayList<TransientLabResult>();
 			List<IValueType> observations = obsMessage.getObservations();
 			initCommentDate(obsMessage);
-
+			
 			for (IValueType iValueType : observations) {
 				if (iValueType instanceof LabResultData) {
 					LabResultData hl7LabResult = (LabResultData) iValueType;
@@ -154,14 +157,13 @@ public class HL7Parser {
 						if (hl7LabResult.isNumeric() == false) {
 							typ = LabItem.typ.TEXT;
 						}
-						labItem =
-							new LabItem(hl7LabResult.getCode(), hl7LabResult.getName(), labor,
-								pat.getGeschlecht().equals(Person.MALE) ? hl7LabResult.getRange()
-										: "",
-								pat.getGeschlecht().equals(Person.FEMALE) ? hl7LabResult.getRange()
-										: "", hl7LabResult.getUnit(), typ,
-								labItemResolver.getTestGroupName(hl7LabResult),
-								labItemResolver.getNextTestGroupSequence(hl7LabResult));
+						labItem = new LabItem(hl7LabResult.getCode(), hl7LabResult.getName(), labor,
+							pat.getGeschlecht().equals(Person.MALE) ? hl7LabResult.getRange() : "",
+							pat.getGeschlecht().equals(Person.FEMALE) ? hl7LabResult.getRange()
+									: "",
+							hl7LabResult.getUnit(), typ,
+							labItemResolver.getTestGroupName(hl7LabResult),
+							labItemResolver.getNextTestGroupSequence(hl7LabResult));
 					}
 					
 					boolean importAsLongText =
@@ -182,9 +184,8 @@ public class HL7Parser {
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem, "text")
 								.date(obrDateTime)
-								.comment(
-									StringTool.unNull(hl7LabResult.getValue()) + "\n"
-										+ StringTool.unNull(hl7LabResult.getComment()))
+								.comment(StringTool.unNull(hl7LabResult.getValue()) + "\n"
+									+ StringTool.unNull(hl7LabResult.getComment()))
 								.flags(hl7LabResult.isFlagged() ? LabResult.PATHOLOGIC : 0)
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 								.observationTime(obrDateTime).analyseTime(obxDateTime)
@@ -194,9 +195,8 @@ public class HL7Parser {
 					} else {
 						TimeTool obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
 						TimeTool obxDateTime = new TimeTool(hl7LabResult.getDate());
-						TransientLabResult importedResult =
-							new TransientLabResult.Builder(pat, labor, labItem,
-								hl7LabResult.getValue()).date(obrDateTime)
+						TransientLabResult importedResult = new TransientLabResult.Builder(pat,
+							labor, labItem, hl7LabResult.getValue()).date(obrDateTime)
 								.comment(StringTool.unNull(hl7LabResult.getComment()))
 								.flags(hl7LabResult.isFlagged() ? LabResult.PATHOLOGIC : 0)
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
@@ -262,7 +262,8 @@ public class HL7Parser {
 			}
 			
 			if (testMode) {
-				orderId = LabImportUtil.importLabResults(results, new OverwriteAllImportUiHandler());
+				orderId =
+					LabImportUtil.importLabResults(results, new OverwriteAllImportUiHandler());
 			} else {
 				orderId = LabImportUtil.importLabResults(results, new DefaultLabImportUiHandler());
 			}
@@ -327,8 +328,9 @@ public class HL7Parser {
 			commentDate = new TimeTool();
 		}
 	}
-
-	private void createCommentsLabResult(TextData hl7TextData, Patient pat, Labor labor, int number){
+	
+	private void createCommentsLabResult(TextData hl7TextData, Patient pat, Labor labor,
+		int number){
 		if (hl7TextData.getDate() == null) {
 			hl7TextData.setDate(commentDate.getTime());
 		}
@@ -403,7 +405,13 @@ public class HL7Parser {
 	public Result<?> importFile(final File file, final File archiveDir,
 		ILabItemResolver labItemResolver, ILabContactResolver labContactResolver,
 		boolean bCreatePatientIfNotExists){
-		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
+		List<HL7Reader> hl7Readers;
+		try {
+			hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
+		} catch (IOException e) {
+			MessageEvent.fireError("Error reading HL7 data", e.getMessage());
+			hl7Readers = Collections.emptyList();
+		}
 		
 		for (HL7Reader hl7Reader : hl7Readers) {
 			this.hl7Reader = hl7Reader;
@@ -416,21 +424,21 @@ public class HL7Parser {
 						if (file.exists() && file.isFile() && file.canRead()) {
 							File newFile = new File(archiveDir, file.getName());
 							
-							if(newFile.exists()) {
+							if (newFile.exists()) {
 								// on multiple move to archive dir:
 								// first time use own filename
 								// n+ times use filename_timestamp
-								String fnwts = file.getName()+"_"+new TimeTool().toString(TimeTool.TIMESTAMP);
+								String fnwts = file.getName() + "_"
+									+ new TimeTool().toString(TimeTool.TIMESTAMP);
 								newFile = new File(archiveDir, fnwts);
-							} 
+							}
 							
 							if (!file.renameTo(newFile)) {
-								SWTHelper
-									.showError(
-										ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorArchiving,
-										ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_TheFile
-											+ file.getAbsolutePath()
-											+ ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_CouldNotMoveToArchive);
+								SWTHelper.showError(
+									ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorArchiving,
+									ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_TheFile
+										+ file.getAbsolutePath()
+										+ ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_CouldNotMoveToArchive);
 							}
 						}
 					}
@@ -488,7 +496,13 @@ public class HL7Parser {
 	}
 	
 	public Result<?> importMessage(String message, boolean bCreatePatientIfNotExists){
-		HL7Reader hl7Reader = HL7ReaderFactory.INSTANCE.getReader(message);
+		HL7Reader hl7Reader;
+		try {
+			hl7Reader = HL7ReaderFactory.INSTANCE.getReader(message);
+		} catch (IOException e) {
+			MessageEvent.fireError("HL7 Error", e.getMessage());
+			return new Result<Object>(SEVERITY.ERROR, 0, e.getMessage(), null, true);
+		}
 		this.hl7Reader = hl7Reader;
 		Result<?> ret = parse(hl7Reader, bCreatePatientIfNotExists);
 		if (ret.isOK()) {

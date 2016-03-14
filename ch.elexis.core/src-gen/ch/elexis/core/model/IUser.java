@@ -16,11 +16,11 @@ package ch.elexis.core.model;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IUser#getUsername <em>Username</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getPassword <em>Password</em>}</li>
  * </ul>
- * </p>
  *
  * @see ch.elexis.core.model.ModelPackage#getIUser()
  * @model interface="true" abstract="true"

@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Hl7InputStreamMessageStringIterator;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.hl7.v26.Messages;
 import ch.elexis.hl7.v2x.HL7ReaderV21;
 import ch.elexis.hl7.v2x.HL7ReaderV22;
@@ -32,35 +32,37 @@ import ch.elexis.hl7.v2x.HL7ReaderV24;
 import ch.elexis.hl7.v2x.HL7ReaderV25;
 import ch.elexis.hl7.v2x.HL7ReaderV251;
 import ch.elexis.hl7.v2x.HL7ReaderV26;
-import ch.rgw.tools.ExHandler;
 
 public enum HL7ReaderFactory {
-	
-	INSTANCE;
-	
+		
+		INSTANCE;
+		
 	protected List<Message> messageList;
 	
 	private static Logger logger = LoggerFactory.getLogger(HL7ReaderFactory.class);
 	
-	public List<HL7Reader> getReader(File file){
+	public List<HL7Reader> getReader(File file) throws IOException{
 		checkClassLoader();
-
+		
 		messageList = new ArrayList<Message>();
 		return load(file);
 	}
 	
-	public HL7Reader getReader(String message){
+	public @Nullable HL7Reader getReader(String message) throws IOException {
 		checkClassLoader();
-
+		
 		messageList = new ArrayList<Message>();
-		return loadMessage(message);
+		try {
+			return loadMessage(message);
+		} catch (HL7Exception e) {
+			throw new IOException(HL7Exception.class.getName()+": "+e.getMessage());
+		}
 	}
 	
-	private List<HL7Reader> load(File file){
+	private List<HL7Reader> load(File file) throws IOException{
 		if (!file.canRead()) {
-			MessageEvent.fireError(Messages.getString("HL7Reader_CannotReadFile"),
-				file.getAbsolutePath());
-			return Collections.emptyList();
+			throw new IOException(MessageFormat
+				.format(Messages.getString("HL7Reader_CannotReadFile"), file.getAbsolutePath()));
 		}
 		
 		List<HL7Reader> ret = new ArrayList<HL7Reader>();
@@ -68,7 +70,7 @@ public enum HL7ReaderFactory {
 			// HAPI utility class will iterate over the messages which appear over an InputStream
 			Hl7InputStreamMessageStringIterator stringIterator =
 				new Hl7InputStreamMessageStringIterator(inputStream);
-			
+				
 			Parser p = new PipeParser();
 			p.setValidationContext(new NoValidation());
 			
@@ -81,11 +83,8 @@ public enum HL7ReaderFactory {
 			}
 			return ret;
 		} catch (Exception ex) {
-			ExHandler.handle(ex);
-			MessageEvent.fireError(Messages.getString("HL7Reader_ExceptionWhileReading"),
-				ex.getMessage());
+			throw new IOException(ex);
 		}
-		return Collections.emptyList();
 	}
 	
 	private void checkClassLoader(){
@@ -95,7 +94,7 @@ public enum HL7ReaderFactory {
 			throw new IllegalStateException("Model and Parser loaded by different ClassLoader");
 		}
 	}
-
+	
 	private InputStream getFileInputStream(File file) throws IOException{
 		byte[] bytes = Files.readAllBytes(file.toPath());
 		CharsetDetector detector = new CharsetDetector();
@@ -104,14 +103,14 @@ public enum HL7ReaderFactory {
 		
 		if (match != null) {
 			if (match.getName().contains("IBM424")) {
-				logger.warn("Reading HL7 file " + file.getAbsolutePath()
-					+ " with unsupported encoding " + match.getName()
-					+ " - trying to use ISO-8859-1 instead");
-				
+				logger.warn(
+					"Reading HL7 file " + file.getAbsolutePath() + " with unsupported encoding "
+						+ match.getName() + " - trying to use ISO-8859-1 instead");
+						
 				return new ByteArrayInputStream(new String(bytes, "ISO-8859-1").getBytes());
 			}
-			logger.info("Reading HL7 file " + file.getAbsolutePath() + " encoded "
-				+ match.getName() + " language " + match.getLanguage());
+			logger.info("Reading HL7 file " + file.getAbsolutePath() + " encoded " + match.getName()
+				+ " language " + match.getLanguage());
 			return new ByteArrayInputStream(match.getString().getBytes());
 		}
 		
@@ -176,20 +175,13 @@ public enum HL7ReaderFactory {
 		return builder.toString();
 	}
 	
-	private HL7Reader loadMessage(String message){
-		try {
-			Parser p = new PipeParser();
-			p.setValidationContext(new NoValidation());
-			Message hl7Msg = p.parse(message);
-			
-			messageList.add(hl7Msg);
-			return getReaderForMessage(hl7Msg);
-		} catch (HL7Exception ex) {
-			ExHandler.handle(ex);
-			MessageEvent.fireError(Messages.getString("HL7Reader_ExceptionWhileReading"),
-				ex.getMessage());
-		}
-		return null;
+	private HL7Reader loadMessage(String message) throws HL7Exception{
+		Parser p = new PipeParser();
+		p.setValidationContext(new NoValidation());
+		Message hl7Msg = p.parse(message);
+		
+		messageList.add(hl7Msg);
+		return getReaderForMessage(hl7Msg);
 	}
 	
 	private HL7Reader getReaderForMessage(Message message){

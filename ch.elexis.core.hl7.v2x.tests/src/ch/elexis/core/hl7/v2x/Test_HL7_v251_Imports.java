@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -15,6 +16,8 @@ import org.junit.Test;
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.hl7.v2x.Test_HL7_Imports.DummyPatientResolver;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.types.Gender;
 import ch.elexis.data.Patient;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;
@@ -33,7 +36,7 @@ public class Test_HL7_v251_Imports {
 	}
 	
 	@Test
-	public void testGetSender() throws ElexisException{
+	public void testGetSender() throws ElexisException, IOException{
 		File[] files = loadv251Files();
 		assertNotSame(0, files.length);
 		
@@ -52,7 +55,7 @@ public class Test_HL7_v251_Imports {
 	}
 	
 	@Test
-	public void testGetPatient() throws ElexisException{
+	public void testGetPatient() throws ElexisException, IOException{
 		File[] files = loadv251Files();
 		assertNotSame(0, files.length);
 		
@@ -64,15 +67,15 @@ public class Test_HL7_v251_Imports {
 			HL7Reader reader = hl7Readers.get(0);
 			reader.readObservation(resolver, false);
 			
-			Patient patient = reader.getPatient();
-			assertEquals("Grissemann", patient.getName());
-			assertEquals("17.05.1966", patient.getGeburtsdatum());
-			assertEquals(Patient.MALE, patient.getGeschlecht());
+			IPatient patient = reader.getPatient();
+			assertEquals("Grissemann", patient.getFamilyName());
+			assertEquals("17.05.1966", patient.getDateOfBirth());
+			assertEquals(Gender.MALE, patient.getGender());
 		}
 	}
 	
 	@Test
-	public void testReadObservation() throws ElexisException{
+	public void testReadObservation() throws ElexisException, IOException{
 		File[] files = loadv251Files();
 		assertNotSame(0, files.length);
 		

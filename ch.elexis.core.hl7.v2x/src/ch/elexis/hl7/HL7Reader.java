@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.data.Patient;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.hl7.model.ObservationMessage;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.Messages;
@@ -19,7 +19,7 @@ public abstract class HL7Reader {
 	
 	protected Message message;
 	protected ObservationMessage observation;
-	protected Patient pat;
+	protected IPatient pat;
 	protected HL7PatientResolver patientResolver;
 	
 	public HL7Reader(Message message){
@@ -84,7 +84,7 @@ public abstract class HL7Reader {
 		return false;
 	}
 	
-	public Patient getPatient(){
+	public IPatient getPatient(){
 		return pat;
 	}
 	

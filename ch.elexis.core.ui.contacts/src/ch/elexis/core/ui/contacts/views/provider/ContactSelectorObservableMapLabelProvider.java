@@ -21,11 +21,12 @@ import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.types.ContactGender;
+import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.icons.Images;
 
-public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabelProvider implements
-		ITableLabelProvider {
-	
+public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabelProvider
+		implements ITableLabelProvider {
+		
 	public ContactSelectorObservableMapLabelProvider(IObservableMap[] observeMaps){
 		super(observeMaps);
 	}
@@ -89,7 +90,7 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 		}
 	}
 	
-	private String geschlechtToLabel(ContactGender geschlecht){
+	private String geschlechtToLabel(Gender geschlecht){
 		if (geschlecht == null)
 			return "?";
 		switch (geschlecht) {

@@ -11,14 +11,15 @@
 package ch.elexis.core.model;
 
 import ch.elexis.core.types.ContactType;
+import ch.elexis.core.types.Country;
 import ch.elexis.core.types.CountryCode;
-
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>IContact</b></em>'. <!--
  * end-user-doc -->
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IContact#getContactType <em>Contact Type</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#isMandator <em>Mandator</em>}</li>
@@ -40,7 +41,6 @@ import ch.elexis.core.types.CountryCode;
  *   <li>{@link ch.elexis.core.model.IContact#getMobile <em>Mobile</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getComment <em>Comment</em>}</li>
  * </ul>
- * </p>
  *
  * @see ch.elexis.core.model.ModelPackage#getIContact()
  * @model interface="true" abstract="true"
@@ -270,14 +270,15 @@ public interface IContact extends Identifiable, Deleteable {
 	
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getCountry <em>Country</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Country</em>' attribute.
 	 * @see ch.elexis.core.types.CountryCode
 	 * @see #getCountry()
 	 * @generated
 	 */
 	void setCountry(CountryCode value);
-	
+
 	/**
 	 * Returns the value of the '<em><b>Zip</b></em>' attribute.
 	 * <!-- begin-user-doc -->

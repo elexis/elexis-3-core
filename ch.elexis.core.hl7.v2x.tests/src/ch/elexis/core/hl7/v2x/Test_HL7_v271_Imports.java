@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import com.ibm.icu.text.SimpleDateFormat;
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.hl7.v2x.Test_HL7_Imports.DummyPatientResolver;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.types.Gender;
 import ch.elexis.data.Patient;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;
@@ -41,7 +44,7 @@ public class Test_HL7_v271_Imports {
 	}
 	
 	@Test
-	public void testGetVersion(){
+	public void testGetVersion() throws IOException{
 		File[] files = loadv271Files();
 		assertNotSame(0, files.length);
 		
@@ -58,7 +61,7 @@ public class Test_HL7_v271_Imports {
 	}
 	
 	@Test
-	public void testGetSenderSendingFacilityGiven() throws ElexisException{
+	public void testGetSenderSendingFacilityGiven() throws ElexisException, IOException{
 		File tstFile1 = loadSpecificv271File("v271test1.hl7");
 		assertNotNull(tstFile1);
 		
@@ -71,7 +74,7 @@ public class Test_HL7_v271_Imports {
 	}
 	
 	@Test
-	public void testGetSenderSendingApplicationGiven() throws ElexisException{
+	public void testGetSenderSendingApplicationGiven() throws ElexisException, IOException{
 		File tstFile2 = loadSpecificv271File("v271test2.hl7");
 		assertNotNull(tstFile2);
 		
@@ -83,7 +86,7 @@ public class Test_HL7_v271_Imports {
 	}
 	
 	@Test
-	public void testGetSenderSendingFacilityAndApplicationGiven() throws ElexisException{
+	public void testGetSenderSendingFacilityAndApplicationGiven() throws ElexisException, IOException{
 		File alerelisFile = loadSpecificv271File("alerelis.hl7");
 		assertNotNull(alerelisFile);
 		
@@ -95,7 +98,7 @@ public class Test_HL7_v271_Imports {
 	}
 	
 	@Test
-	public void testGetPatient() throws ElexisException{
+	public void testGetPatient() throws ElexisException, IOException{
 		File tstFile3 = loadSpecificv271File("v271test3.hl7");
 		assertNotNull(tstFile3);
 		
@@ -105,14 +108,14 @@ public class Test_HL7_v271_Imports {
 		HL7Reader reader = hl7Readers.get(0);
 		reader.readObservation(resolver, false);
 		
-		Patient patient = reader.getPatient();
-		assertEquals("Grissemann", patient.getName());
-		assertEquals("17.05.1966", patient.getGeburtsdatum());
-		assertEquals(Patient.MALE, patient.getGeschlecht());
+		IPatient patient = reader.getPatient();
+		assertEquals("Grissemann", patient.getFamilyName());
+		assertEquals("17.05.1966", patient.getDateOfBirth());
+		assertEquals(Gender.MALE, patient.getGender());
 	}
 	
 	@Test
-	public void testReadObservation() throws ElexisException{
+	public void testReadObservation() throws ElexisException, IOException{
 		File[] files = loadv271Files();
 		assertNotSame(0, files.length);
 		
@@ -150,7 +153,7 @@ public class Test_HL7_v271_Imports {
 	}
 	
 	@Test
-	public void testReadObservationOfAlerelisFile() throws ElexisException{
+	public void testReadObservationOfAlerelisFile() throws ElexisException, IOException{
 		File alerelisFile = loadSpecificv271File("alerelis.hl7");
 		assertNotNull(alerelisFile);
 		
@@ -246,7 +249,7 @@ public class Test_HL7_v271_Imports {
 	}
 	
 	@Test
-	public void testReadObservationOfv271test2File() throws ElexisException{
+	public void testReadObservationOfv271test2File() throws ElexisException, IOException{
 		File tst2File = loadSpecificv271File("v271test2.hl7");
 		assertNotNull(tst2File);
 		
@@ -293,7 +296,7 @@ public class Test_HL7_v271_Imports {
 	}
 	
 	@Test
-	public void testReadObservationOfv271test6File() throws ElexisException{
+	public void testReadObservationOfv271test6File() throws ElexisException, IOException{
 		File tst6File = loadSpecificv271File("v271test6.hl7");
 		assertNotNull(tst6File);
 		

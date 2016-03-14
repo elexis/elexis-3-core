@@ -17,8 +17,10 @@ import java.util.List;
 import org.eclipse.emf.common.util.Enumerator;
 
 /**
- * <!-- begin-user-doc --> A representation of the literals of the enumeration '
- * <em><b>Contact Type</b></em>', and utility methods for working with them. <!-- end-user-doc -->
+ * <!-- begin-user-doc -->
+ * A representation of the literals of the enumeration '<em><b>Contact Type</b></em>',
+ * and utility methods for working with them.
+ * <!-- end-user-doc -->
  * @see ch.elexis.core.types.TypesPackage#getContactType()
  * @model
  * @generated
@@ -26,38 +28,40 @@ import org.eclipse.emf.common.util.Enumerator;
 public enum ContactType implements Enumerator {
 	/**
 	 * The '<em><b>PERSON</b></em>' literal object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #PERSON_VALUE
 	 * @generated
 	 * @ordered
 	 */
 	PERSON(0, "PERSON", "PERSON"),
-	
+
 	/**
-	 * The '<em><b>ORGANIZATION</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
+	 * The '<em><b>ORGANIZATION</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #ORGANIZATION_VALUE
 	 * @generated
 	 * @ordered
 	 */
 	ORGANIZATION(1, "ORGANIZATION", "ORGANIZATION"),
-	
+
 	/**
 	 * The '<em><b>UNKNOWN</b></em>' literal object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #UNKNOWN_VALUE
 	 * @generated
 	 * @ordered
 	 */
 	UNKNOWN(2, "UNKNOWN", "UNKNOWN");
-	
+
 	/**
 	 * The '<em><b>PERSON</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>PERSON</b></em>' literal object isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of '<em><b>PERSON</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PERSON
@@ -66,13 +70,13 @@ public enum ContactType implements Enumerator {
 	 * @ordered
 	 */
 	public static final int PERSON_VALUE = 0;
-	
+
 	/**
 	 * The '<em><b>ORGANIZATION</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>ORGANIZATION</b></em>' literal object isn't clear, there really
-	 * should be more of a description here...
+	 * If the meaning of '<em><b>ORGANIZATION</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #ORGANIZATION
@@ -81,13 +85,13 @@ public enum ContactType implements Enumerator {
 	 * @ordered
 	 */
 	public static final int ORGANIZATION_VALUE = 1;
-	
+
 	/**
 	 * The '<em><b>UNKNOWN</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>UNKNOWN</b></em>' literal object isn't clear, there really should
-	 * be more of a description here...
+	 * If the meaning of '<em><b>UNKNOWN</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #UNKNOWN
@@ -96,34 +100,37 @@ public enum ContactType implements Enumerator {
 	 * @ordered
 	 */
 	public static final int UNKNOWN_VALUE = 2;
-	
+
 	/**
 	 * An array of all the '<em><b>Contact Type</b></em>' enumerators.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private static final ContactType[] VALUES_ARRAY = new ContactType[] {
+	private static final ContactType[] VALUES_ARRAY =
+		new ContactType[] {
 			PERSON,
 			ORGANIZATION,
 			UNKNOWN,
 		};
-	
+
 	/**
-	 * A public read-only list of all the '<em><b>Contact Type</b></em>' enumerators. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * A public read-only list of all the '<em><b>Contact Type</b></em>' enumerators.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static final List<ContactType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
-	
+
 	/**
-	 * Returns the '<em><b>Contact Type</b></em>' literal with the specified literal value. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Contact Type</b></em>' literal with the specified literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param literal the literal.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static ContactType get(String literal){
+	public static ContactType get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			ContactType result = VALUES_ARRAY[i];
 			if (result.toString().equals(literal)) {
@@ -132,14 +139,16 @@ public enum ContactType implements Enumerator {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Returns the '<em><b>Contact Type</b></em>' literal with the specified name. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Contact Type</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param name the name.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static ContactType getByName(String name){
+	public static ContactType getByName(String name) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			ContactType result = VALUES_ARRAY[i];
 			if (result.getName().equals(name)) {
@@ -148,14 +157,16 @@ public enum ContactType implements Enumerator {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Returns the '<em><b>Contact Type</b></em>' literal with the specified integer value. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Contact Type</b></em>' literal with the specified integer value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the integer value.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static ContactType get(int value){
+	public static ContactType get(int value) {
 		switch (value) {
 			case PERSON_VALUE: return PERSON;
 			case ORGANIZATION_VALUE: return ORGANIZATION;
@@ -163,69 +174,76 @@ public enum ContactType implements Enumerator {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private final int value;
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private final String name;
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private final String literal;
-	
+
 	/**
 	 * Only this class can construct instances.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private ContactType(int value, String name, String literal){
+	private ContactType(int value, String name, String literal) {
 		this.value = value;
 		this.name = name;
 		this.literal = literal;
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int getValue(){
+	public int getValue() {
 	  return value;
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getName(){
+	public String getName() {
 	  return name;
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getLiteral(){
+	public String getLiteral() {
 	  return literal;
 	}
-	
+
 	/**
-	 * Returns the literal value of the enumerator, which is its string representation. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the literal value of the enumerator, which is its string representation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public String toString(){
+	public String toString() {
 		return literal;
 	}
 	
-} // ContactType
+} //ContactType

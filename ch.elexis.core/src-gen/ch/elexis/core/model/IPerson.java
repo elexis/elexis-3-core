@@ -11,6 +11,7 @@
 package ch.elexis.core.model;
 
 import ch.elexis.core.types.ContactGender;
+import ch.elexis.core.types.Gender;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -19,13 +20,13 @@ import ch.rgw.tools.TimeTool;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IPerson#getDateOfBirth <em>Date Of Birth</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getGender <em>Gender</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getTitel <em>Titel</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getTitelSuffix <em>Titel Suffix</em>}</li>
  * </ul>
- * </p>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPerson()
  * @model interface="true" abstract="true"
@@ -59,7 +60,6 @@ public interface IPerson extends IContact {
 	
 	/**
 	 * Returns the value of the '<em><b>Gender</b></em>' attribute.
-	 * The literals are from the enumeration {@link ch.elexis.core.types.ContactGender}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Gender</em>' attribute isn't clear, there really should be more of
@@ -67,24 +67,23 @@ public interface IPerson extends IContact {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Gender</em>' attribute.
-	 * @see ch.elexis.core.types.ContactGender
-	 * @see #setGender(ContactGender)
+	 * @see #setGender(Gender)
 	 * @see ch.elexis.core.model.ModelPackage#getIPerson_Gender()
-	 * @model
+	 * @model dataType="ch.elexis.core.types.Gender"
 	 * @generated
 	 */
-	ContactGender getGender();
+	Gender getGender();
 	
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getGender <em>Gender</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Gender</em>' attribute.
-	 * @see ch.elexis.core.types.ContactGender
 	 * @see #getGender()
 	 * @generated
 	 */
-	void setGender(ContactGender value);
-	
+	void setGender(Gender value);
+
 	/**
 	 * Returns the value of the '<em><b>Titel</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -134,5 +133,21 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	void setTitelSuffix(String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" required="true"
+	 * @generated
+	 */
+	String getFirstName();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" required="true"
+	 * @generated
+	 */
+	String getFamilyName();
 	
 } // IPerson

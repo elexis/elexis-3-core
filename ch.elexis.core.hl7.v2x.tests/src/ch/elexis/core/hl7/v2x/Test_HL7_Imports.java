@@ -5,20 +5,28 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.data.Patient;
+import ch.elexis.data.Person;
+import ch.elexis.data.Query;
 import ch.elexis.hl7.HL7PatientResolver;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;
 import ch.elexis.hl7.model.IValueType;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.rgw.tools.StringTool;
+import ch.rgw.tools.TimeTool;
 
 public class Test_HL7_Imports {
 	
@@ -34,7 +42,7 @@ public class Test_HL7_Imports {
 		resolver = new DummyPatientResolver(dummyPatient);
 	}
 	
-	private void testGetReaderOneHL7file(File f){
+	private void testGetReaderOneHL7file(File f) throws IOException{
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
 			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(f);
@@ -47,7 +55,7 @@ public class Test_HL7_Imports {
 		}
 	}
 	
-	private void testGetObservationsOneHL7file(File f) throws ElexisException{
+	private void testGetObservationsOneHL7file(File f) throws ElexisException, IOException{
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
 			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(f);
@@ -63,13 +71,13 @@ public class Test_HL7_Imports {
 			}
 			assertNotNull(hl7Readers.get(0).getPatient());
 			assertEquals(resolver.getPatient().getVorname(), hl7Readers.get(0).getPatient()
-				.getVorname());
+				.getFirstName());
 		} else {
 			System.out.println("Skipping Datei " + name);
 		}
 	}
 	
-	private void getReadersAllHL7files(File directory, TestType type) throws ElexisException{
+	private void getReadersAllHL7files(File directory, TestType type) throws ElexisException, IOException{
 		File[] files = directory.listFiles();
 		int nrFiles = 0;
 		for (int i = 0; i < files.length; i++) {
@@ -93,9 +101,10 @@ public class Test_HL7_Imports {
 	 * Test method for {@link ch.elexis.importers.HL7#HL7(java.lang.String, java.lang.String)}.
 	 * 
 	 * @throws ElexisException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testGetObservationsHL7files() throws ElexisException{
+	public void testGetObservationsHL7files() throws ElexisException, IOException{
 		System.out.println("testHL7files in elexis-import_test/rsc: This will take some time");
 		getReadersAllHL7files(new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
 			"rsc"), TestType.OBSERVATION);
@@ -105,9 +114,10 @@ public class Test_HL7_Imports {
 	 * Test method for {@link ch.elexis.importers.HL7#HL7(java.lang.String, java.lang.String)}.
 	 * 
 	 * @throws ElexisException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testGetReaderHL7files() throws ElexisException{
+	public void testGetReaderHL7files() throws ElexisException, IOException{
 		System.out.println("testHL7files in elexis-import_test/rsc: This will take some time");
 		getReadersAllHL7files(new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
 			"rsc"), TestType.READ);
@@ -124,16 +134,43 @@ public class Test_HL7_Imports {
 		public DummyPatientResolver(Patient dummyPatient){
 			this.patient = dummyPatient;
 		}
-		
+
 		@Override
-		public Patient resolvePatient(String firstname, String lastname, String birthDate){
-			return patient;
-		}
-		
-		@Override
-		public boolean matchPatient(Patient patient, String firstname, String lastname,
+		public boolean matchPatient(IPatient patient, String firstname, String lastname,
 			String birthDate){
+			// TODO Auto-generated method stub
 			return false;
+		}
+
+		@Override
+		public IPatient createPatient(String lastName, String firstName, String birthDate,
+			String sex){
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public List<IPatient> getPatientById(String patid){
+			Query<Patient> qbe = new Query<Patient>(Patient.class);
+			qbe.add(Patient.FLD_PATID, Query.EQUALS, StringTool.normalizeCase(patid));
+			return qbe.execute().stream().map(p -> new ContactBean(p)).collect(Collectors.toList());
+		}
+
+		@Override
+		public List<IPatient> findPatientByNameAndBirthdate(String lastName, String firstName,
+			String birthDate){
+				Query<Patient> qbe = new Query<Patient>(Patient.class);
+				qbe.add(Person.NAME, Query.EQUALS, StringTool.normalizeCase(lastName));
+				qbe.add(Person.FIRSTNAME, Query.EQUALS, StringTool.normalizeCase(firstName));
+				qbe.add(Person.BIRTHDATE, Query.EQUALS,
+					new TimeTool(birthDate).toString(TimeTool.DATE_COMPACT));
+				return qbe.execute().stream().map(p -> new ContactBean(p)).collect(Collectors.toList());
+		}
+
+		@Override
+		public IPatient resolvePatient(String firstname, String lastname, String birthDate){
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 }

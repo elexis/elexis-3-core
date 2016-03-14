@@ -16,9 +16,9 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.CountryCode;
+import ch.elexis.core.types.Gender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -33,6 +33,10 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	public ContactBean(Kontakt kontakt){
 		super(kontakt);
 		cache = new ContactCache();
+	}
+	
+	public Patient getPatientEntity() {
+		return (Patient) entity;
 	}
 	
 	@Override
@@ -335,13 +339,13 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	}
 	
 	@Override
-	public ContactGender getGender(){
+	public Gender getGender(){
 		return cache.sex;
 	}
 	
 	@Override
-	public void setGender(ContactGender value){
-		ContactGender old = getGender();
+	public void setGender(Gender value){
+		Gender old = getGender();
 		String vs;
 		switch (value) {
 		case MALE:
@@ -485,7 +489,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		boolean isDeleted, isPerson, isOrganization, isMandator, isUser, isPatient;
 		String patientNr, description1, description2, description3, titel, titelSuffix;
 		TimeTool dateOfBirth;
-		ContactGender sex;
+		Gender sex;
 		
 		public ContactCache(){
 			String[] labels = new String[14];
@@ -512,20 +516,20 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 			titelSuffix = labels[13];
 		}
 		
-		private ContactGender switchSex(String labels){
+		private Gender switchSex(String labels){
 			if (labels == null || labels.length() < 1)
-				return ContactGender.UNKNOWN;
+				return Gender.UNKNOWN;
 			switch (labels.charAt(0)) {
 			case 'w':
-				return ContactGender.FEMALE;
+				return Gender.FEMALE;
 			case 'f':
-				return ContactGender.FEMALE;
+				return Gender.FEMALE;
 			case 'u':
-				return ContactGender.UNDEFINED;
+				return Gender.UNDEFINED;
 			case 'm':
-				return ContactGender.MALE;
+				return Gender.MALE;
 			default:
-				return ContactGender.UNKNOWN;
+				return Gender.UNKNOWN;
 			}
 		}
 	}
@@ -540,5 +544,15 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	public void setPassword(String value){
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public String getFirstName(){
+		return getDescription2();
+	}
+
+	@Override
+	public String getFamilyName(){
+		return getDescription1();
 	}
 }

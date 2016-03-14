@@ -18,12 +18,12 @@ import java.util.List;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.ISticker#getBackground <em>Background</em>}</li>
  *   <li>{@link ch.elexis.core.model.ISticker#getForeground <em>Foreground</em>}</li>
  *   <li>{@link ch.elexis.core.model.ISticker#isVisible <em>Visible</em>}</li>
  * </ul>
- * </p>
  *
  * @see ch.elexis.core.model.ModelPackage#getISticker()
  * @model interface="true" abstract="true" superTypes="ch.elexis.core.types.Comparable<ch.elexis.core.model.ISticker>"

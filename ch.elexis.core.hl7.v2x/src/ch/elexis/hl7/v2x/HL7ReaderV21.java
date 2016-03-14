@@ -27,10 +27,10 @@ import ca.uhn.hl7v2.model.v21.segment.OBX;
 import ca.uhn.hl7v2.model.v21.segment.PID;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.data.Anschrift;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Person;
-import ch.elexis.data.Query;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.types.Country;
+import ch.elexis.core.types.CountryCode;
+import ch.elexis.core.types.Gender;
 import ch.elexis.hl7.HL7PatientResolver;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.model.LabResultData;
@@ -96,7 +96,7 @@ public class HL7ReaderV21 extends HL7Reader {
 							String code = "";
 							if (ce.getCe3_NameOfCodingSystem() != null)
 								code = ce.getCe3_NameOfCodingSystem().getValue();
-							
+								
 							group = getGroup(code, ce);
 							sequence = getSequence(code, ce);
 							
@@ -133,14 +133,13 @@ public class HL7ReaderV21 extends HL7Reader {
 		return "";
 	}
 	
-	private void setPatient(ORU_R01 oru, final boolean createIfNotFound) throws ParseException,
-		HL7Exception{
-		Query<Patient> qbe = new Query<Patient>(Patient.class);
-		List<Patient> list = new ArrayList<Patient>();
+	private void setPatient(ORU_R01 oru, final boolean createIfNotFound)
+		throws ParseException, HL7Exception{
+		List<IPatient> list = new ArrayList<IPatient>();
 		String lastName = ""; //$NON-NLS-1$
 		String firstName = ""; //$NON-NLS-1$
 		String birthDate = ""; //$NON-NLS-1$
-		String sex = Person.FEMALE;
+		String sex = Gender.FEMALE.value();
 		pat = null;
 		
 		if (pat == null) {
@@ -163,8 +162,7 @@ public class HL7ReaderV21 extends HL7Reader {
 			}
 			
 			if (patid != null) {
-				qbe.add(Patient.FLD_PATID, Query.EQUALS, patid);
-				list = qbe.execute();
+				list = patientResolver.getPatientById(patid);
 			}
 			
 			// String[] pidflds = patid.split("[\\^ ]+"); //$NON-NLS-1$
@@ -173,32 +171,25 @@ public class HL7ReaderV21 extends HL7Reader {
 			// pid = pidflds[pidflds.length - 1];
 			
 			// place order number
-			String orderNumber =
-				oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC().getOrc2_PLACERORDER()
-					.getComponent(0).toString();
-			
+			String orderNumber = oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC()
+				.getOrc2_PLACERORDER().getComponent(0).toString();
+				
 			if (pid.getPid5_PATIENTNAME().getPn1_FamilyName().getValue() != null)
 				lastName = pid.getPid5_PATIENTNAME().getPn1_FamilyName().getValue();
 			if (pid.getPid5_PATIENTNAME().getPn2_GivenName().getValue() != null)
 				firstName = pid.getPid5_PATIENTNAME().getGivenName().getValue();
 			String patientName = firstName + " " + lastName;
 			
-			observation =
-				new ObservationMessage(sendingApplication, sendingFacility, dateTimeOfMessage,
-					patid, patientName, patid_alternative, orderNumber);
-			
+			observation = new ObservationMessage(sendingApplication, sendingFacility,
+				dateTimeOfMessage, patid, patientName, patid_alternative, orderNumber);
+				
 			birthDate = pid.getPid7_DATEOFBIRTH().getValue();
 			sex = pid.getPid8_SEX().getValue();
 			
 			if ((patid == null) || (list.size() != 1)) {
 				// We did not find the patient using the PatID, so we try the
-				// name and birthdate
-				qbe.clear();
-				qbe.add(Person.NAME, Query.EQUALS, StringTool.normalizeCase(lastName));
-				qbe.add(Person.FIRSTNAME, Query.EQUALS, StringTool.normalizeCase(firstName));
-				qbe.add(Person.BIRTHDATE, Query.EQUALS,
-					new TimeTool(birthDate).toString(TimeTool.DATE_COMPACT));
-				list = qbe.execute();
+				// name and birthdate			
+				list = patientResolver.findPatientByNameAndBirthdate(StringTool.normalizeCase(lastName), StringTool.normalizeCase(firstName), new TimeTool(birthDate).toString(TimeTool.DATE_COMPACT));
 				
 				if ((list != null) && (list.size() == 1)) {
 					pat = list.get(0);
@@ -208,26 +199,24 @@ public class HL7ReaderV21 extends HL7Reader {
 						AD adr = pid.getPid11_PATIENTADDRESS();
 						phone = pid.getPid13_PHONENUMBERHOME(0).getValue();
 						
-						pat = new Patient(lastName, firstName, birthDate, sex);
-						pat.set(Patient.FLD_PATID, patid);
-						Anschrift an = pat.getAnschrift();
-						if (adr != null) {
-							if (adr.getAd1_StreetAddress().getValue() != null) {
-								an.setStrasse(adr.getAd1_StreetAddress().getValue());
-							}
-							if (adr.getAd5_Zip().getValue() != null) {
-								an.setPlz(adr.getAd5_Zip().getValue());
-							}
-							if (adr.getAd3_City().getValue() != null) {
-								an.setOrt(adr.getAd3_City().getValue());
-							}
-							if (adr.getAd6_Country().getValue() != null) {
-								an.setLand(adr.getAd6_Country().getValue());
-							}
-						}
+						pat = patientResolver.createPatient(lastName, firstName, birthDate, sex);
+						pat.setPatientNr(patid);
 						
-						pat.setAnschrift(an);
-						pat.set(Patient.FLD_PHONE1, phone);
+						if (adr.getAd1_StreetAddress().getValue() != null) {
+							pat.setStreet(adr.getAd1_StreetAddress().getValue());
+						}
+						if (adr.getAd5_Zip().getValue() != null) {
+							pat.setZip(adr.getAd5_Zip().getValue());
+						}
+						if (adr.getAd3_City().getValue() != null) {
+							pat.setCity(adr.getAd3_City().getValue());
+						}
+						if (adr.getAd6_Country().getValue() != null) {
+							Country country = Country.fromValue(adr.getAd6_Country().getValue());
+							pat.setCountry(CountryCode.valueOf(country.name()));
+						}
+
+						pat.setPhone1(phone);
 					} else {
 						resolvePatient(firstName, lastName, birthDate);
 					}
@@ -321,10 +310,9 @@ public class HL7ReaderV21 extends HL7Reader {
 			observationTime = defaultDateTime;
 			status = obx.getObx11_OBSERVRESULTSTATUS().getValue();
 			
-			LabResultData lrd =
-				new LabResultData(itemCode, name, unit, value, range, flag, defaultDateTime,
-					observationTime, commentNTE, group, sequence, status);
-			
+			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag,
+				defaultDateTime, observationTime, commentNTE, group, sequence, status);
+				
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)) {
 				lrd.setIsNumeric(true);
 			} else if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_TX)) {

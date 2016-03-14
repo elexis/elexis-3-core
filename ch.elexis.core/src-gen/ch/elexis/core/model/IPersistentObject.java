@@ -18,11 +18,11 @@ import java.util.List;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IPersistentObject#getXid <em>Xid</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPersistentObject#getXids <em>Xids</em>}</li>
  * </ul>
- * </p>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPersistentObject()
  * @model interface="true" abstract="true"

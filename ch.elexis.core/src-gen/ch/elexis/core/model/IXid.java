@@ -16,6 +16,7 @@ package ch.elexis.core.model;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IXid#getDomain <em>Domain</em>}</li>
  *   <li>{@link ch.elexis.core.model.IXid#getDomainId <em>Domain Id</em>}</li>
@@ -23,7 +24,6 @@ package ch.elexis.core.model;
  *   <li>{@link ch.elexis.core.model.IXid#getQuality <em>Quality</em>}</li>
  *   <li>{@link ch.elexis.core.model.IXid#isGUID <em>GUID</em>}</li>
  * </ul>
- * </p>
  *
  * @see ch.elexis.core.model.ModelPackage#getIXid()
  * @model interface="true" abstract="true"

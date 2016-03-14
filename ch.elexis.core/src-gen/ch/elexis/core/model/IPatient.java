@@ -16,6 +16,7 @@ package ch.elexis.core.model;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IPatient#getDiagnosen <em>Diagnosen</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getRisk <em>Risk</em>}</li>
@@ -24,7 +25,6 @@ package ch.elexis.core.model;
  *   <li>{@link ch.elexis.core.model.IPatient#getAllergies <em>Allergies</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getPatientNr <em>Patient Nr</em>}</li>
  * </ul>
- * </p>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPatient()
  * @model interface="true" abstract="true"

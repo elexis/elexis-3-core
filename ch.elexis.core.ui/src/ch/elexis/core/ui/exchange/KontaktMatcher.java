@@ -25,6 +25,7 @@ import static ch.elexis.core.ui.dialogs.KontaktSelektor.HINT_ZIP;
 import java.util.List;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Anschrift;
 import ch.elexis.data.Kontakt;
@@ -46,7 +47,7 @@ public class KontaktMatcher {
 	private static final String SEP = ", "; //$NON-NLS-1$
 	
 	public enum CreateMode {
-		FAIL, CREATE, ASK
+			FAIL, CREATE, ASK
 	};
 	
 	public static Kontakt findKontakt(final String name, final String strasse, final String plz,
@@ -54,9 +55,8 @@ public class KontaktMatcher {
 		Organisation o =
 			findOrganisation(name, StringTool.leer, strasse, plz, ort, CreateMode.FAIL);
 		if (o == null) {
-			Person p =
-				findPerson(name, StringTool.leer, StringTool.leer, StringTool.leer, strasse, plz,
-					ort, StringTool.leer, CreateMode.FAIL);
+			Person p = findPerson(name, StringTool.leer, StringTool.leer, StringTool.leer, strasse,
+				plz, ort, StringTool.leer, CreateMode.FAIL);
 			return p;
 		} else {
 			return o;
@@ -114,16 +114,16 @@ public class KontaktMatcher {
 				return org;
 			} else if (createMode == CreateMode.ASK) {
 				return (Organisation) KontaktSelektor.showInSync(Organisation.class,
-					Messages.KontaktMatcher_OrganizationNotFound, name + SEP + strasse + SEP + plz
-						+ StringTool.space + ort, resolve1, hints);
+					Messages.KontaktMatcher_OrganizationNotFound,
+					name + SEP + strasse + SEP + plz + StringTool.space + ort, resolve1, hints);
 			}
 			return null;
 		} else if (found.size() == 1) {
 			return found.get(0);
 		} else if (createMode == CreateMode.ASK) { // more than 1 hit
 			return (Organisation) KontaktSelektor.showInSync(Organisation.class,
-				Messages.KontaktMatcher_OrganizationNotUnique, name + SEP + strasse + SEP + plz
-					+ StringTool.space + ort, resolve1, hints);
+				Messages.KontaktMatcher_OrganizationNotUnique,
+				name + SEP + strasse + SEP + plz + StringTool.space + ort, resolve1, hints);
 		} else {
 			return (Organisation) matchAddress(found.toArray(new Kontakt[0]), strasse, plz, ort,
 				null);
@@ -243,9 +243,11 @@ public class KontaktMatcher {
 				return ret;
 			} else if (createMode == CreateMode.ASK) {
 				return (Person) KontaktSelektor.showInSync(Person.class,
-					Messages.KontaktMatcher_PersonNotFound, name + StringTool.space + vorname
+					Messages.KontaktMatcher_PersonNotFound,
+					name + StringTool.space + vorname
 						+ (StringTool.isNothing(gebdat) ? StringTool.leer : SEP + gebdat) + SEP
-						+ strasse + SEP + plz + " " + ort, resolve1, hints);
+						+ strasse + SEP + plz + " " + ort,
+					resolve1, hints);
 			}
 			return null;
 		}
@@ -258,7 +260,8 @@ public class KontaktMatcher {
 				Messages.KontaktMatcher_PersonNotUnique,
 				name + " " + vorname
 					+ (StringTool.isNothing(gebdat) ? StringTool.leer : SEP + gebdat) + SEP
-					+ strasse + SEP + plz + " " + ort, resolve1, hints);
+					+ strasse + SEP + plz + " " + ort,
+				resolve1, hints);
 		} else {
 			return (Person) matchAddress(found.toArray(new Kontakt[0]), strasse, plz, ort, natel);
 		}
@@ -446,10 +449,37 @@ public class KontaktMatcher {
 				String vorname1 = StringTool.unambiguify(simpleName(a.getVorname()));
 				String vorname2 = StringTool.unambiguify(simpleName(firstnameB));
 				if (vorname1.equals(vorname2)) {
-					if (StringTool.isNothing(a.getGeburtsdatum()) || StringTool.isNothing(gebDatB)) {
+					if (StringTool.isNothing(a.getGeburtsdatum())
+						|| StringTool.isNothing(gebDatB)) {
 						return true;
 					}
 					TimeTool gd1 = new TimeTool(a.getGeburtsdatum());
+					TimeTool gd2 = new TimeTool(gebDatB);
+					if (gd1.equals(gd2)) {
+						return true;
+					}
+				}
+			}
+			
+		} catch (Throwable t) {
+			ExHandler.handle(t);
+			
+		}
+		return false;
+	}
+	
+	public static boolean isSame(IPatient a, String nameB, String firstnameB, String gebDatB){
+		try {
+			String name1 = StringTool.unambiguify(simpleName(a.getDescription1()));
+			String name2 = StringTool.unambiguify(simpleName(nameB));
+			if (name1.equals(name2)) {
+				String vorname1 = StringTool.unambiguify(simpleName(a.getDescription2()));
+				String vorname2 = StringTool.unambiguify(simpleName(firstnameB));
+				if (vorname1.equals(vorname2)) {
+					if (StringTool.isNothing(a.getDateOfBirth()) || StringTool.isNothing(gebDatB)) {
+						return true;
+					}
+					TimeTool gd1 = new TimeTool(a.getDateOfBirth());
 					TimeTool gd2 = new TimeTool(gebDatB);
 					if (gd1.equals(gd2)) {
 						return true;
@@ -469,8 +499,8 @@ public class KontaktMatcher {
 		return ret[0];
 	}
 	
-	final static String resolve1 = Messages.KontaktMatcher_noauto1
-		+ Messages.KontaktMatcher_noauto2 + Messages.KontaktMatcher_noauto3
-		+ Messages.KontaktMatcher_noauto4 + Messages.KontaktMatcher_noauto5;
-	
+	final static String resolve1 = Messages.KontaktMatcher_noauto1 + Messages.KontaktMatcher_noauto2
+		+ Messages.KontaktMatcher_noauto3 + Messages.KontaktMatcher_noauto4
+		+ Messages.KontaktMatcher_noauto5;
+		
 }
