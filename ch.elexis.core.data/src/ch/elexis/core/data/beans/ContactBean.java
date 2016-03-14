@@ -464,7 +464,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	@Override
 	public void setPatientNr(String value){
 		String old = getPatientNr();
-		entity.set(Patient.FLD_ID, value);
+		entity.set(Patient.FLD_PATID, value);
 		firePropertyChange("patientNr", old, value);
 	}
 	
