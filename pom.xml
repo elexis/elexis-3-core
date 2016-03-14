@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0 </modelVersion>
 	<groupId>ch.elexis</groupId>
 	<artifactId>elexis-3-core</artifactId>
-	<version>3.1.0-SNAPSHOT</version>
+	<version>3.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<prerequisites>
 		<maven>3.0.5</maven>
@@ -381,7 +381,7 @@
 						<artifact>
 							<groupId>ch.elexis</groupId>
 							<artifactId>juno-target</artifactId>
-							<version>3.1.0-SNAPSHOT</version>
+							<version>3.2.0-SNAPSHOT</version>
 							<!-- we cannot use a classifier here, or mvn compile would file in
 								any other project!! classifier>elexis-3</classifier -->
 						</artifact>
