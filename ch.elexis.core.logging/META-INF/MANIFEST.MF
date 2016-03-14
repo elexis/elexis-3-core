@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Logging based on slf4j with logback
 Bundle-SymbolicName: ch.elexis.core.logging;singleton:=true
-Bundle-Version: 3.1.0.qualifier
+Bundle-Version: 3.2.0.qualifier
 Bundle-Activator: ch.elexis.core.logging.Activator
 Require-Bundle: org.eclipse.core.runtime,
  ch.qos.logback.core,

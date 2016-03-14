@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Quartz based scheduler for Elexis
 Bundle-SymbolicName: ch.elexis.core.scheduler;singleton:=true
-Bundle-Version: 3.1.0.qualifier
+Bundle-Version: 3.2.0.qualifier
 Bundle-Vendor: elexis.info
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Activator: ch.elexis.core.scheduler.internal.Activator
