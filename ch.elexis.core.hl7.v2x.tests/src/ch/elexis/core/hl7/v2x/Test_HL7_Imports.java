@@ -145,8 +145,7 @@ public class Test_HL7_Imports {
 		@Override
 		public IPatient createPatient(String lastName, String firstName, String birthDate,
 			String sex){
-			// TODO Auto-generated method stub
-			return null;
+			return new ContactBean(new Patient(lastName, firstName, birthDate, sex));
 		}
 
 		@Override
@@ -169,8 +168,7 @@ public class Test_HL7_Imports {
 
 		@Override
 		public IPatient resolvePatient(String firstname, String lastname, String birthDate){
-			// TODO Auto-generated method stub
-			return null;
+			return new ContactBean(patient);
 		}
 	}
 }

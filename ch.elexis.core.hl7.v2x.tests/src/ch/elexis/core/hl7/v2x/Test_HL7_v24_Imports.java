@@ -24,6 +24,7 @@ import ch.elexis.hl7.HL7ReaderFactory;
 import ch.elexis.hl7.model.IValueType;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.rgw.tools.TimeTool;
 
 public class Test_HL7_v24_Imports {
 	
@@ -68,7 +69,7 @@ public class Test_HL7_v24_Imports {
 			
 			IPatient patient = reader.getPatient();
 			assertEquals("Grissemann", patient.getFamilyName());
-			assertEquals("17.05.1966", patient.getDateOfBirth());
+			assertTrue(patient.getDateOfBirth().isEqual(new TimeTool("17.05.1966")));
 			assertEquals(Gender.MALE, patient.getGender());
 		}
 	}
