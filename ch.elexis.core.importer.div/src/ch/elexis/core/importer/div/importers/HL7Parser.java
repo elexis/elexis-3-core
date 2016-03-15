@@ -282,6 +282,12 @@ public class HL7Parser {
 		return importFile(file, archiveDir, null, bCreatePatientIfNotExists);
 	}
 	
+	public Result<?> importFile(File hl7file, File archiveDir, ILabItemResolver labItemResolver,
+		ILabContactResolver labContactResolver, boolean bCreatePatientIfNotExists) throws IOException{
+		this.labContactResolver = labContactResolver;
+		return importFile(hl7file, archiveDir, labItemResolver, bCreatePatientIfNotExists);
+	}
+
 	/**
 	 * Import the given HL7 file. Optionally, move the file into the given archive directory
 	 * 
