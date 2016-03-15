@@ -13,8 +13,9 @@ package ch.elexis.core.model;
 import java.util.List;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object ' <em><b>ISticker</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>ISticker</b></em>'.
+ * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -34,8 +35,8 @@ public interface ISticker extends Comparable<ISticker> {
 	 * Returns the value of the '<em><b>Background</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Background</em>' attribute isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Background</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Background</em>' attribute.
@@ -45,22 +46,23 @@ public interface ISticker extends Comparable<ISticker> {
 	 * @generated
 	 */
 	String getBackground();
-	
+
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.ISticker#getBackground <em>Background</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Background</em>' attribute.
 	 * @see #getBackground()
 	 * @generated
 	 */
 	void setBackground(String value);
-	
+
 	/**
 	 * Returns the value of the '<em><b>Foreground</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Foreground</em>' attribute isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Foreground</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Foreground</em>' attribute.
@@ -70,22 +72,23 @@ public interface ISticker extends Comparable<ISticker> {
 	 * @generated
 	 */
 	String getForeground();
-	
+
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.ISticker#getForeground <em>Foreground</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Foreground</em>' attribute.
 	 * @see #getForeground()
 	 * @generated
 	 */
 	void setForeground(String value);
-	
+
 	/**
 	 * Returns the value of the '<em><b>Visible</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Visible</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Visible</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Visible</em>' attribute.
@@ -95,70 +98,79 @@ public interface ISticker extends Comparable<ISticker> {
 	 * @generated
 	 */
 	boolean isVisible();
-	
+
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.ISticker#isVisible <em>Visible</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Visible</em>' attribute.
 	 * @see #isVisible()
 	 * @generated
 	 */
 	void setVisible(boolean value);
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getId();
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getLabel();
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	int getWert();
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model
 	 * @generated
 	 */
 	void setWert(int w);
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model
 	 * @generated
 	 */
 	boolean delete();
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model
 	 * @generated
 	 */
 	void setClassForSticker(Class<?> clazz);
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model
 	 * @generated
 	 */
 	void removeClassForSticker(Class<?> clazz);
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	List<String> getClassesForSticker();
-	
+
 } // ISticker

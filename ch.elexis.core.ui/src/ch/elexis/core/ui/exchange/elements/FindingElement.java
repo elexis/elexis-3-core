@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.LabItem;
 
@@ -40,14 +41,14 @@ public class FindingElement extends XChangeElement {
 		asExporter(home);
 		
 		setAttribute(ATTR_NAME, li.getKuerzel());
-		if (li.getTyp().equals(LabItem.typ.NUMERIC)) {
+		if (li.getTyp().equals(LabItemTyp.NUMERIC)) {
 			setAttribute(ATTR_TYPE, TYPE_NUMERIC);
 			setAttribute(ATTR_NORMRANGE, li.getRefM()); // TODO anpassen
 			setAttribute(ATTR_UNITS, li.getEinheit());
 			
-		} else if (li.getTyp().equals(LabItem.typ.ABSOLUTE)) {
+		} else if (li.getTyp().equals(LabItemTyp.ABSOLUTE)) {
 			setAttribute(ATTR_TYPE, TYPE_ABSOLUTE);
-		} else if (li.getTyp().equals(LabItem.typ.TEXT)) {
+		} else if (li.getTyp().equals(LabItemTyp.TEXT)) {
 			setAttribute(ATTR_TYPE, TYPE_TEXT);
 		}
 		setAttribute(ATTR_GROUP, li.getGroup());

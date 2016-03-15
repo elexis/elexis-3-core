@@ -7,8 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ReminderConstants;
-import ch.elexis.data.LabItem.typ;
+import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -37,10 +38,10 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 		+ " ADD groupname VARCHAR(255);"; //$NON-NLS-1$
 	private static final String UPD120 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
 		+ " ADD observationtime VARCHAR(24);"; //$NON-NLS-1$
-	
+		
 	// do not change order, as we save the ordinal to the db, only adding new state is allowed
 	public enum State {
-		ORDERED, DONE, DONE_IMPORT;
+			ORDERED, DONE, DONE_IMPORT;
 	}
 	
 	public static String getStateLabel(State state){
@@ -81,9 +82,9 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	// @formatter:on
 	
 	static {
-		addMapping(TABLENAME, FLD_USER, FLD_MANDANT, FLD_PATIENT, FLD_ITEM, FLD_RESULT,
-			FLD_ORDERID, FLD_GROUPNAME, FLD_TIME, FLD_STATE, FLD_OBSERVATIONTIME);
-		
+		addMapping(TABLENAME, FLD_USER, FLD_MANDANT, FLD_PATIENT, FLD_ITEM, FLD_RESULT, FLD_ORDERID,
+			FLD_GROUPNAME, FLD_TIME, FLD_STATE, FLD_OBSERVATIONTIME);
+			
 		if (!tableExists(TABLENAME)) {
 			createOrModifyTable(create);
 		} else {
@@ -118,8 +119,8 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 		return new LabOrder(id);
 	}
 	
-	public LabOrder(Anwender user, Mandant mandant, Patient patient, LabItem item,
-		LabResult result, String orderId, String groupname, TimeTool time){
+	public LabOrder(Anwender user, Mandant mandant, Patient patient, LabItem item, LabResult result,
+		String orderId, String groupname, TimeTool time){
 		create(null);
 		set(FLD_USER, user.getId());
 		set(FLD_MANDANT, mandant.getId());
@@ -133,12 +134,36 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 		if (result != null) {
 			set(FLD_RESULT, result.getId());
 		}
-		if (item.getTyp() == typ.FORMULA) {
+		if (item.getTyp() == LabItemTyp.FORMULA) {
 			createResult();
 			setState(State.DONE);
 		}
 	}
-
+	
+	/**
+	 * @since 3.2
+	 */
+	public LabOrder(String userId, String mandatorId, String patientId, ILabItem item, String labResultId,
+		String orderId, String groupname, TimeTool time){
+		create(null);
+		set(FLD_USER, userId);
+		set(FLD_MANDANT, mandatorId);
+		set(FLD_PATIENT, patientId);
+		set(FLD_ITEM, item.getId());
+		set(FLD_TIME, time.toString(TimeTool.TIMESTAMP));
+		set(FLD_OBSERVATIONTIME, time.toString(TimeTool.TIMESTAMP));
+		set(FLD_ORDERID, orderId);
+		set(FLD_GROUPNAME, groupname);
+		setState(State.ORDERED);
+		if (labResultId != null) {
+			set(FLD_RESULT, labResultId);
+		}
+		if (item.getTyp() == LabItemTyp.FORMULA) {
+			createResult();
+			setState(State.DONE);
+		}
+	}
+	
 	public LabResult createResult(){
 		LabResult result = new LabResult(getPatient(), null, getLabItem(), "", null);
 		result.setObservationTime(getObservationTime());
@@ -166,7 +191,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	public void setObservationTime(TimeTool time){
 		set(FLD_OBSERVATIONTIME, time.toString(TimeTool.TIMESTAMP));
 	}
-
+	
 	public void setObservationTimeWithResults(TimeTool time){
 		setObservationTime(time);
 		List<LabResult> results = getLabResults();
@@ -174,16 +199,17 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			labResult.setObservationTime(time);
 		}
 	}
-
+	
 	/**
 	 * Test if all the orders with this order id are done
 	 * 
 	 * @return
 	 */
 	private boolean isOrderDone(){
-		return getLabOrders(getPatient(), null, null, null, get(FLD_ORDERID), null, State.ORDERED) != null;
+		return getLabOrders(getPatient(), null, null, null, get(FLD_ORDERID), null,
+			State.ORDERED) != null;
 	}
-
+	
 	/**
 	 * Close all {@link Reminder} which have the order id set as params field. Setting the params
 	 * field happens in LaborVerordnungDialog.
@@ -203,7 +229,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			}
 		}
 	}
-
+	
 	public State getState(){
 		String stateStr = checkNull(get(FLD_STATE));
 		if (stateStr.isEmpty()) {
@@ -221,7 +247,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			return null;
 		}
 	}
-
+	
 	public LabItem getLabItem(){
 		LabItem ret = new LabItem(get(FLD_ITEM));
 		if (ret.exists()) {
@@ -247,6 +273,17 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	public void setLabResult(LabResult result){
 		if (result != null) {
 			set(FLD_RESULT, result.getId());
+		} else {
+			set(FLD_RESULT, null);
+		}
+	}
+	
+	/**
+	 * @since 3.2
+	 */
+	public void setLabResultIdAsString(String labresultId){
+		if (labresultId != null) {
+			set(FLD_RESULT, labresultId);
 		} else {
 			set(FLD_RESULT, null);
 		}
@@ -297,7 +334,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	 */
 	public List<LabResult> getLabResults(){
 		ArrayList<LabResult> ret = new ArrayList<LabResult>();
-		List<LabOrder> orders = getLabOrders(null, null, null, null, get(FLD_ORDERID), null, null);
+		List<LabOrder> orders = getLabOrdersByOrderId(get(FLD_ORDERID));
 		if (orders != null) {
 			for (LabOrder labOrder : orders) {
 				if (labOrder.getLabResult() != null) {
@@ -341,30 +378,67 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	 */
 	public static List<LabOrder> getLabOrders(Patient patient, Mandant mandant, LabItem labItem,
 		LabResult result, String orderId, TimeTool time, State state){
+		return getLabOrders(patient.getId(), (mandant!=null) ? mandant.getId() : null, labItem, result, orderId, time,
+			state);
+	}
+	
+	/**
+	 * @since 3.2
+	 */
+	public static List<LabOrder> getLabOrdersByOrderId(String orderId){
+		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
+		qlo.add(FLD_ORDERID, Query.EQUALS, orderId);
+		List<LabOrder> orders = qlo.execute();
+		if (orders.isEmpty()) {
+			return null;
+		} else {
+			return orders;
+		}
+	}
+	
+	/**
+	 * @since 3.2
+	 */
+	public static List<LabOrder> getLabOrdersByLabItem(ILabItem item){
+		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
+		qlo.add(FLD_ITEM, Query.EQUALS, item.getId());
+		List<LabOrder> orders = qlo.execute();
+		if (orders.isEmpty()) {
+			return null;
+		} else {
+			return orders;
+		}
+	}
+
+	/**
+	 * @since 3.2
+	 */
+	public static List<LabOrder> getLabOrders(String patientId, String mandantId, ILabItem labItem,
+		LabResult result, String orderId, TimeTool time, State state){
 		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
 		
-		if (patient != null) {
-			qlo.add(FLD_PATIENT, "=", patient.getId()); //$NON-NLS-1$
+		if (patientId != null) {
+			qlo.add(FLD_PATIENT, Query.EQUALS, patientId); //$NON-NLS-1$
 		}
 		
-		if (mandant != null) {
-			qlo.add(FLD_MANDANT, "=", mandant.getId()); //$NON-NLS-1$
+		if (mandantId != null) {
+			qlo.add(FLD_MANDANT, Query.EQUALS, mandantId); //$NON-NLS-1$
 		}
 		
 		if (labItem != null) {
-			qlo.add(FLD_ITEM, "=", labItem.getId()); //$NON-NLS-1$
+			qlo.add(FLD_ITEM, Query.EQUALS, labItem.getId()); //$NON-NLS-1$
 		}
 		
 		if (result != null) {
-			qlo.add(FLD_RESULT, "=", result.getId()); //$NON-NLS-1$
+			qlo.add(FLD_RESULT, Query.EQUALS, result.getId()); //$NON-NLS-1$
 		}
 		
 		if (orderId != null && !orderId.isEmpty()) {
-			qlo.add(FLD_ORDERID, "=", orderId); //$NON-NLS-1$
+			qlo.add(FLD_ORDERID, Query.EQUALS, orderId); //$NON-NLS-1$
 		}
 		
 		if (time != null) {
-			qlo.add(FLD_TIME, "LIKE", time.toString(TimeTool.DATE_COMPACT) + "%"); //$NON-NLS-1$ //$NON-NLS-2$
+			qlo.add(FLD_TIME, Query.LIKE, time.toString(TimeTool.DATE_COMPACT) + "%"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
 		if (state != null) {
@@ -399,9 +473,8 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	public static String getNextOrderId(){
 		JdbcLink link = PersistentObject.getConnection();
 		Stm statement = link.getStatement();
-		ResultSet result =
-			statement
-				.query("SELECT COUNT(DISTINCT " + FLD_ORDERID + ") AS total FROM " + TABLENAME); //$NON-NLS-1$ //$NON-NLS-2$
+		ResultSet result = statement
+			.query("SELECT COUNT(DISTINCT " + FLD_ORDERID + ") AS total FROM " + TABLENAME); //$NON-NLS-1$ //$NON-NLS-2$
 		int numberOfIds = 0;
 		try {
 			if (result.next()) {
@@ -413,12 +486,12 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			link.releaseStatement(statement);
 		}
 		int orderId = numberOfIds + 1;
-		List<LabOrder> existing =
-			getLabOrders(null, null, null, null, Integer.toString(orderId), null, null);
+		List<LabOrder> existing = getLabOrdersByOrderId(Integer.toString(orderId));
 		while (existing != null) {
 			orderId++;
-			existing = getLabOrders(null, null, null, null, Integer.toString(orderId), null, null);
+			existing = getLabOrdersByOrderId(Integer.toString(orderId));
 		}
 		return Integer.toString(orderId);
 	}
+	
 }

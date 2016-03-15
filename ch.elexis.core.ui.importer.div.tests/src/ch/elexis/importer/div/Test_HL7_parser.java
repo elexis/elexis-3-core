@@ -23,9 +23,14 @@
  *******************************************************************************/
 package ch.elexis.importer.div;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -34,9 +39,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.ui.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.Messages;
+import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.ui.importer.div.importers.TestHL7Parser;
 import ch.elexis.data.LabItem;
-import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -63,11 +71,11 @@ public class Test_HL7_parser {
 		}
 	}
 
-	private HL7Parser hlp = new HL7Parser("HL7_Test");
+	private HL7Parser hlp = new TestHL7Parser("HL7_Test");
 
 	@SuppressWarnings("unused")
 	private void dumpLabresult(LabResult res){
-		System.out.println("LabResult: pathological ? " + res.isFlag(LabResult.PATHOLOGIC)
+		System.out.println("LabResult: pathological ? " + res.isFlag(LabResultConstants.PATHOLOGIC)
 			+ " name: " + res.getItem().getName() + " label: " + res.getLabel() + " result: "
 			+ res.getResult());
 	}
@@ -106,7 +114,7 @@ public class Test_HL7_parser {
 		qrr = qr.execute();
 	}
 
-	private void parseOneHL7file(File f, boolean deleteAll, boolean alsoFailing){
+	private void parseOneHL7file(File f, boolean deleteAll, boolean alsoFailing) throws IOException{
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
 			if (f.getName().equalsIgnoreCase("01TEST5005.hl7")
@@ -117,7 +125,6 @@ public class Test_HL7_parser {
 				}
 			}
 			// System.out.println("parseOneHL7file " + name + "  " + f.length() + " bytes ");
-			hlp.setTestMode(true);
 			Result<?> rs = hlp.importFile(f, f.getParentFile(), true);
 			if (!rs.isOK()) {
 				String info = "Datei " + name + " fehlgeschlagen";
@@ -140,7 +147,7 @@ public class Test_HL7_parser {
 		}
 	}
 
-	private void parseAllHL7files(File directory){
+	private void parseAllHL7files(File directory) throws IOException{
 		File[] files = directory.listFiles();
 		int nrFiles = 0;
 		for (int i = 0; i < files.length; i++) {
@@ -158,15 +165,16 @@ public class Test_HL7_parser {
 
 	/**
 	 * Test method for {@link ch.elexis.importers.HL7#HL7(java.lang.String, java.lang.String)}.
+	 * @throws IOException 
 	 */
 	@Test
-	public void testHL7files(){
+	public void testHL7files() throws IOException{
 		System.out.println("testHL7files in elexis-import_test/rsc: This will take some time");
 		parseAllHL7files(new File(workDir.toString()));
 	}
 
 	@Test
-	public void testOverwrite(){
+	public void testOverwrite() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		File overwrite_test_1 = new File(workDir.toString(), "overwrite_test_1.hl7");
@@ -191,9 +199,10 @@ public class Test_HL7_parser {
 
 	/**
 	 * Rothen filled the HL7 field(8) with 'N' if there was no patholical value found
+	 * @throws IOException 
 	 */
 	@Test
-	public void testRothenPatholical(){
+	public void testRothenPatholical() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		parseOneHL7file(
@@ -226,11 +235,11 @@ public class Test_HL7_parser {
 
 			if (name.contentEquals("MCV") || name.contentEquals("Basophile%")
 				|| name.contentEquals("Triglyceride")) {
-				assertTrue(qrr.get(j).isFlag(LabResult.PATHOLOGIC));
-				assertTrue(qrr.get(j).getFlags() == LabResult.PATHOLOGIC);
+				assertTrue(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
+				assertTrue(qrr.get(j).getFlags() == LabResultConstants.PATHOLOGIC);
 				foundPathological = true;
 			} else {
-				assertFalse(qrr.get(j).isFlag(LabResult.PATHOLOGIC));
+				assertFalse(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 			}
 			if (foundPathological && foundLymphozyten)
 				break;
@@ -243,10 +252,10 @@ public class Test_HL7_parser {
 		assertEquals("G/l", item.getEinheit());
 		assertEquals("lymA_B", item.getKuerzel());
 		assertEquals("Lymphozyten G/l", item.getName());
-		assertEquals(typ.TEXT, item.getTyp());
+		assertEquals(LabItemTyp.TEXT, item.getTyp());
 		// assertEquals(typ.NUMERIC, item.getTyp());
 		assertTrue(item.getGroup().contains(
-			ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_AutomaticAddedGroup));
+			Messages.HL7Parser_AutomaticAddedGroup));
 		assertNotNull(res);
 		assertEquals(res.getResult(), "1.6");
 	}
@@ -254,9 +263,10 @@ public class Test_HL7_parser {
 	/**
 	 * Test method Analytica HL7 (Details) Some detailed checks about how a sample hl7-file is
 	 * imported Actually Analytica has a special importer
+	 * @throws IOException 
 	 */
 	@Test
-	public void testAnalyticaHL7(){
+	public void testAnalyticaHL7() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
@@ -295,9 +305,9 @@ public class Test_HL7_parser {
 		assertEquals("g/dl", aItem.getEinheit());
 		assertEquals("HB", aItem.getKuerzel());
 		assertTrue(aItem.getName().contains("moglobin"));
-		assertEquals(typ.NUMERIC, aItem.getTyp());
+		assertEquals(LabItemTyp.NUMERIC, aItem.getTyp());
 		assertTrue(aItem.getGroup().contains(
-			ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_AutomaticAddedGroup));
+			Messages.HL7Parser_AutomaticAddedGroup));
 		assertEquals("HL7_Test", aItem.getLabor().getKuerzel());
 		assertTrue(aItem.getLabor().getLabel().contains("Labor HL7_Test Labor"));
 		Query<Patient> pqr = new Query<Patient>(Patient.class);

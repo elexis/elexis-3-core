@@ -10,9 +10,11 @@
  */
 package ch.elexis.core.model;
 
+
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Identifiable</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Identifiable</b></em>'.
+ * <!-- end-user-doc -->
  *
  *
  * @see ch.elexis.core.model.ModelPackage#getIdentifiable()
@@ -21,21 +23,25 @@ package ch.elexis.core.model;
  */
 public interface Identifiable {
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc --> <!-- begin-model-doc --> Return an identifier
-	 * for this object that is guaranteed to be globally unique. <!-- end-model-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Return an identifier for this object that is guaranteed to be globally unique.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getId();
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc --> <!-- begin-model-doc --> return a human
-	 * readable identifier (not necessarily unique) for this Object <!-- end-model-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * return a human readable identifier (not necessarily unique) for this Object
+	 * <!-- end-model-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getLabel();
-	
+
 } // Identifiable

@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.importer.div.importers;
+package ch.elexis.core.importer.div.importers;
 
 import ch.elexis.hl7.model.AbstractData;
 

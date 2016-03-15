@@ -10,36 +10,25 @@
  * 
  *******************************************************************************/
 
-package ch.elexis.core.ui.importer.div.importers;
+package ch.elexis.core.importer.div.importers;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.beans.ContactBean;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.data.services.GlobalServiceDescriptors;
-import ch.elexis.core.data.services.IDocumentManager;
-import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.ui.importer.div.importers.LabImportUtil.TransientLabResult;
-import ch.elexis.core.ui.text.GenericDocument;
-import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.LabItem;
-import ch.elexis.data.LabResult;
-import ch.elexis.data.Labor;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Person;
-import ch.elexis.data.Query;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.types.Gender;
+import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.hl7.HL7PatientResolver;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;
 import ch.elexis.hl7.model.EncapsulatedData;
@@ -57,27 +46,28 @@ public class HL7Parser {
 	private static final Logger logger = LoggerFactory.getLogger(HL7Parser.class);
 	public static final String CFG_IMPORT_ENCDATA = "hl7Parser/importencdata";
 	
-	private ImporterPatientResolver patientResolver = new ImporterPatientResolver();
+	private HL7PatientResolver patientResolver;
 	
 	public String myLab = "?"; //$NON-NLS-1$
-	private boolean testMode = false;
+	
 	public HL7Reader hl7Reader;
-	private Patient pat;
+	private IPatient pat;
 	private TimeTool date;
 	private TimeTool commentDate;
+	private ILabImportUtil labImportUtil;
+	private ILabContactResolver labContactResolver;
+	private ImportHandler importHandler;
+	private boolean importEncapsulatedData;
 	
-	public HL7Parser(String mylab){
-		myLab = mylab;
-	}
-	
-	/**
-	 * Method sets testMode which will prevent dialogs from opening. Should only be used by unit
-	 * tests.
-	 * 
-	 * @param value
-	 */
-	public void setTestMode(boolean value){
-		testMode = value;
+	public HL7Parser(String mylab, HL7PatientResolver patientResolver, ILabImportUtil labImportUtil,
+		ImportHandler importHandler, ILabContactResolver labContactResolver,
+		boolean importEncapsulatedData){
+		this.myLab = mylab;
+		this.patientResolver = patientResolver;
+		this.labImportUtil = labImportUtil;
+		this.importHandler = importHandler;
+		this.labContactResolver = labContactResolver;
+		this.importEncapsulatedData = importEncapsulatedData;
 	}
 	
 	public Result<Object> parse(final HL7Reader hl7Reader, boolean createPatientIfNotFound){
@@ -106,14 +96,14 @@ public class HL7Parser {
 		
 		// assure resolvers are initialized
 		if (labContactResolver == null) {
-			labContactResolver = new DefaultLabContactResolver();
+			throw new IllegalArgumentException("labContactResolver must not be null");
 		}
 		if (labItemResolver == null) {
 			labItemResolver = new DefaultLabItemResolver();
 		}
 		
 		try {
-			Labor labor = labContactResolver.getLabContact(myLab, hl7Reader.getSender());
+			IContact labor = labContactResolver.getLabContact(myLab, hl7Reader.getSender());
 			// stop here if lab does not exist
 			if (labor == null) {
 				logger.info("Exiting parsing process as labor is null");
@@ -123,8 +113,7 @@ public class HL7Parser {
 			ObservationMessage obsMessage =
 				hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
 				
-			ContactBean cb = (ContactBean) hl7Reader.getPatient();
-			pat = cb.getPatientEntity();
+			pat = hl7Reader.getPatient();
 			if (pat == null) {
 				return new Result<Object>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
 					obsMessage.getPatientId(), true);
@@ -150,20 +139,20 @@ public class HL7Parser {
 						hl7LabResult.setOBRDateTime(transmissionTime.toString(TimeTool.TIMESTAMP));
 					}
 					
-					LabItem labItem =
-						LabImportUtil.getLabItem(hl7LabResult.getCode(), (Labor) labor);
+					ILabItem labItem = labImportUtil.getLabItem(hl7LabResult.getCode(), labor);
 					if (labItem == null) {
-						LabItem.typ typ = LabItem.typ.NUMERIC;
+						LabItemTyp typ = LabItemTyp.NUMERIC;
 						if (hl7LabResult.isNumeric() == false) {
-							typ = LabItem.typ.TEXT;
+							typ = LabItemTyp.TEXT;
 						}
-						labItem = new LabItem(hl7LabResult.getCode(), hl7LabResult.getName(), labor,
-							pat.getGeschlecht().equals(Person.MALE) ? hl7LabResult.getRange() : "",
-							pat.getGeschlecht().equals(Person.FEMALE) ? hl7LabResult.getRange()
-									: "",
-							hl7LabResult.getUnit(), typ,
-							labItemResolver.getTestGroupName(hl7LabResult),
-							labItemResolver.getNextTestGroupSequence(hl7LabResult));
+						labItem = labImportUtil
+							.createLabItem(hl7LabResult.getCode(), hl7LabResult.getName(), labor,
+								pat.getGender().equals(Gender.MALE) ? hl7LabResult.getRange() : "",
+								pat.getGender().equals(Gender.FEMALE) ? hl7LabResult.getRange()
+										: "",
+								hl7LabResult.getUnit(), typ,
+								labItemResolver.getTestGroupName(hl7LabResult),
+								labItemResolver.getNextTestGroupSequence(hl7LabResult));
 					}
 					
 					boolean importAsLongText =
@@ -186,27 +175,29 @@ public class HL7Parser {
 								.date(obrDateTime)
 								.comment(StringTool.unNull(hl7LabResult.getValue()) + "\n"
 									+ StringTool.unNull(hl7LabResult.getComment()))
-								.flags(hl7LabResult.isFlagged() ? LabResult.PATHOLOGIC : 0)
+								.flags(hl7LabResult.isFlagged() ? LabResultConstants.PATHOLOGIC : 0)
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 								.observationTime(obrDateTime).analyseTime(obxDateTime)
-								.transmissionTime(transmissionTime).build();
+								.transmissionTime(transmissionTime).build(labImportUtil);
 						results.add(importedResult);
 						logger.debug(importedResult.toString());
 					} else {
 						TimeTool obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
 						TimeTool obxDateTime = new TimeTool(hl7LabResult.getDate());
-						TransientLabResult importedResult = new TransientLabResult.Builder(pat,
-							labor, labItem, hl7LabResult.getValue()).date(obrDateTime)
-								.comment(StringTool.unNull(hl7LabResult.getComment()))
-								.flags(hl7LabResult.isFlagged() ? LabResult.PATHOLOGIC : 0)
-								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
-								.observationTime(obrDateTime).analyseTime(obxDateTime)
-								.transmissionTime(transmissionTime).build();
+						TransientLabResult importedResult =
+							new TransientLabResult.Builder(pat, labor, labItem,
+								hl7LabResult.getValue()).date(obrDateTime)
+									.comment(StringTool.unNull(hl7LabResult.getComment()))
+									.flags(hl7LabResult.isFlagged() ? LabResultConstants.PATHOLOGIC
+											: 0)
+									.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
+									.observationTime(obrDateTime).analyseTime(obxDateTime)
+									.transmissionTime(transmissionTime).build(labImportUtil);
 						results.add(importedResult);
 						logger.debug(importedResult.toString());
 					}
 				} else if (iValueType instanceof EncapsulatedData) {
-					if (CoreHub.localCfg.get(CFG_IMPORT_ENCDATA, false)) {
+					if (importEncapsulatedData) {
 						EncapsulatedData hl7EncData = (EncapsulatedData) iValueType;
 						if (hl7EncData.getDate() == null) {
 							if (obsMessage.getDateTimeOfMessage() != null) {
@@ -233,20 +224,20 @@ public class HL7Parser {
 						String liShort = "doc";
 						String liName = "Dokument";
 						
-						LabItem labItem = getDocumentLabItem(liShort, liName, labor);
+						ILabItem labItem = labImportUtil.getDocumentLabItem(liShort, liName, labor);
 						if (labItem == null) {
-							labItem = new LabItem(liShort, liName, labor, "", "", fileType,
-								LabItem.typ.DOCUMENT, hl7EncData.getGroup(), "");
+							labImportUtil.createLabItem(liShort, liName, labor, "", "", fileType,
+								LabItemTyp.DOCUMENT, hl7EncData.getGroup(), "");
 						}
 						
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem, title).date(date)
-								.build();
+								.build(labImportUtil);
 						results.add(importedResult);
 						
 						// create document manager (omnivore) entry
-						createDocumentManagerEntry(title, labor.getKuerzel(), hl7EncData.getData(),
-							hl7EncData.getName());
+						labImportUtil.createDocumentManagerEntry(title, labor.getCode(),
+							hl7EncData.getData(), hl7EncData.getName(), date, pat);
 					}
 				}
 				
@@ -255,68 +246,21 @@ public class HL7Parser {
 					
 					// add comments as a LabResult
 					if (hl7TextData.getName().equals(HL7Constants.COMMENT_NAME)) {
-						createCommentsLabResult(hl7TextData, pat, labor, number);
+						labImportUtil.createCommentsLabResult(hl7TextData, pat, labor, number,
+							commentDate);
 						number++;
 					}
 				}
 			}
 			
-			if (testMode) {
-				orderId =
-					LabImportUtil.importLabResults(results, new OverwriteAllImportUiHandler());
-			} else {
-				orderId = LabImportUtil.importLabResults(results, new DefaultLabImportUiHandler());
-			}
+			orderId = labImportUtil.importLabResults(results, importHandler);
+			
 		} catch (ElexisException e) {
 			logger.error("Parsing HL7 failed", e);
 			return new Result<Object>(SEVERITY.ERROR, 2,
 				Messages.HL7Parser_ExceptionWhileProcessingData, e.getMessage(), true);
 		}
 		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
-	}
-	
-	private void createDocumentManagerEntry(String title, String lab, byte[] data, String mimeType)
-		throws ElexisException{
-		Object os = Extensions.findBestService(GlobalServiceDescriptors.DOCUMENT_MANAGEMENT);
-		if (os != null) {
-			IDocumentManager docManager = (IDocumentManager) os;
-			
-			//find or create a category for this lab
-			boolean catIsNotExisting = true;
-			for (String cat : docManager.getCategories()) {
-				if (cat.equals(lab)) {
-					catIsNotExisting = false;
-					break;
-				}
-			}
-			
-			if (catIsNotExisting) {
-				docManager.addCategorie(lab);
-			}
-			
-			// add document 
-			try {
-				docManager.addDocument(new GenericDocument(pat, title, lab, data,
-					date.toString(TimeTool.DATE_GER), null, mimeType));
-			} catch (IOException e) {
-				logger.error("Error saving document received via hl7 in local document manager", e);
-			}
-		}
-	}
-	
-	private LabItem getDocumentLabItem(String shortname, String name, Labor labor){
-		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
-		qbe.add(LabItem.SHORTNAME, Query.EQUALS, shortname);
-		qbe.add(LabItem.LAB_ID, Query.EQUALS, labor.getId());
-		qbe.add(LabItem.TYPE, Query.EQUALS, new Integer(LabItem.typ.DOCUMENT.ordinal()).toString());
-		
-		LabItem labItem = null;
-		List<LabItem> itemList = qbe.execute();
-		if (itemList.size() > 0) {
-			labItem = itemList.get(0);
-		}
-		
-		return labItem;
 	}
 	
 	private void initCommentDate(ObservationMessage obsMessage){
@@ -329,59 +273,13 @@ public class HL7Parser {
 		}
 	}
 	
-	private void createCommentsLabResult(TextData hl7TextData, Patient pat, Labor labor,
-		int number){
-		if (hl7TextData.getDate() == null) {
-			hl7TextData.setDate(commentDate.getTime());
-		}
-		TimeTool commentsDate = new TimeTool(hl7TextData.getDate());
-		
-		// find LabItem
-		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
-		qbe.add("LaborID", "=", labor.getId()); //$NON-NLS-1$ //$NON-NLS-2$
-		qbe.add("titel", "=", HL7Constants.COMMENT_NAME); //$NON-NLS-1$ //$NON-NLS-2$
-		qbe.add("kuerzel", "=", HL7Constants.COMMENT_CODE); //$NON-NLS-1$ //$NON-NLS-2$
-		List<LabItem> list = qbe.execute();
-		LabItem li = null;
-		if (list.size() < 1) {
-			// LabItem doesn't yet exist
-			LabItem.typ typ = LabItem.typ.TEXT;
-			li = new LabItem(HL7Constants.COMMENT_CODE, HL7Constants.COMMENT_NAME, labor, "", "", //$NON-NLS-1$ //$NON-NLS-2$
-				"", typ, HL7Constants.COMMENT_GROUP, Integer.toString(number)); //$NON-NLS-1$
-		} else {
-			li = list.get(0);
-		}
-		
-		// add LabResult
-		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
-		qr.add("PatientID", "=", pat.getId()); //$NON-NLS-1$ //$NON-NLS-2$
-		qr.add("Datum", "=", commentsDate.toString(TimeTool.DATE_GER)); //$NON-NLS-1$ //$NON-NLS-2$
-		qr.add("ItemID", "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
-		if (qr.execute().size() == 0) {
-			StringBuilder comment = new StringBuilder();
-			comment.append(hl7TextData.getText());
-			comment.append(hl7TextData.getComment());
-			// only add coments not yet existing
-			LabResult result =
-				new LabResult(pat, commentsDate, li, "text", comment.toString(), labor); //$NON-NLS-1$
-			result.setObservationTime(commentsDate);
-		}
-	}
-	
 	/**
+	 * @throws IOException 
 	 * @see HL7Parser#importFile(File, File, ILabItemResolver, ILabContactResolver, boolean)
 	 */
 	public Result<?> importFile(final File file, final File archiveDir,
-		boolean bCreatePatientIfNotExists){
-		return importFile(file, archiveDir, null, null, bCreatePatientIfNotExists);
-	}
-	
-	/**
-	 * @see HL7Parser#importFile(File, File, ILabItemResolver, ILabContactResolver, boolean)
-	 */
-	public Result<?> importFile(final File file, final File archiveDir,
-		ILabItemResolver labItemResolver, boolean bCreatePatientIfNotExists){
-		return importFile(file, archiveDir, labItemResolver, null, bCreatePatientIfNotExists);
+		boolean bCreatePatientIfNotExists) throws IOException{
+		return importFile(file, archiveDir, null, bCreatePatientIfNotExists);
 	}
 	
 	/**
@@ -395,23 +293,13 @@ public class HL7Parser {
 	 * @param labItemResolver
 	 *            implementation of the {@link ILabItemResolver}, or null if
 	 *            {@link DefaultLabItemResolver} should be used
-	 * @param labContactResolver
-	 *            implementation of {@link ILabContactResolver}, or null if
-	 *            {@link DefaultLabContactResovler} should be used
 	 * @param bCreatePatientIfNotExists
 	 *            indicates whether a patient should be created if not existing
 	 * @return the result as type Result
 	 */
 	public Result<?> importFile(final File file, final File archiveDir,
-		ILabItemResolver labItemResolver, ILabContactResolver labContactResolver,
-		boolean bCreatePatientIfNotExists){
-		List<HL7Reader> hl7Readers;
-		try {
-			hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
-		} catch (IOException e) {
-			MessageEvent.fireError("Error reading HL7 data", e.getMessage());
-			hl7Readers = Collections.emptyList();
-		}
+		ILabItemResolver labItemResolver, boolean bCreatePatientIfNotExists) throws IOException{
+		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
 		
 		for (HL7Reader hl7Reader : hl7Readers) {
 			this.hl7Reader = hl7Reader;
@@ -434,27 +322,26 @@ public class HL7Parser {
 							}
 							
 							if (!file.renameTo(newFile)) {
-								SWTHelper.showError(
-									ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorArchiving,
-									ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_TheFile
-										+ file.getAbsolutePath()
-										+ ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_CouldNotMoveToArchive);
+								throw new IOException(
+									Messages.HL7Parser_TheFile + file.getAbsolutePath()
+										+ Messages.HL7Parser_CouldNotMoveToArchive);
 							}
 						}
 					}
 				}
-			} else {
-				ResultAdapter.displayResult(ret,
-					ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorReading);
 			}
-			ElexisEventDispatcher.reload(LabItem.class);
+			//			else {
+			//				ResultAdapter.displayResult(ret,
+			//					ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorReading);
+			//			}
+			//			ElexisEventDispatcher.reload(LabItem.class);
 			return ret;
 		}
 		return new Result<Object>("OK"); //$NON-NLS-1$
 	}
 	
 	public void importFromDir(final File dir, final File archiveDir, Result<?> res,
-		boolean bCreatePatientIfNotExists){
+		boolean bCreatePatientIfNotExists) throws IOException{
 		File[] files = dir.listFiles(new FileFilter() {
 			
 			public boolean accept(File pathname){
@@ -490,36 +377,35 @@ public class HL7Parser {
 	 * @param filepath
 	 *            the file to be imported (full path)
 	 * @return
+	 * @throws IOException
 	 */
-	public Result<?> importFile(final String filepath, boolean bCreatePatientIfNotExists){
+	public Result<?> importFile(final String filepath, boolean bCreatePatientIfNotExists)
+		throws IOException{
 		return importFile(new File(filepath), null, bCreatePatientIfNotExists);
 	}
 	
-	public Result<?> importMessage(String message, boolean bCreatePatientIfNotExists){
-		HL7Reader hl7Reader;
-		try {
-			hl7Reader = HL7ReaderFactory.INSTANCE.getReader(message);
-		} catch (IOException e) {
-			MessageEvent.fireError("HL7 Error", e.getMessage());
-			return new Result<Object>(SEVERITY.ERROR, 0, e.getMessage(), null, true);
-		}
+	public Result<?> importMessage(String message, boolean bCreatePatientIfNotExists,
+		ImportHandler importHandler) throws IOException{
+		HL7Reader hl7Reader = HL7ReaderFactory.INSTANCE.getReader(message);
+		
 		this.hl7Reader = hl7Reader;
 		Result<?> ret = parse(hl7Reader, bCreatePatientIfNotExists);
 		if (ret.isOK()) {
-			return new Result<Object>("OK"); //$NON-NLS-1$
-		} else {
-			ResultAdapter.displayResult(ret,
-				ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorReading);
+			return new Result<Object>("OK");
 		}
-		ElexisEventDispatcher.reload(LabItem.class);
 		return ret;
+		//			ResultAdapter.displayResult(ret,
+		//				ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorReading);
+		
+		//		ElexisEventDispatcher.reload(LabItem.class);
+		//		return ret;
 	}
 	
-	public Patient getPatient(){
+	public IPatient getPatient(){
 		return pat;
 	}
 	
-	public void setPatient(Patient pat){
+	public void setPatient(IPatient pat){
 		this.pat = pat;
 	}
 	

@@ -14,9 +14,9 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.impl.ModelPackageImpl;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
-import ch.elexis.core.types.Country;
 import ch.elexis.core.types.CountryCode;
 import ch.elexis.core.types.Gender;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
@@ -114,6 +114,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	private EDataType genderEDataType = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType labItemTypEDataType = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -159,16 +166,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		isInited = true;
 
-		// Obtain or create and register interdependencies
-		ModelPackageImpl theModelPackage = (ModelPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ModelPackage.eNS_URI) instanceof ModelPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ModelPackage.eNS_URI) : ModelPackage.eINSTANCE);
-
 		// Create package meta-data objects
 		theTypesPackage.createPackageContents();
-		theModelPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theTypesPackage.initializePackageContents();
-		theModelPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theTypesPackage.freeze();
@@ -274,6 +276,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getLabItemTyp() {
+		return labItemTypEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TypesFactory getTypesFactory() {
 		return (TypesFactory)getEFactoryInstance();
 	}
@@ -313,6 +324,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		moneyEDataType = createEDataType(MONEY);
 		timeToolEDataType = createEDataType(TIME_TOOL);
 		genderEDataType = createEDataType(GENDER);
+		labItemTypEDataType = createEDataType(LAB_ITEM_TYP);
 	}
 
 	/**
@@ -393,6 +405,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(moneyEDataType, Money.class, "Money", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(timeToolEDataType, TimeTool.class, "TimeTool", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(genderEDataType, Gender.class, "Gender", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(labItemTypEDataType, LabItemTyp.class, "LabItemTyp", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

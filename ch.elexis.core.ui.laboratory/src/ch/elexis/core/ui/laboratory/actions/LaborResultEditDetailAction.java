@@ -7,8 +7,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.dialogs.EditLabResultDialog;
-import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.LabResult;
@@ -66,8 +66,8 @@ public class LaborResultEditDetailAction extends Action {
 		if (results != null) {
 			for (LabResult result : results) {
 				if (result.getItem() != null) {
-					if (result.getItem().getTyp() == typ.DOCUMENT
-						|| result.getItem().getTyp() == typ.FORMULA) {
+					if (result.getItem().getTyp() == LabItemTyp.DOCUMENT
+						|| result.getItem().getTyp() == LabItemTyp.FORMULA) {
 						return false;
 					}
 				}
@@ -75,8 +75,8 @@ public class LaborResultEditDetailAction extends Action {
 		} else if (orders != null) {
 			for (LabOrder order : orders) {
 				if (order.getLabItem() != null) {
-					if (order.getLabItem().getTyp() == typ.DOCUMENT
-						|| order.getLabItem().getTyp() == typ.FORMULA) {
+					if (order.getLabItem().getTyp() == LabItemTyp.DOCUMENT
+						|| order.getLabItem().getTyp() == LabItemTyp.FORMULA) {
 						return false;
 					}
 				}

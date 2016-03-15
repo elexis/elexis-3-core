@@ -5,7 +5,8 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredViewer;
 
-import ch.elexis.data.LabItem.typ;
+import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.data.LabResult;
 
 public class TogglePathologicAction extends Action {
@@ -21,7 +22,7 @@ public class TogglePathologicAction extends Action {
 	@Override
 	public void run(){
 		for (LabResult result : results) {
-			result.setFlag(LabResult.PATHOLOGIC, !isChecked());
+			result.setFlag(LabResultConstants.PATHOLOGIC, !isChecked());
 		}
 		viewer.refresh();
 	}
@@ -29,7 +30,7 @@ public class TogglePathologicAction extends Action {
 	@Override
 	public boolean isEnabled(){
 		for (LabResult result : results) {
-			if (result.getItem().getTyp() == typ.DOCUMENT) {
+			if (result.getItem().getTyp() == LabItemTyp.DOCUMENT) {
 				return false;
 			}
 		}
@@ -39,7 +40,7 @@ public class TogglePathologicAction extends Action {
 	@Override
 	public boolean isChecked(){
 		for (LabResult result : results) {
-			if (result.isFlag(LabResult.PATHOLOGIC)) {
+			if (result.isFlag(LabResultConstants.PATHOLOGIC)) {
 				return true;
 			}
 		}

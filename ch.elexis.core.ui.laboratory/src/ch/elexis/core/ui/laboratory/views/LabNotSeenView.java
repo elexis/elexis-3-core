@@ -42,6 +42,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
+import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
@@ -193,7 +194,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 			}
 			LabResult lr = (LabResult) element;
 			
-			if (lr.isFlag(LabResult.PATHOLOGIC)) {
+			if (lr.isFlag(LabResultConstants.PATHOLOGIC)) {
 				return UiDesk.getColor(UiDesk.COL_RED);
 			} else {
 				return UiDesk.getColor(UiDesk.COL_BLACK);

@@ -10,9 +10,11 @@
  */
 package ch.elexis.core.model;
 
+
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Deleteable</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Deleteable</b></em>'.
+ * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -30,8 +32,8 @@ public interface Deleteable {
 	 * Returns the value of the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Deleted</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Deleted</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Deleted</em>' attribute.
@@ -41,14 +43,15 @@ public interface Deleteable {
 	 * @generated
 	 */
 	boolean isDeleted();
-	
+
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.Deleteable#isDeleted <em>Deleted</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Deleted</em>' attribute.
 	 * @see #isDeleted()
 	 * @generated
 	 */
 	void setDeleted(boolean value);
-	
+
 } // Deleteable

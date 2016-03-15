@@ -8,10 +8,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
+import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
 import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
-import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
@@ -50,9 +51,9 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 	}
 	
 	private String getResultString(LabResult labResult){
-		if (labResult.getItem().getTyp() == typ.DOCUMENT) {
+		if (labResult.getItem().getTyp() == LabItemTyp.DOCUMENT) {
 			return Messages.LaborResultsComposite_Open;
-		} else if (labResult.getItem().getTyp() == typ.TEXT) {
+		} else if (labResult.getItem().getTyp() == LabItemTyp.TEXT) {
 			return getNonEmptyResultString(labResult);
 		} else {
 			int digits = labResult.getItem().getDigits();
@@ -75,7 +76,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		if (result != null && result.isEmpty()) {
 			result = "?"; //$NON-NLS-1$
 		}
-		if (labResult.getItem().getTyp() == typ.TEXT) {
+		if (labResult.getItem().getTyp() == LabItemTyp.TEXT) {
 			if (labResult.isLongText()) {
 				result = labResult.getComment();
 				if (result.length() > 20) {
@@ -154,7 +155,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 				if (results != null) {
 					boolean pathologic = false;
 					for (LabResult labResult : results) {
-						if (labResult.isFlag(LabResult.PATHOLOGIC)) {
+						if (labResult.isFlag(LabResultConstants.PATHOLOGIC)) {
 							pathologic = true;
 							break;
 						}

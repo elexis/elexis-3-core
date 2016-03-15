@@ -21,6 +21,7 @@ import java.io.InputStream;
 
 import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.data.Patient;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.StringTool;

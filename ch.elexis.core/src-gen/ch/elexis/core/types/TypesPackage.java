@@ -192,6 +192,17 @@ public interface TypesPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '<em>Lab Item Typ</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.LabItemTyp
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
+	 * @generated
+	 */
+	int LAB_ITEM_TYP = 10;
+
+
+	/**
 	 * Returns the meta object for class '{@link java.lang.Comparable <em>Comparable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -296,6 +307,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getGender();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.types.LabItemTyp <em>Lab Item Typ</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Lab Item Typ</em>'.
+	 * @see ch.elexis.core.types.LabItemTyp
+	 * @model instanceClass="ch.elexis.core.types.LabItemTyp"
+	 * @generated
+	 */
+	EDataType getLabItemTyp();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -418,6 +440,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType GENDER = eINSTANCE.getGender();
+
+		/**
+		 * The meta object literal for the '<em>Lab Item Typ</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.LabItemTyp
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
+		 * @generated
+		 */
+		EDataType LAB_ITEM_TYP = eINSTANCE.getLabItemTyp();
 
 	}
 

@@ -1,7 +1,6 @@
-package ch.elexis.core.ui.importer.div.importers;
+package ch.elexis.core.importer.div.importers;
 
-import ch.elexis.data.Kontakt;
-import ch.elexis.data.Labor;
+import ch.elexis.core.model.IContact;
 
 public interface ILabContactResolver {
 	/**
@@ -13,5 +12,5 @@ public interface ILabContactResolver {
 	 *            the identifier sent from the lab device
 	 * @return the found matching lab contact
 	 */
-	public Labor getLabContact(String identifier, String sendingFacility);
+	public IContact getLabContact(String identifier, String sendingFacility);
 }

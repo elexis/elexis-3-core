@@ -28,12 +28,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LabOrderSetObservationDateAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.controls.util.LabOrderEditingSupport;
 import ch.elexis.data.LabItem;
-import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.LabResult;
@@ -203,7 +203,7 @@ public class LaborOrdersComposite extends Composite {
 				if (result != null && result.isEmpty()) {
 					return "?"; //$NON-NLS-1$
 				}
-				if (labResult.getItem().getTyp() == typ.TEXT) {
+				if (labResult.getItem().getTyp() == LabItemTyp.TEXT) {
 					if (labResult.isLongText()) {
 						result = labResult.getComment();
 						if (result.length() > 20) {

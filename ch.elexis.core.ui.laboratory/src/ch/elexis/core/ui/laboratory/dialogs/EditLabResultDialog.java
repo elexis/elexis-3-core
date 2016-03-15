@@ -14,8 +14,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.views.controls.LaborSelectionComposite;
-import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 
@@ -56,7 +56,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 		lbl.setText(Messages.EditLabResultDialog_labelValue);
 		lbl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		
-		if (result.getItem().getTyp() == typ.TEXT) {
+		if (result.getItem().getTyp() == LabItemTyp.TEXT) {
 			resultTxt = new Text(editComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 			GridData data = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 			data.heightHint = 100;
@@ -231,13 +231,13 @@ public class EditLabResultDialog extends TitleAreaDialog {
 	
 	private void updateModelToTarget(){
 		if (result != null) {
-			if (result.getItem().getTyp() == typ.NUMERIC
-				|| result.getItem().getTyp() == typ.ABSOLUTE) {
+			if (result.getItem().getTyp() == LabItemTyp.NUMERIC
+				|| result.getItem().getTyp() == LabItemTyp.ABSOLUTE) {
 				resultTxt.setText(result.getResult());
 				unitTxt.setText(getUnit());
 				refMaleTxt.setText(getRefMale());
 				refFemaleTxt.setText(getRefFemale());
-			} else if (result.getItem().getTyp() == typ.TEXT) {
+			} else if (result.getItem().getTyp() == LabItemTyp.TEXT) {
 				if (result.isLongText()) {
 					resultTxt.setText(result.getComment());
 				} else {
@@ -258,8 +258,8 @@ public class EditLabResultDialog extends TitleAreaDialog {
 	
 	private void updateTargetToModel(){
 		if (result != null) {
-			if (result.getItem().getTyp() == typ.NUMERIC
-				|| result.getItem().getTyp() == typ.ABSOLUTE) {
+			if (result.getItem().getTyp() == LabItemTyp.NUMERIC
+				|| result.getItem().getTyp() == LabItemTyp.ABSOLUTE) {
 				result.setResult(resultTxt.getText());
 				
 				result.setUnit(unitTxt.getText());
@@ -267,7 +267,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 				result.setRefFemale(refFemaleTxt.getText());
 				
 				updateDateTimeTargetToModel();
-			} else if (result.getItem().getTyp() == typ.TEXT) {
+			} else if (result.getItem().getTyp() == LabItemTyp.TEXT) {
 				if (result.isLongText()) {
 					result.setResult("text"); //$NON-NLS-1$
 					result.set(LabResult.COMMENT, resultTxt.getText());
@@ -292,7 +292,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 			setErrorMessage(Messages.EditLabResultDialog_errorNoResult);
 			return false;
 		}
-		if (!resultTxt.getText().isEmpty() && result.getItem().getTyp() == typ.NUMERIC) {
+		if (!resultTxt.getText().isEmpty() && result.getItem().getTyp() == LabItemTyp.NUMERIC) {
 			try {
 				String numeric = resultTxt.getText();
 				if (numeric.startsWith("<") || numeric.startsWith(">")) {
@@ -305,7 +305,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 			}
 		}
 		
-		if (!resultTxt.getText().isEmpty() && result.getItem().getTyp() == typ.ABSOLUTE) {
+		if (!resultTxt.getText().isEmpty() && result.getItem().getTyp() == LabItemTyp.ABSOLUTE) {
 			if (!LabResult.isValidAbsoluteRefValue(resultTxt.getText())) {
 				setErrorMessage(Messages.EditLabItemDialog_errorResultNotAbsolute);
 				return false;
@@ -313,24 +313,24 @@ public class EditLabResultDialog extends TitleAreaDialog {
 		}
 		
 		if (!refMaleTxt.getText().isEmpty()) {
-			if (result.getItem().getTyp() == typ.ABSOLUTE) {
+			if (result.getItem().getTyp() == LabItemTyp.ABSOLUTE) {
 				if (!LabResult.isValidAbsoluteRefValue(refMaleTxt.getText())) {
 					setErrorMessage(Messages.EditLabItemDialog_errorRefMaleNotAbsolute);
 					return false;
 				}
-			} else if (result.getItem().getTyp() != typ.TEXT
+			} else if (result.getItem().getTyp() != LabItemTyp.TEXT
 				&& !LabResult.isValidNumericRefValue(refMaleTxt.getText())) {
 				setErrorMessage(Messages.EditLabResultDialog_errorRefMaleNotNumber);
 				return false;
 			}
 		}
 		if (!refFemaleTxt.getText().isEmpty()) {
-			if (result.getItem().getTyp() == typ.ABSOLUTE) {
+			if (result.getItem().getTyp() == LabItemTyp.ABSOLUTE) {
 				if (!LabResult.isValidAbsoluteRefValue(refFemaleTxt.getText())) {
 					setErrorMessage(Messages.EditLabItemDialog_errorRefFemaleNotAbsolute);
 					return false;
 				}
-			} else if (result.getItem().getTyp() != typ.TEXT
+			} else if (result.getItem().getTyp() != LabItemTyp.TEXT
 				&& !LabResult.isValidNumericRefValue(refFemaleTxt.getText())) {
 				setErrorMessage(Messages.EditLabResultDialog_errorRefFemaleNotNumber);
 				return false;

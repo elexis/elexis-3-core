@@ -12,9 +12,9 @@ package ch.elexis.core.types.impl;
 
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
-import ch.elexis.core.types.Country;
 import ch.elexis.core.types.CountryCode;
 import ch.elexis.core.types.Gender;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
@@ -102,6 +102,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createTimeToolFromString(eDataType, initialValue);
 			case TypesPackage.GENDER:
 				return createGenderFromString(eDataType, initialValue);
+			case TypesPackage.LAB_ITEM_TYP:
+				return createLabItemTypFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -129,6 +131,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertTimeToolToString(eDataType, instanceValue);
 			case TypesPackage.GENDER:
 				return convertGenderToString(eDataType, instanceValue);
+			case TypesPackage.LAB_ITEM_TYP:
+				return convertLabItemTypToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -265,6 +269,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertGenderToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LabItemTyp createLabItemTypFromString(EDataType eDataType, String initialValue) {
+		return (LabItemTyp)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertLabItemTypToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

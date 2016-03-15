@@ -50,4 +50,5 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Money" instanceClassName="ch.rgw.tools.Money"/>
   <eClassifiers xsi:type="ecore:EDataType" name="TimeTool" instanceClassName="ch.rgw.tools.TimeTool"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Gender" instanceClassName="ch.elexis.core.types.Gender"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="LabItemTyp" instanceClassName="ch.elexis.core.types.LabItemTyp"/>
 </ecore:EPackage>

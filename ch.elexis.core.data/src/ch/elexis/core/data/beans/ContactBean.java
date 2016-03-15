@@ -20,6 +20,7 @@ import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.CountryCode;
 import ch.elexis.core.types.Gender;
 import ch.elexis.data.Kontakt;
+import ch.elexis.data.Labor;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
@@ -35,8 +36,12 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		cache = new ContactCache();
 	}
 	
-	public Patient getPatientEntity() {
+	public Patient getAsPatientEntity() {
 		return (Patient) entity;
+	}
+	
+	public Labor getAsLaboratoryEntity() {
+		return (Labor) entity;
 	}
 	
 	@Override
@@ -283,14 +288,14 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	
 	@Override
 	public String getCode(){
-		return entity.get(Patient.FLD_PATID);
+		return cache.code;
 	}
 	
 	@Override
 	public void setCode(String value){
 		String old = getCode();
 		entity.set(Patient.FLD_PATID, value);
-		firePropertyChange("comment", old, value);
+		firePropertyChange("code", old, value);
 	}
 	
 	@Override
@@ -458,14 +463,12 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	
 	@Override
 	public String getPatientNr(){
-		return cache.patientNr;
+		return getCode();
 	}
 	
 	@Override
 	public void setPatientNr(String value){
-		String old = getPatientNr();
-		entity.set(Patient.FLD_PATID, value);
-		firePropertyChange("patientNr", old, value);
+		setCode(value);
 	}
 	
 	// User ---
@@ -487,7 +490,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	 */
 	private class ContactCache {
 		boolean isDeleted, isPerson, isOrganization, isMandator, isUser, isPatient;
-		String patientNr, description1, description2, description3, titel, titelSuffix;
+		String code, description1, description2, description3, titel, titelSuffix;
 		TimeTool dateOfBirth;
 		Gender sex;
 		
@@ -511,7 +514,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 			description3 = labels[8];
 			dateOfBirth = new TimeTool(labels[9]);
 			sex = switchSex(labels[10]);
-			patientNr = labels[11];
+			code = labels[11];
 			titel = labels[12];
 			titelSuffix = labels[13];
 		}

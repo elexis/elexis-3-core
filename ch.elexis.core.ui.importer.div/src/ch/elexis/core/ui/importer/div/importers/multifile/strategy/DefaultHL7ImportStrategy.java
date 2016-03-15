@@ -1,11 +1,14 @@
 package ch.elexis.core.ui.importer.div.importers.multifile.strategy;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import ch.elexis.core.ui.importer.div.importers.HL7Parser;
-import ch.elexis.core.ui.importer.div.importers.multifile.IMultiFileParser;
+import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
+import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
+import ch.elexis.core.ui.importer.div.importers.DefaultHL7Parser;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.rgw.tools.Result;
@@ -26,14 +29,16 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 	private HL7Parser hl7Parser;
 	private boolean testMode;
 	
+	public static final String CFG_IMPORT_ENCDATA = "hl7Parser/importencdata";
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Result<Object> execute(File file, Map<String, Object> context){
-		hl7Parser = new HL7Parser((String) context.get(IMultiFileParser.CTX_LABNAME));
+	public Result<Object> execute(File file, Map<String, Object> context) throws IOException{
+		String myLab = (String) context.get(IMultiFileParser.CTX_LABNAME);
+		hl7Parser = new DefaultHL7Parser(myLab);
 		Result<Object> result = null;
 		
 		if (testMode) {
-			hl7Parser.setTestMode(true);
 			// we need to enable patient creation when testing otherwise test will fail
 			result = (Result<Object>) hl7Parser.importFile(file.getAbsolutePath(), true);
 		} else {
@@ -42,8 +47,7 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 		
 		Object resultObj = result.get();
 		if (resultObj instanceof String) {
-			List<LabOrder> orders =
-				LabOrder.getLabOrders(null, null, null, null, (String) resultObj, null, null);
+			List<LabOrder> orders = LabOrder.getLabOrdersByOrderId((String) resultObj);
 			if (orders != null && !orders.isEmpty()) {
 				LabOrder order = orders.get(0);
 				context.put(IMultiFileParser.CTX_PATIENT, order.getPatient());

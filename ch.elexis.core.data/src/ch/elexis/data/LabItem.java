@@ -22,6 +22,8 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.TextContainerConstants;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -34,7 +36,7 @@ import ch.rgw.tools.TimeTool;
  * @author Gerry
  * 
  */
-public class LabItem extends PersistentObject implements Comparable<LabItem> {
+public class LabItem extends PersistentObject implements Comparable<LabItem>, ILabItem {
 	
 	public static final String REF_MALE = "RefMann"; //$NON-NLS-1$
 	public static final String REF_FEMALE_OR_TEXT = "RefFrauOrTx"; //$NON-NLS-1$
@@ -66,11 +68,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 		addMapping(LABITEMS, SHORTNAME, TITLE, LAB_ID, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE,
 			GROUP, PRIO, EXPORT, FORMULA, DIGITS, VISIBLE, BILLINGCODE, LOINCCODE);
 	}
-	
-	public enum typ {
-		NUMERIC, TEXT, ABSOLUTE, FORMULA, DOCUMENT
-	};
-	
+
 	/**
 	 * Erstellt ein neues LaborItem.
 	 * 
@@ -94,15 +92,24 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 	 *            Sequenz-Nummer
 	 */
 	public LabItem(String k, String t, Kontakt labor, String RefMann, String RefFrau, String Unit,
-		typ type, String grp, String seq){
+		LabItemTyp type, String grp, String seq){
+		this(k, Unit, (labor != null) ? labor.getId() : null, RefMann, RefFrau, Unit, type, grp,
+			seq);
+	}
+	
+	/**
+	 * @since 3.2
+	 */
+	public LabItem(String k, String t, String laborId, String RefMann, String RefFrau, String Unit,
+		LabItemTyp type, String grp, String seq){
 		String tp = "1"; //$NON-NLS-1$
-		if (type == typ.NUMERIC) {
+		if (type == LabItemTyp.NUMERIC) {
 			tp = "0"; //$NON-NLS-1$
-		} else if (type == typ.ABSOLUTE) {
+		} else if (type == LabItemTyp.ABSOLUTE) {
 			tp = "2"; //$NON-NLS-1$
-		} else if (type == typ.FORMULA) {
+		} else if (type == LabItemTyp.FORMULA) {
 			tp = "3"; //$NON-NLS-1$
-		} else if (type == typ.DOCUMENT) {
+		} else if (type == LabItemTyp.DOCUMENT) {
 			tp = "4"; //$NON-NLS-1$
 		}
 		create(null);
@@ -112,20 +119,26 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 		if (StringTool.isNothing(grp)) {
 			grp = Messages.LabItem_defaultGroup;
 		}
-		if (labor == null) {
+		if (laborId == null) {
 			Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
 			String labid = qbe.findSingle(Kontakt.FLD_IS_LAB, Query.EQUALS, StringConstants.ONE);
 			if (labid == null) {
-				labor = new Labor(Messages.LabItem_shortOwnLab, Messages.LabItem_longOwnLab); //$NON-NLS-1$ //$NON-NLS-2$
-			} else {
-				labor = Labor.load(labid);
+				laborId =
+					new Labor(Messages.LabItem_shortOwnLab, Messages.LabItem_longOwnLab).getId();
 			}
 		}
 		set(new String[] {
 			SHORTNAME, TITLE, LAB_ID, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE, GROUP, PRIO
-		}, k, t, labor.getId(), RefMann, RefFrau, Unit, tp, grp, seq);
+		}, k, t, laborId, RefMann, RefFrau, Unit, tp, grp, seq);
 	}
 	
+	protected LabItem(){/* leer */
+	}
+
+	protected LabItem(String id){
+		super(id);
+	}
+
 	public static LabItem load(String id){
 		return new LabItem(id);
 	}
@@ -193,36 +206,36 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 		set(EXPORT, export);
 	}
 	
-	public void setTyp(typ typ){
+	public void setTyp(LabItemTyp typ){
 		String t = "0"; //$NON-NLS-1$
-		if (typ == LabItem.typ.TEXT) {
+		if (typ == LabItemTyp.TEXT) {
 			t = "1"; //$NON-NLS-1$
-		} else if (typ == LabItem.typ.ABSOLUTE) {
+		} else if (typ == LabItemTyp.ABSOLUTE) {
 			t = "2"; //$NON-NLS-1$
-		} else if (typ == LabItem.typ.FORMULA) {
+		} else if (typ == LabItemTyp.FORMULA) {
 			t = "3"; //$NON-NLS-1$
-		} else if (typ == LabItem.typ.DOCUMENT) {
+		} else if (typ == LabItemTyp.DOCUMENT) {
 			t = "4"; //$NON-NLS-1$
 		}
 		set(TYPE, t);
 	}
 	
-	public typ getTyp(){
+	public LabItemTyp getTyp(){
 		String t = get(TYPE);
 		if (t != null) {
 			if (t.equals(StringConstants.ZERO)) {
-				return typ.NUMERIC;
+				return LabItemTyp.NUMERIC;
 			} else if (t.equals(StringConstants.ONE)) {
-				return typ.TEXT;
+				return LabItemTyp.TEXT;
 			} else if (t.equals("2")) { //$NON-NLS-1$
-				return typ.ABSOLUTE;
+				return LabItemTyp.ABSOLUTE;
 			} else if (t.equals("3")) { //$NON-NLS-1$
-				return typ.FORMULA;
+				return LabItemTyp.FORMULA;
 			} else if (t.equals("4")) { //$NON-NLS-1$
-				return typ.DOCUMENT;
+				return LabItemTyp.DOCUMENT;
 			}
 		}
-		return typ.TEXT;
+		return LabItemTyp.TEXT;
 	}
 	
 	public String evaluateNew(Patient pat, TimeTool date, List<LabResult> results){
@@ -245,7 +258,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 	}
 	
 	public String evaluate(Patient pat, List<LabResult> results) throws ElexisException{
-		if (!getTyp().equals(typ.FORMULA)) {
+		if (!getTyp().equals(LabItemTyp.FORMULA)) {
 			return null;
 		}
 		String formel = getFormula();
@@ -323,7 +336,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 	 * @return the result or "?formel?" if no result could be calculated.
 	 */
 	public String evaluate(Patient pat, TimeTool date) throws ElexisException{
-		if (!getTyp().equals(typ.FORMULA)) {
+		if (!getTyp().equals(LabItemTyp.FORMULA)) {
 			return null;
 		}
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
@@ -440,13 +453,6 @@ public class LabItem extends PersistentObject implements Comparable<LabItem> {
 	
 	public void setBillingCode(String code){
 		set(BILLINGCODE, code);
-	}
-	
-	protected LabItem(){/* leer */
-	}
-	
-	protected LabItem(String id){
-		super(id);
 	}
 	
 	@Override

@@ -12,6 +12,9 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import static ch.elexis.core.model.PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN;
+import static ch.elexis.core.model.PatientConstants.FLD_EXTINFO_STAMMARZT;
+
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +33,6 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.TimeTool.TimeFormatException;
-
-import static ch.elexis.core.model.PatientConstants.*;
 
 /**
  * Ein Patient ist eine Person (und damit auch ein Kontakt), mit folgenden zusätzlichen

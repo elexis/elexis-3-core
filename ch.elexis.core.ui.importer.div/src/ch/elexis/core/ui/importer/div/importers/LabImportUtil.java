@@ -1,10 +1,8 @@
 package ch.elexis.core.ui.importer.div.importers;
 
+import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.slf4j.Logger;
@@ -13,11 +11,23 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.services.GlobalServiceDescriptors;
+import ch.elexis.core.data.services.IDocumentManager;
+import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.importer.div.importers.ILabImportUtil;
+import ch.elexis.core.importer.div.importers.ImportHandler;
+import ch.elexis.core.importer.div.importers.TransientLabResult;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.text.GenericDocument;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
-import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabMapping;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
@@ -27,6 +37,8 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.elexis.data.Xid;
+import ch.elexis.hl7.model.TextData;
+import ch.elexis.hl7.v26.HL7Constants;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -34,9 +46,9 @@ import ch.rgw.tools.TimeTool;
  * importers should use this class!
  * 
  * @author thomashu
- * 
+ * 		
  */
-public class LabImportUtil {
+public class LabImportUtil implements ILabImportUtil {
 	private static Logger logger = LoggerFactory.getLogger(LabImportUtil.class);
 	
 	/**
@@ -58,8 +70,8 @@ public class LabImportUtil {
 		List<Labor> results = qbe.execute();
 		if (results.isEmpty()) {
 			labor = new Labor(identifier, "Labor " + identifier); //$NON-NLS-1$
-			logger.warn("Found no Labor for identifier [" + identifier
-				+ "]. Created new Labor contact.");
+			logger.warn(
+				"Found no Labor for identifier [" + identifier + "]. Created new Labor contact.");
 		} else {
 			labor = results.get(0);
 			if (results.size() > 1) {
@@ -91,10 +103,9 @@ public class LabImportUtil {
 		
 		// if no connection exists ask to which lab it should be linked
 		if (labor == null) {
-			KontaktSelektor ks =
-				new KontaktSelektor(UiDesk.getTopShell(), Labor.class,
-					Messages.LabImporterUtil_Select, Messages.LabImporterUtil_SelectLab,
-					Kontakt.DEFAULT_SORT);
+			KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Labor.class,
+				Messages.LabImporterUtil_Select, Messages.LabImporterUtil_SelectLab,
+				Kontakt.DEFAULT_SORT);
 			if (ks.open() == Dialog.OK) {
 				labor = (Labor) ks.getSelection();
 				labor.addXid(Kontakt.XID_KONTAKT_LAB_SENDING_FACILITY, identifier, true);
@@ -143,7 +154,7 @@ public class LabImportUtil {
 	 * @param item
 	 * @return
 	 */
-	public static List<LabResult> getLabResults(Patient patient, LabItem item, TimeTool date,
+	public static List<LabResult> getLabResults(IPatient patient, ILabItem item, TimeTool date,
 		TimeTool analyseTime, TimeTool observationTime){
 		
 		if (date == null && analyseTime == null && observationTime == null) {
@@ -169,8 +180,7 @@ public class LabImportUtil {
 	/**
 	 * Import a list of TransientLabResults. Create LabOrder objects for new results.
 	 */
-	public static String importLabResults(List<TransientLabResult> results,
-		ImportUiHandler uiHandler){
+	public String importLabResults(List<TransientLabResult> results, ImportHandler uiHandler){
 		boolean overWriteAll = false;
 		String orderId = LabOrder.getNextOrderId();
 		for (TransientLabResult transientLabResult : results) {
@@ -188,15 +198,14 @@ public class LabImportUtil {
 						logger.info("Result " + labResult.toString() + " already exists.");
 						continue;
 					}
-
-					ImportUiHandler.OverwriteState retVal =
-						uiHandler.askOverwrite(transientLabResult.patient, labResult,
-							transientLabResult);
 					
-					if (retVal == ImportUiHandler.OverwriteState.OVERWRITE) {
+					ImportHandler.OverwriteState retVal = uiHandler.askOverwrite(
+						transientLabResult.getPatient(), labResult, transientLabResult);
+						
+					if (retVal == ImportHandler.OverwriteState.OVERWRITE) {
 						transientLabResult.overwriteExisting(labResult);
 						continue;
-					} else if (retVal == ImportUiHandler.OverwriteState.OVERWRITEALL) {
+					} else if (retVal == ImportHandler.OverwriteState.OVERWRITEALL) {
 						overWriteAll = true;
 						transientLabResult.overwriteExisting(labResult);
 						continue;
@@ -204,9 +213,9 @@ public class LabImportUtil {
 				}
 			}
 		}
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(null, LabResult.class, ElexisEvent.EVENT_RELOAD));
-		
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(null, LabResult.class, ElexisEvent.EVENT_RELOAD));
+			
 		return orderId;
 	}
 	
@@ -221,21 +230,23 @@ public class LabImportUtil {
 		List<LabResult> ret = Collections.emptyList();
 		
 		// don't overwrite documents
-		if (!transientLabResult.getLabItem().getTyp().equals(LabItem.typ.DOCUMENT)) {
+		if (!transientLabResult.getLabItem().getTyp().equals(LabItemTyp.DOCUMENT)) {
 			if (transientLabResult.isObservationTime()) {
-				ret = LabImportUtil.getLabResults(transientLabResult.patient,
-					transientLabResult.labItem, null, null, transientLabResult.observationTime);
+				ret = LabImportUtil.getLabResults(transientLabResult.getPatient(),
+					transientLabResult.getLabItem(), null, null,
+					transientLabResult.getObservationTime());
 			} else if (transientLabResult.isAnalyseTime()) {
-				ret = LabImportUtil.getLabResults(transientLabResult.patient,
-					transientLabResult.labItem, null, transientLabResult.analyseTime, null);
+				ret = LabImportUtil.getLabResults(transientLabResult.getPatient(),
+					transientLabResult.getLabItem(), null, transientLabResult.getAnalyseTime(),
+					null);
 			} else {
-				ret = LabImportUtil.getLabResults(transientLabResult.patient,
-					transientLabResult.labItem, transientLabResult.date, null, null);
+				ret = LabImportUtil.getLabResults(transientLabResult.getPatient(),
+					transientLabResult.getLabItem(), transientLabResult.getDate(), null, null);
 			}
 		}
 		return ret;
 	}
-
+	
 	/**
 	 * Create the LabResult from the TransientLabResult. Also lookup if there is a matching
 	 * LabOrder. If it is in State.ORDERED the created LabResult is set to that LabOrder, else
@@ -244,13 +255,12 @@ public class LabImportUtil {
 	 * @param transientLabResult
 	 * @param orderId
 	 */
-	private static void createLabResult(TransientLabResult transientLabResult, String orderId){
-		LabResult labResult = transientLabResult.persist();
+	public void createLabResult(TransientLabResult transientLabResult, String orderId){
+		ILabResult labResult = transientLabResult.persist();
 		
-		List<LabOrder> existing =
-			LabOrder.getLabOrders(transientLabResult.getPatient(), null,
-				transientLabResult.getLabItem(), null, null, null, State.ORDERED);
-		
+		List<LabOrder> existing = LabOrder.getLabOrders(transientLabResult.getPatient().getId(),
+			null, transientLabResult.getLabItem(), null, null, null, State.ORDERED);
+			
 		LabOrder labOrder = null;
 		if (existing == null || existing.isEmpty()) {
 			TimeTool importTime = transientLabResult.getTransmissionTime();
@@ -260,374 +270,134 @@ public class LabImportUtil {
 					importTime = new TimeTool();
 				}
 			}
-			labOrder =
-				new LabOrder(CoreHub.actUser, CoreHub.actMandant, transientLabResult.getPatient(),
-					transientLabResult.getLabItem(), labResult, orderId, "Import", importTime);
+			labOrder = new LabOrder(CoreHub.actUser.getId(), CoreHub.actMandant.getId(),
+				transientLabResult.getPatient().getId(), transientLabResult.getLabItem(),
+				labResult.getId(), orderId, "Import", importTime);
 		} else {
 			labOrder = existing.get(0);
-			labOrder.setLabResult(labResult);
+			labOrder.setLabResultIdAsString(labResult.getId());
 		}
 		
 		labOrder.setState(State.DONE_IMPORT);
 	}
 	
-	/**
-	 * Overwrite this class with actual UI handling in UI plugins.
-	 * 
-	 * @author thomashu
-	 */
-	public static abstract class ImportUiHandler {
-		public enum OverwriteState {
-			OVERWRITE, OVERWRITEALL, IGNORE
-		}
-		
-		protected abstract OverwriteState askOverwrite(Patient patient, LabResult oldResult,
-			TransientLabResult newResult);
+	@Override
+	public ILabItem getLabItem(String code, IContact labor){
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
-	/**
-	 * Used to transport LabResults information to the common import method
-	 * {@link LabImportUtil#importLabResults(List, ImportUiHandler)}.
-	 * 
-	 * @author thomashu
-	 */
-	public static class TransientLabResult {
-		private Patient patient;
-		private LabItem labItem;
-		private Kontakt origin;
+	@Override
+	public ILabItem createLabItem(String code, String name, IContact labor, String male,
+		String female, String unit, LabItemTyp typ, String testGroupName,
+		String nextTestGroupSequence){
+		return new LabItem(code, name, labor.getId(), male, female, unit, typ, testGroupName,
+			nextTestGroupSequence);
+	}
+	
+	@Override
+	public ILabItem getDocumentLabItem(String shortname, String name, IContact labor){
+		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
+		qbe.add(LabItem.SHORTNAME, Query.EQUALS, shortname);
+		qbe.add(LabItem.LAB_ID, Query.EQUALS, labor.getId());
+		qbe.add(LabItem.TYPE, Query.EQUALS, new Integer(LabItemTyp.DOCUMENT.ordinal()).toString());
 		
-		private String result;
-		private String comment;
-		private String refMale;
-		private String refFemale;
-		private String unit;
-		private int flags;
-		
-		private TimeTool date;
-		private TimeTool analyseTime;
-		private TimeTool observationTime;
-		private TimeTool transmissionTime;
-		
-		private Map<String, String> setProperties;
-		
-		private TransientLabResult(Builder builder){
-			this.patient = builder.patient;
-			this.labItem = builder.labItem;
-			this.origin = builder.origin;
-			
-			this.result = builder.result;
-			this.comment = builder.comment;
-			this.refMale = builder.refMale;
-			this.refFemale = builder.refFemale;
-			this.unit = builder.unit;
-			this.flags = builder.flags;
-			
-			this.date = builder.date;
-			this.analyseTime = builder.analyseTime;
-			this.observationTime = builder.observationTime;
-			this.transmissionTime = builder.transmissionTime;
-			
-			this.setProperties = builder.setProperties;
+		LabItem labItem = null;
+		List<LabItem> itemList = qbe.execute();
+		if (itemList.size() > 0) {
+			labItem = itemList.get(0);
 		}
 		
-		/**
-		 * Checks if result, ref (if set) and unit are the same in the LabResult.
-		 * 
-		 * @param labResult
-		 * @return
-		 */
-		public boolean isSameResult(LabResult labResult){
-			if (refMale != null) {
-				if (!labResult.getRefMale().equals(refMale)) {
-					return false;
+		return labItem;
+	}
+	
+	@Override
+	public void createCommentsLabResult(TextData hl7TextData, IPatient pat, IContact labor,
+		int number, TimeTool commentDate){
+		if (hl7TextData.getDate() == null) {
+			hl7TextData.setDate(commentDate.getTime());
+		}
+		TimeTool commentsDate = new TimeTool(hl7TextData.getDate());
+		
+		// find LabItem
+		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
+		qbe.add("LaborID", "=", labor.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+		qbe.add("titel", "=", HL7Constants.COMMENT_NAME); //$NON-NLS-1$ //$NON-NLS-2$
+		qbe.add("kuerzel", "=", HL7Constants.COMMENT_CODE); //$NON-NLS-1$ //$NON-NLS-2$
+		List<LabItem> list = qbe.execute();
+		LabItem li = null;
+		if (list.size() < 1) {
+			// LabItem doesn't yet exist
+			LabItemTyp typ = LabItemTyp.TEXT;
+			li = new LabItem(HL7Constants.COMMENT_CODE, HL7Constants.COMMENT_NAME, labor.getId(),
+				"", "", //$NON-NLS-1$ //$NON-NLS-2$
+				"", typ, HL7Constants.COMMENT_GROUP, Integer.toString(number)); //$NON-NLS-1$
+		} else {
+			li = list.get(0);
+		}
+		
+		// add LabResult
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		qr.add("PatientID", "=", pat.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+		qr.add("Datum", "=", commentsDate.toString(TimeTool.DATE_GER)); //$NON-NLS-1$ //$NON-NLS-2$
+		qr.add("ItemID", "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+		if (qr.execute().size() == 0) {
+			StringBuilder comment = new StringBuilder();
+			comment.append(hl7TextData.getText());
+			comment.append(hl7TextData.getComment());
+			// only add coments not yet existing
+			LabResult result =
+				new LabResult(pat, commentsDate, li, "text", comment.toString(), labor); //$NON-NLS-1$
+			result.setObservationTime(commentsDate);
+		}
+		
+	}
+	
+	@Override
+	public void createDocumentManagerEntry(String title, String lab, byte[] data, String mimeType,
+		TimeTool date, IPatient pat){
+		Object os = Extensions.findBestService(GlobalServiceDescriptors.DOCUMENT_MANAGEMENT);
+		if (os != null) {
+			IDocumentManager docManager = (IDocumentManager) os;
+			
+			//find or create a category for this lab
+			boolean catIsNotExisting = true;
+			for (String cat : docManager.getCategories()) {
+				if (cat.equals(lab)) {
+					catIsNotExisting = false;
+					break;
 				}
-			}
-			if (refFemale != null) {
-				if (!labResult.getRefFemale().equals(refFemale)) {
-					return false;
-				}
-			}
-			if (unit != null) {
-				if (!labResult.getUnit().equals(unit)) {
-					return false;
-				}
-			}
-			String matchResult = labResult.getResult();
-			if (!matchResult.equals(result)) {
-				return false;
 			}
 			
-			return true;
+			if (catIsNotExisting) {
+				docManager.addCategorie(lab);
+			}
+			
+			// add document 
+			try {
+				Patient patient = Patient.load(pat.getId());
+				docManager.addDocument(new GenericDocument(patient, title, lab, data,
+					date.toString(TimeTool.DATE_GER), null, mimeType));
+			} catch (IOException | ElexisException e) {
+				logger.error("Error saving document received via hl7 in local document manager", e);
+			}
 		}
+	}
 
-		private void overwriteExisting(LabResult labResult){
-			labResult.set(LabResult.COMMENT, comment);
-			labResult.setResult(result);
-			// pathologic check takes place in labResult if it is numeric
-			if (labItem.getTyp() == typ.NUMERIC) {
-				flags = labResult.getFlags();
-			}
-			setFields(labResult);
-		}
-		
-		private LabResult persist(){
-			// determine gender, set refVal
-			String refVal;
-			if (Person.MALE.equalsIgnoreCase(patient.getGeschlecht())) {
-				refVal = refMale;
+	@Override
+	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem,
+		String result, String comment, String refVal, IContact origin){
+		Patient pat = Patient.load(patient.getId());
+		LabItem item = LabItem.load(labItem.getId());
+		Labor labor = Labor.load(origin.getId());
+		LabResult labResult = new LabResult(pat, date, item, result, comment, labor);
+		if (refVal != null) {
+			if (Person.MALE.equalsIgnoreCase(pat.getGeschlecht())) {
+				labResult.setRefMale(refVal);
 			} else {
-				refVal = refFemale;
-			}
-			
-			LabResult labResult =
-				new LabResult(patient, date, labItem, result, comment, refVal, origin);
-			// pathologic check takes place in labResult if it is numeric
-			if (labItem.getTyp() == typ.NUMERIC) {
-				flags = labResult.getFlags();
-			}
-			setFields(labResult);
-			return labResult;
-		}
-		
-		public String getLabel(){
-			StringBuilder sb = new StringBuilder();
-			sb.append(labItem.getLabel()).append(", ")
-				.append(getDate().toString(TimeTool.DATE_GER)).append(": ").append(getResult());
-			return sb.toString();
-		}
-		
-		@Override
-		public String toString(){
-			StringBuilder sb = new StringBuilder();
-			sb.append(labItem.getLabel()).append(", date ")
-				.append(getDate().toString(TimeTool.TIMESTAMP));
-			
-			if (refMale != null) {
-				sb.append(" refm ").append(refMale);
-			}
-			if (refFemale != null) {
-				sb.append(" reff ").append(refFemale);
-			}
-			if (unit != null) {
-				sb.append(" unit ").append(unit);
-			}
-			if (analyseTime != null) {
-				sb.append(" aTime ").append(analyseTime.toString(TimeTool.TIMESTAMP));
-			}
-			if (observationTime != null) {
-				sb.append(" oTime ").append(observationTime.toString(TimeTool.TIMESTAMP));
-			}
-			if (transmissionTime != null) {
-				sb.append(" tTime ").append(transmissionTime.toString(TimeTool.TIMESTAMP));
-			}
-			
-			sb.append(" res ").append(getResult());
-			return sb.toString();
-		}
-		
-		private void setFields(LabResult labResult){
-			if (refMale != null) {
-				labResult.setRefMale(refMale);
-			}
-			if (refFemale != null) {
-				labResult.setRefFemale(refFemale);
-			}
-			if (unit != null) {
-				labResult.setUnit(unit);
-			}
-			if (analyseTime != null) {
-				labResult.setAnalyseTime(analyseTime);
-			}
-			if (observationTime != null) {
-				labResult.setObservationTime(observationTime);
-			}
-			if (transmissionTime != null) {
-				labResult.setTransmissionTime(transmissionTime);
-			}
-			// set all flags at once, flags is a string in the database
-			labResult.set(LabResult.FLAGS, Integer.toString(flags));
-			
-			if (setProperties != null) {
-				Set<String> keys = setProperties.keySet();
-				for (String string : keys) {
-					labResult.set(string, setProperties.get(string));
-				}
+				labResult.setRefFemale(refVal);
 			}
 		}
-		
-		public Patient getPatient(){
-			return patient;
-		}
-		
-		public LabItem getLabItem(){
-			return labItem;
-		}
-		
-		public String getResult(){
-			return result;
-		}
-		
-		public String getComment(){
-			return comment;
-		}
-		
-		public String getRefMale(){
-			return refMale;
-		}
-		
-		public String getRefFemale(){
-			return refFemale;
-		}
-		
-		public String getUnit(){
-			return unit;
-		}
-		
-		public int getFlags(){
-			return flags;
-		}
-		
-		public TimeTool getDate(){
-			return date;
-		}
-		
-		public TimeTool getAnalyseTime(){
-			return analyseTime;
-		}
-		
-		/**
-		 * Check if analyse time is valid, by comparing it with the transmission time.
-		 * 
-		 * @return
-		 */
-		public boolean isAnalyseTime(){
-			if (analyseTime == null) {
-				return false;
-			}
-			if (transmissionTime != null) {
-				return !analyseTime.isEqual(transmissionTime);
-			} else {
-				return true;
-			}
-		}
-		
-		public TimeTool getObservationTime(){
-			return observationTime;
-		}
-		
-		/**
-		 * Check if observation time is valid, by comparing it with the transmission time.
-		 * 
-		 * @return
-		 */
-		public boolean isObservationTime(){
-			if (observationTime == null) {
-				return false;
-			}
-			if (transmissionTime != null) {
-				return !observationTime.isEqual(transmissionTime);
-			} else {
-				return true;
-			}
-		}
-
-		public TimeTool getTransmissionTime(){
-			return transmissionTime;
-		}
-		
-		public static class Builder {
-			// required parameters
-			private Patient patient;
-			private LabItem labItem;
-			private Kontakt origin;
-			private String result;
-			
-			// optional parameters
-			private String comment;
-			private String refMale;
-			private String refFemale;
-			private String unit;
-			private int flags;
-			
-			private TimeTool date;
-			private TimeTool analyseTime;
-			private TimeTool observationTime;
-			private TimeTool transmissionTime;
-			
-			private Map<String, String> setProperties;
-			
-			public Builder(Patient patient, Kontakt origin, LabItem labItem, String result){
-				this.patient = patient;
-				this.labItem = labItem;
-				this.result = result;
-				this.origin = origin;
-			}
-			
-			public Builder comment(String comment){
-				this.comment = comment;
-				return this;
-			}
-			
-			public Builder refMale(String refMale){
-				this.refMale = refMale;
-				return this;
-			}
-			
-			public Builder refFemale(String refFemale){
-				this.refFemale = refFemale;
-				return this;
-			}
-			
-			public Builder ref(String ref){
-				if (patient.getGeschlecht().equals(Patient.MALE)) {
-					refMale(ref);
-				} else {
-					refFemale(ref);
-				}
-				return this;
-			}
-			
-			public Builder unit(String unit){
-				this.unit = unit;
-				return this;
-			}
-			
-			public Builder flags(int flags){
-				this.flags = flags;
-				return this;
-			}
-			
-			public Builder date(TimeTool date){
-				this.date = date;
-				return this;
-			}
-			
-			public Builder analyseTime(TimeTool analyseTime){
-				this.analyseTime = analyseTime;
-				return this;
-			}
-			
-			public Builder observationTime(TimeTool observationTime){
-				this.observationTime = observationTime;
-				return this;
-			}
-			
-			public Builder transmissionTime(TimeTool transmissionTime){
-				this.transmissionTime = transmissionTime;
-				return this;
-			}
-			
-			public TransientLabResult build(){
-				return new TransientLabResult(this);
-			}
-			
-			public Builder setProperty(String property, String value){
-				if (setProperties == null) {
-					setProperties = new HashMap<String, String>();
-				}
-				setProperties.put(property, value);
-				return this;
-			}
-		}
+		return labResult;
 	}
 }

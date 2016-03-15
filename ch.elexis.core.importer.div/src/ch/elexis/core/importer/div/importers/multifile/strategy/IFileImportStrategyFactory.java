@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.importer.div.importers.multifile.strategy;
+package ch.elexis.core.importer.div.importers.multifile.strategy;
 
 import java.io.File;
 import java.util.Map;

@@ -32,10 +32,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.controls.LaborMappingComposite;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.Labor;
 import ch.elexis.scripting.ScriptEditor;
@@ -208,13 +210,13 @@ public class EditLabItem extends TitleAreaDialog {
 		if (result != null) {
 			iKuerzel.setText(result.getKuerzel());
 			iTitel.setText(result.getName());
-			if (result.getTyp() == LabItem.typ.NUMERIC) {
+			if (result.getTyp() == LabItemTyp.NUMERIC) {
 				numeric.setSelection(true);
-			} else if (result.getTyp() == LabItem.typ.TEXT) {
+			} else if (result.getTyp() == LabItemTyp.TEXT) {
 				alph.setSelection(true);
-			} else if (result.getTyp() == LabItem.typ.ABSOLUTE) {
+			} else if (result.getTyp() == LabItemTyp.ABSOLUTE) {
 				abs.setSelection(true);
-			} else if (result.getTyp() == LabItem.typ.DOCUMENT) {
+			} else if (result.getTyp() == LabItemTyp.DOCUMENT) {
 				document.setSelection(true);
 				documentSelectionChanged();
 			} else {
@@ -244,7 +246,7 @@ public class EditLabItem extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		LabItem.typ typ;
+		LabItemTyp typ;
 		// String refmin="",refmax;
 		// refmax=iRef.getText();
 		if (iTitel.getText().length() < 1 && iPrio.getText().length() < 1) {
@@ -253,30 +255,30 @@ public class EditLabItem extends TitleAreaDialog {
 		}
 		
 		if (numeric.getSelection() == true) {
-			typ = LabItem.typ.NUMERIC;
+			typ =LabItemTyp.NUMERIC;
 		} else if (abs.getSelection() == true) {
-			typ = LabItem.typ.ABSOLUTE;
+			typ = LabItemTyp.ABSOLUTE;
 		} else if (formula.getSelection()) {
-			typ = LabItem.typ.FORMULA;
+			typ =LabItemTyp.FORMULA;
 		} else if (document.getSelection()) {
-			typ = LabItem.typ.DOCUMENT;
+			typ = LabItemTyp.DOCUMENT;
 		} else {
-			typ = LabItem.typ.TEXT;
+			typ =LabItemTyp.TEXT;
 		}
 		if (result == null) {
-			result =
-				new LabItem(iKuerzel.getText(), iTitel.getText(), null, iRef.getText(),
+			result = 
+				new LabItem(iKuerzel.getText(), iTitel.getText(), (Kontakt) null, iRef.getText(),
 					iRfF.getText(), iUnit.getText(), typ, cGroup.getText(), iPrio.getText());
 			mapping.persistTransientLabMappings(result);
 		} else {
 			String t = "0"; //$NON-NLS-1$
-			if (typ == LabItem.typ.TEXT) {
+			if (typ == LabItemTyp.TEXT) {
 				t = "1"; //$NON-NLS-1$
-			} else if (typ == LabItem.typ.ABSOLUTE) {
+			} else if (typ == LabItemTyp.ABSOLUTE) {
 				t = "2"; //$NON-NLS-1$
-			} else if (typ == LabItem.typ.FORMULA) {
+			} else if (typ == LabItemTyp.FORMULA) {
 				t = "3"; //$NON-NLS-1$
-			} else if (typ == LabItem.typ.DOCUMENT) {
+			} else if (typ == LabItemTyp.DOCUMENT) {
 				t = "4"; //$NON-NLS-1$
 			}
 			result.set(new String[] {

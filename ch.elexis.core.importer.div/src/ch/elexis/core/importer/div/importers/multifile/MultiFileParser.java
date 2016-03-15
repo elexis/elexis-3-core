@@ -1,14 +1,17 @@
-package ch.elexis.core.ui.importer.div.importers.multifile;
+package ch.elexis.core.importer.div.importers.multifile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.elexis.core.ui.importer.div.importers.Messages;
-import ch.elexis.core.ui.importer.div.importers.multifile.strategy.IFileImportStrategy;
-import ch.elexis.core.ui.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
+import ch.elexis.core.importer.div.importers.Messages;
+import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
+import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
+
+
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
@@ -42,7 +45,12 @@ public class MultiFileParser implements IMultiFileParser {
 		for (File file : keys) {
 			IFileImportStrategy importStrategy = strategyMap.get(file);
 			importStrategy.setTestMode(testMode);
-			results.add(importStrategy.execute(file, context));
+			try {
+				results.add(importStrategy.execute(file, context));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return results;
 	}

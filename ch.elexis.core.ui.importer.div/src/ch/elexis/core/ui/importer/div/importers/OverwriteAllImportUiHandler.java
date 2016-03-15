@@ -1,14 +1,14 @@
 package ch.elexis.core.ui.importer.div.importers;
 
-import ch.elexis.core.ui.importer.div.importers.LabImportUtil.ImportUiHandler;
-import ch.elexis.core.ui.importer.div.importers.LabImportUtil.TransientLabResult;
-import ch.elexis.data.LabResult;
-import ch.elexis.data.Patient;
+import ch.elexis.core.importer.div.importers.ImportHandler;
+import ch.elexis.core.importer.div.importers.TransientLabResult;
+import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.IPatient;
 
-public class OverwriteAllImportUiHandler extends ImportUiHandler {
+public class OverwriteAllImportUiHandler extends ImportHandler {
 	
 	@Override
-	protected OverwriteState askOverwrite(Patient patient, LabResult oldResult,
+	public OverwriteState askOverwrite(IPatient patient, ILabResult oldResult,
 		TransientLabResult newResult){
 		return OverwriteState.OVERWRITEALL;
 	}

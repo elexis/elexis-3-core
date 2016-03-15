@@ -12,6 +12,8 @@
 
 package ch.elexis.data;
 
+import static ch.elexis.core.model.LabResultConstants.PATHOLOGIC;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,12 +30,17 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.data.LabItem.typ;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.types.Gender;
+import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
-public class LabResult extends PersistentObject {
+public class LabResult extends PersistentObject implements ILabResult {
 	public static final String LABRESULT_UNSEEN = "Labresult:unseen"; //$NON-NLS-1$
 	public static final String DATE = "Datum"; //$NON-NLS-1$
 	public static final String TIME = "Zeit"; //$NON-NLS-1$
@@ -51,12 +58,6 @@ public class LabResult extends PersistentObject {
 	public static final String REFMALE = "refmale"; //$NON-NLS-1$
 	public static final String REFFEMALE = "reffemale"; //$NON-NLS-1$
 	public static final String ORIGIN_ID = "OriginID"; //$NON-NLS-1$
-	
-	public static final int PATHOLOGIC = 1 << 0;
-	public static final int OBSERVE = 1 << 1; // Anwender erklärt den Parameter für
-	// beobachtungswürdig
-	public static final int NORMAL = 1 << 2; // Anwender erklärt den Wert explizit für normal (auch
-	// wenn er formal ausserhalb des Normbereichs ist)
 	
 	private static final String TABLENAME = "LABORWERTE"; //$NON-NLS-1$
 	private final String SMALLER = "<";
@@ -88,6 +89,42 @@ public class LabResult extends PersistentObject {
 		QUERY_GROUP_ORDER = sb.toString();
 	}
 	
+	protected LabResult(){}
+
+	protected LabResult(final String id){
+		super(id);
+	}
+
+	/**
+	 * @since 3.2
+	 */
+	public LabResult(IPatient p, TimeTool date, ILabItem item, String result, String comment,
+		IContact origin){
+		create(null);
+		String[] fields = {
+			PATIENT_ID, DATE, ITEM_ID, RESULT, COMMENT
+		};
+		String[] vals =
+			new String[] {
+				p.getId(),
+				date == null ? new TimeTool().toString(TimeTool.DATE_GER) : date
+					.toString(TimeTool.DATE_GER), item.getId(), result, comment
+			};
+		set(fields, vals);
+		// do we have an initial reference value?
+		
+		int flags = isPathologic(p.getGender(), item, result) ? PATHOLOGIC : 0;
+		set(FLAGS, Integer.toString(flags));
+		
+		// do we have an initial origin (sending facility)
+		if (origin != null) {
+			set(ORIGIN_ID, origin.getId());
+		} else {
+			set(ORIGIN_ID, "");
+		}
+		addToUnseen();
+	}
+
 	/**
 	 * Creates a new LabResult. If the type is numeric, a pathologic check will be applied.
 	 * 
@@ -102,7 +139,7 @@ public class LabResult extends PersistentObject {
 	 *            sending facility
 	 * @since 3.1
 	 */
-	public LabResult(final Patient p, final TimeTool date, final LabItem item, final String result,
+	public LabResult(final Patient p, final TimeTool date, final ILabItem item, final String result,
 		final String comment, @Nullable String refVal, @Nullable
 		final Kontakt origin){
 		create(null);
@@ -125,7 +162,7 @@ public class LabResult extends PersistentObject {
 			}
 		}
 		
-		int flags = isPathologic(p, item, result) ? PATHOLOGIC : 0;
+		int flags = isPathologic(p.getGender(), item, result) ? PATHOLOGIC : 0;
 		set(FLAGS, Integer.toString(flags));
 		
 		// do we have an initial origin (sending facility)
@@ -151,8 +188,8 @@ public class LabResult extends PersistentObject {
 		this(p, date, item, result, comment, null, origin);
 	}
 	
-	private boolean isPathologic(final Patient p, final LabItem item, final String result){
-		if (item.getTyp().equals(LabItem.typ.ABSOLUTE)) {
+	private boolean isPathologic(final Gender g, final ILabItem item, final String result){
+		if (item.getTyp().equals(LabItemTyp.ABSOLUTE)) {
 			if (result.toLowerCase().startsWith("pos")) { //$NON-NLS-1$
 				return true;
 			}
@@ -161,7 +198,7 @@ public class LabResult extends PersistentObject {
 			}
 		} else /* if(item.getTyp().equals(LabItem.typ.NUMERIC)) */{
 			String nr;
-			if (p.getGeschlecht().equalsIgnoreCase(Person.MALE)) {
+			if (g == Gender.MALE) {
 				nr = getRefMale();
 				if (nr == null || nr.isEmpty()) {
 					nr = item.getRefM();
@@ -182,7 +219,7 @@ public class LabResult extends PersistentObject {
 	}
 	
 	public boolean isLongText(){
-		if (getItem().getTyp() == typ.TEXT && getResult().equalsIgnoreCase("text")
+		if (getItem().getTyp() == LabItemTyp.TEXT && getResult().equalsIgnoreCase("text")
 			&& !getComment().isEmpty()) {
 			return true;
 		}
@@ -288,11 +325,10 @@ public class LabResult extends PersistentObject {
 	}
 	
 	public String getResult(){
-		if (getItem().getTyp() == typ.FORMULA) {
+		if (getItem().getTyp() == LabItemTyp.FORMULA) {
 			String value = null;
 			// get the LabOrder for this LabResult
-			List<LabOrder> orders =
-				LabOrder.getLabOrders(null, null, getItem(), this, null, null, null);
+			List<LabOrder> orders = LabOrder.getLabOrdersByLabItem(getItem());
 			if (orders != null && !orders.isEmpty()) {
 				value = evaluteWithOrderContext(orders.get(0));
 			}
@@ -329,7 +365,7 @@ public class LabResult extends PersistentObject {
 	}
 	
 	public void setResult(final String res){
-		int flags = isPathologic(getPatient(), getItem(), res) ? PATHOLOGIC : 0;
+		int flags = isPathologic(getPatient().getGender(), getItem(), res) ? PATHOLOGIC : 0;
 		set(new String[] {
 			RESULT, FLAGS
 		}, new String[] {
@@ -339,7 +375,10 @@ public class LabResult extends PersistentObject {
 	
 	public String getComment(){
 		return checkNull(get(COMMENT));
-		
+	}
+	
+	public void setComment(String comment) {
+		set(COMMENT, comment);
 	}
 	
 	public boolean isFlag(final int flag){
@@ -360,6 +399,11 @@ public class LabResult extends PersistentObject {
 		return checkZero(get(FLAGS));
 	}
 	
+	@Override
+	public void setFlags(int value){
+		set(FLAGS, Integer.toString(value));
+	}
+
 	public String getUnit(){
 		String ret = checkNull(get(UNIT));
 		if (ret.isEmpty()) {
@@ -449,7 +493,7 @@ public class LabResult extends PersistentObject {
 	
 	public void setRefMale(String value){
 		set(REFMALE, value);
-		setFlag(PATHOLOGIC, isPathologic(getPatient(), getItem(), getResult()));
+		setFlag(PATHOLOGIC, isPathologic(getPatient().getGender(), getItem(), getResult()));
 	}
 	
 	public String getRefFemale(){
@@ -458,7 +502,7 @@ public class LabResult extends PersistentObject {
 	
 	public void setRefFemale(String value){
 		set(REFFEMALE, value);
-		setFlag(PATHOLOGIC, isPathologic(getPatient(), getItem(), getResult()));
+		setFlag(PATHOLOGIC, isPathologic(getPatient().getGender(), getItem(), getResult()));
 	}
 	
 	/**
@@ -519,12 +563,6 @@ public class LabResult extends PersistentObject {
 	public String getDetail(final String key){
 		Map<Object, Object> ext = getMap(EXTINFO);
 		return (String) ext.get(key);
-	}
-	
-	protected LabResult(){}
-	
-	protected LabResult(final String id){
-		super(id);
 	}
 	
 	@Override

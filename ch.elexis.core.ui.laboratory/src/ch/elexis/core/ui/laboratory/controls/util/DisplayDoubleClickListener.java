@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.dialogs.DisplayLabDokumenteDialog;
 import ch.elexis.core.ui.dialogs.DisplayTextDialog;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
@@ -38,7 +39,7 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 	
 	private void openDisplayDialog(LabResult labResult){
 		LabItem labItem = labResult.getItem();
-		if (labItem.getTyp().equals(LabItem.typ.TEXT) || (labResult.getComment().length() > 0)) {
+		if (labItem.getTyp().equals(LabItemTyp.TEXT) || (labResult.getComment().length() > 0)) {
 			DisplayTextDialog dlg =
 				new DisplayTextDialog(composite.getShell(),
 					Messages.LaborResultsComposite_textResultTitle, labItem.getName(),
@@ -64,7 +65,7 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 			}
 			dlg.setWhitespaceNormalized(false);
 			dlg.open();
-		} else if (labItem.getTyp().equals(LabItem.typ.DOCUMENT)) {
+		} else if (labItem.getTyp().equals(LabItemTyp.DOCUMENT)) {
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			if (patient != null) {
 				new DisplayLabDokumenteDialog(composite.getShell(),

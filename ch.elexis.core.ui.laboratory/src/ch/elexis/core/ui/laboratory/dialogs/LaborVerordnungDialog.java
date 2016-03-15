@@ -272,8 +272,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		List<LabOrder> existing =
-			LabOrder.getLabOrders(null, null, null, null, orderId.getText(), null, null);
+		List<LabOrder> existing = LabOrder.getLabOrdersByOrderId(orderId.getText());
 		if (existing != null) {
 			String newOrderId = LabOrder.getNextOrderId();
 			setErrorMessage(String.format(Messages.LaborVerordnungDialog_errorOrderNumber,

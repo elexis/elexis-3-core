@@ -9,6 +9,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
+import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
 import ch.rgw.io.FileTool;
 
 /**

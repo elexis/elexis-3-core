@@ -10,12 +10,13 @@ import org.eclipse.jface.viewers.ViewerRow;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
 import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
-import ch.elexis.data.LabItem.typ;
+
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
@@ -40,8 +41,8 @@ public class LabResultEditingSupport extends LabOrderEditingSupport {
 				IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
 				LaborItemResults results = (LaborItemResults) selection.getFirstElement();
 				if (results != null && value instanceof String) {
-					if (results.getLabItem().getTyp() == typ.NUMERIC
-						|| results.getLabItem().getTyp() == typ.ABSOLUTE) {
+					if (results.getLabItem().getTyp() == LabItemTyp.NUMERIC
+						|| results.getLabItem().getTyp() == LabItemTyp.ABSOLUTE) {
 						try {
 							String editedValue = (String) value;
 							if (editedValue.startsWith(SMALLER) || editedValue.startsWith(BIGGER)) {
@@ -70,7 +71,7 @@ public class LabResultEditingSupport extends LabOrderEditingSupport {
 	protected CellEditor getCellEditor(Object element){
 		if (element instanceof LaborItemResults) {
 			LabItem labItem = ((LaborItemResults) element).getLabItem();
-			if (labItem.getTyp() == typ.DOCUMENT) {
+			if (labItem.getTyp() == LabItemTyp.DOCUMENT) {
 				return null;
 			} else {
 				return textCellEditor;
@@ -92,14 +93,14 @@ public class LabResultEditingSupport extends LabOrderEditingSupport {
 	protected void setValue(Object element, Object value){
 		if (element instanceof LaborItemResults && value != null) {
 			LabItem labItem = ((LaborItemResults) element).getLabItem();
-			if (labItem.getTyp() == typ.DOCUMENT) {
+			if (labItem.getTyp() == LabItemTyp.DOCUMENT) {
 				return;
 			}
 			LabResult result = createResult(labItem, LabOrder.getOrCreateManualLabor());
-			if (result.getItem().getTyp() == typ.TEXT) {
+			if (result.getItem().getTyp() == LabItemTyp.TEXT) {
 				result.setResult("Text"); //$NON-NLS-1$
 				result.set(LabResult.COMMENT, value.toString());
-			} else if (result.getItem().getTyp() == typ.DOCUMENT) {
+			} else if (result.getItem().getTyp() == LabItemTyp.DOCUMENT) {
 				// dont know what todo ...
 			} else {
 				result.setResult(value.toString());

@@ -18,10 +18,10 @@ import org.eclipse.jface.viewers.ViewerRow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
-import ch.elexis.data.LabItem.typ;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
@@ -47,8 +47,8 @@ public class LabOrderEditingSupport extends EditingSupport {
 				IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
 				LabOrder order = (LabOrder) selection.getFirstElement();
 				if (order != null && value instanceof String) {
-					if (order.getLabItem().getTyp() == typ.NUMERIC
-						|| order.getLabItem().getTyp() == typ.ABSOLUTE) {
+					if (order.getLabItem().getTyp() == LabItemTyp.NUMERIC
+						|| order.getLabItem().getTyp() == LabItemTyp.ABSOLUTE) {
 						try {
 							String editedValue = (String) value;
 							if (editedValue.startsWith(SMALLER) || editedValue.startsWith(BIGGER)) {
@@ -120,14 +120,14 @@ public class LabOrderEditingSupport extends EditingSupport {
 	@Override
 	protected boolean canEdit(Object element){
 		return (element instanceof LabOrder)
-			&& (((LabOrder) element).getLabItem().getTyp() != typ.FORMULA);
+			&& (((LabOrder) element).getLabItem().getTyp() != LabItemTyp.FORMULA);
 	}
 
 	@Override
 	protected CellEditor getCellEditor(Object element){
 		if (element instanceof LabOrder) {
 			LabItem labItem = ((LabOrder) element).getLabItem();
-			if (labItem.getTyp() == typ.DOCUMENT) {
+			if (labItem.getTyp() == LabItemTyp.DOCUMENT) {
 				return null;
 			} else {
 				return textCellEditor;
@@ -140,9 +140,9 @@ public class LabOrderEditingSupport extends EditingSupport {
 	protected Object getValue(Object element){
 		if (element instanceof LabOrder) {
 			LabItem labItem = ((LabOrder) element).getLabItem();
-			if (labItem.getTyp() == typ.DOCUMENT) {
+			if (labItem.getTyp() == LabItemTyp.DOCUMENT) {
 				return "Doc"; //$NON-NLS-1$
-			} else if (labItem.getTyp() == typ.TEXT) {
+			} else if (labItem.getTyp() == LabItemTyp.TEXT) {
 				LabResult result = ((LabOrder) element).getLabResult();
 				if (result != null) {
 					return result.getComment();
@@ -165,11 +165,11 @@ public class LabOrderEditingSupport extends EditingSupport {
 				result = createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
 			}
 			
-			if (result.getItem().getTyp() == typ.TEXT) {
+			if (result.getItem().getTyp() == LabItemTyp.TEXT) {
 				result.setResult("Text"); //$NON-NLS-1$
 				result.set(LabResult.COMMENT, value.toString());
 				((LabOrder) element).setState(LabOrder.State.DONE);
-			} else if (result.getItem().getTyp() == typ.DOCUMENT) {
+			} else if (result.getItem().getTyp() == LabItemTyp.DOCUMENT) {
 				// dont know what todo ...
 			} else {
 				result.setResult(value.toString());

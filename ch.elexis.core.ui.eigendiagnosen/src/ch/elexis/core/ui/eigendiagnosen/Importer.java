@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import au.com.bytecode.opencsv.CSVReader;
 import ch.elexis.core.data.util.ResultAdapter;
+import ch.elexis.core.importer.div.importers.ExcelWrapper;
 import ch.elexis.core.ui.eigendiagnosen.Messages;
-import ch.elexis.core.ui.importer.div.importers.ExcelWrapper;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;

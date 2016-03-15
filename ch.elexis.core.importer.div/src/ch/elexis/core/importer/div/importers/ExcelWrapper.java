@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  *******************************************************************************/
 
-package ch.elexis.core.ui.importer.div.importers;
+package ch.elexis.core.importer.div.importers;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

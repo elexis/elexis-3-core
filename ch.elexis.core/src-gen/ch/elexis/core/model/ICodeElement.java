@@ -13,7 +13,8 @@ package ch.elexis.core.model;
 import java.util.List;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>ICode Element</b></em>'.
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>ICode Element</b></em>'.
  * <!-- end-user-doc -->
  *
  *
@@ -23,54 +24,51 @@ import java.util.List;
  */
 public interface ICodeElement {
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getCodeSystemName();
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getCodeSystemCode();
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getId();
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getCode();
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getText();
-	
+
 	/**
 	 * <!-- begin-user-doc -->
-	 * 
-	 * Kontext-Aktionen für dieses Code-Element
-	 * 
-	 * @param kontext
-	 * @return a list castable to IAction using <code>(Iterable<IAction>)(Iterable<?>)</code>
-	 * @deprecated
-	 * @since 3.0.0 method is bound for removal, please refactor
-	 * 
-	 *        <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model
-	 * @generated not
+	 * @generated
 	 */
 	List<Object> getActions(Object context);
-	
+
 } // ICodeElement

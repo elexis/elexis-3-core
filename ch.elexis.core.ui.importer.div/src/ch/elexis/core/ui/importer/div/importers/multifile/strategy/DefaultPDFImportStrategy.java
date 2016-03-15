@@ -11,17 +11,23 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
 import ch.elexis.core.data.services.GlobalServiceDescriptors;
 import ch.elexis.core.data.services.IDocumentManager;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.importer.div.importers.ImportHandler;
+import ch.elexis.core.importer.div.importers.TransientLabResult;
+import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
+import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.importer.div.importers.DefaultLabImportUiHandler;
 import ch.elexis.core.ui.importer.div.importers.LabImportUtil;
-import ch.elexis.core.ui.importer.div.importers.LabImportUtil.TransientLabResult;
 import ch.elexis.core.ui.importer.div.importers.Messages;
 import ch.elexis.core.ui.importer.div.importers.OverwriteAllImportUiHandler;
-import ch.elexis.core.ui.importer.div.importers.multifile.IMultiFileParser;
 import ch.elexis.core.ui.text.GenericDocument;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
@@ -45,12 +51,13 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	
 	private static final String PDF = "pdf";
 	private IDocumentManager docManager;
-	private Labor myLab;
+	private IContact myLab;
 	private String labName;
 	private Patient patient;
 	private TimeTool dateTime;
 	private String group;
 	private String prio;
+	private LabImportUtil labImportUtil = new LabImportUtil();
 	
 	private boolean testMode = false;
 	
@@ -81,25 +88,27 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		// get or create LabItem and create labresult
 		String name = "Dokument";
 		String shortname = "doc";
-		LabItem labItem = getLabItem(shortname, name, LabItem.typ.DOCUMENT);
+		ILabItem labItem = getLabItem(shortname, name, LabItemTyp.DOCUMENT);
 		if (labItem == null) {
-			labItem =
-				new LabItem(shortname, name, myLab, "", "", PDF, LabItem.typ.DOCUMENT, group, prio);
+			labItem = labImportUtil.createLabItem(shortname, name, myLab, "", "", PDF,
+				LabItemTyp.DOCUMENT, group, prio);
 		}
 		
 		String titel = generatePDFTitle(file.getName(), dateTime);
-		TransientLabResult importResult =
-			new TransientLabResult.Builder(patient, myLab, labItem, titel).date(dateTime).build();
-			
-		String orderId;
-		if (testMode) {
-			orderId = LabImportUtil.importLabResults(Collections.singletonList(importResult),
-				new OverwriteAllImportUiHandler());
-		} else {
-			orderId = LabImportUtil.importLabResults(Collections.singletonList(importResult),
-				new DefaultLabImportUiHandler());
-		}
 		
+		TransientLabResult importResult =
+			new TransientLabResult.Builder(new ContactBean(patient), myLab, labItem, titel).date(dateTime)
+				.build(labImportUtil);
+				
+		ImportHandler importHandler;
+		if (testMode) {
+			importHandler = new OverwriteAllImportUiHandler();
+		} else {
+			importHandler = new DefaultLabImportUiHandler();
+		}
+		String orderId =
+			labImportUtil.importLabResults(Collections.singletonList(importResult), importHandler);
+			
 		// add doc to document manager
 		try {
 			addDocument(titel, labName, dateTime.toString(TimeTool.DATE_GER), file, file.getName());
@@ -118,7 +127,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			sbFailed.append("; ");
 		}
 		
-		myLab = Labor.load((String) context.get(IMultiFileParser.CTX_LABID));
+		myLab = new ContactBean(Labor.load((String) context.get(IMultiFileParser.CTX_LABID)));
 		if (myLab == null) {
 			sbFailed.append(Messages.DefaultPDFImportStrategy_Lab);
 			sbFailed.append("; ");
@@ -153,7 +162,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		}
 	}
 	
-	private LabItem getLabItem(String shortname, String name, LabItem.typ type){
+	private LabItem getLabItem(String shortname, String name, LabItemTyp type){
 		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
 		qbe.add(LabItem.SHORTNAME, Query.EQUALS, shortname);
 		qbe.add(LabItem.LAB_ID, Query.EQUALS, myLab.getId());
@@ -180,12 +189,13 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		final File file, String keywords) throws IOException, ElexisException{
 		findOrCreateCategory(category);
 		
-		List<IOpaqueDocument> documentList = this.docManager.listDocuments(this.patient, category,
-			title, null, new TimeSpan(dateStr + "-" + dateStr), null); //$NON-NLS-1$
+		Patient pat = Patient.load(patient.getId());
+		List<IOpaqueDocument> documentList = this.docManager.listDocuments(pat, category, title,
+			null, new TimeSpan(dateStr + "-" + dateStr), null); //$NON-NLS-1$
 			
 		if (documentList == null || documentList.size() == 0) {
-			this.docManager.addDocument(new GenericDocument(this.patient, title, category, file,
-				dateStr, keywords, FileTool.getExtension(file.getName())));
+			this.docManager.addDocument(new GenericDocument(pat, title, category, file, dateStr,
+				keywords, FileTool.getExtension(file.getName())));
 			return true;
 		}
 		return false;

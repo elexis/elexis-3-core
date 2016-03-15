@@ -53,6 +53,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.commands.CreateImportMappingUi;
 import ch.elexis.core.ui.laboratory.commands.CreateLabItemUi;
 import ch.elexis.core.ui.laboratory.commands.CreateMappingFrom2_1_7;
@@ -224,14 +225,14 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			case 2:
 				return loinccode;
 			case 3:
-				LabItem.typ typ = li.getTyp();
-				if (typ == LabItem.typ.NUMERIC) {
+				LabItemTyp typ = li.getTyp();
+				if (typ == LabItemTyp.NUMERIC) {
 					return Messages.LaborPrefs_numeric;
-				} else if (typ == LabItem.typ.TEXT) {
+				} else if (typ == LabItemTyp.TEXT) {
 					return Messages.LaborPrefs_alpha;
-				} else if (typ == LabItem.typ.FORMULA) {
+				} else if (typ == LabItemTyp.FORMULA) {
 					return Messages.LaborPrefs_formula;
-				} else if (typ == LabItem.typ.DOCUMENT) {
+				} else if (typ == LabItemTyp.DOCUMENT) {
 					return Messages.LaborPrefs_document;
 				}
 				return Messages.LaborPrefs_absolute;

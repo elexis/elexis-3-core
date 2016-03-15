@@ -10,9 +10,11 @@
  */
 package ch.elexis.core.model;
 
+
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>IUser</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>IUser</b></em>'.
+ * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -31,8 +33,8 @@ public interface IUser extends IContact {
 	 * Returns the value of the '<em><b>Username</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Username</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Username</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Username</em>' attribute.
@@ -42,22 +44,23 @@ public interface IUser extends IContact {
 	 * @generated
 	 */
 	String getUsername();
-	
+
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IUser#getUsername <em>Username</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Username</em>' attribute.
 	 * @see #getUsername()
 	 * @generated
 	 */
 	void setUsername(String value);
-	
+
 	/**
 	 * Returns the value of the '<em><b>Password</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Password</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Password</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Password</em>' attribute.
@@ -67,14 +70,15 @@ public interface IUser extends IContact {
 	 * @generated
 	 */
 	String getPassword();
-	
+
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IUser#getPassword <em>Password</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Password</em>' attribute.
 	 * @see #getPassword()
 	 * @generated
 	 */
 	void setPassword(String value);
-	
+
 } // IUser

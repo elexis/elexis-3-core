@@ -15,8 +15,8 @@ package ch.elexis.data;
 
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.types.Gender;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -61,6 +61,10 @@ public class Person extends Kontakt {
 	
 	public String getGeschlecht(){
 		return checkNull(get(SEX));
+	}
+	
+	public Gender getGender() {
+		return Gender.fromValue(getGeschlecht().toUpperCase());
 	}
 	
 	public String getNatel(){

@@ -1,9 +1,10 @@
-package ch.elexis.core.ui.importer.div.importers.multifile.strategy;
+package ch.elexis.core.importer.div.importers.multifile.strategy;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
-import ch.elexis.core.ui.importer.div.importers.multifile.IMultiFileParser;
+import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
 import ch.rgw.tools.Result;
 
 /**
@@ -24,7 +25,7 @@ public interface IFileImportStrategy {
 	 *            {@link IMultiFileParser} constants.
 	 * @return {@link Result} indicating whether import succeeded or not
 	 */
-	public Result<Object> execute(File file, Map<String, Object> context);
+	public Result<Object> execute(File file, Map<String, Object> context) throws IOException;
 	
 	public void setTestMode(boolean testing);
 	

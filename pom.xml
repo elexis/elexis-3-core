@@ -237,6 +237,7 @@
 		<module>ch.elexis.core.ui.medication</module>
 		<module>ch.elexis.core.ui.p2</module>
 		<module>ch.elexis.core.ui.p2.feature</module>
+		<module>ch.elexis.core.importer.div</module>
 		<module>ch.elexis.core.ui.importer.div</module>
 		<module>ch.elexis.core.ui.importer.div.native32</module>
 		<module>ch.elexis.core.ui.importer.div.native64</module>

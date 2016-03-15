@@ -1,10 +1,8 @@
-package ch.elexis.core.ui.importer.div.importers.multifile;
+package ch.elexis.core.importer.div.importers.multifile;
 
 import java.io.File;
 
-import ch.elexis.core.ui.importer.div.importers.HL7Parser;
-import ch.elexis.core.ui.importer.div.importers.multifile.strategy.DefaultImportStrategyFactory;
-import ch.elexis.core.ui.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
+import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
 import ch.rgw.tools.Result;
 
 public interface IMultiFileParser {

@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.TimeTool;
 
@@ -36,7 +37,7 @@ public class Test_LabItem extends AbstractPersistentObjectTest {
 		// create a instance of an PersistentObject ex. Organisation to test the query
 		org = new Organisation("orgname", "orgzusatz1");
 		new LabItem(REF_ITEM_KUERZEL, REF_ITEM_NAME, org, REF_ITEM_REFM, REF_ITEM_REFW,
-			REF_ITEM_UNIT, LabItem.typ.NUMERIC, REF_ITEM_GROUP, "0");
+			REF_ITEM_UNIT, LabItemTyp.NUMERIC, REF_ITEM_GROUP, "0");
 	}
 	
 	@After
@@ -57,7 +58,7 @@ public class Test_LabItem extends AbstractPersistentObjectTest {
 	public void testGetLabItemsSelective(){
 		// create a second lab item to select
 		LabItem item =
-			new LabItem("kuerzel1", "testname1", org, "0-1", "0-2", "mg/dl", LabItem.typ.NUMERIC,
+			new LabItem("kuerzel1", "testname1", org, "0-1", "0-2", "mg/dl", LabItemTyp.NUMERIC,
 				"gruppe", "0");
 		
 		List<LabItem> items = LabItem.getLabItems(org.getId(), "kuerzel1", "0-1", "0-2", "mg/dl");
@@ -159,7 +160,7 @@ public class Test_LabItem extends AbstractPersistentObjectTest {
 		List<LabItem> items = LabItem.getLabItems();
 		assertEquals(1, items.size());
 		LabItem loc = items.get(0);
-		assertEquals(LabItem.typ.NUMERIC, loc.getTyp());
+		assertEquals(LabItemTyp.NUMERIC, loc.getTyp());
 	}
 	
 	// @Test TODO: does not work under Elexis 3.0
@@ -185,11 +186,11 @@ public class Test_LabItem extends AbstractPersistentObjectTest {
 	private void createFormulaEnv(){
 		// create a second lab item to select
 		LabItem item =
-			new LabItem("kuerzel1", "testname1", org, "0-1", "0-2", "mg/dl", LabItem.typ.NUMERIC,
+			new LabItem("kuerzel1", "testname1", org, "0-1", "0-2", "mg/dl", LabItemTyp.NUMERIC,
 				"G gruppe", "1");
 		// create a lab item made up by a formula
 		formulaItem =
-			new LabItem("formula", "formulatest", org, "0-2", "0-4", "mg/dl", LabItem.typ.FORMULA,
+			new LabItem("formula", "formulatest", org, "0-2", "0-4", "mg/dl", LabItemTyp.FORMULA,
 				"G gruppe", "2");
 		
 		formulaPat = new Patient("testName", "testVorname", "01.01.79", "m");

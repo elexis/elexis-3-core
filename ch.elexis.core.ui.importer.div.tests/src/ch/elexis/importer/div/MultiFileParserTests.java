@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.ui.importer.div.importers.multifile.MultiFileParser;
+import ch.elexis.core.importer.div.importers.multifile.MultiFileParser;
 import ch.elexis.core.ui.importer.div.importers.multifile.strategy.DefaultImportStrategyFactory;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;

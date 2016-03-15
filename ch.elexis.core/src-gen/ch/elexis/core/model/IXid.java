@@ -10,9 +10,11 @@
  */
 package ch.elexis.core.model;
 
+
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>IXid</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>IXid</b></em>'.
+ * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -34,8 +36,8 @@ public interface IXid extends IPersistentObject {
 	 * Returns the value of the '<em><b>Domain</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Domain</em>' attribute isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Domain</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Domain</em>' attribute.
@@ -44,13 +46,13 @@ public interface IXid extends IPersistentObject {
 	 * @generated
 	 */
 	String getDomain();
-	
+
 	/**
 	 * Returns the value of the '<em><b>Domain Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Domain Id</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Domain Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Domain Id</em>' attribute.
@@ -59,24 +61,28 @@ public interface IXid extends IPersistentObject {
 	 * @generated
 	 */
 	String getDomainId();
-	
+
 	/**
 	 * Returns the value of the '<em><b>Object</b></em>' reference.
-	 * <!-- begin-user-doc --> The
-	 * object that is identified with this XID <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Object</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Object</em>' reference.
 	 * @see ch.elexis.core.model.ModelPackage#getIXid_Object()
 	 * @model changeable="false"
 	 * @generated
 	 */
 	IPersistentObject getObject();
-	
+
 	/**
 	 * Returns the value of the '<em><b>Quality</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Quality</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Quality</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Quality</em>' attribute.
@@ -85,13 +91,13 @@ public interface IXid extends IPersistentObject {
 	 * @generated
 	 */
 	int getQuality();
-	
+
 	/**
 	 * Returns the value of the '<em><b>GUID</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>GUID</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>GUID</em>' attribute isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>GUID</em>' attribute.
@@ -100,5 +106,5 @@ public interface IXid extends IPersistentObject {
 	 * @generated
 	 */
 	boolean isGUID();
-	
+
 } // IXid

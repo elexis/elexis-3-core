@@ -10,8 +10,10 @@
  */
 package ch.elexis.core.model;
 
+
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>IChange Listener</b></em>'.
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>IChange Listener</b></em>'.
  * <!-- end-user-doc -->
  *
  *
@@ -21,17 +23,19 @@ package ch.elexis.core.model;
  */
 public interface IChangeListener {
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model
 	 * @generated
 	 */
 	void valueChanged(IPersistentObject object, String field, Object oldValue, Object newValue);
-	
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model
 	 * @generated
 	 */
 	void objectDisposing(IPersistentObject object);
-	
+
 } // IChangeListener

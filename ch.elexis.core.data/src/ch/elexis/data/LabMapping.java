@@ -10,7 +10,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.data.LabItem.typ;
+import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.VersionInfo;
 
@@ -345,15 +345,15 @@ public class LabMapping extends PersistentObject {
 		return item;
 	}
 	
-	private static typ getLabItemTyp(String labItemTyp){
+	private static LabItemTyp getLabItemTyp(String labItemTyp){
 		if (labItemTyp.equalsIgnoreCase("numeric")) { //$NON-NLS-1$
-			return typ.NUMERIC;
+			return LabItemTyp.NUMERIC;
 		} else if (labItemTyp.equalsIgnoreCase("absolute")) { //$NON-NLS-1$
-			return typ.ABSOLUTE;
+			return LabItemTyp.ABSOLUTE;
 		} else if (labItemTyp.equalsIgnoreCase("text")) { //$NON-NLS-1$
-			return typ.TEXT;
+			return LabItemTyp.TEXT;
 		}
-		return typ.NUMERIC;
+		return LabItemTyp.NUMERIC;
 	}
 	
 	private static Labor createLabor(String labName){
