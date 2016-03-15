@@ -390,8 +390,7 @@ public class HL7Parser {
 		return importFile(new File(filepath), null, bCreatePatientIfNotExists);
 	}
 	
-	public Result<?> importMessage(String message, boolean bCreatePatientIfNotExists,
-		ImportHandler importHandler) throws IOException{
+	public Result<?> importMessage(String message, boolean bCreatePatientIfNotExists) throws IOException{
 		HL7Reader hl7Reader = HL7ReaderFactory.INSTANCE.getReader(message);
 		
 		this.hl7Reader = hl7Reader;
