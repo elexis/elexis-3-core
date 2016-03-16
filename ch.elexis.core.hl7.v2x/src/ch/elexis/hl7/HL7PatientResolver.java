@@ -13,8 +13,8 @@ public abstract class HL7PatientResolver {
 	public abstract IPatient createPatient(String lastName, String firstName, String birthDate,
 		String sex);
 		
-	public abstract List<IPatient> getPatientById(String patid);
+	public abstract List<? extends IPatient> getPatientById(String patid);
 	
-	public abstract List<IPatient> findPatientByNameAndBirthdate(String lastName, String firstName,
+	public abstract List<? extends IPatient> findPatientByNameAndBirthdate(String lastName, String firstName,
 		String birthDate);
 }

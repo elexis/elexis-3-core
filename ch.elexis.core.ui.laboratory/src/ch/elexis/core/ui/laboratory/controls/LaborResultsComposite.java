@@ -155,7 +155,7 @@ public class LaborResultsComposite extends Composite {
 					sb.setLength(0);
 					ILabItem item = ((LaborItemResults) element).getFirstResult().getItem();
 					sb.append(item.getKuerzel()).append(" - ").append(item.getName()).append(" [") //$NON-NLS-1$ //$NON-NLS-2$
-						.append(item.getEinheit()).append("]"); //$NON-NLS-1$
+						.append(item.getUnit()).append("]"); //$NON-NLS-1$
 					return sb.toString();
 				}
 				return ""; //$NON-NLS-1$

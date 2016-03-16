@@ -216,7 +216,7 @@ public class HL7ReaderV251 extends HL7Reader {
 	
 	private void setPatient(PID pid, String orderNumber, final boolean createIfNotFound)
 		throws ParseException, HL7Exception{
-		List<IPatient> list = new ArrayList<IPatient>();
+		List<? extends IPatient> list = new ArrayList<IPatient>();
 		String lastName = ""; //$NON-NLS-1$
 		String firstName = ""; //$NON-NLS-1$
 		String birthDate = ""; //$NON-NLS-1$

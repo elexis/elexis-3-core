@@ -603,4 +603,44 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 			labResult.set(LabResult.ITEM_ID, getId());
 		}
 	}
+
+	@Override
+	public String getReferenceMale(){
+		return getRefM();
+	}
+
+	@Override
+	public void setReferenceMale(String value){
+		setRefM(value);
+	}
+
+	@Override
+	public String getReferenceFemale(){
+		return getRefW();
+	}
+
+	@Override
+	public void setReferenceFemale(String value){
+		setRefW(value);
+	}
+
+	@Override
+	public String getPriority(){
+		return getPrio();
+	}
+
+	@Override
+	public void setPriority(String value){
+		setPrio(value);
+	}
+
+	@Override
+	public String getUnit(){
+		return getEinheit();
+	}
+
+	@Override
+	public void setUnit(String value){
+		setEinheit(value);
+	}
 }

@@ -1267,22 +1267,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_ITEM__TYP = IDENTIFIABLE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Ref M</b></em>' attribute.
+	 * The feature id for the '<em><b>Reference Male</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__REF_M = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int ILAB_ITEM__REFERENCE_MALE = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Ref W</b></em>' attribute.
+	 * The feature id for the '<em><b>Reference Female</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__REF_W = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int ILAB_ITEM__REFERENCE_FEMALE = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Group</b></em>' attribute.
@@ -1294,22 +1294,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_ITEM__GROUP = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Prio</b></em>' attribute.
+	 * The feature id for the '<em><b>Priority</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__PRIO = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int ILAB_ITEM__PRIORITY = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Einheit</b></em>' attribute.
+	 * The feature id for the '<em><b>Unit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__EINHEIT = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int ILAB_ITEM__UNIT = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Kuerzel</b></em>' attribute.
@@ -2122,26 +2122,26 @@ public interface ModelPackage extends EPackage {
 	EAttribute getILabItem_Typ();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getRefM <em>Ref M</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getReferenceMale <em>Reference Male</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Ref M</em>'.
-	 * @see ch.elexis.core.model.ILabItem#getRefM()
+	 * @return the meta object for the attribute '<em>Reference Male</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getReferenceMale()
 	 * @see #getILabItem()
 	 * @generated
 	 */
-	EAttribute getILabItem_RefM();
+	EAttribute getILabItem_ReferenceMale();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getRefW <em>Ref W</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getReferenceFemale <em>Reference Female</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Ref W</em>'.
-	 * @see ch.elexis.core.model.ILabItem#getRefW()
+	 * @return the meta object for the attribute '<em>Reference Female</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getReferenceFemale()
 	 * @see #getILabItem()
 	 * @generated
 	 */
-	EAttribute getILabItem_RefW();
+	EAttribute getILabItem_ReferenceFemale();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getGroup <em>Group</em>}'.
@@ -2155,26 +2155,26 @@ public interface ModelPackage extends EPackage {
 	EAttribute getILabItem_Group();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getPrio <em>Prio</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getPriority <em>Priority</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Prio</em>'.
-	 * @see ch.elexis.core.model.ILabItem#getPrio()
+	 * @return the meta object for the attribute '<em>Priority</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getPriority()
 	 * @see #getILabItem()
 	 * @generated
 	 */
-	EAttribute getILabItem_Prio();
+	EAttribute getILabItem_Priority();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getEinheit <em>Einheit</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getUnit <em>Unit</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Einheit</em>'.
-	 * @see ch.elexis.core.model.ILabItem#getEinheit()
+	 * @return the meta object for the attribute '<em>Unit</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getUnit()
 	 * @see #getILabItem()
 	 * @generated
 	 */
-	EAttribute getILabItem_Einheit();
+	EAttribute getILabItem_Unit();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getKuerzel <em>Kuerzel</em>}'.
@@ -2894,20 +2894,20 @@ public interface ModelPackage extends EPackage {
 		EAttribute ILAB_ITEM__TYP = eINSTANCE.getILabItem_Typ();
 
 		/**
-		 * The meta object literal for the '<em><b>Ref M</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Reference Male</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ILAB_ITEM__REF_M = eINSTANCE.getILabItem_RefM();
+		EAttribute ILAB_ITEM__REFERENCE_MALE = eINSTANCE.getILabItem_ReferenceMale();
 
 		/**
-		 * The meta object literal for the '<em><b>Ref W</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Reference Female</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ILAB_ITEM__REF_W = eINSTANCE.getILabItem_RefW();
+		EAttribute ILAB_ITEM__REFERENCE_FEMALE = eINSTANCE.getILabItem_ReferenceFemale();
 
 		/**
 		 * The meta object literal for the '<em><b>Group</b></em>' attribute feature.
@@ -2918,20 +2918,20 @@ public interface ModelPackage extends EPackage {
 		EAttribute ILAB_ITEM__GROUP = eINSTANCE.getILabItem_Group();
 
 		/**
-		 * The meta object literal for the '<em><b>Prio</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Priority</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ILAB_ITEM__PRIO = eINSTANCE.getILabItem_Prio();
+		EAttribute ILAB_ITEM__PRIORITY = eINSTANCE.getILabItem_Priority();
 
 		/**
-		 * The meta object literal for the '<em><b>Einheit</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Unit</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ILAB_ITEM__EINHEIT = eINSTANCE.getILabItem_Einheit();
+		EAttribute ILAB_ITEM__UNIT = eINSTANCE.getILabItem_Unit();
 
 		/**
 		 * The meta object literal for the '<em><b>Kuerzel</b></em>' attribute feature.

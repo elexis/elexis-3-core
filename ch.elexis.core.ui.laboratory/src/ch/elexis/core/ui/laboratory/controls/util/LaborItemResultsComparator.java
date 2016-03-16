@@ -13,12 +13,12 @@ public class LaborItemResultsComparator implements Comparator<LaborItemResults> 
 		ILabItem rightItem = right.getFirstResult().getItem();
 		
 		try {
-			Integer no1 = Integer.parseInt(leftItem.getPrio());
-			Integer no2 = Integer.parseInt(rightItem.getPrio());
+			Integer no1 = Integer.parseInt(leftItem.getPriority());
+			Integer no2 = Integer.parseInt(rightItem.getPriority());
 			
 			return no1.compareTo(no2);
 		} catch (NumberFormatException nfe) {
-			return leftItem.getPrio().compareToIgnoreCase(rightItem.getPrio());
+			return leftItem.getPriority().compareToIgnoreCase(rightItem.getPriority());
 		}
 	}
 }

@@ -60,14 +60,14 @@ public class ImporterPatientResolver extends HL7PatientResolver {
 	}
 	
 	@Override
-	public List<IPatient> getPatientById(String patid){
+	public List<? extends IPatient> getPatientById(String patid){
 		Query<Patient> qbe = new Query<Patient>(Patient.class);
 		qbe.add(Patient.FLD_PATID, Query.EQUALS, StringTool.normalizeCase(patid));
 		return qbe.execute().stream().map(p -> new ContactBean(p)).collect(Collectors.toList());
 	}
 	
 	@Override
-	public List<IPatient> findPatientByNameAndBirthdate(String lastName, String firstName,
+	public List<? extends IPatient> findPatientByNameAndBirthdate(String lastName, String firstName,
 		String birthDate){
 		Query<Patient> qbe = new Query<Patient>(Patient.class);
 		qbe.add(Person.NAME, Query.EQUALS, StringTool.normalizeCase(lastName));

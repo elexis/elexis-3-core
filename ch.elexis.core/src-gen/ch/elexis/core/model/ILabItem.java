@@ -23,11 +23,11 @@ import ch.elexis.core.types.LabItemTyp;
  * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.ILabItem#getTyp <em>Typ</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabItem#getRefM <em>Ref M</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabItem#getRefW <em>Ref W</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getReferenceMale <em>Reference Male</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getReferenceFemale <em>Reference Female</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getGroup <em>Group</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabItem#getPrio <em>Prio</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabItem#getEinheit <em>Einheit</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getPriority <em>Priority</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getUnit <em>Unit</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getKuerzel <em>Kuerzel</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getName <em>Name</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getDigits <em>Digits</em>}</li>
@@ -67,56 +67,56 @@ public interface ILabItem extends Identifiable {
 	void setTyp(LabItemTyp value);
 
 	/**
-	 * Returns the value of the '<em><b>Ref M</b></em>' attribute.
+	 * Returns the value of the '<em><b>Reference Male</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Ref M</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Reference Male</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Ref M</em>' attribute.
-	 * @see #setRefM(String)
-	 * @see ch.elexis.core.model.ModelPackage#getILabItem_RefM()
+	 * @return the value of the '<em>Reference Male</em>' attribute.
+	 * @see #setReferenceMale(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabItem_ReferenceMale()
 	 * @model
 	 * @generated
 	 */
-	String getRefM();
+	String getReferenceMale();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getRefM <em>Ref M</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getReferenceMale <em>Reference Male</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Ref M</em>' attribute.
-	 * @see #getRefM()
+	 * @param value the new value of the '<em>Reference Male</em>' attribute.
+	 * @see #getReferenceMale()
 	 * @generated
 	 */
-	void setRefM(String value);
+	void setReferenceMale(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Ref W</b></em>' attribute.
+	 * Returns the value of the '<em><b>Reference Female</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Ref W</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Reference Female</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Ref W</em>' attribute.
-	 * @see #setRefW(String)
-	 * @see ch.elexis.core.model.ModelPackage#getILabItem_RefW()
+	 * @return the value of the '<em>Reference Female</em>' attribute.
+	 * @see #setReferenceFemale(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabItem_ReferenceFemale()
 	 * @model
 	 * @generated
 	 */
-	String getRefW();
+	String getReferenceFemale();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getRefW <em>Ref W</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getReferenceFemale <em>Reference Female</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Ref W</em>' attribute.
-	 * @see #getRefW()
+	 * @param value the new value of the '<em>Reference Female</em>' attribute.
+	 * @see #getReferenceFemale()
 	 * @generated
 	 */
-	void setRefW(String value);
+	void setReferenceFemale(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Group</b></em>' attribute.
@@ -145,56 +145,56 @@ public interface ILabItem extends Identifiable {
 	void setGroup(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Prio</b></em>' attribute.
+	 * Returns the value of the '<em><b>Priority</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Prio</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Priority</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Prio</em>' attribute.
-	 * @see #setPrio(String)
-	 * @see ch.elexis.core.model.ModelPackage#getILabItem_Prio()
+	 * @return the value of the '<em>Priority</em>' attribute.
+	 * @see #setPriority(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabItem_Priority()
 	 * @model
 	 * @generated
 	 */
-	String getPrio();
+	String getPriority();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getPrio <em>Prio</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getPriority <em>Priority</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Prio</em>' attribute.
-	 * @see #getPrio()
+	 * @param value the new value of the '<em>Priority</em>' attribute.
+	 * @see #getPriority()
 	 * @generated
 	 */
-	void setPrio(String value);
+	void setPriority(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Einheit</b></em>' attribute.
+	 * Returns the value of the '<em><b>Unit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Einheit</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Unit</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Einheit</em>' attribute.
-	 * @see #setEinheit(String)
-	 * @see ch.elexis.core.model.ModelPackage#getILabItem_Einheit()
+	 * @return the value of the '<em>Unit</em>' attribute.
+	 * @see #setUnit(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabItem_Unit()
 	 * @model
 	 * @generated
 	 */
-	String getEinheit();
+	String getUnit();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getEinheit <em>Einheit</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getUnit <em>Unit</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Einheit</em>' attribute.
-	 * @see #getEinheit()
+	 * @param value the new value of the '<em>Unit</em>' attribute.
+	 * @see #getUnit()
 	 * @generated
 	 */
-	void setEinheit(String value);
+	void setUnit(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Kuerzel</b></em>' attribute.

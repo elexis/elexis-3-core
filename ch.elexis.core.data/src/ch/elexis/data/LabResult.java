@@ -202,12 +202,12 @@ public class LabResult extends PersistentObject implements ILabResult {
 			if (g == Gender.MALE) {
 				nr = getRefMale();
 				if (nr == null || nr.isEmpty()) {
-					nr = item.getRefM();
+					nr = item.getReferenceMale();
 				}
 			} else {
 				nr = getRefFemale();
 				if (nr == null || nr.isEmpty()) {
-					nr = item.getRefW();
+					nr = item.getReferenceFemale();
 				}
 			}
 			List<String> refStrings = parseRefString(nr);
@@ -418,7 +418,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	public String getUnit(){
 		String ret = checkNull(get(UNIT));
 		if (ret.isEmpty()) {
-			ret = getItem().getEinheit();
+			ret = getItem().getUnit();
 		}
 		return ret;
 	}
@@ -499,7 +499,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	}
 	
 	public String getRefMale(){
-		return resolvePreferedRefValue(getItem().getRefM(), REFMALE);
+		return resolvePreferedRefValue(getItem().getReferenceMale(), REFMALE);
 	}
 	
 	public void setRefMale(String value){
@@ -508,7 +508,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	}
 	
 	public String getRefFemale(){
-		return resolvePreferedRefValue(getItem().getRefW(), REFFEMALE);
+		return resolvePreferedRefValue(getItem().getReferenceFemale(), REFFEMALE);
 	}
 	
 	public void setRefFemale(String value){

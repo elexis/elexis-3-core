@@ -141,7 +141,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 	private String getUnit(){
 		String ret = result.getUnit();
 		if (ret == null || ret.isEmpty()) {
-			ret = result.getItem().getEinheit();
+			ret = result.getItem().getUnit();
 		}
 		return ret;
 	}
@@ -149,7 +149,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 	private String getRefMale(){
 		String ret = result.getRefMale();
 		if (ret == null || ret.isEmpty()) {
-			ret = result.getItem().getRefM();
+			ret = result.getItem().getReferenceMale();
 		}
 		return ret;
 	}
@@ -157,7 +157,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 	private String getRefFemale(){
 		String ret = result.getRefFemale();
 		if (ret == null || ret.isEmpty()) {
-			ret = result.getItem().getRefW();
+			ret = result.getItem().getReferenceFemale();
 		}
 		return ret;
 	}

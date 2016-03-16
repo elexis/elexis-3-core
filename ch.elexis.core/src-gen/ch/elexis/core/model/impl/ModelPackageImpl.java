@@ -708,7 +708,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getILabItem_RefM() {
+	public EAttribute getILabItem_ReferenceMale() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -717,7 +717,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getILabItem_RefW() {
+	public EAttribute getILabItem_ReferenceFemale() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -735,7 +735,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getILabItem_Prio() {
+	public EAttribute getILabItem_Priority() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -744,7 +744,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getILabItem_Einheit() {
+	public EAttribute getILabItem_Unit() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1039,11 +1039,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		iLabItemEClass = createEClass(ILAB_ITEM);
 		createEAttribute(iLabItemEClass, ILAB_ITEM__TYP);
-		createEAttribute(iLabItemEClass, ILAB_ITEM__REF_M);
-		createEAttribute(iLabItemEClass, ILAB_ITEM__REF_W);
+		createEAttribute(iLabItemEClass, ILAB_ITEM__REFERENCE_MALE);
+		createEAttribute(iLabItemEClass, ILAB_ITEM__REFERENCE_FEMALE);
 		createEAttribute(iLabItemEClass, ILAB_ITEM__GROUP);
-		createEAttribute(iLabItemEClass, ILAB_ITEM__PRIO);
-		createEAttribute(iLabItemEClass, ILAB_ITEM__EINHEIT);
+		createEAttribute(iLabItemEClass, ILAB_ITEM__PRIORITY);
+		createEAttribute(iLabItemEClass, ILAB_ITEM__UNIT);
 		createEAttribute(iLabItemEClass, ILAB_ITEM__KUERZEL);
 		createEAttribute(iLabItemEClass, ILAB_ITEM__NAME);
 		createEAttribute(iLabItemEClass, ILAB_ITEM__DIGITS);
@@ -1277,11 +1277,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iLabItemEClass, ILabItem.class, "ILabItem", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getILabItem_Typ(), theTypesPackage.getLabItemTyp(), "typ", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getILabItem_RefM(), ecorePackage.getEString(), "refM", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getILabItem_RefW(), ecorePackage.getEString(), "refW", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getILabItem_ReferenceMale(), ecorePackage.getEString(), "referenceMale", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getILabItem_ReferenceFemale(), ecorePackage.getEString(), "referenceFemale", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabItem_Group(), ecorePackage.getEString(), "group", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getILabItem_Prio(), ecorePackage.getEString(), "prio", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getILabItem_Einheit(), ecorePackage.getEString(), "einheit", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getILabItem_Priority(), ecorePackage.getEString(), "priority", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getILabItem_Unit(), ecorePackage.getEString(), "unit", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabItem_Kuerzel(), ecorePackage.getEString(), "kuerzel", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabItem_Name(), ecorePackage.getEString(), "name", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabItem_Digits(), ecorePackage.getEInt(), "digits", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

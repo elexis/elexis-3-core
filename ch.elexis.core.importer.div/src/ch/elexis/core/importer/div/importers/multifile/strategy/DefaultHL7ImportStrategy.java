@@ -49,7 +49,7 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 				context.put(IMultiFileParser.CTX_PATIENT, order.getPatientContact());
 				context.put(IMultiFileParser.CTX_LABID, order.getLabResult().getOriginContact().getId());
 				context.put(IMultiFileParser.CTX_GROUP, order.getLabItem().getGroup());
-				context.put(IMultiFileParser.CTX_PRIO, order.getLabItem().getPrio());
+				context.put(IMultiFileParser.CTX_PRIO, order.getLabItem().getPriority());
 				context.put(IMultiFileParser.CTX_TIME, getDate(order.getLabResult()));
 			}
 		}

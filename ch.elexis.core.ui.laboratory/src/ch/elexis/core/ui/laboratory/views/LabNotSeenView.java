@@ -171,9 +171,9 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 			case 2:
 				Patient pat = lr.getPatient();
 				if (pat.getGeschlecht().equalsIgnoreCase("m")) { //$NON-NLS-1$
-					return lr.getItem().getRefM();
+					return lr.getItem().getReferenceMale();
 				} else {
-					return lr.getItem().getRefW();
+					return lr.getItem().getReferenceFemale();
 				}
 			case 3:
 				return lr.getDate();

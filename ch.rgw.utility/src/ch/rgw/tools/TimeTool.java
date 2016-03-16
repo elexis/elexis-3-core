@@ -774,6 +774,12 @@ public class TimeTool extends GregorianCalendar {
 		}
 	}
 	
+	public LocalDate toLocalDate() {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(getTimeInMillis());
+		return gc.toZonedDateTime().toLocalDate();
+	}
+	
 	public String toDBString(final boolean full){
 		String res;
 		if (full == true) {
