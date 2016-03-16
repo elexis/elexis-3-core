@@ -304,7 +304,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		Country ret;
 		try {
 			ret = Country.fromValue(countryVal);
-		} catch (NullPointerException e) {
+		} catch (NullPointerException | IllegalArgumentException e) {
 			ret = Country.NDF;
 		}
 		return ret;
