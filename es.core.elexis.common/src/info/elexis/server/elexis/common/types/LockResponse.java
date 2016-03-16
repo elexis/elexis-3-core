@@ -9,7 +9,7 @@ public class LockResponse {
 	public static final LockResponse ERROR = new LockResponse(Status.ERROR, null);
 	
 	public enum Status{
-		OK, DENIED, ERROR
+		OK, DENIED, DENIED_PERMANENT, ERROR
 	};
 
 	private Status status;
