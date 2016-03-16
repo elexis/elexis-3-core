@@ -18,6 +18,7 @@ import ch.elexis.core.data.services.IDocumentManager;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.ImportHandler;
+import ch.elexis.core.importer.div.importers.OverwriteAllImportHandler;
 import ch.elexis.core.importer.div.importers.TransientLabResult;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
@@ -27,7 +28,6 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.importer.div.importers.DefaultLabImportUiHandler;
 import ch.elexis.core.ui.importer.div.importers.LabImportUtil;
 import ch.elexis.core.ui.importer.div.importers.Messages;
-import ch.elexis.core.ui.importer.div.importers.OverwriteAllImportUiHandler;
 import ch.elexis.core.ui.text.GenericDocument;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
@@ -102,7 +102,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 				
 		ImportHandler importHandler;
 		if (testMode) {
-			importHandler = new OverwriteAllImportUiHandler();
+			importHandler = new OverwriteAllImportHandler();
 		} else {
 			importHandler = new DefaultLabImportUiHandler();
 		}
