@@ -10,26 +10,23 @@
  */
 package ch.elexis.core.types.impl;
 
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.impl.EFactoryImpl;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
-import ch.elexis.core.types.CountryCode;
+import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
-
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-
-import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
-import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc -->
@@ -92,8 +89,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createContactTypeFromString(eDataType, initialValue);
 			case TypesPackage.CONTACT_GENDER:
 				return createContactGenderFromString(eDataType, initialValue);
-			case TypesPackage.COUNTRY_CODE:
-				return createCountryCodeFromString(eDataType, initialValue);
 			case TypesPackage.RELATIONSHIP_TYPE:
 				return createRelationshipTypeFromString(eDataType, initialValue);
 			case TypesPackage.MONEY:
@@ -104,6 +99,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createGenderFromString(eDataType, initialValue);
 			case TypesPackage.LAB_ITEM_TYP:
 				return createLabItemTypFromString(eDataType, initialValue);
+			case TypesPackage.COUNTRY:
+				return createCountryFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -121,8 +118,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertContactTypeToString(eDataType, instanceValue);
 			case TypesPackage.CONTACT_GENDER:
 				return convertContactGenderToString(eDataType, instanceValue);
-			case TypesPackage.COUNTRY_CODE:
-				return convertCountryCodeToString(eDataType, instanceValue);
 			case TypesPackage.RELATIONSHIP_TYPE:
 				return convertRelationshipTypeToString(eDataType, instanceValue);
 			case TypesPackage.MONEY:
@@ -133,6 +128,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertGenderToString(eDataType, instanceValue);
 			case TypesPackage.LAB_ITEM_TYP:
 				return convertLabItemTypToString(eDataType, instanceValue);
+			case TypesPackage.COUNTRY:
+				return convertCountryToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -175,26 +172,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertContactGenderToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public CountryCode createCountryCodeFromString(EDataType eDataType, String initialValue) {
-		CountryCode result = CountryCode.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertCountryCodeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 
@@ -287,6 +264,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertLabItemTypToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Country createCountryFromString(EDataType eDataType, String initialValue) {
+		return (Country)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertCountryToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

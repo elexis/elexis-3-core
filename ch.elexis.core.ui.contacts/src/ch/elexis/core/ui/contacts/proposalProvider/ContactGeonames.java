@@ -3,16 +3,16 @@ package ch.elexis.core.ui.contacts.proposalProvider;
 import java.util.Collections;
 import java.util.List;
 
-import ch.elexis.core.types.CountryCode;
+import ch.elexis.core.types.Country;
 import ch.elexis.core.ui.contacts.extension.ContactGeonamesExtensionPoint;
 import ch.elexis.core.ui.contacts.interfaces.IContactGenoameService;
 
 public class ContactGeonames {
 	
-	private static CountryCode currentCountryCode;
+	private static Country currentCountryCode;
 	private static IContactGenoameService currentService;
 	
-	public static void setCountry(CountryCode country){
+	public static void setCountry(Country country){
 		currentCountryCode = country;
 		currentService = ContactGeonamesExtensionPoint.getGeonameServiceForCountry(country);
 	}
@@ -53,7 +53,7 @@ public class ContactGeonames {
 		return "";
 	}
 	
-	public static CountryCode getCurrentCountryCode(){
+	public static Country getCurrentCountryCode(){
 		return currentCountryCode;
 	}
 	

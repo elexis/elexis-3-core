@@ -492,7 +492,7 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 				while (first.isEmpty() && iter.hasNext()) {
 					first = iter.next();
 				}
-				ret.add(first.get(0).getItem());
+				ret.add((LabItem) first.get(0).getItem());
 			}
 		}
 		return ret;

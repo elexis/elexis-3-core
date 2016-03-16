@@ -26,6 +26,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LaborResultDeleteAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
@@ -152,7 +153,7 @@ public class LaborResultsComposite extends Composite {
 					return groupName;
 				} else if (element instanceof LaborItemResults) {
 					sb.setLength(0);
-					LabItem item = ((LaborItemResults) element).getFirstResult().getItem();
+					ILabItem item = ((LaborItemResults) element).getFirstResult().getItem();
 					sb.append(item.getKuerzel()).append(" - ").append(item.getName()).append(" [") //$NON-NLS-1$ //$NON-NLS-2$
 						.append(item.getEinheit()).append("]"); //$NON-NLS-1$
 					return sb.toString();

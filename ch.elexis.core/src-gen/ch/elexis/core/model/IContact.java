@@ -11,7 +11,7 @@
 package ch.elexis.core.model;
 
 import ch.elexis.core.types.ContactType;
-import ch.elexis.core.types.CountryCode;
+import ch.elexis.core.types.Country;
 
 /**
  * <!-- begin-user-doc -->
@@ -261,7 +261,6 @@ public interface IContact extends Identifiable, Deleteable {
 
 	/**
 	 * Returns the value of the '<em><b>Country</b></em>' attribute.
-	 * The literals are from the enumeration {@link ch.elexis.core.types.CountryCode}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Country</em>' attribute isn't clear,
@@ -269,24 +268,22 @@ public interface IContact extends Identifiable, Deleteable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Country</em>' attribute.
-	 * @see ch.elexis.core.types.CountryCode
-	 * @see #setCountry(CountryCode)
+	 * @see #setCountry(Country)
 	 * @see ch.elexis.core.model.ModelPackage#getIContact_Country()
-	 * @model
+	 * @model dataType="ch.elexis.core.types.Country"
 	 * @generated
 	 */
-	CountryCode getCountry();
+	Country getCountry();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getCountry <em>Country</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Country</em>' attribute.
-	 * @see ch.elexis.core.types.CountryCode
 	 * @see #getCountry()
 	 * @generated
 	 */
-	void setCountry(CountryCode value);
+	void setCountry(Country value);
 
 	/**
 	 * Returns the value of the '<em><b>Zip</b></em>' attribute.

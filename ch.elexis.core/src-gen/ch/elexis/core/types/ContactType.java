@@ -47,6 +47,30 @@ public enum ContactType implements Enumerator {
 	ORGANIZATION(1, "ORGANIZATION", "ORGANIZATION"),
 
 	/**
+	 * The '<em><b>MANDATOR</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #MANDATOR_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	MANDATOR(2, "MANDATOR", ""), /**
+	 * The '<em><b>LABORATORY</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #LABORATORY_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	LABORATORY(3, "LABORATORY", "LABORATORY"), /**
+	 * The '<em><b>PATIENT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #PATIENT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	PATIENT(4, "PATIENT", "PATIENT"), /**
 	 * The '<em><b>UNKNOWN</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -54,7 +78,15 @@ public enum ContactType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	UNKNOWN(2, "UNKNOWN", "UNKNOWN");
+	UNKNOWN(9, "UNKNOWN", "UNKNOWN"), /**
+	 * The '<em><b>USER</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #USER_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	USER(5, "USER", "USER");
 
 	/**
 	 * The '<em><b>PERSON</b></em>' literal value.
@@ -87,6 +119,51 @@ public enum ContactType implements Enumerator {
 	public static final int ORGANIZATION_VALUE = 1;
 
 	/**
+	 * The '<em><b>MANDATOR</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>MANDATOR</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #MANDATOR
+	 * @model literal=""
+	 * @generated
+	 * @ordered
+	 */
+	public static final int MANDATOR_VALUE = 2;
+
+	/**
+	 * The '<em><b>LABORATORY</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>LABORATORY</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #LABORATORY
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int LABORATORY_VALUE = 3;
+
+	/**
+	 * The '<em><b>PATIENT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>PATIENT</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #PATIENT
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PATIENT_VALUE = 4;
+
+	/**
 	 * The '<em><b>UNKNOWN</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -99,7 +176,22 @@ public enum ContactType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int UNKNOWN_VALUE = 2;
+	public static final int UNKNOWN_VALUE = 9;
+
+	/**
+	 * The '<em><b>USER</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>USER</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #USER
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int USER_VALUE = 5;
 
 	/**
 	 * An array of all the '<em><b>Contact Type</b></em>' enumerators.
@@ -111,7 +203,11 @@ public enum ContactType implements Enumerator {
 		new ContactType[] {
 			PERSON,
 			ORGANIZATION,
+			MANDATOR,
+			LABORATORY,
+			PATIENT,
 			UNKNOWN,
+			USER,
 		};
 
 	/**
@@ -170,7 +266,11 @@ public enum ContactType implements Enumerator {
 		switch (value) {
 			case PERSON_VALUE: return PERSON;
 			case ORGANIZATION_VALUE: return ORGANIZATION;
+			case MANDATOR_VALUE: return MANDATOR;
+			case LABORATORY_VALUE: return LABORATORY;
+			case PATIENT_VALUE: return PATIENT;
 			case UNKNOWN_VALUE: return UNKNOWN;
+			case USER_VALUE: return USER;
 		}
 		return null;
 	}

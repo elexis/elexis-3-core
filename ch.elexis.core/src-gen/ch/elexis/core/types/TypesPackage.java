@@ -141,16 +141,6 @@ public interface TypesPackage extends EPackage {
 	int CONTACT_GENDER = 4;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.types.CountryCode <em>Country Code</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.types.CountryCode
-	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountryCode()
-	 * @generated
-	 */
-	int COUNTRY_CODE = 5;
-
-	/**
 	 * The meta object id for the '{@link ch.elexis.core.types.RelationshipType <em>Relationship Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -158,7 +148,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getRelationshipType()
 	 * @generated
 	 */
-	int RELATIONSHIP_TYPE = 6;
+	int RELATIONSHIP_TYPE = 5;
 
 	/**
 	 * The meta object id for the '<em>Money</em>' data type.
@@ -168,7 +158,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 	 * @generated
 	 */
-	int MONEY = 7;
+	int MONEY = 6;
 
 	/**
 	 * The meta object id for the '<em>Time Tool</em>' data type.
@@ -178,7 +168,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTimeTool()
 	 * @generated
 	 */
-	int TIME_TOOL = 8;
+	int TIME_TOOL = 7;
 
 	/**
 	 * The meta object id for the '<em>Gender</em>' data type.
@@ -188,7 +178,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getGender()
 	 * @generated
 	 */
-	int GENDER = 9;
+	int GENDER = 8;
 
 
 	/**
@@ -199,7 +189,18 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
 	 * @generated
 	 */
-	int LAB_ITEM_TYP = 10;
+	int LAB_ITEM_TYP = 9;
+
+
+	/**
+	 * The meta object id for the '<em>Country</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.Country
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountry()
+	 * @generated
+	 */
+	int COUNTRY = 10;
 
 
 	/**
@@ -256,16 +257,6 @@ public interface TypesPackage extends EPackage {
 	EEnum getContactGender();
 
 	/**
-	 * Returns the meta object for enum '{@link ch.elexis.core.types.CountryCode <em>Country Code</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Country Code</em>'.
-	 * @see ch.elexis.core.types.CountryCode
-	 * @generated
-	 */
-	EEnum getCountryCode();
-
-	/**
 	 * Returns the meta object for enum '{@link ch.elexis.core.types.RelationshipType <em>Relationship Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -318,6 +309,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getLabItemTyp();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.types.Country <em>Country</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Country</em>'.
+	 * @see ch.elexis.core.types.Country
+	 * @model instanceClass="ch.elexis.core.types.Country"
+	 * @generated
+	 */
+	EDataType getCountry();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -392,16 +394,6 @@ public interface TypesPackage extends EPackage {
 		EEnum CONTACT_GENDER = eINSTANCE.getContactGender();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.types.CountryCode <em>Country Code</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.types.CountryCode
-		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountryCode()
-		 * @generated
-		 */
-		EEnum COUNTRY_CODE = eINSTANCE.getCountryCode();
-
-		/**
 		 * The meta object literal for the '{@link ch.elexis.core.types.RelationshipType <em>Relationship Type</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -450,6 +442,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType LAB_ITEM_TYP = eINSTANCE.getLabItemTyp();
+
+		/**
+		 * The meta object literal for the '<em>Country</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.Country
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountry()
+		 * @generated
+		 */
+		EDataType COUNTRY = eINSTANCE.getCountry();
 
 	}
 

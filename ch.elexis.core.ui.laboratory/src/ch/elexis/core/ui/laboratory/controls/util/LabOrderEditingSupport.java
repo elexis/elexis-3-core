@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.ViewerRow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
+import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.data.Kontakt;
@@ -143,12 +144,12 @@ public class LabOrderEditingSupport extends EditingSupport {
 			if (labItem.getTyp() == LabItemTyp.DOCUMENT) {
 				return "Doc"; //$NON-NLS-1$
 			} else if (labItem.getTyp() == LabItemTyp.TEXT) {
-				LabResult result = ((LabOrder) element).getLabResult();
+				ILabResult result = ((LabOrder) element).getLabResult();
 				if (result != null) {
 					return result.getComment();
 				}
 			} else {
-				LabResult result = ((LabOrder) element).getLabResult();
+				ILabResult result = ((LabOrder) element).getLabResult();
 				if (result != null) {
 					return result.getResult();
 				}
@@ -160,7 +161,7 @@ public class LabOrderEditingSupport extends EditingSupport {
 	@Override
 	protected void setValue(Object element, Object value){
 		if (element instanceof LabOrder && value != null) {
-			LabResult result = ((LabOrder) element).getLabResult();
+			LabResult result = (LabResult) ((LabOrder) element).getLabResult();
 			if (result == null) {
 				result = createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
 			}

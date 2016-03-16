@@ -119,8 +119,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/familyAnamnese"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/personalAnamnese"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/allergies"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/patientNr"/>
       <genOperations ecoreOperation="model.ecore#//IPatient/getPatientLabel"/>
+      <genOperations ecoreOperation="model.ecore#//IPatient/getPatientNr"/>
+      <genOperations ecoreOperation="model.ecore#//IPatient/setPatientNr">
+        <genParameters ecoreParameter="model.ecore#//IPatient/setPatientNr/patientNr"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IUser">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/username"/>
@@ -133,7 +136,18 @@
     <genClasses image="false" ecoreClass="model.ecore#//Deleteable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//Deleteable/deleted"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//ILabItem"/>
+    <genClasses image="false" ecoreClass="model.ecore#//ILabItem">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/typ"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/refM"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/refW"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/prio"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/einheit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/kuerzel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/digits"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/visible"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabResult">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabResult/refMale"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabResult/refFemale"/>
@@ -144,6 +158,14 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabResult/result"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabResult/flags"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabResult/comment"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ILabResult/originContact"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabResult/date"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ILabResult/item"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//ILabOrder">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ILabOrder/labResult"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ILabOrder/labItem"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ILabOrder/patientContact"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

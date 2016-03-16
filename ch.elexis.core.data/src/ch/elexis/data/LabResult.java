@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
@@ -297,6 +298,11 @@ public class LabResult extends PersistentObject implements ILabResult {
 		return get(DATE);
 	}
 	
+	@Override
+	public void setDate(String value){
+		set(DATE, value);
+	}
+	
 	/**
 	 * @deprecated use analysetime, observationtime and transmissiontime
 	 */
@@ -320,8 +326,13 @@ public class LabResult extends PersistentObject implements ILabResult {
 			+ time.substring(4, 6));
 	}
 	
-	public LabItem getItem(){
+	public ILabItem getItem(){
 		return LabItem.load(get(ITEM_ID));
+	}
+	
+	@Override
+	public void setItem(ILabItem value){
+		set(ITEM_ID, value.getId());
 	}
 	
 	public String getResult(){
@@ -347,7 +358,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	private String evaluteWithOrderContext(LabOrder order){
 		String ret = null;
 		try {
-			ret = getItem().evaluate(getPatient(), order.getLabResults());
+			ret = ((LabItem)getItem()).evaluate(getPatient(), order.getLabResults());
 		} catch (ElexisException e) {
 			ret = "?formel?"; //$NON-NLS-1$
 		}
@@ -357,7 +368,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	private String evaluateWithDateContext(TimeTool time){
 		String ret = null;
 		try {
-			ret = getItem().evaluate(getPatient(), time);
+			ret = ((LabItem)getItem()).evaluate(getPatient(), time);
 		} catch (ElexisException e) {
 			ret = "?formel?"; //$NON-NLS-1$
 		}
@@ -667,6 +678,21 @@ public class LabResult extends PersistentObject implements ILabResult {
 		return getLabel();
 	}
 	
+	@Override
+	public IContact getOriginContact(){
+		Kontakt origin = getOrigin();
+		if(origin==null) {
+			return null;
+		}
+		return new ContactBean(origin);
+	}
+
+	@Override
+	public void setOriginContact(IContact value){
+		Kontakt load = Kontakt.load(value.getId());
+		setOrigin(load);
+	}
+
 	public void setOrigin(Kontakt origin){
 		if (origin != null && origin.exists()) {
 			set(ORIGIN_ID, origin.getId());
@@ -807,4 +833,5 @@ public class LabResult extends PersistentObject implements ILabResult {
 			labResult.setObservationTime(to);
 		}
 	}
+
 }

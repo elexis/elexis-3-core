@@ -1248,10 +1248,10 @@ public interface ModelPackage extends EPackage {
 	int DELETEABLE_FEATURE_COUNT = 1;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.impl.ILabItemImpl <em>ILab Item</em>}' class.
+	 * The meta object id for the '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.impl.ILabItemImpl
+	 * @see ch.elexis.core.model.ILabItem
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabItem()
 	 * @generated
 	 */
@@ -1285,19 +1285,82 @@ public interface ModelPackage extends EPackage {
 	int ILAB_ITEM__REF_W = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Group</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__GROUP = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Prio</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__PRIO = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Einheit</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__EINHEIT = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Kuerzel</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__KUERZEL = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__NAME = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Digits</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__DIGITS = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Visible</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__VISIBLE = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
 	 * The number of structural features of the '<em>ILab Item</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int ILAB_ITEM_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.impl.ILabResultImpl <em>ILab Result</em>}' class.
+	 * The meta object id for the '{@link ch.elexis.core.model.ILabResult <em>ILab Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.impl.ILabResultImpl
+	 * @see ch.elexis.core.model.ILabResult
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabResult()
 	 * @generated
 	 */
@@ -1385,13 +1448,86 @@ public interface ModelPackage extends EPackage {
 	int ILAB_RESULT__COMMENT = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
+	 * The feature id for the '<em><b>Origin Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_RESULT__ORIGIN_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_RESULT__DATE = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Item</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_RESULT__ITEM = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
 	 * The number of structural features of the '<em>ILab Result</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int ILAB_RESULT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ILabOrder
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabOrder()
+	 * @generated
+	 */
+	int ILAB_ORDER = 13;
+
+	/**
+	 * The feature id for the '<em><b>Lab Result</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ORDER__LAB_RESULT = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Lab Item</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ORDER__LAB_ITEM = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Patient Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ORDER__PATIENT_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>ILab Order</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ORDER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '<em>String Array</em>' data type.
@@ -1400,7 +1536,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 	 * @generated
 	 */
-	int STRING_ARRAY = 13;
+	int STRING_ARRAY = 14;
 
 
 	/**
@@ -2008,6 +2144,83 @@ public interface ModelPackage extends EPackage {
 	EAttribute getILabItem_RefW();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getGroup <em>Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Group</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getGroup()
+	 * @see #getILabItem()
+	 * @generated
+	 */
+	EAttribute getILabItem_Group();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getPrio <em>Prio</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Prio</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getPrio()
+	 * @see #getILabItem()
+	 * @generated
+	 */
+	EAttribute getILabItem_Prio();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getEinheit <em>Einheit</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Einheit</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getEinheit()
+	 * @see #getILabItem()
+	 * @generated
+	 */
+	EAttribute getILabItem_Einheit();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getKuerzel <em>Kuerzel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Kuerzel</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getKuerzel()
+	 * @see #getILabItem()
+	 * @generated
+	 */
+	EAttribute getILabItem_Kuerzel();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getName()
+	 * @see #getILabItem()
+	 * @generated
+	 */
+	EAttribute getILabItem_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getDigits <em>Digits</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Digits</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getDigits()
+	 * @see #getILabItem()
+	 * @generated
+	 */
+	EAttribute getILabItem_Digits();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#isVisible <em>Visible</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Visible</em>'.
+	 * @see ch.elexis.core.model.ILabItem#isVisible()
+	 * @see #getILabItem()
+	 * @generated
+	 */
+	EAttribute getILabItem_Visible();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ILabResult <em>ILab Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2115,6 +2328,82 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getILabResult_Comment();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ILabResult#getOriginContact <em>Origin Contact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Origin Contact</em>'.
+	 * @see ch.elexis.core.model.ILabResult#getOriginContact()
+	 * @see #getILabResult()
+	 * @generated
+	 */
+	EReference getILabResult_OriginContact();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabResult#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.ILabResult#getDate()
+	 * @see #getILabResult()
+	 * @generated
+	 */
+	EAttribute getILabResult_Date();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ILabResult#getItem <em>Item</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Item</em>'.
+	 * @see ch.elexis.core.model.ILabResult#getItem()
+	 * @see #getILabResult()
+	 * @generated
+	 */
+	EReference getILabResult_Item();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>ILab Order</em>'.
+	 * @see ch.elexis.core.model.ILabOrder
+	 * @generated
+	 */
+	EClass getILabOrder();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ILabOrder#getLabResult <em>Lab Result</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Lab Result</em>'.
+	 * @see ch.elexis.core.model.ILabOrder#getLabResult()
+	 * @see #getILabOrder()
+	 * @generated
+	 */
+	EReference getILabOrder_LabResult();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ILabOrder#getLabItem <em>Lab Item</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Lab Item</em>'.
+	 * @see ch.elexis.core.model.ILabOrder#getLabItem()
+	 * @see #getILabOrder()
+	 * @generated
+	 */
+	EReference getILabOrder_LabItem();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ILabOrder#getPatientContact <em>Patient Contact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Patient Contact</em>'.
+	 * @see ch.elexis.core.model.ILabOrder#getPatientContact()
+	 * @see #getILabOrder()
+	 * @generated
+	 */
+	EReference getILabOrder_PatientContact();
 
 	/**
 	 * Returns the meta object for data type '<em>String Array</em>'.
@@ -2587,10 +2876,10 @@ public interface ModelPackage extends EPackage {
 		EAttribute DELETEABLE__DELETED = eINSTANCE.getDeleteable_Deleted();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.impl.ILabItemImpl <em>ILab Item</em>}' class.
+		 * The meta object literal for the '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.model.impl.ILabItemImpl
+		 * @see ch.elexis.core.model.ILabItem
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabItem()
 		 * @generated
 		 */
@@ -2621,10 +2910,66 @@ public interface ModelPackage extends EPackage {
 		EAttribute ILAB_ITEM__REF_W = eINSTANCE.getILabItem_RefW();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.impl.ILabResultImpl <em>ILab Result</em>}' class.
+		 * The meta object literal for the '<em><b>Group</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.model.impl.ILabResultImpl
+		 * @generated
+		 */
+		EAttribute ILAB_ITEM__GROUP = eINSTANCE.getILabItem_Group();
+
+		/**
+		 * The meta object literal for the '<em><b>Prio</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_ITEM__PRIO = eINSTANCE.getILabItem_Prio();
+
+		/**
+		 * The meta object literal for the '<em><b>Einheit</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_ITEM__EINHEIT = eINSTANCE.getILabItem_Einheit();
+
+		/**
+		 * The meta object literal for the '<em><b>Kuerzel</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_ITEM__KUERZEL = eINSTANCE.getILabItem_Kuerzel();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_ITEM__NAME = eINSTANCE.getILabItem_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Digits</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_ITEM__DIGITS = eINSTANCE.getILabItem_Digits();
+
+		/**
+		 * The meta object literal for the '<em><b>Visible</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_ITEM__VISIBLE = eINSTANCE.getILabItem_Visible();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.ILabResult <em>ILab Result</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.ILabResult
 		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabResult()
 		 * @generated
 		 */
@@ -2701,6 +3046,64 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ILAB_RESULT__COMMENT = eINSTANCE.getILabResult_Comment();
+
+		/**
+		 * The meta object literal for the '<em><b>Origin Contact</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ILAB_RESULT__ORIGIN_CONTACT = eINSTANCE.getILabResult_OriginContact();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_RESULT__DATE = eINSTANCE.getILabResult_Date();
+
+		/**
+		 * The meta object literal for the '<em><b>Item</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ILAB_RESULT__ITEM = eINSTANCE.getILabResult_Item();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.ILabOrder
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabOrder()
+		 * @generated
+		 */
+		EClass ILAB_ORDER = eINSTANCE.getILabOrder();
+
+		/**
+		 * The meta object literal for the '<em><b>Lab Result</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ILAB_ORDER__LAB_RESULT = eINSTANCE.getILabOrder_LabResult();
+
+		/**
+		 * The meta object literal for the '<em><b>Lab Item</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ILAB_ORDER__LAB_ITEM = eINSTANCE.getILabOrder_LabItem();
+
+		/**
+		 * The meta object literal for the '<em><b>Patient Contact</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ILAB_ORDER__PATIENT_CONTACT = eINSTANCE.getILabOrder_PatientContact();
 
 		/**
 		 * The meta object literal for the '<em>String Array</em>' data type.

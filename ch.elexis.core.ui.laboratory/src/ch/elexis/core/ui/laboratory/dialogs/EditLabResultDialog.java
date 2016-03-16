@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.views.controls.LaborSelectionComposite;
 import ch.elexis.data.LabResult;
@@ -35,6 +36,10 @@ public class EditLabResultDialog extends TitleAreaDialog {
 	private DateTime transmissionTime;
 	
 	private LabResult result;
+	
+	public EditLabResultDialog(Shell parentShell, ILabResult act){
+		this(parentShell, LabResult.load(act.getId()));
+	}
 	
 	public EditLabResultDialog(Shell parentShell, LabResult act){
 		super(parentShell);

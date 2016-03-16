@@ -2,6 +2,8 @@ package ch.elexis.core.importer.div.importers.multifile;
 
 import java.io.File;
 
+import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
 import ch.rgw.tools.Result;
 
@@ -26,7 +28,7 @@ public interface IMultiFileParser {
 	 * @return a {@link Result} indicating whether import succeeded or not
 	 */
 	public Result<Object> importFromFile(File hl7File,
-		IFileImportStrategyFactory importStrategyFactory);
+		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser, IPersistenceHandler persistenceHandler);
 		
 	/**
 	 * Imports all HL7Files from the given directory. <br>
@@ -42,5 +44,5 @@ public interface IMultiFileParser {
 	 * @return a {@link Result} indicating whether import succeeded or not
 	 */
 	public Result<Object> importFromDirectory(File directory,
-		IFileImportStrategyFactory importStrategyFactory);
+		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser, IPersistenceHandler persistenceHandler);
 }

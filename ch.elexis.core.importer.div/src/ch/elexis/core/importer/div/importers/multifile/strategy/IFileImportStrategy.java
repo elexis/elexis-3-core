@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.ILabItemResolver;
+import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
 import ch.rgw.tools.Result;
 
@@ -25,8 +28,9 @@ public interface IFileImportStrategy {
 	 *            {@link IMultiFileParser} constants.
 	 * @return {@link Result} indicating whether import succeeded or not
 	 */
-	public Result<Object> execute(File file, Map<String, Object> context) throws IOException;
-	
+	public Result<Object> execute(File file, Map<String, Object> context, HL7Parser hl7Parser,
+		IPersistenceHandler persistenceHandler) throws IOException;
+		
 	public void setTestMode(boolean testing);
 	
 }

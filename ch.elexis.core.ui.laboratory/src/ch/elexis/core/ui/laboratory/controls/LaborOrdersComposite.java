@@ -28,6 +28,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LabOrderSetObservationDateAction;
@@ -188,9 +189,9 @@ public class LaborOrdersComposite extends Composite {
 			@Override
 			public String getText(Object element){
 				if (element instanceof LabOrder) {
-					LabResult result = ((LabOrder) element).getLabResult();
+					ILabResult result = ((LabOrder) element).getLabResult();
 					if (result != null) {
-						return getNonEmptyResultString(result);
+						return getNonEmptyResultString((LabResult) result);
 					} else {
 						return "?"; //$NON-NLS-1$
 					}
@@ -426,7 +427,7 @@ public class LaborOrdersComposite extends Composite {
 		public void run(){
 			for (Object object : selectedOrders) {
 				if (object instanceof LabOrder) {
-					LabResult result = ((LabOrder) object).getLabResult();
+					LabResult result = (LabResult) ((LabOrder) object).getLabResult();
 					if (result != null) {
 						result.delete();
 					}

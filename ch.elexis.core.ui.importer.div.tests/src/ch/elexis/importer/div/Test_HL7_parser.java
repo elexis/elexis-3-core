@@ -223,14 +223,14 @@ public class Test_HL7_parser {
 		boolean foundPathological = false;
 		for (j = 0; j < qrr.size(); j++) {
 			// dumpLabresult(qrr.get(j));
-			LabItem li = qrr.get(j).getItem();
+			LabItem li = (LabItem) qrr.get(j).getItem();
 			String name = li.getName();
 			assertTrue(qrr.get(j).getAnalyseTime().getTime().toString().contains("2009"));
 			assertTrue(qrr.get(j).getAnalyseTime().getTime().toString().contains("Jun 11"));
 			if (name.contentEquals("Lymphozyten G/l")) {
 				foundLymphozyten = true;
 				res = qrr.get(j);
-				item = qrr.get(j).getItem();
+				item = (LabItem) qrr.get(j).getItem();
 			}
 
 			if (name.contentEquals("MCV") || name.contentEquals("Basophile%")

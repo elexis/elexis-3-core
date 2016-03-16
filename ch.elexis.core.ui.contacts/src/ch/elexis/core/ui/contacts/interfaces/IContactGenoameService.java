@@ -12,14 +12,14 @@ package ch.elexis.core.ui.contacts.interfaces;
 
 import java.util.List;
 
-import ch.elexis.core.types.CountryCode;
+import ch.elexis.core.types.Country;
 
 public interface IContactGenoameService {
 	
 	/**
 	 * @return the country this contribution provides information for
 	 */
-	public CountryCode getProvidesInformationForCountry();
+	public Country getProvidesInformationForCountry();
 	
 	/**
 	 * 

@@ -11,7 +11,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description3" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="country" eType="ecore:EEnum types.ecore#//CountryCode"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="country" eType="ecore:EDataType types.ecore#//Country"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="zip" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="city" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="street" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -160,12 +160,21 @@
   <eClassifiers xsi:type="ecore:EClass" name="Deleteable" abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deleted" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ILabItem" abstract="true" eSuperTypes="#//Identifiable">
+  <eClassifiers xsi:type="ecore:EClass" name="ILabItem" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="typ" eType="ecore:EDataType types.ecore#//LabItemTyp"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="refM" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="refW" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="prio" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="einheit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kuerzel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="digits" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="visible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ILabResult" abstract="true" eSuperTypes="#//Identifiable">
+  <eClassifiers xsi:type="ecore:EClass" name="ILabResult" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="refMale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="refFemale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -175,5 +184,14 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="result" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="flags" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="originContact" eType="#//IContact"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="item" eType="#//ILabItem"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ILabOrder" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="labResult" eType="#//ILabResult"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="labItem" eType="#//ILabItem"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patientContact" eType="#//IPatient"/>
   </eClassifiers>
 </ecore:EPackage>

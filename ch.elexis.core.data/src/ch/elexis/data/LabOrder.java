@@ -7,7 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabOrder;
+import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ReminderConstants;
 import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.ExHandler;
@@ -16,7 +20,7 @@ import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionInfo;
 
-public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
+public class LabOrder extends PersistentObject implements Comparable<LabOrder>, ILabOrder {
 	
 	public static final String FLD_USER = "userid"; //$NON-NLS-1$
 	public static final String FLD_MANDANT = "mandant"; //$NON-NLS-1$
@@ -194,8 +198,8 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	
 	public void setObservationTimeWithResults(TimeTool time){
 		setObservationTime(time);
-		List<LabResult> results = getLabResults();
-		for (LabResult labResult : results) {
+		List<ILabResult> results = getLabResults();
+		for (ILabResult labResult : results) {
 			labResult.setObservationTime(time);
 		}
 	}
@@ -257,11 +261,11 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 		}
 	}
 	
-	public void setLabItem(LabItem item){
+	public void setLabItem(ILabItem item){
 		set(FLD_ITEM, item.getId());
 	}
 	
-	public LabResult getLabResult(){
+	public ILabResult getLabResult(){
 		LabResult ret = new LabResult(get(FLD_RESULT));
 		if (ret.exists()) {
 			return ret;
@@ -270,7 +274,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 		}
 	}
 	
-	public void setLabResult(LabResult result){
+	public void setLabResult(ILabResult result){
 		if (result != null) {
 			set(FLD_RESULT, result.getId());
 		} else {
@@ -332,11 +336,11 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	 * 
 	 * @return
 	 */
-	public List<LabResult> getLabResults(){
-		ArrayList<LabResult> ret = new ArrayList<LabResult>();
-		List<LabOrder> orders = getLabOrdersByOrderId(get(FLD_ORDERID));
+	public List<ILabResult> getLabResults(){
+		ArrayList<ILabResult> ret = new ArrayList<ILabResult>();
+		List<ILabOrder> orders = getLabOrdersByOrderId(get(FLD_ORDERID));
 		if (orders != null) {
-			for (LabOrder labOrder : orders) {
+			for (ILabOrder labOrder : orders) {
 				if (labOrder.getLabResult() != null) {
 					ret.add(labOrder.getLabResult());
 				}
@@ -376,7 +380,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	 * @param time
 	 * @return
 	 */
-	public static List<LabOrder> getLabOrders(Patient patient, Mandant mandant, LabItem labItem,
+	public static List<LabOrder> getLabOrders(Patient patient, Mandant mandant, ILabItem labItem,
 		LabResult result, String orderId, TimeTool time, State state){
 		return getLabOrders(patient.getId(), (mandant!=null) ? mandant.getId() : null, labItem, result, orderId, time,
 			state);
@@ -385,10 +389,10 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	/**
 	 * @since 3.2
 	 */
-	public static List<LabOrder> getLabOrdersByOrderId(String orderId){
-		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
+	public static List<ILabOrder> getLabOrdersByOrderId(String orderId){
+		Query<ILabOrder> qlo = new Query<ILabOrder>(LabOrder.class);
 		qlo.add(FLD_ORDERID, Query.EQUALS, orderId);
-		List<LabOrder> orders = qlo.execute();
+		List<ILabOrder> orders = qlo.execute();
 		if (orders.isEmpty()) {
 			return null;
 		} else {
@@ -486,12 +490,28 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			link.releaseStatement(statement);
 		}
 		int orderId = numberOfIds + 1;
-		List<LabOrder> existing = getLabOrdersByOrderId(Integer.toString(orderId));
+		List<ILabOrder> existing = getLabOrdersByOrderId(Integer.toString(orderId));
 		while (existing != null) {
 			orderId++;
 			existing = getLabOrdersByOrderId(Integer.toString(orderId));
 		}
 		return Integer.toString(orderId);
+	}
+
+
+
+	@Override
+	public IPatient getPatientContact(){
+		Patient patient = getPatient();
+		if(patient==null) {
+			return null;
+		}
+		return new ContactBean(patient);
+	}
+
+	@Override
+	public void setPatientContact(IPatient value){
+		set(FLD_PATIENT, value.getId());
 	}
 	
 }

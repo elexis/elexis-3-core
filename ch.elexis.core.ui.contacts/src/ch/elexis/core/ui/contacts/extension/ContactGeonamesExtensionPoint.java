@@ -8,7 +8,8 @@ import org.eclipse.core.runtime.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.types.CountryCode;
+import ch.elexis.core.types.Country;
+
 import ch.elexis.core.ui.contacts.interfaces.IContactGenoameService;
 
 public class ContactGeonamesExtensionPoint {
@@ -16,7 +17,7 @@ public class ContactGeonamesExtensionPoint {
 	
 	private static Logger log = LoggerFactory.getLogger(ContactGeonamesExtensionPoint.class);
 	
-	private static HashMap<CountryCode, IContactGenoameService> services = new HashMap<>();
+	private static HashMap<Country, IContactGenoameService> services = new HashMap<>();
 	
 	public static void init(){
 		IConfigurationElement[] config =
@@ -39,7 +40,7 @@ public class ContactGeonamesExtensionPoint {
 		// TODO shall we initialize them?
 	}
 	
-	public static IContactGenoameService getGeonameServiceForCountry(CountryCode country){
+	public static IContactGenoameService getGeonameServiceForCountry(Country country){
 		return services.get(country);
 	}
 	

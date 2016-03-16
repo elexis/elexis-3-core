@@ -17,6 +17,8 @@ import ch.elexis.core.data.services.GlobalServiceDescriptors;
 import ch.elexis.core.data.services.IDocumentManager;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.ImportHandler;
 import ch.elexis.core.importer.div.importers.OverwriteAllImportHandler;
 import ch.elexis.core.importer.div.importers.TransientLabResult;
@@ -24,6 +26,7 @@ import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.importer.div.importers.DefaultLabImportUiHandler;
 import ch.elexis.core.ui.importer.div.importers.LabImportUtil;
@@ -53,7 +56,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	private IDocumentManager docManager;
 	private IContact myLab;
 	private String labName;
-	private Patient patient;
+	private IPatient patient;
 	private TimeTool dateTime;
 	private String group;
 	private String prio;
@@ -69,7 +72,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	}
 	
 	@Override
-	public Result<Object> execute(File file, Map<String, Object> context){
+	public Result<Object> execute(File file, Map<String, Object> context, HL7Parser hl7parser, IPersistenceHandler persistenceHandler){
 		if (this.docManager == null) {
 			return new Result<Object>(SEVERITY.ERROR, 2,
 				MessageFormat.format(Messages.DefaultPDFImportStrategy_NoDocManager, file.getName(),
@@ -97,7 +100,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		String titel = generatePDFTitle(file.getName(), dateTime);
 		
 		TransientLabResult importResult =
-			new TransientLabResult.Builder(new ContactBean(patient), myLab, labItem, titel).date(dateTime)
+			new TransientLabResult.Builder(patient, myLab, labItem, titel).date(dateTime)
 				.build(labImportUtil);
 				
 		ImportHandler importHandler;
@@ -121,7 +124,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	
 	private void initValuesFromContext(Map<String, Object> context){
 		StringBuilder sbFailed = new StringBuilder();
-		patient = (Patient) context.get(IMultiFileParser.CTX_PATIENT);
+		patient = (IPatient) context.get(IMultiFileParser.CTX_PATIENT);
 		if (patient == null) {
 			sbFailed.append(Messages.DefaultPDFImportStrategy_Patient);
 			sbFailed.append("; ");

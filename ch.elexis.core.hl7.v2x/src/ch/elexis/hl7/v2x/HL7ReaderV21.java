@@ -29,7 +29,6 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Country;
-import ch.elexis.core.types.CountryCode;
 import ch.elexis.core.types.Gender;
 import ch.elexis.hl7.HL7PatientResolver;
 import ch.elexis.hl7.HL7Reader;
@@ -213,7 +212,7 @@ public class HL7ReaderV21 extends HL7Reader {
 						}
 						if (adr.getAd6_Country().getValue() != null) {
 							Country country = Country.fromValue(adr.getAd6_Country().getValue());
-							pat.setCountry(CountryCode.valueOf(country.name()));
+							pat.setCountry(Country.valueOf(country.name()));
 						}
 
 						pat.setPhone1(phone);

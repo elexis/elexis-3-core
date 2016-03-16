@@ -23,6 +23,7 @@ import ch.elexis.core.constants.TextContainerConstants;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -34,7 +35,7 @@ import ch.rgw.tools.TimeTool;
  * und Priorität beeinflussen die Darstellungsreihenfolge und Gruppierung auf dem Laborblatt.
  * 
  * @author Gerry
- * 
+ * 		
  */
 public class LabItem extends PersistentObject implements Comparable<LabItem>, ILabItem {
 	
@@ -56,9 +57,9 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	public static final String LOINCCODE = "loinccode"; //$NON-NLS-1$
 	
 	static final String LABITEMS = "LABORITEMS"; //$NON-NLS-1$
-	private static final Pattern varPattern = Pattern
-		.compile(TextContainerConstants.MATCH_TEMPLATE);
-	
+	private static final Pattern varPattern =
+		Pattern.compile(TextContainerConstants.MATCH_TEMPLATE);
+		
 	@Override
 	protected String getTableName(){
 		return LABITEMS;
@@ -68,7 +69,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		addMapping(LABITEMS, SHORTNAME, TITLE, LAB_ID, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE,
 			GROUP, PRIO, EXPORT, FORMULA, DIGITS, VISIBLE, BILLINGCODE, LOINCCODE);
 	}
-
+	
 	/**
 	 * Erstellt ein neues LaborItem.
 	 * 
@@ -134,11 +135,11 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	
 	protected LabItem(){/* leer */
 	}
-
+	
 	protected LabItem(String id){
 		super(id);
 	}
-
+	
 	public static LabItem load(String id){
 		return new LabItem(id);
 	}
@@ -238,12 +239,12 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		return LabItemTyp.TEXT;
 	}
 	
-	public String evaluateNew(Patient pat, TimeTool date, List<LabResult> results){
+	public String evaluateNew(Patient pat, TimeTool date, List<ILabResult> results){
 		String formel = getFormula();
 		formel = formel.substring(Script.SCRIPT_MARKER.length());
 		results = sortResultsDescending(results);
-		for (LabResult result : results) {
-			String var = result.getItem().makeVarName();
+		for (ILabResult result : results) {
+			String var = ((LabItem) result.getItem()).makeVarName();
 			if (formel.indexOf(var) != -1) {
 				formel = formel.replaceAll(var, result.getResult());
 			}
@@ -257,7 +258,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		
 	}
 	
-	public String evaluate(Patient pat, List<LabResult> results) throws ElexisException{
+	public String evaluate(Patient pat, List<ILabResult> results) throws ElexisException{
 		if (!getTyp().equals(LabItemTyp.FORMULA)) {
 			return null;
 		}
@@ -267,8 +268,8 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		}
 		boolean bMatched = false;
 		results = sortResultsDescending(results);
-		for (LabResult result : results) {
-			String var = result.getItem().makeVarName();
+		for (ILabResult result : results) {
+			String var = ((LabItem) result.getItem()).makeVarName();
 			if (formel.indexOf(var) != -1) {
 				if (result.getResult() != null && !result.getResult().isEmpty()
 					&& !result.getResult().equals("?")) { //$NON-NLS-1$
@@ -305,12 +306,12 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		}
 	}
 	
-	private List<LabResult> sortResultsDescending(List<LabResult> results){
-		Collections.sort(results, new Comparator<LabResult>() {
+	private List<ILabResult> sortResultsDescending(List<ILabResult> results){
+		Collections.sort(results, new Comparator<ILabResult>() {
 			@Override
-			public int compare(LabResult lr1, LabResult lr2){
-				int var1Length = lr1.getItem().makeVarName().length();
-				int var2Length = lr2.getItem().makeVarName().length();
+			public int compare(ILabResult lr1, ILabResult lr2){
+				int var1Length = ((LabItem) lr1.getItem()).makeVarName().length();
+				int var2Length = ((LabItem) lr2.getItem()).makeVarName().length();
 				
 				if (var1Length < var2Length) {
 					return 1;
@@ -339,10 +340,10 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		if (!getTyp().equals(LabItemTyp.FORMULA)) {
 			return null;
 		}
-		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
+		Query<ILabResult> qbe = new Query<ILabResult>(LabResult.class);
 		qbe.add(LabResult.PATIENT_ID, Query.EQUALS, pat.getId());
 		qbe.add(LabResult.DATE, Query.EQUALS, date.toString(TimeTool.DATE_COMPACT));
-		List<LabResult> results = qbe.execute();
+		List<ILabResult> results = qbe.execute();
 		return evaluate(pat, results);
 	}
 	
@@ -540,7 +541,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	 *            the female reference value for the items
 	 * @param unit
 	 *            the unit for the items
-	 * 
+	 * 			
 	 * @return List of {@link LabItem}
 	 */
 	public static List<LabItem> getLabItems(String laborId, String shortDesc, String refM,

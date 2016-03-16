@@ -14,6 +14,7 @@ import java.util.List;
 
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.ui.exchange.XChangeExporter;
@@ -66,11 +67,11 @@ public class XidElement extends XChangeElement {
 		return this;
 	}
 	
-	public XidElement asExporter(XChangeExporter home, LabItem li){
+	public XidElement asExporter(XChangeExporter home, ILabItem li){
 		asExporter(home);
 		setAttribute(ATTR_ID, XMLTool.idToXMLID(li.getId()));
 		StringBuilder domainRoot = new StringBuilder(FindingElement.XIDBASE);
-		Labor lab = li.getLabor();
+		Labor lab = ((LabItem)li).getLabor();
 		if (lab == null || (!lab.isValid())) {
 			domainRoot.append("unknown");
 		} else {
@@ -78,7 +79,7 @@ public class XidElement extends XChangeElement {
 		}
 		String domain = domainRoot.toString();
 		Xid.localRegisterXIDDomainIfNotExists(domain, li.getLabel(), Xid.ASSIGNMENT_LOCAL);
-		addIdentities(li, domain, li.getName(), Xid.ASSIGNMENT_LOCAL, true);
+		addIdentities((LabItem) li, domain, li.getName(), Xid.ASSIGNMENT_LOCAL, true);
 		return this;
 	}
 	

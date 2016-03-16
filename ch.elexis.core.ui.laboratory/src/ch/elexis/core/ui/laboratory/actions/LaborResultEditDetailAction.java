@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.dialogs.EditLabResultDialog;
 import ch.elexis.data.LabOrder;
@@ -46,7 +47,7 @@ public class LaborResultEditDetailAction extends Action {
 			}
 		} else if (orders != null) {
 			for (LabOrder order : orders) {
-				LabResult result = order.getLabResult();
+				ILabResult result = order.getLabResult();
 				if (result == null) {
 					result = order.createResult();
 					result.setTransmissionTime(new TimeTool());

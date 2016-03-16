@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.Messages;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
@@ -26,7 +28,7 @@ public class MultiFileParser implements IMultiFileParser {
 	
 	@Override
 	public Result<Object> importFromFile(File hl7File,
-		IFileImportStrategyFactory importStrategyFactory){
+		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser, IPersistenceHandler persistenceHandler){
 		Map<String, Object> context = new HashMap<>();
 		context.put(CTX_LABNAME, myLab);
 		
@@ -46,7 +48,7 @@ public class MultiFileParser implements IMultiFileParser {
 			IFileImportStrategy importStrategy = strategyMap.get(file);
 			importStrategy.setTestMode(testMode);
 			try {
-				results.add(importStrategy.execute(file, context));
+				results.add(importStrategy.execute(file, context, hl7parser, persistenceHandler));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -57,12 +59,12 @@ public class MultiFileParser implements IMultiFileParser {
 	
 	@Override
 	public Result<Object> importFromDirectory(File directory,
-		IFileImportStrategyFactory importStrategyFactory){
+		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser, IPersistenceHandler persistenceHandler){
 		Result<Object> results = new Result<>();
 		for (File file : directory.listFiles()) {
 			String extension = FileTool.getExtension(file.getName()).toLowerCase();
 			if (extension.equals("hl7")) {
-				results.add(importFromFile(file, importStrategyFactory));
+				results.add(importFromFile(file, importStrategyFactory, hl7parser, persistenceHandler));
 			}
 		}
 		return results;

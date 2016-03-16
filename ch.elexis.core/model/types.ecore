@@ -17,21 +17,17 @@
   <eClassifiers xsi:type="ecore:EEnum" name="ContactType">
     <eLiterals name="PERSON"/>
     <eLiterals name="ORGANIZATION" value="1"/>
-    <eLiterals name="UNKNOWN" value="2"/>
+    <eLiterals name="MANDATOR" value="2" literal=""/>
+    <eLiterals name="LABORATORY" value="3"/>
+    <eLiterals name="PATIENT" value="4"/>
+    <eLiterals name="UNKNOWN" value="9"/>
+    <eLiterals name="USER" value="5"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ContactGender">
     <eLiterals name="MALE"/>
     <eLiterals name="FEMALE" value="1"/>
     <eLiterals name="UNDEFINED" value="2"/>
     <eLiterals name="UNKNOWN" value="3"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="CountryCode">
-    <eLiterals name="NDF"/>
-    <eLiterals name="AT" value="40"/>
-    <eLiterals name="CH" value="756"/>
-    <eLiterals name="DE" value="276"/>
-    <eLiterals name="FR" value="250"/>
-    <eLiterals name="LI" value="438"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RelationshipType">
     <eLiterals name="A_GENERIC"/>
@@ -51,4 +47,5 @@
   <eClassifiers xsi:type="ecore:EDataType" name="TimeTool" instanceClassName="ch.rgw.tools.TimeTool"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Gender" instanceClassName="ch.elexis.core.types.Gender"/>
   <eClassifiers xsi:type="ecore:EDataType" name="LabItemTyp" instanceClassName="ch.elexis.core.types.LabItemTyp"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Country" instanceClassName="ch.elexis.core.types.Country"/>
 </ecore:EPackage>

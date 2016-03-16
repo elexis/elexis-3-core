@@ -31,10 +31,13 @@ import ch.rgw.tools.TimeTool;
  *   <li>{@link ch.elexis.core.model.ILabResult#getResult <em>Result</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabResult#getFlags <em>Flags</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabResult#getComment <em>Comment</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getOriginContact <em>Origin Contact</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getDate <em>Date</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getItem <em>Item</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getILabResult()
- * @model abstract="true"
+ * @model interface="true" abstract="true"
  * @generated
  */
 public interface ILabResult extends Identifiable {
@@ -271,5 +274,83 @@ public interface ILabResult extends Identifiable {
 	 * @generated
 	 */
 	void setComment(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Origin Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Origin Contact</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Origin Contact</em>' reference.
+	 * @see #setOriginContact(IContact)
+	 * @see ch.elexis.core.model.ModelPackage#getILabResult_OriginContact()
+	 * @model
+	 * @generated
+	 */
+	IContact getOriginContact();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getOriginContact <em>Origin Contact</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Origin Contact</em>' reference.
+	 * @see #getOriginContact()
+	 * @generated
+	 */
+	void setOriginContact(IContact value);
+
+	/**
+	 * Returns the value of the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Date</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Date</em>' attribute.
+	 * @see #setDate(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabResult_Date()
+	 * @model
+	 * @generated
+	 */
+	String getDate();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getDate <em>Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Date</em>' attribute.
+	 * @see #getDate()
+	 * @generated
+	 */
+	void setDate(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Item</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Item</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Item</em>' reference.
+	 * @see #setItem(ILabItem)
+	 * @see ch.elexis.core.model.ModelPackage#getILabResult_Item()
+	 * @model
+	 * @generated
+	 */
+	ILabItem getItem();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getItem <em>Item</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Item</em>' reference.
+	 * @see #getItem()
+	 * @generated
+	 */
+	void setItem(ILabItem value);
 
 } // ILabResult

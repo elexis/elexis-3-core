@@ -170,6 +170,13 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.ILAB_ORDER: {
+				ILabOrder iLabOrder = (ILabOrder)theEObject;
+				T1 result = caseILabOrder(iLabOrder);
+				if (result == null) result = caseIdentifiable(iLabOrder);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -366,6 +373,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseILabResult(ILabResult object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ILab Order</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ILab Order</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseILabOrder(ILabOrder object) {
 		return null;
 	}
 

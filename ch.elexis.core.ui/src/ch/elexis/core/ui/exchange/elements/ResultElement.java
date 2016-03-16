@@ -15,6 +15,7 @@ package ch.elexis.core.ui.exchange.elements;
 import java.util.List;
 
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;
@@ -44,7 +45,7 @@ public class ResultElement extends XChangeElement {
 				return re;
 			}
 		}
-		FindingElement fe = new FindingElement().asExporter(me.sender, lr.getItem());
+		FindingElement fe = new FindingElement().asExporter(me.sender, (LabItem) lr.getItem());
 		me.addFindingItem(fe);
 		ResultElement re = new ResultElement().asExporter(me.sender, lr);
 		me.addAnalyse(re);

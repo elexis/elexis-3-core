@@ -13,7 +13,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.MultiFileParser;
+import ch.elexis.core.ui.importer.div.importers.PersistenceHandler;
+import ch.elexis.core.ui.importer.div.importers.TestHL7Parser;
 import ch.elexis.core.ui.importer.div.importers.multifile.strategy.DefaultImportStrategyFactory;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
@@ -23,18 +27,20 @@ public class MultiFileParserTests {
 	private static MultiFileParser mfParser;
 	private static final String MY_TESTLAB = "myTestLab";
 	private static Path workDir = null;
-
+	private static HL7Parser hl7Parser = new TestHL7Parser(MY_TESTLAB);
+	private static IPersistenceHandler persistenceHandler = new PersistenceHandler();
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception{
 		mfParser = new MultiFileParser(MY_TESTLAB);
 		mfParser.setTestMode(true);
 	}
-
+	
 	@Before
 	public void setup() throws Exception{
 		workDir = Helpers.copyRscToTempDirectory();
 	}
-
+	
 	@After
 	public void tearDown() throws Exception{
 		removeAllPatientsAndDependants();
@@ -42,12 +48,12 @@ public class MultiFileParserTests {
 			Helpers.removeTempDirectory(workDir);
 		}
 	}
-
+	
 	@Test
 	public void testImportFromFile(){
 		File hl7File = new File(workDir.toString(), "Synlab/Labor-Befund.HL7");
-		Result<Object> result =
-			mfParser.importFromFile(hl7File, new DefaultImportStrategyFactory());
+		Result<Object> result = mfParser.importFromFile(hl7File, new DefaultImportStrategyFactory(),
+			hl7Parser, persistenceHandler);
 		if (result.isOK()) {
 			assertTrue(true); // show import was successful
 			assertEquals(2, result.getMessages().size());
@@ -57,14 +63,13 @@ public class MultiFileParserTests {
 			fail(msg);
 		}
 	}
-
+	
 	@Test
 	public void testImportFromDirectory(){
-		File synlabDir =
-			new File(workDir.toString(), "Synlab");
-
-		Result<Object> result =
-			mfParser.importFromDirectory(synlabDir, new DefaultImportStrategyFactory());
+		File synlabDir = new File(workDir.toString(), "Synlab");
+		
+		Result<Object> result = mfParser.importFromDirectory(synlabDir,
+			new DefaultImportStrategyFactory(), hl7Parser, persistenceHandler);
 		if (result.isOK()) {
 			assertTrue(true); // show import was successful
 			assertEquals(4, result.getMessages().size());
@@ -74,14 +79,14 @@ public class MultiFileParserTests {
 			fail(msg);
 		}
 	}
-
+	
 	static private void removeAllPatientsAndDependants(){
 		Query<Patient> qr = new Query<Patient>(Patient.class);
 		List<Patient> qrr = qr.execute();
 		for (int j = 0; j < qrr.size(); j++) {
 			qrr.get(j).delete(true);
 		}
-
+		
 		qr = new Query<Patient>(Patient.class);
 		qrr = qr.execute();
 	}

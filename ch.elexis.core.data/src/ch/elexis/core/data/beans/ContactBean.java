@@ -17,7 +17,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.types.ContactType;
-import ch.elexis.core.types.CountryCode;
+import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
@@ -299,21 +299,21 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	}
 	
 	@Override
-	public CountryCode getCountry(){
+	public Country getCountry(){
 		String countryVal = entity.get(Kontakt.FLD_COUNTRY);
-		CountryCode ret;
+		Country ret;
 		try {
-			ret = CountryCode.get(countryVal);
+			ret = Country.fromValue(countryVal);
 		} catch (NullPointerException e) {
-			ret = CountryCode.NDF;
+			ret = Country.NDF;
 		}
 		return ret;
 	}
 	
 	@Override
-	public void setCountry(CountryCode value){
-		CountryCode old = getCountry();
-		entity.set(Kontakt.FLD_COUNTRY, value.getLiteral());
+	public void setCountry(Country value){
+		Country old = getCountry();
+		entity.set(Kontakt.FLD_COUNTRY, value.value());
 		firePropertyChange("country", old, value);
 	}
 	

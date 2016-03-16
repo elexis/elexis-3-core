@@ -10,22 +10,6 @@
  */
 package ch.elexis.core.types.impl;
 
-import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.model.impl.ModelPackageImpl;
-import ch.elexis.core.types.ContactGender;
-import ch.elexis.core.types.ContactType;
-import ch.elexis.core.types.CountryCode;
-import ch.elexis.core.types.Gender;
-import ch.elexis.core.types.LabItemTyp;
-import ch.elexis.core.types.RelationshipType;
-import ch.elexis.core.types.TypesFactory;
-import ch.elexis.core.types.TypesPackage;
-
-import ch.rgw.tools.Money;
-import ch.rgw.tools.TimeTool;
-
-import java.lang.Comparable;
-
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +17,19 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
+import ch.elexis.core.types.ContactGender;
+import ch.elexis.core.types.ContactType;
+import ch.elexis.core.types.Country;
+import ch.elexis.core.types.Gender;
+import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.RelationshipType;
+import ch.elexis.core.types.TypesFactory;
+import ch.elexis.core.types.TypesPackage;
+import ch.rgw.tools.Money;
+import ch.rgw.tools.TimeTool;
+import java.lang.Comparable;
 
 /**
  * <!-- begin-user-doc -->
@@ -83,13 +78,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EEnum countryCodeEEnum = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EEnum relationshipTypeEEnum = null;
 
 	/**
@@ -119,6 +107,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType labItemTypEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType countryEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -231,15 +226,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EEnum getCountryCode() {
-		return countryCodeEEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EEnum getRelationshipType() {
 		return relationshipTypeEEnum;
 	}
@@ -285,6 +271,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getCountry() {
+		return countryEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TypesFactory getTypesFactory() {
 		return (TypesFactory)getEFactoryInstance();
 	}
@@ -317,7 +312,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		// Create enums
 		contactTypeEEnum = createEEnum(CONTACT_TYPE);
 		contactGenderEEnum = createEEnum(CONTACT_GENDER);
-		countryCodeEEnum = createEEnum(COUNTRY_CODE);
 		relationshipTypeEEnum = createEEnum(RELATIONSHIP_TYPE);
 
 		// Create data types
@@ -325,6 +319,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		timeToolEDataType = createEDataType(TIME_TOOL);
 		genderEDataType = createEDataType(GENDER);
 		labItemTypEDataType = createEDataType(LAB_ITEM_TYP);
+		countryEDataType = createEDataType(COUNTRY);
 	}
 
 	/**
@@ -371,21 +366,17 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEEnum(contactTypeEEnum, ContactType.class, "ContactType");
 		addEEnumLiteral(contactTypeEEnum, ContactType.PERSON);
 		addEEnumLiteral(contactTypeEEnum, ContactType.ORGANIZATION);
+		addEEnumLiteral(contactTypeEEnum, ContactType.MANDATOR);
+		addEEnumLiteral(contactTypeEEnum, ContactType.LABORATORY);
+		addEEnumLiteral(contactTypeEEnum, ContactType.PATIENT);
 		addEEnumLiteral(contactTypeEEnum, ContactType.UNKNOWN);
+		addEEnumLiteral(contactTypeEEnum, ContactType.USER);
 
 		initEEnum(contactGenderEEnum, ContactGender.class, "ContactGender");
 		addEEnumLiteral(contactGenderEEnum, ContactGender.MALE);
 		addEEnumLiteral(contactGenderEEnum, ContactGender.FEMALE);
 		addEEnumLiteral(contactGenderEEnum, ContactGender.UNDEFINED);
 		addEEnumLiteral(contactGenderEEnum, ContactGender.UNKNOWN);
-
-		initEEnum(countryCodeEEnum, CountryCode.class, "CountryCode");
-		addEEnumLiteral(countryCodeEEnum, CountryCode.NDF);
-		addEEnumLiteral(countryCodeEEnum, CountryCode.AT);
-		addEEnumLiteral(countryCodeEEnum, CountryCode.CH);
-		addEEnumLiteral(countryCodeEEnum, CountryCode.DE);
-		addEEnumLiteral(countryCodeEEnum, CountryCode.FR);
-		addEEnumLiteral(countryCodeEEnum, CountryCode.LI);
 
 		initEEnum(relationshipTypeEEnum, RelationshipType.class, "RelationshipType");
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.AGENERIC);
@@ -406,6 +397,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(timeToolEDataType, TimeTool.class, "TimeTool", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(genderEDataType, Gender.class, "Gender", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(labItemTypEDataType, LabItemTyp.class, "LabItemTyp", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(countryEDataType, Country.class, "Country", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

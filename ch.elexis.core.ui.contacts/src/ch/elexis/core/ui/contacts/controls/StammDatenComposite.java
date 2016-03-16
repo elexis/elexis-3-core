@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.types.ContactGender;
-import ch.elexis.core.types.CountryCode;
+import ch.elexis.core.types.Country;
 import ch.elexis.core.ui.contacts.proposalProvider.CityInformationProposalProvider;
 import ch.elexis.core.ui.contacts.proposalProvider.ContactGeonames;
 import ch.elexis.core.ui.contacts.proposalProvider.StreetInformationProposalProvider;
@@ -229,14 +229,14 @@ public class StammDatenComposite extends AbstractComposite {
 			gd_combo_1.widthHint = 55;
 			comboViewerCountry.getCombo().setLayoutData(gd_combo_1);
 			comboViewerCountry.setContentProvider(ArrayContentProvider.getInstance());
-			comboViewerCountry.setInput(CountryCode.values());
+			comboViewerCountry.setInput(Country.values());
 			comboViewerCountry.addSelectionChangedListener(new ISelectionChangedListener() {
 				@Override
 				public void selectionChanged(SelectionChangedEvent event){
-					CountryCode selCountry =
-						(CountryCode) ((StructuredSelection) event.getSelection())
+					Country selCountry =
+						(Country) ((StructuredSelection) event.getSelection())
 							.getFirstElement();
-					if (selCountry == CountryCode.NDF) {
+					if (selCountry == Country.NDF) {
 						comboViewerCountry.getCombo().setForeground(
 							Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 						ContactGeonames.setCountry(null);
@@ -484,7 +484,7 @@ public class StammDatenComposite extends AbstractComposite {
 		IObservableValue countryObserver =
 			ViewersObservables.observeSingleSelection(comboViewerCountry);
 		bindingContext.bindValue(countryObserver,
-			BeansObservables.observeDetailValue(contactObservable, "country", CountryCode.class),
+			BeansObservables.observeDetailValue(contactObservable, "country", Country.class),
 			null, null);
 	}
 	
