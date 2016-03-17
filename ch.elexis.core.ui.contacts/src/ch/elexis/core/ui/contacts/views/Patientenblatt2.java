@@ -606,7 +606,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 		dmd.reload();
 		form.reflow(true);
 
-		setUnlocked(CoreHub.ls.ownsLock(p.storeToString()));
+		setUnlocked(CoreHub.getLocalLockService().isLocked(p));
 	}
 
 	public void refresh() {

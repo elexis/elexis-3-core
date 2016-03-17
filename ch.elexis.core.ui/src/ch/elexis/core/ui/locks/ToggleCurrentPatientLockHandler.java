@@ -14,11 +14,11 @@ import org.eclipse.ui.menus.UIElement;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
-import info.elexis.server.elexis.common.types.LockResponse;
 
 public class ToggleCurrentPatientLockHandler extends AbstractHandler implements IElementUpdater {
 
@@ -39,12 +39,10 @@ public class ToggleCurrentPatientLockHandler extends AbstractHandler implements 
 			return null;
 		}
 
-		String sts = po.storeToString();
-
-		if (CoreHub.ls.ownsLock(sts)) {
-			CoreHub.ls.releaseLock(sts);
+		if (CoreHub.getLocalLockService().isLocked(po)) {
+			CoreHub.getLocalLockService().releaseLock(po);
 		} else {
-			LockResponse lr = CoreHub.ls.acquireLock(sts);
+			LockResponse lr = CoreHub.getLocalLockService().acquireLock(po);
 			if (!lr.isOk()) {
 				ElexisEventDispatcher.fireElexisStatusEvent(new ElexisStatus(Status.WARNING, CoreHub.PLUGIN_ID,
 						ElexisStatus.CODE_NONE, "Lock could not be granted", null));
@@ -67,7 +65,7 @@ public class ToggleCurrentPatientLockHandler extends AbstractHandler implements 
 			return;
 		}
 
-		if (CoreHub.ls.ownsLock(po.storeToString())) {
+		if (CoreHub.getLocalLockService().isLocked(po)) {
 			element.setIcon(Images.IMG_LOCK_OPEN.getImageDescriptor());
 			element.setChecked(true);
 		} else {

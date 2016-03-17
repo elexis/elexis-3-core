@@ -2,16 +2,13 @@ package ch.elexis.core.data.lock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
-import info.elexis.server.elexis.common.types.LockInfo;
 
 /**
  * For first version we lock on patient, resp. whole domain so we should add all

@@ -1,10 +1,10 @@
 package ch.elexis.core.ui.locks;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.PersistentObject;
-import info.elexis.server.elexis.common.types.LockResponse;
 
 public abstract class LockRequestingAction<T extends PersistentObject> extends RestrictedAction {
 
@@ -27,10 +27,10 @@ public abstract class LockRequestingAction<T extends PersistentObject> extends R
 			return;
 		}
 		
-		LockResponse lr = CoreHub.ls.acquireLock(object.storeToString());
+		LockResponse lr = CoreHub.getLocalLockService().acquireLock(object);
 		if(lr.isOk()) {
 			doRun(object);
-			CoreHub.ls.releaseLock(object.storeToString());
+			CoreHub.getLocalLockService().releaseLock(object);
 		} else {
 			log.warn("Unable to acquire lock for "+object.storeToString());
 			// TODO show message

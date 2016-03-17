@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -474,7 +473,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		if (actKons == null) {
 			setUnlocked(false);
 		} else {
-			setUnlocked(CoreHub.ls.ownsLock(actKons.storeToString()));
+			setUnlocked(CoreHub.getLocalLockService().isLocked(actKons));
 		}
 	}
 

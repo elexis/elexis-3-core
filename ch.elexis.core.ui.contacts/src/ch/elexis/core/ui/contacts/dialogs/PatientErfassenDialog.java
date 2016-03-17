@@ -173,11 +173,10 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 					}
 				}
 			}
-			Patient pat = new Patient(ret[0], ret[1], check, ret[2]);
+			result = new Patient(ret[0], ret[1], check, ret[2]);
+			CoreHub.getLocalLockService().acquireLock(result);
 			
-			CoreHub.ls.acquireLock(pat.storeToString());
-			
-			pat.set(new String[] {
+			result.set(new String[] {
 				Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1
 			}, new String[] {
 				ret[4], ret[5], ret[6], ret[7]
@@ -187,8 +186,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 				check.add(TimeTool.YEAR, 18);
 			}
 			
-			ElexisEventDispatcher.fireSelectionEvent(pat);
-			result = pat;
+			ElexisEventDispatcher.fireSelectionEvent(result);
 			super.okPressed();
 		} catch (TimeFormatException e) {
 			ExHandler.handle(e);
@@ -199,8 +197,9 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 			ExHandler.handle(pe);
 			SWTHelper.showError("Unplausible Angaben",
 				"Bitte überprüfen Sie die Eingaben nochmals.");
+		} finally {
+			CoreHub.getLocalLockService().releaseLock(result);
 		}
-		
 	}
 	
 }

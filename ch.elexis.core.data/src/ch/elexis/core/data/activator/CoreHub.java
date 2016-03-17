@@ -41,8 +41,9 @@ import ch.elexis.core.data.events.PatientEventListener;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
-import ch.elexis.core.data.lock.LockService;
+import ch.elexis.core.data.lock.LocalLockService;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
+import ch.elexis.core.lock.ILocalLockService;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -124,7 +125,7 @@ public class CoreHub implements BundleActivator {
 	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
 	
 	/** Lock Service **/
-	public static LockService ls;
+	private static ILocalLockService localLockService;
 	
 	/**
 	 * The listener for patient events
@@ -208,7 +209,7 @@ public class CoreHub implements BundleActivator {
 		log.debug("Starting " + CoreHub.class.getName());
 		plugin = this;
 		
-		ls = new LockService(context);
+		localLockService = new LocalLockService();
 		
 		startUpBundle();
 		setUserDir(userDir);
@@ -258,7 +259,7 @@ public class CoreHub implements BundleActivator {
 	public void stop(BundleContext context) throws Exception{
 		log.debug("Stopping " + CoreHub.class.getName());
 
-		CoreHub.ls.releaseAllLocks();
+		getLocalLockService().releaseAllLocks();
 		
 		CoreHub.logoffAnwender();
 		
@@ -446,7 +447,7 @@ public class CoreHub implements BundleActivator {
 			CoreHub.userCfg.flush();
 		}
 		
-		CoreHub.ls.releaseAllLocks();
+		getLocalLockService().releaseAllLocks();
 		
 		CoreHub.setMandant(null);
 		CoreHub.heart.suspend();
@@ -456,5 +457,9 @@ public class CoreHub implements BundleActivator {
 		ElexisEventDispatcher.getInstance().fire(
 			new ElexisEvent(null, User.class, ElexisEvent.EVENT_DESELECTED));
 		CoreHub.userCfg = CoreHub.localCfg;
+	}
+	
+	public static ILocalLockService getLocalLockService(){
+		return localLockService;
 	}
 }

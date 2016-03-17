@@ -141,7 +141,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 		dmd.reload();
 		scrldfrm.reflow(true);
 
-		setUnlocked(CoreHub.ls.ownsLock(p.storeToString()));
+		setUnlocked(CoreHub.getLocalLockService().isLocked(p));
 	}
 
 	/**

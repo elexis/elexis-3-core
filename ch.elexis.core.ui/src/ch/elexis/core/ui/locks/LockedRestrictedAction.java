@@ -29,11 +29,11 @@ abstract public class LockedRestrictedAction<T extends PersistentObject> extends
 			return;
 		}
 
-		setEnabled(CoreHub.ls.ownsLock(object.storeToString()));
+		setEnabled(CoreHub.getLocalLockService().isLocked(object));
 	}
 
 	public void doRun() {
-		if (CoreHub.ls.ownsLock(object.storeToString()) && CoreHub.acl.request(necessaryRight)) {
+		if (CoreHub.getLocalLockService().isLocked(object) && CoreHub.acl.request(necessaryRight)) {
 			if (object != null) {
 				doRun((T) object);
 			}
