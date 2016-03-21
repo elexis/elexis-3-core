@@ -14,12 +14,21 @@ Start the Elexis3 application.
 
 h2. Building
 
-You need Java 1.8+. Maven (we use 3.0.5 for our builds, other versions might work). Then you should be able to generate the application and p2 update site using the following calls:
+You need Java 1.8+. Maven 3.0.x (Higher version do NOT work due to plugin incompatibilities). Then you should be able to generate the application and p2 update site using the following calls:
 
 @git clone https://github.com/elexis/elexis-3-core@
 @mvn clean install@
 
 It will be built for your OS/Window-System/Architecture combination. You will find the executables under @ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp/*/*/*@ 
+
+Note: This will fail in MacOSX. Build instructions for Mac:
+
+@Install Homebrew@
+@brew install homebrew/versions/maven30@
+@git clone https://github.com/elexis/elexis-3-core@
+@mvn clean install -Pall-archs -Dmaven.test.skip=true@
+
+
 
 If you want a complete development environment, try "Oomph":https://github.com/elexis/elexis-3-core/tree/master/ch.elexis.sdk
 
