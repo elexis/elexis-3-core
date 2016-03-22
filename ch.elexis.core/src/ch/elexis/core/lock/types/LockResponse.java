@@ -17,11 +17,12 @@ public class LockResponse {
 
 	public LockResponse() {
 		status = Status.OK;
+		lockInfo = new LockInfo();
 	}
 
 	public LockResponse(Status status, LockInfo lockInfo) {
 		this.status = status;
-		this.lockInfo = lockInfo;
+		this.lockInfo = (lockInfo!=null) ? lockInfo : new LockInfo();
 	}
 
 	public Status getStatus() {
