@@ -15,7 +15,9 @@ package ch.rgw.tools;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -363,9 +365,19 @@ public class TimeTool extends GregorianCalendar {
 	 * @param localDate
 	 * @since 3.2
 	 */
-	public TimeTool(final LocalDate localDate) {
+	public TimeTool(final LocalDate localDate){
 		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		this.setTimeInMillis(date.getTime());
+		resolution = defaultResolution;
+	}
+	
+	/**
+	 * @param localDate
+	 * @since 3.2
+	 */
+	public TimeTool(final LocalDateTime localDateTime){
+		ZonedDateTime atZone = localDateTime.atZone(ZoneId.systemDefault());
+		this.setTimeInMillis(atZone.toInstant().toEpochMilli());
 		resolution = defaultResolution;
 	}
 	
@@ -774,10 +786,22 @@ public class TimeTool extends GregorianCalendar {
 		}
 	}
 	
-	public LocalDate toLocalDate() {
+	/**
+	 * @since 3.2
+	 */
+	public LocalDate toLocalDate(){
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(getTimeInMillis());
 		return gc.toZonedDateTime().toLocalDate();
+	}
+	
+	/**
+	 * @since 3.2
+	 */
+	public LocalDateTime toLocalDateTime() {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(getTimeInMillis());
+		return gc.toZonedDateTime().toLocalDateTime();
 	}
 	
 	public String toDBString(final boolean full){
