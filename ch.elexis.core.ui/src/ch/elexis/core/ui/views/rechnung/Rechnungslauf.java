@@ -329,6 +329,8 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			log.debug("apply filter for timestpan [" + ttFrom.toString(TimeTool.DATE_COMPACT)
 				+ " - " + ttTo.toString(TimeTool.DATE_COMPACT));
 			monitor.subTask("Filtern nach Zeitspanne ...");
+			// make sure 23:59 and 00:00 are not equal
+			tmpTime.setResolution(1);
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
 					tmpTime.set(k.getDatum());
