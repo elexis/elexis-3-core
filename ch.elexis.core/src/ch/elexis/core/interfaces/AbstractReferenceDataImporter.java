@@ -1,4 +1,4 @@
-package ch.elexis.core.data.interfaces;
+package ch.elexis.core.interfaces;
 
 import java.io.InputStream;
 

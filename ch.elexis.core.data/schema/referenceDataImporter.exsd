@@ -63,7 +63,7 @@ It requires a realisation of the AbstractReferenceDataImporter class.
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="ch.elexis.core.data.interfaces.AbstractReferenceDataImporter:"/>
+                  <meta.attribute kind="java" basedOn="ch.elexis.core.interfaces.AbstractReferenceDataImporter:"/>
                </appInfo>
             </annotation>
          </attribute>

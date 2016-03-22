@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
-import ch.elexis.core.data.interfaces.AbstractReferenceDataImporter;
+import ch.elexis.core.interfaces.AbstractReferenceDataImporter;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 
