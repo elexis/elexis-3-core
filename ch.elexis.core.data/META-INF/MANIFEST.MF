@@ -34,4 +34,3 @@ Export-Package: .,
  ch.elexis.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: ch.elexis.core.data.activator.CoreHub
-Import-Package: javax.ws.rs;version="1.1.1"
