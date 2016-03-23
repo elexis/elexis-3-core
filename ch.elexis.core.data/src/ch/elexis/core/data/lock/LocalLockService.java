@@ -201,7 +201,13 @@ public class LocalLockService implements ILocalLockService {
 			return true;
 		}
 		
-		return ils.isLocked(storeToString);
+		try {
+			return ils.isLocked(storeToString);
+		} catch (Exception e) {
+			log.error("Catched exception in isLocked: ", e);
+			return false;
+		}
+
 	}
 
 	@Override
