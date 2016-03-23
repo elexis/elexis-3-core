@@ -36,6 +36,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Form;
@@ -68,6 +69,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.LockedAction;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
+import ch.elexis.core.ui.locks.ToggleCurrentKonsultationLockHandler;
 import ch.elexis.core.ui.text.EnhancedTextField;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
@@ -155,6 +157,15 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
+				if (actKons != null) {
+					if (CoreHub.getLocalLockService().isLocked(actKons)) {
+						CoreHub.getLocalLockService().releaseLock(actKons);
+					}
+					ICommandService commandService =
+						(ICommandService) getViewSite().getService(ICommandService.class);
+					commandService.refreshElements(ToggleCurrentKonsultationLockHandler.COMMAND_ID,
+						null);
+				}
 			case ElexisEvent.EVENT_UPDATE:
 				setKons(kons);
 				break;

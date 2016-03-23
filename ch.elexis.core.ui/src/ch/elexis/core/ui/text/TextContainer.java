@@ -96,7 +96,7 @@ public class TextContainer {
 		Messages.TextContainer_TemplateNotFoundHeader;
 	private static final String TEMPLATE_NOT_FOUND_BODY =
 		Messages.TextContainer_TemplateNotFoundBody;
-		
+	
 	private ITextPlugin plugin = null;
 	private static Logger log = LoggerFactory.getLogger(TextContainer.class); //$NON-NLS-1$
 	private Shell shell;
@@ -812,8 +812,11 @@ public class TextContainer {
 	
 	private void addBriefToKons(final Brief brief, final Konsultation kons){
 		if (kons != null) {
-			String label = "\n[ " + brief.getLabel() + " ]"; //$NON-NLS-1$ //$NON-NLS-2$
-			kons.addXRef(XRefExtensionConstants.providerID, brief.getId(), -1, label);
+			if (CoreHub.getLocalLockService().acquireLock(kons).isOk()) {
+				String label = "\n[ " + brief.getLabel() + " ]"; //$NON-NLS-1$ //$NON-NLS-2$
+				kons.addXRef(XRefExtensionConstants.providerID, brief.getId(), -1, label);
+				CoreHub.getLocalLockService().releaseLock(kons);
+			}
 		}
 	}
 	
@@ -828,7 +831,7 @@ public class TextContainer {
 	public void saveBrief(Brief brief, final String typ){
 		log.debug(
 			"ch.elexis.views/TextContainer.java saveBrief(Brief brief, final String typ): begin");
-			
+		
 		if (brief == null) {
 			log.debug("ch.elexis.views/TextContainer.java saveBrief(): WARNING: brief == null");
 		} else {
@@ -864,7 +867,7 @@ public class TextContainer {
 			KontaktSelektor ksl = new KontaktSelektor(shell, Kontakt.class,
 				Messages.TextContainer_SelectAdresseeHeader,
 				Messages.TextContainer_SelectAdresseeBody, Kontakt.DEFAULT_SORT);
-				
+			
 			if (ksl.open() == Dialog.OK) {
 				log.debug(
 					"ch.elexis.views/TextContainer.java saveBrief(): about to brief = new Brief(...)");
@@ -954,7 +957,7 @@ public class TextContainer {
 			"ch.elexisviews/TextContainer.java.open(): brief.getLabel())==" + brief.getLabel());
 		log.debug(
 			"ch.elexisviews/TextContainer.java.open(): about to byte[] arr = brief.loadBinary()...");
-			
+		
 		byte[] arr = brief.loadBinary();
 		if (arr == null) {
 			log.debug(
@@ -1060,7 +1063,7 @@ public class TextContainer {
 			checkBoxDontShowAddresseeSelection.setText(Messages.TextContainer_DontAskForAddressee);
 			checkBoxDontShowAddresseeSelection
 				.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
-				
+			
 			// at the end -> checkboxes will be set correctly by the listeners
 			if (tmplName != null)
 				name.setText(tmplName);
@@ -1170,7 +1173,7 @@ public class TextContainer {
 		private static final String expl = Messages.TextContainer_NoPlugin1
 			+ Messages.TextContainer_NoPlugin2 + Messages.TextContainer_Noplugin3
 			+ Messages.TextContainer_NoPlugin4 + Messages.TextContainer_NoPLugin5;
-			
+		
 		public Composite createContainer(final Composite parent, final ITextPlugin.ICallback h){
 			parent.setLayout(new FillLayout());
 			// Composite ret=new Composite(parent,SWT.BORDER);
@@ -1210,7 +1213,7 @@ public class TextContainer {
 		
 		public void setInitializationData(final IConfigurationElement config,
 			final String propertyName, final Object data) throws CoreException{}
-			
+		
 		public boolean loadFromStream(final InputStream is, final boolean asTemplate){
 			// TODO Automatisch erstellter Methoden-Stub
 			return false;
@@ -1227,7 +1230,7 @@ public class TextContainer {
 		}
 		
 		public void setFocus(){
-		
+
 		}
 		
 		public PageFormat getFormat(){
@@ -1235,7 +1238,7 @@ public class TextContainer {
 		}
 		
 		public void setFormat(final PageFormat f){
-		
+
 		}
 		
 		public Object insertTextAt(final int x, final int y, final int w, final int h,

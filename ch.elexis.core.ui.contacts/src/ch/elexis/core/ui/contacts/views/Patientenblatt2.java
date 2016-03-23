@@ -41,6 +41,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -76,6 +78,7 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
+import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.medication.views.FixMediDisplay;
 import ch.elexis.core.ui.settings.UserSettings;
 import ch.elexis.core.ui.util.InputPanel;
@@ -120,13 +123,19 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
+				if (CoreHub.getLocalLockService().isLocked(actPatient)) {
+					CoreHub.getLocalLockService().releaseLock(actPatient);
+				}
+				ICommandService commandService =
+					(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+				commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID, null);
 				setPatient(pat);
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
-				setUnlocked(pat.equals(actPatient));
-				break;
 			case ElexisEvent.EVENT_LOCK_RELEASED:
-				setUnlocked(false);
+				if (pat.equals(actPatient)) {
+					setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
+				}
 				break;
 			default:
 				break;

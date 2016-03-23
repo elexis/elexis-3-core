@@ -85,6 +85,7 @@ public class LocalLockService implements ILocalLockService {
 		if (po == null) {
 			return LockResponse.DENIED(null);
 		}
+		log.debug("Releasing lock on [" + po + "]");
 		return releaseLock(po.storeToString());
 	}
 
@@ -101,6 +102,7 @@ public class LocalLockService implements ILocalLockService {
 		if (po == null) {
 			return LockResponse.DENIED(null);
 		}
+		log.debug("Acquiring lock on [" + po + "]");
 		return acquireLock(po.storeToString());
 	}
 	
@@ -184,6 +186,10 @@ public class LocalLockService implements ILocalLockService {
 
 	@Override
 	public boolean isLocked(IPersistentObject po){
+		if (po == null) {
+			return false;
+		}
+		log.debug("Checking lock on [" + po + "]");
 		return isLocked(po.storeToString());
 	}
 	

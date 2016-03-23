@@ -489,5 +489,14 @@
              style="toggle">
        </command>
     </menuContribution>
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:ch.elexis.Konsdetail">
+       <command
+             commandId="ch.elexis.core.ui.command.ToggleCurrentKonsultationLockCommand"
+             icon="icon://IMG_LOCK_CLOSED"
+             style="toggle">
+       </command>
+    </menuContribution>
  </extension>
 </plugin>

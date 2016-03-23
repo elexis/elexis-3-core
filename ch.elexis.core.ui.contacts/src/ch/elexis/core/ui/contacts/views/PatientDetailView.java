@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -46,6 +47,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
@@ -53,6 +55,7 @@ import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.locks.IUnlockable;
+import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.medication.views.FixMediDisplay;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -94,13 +97,21 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
+				IPersistentObject actPatient = (IPersistentObject) patientObservable.getValue();
+				if (CoreHub.getLocalLockService().isLocked(actPatient)) {
+					CoreHub.getLocalLockService().releaseLock(actPatient);
+				}
+				ICommandService commandService =
+					(ICommandService) getViewSite().getService(ICommandService.class);
+				commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID,
+					null);
 				setPatient(pat);
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
-				setUnlocked(pat.equals(patientObservable.getValue()));
-				break;
 			case ElexisEvent.EVENT_LOCK_RELEASED:
-				setUnlocked(false);
+				if (pat.equals(patientObservable.getValue())) {
+					setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
+				}
 				break;
 			default:
 				break;
