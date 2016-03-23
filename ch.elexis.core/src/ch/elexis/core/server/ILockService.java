@@ -27,7 +27,6 @@ public interface ILockService {
 	
 	@GET
 	@Path("/isLocked")
-	@Consumes(MediaType.APPLICATION_XML)
 	public boolean isLocked(@QueryParam("objectId") String storeToString);
 	
 	@GET
