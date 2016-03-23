@@ -473,12 +473,17 @@ public class LabeledInputField extends Composite {
 		
 		public void setEditable(boolean ed){
 			mine.lbl.setEnabled(ed);
+			if(tFeldTyp==Typ.EXECSTRING || tFeldTyp==Typ.HYPERLINK) {
+				mine.lbl.setEnabled(true);
+				((Text) mine.ctl).setEnabled(ed);
+				return;
+			}
+			
 			if(mine.ctl instanceof Text) {
 				((Text) mine.ctl).setEditable(ed);
 			} else {
 				mine.ctl.setEnabled(ed);
 			}
-
 		}
 		
 		public void setChoices(String... strings){
