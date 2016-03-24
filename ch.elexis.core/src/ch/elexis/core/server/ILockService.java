@@ -25,8 +25,9 @@ public interface ILockService {
 	@Consumes(MediaType.APPLICATION_XML)
 	public LockResponse acquireOrReleaseLocks(LockRequest request);
 	
-	@GET
+	@POST
 	@Path("/isLocked")
+	@Consumes(MediaType.APPLICATION_XML)
 	public boolean isLocked(LockRequest request);
 	
 	@GET
