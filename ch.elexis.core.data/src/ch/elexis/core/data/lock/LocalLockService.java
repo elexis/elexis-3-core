@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +22,7 @@ import ch.elexis.core.lock.ILocalLockService;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.lock.types.LockResponse.Status;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.server.ILockService;
 import ch.elexis.data.PersistentObject;
@@ -105,22 +106,36 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	@Override
-	public LockResponse acquireLockBlocking(IPersistentObject po, int secTimeout){
+	public LockResponse acquireLockBlocking(IPersistentObject po, int secTimeout,
+		IProgressMonitor monitor){
 		if (po == null) {
 			return LockResponse.DENIED(null);
 		}
-		log.debug("Acquiring lock on [" + po + "]");
+		if(monitor != null) {
+			monitor.beginTask("Acquiring Lock for [" + po.getLabel() + "]", secTimeout * 2);
+		}
+		log.debug("Acquiring lock blocking on [" + po + "]");
 		String storeToString = po.storeToString();
 		
 		LockResponse response = acquireLock(storeToString);
 		int sleptMilli = 0;
 		while (!response.isOk()) {
 			try {
-				Thread.sleep(100);
-				sleptMilli += 100;
+				Thread.sleep(500);
+				sleptMilli += 500;
 				response = acquireLock(storeToString);
+				if (response.getStatus() == Status.DENIED_PERMANENT) {
+					return response;
+				}
 				if (sleptMilli > (secTimeout * 1000)) {
 					return response;
+				}
+				// update monitor
+				if (monitor != null) {
+					monitor.worked(1);
+					if (monitor.isCanceled()) {
+						return LockResponse.DENIED(response.getLockInfos());
+					}
 				}
 			} catch (InterruptedException e) {
 				// ignore and keep trying
@@ -159,7 +174,8 @@ public class LocalLockService implements ILocalLockService {
 			String message =
 				"System not configured for standalone mode, and elexis-server not available!";
 			log.error(message);
-			ElexisEventDispatcher.fireElexisStatusEvent(new ElexisStatus(Status.ERROR,
+			ElexisEventDispatcher
+				.fireElexisStatusEvent(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 				CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, null));
 			return LockResponse.ERROR;
 		}
@@ -197,7 +213,8 @@ public class LocalLockService implements ILocalLockService {
 				// deleted!!!
 				String message = "Error trying to acquireOrReleaseLocks.";
 				log.error(message);
-				ElexisEventDispatcher.fireElexisStatusEvent(new ElexisStatus(Status.ERROR,
+				ElexisEventDispatcher
+					.fireElexisStatusEvent(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, e));
 				return LockResponse.ERROR;
 			} finally {

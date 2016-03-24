@@ -2,6 +2,8 @@ package ch.elexis.core.lock;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IPersistentObject;
@@ -27,5 +29,6 @@ public interface ILocalLockService extends ILockService {
 	
 	public String getSystemUuid();
 	
-	public LockResponse acquireLockBlocking(IPersistentObject po, int msTimeout);
+	public LockResponse acquireLockBlocking(IPersistentObject po, int msTimeout,
+		IProgressMonitor monitor);
 }

@@ -649,7 +649,7 @@ public class GlobalActions {
 			public void doRun(){
 				Konsultation.neueKons(null);
 				IPersistentObject kons = ElexisEventDispatcher.getSelected(Konsultation.class);
-				if (kons != null) {
+				if (kons != null && kons.exists()) {
 					CoreHub.getLocalLockService().acquireLock(kons);
 					CoreHub.getLocalLockService().releaseLock(kons);
 				}
