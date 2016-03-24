@@ -28,6 +28,20 @@
    </extension>
       <extension
          point="org.eclipse.ui.menus">
+                  <menuContribution
+               allPopups="false"
+               locationURI="toolbar:org.eclipse.ui.trim.status">
+            <toolbar
+                  id="ch.elexis.core.ui.toolbar.lockstatus">
+               <command
+                     commandId="ch.elexis.core.ui.locks.LockStatusDialog"
+                     icon="icon://IMG_LOCK_CLOSED"
+                     label="%showLockStatusDialog"
+                     style="push"
+                     tooltip="Show lock status information">
+               </command>
+            </toolbar>
+         </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="toolbar:org.eclipse.ui.main.toolbar">
@@ -502,6 +516,11 @@
             defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentKonsultationLockHandler"
             id="ch.elexis.core.ui.command.ToggleCurrentKonsultationLockCommand"
             name="Toggle current consultation lock">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.locks.LockStatusDialogHandler"
+            id="ch.elexis.core.ui.locks.LockStatusDialog"
+            name="Show overall lock status">
       </command>
    </extension>
       <extension

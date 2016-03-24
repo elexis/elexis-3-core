@@ -1,5 +1,8 @@
 package ch.elexis.core.lock;
 
+import java.util.List;
+
+import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.server.ILockService;
@@ -19,4 +22,8 @@ public interface ILocalLockService extends ILockService {
 	public boolean isLocked(IPersistentObject po);
 	
 	public LockResponse releaseAllLocks();
+	
+	public List<LockInfo> getCopyOfAllHeldLocks();
+	
+	public String getSystemUuid();
 }
