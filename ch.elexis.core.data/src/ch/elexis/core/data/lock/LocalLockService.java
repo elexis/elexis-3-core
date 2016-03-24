@@ -225,12 +225,17 @@ public class LocalLockService implements ILocalLockService {
 			return false;
 		}
 		log.debug("Checking lock on [" + po + "]");
-		return isLocked(po.storeToString());
+		
+		User user = (User) ElexisEventDispatcher.getSelected(User.class);
+		LockInfo lockInfo = new LockInfo(po.storeToString(), user.getId(), systemUuid.toString());
+		LockRequest lockRequest = new LockRequest(LockRequest.Type.INFO, lockInfo);
+		
+		return isLocked(lockRequest);
 	}
 	
 	@Override
-	public boolean isLocked(String storeToString){
-		if (storeToString == null) {
+	public boolean isLocked(LockRequest lockRequest){
+		if (lockRequest == null || lockRequest.getLockInfo().getElementId() == null) {
 			return false;
 		}
 		
@@ -238,12 +243,12 @@ public class LocalLockService implements ILocalLockService {
 			return true;
 		}
 		// check local locks first
-		if (locks.containsKey(LockInfo.getElementId(storeToString))) {
+		if (locks.containsKey(lockRequest.getLockInfo().getElementId())) {
 			return true;
 		}
 		
 		try {
-			return ils.isLocked(storeToString);
+			return ils.isLocked(lockRequest);
 		} catch (Exception e) {
 			log.error("Catched exception in isLocked: ", e);
 			return false;
@@ -281,7 +286,7 @@ public class LocalLockService implements ILocalLockService {
 		}
 		
 		@Override
-		public boolean isLocked(String storeToString){
+		public boolean isLocked(LockRequest request){
 			return false;
 		}
 		

@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class LockRequest {
 
 	public enum Type {
-		ACQUIRE, RELEASE
+		ACQUIRE, RELEASE, INFO
 	};
 
 	private Type requestType;

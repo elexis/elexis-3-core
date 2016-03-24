@@ -27,7 +27,7 @@ public interface ILockService {
 	
 	@GET
 	@Path("/isLocked")
-	public boolean isLocked(@QueryParam("objectId") String storeToString);
+	public boolean isLocked(LockRequest request);
 	
 	@GET
 	@Path("/lockInfo")
