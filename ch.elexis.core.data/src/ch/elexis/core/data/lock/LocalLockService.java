@@ -105,6 +105,31 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	@Override
+	public LockResponse acquireLockBlocking(IPersistentObject po, int secTimeout){
+		if (po == null) {
+			return LockResponse.DENIED(null);
+		}
+		log.debug("Acquiring lock on [" + po + "]");
+		String storeToString = po.storeToString();
+		
+		LockResponse response = acquireLock(storeToString);
+		int sleptMilli = 0;
+		while (!response.isOk()) {
+			try {
+				Thread.sleep(100);
+				sleptMilli += 100;
+				response = acquireLock(storeToString);
+				if (sleptMilli > (secTimeout * 1000)) {
+					return response;
+				}
+			} catch (InterruptedException e) {
+				// ignore and keep trying
+			}
+		}
+		return response;
+	}
+	
+	@Override
 	public LockResponse acquireLock(IPersistentObject po){
 		if (po == null) {
 			return LockResponse.DENIED(null);

@@ -26,4 +26,6 @@ public interface ILocalLockService extends ILockService {
 	public List<LockInfo> getCopyOfAllHeldLocks();
 	
 	public String getSystemUuid();
+	
+	public LockResponse acquireLockBlocking(IPersistentObject po, int msTimeout);
 }
