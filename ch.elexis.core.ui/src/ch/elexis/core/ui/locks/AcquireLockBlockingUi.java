@@ -42,13 +42,13 @@ public class AcquireLockBlockingUi {
 			throws InvocationTargetException, InterruptedException{
 
 			LockResponse result = CoreHub.getLocalLockService().acquireLockBlocking(lockPo, 30, monitor);
+			Display display = Display.getDefault();
 			if(result.isOk()) {
 				monitor.beginTask("Lock aquired ...", IProgressMonitor.UNKNOWN);
-				runnable.run();
+				display.asyncExec(runnable);
 				CoreHub.getLocalLockService().releaseLock(lockPo);
 				monitor.done();
 			} else {
-				Display display = Display.getDefault();
 				display.syncExec(new Runnable() {
 					@Override
 					public void run(){
