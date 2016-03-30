@@ -10,7 +10,7 @@ public class PrescriptionMethods {
 	 * @since 3.1.0
 	 * @since 3.2.0 relocated from Prescription
 	 */
-	public static String[] getSignatureAsStringArray(String signature) {
+	public static String[] getSignatureAsStringArray(String signature){
 		String[] daytimeSignature = new String[4];
 		Arrays.fill(daytimeSignature, "");
 		if (signature != null) {
@@ -18,13 +18,16 @@ public class PrescriptionMethods {
 			//			if (signature.matches("^[0-9]/[0-9]$")) {
 			if (signature.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
 				String[] split = signature.split("[xX]");//$NON-NLS-1$
-				System.arraycopy(split, 0, daytimeSignature, 0, split.length);
+				int length = (split.length <= 4) ? split.length : 4;
+				System.arraycopy(split, 0, daytimeSignature, 0, length);
 			} else if (signature.indexOf('-') != -1) {
 				String[] split = signature.split("[-]"); //$NON-NLS-1$
-				System.arraycopy(split, 0, daytimeSignature, 0, split.length);
+				int length = (split.length <= 4) ? split.length : 4;
+				System.arraycopy(split, 0, daytimeSignature, 0, length);
 			} else if (signature.indexOf("/") != -1) {
 				String[] split = signature.split("[/]"); //$NON-NLS-1$
-				System.arraycopy(split, 0, daytimeSignature, 0, split.length);
+				int length = (split.length <= 4) ? split.length : 4;
+				System.arraycopy(split, 0, daytimeSignature, 0, length);
 			} else {
 				daytimeSignature[0] = signature;
 			}
