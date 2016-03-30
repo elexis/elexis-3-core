@@ -30,7 +30,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
@@ -1412,13 +1411,6 @@ public abstract class PersistentObject implements IPersistentObject {
 		
 		String mapped = map(field);
 		if (mapped.startsWith("JOINT:")) {
-			// query cache
-			String cacheId =
-				field + "$" + mapped + "$" + Arrays.toString(extra) + "$" + getWrappedId();
-			Object cached = getDBConnection().getCache().get(cacheId, getCacheTime());
-			if (cached != null)
-				return (List<String[]>) cached;
-				
 			StringBuffer sql = new StringBuffer();
 			String[] abfr = mapped.split(":");
 			sql.append("SELECT ").append(abfr[1]);
@@ -1439,7 +1431,6 @@ public abstract class PersistentObject implements IPersistentObject {
 					}
 					list.add(line);
 				}
-				getDBConnection().getCache().put(cacheId, list, getCacheTime());
 				return list;
 			} catch (Exception ex) {
 				ElexisStatus status =
