@@ -4,11 +4,17 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import ch.elexis.core.constants.StringConstants;
 
 @XmlRootElement
 public class LockInfo {
+
+	@XmlTransient
+	public static final long EVICTION_TIMEOUT = 30000;
+	@XmlTransient
+	private long refreshMillis;
 
 	@XmlElement
 	private String elementId;
@@ -78,5 +84,18 @@ public class LockInfo {
 
 	public String getElementStoreToString() {
 		return elementType+StringConstants.DOUBLECOLON+elementId;
+	}
+
+	public void refresh() {
+		refreshMillis = System.currentTimeMillis();
+	}
+
+	public boolean evict(long currentMillis) {
+		if (refreshMillis == 0) {
+			refreshMillis = currentMillis;
+		} else if ((currentMillis - refreshMillis) > EVICTION_TIMEOUT) {
+			return true;
+		}
+		return false;
 	}
 }

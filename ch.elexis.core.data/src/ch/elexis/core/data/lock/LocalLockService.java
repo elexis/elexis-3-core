@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,6 +23,7 @@ import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.ILocalLockService;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
+import ch.elexis.core.lock.types.LockRequest.Type;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.lock.types.LockResponse.Status;
 import ch.elexis.core.model.IPersistentObject;
@@ -49,6 +52,8 @@ public class LocalLockService implements ILocalLockService {
 	 */
 	private static final UUID systemUuid = UUID.randomUUID();
 	
+	private Timer timer;
+	
 	/**
 	 * Construct a new LocalLockService. Application code should access via
 	 * {@link CoreHub#getLocalLockService()} and <b>NOT</b> create its own instance.
@@ -56,6 +61,8 @@ public class LocalLockService implements ILocalLockService {
 	 */
 	public LocalLockService(){
 		ils = new DenyAllLockService();
+		timer = new Timer();
+		timer.schedule(new LockRefreshTask(), 10000, 10000);
 	}
 	
 	public void reconfigure(){
@@ -293,6 +300,21 @@ public class LocalLockService implements ILocalLockService {
 		String elementId = LockInfo.getElementId(storeToString);
 		LockInfo lockInfo = locks.get(elementId);
 		return lockInfo;
+	}
+	
+	private class LockRefreshTask extends TimerTask {
+		@Override
+		public void run(){
+			if (standalone || ils == null || ils instanceof DenyAllLockService) {
+				return;
+			}
+			synchronized (locks) {
+				Collection<LockInfo> lockInfos = locks.values();
+				for (LockInfo lockInfo : lockInfos) {
+					ils.isLocked(new LockRequest(Type.INFO, lockInfo));
+				}
+			}
+		}
 	}
 	
 	private class DenyAllLockService implements ILockService {
