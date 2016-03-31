@@ -46,7 +46,7 @@ import ch.rgw.tools.TimeTool;
  * importers should use this class!
  * 
  * @author thomashu
- * 		
+ * 
  */
 public class LabImportUtil implements ILabImportUtil {
 	private static Logger logger = LoggerFactory.getLogger(LabImportUtil.class);
@@ -186,11 +186,16 @@ public class LabImportUtil implements ILabImportUtil {
 		for (TransientLabResult transientLabResult : results) {
 			List<LabResult> existing = getExistingResults(transientLabResult);
 			if (existing.isEmpty()) {
-				createLabResult(transientLabResult, orderId);
+				ILabResult labResult = createLabResult(transientLabResult, orderId);
+				
+				CoreHub.getLocalLockService().acquireLock((LabResult) labResult);
+				CoreHub.getLocalLockService().releaseLock((LabResult) labResult);
 			} else {
 				for (LabResult labResult : existing) {
 					if (overWriteAll) {
+						CoreHub.getLocalLockService().acquireLock((LabResult) labResult);
 						transientLabResult.overwriteExisting(labResult);
+						CoreHub.getLocalLockService().releaseLock((LabResult) labResult);
 						continue;
 					}
 					// dont bother user if result has the same value
@@ -201,13 +206,17 @@ public class LabImportUtil implements ILabImportUtil {
 					
 					ImportHandler.OverwriteState retVal = uiHandler.askOverwrite(
 						transientLabResult.getPatient(), labResult, transientLabResult);
-						
+					
 					if (retVal == ImportHandler.OverwriteState.OVERWRITE) {
+						CoreHub.getLocalLockService().acquireLock((LabResult) labResult);
 						transientLabResult.overwriteExisting(labResult);
+						CoreHub.getLocalLockService().releaseLock((LabResult) labResult);
 						continue;
 					} else if (retVal == ImportHandler.OverwriteState.OVERWRITEALL) {
 						overWriteAll = true;
+						CoreHub.getLocalLockService().acquireLock((LabResult) labResult);
 						transientLabResult.overwriteExisting(labResult);
+						CoreHub.getLocalLockService().releaseLock((LabResult) labResult);
 						continue;
 					}
 				}
@@ -215,7 +224,7 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(null, LabResult.class, ElexisEvent.EVENT_RELOAD));
-			
+		
 		return orderId;
 	}
 	
@@ -254,13 +263,14 @@ public class LabImportUtil implements ILabImportUtil {
 	 * 
 	 * @param transientLabResult
 	 * @param orderId
+	 * @return the created lab result element
 	 */
-	public void createLabResult(TransientLabResult transientLabResult, String orderId){
+	public ILabResult createLabResult(TransientLabResult transientLabResult, String orderId){
 		ILabResult labResult = transientLabResult.persist();
 		
 		List<LabOrder> existing = LabOrder.getLabOrders(transientLabResult.getPatient().getId(),
 			null, transientLabResult.getLabItem(), null, null, null, State.ORDERED);
-			
+		
 		LabOrder labOrder = null;
 		if (existing == null || existing.isEmpty()) {
 			TimeTool importTime = transientLabResult.getTransmissionTime();
@@ -279,6 +289,8 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		
 		labOrder.setState(State.DONE_IMPORT);
+		
+		return labResult;
 	}
 	
 	@Override
@@ -349,6 +361,7 @@ public class LabImportUtil implements ILabImportUtil {
 			LabResult result =
 				new LabResult(pat, commentsDate, li, "text", comment.toString(), labor); //$NON-NLS-1$
 			result.setObservationTime(commentsDate);
+			// TODO LockHook
 		}
 		
 	}
@@ -383,7 +396,7 @@ public class LabImportUtil implements ILabImportUtil {
 			}
 		}
 	}
-
+	
 	@Override
 	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem,
 		String result, String comment, String refVal, IContact origin){
@@ -398,6 +411,7 @@ public class LabImportUtil implements ILabImportUtil {
 				labResult.setRefFemale(refVal);
 			}
 		}
+		// TODO LockHook too early
 		return labResult;
 	}
 }
