@@ -27,6 +27,7 @@ public class LockStatusDialogHandler extends AbstractHandler implements IElement
 	
 	private ImageDescriptor localIcon;
 	private ImageDescriptor remoteIcon;
+	private ImageDescriptor standaloneIcon;
 	
 	public LockStatusDialogHandler(){
 		ElexisEventDispatcher.getInstance().addListeners(
@@ -55,10 +56,13 @@ public class LockStatusDialogHandler extends AbstractHandler implements IElement
 	private void prepareIcons(){
 		ImageDescriptor lockIcon = Images.IMG_LOCK_CLOSED.getImageDescriptor();
 		localIcon = new DecorationOverlayIcon(lockIcon.createImage(), new ImageDescriptor[] {
-			Images.IMG_BULLET_GREY.getImageDescriptor()
+			Images.IMG_BULLET_YELLOW.getImageDescriptor()
 		});
 		remoteIcon = new DecorationOverlayIcon(lockIcon.createImage(), new ImageDescriptor[] {
 			Images.IMG_BULLET_GREEN.getImageDescriptor()
+		});
+		standaloneIcon = new DecorationOverlayIcon(lockIcon.createImage(), new ImageDescriptor[] {
+			Images.IMG_BULLET_GREY.getImageDescriptor()
 		});
 	}
 	
@@ -69,7 +73,9 @@ public class LockStatusDialogHandler extends AbstractHandler implements IElement
 		}
 		ILocalLockService.Status status = CoreHub.getLocalLockService().getStatus();
 		
-		if (status == Status.LOCAL) {
+		if (status == Status.STANDALONE) {
+			element.setIcon(standaloneIcon);
+		} else if (status == Status.LOCAL) {
 			element.setIcon(localIcon);
 		} else if (status == Status.REMOTE) {
 			element.setIcon(remoteIcon);

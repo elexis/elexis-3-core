@@ -391,7 +391,9 @@ public class LocalLockService implements ILocalLockService {
 	
 	@Override
 	public Status getStatus(){
-		if (standalone || ils == null || ils instanceof DenyAllLockService) {
+		if (standalone) {
+			return Status.STANDALONE;
+		} else if (ils == null || ils instanceof DenyAllLockService) {
 			return Status.LOCAL;
 		}
 		return Status.REMOTE;
