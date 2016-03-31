@@ -98,7 +98,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
 				IPersistentObject actPatient = (IPersistentObject) patientObservable.getValue();
-				if (CoreHub.getLocalLockService().isLocked(actPatient)) {
+				if (CoreHub.getLocalLockService().isLockedLocal(actPatient)) {
 					CoreHub.getLocalLockService().releaseLock(actPatient);
 				}
 				ICommandService commandService =
@@ -152,7 +152,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 		dmd.reload();
 		scrldfrm.reflow(true);
 
-		setUnlocked(CoreHub.getLocalLockService().isLocked(p));
+		setUnlocked(CoreHub.getLocalLockService().isLockedLocal(p));
 	}
 
 	/**

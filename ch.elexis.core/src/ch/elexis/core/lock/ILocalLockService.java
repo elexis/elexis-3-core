@@ -17,11 +17,17 @@ import ch.elexis.core.server.ILockService;
  */
 public interface ILocalLockService extends ILockService {
 
+	public enum Status {
+			LOCAL, REMOTE
+	}
+	
 	public LockResponse acquireLock(IPersistentObject po);
 	
 	public LockResponse releaseLock(IPersistentObject po);
 	
 	public boolean isLocked(IPersistentObject po);
+	
+	public boolean isLockedLocal(IPersistentObject po);
 	
 	public LockResponse releaseAllLocks();
 	
@@ -31,4 +37,6 @@ public interface ILocalLockService extends ILockService {
 	
 	public LockResponse acquireLockBlocking(IPersistentObject po, int msTimeout,
 		IProgressMonitor monitor);
+	
+	public Status getStatus();
 }

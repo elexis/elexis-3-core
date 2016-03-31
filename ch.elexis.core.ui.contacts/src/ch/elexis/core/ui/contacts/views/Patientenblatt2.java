@@ -123,7 +123,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
-				if (CoreHub.getLocalLockService().isLocked(actPatient)) {
+				if (CoreHub.getLocalLockService().isLockedLocal(actPatient)) {
 					CoreHub.getLocalLockService().releaseLock(actPatient);
 				}
 				ICommandService commandService =
@@ -615,7 +615,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 		dmd.reload();
 		form.reflow(true);
 
-		setUnlocked(CoreHub.getLocalLockService().isLocked(p));
+		setUnlocked(CoreHub.getLocalLockService().isLockedLocal(p));
 	}
 
 	public void refresh() {

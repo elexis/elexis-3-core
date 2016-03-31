@@ -158,7 +158,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
 				if (actKons != null) {
-					if (CoreHub.getLocalLockService().isLocked(actKons)) {
+					if (CoreHub.getLocalLockService().isLockedLocal(actKons)) {
 						CoreHub.getLocalLockService().releaseLock(actKons);
 					}
 					ICommandService commandService =
@@ -484,7 +484,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		if (actKons == null) {
 			setUnlocked(false);
 		} else {
-			setUnlocked(CoreHub.getLocalLockService().isLocked(actKons));
+			setUnlocked(CoreHub.getLocalLockService().isLockedLocal(actKons));
 		}
 	}
 

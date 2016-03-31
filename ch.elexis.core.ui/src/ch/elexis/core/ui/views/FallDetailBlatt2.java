@@ -793,7 +793,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		}
 		
-		setUnlocked(CoreHub.getLocalLockService().isLocked(actFall));
+		setUnlocked(CoreHub.getLocalLockService().isLockedLocal(actFall));
 	}
 	
 	private void allowFieldUpdate(boolean lockEnabled){

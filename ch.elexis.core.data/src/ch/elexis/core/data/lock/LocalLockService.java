@@ -28,7 +28,6 @@ import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockRequest.Type;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.lock.types.LockResponse.Status;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.server.ILockService;
 import ch.elexis.data.PersistentObject;
@@ -109,8 +108,7 @@ public class LocalLockService implements ILocalLockService {
 	
 	private LockResponse releaseLock(String storeToString){
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
-		LockInfo lil =
-			LockStrategy.createLockInfoList(storeToString, user.getId(), systemUuid.toString());
+		LockInfo lil = new LockInfo(storeToString, user.getId(), systemUuid.toString());
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lil);
 		return acquireOrReleaseLocks(lockRequest);
 	}
@@ -134,7 +132,7 @@ public class LocalLockService implements ILocalLockService {
 				Thread.sleep(500);
 				sleptMilli += 500;
 				response = acquireLock(storeToString);
-				if (response.getStatus() == Status.DENIED_PERMANENT) {
+				if (response.getStatus() == LockResponse.Status.DENIED_PERMANENT) {
 					return response;
 				}
 				if (sleptMilli > (secTimeout * 1000)) {
@@ -247,6 +245,22 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	@Override
+	public boolean isLockedLocal(IPersistentObject po){
+		if (po == null) {
+			return false;
+		}
+		
+		if (standalone) {
+			return true;
+		}
+		// check local locks first
+		if (locks.containsKey(po.getId())) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public boolean isLocked(IPersistentObject po){
 		if (po == null) {
 			return false;
@@ -319,9 +333,15 @@ public class LocalLockService implements ILocalLockService {
 				if (testRestUrl(restUrl) && ils instanceof DenyAllLockService
 					&& restService != null) {
 					ils = restService;
+					// publish change
+					ElexisEventDispatcher.getInstance().fire(
+						new ElexisEvent(null, ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
 				} else if (!testRestUrl(restUrl) && !(ils instanceof DenyAllLockService)) {
 					restService = ils;
 					ils = new DenyAllLockService();
+					// publish change
+					ElexisEventDispatcher.getInstance().fire(
+						new ElexisEvent(null, ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
 				}
 			}
 			
@@ -367,5 +387,13 @@ public class LocalLockService implements ILocalLockService {
 			return null;
 		}
 		
+	}
+	
+	@Override
+	public Status getStatus(){
+		if (standalone || ils == null || ils instanceof DenyAllLockService) {
+			return Status.LOCAL;
+		}
+		return Status.REMOTE;
 	}
 }

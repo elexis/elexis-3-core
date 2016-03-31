@@ -40,7 +40,7 @@ public class ToggleCurrentKonsultationLockHandler extends AbstractHandler implem
 			return null;
 		}
 
-		if (CoreHub.getLocalLockService().isLocked(po)) {
+		if (CoreHub.getLocalLockService().isLockedLocal(po)) {
 			CoreHub.getLocalLockService().releaseLock(po);
 		} else {
 			LockResponse lr = CoreHub.getLocalLockService().acquireLock(po);
@@ -66,7 +66,7 @@ public class ToggleCurrentKonsultationLockHandler extends AbstractHandler implem
 			return;
 		}
 
-		if (CoreHub.getLocalLockService().isLocked(po)) {
+		if (CoreHub.getLocalLockService().isLockedLocal(po)) {
 			element.setIcon(Images.IMG_LOCK_OPEN.getImageDescriptor());
 			element.setChecked(true);
 		} else {
