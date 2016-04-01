@@ -56,6 +56,9 @@ import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
 
 public class KontaktBlatt extends Composite implements ElexisEventListener, IActivationListener {
+	
+	private static final String IS_USER = "istAnwender";
+	
 	private static final String MOBIL = Messages.KontaktBlatt_MobilePhone; //$NON-NLS-1$
 	private static final String VORNAME = Messages.KontaktBlatt_FirstName; //$NON-NLS-1$
 	private static final String NAME = Messages.KontaktBlatt_LastName; //$NON-NLS-1$
@@ -64,7 +67,7 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 	private static final String ZUSATZ = Messages.KontaktBlatt_Addidtional; //$NON-NLS-1$
 	private static final String BEZEICHNUNG = Messages.KontaktBlatt_Name; //$NON-NLS-1$
 	static final String[] types = {
-		"istOrganisation", "istLabor", "istPerson", "istPatient", "istAnwender", "istMandant"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		"istOrganisation", "istLabor", "istPerson", "istPatient", IS_USER, "istMandant"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	static final String[] typLabels = {
 		Messages.KontaktBlatt_Organization, Messages.KontaktBlatt_Laboratory,
 		Messages.KontaktBlatt_Person, Messages.KontaktBlatt_Patient, Messages.KontaktBlatt_User,
@@ -151,6 +154,9 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 			bTypes[i] = tk.createButton(cTypes, typLabels[i], SWT.CHECK);
 			bTypes[i].addSelectionListener(tba);
 			bTypes[i].setData(types[i]);
+			if(types[i].equalsIgnoreCase(IS_USER)) {
+				bTypes[i].setEnabled(false);
+			}
 		}
 		cTypes.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		cTypes.setLayout(new FillLayout());
@@ -223,7 +229,7 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 						select("0", "0", "1", "x", "x", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					} else if (type.equals("istPatient")) { //$NON-NLS-1$
 						select("0", "0", "1", "1", "x", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-					} else if (type.equals("istAnwender")) { //$NON-NLS-1$
+					} else if (type.equals(IS_USER)) { //$NON-NLS-1$
 						select("0", "0", "1", "x", "1", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					} else if (type.equals("istMandant")) { //$NON-NLS-1$
 						select("0", "0", "1", "x", "1", "1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
@@ -243,7 +249,7 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 				}
 				alTypes.add(types[i]);
 				alValues.add(fields[i]);
-				bTypes[i].setSelection(fields[i].equals("1")); //$NON-NLS-1$
+				bTypes[i].setSelection(fields[i].equals(StringConstants.ONE));
 			}
 			actKontakt.set(alTypes.toArray(new String[0]), alValues.toArray(new String[0]));
 		}
@@ -297,6 +303,7 @@ public class KontaktBlatt extends Composite implements ElexisEventListener, IAct
 						}
 					}
 					if (bTypes[0].getSelection() == true) {
+						// isOrganisation
 						def[0].setLabel(BEZEICHNUNG);
 						def[1].setLabel(ZUSATZ);
 						def[2].setLabel(ANSPRECHPERSON);
