@@ -31,6 +31,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.services.IEvaluationService;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -38,6 +39,7 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.dialogs.MediDetailDialog;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.medication.handlers.PrintRecipeHandler;
 import ch.elexis.core.ui.medication.handlers.PrintTakingsListHandler;
 import ch.elexis.core.ui.util.ListDisplay;
@@ -108,9 +110,12 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					if (o instanceof Artikel) {
 						MediDetailDialog dlg = new MediDetailDialog(getShell(), (Artikel) o);
 						if (dlg.open() == Window.OK) {
+							Prescription prescription =
 								new Prescription((Artikel) o, (Patient) ElexisEventDispatcher
 									.getSelected(Patient.class), dlg.getDosis(), dlg.getIntakeOrder());
 							// self.add(pre);
+							CoreHub.getLocalLockService().acquireLock(prescription);
+							CoreHub.getLocalLockService().releaseLock(prescription);
 							reload();
 						}
 						
@@ -124,8 +129,11 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 								return;
 							}
 						}
-						new Prescription(pre.getArtikel(), ElexisEventDispatcher
+						Prescription prescription =
+							new Prescription(pre.getArtikel(), ElexisEventDispatcher
 							.getSelectedPatient(), pre.getDosis(), pre.getBemerkung());
+						CoreHub.getLocalLockService().acquireLock(prescription);
+						CoreHub.getLocalLockService().releaseLock(prescription);
 						// self.add(now);
 						reload();
 					}
@@ -251,7 +259,12 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					Prescription pr = getSelection();
 					if (pr != null) {
 						remove(pr);
-						pr.delete(); // this does not delete but stop the Medication. Sorry for
+						AcquireLockBlockingUi.aquireAndRun(pr, new Runnable() {
+							@Override
+							public void run(){
+								pr.delete(); // this does not delete but stop the Medication. Sorry for
+							}
+						});
 						// that
 						reload();
 					}
@@ -287,7 +300,12 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					Prescription pr = getSelection();
 					if (pr != null) {
 						remove(pr);
-						pr.remove(); // this does, in fact, remove the medication from the
+						AcquireLockBlockingUi.aquireAndRun(pr, new Runnable() {
+							@Override
+							public void run(){
+								pr.remove(); // this does, in fact, remove the medication from the
+							}
+						});
 						// database
 						reload();
 					}

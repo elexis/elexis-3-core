@@ -9,7 +9,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.data.ArticleDefaultSignature;
@@ -53,14 +55,22 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 						(Patient) ElexisEventDispatcher.getSelected(Patient.class), dose, remark);
 					reserveMedi.setPrescType(EntryType.RESERVE_MEDICATION.getFlag(), true);
 					// add disposal comment if present
-					if (disposalComment != null && !disposalComment.isEmpty())
+					if (disposalComment != null && !disposalComment.isEmpty()) {
 						reserveMedi.setDisposalComment(disposalComment);
+					}
+					CoreHub.getLocalLockService().acquireLock(reserveMedi);
+					CoreHub.getLocalLockService().releaseLock(reserveMedi);
 						
 					// if selection is FixMedication -> stop it
 					if (presc.isFixedMediation()) {
 						String stopDose = StringConstants.ZERO;
-						presc.addTerm(null, stopDose);
-						presc.setStopReason("Umgestellt auf ReserveMedikation");
+						AcquireLockBlockingUi.aquireAndRun(presc, new Runnable() {
+							@Override
+							public void run(){
+								presc.addTerm(null, stopDose);
+								presc.setStopReason("Umgestellt auf ReserveMedikation");
+							}
+						});
 					}
 					
 					MedicationView medicationView =

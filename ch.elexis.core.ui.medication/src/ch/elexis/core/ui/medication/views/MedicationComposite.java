@@ -62,6 +62,7 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableDownAction;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpAction;
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
@@ -917,7 +918,12 @@ public class MedicationComposite extends Composite {
 		}
 		
 		setValuesForTextSignature(Prescription.getSignatureAsStringArray(newDose));
-		pres.addTerm(null, newDose);
+		AcquireLockBlockingUi.aquireAndRun(pres.getPrescription(), new Runnable() {
+			@Override
+			public void run(){
+				pres.addTerm(null, newDose);
+			}
+		});
 		activateConfirmButton(false);
 		if (btnStopMedication.isEnabled())
 			showMedicationDetailComposite(null);

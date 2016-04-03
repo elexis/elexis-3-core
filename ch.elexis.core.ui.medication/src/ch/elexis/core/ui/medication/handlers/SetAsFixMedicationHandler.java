@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.data.ArticleDefaultSignature;
@@ -49,9 +50,11 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 						(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
 					fixMediPresc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
 					
-					if (disposalComment != null && !disposalComment.isEmpty())
+					if (disposalComment != null && !disposalComment.isEmpty()) {
 						fixMediPresc.setDisposalComment(disposalComment);
-					
+					}
+					CoreHub.getLocalLockService().acquireLock(fixMediPresc);
+					CoreHub.getLocalLockService().releaseLock(fixMediPresc);
 				}
 			}
 		}

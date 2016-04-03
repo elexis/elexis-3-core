@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
@@ -156,9 +157,14 @@ public class MediDetailDialog extends TitleAreaDialog {
 		disposalComment = txtDisposalComment.getText();
 		
 		if (prescription != null) {
-			prescription.setDosis(dosis);
-			prescription.setBemerkung(intakeOrder);
-			prescription.setDisposalComment(disposalComment);
+			AcquireLockBlockingUi.aquireAndRun(prescription, new Runnable() {
+				@Override
+				public void run(){
+					prescription.setDosis(dosis);
+					prescription.setBemerkung(intakeOrder);
+					prescription.setDisposalComment(disposalComment);
+				}
+			});
 		}
 		
 		super.okPressed();

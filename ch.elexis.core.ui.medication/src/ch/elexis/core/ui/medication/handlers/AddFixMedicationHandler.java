@@ -6,6 +6,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.ui.PlatformUI;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -72,6 +73,8 @@ public class AddFixMedicationHandler extends AbstractHandler {
 			Prescription presc = new Prescription((Artikel) article,
 				(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
 			presc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
+			CoreHub.getLocalLockService().acquireLock(presc);
+			CoreHub.getLocalLockService().releaseLock(presc);
 			
 			medicationView.refresh();
 		}
