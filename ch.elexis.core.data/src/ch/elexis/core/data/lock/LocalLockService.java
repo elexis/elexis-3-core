@@ -70,7 +70,7 @@ public class LocalLockService implements ILocalLockService {
 	public void reconfigure(){
 		final String restUrl =
 			System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
-		if (restUrl != null) {
+		if (restUrl != null && restUrl.length() > 0) {
 			standalone = false;
 			log.info("Operating against elexis-server instance on " + restUrl);
 			ils = ConsumerFactory.createConsumer(restUrl, ILockService.class);
@@ -223,7 +223,7 @@ public class LocalLockService implements ILocalLockService {
 				log.error(message);
 				ElexisEventDispatcher
 					.fireElexisStatusEvent(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
-					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, e));
+						CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, e));
 				return LockResponse.ERROR;
 			} finally {
 				if (LockRequest.Type.RELEASE.equals(lockRequest.getRequestType())) {
@@ -236,7 +236,7 @@ public class LocalLockService implements ILocalLockService {
 						CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
 					ElexisEventDispatcher.getInstance()
 						.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_RELEASED));
-						
+					
 				}
 			}
 			
