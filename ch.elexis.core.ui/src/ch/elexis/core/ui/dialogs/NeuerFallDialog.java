@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
 import ch.elexis.data.Fall;
@@ -41,6 +42,7 @@ public class NeuerFallDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent){
 		FallDetailBlatt2 fdb = new FallDetailBlatt2(parent);
+		fdb.setUnlocked(true);
 		return fdb;
 	}
 	
@@ -54,6 +56,9 @@ public class NeuerFallDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
+		if (CoreHub.getLocalLockService().acquireLock(fall).isOk()) {
+			CoreHub.getLocalLockService().releaseLock(fall);
+		}
 		ElexisEventDispatcher.reload(Fall.class);
 		super.okPressed();
 	}

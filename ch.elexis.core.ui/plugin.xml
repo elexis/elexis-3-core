@@ -522,6 +522,11 @@
             id="ch.elexis.core.ui.locks.LockStatusDialog"
             name="Show overall lock status">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentCaseLockHandler"
+            id="ch.elexis.core.ui.command.ToggleCurrentCaseLockCommand"
+            name="Toggle current case lock">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
