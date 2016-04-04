@@ -45,7 +45,7 @@ public class AcquireLockBlockingUi {
 			Display display = Display.getDefault();
 			if(result.isOk()) {
 				monitor.beginTask("Lock aquired ...", IProgressMonitor.UNKNOWN);
-				display.asyncExec(runnable);
+				display.syncExec(runnable);
 				CoreHub.getLocalLockService().releaseLock(lockPo);
 				monitor.done();
 			} else {
