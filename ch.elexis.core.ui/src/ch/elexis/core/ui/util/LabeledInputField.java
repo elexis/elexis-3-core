@@ -35,6 +35,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tiff.common.ui.datepicker.DatePickerCombo;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.ui.UiDesk;
@@ -43,8 +45,6 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
-
-import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 /**
  * Ein Ein/Ausgabeelement, das aus einem Kästchen mit darin einem Label und darunter einem Control
@@ -571,66 +571,73 @@ public class LabeledInputField extends Composite {
 						if (act != null) {
 							Control src = (Control) e.getSource();
 							InputData inp = (InputData) src.getData();
-							String val = StringTool.leer;
-							switch (inp.tFeldTyp) {
-							
-							case STRING:
-							case COMBO:
-							case INT:
-							case EXECSTRING:
-							case DATE:
-								val = inp.getText();
-								break;
-							case CURRENCY:
-								try {
-									Money money = new Money(inp.getText());
-									val = money.getCentsAsString();
-								} catch (ParseException e1) {
-									ExHandler.handle(e1);
-									val = "";
-								}
-								// double betr=Double.parseDouble(inp.getText())*100.0;
-								// val=Long.toString(Math.round(betr));
-								break;
-							case LIST:
-								val = inp.getText();
-								break;
-							case CHECKBOX:
-								val =
-									(((Button) (inp.mine.getControl())).getSelection() == true) ? StringConstants.ONE
-											: StringConstants.ZERO;
-								break;
-							case CHECKBOXTRISTATE:
-								val =
-									((TristateCheckbox) (inp.mine.getControl()))
-										.getTristateDbValue();
-								break;
-							default:
-								break;
-							}
-							if (inp.sHashname == null) {
-								try {
-									act.set(inp.sFeldname, val);
-								} catch (PersistenceException pe) {
-									logger.error("Could not persist [" + val + "] for field ["
-										+ inp.sAnzeige + "]\nCause: " + pe.getCause().getMessage(),
-										pe);
-									
-									if (inp.tFeldTyp.equals(ch.elexis.core.ui.util.LabeledInputField.InputData.Typ.STRING)) {
-										// clear cache to always get the actual the DB value
-										PersistentObject.clearCache();
-										inp.mine.setText(act.get(inp.sFeldname));
-									}
-								}
-							} else {
-								Map ext = act.getMap(inp.sFeldname);
-								ext.put(inp.sHashname, val);
-								act.setMap(inp.sFeldname, ext);
-							}
+							save(inp);
 						}
 					}
 				});
 				cFields[i].setData(def[i]);
+			}
+		}
+		
+		protected void save(InputData inp){
+			if (act == null) {
+				return;
+			}
+			String val = StringTool.leer;
+			switch (inp.tFeldTyp) {
+			
+			case STRING:
+			case COMBO:
+			case INT:
+			case EXECSTRING:
+			case DATE:
+				val = inp.getText();
+				break;
+			case CURRENCY:
+				try {
+					Money money = new Money(inp.getText());
+					val = money.getCentsAsString();
+				} catch (ParseException e1) {
+					ExHandler.handle(e1);
+					val = "";
+				}
+				// double betr=Double.parseDouble(inp.getText())*100.0;
+				// val=Long.toString(Math.round(betr));
+				break;
+			case LIST:
+				val = inp.getText();
+				break;
+			case CHECKBOX:
+				val = (((Button) (inp.mine.getControl())).getSelection() == true)
+						? StringConstants.ONE : StringConstants.ZERO;
+				break;
+			case CHECKBOXTRISTATE:
+				val = ((TristateCheckbox) (inp.mine.getControl())).getTristateDbValue();
+				break;
+			case HYPERLINK:
+				// dont try to save a hyperlink ...
+				return;
+			default:
+				break;
+			}
+			if (inp.sHashname == null) {
+				try {
+					act.set(inp.sFeldname, val);
+				} catch (PersistenceException pe) {
+					logger.error("Could not persist [" + val + "] for field [" + inp.sAnzeige
+						+ "]\nCause: " + pe.getCause().getMessage(), pe);
+					
+					if (inp.tFeldTyp
+						.equals(ch.elexis.core.ui.util.LabeledInputField.InputData.Typ.STRING)) {
+						// clear cache to always get the actual the DB value
+						PersistentObject.clearCache();
+						inp.mine.setText(act.get(inp.sFeldname));
+					}
+				}
+			} else {
+				Map ext = act.getMap(inp.sFeldname);
+				ext.put(inp.sHashname, val);
+				act.setMap(inp.sFeldname, ext);
 			}
 		}
 		

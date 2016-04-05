@@ -31,8 +31,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -123,17 +121,22 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
-				if (CoreHub.getLocalLockService().isLockedLocal(actPatient)) {
-					CoreHub.getLocalLockService().releaseLock(actPatient);
-				}
-				ICommandService commandService =
-					(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-				commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID, null);
+				Patient deselectedPatient = actPatient;
 				setPatient(pat);
+				if (deselectedPatient != null) {
+					if (CoreHub.getLocalLockService().isLockedLocal(deselectedPatient)) {
+						CoreHub.getLocalLockService().releaseLock(deselectedPatient);
+					}
+					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+						.getService(ICommandService.class);
+					commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID,
+						null);
+				}
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
 				if (pat.equals(actPatient)) {
+					save();
 					setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
 				}
 				break;
@@ -466,7 +469,6 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 			ec[i] = WidgetFactory.createExpandableComposite(tk, form, lbExpandable[i]);
 			UserSettings.setExpandedState(ec[i], KEY_PATIENTENBLATT + lbExpandable[i]);
 			txExpandable[i] = tk.createText(ec[i], "", SWT.MULTI); //$NON-NLS-1$
-			txExpandable[i].addFocusListener(new Focusreact(dfExpandable[i]));
 			ec[i].setData(KEY_DBFIELD, dfExpandable[i]);
 			ec[i].addExpansionListener(new ExpansionAdapter() {
 				@Override
@@ -515,39 +517,28 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 		tk.paintBordersFor(form.getBody());
 	}
 
-	@Override
-	public void dispose() {
-		GlobalEventDispatcher.removeActivationListener(this, viewsite.getPart());
-		super.dispose();
-	}
-
-	class Focusreact extends FocusAdapter {
-		private final String field;
-
-		Focusreact(final String f) {
-			field = f;
-		}
-
-		@Override
-		public void focusLost(final FocusEvent e) {
-			if (actPatient == null) {
-				return;
+	private void save(){
+		if (actPatient != null) {
+			if (ipp != null) {
+				ipp.save();
 			}
-			String oldvalue = actPatient.get(field);
-			String newvalue = ((Text) e.getSource()).getText();
-			if (oldvalue != null) {
-				if (oldvalue.equals(newvalue)) {
-					return;
-				}
-			}
-			if (newvalue != null) {
+			for (int i = 0; i < txExpandable.length; i++) {
+				String field = dfExpandable[i];
+				String oldvalue = actPatient.get(field);
+				String newvalue = txExpandable[i].getText();
 				if (bLocked) {
-					((Text) e.getSource()).setText(oldvalue);
+					txExpandable[i].setText(oldvalue);
 				} else {
 					actPatient.set(field, newvalue);
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void dispose() {
+		GlobalEventDispatcher.removeActivationListener(this, viewsite.getPart());
+		super.dispose();
 	}
 
 	/*
@@ -586,6 +577,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 	}
 
 	public void setPatient(final Patient p) {
+		save();
 		actPatient = p;
 		ipp.getAutoForm().reload(actPatient);
 

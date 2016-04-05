@@ -59,4 +59,9 @@ public class InputPanel extends Composite implements IUnlockable {
 		}
 	}
 	
+	public void save() {
+		for (InputData inputData : fields) {
+			af.save(inputData);
+		}
+	}
 }

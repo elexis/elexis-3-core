@@ -157,24 +157,25 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
-				if (actKons != null) {
-					if (CoreHub.getLocalLockService().isLockedLocal(actKons)) {
-						CoreHub.getLocalLockService().releaseLock(actKons);
-					}
-					ICommandService commandService =
-						(ICommandService) getViewSite().getService(ICommandService.class);
-					commandService.refreshElements(ToggleCurrentKonsultationLockHandler.COMMAND_ID,
-						null);
+				Konsultation deselectedKons = actKons;
+				setKons(kons);
+				if (deselectedKons != null) {
+					releaseAndRefreshLock(deselectedKons);
 				}
+				break;
 			case ElexisEvent.EVENT_UPDATE:
 				setKons(kons);
 				break;
 			case ElexisEvent.EVENT_DESELECTED:
+				if (actKons != null) {
+					releaseAndRefreshLock(actKons);
+				}
 				setKons(null);
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
 				if (kons.equals(actKons)) {
+					save();
 					setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
 				}
 				break;
@@ -183,6 +184,14 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 			}
 		}
 
+		private void releaseAndRefreshLock(Konsultation kons){
+			if (CoreHub.getLocalLockService().isLockedLocal(kons)) {
+				CoreHub.getLocalLockService().releaseLock(kons);
+			}
+			ICommandService commandService =
+				(ICommandService) getViewSite().getService(ICommandService.class);
+			commandService.refreshElements(ToggleCurrentKonsultationLockHandler.COMMAND_ID, null);
+		}
 	};
 
 	@Override
