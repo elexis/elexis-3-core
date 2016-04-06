@@ -40,6 +40,7 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
@@ -501,7 +502,7 @@ public class LabeledInputField extends Composite {
 	 * TableWrapData twd=new TableWrapData(TableWrapData.FILL_GRAB);<br>
 	 * twd.grabHorizontal=true;<br>af.setLayoutData(twd);</ul><br></code>
 	 */
-	public static class AutoForm extends Tableau {
+	public static class AutoForm extends Tableau implements IUnlockable {
 		InputData[] def;
 		Control[] cFields;
 		PersistentObject act;
@@ -576,6 +577,12 @@ public class LabeledInputField extends Composite {
 					}
 				});
 				cFields[i].setData(def[i]);
+			}
+		}
+		
+		public void save(){
+			for (InputData id : def) {
+				save(id);
 			}
 		}
 		
@@ -708,6 +715,13 @@ public class LabeledInputField extends Composite {
 					((TristateCheckbox) (def[i].mine.getControl())).setTristateDbValue(val);
 					break;
 				}
+			}
+		}
+		
+		@Override
+		public void setUnlocked(boolean unlocked){
+			for (InputData id : def) {
+				id.setEditable(unlocked);
 			}
 		}
 	}

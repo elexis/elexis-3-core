@@ -70,6 +70,15 @@
    </extension>
    <extension
          point="org.eclipse.ui.menus">
+     <menuContribution
+          allPopups="false"
+          locationURI="toolbar:ch.elexis.KontaktDetailView">
+       <command
+             commandId="ch.elexis.core.ui.command.ToggleCurrentKontaktLockCommand"
+             icon="icon://IMG_LOCK_CLOSED"
+             style="toggle">
+       </command>
+    </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="toolbar:ch.elexis.core.ui.contacts.views.ContactSelectorView">

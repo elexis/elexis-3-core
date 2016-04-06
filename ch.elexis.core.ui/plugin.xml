@@ -513,6 +513,11 @@
             name="Toggle current patient lock">
       </command>
       <command
+            defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentKontaktLockHandler"
+            id="ch.elexis.core.ui.command.ToggleCurrentKontaktLockCommand"
+            name="Toggle current contact lock">
+      </command>
+      <command
             defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentKonsultationLockHandler"
             id="ch.elexis.core.ui.command.ToggleCurrentKonsultationLockCommand"
             name="Toggle current consultation lock">
