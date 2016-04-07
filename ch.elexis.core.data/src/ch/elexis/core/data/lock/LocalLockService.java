@@ -39,7 +39,7 @@ import ch.elexis.data.User;
  * remote LockService will used internal.
  * 
  * @author marco
- * 		
+ * 
  */
 public class LocalLockService implements ILocalLockService {
 	
@@ -119,7 +119,7 @@ public class LocalLockService implements ILocalLockService {
 		if (po == null) {
 			return LockResponse.DENIED(null);
 		}
-		if(monitor != null) {
+		if (monitor != null) {
 			monitor.beginTask("Acquiring Lock for [" + po.getLabel() + "]", secTimeout * 2);
 		}
 		log.debug("Acquiring lock blocking on [" + po + "]");
@@ -158,7 +158,13 @@ public class LocalLockService implements ILocalLockService {
 			return LockResponse.DENIED(null);
 		}
 		log.debug("Acquiring lock on [" + po + "]");
-		return acquireLock(po.storeToString());
+		LockResponse lr = acquireLock(po.storeToString());
+		
+		if (lr.getStatus() == LockResponse.Status.ERROR) {
+			log.warn("LockResponse ERROR");
+		}
+		
+		return lr;
 	}
 	
 	private LockResponse acquireLock(String storeToString){
@@ -184,7 +190,7 @@ public class LocalLockService implements ILocalLockService {
 			log.error(message);
 			ElexisEventDispatcher
 				.fireElexisStatusEvent(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
-				CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, null));
+					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, null));
 			return LockResponse.ERROR;
 		}
 		
@@ -214,7 +220,7 @@ public class LocalLockService implements ILocalLockService {
 						CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
 					ElexisEventDispatcher.getInstance()
 						.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_AQUIRED));
-						
+					
 				}
 			} catch (Exception e) {
 				// if we have an exception here, our lock copies never get
@@ -324,36 +330,39 @@ public class LocalLockService implements ILocalLockService {
 		
 		@Override
 		public void run(){
-
-			final String restUrl =
-				System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
-			if (restUrl != null && !restUrl.isEmpty()) {
-				// if service is available but we are not using it -> use it
-				// if service not available but we are using it -> dont use it
-				if (testRestUrl(restUrl) && ils instanceof DenyAllLockService
-					&& restService != null) {
-					ils = restService;
-					// publish change
-					ElexisEventDispatcher.getInstance().fire(
-						new ElexisEvent(null, ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
-				} else if (!testRestUrl(restUrl) && !(ils instanceof DenyAllLockService)) {
-					restService = ils;
-					ils = new DenyAllLockService();
-					// publish change
-					ElexisEventDispatcher.getInstance().fire(
-						new ElexisEvent(null, ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
+			try {
+				final String restUrl = System
+					.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
+				if (restUrl != null && !restUrl.isEmpty()) {
+					// if service is available but we are not using it -> use it
+					// if service not available but we are using it -> dont use it
+					if (testRestUrl(restUrl) && ils instanceof DenyAllLockService
+						&& restService != null) {
+						ils = restService;
+						// publish change
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null,
+							ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
+					} else if (!testRestUrl(restUrl) && !(ils instanceof DenyAllLockService)) {
+						restService = ils;
+						ils = new DenyAllLockService();
+						// publish change
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null,
+							ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
+					}
 				}
-			}
-			
-			if (standalone || ils == null || ils instanceof DenyAllLockService) {
-				return;
-			}
-			
-			synchronized (locks) {
-				Collection<LockInfo> lockInfos = locks.values();
-				for (LockInfo lockInfo : lockInfos) {
-					ils.isLocked(new LockRequest(Type.INFO, lockInfo));
+				
+				if (standalone || ils == null || ils instanceof DenyAllLockService) {
+					return;
 				}
+				
+				synchronized (locks) {
+					Collection<LockInfo> lockInfos = locks.values();
+					for (LockInfo lockInfo : lockInfos) {
+						ils.isLocked(new LockRequest(Type.INFO, lockInfo));
+					}
+				}
+			} catch (Exception e) {
+				LoggerFactory.getLogger(LockRefreshTask.class).error("Execution error", e);
 			}
 		}
 		
