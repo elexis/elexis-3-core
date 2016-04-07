@@ -23,6 +23,7 @@ import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class TarmedTaxpunktkorrektur {
@@ -65,7 +66,8 @@ public class TarmedTaxpunktkorrektur {
 				writer.write("adjusting multiplicators\n");
 				PersistentObject.getConnection().exec(del.toString());
 				del = new StringBuilder();
-				del.append("INSERT INTO VK_PREISE (DATUM_VON,DATUM_BIS,TYP,MULTIPLIKATOR) VALUES (")
+				del.append("INSERT INTO VK_PREISE (ID,DATUM_VON,DATUM_BIS,TYP,MULTIPLIKATOR) VALUES (")
+					.append(JdbcLink.wrap(StringTool.unique("rtsu"))).append(",")
 					.append(JdbcLink.wrap(ttFrom.toString(TimeTool.DATE_COMPACT))).append(",")
 					.append("'99991231',").append(JdbcLink.wrap(abrsystem)).append(",")
 					.append(JdbcLink.wrap(Double.toString(newTP))).append(");");
