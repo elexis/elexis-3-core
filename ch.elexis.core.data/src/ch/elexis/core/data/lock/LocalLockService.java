@@ -22,6 +22,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.ILocalLockService;
 import ch.elexis.core.lock.types.LockInfo;
@@ -206,6 +207,13 @@ public class LocalLockService implements ILocalLockService {
 			// TODO should we release all locks on acquiring a new one?
 			// if yes, this has to be dependent upon the strategy
 			try {
+				if(LockRequest.Type.RELEASE == lockRequest.getRequestType()) {
+					PersistentObject po =
+							CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
+					ElexisEventDispatcher.getInstance().fire(new ElexisEvent(po, po.getClass(),
+						ElexisEvent.EVENT_LOCK_PRERELEASE, ElexisEvent.PRIORITY_SYNC));
+				}
+				
 				LockResponse lr = ils.acquireOrReleaseLocks(lockRequest);
 				if (!lr.isOk()) {
 					return lr;
@@ -236,13 +244,13 @@ public class LocalLockService implements ILocalLockService {
 					// RELEASE ACTIONS
 					// releases are also to be performed on occurence of an
 					// exception
+					
 					locks.remove(lockInfo.getElementId());
 					
 					PersistentObject po =
-						CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
+							CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
 					ElexisEventDispatcher.getInstance()
 						.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_RELEASED));
-					
 				}
 			}
 			

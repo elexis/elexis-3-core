@@ -1,19 +1,19 @@
 package ch.elexis.core.ui.locks;
 
+import org.eclipse.jface.action.Action;
+
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.data.PersistentObject;
 
-public abstract class LockedAction<T extends PersistentObject> extends RestrictedAction {
+public abstract class LockedAction<T extends PersistentObject> extends Action {
 
 	private T object;
 
 	public LockedAction(String text) {
-		super(null, text);
+		super(text);
 		setEnabled(false);
 	}
 
-	@Override
 	public void reflectRight() {
 		object = getTargetedObject();
 
@@ -24,7 +24,8 @@ public abstract class LockedAction<T extends PersistentObject> extends Restricte
 		setEnabled(CoreHub.getLocalLockService().isLocked(object));
 	}
 
-	public void doRun() {
+	@Override
+	public void run() {
 		if (CoreHub.getLocalLockService().isLocked(object)) {
 			if (object != null) {
 				doRun((T) object);

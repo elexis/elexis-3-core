@@ -121,8 +121,8 @@ public class GlobalActions {
 	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette;
 	public static IAction printRoeBlatt;
 	public static IAction openFallaction, filterAction, makeBillAction, planeRechnungAction;
-	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction, neueKonsAction, redateAction,
-			moveBehandlungAction;
+	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction, neueKonsAction;
+	public static LockedAction moveBehandlungAction, redateAction;
 	public static IAction neuerFallAction;
 	
 	public static MenuManager perspectiveMenu, viewMenu;

@@ -64,6 +64,7 @@ import ch.elexis.core.ui.data.UiSticker;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.ElexisUiSyncEventListenerImpl;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
@@ -114,7 +115,8 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	private DiagnosenDisplay dd;
 	private VerrechnungsDisplay vd;
 	private Action versionBackAction;
-	private RestrictedAction purgeAction, saveAction;
+	private LockedAction saveAction;
+	private RestrictedAction purgeAction;
 	Action versionFwdAction, assignStickerAction;
 	int displayedVersion;
 	Font emFont;
@@ -146,6 +148,17 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		public void runInUi(ElexisEvent ev) {
 			updateFallCombo();
 		};
+	};
+	
+	private final ElexisEventListener eeli_kons_sync =
+			new ElexisUiSyncEventListenerImpl(Konsultation.class, ElexisEvent.EVENT_LOCK_PRERELEASE) {
+		@Override
+		public void runInUi(ElexisEvent ev){
+			Konsultation kons = (Konsultation) ev.getObject();
+			if (kons.equals(actKons)) {
+				save();
+			}
+		}
 	};
 
 	private final ElexisEventListener eeli_kons = new ElexisUiEventListenerImpl(Konsultation.class,
@@ -623,14 +636,15 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	}
 
 	@Override
-	public void visible(final boolean mode) {
+	public void visible(final boolean mode){
 		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_pat, eeli_user, eeli_fall);
+			ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_kons_sync, eeli_pat,
+				eeli_user, eeli_fall);
 			adaptMenus();
 		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_pat, eeli_user, eeli_fall);
+			ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_kons_sync, eeli_pat,
+				eeli_user, eeli_fall);
 		}
-
 	}
 
 	public void adaptMenus() {

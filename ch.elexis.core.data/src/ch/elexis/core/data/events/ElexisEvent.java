@@ -51,8 +51,10 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	public static final int EVENT_NOTIFICATION = 0x0400;
 	/** lock granted event */
 	public static final int EVENT_LOCK_AQUIRED = 0x1000;
+	/** pre-release-lock event */
+	public static final int EVENT_LOCK_PRERELEASE = 0x2000;
 	/** lock released event */
-	public static final int EVENT_LOCK_RELEASED = 0x2000;
+	public static final int EVENT_LOCK_RELEASED = 0x4000;
 	
 	/**
 	 * highest priority, will not be put into the queue but directly fired.
