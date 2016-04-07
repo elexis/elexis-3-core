@@ -23,6 +23,7 @@ import ch.rgw.tools.IFilter;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public abstract class VerrechenbarAdapter extends PersistentObject implements IVerrechenbar {
@@ -73,7 +74,8 @@ public abstract class VerrechenbarAdapter extends PersistentObject implements IV
 			.append(" OR DATUM_BIS='99991231') AND TYP=").append(JdbcLink.wrap(typ));
 		stm.exec(sql.toString());
 		sql.setLength(0);
-		sql.append("INSERT INTO VK_PREISE (DATUM_VON,DATUM_BIS,MULTIPLIKATOR,TYP) VALUES (")
+		sql.append("INSERT INTO VK_PREISE (ID,DATUM_VON,DATUM_BIS,MULTIPLIKATOR,TYP) VALUES (")
+			.append(JdbcLink.wrap(StringTool.unique("rtsu"))).append(",")
 			.append(JdbcLink.wrap(von.toString(TimeTool.DATE_COMPACT))).append(",")
 			.append(JdbcLink.wrap(bis.toString(TimeTool.DATE_COMPACT))).append(",")
 			.append(JdbcLink.wrap(Double.toString(factor))).append(",").append(JdbcLink.wrap(typ))
