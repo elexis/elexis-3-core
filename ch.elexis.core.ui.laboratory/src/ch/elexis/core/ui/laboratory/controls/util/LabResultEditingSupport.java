@@ -15,6 +15,7 @@ import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
 import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabOrder;
@@ -98,9 +99,16 @@ public class LabResultEditingSupport extends LabOrderEditingSupport {
 			}
 			LabResult result = createResult(labItem, LabOrder.getOrCreateManualLabor());
 			final LabResult lockResult = result;
-			AcquireLockBlockingUi.aquireAndRun(result, new Runnable() {
+			AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
+				
 				@Override
-				public void run(){
+				public void lockFailed(){
+					// do nothing
+					
+				}
+				
+				@Override
+				public void lockAcquired(){
 					if (lockResult.getItem().getTyp() == LabItemTyp.TEXT) {
 						lockResult.setResult("Text"); //$NON-NLS-1$
 						lockResult.set(LabResult.COMMENT, value.toString());

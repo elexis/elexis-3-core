@@ -22,6 +22,7 @@ import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabOrder;
@@ -167,9 +168,16 @@ public class LabOrderEditingSupport extends EditingSupport {
 				result = createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
 			}
 			final LabResult lockResult = result;
-			AcquireLockBlockingUi.aquireAndRun(result, new Runnable() {
+			AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
+				
 				@Override
-				public void run(){
+				public void lockFailed(){
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void lockAcquired(){
 					if (lockResult.getItem().getTyp() == LabItemTyp.TEXT) {
 						lockResult.setResult("Text"); //$NON-NLS-1$
 						lockResult.set(LabResult.COMMENT, value.toString());
@@ -179,7 +187,7 @@ public class LabOrderEditingSupport extends EditingSupport {
 					} else {
 						lockResult.setResult(value.toString());
 						((LabOrder) element).setState(LabOrder.State.DONE);
-					}					
+					}
 				}
 			});
 

@@ -17,12 +17,12 @@ import ch.elexis.core.model.IPersistentObject;
 public class AcquireLockBlockingUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockBlockingUi.class);
 	
-	public static void aquireAndRun(IPersistentObject lockPo, Runnable runnable){
+	public static void aquireAndRun(IPersistentObject lockPo, ILockHandler handler){
 		Display display = Display.getDefault();
 		
 		ProgressMonitorDialog progress = new ProgressMonitorDialog(display.getActiveShell());
 		try {
-			progress.run(true, true, new AcquireLockRunnable(lockPo, runnable));
+			progress.run(true, true, new AcquireLockRunnable(lockPo, handler));
 		} catch (InvocationTargetException | InterruptedException e) {
 			logger.warn("Exception during acquire lock.", e);
 		}
@@ -30,11 +30,11 @@ public class AcquireLockBlockingUi {
 	
 	private static class AcquireLockRunnable implements IRunnableWithProgress {
 		private IPersistentObject lockPo;
-		private Runnable runnable;
+		private ILockHandler lockhander;
 		
-		public AcquireLockRunnable(IPersistentObject lockPo, Runnable runnable){
+		public AcquireLockRunnable(IPersistentObject lockPo, ILockHandler lockhander){
 			this.lockPo = lockPo;
-			this.runnable = runnable;
+			this.lockhander = lockhander;
 		}
 		
 		@Override
@@ -45,13 +45,19 @@ public class AcquireLockBlockingUi {
 			Display display = Display.getDefault();
 			if(result.isOk()) {
 				monitor.beginTask("Lock aquired ...", IProgressMonitor.UNKNOWN);
-				display.syncExec(runnable);
+				display.syncExec(new Runnable() {
+					@Override
+					public void run(){
+						lockhander.lockAcquired();
+					}
+				});
 				CoreHub.getLocalLockService().releaseLock(lockPo);
 				monitor.done();
 			} else {
 				display.syncExec(new Runnable() {
 					@Override
 					public void run(){
+						lockhander.lockFailed();
 						logger.error("Could not acquire lock for [" + lockPo.getLabel()
 							+ "] reason [" + result.getStatus() + "]");
 						MessageDialog.openError(display.getActiveShell(), "Could not acquire Lock",
@@ -60,6 +66,5 @@ public class AcquireLockBlockingUi {
 				});
 			}
 		}
-		
 	}
 }

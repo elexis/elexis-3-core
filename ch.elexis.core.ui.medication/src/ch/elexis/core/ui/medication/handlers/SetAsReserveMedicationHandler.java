@@ -9,9 +9,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.data.ArticleDefaultSignature;
@@ -53,22 +53,36 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 					// create ReserveMedication
 					Prescription reserveMedi = new Prescription(article,
 						(Patient) ElexisEventDispatcher.getSelected(Patient.class), dose, remark);
-					reserveMedi.setPrescType(EntryType.RESERVE_MEDICATION.getFlag(), true);
-					// add disposal comment if present
-					if (disposalComment != null && !disposalComment.isEmpty()) {
-						reserveMedi.setDisposalComment(disposalComment);
-					}
-					CoreHub.getLocalLockService().acquireLock(reserveMedi);
-					CoreHub.getLocalLockService().releaseLock(reserveMedi);
+					AcquireLockBlockingUi.aquireAndRun(reserveMedi, new ILockHandler() {
+						@Override
+						public void lockFailed(){
+							reserveMedi.remove();
+						}
+						
+						@Override
+						public void lockAcquired(){
+							reserveMedi.setPrescType(EntryType.RESERVE_MEDICATION.getFlag(), true);
+							// add disposal comment if present
+							if (disposalComment != null && !disposalComment.isEmpty()) {
+								reserveMedi.setDisposalComment(disposalComment);
+							}
+						}
+					});
 						
 					// if selection is FixMedication -> stop it
 					if (presc.isFixedMediation()) {
 						String stopDose = StringConstants.ZERO;
-						AcquireLockBlockingUi.aquireAndRun(presc, new Runnable() {
+						AcquireLockBlockingUi.aquireAndRun(presc, new ILockHandler() {
 							@Override
-							public void run(){
+							public void lockAcquired(){
 								presc.addTerm(null, stopDose);
 								presc.setStopReason("Umgestellt auf ReserveMedikation");
+							}
+							
+							@Override
+							public void lockFailed(){
+								// do nothing
+								
 							}
 						});
 					}

@@ -73,6 +73,7 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.preferences.TextTemplatePreferences;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Brief;
@@ -813,11 +814,17 @@ public class TextContainer {
 	
 	private void addBriefToKons(final Brief brief, final Konsultation kons){
 		if (kons != null) {
-			AcquireLockBlockingUi.aquireAndRun(kons, new Runnable() {
+			AcquireLockBlockingUi.aquireAndRun(kons, new ILockHandler() {
 				@Override
-				public void run(){
+				public void lockAcquired(){
 					String label = "\n[ " + brief.getLabel() + " ]"; //$NON-NLS-1$ //$NON-NLS-2$
 					kons.addXRef(XRefExtensionConstants.providerID, brief.getId(), -1, label);
+				}
+				
+				@Override
+				public void lockFailed(){
+					// do nothing
+					
 				}
 			});
 		}

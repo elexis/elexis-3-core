@@ -6,10 +6,11 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -72,10 +73,18 @@ public class AddFixMedicationHandler extends AbstractHandler {
 			
 			Prescription presc = new Prescription((Artikel) article,
 				(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
-			presc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
-			CoreHub.getLocalLockService().acquireLock(presc);
-			CoreHub.getLocalLockService().releaseLock(presc);
-			
+			AcquireLockBlockingUi.aquireAndRun(presc, new ILockHandler() {
+				
+				@Override
+				public void lockFailed(){
+					presc.remove();
+				}
+				
+				@Override
+				public void lockAcquired(){
+					presc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
+				}
+			});
 			medicationView.refresh();
 		}
 		

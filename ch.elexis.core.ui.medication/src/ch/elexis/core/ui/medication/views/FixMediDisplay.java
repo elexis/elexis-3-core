@@ -31,7 +31,6 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.services.IEvaluationService;
 
 import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -40,6 +39,7 @@ import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.dialogs.MediDetailDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.handlers.PrintRecipeHandler;
 import ch.elexis.core.ui.medication.handlers.PrintTakingsListHandler;
 import ch.elexis.core.ui.util.ListDisplay;
@@ -114,8 +114,17 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 								new Prescription((Artikel) o, (Patient) ElexisEventDispatcher
 									.getSelected(Patient.class), dlg.getDosis(), dlg.getIntakeOrder());
 							// self.add(pre);
-							CoreHub.getLocalLockService().acquireLock(prescription);
-							CoreHub.getLocalLockService().releaseLock(prescription);
+							AcquireLockBlockingUi.aquireAndRun(prescription, new ILockHandler() {
+								@Override
+								public void lockFailed(){
+									prescription.remove();
+								}
+								
+								@Override
+								public void lockAcquired(){
+									// do nothing
+								}
+							});
 							reload();
 						}
 						
@@ -132,8 +141,17 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 						Prescription prescription =
 							new Prescription(pre.getArtikel(), ElexisEventDispatcher
 							.getSelectedPatient(), pre.getDosis(), pre.getBemerkung());
-						CoreHub.getLocalLockService().acquireLock(prescription);
-						CoreHub.getLocalLockService().releaseLock(prescription);
+						AcquireLockBlockingUi.aquireAndRun(prescription, new ILockHandler() {
+							@Override
+							public void lockFailed(){
+								prescription.remove();
+							}
+							
+							@Override
+							public void lockAcquired(){
+								// do nothing
+							}
+						});
 						// self.add(now);
 						reload();
 					}
@@ -259,13 +277,17 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					Prescription pr = getSelection();
 					if (pr != null) {
 						remove(pr);
-						AcquireLockBlockingUi.aquireAndRun(pr, new Runnable() {
+						AcquireLockBlockingUi.aquireAndRun(pr, new ILockHandler() {
 							@Override
-							public void run(){
-								pr.delete(); // this does not delete but stop the Medication. Sorry for
+							public void lockFailed(){
+								// do nothing
+							}
+							
+							@Override
+							public void lockAcquired(){
+								pr.delete(); // this does not delete but stop the Medication. Sorry for that
 							}
 						});
-						// that
 						reload();
 					}
 				}
@@ -300,13 +322,18 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					Prescription pr = getSelection();
 					if (pr != null) {
 						remove(pr);
-						AcquireLockBlockingUi.aquireAndRun(pr, new Runnable() {
+						AcquireLockBlockingUi.aquireAndRun(pr, new ILockHandler() {
+							
 							@Override
-							public void run(){
-								pr.remove(); // this does, in fact, remove the medication from the
+							public void lockFailed(){
+								// do nothing
+							}
+							
+							@Override
+							public void lockAcquired(){
+								pr.remove(); // this does, in fact, remove the medication from the database
 							}
 						});
-						// database
 						reload();
 					}
 				}

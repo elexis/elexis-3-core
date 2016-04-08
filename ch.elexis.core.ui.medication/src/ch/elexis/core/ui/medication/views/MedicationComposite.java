@@ -63,6 +63,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableDownAction;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpAction;
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
@@ -918,9 +919,16 @@ public class MedicationComposite extends Composite {
 		}
 		
 		setValuesForTextSignature(Prescription.getSignatureAsStringArray(newDose));
-		AcquireLockBlockingUi.aquireAndRun(pres.getPrescription(), new Runnable() {
+		AcquireLockBlockingUi.aquireAndRun(pres.getPrescription(), new ILockHandler() {
+			
 			@Override
-			public void run(){
+			public void lockFailed(){
+				// do nothing
+				
+			}
+			
+			@Override
+			public void lockAcquired(){
 				pres.addTerm(null, newDose);
 			}
 		});
