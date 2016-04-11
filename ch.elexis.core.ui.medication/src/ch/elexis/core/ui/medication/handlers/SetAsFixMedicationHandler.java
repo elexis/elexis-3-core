@@ -8,7 +8,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.data.ArticleDefaultSignature;
@@ -49,7 +49,7 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 					
 					Prescription fixMediPresc = new Prescription(article,
 						(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
-					AcquireLockBlockingUi.aquireAndRun(fixMediPresc, new ILockHandler() {
+					AcquireLockUi.aquireAndRun(fixMediPresc, new ILockHandler() {
 						@Override
 						public void lockFailed(){
 							fixMediPresc.remove();

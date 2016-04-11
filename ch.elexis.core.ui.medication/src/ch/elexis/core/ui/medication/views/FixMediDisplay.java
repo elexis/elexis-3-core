@@ -38,7 +38,7 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.dialogs.MediDetailDialog;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.handlers.PrintRecipeHandler;
 import ch.elexis.core.ui.medication.handlers.PrintTakingsListHandler;
@@ -115,7 +115,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 								new Prescription((Artikel) o, (Patient) ElexisEventDispatcher
 									.getSelected(Patient.class), dlg.getDosis(), dlg.getIntakeOrder());
 							// self.add(pre);
-							AcquireLockBlockingUi.aquireAndRun(prescription, new ILockHandler() {
+							AcquireLockUi.aquireAndRun(prescription, new ILockHandler() {
 								@Override
 								public void lockFailed(){
 									prescription.remove();
@@ -142,7 +142,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 						Prescription prescription =
 							new Prescription(pre.getArtikel(), ElexisEventDispatcher
 							.getSelectedPatient(), pre.getDosis(), pre.getBemerkung());
-						AcquireLockBlockingUi.aquireAndRun(prescription, new ILockHandler() {
+						AcquireLockUi.aquireAndRun(prescription, new ILockHandler() {
 							@Override
 							public void lockFailed(){
 								prescription.remove();
@@ -286,7 +286,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					Prescription pr = getSelection();
 					if (pr != null) {
 						remove(pr);
-						AcquireLockBlockingUi.aquireAndRun(pr, new ILockHandler() {
+						AcquireLockUi.aquireAndRun(pr, new ILockHandler() {
 							@Override
 							public void lockFailed(){
 								// do nothing
@@ -331,7 +331,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					Prescription pr = getSelection();
 					if (pr != null) {
 						remove(pr);
-						AcquireLockBlockingUi.aquireAndRun(pr, new ILockHandler() {
+						AcquireLockUi.aquireAndRun(pr, new ILockHandler() {
 							
 							@Override
 							public void lockFailed(){

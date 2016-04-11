@@ -63,7 +63,7 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableDownAction;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpAction;
@@ -885,7 +885,7 @@ public class MedicationComposite extends Composite {
 		if (pres == null)
 			return; // prevent npe
 			
-		AcquireLockBlockingUi.aquireAndRun(pres.getPrescription(), new ILockHandler() {
+		AcquireLockUi.aquireAndRun(pres.getPrescription(), new ILockHandler() {
 			
 			@Override
 			public void lockFailed(){

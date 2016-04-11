@@ -11,7 +11,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
@@ -38,7 +38,7 @@ public class DeleteHandler extends AbstractHandler {
 			while (selectionList.hasNext()) {
 				MedicationTableViewerItem item = selectionList.next();
 				Prescription prescription = item.getPrescription();
-				AcquireLockBlockingUi.aquireAndRun(prescription, new ILockHandler() {
+				AcquireLockUi.aquireAndRun(prescription, new ILockHandler() {
 					
 					@Override
 					public void lockFailed(){

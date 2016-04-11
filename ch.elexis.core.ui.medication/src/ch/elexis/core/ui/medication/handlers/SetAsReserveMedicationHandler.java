@@ -8,7 +8,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
@@ -33,7 +33,7 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 				
 				// is no ReserveMedication yet
 				if (presc != null && !presc.isReserveMedication()) {
-					AcquireLockBlockingUi.aquireAndRun(presc, new ILockHandler() {
+					AcquireLockUi.aquireAndRun(presc, new ILockHandler() {
 						
 						@Override
 						public void lockFailed(){
@@ -58,7 +58,7 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 							
 							// create ReserveMedication
 							Prescription reserveMedi = new Prescription(presc);
-							AcquireLockBlockingUi.aquireAndRun(reserveMedi, new ILockHandler() {
+							AcquireLockUi.aquireAndRun(reserveMedi, new ILockHandler() {
 								@Override
 								public void lockFailed(){
 									reserveMedi.remove();
