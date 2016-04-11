@@ -57,6 +57,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.UiDesk;
@@ -74,7 +75,6 @@ import ch.elexis.data.Prescription;
 import ch.elexis.data.Prescription.EntryType;
 import ch.elexis.data.Rezept;
 import ch.elexis.data.Verrechnet;
-import ch.rgw.tools.TimeTool;
 
 public class MedicationComposite extends Composite {
 	
@@ -257,7 +257,7 @@ public class MedicationComposite extends Composite {
 				showMedicationDetailComposite(presc);
 				ElexisEventDispatcher
 					.fireSelectionEvent((presc != null) ? presc.getPrescription() : null);
-					
+				
 				signatureArray = Prescription
 					.getSignatureAsStringArray((presc != null) ? presc.getDosis() : null);
 				setValuesForTextSignature(signatureArray);
@@ -270,7 +270,7 @@ public class MedicationComposite extends Composite {
 			public boolean select(Viewer viewer, Object parentElement, Object element){
 				if (btnShowHistory.getSelection())
 					return true;
-					
+
 				return MedicationCellLabelProvider.isNoTwin((MedicationTableViewerItem) element,
 					(List<MedicationTableViewerItem>) medicationTableViewer.getInput());
 			}
@@ -412,7 +412,7 @@ public class MedicationComposite extends Composite {
 			new ColumnPixelData(60, true, true));
 		tableViewerColumnDosage.getColumn()
 			.setText(Messages.TherapieplanComposite_tblclmnDosage_text);
-			
+		
 		// enacted
 		TableViewerColumn tableViewerColumnEnacted =
 			new TableViewerColumn(medicationTableViewer, SWT.CENTER);
@@ -426,26 +426,8 @@ public class MedicationComposite extends Composite {
 			
 			@Override
 			public String getText(Object element){
-				// SLLOW
 				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
-				TimeTool tt = new TimeTool(pres.getBeginDate());
-				
-				IPersistentObject po = pres.getLastDisposed();
-				String date = "";
-				if (po != null) {
-					if (po instanceof Rezept) {
-						Rezept r = (Rezept) po;
-						date = r.getDate();
-					} else if (po instanceof Verrechnet) {
-						Verrechnet v = (Verrechnet) po;
-						date = v.getKons().getDatum();
-					}
-				}
-				
-				if (date != null && !date.isEmpty()) {
-					tt.set(date);
-				}
-				return tt.toString(TimeTool.DATE_GER_SHORT);
+				return pres.getBeginDate();
 			}
 		});
 		
@@ -495,7 +477,7 @@ public class MedicationComposite extends Composite {
 		
 		tableViewerColumnComment
 			.setEditingSupport(new MedicationTableViewerEditingSupport(medicationTableViewer));
-			
+		
 		medicationTableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewerColumnComment.getViewer().getControl().addKeyListener(new KeyAdapter() {
 			@Override
@@ -529,7 +511,7 @@ public class MedicationComposite extends Composite {
 		
 		if (order.equals(vso))
 			return;
-			
+
 		medicationTableViewer.setComparator(vso.vc);
 		
 		ICommandService service =
@@ -566,13 +548,7 @@ public class MedicationComposite extends Composite {
 			@Override
 			public String getText(Object element){
 				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
-				String endDate = pres.getEndDate();
-				if (endDate != null && endDate.length() > 4) {
-					TimeTool tt = new TimeTool(pres.getEndDate());
-					return tt.toString(TimeTool.DATE_GER_SHORT);
-				} else {
-					return "";
-				}
+				return pres.getEndDate();
 			}
 		});
 		
@@ -853,7 +829,7 @@ public class MedicationComposite extends Composite {
 		compositeMedicationTextDetails.setLayout(gl_compositeMedicationTextDetails);
 		compositeMedicationTextDetails
 			.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
-			
+		
 		Text txtIntakeOrder = new Text(compositeMedicationTextDetails, SWT.BORDER);
 		txtIntakeOrder.setMessage(Messages.MedicationComposite_txtIntakeOrder_message);
 		txtIntakeOrder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -884,7 +860,7 @@ public class MedicationComposite extends Composite {
 		compositeStopMedicationTextDetails.setLayout(gl_compositeStopMedicationTextDetails);
 		compositeStopMedicationTextDetails
 			.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
-			
+		
 		Text txtStopComment = new Text(compositeStopMedicationTextDetails, SWT.BORDER);
 		txtStopComment.setMessage(Messages.MedicationComposite_stopReason);
 		txtStopComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -908,35 +884,32 @@ public class MedicationComposite extends Composite {
 		MedicationTableViewerItem pres = (MedicationTableViewerItem) selectedMedication.getValue();
 		if (pres == null)
 			return; // prevent npe
-		String newDose;
-		
-		if (btnStopMedication.getSelection()) {
-			// stop medication
-			newDose = StringConstants.ZERO;
-		} else {
-			// change signature
-			newDose = getDosisStringFromSignatureTextArray();
-		}
-		
-		setValuesForTextSignature(Prescription.getSignatureAsStringArray(newDose));
+			
 		AcquireLockBlockingUi.aquireAndRun(pres.getPrescription(), new ILockHandler() {
 			
 			@Override
 			public void lockFailed(){
 				// do nothing
-				
 			}
 			
 			@Override
 			public void lockAcquired(){
-				pres.addTerm(null, newDose);
+				Prescription oldPrescription = pres.getPrescription();
+				
+				if (!btnStopMedication.getSelection()) {
+					Prescription newPrescription = new Prescription(oldPrescription);
+					newPrescription.setDosis(getDosisStringFromSignatureTextArray());
+				}
+				// change always stops
+				oldPrescription.stop(null);
+				oldPrescription.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
 			}
 		});
 		activateConfirmButton(false);
 		if (btnStopMedication.isEnabled())
 			showMedicationDetailComposite(null);
-			
-		medicationTableViewer.update(pres, null);
+
+		medicationTableViewer.refresh();
 	}
 	
 	/**
@@ -1106,7 +1079,12 @@ public class MedicationComposite extends Composite {
 	private void activateConfirmButton(boolean activate){
 		if (ctrlDecor == null)
 			initControlDecoration();
-			
+
+		MedicationTableViewerItem pres = (MedicationTableViewerItem) selectedMedication.getValue();
+		if (pres == null || pres.isStopped()) {
+			activate = false;
+		}
+		
 		if (activate) {
 			btnConfirm.setBackground(tagBtnColor);
 			btnConfirm.setEnabled(true);

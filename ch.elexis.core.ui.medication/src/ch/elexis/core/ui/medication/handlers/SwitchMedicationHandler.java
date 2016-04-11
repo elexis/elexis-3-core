@@ -15,8 +15,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
@@ -26,7 +24,6 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
-import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Prescription.EntryType;
@@ -165,13 +162,14 @@ public class SwitchMedicationHandler extends AbstractHandler {
 				}
 			}
 			
-			Prescription presc = new Prescription((Artikel) article,
-				(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
+			Prescription presc = new Prescription(originalPresc);
+			presc.set(Prescription.FLD_ARTICLE, article.storeToString());
+			presc.setDosis(dosage);
+			presc.setBemerkung(remark);
 			presc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
 			
 			// stop prev medication
-			String stopDose = StringConstants.ZERO;
-			originalPresc.addTerm(null, stopDose);
+			originalPresc.stop(null);
 			originalPresc.setStopReason("Ersetzt durch " + ((Artikel) article).getName());
 			
 			medicationView.refresh();

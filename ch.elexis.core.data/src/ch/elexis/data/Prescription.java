@@ -326,7 +326,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public String getDisposalComment(){
-		return (String) getExtInfoStoredObjectByKey(FLD_EXT_DISPOSAL_COMMENT);
+		return checkNull((String) getExtInfoStoredObjectByKey(FLD_EXT_DISPOSAL_COMMENT));
 	}
 	
 	/**

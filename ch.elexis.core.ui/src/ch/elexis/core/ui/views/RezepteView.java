@@ -251,7 +251,6 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 					Prescription p =
 						new Prescription(art, actR.getPatient(), StringConstants.EMPTY,
 							StringConstants.EMPTY);
-					p.setBeginDate(null);
 					actR.addPrescription(p);
 					refresh();
 				} else if (o instanceof Prescription) {
@@ -259,7 +258,6 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 					Prescription now =
 						new Prescription(pre.getArtikel(), actR.getPatient(), pre.getDosis(),
 							pre.getBemerkung());
-					now.setBeginDate(null);
 					actR.addPrescription(now);
 					refresh();
 				}

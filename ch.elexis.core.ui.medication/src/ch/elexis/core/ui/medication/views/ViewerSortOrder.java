@@ -4,7 +4,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.data.Prescription;
 import ch.rgw.tools.TimeTool;
 
@@ -103,8 +102,8 @@ public enum ViewerSortOrder {
 				rc = l1.compareTo(l2);
 				break;
 			case 2:
-				String dose1 = getDose(p1.getDosis());
-				String dose2 = getDose(p2.getDosis());
+				String dose1 = p1.getDosis();
+				String dose2 = p2.getDosis();
 				rc = dose1.compareTo(dose2);
 				break;
 			case 3:
@@ -159,10 +158,6 @@ public enum ViewerSortOrder {
 				rc = -rc;
 			}
 			return rc;
-		}
-		
-		private String getDose(String dose){
-			return (dose.equals(StringConstants.ZERO) ? "gestoppt" : dose);
 		}
 		
 		private String getSuppliedUntil(MedicationTableViewerItem p){

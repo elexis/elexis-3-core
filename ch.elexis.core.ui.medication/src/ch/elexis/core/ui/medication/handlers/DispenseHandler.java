@@ -48,14 +48,16 @@ public class DispenseHandler extends AbstractHandler {
 		
 		Konsultation kons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 		
-		boolean isToday = new TimeTool(kons.getDatum()).isSameDay(new TimeTool());
-		if (isToday) {
-			// create verrechenbar
-			for (Prescription prescription : prescRecipes) {
-				// update letzte abgabe
-				kons.addLeistung(prescription.getArtikel());
+		if (kons != null) {
+			boolean isToday = new TimeTool(kons.getDatum()).isSameDay(new TimeTool());
+			if (isToday) {
+				// create verrechenbar
+				for (Prescription prescription : prescRecipes) {
+					// update letzte abgabe
+					kons.addLeistung(prescription.getArtikel());
+				}
+				return null;
 			}
-			return null;
 		}
 		
 		MessageDialog.openInformation(UiDesk.getTopShell(), "Konsultation ungültig",

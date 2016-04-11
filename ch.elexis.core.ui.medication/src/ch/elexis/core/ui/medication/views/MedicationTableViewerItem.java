@@ -41,18 +41,19 @@ public class MedicationTableViewerItem {
 	private Object lastDisposed;
 	
 	public MedicationTableViewerItem(Prescription p){
-		String[] values = p.get(false, Prescription.FLD_ARTICLE, Prescription.FLD_DATE_FROM,
-			Prescription.FLD_DATE_UNTIL, Prescription.FLD_DOSAGE, Prescription.FLD_REMARK,
+		String[] values =
+			p.get(false, Prescription.FLD_ARTICLE, Prescription.FLD_DOSAGE, Prescription.FLD_REMARK,
 			Prescription.FLD_REZEPT_ID, Prescription.FLD_LASTUPDATE, Prescription.FLD_SORT_ORDER);
 		prescription = p;
 		artikelsts = values[0];
-		dateFrom = values[1];
-		dateUntil = values[2];
-		dosis = values[3];
-		bemerkung = values[4];
-		rezeptId = values[5];
-		lastUpdate = (values[6] != null && values[6].length() > 0) ? Long.valueOf(values[6]) : 0l;
-		sortOrder = values[7];
+		dosis = values[1];
+		bemerkung = values[2];
+		rezeptId = values[3];
+		lastUpdate = (values[4] != null && values[4].length() > 0) ? Long.valueOf(values[4]) : 0l;
+		sortOrder = values[5];
+		
+		dateFrom = p.getBeginTime();
+		dateUntil = p.getEndTime();
 	}
 	
 	public static void setTableViewer(TableViewer medicationTableViewer){
@@ -75,10 +76,20 @@ public class MedicationTableViewerItem {
 		return bemerkung;
 	}
 	
+	public String getDisposalComment(){
+		return prescription.getDisposalComment();
+	}
+	
 	public void setBemerkung(String bemerkung){
 		this.bemerkung = bemerkung;
 		prescription.setBemerkung(bemerkung);
 		tv.update(this, null);
+	}
+	
+	public void setDisposalComment(String disposal){
+		prescription.setDisposalComment(disposal);
+		tv.update(this, null);
+		
 	}
 	
 	public String getBeginDate(){
@@ -167,15 +178,6 @@ public class MedicationTableViewerItem {
 		});
 	}
 	
-	public void addTerm(TimeTool begin, String newDose){
-		String[] newValues = prescription.addTerm(begin, newDose);
-		dateFrom = newValues[0];
-		dosis = newValues[1];
-		if (StringConstants.ZERO.equals(dosis)) {
-			dateUntil = newValues[0];
-		}
-	}
-	
 	public EntryType getEntryType(){
 		return prescription.getEntryType();
 	}
@@ -210,6 +212,11 @@ public class MedicationTableViewerItem {
 	
 	public String getOrder(){
 		return sortOrder;
+	}
+	
+	public boolean isStopped(){
+		String endTime = prescription.getEndTime();
+		return !endTime.isEmpty();
 	}
 	
 }
