@@ -474,6 +474,8 @@ public class MedicationComposite extends Composite {
 				return pres.getBemerkung();
 			}
 		});
+		// always show stopped columns
+		createStopTableViewerColumn(5, 6);
 		
 		tableViewerColumnComment
 			.setEditingSupport(new MedicationTableViewerEditingSupport(medicationTableViewer));
@@ -609,12 +611,9 @@ public class MedicationComposite extends Composite {
 			public void widgetSelected(SelectionEvent e){
 				if (btnShowHistory.getSelection()) {
 					showSearchFilterComposite(true);
-					createStopTableViewerColumn(5, 6);
 					medicationTableViewer.addFilter(mediFilter);
 					switchToViewerSoftOrderIfNotActive(ViewerSortOrder.DEFAULT);
 				} else {
-					tableViewerColumnStop.getColumn().dispose();
-					tableViewerColumnReason.getColumn().dispose();
 					showSearchFilterComposite(false);
 					medicationTableViewer.removeFilter(mediFilter);
 				}
