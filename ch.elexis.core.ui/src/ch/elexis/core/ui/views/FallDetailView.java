@@ -17,8 +17,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISaveablePart2;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -26,6 +29,7 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
@@ -61,11 +65,22 @@ public class FallDetailView extends ViewPart implements ISaveablePart2, IActivat
 			
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
+				Fall deselectedFall = fdb.getFall();
 				fdb.setFall(fall);
+				if (deselectedFall != null) {
+					if (CoreHub.getLocalLockService().isLockedLocal(deselectedFall)) {
+						CoreHub.getLocalLockService().releaseLock(deselectedFall);
+					}
+					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+						.getService(ICommandService.class);
+					commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID,
+						null);
+				}
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
 				if(fall.equals(fdb.getFall())) {
+					fdb.save();
 					fdb.setUnlocked(ev.getType()==ElexisEvent.EVENT_LOCK_AQUIRED);
 				}
 				break;

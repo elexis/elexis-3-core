@@ -1389,4 +1389,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 	}
 
+	public void save(){
+		// TODO :(
+		
+	}
+	
 }
