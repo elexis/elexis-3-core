@@ -130,8 +130,8 @@ public class LocalLockService implements ILocalLockService {
 		int sleptMilli = 0;
 		while (!response.isOk()) {
 			try {
-				Thread.sleep(500);
-				sleptMilli += 500;
+				Thread.sleep(1000);
+				sleptMilli += 1000;
 				response = acquireLock(storeToString);
 				if (response.getStatus() == LockResponse.Status.DENIED_PERMANENT) {
 					return response;
