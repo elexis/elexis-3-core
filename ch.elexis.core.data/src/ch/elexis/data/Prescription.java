@@ -34,8 +34,8 @@ import ch.rgw.tools.TimeTool;
  */
 public class Prescription extends PersistentObject {
 	
-	public static final String FLD_DATE_UNTIL = "DatumBis"; // date medication was stopped
-	public static final String FLD_DATE_FROM = "DatumVon";
+	public static final String FLD_DATE_UNTIL = "DateUntil"; // date medication was stopped
+	public static final String FLD_DATE_FROM = "DateFrom";
 	public static final String FLD_COUNT = "Anzahl";
 	public static final String FLD_REMARK = "Bemerkung";
 	public static final String FLD_DOSAGE = "Dosis";
@@ -77,26 +77,25 @@ public class Prescription extends PersistentObject {
 	
 	static {
 		addMapping(TABLENAME, FLD_PATIENT_ID, FLD_ARTICLE, FLD_ARTICLE_ID, FLD_REZEPT_ID,
-			FLD_DATE_FROM + "=S:D:DateFrom", FLD_DATE_UNTIL + "=S:D:DateUntil",
-			FLD_DATE_PRESC + "=S:D:" + FLD_DATE_PRESC, FLD_DOSAGE, FLD_REMARK, FLD_COUNT,
-			FLD_PRESC_TYPE, FLD_SORT_ORDER, FLD_EXTINFO, FLD_PRESCRIPTOR);
+			FLD_DATE_FROM, FLD_DATE_UNTIL, FLD_DATE_PRESC + "=S:D:" + FLD_DATE_PRESC, FLD_DOSAGE,
+			FLD_REMARK, FLD_COUNT, FLD_PRESC_TYPE, FLD_SORT_ORDER, FLD_EXTINFO, FLD_PRESCRIPTOR);
 	}
 	
 	public Prescription(Artikel a, Patient p, String dosage, String remark){
 		create(null);
-		
 		String article = a.storeToString();
 		String dateNow = new TimeTool().toString(TimeTool.DATE_GER);
 		IPersistentObject prescriptor = ElexisEventDispatcher.getSelected(Anwender.class);
 		
 		set(new String[] {
-			FLD_ARTICLE, FLD_PATIENT_ID, FLD_DOSAGE, FLD_REMARK, FLD_DATE_PRESC, FLD_DATE_FROM,
+			FLD_ARTICLE, FLD_PATIENT_ID, FLD_DOSAGE, FLD_REMARK, FLD_DATE_PRESC,
 			FLD_SORT_ORDER, FLD_PRESCRIPTOR
-		}, article, p.getId(), dosage, remark, dateNow, dateNow, "999", prescriptor.getId());
+		}, article, p.getId(), dosage, remark, dateNow, "999", prescriptor.getId());
+		setBeginDate(null);
 	}
 	
 	/**
-	 * Creates a copy of the other Prescription, adding an additional term
+	 * Creates a copy of the other Prescription
 	 * 
 	 * @param other
 	 */
@@ -109,8 +108,7 @@ public class Prescription extends PersistentObject {
 		if (other.get(fields, vals)) {
 			create(null);
 			set(fields, vals);
-			addTerm(new TimeTool(), vals[2]);
-			
+			setBeginDate(null);
 			IPersistentObject prescriptor = ElexisEventDispatcher.getSelected(Anwender.class);
 			set(FLD_PRESCRIPTOR, prescriptor.getId());
 			String comment = other.getDisposalComment();
@@ -147,19 +145,55 @@ public class Prescription extends PersistentObject {
 	 *            may be null to set it as today
 	 */
 	public void setBeginDate(String date){
-		set(FLD_DATE_FROM, date == null ? new TimeTool().toString(TimeTool.DATE_GER) : date);
+		TimeTool newDate = new TimeTool();
+		if (date != null && !date.isEmpty()) {
+			newDate.set(date);
+		}
+		set(FLD_DATE_FROM, newDate.toString(TimeTool.TIMESTAMP));
 	}
 	
 	public String getBeginDate(){
-		return checkNull(get(FLD_DATE_FROM));
+		String timestamp = checkNull(get(FLD_DATE_FROM));
+		if (!timestamp.isEmpty()) {
+			TimeTool timetool = new TimeTool(timestamp);
+			return timetool.toString(TimeTool.DATE_GER);
+		}
+		return "";
+	}
+	
+	public String getBeginTime(){
+		String timestamp = checkNull(get(FLD_DATE_FROM));
+		if (!timestamp.isEmpty()) {
+			TimeTool timetool = new TimeTool(timestamp);
+			return timetool.toString(TimeTool.FULL_GER);
+		}
+		return "";
 	}
 	
 	public void setEndDate(String date){
-		set(FLD_DATE_UNTIL, date == null ? new TimeTool().toString(TimeTool.DATE_GER) : date);
+		TimeTool newDate = new TimeTool();
+		if (date != null && !date.isEmpty()) {
+			newDate.set(date);
+		}
+		set(FLD_DATE_UNTIL, newDate.toString(TimeTool.TIMESTAMP));
 	}
 	
 	public String getEndDate(){
-		return checkNull(get(FLD_DATE_UNTIL));
+		String timestamp = checkNull(get(FLD_DATE_UNTIL));
+		if (!timestamp.isEmpty()) {
+			TimeTool timetool = new TimeTool(timestamp);
+			return timetool.toString(TimeTool.DATE_GER);
+		}
+		return "";
+	}
+	
+	public String getEndTime(){
+		String timestamp = checkNull(get(FLD_DATE_UNTIL));
+		if (!timestamp.isEmpty()) {
+			TimeTool timetool = new TimeTool(timestamp);
+			return timetool.toString(TimeTool.FULL_GER);
+		}
+		return "";
 	}
 	
 	@Override
@@ -269,7 +303,7 @@ public class Prescription extends PersistentObject {
 	public void setDosis(String newDose){
 		String oldDose = getDosis();
 		if (!oldDose.equals(newDose)) {
-			addTerm(new TimeTool(), newDose);
+			set(FLD_DOSAGE, newDose);
 		}
 	}
 	
@@ -311,9 +345,7 @@ public class Prescription extends PersistentObject {
 	@Override
 	public boolean delete(){
 		if (CoreHub.acl.request(AccessControlDefaults.MEDICATION_MODIFY)) {
-			TimeTool today = new TimeTool();
-			today.addHours(-24);
-			addTerm(today, StringConstants.ZERO);
+			stop(null);
 			return true;
 		}
 		return false;
@@ -332,59 +364,16 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
-	 * Insert a new dosage term, defined by a beginning date and a dose. We store the old dose and
-	 * its beginning date in the field "terms".
-	 * 
-	 * @param begin
-	 *            the begin date of the new dose, if <code>null</code> the current date is used
-	 * @param dose
-	 *            a dosage definition of the form "1-0-0-0" or "0" to stop the article
-	 * @return String[2] with {@link #FLD_DATE_FROM} and {@link #FLD_DOSAGE}
-	 * @since 3.1 returns the newly set values
-	 */
-	public String[] addTerm(TimeTool begin, String dose){
-		String raw = (String) getExtInfoStoredObjectByKey(FLD_EXT_TERMS);
-		if (raw == null) {
-			raw = "";
-		}
-		
-		String[] vals = new String[2];
-		StringBuilder line = new StringBuilder();
-		if (begin == null)
-			begin = new TimeTool();
-			
-		get(new String[] {
-			FLD_DATE_FROM, FLD_DOSAGE
-		}, vals);
-		line.append(StringTool.flattenSeparator).append(vals[0]).append(StringConstants.DOUBLECOLON)
-			.append(vals[1]);
-		raw += line.toString();
-		setExtInfoStoredObjectByKey(FLD_EXT_TERMS, (String) raw);
-		
-		String valN[] = new String[] {
-			begin.toString(TimeTool.DATE_GER), dose
-		};
-		
-		set(new String[] {
-			FLD_DATE_FROM, FLD_DOSAGE
-		}, valN);
-		if (dose.equals(StringConstants.ZERO)) {
-			stop(begin);
-		}
-		return valN;
-	}
-	
-	/**
 	 * Stops this prescription
 	 * 
-	 * @param begin
+	 * @param until
 	 *            if <code>null</code> effective now, else with the given time
 	 * @since 3.1.0
 	 */
-	public void stop(TimeTool begin){
-		if (begin == null)
-			begin = new TimeTool();
-		set(FLD_DATE_UNTIL, begin.toString(TimeTool.DATE_GER));
+	public void stop(TimeTool until){
+		if (until == null)
+			until = new TimeTool();
+		set(FLD_DATE_UNTIL, until.toString(TimeTool.TIMESTAMP));
 		IPersistentObject user = ElexisEventDispatcher.getSelected(Anwender.class);
 		setExtInfoStoredObjectByKey(Prescription.FLD_EXT_STOPPED_BY, user.getId());
 	}

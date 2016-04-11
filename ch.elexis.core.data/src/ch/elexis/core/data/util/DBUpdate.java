@@ -47,7 +47,7 @@ public class DBUpdate {
 		"1.4.5", "1.4.6", "1.5.0", "1.6.0", "1.6.1", "1.6.2", "1.6.3", "1.6.4", "1.7.0", "1.7.1",
 		"1.7.2", "1.8.0", "1.8.1", "1.8.2", "1.8.3", "1.8.4", "1.8.5", "1.8.6", "1.8.7", "1.8.8",
 		"1.8.9", "1.8.10", "1.8.11", "1.8.12", "1.8.13", "1.8.14", "1.8.15", "1.8.16", "1.9.0", "3.0.0",
-		"3.1.0"
+		"3.1.0", "3.2.0"
 	};
 	static final String[] cmds =
 		{
@@ -381,7 +381,12 @@ public class DBUpdate {
 			ALTER_TABLE+Prescription.TABLENAME+ADD+Prescription.FLD_DATE_PRESC+" CHAR(8);"+
 			ALTER_TABLE+Prescription.TABLENAME+ADD+Prescription.FLD_PRESCRIPTOR+" VARCHAR(25);"+
 			ALTER_TABLE+Leistungsblock.TABLENAME+ADD+Leistungsblock.FLD_MACRO+" VARCHAR(30);"+
-			"CREATE INDEX block3 on "+Leistungsblock.TABLENAME+"("+Leistungsblock.FLD_MACRO+");"
+			"CREATE INDEX block3 on "+Leistungsblock.TABLENAME+"("+Leistungsblock.FLD_MACRO+");",
+			
+			// 3.2.0
+			ALTER_TABLE+Prescription.TABLENAME+" MODIFY "+Prescription.FLD_DATE_FROM+" CHAR(24);"+
+			ALTER_TABLE+Prescription.TABLENAME+" MODIFY "+Prescription.FLD_DATE_UNTIL+" CHAR(24);"
+			
 			};
 	//@formatter:on
 	

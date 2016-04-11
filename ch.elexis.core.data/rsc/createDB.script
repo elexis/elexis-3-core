@@ -165,8 +165,8 @@ CREATE TABLE PATIENT_ARTIKEL_JOINT(
 	ArtikelID		VARCHAR(25),					# foreign key from ARTIKEL  !!!! DEPRECATED DO NOT USE !!!
 	Artikel			VARCHAR(255),					# cheap copy of article. replaces ArtikelID
 	RezeptID		VARCHAR(25),					# prescription where this article was last given
-	DateFrom		CHAR(8),						# first date
-	DateUntil		CHAR(8),						# date the medication was stopped
+	DateFrom		CHAR(24),						# first date
+	DateUntil		CHAR(24),						# date the medication was stopped
 	Dosis			VARCHAR(255),					# number
 	Anzahl			CHAR(3),
 	Bemerkung		VARCHAR(255),
