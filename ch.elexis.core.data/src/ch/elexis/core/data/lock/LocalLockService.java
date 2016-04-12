@@ -22,7 +22,6 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.ILocalLockService;
 import ch.elexis.core.lock.types.LockInfo;
@@ -48,7 +47,7 @@ public class LocalLockService implements ILocalLockService {
 	
 	private final HashMap<String, LockInfo> locks = new HashMap<String, LockInfo>();
 	private boolean standalone = false;
-	private Logger log = LoggerFactory.getLogger(LocalLockService.class);
+	private Logger logger = LoggerFactory.getLogger(LocalLockService.class);
 	
 	/**
 	 * A unique id for this instance of Elexis. Changes on every restart
@@ -73,11 +72,11 @@ public class LocalLockService implements ILocalLockService {
 			System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
 		if (restUrl != null && restUrl.length() > 0) {
 			standalone = false;
-			log.info("Operating against elexis-server instance on " + restUrl);
+			logger.info("Operating against elexis-server instance on " + restUrl);
 			ils = ConsumerFactory.createConsumer(restUrl, ILockService.class);
 		} else {
 			standalone = true;
-			log.info("Operating in stand-alone mode.");
+			logger.info("Operating in stand-alone mode.");
 		}
 	}
 	
@@ -103,7 +102,7 @@ public class LocalLockService implements ILocalLockService {
 		if (po == null) {
 			return LockResponse.DENIED(null);
 		}
-		log.debug("Releasing lock on [" + po + "]");
+		logger.debug("Releasing lock on [" + po + "]");
 		return releaseLock(po.storeToString());
 	}
 	
@@ -123,7 +122,7 @@ public class LocalLockService implements ILocalLockService {
 		if (monitor != null) {
 			monitor.beginTask("Acquiring Lock for [" + po.getLabel() + "]", secTimeout * 2);
 		}
-		log.debug("Acquiring lock blocking on [" + po + "]");
+		logger.debug("Acquiring lock blocking on [" + po + "]");
 		String storeToString = po.storeToString();
 		
 		LockResponse response = acquireLock(storeToString);
@@ -158,11 +157,11 @@ public class LocalLockService implements ILocalLockService {
 		if (po == null) {
 			return LockResponse.DENIED(null);
 		}
-		log.debug("Acquiring lock on [" + po + "]");
+		logger.debug("Acquiring lock on [" + po + "]");
 		LockResponse lr = acquireLock(po.storeToString());
 		
 		if (lr.getStatus() == LockResponse.Status.ERROR) {
-			log.warn("LockResponse ERROR");
+			logger.warn("LockResponse ERROR");
 		}
 		
 		return lr;
@@ -188,7 +187,7 @@ public class LocalLockService implements ILocalLockService {
 		if (ils == null) {
 			String message =
 				"System not configured for standalone mode, and elexis-server not available!";
-			log.error(message);
+			logger.error(message);
 			ElexisEventDispatcher
 				.fireElexisStatusEvent(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, null));
@@ -234,7 +233,7 @@ public class LocalLockService implements ILocalLockService {
 				// if we have an exception here, our lock copies never get
 				// deleted!!!
 				String message = "Error trying to acquireOrReleaseLocks.";
-				log.error(message);
+				logger.error(message);
 				ElexisEventDispatcher
 					.fireElexisStatusEvent(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 						CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, e));
@@ -279,7 +278,7 @@ public class LocalLockService implements ILocalLockService {
 		if (po == null) {
 			return false;
 		}
-		log.debug("Checking lock on [" + po + "]");
+		logger.debug("Checking lock on [" + po + "]");
 		
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
 		LockInfo lockInfo = new LockInfo(po.storeToString(), user.getId(), systemUuid.toString());
@@ -305,7 +304,7 @@ public class LocalLockService implements ILocalLockService {
 		try {
 			return ils.isLocked(lockRequest);
 		} catch (Exception e) {
-			log.error("Catched exception in isLocked: ", e);
+			logger.error("Catched exception in isLocked: ", e);
 			return false;
 		}
 		
@@ -359,15 +358,25 @@ public class LocalLockService implements ILocalLockService {
 					}
 				}
 				
-				if (standalone || ils == null || ils instanceof DenyAllLockService) {
+				if (standalone) {
 					return;
 				}
-				
+				// verify and update the locks
+				boolean publishUpdate = false;
 				synchronized (locks) {
-					Collection<LockInfo> lockInfos = locks.values();
-					for (LockInfo lockInfo : lockInfos) {
-						ils.isLocked(new LockRequest(Type.INFO, lockInfo));
+					List<String> lockKeys = new ArrayList<String>();
+					lockKeys.addAll(locks.keySet());
+					for (String key : lockKeys) {
+						boolean success = ils.isLocked(new LockRequest(Type.INFO, locks.get(key)));
+						if (!success) {
+							publishUpdate = true;
+							releaseLock(locks.get(key).getElementStoreToString());
+						}
 					}
+				}
+				if (publishUpdate) {
+					ElexisEventDispatcher.getInstance()
+						.fire(new ElexisEvent(null, LockInfo.class, ElexisEvent.EVENT_RELOAD));
 				}
 			} catch (Exception e) {
 				LoggerFactory.getLogger(LockRefreshTask.class).error("Execution error", e);
