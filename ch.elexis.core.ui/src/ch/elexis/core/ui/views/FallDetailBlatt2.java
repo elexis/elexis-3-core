@@ -22,11 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -62,12 +57,10 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.preferences.Leistungscodes;
 import ch.elexis.core.ui.preferences.UserCasePreferences;
-import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.DayDateCombo;
@@ -77,7 +70,6 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
-import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -118,6 +110,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
+	
+	List<Focusreact> focusreacts = new ArrayList<Focusreact>();
 	
 	@Override
 	public void setUnlocked(boolean unlock) {
@@ -227,7 +221,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 									Messages.FallDetailBlatt2_DontChangeBillingSystemBody)) { //$NON-NLS-1$
 									fall.setAbrechnungsSystem(cAbrechnung.getItem(i));
 									setFall(fall);
-									ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 									return;
 								}
 							} else {
@@ -240,7 +233,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						} else {
 							fall.setAbrechnungsSystem(Abrechnungstypen[i]);
 							setFall(fall);
-							ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 							// Falls noch kein Garant gesetzt ist: Garanten des
 							// letzten Falles zum
 							// selben Gesetz nehmen
@@ -282,7 +274,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				Fall fall = getFall();
 				if (fall != null) {
 					fall.set(LABEL, newval);
-					ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 				}
 				super.focusLost(e);
 			}
@@ -298,7 +289,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				Fall fall = getFall();
 				if (fall != null) {
 					fall.setGrund(Reasons[i]);
-					ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 				}
 			}
 		});
@@ -312,7 +302,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					Fall fall = getFall();
 					fall.setBeginnDatum(
 						new TimeTool(dpVon.getDate().getTime()).toString(TimeTool.DATE_GER));
-					ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 				}
 			});
 			
@@ -325,7 +314,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				Fall fall = getFall();
 				fall.setEndDatum(
 					new TimeTool(dpBis.getDate().getTime()).toString(TimeTool.DATE_GER));
-				ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 			}
 		});
 
@@ -377,7 +365,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					if (fall != null) {
 						fall.setGarant(sel);
 						setFall(fall);
-						ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 					}
 				}
 			}
@@ -431,46 +418,56 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		
 	}
 	
-	class Focusreact implements FocusListener {
+	private class Focusreact implements FocusListener {
 		
 		private final String field;
+		private Control control;
 		
-		Focusreact(final String dbField){
-			field = dbField;
+		public Focusreact(final Control control, final String field){
+			this.field = field;
+			this.control = control;
 		}
 		
 		public void focusGained(final FocusEvent e){ /* nichts */
 		}
 		
 		public void focusLost(final FocusEvent e){
-			String newval = StringTool.leer;
-			String widgetType = e.widget.getClass().getName();
-			widgetType = widgetType.split("\\.")[widgetType.split("\\.").length - 1]; //$NON-NLS-1$ //$NON-NLS-2$
-			if (widgetType.equalsIgnoreCase("StyledText")) { //$NON-NLS-1$
-				Object plugin = ((TextContainer) (e.getSource())).getPlugin();
-				newval = ((ITextPlugin) plugin).storeToByteArray().toString();
-			} else if (widgetType.equalsIgnoreCase("Combo")) { //$NON-NLS-1$
-				String kind = (String) ((Combo) e.getSource()).getData("kind"); //$NON-NLS-1$
-				if (kind.equalsIgnoreCase("S")) { //$NON-NLS-1$
-					newval = ((Combo) e.getSource()).getText(); // save as
-					// string
-				} else {
-					newval = StringTool.leer + ((Combo) e.getSource()).getSelectionIndex(); // save
-					// as
-					// index
-					// in
-					// combo
+			save();
+		}
+		
+		public void save(){
+			if (!control.isDisposed()) {
+				String newValue = getValue(control);
+				Fall fall = getFall();
+				if (fall != null) {
+					if (newValue != null) {
+						PersistentObject.clearCache();
+						fall.setInfoString(field, newValue);
+						ElexisEventDispatcher.update(fall);
+					}
 				}
-			} else if (widgetType.equalsIgnoreCase("List")) { //$NON-NLS-1$
-				int[] selection =
-					((org.eclipse.swt.widgets.List) e.getSource()).getSelectionIndices();
+			}
+		}
+		
+		public String getValue(Control control){
+			String newval = StringTool.leer;
+			if (control instanceof Combo) {
+				String kind = (String) ((Combo) control).getData("kind"); //$NON-NLS-1$
+				if (kind.equalsIgnoreCase("S")) { //$NON-NLS-1$
+					newval = ((Combo) control).getText(); // save as string
+				} else {
+					newval = StringTool.leer + ((Combo) control).getSelectionIndex();
+					// save as index in combo
+				}
+			} else if (control instanceof org.eclipse.swt.widgets.List) {
+				int[] selection = ((org.eclipse.swt.widgets.List) control).getSelectionIndices();
 				String delim = StringTool.leer;
 				String kind =
-					(String) ((org.eclipse.swt.widgets.List) e.getSource()).getData("kind"); //$NON-NLS-1$
+					(String) ((org.eclipse.swt.widgets.List) control).getData("kind"); //$NON-NLS-1$
 				if (kind.equalsIgnoreCase("S")) { // save as string list, tab delimited   //$NON-NLS-1$
 					for (int ii = 0; ii < selection.length; ii++) {
 						newval = newval + delim
-							+ ((org.eclipse.swt.widgets.List) e.getSource()).getItem(selection[ii]);
+							+ ((org.eclipse.swt.widgets.List) control).getItem(selection[ii]);
 						delim = ITEMDELIMITER;
 					}
 				} else { // save as numeric index list, tab delimited
@@ -479,8 +476,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						delim = ITEMDELIMITER;
 					}
 				}
-			} else if (widgetType.equalsIgnoreCase("Button")) { //$NON-NLS-1$
-				Button button = ((Button) e.getSource());
+			} else if (control instanceof Button) {
+				Button button = ((Button) control);
 				if ((button.getStyle() & SWT.RADIO) != 0) {
 					String kind = (String) button.getData("kind"); //$NON-NLS-1$
 					if (kind.equalsIgnoreCase("S")) { // save as string    //$NON-NLS-1$
@@ -505,20 +502,11 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						newval = "0"; //$NON-NLS-1$
 					}
 				}
-			} else {
-				newval = ((Text) e.getSource()).getText();
+			} else if (control instanceof Text) {
+				newval = ((Text) control).getText();
 			}
-			Fall fall = getFall();
-			if (fall != null) {
-				if (newval != null) {
-					PersistentObject.clearCache();
-					fall.setInfoString(field, newval);
-					ElexisEventDispatcher.update(fall);
-					ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
-				}
-			}
+			return newval;
 		}
-		
 	}
 	
 	/**
@@ -532,6 +520,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	 */
 	@SuppressWarnings("unchecked")
 	public void setFall(final Fall f){
+		if (actFall != null) {
+			save();
+		}
 		// *** dispose of currently displayed fields
 		actFall = f;
 		for (Control c : lReqs) {
@@ -546,7 +537,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		cAbrechnung.setItems(Abrechnungstypen);
 		if (f == null) {
 			form.setText(Messages.FallDetailBlatt2_NoCaseSelected); //$NON-NLS-1$
-			tBezeichnung.setText(Messages.FallDetailBlatt2_29); //$NON-NLS-1$
+			tBezeichnung.setText("");
+			tBezeichnung.setMessage(Messages.FallDetailBlatt2_29);
 			cReason.select(0);
 			return;
 		}
@@ -810,6 +802,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		
 		boolean enable = (lockEnabled && allowFieldUpdate);
 		
+		tBezeichnung.setEditable(lockEnabled);
+		
 		cAbrechnung.setEnabled(enable);
 		cReason.setEnabled(enable);
 		hlGarant.setEnabled(enable);
@@ -841,6 +835,21 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 	}
 	
+	public void save(){
+		if (actFall != null) {
+			String newValue = tBezeichnung.getText();
+			if (newValue != null && !newValue.isEmpty()
+				&& !newValue.equals(Messages.FallDetailBlatt2_29)) {
+				actFall.set(LABEL, newValue);
+			}
+			
+			// save reacts
+			for (Focusreact react : focusreacts) {
+				react.save();
+			}
+		}
+	}
+	
 	/**
 	 * creates the required or optional fields on the bottom of the page and fills them with the
 	 * appropriate values.
@@ -866,10 +875,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	 *            <li>T - Text</li>
 	 *            <li>D - Date</li>
 	 *            <li>K - Kontakt</li>
-	 *            <li>
-	 * 
-	 *            TM - Text Multiline Text</li>
-	 *            <li>TS - Text Styled (still in development)</li>
+	 *            <li>TM - Text Multiline Text</li>
 	 *            <li>CS - Combo saved as string</li>
 	 *            <li>CN - Combo saved as numeric (selected index)</li>
 	 *            <li>LS - List items saved as strings, tab-delimited</li>
@@ -905,6 +911,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 		// *** loop through field list, creating the controls
 		for (String req : fieldList.split(DEFINITIONSDELIMITER)) {
+			// clear new ones are created
+			focusreacts.clear();
+			
 			final String[] r = req.split(ARGUMENTSSDELIMITER);
 			if (r.length < 2) { // *** needs at least fieldName and fieldType...
 				continue;
@@ -968,7 +977,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			if (r[1].equals("T")) { //$NON-NLS-1$  // *** simple Text, single line
 				dataField = tk.createText(subParent, val);
 				dataField.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-				dataField.addFocusListener(new Focusreact(r[0]));
+				addFocusReact(dataField, r[0]);
 			} else if (r[1].equals("D")) { //$NON-NLS-1$  // *** Date
 				final DatePickerCombo dp = new DatePickerCombo(subParent, SWT.NONE);
 				TimeTool tt = new TimeTool();
@@ -1010,7 +1019,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 										fall.setInfoString(r[0], StringTool.leer);
 									}
 									setFall(fall);
-									ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 								}
 							}
 						}
@@ -1025,7 +1033,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				Text multiText = new Text(subParent, SWT.MULTI + SWT.BORDER);
 				multiText.setText(val);
 				multiText.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-				multiText.addFocusListener(new Focusreact(r[0]));
+				addFocusReact(multiText, r[0]);
 				multiText.addKeyListener(new KeyListener() {
 					@Override
 					public void keyPressed(KeyEvent e){}
@@ -1042,68 +1050,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					}
 				});
 				dataField = multiText;
-			} else if (r[1].equals("TS")) { //$NON-NLS-1$
-				dataField = tk.createLabel(subParent, "Styled Text disabled - still experimental"); //$NON-NLS-1$
-				if (CoreHub.actUser.getLabel().equalsIgnoreCase("addsdfgss")) { // +++++ my testing  //$NON-NLS-1$
-					// get the extension for styled text
-					String extensionToUse = "Interner Text"; //$NON-NLS-1$
-					IExtensionRegistry exr = Platform.getExtensionRegistry();
-					IExtensionPoint exp =
-						exr.getExtensionPoint(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
-					ITextPlugin plugin = null;
-					if (exp != null) {
-						IExtension[] extensions = exp.getExtensions();
-						for (IExtension ex : extensions) {
-							IConfigurationElement[] elems = ex.getConfigurationElements();
-							for (IConfigurationElement el : elems) {
-								if ((extensionToUse == null)
-									|| el.getAttribute("name").equals(extensionToUse)) { //$NON-NLS-1$
-									try {
-										plugin =
-											(ITextPlugin) el.createExecutableExtension("Klasse"); //$NON-NLS-1$
-										plugin.setSaveOnFocusLost(true);
-									} catch (Exception e) {
-										ExHandler.handle(e);
-									}
-								}
-							}
-						}
-					}
-					if (plugin != null) {
-						SaveCallback saveCallback = new SaveCallback();
-						Composite textContainer = plugin.createContainer(subParent, saveCallback);
-						// boolean ok =
-						// ((ITextPlugin)plugin).loadFromByteArray(val.getBytes(),
-						// false);
-						
-						// I can get the actual elexisEditor if really needed...
-						Control[] children = textContainer.getChildren();
-						Composite elexisEditor = null;
-						for (int iii = 0; iii < children.length; iii++) {
-							Control child = children[iii];
-							if (child.getClass().getName()
-								.equalsIgnoreCase("ch.elexis.textplugin.ElexisEditor")) { //$NON-NLS-1$
-								elexisEditor = (Composite) child;
-								elexisEditor.addFocusListener(new Focusreact(r[0]));
-							}
-						}
-						if (elexisEditor != null) {
-							Control[] children2 = elexisEditor.getChildren();
-							Composite page = null;
-							for (int iii = 0; iii < children2.length; iii++) {
-								Control child = children2[iii];
-								if (child.getClass().getName()
-									.equalsIgnoreCase("org.eclipse.swt.custom.ScrolledComposite")) { //$NON-NLS-1$
-									page = (Composite) child;
-									page.addFocusListener(new Focusreact(r[0]));
-								}
-							}
-						} else {
-							throw new IllegalStateException("elexisEditor is null");
-						}
-						dataField = textContainer;
-					}
-				}
 			} else if (r[1].equals("CS")) { //$NON-NLS-1$  // *** combo, selected value saved as selected string
 				stretchComposite = new Composite(subParent, SWT.NONE);
 				stretchComposite
@@ -1118,7 +1064,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				combo.setText(val);
 				combo.setData("kind", "S"); //$NON-NLS-1$ //$NON-NLS-2$
 				combo.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
-				combo.addFocusListener(new Focusreact(r[0]));
+				addFocusReact(combo, r[0]);
 				dataField = combo;
 			} else if (r[1].equals("CN")) { //$NON-NLS-1$  // *** combo, selected value saved as selected index (zero-based)
 				stretchComposite = new Composite(subParent, SWT.NONE);
@@ -1137,7 +1083,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 				combo.setData("kind", "N"); //$NON-NLS-1$ //$NON-NLS-2$
 				combo.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
-				combo.addFocusListener(new Focusreact(r[0]));
+				addFocusReact(combo, r[0]);
 				dataField = combo;
 			} else if (r[1].equals("LS")) { //$NON-NLS-1$  // *** selection list, selection saved as tab-delimited string-list
 				stretchComposite = new Composite(subParent, SWT.NONE);
@@ -1160,7 +1106,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 				list.setData("kind", "S"); //$NON-NLS-1$ //$NON-NLS-2$
 				list.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
-				list.addFocusListener(new Focusreact(r[0]));
+				addFocusReact(list, r[0]);
 				dataField = list;
 			} else if (r[1].equals("LN")) { //$NON-NLS-1$  // *** selection list numeric, selection saved as tab-delimited list of selected-item-nums
 				stretchComposite = new Composite(subParent, SWT.NONE);
@@ -1183,7 +1129,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 				list.setData("kind", "N"); //$NON-NLS-1$ //$NON-NLS-2$
 				list.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
-				list.addFocusListener(new Focusreact(r[0]));
+				addFocusReact(list, r[0]);
 				dataField = list;
 			} else if (r[1].equals("RS")) { // radio group //$NON-NLS-1$  // *** radio group, selection saved string
 				Composite radioComposite = new Composite(subParent, SWT.NONE);
@@ -1204,7 +1150,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					} else {
 						radios[rIx].setSelection(false);
 					}
-					radios[rIx].addFocusListener(new Focusreact(r[0]));
+					addFocusReact(radios[rIx], r[0]);
 				}
 				dataField = radioComposite;
 			} else if (r[1].equals("RN")) { // radio group //$NON-NLS-1$  // *** radio group
@@ -1226,7 +1172,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					} else {
 						radios[rIx].setSelection(false);
 					}
-					radios[rIx].addFocusListener(new Focusreact(r[0]));
+					addFocusReact(radios[rIx], r[0]);
 				}
 				dataField = radioComposite;
 			} else if (r[1].equals("X")) { //$NON-NLS-1$  // *** checkBox, always saved as numeric - 0 or 1
@@ -1263,7 +1209,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 							checks[rIx].setSelection(true);
 							checks[rIx].setGrayed(false);
 						}
-						checks[rIx].addFocusListener(new Focusreact(r[0] + "_" + items[rIx])); //$NON-NLS-1$
+						addFocusReact(checks[rIx], r[0] + "_" + items[rIx]); //$NON-NLS-1$
 						checks[rIx].addSelectionListener(new TristateSelection());
 						addControl(checks[rIx], optional, r[0]);
 					}
@@ -1281,7 +1227,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						check.setSelection(true);
 						check.setGrayed(false);
 					}
-					check.addFocusListener(new Focusreact(r[0]));
+					addFocusReact(check, r[0]);
 					check.addSelectionListener(new TristateSelection());
 					check.setBackground(new Color(check.getDisplay(), 255, 255, 255));
 					check.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -1306,6 +1252,12 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		ddc.setDates(bt);
 		form.reflow(true);
 		form.redraw();
+	}
+	
+	private void addFocusReact(Control dataField, String field){
+		Focusreact react = new Focusreact(dataField, field);
+		dataField.addFocusListener(react);
+		focusreacts.add(react);
 	}
 	
 	/**
@@ -1388,10 +1340,4 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			return true;
 		}
 	}
-
-	public void save(){
-		// TODO :(
-		
-	}
-	
 }

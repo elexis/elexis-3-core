@@ -167,10 +167,10 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		@Override
 		public void runInUi(ElexisEvent ev) {
 			Konsultation kons = (Konsultation) ev.getObject();
-
+			Konsultation deselectedKons = null;
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
-				Konsultation deselectedKons = actKons;
+				deselectedKons = actKons;
 				setKons(kons);
 				if (deselectedKons != null) {
 					releaseAndRefreshLock(deselectedKons);
@@ -180,15 +180,15 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 				setKons(kons);
 				break;
 			case ElexisEvent.EVENT_DESELECTED:
-				if (actKons != null) {
-					releaseAndRefreshLock(actKons);
-				}
+				deselectedKons = actKons;
 				setKons(null);
+				if (deselectedKons != null) {
+					releaseAndRefreshLock(deselectedKons);
+				}
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
 				if (kons.equals(actKons)) {
-					save();
 					setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
 				}
 				break;
