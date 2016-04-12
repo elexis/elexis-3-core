@@ -6,8 +6,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,16 +17,12 @@ import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.data.Patient;
-import ch.elexis.data.Person;
-import ch.elexis.data.Query;
 import ch.elexis.hl7.HL7PatientResolver;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;
 import ch.elexis.hl7.model.IValueType;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
-import ch.rgw.tools.StringTool;
-import ch.rgw.tools.TimeTool;
 
 public class Test_HL7_Imports {
 	
@@ -150,20 +146,13 @@ public class Test_HL7_Imports {
 
 		@Override
 		public List<IPatient> getPatientById(String patid){
-			Query<Patient> qbe = new Query<Patient>(Patient.class);
-			qbe.add(Patient.FLD_PATID, Query.EQUALS, StringTool.normalizeCase(patid));
-			return qbe.execute().stream().map(p -> new ContactBean(p)).collect(Collectors.toList());
+			return Collections.singletonList(new ContactBean(patient));
 		}
 
 		@Override
 		public List<IPatient> findPatientByNameAndBirthdate(String lastName, String firstName,
 			String birthDate){
-				Query<Patient> qbe = new Query<Patient>(Patient.class);
-				qbe.add(Person.NAME, Query.EQUALS, StringTool.normalizeCase(lastName));
-				qbe.add(Person.FIRSTNAME, Query.EQUALS, StringTool.normalizeCase(firstName));
-				qbe.add(Person.BIRTHDATE, Query.EQUALS,
-					new TimeTool(birthDate).toString(TimeTool.DATE_COMPACT));
-				return qbe.execute().stream().map(p -> new ContactBean(p)).collect(Collectors.toList());
+			return Collections.singletonList(new ContactBean(patient));
 		}
 
 		@Override
