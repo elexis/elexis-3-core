@@ -897,6 +897,7 @@ public class MedicationComposite extends Composite {
 				
 				if (!btnStopMedication.getSelection()) {
 					Prescription newPrescription = new Prescription(oldPrescription);
+					newPrescription.setReserveMedication(oldPrescription.isReserveMedication());
 					newPrescription.setDosis(getDosisStringFromSignatureTextArray());
 				}
 				// change always stops
