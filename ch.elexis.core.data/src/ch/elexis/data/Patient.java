@@ -48,7 +48,7 @@ import ch.rgw.tools.TimeTool.TimeFormatException;
  * </ul>
  * 
  * @author gerry
- * 		
+ * 
  */
 public class Patient extends Person {
 	
@@ -133,6 +133,7 @@ public class Patient extends Person {
 	public Patient(final String Name, final String Vorname, final String Geburtsdatum,
 		final String s){
 		super(Name, Vorname, Geburtsdatum, s);
+		getPatCode();
 	}
 	
 	/**
@@ -151,6 +152,7 @@ public class Patient extends Person {
 	public Patient(final String name, final String vorname, final TimeTool gebDat, final String s)
 		throws PersonDataException{
 		super(name, vorname, gebDat, s);
+		getPatCode();
 	}
 	
 	/**
@@ -221,7 +223,7 @@ public class Patient extends Person {
 		// if not configured otherwise load only consultations of active mandant
 		if (!CoreHub.userCfg.get(Preferences.USR_DEFLOADCONSALL, false)) {
 			Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
-			if(mandator!=null) {
+			if (mandator != null) {
 				qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, mandator.getId());
 			}
 		}
@@ -289,57 +291,26 @@ public class Patient extends Person {
 		if (!StringTool.isNothing(rc)) {
 			return rc;
 		}
-//		if (CoreHub.globalCfg.get("PatIDMode", "number").equals("number")) {
-			while (true) {
-				String lockid = PersistentObject.lock("PatNummer", true);
-				String pid = getDBConnection()
-					.queryString("SELECT WERT FROM CONFIG WHERE PARAM='PatientNummer'");
-				if (StringTool.isNothing(pid)) {
-					pid = "0";
-					getDBConnection()
-						.exec("INSERT INTO CONFIG (PARAM,WERT) VALUES ('PatientNummer','0')");
-				}
-				int lastNum = Integer.parseInt(pid) + 1;
-				rc = Integer.toString(lastNum);
+		while (true) {
+			String lockid = PersistentObject.lock("PatNummer", true);
+			String pid = getDBConnection()
+				.queryString("SELECT WERT FROM CONFIG WHERE PARAM='PatientNummer'");
+			if (StringTool.isNothing(pid)) {
+				pid = "0";
 				getDBConnection()
-					.exec("UPDATE CONFIG set wert='" + rc + "' where param='PatientNummer'");
-				PersistentObject.unlock("PatNummer", lockid);
-				String exists = getDBConnection()
-					.queryString("SELECT ID FROM KONTAKT WHERE PatientNr=" + JdbcLink.wrap(rc));
-				if (exists == null) {
-					break;
-				}
+					.exec("INSERT INTO CONFIG (PARAM,WERT) VALUES ('PatientNummer','0')");
 			}
-//		} else {
-//			String[] ret = new String[3];
-//			if (get(new String[] {
-//				Person.NAME, Person.FIRSTNAME, Person.BIRTHDATE
-//			}, ret) == true) {
-//				StringBuffer code = new StringBuffer(12);
-//				if ((ret[0] != null) && (ret[0].length() > 1)) {
-//					code.append(ret[0].substring(0, 2));
-//				}
-//				if ((ret[1] != null) && (ret[1].length() > 1)) {
-//					code.append(ret[1].substring(0, 2));
-//				}
-//				if ((ret[2] != null) && (ret[2].length() == 10)) {
-//					int quersumme = Integer.parseInt(ret[2].substring(8));
-//					quersumme += Integer.parseInt(ret[2].substring(3, 5));
-//					quersumme += Integer.parseInt(ret[2].substring(0, 2));
-//					code.append(Integer.toString(quersumme));
-//					// code.append(ret[2].substring(8)).append(ret[2].substring(3,5)).append(ret[2].substring(0,2));
-//				}
-//				rc = code.toString();
-//				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
-//				qbe.add(FLD_PATID, "LIKE", rc + "%");
-//				List<Kontakt> list = qbe.execute();
-//				if (!list.isEmpty()) {
-//					int l = list.size() + 1;
-//					code.append("-").append(l);
-//					rc = code.toString();
-//				}
-//			}
-//		}
+			int lastNum = Integer.parseInt(pid) + 1;
+			rc = Integer.toString(lastNum);
+			getDBConnection()
+				.exec("UPDATE CONFIG set wert='" + rc + "' where param='PatientNummer'");
+			PersistentObject.unlock("PatNummer", lockid);
+			String exists = getDBConnection()
+				.queryString("SELECT ID FROM KONTAKT WHERE PatientNr=" + JdbcLink.wrap(rc));
+			if (exists == null) {
+				break;
+			}
+		}
 		set(FLD_PATID, rc);
 		return rc;
 	}
@@ -396,7 +367,7 @@ public class Patient extends Person {
 		// normally do not display other mandator's balance
 		if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
 			Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
-			if(mandator!=null) {
+			if (mandator != null) {
 				rQuery.add(Rechnung.MANDATOR_ID, Query.EQUALS, mandator.getId());
 			}
 		}
