@@ -112,10 +112,21 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	Button btnCopyForPatient;
 	
 	List<Focusreact> focusreacts = new ArrayList<Focusreact>();
+	boolean lockUpdate = true;
 	
 	@Override
 	public void setUnlocked(boolean unlock) {
 		allowFieldUpdate(unlock);
+	}
+	
+	/**
+	 * Defines if the lock should be updated on setting a Fall on the composite. Default value is
+	 * true.
+	 * 
+	 * @param value
+	 */
+	public void setLockUpdate(boolean value){
+		lockUpdate = value;
 	}
 	
 	public FallDetailBlatt2(final Composite parent){
@@ -785,7 +796,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		}
 		
-		setUnlocked(CoreHub.getLocalLockService().isLockedLocal(actFall));
+		if (lockUpdate) {
+			setUnlocked(CoreHub.getLocalLockService().isLockedLocal(actFall));
+		}
 	}
 	
 	private void allowFieldUpdate(boolean lockEnabled){
