@@ -75,11 +75,7 @@ public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler
 		} else {
 			LockResponse lr = CoreHub.getLocalLockService().acquireLock(po);
 			if (!lr.isOk()) {
-				ElexisEventDispatcher.fireElexisStatusEvent(new ElexisStatus(Status.WARNING,
-					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Lock could not be granted", null));
-				SWTHelper.showError("Lock acquisition error.",
-					"Can't acquire lock for " + po.storeToString() + ". Lock currently held by "
-						+ lr.getLockInfos().getUser());
+				LockResponseHelper.showInfo(lr, po, null);
 			}
 		}
 		

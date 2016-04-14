@@ -32,12 +32,7 @@ public abstract class LockRequestingAction<T extends PersistentObject> extends R
 			doRun(object);
 			CoreHub.getLocalLockService().releaseLock(object);
 		} else {
-			log.warn("Unable to acquire lock for "+object.storeToString());
-			// TODO show message
-			// we could not get the lock, what now??
-			// simple ui warning showing who currently owns the lock?
-			SWTHelper.showError("Lock acquisition error.", "Can't acquire lock for " + object.storeToString()
-			+ ". Lock currently held by " + lr.getLockInfos().getUser());
+			LockResponseHelper.showInfo(lr, object, log);
 		}
 	};
 

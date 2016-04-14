@@ -58,10 +58,7 @@ public class AcquireLockBlockingUi {
 					@Override
 					public void run(){
 						lockhander.lockFailed();
-						logger.error("Could not acquire lock for [" + lockPo.getLabel()
-							+ "] reason [" + result.getStatus() + "]");
-						MessageDialog.openError(display.getActiveShell(), "Could not acquire Lock",
-							"Could not acquire lock for [" + lockPo.getLabel() + "]");
+						LockResponseHelper.showInfo(result, lockPo, logger);
 					}
 				});
 			}
