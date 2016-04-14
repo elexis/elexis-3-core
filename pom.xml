@@ -243,6 +243,8 @@
 		<module>ch.elexis.core.hl7.v2x</module>
 		<module>ch.rgw.utility</module>
 		<module>ch.elexis.core.ui.feature</module>
+		<module>ch.elexis.core.ui.medication.os</module>
+		<module>ch.elexis.core.ui.medication.os.feature</module>
     <!-- now follow the unit tests in a more or less logical order -->
     <module>ch.rgw.utility.tests</module>
     <module>ch.elexis.core.data.tests</module>

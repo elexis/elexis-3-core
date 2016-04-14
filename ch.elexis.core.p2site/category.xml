@@ -15,5 +15,8 @@
    <feature url="features/ch.elexis.core.logging.feature_3.2.0.qualifier.jar" id="ch.elexis.core.logging.feature" version="3.2.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
+   <feature url="features/ch.elexis.core.ui.medication.os.feature_3.2.0.qualifier.jar" id="ch.elexis.core.ui.medication.os.feature" version="3.2.0.qualifier">
+      <category name="elexis_3_core"/>
+   </feature>
    <category-def name="elexis_3_core" label="Elexis 3 Kern"/>
 </site>

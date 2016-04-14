@@ -34,6 +34,7 @@
       </win>
    </launcher>
 
+
    <vm>
       <macos include="false">
       
@@ -54,6 +55,7 @@
       <feature id="ch.elexis.core.ui.feature"/>
       <feature id="ch.elexis.core.application.feature"/>
       <feature id="ch.elexis.core.ui.p2.feature"/>
+      <feature id="ch.elexis.core.ui.medication.os.feature"/>
    </features>
 
    <configurations>
