@@ -88,16 +88,6 @@
       </menuContribution>
    </extension>
    <extension
-         point="org.eclipse.ui.views">
-      <view
-            class="ch.elexis.core.ui.medication.views.MedicationView"
-            icon="icon://IMG_PILL"
-            id="ch.elexis.core.ui.medication.views.MedicationView"
-            name="Medikationsliste"
-            restorable="true">
-      </view>
-   </extension>
-   <extension
          point="org.eclipse.ui.commands">
       <command
             description="Ausgewählte Medikamente rezeptieren und Rezept ausdrucken"
