@@ -765,5 +765,15 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void setEditable(boolean unlocked){
+		text.setEditable(unlocked);
+		menuMgr.getMenu().setEnabled(unlocked);
+		if(unlocked) {
+			text.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
+		} else {
+			text.setForeground(UiDesk.getColor(UiDesk.COL_DARKGREY));
+		}
+	}
 	
 }

@@ -218,9 +218,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	public void setUnlocked(boolean unlocked) {
 		hlMandant.setEnabled(unlocked);
 		cbFall.setEnabled(unlocked);
-		text.setEnabled(unlocked);
-		dd.setUnlocked(unlocked);
-		vd.setUnlocked(unlocked);
+		text.setEditable(unlocked);
 		saveAction.reflectRight();
 		purgeAction.reflectRight();
 	}
@@ -478,6 +476,8 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 			hlMandant.setEnabled(CoreHub.acl.request(AccessControlDefaults.KONS_REASSIGN));
 			dd.setDiagnosen(kons);
 			vd.setLeistungen(kons);
+			vd.setEnabled(true);
+			dd.setEnabled(true);
 			if (kons.isEditable(false)) {
 				text.setEnabled(true);
 				text.setToolTipText("");
@@ -499,6 +499,8 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 			vd.clear();
 			text.setText(""); //$NON-NLS-1$
 			text.setEnabled(false);
+			vd.setEnabled(false);
+			dd.setEnabled(false);
 		}
 		actKons = kons;
 		cDesc.layout();

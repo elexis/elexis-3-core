@@ -75,6 +75,12 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			}
 		}
 	};
+	
+	public void setEnabled(boolean enabled) {
+		addFreeTextBtn.setEnabled(enabled);
+		hDg.setEnabled(enabled);
+		super.setEnabled(enabled);
+	};
 
 	public DiagnosenDisplay(final IWorkbenchPage page, final Composite parent, final int style){
 		super(parent, style);
