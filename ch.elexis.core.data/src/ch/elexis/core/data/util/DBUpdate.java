@@ -21,6 +21,7 @@ import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.data.BezugsKontakt;
+import ch.elexis.data.Brief;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.Prescription;
 import ch.rgw.tools.Log;
@@ -385,8 +386,8 @@ public class DBUpdate {
 			
 			// 3.2.0
 			ALTER_TABLE+Prescription.TABLENAME+" MODIFY "+Prescription.FLD_DATE_FROM+" CHAR(24);"+
-			ALTER_TABLE+Prescription.TABLENAME+" MODIFY "+Prescription.FLD_DATE_UNTIL+" CHAR(24);"
-			
+			ALTER_TABLE+Prescription.TABLENAME+" MODIFY "+Prescription.FLD_DATE_UNTIL+" CHAR(24);"+
+			ALTER_TABLE+Brief.TABLENAME+" MODIFY "+Brief.FLD_SUBJECT+" VARCHAR(255);"
 			};
 	//@formatter:on
 	

@@ -304,7 +304,7 @@ CREATE TABLE BRIEFE(
 	ID				VARCHAR(25) primary key,
 	lastupdate      BIGINT,
 	deleted			CHAR(1) default '0',
-	Betreff			VARCHAR(80),
+	Betreff			VARCHAR(255),
 	Datum			CHAR(8),
 	modifiziert		CHAR(8),
 	gedruckt		CHAR(8),
