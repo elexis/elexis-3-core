@@ -13,6 +13,7 @@ package ch.elexis.data;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.interfaces.IOutputter;
+import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.rgw.compress.CompEx;
 import ch.rgw.tools.ExHandler;
@@ -40,13 +41,13 @@ public class Brief extends PersistentObject {
 	public static final String FLD_PATIENT_ID = "PatientID";
 	public static final String FLD_SUBJECT = "Betreff";
 	public static final String TABLENAME = "BRIEFE";
-	public static final String TEMPLATE = "Vorlagen";
-	public static final String AUZ = "AUF-Zeugnis";
-	public static final String RP = "Rezept";
-	public static final String UNKNOWN = "Allg.";
-	public static final String LABOR = "Labor";
-	public static final String BESTELLUNG = "Bestellung";
-	public static final String RECHNUNG = "Rechnung";
+	public static final String TEMPLATE = BriefConstants.TEMPLATE;
+	public static final String AUZ = BriefConstants.AUZ;
+	public static final String RP = BriefConstants.RP;
+	public static final String UNKNOWN = BriefConstants.UNKNOWN;
+	public static final String LABOR = BriefConstants.LABOR;
+	public static final String BESTELLUNG = BriefConstants.BESTELLUNG;
+	public static final String RECHNUNG = BriefConstants.RECHNUNG;
 	
 	public static final String MIMETYPE_OO2 = "application/vnd.oasis.opendocument.text";
 	public static final String SYS_TEMPLATE = "SYS";
