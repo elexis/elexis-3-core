@@ -37,7 +37,7 @@ public interface ITextPlugin extends IExecutableExtension {
 	public void setFormat(PageFormat f);
 	
 	public static enum Parameter {
-		NOUI
+			NOUI, READ_ONLY
 	};
 	
 	/**
