@@ -74,6 +74,7 @@ import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.ElexisUiSyncEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
@@ -136,12 +137,22 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
 				if (pat.equals(actPatient)) {
-					save();
 					setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
 				}
 				break;
 			default:
 				break;
+			}
+		}
+	};
+	
+	private final ElexisEventListener eeli_pat_sync =
+			new ElexisUiSyncEventListenerImpl(Patient.class, ElexisEvent.EVENT_LOCK_PRERELEASE) {
+		@Override
+		public void runInUi(ElexisEvent ev){
+			Patient pat = (Patient) ev.getObject();
+			if (pat.equals(actPatient)) {
+				save();
 			}
 		}
 	};
@@ -1135,9 +1146,9 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 	public void visible(final boolean mode) {
 		if (mode == true) {
 			setPatient((Patient) ElexisEventDispatcher.getSelected(Patient.class));
-			ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user);
+			ElexisEventDispatcher.getInstance().addListeners(eeli_pat_sync, eeli_pat, eeli_user);
 		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_user);
+			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat_sync, eeli_pat, eeli_user);
 		}
 
 	}
