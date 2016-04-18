@@ -44,7 +44,7 @@ public class XIDPropertyPage extends PropertyPage implements IWorkbenchPropertyP
 			lab.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 			return comp;
 		}
-		for (Iterator iterator = domains.iterator(); iterator.hasNext();) {
+		for (Iterator<String> iterator = domains.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
 			Label lab = new Label(comp, SWT.None);
 			lab.setText(Xid.getSimpleNameForXIDDomain(string));

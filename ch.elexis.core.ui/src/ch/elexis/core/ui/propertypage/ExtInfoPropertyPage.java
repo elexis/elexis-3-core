@@ -17,7 +17,6 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Xid;
 
 public class ExtInfoPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
 	

@@ -15,19 +15,19 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.data.Patient;
 
-public class PatientAddressPage extends PropertyPage implements IWorkbenchPropertyPage {
+public class PatientAddressPage extends PropertyPage implements IWorkbenchPropertyPage, IUnlockable {
 	
-	Patient pat;
+	private Patient pat;
 	private Text textStrasse;
 	private Text textPostleitzahl;
 	private Text textOrtschaft;
 	private TableCombo tableCombo;
 	
-	public PatientAddressPage(){
-		// TODO Auto-generated constructor stub
-	}
+	public PatientAddressPage(){}
 	
 	@Override
 	protected Control createContents(Composite parent){
@@ -89,6 +89,8 @@ public class PatientAddressPage extends PropertyPage implements IWorkbenchProper
 			}
 		}
 		
+		setUnlocked(CoreHub.getLocalLockService().isLocked(pat));
+		
 		return comp;
 	}
 	
@@ -115,5 +117,12 @@ public class PatientAddressPage extends PropertyPage implements IWorkbenchProper
 		performApply();
 		return true;
 	}
-	
+
+	@Override
+	public void setUnlocked(boolean unlocked){
+		textStrasse.setEditable(unlocked);
+		textPostleitzahl.setEditable(unlocked);
+		textOrtschaft.setEditable(unlocked);
+		tableCombo.setEnabled(unlocked);
+	}
 }

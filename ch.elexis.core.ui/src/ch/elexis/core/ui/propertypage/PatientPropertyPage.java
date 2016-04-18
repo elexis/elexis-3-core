@@ -28,10 +28,12 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 
-public class PatientPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
+public class PatientPropertyPage extends PropertyPage implements IWorkbenchPropertyPage, IUnlockable {
 	
 	public static final String ID = "at.medevit.elexis.properties.propertyPage.PatientPropertyPage";
 	
@@ -157,6 +159,8 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textEmail.setText(pat.get(Patient.FLD_E_MAIL));
 		textBemerkungen.setText(pat.getBemerkung());
 		
+		setUnlocked(CoreHub.getLocalLockService().isLocked(pat));
+		
 		return comp;
 	}
 	
@@ -216,5 +220,20 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 	public boolean performOk(){
 		performApply();
 		return true;
+	}
+
+	@Override
+	public void setUnlocked(boolean unlocked){
+		textVorname.setEditable(unlocked);
+		textNachname.setEditable(unlocked);
+		textTelefon1.setEditable(unlocked);
+		textTelefon2.setEditable(unlocked);
+		textHandy.setEditable(unlocked);
+		textFax.setEditable(unlocked);
+		textEmail.setEditable(unlocked);
+		textBemerkungen.setEditable(unlocked);
+		geburtsdatum.setEditable(unlocked);
+		comboGeschlecht.setEnabled(unlocked);
+		
 	}
 }
