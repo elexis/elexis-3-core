@@ -40,6 +40,7 @@ public class Brief extends PersistentObject {
 	public static final String FLD_SENDER_ID = "AbsenderID";
 	public static final String FLD_PATIENT_ID = "PatientID";
 	public static final String FLD_SUBJECT = "Betreff";
+	public static final String FLD_NOTE = "note";
 	public static final String TABLENAME = "BRIEFE";
 	public static final String TEMPLATE = BriefConstants.TEMPLATE;
 	public static final String AUZ = BriefConstants.AUZ;
@@ -61,7 +62,7 @@ public class Brief extends PersistentObject {
 	static {
 		addMapping(TABLENAME, FLD_SUBJECT, FLD_PATIENT_ID, DATE_COMPOUND, FLD_SENDER_ID,
 			FLD_DESTINATION_ID, FLD_KONSULTATION_ID, FLD_TYPE, "modifiziert=S:D:modifiziert",
-			"geloescht", FLD_MIME_TYPE, "gedruckt=S:D:gedruckt", "Path");
+			"geloescht", FLD_MIME_TYPE, "gedruckt=S:D:gedruckt", "Path", FLD_NOTE);
 	}
 	
 	protected Brief(){/* leer */
@@ -93,7 +94,7 @@ public class Brief extends PersistentObject {
 			if (dest != null) {
 				dst = dest.getId();
 			}
-			String dat = Datum.toString(TimeTool.DATE_GER);
+			String dat = Datum.toString(TimeTool.TIMESTAMP);
 			set(new String[] {
 				FLD_SUBJECT, FLD_PATIENT_ID, FLD_DATE, FLD_SENDER_ID, FLD_DATE_MODIFIED,
 				FLD_DESTINATION_ID, FLD_KONSULTATION_ID, FLD_TYPE, "geloescht"
@@ -127,7 +128,7 @@ public class Brief extends PersistentObject {
 	public boolean save(String cnt){
 		contents c = contents.load(getId());
 		c.save(cnt);
-		set(FLD_DATE_MODIFIED, new TimeTool().toString(TimeTool.DATE_COMPACT));
+		set(FLD_DATE_MODIFIED, new TimeTool().toString(TimeTool.TIMESTAMP));
 		return true;
 	}
 	
@@ -137,7 +138,7 @@ public class Brief extends PersistentObject {
 			// if(mimetype.equalsIgnoreCase(MIMETYPE_OO2)){
 			contents c = contents.load(getId());
 			c.save(in);
-			set(FLD_DATE_MODIFIED, new TimeTool().toString(TimeTool.DATE_COMPACT));
+			set(FLD_DATE_MODIFIED, new TimeTool().toString(TimeTool.TIMESTAMP));
 			set(FLD_MIME_TYPE, mimetype);
 			return true;
 			// }
@@ -212,7 +213,7 @@ public class Brief extends PersistentObject {
 	}
 	
 	public String getDatum(){
-		return get(FLD_DATE);
+		return new TimeTool(get(FLD_DATE)).toString(TimeTool.DATE_COMPACT);
 	}
 	
 	public Kontakt getAdressat(){
