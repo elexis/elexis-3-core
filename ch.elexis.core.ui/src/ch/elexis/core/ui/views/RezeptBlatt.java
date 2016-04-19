@@ -21,12 +21,16 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IOutputter;
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
+import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Konsultation;
@@ -42,13 +46,26 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	Brief actBrief;
 	
 	public RezeptBlatt(){
-		
 	}
 	
 	@Override
 	public void dispose(){
+		if (actBrief != null) {
+			CoreHub.getLocalLockService().releaseLock(actBrief);
+		}
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
+	}
+	
+	private void updateTextLock(){
+		// test lock and set read only before opening the Brief
+		LockResponse result = CoreHub.getLocalLockService().acquireLock(actBrief);
+		if (result.isOk()) {
+			text.getPlugin().setParameter(null);
+		} else {
+			LockResponseHelper.showInfo(result, actBrief, null);
+			text.getPlugin().setParameter(Parameter.READ_ONLY);
+		}
 	}
 	
 	/**
@@ -58,7 +75,11 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	 *            the Brief for the Rezept to be shown
 	 */
 	public void loadRezeptFromDatabase(Rezept rp, Brief brief){
+		if (actBrief != null) {
+			CoreHub.getLocalLockService().releaseLock(actBrief);
+		}
 		actBrief = brief;
+		updateTextLock();
 		text.open(brief);
 		rp.setBrief(actBrief);
 	}
@@ -77,10 +98,14 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	}
 	
 	public boolean createList(Rezept rp, String template, String replace){
+		if (actBrief != null) {
+			CoreHub.getLocalLockService().releaseLock(actBrief);
+		}
 		actBrief =
 			text.createFromTemplateName(Konsultation.getAktuelleKons(), template, Brief.RP,
 				(Patient) ElexisEventDispatcher.getSelected(Patient.class),
 				template + " " + rp.getDate());
+		updateTextLock();
 		List<Prescription> lines = rp.getLines();
 		String[][] fields = new String[lines.size()][];
 		if (replace.equals(Messages.RezeptBlatt_4)) {

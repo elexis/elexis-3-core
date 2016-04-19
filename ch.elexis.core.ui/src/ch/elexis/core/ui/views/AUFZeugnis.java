@@ -17,10 +17,14 @@ import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_AUF_CERT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
+import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.AUF;
 import ch.elexis.data.Brief;
@@ -35,6 +39,9 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 	
 	@Override
 	public void dispose(){
+		if (actBrief != null) {
+			CoreHub.getLocalLockService().releaseLock(actBrief);
+		}
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
 	}
@@ -56,10 +63,22 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 		actBrief =
 			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_AUF_CERT, Brief.AUZ, //$NON-NLS-1$
 				null, null);
+		updateTextLock();
 		// text.getPlugin().setFormat(PageFormat.A5);
 		if (text.getPlugin().isDirectOutput()) {
 			text.getPlugin().print(null, null, true);
 			getSite().getPage().hideView(this);
+		}
+	}
+	
+	private void updateTextLock(){
+		// test lock and set read only before opening the Brief
+		LockResponse result = CoreHub.getLocalLockService().acquireLock(actBrief);
+		if (result.isOk()) {
+			text.getPlugin().setParameter(null);
+		} else {
+			LockResponseHelper.showInfo(result, actBrief, null);
+			text.getPlugin().setParameter(Parameter.READ_ONLY);
 		}
 	}
 	

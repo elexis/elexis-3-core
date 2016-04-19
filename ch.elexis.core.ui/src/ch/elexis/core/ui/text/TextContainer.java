@@ -73,10 +73,8 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
-import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.preferences.TextTemplatePreferences;
-import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
@@ -980,19 +978,6 @@ public class TextContainer {
 		
 		log.debug(
 			"ch.elexis.views/TextContainer.java open(): about to return plugin.loadFromByteArray(arr, false) and end...");
-		AcquireLockUi.aquireAndRun(brief, new ILockHandler() {
-			
-			@Override
-			public void lockFailed(){
-				plugin.setParameter(Parameter.READ_ONLY);
-			}
-			
-			@Override
-			public void lockAcquired(){
-				plugin.setParameter(null);
-			}
-		});
-		
 		return plugin.loadFromByteArray(arr, false);
 	}
 	

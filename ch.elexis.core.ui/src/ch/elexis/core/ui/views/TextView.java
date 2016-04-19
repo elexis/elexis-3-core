@@ -35,13 +35,16 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.text.ITextPlugin;
+import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -101,6 +104,9 @@ public class TextView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void dispose(){
+		if (actBrief != null) {
+			CoreHub.getLocalLockService().releaseLock(actBrief);
+		}
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		actBrief = null;
 		super.dispose();
@@ -108,10 +114,20 @@ public class TextView extends ViewPart implements IActivationListener {
 	
 	public boolean openDocument(Brief doc){
 		if (actBrief != null) {
+			CoreHub.getLocalLockService().releaseLock(actBrief);
 			actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin().getMimeType());
 		}
 		if (doc == null) {
 			return false;
+		} else {
+			// test lock and set read only before opening the Brief
+			LockResponse result = CoreHub.getLocalLockService().acquireLock(doc);
+			if (result.isOk()) {
+				txt.getPlugin().setParameter(null);
+			} else {
+				LockResponseHelper.showInfo(result, doc, log);
+				txt.getPlugin().setParameter(Parameter.READ_ONLY);
+			}
 		}
 		if (txt.open(doc) == true) {
 			log.debug("TextView.openDocument: "); //$NON-NLS-1$
@@ -120,6 +136,7 @@ public class TextView extends ViewPart implements IActivationListener {
 			return true;
 		} else {
 			actBrief = null;
+			CoreHub.getLocalLockService().releaseLock(doc);
 			if (CoreHub.localCfg.get(Preferences.P_TEXT_SUPPORT_LEGACY, false) == true) {
 				setName();
 				String ext = MimeTool.getExtension(doc.getMimeType());
