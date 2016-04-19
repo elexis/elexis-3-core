@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.medication.views;
 
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.DateAndTimeObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
@@ -47,6 +49,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -75,6 +78,7 @@ import ch.elexis.data.Prescription;
 import ch.elexis.data.Prescription.EntryType;
 import ch.elexis.data.Rezept;
 import ch.elexis.data.Verrechnet;
+import ch.rgw.tools.TimeTool;
 
 public class MedicationComposite extends Composite {
 	
@@ -112,6 +116,9 @@ public class MedicationComposite extends Composite {
 		new WritableValue(null, MedicationTableViewerItem.class);
 	private WritableValue lastDisposalPO = new WritableValue(null, PersistentObject.class);
 	private TableColumnLayout tcl_compositeMedicationTable = new TableColumnLayout();
+	
+	private DateTime timeStopped;
+	private DateTime dateStopped;
 	private Button btnStopMedication;
 	private Label lblLastDisposalLink;
 	private Label lblDailyTherapyCost;
@@ -477,18 +484,7 @@ public class MedicationComposite extends Composite {
 		// always show stopped columns
 		createStopTableViewerColumn(5, 6);
 		
-		tableViewerColumnComment
-			.setEditingSupport(new MedicationTableViewerEditingSupport(medicationTableViewer));
-		
 		medicationTableViewer.setContentProvider(ArrayContentProvider.getInstance());
-		tableViewerColumnComment.getViewer().getControl().addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e){
-				if (e.keyCode == SWT.CR) {
-					applyDetailChanges();
-				}
-			}
-		});
 	}
 	
 	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index){
@@ -627,7 +623,7 @@ public class MedicationComposite extends Composite {
 	
 	private void medicationDetailComposite(){
 		compositeMedicationDetail = new Composite(this, SWT.BORDER);
-		GridLayout gl_compositeMedicationDetail = new GridLayout(4, false);
+		GridLayout gl_compositeMedicationDetail = new GridLayout(6, false);
 		gl_compositeMedicationDetail.marginBottom = 5;
 		gl_compositeMedicationDetail.marginRight = 5;
 		gl_compositeMedicationDetail.marginLeft = 5;
@@ -772,18 +768,27 @@ public class MedicationComposite extends Composite {
 			};
 		});
 		
-		btnConfirm = new Button(compositeMedicationDetail, SWT.FLAT);
-		btnConfirm.setText(Messages.MedicationComposite_btnConfirm);
-		GridData gdBtnConfirm = new GridData();
-		gdBtnConfirm.horizontalIndent = 5;
-		btnConfirm.setLayoutData(gdBtnConfirm);
-		btnConfirm.addSelectionListener(new SelectionAdapter() {
+		timeStopped = new DateTime(compositeMedicationDetail, SWT.TIME);
+		timeStopped.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				applyDetailChanges();
+				activateConfirmButton(true);
 			}
 		});
-		btnConfirm.setEnabled(false);
+		dateStopped = new DateTime(compositeMedicationDetail, SWT.DATE);
+		dateStopped.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				activateConfirmButton(true);
+			}
+		});
+		DataBindingContext dbc = new DataBindingContext();
+		IObservableValue dateTimeStopObservable =
+			PojoProperties.value("endTime", Date.class).observeDetail(selectedMedication);
+		IObservableValue timeObservable = WidgetProperties.selection().observe(timeStopped);
+		IObservableValue dateObservable = WidgetProperties.selection().observe(dateStopped);
+		dbc.bindValue(new DateAndTimeObservableValue(dateObservable, timeObservable),
+			dateTimeStopObservable);
 		
 		btnStopMedication = new Button(compositeMedicationDetail, SWT.FLAT | SWT.TOGGLE);
 		btnStopMedication.setImage(Images.IMG_STOP.getImage());
@@ -798,6 +803,9 @@ public class MedicationComposite extends Composite {
 					compositeMedicationDetail.setBackground(stopBGColor);
 					compositeStopMedicationTextDetails.setBackground(stopBGColor);
 					
+					dateStopped.setEnabled(true);
+					timeStopped.setEnabled(true);
+					
 					// highlight confirm button
 					activateConfirmButton(true);
 				} else {
@@ -806,12 +814,29 @@ public class MedicationComposite extends Composite {
 					compositeStopMedicationTextDetails.setBackground(defaultBGColor);
 					stackLayout.topControl = compositeMedicationTextDetails;
 					
+					dateStopped.setEnabled(false);
+					timeStopped.setEnabled(false);
+					
 					//set confirm button defaults
 					activateConfirmButton(false);
 				}
 				stackedMedicationDetailComposite.layout();
 			}
 		});
+		
+		btnConfirm = new Button(compositeMedicationDetail, SWT.FLAT);
+		btnConfirm.setText(Messages.MedicationComposite_btnConfirm);
+		GridData gdBtnConfirm = new GridData();
+		gdBtnConfirm.horizontalIndent = 5;
+		gdBtnConfirm.horizontalAlignment = SWT.RIGHT;
+		btnConfirm.setLayoutData(gdBtnConfirm);
+		btnConfirm.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				applyDetailChanges();
+			}
+		});
+		btnConfirm.setEnabled(false);
 		
 		stackedMedicationDetailComposite = new Composite(compositeMedicationDetail, SWT.NONE);
 		stackedMedicationDetailComposite
@@ -901,7 +926,12 @@ public class MedicationComposite extends Composite {
 					newPrescription.setDosis(getDosisStringFromSignatureTextArray());
 				}
 				// change always stops
-				oldPrescription.stop(null);
+				if (btnStopMedication.getSelection()) {
+					TimeTool endTime = new TimeTool(pres.getEndTime());
+					oldPrescription.stop(endTime);
+				} else {
+					oldPrescription.stop(null);
+				}
 				oldPrescription.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
 			}
 		});
@@ -909,7 +939,7 @@ public class MedicationComposite extends Composite {
 		if (btnStopMedication.isEnabled())
 			showMedicationDetailComposite(null);
 
-		medicationTableViewer.refresh();
+		updateUi(pat, true);
 	}
 	
 	/**
@@ -933,6 +963,9 @@ public class MedicationComposite extends Composite {
 			} else {
 				stackLayout.topControl = compositeMedicationTextDetails;
 			}
+			dateStopped.setEnabled(false);
+			timeStopped.setEnabled(false);
+			
 			btnStopMedication.setEnabled(!stopped && presc.isFixedMediation());
 			stackedMedicationDetailComposite.layout();
 			

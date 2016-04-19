@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.medication.views;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,6 +41,8 @@ public class MedicationTableViewerItem {
 	private Object suppliedUntil;
 	private Object lastDisposed;
 	
+	private Date endTime;
+	
 	public MedicationTableViewerItem(Prescription p){
 		String[] values =
 			p.get(false, Prescription.FLD_ARTICLE, Prescription.FLD_DOSAGE, Prescription.FLD_REMARK,
@@ -54,6 +57,8 @@ public class MedicationTableViewerItem {
 		
 		dateFrom = p.getBeginTime();
 		dateUntil = p.getEndTime();
+		
+		endTime = new TimeTool(prescription.getEndTime()).getTime();
 	}
 	
 	public static void setTableViewer(TableViewer medicationTableViewer){
@@ -98,6 +103,14 @@ public class MedicationTableViewerItem {
 	
 	public String getEndDate(){
 		return dateUntil;
+	}
+	
+	public Date getEndTime(){
+		return endTime;
+	}
+	
+	public void setEndTime(Date time){
+		endTime = time;
 	}
 	
 	public String getDosis(){
