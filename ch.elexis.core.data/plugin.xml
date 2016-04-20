@@ -45,6 +45,10 @@
            class="ch.elexis.core.data.util.FallDataAccessor"
            name="Fall">
      </DataAccess>
+     <DataAccess
+           class="ch.elexis.core.data.util.PatientDataAccessor"
+           name="Patient">
+     </DataAccess>
   </extension>
   <extension
         point="org.eclipse.core.runtime.preferences">
