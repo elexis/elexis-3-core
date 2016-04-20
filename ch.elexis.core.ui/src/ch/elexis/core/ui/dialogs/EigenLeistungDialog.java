@@ -53,12 +53,12 @@ public class EigenLeistungDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(2, false));
-		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_name); //$NON-NLS-1$
-		tName = new Text(ret, SWT.BORDER);
-		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_shortname); //$NON-NLS-1$
 		tKurz = new Text(ret, SWT.BORDER);
 		tKurz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_name); //$NON-NLS-1$
+		tName = new Text(ret, SWT.BORDER);
+		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_costInCents); //$NON-NLS-1$
 		tEK = new Text(ret, SWT.BORDER);
 		tEK.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));

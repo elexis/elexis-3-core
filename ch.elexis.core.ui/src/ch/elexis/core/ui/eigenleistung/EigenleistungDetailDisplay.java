@@ -39,7 +39,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		
 		Label lblCode = new Label(ret, SWT.NONE);
 		lblCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblCode.setText("Code");
+		lblCode.setText("Kürzel (Code)");
 		
 		textCode = new Text(ret, SWT.BORDER);
 		textCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -55,7 +55,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		
 		Label lblEKP = new Label(ret, SWT.NONE);
 		lblEKP.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEKP.setText("Einkaufspreis");
+		lblEKP.setText("Einkaufspreis (Rp.)");
 		
 		textEKP = new Text(ret, SWT.BORDER);
 		textEKP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -63,7 +63,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		
 		Label lblVKP = new Label(ret, SWT.NONE);
 		lblVKP.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblVKP.setText("Verkaufspreis");
+		lblVKP.setText("Verkaufspreis (Rp.)");
 		
 		textVKP = new Text(ret, SWT.BORDER);
 		textVKP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

@@ -10,28 +10,50 @@
  ******************************************************************************/
 package ch.elexis.core.ui.eigenleistung;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.handlers.IHandlerService;
 
+import ch.elexis.core.ui.commands.CreateEigenleistungUi;
+import ch.elexis.core.ui.dialogs.EigenLeistungDialog;
+import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.selectors.FieldDescriptor;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
+import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import ch.elexis.core.ui.views.codesystems.Messages;
 import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.PersistentObject;
 
 public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
+	IAction createAction;
+	static SelectorPanelProvider slp;
+	CommonViewer cv;
 	
 	@Override
 	public ViewerConfigurer createViewerConfigurer(CommonViewer cv){
+		this.cv = cv;
+		makeActions();
+		
+		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
+			new FieldDescriptor<Eigenleistung>(Eigenleistung.CODE)
+		};
+		
+		slp = new SelectorPanelProvider(lbName, true);
+		slp.addActions(createAction);
 		return new ViewerConfigurer(
 			// new LazyContentProvider(cv,dataloader,null),
-			new EigenleistungLoader(cv), new DefaultLabelProvider(),
-			new DefaultControlFieldProvider(cv, new String[] {
-				"code=Code" //$NON-NLS-1$
-			}), new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
-				SimpleWidgetProvider.TYPE_LAZYLIST, SWT.NONE, null));
+			new EigenleistungLoader(cv), new DefaultLabelProvider(), slp,
+			new ViewerConfigurer.DefaultButtonProvider(),
+			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.NONE, null));
 	}
 	
 	@Override
@@ -41,6 +63,23 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 	
 	@Override
 	public void dispose(){}
+	
+	private void makeActions(){
+		createAction = new Action("neu erstellen") {
+			{
+				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+				setToolTipText(Messages.BlockDetailDisplay_addSelfDefinedServices);
+			}
+			
+			@Override
+			public void run(){
+				Shell parent = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+				EigenLeistungDialog dialog = new EigenLeistungDialog(parent, null);
+				dialog.open();
+				cv.notify(CommonViewer.Message.update);
+			}
+		};
+	}
 	
 	@Override
 	public String getCodeSystemName(){
