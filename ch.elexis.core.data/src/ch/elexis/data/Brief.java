@@ -213,7 +213,7 @@ public class Brief extends PersistentObject {
 	}
 	
 	public String getDatum(){
-		return new TimeTool(get(FLD_DATE)).toString(TimeTool.DATE_COMPACT);
+		return new TimeTool(get(FLD_DATE)).toString(TimeTool.DATE_GER);
 	}
 	
 	public Kontakt getAdressat(){
