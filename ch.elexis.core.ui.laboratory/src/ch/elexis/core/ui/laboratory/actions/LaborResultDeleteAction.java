@@ -47,7 +47,6 @@ public class LaborResultDeleteAction extends Action implements IAction {
 					
 					if (orders != null) {
 						for (LabOrder labOrder : orders) {
-							labOrder.setLabResult(null);
 							labOrder.setState(State.ORDERED);
 						}
 					}
