@@ -5,6 +5,13 @@ import org.eclipse.jface.action.Action;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.data.PersistentObject;
 
+/**
+ * Action will be active if lock LockService#isLocked on the targeted Object is true.
+ * 
+ * @author thomas
+ *
+ * @param <T>
+ */
 public abstract class LockedAction<T extends PersistentObject> extends Action {
 
 	private T object;

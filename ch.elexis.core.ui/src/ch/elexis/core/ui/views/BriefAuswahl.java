@@ -35,13 +35,11 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
@@ -59,6 +57,7 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -474,46 +473,65 @@ public class BriefAuswahl extends ViewPart implements
 					}
 					
 				}
-			};
-		deleteAction = new Action(Messages.BriefAuswahlDeleteButtonText) { //$NON-NLS-1$
-				@Override
-				public void run(){
+		};
+		deleteAction = new LockRequestingAction<Brief>(Messages.BriefAuswahlDeleteButtonText) { //$NON-NLS-1$
+			@Override
+			public void doRun(Brief brief){
+				if (brief != null && SWTHelper.askYesNo(Messages.BriefAuswahlDeleteConfirmHeading, //$NON-NLS-1$
+					Messages.BriefAuswahlDeleteConfirmText)) {
+					brief.delete();
 					CTabItem sel = ctab.getSelection();
-					if ((sel != null)
-						&& SWTHelper.askYesNo(Messages.BriefAuswahlDeleteConfirmHeading, //$NON-NLS-1$
-							Messages.BriefAuswahlDeleteConfirmText)) { //$NON-NLS-1$
-						CommonViewer cv = (CommonViewer) sel.getData();
-						Object[] o = cv.getSelection();
-						if ((o != null) && (o.length > 0)) {
-							Brief brief = (Brief) o[0];
-							brief.delete();
-						}
-						cv.notify(CommonViewer.Message.update);
-					}
-					
+					CommonViewer cv = (CommonViewer) sel.getData();
+					cv.notify(CommonViewer.Message.update);
 				}
-			};
-		editNameAction = new Action(Messages.BriefAuswahlRenameButtonText) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					CTabItem sel = ctab.getSelection();
-					if (sel != null) {
-						CommonViewer cv = (CommonViewer) sel.getData();
-						Object[] o = cv.getSelection();
-						if ((o != null) && (o.length > 0)) {
-							Brief brief = (Brief) o[0];
-							InputDialog id =
-								new InputDialog(getViewSite().getShell(),
-									Messages.BriefAuswahlNewSubjectHeading, //$NON-NLS-1$
-									Messages.BriefAuswahlNewSubjectText, //$NON-NLS-1$
-									brief.getBetreff(), null);
-							if (id.open() == Dialog.OK) {
-								brief.setBetreff(id.getValue());
-							}
+			}
+			
+			@Override
+			public Brief getTargetedObject(){
+				CTabItem sel = ctab.getSelection();
+				if ((sel != null)) { //$NON-NLS-1$
+					CommonViewer cv = (CommonViewer) sel.getData();
+					Object[] o = cv.getSelection();
+					if ((o != null) && (o.length > 0)) {
+						if (o[0] instanceof Brief) {
+							return (Brief) o[0];
 						}
-						cv.notify(CommonViewer.Message.update);
 					}
 				}
+				return null;
+			}
+		};
+		editNameAction = new LockRequestingAction<Brief>(Messages.BriefAuswahlRenameButtonText) { //$NON-NLS-1$
+			@Override
+			public void doRun(Brief brief){
+				if (brief != null) {
+					InputDialog id = new InputDialog(getViewSite().getShell(),
+						Messages.BriefAuswahlNewSubjectHeading, //$NON-NLS-1$
+						Messages.BriefAuswahlNewSubjectText, //$NON-NLS-1$
+						brief.getBetreff(), null);
+					if (id.open() == Dialog.OK) {
+						brief.setBetreff(id.getValue());
+					}
+					CTabItem sel = ctab.getSelection();
+					CommonViewer cv = (CommonViewer) sel.getData();
+					cv.notify(CommonViewer.Message.update);
+				}
+			}
+			
+			@Override
+			public Brief getTargetedObject(){
+				CTabItem sel = ctab.getSelection();
+				if (sel != null) { //$NON-NLS-1$
+					CommonViewer cv = (CommonViewer) sel.getData();
+					Object[] o = cv.getSelection();
+					if ((o != null) && (o.length > 0)) {
+						if (o[0] instanceof Brief) {
+							return (Brief) o[0];
+						}
+					}
+				}
+				return null;
+			}
 			};
 		/*
 		 * importAction=new Action("Importieren..."){ public void run(){
