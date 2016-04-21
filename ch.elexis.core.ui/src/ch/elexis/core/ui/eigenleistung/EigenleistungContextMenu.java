@@ -23,7 +23,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.ui.dialogs.EigenLeistungDialog;
+import ch.elexis.core.ui.commands.EditEigenleistungUi;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.data.Eigenleistung;
@@ -64,13 +64,14 @@ public class EigenleistungContextMenu {
 		deleteAction = new Action(Messages.EigenleistungContextMenu_deleteAction) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-				setToolTipText(
-					art.getClass().getName() + Messages.EigenleistungContextMenu_deleteActionToolTip);
+				setToolTipText(art.getClass().getName()
+					+ Messages.EigenleistungContextMenu_deleteActionToolTip);
 			}
 			
 			@Override
 			public void run(){
-				Eigenleistung act = (Eigenleistung) ElexisEventDispatcher.getSelected(art.getClass());
+				Eigenleistung act =
+					(Eigenleistung) ElexisEventDispatcher.getSelected(art.getClass());
 				if (MessageDialog.openConfirm(cv.getViewerWidget().getControl().getShell(),
 					Messages.EigenleistungContextMenu_deleteActionConfirmCaption,
 					MessageFormat.format(Messages.EigenleistungContextMenu_deleteConfirmBody,
@@ -92,9 +93,7 @@ public class EigenleistungContextMenu {
 			public void run(){
 				Eigenleistung lstg =
 					(Eigenleistung) ElexisEventDispatcher.getSelected(art.getClass());
-				EigenLeistungDialog dialog =
-					new EigenLeistungDialog(cv.getViewerWidget().getControl().getShell(), lstg);
-				dialog.open();
+				EditEigenleistungUi.executeWithParams(lstg);
 			}
 		};
 	}
