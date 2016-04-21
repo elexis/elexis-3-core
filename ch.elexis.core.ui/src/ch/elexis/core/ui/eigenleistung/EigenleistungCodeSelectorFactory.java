@@ -15,15 +15,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.handlers.IHandlerService;
 
-import ch.elexis.core.ui.commands.CreateEigenleistungUi;
 import ch.elexis.core.ui.dialogs.EigenLeistungDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
@@ -32,6 +28,7 @@ import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 import ch.elexis.core.ui.views.codesystems.Messages;
 import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.PersistentObjectFactory;
 
 public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 	IAction createAction;
@@ -41,6 +38,11 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 	@Override
 	public ViewerConfigurer createViewerConfigurer(CommonViewer cv){
 		this.cv = cv;
+		
+		new EigenleistungContextMenu(
+			(Eigenleistung) new PersistentObjectFactory().createTemplate(Eigenleistung.class), cv,
+			null);
+		
 		makeActions();
 		
 		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {

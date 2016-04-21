@@ -44,6 +44,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		textCode = new Text(ret, SWT.BORDER);
 		textCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textCode.setTextLimit(20);
+		textCode.setEditable(false);
 		
 		Label lblBezeichnung = new Label(ret, SWT.NONE);
 		lblBezeichnung.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -52,6 +53,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		textBezeichnung = new Text(ret, SWT.BORDER | SWT.MULTI);
 		textBezeichnung.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textBezeichnung.setTextLimit(80);
+		textBezeichnung.setEditable(false);
 		
 		Label lblEKP = new Label(ret, SWT.NONE);
 		lblEKP.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -60,6 +62,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		textEKP = new Text(ret, SWT.BORDER);
 		textEKP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textEKP.setTextLimit(6);
+		textEKP.setEditable(false);
 		
 		Label lblVKP = new Label(ret, SWT.NONE);
 		lblVKP.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -68,6 +71,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		textVKP = new Text(ret, SWT.BORDER);
 		textVKP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textVKP.setTextLimit(6);
+		textVKP.setEditable(false);
 		
 		Label lblZeit = new Label(ret, SWT.NONE);
 		lblZeit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -76,6 +80,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		textZeit = new Text(ret, SWT.BORDER);
 		textZeit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textZeit.setTextLimit(4);
+		textZeit.setEditable(false);
 		return null;
 	}
 	

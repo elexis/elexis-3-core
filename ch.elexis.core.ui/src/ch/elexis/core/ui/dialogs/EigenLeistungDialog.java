@@ -90,9 +90,9 @@ public class EigenLeistungDialog extends TitleAreaDialog {
 		} else if (result instanceof Eigenleistung) {
 			((Eigenleistung) result).set(new String[] {
 				Eigenleistung.CODE, Eigenleistung.BEZEICHNUNG, Eigenleistung.EK_PREIS,
-				Eigenleistung.VK_PREIS
+				Eigenleistung.VK_PREIS, Eigenleistung.TIME
 			}, new String[] {
-				tKurz.getText(), tName.getText(), tEK.getText(), tVK.getText()
+				tKurz.getText(), tName.getText(), tEK.getText(), tVK.getText(), tTime.getText()
 			});
 		}
 		super.okPressed();
