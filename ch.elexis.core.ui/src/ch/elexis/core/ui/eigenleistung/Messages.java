@@ -12,7 +12,7 @@ package ch.elexis.core.ui.eigenleistung;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.core.ui.views.artikel.messages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "ch.elexis.core.ui.eigenleistung.messages";//$NON-NLS-1$
 	public static String EigenleistungContextMenu_create;
 	public static String EigenleistungContextMenu_deleteAction;
 	public static String EigenleistungContextMenu_deleteActionConfirmCaption;
