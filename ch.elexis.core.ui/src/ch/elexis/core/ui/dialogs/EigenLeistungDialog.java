@@ -74,6 +74,7 @@ public class EigenLeistungDialog extends TitleAreaDialog {
 			tKurz.setText(el.get(Messages.BlockDetailDisplay_code)); //$NON-NLS-1$
 			tEK.setText(el.getKosten(new TimeTool()).getCentsAsString());
 			tVK.setText(el.getPreis(new TimeTool(), null).getCentsAsString());
+			tTime.setText(el.get(Eigenleistung.TIME));
 		}
 		return ret;
 	}
