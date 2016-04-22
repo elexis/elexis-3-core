@@ -135,7 +135,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 		txtAllergien.setEditable(unlocked);
 		txtRisiken.setEditable(unlocked);
 		txtBemerkungen.setEditable(unlocked);
-		dmd.setUnlocked(unlocked);
+		dmd.setUnlocked(false); // https://redmine.medelexis.ch/issues/4602
 		inpZusatzAdresse.setUnlocked(unlocked);
 	}
 
