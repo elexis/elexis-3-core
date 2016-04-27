@@ -130,6 +130,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	 * Refresh the contents of the list.
 	 */
 	public void reload() {
+		plcp.invalidate();
 		cv.notify(CommonViewer.Message.update);
 	}
 
