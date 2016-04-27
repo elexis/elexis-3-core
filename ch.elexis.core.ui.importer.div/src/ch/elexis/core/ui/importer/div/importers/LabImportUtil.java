@@ -365,10 +365,12 @@ public class LabImportUtil implements ILabImportUtil {
 			comment.append(hl7TextData.getText());
 			comment.append(hl7TextData.getComment());
 			// only add coments not yet existing
-			LabResult result =
+			LabResult labResult =
 				new LabResult(pat, commentsDate, li, "text", comment.toString(), labor); //$NON-NLS-1$
-			result.setObservationTime(commentsDate);
-			// TODO LockHook
+			labResult.setObservationTime(commentsDate);
+			
+			CoreHub.getLocalLockService().acquireLock((LabResult) labResult);
+			CoreHub.getLocalLockService().releaseLock((LabResult) labResult);
 		}
 	}
 	
