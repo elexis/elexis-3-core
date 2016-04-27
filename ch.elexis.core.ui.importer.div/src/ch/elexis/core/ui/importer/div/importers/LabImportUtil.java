@@ -295,8 +295,15 @@ public class LabImportUtil implements ILabImportUtil {
 	
 	@Override
 	public ILabItem getLabItem(String code, IContact labor){
-		// TODO Auto-generated method stub
-		return null;
+		Query<LabItem> qre = new Query<LabItem>(LabItem.class);
+		qre.add(LabItem.SHORTNAME, Query.EQUALS, code);
+		qre.add(LabItem.LAB_ID, Query.EQUALS, labor.getId());
+		LabItem labItem = null;
+		List<LabItem> itemList = qre.execute();
+		if (itemList.size() > 0) {
+			labItem = itemList.get(0);
+		}
+		return labItem;
 	}
 	
 	@Override
@@ -333,9 +340,9 @@ public class LabImportUtil implements ILabImportUtil {
 		
 		// find LabItem
 		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
-		qbe.add("LaborID", "=", labor.getId()); //$NON-NLS-1$ //$NON-NLS-2$
-		qbe.add("titel", "=", HL7Constants.COMMENT_NAME); //$NON-NLS-1$ //$NON-NLS-2$
-		qbe.add("kuerzel", "=", HL7Constants.COMMENT_CODE); //$NON-NLS-1$ //$NON-NLS-2$
+		qbe.add(LabItem.LAB_ID, Query.EQUALS, labor.getId());
+		qbe.add(LabItem.TITLE, Query.EQUALS, HL7Constants.COMMENT_NAME);
+		qbe.add(LabItem.SHORTNAME, Query.EQUALS, HL7Constants.COMMENT_CODE);
 		List<LabItem> list = qbe.execute();
 		LabItem li = null;
 		if (list.size() < 1) {
@@ -350,9 +357,9 @@ public class LabImportUtil implements ILabImportUtil {
 		
 		// add LabResult
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
-		qr.add("PatientID", "=", pat.getId()); //$NON-NLS-1$ //$NON-NLS-2$
-		qr.add("Datum", "=", commentsDate.toString(TimeTool.DATE_GER)); //$NON-NLS-1$ //$NON-NLS-2$
-		qr.add("ItemID", "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+		qr.add(LabResult.PATIENT_ID, Query.EQUALS, pat.getId());
+		qr.add(LabResult.DATE, Query.EQUALS, commentsDate.toString(TimeTool.DATE_GER));
+		qr.add(LabResult.ITEM_ID,Query.EQUALS, li.getId());
 		if (qr.execute().size() == 0) {
 			StringBuilder comment = new StringBuilder();
 			comment.append(hl7TextData.getText());
@@ -363,7 +370,6 @@ public class LabImportUtil implements ILabImportUtil {
 			result.setObservationTime(commentsDate);
 			// TODO LockHook
 		}
-		
 	}
 	
 	@Override
