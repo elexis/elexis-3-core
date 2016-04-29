@@ -1530,13 +1530,50 @@ public interface ModelPackage extends EPackage {
 	int ILAB_ORDER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IPeriod <em>IPeriod</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IPeriod
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPeriod()
+	 * @generated
+	 */
+	int IPERIOD = 14;
+
+	/**
+	 * The feature id for the '<em><b>Start Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERIOD__START_TIME = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>End Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERIOD__END_TIME = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>IPeriod</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERIOD_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
 	 * The meta object id for the '<em>String Array</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 	 * @generated
 	 */
-	int STRING_ARRAY = 14;
+	int STRING_ARRAY = 15;
 
 
 	/**
@@ -2406,6 +2443,38 @@ public interface ModelPackage extends EPackage {
 	EReference getILabOrder_PatientContact();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IPeriod <em>IPeriod</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IPeriod</em>'.
+	 * @see ch.elexis.core.model.IPeriod
+	 * @generated
+	 */
+	EClass getIPeriod();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPeriod#getStartTime <em>Start Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Start Time</em>'.
+	 * @see ch.elexis.core.model.IPeriod#getStartTime()
+	 * @see #getIPeriod()
+	 * @generated
+	 */
+	EAttribute getIPeriod_StartTime();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPeriod#getEndTime <em>End Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>End Time</em>'.
+	 * @see ch.elexis.core.model.IPeriod#getEndTime()
+	 * @see #getIPeriod()
+	 * @generated
+	 */
+	EAttribute getIPeriod_EndTime();
+
+	/**
 	 * Returns the meta object for data type '<em>String Array</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3104,6 +3173,32 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ILAB_ORDER__PATIENT_CONTACT = eINSTANCE.getILabOrder_PatientContact();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IPeriod <em>IPeriod</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IPeriod
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPeriod()
+		 * @generated
+		 */
+		EClass IPERIOD = eINSTANCE.getIPeriod();
+
+		/**
+		 * The meta object literal for the '<em><b>Start Time</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPERIOD__START_TIME = eINSTANCE.getIPeriod_StartTime();
+
+		/**
+		 * The meta object literal for the '<em><b>End Time</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPERIOD__END_TIME = eINSTANCE.getIPeriod_EndTime();
 
 		/**
 		 * The meta object literal for the '<em>String Array</em>' data type.

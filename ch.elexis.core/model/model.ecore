@@ -194,4 +194,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="labItem" eType="#//ILabItem"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patientContact" eType="#//IPatient"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IPeriod" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
+  </eClassifiers>
 </ecore:EPackage>

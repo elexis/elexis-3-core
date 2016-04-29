@@ -132,6 +132,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createILabOrderAdapter();
 			}
 			@Override
+			public Adapter caseIPeriod(IPeriod object) {
+				return createIPeriodAdapter();
+			}
+			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
 				return createComparableAdapter();
 			}
@@ -348,6 +352,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createILabOrderAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IPeriod <em>IPeriod</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IPeriod
+	 * @generated
+	 */
+	public Adapter createIPeriodAdapter() {
 		return null;
 	}
 

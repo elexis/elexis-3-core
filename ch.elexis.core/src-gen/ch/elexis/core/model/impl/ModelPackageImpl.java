@@ -10,6 +10,15 @@
  */
 package ch.elexis.core.model.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EGenericType;
+import org.eclipse.emf.ecore.EOperation;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IChangeListener;
 import ch.elexis.core.model.ICodeElement;
@@ -18,6 +27,7 @@ import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.ISticker;
@@ -26,20 +36,7 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelFactory;
 import ch.elexis.core.model.ModelPackage;
-
 import ch.elexis.core.types.TypesPackage;
-
-import ch.elexis.core.types.impl.TypesPackageImpl;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EGenericType;
-import org.eclipse.emf.ecore.EOperation;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -145,6 +142,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iLabOrderEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iPeriodEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -942,6 +946,33 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getIPeriod() {
+		return iPeriodEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPeriod_StartTime() {
+		return (EAttribute)iPeriodEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPeriod_EndTime() {
+		return (EAttribute)iPeriodEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getStringArray() {
 		return stringArrayEDataType;
 	}
@@ -1068,6 +1099,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iLabOrderEClass, ILAB_ORDER__LAB_ITEM);
 		createEReference(iLabOrderEClass, ILAB_ORDER__PATIENT_CONTACT);
 
+		iPeriodEClass = createEClass(IPERIOD);
+		createEAttribute(iPeriodEClass, IPERIOD__START_TIME);
+		createEAttribute(iPeriodEClass, IPERIOD__END_TIME);
+
 		// Create data types
 		stringArrayEDataType = createEDataType(STRING_ARRAY);
 	}
@@ -1117,6 +1152,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iLabItemEClass.getESuperTypes().add(this.getIdentifiable());
 		iLabResultEClass.getESuperTypes().add(this.getIdentifiable());
 		iLabOrderEClass.getESuperTypes().add(this.getIdentifiable());
+		iPeriodEClass.getESuperTypes().add(this.getIdentifiable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(iContactEClass, IContact.class, "IContact", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1305,6 +1341,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getILabOrder_LabResult(), this.getILabResult(), null, "labResult", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getILabOrder_LabItem(), this.getILabItem(), null, "labItem", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getILabOrder_PatientContact(), this.getIPatient(), null, "patientContact", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iPeriodEClass, IPeriod.class, "IPeriod", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIPeriod_StartTime(), theTypesPackage.getTimeTool(), "startTime", null, 0, 1, IPeriod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPeriod_EndTime(), theTypesPackage.getTimeTool(), "endTime", null, 0, 1, IPeriod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(stringArrayEDataType, String[].class, "StringArray", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
