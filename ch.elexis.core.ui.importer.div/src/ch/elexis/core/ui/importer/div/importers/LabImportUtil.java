@@ -294,14 +294,24 @@ public class LabImportUtil implements ILabImportUtil {
 	}
 	
 	@Override
-	public ILabItem getLabItem(String code, IContact labor){
-		Query<LabItem> qre = new Query<LabItem>(LabItem.class);
-		qre.add(LabItem.SHORTNAME, Query.EQUALS, code);
-		qre.add(LabItem.LAB_ID, Query.EQUALS, labor.getId());
+	public ILabItem getLabItem(String identifier, IContact labor){
+		LabMapping mapping = LabMapping.getByContactAndItemName(labor.getId(), identifier);
+		if (mapping != null) {
+			return mapping.getLabItem();
+		}
+		
 		LabItem labItem = null;
-		List<LabItem> itemList = qre.execute();
-		if (itemList.size() > 0) {
-			labItem = itemList.get(0);
+		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
+		qbe.add(LabItem.LAB_ID, Query.EQUALS, labor.getId());
+		qbe.add(LabItem.SHORTNAME, Query.EQUALS, identifier);
+		List<LabItem> list = qbe.execute();
+		if (!list.isEmpty()) {
+			labItem = list.get(0);
+			if (list.size() > 1) {
+				logger.warn(
+					"Found more than one LabItem for identifier [" + identifier + "] and Labor ["
+						+ labor.getLabel() + "]. This can cause problems when importing results.");
+			}
 		}
 		return labItem;
 	}
