@@ -12,12 +12,15 @@
 
 package ch.rgw.io;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Iterator;
 
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
+import ch.rgw.tools.JdbcLinkExceptionTranslation;
 
 /**
  * settings-IMplementation, die eine SQL-Datenbank zur Speicherung verwendet. In der jetzigen
@@ -76,62 +79,98 @@ public class SqlSettings extends Settings {
 	 */
 	protected void flush_absolute(){
 		Iterator it = iterator();
-		Stm stm = j.getStatement();
-		while (it.hasNext()) {
-			String a = (String) it.next();
-			String v = get(a, null);
+		PreparedStatement selectStatement = null;
+		PreparedStatement deleteStatement = null;
+		PreparedStatement updateStatement = null;
+		PreparedStatement insertStatement = null;
+		try {
+			// prepare the select statement
 			StringBuilder sql = new StringBuilder(300);
 			sql.append("SELECT ").append(valueColumn).append(" FROM ").append(tbl)
 				.append(" WHERE ");
 			if (constraint != null) {
 				sql.append(constraint).append(" AND ");
 			}
-			sql.append(paramColumn).append("=").append(JdbcLink.wrap(a));
-			// String
-			// sql="SELECT wert FROM "+tbl+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a);
-			if (stm.queryString(sql.toString()) != null) {
-				sql = new StringBuilder(200);
-				if (v == null) {
-					sql.append("DELETE FROM ").append(tbl).append(" WHERE ");
-					if (constraint != null) {
-						sql.append(constraint).append(" AND ");
-					}
-					sql.append(paramColumn).append("=").append(JdbcLink.wrap(a));
-					// sql=new
-					// StringBuilder("DELETE from "+tbl+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a))
-				} else {
-					sql.append("UPDATE ").append(tbl).append(" SET ").append(valueColumn)
-						.append("=").append(JdbcLink.wrap(v)).append(" WHERE ");
-					if (constraint != null) {
-						sql.append(constraint).append(" AND ");
-					}
-					sql.append(paramColumn).append("=").append(JdbcLink.wrap(a));
-					// sql=new
-					// StringBuilder("UPDATE "+tbl+" SET wert="+JdbcLink.wrap(v)+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a));
-				}
-			} else {
-				if (v == null) {
-					continue;
-				}
-				sql = new StringBuilder(200);
-				String[] cn = null;
-				sql.append("INSERT INTO ").append(tbl).append("(").append(paramColumn).append(",")
-					.append(valueColumn);
-				if (constraint != null) {
-					cn = constraint.split("=");
-					sql.append(",").append(cn[0]);
-				}
-				sql.append(") VALUES (").append(JdbcLink.wrap(a)).append(",")
-					.append(JdbcLink.wrap(v));
-				if (cn != null && cn.length > 1) {
-					sql.append(",").append(cn[1]);
-				}
-				sql.append(")");
-				// sql="INSERT INTO "+tbl+" (param,wert,"+cn[0]+") VALUES ("+JdbcLink.wrap(a)+","+JdbcLink.wrap(v)+","+cn[1]+")";
+			sql.append(paramColumn).append("= ?");
+			selectStatement = j.getPreparedStatement(sql.toString());
+			
+			// prepare the delete statement
+			sql = new StringBuilder(200);
+			sql.append("DELETE FROM ").append(tbl).append(" WHERE ");
+			if (constraint != null) {
+				sql.append(constraint).append(" AND ");
 			}
-			stm.exec(sql.toString());
+			sql.append(paramColumn).append("= ?");
+			deleteStatement = j.getPreparedStatement(sql.toString());
+			
+			// prepare the update statement
+			sql = new StringBuilder(200);
+			sql.append("UPDATE ").append(tbl).append(" SET ").append(valueColumn).append("= ?")
+				.append(" WHERE ");
+			if (constraint != null) {
+				sql.append(constraint).append(" AND ");
+			}
+			sql.append(paramColumn).append("= ?");
+			updateStatement = j.getPreparedStatement(sql.toString());
+			
+			// prepare the insert statement
+			sql = new StringBuilder(200);
+			String[] cn = null;
+			sql.append("INSERT INTO ").append(tbl).append("(").append(paramColumn).append(",")
+				.append(valueColumn);
+			if (constraint != null) {
+				cn = constraint.split("=");
+				sql.append(",").append(cn[0]);
+			}
+			sql.append(") VALUES (").append("?").append(",").append("?");
+			if (cn != null && cn.length > 1) {
+				sql.append(",?");
+			}
+			sql.append(")");
+			insertStatement = j.getPreparedStatement(sql.toString());
+			
+			while (it.hasNext()) {
+				String a = (String) it.next();
+				String v = get(a, null);
+				selectStatement.setString(1, a);
+				// String
+				// sql="SELECT wert FROM "+tbl+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a);
+				ResultSet res = selectStatement.executeQuery();
+				if (res.first()) {
+					if (v == null) {
+						deleteStatement.setString(1, a);
+						deleteStatement.executeUpdate();
+						// sql=new
+						// StringBuilder("DELETE from "+tbl+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a))
+					} else {
+						updateStatement.setString(1, v);
+						updateStatement.setString(2, a);
+						updateStatement.executeUpdate();
+						// sql=new
+						// StringBuilder("UPDATE "+tbl+" SET wert="+JdbcLink.wrap(v)+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a));
+					}
+				} else {
+					if (v == null) {
+						continue;
+					}
+					insertStatement.setString(1, a);
+					insertStatement.setString(2, v);
+					if (cn != null && cn.length > 1) {
+						insertStatement.setString(3, cn[1]);
+					}
+					insertStatement.executeUpdate();
+					// sql="INSERT INTO "+tbl+" (param,wert,"+cn[0]+") VALUES ("+JdbcLink.wrap(a)+","+JdbcLink.wrap(v)+","+cn[1]+")";
+				}
+				res.close();
+			}
+		} catch (SQLException e) {
+			throw JdbcLinkExceptionTranslation.translateException(e);
+		} finally {
+			j.releasePreparedStatement(selectStatement);
+			j.releasePreparedStatement(deleteStatement);
+			j.releasePreparedStatement(updateStatement);
+			j.releasePreparedStatement(insertStatement);
 		}
-		j.releaseStatement(stm);
 	}
 	
 	/*
