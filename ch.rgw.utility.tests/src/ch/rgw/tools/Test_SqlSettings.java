@@ -30,7 +30,7 @@ public class Test_SqlSettings {
 		JdbcLink link = getJdbcLink(false);
 		new SqlSettings(link, "CONFIG");
 		
-		new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID=1");
+		new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
 		link.disconnect();
 	}
 	
@@ -48,7 +48,7 @@ public class Test_SqlSettings {
 		
 		link = getJdbcLink(false);
 		SqlSettings userSettings =
-			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID=1");
+			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
 		// returns false on first set
 		assertFalse(userSettings.set("key1", "value"));
 		userSettings.flush();
@@ -72,7 +72,7 @@ public class Test_SqlSettings {
 		
 		link = getJdbcLink(false);
 		SqlSettings userSettings =
-			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID=1");
+			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
 		// returns false on first set
 		userSettings.set("key1", true);
 		userSettings.flush();
@@ -96,7 +96,7 @@ public class Test_SqlSettings {
 		
 		link = getJdbcLink(false);
 		SqlSettings userSettings =
-			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID=1");
+			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
 		// returns false on first set
 		userSettings.set("key1", 1);
 		userSettings.flush();
@@ -121,13 +121,13 @@ public class Test_SqlSettings {
 		assertEquals("\\\\server\\order\\file", globalSettings.get("key2", ""));
 		
 		SqlSettings userSettings =
-			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID=1");
+			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
 		userSettings.set("key1", "value1");
 		userSettings.set("key2", "\\\\server\\order\\file");
 		userSettings.flush();
 		link.disconnect();
 		link = getJdbcLink(false);
-		userSettings = new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID=1");
+		userSettings = new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
 		
 		assertEquals("value1", userSettings.get("key1", ""));
 		assertEquals("\\\\server\\order\\file", userSettings.get("key2", ""));
@@ -148,13 +148,13 @@ public class Test_SqlSettings {
 		assertEquals(false, globalSettings.get("key2", true));
 		
 		SqlSettings userSettings =
-			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID=1");
+			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
 		userSettings.set("key1", true);
 		userSettings.set("key2", false);
 		userSettings.flush();
 		link.disconnect();
 		link = getJdbcLink(false);
-		userSettings = new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID=1");
+		userSettings = new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
 		
 		assertEquals(true, userSettings.get("key1", false));
 		assertEquals(false, userSettings.get("key2", true));
@@ -176,13 +176,13 @@ public class Test_SqlSettings {
 		assertEquals(2, globalSettings.get("key2", -1));
 		
 		SqlSettings userSettings =
-			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID=1");
+			new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
 		userSettings.set("key1", 1);
 		userSettings.set("key2", 2);
 		userSettings.flush();
 		link.disconnect();
 		link = getJdbcLink(false);
-		userSettings = new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID=1");
+		userSettings = new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
 		
 		assertEquals(1, userSettings.get("key1", -1));
 		assertEquals(2, userSettings.get("key2", -1));

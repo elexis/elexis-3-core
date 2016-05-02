@@ -17,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 
-import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.JdbcLinkExceptionTranslation;
@@ -84,46 +83,54 @@ public class SqlSettings extends Settings {
 		PreparedStatement updateStatement = null;
 		PreparedStatement insertStatement = null;
 		try {
+			String constraintKey = null;
+			String constraintValue = null;
+			if (constraint != null) {
+				String[] constraintParts = constraint.split("=");
+				if (constraintParts.length == 2) {
+					constraintKey = unwrap(constraintParts[0]);
+					constraintValue = unwrap(constraintParts[1]);
+				}
+			}
+			
 			// prepare the select statement
 			StringBuilder sql = new StringBuilder(300);
 			sql.append("SELECT ").append(valueColumn).append(" FROM ").append(tbl)
 				.append(" WHERE ");
-			if (constraint != null) {
-				sql.append(constraint).append(" AND ");
-			}
 			sql.append(paramColumn).append("= ?");
+			if (constraintKey != null && constraintValue != null) {
+				sql.append(" AND ").append(constraintKey).append("= ?");
+			}
 			selectStatement = j.getPreparedStatement(sql.toString());
 			
 			// prepare the delete statement
 			sql = new StringBuilder(200);
 			sql.append("DELETE FROM ").append(tbl).append(" WHERE ");
-			if (constraint != null) {
-				sql.append(constraint).append(" AND ");
-			}
 			sql.append(paramColumn).append("= ?");
+			if (constraintKey != null && constraintValue != null) {
+				sql.append(" AND ").append(constraintKey).append("= ?");
+			}
 			deleteStatement = j.getPreparedStatement(sql.toString());
 			
 			// prepare the update statement
 			sql = new StringBuilder(200);
 			sql.append("UPDATE ").append(tbl).append(" SET ").append(valueColumn).append("= ?")
 				.append(" WHERE ");
-			if (constraint != null) {
-				sql.append(constraint).append(" AND ");
-			}
 			sql.append(paramColumn).append("= ?");
+			if (constraintKey != null && constraintValue != null) {
+				sql.append(" AND ").append(constraintKey).append("= ?");
+			}
 			updateStatement = j.getPreparedStatement(sql.toString());
 			
 			// prepare the insert statement
 			sql = new StringBuilder(200);
-			String[] cn = null;
 			sql.append("INSERT INTO ").append(tbl).append("(").append(paramColumn).append(",")
 				.append(valueColumn);
-			if (constraint != null) {
-				cn = constraint.split("=");
-				sql.append(",").append(cn[0]);
+			if (constraintKey != null && constraintValue != null) {
+				sql.append(",").append(constraintKey);
 			}
 			sql.append(") VALUES (").append("?").append(",").append("?");
-			if (cn != null && cn.length > 1) {
+			if (constraintKey != null && constraintValue != null) {
 				sql.append(",?");
 			}
 			sql.append(")");
@@ -133,21 +140,34 @@ public class SqlSettings extends Settings {
 				String a = (String) it.next();
 				String v = get(a, null);
 				selectStatement.setString(1, a);
+				if (constraintKey != null && constraintValue != null) {
+					selectStatement.setString(2, constraintValue);
+				}
 				// String
 				// sql="SELECT wert FROM "+tbl+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a);
 				ResultSet res = selectStatement.executeQuery();
 				if (res.first()) {
-					if (v == null) {
-						deleteStatement.setString(1, a);
-						deleteStatement.executeUpdate();
-						// sql=new
-						// StringBuilder("DELETE from "+tbl+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a))
-					} else {
-						updateStatement.setString(1, v);
-						updateStatement.setString(2, a);
-						updateStatement.executeUpdate();
-						// sql=new
-						// StringBuilder("UPDATE "+tbl+" SET wert="+JdbcLink.wrap(v)+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a));
+					String existingValue = res.getString(1);
+					if (existingValue != null && !existingValue.equals(v)) {
+						if (v == null) {
+							deleteStatement.setString(1, a);
+							if (constraintKey != null && constraintValue != null) {
+								deleteStatement.setString(2, constraintValue);
+							}
+							deleteStatement.executeUpdate();
+							// sql=new
+							// StringBuilder("DELETE from "+tbl+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a))
+						} else {
+							updateStatement.setString(1, v);
+							updateStatement.setString(2, a);
+							if (constraintKey != null && constraintValue != null) {
+								updateStatement.setString(3, constraintValue);
+							}
+							updateStatement.executeUpdate();
+							System.out.println("UPD " + updateStatement);
+							// sql=new
+							// StringBuilder("UPDATE "+tbl+" SET wert="+JdbcLink.wrap(v)+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a));
+						}
 					}
 				} else {
 					if (v == null) {
@@ -155,8 +175,8 @@ public class SqlSettings extends Settings {
 					}
 					insertStatement.setString(1, a);
 					insertStatement.setString(2, v);
-					if (cn != null && cn.length > 1) {
-						insertStatement.setString(3, cn[1]);
+					if (constraintKey != null && constraintValue != null) {
+						insertStatement.setString(3, constraintValue);
 					}
 					insertStatement.executeUpdate();
 					// sql="INSERT INTO "+tbl+" (param,wert,"+cn[0]+") VALUES ("+JdbcLink.wrap(a)+","+JdbcLink.wrap(v)+","+cn[1]+")";
@@ -173,31 +193,50 @@ public class SqlSettings extends Settings {
 		}
 	}
 	
+	private String unwrap(String wrapped){
+		if (wrapped.startsWith("\'") && wrapped.endsWith("\'")) {
+			return wrapped.substring(1, wrapped.length() - 1);
+		}
+		return wrapped;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see ch.rgw.tools.Settings#undo()
 	 */
 	public void undo(){
-		ResultSet r;
-		Stm stm = j.getStatement();
+		PreparedStatement selectStatement = null;
 		try {
-			String sql = "SELECT * from " + tbl;
+			String constraintKey = null;
+			String constraintValue = null;
 			if (constraint != null) {
-				sql += " WHERE " + constraint;
+				String[] constraintParts = constraint.split("=");
+				if (constraintParts.length == 2) {
+					constraintKey = unwrap(constraintParts[0]);
+					constraintValue = unwrap(constraintParts[1]);
+				}
 			}
-			r = stm.query(sql);
-			while ((r != null) && r.next()) {
-				String parm = r.getString(paramColumn);
-				String val = r.getString(valueColumn);
+			StringBuilder sql = new StringBuilder(300);
+			sql.append("SELECT * FROM ").append(tbl);
+			if (constraintKey != null && constraintValue != null) {
+				sql.append(" WHERE ").append(constraintKey).append("= ?");
+			}
+			selectStatement = j.getPreparedStatement(sql.toString());
+			if (constraintKey != null && constraintValue != null) {
+				selectStatement.setString(1, constraintValue);
+			}
+			ResultSet resultSet = selectStatement.executeQuery();
+			while ((resultSet != null) && resultSet.next()) {
+				String parm = resultSet.getString(paramColumn);
+				String val = resultSet.getString(valueColumn);
 				set(parm, val);
 			}
 			cleaned();
-		} catch (Exception ex) {
-			ExHandler.handle(ex);
+		} catch (SQLException e) {
+			throw JdbcLinkExceptionTranslation.translateException(e);
 		} finally {
-			j.releaseStatement(stm);
+			j.releasePreparedStatement(selectStatement);
 		}
 	}
-	
 }
