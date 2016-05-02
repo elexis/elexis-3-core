@@ -164,7 +164,6 @@ public class SqlSettings extends Settings {
 								updateStatement.setString(3, constraintValue);
 							}
 							updateStatement.executeUpdate();
-							System.out.println("UPD " + updateStatement);
 							// sql=new
 							// StringBuilder("UPDATE "+tbl+" SET wert="+JdbcLink.wrap(v)+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a));
 						}
