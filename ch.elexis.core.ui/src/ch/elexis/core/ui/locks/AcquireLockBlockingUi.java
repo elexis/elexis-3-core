@@ -3,7 +3,6 @@ package ch.elexis.core.ui.locks;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
@@ -19,13 +18,19 @@ public class AcquireLockBlockingUi {
 	
 	public static void aquireAndRun(IPersistentObject lockPo, ILockHandler handler){
 		Display display = Display.getDefault();
-		
-		ProgressMonitorDialog progress = new ProgressMonitorDialog(display.getActiveShell());
-		try {
-			progress.run(true, true, new AcquireLockRunnable(lockPo, handler));
-		} catch (InvocationTargetException | InterruptedException e) {
-			logger.warn("Exception during acquire lock.", e);
-		}
+		display.syncExec(new Runnable() {
+			
+			@Override
+			public void run(){
+				ProgressMonitorDialog progress =
+					new ProgressMonitorDialog(display.getActiveShell());
+				try {
+					progress.run(true, true, new AcquireLockRunnable(lockPo, handler));
+				} catch (InvocationTargetException | InterruptedException e) {
+					logger.warn("Exception during acquire lock.", e);
+				}
+			}
+		});
 	}
 	
 	private static class AcquireLockRunnable implements IRunnableWithProgress {
