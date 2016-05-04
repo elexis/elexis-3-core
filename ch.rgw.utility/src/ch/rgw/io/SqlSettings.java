@@ -146,7 +146,7 @@ public class SqlSettings extends Settings {
 				// String
 				// sql="SELECT wert FROM "+tbl+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a);
 				ResultSet res = selectStatement.executeQuery();
-				if (res.first()) {
+				if (res.next()) {
 					String existingValue = res.getString(1);
 					if (existingValue != null && !existingValue.equals(v)) {
 						if (v == null) {
