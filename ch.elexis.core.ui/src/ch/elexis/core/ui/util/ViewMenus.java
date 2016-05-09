@@ -52,6 +52,16 @@ public class ViewMenus {
 	 */
 	public void createMenu(IAction... actions){
 		IMenuManager mgr = site.getActionBars().getMenuManager();
+		mgr.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager){
+				for (IAction iAction : actions) {
+					if(iAction instanceof RestrictedAction) {
+						((RestrictedAction) iAction).reflectRight();
+					}
+				}
+			}
+		});
 		for (IAction ac : actions) {
 			if (ac == null) {
 				mgr.add(new Separator());
