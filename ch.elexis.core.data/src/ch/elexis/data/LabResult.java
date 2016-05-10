@@ -339,7 +339,9 @@ public class LabResult extends PersistentObject implements ILabResult {
 		if (getItem().getTyp() == LabItemTyp.FORMULA) {
 			String value = null;
 			// get the LabOrder for this LabResult
-			List<LabOrder> orders = LabOrder.getLabOrdersByLabItem(getItem());
+			List<LabOrder> orders =
+				LabOrder.getLabOrders((String) null, (String) null, getItem(), this, null, null,
+					null);
 			if (orders != null && !orders.isEmpty()) {
 				value = evaluteWithOrderContext(orders.get(0));
 			}
