@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -39,6 +40,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 	private Text txtMorning, txtNoon, txtEvening, txtNight;
 	private Text txtIntakeOrder, txtDisposalComment;
 	private Artikel article;
+	private Button btnReserveMedication;
 	
 	/**
 	 * @wbp.parser.constructor
@@ -72,7 +74,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 		
 		compositeDosage = new Composite(ret, SWT.NONE);
 		compositeDosage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-		GridLayout gl_composite = new GridLayout(7, false);
+		GridLayout gl_composite = new GridLayout(8, false);
 		gl_composite.marginWidth = 0;
 		gl_composite.marginHeight = 0;
 		compositeDosage.setLayout(gl_composite);
@@ -107,6 +109,10 @@ public class MediDetailDialog extends TitleAreaDialog {
 		txtNight.setMessage(Messages.MediDetailDialog_night);
 		txtNight.setLayoutData(gdSignature);
 		
+		btnReserveMedication = new Button(compositeDosage, SWT.CHECK);
+		btnReserveMedication.setText(Messages.MediDetailDialog_btnReserveMedication);
+		btnReserveMedication.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
+		
 		txtIntakeOrder = new Text(ret, SWT.BORDER);
 		txtIntakeOrder.setMessage(Messages.MediDetailDialog_intakeOrder);
 		txtIntakeOrder.setTextLimit(254);
@@ -120,6 +126,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 		if (prescription != null) {
 			initTextFields(prescription.getDosis(), prescription.getBemerkung(),
 				prescription.getDisposalComment());
+			btnReserveMedication.setSelection(prescription.isReserveMedication());
 		} else if (ads != null) {
 			initTextFields(ads.getSignatureAsDosisString(), ads.getSignatureComment(), "");
 		}
@@ -164,6 +171,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 					prescription.setDosis(dosis);
 					prescription.setBemerkung(intakeOrder);
 					prescription.setDisposalComment(disposalComment);
+					prescription.setReserveMedication(btnReserveMedication.getSelection());
 				}
 				
 				@Override

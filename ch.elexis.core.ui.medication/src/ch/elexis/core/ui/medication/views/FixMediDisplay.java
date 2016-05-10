@@ -248,7 +248,9 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 		
 		public String getLabel(Object o){
 			if (o instanceof Prescription) {
-				return ((Prescription) o).getLabel();
+				Prescription presc = (Prescription) o;
+				return (presc.isReserveMedication()) ? presc.getLabel() + " Res."
+						: presc.getLabel();
 			}
 			return o.toString();
 		}
