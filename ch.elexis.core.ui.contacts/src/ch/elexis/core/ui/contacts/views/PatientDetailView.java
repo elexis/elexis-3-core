@@ -97,15 +97,9 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
-				IPersistentObject actPatient = (IPersistentObject) patientObservable.getValue();
-				if (CoreHub.getLocalLockService().isLockedLocal(actPatient)) {
-					CoreHub.getLocalLockService().releaseLock(actPatient);
-				}
-				ICommandService commandService =
-					(ICommandService) getViewSite().getService(ICommandService.class);
-				commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID,
-					null);
+				IPersistentObject deselected = (IPersistentObject) patientObservable.getValue();
 				setPatient(pat);
+				releaseAndRefreshLock(deselected, ToggleCurrentPatientLockHandler.COMMAND_ID);
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
@@ -119,6 +113,15 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 		}
 	};
 
+	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
+		if (object != null && CoreHub.getLocalLockService().isLockedLocal(object)) {
+			CoreHub.getLocalLockService().releaseLock(object);
+		}
+		ICommandService commandService =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		commandService.refreshElements(commandId, null);
+	}
+	
 	private FixMediDisplay dmd;
 
 	public PatientDetailView() {

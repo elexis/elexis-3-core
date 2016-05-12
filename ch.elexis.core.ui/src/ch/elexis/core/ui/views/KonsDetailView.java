@@ -36,6 +36,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -53,11 +54,10 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.data.UiSticker;
@@ -96,7 +96,7 @@ import ch.rgw.tools.VersionedResource.ResourceItem;
  * @author gerry
  * 
  */
-public class KonsDetailView extends ViewPart implements IActivationListener, ISaveablePart2, IUnlockable {
+public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlockable {
 	private static final String NO_CONS_SELECTED = Messages.KonsDetailView_NoConsSelected; // $NON-NLS-1$
 	public static final String ID = "ch.elexis.Konsdetail"; //$NON-NLS-1$
 	public static final String CFG_VERTRELATION = "vertrelation"; //$NON-NLS-1$
@@ -172,9 +172,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 			case ElexisEvent.EVENT_SELECTED:
 				deselectedKons = actKons;
 				setKons(kons);
-				if (deselectedKons != null) {
-					releaseAndRefreshLock(deselectedKons);
-				}
+				releaseAndRefreshLock(deselectedKons, ToggleCurrentKonsultationLockHandler.COMMAND_ID);
 				break;
 			case ElexisEvent.EVENT_UPDATE:
 				setKons(kons);
@@ -182,9 +180,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 			case ElexisEvent.EVENT_DESELECTED:
 				deselectedKons = actKons;
 				setKons(null);
-				if (deselectedKons != null) {
-					releaseAndRefreshLock(deselectedKons);
-				}
+				releaseAndRefreshLock(deselectedKons, ToggleCurrentKonsultationLockHandler.COMMAND_ID);
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
@@ -196,17 +192,17 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 				break;
 			}
 		}
-
-		private void releaseAndRefreshLock(Konsultation kons){
-			if (CoreHub.getLocalLockService().isLockedLocal(kons)) {
-				CoreHub.getLocalLockService().releaseLock(kons);
-			}
-			ICommandService commandService =
-				(ICommandService) getViewSite().getService(ICommandService.class);
-			commandService.refreshElements(ToggleCurrentKonsultationLockHandler.COMMAND_ID, null);
-		}
 	};
 
+	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
+		if (object != null && CoreHub.getLocalLockService().isLockedLocal(object)) {
+			CoreHub.getLocalLockService().releaseLock(object);
+		}
+		ICommandService commandService =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		commandService.refreshElements(commandId, null);
+	}
+	
 	@Override
 	public void saveState(IMemento memento) {
 		int[] w = sash.getWeights();
@@ -352,7 +348,8 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		sash.setWeights(sashWeights == null ? new int[] { 80, 20 } : sashWeights);
 
 		menu.createToolbar(GlobalActions.neueKonsAction, saveAction);
-		GlobalEventDispatcher.addActivationListener(this, this);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_kons_sync, eeli_pat,
+			eeli_user, eeli_fall);
 		text.connectGlobalActions(getViewSite());
 		adaptMenus();
 		setKons((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class));
@@ -381,7 +378,8 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	 */
 	@Override
 	public void dispose() {
-		GlobalEventDispatcher.removeActivationListener(this, this);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_kons_sync, eeli_pat,
+			eeli_user, eeli_fall);
 		text.disconnectGlobalActions(getViewSite());
 		// emFont.dispose();
 		super.dispose();
@@ -620,32 +618,6 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 			setKons(actKons);
 		} else {
 			log.warn(getClass().getName() + " save() actKons == null");
-		}
-	}
-
-	@Override
-	public void activation(final boolean mode) {
-		if ((mode == false) && (text.isDirty())) {
-			if (actKons != null) {
-				actKons.updateEintrag(text.getContentsAsXML(), false);
-				log.debug("saved."); //$NON-NLS-1$
-			}
-			text.setDirty(false);
-		} else {
-			setKons((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class));
-		}
-
-	}
-
-	@Override
-	public void visible(final boolean mode){
-		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_kons_sync, eeli_pat,
-				eeli_user, eeli_fall);
-			adaptMenus();
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_kons_sync, eeli_pat,
-				eeli_user, eeli_fall);
 		}
 	}
 

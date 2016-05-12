@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISaveablePart2;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 
@@ -24,18 +25,15 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.locks.ToggleCurrentCaseLockHandler;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
 
-public class FallDetailView extends ViewPart implements ISaveablePart2, IActivationListener {
-	public FallDetailView() {
-	}
+public class FallDetailView extends ViewPart implements ISaveablePart2 {
 	public static final String ID = "ch.elexis.FallDetailView"; //$NON-NLS-1$
 	FallDetailBlatt2 fdb;
 	
@@ -57,14 +55,14 @@ public class FallDetailView extends ViewPart implements ISaveablePart2, IActivat
 				deselectedFall = fdb.getFall();
 				fdb.setFall(fall);
 				if (deselectedFall != null) {
-					releaseAndRefreshLock(deselectedFall);
+					releaseAndRefreshLock(deselectedFall, ToggleCurrentCaseLockHandler.COMMAND_ID);
 				}
 				break;
 			case ElexisEvent.EVENT_DESELECTED:
 				deselectedFall = fdb.getFall();
 				fdb.setFall(null);
 				if (deselectedFall != null) {
-					releaseAndRefreshLock(deselectedFall);
+					releaseAndRefreshLock(deselectedFall, ToggleCurrentCaseLockHandler.COMMAND_ID);
 				}
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
@@ -77,16 +75,16 @@ public class FallDetailView extends ViewPart implements ISaveablePart2, IActivat
 				break;
 			}
 		}
-		
-		private void releaseAndRefreshLock(Fall fall){
-			if (CoreHub.getLocalLockService().isLockedLocal(fall)) {
-				CoreHub.getLocalLockService().releaseLock(fall);
-			}
-			ICommandService commandService =
-				(ICommandService) getViewSite().getService(ICommandService.class);
-			commandService.refreshElements(ToggleCurrentCaseLockHandler.COMMAND_ID, null);
-		}
 	};
+	
+	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
+		if (object != null && CoreHub.getLocalLockService().isLockedLocal(object)) {
+			CoreHub.getLocalLockService().releaseLock(object);
+		}
+		ICommandService commandService =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		commandService.refreshElements(commandId, null);
+	}
 	
 	@Override
 	public void createPartControl(Composite parent){
@@ -94,7 +92,7 @@ public class FallDetailView extends ViewPart implements ISaveablePart2, IActivat
 		fdb = new FallDetailBlatt2(parent);
 		fdb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		fdb.setUnlocked(false);
-		GlobalEventDispatcher.addActivationListener(this, this);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_user);
 	}
 	
 	@Override
@@ -105,7 +103,7 @@ public class FallDetailView extends ViewPart implements ISaveablePart2, IActivat
 	
 	@Override
 	public void dispose(){
-		GlobalEventDispatcher.removeActivationListener(this, this);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_user);
 		super.dispose();
 	}
 	
@@ -135,21 +133,6 @@ public class FallDetailView extends ViewPart implements ISaveablePart2, IActivat
 	
 	public boolean isSaveOnCloseNeeded(){
 		return true;
-	}
-	
-	public void activation(boolean mode){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public void visible(boolean mode){
-		if (mode) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_fall,
-				eeli_user);
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_fall,
-				eeli_user);
-		}
 	}
 	
 	public Fall getActiveFall(){

@@ -60,12 +60,11 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
@@ -105,7 +104,7 @@ import ch.rgw.tools.TimeTool;
  * Detailansicht eines Patientrecords Ersatz für Patientenblatt mit erweiterter
  * Funktionalität (Lock, Nutzung von InputPanel)
  */
-public class Patientenblatt2 extends Composite implements IActivationListener, IUnlockable {
+public class Patientenblatt2 extends Composite implements IUnlockable {
 	private static final String KEY_DBFIELD = "dbfield"; //$NON-NLS-1$
 	private static final String KEY_PATIENTENBLATT = "Patientenblatt/"; //$NON-NLS-1$
 	private final FormToolkit tk;
@@ -124,15 +123,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 			case ElexisEvent.EVENT_SELECTED:
 				Patient deselectedPatient = actPatient;
 				setPatient(pat);
-				if (deselectedPatient != null) {
-					if (CoreHub.getLocalLockService().isLockedLocal(deselectedPatient)) {
-						CoreHub.getLocalLockService().releaseLock(deselectedPatient);
-					}
-					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
-						.getService(ICommandService.class);
-					commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID,
-						null);
-				}
+				releaseAndRefreshLock(deselectedPatient, ToggleCurrentPatientLockHandler.COMMAND_ID);
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
@@ -145,6 +136,15 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 			}
 		}
 	};
+	
+	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
+		if (object != null && CoreHub.getLocalLockService().isLockedLocal(object)) {
+			CoreHub.getLocalLockService().releaseLock(object);
+		}
+		ICommandService commandService =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		commandService.refreshElements(commandId, null);
+	}
 	
 	private final ElexisEventListener eeli_pat_sync =
 			new ElexisUiSyncEventListenerImpl(Patient.class, ElexisEvent.EVENT_LOCK_PRERELEASE) {
@@ -524,7 +524,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 
 		viewmenu.createToolbar(copySelectedContactInfosToClipboardAction);
 		viewmenu.createToolbar(copySelectedAddressesToClipboardAction);
-		GlobalEventDispatcher.addActivationListener(this, site.getPart());
+		ElexisEventDispatcher.getInstance().addListeners(eeli_pat_sync, eeli_pat, eeli_user);
 		tk.paintBordersFor(form.getBody());
 	}
 
@@ -548,7 +548,7 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 	
 	@Override
 	public void dispose() {
-		GlobalEventDispatcher.removeActivationListener(this, viewsite.getPart());
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat_sync, eeli_pat, eeli_user);
 		super.dispose();
 	}
 
@@ -1136,20 +1136,5 @@ public class Patientenblatt2 extends Composite implements IActivationListener, I
 		for (ExpandableComposite ex : ec) {
 			ex.getClient().setEnabled(unlocked);
 		}
-	}
-
-	public void activation(final boolean mode) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void visible(final boolean mode) {
-		if (mode == true) {
-			setPatient((Patient) ElexisEventDispatcher.getSelected(Patient.class));
-			ElexisEventDispatcher.getInstance().addListeners(eeli_pat_sync, eeli_pat, eeli_user);
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat_sync, eeli_pat, eeli_user);
-		}
-
 	}
 }
