@@ -18,7 +18,9 @@ import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EX
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -396,9 +398,11 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				if (actRn != null) {
 					List<Konsultation> konsultationen = actRn.getKonsultationen();
 					if (konsultationen == null || konsultationen.isEmpty()) {
+						HashMap<Konsultation, List<VerrechnetCopy>> elementsMap =
+							new HashMap<Konsultation, List<VerrechnetCopy>>();
 						// prepare heading label that will look like this dd.MM.yyyy (cancelled) - amountOfMoney
 						StringBuilder sbHeadingLabel = new StringBuilder();
-						sbHeadingLabel.append(actRn.getDatumRn());
+						sbHeadingLabel.append(Messages.AccountView_bill + " " + actRn.getDatumRn()); //$NON-NLS-1$
 						sbHeadingLabel.append(Messages.RechnungsBlatt_stornoLabel);
 						
 						// store all verrechnetCopies and add label with sum of all cancelled items
@@ -408,12 +412,22 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 						List<VerrechnetCopy> vcList = vcQuery.execute();
 						Money sum = new Money(0);
 						for (VerrechnetCopy vc : vcList) {
-							// add verrechnet to list
-							elements.add(vc);
 							// add amount of money this item/s cost
 							Money price = vc.getNettoPreis();
 							price.multiply(vc.getZahl());
 							sum.addMoney(price);
+							// add verrechnet to map
+							addToMap(vc, elementsMap);
+						}
+						// add the map to the elements
+						Set<Konsultation> keys = elementsMap.keySet();
+						for (Konsultation konsultation : keys) {
+							if (konsultation != null) {
+								elements.add(konsultation);
+							} else {
+								elements.add("?"); //$NON-NLS-1$
+							}
+							elements.addAll(elementsMap.get(konsultation));
 						}
 						
 						// finalize heading label by adding sum of money of all cancellations
@@ -422,6 +436,29 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					}
 				}
 				return elements.toArray();
+			}
+			
+			private void addToMap(VerrechnetCopy copy,
+				HashMap<Konsultation, List<VerrechnetCopy>> elementsMap){
+				String konsId = copy.get(VerrechnetCopy.BEHANDLUNGID);
+				if (konsId != null && !konsId.isEmpty()) {
+					Konsultation kons = Konsultation.load(konsId);
+					if (kons != null && kons.exists()) {
+						List<VerrechnetCopy> list = elementsMap.get(kons);
+						if (list == null) {
+							list = new ArrayList<VerrechnetCopy>();
+						}
+						list.add(copy);
+						elementsMap.put(kons, list);
+					} else {
+						List<VerrechnetCopy> list = elementsMap.get(null);
+						if (list == null) {
+							list = new ArrayList<VerrechnetCopy>();
+						}
+						list.add(copy);
+						elementsMap.put(null, list);
+					}
+				}
 			}
 		});
 		stornoViewer.setLabelProvider(new LabelProvider() {
@@ -434,6 +471,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					price.multiply(amount);
 					return "  - " + amount + " " + vc.getLabel() + " (" + price.toString() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						+ ")"; //$NON-NLS-1$
+				} else if (element instanceof Konsultation) {
+					return ((Konsultation) element).getLabel();
 				} else {
 					return element.toString();
 				}
