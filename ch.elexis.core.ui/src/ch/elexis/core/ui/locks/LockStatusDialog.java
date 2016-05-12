@@ -13,6 +13,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.lock.ILocalLockService.Status;
 import ch.elexis.core.lock.types.LockInfo;
+import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.data.PersistentObject;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Table;
@@ -22,7 +24,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Label;
 
 public class LockStatusDialog extends TitleAreaDialog {
-	private Table table;
+	private CheckboxTableViewer checkboxTableViewer;
 	
 	/**
 	 * Create the dialog.
@@ -48,16 +50,18 @@ public class LockStatusDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(1, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		CheckboxTableViewer checkboxTableViewer =
+		checkboxTableViewer =
 			CheckboxTableViewer.newCheckList(container, SWT.BORDER | SWT.FULL_SELECTION);
-		table = checkboxTableViewer.getTable();
+		Table table = checkboxTableViewer.getTable();
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		checkboxTableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		checkboxTableViewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
 				LockInfo li = (LockInfo) element;
-				return li.getUser() + "@" + li.getElementStoreToString();
+				PersistentObject po =
+					CoreHub.poFactory.createFromString(li.getElementStoreToString());
+				return li.getElementType() + ": " + po.getLabel();
 			}
 		});
 		checkboxTableViewer.setInput(CoreHub.getLocalLockService().getCopyOfAllHeldLocks());
@@ -77,6 +81,26 @@ public class LockStatusDialog extends TitleAreaDialog {
 		lblLockStatus.setText(statusString.toString());
 		
 		return area;
+	}
+	
+	@Override
+	protected void okPressed(){
+		setErrorMessage(null);
+		Object[] checkedElements = checkboxTableViewer.getCheckedElements();
+		boolean error = false;
+		for (Object object : checkedElements) {
+			LockInfo lockInfo = (LockInfo) object;
+			LockResponse lockResponse = CoreHub.getLocalLockService().releaseLock(lockInfo);
+			if (!lockResponse.isOk()) {
+				setErrorMessage("Error releasing lock "+lockInfo.getElementStoreToString());
+				error = true;
+				break;
+			}
+		}
+		
+		if (!error) {
+			super.okPressed();
+		}
 	}
 	
 	/**

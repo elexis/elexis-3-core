@@ -25,6 +25,8 @@ public interface ILocalLockService extends ILockService {
 	
 	public LockResponse releaseLock(IPersistentObject po);
 	
+	public LockResponse releaseLock(LockInfo lockInfo);
+	
 	public boolean isLocked(IPersistentObject po);
 	
 	public boolean isLockedLocal(IPersistentObject po);

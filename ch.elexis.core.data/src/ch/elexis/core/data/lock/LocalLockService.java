@@ -106,6 +106,15 @@ public class LocalLockService implements ILocalLockService {
 		return releaseLock(po.storeToString());
 	}
 	
+	@Override
+	public LockResponse releaseLock(LockInfo lockInfo){
+		if (lockInfo.getElementStoreToString() == null) {
+			return LockResponse.DENIED(null);
+		}
+		logger.debug("Releasing lock on [" + lockInfo.getElementStoreToString() + "]");
+		return releaseLock(lockInfo.getElementStoreToString());
+	}
+	
 	private LockResponse releaseLock(String storeToString){
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
 		LockInfo lil = new LockInfo(storeToString, user.getId(), systemUuid.toString());
@@ -206,9 +215,9 @@ public class LocalLockService implements ILocalLockService {
 			// TODO should we release all locks on acquiring a new one?
 			// if yes, this has to be dependent upon the strategy
 			try {
-				if(LockRequest.Type.RELEASE == lockRequest.getRequestType()) {
+				if (LockRequest.Type.RELEASE == lockRequest.getRequestType()) {
 					PersistentObject po =
-							CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
+						CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
 					ElexisEventDispatcher.getInstance().fire(new ElexisEvent(po, po.getClass(),
 						ElexisEvent.EVENT_LOCK_PRERELEASE, ElexisEvent.PRIORITY_SYNC));
 				}
@@ -247,7 +256,7 @@ public class LocalLockService implements ILocalLockService {
 					locks.remove(lockInfo.getElementId());
 					
 					PersistentObject po =
-							CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
+						CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
 					ElexisEventDispatcher.getInstance()
 						.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_RELEASED));
 				}
@@ -400,7 +409,7 @@ public class LocalLockService implements ILocalLockService {
 		
 		@Override
 		public LockResponse acquireOrReleaseLocks(LockRequest request){
-			return LockResponse.DENIED(request.getLockInfo());
+			return LockResponse.DENIED(getLockInfo(request.getLockInfo().getElementStoreToString()));
 		}
 		
 		@Override
@@ -410,7 +419,7 @@ public class LocalLockService implements ILocalLockService {
 		
 		@Override
 		public LockInfo getLockInfo(String storeToString){
-			return null;
+			return new LockInfo(storeToString, "LockService", "DenyAllLockService");
 		}
 		
 	}
