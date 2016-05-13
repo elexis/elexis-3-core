@@ -36,6 +36,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -776,4 +777,9 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		}
 	}
 	
+	public void setTextBackground(Color color){
+		if (text != null && !text.isDisposed()) {
+			text.setBackground(color);
+		}
+	}
 }

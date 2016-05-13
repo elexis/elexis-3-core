@@ -12,6 +12,7 @@
 package ch.elexis.core.ui.views;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -512,7 +513,11 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
 				lBeh.setBackground(UiDesk.getColor(UiDesk.COL_GREY20));
 			}
-
+			if (isKonsToday(kons)) {
+				text.setTextBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+			} else {
+				text.setTextBackground(UiDesk.getColorFromRGB("FAFAFA"));
+			}
 		} else {
 			form.setText(NO_CONS_SELECTED);
 			lBeh.setText("-"); //$NON-NLS-1$
@@ -534,6 +539,11 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 		} else {
 			setUnlocked(CoreHub.getLocalLockService().isLockedLocal(actKons));
 		}
+	}
+	
+	private boolean isKonsToday(Konsultation kons){
+		TimeTool konsDate = new TimeTool(kons.getDatum());
+		return konsDate.toLocalDate().isEqual(LocalDate.now());
 	}
 	
 	void setKonsText(final Konsultation b, final int version) {
