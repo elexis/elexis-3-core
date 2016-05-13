@@ -100,6 +100,8 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 	private static final String NO_CONS_SELECTED = Messages.KonsDetailView_NoConsSelected; // $NON-NLS-1$
 	public static final String ID = "ch.elexis.Konsdetail"; //$NON-NLS-1$
 	public static final String CFG_VERTRELATION = "vertrelation"; //$NON-NLS-1$
+	public static final String CFG_HORIZRELATION = "horizrelation"; //$NON-NLS-1$
+	
 	private Logger log = LoggerFactory.getLogger(KonsDetailView.class);
 	Hashtable<String, IKonsExtension> hXrefs;
 	EnhancedTextField text;
@@ -124,6 +126,8 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 	Composite cEtiketten;
 	private int[] sashWeights = null;
 	private SashForm sash;
+	private int[] diagAndChargeSashWeights = null;
+	private SashForm diagAndChargeSash;
 
 	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class,
 			ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_RELOAD) {
@@ -207,6 +211,11 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 	public void saveState(IMemento memento) {
 		int[] w = sash.getWeights();
 		memento.putString(CFG_VERTRELATION, Integer.toString(w[0]) + StringConstants.COMMA + Integer.toString(w[1]));
+		
+		w = diagAndChargeSash.getWeights();
+		memento.putString(CFG_HORIZRELATION,
+			Integer.toString(w[0]) + StringConstants.COMMA + Integer.toString(w[1]));
+		
 		super.saveState(memento);
 	}
 
@@ -326,11 +335,11 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 				GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL | GridData.GRAB_VERTICAL | GridData.GRAB_HORIZONTAL);
 		text.setLayoutData(gd);
 		tk.adapt(text);
-		SashForm bf = new SashForm(sash, SWT.HORIZONTAL);
+		diagAndChargeSash = new SashForm(sash, SWT.HORIZONTAL);
 
-		Composite botleft = tk.createComposite(bf);
+		Composite botleft = tk.createComposite(diagAndChargeSash);
 		botleft.setLayout(new GridLayout(1, false));
-		Composite botright = tk.createComposite(bf);
+		Composite botright = tk.createComposite(diagAndChargeSash);
 		botright.setLayout(new GridLayout(1, false));
 
 		dd = new DiagnosenDisplay(getSite().getPage(), botleft, SWT.NONE);
@@ -339,7 +348,10 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 		vd.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		getSite().registerContextMenu(ID + ".VerrechnungsDisplay", vd.contextMenuManager, vd.viewer);
 		getSite().setSelectionProvider(vd.viewer);
-
+		diagAndChargeSash.setWeights(diagAndChargeSashWeights == null ? new int[] {
+			40, 60
+		} : diagAndChargeSashWeights);
+		
 		makeActions();
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createMenu(versionFwdAction, versionBackAction, GlobalActions.neueKonsAction, GlobalActions.delKonsAction,
@@ -360,6 +372,9 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 
 		if (memento == null) {
 			sashWeights = new int[] { 80, 20 };
+			diagAndChargeSashWeights = new int[] {
+				40, 60
+			};
 		} else {
 			String state = memento.getString(CFG_VERTRELATION);
 			if (state == null) {
@@ -367,6 +382,16 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 			}
 			String[] sw = state.split(StringConstants.COMMA);
 			sashWeights = new int[] { Integer.parseInt(sw[0]), Integer.parseInt(sw[1]) };
+			
+			state = memento.getString(CFG_HORIZRELATION);
+			if (state == null) {
+				state = "40,60"; //$NON-NLS-1$
+			}
+			sw = state.split(StringConstants.COMMA);
+			diagAndChargeSashWeights = new int[] {
+				Integer.parseInt(sw[0]), Integer.parseInt(sw[1])
+			};
+			
 		}
 		super.init(site, memento);
 	}
