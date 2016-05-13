@@ -14,14 +14,17 @@ package ch.rgw.tools;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.WeekFields;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -722,6 +725,101 @@ public class TimeTool extends GregorianCalendar {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	/**
+	 * Get a String representation of the duration of the date compared to now. Returns an
+	 * internationalized String.<br />
+	 * Examples: 2 weeks ago, in 1 week, 1 year ago, in 2 years
+	 * 
+	 * @since 3.2
+	 * 
+	 * @return
+	 */
+	public String getDurationToNowString(){
+		LocalDateTime date = toLocalDateTime();
+		LocalDateTime now = LocalDateTime.now();
+		
+		int years = now.getYear() - date.getYear();
+		int months = now.getMonth().getValue() - date.getMonth().getValue();
+		WeekFields weekFields = WeekFields.of(Locale.getDefault());
+		int weeks = now.get(weekFields.weekOfYear()) - date.get(weekFields.weekOfYear());
+		Duration duration = Duration.between(date, now);
+		int days = (int) duration.toDays();
+		if (years != 0 && Math.abs(days) > 56) {
+			String format = getYearsFormat(years);
+			return String.format(format, Math.abs(years));
+		}
+		if (months != 0 && Math.abs(days) > 28) {
+			String format = getMonthsFormat(months);
+			return String.format(format, Math.abs(months));
+		}
+		if (weeks != 0 && Math.abs(days) > 14) {
+			String format = getWeeksFormat(weeks);
+			return String.format(format, Math.abs(weeks));
+		}
+		if (days != 0) {
+			String format = getDaysFormat(days);
+			return String.format(format, Math.abs(days));
+		} else {
+			return Messages.getString("TimeTool.today");
+		}
+	}
+	
+	protected String getYearsFormat(int years){
+		if (years > 0) {
+			if (years > 1) {
+				return Messages.getString("TimeTool.yearsAgoFormat");
+			}
+			return Messages.getString("TimeTool.yearAgoFormat");
+		} else {
+			if (years < -1) {
+				return Messages.getString("TimeTool.yearsToFormat");
+			}
+			return Messages.getString("TimeTool.yearToFormat");
+		}
+	}
+	
+	protected String getMonthsFormat(int months){
+		if (months > 0) {
+			if (months > 1) {
+				return Messages.getString("TimeTool.monthsAgoFormat");
+			}
+			return Messages.getString("TimeTool.monthAgoFormat");
+		} else {
+			if (months < -1) {
+				return Messages.getString("TimeTool.monthsToFormat");
+			}
+			return Messages.getString("TimeTool.monthToFormat");
+		}
+	}
+	
+	protected String getWeeksFormat(int weeks){
+		if (weeks > 0) {
+			if (weeks > 1) {
+				return Messages.getString("TimeTool.weeksAgoFormat");
+			}
+			return Messages.getString("TimeTool.weekAgoFormat");
+		} else {
+			if (weeks < -1) {
+				return Messages.getString("TimeTool.weeksToFormat");
+			}
+			return Messages.getString("TimeTool.weekToFormat");
+		}
+	}
+	
+	protected String getDaysFormat(int days){
+		if (days > 0) {
+			if (days > 1) {
+				return Messages.getString("TimeTool.daysAgoFormat");
+			}
+			return Messages.getString("TimeTool.dayAgoFormat");
+		} else {
+			if (days < -1) {
+				return Messages.getString("TimeTool.daysToFormat");
+			}
+			return Messages.getString("TimeTool.dayToFormat");
 		}
 	}
 	

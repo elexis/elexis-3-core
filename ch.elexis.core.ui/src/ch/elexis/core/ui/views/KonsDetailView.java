@@ -457,7 +457,8 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 			}
 			cbFall.setEnabled(act.isOpen());
 			Mandant m = kons.getMandant();
-			lBeh.setText(Messages.KonsDetailView_ConsOfDate + " " + kons.getDatum()); //$NON-NLS-1$
+			lBeh.setText(Messages.KonsDetailView_ConsOfDate + " " + kons.getDatum() + " (" //$NON-NLS-1$ //$NON-NLS-2$
+				+ new TimeTool(kons.getDatum()).getDurationToNowString() + ")"); //$NON-NLS-1$
 			StringBuilder sb = new StringBuilder();
 			if (m == null) {
 				sb.append(Messages.KonsDetailView_NotYours); // $NON-NLS-1$
@@ -509,7 +510,7 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 			setUnlocked(CoreHub.getLocalLockService().isLockedLocal(actKons));
 		}
 	}
-
+	
 	void setKonsText(final Konsultation b, final int version) {
 		String ntext = ""; //$NON-NLS-1$
 		if ((version >= 0) && (version <= b.getHeadVersion())) {
