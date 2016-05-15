@@ -15,6 +15,7 @@ package ch.elexis.core.ui.util;
 
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -59,6 +60,11 @@ public class ViewMenus {
 					if(iAction instanceof RestrictedAction) {
 						((RestrictedAction) iAction).reflectRight();
 					}
+				}
+				// update the UI
+				IContributionItem[] items = manager.getItems();
+				for (IContributionItem iContributionItem : items) {
+					iContributionItem.update();
 				}
 			}
 		});

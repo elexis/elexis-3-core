@@ -106,7 +106,7 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 	private Logger log = LoggerFactory.getLogger(KonsDetailView.class);
 	Hashtable<String, IKonsExtension> hXrefs;
 	EnhancedTextField text;
-	private Label lBeh, lVersion;
+	private Label lBeh;
 	Hyperlink hlMandant;
 	Combo cbFall;
 	private Konsultation actKons;
@@ -120,7 +120,7 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 	private Action versionBackAction;
 	private LockedAction saveAction;
 	private RestrictedAction purgeAction;
-	Action versionFwdAction, assignStickerAction;
+	Action versionFwdAction, assignStickerAction, versionDisplayAction;
 	int displayedVersion;
 	Font emFont;
 	Composite cDesc;
@@ -312,10 +312,6 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 		GridData gdFall = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		cbFall.setLayoutData(gdFall);
 
-		lVersion = tk.createLabel(form.getBody(), Messages.KonsDetailView_actual); // $NON-NLS-1$
-		GridData gdVer = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		lVersion.setLayoutData(gdVer);
-
 		text = new EnhancedTextField(form.getBody());
 		hXrefs = new Hashtable<String, IKonsExtension>();
 		@SuppressWarnings("unchecked")
@@ -355,7 +351,8 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 		
 		makeActions();
 		ViewMenus menu = new ViewMenus(getViewSite());
-		menu.createMenu(versionFwdAction, versionBackAction, GlobalActions.neueKonsAction, GlobalActions.delKonsAction,
+		menu.createMenu(versionDisplayAction, versionFwdAction, versionBackAction,
+			GlobalActions.neueKonsAction, GlobalActions.delKonsAction,
 				GlobalActions.redateAction, assignStickerAction, purgeAction);
 
 		sash.setWeights(sashWeights == null ? new int[] { 80, 20 } : sashWeights);
@@ -523,7 +520,6 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 			lBeh.setText("-"); //$NON-NLS-1$
 			hlMandant.setText("--"); //$NON-NLS-1$
 			hlMandant.setEnabled(false);
-			lVersion.setText(""); //$NON-NLS-1$
 			dd.clear();
 			vd.clear();
 			text.setText(""); //$NON-NLS-1$
@@ -557,9 +553,9 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 					.append( //$NON-NLS-2$
 							new TimeTool(entry.timestamp).toString(TimeTool.FULL_GER))
 					.append(" (").append(entry.remark).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
-			lVersion.setText(sb.toString());
+			versionDisplayAction.setText(sb.toString());
 		} else {
-			lVersion.setText(""); //$NON-NLS-1$
+			versionDisplayAction.setText("");
 		}
 		text.setText(ntext);
 		text.setKons(b);
@@ -570,6 +566,25 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 
 	private void makeActions() {
 
+		versionDisplayAction = new Action() {
+			private String versionText;
+			
+			@Override
+			public String getText(){
+				return versionText;
+			}
+			
+			@Override
+			public void setText(String text){
+				versionText = text;
+			}
+			
+			@Override
+			public boolean isEnabled(){
+				return false;
+			}
+		};
+		
 		purgeAction = new LockedRestrictedAction<Konsultation>(AccessControlDefaults.AC_PURGE, Messages.KonsDetailView_PurgeOldEntries) {
 
 			@Override
