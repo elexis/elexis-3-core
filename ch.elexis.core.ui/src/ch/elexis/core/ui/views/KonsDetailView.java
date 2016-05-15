@@ -61,6 +61,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.data.UiSticker;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -485,6 +486,7 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 			StringBuilder sb = new StringBuilder();
 			if (m == null) {
 				sb.append(Messages.KonsDetailView_NotYours); // $NON-NLS-1$
+				hlMandant.setBackground(hlMandant.getParent().getBackground());
 			} else {
 				Rechnungssteller rs = m.getRechnungssteller();
 				if (rs.getId().equals(m.getId())) {
@@ -493,6 +495,7 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 					sb.append("(").append(m.getLabel()).append("/").append( //$NON-NLS-1$ //$NON-NLS-2$
 							rs.getLabel()).append(")"); //$NON-NLS-1$
 				}
+				hlMandant.setBackground(UiMandant.getColorForMandator(m));
 			}
 			hlMandant.setText(sb.toString());
 			hlMandant.setEnabled(CoreHub.acl.request(AccessControlDefaults.KONS_REASSIGN));
@@ -520,6 +523,7 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 			lBeh.setText("-"); //$NON-NLS-1$
 			hlMandant.setText("--"); //$NON-NLS-1$
 			hlMandant.setEnabled(false);
+			hlMandant.setBackground(hlMandant.getParent().getBackground());
 			dd.clear();
 			vd.clear();
 			text.setText(""); //$NON-NLS-1$
