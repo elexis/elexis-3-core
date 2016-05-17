@@ -309,7 +309,7 @@ CREATE TABLE BRIEFE(
 	modifiziert		CHAR(24),
 	gedruckt		CHAR(8),
 	geloescht		CHAR(2),
-	note			VARCHAR(255),		   # Notizen
+	note			TEXT,		  		   # Notizen
 	AbsenderID		VARCHAR(25),           # foreign key from KONTAKT
 	DestID			VARCHAR(25),           # foreign key from KONTAKT
 	BehandlungsID	VARCHAR(25),           # foreign key from BEHANDLUNG
