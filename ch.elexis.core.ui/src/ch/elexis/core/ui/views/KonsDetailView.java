@@ -59,6 +59,8 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.actions.GlobalEventDispatcher;
+import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.data.UiMandant;
@@ -98,7 +100,8 @@ import ch.rgw.tools.VersionedResource.ResourceItem;
  * @author gerry
  * 
  */
-public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlockable {
+public class KonsDetailView extends ViewPart
+		implements IActivationListener, ISaveablePart2, IUnlockable {
 	private static final String NO_CONS_SELECTED = Messages.KonsDetailView_NoConsSelected; // $NON-NLS-1$
 	public static final String ID = "ch.elexis.Konsdetail"; //$NON-NLS-1$
 	public static final String CFG_VERTRELATION = "vertrelation"; //$NON-NLS-1$
@@ -359,6 +362,7 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 		sash.setWeights(sashWeights == null ? new int[] { 80, 20 } : sashWeights);
 
 		menu.createToolbar(GlobalActions.neueKonsAction, saveAction);
+		GlobalEventDispatcher.addActivationListener(this, this);
 		ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_kons_sync, eeli_pat,
 			eeli_user, eeli_fall);
 		text.connectGlobalActions(getViewSite());
@@ -402,6 +406,7 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 	 */
 	@Override
 	public void dispose() {
+		GlobalEventDispatcher.removeActivationListener(this, this);
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_kons_sync, eeli_pat,
 			eeli_user, eeli_fall);
 		text.disconnectGlobalActions(getViewSite());
@@ -668,11 +673,13 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 
 	public void save() {
 		if (actKons != null) {
-			actKons.updateEintrag(text.getContentsAsXML(), false);
-			log.debug("saved"); //$NON-NLS-1$
+			if (text.isDirty()) {
+				actKons.updateEintrag(text.getContentsAsXML(), false);
+				text.setDirty(false);
+			}
 			setKons(actKons);
 		} else {
-			log.warn(getClass().getName() + " save() actKons == null");
+			log.warn("Save() actKons == null");
 		}
 	}
 
@@ -717,4 +724,26 @@ public class KonsDetailView extends ViewPart implements ISaveablePart2, IUnlocka
 		vd.addPersistentObject(artikel);
 	}
 
+	@Override
+	public void activation(boolean mode){
+		if ((mode == false) && (text.isDirty())) {
+			// save entry on deactivation if text was edited
+			if (actKons != null) {
+				actKons.updateEintrag(text.getContentsAsXML(), false);
+				text.setDirty(false);
+			}
+		} else {
+			// load newest version on activation
+			if (actKons != null) {
+				setKonsText(actKons, actKons.getHeadVersion());
+			}
+		}
+	}
+	
+	@Override
+	public void visible(boolean mode){
+		if (mode == true) {
+			adaptMenus();
+		}
+	}
 }
