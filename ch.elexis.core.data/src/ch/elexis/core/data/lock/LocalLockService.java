@@ -45,6 +45,7 @@ public class LocalLockService implements ILocalLockService {
 	
 	private ILockService ils;
 	
+	private final HashMap<String, Integer> lockCount = new HashMap<String, Integer>();
 	private final HashMap<String, LockInfo> locks = new HashMap<String, LockInfo>();
 	private boolean standalone = false;
 	private Logger logger = LoggerFactory.getLogger(LocalLockService.class);
@@ -209,9 +210,16 @@ public class LocalLockService implements ILocalLockService {
 			// does the requested lock match the cache on our side?
 			if (LockRequest.Type.ACQUIRE == lockRequest.getRequestType()
 				&& locks.keySet().contains(lockInfo.getElementId())) {
+				incrementLockCount(lockInfo);
 				return LockResponse.OK;
 			}
 			
+			// do not release lock if it was locked multiple times
+			if (LockRequest.Type.RELEASE == lockRequest.getRequestType()
+				&& getCurrentLockCount(lockInfo) > 1) {
+				decrementLockCount(lockInfo);
+				return LockResponse.OK;
+			}
 			// TODO should we release all locks on acquiring a new one?
 			// if yes, this has to be dependent upon the strategy
 			try {
@@ -231,7 +239,7 @@ public class LocalLockService implements ILocalLockService {
 					// ACQUIRE ACTIONS
 					// lock is granted only if we have non-exception on acquire
 					locks.put(lockInfo.getElementId(), lockInfo);
-					
+					incrementLockCount(lockInfo);
 					PersistentObject po =
 						CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
 					ElexisEventDispatcher.getInstance()
@@ -252,7 +260,7 @@ public class LocalLockService implements ILocalLockService {
 					// RELEASE ACTIONS
 					// releases are also to be performed on occurence of an
 					// exception
-					
+					decrementLockCount(lockInfo);
 					locks.remove(lockInfo.getElementId());
 					
 					PersistentObject po =
@@ -264,6 +272,35 @@ public class LocalLockService implements ILocalLockService {
 			
 			return LockResponse.OK;
 		}
+	}
+	
+	private void incrementLockCount(LockInfo lockInfo){
+		Integer count = lockCount.get(lockInfo.getElementId());
+		if (count == null) {
+			count = new Integer(0);
+		}
+		lockCount.put(lockInfo.getElementId(), ++count);
+		logger.debug("Increment to " + count + " locks on " + lockInfo.getElementId());
+	}
+	
+	private void decrementLockCount(LockInfo lockInfo){
+		Integer count = lockCount.get(lockInfo.getElementId());
+		if (count != null) {
+			lockCount.put(lockInfo.getElementId(), --count);
+			logger.debug("Decrement to " + count + " locks on " + lockInfo.getElementId());
+			if (count < 1) {
+				lockCount.remove(lockInfo.getElementId());
+			}
+		}
+	}
+	
+	private Integer getCurrentLockCount(LockInfo lockInfo){
+		Integer count = lockCount.get(lockInfo.getElementId());
+		if (count == null) {
+			count = new Integer(0);
+		}
+		logger.debug("Got currently " + count + " locks on " + lockInfo.getElementId());
+		return count;
 	}
 	
 	@Override
