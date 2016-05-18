@@ -22,6 +22,11 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
@@ -101,6 +106,24 @@ public class AUF2 extends ViewPart implements IActivationListener {
 			}
 		});
 		tv.setInput(getViewSite());
+		
+		final Transfer[] dragTransferTypes = new Transfer[] {
+			TextTransfer.getInstance()
+		};
+		
+		tv.addDragSupport(DND.DROP_COPY, dragTransferTypes, new DragSourceAdapter() {
+			
+			@Override
+			public void dragSetData(DragSourceEvent event){
+				IStructuredSelection selection = (IStructuredSelection) tv.getSelection();
+				StringBuilder sb = new StringBuilder();
+				if (selection != null && !selection.isEmpty()) {
+					AUF auf = (AUF) selection.getFirstElement();
+					sb.append(auf.storeToString()).append(","); //$NON-NLS-1$
+				}
+				event.data = sb.toString().replace(",$", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		});
 	}
 	
 	@Override
@@ -116,100 +139,96 @@ public class AUF2 extends ViewPart implements IActivationListener {
 	
 	private void makeActions(){
 		newAUF = new Action(Messages.AUF2_new) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-					setToolTipText(Messages.AUF2_createNewCert); //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+				setToolTipText(Messages.AUF2_createNewCert); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
+				if (pat == null) {
+					SWTHelper.showError(Messages.AUF2_NoPatientSelected, //$NON-NLS-1$
+						Messages.AUF2_PleaseDoSelectPatient); //$NON-NLS-1$
+					return;
 				}
-				
-				@Override
-				public void run(){
-					Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-					if (pat == null) {
-						SWTHelper.showError(Messages.AUF2_NoPatientSelected, //$NON-NLS-1$
-							Messages.AUF2_PleaseDoSelectPatient); //$NON-NLS-1$
+				Konsultation kons =
+					(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+				Fall fall = null;
+				if (kons != null) {
+					fall = kons.getFall();
+					if (fall == null) {
+						SWTHelper.showError(Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
+						return;
+						
+					}
+					if (!fall.getPatient().equals(pat)) {
+						kons = null;
+					}
+				}
+				if (kons == null) {
+					kons = pat.getLetzteKons(false);
+					if (kons == null) {
+						SWTHelper.showError(Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
 						return;
 					}
-					Konsultation kons =
-						(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-					Fall fall = null;
-					if (kons != null) {
-						fall = kons.getFall();
-						if (fall == null) {
-							SWTHelper.showError(Messages.AUF2_noCaseSelected,
-								Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
-							return;
-							
-						}
-						if (!fall.getPatient().equals(pat)) {
-							kons = null;
-						}
-					}
-					if (kons == null) {
-						kons = pat.getLetzteKons(false);
-						if (kons == null) {
-							SWTHelper.showError(Messages.AUF2_noCaseSelected,
-								Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
-							return;
-						}
-						fall = kons.getFall();
-					}
-					new EditAUFDialog(getViewSite().getShell(), null, fall).open();
-					tv.refresh(false);
+					fall = kons.getFall();
 				}
-			};
+				new EditAUFDialog(getViewSite().getShell(), null, fall).open();
+				tv.refresh(false);
+			}
+		};
 		delAUF = new Action(Messages.AUF2_delete) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-					setToolTipText(Messages.AUF2_deleteCertificate); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					AUF sel = getSelectedAUF();
-					if (sel != null) {
-						if (MessageDialog.openConfirm(getViewSite().getShell(),
-							Messages.AUF2_deleteReally, Messages.AUF2_doyoywantdeletereally)) { //$NON-NLS-1$ //$NON-NLS-2$
-							sel.delete();
-							tv.refresh(false);
-						}
+			{
+				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
+				setToolTipText(Messages.AUF2_deleteCertificate); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				AUF sel = getSelectedAUF();
+				if (sel != null) {
+					if (MessageDialog.openConfirm(getViewSite().getShell(),
+						Messages.AUF2_deleteReally, Messages.AUF2_doyoywantdeletereally)) { //$NON-NLS-1$ //$NON-NLS-2$
+						sel.delete();
+						tv.refresh(false);
 					}
 				}
-			};
+			}
+		};
 		modAUF = new Action(Messages.AUF2_edit) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-					setToolTipText(Messages.AUF2_editCertificate); //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
+				setToolTipText(Messages.AUF2_editCertificate); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				AUF sel = getSelectedAUF();
+				if (sel != null) {
+					new EditAUFDialog(getViewSite().getShell(), sel, sel.getFall()).open();
+					tv.refresh(true);
 				}
-				
-				@Override
-				public void run(){
-					AUF sel = getSelectedAUF();
-					if (sel != null) {
-						new EditAUFDialog(getViewSite().getShell(), sel, sel.getFall()).open();
-						tv.refresh(true);
-					}
-				}
-			};
+			}
+		};
 		printAUF = new Action(Messages.AUF2_print) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
-					setToolTipText(Messages.AUF2_createPrint); //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
+				setToolTipText(Messages.AUF2_createPrint); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				try {
+					AUFZeugnis az = (AUFZeugnis) getViewSite().getPage().showView(AUFZeugnis.ID);
+					AUF actAUF = (ch.elexis.data.AUF) ElexisEventDispatcher.getSelected(AUF.class);
+					az.createAUZ(actAUF);
+				} catch (Exception ex) {
+					ExHandler.handle(ex);
 				}
 				
-				@Override
-				public void run(){
-					try {
-						AUFZeugnis az =
-							(AUFZeugnis) getViewSite().getPage().showView(AUFZeugnis.ID);
-						AUF actAUF =
-							(ch.elexis.data.AUF) ElexisEventDispatcher.getSelected(AUF.class);
-						az.createAUZ(actAUF);
-					} catch (Exception ex) {
-						ExHandler.handle(ex);
-					}
-					
-				}
-			};
+			}
+		};
 	}
 	
 	private ch.elexis.data.AUF getSelectedAUF(){
@@ -249,8 +268,9 @@ public class AUF2 extends ViewPart implements IActivationListener {
 	public void visible(boolean mode){
 		if (mode) {
 			ElexisEventDispatcher.getInstance().addListeners(eli_auf, eli_pat);
-			eli_pat.catchElexisEvent(new ElexisEvent(ElexisEventDispatcher
-				.getSelected(Patient.class), null, ElexisEvent.EVENT_SELECTED));
+			eli_pat
+				.catchElexisEvent(new ElexisEvent(ElexisEventDispatcher.getSelected(Patient.class),
+					null, ElexisEvent.EVENT_SELECTED));
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(eli_auf, eli_pat);
 		}

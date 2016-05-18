@@ -547,6 +547,10 @@
                KonsMakro="ch.elexis.core.ui.text.FavoritenKonsMakro"
                name="Makros Verrechenbar Favoriten">
          </Makro>
+         <Link
+               KonsExtension="ch.elexis.core.ui.text.AUFExtension"
+               name="AUFLink">
+         </Link>
       </extension>
       <extension
             point="ch.elexis.core.ui.Verrechnungscode">
