@@ -4,15 +4,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.ui.PartInitException;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.dialogs.EditAUFDialog;
 import ch.elexis.core.ui.util.IKonsExtension;
+import ch.elexis.core.ui.views.AUF2;
 import ch.elexis.data.AUF;
 import ch.elexis.data.Konsultation;
+import ch.rgw.tools.ExHandler;
 
 public class AUFExtension implements IKonsExtension {
 	private IRichTextDisplay tx;
@@ -34,7 +36,13 @@ public class AUFExtension implements IKonsExtension {
 	public boolean doXRef(String refProvider, String refID){
 		AUF auf = AUF.load(refID);
 		if (auf != null && auf.exists()) {
-			new EditAUFDialog(Hub.getActiveShell(), auf, auf.getFall()).open();
+			//			new EditAUFDialog(Hub.getActiveShell(), auf, auf.getFall()).open();
+			try {
+				AUF2 aufView = (AUF2) Hub.plugin.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().showView(AUF2.ID);
+			} catch (PartInitException e) {
+				ExHandler.handle(e);
+			}
 			return true;
 		} else {
 			return false;
