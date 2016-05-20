@@ -24,7 +24,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IFilter;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.text.model.Samdas;
+import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionedResource;
@@ -95,6 +97,7 @@ public class HistoryLoader extends BackgroundJob {
 			List<Konsultation> konsList = new ArrayList<Konsultation>(lKons);
 			monitor.worked(50);
 			
+			Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 			Iterator<Konsultation> it = konsList.iterator();
 			sb.append("<form>"); //$NON-NLS-1$
 			globalFilter = ObjectFilterRegistry.getInstance().getFilterFor(Konsultation.class);
@@ -137,13 +140,23 @@ public class HistoryLoader extends BackgroundJob {
 					s = ""; //$NON-NLS-1$
 				}
 				String label = maskHTML(k.getLabel());
-				// label+="<br/>"+k.getFall().getLabel();
-				sb.append("<p><a href=\"") //$NON-NLS-1$
+				// make kons text grey if kons Fall is not the selected Fall
+				if (selectedFall != null && !selectedFall.equals(k.getFall())) {
+					sb.append("<p><a href=\"") //$NON-NLS-1$
+						.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
+						.append(label).append("</a><br/>") //$NON-NLS-1$
+						.append("<span color=\"gruen\">") //$NON-NLS-1$
+						.append(maskHTML(k.getFall().getLabel()))
+						.append("</span><br/><span color=\"gruen\">") //$NON-NLS-1$
+						.append(s).append("</span></p>"); //$NON-NLS-1$
+				} else {
+					sb.append("<p><a href=\"") //$NON-NLS-1$
 					.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
 					.append(label).append("</a><br/>") //$NON-NLS-1$
 					.append("<span color=\"gruen\">") //$NON-NLS-1$
 					.append(maskHTML(k.getFall().getLabel())).append("</span><br/>") //$NON-NLS-1$
 					.append(s).append("</p>"); //$NON-NLS-1$
+				}
 				monitor.worked(1);
 				
 			}
