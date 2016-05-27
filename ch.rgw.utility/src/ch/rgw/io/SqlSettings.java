@@ -15,7 +15,11 @@ package ch.rgw.io;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Iterator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -29,6 +33,8 @@ import ch.rgw.tools.JdbcLinkExceptionTranslation;
 
 public class SqlSettings extends Settings {
 	
+	private static final Logger logger = LoggerFactory.getLogger(SqlSettings.class);
+	
 	private static final long serialVersionUID = 7848755852540263456L;
 	
 	public static final String Version(){
@@ -40,6 +46,9 @@ public class SqlSettings extends Settings {
 	volatile String constraint = null;
 	volatile String paramColumn = "param";
 	volatile String valueColumn = "wert";
+	
+	private static final String LASTUPDATE_COLUMN = "lastupdate";
+	private HashMap<String, Long> lastUpdateMap = new HashMap<String, Long>();
 	
 	public SqlSettings(JdbcLink j, String tablename, String paramColumn, String valueColumn,
 		String constraint){
@@ -114,7 +123,8 @@ public class SqlSettings extends Settings {
 			
 			// prepare the update statement
 			sql = new StringBuilder(200);
-			sql.append("UPDATE ").append(tbl).append(" SET ").append(valueColumn).append("= ?")
+			sql.append("UPDATE ").append(tbl).append(" SET ").append(valueColumn).append("= ?,")
+				.append(LASTUPDATE_COLUMN).append("= ?")
 				.append(" WHERE ");
 			sql.append(paramColumn).append("= ?");
 			if (constraintKey != null && constraintValue != null) {
@@ -125,21 +135,22 @@ public class SqlSettings extends Settings {
 			// prepare the insert statement
 			sql = new StringBuilder(200);
 			sql.append("INSERT INTO ").append(tbl).append("(").append(paramColumn).append(",")
-				.append(valueColumn);
+				.append(valueColumn).append(",").append(LASTUPDATE_COLUMN);
 			if (constraintKey != null && constraintValue != null) {
 				sql.append(",").append(constraintKey);
 			}
-			sql.append(") VALUES (").append("?").append(",").append("?");
+			sql.append(") VALUES (").append("?").append(",").append("?").append(",").append("?");
 			if (constraintKey != null && constraintValue != null) {
 				sql.append(",?");
 			}
 			sql.append(")");
 			insertStatement = j.getPreparedStatement(sql.toString());
 			
+			long timestamp = System.currentTimeMillis();
 			while (it.hasNext()) {
-				String a = (String) it.next();
-				String v = get(a, null);
-				selectStatement.setString(1, a);
+				String parameterName = (String) it.next();
+				String parameterValue = get(parameterName, null);
+				selectStatement.setString(1, parameterName);
 				if (constraintKey != null && constraintValue != null) {
 					selectStatement.setString(2, constraintValue);
 				}
@@ -148,9 +159,16 @@ public class SqlSettings extends Settings {
 				ResultSet res = selectStatement.executeQuery();
 				if (res.next()) {
 					String existingValue = res.getString(1);
-					if (existingValue != null && !existingValue.equals(v)) {
-						if (v == null) {
-							deleteStatement.setString(1, a);
+					if (existingValue != null && !existingValue.equals(parameterValue)) {
+						if (lastUpdateChanged(parameterName)) {
+							logger.warn("Did not flush parameter [" + parameterName
+								+ "] because it was changed. Timestamp local ("
+								+ getLastUpdate(parameterName) + ") db ("
+								+ getSqlLastUpdate(parameterName) + ")");
+							continue;
+						}
+						if (parameterValue == null) {
+							deleteStatement.setString(1, parameterName);
 							if (constraintKey != null && constraintValue != null) {
 								deleteStatement.setString(2, constraintValue);
 							}
@@ -158,26 +176,30 @@ public class SqlSettings extends Settings {
 							// sql=new
 							// StringBuilder("DELETE from "+tbl+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a))
 						} else {
-							updateStatement.setString(1, v);
-							updateStatement.setString(2, a);
+							updateStatement.setString(1, parameterValue);
+							updateStatement.setLong(2, timestamp);
+							updateStatement.setString(3, parameterName);
 							if (constraintKey != null && constraintValue != null) {
-								updateStatement.setString(3, constraintValue);
+								updateStatement.setString(4, constraintValue);
 							}
 							updateStatement.executeUpdate();
+							setLastUpdate(parameterName, timestamp);
 							// sql=new
 							// StringBuilder("UPDATE "+tbl+" SET wert="+JdbcLink.wrap(v)+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a));
 						}
 					}
 				} else {
-					if (v == null) {
+					if (parameterValue == null) {
 						continue;
 					}
-					insertStatement.setString(1, a);
-					insertStatement.setString(2, v);
+					insertStatement.setString(1, parameterName);
+					insertStatement.setString(2, parameterValue);
+					insertStatement.setLong(3, timestamp);
 					if (constraintKey != null && constraintValue != null) {
-						insertStatement.setString(3, constraintValue);
+						insertStatement.setString(4, constraintValue);
 					}
 					insertStatement.executeUpdate();
+					setLastUpdate(parameterName, timestamp);
 					// sql="INSERT INTO "+tbl+" (param,wert,"+cn[0]+") VALUES ("+JdbcLink.wrap(a)+","+JdbcLink.wrap(v)+","+cn[1]+")";
 				}
 				res.close();
@@ -229,7 +251,9 @@ public class SqlSettings extends Settings {
 			while ((resultSet != null) && resultSet.next()) {
 				String parm = resultSet.getString(paramColumn);
 				String val = resultSet.getString(valueColumn);
+				long lastUpdate = resultSet.getLong(LASTUPDATE_COLUMN);
 				set(parm, val);
+				setLastUpdate(parm, ((lastUpdate != 0) ? lastUpdate : -1));
 			}
 			cleaned();
 		} catch (SQLException e) {
@@ -237,5 +261,75 @@ public class SqlSettings extends Settings {
 		} finally {
 			j.releasePreparedStatement(selectStatement);
 		}
+	}
+	
+	/**
+	 * Check if the value was changed in the database.
+	 * 
+	 * @param param
+	 * @return true if changed
+	 */
+	private boolean lastUpdateChanged(String param){
+		long localLastUpdate = getLastUpdate(param);
+		long sqlLastUpdate = getSqlLastUpdate(param);
+		return localLastUpdate != sqlLastUpdate;
+	}
+	
+	/**
+	 * Set the lastupdate value for a parameter. It will be used by
+	 * {@link #lastUpdateChanged(String)}.
+	 * 
+	 * @param param
+	 * @param timestamp
+	 */
+	private void setLastUpdate(String param, long timestamp){
+		lastUpdateMap.put(param, timestamp);
+	}
+	
+	private long getLastUpdate(String param){
+		Long ret = lastUpdateMap.get(param);
+		if (ret != null) {
+			return ret;
+		} else {
+			return -1;
+		}
+	}
+	
+	private long getSqlLastUpdate(String param){
+		PreparedStatement selectStatement = null;
+		try {
+			String constraintKey = null;
+			String constraintValue = null;
+			if (constraint != null) {
+				String[] constraintParts = constraint.split("=");
+				if (constraintParts.length == 2) {
+					constraintKey = unwrap(constraintParts[0]);
+					constraintValue = unwrap(constraintParts[1]);
+				}
+			}
+			StringBuilder sql = new StringBuilder(300);
+			sql.append("SELECT ").append(LASTUPDATE_COLUMN).append(" FROM ").append(tbl)
+				.append(" WHERE ").append(paramColumn).append("= ?");
+			if (constraintKey != null && constraintValue != null) {
+				sql.append(" AND ").append(constraintKey).append("= ?");
+			}
+			selectStatement = j.getPreparedStatement(sql.toString());
+			selectStatement.setString(1, param);
+			if (constraintKey != null && constraintValue != null) {
+				selectStatement.setString(2, constraintValue);
+			}
+			ResultSet resultSet = selectStatement.executeQuery();
+			if ((resultSet != null) && resultSet.next()) {
+				long lastUpdate = resultSet.getLong(LASTUPDATE_COLUMN);
+				if (lastUpdate != 0) {
+					return lastUpdate;
+				}
+			}
+		} catch (SQLException e) {
+			throw JdbcLinkExceptionTranslation.translateException(e);
+		} finally {
+			j.releasePreparedStatement(selectStatement);
+		}
+		return -1;
 	}
 }
