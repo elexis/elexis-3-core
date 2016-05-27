@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,6 +24,14 @@ public class Test_SqlSettings {
 	@AfterClass
 	public static void afterClass(){
 		mainLink.disconnect();
+	}
+	
+	@After
+	public void after(){
+		JdbcLink link = getJdbcLink(false);
+		link.exec("DELETE FROM CONFIG WHERE 1=1;");
+		link.exec("DELETE FROM USERCONFIG WHERE 1=1;");
+		link.disconnect();
 	}
 	
 	@Test
@@ -186,6 +195,37 @@ public class Test_SqlSettings {
 		
 		assertEquals(1, userSettings.get("key1", -1));
 		assertEquals(2, userSettings.get("key2", -1));
+		link.disconnect();
+	}
+	
+	@Test
+	public void testConcurrentChange(){
+		JdbcLink link1 = getJdbcLink(false);
+		SqlSettings globalSettings1 = new SqlSettings(link1, "CONFIG");
+		globalSettings1.set("key1", "value1");
+		globalSettings1.flush();
+		
+		JdbcLink link2 = getJdbcLink(false);
+		SqlSettings globalSettings2 = new SqlSettings(link2, "CONFIG");
+		// read value from 2
+		assertEquals("value1", globalSettings2.get("key1", null));
+		// change on 2 and flush
+		globalSettings2.set("key1", "value2");
+		globalSettings2.flush();
+		// read value from 1 
+		assertEquals("value1", globalSettings1.get("key1", null));
+		// write something else on 1 and flush
+		globalSettings1.set("key2", "value1");
+		globalSettings1.flush();
+		// flush and disconnect
+		globalSettings2.flush();
+		link1.disconnect();
+		link2.disconnect();
+		// test what was persisted
+		JdbcLink link = getJdbcLink(false);
+		SqlSettings globalSettings = new SqlSettings(link, "CONFIG");
+		assertEquals("value2", globalSettings.get("key1", null));
+		assertEquals("value1", globalSettings.get("key2", null));
 		link.disconnect();
 	}
 	
