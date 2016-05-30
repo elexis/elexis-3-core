@@ -45,8 +45,21 @@ public class PatientDetailView2 extends ViewPart implements ISaveablePart2 {
 	
 	@Override
 	public void setFocus(){
-		// TODO Auto-generated method stub
-		
+		if (pb != null && !pb.isDisposed()) {
+			Patient selectedPatient = ElexisEventDispatcher.getSelectedPatient();
+			if (selectedPatient != null && !selectedPatient.equals(pb.actPatient)) {
+				pb.setPatient((Patient) ElexisEventDispatcher.getSelected(Patient.class));
+				pb.refresh();
+			}
+		}
+	}
+	
+	@Override
+	public void dispose(){
+		if (pb != null) {
+			pb.dispose();
+		}
+		super.dispose();
 	}
 	
 	/*
