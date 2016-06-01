@@ -273,17 +273,21 @@ public class LabImportUtil implements ILabImportUtil {
 		
 		LabOrder labOrder = null;
 		if (existing == null || existing.isEmpty()) {
-			TimeTool importTime = transientLabResult.getTransmissionTime();
-			if (importTime == null) {
-				importTime = transientLabResult.getDate();
-				if (importTime == null) {
-					importTime = new TimeTool();
+			TimeTool time = transientLabResult.getObservationTime();
+			if (time == null) {
+				time = transientLabResult.getDate();
+				if (time == null) {
+					logger.warn(
+						"Could not resolve observation time and time for ILabResult [{}], defaulting to now.",
+						labResult.getId());
+					time = new TimeTool();
 				}
 			}
 			labOrder = new LabOrder(CoreHub.actUser.getId(), CoreHub.actMandant.getId(),
 				transientLabResult.getPatient().getId(), transientLabResult.getLabItem(),
-				labResult.getId(), orderId, "Import", importTime);
+				labResult.getId(), orderId, "Import", time);
 		} else {
+			// TODO for multiple entries we could check on which one the observationtime matches
 			labOrder = existing.get(0);
 			labOrder.setLabResultIdAsString(labResult.getId());
 		}
@@ -369,7 +373,7 @@ public class LabImportUtil implements ILabImportUtil {
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.add(LabResult.PATIENT_ID, Query.EQUALS, pat.getId());
 		qr.add(LabResult.DATE, Query.EQUALS, commentsDate.toString(TimeTool.DATE_GER));
-		qr.add(LabResult.ITEM_ID,Query.EQUALS, li.getId());
+		qr.add(LabResult.ITEM_ID, Query.EQUALS, li.getId());
 		if (qr.execute().size() == 0) {
 			StringBuilder comment = new StringBuilder();
 			comment.append(hl7TextData.getText());
