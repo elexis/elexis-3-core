@@ -10,6 +10,8 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.dialogs.EditLabResultDialog;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.LabResult;
@@ -39,11 +41,22 @@ public class LaborResultEditDetailAction extends Action {
 	public void run(){
 		if (results != null) {
 			for (LabResult result : results) {
-				EditLabResultDialog dialog =
-					new EditLabResultDialog(viewer.getControl().getShell(), result);
-				if (dialog.open() == Window.OK) {
-					ElexisEventDispatcher.reload(LabResult.class);
-				}
+				final LabResult lockingResult = result;
+				AcquireLockBlockingUi.aquireAndRun(lockingResult, new ILockHandler() {
+					@Override
+					public void lockFailed(){
+						// do nothing
+					}
+					
+					@Override
+					public void lockAcquired(){
+						EditLabResultDialog dialog =
+							new EditLabResultDialog(viewer.getControl().getShell(), lockingResult);
+						if (dialog.open() == Window.OK) {
+							ElexisEventDispatcher.reload(LabResult.class);
+						}
+					}
+				});
 			}
 		} else if (orders != null) {
 			for (LabOrder order : orders) {
@@ -52,12 +65,24 @@ public class LaborResultEditDetailAction extends Action {
 					result = order.createResult();
 					result.setTransmissionTime(new TimeTool());
 				}
-				EditLabResultDialog dialog =
-					new EditLabResultDialog(viewer.getControl().getShell(), result);
-				if (dialog.open() == Window.OK) {
-					order.setState(State.DONE);
-					ElexisEventDispatcher.reload(LabResult.class);
-				}
+				final LabResult lockingResult = (LabResult) result;
+				final LabOrder lockingOrder = order;
+				AcquireLockBlockingUi.aquireAndRun(lockingResult, new ILockHandler() {
+					@Override
+					public void lockFailed(){
+						// do nothing
+					}
+					
+					@Override
+					public void lockAcquired(){
+						EditLabResultDialog dialog =
+							new EditLabResultDialog(viewer.getControl().getShell(), lockingResult);
+						if (dialog.open() == Window.OK) {
+							lockingOrder.setState(State.DONE);
+							ElexisEventDispatcher.reload(LabResult.class);
+						}
+					}
+				});
 			}
 		}
 	}
