@@ -16,7 +16,7 @@ public class LabOrderSetObservationDateAction extends Action {
 	private TreeViewer viewer;
 	
 	public LabOrderSetObservationDateAction(List<LabOrder> orders, TreeViewer viewer){
-		super("Beobachtungszeitpunkt ändern (inkl. Resultate)"); //$NON-NLS-1$
+		super("Beobachtungszeitpunkt für Auftrag ändern (inkl. Resultate)"); //$NON-NLS-1$
 		this.orders = orders;
 		this.viewer = viewer;
 	}

@@ -197,7 +197,12 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	}
 	
 	public void setObservationTimeWithResults(TimeTool time){
-		setObservationTime(time);
+		// update all orders with same order id
+		List<ILabOrder> orders = getLabOrdersByOrderId(get(FLD_ORDERID));
+		for (ILabOrder iLabOrder : orders) {
+			((LabOrder) iLabOrder).setObservationTime(time);
+		}
+		// update all results
 		List<ILabResult> results = getLabResults();
 		for (ILabResult labResult : results) {
 			labResult.setObservationTime(time);
