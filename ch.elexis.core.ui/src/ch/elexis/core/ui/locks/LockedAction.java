@@ -21,19 +21,20 @@ public abstract class LockedAction<T extends PersistentObject> extends Action {
 		setEnabled(false);
 	}
 
-	public void reflectRight() {
+	@Override
+	public boolean isEnabled(){
 		object = getTargetedObject();
-
+		
 		if (object == null) {
-			return;
+			return false;
 		}
-
-		setEnabled(CoreHub.getLocalLockService().isLocked(object));
+		
+		return CoreHub.getLocalLockService().isLockedLocal(object);
 	}
-
+	
 	@Override
 	public void run() {
-		if (CoreHub.getLocalLockService().isLocked(object)) {
+		if (CoreHub.getLocalLockService().isLockedLocal(object)) {
 			if (object != null) {
 				doRun((T) object);
 			}

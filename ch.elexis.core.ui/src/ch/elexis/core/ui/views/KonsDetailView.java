@@ -18,6 +18,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -229,8 +231,13 @@ public class KonsDetailView extends ViewPart
 		hlMandant.setEnabled(unlocked);
 		cbFall.setEnabled(unlocked);
 		text.setEditable(unlocked);
-		saveAction.reflectRight();
-		purgeAction.reflectRight();
+		
+		// update the UI
+		IToolBarManager mgr = ((IViewSite) getSite()).getActionBars().getToolBarManager();
+		IContributionItem[] items = mgr.getItems();
+		for (IContributionItem iContributionItem : items) {
+			iContributionItem.update();
+		}
 	}
 
 	@Override
