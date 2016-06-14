@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
+<booleanAttribute key="append.args" value="true"/>
+<booleanAttribute key="askclear" value="false"/>
+<booleanAttribute key="automaticAdd" value="false"/>
+<booleanAttribute key="automaticValidate" value="false"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="clearConfig" value="true"/>
+<booleanAttribute key="clearws" value="true"/>
+<booleanAttribute key="clearwslog" value="false"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
+<booleanAttribute key="default" value="false"/>
+<booleanAttribute key="includeOptional" value="false"/>
+<stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/ch.elexis.core.mail.test/src/ch/elexis/core/mail/test/AllTests.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<mapAttribute key="org.eclipse.debug.core.preferred_launchers">
+<mapEntry key="[debug]" value="org.eclipse.pde.ui.JunitLaunchConfig"/>
+<mapEntry key="[run]" value="org.eclipse.pde.ui.JunitLaunchConfig"/>
+</mapAttribute>
+<stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
+<booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
+<stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
+<stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
+<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="ch.elexis.core.mail.test.AllTests"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ch.elexis.core.mail.test"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delexis-run-mode=RunFromScratch -Dch.elexis.username=007 -Dch.elexis.password=topsecret"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<stringAttribute key="product" value="ch.elexis.core.application.product"/>
+<booleanAttribute key="run_in_ui_thread" value="false"/>
+<stringAttribute key="selected_target_plugins" value="bouncycastle.bcprov-jdk14@default:default,ca.uhn.hapi.osgi-base@default:default,ch.qos.logback.classic@default:default,ch.qos.logback.core@default:default,ch.qos.logback.slf4j@default:false,com.eclipsesource.jaxrs.consumer@default:default,com.eclipsesource.jaxrs.jersey-min@default:default,com.google.guava@default:default,com.healthmarketscience.jackcess@default:default,com.ibm.icu@default:default,com.mysql.jdbc@default:default,javax.activation@default:default,javax.mail.glassfish@default:default,net.sf.opencsv@default:default,org.apache.commons.codec*1.6.0.v201305230611@default:default,org.apache.commons.dbcp@default:default,org.apache.commons.io@default:default,org.apache.commons.jexl@default:default,org.apache.commons.lang@default:default,org.apache.commons.logging@default:default,org.apache.commons.pool@default:default,org.apache.poi@default:default,org.eclipse.core.commands@default:default,org.eclipse.core.contenttype@default:default,org.eclipse.core.databinding.beans@default:default,org.eclipse.core.databinding.observable@default:default,org.eclipse.core.databinding.property@default:default,org.eclipse.core.databinding@default:default,org.eclipse.core.expressions@default:default,org.eclipse.core.filesystem.win32.x86@default:false,org.eclipse.core.filesystem@default:default,org.eclipse.core.jobs@default:default,org.eclipse.core.resources.win32.x86@default:false,org.eclipse.core.resources@default:default,org.eclipse.core.runtime.compatibility.registry@default:false,org.eclipse.core.runtime@default:true,org.eclipse.emf.common@default:default,org.eclipse.emf.ecore@default:default,org.eclipse.equinox.app@default:default,org.eclipse.equinox.common@2:true,org.eclipse.equinox.preferences@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.help@default:default,org.eclipse.jface.databinding@default:default,org.eclipse.jface@default:default,org.eclipse.nebula.cwt@default:default,org.eclipse.nebula.widgets.cdatetime@default:default,org.eclipse.nebula.widgets.tablecombo@default:default,org.eclipse.osgi*3.9.1.v20140110-1610@-1:true,org.eclipse.swt.win32.win32.x86@default:false,org.eclipse.swt@default:default,org.eclipse.ui.forms@default:default,org.eclipse.ui.views.properties.tabbed@default:default,org.eclipse.ui.views@default:default,org.eclipse.ui.workbench@default:default,org.eclipse.ui@default:default,org.h2@default:default,org.hamcrest.core@default:default,org.jdom@default:default,org.junit@default:default,org.postgresql@default:default,org.slf4j.api@default:default,org.slf4j.nop@default:false"/>
+<stringAttribute key="selected_workspace_plugins" value="at.medevit.elexis.tarmed.model.tests@default:false,at.medevit.elexis.tarmed.model@default:default,ch.elexis.base.ch.arzttarife.test@default:false,ch.elexis.base.ch.arzttarife@default:default,ch.elexis.base.ch.diagnosecodes@default:default,ch.elexis.base.ch.ebanking@default:default,ch.elexis.base.ch.labortarif_2009@default:default,ch.elexis.base.ch.ticode@default:default,ch.elexis.core.application@default:default,ch.elexis.core.data.tests@default:false,ch.elexis.core.data@default:default,ch.elexis.core.hl7.v2x.tests@default:false,ch.elexis.core.hl7.v2x@default:default,ch.elexis.core.importer.div@default:default,ch.elexis.core.logging.default_configuration@default:false,ch.elexis.core.mail.test@default:false,ch.elexis.core.mail@default:default,ch.elexis.core.ui.contacts@default:default,ch.elexis.core.ui.icons@default:default,ch.elexis.core.ui.importer.div.native32@default:false,ch.elexis.core.ui.importer.div.tests@default:false,ch.elexis.core.ui.importer.div@default:default,ch.elexis.core.ui.laboratory@default:default,ch.elexis.core.ui.medication@default:default,ch.elexis.core.ui@default:default,ch.elexis.core@default:default,ch.medelexis.medication.ui@default:false,ch.rgw.utility.tests@default:false,ch.rgw.utility@default:default"/>
+<booleanAttribute key="show_selected_only" value="false"/>
+<stringAttribute key="testApplication" value="ch.elexis.core.application.ElexisApp"/>
+<booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useCustomFeatures" value="false"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<booleanAttribute key="useDefaultConfigArea" value="false"/>
+<booleanAttribute key="useProduct" value="false"/>
+</launchConfiguration>

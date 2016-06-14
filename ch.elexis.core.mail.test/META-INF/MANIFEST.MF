@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mail Test
+Bundle-SymbolicName: ch.elexis.core.mail.test
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: ch.elexis.core.mail
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.junit
+Bundle-ClassPath: lib/dumbster1.6.jar,
+ .

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="ch.elexis.core.mail.ui.preference.Preference"
+            id="ch.elexis.core.mail.ui.preference"
+            name="E-Mail">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="ch.elexis.core.mail.ui.handlers.SendMailHandler"
+            id="ch.elexis.core.mail.ui.sendMail"
+            name="Send E-Mail">
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.attachments"
+               name="attachments"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.to"
+               name="to"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.subject"
+               name="subject"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.text"
+               name="text"
+               optional="true">
+         </commandParameter>
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="ch.elexis.core.mail.ui.property.PropertyTester"
+            id="ch.elexis.core.mail.ui.propertyTester"
+            namespace="ch.elexis.core.mail.ui"
+            properties="available"
+            type="java.lang.Object">
+      </propertyTester>
+   </extension>
+
+</plugin>

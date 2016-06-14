@@ -62,6 +62,8 @@ public enum Images {
 	IMG_FAX,
 	/** a mail icon */
 	IMG_MAIL,
+		/** a mail send icon */
+		IMG_MAIL_SEND,
 	/** a web icon */
 	IMG_WEB,
 	/** a contact detail icon */

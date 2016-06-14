@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mail Client
+Bundle-SymbolicName: ch.elexis.core.mail
+Bundle-Version: 3.2.0.qualifier
+Bundle-Vendor: medevit.at
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/ch.elexis.core.mail.internal.MailClient.xml
+Require-Bundle: ch.elexis.core.data;bundle-version="3.2.0",
+ javax.mail.glassfish;bundle-version="1.4.1",
+ org.eclipse.osgi.services;bundle-version="3.3.100"
+Import-Package: ch.rgw.io
+Export-Package: ch.elexis.core.mail

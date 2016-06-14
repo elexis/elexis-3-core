@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Juno for Elexis 3.1 (Updated for Java 8)" sequenceNumber="1454509112">
+<target name="Juno for Elexis 3.1 (Updated for Java 8)" sequenceNumber="1465377825">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.osgi" version="3.9.1.v20140110-1610"/>
@@ -24,6 +24,8 @@
       <unit id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
       <unit id="javax.xml" version="1.3.4.v201005080400"/>
       <unit id="ca.odell.glazedlists" version="1.9.0.v201303080712"/>
+      <unit id="javax.mail.glassfish" version="1.4.1.v201108011116"/>
+      <unit id="javax.activation" version="1.1.0.v201211130549"/>
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150124073747/repository/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
