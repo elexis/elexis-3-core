@@ -611,9 +611,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		for (int i = 0; i < dfExpandable.length; i++) {
 			UserSettings.setExpandedState(ec[i], KEY_PATIENTENBLATT + ec[i].getText());
-			if (ec[i].isExpanded() == true) {
-				txExpandable[i].setText(p.get(dfExpandable[i]));
-			}
+			txExpandable[i].setText(p.get(dfExpandable[i]));
 		}
 		dmd.reload();
 		form.reflow(true);
