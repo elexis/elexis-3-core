@@ -6,6 +6,8 @@ import javax.mail.Address;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import ch.elexis.data.Mandant;
+
 public class MailAccount {
 	
 	private static final String SEPARATOR = ",";
@@ -24,6 +26,8 @@ public class MailAccount {
 	
 	private String host;
 	private String port;
+	
+	private String mandants;
 	
 	private boolean starttls;
 	
@@ -91,6 +95,14 @@ public class MailAccount {
 		this.starttls = starttls;
 	}
 	
+	public String getMandants(){
+		return mandants;
+	}
+	
+	public void setMandants(String mandants){
+		this.mandants = mandants;
+	}
+	
 	public static MailAccount from(String csv){
 		MailAccount ret = null;
 		String[] parts = csv.split(SEPARATOR);
@@ -129,6 +141,9 @@ public class MailAccount {
 		case "port":
 			account.port = value;
 			return;
+		case "mandants":
+			account.mandants = value;
+			return;
 		case "starttls":
 			account.starttls = Boolean.parseBoolean(value);
 		}
@@ -165,6 +180,10 @@ public class MailAccount {
 			sb.append("port=").append(port);
 			sb.append(SEPARATOR);
 		}
+		if (mandants != null) {
+			sb.append("mandants=").append(mandants);
+			sb.append(SEPARATOR);
+		}
 		sb.append("starttls=").append(starttls);
 		return sb.toString();
 	}
@@ -188,5 +207,43 @@ public class MailAccount {
 		}
 		throw new AddressException(
 			"From [" + from + "] Username [" + username + "] are no mail addresses.");
+	}
+	
+	public boolean isForMandant(String mandantId){
+		if (mandants != null && !mandants.isEmpty()) {
+			String[] ids = mandants.split("\\|\\|");
+			for (String string : ids) {
+				if (string.equals(mandantId)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void addMandant(Mandant mandant){
+		String newId = mandant.getId();
+		if (mandants == null) {
+			mandants = new String(newId);
+		} else if (!mandants.contains(newId)) {
+			mandants += "||" + newId;
+		}
+	}
+	
+	public void removeMandant(Mandant mandant){
+		if (mandants != null) {
+			StringBuilder sb = new StringBuilder();
+			String[] ids = mandants.split("\\|\\|");
+			for (String string : ids) {
+				if (!string.equals(mandant)) {
+					if (sb.length() == 0) {
+						sb.append(string);
+					} else {
+						sb.append("||").append(string);
+					}
+				}
+			}
+			mandants = sb.toString();
+		}
 	}
 }

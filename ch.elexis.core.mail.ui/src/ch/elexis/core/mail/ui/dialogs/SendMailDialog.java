@@ -4,7 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalListener;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -18,9 +28,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
+import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Mandant;
 
 public class SendMailDialog extends TitleAreaDialog {
 
@@ -67,7 +81,55 @@ public class SendMailDialog extends TitleAreaDialog {
 			toText = new Text(container, SWT.BORDER);
 			toText.setText(toString);
 			toText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			ContentProposalAdapter toAddressProposalAdapter = new ContentProposalAdapter(toText,
+				new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
+			toAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
+				@Override
+				public void proposalAccepted(IContentProposal proposal){
+					int index =
+						MailAddressContentProposalProvider.getLastAddressIndex(toText.getText());
+					StringBuilder sb = new StringBuilder();
+					if (index != 0) {
+						sb.append(toText.getText().substring(0, index)).append(", ")
+							.append(proposal.getContent());
+					} else {
+						sb.append(proposal.getContent());
+					}
+					toText.setText(sb.toString());
+					toText.setSelection(toText.getText().length());
+				}
+			});
+			MenuManager menuManager = new MenuManager();
+			menuManager.add(new Action("email von") {
+				@Override
+				public void run(){
+					KontaktSelektor selector =
+						new KontaktSelektor(getShell(), Kontakt.class, "Kontakt auswahl",
+							"Kontakt für die E-Mail Adresse auswählen", Kontakt.DEFAULT_SORT);
+					if (selector.open() == Dialog.OK) {
+						Kontakt selected = (Kontakt) selector.getSelection();
+						selected.set(Kontakt.FLD_E_MAIL, toText.getSelectionText());
+					}
+				}
+				
+				@Override
+				public boolean isEnabled(){
+					String text = toText.getSelectionText();
+					return text != null && !text.isEmpty() && text.contains("@");
+				}
+			});
+			menuManager.addMenuListener(new IMenuListener() {
+				@Override
+				public void menuAboutToShow(IMenuManager manager){
+					IContributionItem[] items = manager.getItems();
+					for (IContributionItem iContributionItem : items) {
+						iContributionItem.update();
+					}
+				}
+			});
+			toText.setMenu(menuManager.createContextMenu(toText));
 			
+
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Betreff");
 			subjectText = new Text(container, SWT.BORDER);
@@ -86,6 +148,21 @@ public class SendMailDialog extends TitleAreaDialog {
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 			gd.heightHint = 128;
 			textText.setLayoutData(gd);
+			
+			// set selected account for mandant
+			Mandant selectedMandant = ElexisEventDispatcher.getSelectedMandator();
+			if (selectedMandant != null) {
+				List<String> accounts = MailClientComponent.getMailClient().getAccounts();
+				for (String string : accounts) {
+					Optional<MailAccount> accountOptional =
+						MailClientComponent.getMailClient().getAccount(string);
+					if (accountOptional.isPresent()
+						&& accountOptional.get().isForMandant(selectedMandant.getId())) {
+						accountsViewer
+							.setSelection(new StructuredSelection(accountOptional.get().getId()));
+					}
+				}
+			}
 		}
 		
 		return area;
@@ -182,5 +259,4 @@ public class SendMailDialog extends TitleAreaDialog {
 	public MailAccount getAccount(){
 		return account;
 	}
-	
 }

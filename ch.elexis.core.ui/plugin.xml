@@ -189,6 +189,31 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.BriefAuswahlView">
+         <command
+               commandId="ch.elexis.core.ui.brief.send"
+               icon="icon://IMG_MAIL_SEND"
+               label="Versenden"
+               style="pulldown">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:ch.elexis.core.ui.brief.send">
+         <command
+               commandId="ch.elexis.core.ui.commands.SendBriefAsMail"
+               label="als E-Mail"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     property="ch.elexis.core.mail.ui.sendavailable">
+               </test>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -531,6 +556,16 @@
             defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentCaseLockHandler"
             id="ch.elexis.core.ui.command.ToggleCurrentCaseLockCommand"
             name="Toggle current case lock">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.SendBriefAsMailHandler"
+            id="ch.elexis.core.ui.commands.SendBriefAsMail"
+            name="Send Brief as E-Mail">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.SendHandler"
+            id="ch.elexis.core.ui.brief.send"
+            name="Send Menu">
       </command>
    </extension>
       <extension

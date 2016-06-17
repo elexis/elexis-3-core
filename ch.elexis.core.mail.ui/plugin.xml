@@ -43,7 +43,7 @@
             class="ch.elexis.core.mail.ui.property.PropertyTester"
             id="ch.elexis.core.mail.ui.propertyTester"
             namespace="ch.elexis.core.mail.ui"
-            properties="available"
+            properties="sendavailable"
             type="java.lang.Object">
       </propertyTester>
    </extension>
