@@ -94,7 +94,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	 */
 	public LabItem(String k, String t, Kontakt labor, String RefMann, String RefFrau, String Unit,
 		LabItemTyp type, String grp, String seq){
-		this(k, Unit, (labor != null) ? labor.getId() : null, RefMann, RefFrau, Unit, type, grp,
+		this(k, t, (labor != null) ? labor.getId() : null, RefMann, RefFrau, Unit, type, grp,
 			seq);
 	}
 	
