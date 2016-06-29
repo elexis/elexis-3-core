@@ -23,6 +23,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.model.PrescriptionConstants;
 import ch.elexis.core.model.PrescriptionMethods;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -57,12 +58,6 @@ public class Prescription extends PersistentObject {
 	public static final String FLD_SORT_ORDER = "sortOrder"; // manual sort order in the UI table
 	public static final String FLD_PRESC_TYPE = "prescType"; // prescription type, see flags
 	public static final String FLD_PRESCRIPTOR = "prescriptor"; // contact that prescribed this
-	public static final String FLD_EXT_STOP_REASON = "stopReason"; // reason for stopping medication
-	public static final String FLD_EXT_STOPPED_BY = "stopper"; // who stopped the prescription
-	public static final String FLD_EXT_INTOLERANCE = "intolerance";
-	public static final String FLD_EXT_DISPOSAL_COMMENT = "disposalComment";
-	public static final String FLD_EXT_DATE_LAST_DISPOSAL = "lastDisposal";
-	public static final String FLD_EXT_DISPOSED_BY = "disposedBy";
 	
 	/**
 	 * Prescription is a direct distribution within a consultation
@@ -326,7 +321,8 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public String getDisposalComment(){
-		return checkNull((String) getExtInfoStoredObjectByKey(FLD_EXT_DISPOSAL_COMMENT));
+		return checkNull(
+			(String) getExtInfoStoredObjectByKey(PrescriptionConstants.FLD_EXT_DISPOSAL_COMMENT));
 	}
 	
 	/**
@@ -336,7 +332,8 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public void setDisposalComment(String disposalComment){
-		setExtInfoStoredObjectByKey(FLD_EXT_DISPOSAL_COMMENT, disposalComment);
+		setExtInfoStoredObjectByKey(PrescriptionConstants.FLD_EXT_DISPOSAL_COMMENT,
+			disposalComment);
 	}
 	
 	/**
@@ -375,7 +372,7 @@ public class Prescription extends PersistentObject {
 			until = new TimeTool();
 		set(FLD_DATE_UNTIL, until.toString(TimeTool.TIMESTAMP));
 		IPersistentObject user = ElexisEventDispatcher.getSelected(Anwender.class);
-		setExtInfoStoredObjectByKey(Prescription.FLD_EXT_STOPPED_BY, user.getId());
+		setExtInfoStoredObjectByKey(PrescriptionConstants.FLD_EXT_STOPPED_BY, user.getId());
 	}
 	
 	/**
@@ -564,7 +561,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public String getStopReason(){
-		return (String) getExtInfoStoredObjectByKey(FLD_EXT_STOP_REASON);
+		return (String) getExtInfoStoredObjectByKey(PrescriptionConstants.FLD_EXT_STOP_REASON);
 	}
 	
 	/**
@@ -573,7 +570,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public void setStopReason(String stopReason){
-		setExtInfoStoredObjectByKey(FLD_EXT_STOP_REASON, stopReason);
+		setExtInfoStoredObjectByKey(PrescriptionConstants.FLD_EXT_STOP_REASON, stopReason);
 	}
 	
 	/**
