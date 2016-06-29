@@ -644,10 +644,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					// art.einzelAbgabe(1); -> this is done by the optifier now
 					Prescription p = new Prescription(art, getFall().getPatient(), "", "");
 					p.set(new String[] {
-						Prescription.FLD_REZEPT_ID, Prescription.FLD_DATE_UNTIL
+						Prescription.FLD_REZEPT_ID
 					}, new String[] {
-						Prescription.FLD_REZEPTID_VAL_DIREKTABGABE,
-						new TimeTool().toString(TimeTool.DATE_GER)
+						Prescription.FLD_REZEPTID_VAL_DIREKTABGABE
 					});
 					Verrechnet verrechnet = optifier.getCreatedVerrechnet();
 					if (verrechnet != null) {
