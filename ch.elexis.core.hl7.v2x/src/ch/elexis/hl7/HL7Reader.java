@@ -98,17 +98,8 @@ public abstract class HL7Reader {
 	
 	public String parseTextValue(String value){
 		String text = value;
-		value = value.replaceAll("\\\\", "");
-		String[] split = value.split("\\.br");
-		StringBuilder sb = new StringBuilder();
-		for (String s : split) {
-			if (!s.isEmpty()) {
-				sb.append(s);
-				sb.append("\n");
-			}
-		}
-		
-		text = sb.toString();
+		text = text.replaceAll("\\\\.br\\\\", "\n");
+		text = text.replaceAll("\\\\.BR\\\\", "\n");
 		
 		// only return parsed value if it contains reasonable input
 		if (text != null && !text.isEmpty()) {
