@@ -1,0 +1,46 @@
+[[Kategorie:KG-Führung]]
+== Einführung ==
+
+Dieses Plugin ermöglicht die Entwicklung und Einbindung von eigenen bzw. nicht als eigene Plugins erhältlichen Diagnosesystemen. Das Plugin ist dabei bewusst offen gehalten, ermöglicht also nicht nur medizinische Diagnosen, sondern jede Art von Dienstleistsgründen zu erfassen.
+
+== Vorbereitung ==
+
+== Definition der Leistungen ==
+
+Sie benötigen eine Tabelle, in der Sie Ihre Diagnosen festgehalten haben. Dies kann eine Excel-Tabelle oder eine .csv-Datei sein. Diese muss den folgenden Aufbau haben:
+
+; Gruppe &amp; Kürzel &amp; Text &amp; Erläuterung
+
+Beispiel s. Abb. [fig:diag]
+
+[[Image:diagnose_1.png|image]]<br />
+ [fig:diag]
+
+Erläuterung: Der Inhalt der Tabelle wird als hierarchische bzw. baumartige Struktur (Vgl. Tessiner Code oder Tarmed) aufbereitet. Das heisst, jedes Element hat genau ein Eltern-Element und kann kein oder beliebig viele Unterelemente haben. Nur die Elemente der obersten Ebene haben kein Elternelement.
+
+Die erste Spalte der Tabelle deklariert nun das Elternelement der betreffenden Leistung. NIL bedeutet, dass dieses Element zur obersten Ebene gehört. Ansonsten können die Bezeichnungen frei gewählt werden.
+
+== Import ==
+
+Die so erstellte Tabelle kann nun nach Elexis importiert werden: Sofern das Eigendiagnose-Plugin installiert ist, erscheint in der ‘Codes’ View (in der Perspektive ‘Codes’) die entsprechende Seite ‘Eigendiagnose’ .
+
+Wenn Sie im ViewMenu (Dreieck rechts oben) auf ‘Import’ Klicken, können Sie die csv- oder xls-Tabelle mit Ihrem Codesystem einlesen. <sup>[[#fn1|1]]</sup> Danach stehen Ihnen Ihre selbstdefinierten Diagnosen wie jedes andere Codesystem zur Verfügung.
+
+[[#fnr1|<sup>1</sup>]] Änderungen können Sie nachträglich auch direkt in der codes-View vornehmen.
+
+
+
+{{PluginInfo
+|plugin=ch.elexis.eigendiagnosen
+| eingelesen=von /elexis-base/ch.elexis.eigendiagnosen/doc/ch.elexis.eigendiagnosen.tex am 25.03.2013
+| name=Elexis-Eigendiagnosen
+| description=Eigendiagnosen (ausserhalb der vordefinierten Systeme) definieren
+| category=feature
+| license=EPL
+| first_commit_date=2007-07-23
+| first_commit_author=rgw_ch
+| responsible=weirich@elexis.ch
+| type=KG-Führung
+
+
+}}
