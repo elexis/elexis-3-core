@@ -20,7 +20,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -58,6 +60,7 @@ import ch.elexis.core.text.model.SSDRange;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.preferences.UserTextPref;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
@@ -769,7 +772,17 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 
 	public void setEditable(boolean unlocked){
 		text.setEditable(unlocked);
-		menuMgr.getMenu().setEnabled(unlocked);
+		IContributionItem[] items = menuMgr.getItems();
+		for (IContributionItem iContributionItem : items) {
+			if(iContributionItem instanceof ActionContributionItem) {
+				IAction action = ((ActionContributionItem) iContributionItem).getAction();
+				if(action instanceof RestrictedAction) {
+					((RestrictedAction) action).reflectRight();
+				} else {
+					action.setEnabled(unlocked);
+				}
+			}
+		}
 		if(unlocked) {
 			text.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 		} else {
