@@ -226,8 +226,10 @@ public class LocalLockService implements ILocalLockService {
 				if (LockRequest.Type.RELEASE == lockRequest.getRequestType()) {
 					PersistentObject po =
 						CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
-					ElexisEventDispatcher.getInstance().fire(new ElexisEvent(po, po.getClass(),
-						ElexisEvent.EVENT_LOCK_PRERELEASE, ElexisEvent.PRIORITY_SYNC));
+					if (po != null) {
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(po, po.getClass(),
+							ElexisEvent.EVENT_LOCK_PRERELEASE, ElexisEvent.PRIORITY_SYNC));
+					}
 				}
 				
 				LockResponse lr = ils.acquireOrReleaseLocks(lockRequest);
@@ -242,9 +244,10 @@ public class LocalLockService implements ILocalLockService {
 					incrementLockCount(lockInfo);
 					PersistentObject po =
 						CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
-					ElexisEventDispatcher.getInstance()
-						.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_AQUIRED));
-					
+					if (po != null) {
+						ElexisEventDispatcher.getInstance().fire(
+							new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_AQUIRED));
+					}
 				}
 			} catch (Exception e) {
 				// if we have an exception here, our lock copies never get
@@ -265,8 +268,10 @@ public class LocalLockService implements ILocalLockService {
 					
 					PersistentObject po =
 						CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
-					ElexisEventDispatcher.getInstance()
-						.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_RELEASED));
+					if (po != null) {
+						ElexisEventDispatcher.getInstance().fire(
+							new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_RELEASED));
+					}
 				}
 			}
 			
@@ -446,7 +451,8 @@ public class LocalLockService implements ILocalLockService {
 		
 		@Override
 		public LockResponse acquireOrReleaseLocks(LockRequest request){
-			return LockResponse.DENIED(getLockInfo(request.getLockInfo().getElementStoreToString()));
+			return LockResponse
+				.DENIED(getLockInfo(request.getLockInfo().getElementStoreToString()));
 		}
 		
 		@Override
