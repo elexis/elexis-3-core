@@ -376,11 +376,12 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		checkMandant = !CoreHub.acl.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
 		boolean mandantOK = true;
 		boolean billOK = true;
-		boolean bMandantLoggedIn = CoreHub.actMandant != null;
+		Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
+		boolean bMandantLoggedIn = (mandator != null);
 		
 		// if m is null, ignore checks (return true)
-		if (m != null && bMandantLoggedIn) {
-			if (checkMandant && !(m.getId().equals(CoreHub.actMandant.getId()))) {
+		if (m != null && mandator != null) {
+			if (checkMandant && !(m.getId().equals(mandator.getId()))) {
 				mandantOK = false;
 			}
 			
@@ -940,7 +941,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			}
 		}
 		Konsultation n = actFall.neueKonsultation();
-		n.setMandant(CoreHub.actMandant);
+		n.setMandant(ElexisEventDispatcher.getSelectedMandator());
 		if (initialText != null) {
 			n.updateEintrag(initialText, false);
 		}

@@ -426,6 +426,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				int sel = tVerr.getSelectionIndex();
 				TableItem ti = tVerr.getItem(sel);
 				Verrechnet v = (Verrechnet) ti.getData();
+				
+				if(!v.getKons().isEditable(true)) {
+					return;
+				}
+				
 				Money oldPrice = v.getBruttoPreis();
 				String p = oldPrice.getAmountAsString();
 				InputDialog dlg =
@@ -465,6 +470,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				int sel = tVerr.getSelectionIndex();
 				TableItem ti = tVerr.getItem(sel);
 				Verrechnet v = (Verrechnet) ti.getData();
+				
+				if(!v.getKons().isEditable(true)) {
+					return;
+				}
+				
 				String p = Integer.toString(v.getZahl());
 				changeQuantityDialog(p, v);
 			}
