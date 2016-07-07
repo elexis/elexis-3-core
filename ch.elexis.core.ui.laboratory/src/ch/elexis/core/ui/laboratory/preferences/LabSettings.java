@@ -12,12 +12,19 @@
 
 package ch.elexis.core.ui.laboratory.preferences;
 
+import java.text.MessageFormat;
+import java.util.List;
+
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -33,6 +40,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.preferences.Messages;
 import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
+import ch.elexis.data.LabMapping;
+import ch.elexis.data.Query;
 
 public class LabSettings extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger log = LoggerFactory.getLogger(LabSettings.class);
@@ -81,6 +90,29 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 		txtKeepUnseen = new Text(area, SWT.BORDER);
 		txtKeepUnseen.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		txtKeepUnseen.setText(daysKeepUnseen);
+		
+		Button btnValidateMappings = new Button(area, SWT.PUSH);
+		btnValidateMappings.setText(Messages.LabSettings_validateMappings);
+		btnValidateMappings.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				Query<LabMapping> query = new Query<LabMapping>(LabMapping.class);
+				query.add(LabMapping.FLD_ID, Query.NOT_EQUAL, LabMapping.VERSIONID); //$NON-NLS-1$
+				List<LabMapping> mappings = query.execute();
+				int countDeleted = 0;
+				for (LabMapping labMapping : mappings) {
+					if (!labMapping.isMappingValid()) {
+						countDeleted++;
+						labMapping.delete();
+					}
+				}
+				MessageDialog.openInformation(getShell(), Messages.LabSettings_validateMappings,
+					MessageFormat.format(Messages.LabSettings_validateMappingsResult,
+						countDeleted));
+			}
+		});
+		// dummy lbl
+		new Label(area, SWT.NONE);
 	}
 	
 	public void init(final IWorkbench workbench){

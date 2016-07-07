@@ -31,6 +31,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.data.LabItem;
+import ch.elexis.data.LabMapping;
+import ch.elexis.data.Query;
 
 public class MergeLabItemDialog extends TitleAreaDialog {
 	
@@ -153,11 +155,21 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 		
 		if (confirm) {
 			destination.mergeWith(source);
+			deleteMappings(source);
 			source.delete();
 		} else {
 			return;
 		}
 		
 		super.okPressed();
+	}
+	
+	private void deleteMappings(LabItem li){
+		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
+		qbe.add(LabMapping.FLD_LABITEMID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+		List<LabMapping> list = qbe.execute();
+		for (LabMapping po : list) {
+			po.delete();
+		}
 	}
 }
