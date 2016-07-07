@@ -208,33 +208,13 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	}
 	
 	public void setTyp(LabItemTyp typ){
-		String t = "0"; //$NON-NLS-1$
-		if (typ == LabItemTyp.TEXT) {
-			t = "1"; //$NON-NLS-1$
-		} else if (typ == LabItemTyp.ABSOLUTE) {
-			t = "2"; //$NON-NLS-1$
-		} else if (typ == LabItemTyp.FORMULA) {
-			t = "3"; //$NON-NLS-1$
-		} else if (typ == LabItemTyp.DOCUMENT) {
-			t = "4"; //$NON-NLS-1$
-		}
-		set(TYPE, t);
+		set(TYPE, Integer.toString(typ.getType()));
 	}
 	
 	public LabItemTyp getTyp(){
-		String t = get(TYPE);
-		if (t != null) {
-			if (t.equals(StringConstants.ZERO)) {
-				return LabItemTyp.NUMERIC;
-			} else if (t.equals(StringConstants.ONE)) {
-				return LabItemTyp.TEXT;
-			} else if (t.equals("2")) { //$NON-NLS-1$
-				return LabItemTyp.ABSOLUTE;
-			} else if (t.equals("3")) { //$NON-NLS-1$
-				return LabItemTyp.FORMULA;
-			} else if (t.equals("4")) { //$NON-NLS-1$
-				return LabItemTyp.DOCUMENT;
-			}
+		LabItemTyp type = LabItemTyp.fromType(get(TYPE));
+		if (type != null) {
+			return type;
 		}
 		return LabItemTyp.TEXT;
 	}
