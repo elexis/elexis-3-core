@@ -380,10 +380,6 @@ public class VerrechnungsDisplay extends Composite {
 				return Images.IMG_PILL.getImageDescriptor();
 			}
 			
-			@Override
-			public ImageDescriptor getImageDescriptor(){
-				return Images.IMG_SYRINGE.getImageDescriptor();
-			}
 		};
 		
 		removeAction = new Action(REMOVE) {

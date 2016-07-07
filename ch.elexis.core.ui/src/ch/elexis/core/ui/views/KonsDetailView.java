@@ -114,7 +114,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	Composite cEtiketten;
 	private int[] sashWeights = null;
 	private SashForm sash;
-	
+
 	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class,
 		ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_RELOAD) {
 		@Override
@@ -438,9 +438,14 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 				}
 			}
 			hlMandant.setText(sb.toString());
-			hlMandant.setEnabled(CoreHub.acl.request(AccessControlDefaults.KONS_REASSIGN));
+
+			boolean hlMandantEnabled =
+				b.isEditable(false) && CoreHub.acl.request(AccessControlDefaults.KONS_REASSIGN);
+			hlMandant.setEnabled(hlMandantEnabled);
 			dd.setDiagnosen(b);
 			vd.setLeistungen(b);
+			vd.setEnabled(true);
+			dd.setEnabled(true);
 			if (b.isEditable(false)) {
 				text.setEnabled(true);
 				text.setToolTipText("");
@@ -491,13 +496,13 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	private void makeActions(){
 		
 		purgeAction = new Action(Messages.KonsDetailView_PurgeOldEntries) { //$NON-NLS-1$
-			
+
 				@Override
 				public void run(){
 					actKons.purgeEintrag();
 					ElexisEventDispatcher.fireSelectionEvent(actKons);
 				}
-				
+
 			};
 		versionBackAction = new Action(Messages.KonsDetailView_PreviousEntry) { //$NON-NLS-1$
 			
@@ -540,7 +545,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 					save();
 				}
 			};
-		
+
 		versionFwdAction.setImageDescriptor(Images.IMG_NEXT.getImageDescriptor());
 		versionBackAction.setImageDescriptor(Images.IMG_PREVIOUS.getImageDescriptor());
 		purgeAction.setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
