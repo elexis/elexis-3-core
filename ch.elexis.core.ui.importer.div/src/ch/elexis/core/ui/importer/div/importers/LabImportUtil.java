@@ -64,9 +64,11 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		Labor labor = null;
 		Query<Labor> qbe = new Query<Labor>(Labor.class);
+		qbe.startGroup();
 		qbe.add(Kontakt.FLD_SHORT_LABEL, Query.LIKE, "%" + identifier + "%"); //$NON-NLS-1$ //$NON-NLS-2$
 		qbe.or();
 		qbe.add(Kontakt.FLD_NAME1, Query.LIKE, "%" + identifier + "%"); //$NON-NLS-1$ //$NON-NLS-2$
+		qbe.endGroup();
 		List<Labor> results = qbe.execute();
 		if (results.isEmpty()) {
 			labor = new Labor(identifier, "Labor " + identifier); //$NON-NLS-1$
