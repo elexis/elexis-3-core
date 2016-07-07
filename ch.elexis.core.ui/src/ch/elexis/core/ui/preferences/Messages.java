@@ -83,6 +83,8 @@ public class Messages extends NLS {
 	public static String LabSettings_slow;
 	public static String LabSettings_showOrdersActiveMandant;
 	public static String LabSettings_useLocalLabRefValues;
+	public static String LabSettings_validateMappings;
+	public static String LabSettings_validateMappingsResult;
 	public static String LaborPrefs2_LabItemsAndGroups;
 	public static String LaborPrefs_34;
 	public static String LaborPrefs_35;

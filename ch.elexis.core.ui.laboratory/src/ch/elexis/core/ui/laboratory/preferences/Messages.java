@@ -114,7 +114,9 @@ public class Messages extends NLS {
 	public static String LaborPrefs_deleteAllExplain;
 	public static String LaborPrefs_deleteAllItems;
 	public static String LaborPrefs_deleteItem;
+	public static String LaborPrefs_deleteReallyItem;
 	public static String LaborPrefs_deleteReallyAllItems;
+	public static String LaborPrefs_deleteFail;
 	public static String LaborPrefs_document;
 	public static String LaborPrefs_enterNewLabParam;
 	public static String LaborPrefs_formula;

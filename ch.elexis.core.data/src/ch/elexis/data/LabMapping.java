@@ -162,6 +162,27 @@ public class LabMapping extends PersistentObject {
 		return TABLENAME;
 	}
 	
+	/**
+	 * Test if the mapping is valid. Checking {@link LabItem}, item name and origin.
+	 * 
+	 * @return
+	 */
+	public boolean isMappingValid(){
+		LabItem item = getLabItem();
+		if (item == null || !item.exists()) {
+			return false;
+		}
+		String itemName = getItemName();
+		if (itemName == null || itemName.isEmpty()) {
+			return false;
+		}
+		Kontakt origin = getOrigin();
+		if (origin == null || !origin.exists()) {
+			return false;
+		}
+		return true;
+	}
+	
 	public static LabMapping getByContactAndItemName(String contactId, String itemName){
 		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
 		qbe.add("ID", Query.NOT_EQUAL, VERSIONID); //$NON-NLS-1$
