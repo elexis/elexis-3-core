@@ -14,7 +14,6 @@ package ch.elexis.core.ui.dialogs;
 
 import java.util.Date;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,9 +30,12 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.tiff.common.ui.datepicker.DatePickerCombo;
+
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.model.ReminderConstants;
+import ch.elexis.core.model.issue.ProcessStatus;
+import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -44,8 +46,7 @@ import ch.elexis.data.Reminder;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
-import com.tiff.common.ui.datepicker.DatePickerCombo;
-
+@Deprecated 
 public class EditReminderDialog extends TitleAreaDialog {
 	private static final String TX_ALL = Messages.EditReminderDialog_all; //$NON-NLS-1$
 	Reminder mine;
@@ -89,25 +90,25 @@ public class EditReminderDialog extends TitleAreaDialog {
 		new Label(ret, SWT.NONE).setText(Messages.EditReminderDialog_actionwhenDue); //$NON-NLS-1$
 		
 		cbType = new Combo(ret, SWT.SINGLE);
-		for (String s : Reminder.TypText) {
-			cbType.add(s);
-		}
-		cbType.addSelectionListener(new SelectionAdapter() {
-			
-			@Override
-			public void widgetSelected(final SelectionEvent e){
-				// We check wether a letter reminder is selected and if so we
-				// let the user choose the template
-				if (cbType.getText().equals(Reminder.TypText[ReminderConstants.Typ.brief.ordinal()])) {
-					DocumentSelectDialog dsl =
-						new DocumentSelectDialog(getShell(), CoreHub.actMandant,
-							DocumentSelectDialog.TYPE_LOAD_TEMPLATE);
-					if (dsl.open() == Dialog.OK) {
-						mine.set("Params", dsl.getSelectedDocument().getId()); //$NON-NLS-1$
-					}
-				}
-			}
-		});
+//		for (String s : Reminder.TypText) {
+//			cbType.add(s);
+//		}
+//		cbType.addSelectionListener(new SelectionAdapter() {
+//			
+//			@Override
+//			public void widgetSelected(final SelectionEvent e){
+//				// We check wether a letter reminder is selected and if so we
+//				// let the user choose the template
+//				if (cbType.getText().equals(Reminder.TypText[ReminderConstants.Typ.brief.ordinal()])) {
+//					DocumentSelectDialog dsl =
+//						new DocumentSelectDialog(getShell(), CoreHub.actMandant,
+//							DocumentSelectDialog.TYPE_LOAD_TEMPLATE);
+//					if (dsl.open() == Dialog.OK) {
+//						mine.set(Reminder.FLD_PARAMS, dsl.getSelectedDocument().getId()); //$NON-NLS-1$
+//					}
+//				}
+//			}
+//		});
 		Composite dates = new Composite(ret, SWT.NONE);
 		dates.setLayout(new GridLayout(4, false));
 		dates.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
@@ -165,7 +166,7 @@ public class EditReminderDialog extends TitleAreaDialog {
 			
 			actPatient = mine.getKontakt();
 			text.setText(mine.get(Reminder.MESSAGE));
-			cbType.select(mine.getTyp().ordinal());
+			cbType.select(mine.getVisibility().numericValue());
 			
 			// select responsible
 			int index = 0;
@@ -192,10 +193,10 @@ public class EditReminderDialog extends TitleAreaDialog {
 			dpDue.setDate(mine.getDateDue().getTime());
 			
 			// update current selection depending on the status
-			ReminderConstants.Status s = mine.getStatus();
-			if (s.equals(ReminderConstants.Status.STATE_DONE)) {
+			ProcessStatus s = mine.getStatus();
+			if (s.equals(ProcessStatus.CLOSED)) {
 				bDone.setSelection(true);
-			} else if (s.equals(ReminderConstants.Status.STATE_UNDONE)) {
+			} else if (s.equals(ProcessStatus.ON_HOLD)) {
 				bRejected.setSelection(true);
 			} else {
 				bDue.setSelection(true);
@@ -260,22 +261,22 @@ public class EditReminderDialog extends TitleAreaDialog {
 		if (typidx == -1) {
 			typidx = 0;
 		}
-		ReminderConstants.Typ typ = ReminderConstants.Typ.values()[typidx];
+		Visibility visibility = Visibility.values()[typidx];
 		if (mine == null) {
-			mine = new Reminder(actPatient, due, typ, "", text.getText()); //$NON-NLS-1$
+			mine = new Reminder(actPatient, due, visibility, "", text.getText()); //$NON-NLS-1$
 		} else {
 			mine.set(new String[] {
-				Reminder.KONTAKT_ID, Reminder.DUE, Reminder.TYPE, Reminder.MESSAGE
+				Reminder.KONTAKT_ID, Reminder.DUE, Reminder.FLD_VISIBILITY, Reminder.MESSAGE
 			}, new String[] {
-				actPatient.getId(), due, Byte.toString((byte) typ.ordinal()), text.getText()
+				actPatient.getId(), due, Byte.toString((byte) visibility.ordinal()), text.getText()
 			});
 		}
 		if (bDone.getSelection()) {
-			mine.setStatus(ReminderConstants.Status.STATE_DONE);
+			mine.setStatus(ProcessStatus.CLOSED);
 		} else if (bRejected.getSelection()) {
-			mine.setStatus(ReminderConstants.Status.STATE_UNDONE);
+			mine.setStatus(ProcessStatus.ON_HOLD);
 		} else {
-			mine.setStatus(ReminderConstants.Status.STATE_PLANNED);
+			mine.setStatus(ProcessStatus.OPEN);
 		}
 		int[] resps = lUser.getSelectionIndices();
 		

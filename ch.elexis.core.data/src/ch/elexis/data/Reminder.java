@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2009, G. Weirich and Elexis
+ * Copyright (c) 2005-2016, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *    MEDEVIT <office@medevit.at>
  *******************************************************************************/
 
 package ch.elexis.data;
@@ -18,11 +18,12 @@ import java.util.SortedSet;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.model.issue.Type;
+import ch.elexis.core.model.issue.Priority;
+import ch.elexis.core.model.issue.ProcessStatus;
+import ch.elexis.core.model.issue.Visibility;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
-
-import static ch.elexis.core.model.ReminderConstants.Status;
-import static ch.elexis.core.model.ReminderConstants.Typ;
 
 /**
  * Ein Reminder ist eine Erinnerung an etwas. Ein Reminder ist an einen Kontakt gebunden. Ein
@@ -36,27 +37,26 @@ import static ch.elexis.core.model.ReminderConstants.Typ;
  * </ul>
  * 
  * @author Gerry
- * 
+ * @since 3.2 major refactorings
  */
 public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	
+	public static final String TABLENAME = "REMINDERS";
+	
 	public static final String MESSAGE = "Message";
 	public static final String RESPONSIBLE = "Responsible";
-	public static final String TYPE = "Typ";
-	public static final String STATUS = "Status";
+	public static final String FLD_VISIBILITY = "Typ";
+	public static final String FLD_STATUS = "Status";
 	public static final String DUE = "Due";
 	public static final String CREATOR = "Creator";
 	public static final String KONTAKT_ID = "IdentID";
-	static final String TABLENAME = "REMINDERS";
-	
-	public static final String STATE_PLANNED = "geplant";
-	public static final String STATE_DUE = "fällig";
-	public static final String STATE_OVERDUE = "überfällig";
-	public static final String DONE = "erledigt";
-	public static final String UNDONE = "unerledigt";
+	public static final String FLD_PRIORITY = "priority";
+	public static final String FLD_ACTION_TYPE = "actionType";
+	public static final String FLD_SUBJECT = "subject";
+	public static final String FLD_PARAMS = "Params";
 	
 	public enum LabelFields {
-		PAT_ID("PatientNr"), FIRSTNAME("Vorname"), LASTNAME("Name");
+			PAT_ID("PatientNr"), FIRSTNAME("Vorname"), LASTNAME("Name");
 		
 		private final String text;
 		
@@ -86,19 +86,11 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	}
 	
 	static {
-		addMapping(TABLENAME, KONTAKT_ID, "Creator=OriginID", "Due=S:D:DateDue", STATUS, TYPE,
-			"Params", MESSAGE, RESPONSIBLE,
-			"Responsibles=JOINT:ResponsibleID:ReminderID:REMINDERS_RESPONSIBLE_LINK");
+		addMapping(TABLENAME, KONTAKT_ID, CREATOR + "=OriginID", DUE + "=S:D:DateDue", FLD_STATUS,
+			FLD_VISIBILITY, FLD_PARAMS, MESSAGE, RESPONSIBLE,
+			"Responsibles=JOINT:ResponsibleID:ReminderID:REMINDERS_RESPONSIBLE_LINK", FLD_PRIORITY,
+			FLD_ACTION_TYPE, FLD_SUBJECT);
 	}
-	
-
-	
-	public static final String[] TypText = {
-		"Anzeige nur beim Patienten", "Immer in Pendenzen anzeigen",
-		"Popup beim Auswählen des Patienten", "Popup beim Einloggen", "Brief erstellen"
-	};
-	
-
 	
 	Reminder(){/* leer */}
 	
@@ -123,20 +115,19 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 *            Text for the reminder
 	 * 
 	 */
-	public Reminder(Kontakt ident, final String due, final Typ typ, final String params,
-		final String msg){
+	public Reminder(Kontakt ident, final String due, final Visibility visibility,
+		final String params, final String msg){
 		create(null);
 		if (ident == null) {
 			ident = CoreHub.actUser;
 		}
 		set(new String[] {
-			KONTAKT_ID, CREATOR, DUE, STATUS, TYPE, "Params", MESSAGE
-		},
-			new String[] {
-				ident.getId(), CoreHub.actUser.getId(), due,
-				Byte.toString((byte) Status.STATE_PLANNED.ordinal()),
-				Byte.toString((byte) typ.ordinal()), params, msg
-			});
+			KONTAKT_ID, CREATOR, DUE, FLD_STATUS, FLD_VISIBILITY, FLD_PARAMS, MESSAGE
+		}, new String[] {
+			ident.getId(), CoreHub.actUser.getId(), due,
+			Byte.toString((byte) Visibility.ALWAYS.numericValue()),
+			Byte.toString((byte) visibility.numericValue()), params, msg
+		});
 	}
 	
 	/**
@@ -175,15 +166,19 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	
 	@Override
 	public String getLabel(){
-		String[] vals = get(true, KONTAKT_ID, DUE, MESSAGE);		
+		String[] vals = get(true, KONTAKT_ID, DUE, MESSAGE, FLD_SUBJECT);
 		Kontakt k = Kontakt.load(vals[0]);
-		return vals[1]+" ("+getConfiguredKontaktLabel(k)+"): "+vals[2];
+		if (vals[3] != null && vals[3].length() > 1) {
+			return vals[1] + " (" + getConfiguredKontaktLabel(k) + "): " + vals[3];
+		} else {
+			return vals[1] + " (" + getConfiguredKontaktLabel(k) + "): " + vals[2];
+		}
 	}
 	
 	private String getConfiguredKontaktLabel(Kontakt k){
-		String[] configLabel =
-			CoreHub.userCfg.get(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
-				LabelFields.LASTNAME.toString()).split(",");
+		String[] configLabel = CoreHub.userCfg
+			.get(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN, LabelFields.LASTNAME.toString())
+			.split(",");
 		
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < configLabel.length; i++) {
@@ -196,51 +191,31 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		return sb.toString();
 	}
 	
-	public Typ getTyp(){
-		return convertTypStringToTyp(get(TYPE));
-	}
-	
-	/**
-	 * Convert the string value returned from {@link TYPE} into 
-	 * an element {@link Typ}
-	 * @param typString
-	 * @return
-	 * @since 3.1
-	 */
-	public static Typ convertTypStringToTyp(String typString){
-		if (StringTool.isNothing(typString)) {
-			typString = "1";
-		}
-		Typ ret = Typ.values()[Byte.parseByte(typString)];
-		return ret;
-	}
-	
-	public Status getStatus(){
-		String t = get(STATUS);
-		if (StringTool.isNothing(t)) {
-			t = "0";
-		}
-		Status ret = Status.values()[Byte.parseByte(t)];
-		if (ret == Status.STATE_PLANNED) {
+	public static ProcessStatus determineCurrentStatus(ProcessStatus givenStatus, TimeTool dueDate){
+		if (givenStatus == ProcessStatus.OPEN || givenStatus == ProcessStatus.IN_PROGRESS) {
 			TimeTool now = new TimeTool();
 			now.chop(3);
-			TimeTool mine = getDateDue();
-			if (now.isEqual(mine)) {
-				return Status.STATE_DUE;
+			if (now.isEqual(dueDate)) {
+				return ProcessStatus.DUE;
 			}
-			if (now.isAfter(mine)) {
-				return Status.STATE_OVERDUE;
+			if (now.isAfter(dueDate)) {
+				return ProcessStatus.OVERDUE;
 			}
 		}
-		return ret;
+		return givenStatus;
+	}
+	
+	public ProcessStatus getStatus(){
+		ProcessStatus ps = ProcessStatus.byNumericSafe(get(FLD_STATUS));
+		return Reminder.determineCurrentStatus(ps, getDateDue());
 	}
 	
 	public String getMessage(){
 		return checkNull(get(MESSAGE));
 	}
 	
-	public void setStatus(final Status s){
-		set(STATUS, Byte.toString((byte) s.ordinal()));
+	public void setStatus(ProcessStatus s){
+		set(FLD_STATUS, Byte.toString((byte) s.ordinal()));
 	}
 	
 	public TimeTool getDateDue(){
@@ -288,7 +263,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	public static List<Reminder> findForToday(){
 		Query<Reminder> qbe = new Query<Reminder>(Reminder.class);
 		qbe.add(DUE, Query.LESS_OR_EQUAL, new TimeTool().toString(TimeTool.DATE_COMPACT));
-		qbe.add(STATUS, Query.NOT_EQUAL, Integer.toString(Status.STATE_DONE.ordinal()));
+		qbe.add(FLD_STATUS, Query.NOT_EQUAL, Integer.toString(ProcessStatus.CLOSED.numericValue()));
 		List<Reminder> ret = qbe.execute();
 		return ret;
 	}
@@ -305,7 +280,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	public static List<Reminder> findForPatient(final Patient p, final Kontakt responsible){
 		Query<Reminder> qbe = new Query<Reminder>(Reminder.class);
 		qbe.add(KONTAKT_ID, Query.EQUALS, p.getId());
-		qbe.add(STATUS, Query.NOT_EQUAL, Integer.toString(Status.STATE_DONE.ordinal()));
+		qbe.add(FLD_STATUS, Query.NOT_EQUAL, Integer.toString(ProcessStatus.CLOSED.numericValue()));
 		qbe.add(DUE, Query.LESS_OR_EQUAL, new TimeTool().toString(TimeTool.DATE_COMPACT));
 		if (responsible != null) {
 			qbe.startGroup();
@@ -325,8 +300,9 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	public static List<Reminder> findToShowOnStartup(final Anwender a){
 		Query<Reminder> qbe = new Query<Reminder>(Reminder.class);
 		qbe.add(DUE, Query.LESS_OR_EQUAL, new TimeTool().toString(TimeTool.DATE_COMPACT));
-		qbe.add(STATUS, Query.NOT_EQUAL, Integer.toString(Status.STATE_DONE.ordinal()));
-		qbe.add(TYPE, Query.EQUALS, Integer.toString(Typ.anzeigeProgstart.ordinal()));
+		qbe.add(FLD_STATUS, Query.NOT_EQUAL, Integer.toString(ProcessStatus.CLOSED.numericValue()));
+		qbe.add(FLD_VISIBILITY, Query.EQUALS,
+			Integer.toString(Visibility.POPUP_ON_LOGIN.numericValue()));
 		return qbe.execute();
 	}
 	
@@ -354,10 +330,11 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			if (r.getDateDue().isAfter(today)) {
 				continue;
 			}
-			if (r.getStatus() == Status.STATE_DONE) {
+			if (r.getStatus() == ProcessStatus.CLOSED) {
 				continue;
 			}
-			if ((bOnlyPopup == true) && (r.getTyp() != Typ.anzeigeOeffnen)) {
+			if ((bOnlyPopup == true)
+				&& (r.getVisibility() != Visibility.POPUP_ON_PATIENT_SELECTION)) {
 				continue;
 			}
 			ret.add(r);
@@ -391,9 +368,42 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	
 	@Override
 	public boolean delete(){
-		getConnection().exec(
-			"DELETE FROM REMINDERS_RESPONSIBLE_LINK WHERE ReminderID=" + getWrappedId());
+		getConnection()
+			.exec("DELETE FROM REMINDERS_RESPONSIBLE_LINK WHERE ReminderID=" + getWrappedId());
 		return super.delete();
 	}
 	
+	public Visibility getVisibility(){
+		return Visibility.byNumericSafe(get(FLD_VISIBILITY));
+	}
+	
+	public void setVisibility(Visibility visibility){
+		set(FLD_VISIBILITY, Integer.toString(visibility.numericValue()));
+	}
+	
+	public Priority getPriority(){
+		String priority = get(FLD_PRIORITY);
+		return Priority.byNumericSafe(priority);
+	}
+	
+	public void setPriority(Priority priority){
+		set(FLD_PRIORITY, Integer.toString(priority.numericValue()));
+	}
+	
+	public Type getActionType(){
+		String actionType = get(FLD_ACTION_TYPE);
+		return Type.byNumericSafe(actionType);
+	}
+	
+	public void setActionType(Type at){
+		set(FLD_ACTION_TYPE, Integer.toString(at.numericValue()));
+	}
+	
+	public String getSubject(){
+		return get(FLD_SUBJECT);
+	}
+	
+	public void setSubject(String subject){
+		set(FLD_SUBJECT, subject);
+	}
 }

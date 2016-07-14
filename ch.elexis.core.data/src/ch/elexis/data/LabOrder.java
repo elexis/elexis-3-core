@@ -12,7 +12,7 @@ import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.ReminderConstants;
+import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -227,12 +227,12 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	private void closeOrderReminder(){
 		List<Reminder> reminders = Reminder.findForPatient(getPatient(), null);
 		for (Reminder reminder : reminders) {
-			String params = reminder.get("Params"); //$NON-NLS-1$
+			String params = reminder.get(Reminder.FLD_PARAMS);
 			if (params.startsWith(LabOrder.FLD_ORDERID)) {
 				String[] parts = params.split("="); //$NON-NLS-1$
 				if (parts.length == 2) {
 					if (parts[1].equals(get(FLD_ORDERID))) {
-						reminder.setStatus(ReminderConstants.Status.STATE_DONE);
+						reminder.setStatus(ProcessStatus.CLOSED);
 					}
 				}
 			}

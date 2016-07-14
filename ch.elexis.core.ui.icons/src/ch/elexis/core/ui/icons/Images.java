@@ -276,7 +276,7 @@ public enum Images {
 	 * @return <code>null</code> if no such image is existent
 	 */
 	public static Image lookupImage(String iconKey, ImageSize is){
-		Image image = JFaceResources.getImageRegistry().get(iconKey);
+		Image image = JFaceResources.getImageRegistry().get(iconKey + is.name);
 		if (image == null) {
 			boolean ret = addIconImageDescriptor(iconKey, is);
 			if (!ret)

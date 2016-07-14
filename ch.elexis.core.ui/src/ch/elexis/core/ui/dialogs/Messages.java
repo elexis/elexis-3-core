@@ -257,6 +257,19 @@ public class Messages extends NLS {
 	public static String DailyOrderDialog_Message;
 	public static String DailyOrderDialog_Amount;
 	public static String DailyOrderDialog_Article;
+	public static String ReminderDetailDialog_grpPriority_text;
+	public static String ReminderDetailDialog_btnPriorityLow_text;
+	public static String ReminderDetailDialog_btnPriorityMedium_text;
+	public static String ReminderDetailDialog_btnPriorityHigh_text;
+	public static String ReminderDetailDialog_txtSubject_message;
+	public static String ReminderDetailDialog_btnOpen_text;
+	public static String ReminderDetailDialog_btnInProgress_text;
+	public static String ReminderDetailDialog_btnClosed_text;
+	public static String ReminderDetailDialog_btnOnHold_text;
+	public static String ReminderDetailDialog_btnDue_text;
+	public static String ReminderDetailDialog_btnOverdue_text;
+	public static String ReminderDetailDialog_labelAction_toolTipText;
+	public static String ReminderDetailDialog_labelAction_text;
 	
 	static {
 		// load message values from bundle file

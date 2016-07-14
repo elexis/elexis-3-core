@@ -382,7 +382,10 @@ CREATE TABLE REMINDERS(
 	Status			VARCHAR(1),
 	Typ				VARCHAR(1),
 	Params			TEXT,
-	Message			TEXT
+	Message			TEXT,
+	priority		CHAR(1),
+	actionType		CHAR(2),
+	subject			VARCHAR(160)
 );
 
 CREATE TABLE REMINDERS_RESPONSIBLE_LINK(

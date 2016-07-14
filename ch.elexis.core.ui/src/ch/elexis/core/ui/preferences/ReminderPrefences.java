@@ -30,6 +30,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.DecoratedStringChooser;
 import ch.elexis.core.ui.util.DecoratedString;
@@ -49,10 +50,11 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	public ReminderPrefences(){
 		super(Messages.ReminderPrefences_Reminders);
 		cfg = CoreHub.userCfg.getBranch(Preferences.USR_REMINDERCOLORS, true);
-		strings = new DecoratedString[3];
-		strings[0] = new DecoratedString(Reminder.STATE_PLANNED);
-		strings[1] = new DecoratedString(Reminder.STATE_DUE);
-		strings[2] = new DecoratedString(Reminder.STATE_OVERDUE);
+		strings = new DecoratedString[4];
+		strings[0] = new DecoratedString(ProcessStatus.OPEN.getLocaleText());
+		strings[1] = new DecoratedString(ProcessStatus.IN_PROGRESS.getLocaleText());
+		strings[2] = new DecoratedString(ProcessStatus.DUE.getLocaleText());
+		strings[3] = new DecoratedString(ProcessStatus.OVERDUE.getLocaleText());
 		
 		choosenFields =
 			CoreHub.userCfg.get(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
