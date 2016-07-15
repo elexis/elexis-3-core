@@ -1,0 +1,5 @@
+Nur für Entwickler! (only for developers)
+
+This project is used to automatically set-up an Elexis 3 development environment.
+
+See the [https://github.com/elexis/elexis-3-core/tree/master/ch.elexis.sdk readme.textile] of the source code.

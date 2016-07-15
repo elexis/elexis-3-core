@@ -1,0 +1,3 @@
+Nur für Entwickler! (only for developers!)
+
+This is a feature to pull in the needed core dependencies. Consult the source [https://github.com/elexis/elexis-3-core/blob/master/ch.elexis.core.ui.p2.feature/feature.xml feature.xml]
