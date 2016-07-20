@@ -7,7 +7,13 @@ public class PatientConstants {
 	public static final String FLD_EXTINFO_PROFESSION = "Profession";
 	public static final String FLD_EXTINFO_BIRTHNAME = "BirthName";
 	/**
-	 * store {@link CivilState}
+	 * {@link MaritalStatus}
+	 */
+	public static final String FLD_EXTINFO_MARITAL_STATUS = "MaritalStatus";
+	
+	/**
+	 * {@link MaritalStatus}
+	 * @deprecated
 	 */
 	public static final String FLD_EXTINFO_CIVIL_STATE = "CivilState";
 }
