@@ -168,11 +168,22 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		btnNotPatientRelated = new Button(compositeMessageHead, SWT.CHECK);
 		btnNotPatientRelated.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnNotPatientRelated.setText(Messages.EditReminderDialog_noPatient);
+		btnNotPatientRelated.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				Button btn = ((Button) e.widget);
+				if(btn.getSelection()) {
+					
+				}
+				super.widgetSelected(e);
+			}
+		});
 		
 		txtSubject = new Text(compositeMessage, SWT.BORDER);
 		txtSubject.setMessage(Messages.ReminderDetailDialog_txtSubject_message);
 		txtSubject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtSubject.setTextLimit(160);
+		txtSubject.setFocus();
 		
 		txtDescription = new Text(compositeMessage, SWT.BORDER | SWT.WRAP);
 		txtDescription.setMessage("description");
@@ -355,12 +366,16 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			cvActionType.setSelection(new StructuredSelection(Type.COMMON));
 		} else {
 			patient = reminder.getKontakt();
-			
 			TimeTool dateDue = reminder.getDateDue();
 			dateDuePicker.setDate(dateDue.getTime());
 			
-			txtSubject.setText(reminder.getSubject());
-			txtDescription.setText(reminder.getMessage());
+			String[] strings = reminder.get(false, Reminder.FLD_SUBJECT, Reminder.MESSAGE);
+			if (strings[0].length() == 0 && strings[1].length() > 0) {
+				txtSubject.setText(strings[1]);
+			} else {
+				txtSubject.setText(reminder.getSubject());
+			}
+			txtDescription.setText(strings[1]);
 			setReminderPriority(reminder.getPriority());
 			setReminderStatus(reminder.getStatus());
 			cvActionType.setSelection(new StructuredSelection(reminder.getActionType()));
@@ -468,4 +483,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 	
+	public Reminder getReminder(){
+		return reminder;
+	}
 }
