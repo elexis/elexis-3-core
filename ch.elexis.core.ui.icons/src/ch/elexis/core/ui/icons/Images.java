@@ -36,172 +36,170 @@ import ch.elexis.core.ui.icons.urihandler.IconURLConnection;
  * @author M. Descher / MEDEVIT Austria
  */
 public enum Images {
-	/** The Elexis logo **/
-	IMG_LOGO,
-	/** Returning to some home place */
-	IMG_HOME,
-	/** An Address label */
-	IMG_ADRESSETIKETTE,
-	/** a label with patient data */
-	IMG_PATIENTETIKETTE,
-	/** a label with some identity number (e.g. for lab orders) */
-	IMG_VERSIONEDETIKETTE,
-	/** a bomb icon */
-	IMG_BOMB,
-	/** an organisation icon */
-	IMG_ORGANISATION,
-	/** an organisation add icon */
-	IMG_ORGANISATION_ADD,
-	/** a transparent and empty 16x16 image */
-	IMG_EMPTY_TRANSPARENT,
-	/** a telephone icon */
-	IMG_TELEPHONE,
-	/** a mobile phone */
-	IMG_MOBILEPHONE,
-	/** a fax */
-	IMG_FAX,
-	/** a mail icon */
-	IMG_MAIL,
+		/** The Elexis logo **/
+		IMG_LOGO,
+		/** Returning to some home place */
+		IMG_HOME,
+		/** An Address label */
+		IMG_ADRESSETIKETTE,
+		/** a label with patient data */
+		IMG_PATIENTETIKETTE,
+		/** a label with some identity number (e.g. for lab orders) */
+		IMG_VERSIONEDETIKETTE,
+		/** a bomb icon */
+		IMG_BOMB,
+		/** an organisation icon */
+		IMG_ORGANISATION,
+		/** an organisation add icon */
+		IMG_ORGANISATION_ADD,
+		/** a transparent and empty 16x16 image */
+		IMG_EMPTY_TRANSPARENT,
+		/** a telephone icon */
+		IMG_TELEPHONE,
+		/** a mobile phone */
+		IMG_MOBILEPHONE,
+		/** a fax */
+		IMG_FAX,
+		/** a mail icon */
+		IMG_MAIL,
 		/** a mail send icon */
 		IMG_MAIL_SEND,
-	/** a web icon */
-	IMG_WEB,
-	/** a contact detail icon */
-	IMG_CONTACT_DETAIL,
-	/** deleting items */
-	IMG_DELETE,
-	/** a male */
-	IMG_MANN,
-	/** a female */
-	IMG_FRAU,
-	/** a group of two persons */
-	IMG_GROUP,
-	/** a money icon */
-	IMG_MONEY,
-	/** a Very Important Person/Patient */
-	IMG_VIP,
-	/** a Very Important Person/Patient overlay Icon */
-	IMG_VIP_OVERLAY,
-	/** a printer */
-	IMG_PRINTER,
-	/** a big printer icon */
-	IMG_PRINTER_BIG,
-	/** a filter */
-	IMG_FILTER,
-	/** creating a new Object */
-	IMG_NEW,
-	/** importing items */
-	IMG_IMPORT,
-	/** exporting items */
-	IMG_EXPORT, IMG_GOFURTHER,
-	/** editing an item */
-	IMG_EDIT,
-	/** warning */
-	IMG_ACHTUNG,
-	/** red bullet */
-	IMG_BULLET_RED,
-	/** green bullet */
-	IMG_BULLET_GREEN,
-	/** yellow bullet */
-	IMG_BULLET_YELLOW,
-	/** grey bullet */
-	IMG_BULLET_GREY,
-	/** ok */
-	IMG_OK,
-	/** tick */
-	IMG_TICK,
-	/** error */
-	IMG_FEHLER,
-	/** refresh/reload */
-	IMG_REFRESH,
-	/** wizard/doing things automagically */
-	IMG_WIZARD,
-	/** add something to an existing object */
-	IMG_ADDITEM,
-	/** remove something from an existing object */
-	IMG_REMOVEITEM,
-	/** excalamation mark red */
-	IMG_AUSRUFEZ_ROT,
-	/** exclamantion mark */
-	IMG_AUSRUFEZ,
-	/** computer network */
-	IMG_NETWORK,
-	/** a book */
-	IMG_BOOK,
-	/** a person */
-	IMG_BOOKMARK_PENCIL, IMG_PERSON,
-	/** a person with an OK mark */
-	IMG_PERSON_OK,
-	/** a person with an ADD sign */
-	IMG_PERSON_ADD,
-	/** a greyed out person */
-	IMG_PERSON_GREY,
-	/** a diskette symbol */
-	IMG_DISK,
-	/** a closed lock */
-	IMG_LOCK_CLOSED,
-	/** An opened lock */
-	IMG_LOCK_OPEN,
-	/** Clipboard symbol */
-	IMG_CLIPBOARD,
-	/** Arrow right */
-	IMG_NEXT, IMG_NEXT_WO_SHADOW,
-	/** Arrow left */
-	IMG_PREVIOUS,
-	/** Arrow up */
-	IMG_ARROWUP,
-	/** Arrow down */
-	IMG_ARROWDOWN,
-	/** Arrow down to rectangle */
-	IMG_ARROWDOWNTORECT,
-	/** Arrow to stop */
-	IMG_ARROWSTOP, IMG_ARROWSTOP_WO_SHADOW, IMG_EYE_WO_SHADOW,
-	/** undo */
-	IMG_UNDO,
-	/** a 8px pencil symbol */
-	IMG_PENCIL_8PX,
-	/** a pill symbol */
-	IMG_PILL,
-	/** a pill with an exclamation */
-	IMG_PILL_EXCLAMATION_WO_SHADOW,
-	/** a link symbol */
-	IMG_LINK,
-	/** Move to upper list */
-	IMG_MOVETOUPPERLIST,
-	/** Move to lower list */
-	IMG_MOVETOLOWERLIST,
-	/** clear input field */
-	IMG_CLEAR,
-	/** Perspective Konsultation */
-	IMG_PERSPECTIVE_KONS,
-	/** Perspective Contacts */
-	IMG_PERSPECTIVE_CONTACTS,
-	/** Perspective letters */
-	IMG_PERSPECTIVE_LETTERS,
-	/** Perspective leistungen */
-	IMG_PERSPECTIVE_LEISTUNGEN,
-	/** Perspective articles */
-	IMG_PERSPECTIVE_ARTICLES,
-	/** Perspective reminder */
-	IMG_PERSPECTIVE_REMINDERS,
-	/** Perspective bills */
-	IMG_PERSPECTIVE_BILLS,
-	/** Perspective blackboard */
-	IMG_PERSPECTIVE_BBS,
-	/** Perspective orders */
-	IMG_PERSPECTIVE_ORDERS,
-	/** a document of type text */
-	IMG_DOCUMENT_TEXT,
-	/** add document */
-	IMG_DOCUMENT_ADD,
-	/** write document */
-	IMG_DOCUMENT_WRITE,
-	/** remove document */
-	IMG_DOCUMENT_REMOVE, IMG_MENUBAR, IMG_TOOLBAR,
-	/** a bill */
-	IMG_BILL, IMG_VIEW_WORK_INCAPABLE, IMG_VIEW_CONSULTATION_DETAIL, IMG_VIEW_LABORATORY,
-		IMG_VIEW_PATIENT_DETAIL, IMG_VIEW_RECIPES, IMG_DATABASE, IMG_CONFLICT, IMG_QUESTION_MARK,
-		IMG_FLAG_AT, IMG_FLAG_DE, IMG_FLAG_CH, IMG_FLAG_FR, IMG_FLAG_IT, IMG_FLAG_FL,
+		/** a web icon */
+		IMG_WEB,
+		/** a contact detail icon */
+		IMG_CONTACT_DETAIL,
+		/** deleting items */
+		IMG_DELETE,
+		/** a male */
+		IMG_MANN,
+		/** a female */
+		IMG_FRAU,
+		/** a group of two persons */
+		IMG_GROUP,
+		/** a money icon */
+		IMG_MONEY,
+		/** a Very Important Person/Patient */
+		IMG_VIP,
+		/** a Very Important Person/Patient overlay Icon */
+		IMG_VIP_OVERLAY,
+		/** a printer */
+		IMG_PRINTER,
+		/** a big printer icon */
+		IMG_PRINTER_BIG,
+		/** a filter */
+		IMG_FILTER,
+		/** creating a new Object */
+		IMG_NEW,
+		/** importing items */
+		IMG_IMPORT,
+		/** exporting items */
+		IMG_EXPORT, IMG_GOFURTHER,
+		/** editing an item */
+		IMG_EDIT,
+		/** warning */
+		IMG_ACHTUNG,
+		/** red bullet */
+		IMG_BULLET_RED,
+		/** green bullet */
+		IMG_BULLET_GREEN,
+		/** yellow bullet */
+		IMG_BULLET_YELLOW,
+		/** grey bullet */
+		IMG_BULLET_GREY,
+		/** ok */
+		IMG_OK,
+		/** tick */
+		IMG_TICK,
+		/** error */
+		IMG_FEHLER,
+		/** refresh/reload */
+		IMG_REFRESH,
+		/** wizard/doing things automagically */
+		IMG_WIZARD,
+		/** add something to an existing object */
+		IMG_ADDITEM,
+		/** remove something from an existing object */
+		IMG_REMOVEITEM,
+		/** excalamation mark red */
+		IMG_AUSRUFEZ_ROT,
+		/** exclamantion mark */
+		IMG_AUSRUFEZ,
+		/** computer network */
+		IMG_NETWORK,
+		/** a book */
+		IMG_BOOK,
+		/** a person */
+		IMG_BOOKMARK_PENCIL, IMG_PERSON,
+		/** a person with an OK mark */
+		IMG_PERSON_OK,
+		/** a person with an ADD sign */
+		IMG_PERSON_ADD,
+		/** a greyed out person */
+		IMG_PERSON_GREY,
+		/** a diskette symbol */
+		IMG_DISK,
+		/** a closed lock */
+		IMG_LOCK_CLOSED,
+		/** An opened lock */
+		IMG_LOCK_OPEN,
+		/** Clipboard symbol */
+		IMG_CLIPBOARD,
+		/** Arrow right */
+		IMG_NEXT, IMG_NEXT_WO_SHADOW,
+		/** Arrow left */
+		IMG_PREVIOUS,
+		/** Arrow up */
+		IMG_ARROWUP,
+		/** Arrow down */
+		IMG_ARROWDOWN,
+		/** Arrow down to rectangle */
+		IMG_ARROWDOWNTORECT,
+		/** Arrow to stop */
+		IMG_ARROWSTOP, IMG_ARROWSTOP_WO_SHADOW, IMG_EYE_WO_SHADOW,
+		/** undo */
+		IMG_UNDO,
+		/** a 8px pencil symbol */
+		IMG_PENCIL_8PX,
+		/** a pill symbol */
+		IMG_PILL,
+		/** a pill with an exclamation */
+		IMG_PILL_EXCLAMATION_WO_SHADOW,
+		/** a link symbol */
+		IMG_LINK,
+		/** Move to upper list */
+		IMG_MOVETOUPPERLIST,
+		/** Move to lower list */
+		IMG_MOVETOLOWERLIST,
+		/** clear input field */
+		IMG_CLEAR,
+		/** Perspective Konsultation */
+		IMG_PERSPECTIVE_KONS,
+		/** Perspective Contacts */
+		IMG_PERSPECTIVE_CONTACTS,
+		/** Perspective letters */
+		IMG_PERSPECTIVE_LETTERS,
+		/** Perspective leistungen */
+		IMG_PERSPECTIVE_LEISTUNGEN,
+		/** Perspective articles */
+		IMG_PERSPECTIVE_ARTICLES,
+		/** Perspective reminder */
+		IMG_PERSPECTIVE_REMINDERS,
+		/** Perspective bills */
+		IMG_PERSPECTIVE_BILLS,
+		/** Perspective blackboard */
+		IMG_PERSPECTIVE_BBS,
+		/** Perspective orders */
+		IMG_PERSPECTIVE_ORDERS,
+		/** a document of type text */
+		IMG_DOCUMENT_TEXT,
+		/** add document */
+		IMG_DOCUMENT_ADD,
+		/** write document */
+		IMG_DOCUMENT_WRITE,
+		/** remove document */
+		IMG_DOCUMENT_REMOVE, IMG_MENUBAR, IMG_TOOLBAR,
+		/** a bill */
+		IMG_BILL, IMG_VIEW_WORK_INCAPABLE, IMG_VIEW_CONSULTATION_DETAIL, IMG_VIEW_LABORATORY, IMG_VIEW_PATIENT_DETAIL, IMG_VIEW_RECIPES, IMG_DATABASE, IMG_CONFLICT, IMG_QUESTION_MARK, IMG_FLAG_AT, IMG_FLAG_DE, IMG_FLAG_CH, IMG_FLAG_FR, IMG_FLAG_IT, IMG_FLAG_FL,
 		/** a generic group icon */
 		IMG_CATEGORY_GROUP,
 		/** a syringe, nozzle, injection icon */
@@ -233,20 +231,20 @@ public enum Images {
 		/** fixmedi icon **/
 		IMG_FIX_MEDI,
 		/** reserve medi icon **/
-		IMG_RESERVE_MEDI, 
+		IMG_RESERVE_MEDI,
 		/** need medi icon **/
-		IMG_NEED_MEDI, 
+		IMG_NEED_MEDI,
 		/** sort after personal favorites **/
-		IMG_SORT_STAR, 
+		IMG_SORT_STAR,
 		/** daten gif **/
-		IMG_DATA, 
-		/** edit a balance*/
-		IMG_BALANCE_EDIT, 
-		/** shopping cart**/
+		IMG_DATA,
+		/** edit a balance */
+		IMG_BALANCE_EDIT,
+		/** shopping cart **/
 		IMG_CART,
 		/** wizard for some day event **/
-		IMG_WIZ_DAY;
-	
+		IMG_WIZ_DAY, IMG_CALENDAR;
+		
 	private Images(){}
 	
 	/**
