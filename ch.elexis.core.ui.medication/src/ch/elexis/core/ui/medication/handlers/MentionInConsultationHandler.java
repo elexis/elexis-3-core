@@ -10,12 +10,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Prescription;
-import ch.elexis.data.Prescription.EntryType;
 
 public class MentionInConsultationHandler extends AbstractHandler {
 	@SuppressWarnings("unchecked")

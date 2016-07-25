@@ -1,6 +1,6 @@
-package ch.elexis.core.model;
+package ch.elexis.core.model.prescription;
 
-public class PrescriptionConstants {
+public class Constants {
 	public static final String FLD_EXT_STOP_REASON = "stopReason";
 	public static final String FLD_EXT_STOPPED_BY = "stopper";
 	public static final String FLD_EXT_INTOLERANCE = "intolerance";

@@ -15,6 +15,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
@@ -26,7 +27,6 @@ import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
-import ch.elexis.data.Prescription.EntryType;
 import ch.rgw.tools.StringTool;
 
 public class SwitchMedicationHandler extends AbstractHandler {
@@ -166,7 +166,7 @@ public class SwitchMedicationHandler extends AbstractHandler {
 			presc.set(Prescription.FLD_ARTICLE, article.storeToString());
 			presc.setDosis(dosage);
 			presc.setBemerkung(remark);
-			presc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
+			presc.setEntryType(EntryType.FIXED_MEDICATION);
 			
 			// stop prev medication
 			originalPresc.stop(null);

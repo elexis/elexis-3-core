@@ -23,8 +23,9 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.core.model.PrescriptionConstants;
-import ch.elexis.core.model.PrescriptionMethods;
+import ch.elexis.core.model.prescription.Constants;
+import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.model.prescription.Methods;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -289,10 +290,10 @@ public class Prescription extends PersistentObject {
 	 * @return the signature split into a string array with 4 elements; will always return an array
 	 *         of 4 elements, where empty entries are of type String ""
 	 * @since 3.1.0
-	 * @since 3.2.0 relocated to {@link PrescriptionMethods#getSignatureAsStringArray(String)}
+	 * @since 3.2.0 relocated to {@link Methods#getSignatureAsStringArray(String)}
 	 */
 	public static String[] getSignatureAsStringArray(String signature){
-		return PrescriptionMethods.getSignatureAsStringArray(signature);
+		return Methods.getSignatureAsStringArray(signature);
 	}
 	
 	public void setDosis(String newDose){
@@ -322,7 +323,7 @@ public class Prescription extends PersistentObject {
 	 */
 	public String getDisposalComment(){
 		return checkNull(
-			(String) getExtInfoStoredObjectByKey(PrescriptionConstants.FLD_EXT_DISPOSAL_COMMENT));
+			(String) getExtInfoStoredObjectByKey(Constants.FLD_EXT_DISPOSAL_COMMENT));
 	}
 	
 	/**
@@ -332,7 +333,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public void setDisposalComment(String disposalComment){
-		setExtInfoStoredObjectByKey(PrescriptionConstants.FLD_EXT_DISPOSAL_COMMENT,
+		setExtInfoStoredObjectByKey(Constants.FLD_EXT_DISPOSAL_COMMENT,
 			disposalComment);
 	}
 	
@@ -372,7 +373,7 @@ public class Prescription extends PersistentObject {
 			until = new TimeTool();
 		set(FLD_DATE_UNTIL, until.toString(TimeTool.TIMESTAMP));
 		IPersistentObject user = ElexisEventDispatcher.getSelected(Anwender.class);
-		setExtInfoStoredObjectByKey(PrescriptionConstants.FLD_EXT_STOPPED_BY, user.getId());
+		setExtInfoStoredObjectByKey(Constants.FLD_EXT_STOPPED_BY, user.getId());
 	}
 	
 	/**
@@ -509,42 +510,13 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
-	 * set prescription type flag
-	 * 
-	 * @param flagVal
-	 *            {@link EntryType#flag}
-	 * @param b
-	 *            the boolean value to set to
-	 * @since 3.1.0
-	 */
-	public void setPrescType(int flagVal, boolean b){
-		int val = getInt(FLD_PRESC_TYPE);
-		boolean flag = ((val & flagVal) == flagVal);
-		if (b != flag) {
-			val ^= flagVal;
-			setInt(FLD_PRESC_TYPE, val);
-		}
-	}
-	
-	/**
-	 * get the boolean value of a prescription type flag
-	 * 
-	 * @param flag
-	 *            {@link EntryType#flag}
-	 * @return
-	 */
-	public boolean isPrescType(int flag){
-		return ((getInt(FLD_PRESC_TYPE) & flag) == flag);
-	}
-	
-	/**
 	 * 
 	 * @param reserve
 	 *            this is a medication to keep as reserve or "Reservemedikation"
 	 * @since 3.1.0
 	 */
 	public void setReserveMedication(boolean reserve){
-		setPrescType(EntryType.RESERVE_MEDICATION.getFlag(), reserve);
+		setEntryType(EntryType.RESERVE_MEDICATION);
 	}
 	
 	/**
@@ -553,7 +525,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public boolean isReserveMedication(){
-		return isPrescType(EntryType.RESERVE_MEDICATION.getFlag());
+		return getEntryType() == EntryType.RESERVE_MEDICATION;
 	}
 	
 	/**
@@ -561,7 +533,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public String getStopReason(){
-		return (String) getExtInfoStoredObjectByKey(PrescriptionConstants.FLD_EXT_STOP_REASON);
+		return (String) getExtInfoStoredObjectByKey(Constants.FLD_EXT_STOP_REASON);
 	}
 	
 	/**
@@ -570,7 +542,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public void setStopReason(String stopReason){
-		setExtInfoStoredObjectByKey(PrescriptionConstants.FLD_EXT_STOP_REASON, stopReason);
+		setExtInfoStoredObjectByKey(Constants.FLD_EXT_STOP_REASON, stopReason);
 	}
 	
 	/**
@@ -578,7 +550,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public boolean isAppliedMedication(){
-		return isPrescType(EntryType.APPLICATION.getFlag());
+		return getEntryType() == EntryType.APPLICATION;
 	}
 	
 	/**
@@ -600,6 +572,11 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public EntryType getEntryType(){
+		int typeNum = getPrescType();
+		if(typeNum != -1) {
+			return EntryType.byNumeric(typeNum);
+		}
+		
 		if (isFixedMediation()) {
 			if (isReserveMedication()) {
 				return EntryType.RESERVE_MEDICATION;
@@ -618,32 +595,20 @@ public class Prescription extends PersistentObject {
 		return EntryType.RECIPE;
 	}
 	
-	/**
-	 * The allowed prescription and disposal types  @since 3.1.0
-	 */
-	public enum EntryType {
-		//@formatter:off
-		/** Medicine to take over a longer period. <br> i.e. against too high blood pressure, heart medicine **/
-		FIXED_MEDICATION (0), 
-		/** Medicine given in case a need occurs."Reservemedikation" <br>i.e. patient plans a journey and gets medicine against pain, sickness, insect bites to take in case something happens  **/
-		RESERVE_MEDICATION (1), 
-		/** Written a recipe for this medicine **/
-		RECIPE (2),
-		/** For self dispensation **/
-		SELF_DISPENSED (3), 
-		/** Directly applied during consultation **/
-		APPLICATION (4);
-		//@formatter:on
-		
-		private final int flag;
-		
-		private EntryType(int flag){
-			this.flag = flag;
+	private int getPrescType(){
+		String prescTypeString = get(FLD_PRESC_TYPE);
+		if (prescTypeString != null && !prescTypeString.isEmpty()) {
+			try {
+				return Integer.parseInt(prescTypeString);
+			} catch (NumberFormatException e) {
+				// ignore and return -1
+			}
 		}
-		
-		public int getFlag(){
-			return flag;
-		}
+		return -1;
+	}
+	
+	public void setEntryType(EntryType type){
+		setInt(FLD_PRESC_TYPE, type.numericValue());
 	}
 	
 	/**

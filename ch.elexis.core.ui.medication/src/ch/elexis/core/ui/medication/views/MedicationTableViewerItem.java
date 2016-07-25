@@ -11,9 +11,9 @@ import org.eclipse.jface.viewers.TableViewer;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
-import ch.elexis.data.Prescription.EntryType;
 import ch.rgw.tools.TimeTool;
 
 /**

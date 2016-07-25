@@ -8,6 +8,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
@@ -15,7 +16,6 @@ import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
-import ch.elexis.data.Prescription.EntryType;
 
 public class SetAsReserveMedicationHandler extends AbstractHandler {
 	
@@ -66,8 +66,7 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 								
 								@Override
 								public void lockAcquired(){
-									reserveMedi.setPrescType(EntryType.RESERVE_MEDICATION.getFlag(),
-										true);
+									reserveMedi.setEntryType(EntryType.RESERVE_MEDICATION);
 									// add disposal comment if present
 									if (disposalComment != null && !disposalComment.isEmpty()) {
 										reserveMedi.setDisposalComment(disposalComment);

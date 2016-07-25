@@ -7,6 +7,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.locks.AcquireLockUi;
@@ -20,7 +21,6 @@ import ch.elexis.data.Artikel;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
-import ch.elexis.data.Prescription.EntryType;
 import ch.rgw.tools.StringTool;
 
 public class AddFixMedicationHandler extends AbstractHandler {
@@ -82,7 +82,7 @@ public class AddFixMedicationHandler extends AbstractHandler {
 				
 				@Override
 				public void lockAcquired(){
-					presc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
+					presc.setEntryType(EntryType.FIXED_MEDICATION);
 				}
 			});
 			medicationView.refresh();

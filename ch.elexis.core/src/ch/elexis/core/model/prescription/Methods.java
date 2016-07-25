@@ -1,8 +1,8 @@
-package ch.elexis.core.model;
+package ch.elexis.core.model.prescription;
 
 import java.util.Arrays;
 
-public class PrescriptionMethods {
+public class Methods {
 	/**
 	 * 
 	 * @return the signature split into a string array with 4 elements; will always return an array

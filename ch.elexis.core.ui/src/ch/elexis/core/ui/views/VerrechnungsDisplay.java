@@ -55,6 +55,7 @@ import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -340,7 +341,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				
 				Prescription presc = Prescription.load(v.getDetail(Verrechnet.FLD_EXT_PRESC_ID));
 				presc.stop(null);
-				presc.setPrescType(Prescription.EntryType.APPLICATION.getFlag(), true);
+				presc.setEntryType(EntryType.APPLICATION);
 				presc.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID, v.getId());
 				
 				int packungsGroesse = presc.getArtikel().getPackungsGroesse();
