@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.ElexisConfigurationConstants;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.views.RezeptBlatt;
@@ -54,7 +55,8 @@ public class PrintRecipeHandler extends AbstractHandler {
 		Rezept rp = new Rezept(patient);
 		for (Prescription p : prescRecipes) {
 			Prescription prescription = new Prescription(p);
-			prescription.setEndDate(null);	
+			prescription.setEndDate(null);
+			prescription.setEntryType(EntryType.RECIPE);
 			rp.addPrescription(prescription);
 		}
 		

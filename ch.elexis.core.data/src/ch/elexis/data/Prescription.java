@@ -97,7 +97,7 @@ public class Prescription extends PersistentObject {
 	 */
 	public Prescription(Prescription other){
 		String[] fields = new String[] {
-			FLD_ARTICLE, FLD_PATIENT_ID, FLD_DOSAGE, FLD_REMARK, FLD_ARTICLE_ID
+			FLD_ARTICLE, FLD_PATIENT_ID, FLD_DOSAGE, FLD_REMARK, FLD_ARTICLE_ID, FLD_PRESC_TYPE
 		};
 		
 		String[] vals = new String[fields.length];
@@ -577,22 +577,12 @@ public class Prescription extends PersistentObject {
 			return EntryType.byNumeric(typeNum);
 		}
 		
-		if (isFixedMediation()) {
-			if (isReserveMedication()) {
-				return EntryType.RESERVE_MEDICATION;
-			}
-			return EntryType.FIXED_MEDICATION;
-		}
 		String rezeptId = get(FLD_REZEPT_ID);
-		if (rezeptId.equals(FLD_REZEPTID_VAL_DIREKTABGABE)) {
-			return (isAppliedMedication()) ? EntryType.APPLICATION : EntryType.SELF_DISPENSED;
-			// SD OR APP
+		if (rezeptId != null && !rezeptId.isEmpty()) {
+			return EntryType.RECIPE;
 		}
 		
-		if (getDosis().equals(StringConstants.ZERO) && !isAppliedMedication()) {
-			return EntryType.FIXED_MEDICATION;
-		}
-		return EntryType.RECIPE;
+		return EntryType.FIXED_MEDICATION;
 	}
 	
 	private int getPrescType(){
