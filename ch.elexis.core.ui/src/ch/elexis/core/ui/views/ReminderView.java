@@ -78,10 +78,11 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	public static final String ID = "ch.elexis.reminderview"; //$NON-NLS-1$
 	
 	private IAction newReminderAction, deleteReminderAction, onlyOpenReminderAction,
-			ownReminderAction;
+			ownReminderAction, toggleAutoSelectPatientAction;
 	private RestrictedAction othersReminderAction;
 	private RestrictedAction selectPatientAction;
 	private boolean bVisible;
+	private boolean autoSelectPatient;
 	
 	private IAction filterActionType[] = new IAction[Type.values().length];
 	private Set<Integer> filterActionSet = new HashSet<Integer>();
@@ -148,6 +149,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			cv.notify(CommonViewer.Message.update);
 		}
 	};
+	
 	CommonViewer cv;
 	ViewerConfigurer vc;
 	Query<Reminder> qbe;
@@ -194,7 +196,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				
 				if (filterActionSet.size() > 0) {
 					allReminders = allReminders.stream()
-						.filter(p -> filterActionSet.contains(Integer.valueOf(p.getActionType().numericValue())))
+						.filter(p -> filterActionSet
+							.contains(Integer.valueOf(p.getActionType().numericValue())))
 						.collect(Collectors.toSet());
 				}
 				
@@ -205,10 +208,20 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TABLE, SWT.MULTI, cv));
 		
 		makeActions();
+		
+		IAction[] list = new IAction[] {
+			newReminderAction, deleteReminderAction, null, onlyOpenReminderAction,
+			ownReminderAction, othersReminderAction, null
+		};
+		List<IAction> actionList = new ArrayList<IAction>();
+		actionList.addAll(Arrays.asList(list));
+		actionList.addAll(Arrays.asList(filterActionType));
+		actionList.add(null);
+		actionList.add(selectPatientAction);
+		
 		ViewMenus menu = new ViewMenus(getViewSite());
-		menu.createToolbar(newReminderAction);
-		menu.createMenu(newReminderAction, deleteReminderAction, null, onlyOpenReminderAction,
-			ownReminderAction, othersReminderAction, null, selectPatientAction);
+		menu.createToolbar(newReminderAction, toggleAutoSelectPatientAction);
+		menu.createMenu(actionList.toArray(new IAction[] {}));
 		
 		if (CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS)) {
 			othersReminderAction.setEnabled(true);
@@ -238,15 +251,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				
 			}
 		});
-		IAction[] list = new IAction[] {
-			newReminderAction, deleteReminderAction, null, onlyOpenReminderAction,
-			ownReminderAction, othersReminderAction, null
-		};
-		List<IAction> actionList = new ArrayList<IAction>();
-		actionList.addAll(Arrays.asList(list));
-		actionList.addAll(Arrays.asList(filterActionType));
-		actionList.add(null);
-		actionList.add(selectPatientAction);
+		
 		menu.createViewerContextMenu(cv.getViewerWidget(), actionList.toArray(new IAction[] {}));
 		cv.getViewerWidget().addFilter(filter);
 		GlobalEventDispatcher.addActivationListener(this, getViewSite().getPart());
@@ -257,6 +262,10 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			public void selectionChanged(SelectionChangedEvent event){
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				selectPatientAction.setEnabled(selection.size() <= 1);
+				selectPatientAction.reflectRight();
+				if (autoSelectPatient && selectPatientAction.isEnabled()) {
+					selectPatientAction.doRun();
+				}
 			}
 		});
 	}
@@ -458,12 +467,33 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				} else if (sel != null && sel.length > 0) {
 					Reminder reminder = (Reminder) sel[0];
 					Patient patient = reminder.getKontakt();
+					Anwender creator = reminder.getCreator();
 					if (patient != null) {
-						ElexisEventDispatcher.fireSelectionEvent(patient);
+						if (!patient.getId().equals(creator.getId())) {
+							ElexisEventDispatcher.fireSelectionEvent(patient);
+						}
 					}
 				}
 			}
 		};
+		
+		toggleAutoSelectPatientAction =
+			new Action(Messages.ReminderView_activatePatientAction, Action.AS_CHECK_BOX) {
+				{
+					setImageDescriptor(Images.IMG_PERSON.getImageDescriptor());
+					setToolTipText(Messages.ReminderView_toggleSelectPatientActionTooltip);
+					autoSelectPatient =
+						CoreHub.userCfg.get(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false);
+					setChecked(autoSelectPatient);
+				}
+				
+				@Override
+				public void run(){
+					autoSelectPatient = toggleAutoSelectPatientAction.isChecked();
+					CoreHub.userCfg.set(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT,
+						autoSelectPatient);
+				}
+			};
 		
 		for (int i = 0; i < Type.values().length; i++) {
 			Type type = Type.values()[i];

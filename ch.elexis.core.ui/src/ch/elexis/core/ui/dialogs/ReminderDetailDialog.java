@@ -363,6 +363,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			
 			setReminderPriority(Priority.MEDIUM);
 			setReminderStatus(ProcessStatus.OPEN);
+			lvResponsible.setSelection(new StructuredSelection(CoreHub.actUser));
 			cvActionType.setSelection(new StructuredSelection(Type.COMMON));
 		} else {
 			patient = reminder.getKontakt();

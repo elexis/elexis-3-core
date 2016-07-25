@@ -374,6 +374,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_allergiesLbl;
 	public static String Patientenblatt2_balance;
 	public static String Patientenblatt2_birthdate;
+	public static String Patientenblatt2_civilState;
 	public static String Patientenblatt2_contactForAdditionalAddress;
 	public static String Patientenblatt2_diagnosesLbl;
 	public static String Patientenblatt2_email;
@@ -407,6 +408,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_selectLegalGuardianMessage;
 	public static String ReminderView_activatePatientAction;
 	public static String ReminderView_activatePatientTooltip;
+	public static String ReminderView_toggleSelectPatientActionTooltip;
 	public static String ReminderView_deleteAction;
 	public static String ReminderView_deleteToolTip;
 	public static String ReminderView_foreignAction;
