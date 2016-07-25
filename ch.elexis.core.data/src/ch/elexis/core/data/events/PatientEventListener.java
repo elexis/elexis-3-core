@@ -40,7 +40,7 @@ public class PatientEventListener extends ElexisEventListenerImpl {
 					for (Reminder r : list) {
 						sb.append(r.getMessage()).append("\n\n"); //$NON-NLS-1$
 					}
-					MessageEvent.fireInformation("important reminders for this patient",
+					MessageEvent.fireInformation(Messages.PatientEventListener_0,
 						sb.toString());
 				}
 			}
