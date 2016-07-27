@@ -192,16 +192,19 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	}
 	
 	public static ProcessStatus determineCurrentStatus(ProcessStatus givenStatus, TimeTool dueDate){
-		if (givenStatus == ProcessStatus.OPEN || givenStatus == ProcessStatus.IN_PROGRESS) {
-			TimeTool now = new TimeTool();
-			now.chop(3);
-			if (now.isEqual(dueDate)) {
-				return ProcessStatus.DUE;
-			}
-			if (now.isAfter(dueDate)) {
-				return ProcessStatus.OVERDUE;
-			}
+		if (ProcessStatus.CLOSED == givenStatus || ProcessStatus.ON_HOLD == givenStatus) {
+			return givenStatus;
 		}
+		
+		TimeTool now = new TimeTool();
+		now.chop(3);
+		if (now.isEqual(dueDate)) {
+			return ProcessStatus.DUE;
+		}
+		if (now.isAfter(dueDate)) {
+			return ProcessStatus.OVERDUE;
+		}
+		
 		return givenStatus;
 	}
 	
