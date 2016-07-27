@@ -112,6 +112,8 @@ public class AccessControlDefaults {
 	public static final ACE USER = new ACE(DATA, "Anwender", Messages.AccessControlDefaults_user); //$NON-NLS-1$
 	public static final ACE USER_CREATE =
 		new ACE(USER, "Erstellen", Messages.AccessControlDefaults_create); //$NON-NLS-1$
+	public static final ACE USER_DELETE =
+		new ACE(USER, "Löschen", Messages.AccessControlDefaults_delete);
 		
 	public static final ACE LEISTUNGEN =
 		new ACE(ACE.ACE_ROOT, "Leistungen", Messages.AccessControlDefaults_services); //$NON-NLS-1$

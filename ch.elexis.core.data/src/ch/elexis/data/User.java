@@ -61,6 +61,9 @@ public class User extends PersistentObject {
 	public User(Anwender anw, String username, String password){
 		create(username);
 		setAssignedContact(anw);
+		if (password == null || password.length() == 0) {
+			password = StringTool.unique("pswd");
+		}
 		setPassword(password);
 		
 		setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_USER), true);
@@ -177,7 +180,10 @@ public class User extends PersistentObject {
 	 * @return <code>true</code> if the given username may be used
 	 */
 	public static boolean verifyUsernameNotTaken(String username){
-		return new Query<User>(User.class, FLD_ID, username).execute().size() == 0;
+		Query<User> qbe = new Query<User>(User.class);
+		qbe.clear(true);
+		qbe.add(User.FLD_ID, Query.EQUALS, username);
+		return qbe.execute().size() == 0;
 	}
 	
 	/**
@@ -266,10 +272,6 @@ public class User extends PersistentObject {
 	@Override
 	public boolean delete(){
 		getAssignedRoles().stream().forEachOrdered(r -> setAssignedRole(r, false));
-		
-		Stm stm = getConnection().getStatement();
-		int res = stm.exec("DELETE FROM " + TABLENAME + " WHERE ID=" + getWrappedId());
-		getConnection().releaseStatement(stm);
-		return res == 1;
+		return super.delete();
 	}
 }
