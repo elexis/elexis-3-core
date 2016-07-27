@@ -150,7 +150,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}
 	};
 	
-	CommonViewer cv;
+	final CommonViewer cv;
 	ViewerConfigurer vc;
 	Query<Reminder> qbe;
 	Settings cfg;
@@ -158,13 +158,13 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	private Patient actPatient;
 	
 	public ReminderView(){
+		cv = new CommonViewer();
 		qbe = new Query<Reminder>(Reminder.class);
 		Patient.load("0");
 	}
 	
 	@Override
 	public void createPartControl(final Composite parent){
-		cv = new CommonViewer();
 		filter = new ReminderFilter();
 		vc = new ViewerConfigurer(new CommonContentProviderAdapter() {
 			@Override
@@ -240,7 +240,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 						ReminderDetailDialog rdd =
 							new ReminderDetailDialog(UiDesk.getTopShell(), (Reminder) obj);
 						rdd.open();
-						cv.notify(CommonViewer.Message.update);
+						cv.getViewerWidget().update(obj, null);
 					}
 					
 					@Override
@@ -533,7 +533,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	}
 	
 	public void heartbeat(){
-		cv.notify(CommonViewer.Message.update_keeplabels);
+		cv.notify(CommonViewer.Message.update);
 	}
 	
 	class ReminderFilter extends ViewerFilter {
