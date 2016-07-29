@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -48,6 +49,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -526,33 +528,36 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				try {
 					String val = dlg.getValue();
 					if (!StringTool.isNothing(val)) {
-						if (val.indexOf('/') > 0) {
-							String[] frac = val.split("/"); //$NON-NLS-1$
-							v.changeAnzahl(1);
-							double scale =
+						int changeAnzahl;
+						double secondaryScaleFactor = 1.0;
+						String text = v.getVerrechenbar().getText();
+						
+						if (val.indexOf(StringConstants.SLASH) > 0) {
+							changeAnzahl = 1;
+							String[] frac = val.split(StringConstants.SLASH);
+							secondaryScaleFactor =
 								Double.parseDouble(frac[0]) / Double.parseDouble(frac[1]);
-							v.setSecondaryScaleFactor(scale);
-							v.setText(v.getText()
-								+ " (" + val + Messages.VerrechnungsDisplay_Orininalpackungen); //$NON-NLS-1$ //$NON-NLS-2$
+							text = v.getText()
+								+ " (" + val + Messages.VerrechnungsDisplay_Orininalpackungen; //$NON-NLS-1$
 						} else if (val.indexOf('.') > 0) {
-							double scale = Double.parseDouble(val);
-							v.changeAnzahl(1);
-							v.setSecondaryScaleFactor(scale);
-							v.setText(v.getText() + " (" + Double.toString(scale) + ")");
+							changeAnzahl = 1;
+							secondaryScaleFactor = Double.parseDouble(val);
+							text = v.getText() + " (" + Double.toString(secondaryScaleFactor) + ")";
 						} else {
-							int neu = Integer.parseInt(dlg.getValue());
-							v.changeAnzahl(neu);
-							v.setSecondaryScaleFactor(1.0);
-							v.setText(v.getVerrechenbar().getText());
+							changeAnzahl = Integer.parseInt(dlg.getValue());
+						}
+						
+						IStatus ret = v.changeAnzahlValidated(changeAnzahl);
+						if(ret.isOK()) {
+							v.setSecondaryScaleFactor(secondaryScaleFactor);
+							v.setText(text);
+						} else {
+							SWTHelper.showError(Messages.VerrechnungsDisplay_error,
+								ret.getMessage());
 						}
 					}
 					setLeistungen((Konsultation) ElexisEventDispatcher
 						.getSelected(Konsultation.class));
-					v.getVerrechenbar()
-						.getOptifier()
-						.optify(
-							(Konsultation) ElexisEventDispatcher
-								.getSelected(Konsultation.class));
 				} catch (NumberFormatException ne) {
 					SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, //$NON-NLS-1$
 						Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$

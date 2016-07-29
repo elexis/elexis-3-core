@@ -15,9 +15,12 @@ package ch.elexis.data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
@@ -26,6 +29,7 @@ import ch.elexis.core.data.interfaces.IVerrechnetAdjuster;
 import ch.elexis.core.data.util.Extensions;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -367,6 +371,48 @@ public class Verrechnet extends PersistentObject {
 			art.einzelRuecknahme(vorher);
 			art.einzelAbgabe(neuAnzahl);
 		}
+	}
+	
+	/**
+	 * Change the count for this service or article, considering the rules given by the resp.
+	 * optifiers.
+	 * 
+	 * @param neuAnzahl
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public IStatus changeAnzahlValidated(int neuAnzahl){
+		int vorher = getZahl();
+		if (neuAnzahl == vorher) {
+			return Status.OK_STATUS;
+		}
+		
+		Konsultation kons = getKons();
+		IVerrechenbar verrechenbar = getVerrechenbar();
+		
+		int difference = neuAnzahl - vorher;
+		if (difference > 0) {
+			for (int i = 0; i < difference; i++) {
+				Result<IVerrechenbar> result = kons.addLeistung(verrechenbar);
+				if (!result.isOK()) {
+					String message = result.getMessages().stream().map(m -> m.getText())
+						.collect(Collectors.joining(", "));
+					return new Status(Status.ERROR, CoreHub.PLUGIN_ID, message);
+				}
+			}
+		} else {
+			int abs = Math.abs(difference);
+			for (int i = 0; i < abs; i++) {
+				Result<Verrechnet> result = kons.removeLeistung(this);
+				if (!result.isOK()) {
+					String message = result.getMessages().stream().map(m -> m.getText())
+						.collect(Collectors.joining(", "));
+					return new Status(Status.ERROR, CoreHub.PLUGIN_ID, message);
+				}
+			}
+		}
+		
+		return Status.OK_STATUS;
 	}
 	
 	/** Frage, ob dieses Verrechnet aus dem IVerrechenbar tmpl entstanden ist */
