@@ -378,8 +378,12 @@ public class LabImportUtil implements ILabImportUtil {
 		qr.add(LabResult.ITEM_ID, Query.EQUALS, li.getId());
 		if (qr.execute().size() == 0) {
 			StringBuilder comment = new StringBuilder();
-			comment.append(hl7TextData.getText());
-			comment.append(hl7TextData.getComment());
+			if (hl7TextData.getText() != null) {
+				comment.append(hl7TextData.getText());
+			}
+			if (hl7TextData.getComment() != null) {
+				comment.append(hl7TextData.getComment());
+			}
 			// only add coments not yet existing
 			LabResult labResult =
 				new LabResult(pat, commentsDate, li, "text", comment.toString(), labor); //$NON-NLS-1$
