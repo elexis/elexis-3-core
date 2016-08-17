@@ -293,7 +293,7 @@ public class HL7ReaderV25 extends HL7Reader {
 		String status = "";
 		boolean flag = false;
 		
-		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
+		if (valueType != null && valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
 			String observationId =
 				obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
 			
@@ -311,7 +311,7 @@ public class HL7ReaderV25 extends HL7Reader {
 			
 			observation.add(new EncapsulatedData(filename, encoding, data, observationTime,
 				commentNTE, group, sequence));
-		} else if (isTextOrNumeric(valueType)) {
+		} else if (valueType != null && isTextOrNumeric(valueType)) {
 			name = obx.getObx4_ObservationSubID().getValue();
 			if (name == null) {
 				name = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
