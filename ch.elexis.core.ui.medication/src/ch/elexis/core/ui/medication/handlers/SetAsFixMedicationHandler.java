@@ -64,6 +64,12 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 							}
 						}
 					});
+					
+					// if selection is ReserveMedication -> stop it
+					if (presc.isReserveMedication()) {
+						presc.stop(null);
+						presc.setStopReason("Umgestellt auf Fix Medikation");
+					}
 				}
 			}
 		}
