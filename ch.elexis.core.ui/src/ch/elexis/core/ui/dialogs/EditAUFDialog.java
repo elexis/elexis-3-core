@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.tiff.common.ui.datepicker.DatePicker;
+
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -31,8 +33,6 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
-
-import com.tiff.common.ui.datepicker.DatePicker;
 
 /**
  * Eine AUF erstellen oder ändern
@@ -127,13 +127,14 @@ public class EditAUFDialog extends TitleAreaDialog {
 		} else {
 			fall = auf.getFall();
 			String[] parms = new String[] {
-				AUF.FLD_CASE_ID, AUF.FLD_DATE_FROM, AUF.FLD_DATE_UNTIL, AUF.FLD_REASON,
-				AUF.FLD_PERCENT, AUF.FLD_ZUSATZ
+				AUF.FLD_CASE_ID, AUF.FLD_REASON, AUF.FLD_PERCENT, AUF.FLD_ZUSATZ
 			};
 			String[] vals = new String[] {
-				fall.getId(), von, bis, tGrund.getText(), tProzent.getText(), zus
+				fall.getId(), tGrund.getText(), tProzent.getText(), zus
 			};
 			auf.set(parms, vals);
+			auf.set(AUF.FLD_DATE_FROM, von);
+			auf.set(AUF.FLD_DATE_UNTIL, bis);
 		}
 		super.okPressed();
 	}
