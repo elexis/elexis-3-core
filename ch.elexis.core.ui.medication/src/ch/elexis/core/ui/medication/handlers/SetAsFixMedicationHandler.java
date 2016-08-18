@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.data.ArticleDefaultSignature;
@@ -47,11 +48,17 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 					
 					Prescription fixMediPresc = new Prescription(article,
 						(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
-					fixMediPresc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
+					fixMediPresc.setEntryType(EntryType.FIXED_MEDICATION);
 					
 					if (disposalComment != null && !disposalComment.isEmpty())
 						fixMediPresc.setDisposalComment(disposalComment);
 					
+					// if selection is FixMedication -> stop it
+					if (presc.isFixedMediation()) {
+						String stopDose = StringConstants.ZERO;
+						presc.addTerm(null, stopDose);
+						presc.setStopReason("Umgestellt auf Fix Medikation");
+					}
 				}
 			}
 		}

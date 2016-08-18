@@ -51,7 +51,7 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 					// create ReserveMedication
 					Prescription reserveMedi = new Prescription(article,
 						(Patient) ElexisEventDispatcher.getSelected(Patient.class), dose, remark);
-					reserveMedi.setPrescType(EntryType.RESERVE_MEDICATION.getFlag(), true);
+					reserveMedi.setEntryType(EntryType.RESERVE_MEDICATION);
 					// add disposal comment if present
 					if (disposalComment != null && !disposalComment.isEmpty())
 						reserveMedi.setDisposalComment(disposalComment);

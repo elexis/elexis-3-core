@@ -339,7 +339,7 @@ public class VerrechnungsDisplay extends Composite {
 				
 				Prescription presc = Prescription.load(v.getDetail(Verrechnet.FLD_EXT_PRESC_ID));
 				presc.stop(null);
-				presc.setPrescType(Prescription.EntryType.APPLICATION.getFlag(), true);
+				presc.setEntryType(Prescription.EntryType.APPLICATION);
 				presc.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID, v.getId());
 				
 				int packungsGroesse = presc.getArtikel().getPackungsGroesse();

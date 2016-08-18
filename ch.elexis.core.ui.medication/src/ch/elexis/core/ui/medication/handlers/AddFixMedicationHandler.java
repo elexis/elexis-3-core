@@ -71,7 +71,7 @@ public class AddFixMedicationHandler extends AbstractHandler {
 			
 			Prescription presc = new Prescription((Artikel) article,
 				(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
-			presc.setPrescType(EntryType.FIXED_MEDICATION.getFlag(), true);
+			presc.setEntryType(EntryType.FIXED_MEDICATION);
 			
 			medicationView.refresh();
 		}
