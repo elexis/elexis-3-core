@@ -231,7 +231,7 @@ public class LabMapping extends PersistentObject {
 	 * 
 	 * <pre>
 	 * CONTACT_NAME;CONTACT_ITEMNAME;LOINCCODE;LABITEM_NAME;LABITEM_SHORTNAME;LABITEM_REFM;
-	 * LABITEM_REFF;LABITEM_UNIT;LABITEM_TYP;LABITEM_GROUP
+	 * LABITEM_REFF;LABITEM_UNIT;LABITEM_TYP;LABITEM_GROUP;LABITEM_BILLINGCODE
 	 * </pre>
 	 * 
 	 * Possible values for LABITEM_TYP -> numeric,absolute,text <br\>
@@ -248,7 +248,7 @@ public class LabMapping extends PersistentObject {
 		String line;
 		while ((line = reader.readLine()) != null) {
 			String[] parts = line.split(";", -1); //$NON-NLS-1$
-			if (parts.length != 10) {
+			if (parts.length < 10) {
 				String reason =
 					String.format(Messages.LabMapping_reasonLineNotValid, line, parts.length);
 				logger.warn(reason);
@@ -288,6 +288,10 @@ public class LabMapping extends PersistentObject {
 			String labItemUnit = parts[7];
 			String labItemTyp = parts[8];
 			String labItemGroup = parts[9];
+			String labItemBillingCode = "";
+			if (parts.length > 10) {
+				labItemBillingCode = parts[10];
+			}
 			
 			if (laborItemName == null || laborItemName.isEmpty() || labItemName == null
 				|| labItemName.isEmpty() || labItemShort == null || labItemShort.isEmpty()) {
@@ -310,7 +314,8 @@ public class LabMapping extends PersistentObject {
 					labItemShort));
 				labItem =
 					createLabItem(labor.getId(), labItemName, labItemShort, labItemRefM,
-						labItemRefF, labItemUnit, labItemTyp, labItemGroup, labItemLoinc);
+						labItemRefF, labItemUnit, labItemTyp, labItemGroup, labItemLoinc,
+						labItemBillingCode);
 			} else if (origins.size() > 1) {
 				String reason =
 					String.format(Messages.LabMapping_reasonMoreLabItems, labItemLoinc,
@@ -344,7 +349,7 @@ public class LabMapping extends PersistentObject {
 	
 	private static LabItem createLabItem(String laborId, String labItemName, String labItemShort,
 		String labItemRefM, String labItemRefF, String labItemUnit, String labItemTyp,
-		String labItemGroup, String labItemLoinc){
+		String labItemGroup, String labItemLoinc, String labItemBillingCode){
 		logger.warn(String.format(
 			"Creating new labor item with name [%s] and shortname [%s] loinc [%s]", labItemName, //$NON-NLS-1$
 			labItemShort, labItemLoinc));
@@ -355,6 +360,9 @@ public class LabMapping extends PersistentObject {
 		
 		if (labItemLoinc != null && !labItemLoinc.isEmpty()) {
 			item.setLoincCode(labItemLoinc);
+		}
+		if (labItemBillingCode != null && !labItemBillingCode.isEmpty()) {
+			item.setBillingCode(labItemBillingCode);
 		}
 		return item;
 	}
