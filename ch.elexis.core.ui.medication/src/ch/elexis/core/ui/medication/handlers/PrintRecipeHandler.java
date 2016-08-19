@@ -43,12 +43,16 @@ public class PrintRecipeHandler extends AbstractHandler {
 			prescRecipes = Arrays.asList(patient.getFixmedikation());
 		} else {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
-			List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
-			for (MedicationTableViewerItem mtvItem : mtvItems) {
-				Prescription p = mtvItem.getPrescription();
-				if (p != null) {
-					prescRecipes.add(p);
+			if (strucSelection.getFirstElement() instanceof MedicationTableViewerItem) {
+				List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
+				for (MedicationTableViewerItem mtvItem : mtvItems) {
+					Prescription p = mtvItem.getPrescription();
+					if (p != null) {
+						prescRecipes.add(p);
+					}
 				}
+			} else if (strucSelection.getFirstElement() instanceof Prescription) {
+				prescRecipes.addAll(strucSelection.toList());
 			}
 		}
 
