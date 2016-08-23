@@ -71,7 +71,7 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 			if ("Artikel".equals(ice.getName())) { //$NON-NLS-1$
 				try {
 					CodeSelectorFactory cs =
-						(CodeSelectorFactory) ice.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
+						(CodeSelectorFactory) ice.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 					CTabItem ci = new CTabItem(ctab, SWT.NONE);
 					ci.setText(cs.getCodeSystemName());
 					ci.setData("csf", cs); //$NON-NLS-1$

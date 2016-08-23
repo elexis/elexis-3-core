@@ -93,11 +93,11 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 								(IConfigurationElement) selected.getData(KEY_CE);
 							CodeSelectorFactory cs =
 								(CodeSelectorFactory) ce
-									.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
-							String a = ce.getAttribute("ImporterClass"); //$NON-NLS-1$
+									.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+							String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 							ImporterPage ip = null;
 							if (a != null) {
-								ip = (ImporterPage) ce.createExecutableExtension("ImporterClass"); //$NON-NLS-1$
+								ip = (ImporterPage) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 								if (ip != null) {
 									importers.put(det.getTitle(), ip);
 								}
@@ -181,17 +181,17 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 					continue;
 				// The first page initializes the screen
 				if (!headerDone) {
-					d = (IDetailDisplay) ce.createExecutableExtension("CodeDetailDisplay");
-					String a = ce.getAttribute("ImporterClass"); //$NON-NLS-1$
+					d = (IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
+					String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 					ImporterPage ip = null;
 					if (a != null) {
-						ip = (ImporterPage) ce.createExecutableExtension("ImporterClass"); //$NON-NLS-1$
+						ip = (ImporterPage) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 						if (ip != null) {
 							importers.put(d.getTitle(), ip);
 						}
 					}
 					CodeSelectorFactory csf =
-						(CodeSelectorFactory) ce.createExecutableExtension("CodeSelectorFactory");
+						(CodeSelectorFactory) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 					MasterDetailsPage page = new MasterDetailsPage(ctab, csf, d);
 					CTabItem ct = new CTabItem(ctab, SWT.None);
 					ct.setText(d.getTitle());
@@ -203,7 +203,7 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 					headerDone = true;
 					continue;
 				}
-				d = (IDetailDisplay) ce.createExecutableExtension("CodeDetailDisplay");
+				d = (IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 				CTabItem ct = new CTabItem(ctab, SWT.NONE);
 				ct.setText(d.getTitle());
 				ct.setData(KEY_CE, ce);
@@ -302,7 +302,7 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 	}
 	
 	public void visible(boolean mode){
-		
+		System.out.println(this.getClass().getName()+" visible "+mode);
 	}
 	
 	/*

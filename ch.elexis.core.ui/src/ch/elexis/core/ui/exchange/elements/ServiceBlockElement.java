@@ -50,10 +50,10 @@ public class ServiceBlockElement extends XChangeElement {
 		factories = new HashMap<ICodeElement, CodeSelectorFactory>(codesystems.size());
 		for (IConfigurationElement ic : codesystems) {
 			try {
-				PersistentObjectFactory po =
-					(PersistentObjectFactory) ic.createExecutableExtension("ElementFactory");
-				CodeSelectorFactory cs =
-					(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory");
+				PersistentObjectFactory po = (PersistentObjectFactory) ic
+					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
+				CodeSelectorFactory cs = (CodeSelectorFactory) ic
+					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 				if (cs == null) {
 					SWTHelper.alert("Fehler", "CodeSelectorFactory is null");
 				} else {
@@ -130,9 +130,8 @@ public class ServiceBlockElement extends XChangeElement {
 							}
 						}
 						if (!bMatched) {
-							Eigenleistung custom =
-								new Eigenleistung(code, lname, se.getAttr("cost"),
-									se.getAttr("price"));
+							Eigenleistung custom = new Eigenleistung(code, lname,
+								se.getAttr("cost"), se.getAttr("price"));
 							ret.addElement(custom);
 						}
 					}

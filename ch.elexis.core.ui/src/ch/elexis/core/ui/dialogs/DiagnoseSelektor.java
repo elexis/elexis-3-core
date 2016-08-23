@@ -59,9 +59,9 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 			for (IConfigurationElement ic : list) {
 				try {
 					PersistentObjectFactory po =
-						(PersistentObjectFactory) ic.createExecutableExtension("ElementFactory"); //$NON-NLS-1$
+						(PersistentObjectFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
 					CodeSelectorFactory codeSelectorFactory =
-						(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
+						(CodeSelectorFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 					// get all available diagnoses available (TI can not be Queried as it is
 					// not in the database)
 					if (!(codeSelectorFactory.getCodeSystemName().equalsIgnoreCase("TI-Code"))) { //$NON-NLS-1$

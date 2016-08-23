@@ -127,9 +127,9 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			for (IConfigurationElement ic : list) {
 				try {
 					PersistentObjectFactory po =
-						(PersistentObjectFactory) ic.createExecutableExtension("ElementFactory"); //$NON-NLS-1$
+						(PersistentObjectFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
 					CodeSelectorFactory codeSelectorFactory =
-						(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
+						(CodeSelectorFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 					if (codeSelectorFactory == null) {
 						String error = "CodeSelectorFactory is null: "+ic.getClass().getName();
 						SWTHelper.alert(CAPTION_ERROR, error); //$NON-NLS-1$
@@ -197,10 +197,10 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		if (list != null) {
 			for (IConfigurationElement ic : list) {
 				try {
-					PersistentObjectFactory po =
-						(PersistentObjectFactory) ic.createExecutableExtension("ElementFactory"); //$NON-NLS-1$
-					CodeSelectorFactory codeSelectorFactory =
-						(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
+					PersistentObjectFactory po = (PersistentObjectFactory) ic
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
+					CodeSelectorFactory codeSelectorFactory = (CodeSelectorFactory) ic
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 					if (codeSelectorFactory == null) {
 						String error = "CodeSelectorFactory is null: "+ic.getClass().getName(); //$NON-NLS-1$
 						SWTHelper.alert(CAPTION_ERROR, error);
@@ -252,7 +252,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		for (IConfigurationElement ic : list) {
 			try {
 				IDetailDisplay d =
-					(IDetailDisplay) ic.createExecutableExtension("CodeDetailDisplay"); //$NON-NLS-1$
+					(IDetailDisplay) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 				
 				for (int i = 0; i < userSettings.length; i++) {
 					if (userSettings[i].equals(d.getTitle().trim())) {
@@ -269,9 +269,9 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			try {
 				IConfigurationElement ic = icMap.get(key);
 				PersistentObjectFactory po =
-					(PersistentObjectFactory) ic.createExecutableExtension("ElementFactory"); //$NON-NLS-1$
+					(PersistentObjectFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
 				CodeSelectorFactory codeSelectorFactory =
-					(CodeSelectorFactory) ic.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
+					(CodeSelectorFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 				if (codeSelectorFactory == null) {
 					String error = "CodeSelectorFactory is null: "+ic.getClass().getName(); //$NON-NLS-1$
 					SWTHelper.alert(CAPTION_ERROR, error); 

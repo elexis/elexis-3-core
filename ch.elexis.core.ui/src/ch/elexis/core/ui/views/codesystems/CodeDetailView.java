@@ -171,13 +171,13 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 			
 			try {
 				IDetailDisplay d =
-					(IDetailDisplay) ce.createExecutableExtension("CodeDetailDisplay"); //$NON-NLS-1$
+					(IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 				CodeSelectorFactory cs =
-					(CodeSelectorFactory) ce.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
-				String a = ce.getAttribute("ImporterClass"); //$NON-NLS-1$
+					(CodeSelectorFactory) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+				String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 				ImporterPage ip = null;
 				if (a != null) {
-					ip = (ImporterPage) ce.createExecutableExtension("ImporterClass"); //$NON-NLS-1$
+					ip = (ImporterPage) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 					if (ip != null) {
 						importers.put(d.getTitle(), ip);
 					}
@@ -207,7 +207,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 					continue;
 				}
 				IDetailDisplay d =
-					(IDetailDisplay) ce.createExecutableExtension("CodeDetailDisplay"); //$NON-NLS-1$
+					(IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 				for (int i = 0; i < userSettings.length; i++) {
 					if (userSettings[i].equals(d.getTitle().trim())) {
 						iceMap.put(i, ce);
@@ -232,13 +232,13 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 					continue;
 				}
 				IDetailDisplay d =
-					(IDetailDisplay) ce.createExecutableExtension("CodeDetailDisplay"); //$NON-NLS-1$
+					(IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 				CodeSelectorFactory cs =
-					(CodeSelectorFactory) ce.createExecutableExtension("CodeSelectorFactory"); //$NON-NLS-1$
-				String a = ce.getAttribute("ImporterClass"); //$NON-NLS-1$
+					(CodeSelectorFactory) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+				String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 				ImporterPage ip = null;
 				if (a != null) {
-					ip = (ImporterPage) ce.createExecutableExtension("ImporterClass"); //$NON-NLS-1$
+					ip = (ImporterPage) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 					if (ip != null) {
 						importers.put(d.getTitle(), ip);
 					}
