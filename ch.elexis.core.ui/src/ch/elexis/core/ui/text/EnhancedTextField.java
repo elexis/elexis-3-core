@@ -177,12 +177,16 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	
 	public EnhancedTextField(final Composite parent){
 		super(parent, SWT.NONE);
-		setLayout(new GridLayout());
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		setLayout(layout);
 		text = new StyledText(this, SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
 		text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 		text.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		text.addVerifyListener(new ETFVerifyListener());
 		text.addVerifyKeyListener(new ShortcutListener(this));
+		setBackground(UiDesk.getColor(UiDesk.COL_BLUE));
 		dropper = new ETFDropReceiver(this);
 		menuMgr = new MenuManager();
 		menuMgr.setRemoveAllWhenShown(true);

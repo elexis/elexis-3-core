@@ -514,7 +514,7 @@ public class KonsDetailView extends ViewPart
 			}
 			cbFall.setEnabled(act.isOpen());
 			Mandant m = kons.getMandant();
-			lBeh.setText(Messages.KonsDetailView_ConsOfDate + " " + kons.getDatum() + " (" //$NON-NLS-1$ //$NON-NLS-2$
+			lBeh.setText(kons.getDatum() + " (" //$NON-NLS-1$
 				+ new TimeTool(kons.getDatum()).getDurationToNowString() + ")"); //$NON-NLS-1$
 			StringBuilder sb = new StringBuilder();
 			if (m == null) {

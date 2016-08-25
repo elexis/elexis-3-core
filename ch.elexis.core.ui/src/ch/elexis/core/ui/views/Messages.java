@@ -194,7 +194,6 @@ public class Messages extends NLS {
 	public static String KonsDetailView_CaseClosedCaption;
 	public static String KonsDetailView_ChangeCaseCaption;
 	public static String KonsDetailView_ConfirmChangeConsToCase;
-	public static String KonsDetailView_ConsOfDate;
 	public static String KonsDetailView_No;
 	public static String KonsDetailView_NoConsSelected;
 	public static String KonsDetailView_NotYours;
