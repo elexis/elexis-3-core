@@ -12,13 +12,15 @@ package ch.elexis.core.ui.constants;
 
 /**
  * @since 3.0.0
- * @since 3.2.0 added VERRECHNUNGSCODE_CSF, VERRECHNUNGSCODE_ELF, VERRECHNUNGSCODE_CDD
+ * @since 3.2.0 added VERRECHNUNGSCODE_CSF, VERRECHNUNGSCODE_ELF, VERRECHNUNGSCODE_CDD,
+ *        VERRECHNUNGSCODE_IMPC
  */
 public class ExtensionPointConstantsUi {
 	public static final String VERRECHNUNGSCODE = "ch.elexis.core.ui.Verrechnungscode";
 	public static final String VERRECHNUNGSCODE_CSF = "CodeSelectorFactory";	
 	public static final String VERRECHNUNGSCODE_ELF = "ElementFactory";
 	public static final String VERRECHNUNGSCODE_CDD = "CodeDetailDisplay";
+	public static final String VERRECHNUNGSCODE_IMPC = "ImporterClass";
 	public static final String FREMDDATENIMPORT = "ch.elexis.core.ui.FremdDatenImport";
 	public static final String KONSEXTENSION = "ch.elexis.core.ui.KonsExtension";
 	public static final String DIAGNOSECODE = "ch.elexis.core.ui.Diagnosecode";
