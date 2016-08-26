@@ -66,6 +66,7 @@ public class Prescription extends PersistentObject {
 	
 	/**
 	 * Prescription is a direct distribution within a consultation
+	 * @deprecated use {@link Prescription#setEntryType(EntryType)} instead
 	 */
 	public static final String FLD_REZEPTID_VAL_DIREKTABGABE = "Direktabgabe";
 	/**
@@ -665,6 +666,12 @@ public class Prescription extends PersistentObject {
 		
 		String rezeptId = get(FLD_REZEPT_ID);
 		if (rezeptId != null && !rezeptId.isEmpty()) {
+			// this is necessary due to a past impl. where self dispensed was not set as entry type
+			if (rezeptId.equals(Prescription.FLD_REZEPTID_VAL_DIREKTABGABE)) {
+				setEntryType(EntryType.SELF_DISPENSED);
+				set(FLD_REZEPT_ID, "");
+				return EntryType.SELF_DISPENSED;
+			}
 			return EntryType.RECIPE;
 		}
 		
@@ -733,6 +740,10 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public @Nullable IPersistentObject getLastDisposed(){
+		EntryType entryType = getEntryType();
+		if (entryType == EntryType.SELF_DISPENSED) {
+			return getVerrechnetForAppliedMedication();
+		}
 		String rezeptId = get(Prescription.FLD_REZEPT_ID);
 		return getLastDisposed(rezeptId);
 	}
@@ -757,8 +768,6 @@ public class Prescription extends PersistentObject {
 			} else {
 				return null;
 			}
-		} else if (Prescription.FLD_REZEPTID_VAL_DIREKTABGABE.equals(rezeptId)) {
-			return getVerrechnetForAppliedMedication();
 		} else {
 			Query<Prescription> qre = new Query<Prescription>(Prescription.class);
 			qre.add(Prescription.FLD_PATIENT_ID, Query.LIKE, get(Prescription.FLD_PATIENT_ID));
