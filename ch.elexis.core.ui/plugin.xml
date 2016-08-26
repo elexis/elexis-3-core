@@ -315,6 +315,11 @@
                id="ch.elexis.ui.keybindingScheme"
                name="Elexis Keybinding Scheme">
          </scheme>
+         <key
+               commandId="org.eclipse.ui.views.showView"
+               schemeId="ch.elexis.ui.keybindingScheme"
+               sequence="M1+N">
+         </key>
       </extension>
       <extension
             point="org.eclipse.ui.services">
