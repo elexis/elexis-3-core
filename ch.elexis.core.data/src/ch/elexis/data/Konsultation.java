@@ -27,6 +27,7 @@ import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -644,11 +645,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					Artikel art = (Artikel) l;
 					// art.einzelAbgabe(1); -> this is done by the optifier now
 					Prescription p = new Prescription(art, getFall().getPatient(), "", "");
-					p.set(new String[] {
-						Prescription.FLD_REZEPT_ID
-					}, new String[] {
-						Prescription.FLD_REZEPTID_VAL_DIREKTABGABE
-					});
+					p.setEntryType(EntryType.SELF_DISPENSED);
 					Verrechnet verrechnet = optifier.getCreatedVerrechnet();
 					if (verrechnet != null) {
 						p.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID,
