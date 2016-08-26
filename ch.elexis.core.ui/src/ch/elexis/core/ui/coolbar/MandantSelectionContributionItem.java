@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.coolbar;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -136,6 +137,12 @@ public class MandantSelectionContributionItem extends ContributionItem {
 		menu = new Menu(fParent);
 		
 		List<Mandant> qre = Hub.getMandantenList();
+		qre.sort(new Comparator<Mandant>() {
+			@Override
+			public int compare(Mandant m1, Mandant m2){
+				return m1.getMandantLabel().compareTo(m2.getMandantLabel());
+			}
+		});
 		mandants = qre.toArray(new Mandant[] {});
 		if (mandants.length < 2)
 			return;
