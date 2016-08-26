@@ -110,6 +110,9 @@ public class SettingsPreferenceStore implements IPreferenceStore {
 	
 	public boolean getBoolean(String name){
 		String z = get(name);
+		if (z.isEmpty()) {
+			return false;
+		}
 		if (z.equals("0")) { //$NON-NLS-1$
 			return false;
 		}
