@@ -2532,21 +2532,24 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
-	 * 
+	 * Unfold a byte array as stored by {@link #flatten(Hashtable)}
 	 * @param flat
 	 * @return
 	 * @since 3.1
 	 */
 	public static Object foldObject(final byte[] flat){
-		try {
-			ByteArrayInputStream bais = new ByteArrayInputStream(flat);
-			ZipInputStream zis = new ZipInputStream(bais);
-			zis.getNextEntry();
-			ObjectInputStream ois = new ObjectInputStream(zis);
-			Object res = ois.readObject();
-			ois.close();
-			bais.close();
-			return res;
+		if (flat.length == 0) {
+			return null;
+		}
+		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(flat))) {
+			ZipEntry entry = zis.getNextEntry();
+			if (entry != null) {
+				try (ObjectInputStream ois = new ObjectInputStream(zis)) {
+					return ois.readObject();
+				}
+			} else {
+				return null;
+			}
 		} catch (Exception ex) {
 			log.error("Error unfolding object", ex);
 			return null;
