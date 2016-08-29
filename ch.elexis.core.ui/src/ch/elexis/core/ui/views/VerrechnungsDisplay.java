@@ -489,6 +489,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				int sel = tVerr.getSelectionIndex();
 				TableItem ti = tVerr.getItem(sel);
 				Verrechnet v = (Verrechnet) ti.getData();
+				
+				if(!v.getKons().isEditable(true)) {
+					return;
+				}
+				
 				String oldText = v.getText();
 				InputDialog dlg =
 					new InputDialog(UiDesk.getTopShell(),
