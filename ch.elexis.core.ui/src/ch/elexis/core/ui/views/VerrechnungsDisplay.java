@@ -406,6 +406,9 @@ public class VerrechnungsDisplay extends Composite {
 			public void run(){
 				TableItem[] items = tVerr.getItems();
 				for (TableItem ti : items) {
+					if (!((Verrechnet) ti.getData()).getKons().isEditable(true)) {
+						return;
+					}
 					Result<Verrechnet> result =
 						((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class))
 							.removeLeistung((Verrechnet) ti.getData());
