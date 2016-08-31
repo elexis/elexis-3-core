@@ -10,7 +10,12 @@
  ******************************************************************************/
 package ch.elexis.core.ui;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -21,6 +26,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
+import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.ErsterMandantDialog;
@@ -99,5 +105,43 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	@Override
 	public boolean performDatabaseUpdate(String[] array, String pluginId){
 		return new SqlWithUiRunner(array, pluginId).runSql();
+	}
+	
+	@Override
+	public void showProgress(IRunnableWithProgress irwp){
+		try {
+			if (isDisplayAvailable()) {
+				ProgressMonitorDialog pmd = new ProgressMonitorDialog(Hub.getActiveShell());
+				org.eclipse.jface.operation.IRunnableWithProgress irpwAdapter =
+					new org.eclipse.jface.operation.IRunnableWithProgress() {
+						
+						@Override
+						public void run(IProgressMonitor monitor)
+							throws InvocationTargetException, InterruptedException{
+							irwp.run(monitor);
+						}
+					};
+				
+				pmd.run(false, true, irpwAdapter);
+			} else {
+				irwp.run(new NullProgressMonitor());
+			}
+		} catch (InvocationTargetException | InterruptedException e) {
+			log.error("Execution error", e);
+		}
+	}
+	
+	protected boolean isDisplayAvailable(){
+		try {
+			Class.forName("org.eclipse.swt.widgets.Display");
+		} catch (ClassNotFoundException e) {
+			return false;
+		} catch (NoClassDefFoundError e) {
+			return false;
+		}
+		if (Display.getDefault() == null)
+			return false;
+		else
+			return true;
 	}
 }

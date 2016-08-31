@@ -11,6 +11,7 @@
 package ch.elexis.core.data.extension;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.PersistentObject;
 
@@ -89,4 +90,12 @@ public abstract class AbstractCoreOperationAdvisor {
 	 *         {@link CoreHub#DBVersion} will be updated
 	 */
 	public abstract boolean performDatabaseUpdate(String[] array, String pluginId);
+	
+	/**
+	 * Provide progress information to the user
+	 * 
+	 * @param irwp
+	 * @since 3.2
+	 */
+	public abstract void showProgress(IRunnableWithProgress irwp);
 }

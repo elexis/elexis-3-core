@@ -7,5 +7,12 @@
             Class="ch.elexis.core.eigenartikel.EigenartikelPersistentObjectFactory">
       </Factory>
    </extension>
+   <extension
+         point="ch.elexis.core.data.ACLContribution">
+      <ACLContribution
+            ACLContributor="ch.elexis.core.eigenartikel.acl.ACLContributor"
+            name="ch.elexis.core.eigenartikel.acl.ACLContributor">
+      </ACLContribution>
+   </extension>
 
 </plugin>

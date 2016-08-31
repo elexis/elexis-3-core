@@ -38,6 +38,7 @@ public class Artikel extends VerrechenbarAdapter {
 	public static final String ARTIKEL = "Artikel";
 	public static final String FLD_LIEFERANT_ID = "LieferantID";
 	public static final String FLD_PHARMACODE = "Pharmacode";
+	public static final String FLD_EXTID = "ExtID";
 	public static final String ANBRUCH = "Anbruch";
 	public static final String MINBESTAND = "Minbestand";
 	public static final String MAXBESTAND = "Maxbestand";
@@ -50,8 +51,9 @@ public class Artikel extends VerrechenbarAdapter {
 	public static final String FLD_TYP = "Typ";
 	public static final String FLD_NAME = "Name";
 	public static final String FLD_ATC_CODE = "ATC_code";
+	
 	public static final String TABLENAME = "ARTIKEL";
-	public static Pattern NAME_VE_PATTERN = Pattern.compile(".+ ([0-9]+) Stk.*");
+	public static final Pattern NAME_VE_PATTERN = Pattern.compile(".+ ([0-9]+) Stk.*");
 	
 	@Override
 	protected String getTableName(){
@@ -65,8 +67,9 @@ public class Artikel extends VerrechenbarAdapter {
 	static {
 		addMapping(TABLENAME, FLD_LIEFERANT_ID, FLD_NAME, MAXBESTAND, MINBESTAND, ISTBESTAND,
 			FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP, FLD_EXTINFO, FLD_EAN, FLD_SUB_ID,
-			"Eigenname=Name_intern", FLD_CODECLASS, FLD_KLASSE, FLD_ATC_CODE);
-		Xid.localRegisterXIDDomainIfNotExists(XID_PHARMACODE, "Pharmacode", Xid.ASSIGNMENT_REGIONAL);
+			EIGENNAME + "=Name_intern", FLD_CODECLASS, FLD_KLASSE, FLD_ATC_CODE, FLD_EXTID);
+		Xid.localRegisterXIDDomainIfNotExists(XID_PHARMACODE, "Pharmacode",
+			Xid.ASSIGNMENT_REGIONAL);
 	}
 	
 	/**
@@ -537,6 +540,10 @@ public class Artikel extends VerrechenbarAdapter {
 		return checkZero(getExt(VERPACKUNGSEINHEIT));
 	}
 	
+	public void setPackungsGroesse(int packageSize){
+		setExtInfoStoredObjectByKey(VERPACKUNGSEINHEIT, Integer.toString(packageSize));
+	}
+	
 	public String getPackungsGroesseDesc(){
 		return Integer.toString(getPackungsGroesse());
 	}
@@ -582,6 +589,18 @@ public class Artikel extends VerrechenbarAdapter {
 	@Override
 	public String getCodeSystemName(){
 		return ARTIKEL;
+	}
+	
+	/**
+	 * Determine whether this article is a product or a package. A product is the abstract
+	 * definition of articles available as packages. Hence a product can not be billed, as it does
+	 * not represent a tangible element.
+	 * 
+	 * @return
+	 * @since 3.2
+	 */
+	public boolean isProduct(){
+		return false;
 	}
 	
 	@SuppressWarnings("unchecked")

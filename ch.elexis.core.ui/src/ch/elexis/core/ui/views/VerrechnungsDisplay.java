@@ -230,6 +230,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		
 		public boolean accept(PersistentObject o){
 			if (ElexisEventDispatcher.getSelectedPatient() != null) {
+				if (o instanceof Artikel) {
+					return !((Artikel) o).isProduct();
+				}
 				if (o instanceof IVerrechenbar) {
 					return true;
 				}
@@ -237,7 +240,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return true;
 				}
 				if (o instanceof Prescription) {
-					return true;
+					Prescription p = ((Prescription) o);
+					return (p.getArtikel() != null && !p.getArtikel().isProduct());
 				}
 			}
 			return false;

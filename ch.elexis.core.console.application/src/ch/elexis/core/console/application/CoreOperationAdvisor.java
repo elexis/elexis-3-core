@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
+import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.data.Anwender;
 
@@ -69,6 +70,11 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	@Override
 	public boolean performDatabaseUpdate(String[] array, String pluginId){
 		return new SqlRunner(array, pluginId).runSql();
+	}
+	
+	@Override
+	public void showProgress(IRunnableWithProgress irwp){
+		System.out.println("CoreOperationAdvisor: showProgress()");
 	}
 	
 }
