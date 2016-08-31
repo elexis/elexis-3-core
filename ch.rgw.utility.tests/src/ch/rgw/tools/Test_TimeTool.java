@@ -55,7 +55,7 @@ public class Test_TimeTool {
 		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
-		timeTool.addDays(-60);
+		timeTool.addDays(-62);
 		duration = timeTool.getDurationToNowString();
 		assertTrue(containsDigit(duration));
 		split = splitByFormat(timeTool.getMonthsFormat(2));
