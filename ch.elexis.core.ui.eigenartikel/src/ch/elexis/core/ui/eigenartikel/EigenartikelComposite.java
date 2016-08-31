@@ -62,7 +62,6 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	private ComboViewer comboViewerDpSelector;
 	private ComboViewer comboViewerProductType;
 	private Combo comboProductType;
-	private Label lblAtcCodeSubstanceName;
 	private Label lblAtcCode;
 	private Label lblProvider;
 	private Label lblMeasurementUnit;
@@ -131,11 +130,8 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		gd_txtAtcCode.widthHint = 80;
 		txtAtcCode.setLayoutData(gd_txtAtcCode);
 		txtAtcCode.setTextLimit(8);
-		
-		lblAtcCodeSubstanceName = new Label(compAtcCode, SWT.NONE);
-		lblAtcCodeSubstanceName
-			.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
+		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		
@@ -423,16 +419,6 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtpubPriceObserveWidget,
 			drugPackageEigenartikelVKPreisObserveDetailValue, null, null);
-		//
-		IObservableValue observeTextTxtAtcCodeObserveWidget_1 =
-			WidgetProperties.text(SWT.Modify).observe(txtAtcCode);
-		IObservableValue observeTextLblAtcCodeSubstanceNameObserveWidget =
-			WidgetProperties.text().observe(lblAtcCodeSubstanceName);
-		UpdateValueStrategy strategy_1 = new UpdateValueStrategy();
-		strategy_1.setConverter(new ATCCodeToStringConverter());
-		UpdateValueStrategy strategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER);
-		bindingContext.bindValue(observeTextTxtAtcCodeObserveWidget_1,
-			observeTextLblAtcCodeSubstanceNameObserveWidget, strategy_1, strategy);
 		//
 		IObservableValue observeTextTxtMaxOnStockObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtMaxOnStock);
