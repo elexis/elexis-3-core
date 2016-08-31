@@ -341,6 +341,12 @@
             id="ch.elexis.servicediagnose.prefs"
             name="%page.name.7">
       </page>
+      <page
+            category="ch.elexis.Leistungscodes"
+            class="ch.elexis.core.ui.preferences.AccountsPreferencePage"
+            id="ch.elexis.core.ui.billing.accounts"
+            name="%elexis.accounts">
+      </page>
    </extension>
       <extension
             point="org.eclipse.ui.bindings">

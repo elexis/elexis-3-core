@@ -51,6 +51,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.AccountTransaction;
+import ch.elexis.data.AccountTransaction.Account;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
@@ -82,12 +83,14 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 	private static final int AMOUNT = 1;
 	private static final int BILL = 2;
 	private static final int REMARKS = 3;
+	private static final int ACCOUNT = 4;
 	
 	private static final String[] COLUMN_TEXT = {
-		Messages.AccountView_date, // DATE //$NON-NLS-1$
-		Messages.AccountView_amount, // AMOUNT //$NON-NLS-1$
-		Messages.AccountView_bill, // BILL //$NON-NLS-1$
-		Messages.AccountView_remarks, // REMARKS //$NON-NLS-1$
+		Messages.AccountView_date, // DATE
+		Messages.AccountView_amount, // AMOUNT
+		Messages.AccountView_bill, // BILL
+		Messages.AccountView_remarks, // REMARKS
+		Messages.AccountView_account, // ACCOUNT
 	};
 	
 	private static final int[] COLUMN_WIDTH = {
@@ -95,6 +98,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 		80, // AMOUNT
 		80, // BILL
 		160, // REMARKS
+		80 // ACCOUNT
 	};
 	private ElexisEventListenerImpl eeli_pat = new ElexisEventListenerImpl(Patient.class) {
 		
@@ -201,6 +205,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 				AccountTransaction entry = (AccountTransaction) element;
 				String text = "";
 				
+				Account account = null;
 				switch (columnIndex) {
 				case DATE:
 					text = entry.get("Datum");
@@ -218,6 +223,12 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 					break;
 				case REMARKS:
 					text = entry.getRemark();
+					break;
+				case ACCOUNT:
+					account = entry.getAccount();
+					if (account != null && account != Account.UNKNOWN) {
+						text = account.getName();
+					}
 					break;
 				}
 				

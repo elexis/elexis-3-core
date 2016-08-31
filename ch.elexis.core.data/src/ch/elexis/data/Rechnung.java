@@ -525,10 +525,14 @@ public class Rechnung extends PersistentObject {
 		addTrace(STATUS_CHANGED, Integer.toString(stat));
 	}
 	
-	/** Eine Zahlung zufügen */
-	public void addZahlung(final Money betrag, final String text, TimeTool date){
+	/**
+	 * Eine Zahlung zufügen
+	 * 
+	 * @return
+	 */
+	public Zahlung addZahlung(final Money betrag, final String text, TimeTool date){
 		if (betrag.isZero()) {
-			return;
+			return null;
 		}
 		Money oldOffen = getOffenerBetrag();
 		int oldOffenCents = oldOffen.getCents();
@@ -569,7 +573,7 @@ public class Rechnung extends PersistentObject {
 		} else if (newOffen.getCents() < oldOffenCents) {
 			setStatus(RnStatus.TEILZAHLUNG);
 		}
-		new Zahlung(this, betrag, text, date);
+		return new Zahlung(this, betrag, text, date);
 	}
 	
 	/** EIne Liste aller Zahlungen holen */

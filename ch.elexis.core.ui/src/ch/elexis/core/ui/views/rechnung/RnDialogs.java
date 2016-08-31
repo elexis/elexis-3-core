@@ -23,6 +23,9 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -36,6 +39,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.tiff.common.ui.datepicker.DatePickerCombo;
+
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
@@ -44,12 +49,13 @@ import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.AccountTransaction;
+import ch.elexis.data.AccountTransaction.Account;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
+import ch.elexis.data.Zahlung;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
-
-import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 public class RnDialogs {
 	public static final int ERR_STORNO = 1;
@@ -214,6 +220,8 @@ public class RnDialogs {
 		DatePickerCombo dp;
 		Text amount, bemerkung;
 		
+		ComboViewer viewer;
+		
 		public BuchungHinzuDialog(Shell shell, Rechnung r) throws ElexisException{
 			super(shell);
 			if (r.getStatus() == RnStatus.STORNIERT) {
@@ -240,6 +248,20 @@ public class RnDialogs {
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setFocus();
+			new Label(ret, SWT.NONE).setText("Konto"); //$NON-NLS-1$
+			viewer = new ComboViewer(ret, SWT.BORDER);
+			viewer.setContentProvider(ArrayContentProvider.getInstance());
+			viewer.setLabelProvider(new LabelProvider() {
+				@Override
+				public String getText(Object element){
+					if (element instanceof Account) {
+						return ((Account) element).getName();
+					}
+					return super.getText(element);
+				}
+			});
+			viewer.setInput(Account.getAccounts().values());
+			viewer.getCombo().setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			return ret;
 		}
 		
@@ -257,7 +279,18 @@ public class RnDialogs {
 			// Number num=df.parse(amount.getText());
 			Money ret = MoneyInput.getFromTextField(amount);
 			if (ret != null) {
-				rn.addZahlung(ret, bemerkung.getText(), new TimeTool(dp.getDate().getTime()));
+				Zahlung zahlung =
+					rn.addZahlung(ret, bemerkung.getText(), new TimeTool(dp.getDate().getTime()));
+				if (zahlung != null) {
+					AccountTransaction transaction = zahlung.getTransaction();
+					if (transaction != null) {
+						IStructuredSelection selection =
+							(IStructuredSelection) viewer.getSelection();
+						if (selection != null && !selection.isEmpty()) {
+							transaction.setAccount((Account) selection.getFirstElement());
+						}
+					}
+				}
 				super.okPressed();
 			} else {
 				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid,

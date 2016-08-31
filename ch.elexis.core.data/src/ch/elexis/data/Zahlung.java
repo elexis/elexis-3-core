@@ -11,6 +11,11 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
@@ -86,6 +91,20 @@ public class Zahlung extends PersistentObject {
 	@Override
 	protected String getTableName(){
 		return TABLENAME;
+	}
+	
+	public AccountTransaction getTransaction(){
+		Query<AccountTransaction> query = new Query<>(AccountTransaction.class);
+		query.add(AccountTransaction.FLD_PAYMENT_ID, Query.EQUALS, getId());
+		List<AccountTransaction> transactions = query.execute();
+		if(!transactions.isEmpty()) {
+			if(transactions.size() > 1) {
+				Logger logger = LoggerFactory.getLogger(Zahlung.class);
+				logger.warn("More than 1 transaction for payment. [" + storeToString() + "]");
+			}
+			return transactions.get(0);
+		}
+		return null;
 	}
 	
 }
