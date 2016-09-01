@@ -151,9 +151,6 @@ public class Eigenartikel extends Artikel {
 		
 		List<Eigenartikel> eaPackages = new ArrayList<Eigenartikel>();
 		if (eaPackage != null) {
-			if(eaPackage.isProduct()) {
-				return;
-			}
 			eaPackages.add(eaPackage);
 		} else {
 			Query<Eigenartikel> qre = new Query<Eigenartikel>(Eigenartikel.class);
