@@ -637,6 +637,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			IOptifier optifier = l.getOptifier();
 			Result<IVerrechenbar> result = optifier.add(l, this);
 			if (result.isOK()) {
+				ElexisEventDispatcher.update(this);
 				// Statistik nachführen
 				getFall().getPatient().countItem(l);
 				CoreHub.actUser.countItem(l);
@@ -645,7 +646,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					Artikel art = (Artikel) l;
 					// art.einzelAbgabe(1); -> this is done by the optifier now
 					Prescription p = new Prescription(art, getFall().getPatient(), "", "");
+					p.stop(null);
 					p.setEntryType(EntryType.SELF_DISPENSED);
+					p.setStopReason("Dispensiert");
 					Verrechnet verrechnet = optifier.getCreatedVerrechnet();
 					if (verrechnet != null) {
 						p.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID,
