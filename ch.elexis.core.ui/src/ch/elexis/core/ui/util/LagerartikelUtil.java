@@ -56,7 +56,7 @@ public class LagerartikelUtil {
 					continue;
 				}
 				csfList.add((CodeSelectorFactory) ce
-					.createExecutableExtension("CodeSelectorFactory"));
+					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF));
 			} catch (Exception ex) {
 				MessageBox mb = new MessageBox(UiDesk.getTopShell(), SWT.ICON_ERROR | SWT.OK);
 				mb.setText(ch.elexis.core.ui.views.artikel.Messages.ArtikelView_errorCaption);
