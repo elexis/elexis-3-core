@@ -16,6 +16,10 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Map;
 
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -39,6 +43,7 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.interfaces.INumericEnum;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.data.PersistentObject;
@@ -58,11 +63,12 @@ public class LabeledInputField extends Composite {
 	final static Logger logger = LoggerFactory.getLogger(LabeledInputField.class);
 	
 	static public enum Typ {
-		TEXT, CHECKBOX, CHECKBOXTRISTATE, LIST, LINK, DATE, MONEY, COMBO, EXECLINK
+		TEXT, CHECKBOX, CHECKBOXTRISTATE, LIST, LINK, DATE, MONEY, COMBO, EXECLINK, COMBO_VIEWER
 	};
 	
 	Label lbl;
 	Control ctl;
+	StructuredViewer viewer;
 	FormToolkit tk = UiDesk.getToolkit();
 	Typ inputFieldType;
 	
@@ -143,6 +149,11 @@ public class LabeledInputField extends Composite {
 			ctl = new Combo(this, SWT.SINGLE | SWT.BORDER);
 			ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
 			break;
+		case COMBO_VIEWER:
+			viewer = new ComboViewer(this, SWT.SINGLE | SWT.BORDER);
+			ctl = viewer.getControl();
+			ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
+			break;
 		case CHECKBOX:
 			ctl = tk.createButton(this, label, SWT.CHECK);
 			((Button) ctl).setText(label);
@@ -176,6 +187,11 @@ public class LabeledInputField extends Composite {
 	 * 
 	 */
 	public void setText(String text){
+		if(viewer != null) {
+			// handled by viewer
+			return;
+		}
+		
 		if (ctl instanceof Text) {
 			((Text) ctl).setText(text);
 		} else if (ctl instanceof List) {
@@ -216,6 +232,18 @@ public class LabeledInputField extends Composite {
 	 * @return
 	 */
 	public String getText(){
+		if (viewer != null) {
+			StructuredSelection ss = (StructuredSelection) viewer.getSelection();
+			Object firstElement = ss.getFirstElement();
+			if (firstElement == null) {
+				return StringConstants.EMPTY;
+			}
+			if (firstElement instanceof INumericEnum) {
+				return Integer.toString(((INumericEnum) firstElement).numericValue());
+			}
+			return ss.getFirstElement().toString();
+		}
+		
 		if (ctl instanceof Text) {
 			// for TEXT, MONEY, LINK, EXECLINK
 			return ((Text) ctl).getText();
@@ -280,6 +308,10 @@ public class LabeledInputField extends Composite {
 		return ctl;
 	}
 	
+	public StructuredViewer getViewer() {
+		return viewer;
+	}
+	
 	public static class Tableau extends Composite {
 		public Tableau(Composite parent, int minColumns, int maxColumns){
 			super(parent, SWT.BORDER);
@@ -313,7 +345,7 @@ public class LabeledInputField extends Composite {
 	public static class InputData {
 		public enum Typ {
 			STRING, INT, CURRENCY, LIST, HYPERLINK, DATE, COMBO, EXECSTRING, CHECKBOX,
-				CHECKBOXTRISTATE
+				CHECKBOXTRISTATE, COMBO_VIEWER
 		};
 		
 		String sAnzeige, sFeldname, sHashname;
@@ -321,6 +353,9 @@ public class LabeledInputField extends Composite {
 		Object ext;
 		LabeledInputField mine;
 		int sLimit;
+		private org.eclipse.jface.viewers.IContentProvider contentProvider;
+		private ILabelProvider labelProvider;
+		private IStructuredSelectionResolver selectionResolver;
 		
 		/**
 		 * create control of different types.
@@ -386,6 +421,19 @@ public class LabeledInputField extends Composite {
 			ext = cp;
 			tFeldTyp = Typ.HYPERLINK;
 			sLimit = Text.LIMIT;
+		}
+		
+		public InputData(String anzeige, String feldname, String hashname, Typ typ,
+			org.eclipse.jface.viewers.IContentProvider contentProvider,
+			ILabelProvider labelProvider, IStructuredSelectionResolver selectionResolver, Object input){
+			sAnzeige = anzeige;
+			sFeldname = feldname;
+			sHashname = hashname;
+			ext = input;
+			tFeldTyp = typ;
+			this.contentProvider = contentProvider;
+			this.labelProvider = labelProvider;
+			this.selectionResolver = selectionResolver;
 		}
 		
 		/**
@@ -542,6 +590,11 @@ public class LabeledInputField extends Composite {
 							super.mouseDown(e);
 						}
 					});
+				} else if (typ == InputData.Typ.COMBO_VIEWER){
+					ltf = addComponent(def[i].sAnzeige, LabeledInputField.Typ.COMBO_VIEWER);
+					ltf.getViewer().setContentProvider(def[i].contentProvider);
+					ltf.getViewer().setLabelProvider(def[i].labelProvider);
+					ltf.getViewer().setInput(def[i].ext);
 				} else {
 					if (typ == InputData.Typ.HYPERLINK) {
 						ltf = addComponent(def[i].sAnzeige, LabeledInputField.Typ.LINK);
@@ -595,6 +648,7 @@ public class LabeledInputField extends Composite {
 			
 			case STRING:
 			case COMBO:
+			case COMBO_VIEWER:
 			case INT:
 			case EXECSTRING:
 			case DATE:
@@ -642,9 +696,11 @@ public class LabeledInputField extends Composite {
 					}
 				}
 			} else {
-				Map ext = act.getMap(inp.sFeldname);
-				ext.put(inp.sHashname, val);
-				act.setMap(inp.sFeldname, ext);
+				if (val != null && val.length() > 0) {
+					Map ext = act.getMap(inp.sFeldname);
+					ext.put(inp.sHashname, val);
+					act.setMap(inp.sFeldname, ext);
+				}
 			}
 		}
 		
@@ -707,12 +763,18 @@ public class LabeledInputField extends Composite {
 					break;
 				case CHECKBOX:
 					val = StringTool.unNull(val);
-					((Button) (def[i].mine.getControl())).setSelection(val
-						.equalsIgnoreCase(StringConstants.ONE));
+					((Button) (def[i].mine.getControl()))
+						.setSelection(val.equalsIgnoreCase(StringConstants.ONE));
 					break;
 				case CHECKBOXTRISTATE:
 					val = StringTool.unNull(val);
 					((TristateCheckbox) (def[i].mine.getControl())).setTristateDbValue(val);
+					break;
+				case COMBO_VIEWER:
+					StructuredSelection selection =
+						def[i].selectionResolver.resolveStructuredSelection(val);
+					System.out.println(selection);
+					((StructuredViewer) (def[i].mine.getViewer())).setSelection(selection);
 					break;
 				}
 			}
@@ -738,4 +800,9 @@ public class LabeledInputField extends Composite {
 		/** Execute the string within the InputData */
 		public void executeString(InputData ltf);
 	}
+	
+	public interface IStructuredSelectionResolver {
+		public StructuredSelection resolveStructuredSelection(String value);
+	}
+
 }

@@ -394,7 +394,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					new InputData(extfield, Patient.FLD_EXTINFO, InputData.Typ.STRING, extfield));
 			}
 		}
-		ipp = new InputPanel(cUserfields, 2, 6, fields.toArray(new InputData[0]));
+		ipp = new InputPanel(cUserfields, 3, 3, fields.toArray(new InputData[0]));
 		ipp.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		ipp.changed(ipp.getChildren());
 		// cUserfields.setRedraw(true);
