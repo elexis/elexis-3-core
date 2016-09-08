@@ -295,10 +295,12 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 				Messages.EigenartikelDisplay_dealer,
 				Messages.EigenartikelDisplay_pleaseChooseDealer, Kontakt.DEFAULT_SORT);
 			if (ksl.open() == Dialog.OK) {
-				Kontakt k = (Kontakt) ksl.getSelection();
 				Eigenartikel value = (Eigenartikel) drugPackageEigenartikel.getValue();
-				value.setLieferant(k);
-				lblProvider.setText(value.getLieferant().getLabel());
+				if(value !=null) {
+					Kontakt k = (Kontakt) ksl.getSelection();	
+					value.setLieferant(k);
+					lblProvider.setText(value.getLieferant().getLabel());
+				}
 			}
 		});
 		
