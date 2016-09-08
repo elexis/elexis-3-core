@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -25,6 +26,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
+import ch.elexis.core.jdt.NonNull;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -46,7 +48,7 @@ public class Extensions {
 	 *            Name des Extensionpoints
 	 */
 	public static List<IConfigurationElement> getExtensions(String ext){
-		LinkedList<IConfigurationElement> ret = new LinkedList<IConfigurationElement>();
+		List<IConfigurationElement> ret = new LinkedList<IConfigurationElement>();
 		IExtensionRegistry exr = Platform.getExtensionRegistry();
 		IExtensionPoint exp = exr.getExtensionPoint(ext);
 		if (exp != null) {
@@ -73,7 +75,7 @@ public class Extensions {
 	 * @return eine Liste der konstruierten Klassen
 	 * @deprecated Use {@link #getClasses(List<IConfigurationElement>,String,boolean)} instead
 	 */
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public static List getClasses(List<IConfigurationElement> list, String points){
 		return getClasses(list, points, true);
 	}
@@ -90,7 +92,7 @@ public class Extensions {
 	 *            false: do not handle exceptions
 	 * @return eine Liste der konstruierten Klassen
 	 */
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public static List getClasses(List<IConfigurationElement> list, String points,
 		boolean bMandatory){
 		List ret = new LinkedList();
@@ -113,6 +115,26 @@ public class Extensions {
 	 * Shortcut für getClasses(getExtensions(extension),points);
 	 */
 	public static List getClasses(String extension, String points){
+		return getClasses(extension, points, null, null);
+	}
+	
+	/**
+	 * 
+	 * @param extension
+	 * @param points
+	 * @param idParam id parameter on the extension point to filter against
+	 * @param idValue key matching idParam
+	 * @return instantiated classes of a defined extension point
+	 * @since 3.2
+	 */
+	public static @NonNull List getClasses(String extension, String points, String idParam, String idValue){
+		List<IConfigurationElement> extensions = getExtensions(extension);
+		if (idParam != null && idValue != null) {
+			List<IConfigurationElement> filteredExtensions =
+				extensions.stream().filter(p -> idValue.equalsIgnoreCase(p.getAttribute(idParam)))
+					.collect(Collectors.toList());
+			return getClasses(filteredExtensions, points, true);
+		}
 		return getClasses(getExtensions(extension), points, true);
 	}
 	

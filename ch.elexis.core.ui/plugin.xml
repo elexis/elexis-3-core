@@ -16,6 +16,7 @@
    <extension-point id="LoginNews" name="%elexis.loginNews" schema="schema/LoginNews.exsd"/>
    <extension-point id="Rechnungsdetail" name="Rechnungsdetail" schema="schema/Rechnungsdetail.exsd"/>
    <extension-point id="TextTemplateRequirement" name="%elexis.textTemplate" schema="schema/TextTemplateRequirement.exsd"/>
+   <extension-point id="ViewContribution" name="ViewContribution" schema="schema/ViewContribution.exsd"/>
    
       <extension
          point="org.eclipse.ui.contexts">

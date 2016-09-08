@@ -21,6 +21,9 @@ public class ExtensionPointConstantsUi {
 	public static final String VERRECHNUNGSCODE_ELF = "ElementFactory";
 	public static final String VERRECHNUNGSCODE_CDD = "CodeDetailDisplay";
 	public static final String VERRECHNUNGSCODE_IMPC = "ImporterClass";
+	public static final String VIEWCONTRIBUTION = "ch.elexis.core.ui.ViewContribution";
+	public static final String VIEWCONTRIBUTION_CLASS = "class";
+	public static final String VIEWCONTRIBUTION_VIEWID = "viewId";
 	public static final String FREMDDATENIMPORT = "ch.elexis.core.ui.FremdDatenImport";
 	public static final String KONSEXTENSION = "ch.elexis.core.ui.KonsExtension";
 	public static final String DIAGNOSECODE = "ch.elexis.core.ui.Diagnosecode";
