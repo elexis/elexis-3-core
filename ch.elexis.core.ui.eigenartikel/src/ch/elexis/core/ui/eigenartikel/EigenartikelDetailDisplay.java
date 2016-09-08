@@ -18,6 +18,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
+import ch.elexis.core.lock.ILocalLockService.Status;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
@@ -147,16 +148,21 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		final ToolBarManager manager = new ToolBarManager(toolBar);
 		manager.add(createAction);
-		manager.add(toggleLockAction);
+		if (CoreHub.getLocalLockService().getStatus() != Status.STANDALONE) {
+			manager.add(toggleLockAction);
+		}
 		manager.add(deleteAction);
 		manager.update(true);
 		toolBar.pack();
 		
 		ec = new EigenartikelComposite(comp, SWT.None);
 		ec.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		ec.setUnlocked(false);
+		ec.setUnlocked(CoreHub.getLocalLockService().getStatus() == Status.STANDALONE);
 		
-		ElexisEventDispatcher.getInstance().addListeners(eeli_egartikel);
+		if (CoreHub.getLocalLockService().getStatus() != Status.STANDALONE) {
+			ElexisEventDispatcher.getInstance().addListeners(eeli_egartikel);
+		}
+		
 		return comp;
 	}
 	
@@ -194,7 +200,10 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	
 	@Override
 	protected void finalize() throws Throwable{
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_egartikel);
+		if (CoreHub.getLocalLockService().getStatus() != Status.STANDALONE) {
+			ElexisEventDispatcher.getInstance().removeListeners(eeli_egartikel);
+		}
+		
 		super.finalize();
 	}
 }
