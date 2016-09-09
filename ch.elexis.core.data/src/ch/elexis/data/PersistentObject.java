@@ -2059,7 +2059,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				}
 			}
 		} catch (Exception ex) {
-			log.error("Fehler bei decode ", ex);
+			log.error("Fehler bei decode in field [{}]", field, ex);
 			
 			// Dont throw an exception. Null is an acceptable (and normally
 			// testes) return value if something went wrong.
