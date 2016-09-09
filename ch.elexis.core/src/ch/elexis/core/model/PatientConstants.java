@@ -10,4 +10,10 @@ public class PatientConstants {
 	 * {@link MaritalStatus}
 	 */
 	public static final String FLD_EXTINFO_MARITAL_STATUS = "MaritalStatus";
+	
+	/**
+	 * {@link MaritalStatus}
+	 * @deprecated
+	 */
+	public static final String FLD_EXTINFO_CIVIL_STATE = "CivilState";
 }
