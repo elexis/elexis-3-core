@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Juno for Elexis 3.1 (Updated for Java 8)" sequenceNumber="1472643056">
+<target name="Juno for Elexis 3.1 (Updated for Java 8)" sequenceNumber="1473664383">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.osgi" version="3.9.1.v20140110-1610"/>
@@ -15,10 +15,13 @@
       <repository location="http://hstaudacher.github.io/osgi-jax-rs-connector/5.2.1/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.apache.httpcomponents.httpcore" version="4.3.3.v201411290715"/>
+      <unit id="org.apache.httpcomponents.httpclient" version="4.3.6.v201511171540"/>
+      <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository"/>
+    </location>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="edu.emory.mathcs.backport" version="3.1.0.v200902251154"/>
       <unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
-      <unit id="org.apache.httpcomponents.httpcore" version="4.1.4.v201203221030"/>
-      <unit id="org.apache.httpcomponents.httpclient" version="4.1.3.v201209201135"/>
       <unit id="org.apache.commons.codec" version="1.6.0.v201305230611"/>
       <unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
       <unit id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
@@ -55,6 +58,15 @@
       <unit id="org.aspectj.feature.group" version="1.7.3.20130613144500-a"/>
       <unit id="org.eclipse.mylyn.wikitext.textile.core" version="2.3.2.v20150217-2315"/>
       <repository location="http://download.elexis.info/mirror.4.elexis/snapshot"/>
+    </location>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.thymeleaf" version="2.1.4.RELEASE"/>
+      <unit id="com.phloc.commons" version="4.4.4"/>
+      <unit id="org.glassfish.javax.json" version="1.0.4"/>
+      <unit id="hapi-fhir-osgi-core" version="1.6.0"/>
+      <unit id="com.phloc.schematron" version="2.7.1"/>
+      <unit id="javax.json-api" version="1.0.0"/>
+      <repository location="http://download.elexis.info/elexis-server/elexis-server-dependencies"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="ag.ion.bion.workbench.office.editor.activation" version="2.0.14"/>
