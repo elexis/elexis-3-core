@@ -15,7 +15,8 @@ package ch.elexis.core.eigenartikel;
 
 import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_HI_COST_ABSORPTION;
 import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_MEASUREMENT_UNIT;
-import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_PACKAGE_SIZE_STRING;
+import static ch.elexis.core.model.eigenartikel.Constants.*;
+
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -260,6 +261,14 @@ public class Eigenartikel extends Artikel {
 	
 	public String getPackageSizeString(){
 		return (String) getExtInfoStoredObjectByKey(FLD_EXT_PACKAGE_SIZE_STRING);
+	}
+	
+	public String getSellUnit() {
+		return (String) getExtInfoStoredObjectByKey(FLD_EXT_SELL_UNIT);
+	}
+	
+	public void setSellUnit(String sellUnit) {
+		setExtInfoStoredObjectByKey(FLD_EXT_SELL_UNIT, sellUnit);
 	}
 	
 	public void setMeasurementUnit(String mu){

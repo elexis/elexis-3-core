@@ -68,6 +68,8 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	private Text txtMeasurementUnit;
 	private Group grpDrugPackages;
 	private Button btnHiCostAbsorption;
+	private Text txtSellUnit;
+	private Label lblVerkaufseinheit;
 	
 	/**
 	 * Create the composite.
@@ -130,7 +132,9 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		gd_txtAtcCode.widthHint = 80;
 		txtAtcCode.setLayoutData(gd_txtAtcCode);
 		txtAtcCode.setTextLimit(8);
+		new Label(compAtcCode, SWT.NONE);
 
+		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
@@ -237,13 +241,19 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		txtMeasurementUnit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPackagesstring = new Label(compDpDetail, SWT.NONE);
+		lblPackagesstring.setToolTipText(Messages.EigenartikelComposite_lblPackagesstring_toolTipText);
 		lblPackagesstring.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPackagesstring.setText(Messages.EigenartikelComposite_lblPackagesstring_text);
 		
 		txtPackageSizeString = new Text(compDpDetail, SWT.BORDER);
 		txtPackageSizeString.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compDpDetail, SWT.NONE);
-		new Label(compDpDetail, SWT.NONE);
+		
+		lblVerkaufseinheit = new Label(compDpDetail, SWT.NONE);
+		lblVerkaufseinheit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblVerkaufseinheit.setText(Messages.EigenartikelComposite_lblVerkaufseinheit_text);
+		
+		txtSellUnit = new Text(compDpDetail, SWT.BORDER);
+		txtSellUnit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblExFactoryPrice = new Label(compDpDetail, SWT.NONE);
 		lblExFactoryPrice.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -470,6 +480,14 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtPharmacodeObserveWidget,
 			drugPackageEigenartikelPharmaCodeObserveDetailValue, null, null);
+		//
+		IObservableValue observeTextTxtSellUnitObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtSellUnit);
+		IObservableValue drugPackageEigenartikelSellUnitObserveDetailValue =
+			PojoProperties.value(Eigenartikel.class, "sellUnit", String.class)
+				.observeDetail(drugPackageEigenartikel);
+		bindingContext.bindValue(observeTextTxtSellUnitObserveWidget,
+			drugPackageEigenartikelSellUnitObserveDetailValue, null, null);
 		//
 		IObservableValue observeTooltipTextTxtPackageSizeStringObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtPackageSizeString);
