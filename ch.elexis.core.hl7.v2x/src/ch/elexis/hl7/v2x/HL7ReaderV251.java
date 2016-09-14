@@ -413,7 +413,7 @@ public class HL7ReaderV251 extends HL7Reader {
 					value = parseTextValue(value);
 				}
 			} else if (tmp instanceof FT) {
-				value = ((FT) tmp).getValue();
+				value = parseFormattedTextValue(((FT) tmp).getValue());
 			} else if (tmp instanceof NM) {
 				value = ((NM) tmp).getValue();
 			} else if (tmp instanceof SN) {
