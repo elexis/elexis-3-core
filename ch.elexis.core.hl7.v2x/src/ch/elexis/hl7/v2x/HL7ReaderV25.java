@@ -226,7 +226,7 @@ public class HL7ReaderV25 extends HL7Reader {
 							if (adr.getCity() != null) {
 								pat.setCity(adr.getCity().getValue());
 							}
-							if (adr.getCountry() != null) {
+							if (adr.getCountry().getValue() != null) {
 								Country cc = Country.valueOf(adr.getCountry().getValue());
 								pat.setCountry(cc);
 							}
@@ -330,7 +330,7 @@ public class HL7ReaderV25 extends HL7Reader {
 					value = parseTextValue(value);
 				}
 			} else if (tmp instanceof FT) {
-				value = ((FT) tmp).getValue();
+				value = parseFormattedTextValue(((FT) tmp).getValue());
 			} else if (tmp instanceof NM) {
 				value = ((NM) tmp).getValue();
 			} else if (tmp instanceof SN) {

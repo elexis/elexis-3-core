@@ -107,4 +107,16 @@ public abstract class HL7Reader {
 		}
 		return value;
 	}
+	
+	/**
+	 * Parse an FT value
+	 * @param ftValue
+	 * @return
+	 * @see http://www.healthintersections.com.au/?page_id=441
+	 */
+	public String parseFormattedTextValue(String ftValue) {
+		// currently we use the default, please augment
+		// on specific requirements
+		return parseTextValue(ftValue);
+	}
 }

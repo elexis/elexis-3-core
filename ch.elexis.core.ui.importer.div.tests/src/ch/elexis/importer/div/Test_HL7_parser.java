@@ -273,7 +273,23 @@ public class Test_HL7_parser {
 		LabResult result = results.get(0);
 		assertTrue(result.isLongText());
 		String resultString = result.getComment();
-		assertFalse(resultString.contains("\\br.\\"));
+		assertFalse(resultString.contains("\\.br\\"));
+		assertTrue(resultString.contains("\n"));
+	}
+	
+	@Test
+	public void testTextResultMultiLinebreaks() throws IOException {
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		parseOneHL7file(
+			new File(workDir.toString(), "Analytica/0216370074_6417526401671.hl7"), false,
+			true);
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> results = qr.execute();
+		assertFalse(results.isEmpty());
+		LabResult result = results.get(2);
+		String resultString = result.getComment();
+		assertFalse(resultString.contains("\\.br\\"));
 		assertTrue(resultString.contains("\n"));
 	}
 	
