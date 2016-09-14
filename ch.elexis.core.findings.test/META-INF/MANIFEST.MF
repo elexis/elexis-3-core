@@ -11,3 +11,4 @@ Require-Bundle: ch.elexis.core.findings;bundle-version="1.0.0",
  org.junit
 Service-Component: OSGI-INF/ch.elexis.core.findings.FindingsServiceComponent.xml
 Bundle-ActivationPolicy: lazy
+Import-Package: info.elexis.server.core.connector.elexis.jpa.test;resolution:=optional
