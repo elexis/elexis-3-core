@@ -1,9 +1,5 @@
 package ch.elexis.core.findings.fhir.po.model;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,15 +100,6 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 		if (patientId != null && !patientId.isEmpty()) {
 			setPatientId(patientId);
 		}
-	}
-	
-	protected Date getDate(LocalDateTime localDateTime){
-		ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
-		return Date.from(zdt.toInstant());
-	}
-	
-	protected LocalDateTime getLocalDateTime(Date date) {
-		return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
 	}
 	
 	@Override

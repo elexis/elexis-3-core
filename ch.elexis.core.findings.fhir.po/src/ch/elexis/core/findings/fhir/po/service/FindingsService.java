@@ -178,4 +178,10 @@ public class FindingsService implements IFindingsService {
 	public IFindingsFactory getFindingsFactory(){
 		return new FindingsFactory();
 	}
+	
+	@Override
+	public Optional<IFinding> findById(String idPart){
+		// TODO ...
+		return Optional.empty();
+	}
 }

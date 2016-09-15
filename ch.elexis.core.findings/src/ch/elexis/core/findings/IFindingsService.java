@@ -1,6 +1,7 @@
 package ch.elexis.core.findings;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IFindingsService {
 	
@@ -14,4 +15,6 @@ public interface IFindingsService {
 	public void deleteFinding(IFinding finding);
 	
 	public IFindingsFactory getFindingsFactory();
+
+	public Optional<IFinding> findById(String idPart);
 }
