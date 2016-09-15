@@ -17,7 +17,6 @@ import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_HI_COST_ABSORP
 import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_MEASUREMENT_UNIT;
 import static ch.elexis.core.model.eigenartikel.Constants.*;
 
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,12 +86,12 @@ public class Eigenartikel extends Artikel {
 	@Override
 	public String getLabel(){
 		String name = get(Artikel.FLD_NAME);
-		if(!isProduct()) {
-			name += StringConstants.SPACE+getPackageSizeLabel();
+		if (!isProduct()) {
+			name += StringConstants.SPACE + getPackageSizeLabel();
 		}
 		return name;
 	}
-
+	
 	@Override
 	public String getCode(){
 		return get(Artikel.FLD_SUB_ID);
@@ -137,6 +136,21 @@ public class Eigenartikel extends Artikel {
 	@Override
 	public String getInternalName(){
 		return getLabel();
+	}
+	
+	@Override
+	public VatInfo getVatInfo(){
+		EigenartikelTyp eat = getTyp();
+		switch (eat) {
+		case PHARMA:
+		case MAGISTERY:
+			return VatInfo.VAT_CH_ISMEDICAMENT;
+		case NONPHARMA:
+			return VatInfo.VAT_CH_NOTMEDICAMENT;
+		default:
+			break;
+		}
+		return VatInfo.VAT_NONE;
 	}
 	
 	/**
@@ -263,11 +277,11 @@ public class Eigenartikel extends Artikel {
 		return (String) getExtInfoStoredObjectByKey(FLD_EXT_PACKAGE_SIZE_STRING);
 	}
 	
-	public String getSellUnit() {
+	public String getSellUnit(){
 		return (String) getExtInfoStoredObjectByKey(FLD_EXT_SELL_UNIT);
 	}
 	
-	public void setSellUnit(String sellUnit) {
+	public void setSellUnit(String sellUnit){
 		setExtInfoStoredObjectByKey(FLD_EXT_SELL_UNIT, sellUnit);
 	}
 	
