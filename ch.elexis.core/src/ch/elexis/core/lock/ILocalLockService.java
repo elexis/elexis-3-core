@@ -41,4 +41,6 @@ public interface ILocalLockService extends ILockService {
 		IProgressMonitor monitor);
 	
 	public Status getStatus();
+
+	public void shutdown();
 }

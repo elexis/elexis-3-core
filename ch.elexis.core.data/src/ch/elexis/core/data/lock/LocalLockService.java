@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import com.eclipsesource.jaxrs.consumer.ConsumerFactory;
 
+import ch.elexis.core.common.InstanceStatus;
+import ch.elexis.core.common.InstanceStatus.STATE;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -29,6 +31,7 @@ import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockRequest.Type;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.server.IInstanceService;
 import ch.elexis.core.server.ILockService;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.User;
@@ -44,6 +47,8 @@ import ch.elexis.data.User;
 public class LocalLockService implements ILocalLockService {
 	
 	private ILockService ils;
+	private IInstanceService iis;
+	private InstanceStatus inst;
 	
 	private final HashMap<String, Integer> lockCount = new HashMap<String, Integer>();
 	private final HashMap<String, LockInfo> locks = new HashMap<String, LockInfo>();
@@ -66,6 +71,13 @@ public class LocalLockService implements ILocalLockService {
 		ils = new DenyAllLockService();
 		timer = new Timer();
 		timer.schedule(new LockRefreshTask(), 10000, 10000);
+		
+		inst = new InstanceStatus();
+		inst.setState(InstanceStatus.STATE.RUNNING);
+		inst.setUuid(getSystemUuid());
+		inst.setVersion(CoreHub.readElexisBuildVersion());
+		inst.setOperatingSystem(
+			System.getProperty("os.name") + " " + System.getProperty("os.version"));
 	}
 	
 	public void reconfigure(){
@@ -75,6 +87,7 @@ public class LocalLockService implements ILocalLockService {
 			standalone = false;
 			logger.info("Operating against elexis-server instance on " + restUrl);
 			ils = ConsumerFactory.createConsumer(restUrl, ILockService.class);
+			iis = ConsumerFactory.createConsumer(restUrl, IInstanceService.class);
 		} else {
 			standalone = true;
 			logger.info("Operating in stand-alone mode.");
@@ -397,11 +410,13 @@ public class LocalLockService implements ILocalLockService {
 					if (testRestUrl(restUrl) && ils instanceof DenyAllLockService
 						&& restService != null) {
 						ils = restService;
+						iis = ConsumerFactory.createConsumer(restUrl, IInstanceService.class);
 						// publish change
 						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null,
 							ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
 					} else if (!testRestUrl(restUrl) && !(ils instanceof DenyAllLockService)) {
 						restService = ils;
+						iis = null;
 						ils = new DenyAllLockService();
 						// publish change
 						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null,
@@ -412,6 +427,13 @@ public class LocalLockService implements ILocalLockService {
 				if (standalone) {
 					return;
 				}
+				
+				if (iis != null) {
+					User u = (User) ElexisEventDispatcher.getSelected(User.class);
+					inst.setActiveUser((u != null) ? u.getId() : "NO USER ACTIVE");
+					iis.updateStatus(inst);
+				}
+				
 				// verify and update the locks
 				boolean publishUpdate = false;
 				synchronized (locks) {
@@ -475,5 +497,14 @@ public class LocalLockService implements ILocalLockService {
 			return Status.LOCAL;
 		}
 		return Status.REMOTE;
+	}
+
+	@Override
+	public void shutdown(){
+		timer.cancel();
+		if(iis!=null) {
+			inst.setState(STATE.SHUTTING_DOWN);
+			iis.updateStatus(inst);
+		}
 	}
 }

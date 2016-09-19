@@ -260,6 +260,7 @@ public class CoreHub implements BundleActivator {
 		log.debug("Stopping " + CoreHub.class.getName());
 
 		getLocalLockService().releaseAllLocks();
+		getLocalLockService().shutdown();
 		
 		CoreHub.logoffAnwender();
 		
