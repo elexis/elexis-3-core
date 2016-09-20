@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Juno for Elexis 3.1 (Updated for Java 8)" sequenceNumber="1473664383">
+<target name="Juno for Elexis 3.1 (Updated for Java 8)" sequenceNumber="1474377314">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.osgi" version="3.9.1.v20140110-1610"/>
@@ -60,12 +60,11 @@
       <repository location="http://download.elexis.info/mirror.4.elexis/snapshot"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.thymeleaf" version="2.1.4.RELEASE"/>
-      <unit id="com.phloc.commons" version="4.4.4"/>
-      <unit id="org.glassfish.javax.json" version="1.0.4"/>
-      <unit id="hapi-fhir-osgi-core" version="1.6.0"/>
+      <unit id="org.thymeleaf" version="3.0.1.RELEASE"/>
+      <unit id="com.phloc.commons" version="4.4.5"/>
+      <unit id="hapi-fhir-osgi-core" version="2.0.0"/>
       <unit id="com.phloc.schematron" version="2.7.1"/>
-      <unit id="javax.json-api" version="1.0.0"/>
+      <unit id="com.google.gson" version="2.7.0"/>
       <repository location="http://download.elexis.info/elexis-server/elexis-server-dependencies"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">

@@ -60,12 +60,11 @@ location "http://download.elexis.info/mirror.4.elexis/snapshot" {
 }
 
 location "http://download.elexis.info/elexis-server/elexis-server-dependencies" {
-	org.thymeleaf[2.1.4,3.0.0)
+	org.thymeleaf
 	com.phloc.commons
-	org.glassfish.javax.json
 	hapi-fhir-osgi-core
 	com.phloc.schematron
-	javax.json-api
+	com.google.gson
 }
 
 location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {
