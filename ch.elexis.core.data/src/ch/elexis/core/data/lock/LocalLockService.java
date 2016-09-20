@@ -73,11 +73,12 @@ public class LocalLockService implements ILocalLockService {
 		timer.schedule(new LockRefreshTask(), 10000, 10000);
 		
 		inst = new InstanceStatus();
-		inst.setState(InstanceStatus.STATE.RUNNING);
+		inst.setState(InstanceStatus.STATE.ACTIVE);
 		inst.setUuid(getSystemUuid());
 		inst.setVersion(CoreHub.readElexisBuildVersion());
 		inst.setOperatingSystem(
-			System.getProperty("os.name") + " " + System.getProperty("os.version"));
+			System.getProperty("os.name") + "/" + System.getProperty("os.version") + "/"
+				+ System.getProperty("os.arch") + "/J" + System.getProperty("java.version"));
 	}
 	
 	public void reconfigure(){
@@ -498,11 +499,11 @@ public class LocalLockService implements ILocalLockService {
 		}
 		return Status.REMOTE;
 	}
-
+	
 	@Override
 	public void shutdown(){
 		timer.cancel();
-		if(iis!=null) {
+		if (iis != null) {
 			inst.setState(STATE.SHUTTING_DOWN);
 			iis.updateStatus(inst);
 		}

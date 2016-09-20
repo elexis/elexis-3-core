@@ -1,20 +1,26 @@
 package ch.elexis.core.common;
 
+import java.util.Date;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class InstanceStatus {
 
 	public enum STATE {
-		STARTING_UP, RUNNING, SHUTTING_DOWN
+		UNDEF, STARTING_UP, ACTIVE, SHUTTING_DOWN
 	};
 
 	private String uuid;
 	private String activeUser;
 	private String identifier;
 	private String version;
-	private STATE state;
+	private STATE state = STATE.UNDEF;
 	private String operatingSystem;
+	// server written
+	private Date firstSeen;
+	private Date lastUpdate;
+	private String remoteAddress;
 
 	public String getUuid() {
 		return uuid;
@@ -48,6 +54,14 @@ public class InstanceStatus {
 		this.version = version;
 	}
 
+	public STATE getState() {
+		return state;
+	}
+
+	public void setState(STATE state) {
+		this.state = state;
+	}
+
 	public String getOperatingSystem() {
 		return operatingSystem;
 	}
@@ -56,19 +70,35 @@ public class InstanceStatus {
 		this.operatingSystem = operatingSystem;
 	}
 
-	public void setState(STATE state) {
-		this.state = state;
+	public Date getFirstSeen() {
+		return firstSeen;
 	}
 
-	public STATE getState() {
-		return state;
+	public void setFirstSeen(Date firstSeen) {
+		this.firstSeen = firstSeen;
+	}
+
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public String getRemoteAddress() {
+		return remoteAddress;
+	}
+
+	public void setRemoteAddress(String remoteAddress) {
+		this.remoteAddress = remoteAddress;
 	}
 
 	@Override
 	public String toString() {
 		String ret = "[" + getUuid() + "] " + getActiveUser() + " (Version " + getVersion() + " @ "
 				+ getOperatingSystem() + ") ";
-		if (getState() != STATE.RUNNING) {
+		if (getState() != STATE.ACTIVE) {
 			ret += getState();
 		}
 		return ret;
