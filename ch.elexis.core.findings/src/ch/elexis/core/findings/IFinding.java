@@ -9,6 +9,10 @@ import java.util.Optional;
 
 public interface IFinding {
 	
+	public enum RawContentFormat {
+		FHIR_JSON, FHIR_XML
+	}
+
 	public String getId();
 	
 	public String getPatientId();
@@ -25,6 +29,12 @@ public interface IFinding {
 	
 	public Optional<String> getText();
 	
+	public RawContentFormat getRawContentFormat();
+
+	public String getRawContent();
+
+	public void setRawContent(String content);
+
 	default Date getDate(LocalDateTime localDateTime){
 		ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
 		return Date.from(zdt.toInstant());

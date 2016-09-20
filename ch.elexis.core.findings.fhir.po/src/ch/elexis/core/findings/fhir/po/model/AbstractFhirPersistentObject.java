@@ -46,7 +46,7 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 	}
 	
 	protected Optional<IBaseResource> loadResource(){
-		String content = get(FLD_CONTENT);
+		String content = getRawContent();
 		IBaseResource resource = null;
 		if (content != null && !content.isEmpty()) {
 			try {
@@ -62,7 +62,7 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 		if (resource != null) {
 			try {
 				String resourceJson = getJsonParser().encodeResourceToString(resource);
-				set(FLD_CONTENT, resourceJson);
+				setRawContent(resourceJson);
 			} catch (DataFormatException ex) {
 				logger.error("Could not save resource [" + this + "]", ex);
 			}
@@ -123,5 +123,17 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 	public Optional<String> getText(){
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public RawContentFormat getRawContentFormat(){
+		return RawContentFormat.FHIR_JSON;
+	}
+	
+	public String getRawContent(){
+		return get(FLD_CONTENT);
+	}
+	
+	public void setRawContent(String content){
+		set(FLD_CONTENT, content);
 	}
 }

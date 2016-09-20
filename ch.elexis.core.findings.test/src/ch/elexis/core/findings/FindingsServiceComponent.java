@@ -8,11 +8,11 @@ public class FindingsServiceComponent {
 	private static IFindingsService findingsService;
 	
 	@Reference
-	public void setEventProvider(IFindingsService findingsService){
+	public void setIFindingsService(IFindingsService findingsService) {
 		FindingsServiceComponent.findingsService = findingsService;
 	}
 	
-	public void unsetEventProvider(IFindingsService findingsService){
+	public void unsetIFindingsService(IFindingsService findingsService) {
 		FindingsServiceComponent.findingsService = null;
 	}
 	

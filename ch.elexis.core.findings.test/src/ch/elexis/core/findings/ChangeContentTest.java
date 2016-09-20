@@ -19,6 +19,9 @@ public class ChangeContentTest {
 	@Before
 	public void beforeTest(){
 		AllTests.deleteAllFindings();
+		List<IFinding> findings = FindingsServiceComponent.getService().getPatientsFindings(AllTests.PATIENT_ID,
+				IFinding.class);
+		assertTrue(findings.isEmpty());
 	}
 	
 	@Test

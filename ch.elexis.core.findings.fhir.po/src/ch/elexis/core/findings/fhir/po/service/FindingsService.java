@@ -29,6 +29,7 @@ import ch.elexis.data.Query;
 public class FindingsService implements IFindingsService {
 	
 	private Logger logger = LoggerFactory.getLogger(FindingsService.class);
+	private boolean createOrUpdateFindings;
 	
 	@Override
 	public List<IFinding> getPatientsFindings(String patientId, Class<? extends IFinding> filter){
@@ -183,5 +184,15 @@ public class FindingsService implements IFindingsService {
 	public Optional<IFinding> findById(String idPart){
 		// TODO ...
 		return Optional.empty();
+	}
+	
+	@Override
+	public void setCreateOrUpdate(boolean value){
+		createOrUpdateFindings = value;
+	}
+	
+	@Override
+	public boolean getCreateOrUpdate(){
+		return createOrUpdateFindings;
 	}
 }
