@@ -27,7 +27,7 @@ import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
-import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.data.Prescription.EntryType;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
