@@ -608,6 +608,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		konsultationenViewer.refresh();
 		stornoViewer.refresh();
 		
+		detailComposites.forEach(dc -> dc.setDetailObject(actRn, null));
+		
 		setExpandedState(ecBuchungen, KEY_RECHNUNGSBLATT + ecBuchungen.getText());
 		setExpandedState(ecBemerkungen, KEY_RECHNUNGSBLATT + ecBemerkungen.getText());
 		setExpandedState(ecStatus, KEY_RECHNUNGSBLATT + ecStatus.getText());
