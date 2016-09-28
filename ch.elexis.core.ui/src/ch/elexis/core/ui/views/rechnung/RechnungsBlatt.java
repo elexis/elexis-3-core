@@ -11,6 +11,9 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED;
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN;
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_REMEMBER_STATE;
@@ -30,6 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -54,7 +58,6 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
-import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
@@ -62,6 +65,8 @@ import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
+import ch.elexis.core.ui.views.contribution.IViewContribution;
+import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
@@ -97,6 +102,10 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	private final ExpandableComposite ecAusgaben;
 	private final ExpandableComposite ecKons;
 	private final ExpandableComposite ecStorno;
+	
+	@SuppressWarnings("unchecked")
+	private final List<IViewContribution> detailComposites = Extensions.getClasses(VIEWCONTRIBUTION,
+		VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, RnDetailView.ID);
 	
 	static final InputData[] rndata = {
 		new InputData(Messages.RechnungsBlatt_billNumber, Rechnung.BILL_NUMBER, Typ.STRING, null), //$NON-NLS-1$
@@ -482,12 +491,16 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		
 		buchungen.setInput(site);
 		
-		// add extension points
-		@SuppressWarnings("unchecked")
-		List<IRechnungsdetail> invDetails =
-			Extensions.getClasses(ExtensionPointConstantsUi.RECHNUNGSDETAIL, "Class");
-		for (IRechnungsdetail invDetail : invDetails) {
-			invDetail.getExpandableComposite(tk, form);
+		List<IViewContribution> filtered =
+			ViewContributionHelper.getFilteredAndPositionSortedContributions(detailComposites, 0);
+		for (IViewContribution ivc : filtered) {
+			ExpandableComposite ec =
+				WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
+			ec.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+			ec.addExpansionListener(ecExpansionListener);
+			Composite ret = ivc.initComposite(ec);
+			tk.adapt(ret);
+			ec.setClient(ret);
 		}
 		
 		GlobalEventDispatcher.addActivationListener(this, site.getPart());
