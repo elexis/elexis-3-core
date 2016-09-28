@@ -498,7 +498,10 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
 			ec.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 			ec.addExpansionListener(ecExpansionListener);
-			Composite ret = ivc.initComposite(ec);
+			Composite mainComposite = new Composite(ec, SWT.None);
+			mainComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			mainComposite.setLayout(new GridLayout(1, false));
+			Composite ret = ivc.initComposite(mainComposite);
 			tk.adapt(ret);
 			ec.setClient(ret);
 		}
