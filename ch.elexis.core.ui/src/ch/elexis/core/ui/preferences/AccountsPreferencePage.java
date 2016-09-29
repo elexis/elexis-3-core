@@ -31,6 +31,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.AccountTransaction.Account;
 
 public class AccountsPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
@@ -193,10 +194,11 @@ public class AccountsPreferencePage extends PreferencePage implements IWorkbench
 		
 		@Override
 		protected Control createDialogArea(Composite parent){
-			setTitle("Konto editieren"); //$NON-NLS-1$
 			Composite ret = new Composite(parent, SWT.NONE);
+			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			ret.setLayout(new GridLayout(2, false));
 			
+			setTitle("Konto editieren"); //$NON-NLS-1$
 			Label lbl = new Label(ret, SWT.NONE);
 			lbl.setText("Nummer");
 			numericText = new Text(ret, SWT.BORDER);
@@ -210,8 +212,7 @@ public class AccountsPreferencePage extends PreferencePage implements IWorkbench
 			lbl = new Label(ret, SWT.NONE);
 			lbl.setText("Name");
 			nameText = new Text(ret, SWT.BORDER);
-			gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
-			nameText.setLayoutData(gd);
+			nameText.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			if (account != null) {
 				nameText.setText(account.getName());
 			}

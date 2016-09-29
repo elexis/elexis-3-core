@@ -14,6 +14,7 @@ package ch.elexis.core.ui.views.rechnung;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -255,12 +256,21 @@ public class RnDialogs {
 				@Override
 				public String getText(Object element){
 					if (element instanceof Account) {
-						return ((Account) element).getName();
+						return ((Account) element).getNumeric() + " - " + ((Account) element).getName();
 					}
 					return super.getText(element);
 				}
 			});
-			viewer.setInput(Account.getAccounts().values());
+			List<Account> accounts = new ArrayList<>();
+			accounts.addAll(Account.getAccounts().values());
+			accounts.sort(new Comparator<Account>() {
+				@Override
+				public int compare(Account left, Account right){
+					return Integer.valueOf(left.getNumeric())
+						.compareTo(Integer.valueOf(right.getNumeric()));
+				}
+			});
+			viewer.setInput(accounts);
 			viewer.getCombo().setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			return ret;
 		}
