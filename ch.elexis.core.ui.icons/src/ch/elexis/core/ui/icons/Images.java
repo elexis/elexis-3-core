@@ -232,6 +232,8 @@ public enum Images {
 		IMG_FIX_MEDI,
 		/** reserve medi icon **/
 		IMG_RESERVE_MEDI,
+		/** symptomatic medi icon **/
+		IMG_SYMPTOM_MEDI,
 		/** need medi icon **/
 		IMG_NEED_MEDI,
 		/** sort after personal favorites **/
