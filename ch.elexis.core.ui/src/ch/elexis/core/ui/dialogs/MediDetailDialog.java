@@ -25,10 +25,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
 
@@ -36,7 +36,6 @@ public class MediDetailDialog extends TitleAreaDialog {
 	Prescription prescription;
 	private String dosis, intakeOrder, disposalComment;
 	private Composite compositeDosage;
-	private ArticleDefaultSignature ads;
 	private Text txtMorning, txtNoon, txtEvening, txtNight;
 	private Text txtIntakeOrder, txtDisposalComment;
 	private Artikel article;
@@ -48,22 +47,6 @@ public class MediDetailDialog extends TitleAreaDialog {
 	public MediDetailDialog(Shell shell, Prescription prescription){
 		super(shell);
 		this.prescription = prescription;
-		
-		this.ads =
-			ArticleDefaultSignature.getDefaultsignatureForArticle(prescription.getArtikel());	
-	}
-	
-	/**
-	 * 
-	 * @since 3.1.0
-	 */
-	public MediDetailDialog(Shell shell, Artikel article){
-		super(shell);
-		this.prescription = null;
-		this.article = article;
-		
-		this.ads =
-			ArticleDefaultSignature.getDefaultsignatureForArticle(article);	
 	}
 	
 	@Override
@@ -127,8 +110,6 @@ public class MediDetailDialog extends TitleAreaDialog {
 			initTextFields(prescription.getDosis(), prescription.getBemerkung(),
 				prescription.getDisposalComment());
 			btnReserveMedication.setSelection(prescription.isReserveMedication());
-		} else if (ads != null) {
-			initTextFields(ads.getSignatureAsDosisString(), ads.getSignatureComment(), "");
 		}
 		
 		return ret;
@@ -171,7 +152,9 @@ public class MediDetailDialog extends TitleAreaDialog {
 					prescription.setDosis(dosis);
 					prescription.setBemerkung(intakeOrder);
 					prescription.setDisposalComment(disposalComment);
-					prescription.setReserveMedication(btnReserveMedication.getSelection());
+					if (btnReserveMedication.getSelection()) {
+						prescription.setEntryType(EntryType.RESERVE_MEDICATION);
+					}
 				}
 				
 				@Override

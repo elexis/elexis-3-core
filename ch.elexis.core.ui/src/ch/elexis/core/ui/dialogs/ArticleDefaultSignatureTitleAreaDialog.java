@@ -6,24 +6,19 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.ui.views.controls.ArticleDefaultSignatureComposite;
-import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
 
 public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	
 	private Artikel article;
-	private Button btnRadioOnAtcCode;
 	private ArticleDefaultSignatureComposite adsc;
 	private Prescription prescription;
-	private Button btnRadioOnArticle;
 	
 	/**
 	 * Create the dialog.
@@ -32,8 +27,6 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	 */
 	public ArticleDefaultSignatureTitleAreaDialog(Shell parentShell, Artikel article){
 		super(parentShell);
-		
-		// TODO find existing?
 		this.article = article;
 	}
 	
@@ -42,7 +35,6 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	 */
 	public ArticleDefaultSignatureTitleAreaDialog(Shell parentShell, Prescription pr){
 		super(parentShell);
-		// TODO find existing
 		this.prescription = pr;
 		this.article = pr.getArtikel();
 	}
@@ -54,32 +46,15 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent){
-		setMessage("Für diesen ATC Code oder diesen Artikel folgende Standard-Signatur hinterlegen");
+		setMessage(
+			"Für diesen ATC Code oder diesen Artikel folgende Standard-Signatur hinterlegen");
 		setTitle("Standard-Signatur hinterlegen");
 		Composite area = (Composite) super.createDialogArea(parent);
-		Composite container = new Composite(area, SWT.NONE);
-		container.setLayout(new GridLayout(2, false));
-		GridData gd_container = new GridData(GridData.FILL_BOTH);
-		gd_container.grabExcessVerticalSpace = false;
-		container.setLayoutData(gd_container);
-		
-		btnRadioOnAtcCode = new Button(container, SWT.RADIO);
-		btnRadioOnAtcCode.setText("auf ATC Code hinterlegen");
-		
-		btnRadioOnArticle = new Button(container, SWT.RADIO);
-		btnRadioOnArticle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnRadioOnArticle.setText("auf Artikel hinterlegen");
-		
-		if(article!=null) {
-			String atc_code = article.getATC_code();
-			boolean atcCode = (atc_code!=null && atc_code.length()>0);
-			btnRadioOnAtcCode.setEnabled(atcCode);
-			btnRadioOnAtcCode.setSelection(atcCode);
-			btnRadioOnArticle.setSelection(!atcCode);
-		}
 		
 		adsc = new ArticleDefaultSignatureComposite(area, SWT.None);
 		adsc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		adsc.setToolbarVisible(false);
+		adsc.setArticleToBind(article, false);
 		
 		if(prescription!=null) {
 			// set initial values from prescription
@@ -122,22 +97,9 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		ArticleDefaultSignature ads;
-		if (btnRadioOnAtcCode.getSelection()) {
-			ads = new ArticleDefaultSignature(null, article.getATC_code());
-		} else {
-			ads = new ArticleDefaultSignature(article, null);
-		}
-		
-		ads.set(new String[] {
-			ArticleDefaultSignature.FLD_SIG_MORNING, ArticleDefaultSignature.FLD_SIG_NOON,
-			ArticleDefaultSignature.FLD_SIG_EVENING, ArticleDefaultSignature.FLD_SIG_NIGHT,
-			ArticleDefaultSignature.FLD_SIG_COMMENT
-		},
-			new String[] {
-				adsc.getSignatureMorning(), adsc.getSignatureNoon(), adsc.getSignatureEvening(),
-				adsc.getSignatureNight(), adsc.getSignatureComment()
-			});
+		adsc.createPersistent();
+		adsc.updateModelNonDatabinding();
+		adsc.safeToDefault();
 		
 		super.okPressed();
 	}

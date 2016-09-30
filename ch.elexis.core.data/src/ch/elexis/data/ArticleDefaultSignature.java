@@ -3,6 +3,7 @@ package ch.elexis.data;
 import java.util.List;
 
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.rgw.tools.JdbcLink;
 
 /**
@@ -20,6 +21,9 @@ public class ArticleDefaultSignature extends PersistentObject {
 	public static final String FLD_SIG_EVENING = "evening";
 	public static final String FLD_SIG_NIGHT = "night";
 	public static final String FLD_SIG_COMMENT = "comment";
+	
+	public static final String EXT_FLD_MEDICATIONTYPE = "medicationType";
+	public static final String EXT_FLD_DISPOSALTYPE = "disposalType";
 	
 	public static final String TABLENAME = "default_signatures";
 	private static final String VERSION_ENTRY_ID = "VERSION";
@@ -84,7 +88,17 @@ public class ArticleDefaultSignature extends PersistentObject {
 	
 	@Override
 	public String getLabel(){
-		// TODO Auto-generated method stub
+		StringBuilder sb = new StringBuilder();
+		String atcCode = get(FLD_ATC_CODE);
+		Artikel article = getArticle();
+		if (atcCode != null && !atcCode.isEmpty()) {
+			sb.append("ATC [" + atcCode + "] ");
+		} else if (article != null) {
+			sb.append("ARTICLE [" + article.getLabel() + "] ");
+		}
+		sb.append(getSignatureMorning()).append("-").append(getSignatureNoon()).append("-")
+			.append(getSignatureEvening()).append("-").append(getSignatureNight()).append(" ")
+			.append(getSignatureComment());
 		return null;
 	}
 	
@@ -105,8 +119,9 @@ public class ArticleDefaultSignature extends PersistentObject {
 			new Query<ArticleDefaultSignature>(ArticleDefaultSignature.class);
 		qbe.add(FLD_ARTICLE, Query.LIKE, "%" + artikel.storeToString());
 		List<ArticleDefaultSignature> resultArticle = qbe.execute();
-		if (resultArticle.size() > 0)
+		if (resultArticle.size() > 0) {
 			return resultArticle.get(0);
+		}
 		return ArticleDefaultSignature.getDefaultSignatureForATCCode(artikel.getATC_code());
 	}
 	
@@ -121,35 +136,6 @@ public class ArticleDefaultSignature extends PersistentObject {
 		qbe.add(FLD_ATC_CODE, Query.LIKE, atcCode);
 		List<ArticleDefaultSignature> execute = qbe.execute();
 		return (execute.size() > 0) ? execute.get(0) : null;
-	}
-	
-	public String getSignatureAsDosisString(){
-		String[] values = new String[4];
-		get(new String[] {
-			FLD_SIG_MORNING, FLD_SIG_NOON, FLD_SIG_EVENING, FLD_SIG_NIGHT
-		}, values);
-		
-		StringBuilder sb = new StringBuilder();
-		if (signatureInfoExists(values)) {
-			for (int i = 0; i < values.length; i++) {
-				String string = values[i].isEmpty() ? "0" : values[i];
-				
-				if (i > 0) {
-					sb.append("-");
-				}
-				sb.append(string);
-			}
-		}
-		return sb.toString();
-	}
-	
-	private boolean signatureInfoExists(String[] values){
-		for (String val : values) {
-			if (val != null && !val.isEmpty()) {
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	public String getSignatureMorning(){
@@ -190,5 +176,235 @@ public class ArticleDefaultSignature extends PersistentObject {
 	
 	public void setSignatureComment(String sm){
 		set(FLD_SIG_COMMENT, sm);
+	}
+	
+	public EntryType getMedicationType(){
+		String typeNumber = (String) getExtInfoStoredObjectByKey(EXT_FLD_MEDICATIONTYPE);
+		if (typeNumber != null && !typeNumber.isEmpty()) {
+			return EntryType.byNumeric(Integer.parseInt(typeNumber));
+		}
+		return EntryType.UNKNOWN;
+	}
+	
+	public void setMedicationType(EntryType type){
+		setExtInfoStoredObjectByKey(EXT_FLD_MEDICATIONTYPE, Integer.toString(type.numericValue()));
+	}
+	
+	public EntryType getDisposalType(){
+		String typeNumber = (String) getExtInfoStoredObjectByKey(EXT_FLD_DISPOSALTYPE);
+		if (typeNumber != null && !typeNumber.isEmpty()) {
+			return EntryType.byNumeric(Integer.parseInt(typeNumber));
+		}
+		return EntryType.UNKNOWN;
+	}
+	
+	public void setDisposalType(EntryType type){
+		setExtInfoStoredObjectByKey(EXT_FLD_DISPOSALTYPE, Integer.toString(type.numericValue()));
+	}
+	
+	public Artikel getArticle(){
+		String articleString = get(FLD_ARTICLE);
+		if (articleString != null && !articleString.isEmpty()) {
+			String[] parts = articleString.split("\\$");
+			if (parts.length == 3) {
+				PersistentObjectFactory factory = new PersistentObjectFactory();
+				PersistentObject ret = factory.createFromString(parts[2]);
+				if (ret instanceof Artikel) {
+					return (Artikel) ret;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public String getAtcCode(){
+		return get(FLD_ATC_CODE);
+	}
+	
+	public static class ArticleSignature {
+		
+		private ArticleDefaultSignature defaultSignature;
+		
+		private Artikel article;
+		private String atcCode;
+		
+		private String morning;
+		private String noon;
+		private String evening;
+		private String night;
+		
+		private String comment;
+		
+		private EntryType medicationType;
+		private EntryType disposalType;
+		
+		public static ArticleSignature fromDefault(ArticleDefaultSignature defaultSignature){
+			ArticleSignature signature =
+				new ArticleSignature(defaultSignature.getArticle(), defaultSignature.getAtcCode());
+			
+			signature.setMorning(defaultSignature.getSignatureMorning());
+			signature.setNoon(defaultSignature.getSignatureNoon());
+			signature.setEvening(defaultSignature.getSignatureEvening());
+			signature.setNight(defaultSignature.getSignatureNight());
+			
+			signature.setComment(defaultSignature.getSignatureComment());
+			
+			signature.setMedicationType(defaultSignature.getMedicationType());
+			signature.setDisposalType(defaultSignature.getDisposalType());
+			
+			signature.defaultSignature = defaultSignature;
+			
+			return signature;
+		}
+		
+		public ArticleSignature(Artikel article, String atcCode){
+			this.article = article;
+			this.atcCode = atcCode;
+		}
+		
+		public ArticleDefaultSignature toDefault(){
+			if (defaultSignature != null) {
+				defaultSignature.setSignatureMorning(morning);
+				defaultSignature.setSignatureNoon(noon);
+				defaultSignature.setSignatureEvening(evening);
+				defaultSignature.setSignatureNight(night);
+				
+				defaultSignature.setSignatureComment(comment);
+				
+				if (medicationType != null) {
+					defaultSignature.setMedicationType(medicationType);
+				}
+				if (disposalType != null) {
+					defaultSignature.setDisposalType(disposalType);
+				}
+				if (atcCode != null && !atcCode.isEmpty()) {
+					defaultSignature.set(FLD_ATC_CODE, atcCode);
+					defaultSignature.set(FLD_ARTICLE, null);
+				} else if (article != null) {
+					defaultSignature.set(FLD_ATC_CODE, null);
+					defaultSignature.set(FLD_ARTICLE, article.storeToString());
+				}
+			}
+			return defaultSignature;
+		}
+		
+		public void delete(){
+			if (defaultSignature != null) {
+				defaultSignature.delete();
+			}
+		}
+		
+		public String getMorning(){
+			return morning;
+		}
+		
+		public void setMorning(String morning){
+			this.morning = morning;
+		}
+		
+		public String getNoon(){
+			return noon;
+		}
+		
+		public void setNoon(String noon){
+			this.noon = noon;
+		}
+		
+		public String getEvening(){
+			return evening;
+		}
+		
+		public void setEvening(String evening){
+			this.evening = evening;
+		}
+		
+		public String getNight(){
+			return night;
+		}
+		
+		public void setNight(String night){
+			this.night = night;
+		}
+		
+		public String getSignatureAsDosisString(){
+			String[] values = new String[] {
+				morning, noon, evening, night
+			};
+			
+			StringBuilder sb = new StringBuilder();
+			if (signatureInfoExists(values)) {
+				for (int i = 0; i < values.length; i++) {
+					String string = values[i].isEmpty() ? "0" : values[i];
+					
+					if (i > 0) {
+						sb.append("-");
+					}
+					sb.append(string);
+				}
+			}
+			return sb.toString();
+		}
+		
+		private boolean signatureInfoExists(String[] values){
+			for (String val : values) {
+				if (val != null && !val.isEmpty()) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public String getComment(){
+			return comment;
+		}
+		
+		public void setComment(String comment){
+			this.comment = comment;
+		}
+		
+		public EntryType getMedicationType(){
+			return medicationType;
+		}
+		
+		public void setMedicationType(EntryType medicationType){
+			this.medicationType = medicationType;
+		}
+		
+		public EntryType getDisposalType(){
+			return disposalType;
+		}
+		
+		public void setDisposalType(EntryType disposalType){
+			this.disposalType = disposalType;
+		}
+		
+		public void setAtcCode(String code){
+			this.atcCode = code;
+			this.article = null;
+		}
+		
+		public void setArticle(Artikel article){
+			this.article = article;
+			this.atcCode = null;
+		}
+		
+		public boolean isAtc(){
+			return (atcCode != null && !atcCode.isEmpty());
+		}
+		
+		public boolean isPersistent(){
+			return defaultSignature != null;
+		}
+		
+		public void createPersistent(){
+			if (isPersistent()) {
+				return;
+			}
+			if (isAtc()) {
+				defaultSignature = new ArticleDefaultSignature(null, atcCode);
+			} else {
+				defaultSignature = new ArticleDefaultSignature(article, null);
+			}
+		}
 	}
 }

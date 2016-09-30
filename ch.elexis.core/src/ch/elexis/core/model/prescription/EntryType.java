@@ -16,8 +16,8 @@ public enum EntryType implements INumericEnum {
 	RECIPE (2),
 	/** For self dispensation **/
 	SELF_DISPENSED (3), 
-	/** Directly applied during consultation **/
-	APPLICATION (4);
+	/** Medicine given because of a current problem, but not intended for a longer period **/
+	SYMPTOMATIC_MEDICATION(5);
 	//@formatter:on
 	
 	private int numeric;
