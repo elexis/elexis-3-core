@@ -7,7 +7,7 @@
             allPopups="false"
             locationURI="toolbar:ch.elexis.core.ui.medication.views.MedicationView">
          <command
-               commandId="ch.elexis.core.ui.medication.AddFixMedication"
+               commandId="ch.elexis.core.ui.medication.AddMedication"
                icon="icon://IMG_NEW"
                style="push">
          </command>
@@ -29,7 +29,12 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:ch.elexis.core.ui.medication.views.MedicationView">
+            locationURI="popup:ch.elexis.core.ui.medication.tables">
+         <command
+               commandId="ch.elexis.core.ui.medication.SetAsSymptomaticMedication"
+               icon="icon://IMG_SYMPTOM_MEDI"
+               style="push">
+         </command>
          <command
                commandId="ch.elexis.core.ui.medication.SetAsFixMedication"
                icon="icon://IMG_PILL"
@@ -109,19 +114,24 @@
             name="Löschen">
       </command>
       <command
-            description="FixMedikation hinzufügen"
-            id="ch.elexis.core.ui.medication.AddFixMedication"
-            name="FixMedikation hinzufügen">
+            description="Medikation hinzufügen"
+            id="ch.elexis.core.ui.medication.AddMedication"
+            name="Medikation hinzufügen">
       </command>
       <command
-            description="FixMedikation"
+            description="Symptomatische Medikation"
+            id="ch.elexis.core.ui.medication.SetAsSymptomaticMedication"
+            name="Symptomatische Medikation">
+      </command>
+      <command
+            description="Fix Medikation"
             id="ch.elexis.core.ui.medication.SetAsFixMedication"
-            name="FixMedikation">
+            name="Fix Medikation">
       </command>
       <command
-            description="Medikation auf Reserve"
+            description="Reserve Medikation"
             id="ch.elexis.core.ui.medication.SetAsReserveMedication"
-            name="Reservemedikation">
+            name="Reserve Medikation">
       </command>
       <command
             id="ch.elexis.core.ui.medication.ApplyCustomSorting"
@@ -218,8 +228,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="ch.elexis.core.ui.medication.handlers.AddFixMedicationHandler"
-            commandId="ch.elexis.core.ui.medication.AddFixMedication">
+            class="ch.elexis.core.ui.medication.handlers.AddMedicationHandler"
+            commandId="ch.elexis.core.ui.medication.AddMedication">
          <activeWhen>
             <with
                   variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
@@ -238,6 +248,28 @@
                <equals
                      value="TRUE">
                </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.SetAsSymptomaticMedicationHandler"
+            commandId="ch.elexis.core.ui.medication.SetAsSymptomaticMedication">
+         <activeWhen>
+            <with
+                  variable="ch.elexis.commands.sourceprovider.patientSelectionActive">
+               <equals
+                     value="TRUE">
+               </equals>
+               <and>
+                  <with
+                        variable="selection">
+                     <not>
+                        <count
+                              value="0">
+                        </count>
+                     </not>
+                  </with>
+               </and>
             </with>
          </activeWhen>
       </handler>
@@ -334,6 +366,13 @@
             </with>
          </activeWhen>
       </handler>    
+   </extension>
+   <extension
+         point="ch.elexis.core.data.VerrechnungscodeAdjuster">
+      <adjuster
+            class="ch.elexis.core.ui.medication.billing.PrescriptionVerrechnetAdjuster"
+            id="ch.elexis.core.ui.medication.adjuster.prescription">
+      </adjuster>
    </extension>
 
 </plugin>

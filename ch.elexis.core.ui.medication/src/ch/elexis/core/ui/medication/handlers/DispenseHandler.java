@@ -7,18 +7,15 @@ import java.util.List;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
-import ch.elexis.data.Konsultation;
+import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
-import ch.rgw.tools.TimeTool;
 
 public class DispenseHandler extends AbstractHandler {
 	
@@ -26,8 +23,9 @@ public class DispenseHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
 		Patient patient = ElexisEventDispatcher.getSelectedPatient();
-		if (patient == null)
+		if (patient == null) {
 			return null;
+		}
 		
 		List<Prescription> prescRecipes = new ArrayList<Prescription>();
 		
@@ -45,24 +43,11 @@ public class DispenseHandler extends AbstractHandler {
 				}
 			}
 		}
-		
-		Konsultation kons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-		
-		if (kons != null) {
-			boolean isToday = new TimeTool(kons.getDatum()).isSameDay(new TimeTool());
-			if (isToday) {
-				// create verrechenbar
-				for (Prescription prescription : prescRecipes) {
-					// update letzte abgabe
-					kons.addLeistung(prescription.getArtikel());
-				}
-				return null;
-			}
+		for (Prescription prescription : prescRecipes) {
+			CreatePrescriptionHelper prescriptionHelper =
+				new CreatePrescriptionHelper(null, HandlerUtil.getActiveShell(event));
+			prescriptionHelper.selfDispense(prescription);
 		}
-		
-		MessageDialog.openInformation(UiDesk.getTopShell(), "Konsultation ungültig",
-			"Die gefundene Konsultation ist nicht von heute.");
-		
 		return null;
 	}
 	

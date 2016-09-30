@@ -7,7 +7,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.PlatformUI;
@@ -15,17 +14,13 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
-import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.rgw.tools.StringTool;
 
@@ -36,7 +31,6 @@ public class SwitchMedicationHandler extends AbstractHandler {
 	private static final String SPACE = "\\s";
 	private static final String NUMBERS = "[0-9]+";
 	
-	private static PersistentObjectDropTarget dropTarget;
 	private static MedicationView medicationView;
 	private LeistungenView leistungenView;
 	private Prescription originalPresc;
@@ -110,11 +104,6 @@ public class SwitchMedicationHandler extends AbstractHandler {
 	private void openLeistungsView(){
 		medicationView = (MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 			.getActivePage().findView(MedicationView.PART_ID);
-			
-		if (dropTarget == null) {
-			dropTarget = new PersistentObjectDropTarget("FixMedication", UiDesk.getTopShell(),
-				new DropFixMedicationReceiver());
-		}
 		
 		// open the LeistungenView
 		try {
@@ -127,8 +116,10 @@ public class SwitchMedicationHandler extends AbstractHandler {
 			leistungenView = (LeistungenView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getActivePage().showView(LeistungenView.ID);
 			CodeSelectorHandler csHandler = CodeSelectorHandler.getInstance();
-			csHandler.setCodeSelectorTarget(dropTarget);
+			csHandler
+				.setCodeSelectorTarget(medicationView.getMedicationComposite().getDropTarget());
 			csHandler.getCodeSelectorTarget().registered(false);
+			medicationView.getMedicationComposite().setDropChangePrescription(originalPresc);
 			
 			for (CTabItem cti : leistungenView.ctab.getItems()) {
 				if (cti.getText().equalsIgnoreCase("Artikelstamm")) {
@@ -143,45 +134,4 @@ public class SwitchMedicationHandler extends AbstractHandler {
 				e);
 		}
 	}
-	
-	/**
-	 * waits for dropps/double-clicks on a medication
-	 *
-	 */
-	private final class DropFixMedicationReceiver implements PersistentObjectDropTarget.IReceiver {
-		public void dropped(PersistentObject article, DropTargetEvent ev){
-			
-			String dosage = originalPresc.getDosis();
-			String remark = originalPresc.getBemerkung();
-			if (dosage == null || dosage.isEmpty()) {
-				ArticleDefaultSignature defSig =
-					ArticleDefaultSignature.getDefaultsignatureForArticle((Artikel) article);
-				if (defSig != null) {
-					dosage = defSig.getSignatureAsDosisString();
-					remark = defSig.getSignatureComment();
-				}
-			}
-			
-			Prescription presc = new Prescription(originalPresc);
-			presc.set(Prescription.FLD_ARTICLE, article.storeToString());
-			presc.setDosis(dosage);
-			presc.setBemerkung(remark);
-			presc.setEntryType(EntryType.FIXED_MEDICATION);
-			
-			// stop prev medication
-			originalPresc.stop(null);
-			originalPresc.setStopReason("Ersetzt durch " + ((Artikel) article).getName());
-			
-			medicationView.refresh();
-		}
-		
-		public boolean accept(PersistentObject o){
-			if (!(o instanceof Artikel))
-				return false;
-			// we do not accept vaccination articles
-			Artikel a = (Artikel) o;
-			return (!a.getATC_code().startsWith("J07"));
-		}
-	}
-	
 }

@@ -20,7 +20,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -42,6 +41,7 @@ import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.handlers.PrintRecipeHandler;
 import ch.elexis.core.ui.medication.handlers.PrintTakingsListHandler;
+import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
@@ -109,26 +109,10 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				public void dropped(PersistentObject o, DropTargetEvent e){
 					
 					if (o instanceof Artikel) {
-						MediDetailDialog dlg = new MediDetailDialog(getShell(), (Artikel) o);
-						if (dlg.open() == Window.OK) {
-							Prescription prescription =
-								new Prescription((Artikel) o, (Patient) ElexisEventDispatcher
-									.getSelected(Patient.class), dlg.getDosis(), dlg.getIntakeOrder());
-							// self.add(pre);
-							AcquireLockUi.aquireAndRun(prescription, new ILockHandler() {
-								@Override
-								public void lockFailed(){
-									prescription.remove();
-								}
-								
-								@Override
-								public void lockAcquired(){
-									// do nothing
-								}
-							});
-							reload();
-						}
-						
+						CreatePrescriptionHelper prescriptionHelper =
+							new CreatePrescriptionHelper((Artikel) o, getShell());
+						prescriptionHelper.createPrescription();
+						reload();
 					} else if (o instanceof Prescription) {
 						Prescription[] existing =
 							((Patient) ElexisEventDispatcher.getSelected(Patient.class))

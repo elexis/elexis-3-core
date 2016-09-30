@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.State;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+
+import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Query;
@@ -13,6 +20,19 @@ import ch.rgw.tools.TimeTool;
 
 public class MedicationViewHelper {
 	private static final int FILTER_PRESCRIPTION_AFTER_N_DAYS = 30;
+	
+	public static ViewerSortOrder getSelectedComparator(){
+		ICommandService service =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		Command command = service.getCommand(ApplyCustomSortingHandler.CMD_ID);
+		State state = command.getState(ApplyCustomSortingHandler.STATE_ID);
+		
+		if ((Boolean) state.getValue()) {
+			return ViewerSortOrder.getSortOrderPerValue(ViewerSortOrder.MANUAL.val);
+		} else {
+			return ViewerSortOrder.getSortOrderPerValue(ViewerSortOrder.DEFAULT.val);
+		}
+	}
 	
 	public static String calculateDailyCostAsString(List<Prescription> pres){
 		String TTCOST = Messages.FixMediDisplay_DailyCost;
@@ -111,8 +131,13 @@ public class MedicationViewHelper {
 		List<Prescription> result = new ArrayList<Prescription>();
 		for (Prescription p : tmpPrescs) {
 			if (p.getArtikel() != null && p.getArtikel().getATC_code() != null) {
-				if (p.getArtikel().getATC_code().toUpperCase().startsWith("J07"))
+				if (p.getArtikel().getATC_code().toUpperCase().startsWith("J07")) {
 					continue;
+				}
+				if (p.getEntryType() == EntryType.RECIPE
+					|| p.getEntryType() == EntryType.SELF_DISPENSED) {
+					continue;
+				}
 			}
 			
 			result.add(p);

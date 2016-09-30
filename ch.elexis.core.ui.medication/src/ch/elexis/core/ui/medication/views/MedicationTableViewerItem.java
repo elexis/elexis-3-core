@@ -2,11 +2,7 @@ package ch.elexis.core.ui.medication.views;
 
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-
-import org.eclipse.jface.viewers.TableViewer;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -21,9 +17,6 @@ import ch.rgw.tools.TimeTool;
  * Used for performance reasons.
  */
 public class MedicationTableViewerItem {
-	
-	private static TableViewer tv;
-	private static ExecutorService executorService = Executors.newFixedThreadPool(10);
 	
 	// loaded first run
 	private Prescription prescription;
@@ -61,10 +54,6 @@ public class MedicationTableViewerItem {
 		endTime = new TimeTool(prescription.getEndTime()).getTime();
 	}
 	
-	public static void setTableViewer(TableViewer medicationTableViewer){
-		MedicationTableViewerItem.tv = medicationTableViewer;
-	}
-	
 	public static List<MedicationTableViewerItem> initFromPrescriptionList(
 		List<Prescription> prescriptionList){
 		List<MedicationTableViewerItem> collect = prescriptionList.stream()
@@ -83,18 +72,6 @@ public class MedicationTableViewerItem {
 	
 	public String getDisposalComment(){
 		return prescription.getDisposalComment();
-	}
-	
-	public void setBemerkung(String bemerkung){
-		this.bemerkung = bemerkung;
-		prescription.setBemerkung(bemerkung);
-		tv.update(this, null);
-	}
-	
-	public void setDisposalComment(String disposal){
-		prescription.setDisposalComment(disposal);
-		tv.update(this, null);
-		
 	}
 	
 	public String getBeginDate(){
@@ -146,49 +123,27 @@ public class MedicationTableViewerItem {
 	
 	public IPersistentObject getLastDisposed(){
 		if (lastDisposed == null) {
-			lazyLoad(this, () -> {
-				IPersistentObject ld = prescription.getLastDisposed(rezeptId);
-				if (ld == null) {
-					lastDisposed = StringConstants.EMPTY;
-				} else {
-					lastDisposed = ld;
-				}
-			});
-			return null;
+			IPersistentObject ld = prescription.getLastDisposed(rezeptId);
+			if (ld == null) {
+				lastDisposed = StringConstants.EMPTY;
+			} else {
+				lastDisposed = ld;
+			}
 		}
-		
 		return (lastDisposed instanceof IPersistentObject) ? (IPersistentObject) lastDisposed
 				: null;
 	}
 	
 	public TimeTool getSuppliedUntilDate(){
 		if (suppliedUntil == null) {
-			lazyLoad(this, () -> {
-				TimeTool suppliedUntilDate = prescription.getSuppliedUntilDate();
-				if (suppliedUntilDate == null) {
-					suppliedUntil = StringConstants.EMPTY;
-				} else {
-					suppliedUntil = suppliedUntilDate;
-				}
-			});
-			return null;
+			TimeTool suppliedUntilDate = prescription.getSuppliedUntilDate();
+			if (suppliedUntilDate == null) {
+				suppliedUntil = StringConstants.EMPTY;
+			} else {
+				suppliedUntil = suppliedUntilDate;
+			}
 		}
 		return (suppliedUntil instanceof TimeTool) ? (TimeTool) suppliedUntil : null;
-	}
-	
-	private void lazyLoad(MedicationTableViewerItem mtvi, Runnable r){
-		executorService.execute(new Runnable() {
-			public void run(){
-				r.run();
-				
-				tv.getControl().getDisplay().asyncExec(new Runnable() {
-					@Override
-					public void run(){
-						tv.update(mtvi, null);
-					}
-				});
-			}
-		});
 	}
 	
 	public EntryType getEntryType(){
@@ -201,19 +156,16 @@ public class MedicationTableViewerItem {
 	
 	public String getArtikelLabel(){
 		if (artikelLabel == null) {
-			lazyLoad(this, () -> {
-				Artikel artikel = (Artikel) CoreHub.poFactory.createFromString(artikelsts);
-				if (artikel == null) {
-					artikel = prescription.getArtikel();
-				}
-				
-				if (artikel == null) {
-					artikelLabel = "?";
-				} else {
-					artikelLabel = artikel.getLabel();
-				}
-			});
-			return "-";
+			Artikel artikel = (Artikel) CoreHub.poFactory.createFromString(artikelsts);
+			if (artikel == null) {
+				artikel = prescription.getArtikel();
+			}
+			
+			if (artikel == null) {
+				artikelLabel = "?";
+			} else {
+				artikelLabel = artikel.getLabel();
+			}
 		}
 		return artikelLabel;
 	}

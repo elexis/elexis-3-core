@@ -15,7 +15,7 @@ import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.data.Prescription;
 
-public class SetAsReserveMedicationHandler extends AbstractHandler {
+public class SetAsSymptomaticMedicationHandler extends AbstractHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
@@ -29,7 +29,7 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
 				Prescription presc = mtvItem.getPrescription();
 				
-				if (presc != null && !(presc.getEntryType() == EntryType.RESERVE_MEDICATION)) {
+				if (presc != null && !(presc.getEntryType() == EntryType.SYMPTOMATIC_MEDICATION)) {
 					AcquireLockUi.aquireAndRun(presc, new ILockHandler() {
 						
 						@Override
@@ -48,11 +48,11 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 								
 								@Override
 								public void lockAcquired(){
-									reserveMedi.setEntryType(EntryType.RESERVE_MEDICATION);
+									reserveMedi.setEntryType(EntryType.SYMPTOMATIC_MEDICATION);
 								}
 							});
 							presc.stop(null);
-							presc.setStopReason("Umgestellt auf Reserve Medikation");
+							presc.setStopReason("Umgestellt auf Symtomatische Medikation");
 						}
 					});
 					MedicationView medicationView =
@@ -64,5 +64,4 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 		}
 		return null;
 	}
-	
 }

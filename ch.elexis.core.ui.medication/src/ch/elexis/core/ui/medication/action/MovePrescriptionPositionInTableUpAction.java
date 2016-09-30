@@ -19,7 +19,8 @@ public class MovePrescriptionPositionInTableUpAction extends Action {
 	private TableViewer tv;
 	private MedicationComposite mediComposite;
 	
-	public MovePrescriptionPositionInTableUpAction(TableViewer tv, MedicationComposite mediComposite){
+	public MovePrescriptionPositionInTableUpAction(TableViewer tv,
+		MedicationComposite mediComposite){
 		this.tv = tv;
 		this.mediComposite = mediComposite;
 	}

@@ -32,12 +32,12 @@ public enum ViewerSortOrder {
 	}
 	
 	public void setColumn(int column){
-		if (column == this.propertyIdx) {
+		if (column == propertyIdx) {
 			// Same column as last sort; toggle the direction
 			direction = 1 - direction;
 		} else {
 			// New column; do an ascending sort
-			this.propertyIdx = column;
+			propertyIdx = column;
 			direction = DESCENDING;
 		}
 	}
@@ -63,13 +63,13 @@ public enum ViewerSortOrder {
 			try {
 				val1 = Integer.parseInt(sos1);
 			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
+				// ignore
 			}
 			
 			try {
 				val2 = Integer.parseInt(sos2);
 			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
+				// ignore
 			}
 			
 			return Integer.compare(val1, val2);
@@ -112,12 +112,11 @@ public enum ViewerSortOrder {
 				rc = time1.compareTo(time2);
 				break;
 			case 4:
-				String supUntil1 = getSuppliedUntil(p1);
-				String supUntil2 = getSuppliedUntil(p2);
-				rc = supUntil1.compareTo(supUntil2);
+				String com1 = p1.getBemerkung();
+				String com2 = p2.getBemerkung();
+				rc = com1.compareTo(com2);
 				break;
 			case 5:
-				// stopped column is optional 
 				boolean stop1IsValid = isStopped(p1.getEndDate());
 				boolean stop2IsValid = isStopped(p2.getEndDate());
 				
@@ -135,11 +134,6 @@ public enum ViewerSortOrder {
 				}
 				break;
 			case 6:
-				String com1 = p1.getBemerkung();
-				String com2 = p2.getBemerkung();
-				rc = com1.compareTo(com2);
-				break;
-			case 7:
 				String stopReason1 = p1.getStopReason();
 				if (stopReason1 == null)
 					stopReason1 = "";
@@ -158,21 +152,6 @@ public enum ViewerSortOrder {
 				rc = -rc;
 			}
 			return rc;
-		}
-		
-		private String getSuppliedUntil(MedicationTableViewerItem p){
-			// !A OR B === !(A AND !B)
-			boolean val = p.isFixedMediation() && !(p.isReserveMedication());
-			if (!val) {
-				return "";
-			}
-			
-			TimeTool time = p.getSuppliedUntilDate();
-			if (time != null && time.isAfterOrEqual(new TimeTool())) {
-				return "OK";
-			}
-			
-			return "?";
 		}
 		
 		private boolean isStopped(String endDate){

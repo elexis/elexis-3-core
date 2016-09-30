@@ -65,8 +65,6 @@ public class MentionInConsultationHandler extends AbstractHandler {
 			return "(Fixmedikation)";
 		case RESERVE_MEDICATION:
 			return "(Reservemedikation)";
-		case APPLICATION:
-			return "(Appliziert)";
 		case SELF_DISPENSED:
 			return "(Dispensiert)";
 		case RECIPE:

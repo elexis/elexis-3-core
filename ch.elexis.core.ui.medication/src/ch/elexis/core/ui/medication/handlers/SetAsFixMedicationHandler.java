@@ -5,16 +5,14 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
-import ch.elexis.data.ArticleDefaultSignature;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Patient;
+import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.data.Prescription;
 
 public class SetAsFixMedicationHandler extends AbstractHandler {
@@ -31,46 +29,38 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
 				Prescription presc = mtvItem.getPrescription();
 				
-				if (presc != null && (!presc.isFixedMediation()
-					|| presc.getEntryType() == EntryType.RESERVE_MEDICATION)) {
-					Artikel article = presc.getArtikel();
-					String dosage = presc.getDosis();
-					String remark = presc.getBemerkung();
-					String disposalComment = presc.getDisposalComment();
-					
-					if (dosage.isEmpty() && remark.isEmpty()) {
-						ArticleDefaultSignature defSig =
-							ArticleDefaultSignature.getDefaultsignatureForArticle(article);
-						if (defSig != null) {
-							dosage = defSig.getSignatureAsDosisString();
-							remark = defSig.getSignatureComment();
-						}
-					}
-					
-					Prescription fixMediPresc = new Prescription(article,
-						(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
-					AcquireLockUi.aquireAndRun(fixMediPresc, new ILockHandler() {
+				if (presc != null && !(presc.getEntryType() == EntryType.FIXED_MEDICATION)) {
+					AcquireLockUi.aquireAndRun(presc, new ILockHandler() {
+						
 						@Override
 						public void lockFailed(){
-							fixMediPresc.remove();
+							// do nothing
 						}
 						
 						@Override
 						public void lockAcquired(){
-							fixMediPresc.setEntryType(EntryType.FIXED_MEDICATION);
-							
-							if (disposalComment != null && !disposalComment.isEmpty()) {
-								fixMediPresc.setDisposalComment(disposalComment);
-							}
+							Prescription reserveMedi = new Prescription(presc);
+							AcquireLockUi.aquireAndRun(reserveMedi, new ILockHandler() {
+								@Override
+								public void lockFailed(){
+									reserveMedi.remove();
+								}
+								
+								@Override
+								public void lockAcquired(){
+									reserveMedi.setEntryType(EntryType.FIXED_MEDICATION);
+								}
+							});
+							presc.stop(null);
+							presc.setStopReason("Umgestellt auf Reserve Medikation");
 						}
 					});
-					
-					// if selection is ReserveMedication -> stop it
-					if (presc.isReserveMedication()) {
-						presc.stop(null);
-						presc.setStopReason("Umgestellt auf Fix Medikation");
-					}
+					MedicationView medicationView =
+						(MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getActivePage().findView(MedicationView.PART_ID);
+					medicationView.refresh();
 				}
+				
 			}
 		}
 		return null;
