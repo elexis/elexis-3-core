@@ -58,6 +58,7 @@ public class MedicationHistoryTableComposite extends Composite {
 		
 		MedicationViewerHelper.createStopColumn(viewer, layout, 5);
 		MedicationViewerHelper.createStopReasonColumn(viewer, layout, 6);
+		MedicationViewerHelper.createMandantColumn(viewer, layout, 7);
 		
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
 	}

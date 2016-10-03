@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.medication.views;
 
 import java.text.MessageFormat;
+import java.util.Optional;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -32,6 +33,7 @@ import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableDownAction;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpAction;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Rezept;
 import ch.elexis.data.Verrechnet;
@@ -230,6 +232,28 @@ public class MedicationViewerHelper {
 					if (stopReason != null && !stopReason.isEmpty()) {
 						return stopReason;
 					}
+				}
+				return "";
+			}
+		});
+		return ret;
+	}
+	
+	public static TableViewerColumn createMandantColumn(TableViewer viewer,
+		TableColumnLayout layout, int columnIndex){
+		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.LEFT);
+		TableColumn tblclmnMandant = ret.getColumn();
+		ColumnWeightData mandantColumnWeightData =
+			new ColumnWeightData(0, 50, true);
+		layout.setColumnData(tblclmnMandant, mandantColumnWeightData);
+		tblclmnMandant.setText("Anwender");
+		ret.setLabelProvider(new MedicationCellLabelProvider() {
+			@Override
+			public String getText(Object element){
+				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
+				Optional<Anwender> prescriptorOpt = pres.getPrescriptor();
+				if (prescriptorOpt.isPresent()) {
+					return prescriptorOpt.get().getKuerzel();
 				}
 				return "";
 			}

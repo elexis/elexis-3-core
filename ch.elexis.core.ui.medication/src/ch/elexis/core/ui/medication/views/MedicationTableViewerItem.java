@@ -2,12 +2,14 @@ package ch.elexis.core.ui.medication.views;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
 import ch.rgw.tools.TimeTool;
@@ -27,6 +29,7 @@ public class MedicationTableViewerItem {
 	private String bemerkung;
 	private String rezeptId;
 	private String sortOrder;
+	private String prescriptorId;
 	private long lastUpdate;
 	
 	// lazy computed
@@ -39,7 +42,8 @@ public class MedicationTableViewerItem {
 	public MedicationTableViewerItem(Prescription p){
 		String[] values =
 			p.get(false, Prescription.FLD_ARTICLE, Prescription.FLD_DOSAGE, Prescription.FLD_REMARK,
-			Prescription.FLD_REZEPT_ID, Prescription.FLD_LASTUPDATE, Prescription.FLD_SORT_ORDER);
+				Prescription.FLD_REZEPT_ID, Prescription.FLD_LASTUPDATE,
+				Prescription.FLD_SORT_ORDER, Prescription.FLD_PRESCRIPTOR);
 		prescription = p;
 		artikelsts = values[0];
 		dosis = values[1];
@@ -47,6 +51,7 @@ public class MedicationTableViewerItem {
 		rezeptId = values[3];
 		lastUpdate = (values[4] != null && values[4].length() > 0) ? Long.valueOf(values[4]) : 0l;
 		sortOrder = values[5];
+		prescriptorId = values[6];
 		
 		dateFrom = p.getBeginTime();
 		dateUntil = p.getEndTime();
@@ -184,4 +189,13 @@ public class MedicationTableViewerItem {
 		return !endTime.isEmpty();
 	}
 	
+	public Optional<Anwender> getPrescriptor(){
+		if (prescriptorId != null && !prescriptorId.isEmpty()) {
+			Anwender prescriptor = Anwender.load(prescriptorId);
+			if (prescriptor != null && prescriptor.exists()) {
+				return Optional.of(prescriptor);
+			}
+		}
+		return Optional.empty();
+	}
 }
