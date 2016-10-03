@@ -18,6 +18,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -111,7 +112,9 @@ public class Rezept extends PersistentObject {
 	}
 	
 	/**
-	 * Alle Rezeotzeilen als Liste holen
+	 * Get all prescriptions of the recipe.
+	 * 
+	 * @return all prescriptions with a matching recipe id entry
 	 */
 	public List<Prescription> getLines(){
 		List<String> list = getList(LINES, false);
@@ -123,16 +126,24 @@ public class Rezept extends PersistentObject {
 	}
 	
 	/**
-	 * Eine Rezeptzeile entfernen
+	 * Remove the prescription from the recipe. The prescription will be deleted.
+	 * 
+	 * @param p
 	 */
 	public void removePrescription(final Prescription p){
-		p.set(Prescription.FLD_REZEPT_ID, StringTool.leer);
+		p.remove();
 	}
 	
 	/**
-	 * Eine Rezeptzeile hinzufügen
+	 * Add a prescription to the recipe. The Prescription will be marked as recipe entry, and will
+	 * be stopped immediately. The prescription will be deleted if it is removed from the recipe. It
+	 * should not be altered afterwards.
+	 * 
+	 * @param p
 	 */
 	public void addPrescription(final Prescription p){
+		p.setEndDate(null);
+		p.setEntryType(EntryType.RECIPE);
 		p.set(Prescription.FLD_REZEPT_ID, getId());
 	}
 	
