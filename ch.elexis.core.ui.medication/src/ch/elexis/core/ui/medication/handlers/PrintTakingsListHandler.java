@@ -37,9 +37,7 @@ public class PrintTakingsListHandler extends AbstractHandler {
 		
 		ISelection selection =
 			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
-		if (selection.isEmpty()) {
-			prescRecipes = Arrays.asList(patient.getFixmedikation());
-		} else {
+		if (selection != null && !selection.isEmpty()) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			if (strucSelection.getFirstElement() instanceof MedicationTableViewerItem) {
 				List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
@@ -52,6 +50,8 @@ public class PrintTakingsListHandler extends AbstractHandler {
 			} else if (strucSelection.getFirstElement() instanceof Prescription) {
 				prescRecipes.addAll(strucSelection.toList());
 			}
+		} else {
+			prescRecipes = Arrays.asList(patient.getFixmedikation());
 		}
 		
 		RezeptBlatt rpb;
