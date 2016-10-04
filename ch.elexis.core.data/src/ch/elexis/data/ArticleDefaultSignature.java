@@ -24,6 +24,7 @@ public class ArticleDefaultSignature extends PersistentObject {
 	
 	public static final String EXT_FLD_MEDICATIONTYPE = "medicationType";
 	public static final String EXT_FLD_DISPOSALTYPE = "disposalType";
+	public static final String EXT_FLD_FREETEXT = "textSignature";
 	
 	public static final String TABLENAME = "default_signatures";
 	private static final String VERSION_ENTRY_ID = "VERSION";
@@ -221,6 +222,17 @@ public class ArticleDefaultSignature extends PersistentObject {
 		return get(FLD_ATC_CODE);
 	}
 	
+	public String getSignatureFreeText(){
+		return (String) getExtInfoStoredObjectByKey(EXT_FLD_FREETEXT);
+	}
+	
+	public void setSignatureFreeText(String text){
+		if (text == null) {
+			text = "";
+		}
+		setExtInfoStoredObjectByKey(EXT_FLD_FREETEXT, text);
+	}
+	
 	public static class ArticleSignature {
 		
 		private ArticleDefaultSignature defaultSignature;
@@ -232,6 +244,8 @@ public class ArticleDefaultSignature extends PersistentObject {
 		private String noon;
 		private String evening;
 		private String night;
+		
+		private String freeText;
 		
 		private String comment;
 		
@@ -246,6 +260,8 @@ public class ArticleDefaultSignature extends PersistentObject {
 			signature.setNoon(defaultSignature.getSignatureNoon());
 			signature.setEvening(defaultSignature.getSignatureEvening());
 			signature.setNight(defaultSignature.getSignatureNight());
+			
+			signature.setFreeText(defaultSignature.getSignatureFreeText());
 			
 			signature.setComment(defaultSignature.getSignatureComment());
 			
@@ -268,6 +284,8 @@ public class ArticleDefaultSignature extends PersistentObject {
 				defaultSignature.setSignatureNoon(noon);
 				defaultSignature.setSignatureEvening(evening);
 				defaultSignature.setSignatureNight(night);
+				
+				defaultSignature.setSignatureFreeText(freeText);
 				
 				defaultSignature.setSignatureComment(comment);
 				
@@ -292,6 +310,14 @@ public class ArticleDefaultSignature extends PersistentObject {
 			if (defaultSignature != null) {
 				defaultSignature.delete();
 			}
+		}
+		
+		public String getFreeText(){
+			return freeText;
+		}
+		
+		public void setFreeText(String text){
+			this.freeText = text;
 		}
 		
 		public String getMorning(){
@@ -327,6 +353,11 @@ public class ArticleDefaultSignature extends PersistentObject {
 		}
 		
 		public String getSignatureAsDosisString(){
+			String freeText = getFreeText();
+			if (freeText != null && !freeText.isEmpty()) {
+				return freeText;
+			}
+			
 			String[] values = new String[] {
 				morning, noon, evening, night
 			};
@@ -334,7 +365,7 @@ public class ArticleDefaultSignature extends PersistentObject {
 			StringBuilder sb = new StringBuilder();
 			if (signatureInfoExists(values)) {
 				for (int i = 0; i < values.length; i++) {
-					String string = values[i].isEmpty() ? "0" : values[i];
+					String string = values[i] == null || values[i].isEmpty() ? "0" : values[i];
 					
 					if (i > 0) {
 						sb.append("-");

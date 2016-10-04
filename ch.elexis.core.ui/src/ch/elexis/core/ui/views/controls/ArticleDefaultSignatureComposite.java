@@ -10,6 +10,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -55,6 +56,11 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private Button btnRadioOnArticle;
 	
 	private Artikel article;
+	private StackLayout stackLayoutDosage;
+	private Composite compositeDayTimeDosage;
+	private Text txtFreeTextDosage;
+	private Composite compositeFreeTextDosage;
+	private Composite stackCompositeDosage;
 	
 	/**
 	 * Create the composite.
@@ -84,31 +90,71 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		ToolBar toolbar = toolbarManager.createControl(this);
 		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
 		
-		txtSignatureMorning = new Text(this, SWT.BORDER);
+		stackCompositeDosage = new Composite(this, SWT.NONE);
+		stackCompositeDosage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1));
+		stackLayoutDosage = new StackLayout();
+		stackCompositeDosage.setLayout(stackLayoutDosage);
+		
+		compositeDayTimeDosage = new Composite(stackCompositeDosage, SWT.NONE);
+		GridLayout layout = new GridLayout(7, false);
+		layout.horizontalSpacing = 0;
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 0;
+		layout.marginHeight = 0;
+		compositeDayTimeDosage.setLayout(layout);
+		txtSignatureMorning = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtSignatureMorning.setMessage("morgens");
 		txtSignatureMorning.setToolTipText("");
 		txtSignatureMorning.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label label = new Label(this, SWT.None);
+		Label label = new Label(compositeDayTimeDosage, SWT.None);
 		label.setText("-");
 		
-		txtSignatureNoon = new Text(this, SWT.BORDER);
+		txtSignatureNoon = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtSignatureNoon.setMessage("mittags");
 		txtSignatureNoon.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		label = new Label(this, SWT.None);
+		label = new Label(compositeDayTimeDosage, SWT.None);
 		label.setText("-");
 		
-		txtSignatureEvening = new Text(this, SWT.BORDER);
+		txtSignatureEvening = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtSignatureEvening.setMessage("abends");
 		txtSignatureEvening.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		label = new Label(this, SWT.None);
+		label = new Label(compositeDayTimeDosage, SWT.None);
 		label.setText("-");
 		
-		txtSignatureNight = new Text(this, SWT.BORDER);
+		txtSignatureNight = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtSignatureNight.setMessage("nachts");
 		txtSignatureNight.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		compositeFreeTextDosage = new Composite(stackCompositeDosage, SWT.NONE);
+		layout = new GridLayout(1, false);
+		layout.horizontalSpacing = 0;
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 0;
+		layout.marginHeight = 0;
+		compositeFreeTextDosage.setLayout(layout);
+		txtFreeTextDosage = new Text(compositeFreeTextDosage, SWT.BORDER);
+		txtFreeTextDosage.setMessage("Dosierung");
+		txtFreeTextDosage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		// set initial control to day time dosage
+		stackLayoutDosage.topControl = compositeDayTimeDosage;
+		
+		Button btnDoseSwitch = new Button(this, SWT.NONE);
+		btnDoseSwitch.setImage(Images.IMG_SYNC.getImage());
+		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
+			
+			public void widgetSelected(SelectionEvent e){
+				if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
+					stackLayoutDosage.topControl = compositeFreeTextDosage;
+				} else {
+					stackLayoutDosage.topControl = compositeDayTimeDosage;
+					txtFreeTextDosage.setText("");
+				}
+				stackCompositeDosage.layout();
+			};
+		});
 		
 		txtSignatureComment = new Text(this, SWT.BORDER);
 		txtSignatureComment.setMessage("Kommentar");
@@ -202,6 +248,15 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		databindingContext.bindValue(observeTextTextSignatureNightObserveWidget,
 			itemSignatureNightObserveDetailValue);
 		
+		IObservableValue observeTextFreeTextDosageObserveWidget =
+			WidgetProperties.text(new int[] {
+				SWT.Modify, SWT.FocusOut
+			}).observeDelayed(100, txtFreeTextDosage);
+		IObservableValue itemSignatureFreeTextDosageObserveDetailValue = PojoProperties
+			.value(ArticleSignature.class, "freeText", String.class).observeDetail(signatureItem);
+		databindingContext.bindValue(observeTextFreeTextDosageObserveWidget,
+			itemSignatureFreeTextDosageObserveDetailValue);
+		
 		IObservableValue observeTextTextSignatureCommentObserveWidget =
 			WidgetProperties.text(new int[] {
 				SWT.Modify, SWT.FocusOut
@@ -286,6 +341,14 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	public void updateTargetNonDatabinding(){
 		ArticleSignature signature = getSignature();
 		
+		String freeText = signature.getFreeText();
+		if (freeText != null && !freeText.isEmpty()) {
+			stackLayoutDosage.topControl = compositeFreeTextDosage;
+		} else {
+			stackLayoutDosage.topControl = compositeDayTimeDosage;
+		}
+		stackCompositeDosage.layout();
+		
 		btnFix.setSelection(false);
 		btnReserve.setSelection(false);
 		btnSymtomatic.setSelection(false);
@@ -328,28 +391,12 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	public void safeToDefault(){
 		ArticleSignature signature = getSignature();
 		
-		// dont save if no signature set
-		String morningTxt = txtSignatureMorning.getText();
-		String noonTxt = txtSignatureNoon.getText();
-		String eveningTxt = txtSignatureEvening.getText();
-		String nightTxt = txtSignatureNight.getText();
-		if ((morningTxt == null || morningTxt.isEmpty()) && (noonTxt == null || noonTxt.isEmpty())
-			&& (eveningTxt == null || eveningTxt.isEmpty())
-			&& (nightTxt == null || nightTxt.isEmpty())) {
-			return;
-		}
-
 		// dont save if no medication type is selected
 		if (!btnFix.getSelection() && !btnReserve.getSelection() && !btnSymtomatic.getSelection()) {
 			return;
 		}
 		
 		if (signature != null) {
-			signature.setMorning(morningTxt);
-			signature.setNoon(noonTxt);
-			signature.setEvening(eveningTxt);
-			signature.setNight(nightTxt);
-			signature.setComment(txtSignatureComment.getText());
 			signature.toDefault();
 		}
 	}

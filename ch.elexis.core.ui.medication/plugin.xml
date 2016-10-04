@@ -37,7 +37,7 @@
          </command>
          <command
                commandId="ch.elexis.core.ui.medication.SetAsFixMedication"
-               icon="icon://IMG_PILL"
+               icon="icon://IMG_FIX_MEDI"
                style="push">
          </command>
          <command

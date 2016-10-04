@@ -58,6 +58,7 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 		
 		adsc = new ArticleDefaultSignatureComposite(area, SWT.None);
 		adsc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		adsc.initDataBindings(null);
 		adsc.setToolbarVisible(false);
 		adsc.setOnLocationEnabled(false);
 		adsc.setArticleToBind(article, false);

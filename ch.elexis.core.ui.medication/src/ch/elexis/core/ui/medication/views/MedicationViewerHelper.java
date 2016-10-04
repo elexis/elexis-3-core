@@ -1,15 +1,14 @@
 package ch.elexis.core.ui.medication.views;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Optional;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -27,15 +26,14 @@ import org.eclipse.ui.PlatformUI;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.prescription.EntryType;
-import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableDownAction;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpAction;
 import ch.elexis.data.Anwender;
-import ch.elexis.data.Prescription;
+import ch.elexis.data.Query;
 import ch.elexis.data.Rezept;
+import ch.elexis.data.User;
 import ch.elexis.data.Verrechnet;
 
 public class MedicationViewerHelper {
@@ -253,7 +251,17 @@ public class MedicationViewerHelper {
 				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
 				Optional<Anwender> prescriptorOpt = pres.getPrescriptor();
 				if (prescriptorOpt.isPresent()) {
-					return prescriptorOpt.get().getKuerzel();
+					String ret = prescriptorOpt.get().getKuerzel();
+					if (ret == null || ret.isEmpty()) {
+						String anwenderId = prescriptorOpt.get().getId();
+						Query<User> query = new Query<>(User.class);
+						query.add(User.FLD_ASSOC_CONTACT, Query.EQUALS, anwenderId);
+						List<User> users = query.execute();
+						if (!users.isEmpty()) {
+							ret = users.get(0).getId();
+						}
+					}
+					return ret;
 				}
 				return "";
 			}
@@ -296,28 +304,6 @@ public class MedicationViewerHelper {
 		menuManager.add(new MovePrescriptionPositionInTableDownAction(viewer, medicationComposite));
 		menuManager.add(new Separator());
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		menuManager.add(new Separator());
-		menuManager.add(new Action() {
-			{
-				setImageDescriptor(Images.IMG_BOOKMARK_PENCIL.getImageDescriptor());
-				setText(Messages.FixMediDisplay_AddDefaultSignature);
-			}
-			
-			@Override
-			public void run(){
-				StructuredSelection ss = (StructuredSelection) viewer.getSelection();
-				MedicationTableViewerItem viewerItem =
-					(MedicationTableViewerItem) ss.getFirstElement();
-				if (viewerItem != null) {
-					Prescription pr = viewerItem.getPrescription();
-					if (pr != null) {
-						ArticleDefaultSignatureTitleAreaDialog adtad =
-							new ArticleDefaultSignatureTitleAreaDialog(UiDesk.getTopShell(), pr);
-						adtad.open();
-					}
-				}
-			}
-		});
 		Menu menu = menuManager.createContextMenu(viewer.getTable());
 		
 		viewer.getTable().setMenu(menu);
