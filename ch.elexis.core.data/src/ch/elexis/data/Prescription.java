@@ -339,6 +339,27 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
+	 * @return if the prescription marks an applied article
+	 * @since 3.1.0
+	 */
+	public Boolean isApplied(){
+		String value =
+			checkNull((String) getExtInfoStoredObjectByKey(Constants.FLD_EXT_IS_APPLIED));
+		return Boolean.valueOf(value);
+	}
+	
+	/**
+	 * Mark this prescription as an applied article. Typically only prescriptions with
+	 * {@link EntryType.SELF_DISPENSED} are marked as applied.
+	 * 
+	 * @param disposalComment
+	 * @since 3.1.0
+	 */
+	public void setApplied(Boolean value){
+		setExtInfoStoredObjectByKey(Constants.FLD_EXT_IS_APPLIED, Boolean.toString(value));
+	}
+	
+	/**
 	 * Ein Medikament stoppen
 	 */
 	@Override

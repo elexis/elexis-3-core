@@ -57,6 +57,7 @@ import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -338,6 +339,13 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				int packungsGroesse = ((Artikel) v.getVerrechenbar()).getPackungsGroesse();
 				String proposal = (packungsGroesse > 0) ? "1/" + packungsGroesse : "1";
 				changeQuantityDialog(proposal, v);
+				Object prescriptionId = v.getDetail(Verrechnet.FLD_EXT_PRESC_ID);
+				if (prescriptionId instanceof String) {
+					Prescription prescription = Prescription.load((String) prescriptionId);
+					if (prescription.getEntryType() == EntryType.SELF_DISPENSED) {
+						prescription.setApplied(true);
+					}
+				}
 			}
 			
 			@Override

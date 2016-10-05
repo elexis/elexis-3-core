@@ -61,6 +61,9 @@ public class MedicationViewerHelper {
 				case SYMPTOMATIC_MEDICATION:
 					return Images.IMG_SYMPTOM_MEDI.getImage();
 				case SELF_DISPENSED:
+					if (pres.getPrescription().isApplied()) {
+						return Images.IMG_SYRINGE.getImage();
+					}
 					return Images.IMG_VIEW_CONSULTATION_DETAIL.getImage();
 				case RECIPE:
 					return Images.IMG_VIEW_RECIPES.getImage();
