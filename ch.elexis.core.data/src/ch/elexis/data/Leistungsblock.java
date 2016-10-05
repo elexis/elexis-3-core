@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -42,6 +45,8 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, XIDDOMAIN_SIMPLENAME,
 			Xid.ASSIGNMENT_LOCAL | Xid.QUALITY_GUID);
 	}
+	
+	private Logger logger;
 	
 	@Override
 	protected String getTableName(){
@@ -219,13 +224,25 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 			if (compressed != null) {
 				String storable = new String(CompEx.expand(compressed), "UTF-8"); //$NON-NLS-1$
 				for (String p : storable.split(",")) { //$NON-NLS-1$
-					lst.add((ICodeElement) CoreHub.poFactory.createFromString(p));
+					ICodeElement iCodeElement = (ICodeElement) CoreHub.poFactory.createFromString(p);
+					if(iCodeElement != null) {
+						lst.add(iCodeElement);
+					} else {
+						getLogger().warn("Could not load code [" + p + "]");
+					}
 				}
 			}
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 		}
 		return lst;
+	}
+	
+	private Logger getLogger(){
+		if (logger == null) {
+			logger = LoggerFactory.getLogger(Leistungsblock.class);
+		}
+		return logger;
 	}
 	
 	@Deprecated
