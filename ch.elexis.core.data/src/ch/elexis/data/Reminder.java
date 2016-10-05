@@ -12,16 +12,21 @@
 
 package ch.elexis.data;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.SortedSet;
+import java.util.Set;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
+import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
+import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -309,6 +314,9 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		return qbe.execute();
 	}
 	
+	private static String PS_REMINDERS_DUE_FOR =
+		"SELECT r.ID FROM reminders r LEFT JOIN reminders_responsible_link rrl ON (r.id = rrl.ReminderId) WHERE rrl.ResponsibleID = ? AND r.deleted = '0' AND r.IdentID = ? AND r.Status != ? AND r.DateDue < ?;";
+	
 	/**
 	 * Alle Reminder holen, die bei einem bestimmten Patienten für einen bestimmten Anwender fällig
 	 * sind
@@ -323,27 +331,42 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 */
 	public static List<Reminder> findRemindersDueFor(final Patient p, final Anwender a,
 		final boolean bOnlyPopup){
-		if (a == null) {
-			return new ArrayList<Reminder>();
+		Set<Reminder> ret = new HashSet<Reminder>();
+		// we have to apply a set, as there may exist
+		// multiple equivalent entries in reminders_responsible_link
+		// which resolve to multiple occurences of the same element, due to the left join
+		DBConnection dbConnection = getDefaultConnection();
+		PreparedStatement ps = dbConnection.getPreparedStatement(PS_REMINDERS_DUE_FOR);
+		try {
+			ps.setString(1, a.getId());
+			ps.setString(2, p.getId());
+			ps.setString(3, Integer.toString(ProcessStatus.CLOSED.numericValue()));
+			ps.setString(4, new TimeTool().toString(TimeTool.DATE_COMPACT));
+			ResultSet res = ps.executeQuery();
+			while (res.next()) {
+				Reminder reminder = Reminder.load(res.getString(1));
+				reminder.setDBConnection(dbConnection);
+				if (reminder != null && reminder.exists()) {
+					if ((bOnlyPopup == true)
+						&& (reminder.getVisibility() != Visibility.POPUP_ON_PATIENT_SELECTION)) {
+						continue;
+					}
+					ret.add(reminder);
+				}
+			}
+			res.close();
+		} catch (Exception ex) {
+			ExHandler.handle(ex);
+			return new ArrayList<Reminder>(ret);
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				// ignore
+			}
+			dbConnection.releasePreparedStatement(ps);
 		}
-		final SortedSet<Reminder> r4a = a.getReminders(p);
-		List<Reminder> ret = new ArrayList<Reminder>(r4a.size());
-		TimeTool today = new TimeTool();
-		for (Reminder r : r4a) {
-			if (r.getDateDue().isAfter(today)) {
-				continue;
-			}
-			if (r.getStatus() == ProcessStatus.CLOSED) {
-				continue;
-			}
-			if ((bOnlyPopup == true)
-				&& (r.getVisibility() != Visibility.POPUP_ON_PATIENT_SELECTION)) {
-				continue;
-			}
-			ret.add(r);
-		}
-		
-		return ret;
+		return new ArrayList<Reminder>(ret);
 	}
 	
 	public Patient getKontakt(){

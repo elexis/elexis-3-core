@@ -143,7 +143,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	private static DBConnection defaultConnection;
 	
-	protected static DBConnection getDefaultConnection(){
+	public static DBConnection getDefaultConnection(){
 		return defaultConnection;
 	}
 	
