@@ -63,11 +63,9 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
-import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;
-import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Verrechnet;
@@ -83,10 +81,9 @@ public class VerrechnungsDisplay extends Composite {
 	private IWorkbenchPage page;
 	private final Hyperlink hVer;
 	private final PersistentObjectDropTarget dropTarget;
-	private IAction applyMedicationAction, fixMedicationAction, chPriceAction, chCountAction,
+	private IAction applyMedicationAction, chPriceAction, chCountAction,
 			chTextAction, removeAction, removeAllAction;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
-	private static final String FIX_MEDICATION = Messages.VerrechnungsDisplay_fixMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
 	private static final String CHCOUNT = Messages.VerrechnungsDisplay_changeNumber;
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
@@ -146,15 +143,10 @@ public class VerrechnungsDisplay extends Composite {
 				ElexisEventDispatcher.fireSelectionEvent(verrechnet);
 				
 				applyMedicationAction.setEnabled(false);
-				fixMedicationAction.setEnabled(false);
 				
 				IVerrechenbar verrechenbar = verrechnet.getVerrechenbar();
-				boolean isApplicable = (verrechnet != null && (verrechenbar instanceof Artikel));
-				if(!isApplicable) return;
-				// we can only do this if we know about the resp. prescription id
-				if (verrechnet.getDetail(Verrechnet.FLD_EXT_PRESC_ID) != null) {
+				if (verrechenbar != null && (verrechenbar instanceof Artikel)) {
 					applyMedicationAction.setEnabled(true);
-					fixMedicationAction.setEnabled(true);
 				}
 			}
 		});
@@ -304,7 +296,6 @@ public class VerrechnungsDisplay extends Composite {
 						TableItem ti = tVerr.getItem(sel);
 						Verrechnet v = (Verrechnet) ti.getData();
 						manager.add(applyMedicationAction);
-						manager.add(fixMedicationAction);
 						manager.add(chPriceAction);
 						manager.add(chCountAction);
 						IVerrechenbar vbar = v.getVerrechenbar();
@@ -337,49 +328,15 @@ public class VerrechnungsDisplay extends Composite {
 				Verrechnet v = loadSelectedVerrechnet();
 				v.setDetail(Verrechnet.VATSCALE, Double.toString(0.0));
 				
-				Prescription presc = Prescription.load(v.getDetail(Verrechnet.FLD_EXT_PRESC_ID));
-				presc.stop(null);
-				presc.setEntryType(Prescription.EntryType.APPLICATION);
-				presc.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID, v.getId());
-				
-				int packungsGroesse = presc.getArtikel().getPackungsGroesse();
+				int packungsGroesse = ((Artikel) v.getVerrechenbar()).getPackungsGroesse();
 				String proposal = (packungsGroesse > 0) ? "1/" + packungsGroesse : "1";
 				changeQuantityDialog(proposal, v);
-				
-				ElexisEventDispatcher.update(presc);
 			}
 			
 			@Override
 			public ImageDescriptor getImageDescriptor(){
 				return Images.IMG_SYRINGE.getImageDescriptor();
 			}
-		};
-		// #3315
-		fixMedicationAction = new Action(FIX_MEDICATION) {
-			@Override
-			public void run(){
-				Verrechnet v = loadSelectedVerrechnet();
-				Prescription presc = Prescription.load(v.getDetail(Verrechnet.FLD_EXT_PRESC_ID));
-				Artikel article = presc.getArtikel();
-				
-				ArticleDefaultSignature defSig =
-					ArticleDefaultSignature.getDefaultsignatureForArticle(article);
-				String dosage = StringTool.leer;
-				String remark = StringTool.leer;
-				if (defSig != null) {
-					dosage = defSig.getSignatureAsDosisString();
-					remark = defSig.getSignatureComment();
-				}
-				
-				new Prescription(article,
-					(Patient) ElexisEventDispatcher.getSelected(Patient.class), dosage, remark);
-			}
-			
-			@Override
-			public ImageDescriptor getImageDescriptor(){
-				return Images.IMG_PILL.getImageDescriptor();
-			}
-			
 		};
 		
 		removeAction = new Action(REMOVE) {

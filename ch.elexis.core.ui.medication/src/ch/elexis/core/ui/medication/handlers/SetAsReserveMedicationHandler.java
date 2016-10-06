@@ -8,13 +8,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
-import ch.elexis.data.ArticleDefaultSignature;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Prescription.EntryType;
 
@@ -32,37 +27,11 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
 				Prescription presc = mtvItem.getPrescription();
 				
-				// is no ReserveMedication yet
-				if (presc != null && !presc.isReserveMedication()) {
-					Artikel article = presc.getArtikel();
-					String dose = presc.getDosis();
-					String remark = presc.getBemerkung();
-					String disposalComment = presc.getDisposalComment();
-					
-					if (dose.isEmpty() && remark.isEmpty()) {
-						ArticleDefaultSignature defSig =
-							ArticleDefaultSignature.getDefaultsignatureForArticle(article);
-						if (defSig != null) {
-							dose = defSig.getSignatureAsDosisString();
-							remark = defSig.getSignatureComment();
-						}
-					}
-					
-					// create ReserveMedication
-					Prescription reserveMedi = new Prescription(article,
-						(Patient) ElexisEventDispatcher.getSelected(Patient.class), dose, remark);
+				if (presc != null && !(presc.getEntryType() == EntryType.RESERVE_MEDICATION)) {
+					Prescription reserveMedi = new Prescription(presc);
 					reserveMedi.setEntryType(EntryType.RESERVE_MEDICATION);
-					// add disposal comment if present
-					if (disposalComment != null && !disposalComment.isEmpty())
-						reserveMedi.setDisposalComment(disposalComment);
-						
-					// if selection is FixMedication -> stop it
-					if (presc.isFixedMediation()) {
-						String stopDose = StringConstants.ZERO;
-						presc.addTerm(null, stopDose);
-						presc.setStopReason("Umgestellt auf ReserveMedikation");
-					}
-					
+					presc.stop(null);
+					presc.setStopReason("Umgestellt auf Reserve Medikation");
 					MedicationView medicationView =
 						(MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 							.getActivePage().findView(MedicationView.PART_ID);

@@ -597,16 +597,6 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
-	 * 
-	 * @param reserve
-	 *            this is a medication to keep as reserve or "Reservemedikation"
-	 * @since 3.1.0
-	 */
-	public void setReserveMedication(boolean reserve){
-		setEntryType(EntryType.RESERVE_MEDICATION);
-	}
-	
-	/**
 	 * required by JFace data-binding
 	 * 
 	 * @since 3.1.0
@@ -630,14 +620,6 @@ public class Prescription extends PersistentObject {
 	 */
 	public void setStopReason(String stopReason){
 		setExtInfoStoredObjectByKey(FLD_EXT_STOP_REASON, stopReason);
-	}
-	
-	/**
-	 * @return whether this medication was directly applied during a consultation
-	 * @since 3.1.0
-	 */
-	public boolean isAppliedMedication(){
-		return getEntryType() == EntryType.APPLICATION;
 	}
 	
 	/**
@@ -691,6 +673,9 @@ public class Prescription extends PersistentObject {
 	}
 	
 	public void setEntryType(EntryType type){
+		if (type == null) {
+			type = EntryType.FIXED_MEDICATION;
+		}
 		setInt(FLD_PRESC_TYPE, type.numericValue());
 	}
 	
@@ -708,8 +693,8 @@ public class Prescription extends PersistentObject {
 		RECIPE (2),
 		/** For self dispensation **/
 		SELF_DISPENSED (3), 
-		/** Directly applied during consultation **/
-		APPLICATION (4);
+		/** Medicine given because of a current problem, but not intended for a longer period **/
+		SYMPTOMATIC_MEDICATION(5);
 		//@formatter:on
 		
 		private int numeric;

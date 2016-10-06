@@ -15,6 +15,7 @@ package ch.elexis.core.ui.views;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_INTAKE_LIST;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PRESCRIPTION;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
@@ -35,6 +36,7 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Rezept;
 import ch.rgw.tools.StringTool;
+import ch.rgw.tools.TimeTool;
 
 public class RezeptBlatt extends ViewPart implements ICallback, IActivationListener, IOutputter {
 	public final static String ID = "ch.elexis.RezeptBlatt"; //$NON-NLS-1$
@@ -76,6 +78,14 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		
 	}
 	
+	/**
+	 * Create a recipe document, with a list of prescriptions from Rezept parameter.
+	 * 
+	 * @param rp
+	 * @param template
+	 * @param replace
+	 * @return
+	 */
 	public boolean createList(Rezept rp, String template, String replace){
 		actBrief =
 			text.createFromTemplateName(Konsultation.getAktuelleKons(), template, Brief.RP,
@@ -101,6 +111,41 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			return true;
 		}
 		text.saveBrief(actBrief, Brief.RP);
+		return false;
+	}
+	
+	/**
+	 * Create a document with a list of prescriptions, not a recipe.
+	 * 
+	 * @param prescriptions
+	 * @param template
+	 * @param replace
+	 * @return
+	 */
+	public boolean createList(Prescription[] prescriptions, String template, String replace){
+		TimeTool now = new TimeTool();
+		actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(), template,
+			Brief.UNKNOWN, (Patient) ElexisEventDispatcher.getSelected(Patient.class),
+			template + " " + now.toString(TimeTool.DATE_GER));
+		List<Prescription> lines = Arrays.asList(prescriptions);
+		String[][] fields = new String[lines.size()][];
+		if (replace.equals(Messages.RezeptBlatt_4)) {
+			fields = createRezeptListFields(lines);
+		} else {
+			fields = createTakingListFields(lines);
+		}
+		int[] wt = new int[] {
+			10, 70, 20
+		};
+		if (text.getPlugin().insertTable(replace, 0, fields, wt)) {
+			if (text.getPlugin().isDirectOutput()) {
+				text.getPlugin().print(null, null, true);
+				getSite().getPage().hideView(this);
+			}
+			text.saveBrief(actBrief, Brief.UNKNOWN);
+			return true;
+		}
+		text.saveBrief(actBrief, Brief.UNKNOWN);
 		return false;
 	}
 	
@@ -155,15 +200,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	}
 	
 	public boolean createEinnahmeliste(Patient pat, Prescription[] pres){
-		Rezept rp = new Rezept(pat);
-		for (Prescription p : pres) {
-			/*
-			 * rp.addLine(new RpZeile(" ",p.getArtikel().getLabel(),"",
-			 * p.getDosis(),p.getBemerkung()));
-			 */
-			rp.addPrescription(new Prescription(p));
-		}
-		return createList(rp, TT_INTAKE_LIST, Messages.RezeptBlatt_6); //$NON-NLS-1$ //$NON-NLS-2$
+		return createList(pres, TT_INTAKE_LIST, Messages.RezeptBlatt_6); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public void save(){

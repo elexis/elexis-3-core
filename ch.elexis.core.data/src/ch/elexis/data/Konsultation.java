@@ -27,8 +27,8 @@ import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
-import ch.elexis.data.Prescription.EntryType;
 import ch.elexis.core.text.model.Samdas;
+import ch.elexis.data.Prescription.EntryType;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -615,6 +615,15 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				if (v instanceof Artikel) {
 					Artikel art = (Artikel) v;
 					art.einzelRuecknahme(z);
+					
+					Object prescId = ls.getDetail(Verrechnet.FLD_EXT_PRESC_ID);
+					if (prescId instanceof String) {
+						Prescription prescription = Prescription.load((String) prescId);
+						if (prescription.getEntryType() == EntryType.SELF_DISPENSED) {
+							prescription.remove();
+							ElexisEventDispatcher.reload(Prescription.class);
+						}
+					}
 				}
 			}
 			return result;
@@ -644,25 +653,6 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				getFall().getPatient().countItem(l);
 				CoreHub.actUser.countItem(l);
 				CoreHub.actUser.statForString("LeistungenMFU", l.getCodeSystemName());
-				if (l instanceof Artikel) {
-					Artikel art = (Artikel) l;
-					// art.einzelAbgabe(1); -> this is done by the optifier now
-					Prescription p = new Prescription(art, getFall().getPatient(), "", "");
-					p.stop(null);
-					p.setEntryType(EntryType.SELF_DISPENSED);
-					p.setStopReason("Dispensiert");
-					Verrechnet verrechnet = optifier.getCreatedVerrechnet();
-					if (verrechnet != null) {
-						p.setExtInfoStoredObjectByKey(Prescription.FLD_EXT_VERRECHNET_ID,
-							verrechnet.getId());
-						verrechnet.setDetail(Verrechnet.FLD_EXT_PRESC_ID, p.getId());
-					} else {
-						log.error("Verrechnet is null in " + optifier.getClass().getName() + " for "
-							+ l.getCodeSystemName() + "/" + l.getCodeSystemCode() + "/"
-							+ l.getCode());
-					}
-					
-				}
 			}
 			return result;
 		}

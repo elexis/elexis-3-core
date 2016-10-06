@@ -13,7 +13,7 @@ import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Prescription.EntryType;
 
-public class SetAsFixMedicationHandler extends AbstractHandler {
+public class SetAsSymptomaticMedicationHandler extends AbstractHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
@@ -27,15 +27,16 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
 				Prescription presc = mtvItem.getPrescription();
 				
-				if (presc != null && !(presc.getEntryType() == EntryType.FIXED_MEDICATION)) {
+				if (presc != null && !(presc.getEntryType() == EntryType.SYMPTOMATIC_MEDICATION)) {
 					Prescription reserveMedi = new Prescription(presc);
-					reserveMedi.setEntryType(EntryType.FIXED_MEDICATION);
+					reserveMedi.setEntryType(EntryType.SYMPTOMATIC_MEDICATION);
 					presc.stop(null);
-					presc.setStopReason("Umgestellt auf Fix Medikation");
+					presc.setStopReason("Umgestellt auf Symptomatische Medikation");
+					MedicationView medicationView =
+						(MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getActivePage().findView(MedicationView.PART_ID);
+					medicationView.refresh();
 				}
-				MedicationView medicationView = (MedicationView) PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getActivePage().findView(MedicationView.PART_ID);
-				medicationView.refresh();
 			}
 		}
 		return null;

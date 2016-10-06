@@ -59,7 +59,8 @@ public class PrintTakingsListHandler extends AbstractHandler {
 			rpb =
 				(RezeptBlatt) HandlerUtil.getActiveWorkbenchWindow(event).getActivePage()
 					.showView(RezeptBlatt.ID);
-			rpb.createEinnahmeliste(patient, prescRecipes.toArray(new Prescription[0]));
+			rpb.createEinnahmeliste(patient,
+				prescRecipes.toArray(new Prescription[prescRecipes.size()]));
 		} catch (PartInitException e) {
 			log.error("Error outputting recipe", e);
 		}
