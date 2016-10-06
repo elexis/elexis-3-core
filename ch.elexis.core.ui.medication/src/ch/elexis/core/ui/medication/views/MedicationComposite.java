@@ -12,6 +12,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.viewers.ISelection;
@@ -888,6 +889,12 @@ public class MedicationComposite extends Composite
 		}
 		
 		public void dropped(PersistentObject article, DropTargetEvent ev){
+			if (isVaccination(article)) {
+				MessageDialog.openWarning(parentShell,
+					Messages.MedicationComposite_isVaccinationTitle,
+					Messages.MedicationComposite_isVaccinationText);
+				return;
+			}
 			if (dropChangePrescription == null) {
 				CreatePrescriptionHelper prescriptionHelper =
 					new CreatePrescriptionHelper((Artikel) article, parentShell);
@@ -915,12 +922,15 @@ public class MedicationComposite extends Composite
 			refresh();
 		}
 		
+		private boolean isVaccination(PersistentObject article){
+			return (((Artikel) article).getATC_code().startsWith("J07"));
+		}
+		
 		public boolean accept(PersistentObject o){
 			if (!(o instanceof Artikel))
 				return false;
 			// we do not accept vaccination articles
-			Artikel a = (Artikel) o;
-			return (!a.getATC_code().startsWith("J07"));
+			return !isVaccination((Artikel) o);
 		}
 	}
 }

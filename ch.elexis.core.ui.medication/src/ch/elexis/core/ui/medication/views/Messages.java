@@ -62,6 +62,8 @@ public class Messages extends NLS {
 	public static String MedicationComposite_consFrom;
 	public static String MedicationComposite_freetext;
 	public static String MedicationComposite_tooltipDosageType;
+	public static String MedicationComposite_isVaccinationTitle;
+	public static String MedicationComposite_isVaccinationText;
 	
 	public static String MovePrescriptionPositionInTableUpAction_Label;
 	public static String MovePrescriptionPositionInTableDownAction_Label;
