@@ -1,9 +1,14 @@
 package ch.elexis.core.ui.views.controls;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -61,6 +66,8 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private Text txtFreeTextDosage;
 	private Composite compositeFreeTextDosage;
 	private Composite stackCompositeDosage;
+	
+	private List<SavingTargetToModelStrategy> targetToModelStrategies;
 	
 	/**
 	 * Create the composite.
@@ -208,6 +215,8 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			databindingContext = dbc;
 		}
 		
+		targetToModelStrategies = new ArrayList<>();
+		
 		IObservableValue observeTextTextSignatureMorningObserveWidget =
 			WidgetProperties.text(new int[] {
 				SWT.Modify, SWT.FocusOut
@@ -215,8 +224,10 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		IObservableValue itemSignatureMorningObserveDetailValue =
 			PojoProperties.value(ArticleSignature.class, "morning", String.class)
 				.observeDetail(signatureItem);
+		SavingTargetToModelStrategy targetToModelStrategy = new SavingTargetToModelStrategy(this);
+		targetToModelStrategies.add(targetToModelStrategy);
 		databindingContext.bindValue(observeTextTextSignatureMorningObserveWidget,
-			itemSignatureMorningObserveDetailValue);
+			itemSignatureMorningObserveDetailValue, targetToModelStrategy, null);
 		
 		IObservableValue observeTextTextSignatureNoonObserveWidget =
 			WidgetProperties.text(new int[] {
@@ -225,8 +236,10 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		IObservableValue itemSignatureNoonObserveDetailValue =
 			PojoProperties.value(ArticleSignature.class, "noon", String.class)
 				.observeDetail(signatureItem);
+		targetToModelStrategy = new SavingTargetToModelStrategy(this);
+		targetToModelStrategies.add(targetToModelStrategy);
 		databindingContext.bindValue(observeTextTextSignatureNoonObserveWidget,
-			itemSignatureNoonObserveDetailValue);
+			itemSignatureNoonObserveDetailValue, targetToModelStrategy, null);
 		
 		IObservableValue observeTextTextSignatureEveningObserveWidget =
 				WidgetProperties.text(new int[] {
@@ -235,8 +248,10 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			IObservableValue itemSignatureEveningObserveDetailValue =
 			PojoProperties.value(ArticleSignature.class, "evening", String.class)
 					.observeDetail(signatureItem);
+		targetToModelStrategy = new SavingTargetToModelStrategy(this);
+		targetToModelStrategies.add(targetToModelStrategy);
 			databindingContext.bindValue(observeTextTextSignatureEveningObserveWidget,
-				itemSignatureEveningObserveDetailValue);
+			itemSignatureEveningObserveDetailValue, targetToModelStrategy, null);
 		
 		IObservableValue observeTextTextSignatureNightObserveWidget =
 			WidgetProperties.text(new int[] {
@@ -245,8 +260,10 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		IObservableValue itemSignatureNightObserveDetailValue =
 			PojoProperties.value(ArticleSignature.class, "night", String.class)
 				.observeDetail(signatureItem);
+		targetToModelStrategy = new SavingTargetToModelStrategy(this);
+		targetToModelStrategies.add(targetToModelStrategy);
 		databindingContext.bindValue(observeTextTextSignatureNightObserveWidget,
-			itemSignatureNightObserveDetailValue);
+			itemSignatureNightObserveDetailValue, targetToModelStrategy, null);
 		
 		IObservableValue observeTextFreeTextDosageObserveWidget =
 			WidgetProperties.text(new int[] {
@@ -254,8 +271,10 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			}).observeDelayed(100, txtFreeTextDosage);
 		IObservableValue itemSignatureFreeTextDosageObserveDetailValue = PojoProperties
 			.value(ArticleSignature.class, "freeText", String.class).observeDetail(signatureItem);
+		targetToModelStrategy = new SavingTargetToModelStrategy(this);
+		targetToModelStrategies.add(targetToModelStrategy);
 		databindingContext.bindValue(observeTextFreeTextDosageObserveWidget,
-			itemSignatureFreeTextDosageObserveDetailValue);
+			itemSignatureFreeTextDosageObserveDetailValue, targetToModelStrategy, null);
 		
 		IObservableValue observeTextTextSignatureCommentObserveWidget =
 			WidgetProperties.text(new int[] {
@@ -264,8 +283,10 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		IObservableValue itemSignatureCommentObserveDetailValue =
 			PojoProperties.value(ArticleSignature.class, "comment", String.class)
 				.observeDetail(signatureItem);
+		targetToModelStrategy = new SavingTargetToModelStrategy(this);
+		targetToModelStrategies.add(targetToModelStrategy);
 		databindingContext.bindValue(observeTextTextSignatureCommentObserveWidget,
-			itemSignatureCommentObserveDetailValue);
+			itemSignatureCommentObserveDetailValue, targetToModelStrategy, null);
 		
 		return databindingContext;
 	}
@@ -505,6 +526,36 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				return false;
 			}
 			return true;
+		}
+	}
+	
+	public void setAutoSave(boolean value){
+		if (targetToModelStrategies != null) {
+			for (SavingTargetToModelStrategy savingTargetToModelStrategy : targetToModelStrategies) {
+				savingTargetToModelStrategy.setAutoSave(value);
+			}
+		}
+	}
+	
+	private static class SavingTargetToModelStrategy extends UpdateValueStrategy {
+		private boolean autoSave;
+		private ArticleDefaultSignatureComposite composite;
+		
+		public SavingTargetToModelStrategy(ArticleDefaultSignatureComposite composite){
+			this.composite = composite;
+		}
+		
+		public void setAutoSave(boolean value){
+			autoSave = value;
+		}
+		
+		@Override
+		protected IStatus doSet(IObservableValue observableValue, Object value){
+			IStatus ret = super.doSet(observableValue, value);
+			if (autoSave) {
+				composite.safeToDefault();
+			}
+			return ret;
 		}
 	}
 }

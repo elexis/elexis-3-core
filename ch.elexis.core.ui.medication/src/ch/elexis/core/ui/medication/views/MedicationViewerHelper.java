@@ -252,20 +252,20 @@ public class MedicationViewerHelper {
 			public String getText(Object element){
 				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
 				Optional<Anwender> prescriptorOpt = pres.getPrescriptor();
+				String text = null;
 				if (prescriptorOpt.isPresent()) {
-					String ret = prescriptorOpt.get().getKuerzel();
-					if (ret == null || ret.isEmpty()) {
+					text = prescriptorOpt.get().getKuerzel();
+					if (text == null || text.isEmpty()) {
 						String anwenderId = prescriptorOpt.get().getId();
 						Query<User> query = new Query<>(User.class);
 						query.add(User.FLD_ASSOC_CONTACT, Query.EQUALS, anwenderId);
 						List<User> users = query.execute();
 						if (!users.isEmpty()) {
-							ret = users.get(0).getId();
+							text = users.get(0).getId();
 						}
 					}
-					return ret;
 				}
-				return "";
+				return ((text != null) ? text : "");
 			}
 		});
 		return ret;

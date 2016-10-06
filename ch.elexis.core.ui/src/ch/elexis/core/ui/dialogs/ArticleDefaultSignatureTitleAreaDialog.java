@@ -54,6 +54,7 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 		adsc = new ArticleDefaultSignatureComposite(area, SWT.None);
 		adsc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		adsc.setToolbarVisible(false);
+		adsc.initDataBindings(null);
 		adsc.setArticleToBind(article, false);
 		
 		if(prescription!=null) {
