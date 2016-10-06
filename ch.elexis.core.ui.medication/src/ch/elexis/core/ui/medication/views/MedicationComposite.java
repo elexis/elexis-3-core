@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
@@ -115,13 +116,14 @@ public class MedicationComposite extends Composite
 	 * 
 	 * @param parent
 	 * @param style
+	 * @param partSite
 	 */
-	public MedicationComposite(Composite parent, int style){
+	public MedicationComposite(Composite parent, int style, IWorkbenchPartSite partSite){
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		
 		searchFilterComposite();
-		medicationTableComposite();
+		medicationTableComposite(partSite);
 		stateComposite();
 		medicationDetailComposite();
 		
@@ -163,7 +165,7 @@ public class MedicationComposite extends Composite
 		medicationHistoryFilter.setSearchText("");
 	}
 	
-	private void medicationTableComposite(){
+	private void medicationTableComposite(IWorkbenchPartSite partSite){
 		tablesComposite = new Composite(this, SWT.NONE);
 		tablesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tablesLayout = new StackLayout();
@@ -172,7 +174,8 @@ public class MedicationComposite extends Composite
 		medicationTableComposite = new MedicationTableComposite(tablesComposite, SWT.NONE);
 		medicationTableComposite.setMedicationComposite(this);
 		MedicationViewerHelper.addKeyMoveUpDown(medicationTableComposite.getTableViewer(), this);
-		MedicationViewerHelper.addContextMenu(medicationTableComposite.getTableViewer(), this);
+		MedicationViewerHelper.addContextMenu(medicationTableComposite.getTableViewer(), this,
+			partSite);
 		// this composite manages selection of both tables
 		medicationTableComposite.getTableViewer().addSelectionChangedListener(this);
 		
@@ -182,7 +185,7 @@ public class MedicationComposite extends Composite
 		MedicationViewerHelper.addKeyMoveUpDown(medicationHistoryTableComposite.getTableViewer(),
 			this);
 		MedicationViewerHelper.addContextMenu(medicationHistoryTableComposite.getTableViewer(),
-			this);
+			this, partSite);
 		// this composite manages selection of both tables
 		medicationHistoryTableComposite.getTableViewer().addSelectionChangedListener(this);
 		medicationHistoryFilter =

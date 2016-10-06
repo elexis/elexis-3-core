@@ -37,7 +37,7 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void createPartControl(Composite parent){
-		tpc = new MedicationComposite(parent, SWT.NONE);
+		tpc = new MedicationComposite(parent, SWT.NONE, getSite());
 		getSite().setSelectionProvider(tpc);
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
