@@ -1,8 +1,6 @@
 package ch.elexis.core.ui.medication.views;
 
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Optional;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -28,11 +26,8 @@ import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableDownAction;
 import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpAction;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Prescription.EntryType;
-import ch.elexis.data.Query;
 import ch.elexis.data.Rezept;
-import ch.elexis.data.User;
 import ch.elexis.data.Verrechnet;
 
 public class MedicationViewerHelper {
@@ -50,25 +45,7 @@ public class MedicationViewerHelper {
 			
 			@Override
 			public Image getImage(Object element){
-				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
-				EntryType et = pres.getEntryType();
-				switch (et) {
-				case FIXED_MEDICATION:
-					return Images.IMG_FIX_MEDI.getImage();
-				case RESERVE_MEDICATION:
-					return Images.IMG_RESERVE_MEDI.getImage();
-				case SYMPTOMATIC_MEDICATION:
-					return Images.IMG_SYMPTOM_MEDI.getImage();
-				case SELF_DISPENSED:
-					if (pres.getPrescription().isApplied()) {
-						return Images.IMG_SYRINGE.getImage();
-					}
-					return Images.IMG_VIEW_CONSULTATION_DETAIL.getImage();
-				case RECIPE:
-					return Images.IMG_VIEW_RECIPES.getImage();
-				default:
-					return Images.IMG_EMPTY_TRANSPARENT.getImage();
-				}
+				return ((MedicationTableViewerItem) element).getImage();
 			}
 		});
 		return ret;
@@ -128,8 +105,8 @@ public class MedicationViewerHelper {
 		return ret;
 	}
 	
-	public static TableViewerColumn createDosageColumn(TableViewer viewer, TableColumnLayout layout,
-		int columnIndex){
+	public static TableViewerColumn createDosageColumn(TableViewer viewer,
+		TableColumnLayout layout, int columnIndex){
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			
@@ -149,8 +126,8 @@ public class MedicationViewerHelper {
 		return ret;
 	}
 	
-	public static TableViewerColumn createBeginColumn(TableViewer viewer, TableColumnLayout layout,
-		int columnIndex){
+	public static TableViewerColumn createBeginColumn(TableViewer viewer,
+		TableColumnLayout layout, int columnIndex){
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.CENTER);
 		TableColumn tblclmnEnacted = ret.getColumn();
 		layout.setColumnData(tblclmnEnacted, new ColumnPixelData(60, true, true));
@@ -213,7 +190,8 @@ public class MedicationViewerHelper {
 	}
 	
 	public static TableViewerColumn createStopReasonColumn(TableViewer viewer,
-		TableColumnLayout layout, int columnIndex){
+		TableColumnLayout layout,
+		int columnIndex){
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.LEFT);
 		TableColumn tblclmnReason = ret.getColumn();
 		ColumnWeightData reasonColumnWeightData =
@@ -242,28 +220,14 @@ public class MedicationViewerHelper {
 		TableColumnLayout layout, int columnIndex){
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.LEFT);
 		TableColumn tblclmnMandant = ret.getColumn();
-		ColumnWeightData mandantColumnWeightData = new ColumnWeightData(0, 50, true);
+		ColumnWeightData mandantColumnWeightData =
+			new ColumnWeightData(0, 50, true);
 		layout.setColumnData(tblclmnMandant, mandantColumnWeightData);
 		tblclmnMandant.setText("Anwender");
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
 			public String getText(Object element){
-				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
-				Optional<Anwender> prescriptorOpt = pres.getPrescriptor();
-				String text = null;
-				if (prescriptorOpt.isPresent()) {
-					text = prescriptorOpt.get().getKuerzel();
-					if (text == null || text.isEmpty()) {
-						String anwenderId = prescriptorOpt.get().getId();
-						Query<User> query = new Query<>(User.class);
-						query.add(User.FLD_ASSOC_CONTACT, Query.EQUALS, anwenderId);
-						List<User> users = query.execute();
-						if (!users.isEmpty()) {
-							text = users.get(0).getId();
-						}
-					}
-				}
-				return ((text != null) ? text : "");
+				return ((MedicationTableViewerItem) element).getPrescriptorLabel();
 			}
 		});
 		return ret;

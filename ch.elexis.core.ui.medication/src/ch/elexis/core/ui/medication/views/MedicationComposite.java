@@ -3,7 +3,6 @@ package ch.elexis.core.ui.medication.views;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -249,10 +248,16 @@ public class MedicationComposite extends Composite
 				if (btnShowHistory.getSelection()) {
 					showSearchFilterComposite(true);
 					tablesLayout.topControl = medicationHistoryTableComposite;
+					tablesLayout.topControl = medicationHistoryTableComposite;
+					medicationHistoryTableComposite.setPendingInput();
+					medicationHistoryTableComposite.getTableViewer().refresh();
 					switchToViewerSoftOrderIfNotActive(ViewerSortOrder.DEFAULT);
 				} else {
 					showSearchFilterComposite(false);
 					tablesLayout.topControl = medicationTableComposite;
+					tablesLayout.topControl = medicationTableComposite;
+					medicationTableComposite.setPendingInput();
+					medicationTableComposite.getTableViewer().refresh();
 				}
 				tablesComposite.layout();
 				
@@ -633,40 +638,24 @@ public class MedicationComposite extends Composite
 		
 		List<Prescription> medicationInput = MedicationViewHelper.loadInputData(false, pat.getId());
 		List<MedicationTableViewerItem> tvMedicationInput =
-			MedicationTableViewerItem.initFromPrescriptionList(medicationInput);
-		medicationTableComposite.getTableViewer().setInput(tvMedicationInput);
+			MedicationTableViewerItem.createFromPrescriptionList(medicationInput,
+				medicationTableComposite.getTableViewer());
+		medicationTableComposite.setInput(tvMedicationInput);
 		
 		List<Prescription> medicationHistoryInput =
 			MedicationViewHelper.loadInputData(true, pat.getId());
 		List<MedicationTableViewerItem> tvMedicationHistoryInput =
-			MedicationTableViewerItem.initFromPrescriptionList(medicationHistoryInput);
-		medicationHistoryTableComposite.getTableViewer().setInput(tvMedicationHistoryInput);
+			MedicationTableViewerItem.createFromPrescriptionList(medicationHistoryInput,
+				medicationHistoryTableComposite.getTableViewer());
+		medicationHistoryTableComposite.setInput(tvMedicationHistoryInput);
 		
 		selectedMedication.setValue(null);
 		lblLastDisposalLink.setText("");
 		showMedicationDetailComposite(null);
 		
-		if (tvMedicationInput != null) {
-			lblDailyTherapyCost.setText("Berechne Tagestherapiekosten...");
-			UIFinishingThread ut = new UIFinishingThread() {
-		
-				@Override
-				public Object preparation(){
-					List<Prescription> fix =
-						tvMedicationInput.stream().filter(p -> p.isFixedMediation())
-							.map(f -> f.getPrescription()).collect(Collectors.toList());
-					return MedicationViewHelper.calculateDailyCostAsString(fix);
-		}
-		
-				@Override
-				public void finalization(Object input){
-					if (lblDailyTherapyCost != null && !lblDailyTherapyCost.isDisposed()) {
-						lblDailyTherapyCost.setText(input.toString());
-					}
-		}
-		
-			};
-			ut.start();
+		if (medicationInput != null) {
+			String dailyCost = MedicationViewHelper.calculateDailyCostAsString(medicationInput);
+			lblDailyTherapyCost.setText(dailyCost);
 		} else {
 			lblDailyTherapyCost.setText("");
 		}
