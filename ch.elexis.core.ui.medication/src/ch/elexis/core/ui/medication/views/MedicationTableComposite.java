@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.medication.views;
 
+import java.util.List;
+
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -21,6 +23,7 @@ public class MedicationTableComposite extends Composite {
 	private TableColumnLayout layout;
 	
 	private MedicationComposite medicationComposite;
+	private List<MedicationTableViewerItem> pendingInput;
 	
 	public MedicationTableComposite(Composite parent, int style){
 		super(parent, style);
@@ -67,5 +70,20 @@ public class MedicationTableComposite extends Composite {
 	
 	public TableViewer getTableViewer(){
 		return viewer;
+	}
+	
+	public void setInput(List<MedicationTableViewerItem> tvMedicationInput){
+		if (isVisible()) {
+			viewer.setInput(tvMedicationInput);
+		} else {
+			pendingInput = tvMedicationInput;
+		}
+	}
+	
+	public void setPendingInput(){
+		if (pendingInput != null) {
+			viewer.setInput(pendingInput);
+			pendingInput = null;
+		}
 	}
 }
