@@ -68,6 +68,7 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
+import ch.elexis.data.Prescription.EntryType;
 import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -331,6 +332,13 @@ public class VerrechnungsDisplay extends Composite {
 				int packungsGroesse = ((Artikel) v.getVerrechenbar()).getPackungsGroesse();
 				String proposal = (packungsGroesse > 0) ? "1/" + packungsGroesse : "1";
 				changeQuantityDialog(proposal, v);
+				Object prescriptionId = v.getDetail(Verrechnet.FLD_EXT_PRESC_ID);
+				if (prescriptionId instanceof String) {
+					Prescription prescription = Prescription.load((String) prescriptionId);
+					if (prescription.getEntryType() == EntryType.SELF_DISPENSED) {
+						prescription.setApplied(true);
+					}
+				}
 			}
 			
 			@Override

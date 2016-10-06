@@ -24,6 +24,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.data.Prescription.EntryType;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -63,6 +64,7 @@ public class Prescription extends PersistentObject {
 	public static final String FLD_EXT_DISPOSAL_COMMENT = "disposalComment";
 	public static final String FLD_EXT_DATE_LAST_DISPOSAL = "lastDisposal";
 	public static final String FLD_EXT_DISPOSED_BY = "disposedBy";
+	public static final Object FLD_EXT_IS_APPLIED = "isApplied";
 	
 	/**
 	 * Prescription is a direct distribution within a consultation
@@ -377,6 +379,26 @@ public class Prescription extends PersistentObject {
 	 */
 	public void setDisposalComment(String disposalComment){
 		setExtInfoStoredObjectByKey(FLD_EXT_DISPOSAL_COMMENT, disposalComment);
+	}
+	
+	/**
+	 * @return if the prescription marks an applied article
+	 * @since 3.1.0
+	 */
+	public Boolean isApplied(){
+		String value = checkNull((String) getExtInfoStoredObjectByKey(FLD_EXT_IS_APPLIED));
+		return Boolean.valueOf(value);
+	}
+	
+	/**
+	 * Mark this prescription as an applied article. Typically only prescriptions with
+	 * {@link EntryType.SELF_DISPENSED} are marked as applied.
+	 * 
+	 * @param disposalComment
+	 * @since 3.1.0
+	 */
+	public void setApplied(Boolean value){
+		setExtInfoStoredObjectByKey(FLD_EXT_IS_APPLIED, Boolean.toString(value));
 	}
 	
 	/**
