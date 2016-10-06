@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.IPersistentObject;
@@ -300,7 +299,8 @@ public class MedicationViewerHelper {
 	//		});
 	//	}
 	
-	public static void addContextMenu(TableViewer viewer, MedicationComposite medicationComposite){
+	public static void addContextMenu(TableViewer viewer, MedicationComposite medicationComposite,
+		IWorkbenchPartSite site){
 		// register context menu for table viewer
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(new MovePrescriptionPositionInTableUpAction(viewer, medicationComposite));
@@ -310,8 +310,6 @@ public class MedicationViewerHelper {
 		Menu menu = menuManager.createContextMenu(viewer.getTable());
 		
 		viewer.getTable().setMenu(menu);
-		IWorkbenchPartSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-			.getActivePage().getActivePart().getSite();
 		if (site != null) {
 			site.registerContextMenu("ch.elexis.core.ui.medication.tables", menuManager, viewer);
 		}
