@@ -291,6 +291,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 			setLayout(new FillLayout());
 			sash = new SashForm(this, SWT.NONE);
 			cv = new CommonViewer();
+			cv.setViewName(master.getCodeSystemName());
 			cv.create(master.createViewerConfigurer(cv), sash, SWT.NONE, getViewSite());
 			// cv.getViewerWidget().addSelectionChangedListener(
 			// GlobalEventDispatcher.getInstance().getDefaultListener());
