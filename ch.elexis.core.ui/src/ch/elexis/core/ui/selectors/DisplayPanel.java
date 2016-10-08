@@ -76,6 +76,15 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 			}
 		}
 		tb = tActions.createControl(this);
+		// For the Jubula GUI tests we create unique identifiers for all tool items
+		if (parent.getData("TEST_COMP_NAME") != null) {
+			for (int idx = 0; idx < tb.getItemCount(); idx++)
+			{
+				tb.getItem(idx).setData("TEST_COMP_NAME",
+					parent.getData("TEST_COMP_NAME") + "_" + idx + "_tbi");
+			}
+		}
+		
 		FormData fdActions = new FormData();
 		fdActions.top = new FormAttachment(0, 0);
 		fdActions.right = new FormAttachment(100, 0);
