@@ -29,14 +29,17 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	
 	public static final String VERSIONID = "VERSION"; //$NON-NLS-1$
 	private static final String TABLENAME = "LABORDER"; //$NON-NLS-1$
-	public static final String VERSION = "1.2.0"; //$NON-NLS-1$
+	public static final String VERSION = "1.3.0"; //$NON-NLS-1$
 	public static final String VERSION110 = "1.1.0"; //$NON-NLS-1$
 	public static final String VERSION120 = "1.2.0"; //$NON-NLS-1$
+	public static final String VERSION130 = "1.3.0"; //$NON-NLS-1$
 	private static final String UPD110 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
 		+ " ADD groupname VARCHAR(255);"; //$NON-NLS-1$
 	private static final String UPD120 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
 		+ " ADD observationtime VARCHAR(24);"; //$NON-NLS-1$
-	
+	private static final String UPD130 =
+		"CREATE INDEX laborder4 ON " + TABLENAME + " (" + FLD_ORDERID + ");";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		
 	// do not change order, as we save the ordinal to the db, only adding new state is allowed
 	public enum State {
 		ORDERED, DONE, DONE_IMPORT;
@@ -76,11 +79,12 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 			"CREATE INDEX laborder1 ON " + TABLENAME + " (" + FLD_TIME + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			"CREATE INDEX laborder2 ON " + TABLENAME + " (" + FLD_MANDANT + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			"CREATE INDEX laborder3 ON " + TABLENAME + " (" + FLD_PATIENT + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"CREATE INDEX laborder4 ON " + TABLENAME + " (" + FLD_ORDERID + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			"INSERT INTO " + TABLENAME + " (ID," + FLD_USER + ") VALUES (" + JdbcLink.wrap(VERSIONID) + "," + JdbcLink.wrap(VERSION) + ");"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	// @formatter:on
 	
 	static {
-		addMapping(TABLENAME, FLD_USER, FLD_MANDANT, FLD_PATIENT, FLD_ITEM, FLD_RESULT,
+		addMapping(TABLENAME, FLD_ID, FLD_USER, FLD_MANDANT, FLD_PATIENT, FLD_ITEM, FLD_RESULT,
 			FLD_ORDERID, FLD_GROUPNAME, FLD_TIME, FLD_STATE, FLD_OBSERVATIONTIME);
 		
 		if (!tableExists(TABLENAME)) {
@@ -94,6 +98,9 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 				}
 				if (vi.isOlder(new VersionInfo(VERSION120))) {
 					createOrModifyTable(UPD120);
+				}
+				if (vi.isOlder(new VersionInfo(VERSION130))) {
+					createOrModifyTable(UPD130);
 				}
 				version.set(FLD_USER, VERSION);
 			}
@@ -120,14 +127,12 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	public LabOrder(Anwender user, Mandant mandant, Patient patient, LabItem item,
 		LabResult result, String orderId, String groupname, TimeTool time){
 		create(null);
-		set(FLD_USER, user.getId());
-		set(FLD_MANDANT, mandant.getId());
-		set(FLD_PATIENT, patient.getId());
-		set(FLD_ITEM, item.getId());
-		set(FLD_TIME, time.toString(TimeTool.TIMESTAMP));
-		set(FLD_OBSERVATIONTIME, time.toString(TimeTool.TIMESTAMP));
-		set(FLD_ORDERID, orderId);
-		set(FLD_GROUPNAME, groupname);
+		set(new String[] {
+			FLD_USER, FLD_MANDANT, FLD_PATIENT, FLD_ITEM, FLD_TIME, FLD_OBSERVATIONTIME,
+			FLD_ORDERID, FLD_GROUPNAME
+		}, user.getId(), mandant.getId(), patient.getId(), item.getId(),
+			time.toString(TimeTool.TIMESTAMP), time.toString(TimeTool.TIMESTAMP), orderId,
+			groupname);
 		setState(State.ORDERED);
 		if (result != null) {
 			set(FLD_RESULT, result.getId());
@@ -328,6 +333,18 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 		return labor;
 	}
 	
+	public static List<LabOrder> getLabOrdersByOrderId(String orderId){
+		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
+		qlo.add(FLD_ORDERID, Query.EQUALS, orderId);
+		qlo.add(FLD_ID, Query.NOT_EQUAL, VERSIONID);
+		List<LabOrder> orders = qlo.execute();
+		if (orders.isEmpty()) {
+			return null;
+		} else {
+			return orders;
+		}
+	}
+	
 	/**
 	 * Returns all LabOrders matching the criteria. If a parameter is null it will be ignored.
 	 * 
@@ -341,6 +358,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 	public static List<LabOrder> getLabOrders(Patient patient, Mandant mandant, LabItem labItem,
 		LabResult result, String orderId, TimeTool time, State state){
 		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
+		qlo.add(FLD_ID, Query.NOT_EQUAL, VERSIONID);
 		
 		if (patient != null) {
 			qlo.add(FLD_PATIENT, "=", patient.getId()); //$NON-NLS-1$
@@ -395,7 +413,33 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder> {
 		return ret;
 	}
 	
-	public static String getNextOrderId(){
+	public synchronized static String getNextOrderId(){
+		LabOrder version = load(VERSIONID);
+		String orderId = version.get(FLD_ORDERID);
+		String nextOrderId = "-1";
+		if (orderId != null && !orderId.isEmpty()) {
+			int intNextOrderId = Integer.parseInt(orderId) + 1;
+			// make sure it is still free
+			List<LabOrder> existing = getLabOrdersByOrderId(Integer.toString(intNextOrderId));
+			while (existing != null) {
+				intNextOrderId++;
+				existing = getLabOrdersByOrderId(Integer.toString(intNextOrderId));
+			}
+			nextOrderId = Integer.toString(intNextOrderId);
+		} else {
+			// fallback to old method
+			nextOrderId = getNextOrderIdOld();
+		}
+		version.set(FLD_ORDERID, nextOrderId);
+		return nextOrderId;
+	}
+	
+	/**
+	 * Old version of getting next order id.
+	 * 
+	 * @return
+	 */
+	private static String getNextOrderIdOld(){
 		JdbcLink link = PersistentObject.getConnection();
 		Stm statement = link.getStatement();
 		ResultSet result =
