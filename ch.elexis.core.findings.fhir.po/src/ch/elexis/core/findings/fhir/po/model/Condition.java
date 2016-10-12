@@ -98,4 +98,28 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public ConditionCategory getCategory(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setCategory(ConditionCategory category){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public ConditionStatus getStatus(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setStatus(ConditionStatus status){
+		// TODO Auto-generated method stub
+		
+	}
 }
