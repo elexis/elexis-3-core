@@ -4,4 +4,6 @@ public interface ICoding {
 	public String getSystem();
 	
 	public String getCode();
+
+	public String getDisplay();
 }
