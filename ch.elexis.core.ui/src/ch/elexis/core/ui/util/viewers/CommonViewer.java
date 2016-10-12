@@ -81,9 +81,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	}
 	
 	public CommonViewer(){
-		String callerClassName = new Exception().getStackTrace()[1].getClassName();
-		String[] x = callerClassName.split("\\.");
-		viewName = x[x.length-1];
+		viewName = "unknown";
 	}
 	
 	/**
