@@ -74,13 +74,33 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	private HashSet<DoubleClickListener> dlListeners;
 	private MenuManager mgr;
 	private Composite composite;
+	private String viewName = null;
 	
 	public Composite getParent(){
 		return parent;
 	}
 	
 	public CommonViewer(){
-		
+		viewName = "unknown";
+	}
+	
+	/**
+	 * Sets the view name. Mainly used for GUI-Jubula tests.
+	 * The view name is used to uniquely identify the toolbar items by
+	 * setting the TEST_COMP_NAME accordingly
+	 *
+	 * @param s
+	 */
+	public void setViewName(String s) {
+		viewName = s;
+	}
+	
+	/**
+	 * Gets the view name. Mainly used for GUI-Jubula tests.
+	 *
+	 */
+	public String getViewName() {
+		return viewName;
 	}
 	
 	public void setObjectCreateAction(IViewSite site, IAction action){
@@ -118,7 +138,9 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		}
 		ControlFieldProvider cfp = vc.getControlFieldProvider();
 		if (cfp != null) {
+			ret.setData("TEST_COMP_NAME", "cv_ret_" + viewName); // for Jubula
 			Composite ctlf = vc.getControlFieldProvider().createControl(ret);
+			ctlf.setData("TEST_COMP_NAME", "cv_ctlf_" + viewName); // for Jubula
 			ctlf.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		}
 		viewer = vc.getWidgetProvider().createViewer(ret);
@@ -136,6 +158,9 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		}
 		bNew = vc.getButtonProvider().createButton(ret);
 		if (bNew != null) {
+			if (viewName != null) {
+				bNew.setData("TEST_COMP_NAME",  "cv_bNew_"+ viewName + "_btn"); // for Jubula
+			}
 			GridData gdNew = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 			bNew.setLayoutData(gdNew);
 			if (vc.getButtonProvider().isAlwaysEnabled() == false) {

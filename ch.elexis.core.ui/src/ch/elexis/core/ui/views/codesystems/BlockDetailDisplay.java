@@ -211,6 +211,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		});
 		bNew = tk.createButton(body, Messages.BlockDetailDisplay_addPredefinedServices, SWT.PUSH); //$NON-NLS-1$
 		bNew.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		bNew.setData("TEST_COMP_NAME", "blkd_addPredefinedServices_btn");
 		bNew.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
@@ -230,6 +231,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		bEigen =
 			tk.createButton(body, Messages.BlockDetailDisplay_addSelfDefinedServices, SWT.PUSH); //$NON-NLS-1$
 		bEigen.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		bEigen.setData("TEST_COMP_NAME", "blkd_createPredefinedServices_btn");
 		bEigen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
@@ -249,6 +251,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		
 		bDiag = tk.createButton(body, "Diagnose hinzufügen", SWT.PUSH); //$NON-NLS-1$
 		bDiag.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		bDiag.setData("TEST_COMP_NAME", "btn_addDiagnosis_btn");
 		bDiag.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
