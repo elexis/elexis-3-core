@@ -45,7 +45,7 @@ public class AssignReminderToUser {
 		Anwender user =
 			Anwender.load(qbe.findSingle(Anwender.FLD_LABEL, Query.EQUALS, fromUsername));
 		if (user.exists()) {
-			return run(user.getReminders(null), toUsername);
+			return run(user.getReminders(), toUsername);
 		} else {
 			return fromUsername + " kann nicht gefunden werden";
 		}

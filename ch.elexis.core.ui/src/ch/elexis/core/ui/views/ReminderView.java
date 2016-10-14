@@ -13,10 +13,12 @@ package ch.elexis.core.ui.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -114,7 +116,6 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 								sb.toString());
 						}
 					}
-					
 				});
 			}
 		}
@@ -173,39 +174,36 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				if (CoreHub.actUser == null) {
 					return new Object[0];
 				}
-				Set<Reminder> allReminders = CoreHub.actUser.getReminders(null);
 				
-				if (othersReminderAction.isChecked()
-					&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS)) {
+				SortedSet<Reminder> reminders = new TreeSet<Reminder>();
+				
+				boolean ownReminders = ownReminderAction.isChecked();
+				boolean otherReminders = (othersReminderAction.isChecked()
+					&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
+				
+				if(otherReminders) {
 					qbe.clear();
+					reminders.addAll(qbe.execute());
 				} else {
-					if (ownReminderAction.isChecked()) {
+					if(ownReminders) {
 						qbe.clear();
 						qbe.add(Reminder.CREATOR, Query.EQUALS, CoreHub.actUser.getId());
-						
+						qbe.or();
+						qbe.add(Reminder.RESPONSIBLE, Query.EQUALS, CoreHub.actUser.getId());
+
+						reminders.addAll(qbe.execute());
 					}
-					// compatibility to old reminders where responsible
-					// was given instead of n:m
-					qbe.clear();
-					qbe.add(Reminder.RESPONSIBLE, Query.EQUALS, CoreHub.actUser.getId());
-					
-					// ..to be removed later
 				}
-				
-				allReminders.addAll(qbe.execute());
 				
 				if (filterActionSet.size() > 0) {
-					allReminders = allReminders.stream()
-						.filter(p -> filterActionSet
-							.contains(Integer.valueOf(p.getActionType().numericValue())))
-						.collect(Collectors.toSet());
+					reminders.removeIf( p->(filterActionSet.contains(p.getActionType().numericValue())));
 				}
 				
-				return allReminders.toArray();
+				return reminders.toArray();
 				
 			}
 		}, new ReminderLabelProvider(), null, new ViewerConfigurer.DefaultButtonProvider(),
-			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TABLE, SWT.MULTI, cv));
+			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.MULTI, cv));
 		
 		makeActions();
 		
@@ -524,7 +522,6 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user, eeli_reminder);
 			CoreHub.heart.addListener(this);
 			cv.notify(CommonViewer.Message.update);
-			heartbeat();
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_user, eeli_reminder);
 			CoreHub.heart.removeListener(this);

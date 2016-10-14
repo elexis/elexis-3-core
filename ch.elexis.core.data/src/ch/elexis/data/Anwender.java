@@ -120,25 +120,16 @@ public class Anwender extends Person {
 	}
 	
 	/**
-	 * Get Reminders for this user, related to a specific Kontakt
+	 * Retrieve reminders for this {@link Anwender}
 	 * 
-	 * @param k
-	 *            related kontakt or null: all Reminders
-	 * @return a List sorted by date
+	 * @return a
 	 */
-	public SortedSet<Reminder> getReminders(final Kontakt k){
-		TreeSet<Reminder> ret = new TreeSet<Reminder>();
+	public SortedSet<Reminder> getReminders(){
+		SortedSet<Reminder> ret = new TreeSet<Reminder>();
 		List<String[]> rem = getList(FLD_JOINT_REMINDERS, (String[]) null);
 		if (rem != null) {
-			String kid = k == null ? null : k.getId();
 			for (String[] l : rem) {
-				Reminder r = Reminder.load(l[0]);
-				if (kid != null) {
-					if (!r.get("IdentID").equals(kid)) {
-						continue;
-					}
-				}
-				ret.add(r);
+				ret.add(Reminder.load(l[0]));
 			}
 		}
 		return ret;
