@@ -3,6 +3,7 @@ package ch.elexis.core.ui.preferences;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -55,6 +56,7 @@ import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
+import ch.elexis.core.ui.util.BooleanNotConverter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Anwender;
@@ -91,6 +93,7 @@ public class UserManagementPreferencePage extends PreferencePage
 	private Link linkRechnungssteller;
 	private MenuItem addUserMenuItem;
 	private MenuItem deleteUserMenuItem;
+	private Button btnUserIsLocked;
 	
 	/**
 	 * Create the preference page.
@@ -213,7 +216,7 @@ public class UserManagementPreferencePage extends PreferencePage
 		btnUserIsAdmin.setToolTipText("Administratoren unterliegen keinerlei Beschränkungen.");
 		btnUserIsAdmin.setText("Administrator");
 		
-		Button btnUserIsLocked = new Button(grpSysAccess, SWT.CHECK);
+		btnUserIsLocked = new Button(grpSysAccess, SWT.CHECK);
 		btnUserIsLocked.setToolTipText("Sperrt die Möglichkeit sich am System anzumelden.");
 		btnUserIsLocked.setText("Gesperrt");
 		
@@ -527,6 +530,14 @@ public class UserManagementPreferencePage extends PreferencePage
 		bindingContext.bindValue(observeSelectionBtnIsMandatorObserveWidget,
 			wvMandatorObserveDetailValue, null, null);
 		//
+		IObservableValue observeSelectionBtnIsActiveObserveWidget =
+			WidgetProperties.selection().observe(btnUserIsLocked);
+		IObservableValue wvActiveObserveDetailValue =
+			PojoProperties.value(User.class, "active", boolean.class).observeDetail(wvUser);
+		bindingContext.bindValue(observeSelectionBtnIsActiveObserveWidget,
+			wvActiveObserveDetailValue,
+			new UpdateValueStrategy().setConverter(new BooleanNotConverter()),
+			new UpdateValueStrategy().setConverter(new BooleanNotConverter()));
 		return bindingContext;
 	}
 }
