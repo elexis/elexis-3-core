@@ -27,8 +27,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.ArticleDefaultSignature.ArticleSignature;
 import ch.elexis.data.Artikel;
@@ -398,8 +400,12 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			} else if (modelDisposalType == EntryType.SELF_DISPENSED) {
 				btnDispensation.setSelection(true);
 			} else {
-				// default
-				btnNoDisposal.setSelection(true);
+				if(CoreHub.userCfg
+						.get(CreatePrescriptionHelper.MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION, false)) {
+					btnDispensation.setSelection(true);
+				} else {
+					btnNoDisposal.setSelection(true);
+				}
 			}
 			if (signature.isAtc()) {
 				btnRadioOnAtcCode.setSelection(true);
@@ -467,6 +473,11 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	
 	public void setSignatureComment(String signatureComment){
 		txtSignatureComment.setText(signatureComment);
+	}
+	
+	public void setSignature(ArticleSignature signature){
+		signatureItem.setValue(signature);
+		updateTargetNonDatabinding();
 	}
 	
 	private class SavingSelectionAdapter extends SelectionAdapter {

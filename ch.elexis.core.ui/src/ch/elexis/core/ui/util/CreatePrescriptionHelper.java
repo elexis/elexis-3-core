@@ -1,9 +1,12 @@
 package ch.elexis.core.ui.util;
 
+import java.util.Optional;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.ui.dialogs.PrescriptionSignatureTitleAreaDialog;
@@ -19,6 +22,12 @@ import ch.rgw.tools.TimeTool;
 
 public class CreatePrescriptionHelper {
 	
+	public static final String MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG =
+		"medication/settings/alwaysShowSignatureDialog";
+	
+	public static final String MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION =
+		"medication/settings/signatureStdDispensation";
+	
 	private Artikel article;
 	private Shell parentShell;
 	
@@ -31,18 +40,27 @@ public class CreatePrescriptionHelper {
 		ArticleDefaultSignature defaultSignature =
 			ArticleDefaultSignature.getDefaultsignatureForArticle((Artikel) article);
 		
-		ArticleSignature signature;
+		Optional<ArticleSignature> signature;
 		if (defaultSignature != null) {
-			signature = ArticleSignature.fromDefault(defaultSignature);
-		} else {
-			PrescriptionSignatureTitleAreaDialog dialog =
-				new PrescriptionSignatureTitleAreaDialog(parentShell, (Artikel) article);
-			if (dialog.open() != Dialog.OK) {
-				return;
+			signature = Optional.of(ArticleSignature.fromDefault(defaultSignature));
+			if (CoreHub.userCfg.get(MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG, false)) {
+				signature = getSignatureWithDialog(signature);
 			}
-			signature = dialog.getSignature();
+		} else {
+			signature = getSignatureWithDialog(Optional.empty());
 		}
-		createPrescriptionFromSignature(signature);
+		signature.ifPresent(s -> createPrescriptionFromSignature(s));
+	}
+	
+	private Optional<ArticleSignature> getSignatureWithDialog(
+		Optional<ArticleSignature> preSelectedSignature){
+		PrescriptionSignatureTitleAreaDialog dialog =
+			new PrescriptionSignatureTitleAreaDialog(parentShell, (Artikel) article);
+		preSelectedSignature.ifPresent(s -> dialog.setSignature(s));
+		if (dialog.open() != Dialog.OK) {
+			return Optional.empty();
+		}
+		return Optional.of(dialog.getSignature());
 	}
 	
 	public void createPrescriptionFromSignature(ArticleSignature signature){

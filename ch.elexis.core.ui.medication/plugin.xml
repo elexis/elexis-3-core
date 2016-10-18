@@ -373,4 +373,13 @@
             id="ch.elexis.core.ui.medication.adjuster.prescription">
       </adjuster>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="ch.elexis.preferences.UserPreferences"
+            class="ch.elexis.core.ui.medication.preferences.MedicationSettings"
+            id="ch.elexis.core.ui.medication.settings"
+            name="Medikation">
+      </page>
+   </extension>
 </plugin>
