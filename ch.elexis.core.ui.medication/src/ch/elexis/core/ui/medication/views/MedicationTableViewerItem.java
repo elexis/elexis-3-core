@@ -131,6 +131,12 @@ public class MedicationTableViewerItem {
 		return stopReason != null ? stopReason : "...";
 	}
 	
+	public void setStopReason(String reason){
+		if (prescription != null) {
+			prescription.setStopReason(reason);
+		}
+	}
+	
 	public boolean isFixedMediation(){
 		return prescription.isFixedMedication(rezeptId, dateUntil);
 	}

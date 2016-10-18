@@ -540,9 +540,9 @@ public class MedicationComposite extends Composite
 			PojoProperties.value("stopReason", String.class).observeDetail(selectedMedication);
 		dbc.bindValue(txtStopCommentObservableUi, txtStopCommentObservable);
 		
-		Text txtIntolerance = new Text(compositeStopMedicationTextDetails, SWT.BORDER);
-		txtIntolerance.setMessage(Messages.MedicationComposite_intolerance);
-		txtIntolerance.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		//		Text txtIntolerance = new Text(compositeStopMedicationTextDetails, SWT.BORDER);
+		//		txtIntolerance.setMessage(Messages.MedicationComposite_intolerance);
+		//		txtIntolerance.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		//		IObservableValue txtCommentObservable =
 		//			WidgetProperties.text(SWT.Modify).observeDelayed(100, txtDisposalComment);
 		//		IObservableValue commentObservable =
@@ -568,7 +568,10 @@ public class MedicationComposite extends Composite
 		} else {
 			oldPrescription.stop(null);
 		}
-		oldPrescription.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
+		if (oldPrescription.getStopReason() == null
+				|| oldPrescription.getStopReason().isEmpty()) {
+				oldPrescription.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
+			}
 		activateConfirmButton(false);
 		if (btnStopMedication.isEnabled())
 			showMedicationDetailComposite(null);
