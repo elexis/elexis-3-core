@@ -20,6 +20,7 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	private Artikel article;
 	private ArticleDefaultSignatureComposite adsc;
 	private Button btnAsDefault;
+	private ArticleSignature signature;
 	
 	/**
 	 * Create the dialog.
@@ -62,6 +63,9 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 		adsc.setToolbarVisible(false);
 		adsc.setOnLocationEnabled(false);
 		adsc.setArticleToBind(article, false);
+		if (signature != null) {
+			adsc.setSignature(signature);
+		}
 		
 		return area;
 	}
@@ -86,6 +90,15 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 		}
 		
 		super.okPressed();
+	}
+	
+	/**
+	 * Set a signature that will be displayed and edited on the dialog.
+	 * 
+	 * @param signature
+	 */
+	public void setSignature(ArticleSignature signature){
+		this.signature = signature;
 	}
 	
 	public ArticleSignature getSignature(){
