@@ -20,7 +20,6 @@ import org.apache.commons.codec.DecoderException;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.RoleConstants;
-import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.PasswordEncryptionService;
 import ch.rgw.tools.StringTool;
 
