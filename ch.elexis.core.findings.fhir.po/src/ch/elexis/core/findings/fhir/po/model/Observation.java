@@ -1,6 +1,5 @@
 package ch.elexis.core.findings.fhir.po.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,18 +109,6 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	
 	@Override
 	public void addTargetObservation(IObservation source){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public Optional<LocalDateTime> getEffectiveTime(){
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public void setEffectiveTime(LocalDateTime time){
 		// TODO Auto-generated method stub
 		
 	}

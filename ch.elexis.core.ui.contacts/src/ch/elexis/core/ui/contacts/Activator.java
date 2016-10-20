@@ -4,8 +4,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import ch.elexis.core.ui.contacts.extension.ContactGeonamesExtensionPoint;
-import ch.elexis.data.Anwender;
-import ch.elexis.data.Patient;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -31,11 +29,6 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception{
 		super.start(context);
 		plugin = this;
-		
-		// we need to initialize the static header
-		// in order to have the correct PersistentObject mappings
-		Class.forName(Patient.class.getName());
-		Class.forName(Anwender.class.getName());
 		
 		// Initialize geonames content proposal
 		ContactGeonamesExtensionPoint.init();

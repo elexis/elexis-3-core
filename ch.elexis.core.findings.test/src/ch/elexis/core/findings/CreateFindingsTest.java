@@ -45,17 +45,12 @@ public class CreateFindingsTest {
 	public void createCondition(){
 		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
 		assertNotNull(factory);
-		IEncounter encounter = factory.createEncounter();
-		assertNotNull(encounter);
-		encounter.setConsultationId(AllTests.CONSULTATION_ID);
-		encounter.setPatientId(AllTests.PATIENT_ID);
-		FindingsServiceComponent.getService().saveFinding(encounter);
 		ICondition condition = factory.createCondition();
-		condition.setEncounter(encounter);
+		condition.setPatientId(AllTests.PATIENT_ID);
 		FindingsServiceComponent.getService().saveFinding(condition);
 		
 		List<IFinding> conditions = FindingsServiceComponent.getService()
-			.getConsultationsFindings(AllTests.CONSULTATION_ID, ICondition.class);
+			.getPatientsFindings(AllTests.PATIENT_ID, ICondition.class);
 		assertNotNull(conditions);
 		assertFalse(conditions.isEmpty());
 		assertEquals(1, conditions.size());

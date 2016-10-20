@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import ch.elexis.core.findings.test.AllTests;
 
-public class ChangeContentTest {
+public class EncounterTest {
 	
 	@Before
 	public void beforeTest(){
@@ -25,7 +25,7 @@ public class ChangeContentTest {
 	}
 	
 	@Test
-	public void changeEncounter(){
+	public void getProperties(){
 		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
 		assertNotNull(factory);
 		IEncounter encounter = factory.createEncounter();
@@ -33,7 +33,7 @@ public class ChangeContentTest {
 		encounter.setConsultationId(AllTests.CONSULTATION_ID);
 		encounter.setPatientId(AllTests.PATIENT_ID);
 		LocalDateTime effectiveTime = LocalDateTime.of(2016, Month.SEPTEMBER, 12, 9, 33);
-		encounter.setEffectiveTime(effectiveTime);
+		encounter.setStartTime(effectiveTime);
 		FindingsServiceComponent.getService().saveFinding(encounter);
 		
 		List<IFinding> encounters = FindingsServiceComponent.getService()
@@ -41,9 +41,10 @@ public class ChangeContentTest {
 		assertNotNull(encounters);
 		assertFalse(encounters.isEmpty());
 		assertEquals(1, encounters.size());
+		IEncounter readEncounter = (IEncounter) encounters.get(0);
 		assertEquals(AllTests.CONSULTATION_ID,
-			((IEncounter) encounters.get(0)).getConsultationId());
-		assertTrue(encounters.get(0).getEffectiveTime().isPresent());
-		assertEquals(effectiveTime, encounters.get(0).getEffectiveTime().get());
+			readEncounter.getConsultationId());
+		assertTrue(readEncounter.getStartTime().isPresent());
+		assertEquals(effectiveTime, readEncounter.getStartTime().get());
 	}
 }

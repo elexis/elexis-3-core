@@ -15,6 +15,10 @@
 
 package ch.elexis.core.ui.contacts.views;
 
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
+
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -65,6 +69,9 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.findings.ICondition;
+import ch.elexis.core.findings.ICondition.ConditionCategory;
+import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
@@ -72,7 +79,8 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
-import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.*;
+import ch.elexis.core.ui.contacts.FindingsServiceComponent;
+import ch.elexis.core.ui.contacts.controls.DiagnosesComposite;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
@@ -207,6 +215,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private boolean bLocked = true;
 	private Composite cUserfields;
 	Hyperlink hHA;
+	private DiagnosesComposite conditionsComposite;
 	
 	void recreateUserpanel(){
 		// cUserfields.setRedraw(false);
@@ -538,6 +547,19 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			copySelectedContactInfosToClipboardAction, copySelectedAddressesToClipboardAction);
 		
 		ecZA.setClient(inpZusatzAdresse);
+		
+		if (CoreHub.userCfg.get(DiagnosesComposite.DIAGNOSE_SETTINGS_USE_STRUCTURED, false)) {
+			ExpandableComposite expConditonComposite =
+				WidgetFactory.createExpandableComposite(tk, form, "Diagnosen strukturiert");
+			expConditonComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+			UserSettings.setExpandedState(expConditonComposite,
+				KEY_PATIENTENBLATT + expConditonComposite.getText());
+			expConditonComposite.addExpansionListener(ecExpansionListener);
+			conditionsComposite = new DiagnosesComposite(expConditonComposite, SWT.NONE);
+			tk.adapt(conditionsComposite);
+			expConditonComposite.setClient(conditionsComposite);
+		}
+		
 		for (int i = 0; i < lbExpandable.length; i++) {
 			ec[i] = WidgetFactory.createExpandableComposite(tk, form, lbExpandable[i]);
 			UserSettings.setExpandedState(ec[i], KEY_PATIENTENBLATT + lbExpandable[i]);
@@ -664,10 +686,25 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setPatient(final Patient p){
 		save();
 		actPatient = p;
 		ipp.getAutoForm().reload(actPatient);
+		
+		if (conditionsComposite != null && FindingsServiceComponent.getService() != null
+			&& actPatient != null) {
+			FindingsServiceComponent.getService().setCreateOrUpdate(CoreHub.userCfg
+				.get(DiagnosesComposite.DIAGNOSE_SETTINGS_AUTO_CREATE, false));
+			
+			List<? extends IFinding> conditions = FindingsServiceComponent.getService()
+				.getPatientsFindings(actPatient.getId(), ICondition.class);
+			conditions = conditions.stream()
+				.filter(finding -> (finding instanceof ICondition)
+					&& ((ICondition) finding).getCategory() == ConditionCategory.DIAGNOSIS)
+				.collect(Collectors.toList());
+			conditionsComposite.setInput((List<ICondition>) conditions);
+		}
 		
 		detailComposites.forEach(dc -> dc.setDetailObject(actPatient, null));
 		

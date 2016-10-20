@@ -60,11 +60,19 @@ location "http://download.elexis.info/mirror.4.elexis/snapshot" {
 }
 
 location "http://download.elexis.info/elexis-server/elexis-server-dependencies" {
-	org.thymeleaf
-	com.phloc.commons
 	hapi-fhir-osgi-core
+	woodstox-core-asl
+	javax.xml.stream.stax-api
+	stax2-api
+	net.sf.saxon.Saxon-HE
+	com.phloc.commons
 	com.phloc.schematron
+	findbugsAnnotations
 	com.google.gson
+	org.thymeleaf
+	ognl
+	org.attoparser
+	org.unbescape
 }
 
 location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {

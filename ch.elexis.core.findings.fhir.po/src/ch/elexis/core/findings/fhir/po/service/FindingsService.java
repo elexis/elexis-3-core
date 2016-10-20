@@ -3,6 +3,7 @@ package ch.elexis.core.findings.fhir.po.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
@@ -21,15 +22,25 @@ import ch.elexis.core.findings.fhir.po.model.Condition;
 import ch.elexis.core.findings.fhir.po.model.Encounter;
 import ch.elexis.core.findings.fhir.po.model.Observation;
 import ch.elexis.core.findings.fhir.po.model.ProcedureRequest;
+import ch.elexis.core.findings.fhir.po.service.internal.CreateOrUpdateHandler;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 
 @Component
 public class FindingsService implements IFindingsService {
 	
+	private static ReentrantLock createOrUpdateLock = new ReentrantLock();
+	
 	private Logger logger = LoggerFactory.getLogger(FindingsService.class);
 	private boolean createOrUpdateFindings;
+	
+	private CreateOrUpdateHandler createOrUpdateHandler;
+	
+	public FindingsService(){
+		createOrUpdateHandler = new CreateOrUpdateHandler(new FindingsFactory());
+	}
 	
 	@Override
 	public List<IFinding> getPatientsFindings(String patientId, Class<? extends IFinding> filter){
@@ -39,7 +50,7 @@ public class FindingsService implements IFindingsService {
 				ret.addAll(getEncounters(patientId));
 			}
 			if (filter.isAssignableFrom(ICondition.class)) {
-				ret.addAll(getConditions(patientId, null));
+				ret.addAll(getConditions(patientId));
 			}
 			if (filter.isAssignableFrom(IClinicalImpression.class)) {
 				ret.addAll(getClinicalImpressions(patientId, null));
@@ -76,13 +87,21 @@ public class FindingsService implements IFindingsService {
 		return query.execute();
 	}
 	
-	private List<Condition> getConditions(String patientId, String encounterId){
+	private List<Condition> getConditions(String patientId){
+		if (createOrUpdateFindings) {
+			if (patientId != null) {
+				createOrUpdateLock.lock();
+				try {
+					Patient patient = Patient.load(patientId);
+					createOrUpdateHandler.createOrUpdateCondition(patient);
+				} finally {
+					createOrUpdateLock.unlock();
+				}
+			}
+		}
 		Query<Condition> query = new Query<>(Condition.class);
 		if (patientId != null) {
 			query.add(Condition.FLD_PATIENTID, Query.EQUALS, patientId);
-		}
-		if (encounterId != null) {
-			query.add(Condition.FLD_ENCOUNTERID, Query.EQUALS, encounterId);
 		}
 		return query.execute();
 	}
@@ -115,9 +134,6 @@ public class FindingsService implements IFindingsService {
 			if (encounter.isPresent()) {
 				if (filter.isAssignableFrom(IEncounter.class)) {
 					ret.add(encounter.get());
-				}
-				if (filter.isAssignableFrom(ICondition.class)) {
-					ret.addAll(getConditions(null, encounter.get().getId()));
 				}
 				if (filter.isAssignableFrom(IClinicalImpression.class)) {
 					ret.addAll(getClinicalImpressions(null, encounter.get().getId()));

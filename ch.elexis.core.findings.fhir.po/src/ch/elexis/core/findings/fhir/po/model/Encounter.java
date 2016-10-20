@@ -1,11 +1,16 @@
 package ch.elexis.core.findings.fhir.po.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
+import ca.uhn.fhir.model.primitive.IdDt;
+import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.VersionInfo;
@@ -106,7 +111,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	}
 	
 	@Override
-	public Optional<LocalDateTime> getEffectiveTime(){
+	public Optional<LocalDateTime> getStartTime(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
@@ -120,7 +125,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	}
 	
 	@Override
-	public void setEffectiveTime(LocalDateTime time){
+	public void setStartTime(LocalDateTime time){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			org.hl7.fhir.dstu3.model.Encounter fhirEncounter = (org.hl7.fhir.dstu3.model.Encounter) resource.get();
@@ -132,6 +137,43 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 				period.setStart(getDate(time));
 			}
 			fhirEncounter.setPeriod(period);
+		}
+		saveResource(resource.get());
+	}
+	
+	@Override
+	public List<ICondition> getIndication(){
+		List<ICondition> indication = new ArrayList<>();
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
+				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
+			List<Reference> theIndication = fhirEncounter.getIndication();
+			for (Reference reference : theIndication) {
+				if (reference.getReference() != null
+					&& reference.getReference().contains("Condition")) {
+					String refString = reference.getReference();
+					String idString = refString;
+					if (refString.lastIndexOf("/") != -1) {
+						idString = refString.substring(refString.lastIndexOf("/"));
+					}
+					indication.add(Condition.load(idString));
+				}
+			}
+		}
+		return indication;
+	}
+	
+	@Override
+	public void setIndication(List<ICondition> indication){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Encounter fhirEncounter = (org.hl7.fhir.dstu3.model.Encounter) resource.get();
+			List<Reference>theIndication = new ArrayList<>();
+			for (ICondition iCondition : indication) {
+				theIndication.add(new Reference(new IdDt("Condition", iCondition.getId())));
+			}
+			fhirEncounter.setIndication(theIndication);
 		}
 		saveResource(resource.get());
 	}

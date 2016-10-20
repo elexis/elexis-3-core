@@ -3,6 +3,8 @@ package ch.elexis.core.findings.fhir.po.model;
 import java.util.List;
 import java.util.Optional;
 
+import org.hl7.fhir.dstu3.model.DomainResource;
+import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +24,7 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 	
 	public static final String FLD_CONTENT = "content"; //$NON-NLS-1$
 	
-	private static FhirContext context = FhirContext.forDstu3();
+	private static FhirContext context;
 	
 	private IParser parser;
 	
@@ -38,7 +40,10 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 		return this;
 	}
 	
-	protected IParser getJsonParser(){
+	protected synchronized IParser getJsonParser(){
+		if(context == null) {
+			context = FhirContext.forDstu3();
+		}
 		if (parser == null) {
 			parser = context.newJsonParser();
 		}
@@ -114,15 +119,43 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 	}
 	
 	@Override
-	public void addCoding(ICoding coding){
+	public void setCoding(List<ICoding> coding){
 		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
 	public Optional<String> getText(){
-		// TODO Auto-generated method stub
-		return null;
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent() && resource.get() instanceof DomainResource) {
+			Narrative narrative = ((DomainResource) resource.get()).getText();
+			if (narrative != null && narrative.getDivAsString() != null) {
+				String text = narrative.getDivAsString();
+				if (text != null) {
+					String divDecodedText = text.replaceAll(
+						"<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>", "");
+					divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n");
+					return Optional.of(divDecodedText);
+				}
+			}
+		}
+		return Optional.empty();
+	}
+	
+	@Override
+	public void setText(String text){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent() && resource.get() instanceof DomainResource) {
+			DomainResource domainResource = (DomainResource) resource.get();
+			Narrative narrative = domainResource.getText();
+			if (narrative != null && narrative.getDivAsString() != null) {
+				narrative = new Narrative();
+			}
+			String divEncodedText = text.replaceAll("(\r\n|\r|\n)", "<br />");
+			narrative.setDivAsString(divEncodedText);
+			domainResource.setText(narrative);
+			saveResource(domainResource);
+		}
 	}
 	
 	public RawContentFormat getRawContentFormat(){

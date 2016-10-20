@@ -1,0 +1,5 @@
+<div>
+    <div th:if="${resource.dateRecorded}" th:text="${#dates.format(resource.dateRecorded,'dd.MM.yyyy')} + ' - ' + ${resource.clinicalStatus.toCode}"></div>
+	<div th:if="not ${#lists.isEmpty(resource.code.coding)}" th:each="code : ${resource.code.coding}" th:text="${code.display}"></div>
+	<div th:if="not ${#lists.isEmpty(resource.note)}" th:each="note : ${resource.note}" th:text="${note.text}"></div>
+</div>
