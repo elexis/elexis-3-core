@@ -90,14 +90,17 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	public Composite createDisplay(final Composite parent, final IViewSite site){
 		tk = UiDesk.getToolkit();
 		form = tk.createScrolledForm(parent);
+		form.setData("TEST_COMP_NAME", "blkd_form"); //$NON-NLS-1$
 		
 		Composite body = form.getBody();
+		body.setData("TEST_COMP_NAME", "blkd_body"); //$NON-NLS-1$
 		body.setBackground(parent.getBackground());
 		body.setLayout(new GridLayout(2, false));
 		
 		tk.createLabel(body, Messages.BlockDetailDisplay_name)
 			.setBackground(parent.getBackground());
 		tName = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
+		tName.setData("TEST_COMP_NAME", "blkd_Name_lst"); //$NON-NLS-1$
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		IObservableValue txtNameObservableUi =
 			WidgetProperties.text(SWT.Modify).observeDelayed(100, tName);
@@ -108,6 +111,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		tk.createLabel(body, Messages.BlockDetailDisplay_macro).setBackground(
 			parent.getBackground());
 		tMacro = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
+		tMacro.setData("TEST_COMP_NAME", "blkd_Makro_lst"); //$NON-NLS-1$
 		tMacro.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		IObservableValue txtMacroObservableUi =
 			WidgetProperties.text(SWT.Modify).observeDelayed(100, tMacro);
@@ -117,6 +121,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		
 		tk.createLabel(body, StringConstants.MANDATOR).setBackground(parent.getBackground());
 		cbMandant = new Combo(body, SWT.NONE);
+		cbMandant.setData("TEST_COMP_NAME", "blkd_Mandant_cb"); //$NON-NLS-1$
 		cbMandant.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.adapt(cbMandant);
 		Query<Mandant> qm = new Query<Mandant>(Mandant.class);
@@ -147,6 +152,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		gList.setLayout(new FillLayout());
 		tk.adapt(gList);
 		lLst = new TableViewer(gList, SWT.NONE);
+		lLst.setData("TEST_COMP_NAME", "blkd_Leistung_Lst"); //$NON-NLS-1$
 		tk.adapt(lLst.getControl(), true, true);
 		
 		lLst.setContentProvider(new IStructuredContentProvider() {
@@ -211,7 +217,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		});
 		bNew = tk.createButton(body, Messages.BlockDetailDisplay_addPredefinedServices, SWT.PUSH); //$NON-NLS-1$
 		bNew.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		bNew.setData("TEST_COMP_NAME", "blkd_addPredefinedServices_btn");
+		bNew.setData("TEST_COMP_NAME", "blkd_addPredefinedServices_btn"); //$NON-NLS-1$
 		bNew.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
@@ -231,7 +237,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		bEigen =
 			tk.createButton(body, Messages.BlockDetailDisplay_addSelfDefinedServices, SWT.PUSH); //$NON-NLS-1$
 		bEigen.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		bEigen.setData("TEST_COMP_NAME", "blkd_createPredefinedServices_btn");
+		bEigen.setData("TEST_COMP_NAME", "blkd_createPredefinedServices_btn"); //$NON-NLS-1$
 		bEigen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
@@ -251,7 +257,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		
 		bDiag = tk.createButton(body, "Diagnose hinzufügen", SWT.PUSH); //$NON-NLS-1$
 		bDiag.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		bDiag.setData("TEST_COMP_NAME", "btn_addDiagnosis_btn");
+		bDiag.setData("TEST_COMP_NAME", "btn_addDiagnosis_btn"); //$NON-NLS-1$
 		bDiag.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
