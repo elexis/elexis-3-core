@@ -42,6 +42,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		lblCode.setText("Kürzel (Code)");
 		
 		textCode = new Text(ret, SWT.BORDER);
+		textCode.setData("TEST_COMP_NAME", "EigenleistungDetailCode_txt"); //$NON-NLS-1$
 		textCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textCode.setTextLimit(20);
 		textCode.setEditable(false);
@@ -51,6 +52,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		lblBezeichnung.setText("Bezeichnung");
 		
 		textBezeichnung = new Text(ret, SWT.BORDER | SWT.MULTI);
+		textCode.setData("TEST_COMP_NAME", "EigenleistungDetailCode_txt"); //$NON-NLS-1$
 		textBezeichnung.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textBezeichnung.setTextLimit(80);
 		textBezeichnung.setEditable(false);
@@ -60,6 +62,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		lblEKP.setText("Einkaufspreis (Rp.)");
 		
 		textEKP = new Text(ret, SWT.BORDER);
+		textEKP.setData("TEST_COMP_NAME", "EigenleistungDetailEKP_txt"); //$NON-NLS-1$
 		textEKP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textEKP.setTextLimit(6);
 		textEKP.setEditable(false);
@@ -69,6 +72,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		lblVKP.setText("Verkaufspreis (Rp.)");
 		
 		textVKP = new Text(ret, SWT.BORDER);
+		textVKP.setData("TEST_COMP_NAME", "EigenleistungDetailVKP_txt"); //$NON-NLS-1$
 		textVKP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textVKP.setTextLimit(6);
 		textVKP.setEditable(false);
@@ -78,6 +82,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		lblZeit.setText("Zeitbedarf");
 		
 		textZeit = new Text(ret, SWT.BORDER);
+		textZeit.setData("TEST_COMP_NAME", "EigenleistungDetailZeit_txt"); //$NON-NLS-1$
 		textZeit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textZeit.setTextLimit(4);
 		textZeit.setEditable(false);
