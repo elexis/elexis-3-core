@@ -52,7 +52,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 		lblBezeichnung.setText("Bezeichnung");
 		
 		textBezeichnung = new Text(ret, SWT.BORDER | SWT.MULTI);
-		textCode.setData("TEST_COMP_NAME", "EigenleistungDetailCode_txt"); //$NON-NLS-1$
+		textBezeichnung.setData("TEST_COMP_NAME", "EigenleistungDetailName_txt"); //$NON-NLS-1$
 		textBezeichnung.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textBezeichnung.setTextLimit(80);
 		textBezeichnung.setEditable(false);
