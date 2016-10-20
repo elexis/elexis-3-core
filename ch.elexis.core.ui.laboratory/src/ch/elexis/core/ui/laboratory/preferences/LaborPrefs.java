@@ -411,12 +411,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		qbe.add(LabResult.ITEM_ID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		List<LabResult> list = qbe.execute();
 		for (LabResult po : list) {
-			if (CoreHub.getLocalLockService().acquireLock(po).isOk()) {
-				po.delete();
-				CoreHub.getLocalLockService().releaseLock(po);
-			} else {
-				ret = false;
-			}
+			po.delete();
 		}
 		return ret;
 	}
