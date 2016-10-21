@@ -51,22 +51,28 @@ public class EigenLeistungDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(final Composite parent){
 		Composite ret = new Composite(parent, SWT.NONE);
+		ret.setData("TEST_COMP_NAME", "EigenLeistungDialog_ret"); //$NON-NLS-1$
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(2, false));
 		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_name); //$NON-NLS-1$
 		tName = new Text(ret, SWT.BORDER);
+		tName.setData("TEST_COMP_NAME", "EigenLeistungDialog_tName"); //$NON-NLS-1$
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_shortname); //$NON-NLS-1$
 		tKurz = new Text(ret, SWT.BORDER);
+		tKurz.setData("TEST_COMP_NAME", "EigenLeistungDialog_tKurz"); //$NON-NLS-1$
 		tKurz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_costInCents); //$NON-NLS-1$
 		tEK = new Text(ret, SWT.BORDER);
+		tEK.setData("TEST_COMP_NAME", "EigenLeistungDialog_tEK"); //$NON-NLS-1$
 		tEK.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_priceInCents); //$NON-NLS-1$
 		tVK = new Text(ret, SWT.BORDER);
+		tVK.setData("TEST_COMP_NAME", "EigenLeistungDialog_tVK"); //$NON-NLS-1$
 		tVK.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.BlockDetailDisplay_timeInMinutes); //$NON-NLS-1$
 		tTime = new Text(ret, SWT.BORDER);
+		tTime.setData("TEST_COMP_NAME", "EigenLeistungDialog_tTime"); //$NON-NLS-1$
 		tTime.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		if (result instanceof Eigenleistung) {
 			Eigenleistung el = (Eigenleistung) result;
