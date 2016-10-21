@@ -27,6 +27,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -178,9 +179,10 @@ public class Patient extends Person {
 	 * Get the patients active medication filtered by {@link EntryType}.
 	 * 
 	 * @param filterType
+	 *            or null
 	 * @return
 	 */
-	public List<Prescription> getMedication(EntryType filterType){
+	public List<Prescription> getMedication(@Nullable EntryType filterType){
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
 		qbe.add(Prescription.FLD_REZEPT_ID, StringTool.leer, null);
@@ -190,20 +192,24 @@ public class Patient extends Person {
 		qbe.or();
 		qbe.add(Prescription.FLD_DATE_UNTIL, StringTool.leer, null);
 		qbe.endGroup();
-		List<Prescription> l = qbe.execute();
+		List<Prescription> prescriptions = qbe.execute();
 		
-		// filter fix medication only
-		return l.parallelStream().filter(p -> p.getEntryType() == filterType)
-			.collect(Collectors.toList());
+		if (filterType != null) {
+			return prescriptions.parallelStream().filter(p -> p.getEntryType() == filterType)
+				.collect(Collectors.toList());
+		} else {
+			return prescriptions;
+		}
 	}
 	
 	/**
 	 * Get the patients medication filtered by {@link EntryType} as text.
 	 * 
 	 * @param filterType
+	 *            or null
 	 * @return
 	 */
-	public String getMedicationText(EntryType filterType){
+	public String getMedicationText(@Nullable EntryType filterType){
 		List<Prescription> prescriptions = getMedication(filterType);
 		StringBuilder sb = new StringBuilder();
 		
