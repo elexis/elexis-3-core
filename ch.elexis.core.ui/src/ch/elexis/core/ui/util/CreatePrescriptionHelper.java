@@ -92,7 +92,8 @@ public class CreatePrescriptionHelper {
 				}
 			}
 		}
-		MessageDialog.openInformation(parentShell, "Konsultation ungültig",
-			"Keine Konsultation selektiert, oder die selektierte Konsultation ist nicht von heute. Dispensation wurde abgebrochen.");
+		MessageDialog.openWarning(parentShell,
+			Messages.CreatePrescriptionHelper_WarninigNoConsTitle,
+			Messages.CreatePrescriptionHelper_WarninigNoConsText);
 	}
 }

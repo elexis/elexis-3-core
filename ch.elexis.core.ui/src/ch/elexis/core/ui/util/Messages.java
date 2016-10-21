@@ -58,6 +58,8 @@ public class Messages extends NLS {
 	public static String ViewerConfigurer_createNew;
 	public static String WikipediaSearchAction_DisplayName;
 	public static String LimitedText_MaxLengthReached;
+	public static String CreatePrescriptionHelper_WarninigNoConsTitle;
+	public static String CreatePrescriptionHelper_WarninigNoConsText;
 	
 	static {
 		// load message values from bundle file
