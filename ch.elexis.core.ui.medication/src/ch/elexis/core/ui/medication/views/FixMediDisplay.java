@@ -31,6 +31,7 @@ import org.eclipse.ui.services.IEvaluationService;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -53,7 +54,6 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.rgw.tools.ExHandler;
-import ch.rgw.tools.TimeTool;
 
 /**
  * Display and let the user modify the medication of the currently selected patient This is a
@@ -180,19 +180,8 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 		clear();
 		Patient act = ElexisEventDispatcher.getSelectedPatient();
 		if (act != null) {
-			List<Prescription> fix = Arrays.asList(act.getFixmedikation());
-			TimeTool now = new TimeTool();
-			for (Prescription pr : fix) {
-				// skip stopped prescriptions 
-				String endTimeStr = pr.getEndTime();
-				if (!endTimeStr.isEmpty()) {
-					TimeTool endTime = new TimeTool(endTimeStr);
-					if (endTime.isBefore(now)) {
-						continue;
-					}
-				}
-				add(pr);
-			}
+			List<Prescription> fix = act.getMedication(EntryType.FIXED_MEDICATION);
+			fix.stream().forEach(p -> add(p));
 			
 			lCost.setText(MedicationViewHelper.calculateDailyCostAsString(fix));
 		}
