@@ -82,9 +82,9 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
+		adsc.updateModelNonDatabinding();
 		if (btnAsDefault.getSelection()) {
 			adsc.createPersistent();
-			adsc.updateModelNonDatabinding();
 			adsc.safeToDefault();
 		}
 		
