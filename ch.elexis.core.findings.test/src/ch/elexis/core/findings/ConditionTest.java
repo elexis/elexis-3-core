@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,7 @@ public class ConditionTest {
 		condition.setDateRecorded(dateRecorded);
 		condition.setCategory(ConditionCategory.DIAGNOSIS);
 		condition.setStatus(ConditionStatus.ACTIVE);
+		condition.addStringExtension("test", "testValue");
 		FindingsServiceComponent.getService().saveFinding(condition);
 		
 		List<IFinding> conditions = FindingsServiceComponent.getService()
@@ -48,5 +50,9 @@ public class ConditionTest {
 			readcondition.getPatientId());
 		assertTrue(readcondition.getDateRecorded().isPresent());
 		assertEquals(dateRecorded, readcondition.getDateRecorded().get());
+		Map<String, String> extensions = readcondition.getStringExtensions();
+		assertFalse(extensions.isEmpty());
+		assertTrue(extensions.containsKey("test"));
+		assertEquals("testValue", extensions.get("test"));
 	}
 }

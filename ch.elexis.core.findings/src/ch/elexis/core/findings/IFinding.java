@@ -16,6 +16,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface IFinding {
@@ -51,6 +52,10 @@ public interface IFinding {
 	public Optional<String> getText();
 	
 	public void setText(String text);
+	
+	public void addStringExtension(String theUrl, String theValue);
+	
+	public Map<String, String> getStringExtensions();
 	
 	public RawContentFormat getRawContentFormat();
 

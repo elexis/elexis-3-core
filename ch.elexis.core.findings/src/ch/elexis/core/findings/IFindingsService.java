@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Main Interface to load, find and manipulate {@link IFinding} instances.
+ * Main Interface to load, find and save {@link IFinding} instances.
  * 
  * @author thomas
  *
@@ -70,25 +70,14 @@ public interface IFindingsService {
 	 * @return
 	 */
 	public Optional<IFinding> findById(String idPart);
-
+	
 	/**
-	 * Set if the service should try to create or update Findings from existing
-	 * information. Existing information are Finding specific e.g.
-	 * {@link IEncounter} will search for {@link Behandung}.<br />
+	 * Try to load an {@link IFinding} instance by its id, using a specific IFinding class for
+	 * better performance than {@link IFindingsService#findById(String)}.
 	 * 
-	 * If set to true, find operations will run the IFinding and Service
-	 * specific create or update code.<br />
-	 * 
-	 * Default createOrUpdate is false.
-	 * 
-	 * @param value
-	 */
-	public void setCreateOrUpdate(boolean value);
-
-	/**
-	 * Get the current createOrUpdate state.
-	 * 
+	 * @param id
+	 * @param clazz
 	 * @return
 	 */
-	public boolean getCreateOrUpdate();
+	public Optional<IFinding> findById(String id, Class<? extends IFinding> clazz);
 }

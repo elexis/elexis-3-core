@@ -3,7 +3,6 @@ package ch.elexis.core.findings.fhir.po.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
@@ -22,25 +21,13 @@ import ch.elexis.core.findings.fhir.po.model.Condition;
 import ch.elexis.core.findings.fhir.po.model.Encounter;
 import ch.elexis.core.findings.fhir.po.model.Observation;
 import ch.elexis.core.findings.fhir.po.model.ProcedureRequest;
-import ch.elexis.core.findings.fhir.po.service.internal.CreateOrUpdateHandler;
 import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 
 @Component
 public class FindingsService implements IFindingsService {
-	
-	private static ReentrantLock createOrUpdateLock = new ReentrantLock();
-	
 	private Logger logger = LoggerFactory.getLogger(FindingsService.class);
-	private boolean createOrUpdateFindings;
-	
-	private CreateOrUpdateHandler createOrUpdateHandler;
-	
-	public FindingsService(){
-		createOrUpdateHandler = new CreateOrUpdateHandler(new FindingsFactory());
-	}
 	
 	@Override
 	public List<IFinding> getPatientsFindings(String patientId, Class<? extends IFinding> filter){
@@ -88,17 +75,6 @@ public class FindingsService implements IFindingsService {
 	}
 	
 	private List<Condition> getConditions(String patientId){
-		if (createOrUpdateFindings) {
-			if (patientId != null) {
-				createOrUpdateLock.lock();
-				try {
-					Patient patient = Patient.load(patientId);
-					createOrUpdateHandler.createOrUpdateCondition(patient);
-				} finally {
-					createOrUpdateLock.unlock();
-				}
-			}
-		}
 		Query<Condition> query = new Query<>(Condition.class);
 		if (patientId != null) {
 			query.add(Condition.FLD_PATIENTID, Query.EQUALS, patientId);
@@ -203,12 +179,14 @@ public class FindingsService implements IFindingsService {
 	}
 	
 	@Override
-	public void setCreateOrUpdate(boolean value){
-		createOrUpdateFindings = value;
-	}
-	
-	@Override
-	public boolean getCreateOrUpdate(){
-		return createOrUpdateFindings;
+	public Optional<IFinding> findById(String id, Class<? extends IFinding> clazz){
+		IFinding loadedObj = null;
+		if (clazz.isAssignableFrom(ICondition.class)) {
+			loadedObj = Condition.load(id);
+		}
+		if (loadedObj != null && ((IPersistentObject) loadedObj).exists()) {
+			return Optional.of(loadedObj);
+		}
+		return Optional.empty();
 	}
 }

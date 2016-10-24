@@ -1,10 +1,15 @@
 package ch.elexis.core.findings.fhir.po.model;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.DomainResource;
+import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.Narrative;
+import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,6 +161,29 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 			domainResource.setText(narrative);
 			saveResource(domainResource);
 		}
+	}
+	
+	public void addStringExtension(String theUrl, String theValue){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent() && resource.get() instanceof DomainResource) {
+			DomainResource domainResource = (DomainResource) resource.get();
+			Extension extension = new Extension(theUrl);
+			extension.setValue(new StringType().setValue(theValue));
+			domainResource.addExtension(extension);
+			saveResource(domainResource);
+		}
+	}
+	
+	public Map<String, String> getStringExtensions(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent() && resource.get() instanceof DomainResource) {
+			List<Extension> extensions = ((DomainResource) resource.get()).getExtension();
+			return extensions.stream()
+				.filter(extension -> extension.getValue() instanceof StringType)
+				.collect(Collectors.toMap(extension -> extension.getUrl(),
+					extension -> ((StringType) extension.getValue()).getValueAsString()));
+		}
+		return Collections.emptyMap();
 	}
 	
 	public RawContentFormat getRawContentFormat(){
