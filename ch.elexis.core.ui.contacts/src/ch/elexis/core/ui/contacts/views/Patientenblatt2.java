@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -69,9 +69,6 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.findings.ICondition;
-import ch.elexis.core.findings.ICondition.ConditionCategory;
-import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
@@ -79,8 +76,6 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
-import ch.elexis.core.ui.contacts.FindingsServiceComponent;
-import ch.elexis.core.ui.contacts.controls.DiagnosesComposite;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
@@ -190,17 +185,17 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		};
 	
-	private final static String[] lbExpandable = {
+	private static ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(
 		Messages.Patientenblatt2_diagnosesLbl, Messages.Patientenblatt2_persAnamnesisLbl,
 		Messages.Patientenblatt2_allergiesLbl, Messages.Patientenblatt2_risksLbl,
 		Messages.Patientenblatt2_remarksLbk
-	};
-	private final Text[] txExpandable = new Text[lbExpandable.length];
-	private final static String[] dfExpandable = {
+	));
+	private final List<Text> txExpandable = new ArrayList<>();
+	private static ArrayList<String> dfExpandable = new ArrayList<>(Arrays.asList(
 		"Diagnosen", "PersAnamnese", //$NON-NLS-1$ //$NON-NLS-2$
 		"Allergien", "Risiken", "Bemerkung" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-	};
-	private final ExpandableComposite[] ec = new ExpandableComposite[lbExpandable.length];
+	));
+	private final List<ExpandableComposite> ec = new ArrayList<>();
 	private final static String FIXMEDIKATION = Messages.Patientenblatt2_fixmedication; // $NON-NLS-1$
 	// private final static String[] lbLists={"Fixmedikation"/*,"Reminders" */};
 	private final FormText inpAdresse;
@@ -215,7 +210,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private boolean bLocked = true;
 	private Composite cUserfields;
 	Hyperlink hHA;
-	private DiagnosesComposite conditionsComposite;
 	
 	void recreateUserpanel(){
 		// cUserfields.setRedraw(false);
@@ -440,15 +434,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		inpAdresse.setText("---\n", false, false); //$NON-NLS-1$
 		inpAdresse.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
-		List<IViewContribution> filtered =
-			ViewContributionHelper.getFilteredAndPositionSortedContributions(detailComposites, 0);
-		for (IViewContribution ivc : filtered) {
-			Composite comp = ivc.initComposite(form.getBody());
-			tk.adapt(comp);
-			comp.setLayout(new GridLayout());
-			comp.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		}
-		
 		IExpansionListener ecExpansionListener = new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanging(final ExpansionEvent e){
@@ -456,6 +441,25 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				UserSettings.saveExpandedState(KEY_PATIENTENBLATT + src.getText(), e.getState());
 			}
 		};
+		
+		List<IViewContribution> filtered =
+			ViewContributionHelper.getFilteredAndPositionSortedContributions(detailComposites, 0);
+		for (IViewContribution ivc : filtered) {
+			if (ivc.getClass().getPackage().getName()
+				.startsWith("ch.elexis.core.findings.ui.viewcontributions")) {
+				// remove unstructured diagnosis ui
+				lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
+				dfExpandable.remove("Diagnosen");
+			}
+			ExpandableComposite ec =
+				WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
+			ec.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+			UserSettings.setExpandedState(ec, KEY_PATIENTENBLATT + ec.getText());
+			ec.addExpansionListener(ecExpansionListener);
+			Composite ret = ivc.initComposite(ec);
+			tk.adapt(ret);
+			ec.setClient(ret);
+		}
 		
 		ecZA = WidgetFactory.createExpandableComposite(tk, form,
 			Messages.Patientenblatt2_additionalAdresses); // $NON-NLS-1$
@@ -548,24 +552,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		
 		ecZA.setClient(inpZusatzAdresse);
 		
-		if (CoreHub.userCfg.get(DiagnosesComposite.DIAGNOSE_SETTINGS_USE_STRUCTURED, false)) {
-			ExpandableComposite expConditonComposite =
-				WidgetFactory.createExpandableComposite(tk, form, "Diagnosen strukturiert");
-			expConditonComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-			UserSettings.setExpandedState(expConditonComposite,
-				KEY_PATIENTENBLATT + expConditonComposite.getText());
-			expConditonComposite.addExpansionListener(ecExpansionListener);
-			conditionsComposite = new DiagnosesComposite(expConditonComposite, SWT.NONE);
-			tk.adapt(conditionsComposite);
-			expConditonComposite.setClient(conditionsComposite);
-		}
-		
-		for (int i = 0; i < lbExpandable.length; i++) {
-			ec[i] = WidgetFactory.createExpandableComposite(tk, form, lbExpandable[i]);
-			UserSettings.setExpandedState(ec[i], KEY_PATIENTENBLATT + lbExpandable[i]);
-			txExpandable[i] = tk.createText(ec[i], "", SWT.MULTI); //$NON-NLS-1$
-			ec[i].setData(KEY_DBFIELD, dfExpandable[i]);
-			ec[i].addExpansionListener(new ExpansionAdapter() {
+		for (int i = 0; i < lbExpandable.size(); i++) {
+			ec.add(WidgetFactory.createExpandableComposite(tk, form, lbExpandable.get(i)));
+			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
+			txExpandable.add(tk.createText(ec.get(i), "", SWT.MULTI)); //$NON-NLS-1$
+			ec.get(i).setData(KEY_DBFIELD, dfExpandable.get(i));
+			ec.get(i).addExpansionListener(new ExpansionAdapter() {
 				@Override
 				public void expansionStateChanging(final ExpansionEvent e){
 					ExpandableComposite src = (ExpandableComposite) e.getSource();
@@ -583,7 +575,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 				
 			});
-			txExpandable[i].addKeyListener(new KeyListener() {
+			txExpandable.get(i).addKeyListener(new KeyListener() {
 				
 				public void keyReleased(KeyEvent e){
 					Text tx = (Text) e.getSource();
@@ -594,7 +586,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				public void keyPressed(KeyEvent e){}
 			});
 			
-			ec[i].setClient(txExpandable[i]);
+			ec.get(i).setClient(txExpandable.get(i));
 		}
 		ecdm = WidgetFactory.createExpandableComposite(tk, form, FIXMEDIKATION);
 		UserSettings.setExpandedState(ecdm, KEY_PATIENTENBLATT + FIXMEDIKATION);
@@ -605,6 +597,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		List<IViewContribution> lContrib =
 			ViewContributionHelper.getFilteredAndPositionSortedContributions(detailComposites, 1);
 		for (IViewContribution ivc : lContrib) {
+			if (ivc.getClass().getPackage().getName()
+				.startsWith("ch.elexis.core.findings.ui.viewcontributions")) {
+				// remove unstructured diagnosis ui
+				lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
+				dfExpandable.remove("Diagnosen");
+			}
 			ExpandableComposite ec =
 				WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
 			ec.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
@@ -631,12 +629,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			if (ipp != null) {
 				ipp.save();
 			}
-			for (int i = 0; i < txExpandable.length; i++) {
-				String field = dfExpandable[i];
+			for (int i = 0; i < txExpandable.size(); i++) {
+				String field = dfExpandable.get(i);
 				String oldvalue = actPatient.get(field);
-				String newvalue = txExpandable[i].getText();
+				String newvalue = txExpandable.get(i).getText();
 				if (bLocked) {
-					txExpandable[i].setText(oldvalue);
+					txExpandable.get(i).setText(oldvalue);
 				} else {
 					actPatient.set(field, newvalue);
 				}
@@ -692,20 +690,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		actPatient = p;
 		ipp.getAutoForm().reload(actPatient);
 		
-		if (conditionsComposite != null && FindingsServiceComponent.getService() != null
-			&& actPatient != null) {
-			FindingsServiceComponent.getService().setCreateOrUpdate(CoreHub.userCfg
-				.get(DiagnosesComposite.DIAGNOSE_SETTINGS_AUTO_CREATE, false));
-			
-			List<? extends IFinding> conditions = FindingsServiceComponent.getService()
-				.getPatientsFindings(actPatient.getId(), ICondition.class);
-			conditions = conditions.stream()
-				.filter(finding -> (finding instanceof ICondition)
-					&& ((ICondition) finding).getCategory() == ConditionCategory.DIAGNOSIS)
-				.collect(Collectors.toList());
-			conditionsComposite.setInput((List<ICondition>) conditions);
-		}
-		
 		detailComposites.forEach(dc -> dc.setDetailObject(actPatient, null));
 		
 		if (actPatient == null) {
@@ -726,9 +710,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			inpZusatzAdresse.add(za);
 		}
 		
-		for (int i = 0; i < dfExpandable.length; i++) {
-			UserSettings.setExpandedState(ec[i], KEY_PATIENTENBLATT + ec[i].getText());
-			txExpandable[i].setText(p.get(dfExpandable[i]));
+		for (int i = 0; i < dfExpandable.size(); i++) {
+			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + ec.get(i).getText());
+			txExpandable.get(i).setText(p.get(dfExpandable.get(i)));
 		}
 		dmd.reload();
 		form.reflow(true);

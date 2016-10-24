@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.contacts.controls;
+package ch.elexis.core.findings.ui.composites;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ICondition.ConditionStatus;
-import ch.elexis.core.ui.contacts.FindingsServiceComponent;
+import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 
 public class ConditionComposite extends Composite {
 	

@@ -67,12 +67,6 @@
             id="ch.elexis.userSetting2"
             name="%page.name.2">
       </page>
-      <page
-            category="ch.elexis.preferences.UserPreferences"
-            class="ch.elexis.core.ui.contacts.preferences.DiagnoseSettings"
-            id="ch.elexis.core.ui.contacts.diagnose.settings"
-            name="Diagnose">
-      </page>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="ch.elexis.preferences.UserPreferences"
+            class="ch.elexis.core.findings.ui.preferences.DiagnoseSettings"
+            id="ch.elexis.core.findings.ui.diagnose.settings"
+            name="Diagnose">
+      </page>
+   </extension>
+   <extension
+         point="ch.elexis.core.ui.ViewContribution">
+      <detailComposite
+            class="ch.elexis.core.findings.ui.viewcontributions.PatientDetailViewContribution"
+            viewId="ch.elexis.PatDetail_v2">
+      </detailComposite>
+   </extension>
+
+</plugin>

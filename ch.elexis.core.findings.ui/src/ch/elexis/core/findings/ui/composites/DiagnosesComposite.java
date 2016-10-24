@@ -8,7 +8,7 @@
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
-package ch.elexis.core.ui.contacts.controls;
+package ch.elexis.core.findings.ui.composites;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,8 +39,8 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ICondition.ConditionStatus;
-import ch.elexis.core.ui.contacts.FindingsServiceComponent;
-import ch.elexis.core.ui.contacts.dialogs.ConditionEditDialog;
+import ch.elexis.core.findings.ui.dialogs.ConditionEditDialog;
+import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.NatTableFactory;
 import ch.elexis.core.ui.util.NatTableWrapper;
@@ -55,9 +55,6 @@ import ch.elexis.data.Patient;
  *
  */
 public class DiagnosesComposite extends Composite {
-	public static final String DIAGNOSE_SETTINGS_USE_STRUCTURED = "diagnose/settings/useStructured";
-	public static final String DIAGNOSE_SETTINGS_AUTO_CREATE = "diagnose/settings/autoCreate";
-	
 	private NatTableWrapper natTableWrapper;
 	private ToolBarManager toolbarManager;
 	

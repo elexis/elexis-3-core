@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.contacts;
+package ch.elexis.core.findings.ui.services;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;

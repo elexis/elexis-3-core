@@ -27,8 +27,31 @@ public interface IViewContribution extends IUnlockable {
 		return 0;
 	}
 	
+	/**
+	 * Test if the contribution is available and can be included.
+	 * 
+	 * @return
+	 */
+	public default boolean isAvailable(){
+		return true;
+	}
+	
+	/**
+	 * Get the localized title of the contribution.
+	 * 
+	 * @return
+	 */
 	public String getLocalizedTitle();
 	
+	/**
+	 * Create the contributed {@link Composite} implementation on the parent. Always test
+	 * {@link IViewContribution#isAvailable()} before initializing the composite. Tip: use
+	 * {@link ViewContributionHelper#getFilteredAndPositionSortedContributions(java.util.List, int)}
+	 * to filter the list of contributions before calling this method.
+	 * 
+	 * @param parent
+	 * @return
+	 */
 	public Composite initComposite(Composite parent);
 	
 	/**

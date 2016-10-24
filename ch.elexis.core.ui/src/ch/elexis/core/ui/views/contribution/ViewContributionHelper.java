@@ -25,7 +25,8 @@ public class ViewContributionHelper {
 	public static List<IViewContribution> getFilteredAndPositionSortedContributions(
 		List<IViewContribution> detailComposites, int i){
 		if (detailComposites != null && detailComposites.size() > 0) {
-			return detailComposites.stream().filter(p -> p.getContributionPosition() == i)
+			return detailComposites.stream()
+				.filter(p -> p.getContributionPosition() == i && p.isAvailable())
 				.sorted(sortByContributionPositionOrder).collect(Collectors.toList());
 		}
 		return Collections.emptyList();

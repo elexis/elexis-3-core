@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.contacts.dialogs;
+package ch.elexis.core.findings.ui.dialogs;
 
 import java.util.Optional;
 
@@ -12,7 +12,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
-import ch.elexis.core.ui.contacts.controls.ConditionComposite;
+import ch.elexis.core.findings.ui.composites.ConditionComposite;
+
 
 public class ConditionEditDialog extends TitleAreaDialog {
 	
