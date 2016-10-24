@@ -298,8 +298,12 @@ public class HL7ReaderV251 extends HL7Reader {
 								pat.setCity(adr.getCity().getValue());
 							}
 							if (adr.getCountry() != null) {
-								Country cc = Country.valueOf(adr.getCountry().getValue());
-								pat.setCountry(cc);
+								try {
+									Country cc = Country.valueOf(adr.getCountry().getValue());
+									pat.setCountry(cc);
+								} catch (Exception e) {
+									// unknown country, just move on
+								}
 							}
 						}
 						
