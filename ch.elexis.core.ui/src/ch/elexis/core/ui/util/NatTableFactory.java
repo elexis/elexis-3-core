@@ -78,6 +78,7 @@ public class NatTableFactory {
 		
 		NatTable natTable =
 			new NatTable(parent, NatTable.DEFAULT_STYLE_OPTIONS | SWT.BORDER, viewportLayer, false);
+		natTable.setBackground(natTable.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		natTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		natTable.addConfiguration(new DefaultSingleColumnStyleConfiguration());
 		if (customConfiguration != null) {

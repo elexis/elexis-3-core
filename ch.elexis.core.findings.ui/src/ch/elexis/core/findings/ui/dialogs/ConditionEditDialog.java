@@ -36,7 +36,8 @@ public class ConditionEditDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setTitle(category + " Daten " + (condition.isPresent() ? "editieren" : "anlegen") + ".");
+		setTitle(category.getLocalized() + " Daten "
+			+ (condition.isPresent() ? "editieren" : "anlegen") + ".");
 	}
 	
 	@Override

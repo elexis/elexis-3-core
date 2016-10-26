@@ -33,7 +33,7 @@ public class PatientDetailViewContribution implements IViewContribution {
 	
 	@Override
 	public boolean isAvailable(){
-		return CoreHub.userCfg.get(SettingsConstants.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
+		return CoreHub.globalCfg.get(SettingsConstants.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
 	}
 	
 	@Override

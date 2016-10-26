@@ -4,10 +4,9 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="ch.elexis.preferences.UserPreferences"
-            class="ch.elexis.core.findings.ui.preferences.DiagnoseSettings"
-            id="ch.elexis.core.findings.ui.diagnose.settings"
-            name="Diagnose">
+            class="ch.elexis.core.findings.ui.preferences.FindingsSettings"
+            id="ch.elexis.core.findings.ui"
+            name="Befunde">
       </page>
    </extension>
    <extension

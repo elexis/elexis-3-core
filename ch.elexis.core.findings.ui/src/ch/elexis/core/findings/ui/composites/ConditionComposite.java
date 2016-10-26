@@ -2,6 +2,7 @@ package ch.elexis.core.findings.ui.composites;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,16 +14,23 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ICondition.ConditionStatus;
+import ch.elexis.core.findings.ui.composites.CodingComposite.CodingAdapter;
+import ch.elexis.core.findings.ui.composites.NotesComposite.NotesAdapter;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 
 public class ConditionComposite extends Composite {
@@ -32,9 +40,18 @@ public class ConditionComposite extends Composite {
 	private Optional<ICondition> condition;
 	private WritableValue transientConditionValue;
 	
+	private DateTime from;
+	private DateTime to;
+	
 	private ComboViewer statusViewer;
 	
+	private TabFolder textOrCodingFolder;
+	
 	private Text textTxt;
+	
+	private CodingComposite codingComposite;
+	
+	private NotesComposite notesComposite;
 	
 	public ConditionComposite(ConditionCategory category, Composite parent, int style){
 		super(parent, style);
@@ -43,13 +60,54 @@ public class ConditionComposite extends Composite {
 		this.category = category;
 		condition = Optional.empty();
 		
-		statusViewer = new ComboViewer(this);
+		Composite header = new Composite(this, SWT.NONE);
+		header.setLayout(new GridLayout(5, false));
+		header.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		statusViewer = new ComboViewer(header);
+		statusViewer.getCombo().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		statusViewer.setContentProvider(new ArrayContentProvider());
 		statusViewer.setInput(ConditionStatus.values());
-		statusViewer.getCombo().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		statusViewer.setLabelProvider(new LabelProvider() {
+			@Override
+			public String getText(Object element){
+				if (element instanceof ConditionStatus) {
+					return ((ConditionStatus) element).getLocalized();
+				}
+				return super.getText(element);
+			}
+		});
 		
-		textTxt = new Text(this, SWT.BORDER);
-		textTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		Label lbl = new Label(header, SWT.NONE);
+		lbl.setText("Von:");
+		
+		from = new DateTime(header, SWT.NONE);
+		
+		lbl = new Label(header, SWT.NONE);
+		lbl.setText("Bis:");
+		
+		to = new DateTime(header, SWT.NONE);
+		
+		textOrCodingFolder = new TabFolder(this, SWT.NONE);
+		
+		TabItem textItem = new TabItem(textOrCodingFolder, SWT.NONE, 0);
+		textItem.setText("Text");
+		textTxt = new Text(textOrCodingFolder, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		textItem.setControl(textTxt);
+		
+		TabItem codingItem = new TabItem(textOrCodingFolder, SWT.NONE, 1);
+		codingItem.setText("Kodierung");
+		codingComposite = new CodingComposite(textOrCodingFolder, SWT.NONE);
+		codingComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		codingItem.setControl(codingComposite);
+		
+		GridData folderGd = new GridData(GridData.FILL_HORIZONTAL);
+		folderGd.heightHint = 100;
+		textOrCodingFolder.setLayoutData(folderGd);
+
+		notesComposite = new NotesComposite(this, SWT.NONE);
+		notesComposite.showTitle(true);
+		notesComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		initDataBinding();
 	}
@@ -80,9 +138,54 @@ public class ConditionComposite extends Composite {
 		return condition;
 	}
 	
-	public void setCondition(ICondition condition){
+	public void setCondition(final ICondition condition){
 		this.condition = Optional.ofNullable(condition);
 		transientConditionValue.setValue(TransientCondition.fromCondition(condition));
+		// provide access adapter to notes composite 
+		notesComposite.setInput(new NotesAdapter() {
+			@Override
+			public void removeNote(String note){
+				if (transientConditionValue.getValue() != null) {
+					((TransientCondition) transientConditionValue.getValue()).removeNote(note);
+				}
+			}
+			
+			@Override
+			public List<String> getNotes(){
+				if (transientConditionValue.getValue() != null) {
+					return ((TransientCondition) transientConditionValue.getValue()).getNotes();
+				}
+				return Collections.emptyList();
+			}
+			
+			@Override
+			public void addNote(String note){
+				if (transientConditionValue.getValue() != null) {
+					((TransientCondition) transientConditionValue.getValue()).addNote(note);
+				}
+			}
+		});
+		codingComposite.setInput(new CodingAdapter() {
+			@Override
+			public List<ICoding> getCoding(){
+				if (transientConditionValue.getValue() != null) {
+					return ((TransientCondition) transientConditionValue.getValue()).getCoding();
+				}
+				return Collections.emptyList();
+			}
+
+			@Override
+			public void setCoding(List<ICoding> coding){
+				if (transientConditionValue.getValue() != null) {
+					((TransientCondition) transientConditionValue.getValue()).setCoding(coding);
+				}
+			}
+		});
+		// show coding if present
+		List<ICoding> coding = condition.getCoding();
+		if (coding != null && !coding.isEmpty()) {
+			textOrCodingFolder.setSelection(1);
+		}
 	}
 	
 	/**
@@ -105,6 +208,7 @@ public class ConditionComposite extends Composite {
 		private List<ICoding> coding = new ArrayList<>();
 		private ConditionStatus status;
 		private LocalDate dateRecorded;
+		private List<String> notes;
 		
 		public List<ICoding> getCoding(){
 			return coding;
@@ -142,20 +246,57 @@ public class ConditionComposite extends Composite {
 			return dateRecorded;
 		}
 		
+		private void setNotes(List<String> notes){
+			this.notes = notes;
+		}
+		
+		public List<String> getNotes(){
+			return notes;
+		}
+		
+		public void addNote(String note){
+			notes.add(note);
+		}
+		
+		public void removeNote(String note){
+			notes.remove(note);
+		}
+		
 		public static TransientCondition fromCondition(ICondition condition){
 			TransientCondition ret = new TransientCondition();
 			ret.setStatus(condition.getStatus());
-			ret.setCoding(ret.getCoding());
+			ret.setCoding(condition.getCoding());
 			condition.getDateRecorded().ifPresent(d -> ret.setDateRecorded(d));
 			condition.getText().ifPresent(t -> ret.setText(t));
+			ret.setNotes(new ArrayList<String>(condition.getNotes()));
 			return ret;
 		}
 		
+
 		public void toCondition(ICondition condition){
 			condition.setStatus(getStatus());
 			condition.setCoding(getCoding());
-			condition.setDateRecorded(getDateRecorded());
-			condition.setText(getText());
+			if(dateRecorded != null) {
+				condition.setDateRecorded(getDateRecorded());
+			}
+			if(text != null) {
+				condition.setText(getText());
+			}
+			if (notes != null) {
+				List<String> existingNotes = condition.getNotes();
+				for (String string : existingNotes) {
+					// remove no longer contained notes
+					if (!notes.contains(string)) {
+						condition.removeNote(string);
+					}
+				}
+				for (String string : notes) {
+					// add new notes
+					if (!existingNotes.contains(string)) {
+						condition.addNote(string);
+					}
+				}
+			}
 		}
 	}
 }

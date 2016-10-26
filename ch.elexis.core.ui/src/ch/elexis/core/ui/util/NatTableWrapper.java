@@ -51,7 +51,6 @@ public class NatTableWrapper implements ISelectionProvider {
 	private SelectionLayer selectionLayer;
 	
 	private List<Object> currentSelection = new ArrayList<>();
-	private List<Integer> rowHeights = new ArrayList<>();
 	
 	private ListenerList doubleClickListeners = new ListenerList();
 	private ListenerList selectionListener = new ListenerList();
@@ -117,7 +116,6 @@ public class NatTableWrapper implements ISelectionProvider {
 				}
 			}
 		});
-		
 		natTable.configure();
 	}
 	

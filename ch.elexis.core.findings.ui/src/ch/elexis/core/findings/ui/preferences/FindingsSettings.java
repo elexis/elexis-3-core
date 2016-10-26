@@ -27,7 +27,7 @@ import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 
-public class DiagnoseSettings extends FieldEditorPreferencePage
+public class FindingsSettings extends FieldEditorPreferencePage
 		implements IWorkbenchPreferencePage {
 	
 	private BooleanFieldEditor diagStructFieldEditor;
@@ -35,18 +35,19 @@ public class DiagnoseSettings extends FieldEditorPreferencePage
 	@Override
 	public void init(IWorkbench workbench){
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
+		setMessage("Globale Befunde Einstellungen");
 	}
 	
 	@Override
 	protected void createFieldEditors(){
 		diagStructFieldEditor =
 			new BooleanFieldEditor(SettingsConstants.DIAGNOSE_SETTINGS_USE_STRUCTURED,
-				"Diagnosen strukturiert anzeigen (global)", getFieldEditorParent());
+				"Diagnosen strukturiert anzeigen", getFieldEditorParent());
 		addField(diagStructFieldEditor);
 	}
 	
 	private Logger getLogger(){
-		return LoggerFactory.getLogger(DiagnoseSettings.class);
+		return LoggerFactory.getLogger(FindingsSettings.class);
 	}
 	
 	@Override
@@ -64,7 +65,7 @@ public class DiagnoseSettings extends FieldEditorPreferencePage
 								throws InvocationTargetException, InterruptedException{
 								Query<Patient> query = new Query<>(Patient.class);
 								List<Patient> patients = query.execute();
-								monitor.beginTask("Strukturierte Diagnosen erzeugen.",
+								monitor.beginTask("Strukturierte Diagnosen erzeugen",
 									patients.size());
 								IFindingsService findingsService =
 									FindingsServiceComponent.getService();
@@ -89,6 +90,9 @@ public class DiagnoseSettings extends FieldEditorPreferencePage
 									}
 								}
 								monitor.done();
+								MessageDialog.openInformation(getShell(),
+									"Strukturierte Diagnosen",
+									"Strukturierte Diagnosen erfolgreich erzeugt. Bitte starten sie Elexis neu um mit den strukturierten Diagnosen zu arbeiten.");
 							}
 							
 							private List<IFinding> getExistingDiagnoses(String patientId,
@@ -118,9 +122,10 @@ public class DiagnoseSettings extends FieldEditorPreferencePage
 				}
 			} else {
 				if (MessageDialog.openConfirm(getShell(), "Strukturierte Diagnosen",
-					"Bisher erfasste Strukturierte Diagnosen werden nicht in Text umgewandelt.\n"
+					"Bisher erfasste strukturierte Diagnosen werden nicht in Text umgewandelt.\n"
 						+ "Wollen Sie wirklich von nun an Text Diagnosen verwenden?")) {
-					// nothig to do here
+					MessageDialog.openInformation(getShell(), "Text Diagnosen",
+						"Bitte starten sie Elexis neu um mit den Text Diagnosen zu arbeiten.");
 				} else {
 					getPreferenceStore()
 						.setValue(SettingsConstants.DIAGNOSE_SETTINGS_USE_STRUCTURED, true);

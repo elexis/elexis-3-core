@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.findings.ui.composites;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,18 +92,54 @@ public class DiagnosesComposite extends Composite {
 				private Object getFormattedDescriptionText(ICondition condition){
 					StringBuilder text = new StringBuilder();
 					
-					ConditionStatus status = condition.getStatus();
-					text.append("<strong>");
-					text.append("Status: ").append(status.toString());
-					text.append("</strong>\n");
-					
+					StringBuilder contentText = new StringBuilder();
+					// first display text
+					Optional<String> conditionText = condition.getText();
+					conditionText.ifPresent(t -> {
+						if (contentText.length() > 0) {
+							contentText.append("\n");
+						}
+						contentText.append(t);
+					});
+					// then display the coding
 					List<ICoding> codings = condition.getCoding();
 					if (codings != null && !codings.isEmpty()) {
-						// TODO fill in codings display ...
-					} else {
-						Optional<String> conditionText = condition.getText();
-						conditionText.ifPresent(t -> text.append(t));
+						for (ICoding iCoding : codings) {
+							if (contentText.length() > 0) {
+								contentText.append("\n");
+							}
+							contentText.append("[").append(iCoding.getCode()).append("] ")
+								.append(iCoding.getDisplay());
+						}
 					}
+					// add additional information before content
+					text.append("<strong>");
+					ConditionStatus status = condition.getStatus();
+					text.append(status.getLocalized());
+					Optional<LocalDateTime> startTime = condition.getStartTime();
+					startTime.ifPresent(time -> {
+						text.append("(")
+							.append(time.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
+							.append(" - ");
+					});
+					Optional<LocalDateTime> endTime = condition.getEndTime();
+					endTime.ifPresent(time -> {
+						text.append(time.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+					});
+					startTime.ifPresent(time -> {
+						text.append(")");
+					});
+					List<String> notes = condition.getNotes();
+					if(!notes.isEmpty()) {
+						text.append(" (" + notes.size() + ")");
+					}
+					if (contentText.toString().contains("\n")) {
+						text.append("</strong>\n").append(contentText.toString());
+					} else {
+						text.append("</strong> ").append(contentText.toString());
+					}
+					
+
 					return text.toString();
 				}
 				
@@ -204,7 +242,7 @@ public class DiagnosesComposite extends Composite {
 		
 		@Override
 		public String getText(){
-			return "Diagnose Status " + status;
+			return "Status " + status.getLocalized();
 		}
 		
 		@Override
@@ -223,7 +261,7 @@ public class DiagnosesComposite extends Composite {
 		
 		@Override
 		public String getText(){
-			return "Diagnose erstellen";
+			return "erstellen";
 		}
 		
 		@Override
@@ -252,7 +290,7 @@ public class DiagnosesComposite extends Composite {
 		
 		@Override
 		public String getText(){
-			return "Diagnose entfernen";
+			return "entfernen";
 		}
 		
 		@Override
