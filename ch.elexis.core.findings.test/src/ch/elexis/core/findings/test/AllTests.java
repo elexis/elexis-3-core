@@ -9,16 +9,17 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import ch.elexis.core.findings.ConditionTest;
-import ch.elexis.core.findings.ConditionTest;
 import ch.elexis.core.findings.CreateFindingsTest;
 import ch.elexis.core.findings.EncounterTest;
 import ch.elexis.core.findings.FindingsServiceComponent;
 import ch.elexis.core.findings.FindingsServiceTest;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.codings.CodingServiceTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	FindingsServiceTest.class, CreateFindingsTest.class, EncounterTest.class, ConditionTest.class
+	FindingsServiceTest.class, CreateFindingsTest.class, EncounterTest.class, ConditionTest.class,
+	CodingServiceTest.class
 })
 public class AllTests {
 	public static final String PATIENT_ID = "defaultPatient";

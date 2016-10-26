@@ -6,7 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -32,12 +34,40 @@ public class ConditionTest {
 		assertNotNull(factory);
 		ICondition condition = factory.createCondition();
 		assertNotNull(condition);
+		// set the properties
 		condition.setPatientId(AllTests.PATIENT_ID);
 		LocalDate dateRecorded = LocalDate.of(2016, Month.OCTOBER, 19);
 		condition.setDateRecorded(dateRecorded);
 		condition.setCategory(ConditionCategory.DIAGNOSIS);
 		condition.setStatus(ConditionStatus.ACTIVE);
+		
+		condition.addNote("first note");
+		condition.addNote("second note\nthird note");
+		
+		LocalDateTime startTime = LocalDateTime.of(2016, Month.OCTOBER, 1, 12, 0, 0);
+		condition.setStartTime(startTime);
+		
+		ICoding code = new ICoding() {
+			
+			@Override
+			public String getSystem(){
+				return "testSystem";
+			}
+			
+			@Override
+			public String getDisplay(){
+				return "test display";
+			}
+			
+			@Override
+			public String getCode(){
+				return "test";
+			}
+		};
+		condition.setCoding(Collections.singletonList(code));
+		
 		condition.addStringExtension("test", "testValue");
+		
 		FindingsServiceComponent.getService().saveFinding(condition);
 		
 		List<IFinding> conditions = FindingsServiceComponent.getService()
@@ -45,11 +75,27 @@ public class ConditionTest {
 		assertNotNull(conditions);
 		assertFalse(conditions.isEmpty());
 		assertEquals(1, conditions.size());
+		// read condition and test the properties
 		ICondition readcondition = (ICondition) conditions.get(0);
 		assertEquals(AllTests.PATIENT_ID,
 			readcondition.getPatientId());
 		assertTrue(readcondition.getDateRecorded().isPresent());
 		assertEquals(dateRecorded, readcondition.getDateRecorded().get());
+		
+		List<String> notes = readcondition.getNotes();
+		assertNotNull(notes);
+		assertFalse(notes.isEmpty());
+		assertTrue(notes.get(0).equals("first note"));
+		assertTrue(notes.get(1).equals("second note\nthird note"));
+		
+		assertTrue(readcondition.getStartTime().isPresent());
+		assertEquals(startTime, readcondition.getStartTime().get());
+		
+		List<ICoding> coding = readcondition.getCoding();
+		assertNotNull(coding);
+		assertFalse(coding.isEmpty());
+		assertEquals(coding.get(0).getDisplay(), "test display");
+		
 		Map<String, String> extensions = readcondition.getStringExtensions();
 		assertFalse(extensions.isEmpty());
 		assertTrue(extensions.containsKey("test"));

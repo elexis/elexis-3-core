@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
-import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.data.PersistentObject;
@@ -115,18 +114,6 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 	@Override
 	public String getId(){
 		return super.getId();
-	}
-	
-	@Override
-	public List<ICoding> getCoding(){
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public void setCoding(List<ICoding> coding){
-		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override

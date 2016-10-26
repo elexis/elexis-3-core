@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,16 +44,25 @@ public interface IFinding {
 	 */
 	public void setPatientId(String patientId);
 	
-	public List<ICoding> getCoding();
-	
-	public void setCoding(List<ICoding> coding);
-	
 	public Optional<String> getText();
 	
 	public void setText(String text);
 	
+	/**
+	 * Add an extension to the {@link IFinding}. It is identified by the url, and contains the
+	 * value.
+	 * 
+	 * @param theUrl
+	 * @param theValue
+	 */
 	public void addStringExtension(String theUrl, String theValue);
 	
+	/**
+	 * Get a map of all extensions attacht to the {@link IFinding}. Via the url as key, the value
+	 * can be accessed.
+	 * 
+	 * @return
+	 */
 	public Map<String, String> getStringExtensions();
 	
 	public RawContentFormat getRawContentFormat();

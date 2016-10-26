@@ -1,20 +1,29 @@
 package ch.elexis.core.findings.fhir.po.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.hl7.fhir.dstu3.exceptions.FHIRException;
+import org.hl7.fhir.dstu3.model.Annotation;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Condition.ConditionClinicalStatus;
+import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
+import ch.elexis.core.findings.fhir.po.model.util.ModelUtil;
 import ch.elexis.core.findings.fhir.po.service.internal.EnumMapping;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Xid;
 import ch.rgw.tools.VersionInfo;
 
 public class Condition extends AbstractFhirPersistentObject implements ICondition {
@@ -29,7 +38,6 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 	protected static final String VERSION = "1.0.0";
 	
 	public static final String FLD_PATIENTID = "patientid"; //$NON-NLS-1$
-	public static final String XID_CONDITION_UPDATED = "www.elexis.info/condition/updated";
 	
 	//@formatter:off
 	protected static final String createDB =
@@ -45,9 +53,6 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 	
 	static {
 		addMapping(TABLENAME, FLD_PATIENTID, FLD_CONTENT);
-		
-		Xid.localRegisterXIDDomainIfNotExists(XID_CONDITION_UPDATED, XID_CONDITION_UPDATED,
-			Xid.ASSIGNMENT_LOCAL);
 		
 		Condition version = load("VERSION");
 		if (version.state() < PersistentObject.DELETED) {
@@ -73,6 +78,10 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 	public Condition(){
 		org.hl7.fhir.dstu3.model.Condition fhirCondition = new org.hl7.fhir.dstu3.model.Condition();
 		saveResource(fhirCondition);
+	}
+	
+	private Logger getLogger(){
+		return LoggerFactory.getLogger(Condition.class);
 	}
 	
 	@Override
@@ -186,6 +195,137 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 			if (fhirCategoryCode != null) {
 				fhirCondition.setClinicalStatus(fhirCategoryCode);
 			}
+			saveResource(resource.get());
+		}
+	}
+	
+	@Override
+	public void setStartTime(LocalDateTime startTime){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				(org.hl7.fhir.dstu3.model.Condition) resource.get();
+			fhirCondition.setOnset(new DateTimeType(getDate(startTime)));
+			saveResource(resource.get());
+		}
+	}
+	
+	@Override
+	public Optional<LocalDateTime> getStartTime(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				(org.hl7.fhir.dstu3.model.Condition) resource.get();
+			try {
+				if (fhirCondition.hasOnsetDateTimeType()) {
+					DateTimeType dateTime = fhirCondition.getOnsetDateTimeType();
+					if (dateTime != null) {
+						return Optional.of(getLocalDateTime(dateTime.getValue()));
+					}
+				}
+			} catch (FHIRException e) {
+				getLogger().error("Could not access start time.", e);
+			}
+		}
+		return Optional.empty();
+	}
+	
+	@Override
+	public void setEndTime(LocalDateTime endTime){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				(org.hl7.fhir.dstu3.model.Condition) resource.get();
+			fhirCondition.setAbatement(new DateTimeType(getDate(endTime)));
+			saveResource(resource.get());
+		}
+	}
+	
+	@Override
+	public Optional<LocalDateTime> getEndTime(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				(org.hl7.fhir.dstu3.model.Condition) resource.get();
+			try {
+				if (fhirCondition.hasOnsetDateTimeType()) {
+					DateTimeType dateTime = fhirCondition.getAbatementDateTimeType();
+					if (dateTime != null) {
+						return Optional.of(getLocalDateTime(dateTime.getValue()));
+					}
+				}
+			} catch (FHIRException e) {
+				getLogger().error("Could not access end time.", e);
+			}
+		}
+		return Optional.empty();
+	}
+	
+	@Override
+	public void addNote(String text){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				(org.hl7.fhir.dstu3.model.Condition) resource.get();
+			Annotation annotation = new Annotation();
+			annotation.setText(text);
+			fhirCondition.addNote(annotation);
+			saveResource(resource.get());
+		}
+	}
+	
+	@Override
+	public void removeNote(String text){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				(org.hl7.fhir.dstu3.model.Condition) resource.get();
+			List<Annotation> notes = new ArrayList<Annotation>(fhirCondition.getNote());
+			notes = notes.stream().filter(annotation -> !text.equals(annotation.getText())).collect(Collectors.toList());
+			fhirCondition.setNote(notes);
+			saveResource(resource.get());
+		}
+	}
+	
+	@Override
+	public List<String> getNotes(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				(org.hl7.fhir.dstu3.model.Condition) resource.get();
+			List<Annotation> notes = fhirCondition.getNote();
+			return notes.stream().map(annotation -> annotation.getText())
+				.collect(Collectors.toList());
+		}
+		return Collections.emptyList();
+	}
+	
+	@Override
+	public List<ICoding> getCoding(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				(org.hl7.fhir.dstu3.model.Condition) resource.get();
+			CodeableConcept codeableConcept = fhirCondition.getCode();
+			if (codeableConcept != null) {
+				return ModelUtil.getCodingsFromConcept(codeableConcept);
+			}
+		}
+		return Collections.emptyList();
+	}
+	
+	@Override
+	public void setCoding(List<ICoding> coding){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				(org.hl7.fhir.dstu3.model.Condition) resource.get();
+			CodeableConcept codeableConcept = fhirCondition.getCode();
+			if (codeableConcept == null) {
+				codeableConcept = new CodeableConcept();
+			}
+			ModelUtil.addCodingsToConcept(codeableConcept, coding);
+			fhirCondition.setCode(codeableConcept);
 			saveResource(resource.get());
 		}
 	}
