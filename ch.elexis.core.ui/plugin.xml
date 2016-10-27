@@ -276,7 +276,7 @@
             id="ch.elexis.preferences.usertext"
             name="%page.name.0"/>
       <page
-            class="ch.elexis.core.ui.preferences.LagerverwaltungPrefs"
+            class="ch.elexis.core.ui.preferences.StockManagementPreferencePage"
             id="ch.elexis.preferences.LagerverwaltungPrefs"
             name="%page.name.1"/>
       <page

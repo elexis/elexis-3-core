@@ -270,6 +270,7 @@ public class Messages extends NLS {
 	public static String ReminderDetailDialog_btnOverdue_text;
 	public static String ReminderDetailDialog_labelAction_toolTipText;
 	public static String ReminderDetailDialog_labelAction_text;
+	public static String DailyOrderDialog_text_text;
 	
 	static {
 		// load message values from bundle file

@@ -35,6 +35,7 @@ public class ExtensionPointConstantsUi {
 	public static final String REZEPT_HOOK = "ch.elexis.core.ui.RezeptHook";
 	public static final String XCHANGE_CONTRIBUTION = "ch.elexis.core.ui.xCHangeContribution";
 	public static final String TRANSPORTER = "ch.elexis.core.ui.Transporter";
+	public static final String TRANSPORTER_EXPC = "ExporterClass";
 	public static final String GENERICCODE = "ch.elexis.core.ui.Genericcode";
 	public static final String RECHNUNGSDETAIL = "ch.elexis.core.ui.Rechnungsdetail";
 	public static final String TEXT_TEMPLATE_REQUIREMENT = "ch.elexis.core.ui.TextTemplateRequirement";

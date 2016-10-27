@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2015-2016 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,7 +43,10 @@ import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.lock.LocalLockService;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
+import ch.elexis.core.data.service.OrderService;
+import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.lock.ILocalLockService;
+import ch.elexis.core.stock.IOrderService;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -70,7 +73,7 @@ public class CoreHub implements BundleActivator {
 	public static String Version = "3.2.0.qualifier"; //$NON-NLS-1$
 	public static final String APPLICATION_NAME = "Elexis Core"; //$NON-NLS-1$
 	static final String neededJRE = "1.8.0"; //$NON-NLS-1$
-	public static final String DBVersion = "3.2.3"; //$NON-NLS-1$
+	public static final String DBVersion = "3.2.4"; //$NON-NLS-1$
 	
 	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
 	
@@ -94,7 +97,7 @@ public class CoreHub implements BundleActivator {
 	 * hier: den eingeloggten Betriebssystem-User, nicht den Elexis-User. In Windows wird userDir
 	 * meist %USERPROFILE%\elexis sein, in Linux ~./elexis. Es kann mit getWritableUserDir() geholt
 	 * werden.
-	 * */
+	 */
 	static File userDir;
 	
 	/** Globale Einstellungen (Werden in der Datenbank gespeichert) */
@@ -127,12 +130,18 @@ public class CoreHub implements BundleActivator {
 	/** Lock Service **/
 	private static ILocalLockService localLockService;
 	
+	/** Stock Service **/
+	private static final StockService stockService = new StockService();
+	
+	/** Order Service **/
+	private static final IOrderService orderService = new OrderService();
+	
 	/**
 	 * The listener for patient events
 	 */
 	private final PatientEventListener eeli_pat = new PatientEventListener();
 	
-	public static boolean isTooManyInstances() {
+	public static boolean isTooManyInstances(){
 		return tooManyInstances;
 	}
 	
@@ -220,8 +229,8 @@ public class CoreHub implements BundleActivator {
 		// add core ClassLoader to default Script Interpreter
 		Interpreter.classLoaders.add(CoreHub.class.getClassLoader());
 		
-		if (!ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH.equals(System
-			.getProperty(ElexisSystemPropertyConstants.RUN_MODE)))
+		if (!ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
+			.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE)))
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				public void run(){
 					SysSettings localCfg = (SysSettings) CoreHub.localCfg;
@@ -258,7 +267,7 @@ public class CoreHub implements BundleActivator {
 	@Override
 	public void stop(BundleContext context) throws Exception{
 		log.debug("Stopping " + CoreHub.class.getName());
-
+		
 		getLocalLockService().releaseAllLocks();
 		getLocalLockService().shutdown();
 		
@@ -284,8 +293,8 @@ public class CoreHub implements BundleActivator {
 				config = c[1];
 			}
 		}
-		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH.equals(System
-			.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
+		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
+			.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
 			config = UUID.randomUUID().toString();
 		}
 		loadLocalCfg(config);
@@ -301,8 +310,8 @@ public class CoreHub implements BundleActivator {
 			+ System.getProperty("file.encoding"));
 		
 		if (vI.isOlder(neededJRE)) {
-			MessageEvent.fireLoggedError("Invalid Java version", "Your Java version is older than "
-				+ neededJRE + ", please update.");
+			MessageEvent.fireLoggedError("Invalid Java version",
+				"Your Java version is older than " + neededJRE + ", please update.");
 		}
 		log.info("Basepath: " + getBasePath());
 		pin.initializeDefaultPreferences();
@@ -373,15 +382,14 @@ public class CoreHub implements BundleActivator {
 		
 		actMandant = newMandant;
 		
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(newMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(newMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
 	}
 	
 	public static Settings getUserSetting(Kontakt user){
 		if (StringConstants.ONE.equals(user.get(Kontakt.FLD_IS_USER))) {
-			Settings settings =
-				new SqlSettings(PersistentObject.getConnection(), "USERCONFIG", "Param", "Value",
-					"UserID=" + user.getWrappedId());
+			Settings settings = new SqlSettings(PersistentObject.getConnection(), "USERCONFIG",
+				"Param", "Value", "UserID=" + user.getWrappedId());
 			return settings;
 		}
 		return null;
@@ -439,10 +447,12 @@ public class CoreHub implements BundleActivator {
 	
 	/**
 	 * Perform the required tasks to log off the current {@link Anwender}
+	 * 
 	 * @since 3.1 moved from {@link Anwender} class
 	 */
 	public static void logoffAnwender(){
-		if (CoreHub.actUser == null) return; 
+		if (CoreHub.actUser == null)
+			return;
 		
 		if (CoreHub.userCfg != null) {
 			CoreHub.userCfg.flush();
@@ -453,14 +463,22 @@ public class CoreHub implements BundleActivator {
 		CoreHub.setMandant(null);
 		CoreHub.heart.suspend();
 		CoreHub.actUser = null;
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(null, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(null, User.class, ElexisEvent.EVENT_DESELECTED));
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(null, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(null, User.class, ElexisEvent.EVENT_DESELECTED));
 		CoreHub.userCfg = CoreHub.localCfg;
 	}
 	
 	public static ILocalLockService getLocalLockService(){
 		return localLockService;
+	}
+	
+	public static StockService getStockService(){
+		return stockService;
+	}
+	
+	public static IOrderService getOrderService(){
+		return orderService;
 	}
 }

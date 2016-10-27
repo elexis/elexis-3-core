@@ -20,6 +20,7 @@ import com.eclipsesource.jaxrs.consumer.ConsumerFactory;
 
 import ch.elexis.core.common.InstanceStatus;
 import ch.elexis.core.common.InstanceStatus.STATE;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -89,6 +90,9 @@ public class LocalLockService implements ILocalLockService {
 			logger.info("Operating against elexis-server instance on " + restUrl);
 			ils = ConsumerFactory.createConsumer(restUrl, ILockService.class);
 			iis = ConsumerFactory.createConsumer(restUrl, IInstanceService.class);
+			String identId = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, "");
+			String identTxt = CoreHub.localCfg.get(Preferences.STATION_IDENT_TEXT, "");
+			inst.setIdentifier(identTxt + " [" + identId + "]");
 		} else {
 			standalone = true;
 			logger.info("Operating in stand-alone mode.");

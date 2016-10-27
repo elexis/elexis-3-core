@@ -612,7 +612,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			if (result.isOK()) {
 				if (v instanceof Artikel) {
 					Artikel art = (Artikel) v;
-					art.einzelRuecknahme(z);
+					CoreHub.getStockService().performSingleReturn(art, z);
 					
 					Object prescId = ls.getDetail(Verrechnet.FLD_EXT_PRESC_ID);
 					if (prescId instanceof String) {

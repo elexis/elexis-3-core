@@ -299,7 +299,7 @@ public class Query<T> {
 	 *            Der Wert, der gesucht wird. Für Wildcard suche kann der Wert % enthalten, der
 	 *            Operator muss dann aber "LIKE" sein.
 	 *            Falls ein Feldname angegeben wird, wird die Vergleichsoperation auf dem Feld
-	 *            ausgeführt.
+	 *            ausgeführt. Es ist auch <code>null</code> erlaubt.
 	 * @param toLower
 	 *            ei true werden die Parameter mit der SQL-Funktion "lower()" in Kleinschreibung
 	 *            umgewandelt, so dass die Gross-/Kleinschreibung egal ist.
@@ -375,8 +375,10 @@ public class Query<T> {
 			if (operator.equalsIgnoreCase("is") || operator.equals("=")) {
 				// let's be a bit fault tolerant
 				operator = "";
+			} else if(NOT_EQUAL.equalsIgnoreCase(operator)){
+				operator = "NOT";
 			}
-			append(mapped, "is", operator, "null");
+			append(mapped, "IS", operator, "NULL");
 		} else {
 			if (mappedValue != null && !mappedValue.equals(wert)) {
 				append(mapped, operator, mappedValue);

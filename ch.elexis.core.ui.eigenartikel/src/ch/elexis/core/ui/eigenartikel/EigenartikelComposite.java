@@ -10,7 +10,6 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -20,6 +19,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -27,17 +27,14 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
-import ch.elexis.core.ui.Hub;
-import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
-import ch.elexis.data.Kontakt;
+import ch.elexis.core.ui.views.controls.StockDetailComposite;
 
 public class EigenartikelComposite extends Composite implements IUnlockable {
 	private DataBindingContext m_bindingContext;
@@ -55,21 +52,19 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	private Text txtPackageSizeInt;
 	private Text txtExfPrice;
 	private Text txtpubPrice;
-	private Text txtMinOnStock;
-	private Text txtMaxOnStock;
-	private Text txtCurrOnStock;
 	private Combo comboDpSelector;
 	private ComboViewer comboViewerDpSelector;
 	private ComboViewer comboViewerProductType;
 	private Combo comboProductType;
 	private Label lblAtcCode;
-	private Label lblProvider;
 	private Label lblMeasurementUnit;
 	private Text txtMeasurementUnit;
 	private Group grpDrugPackages;
 	private Button btnHiCostAbsorption;
 	private Text txtSellUnit;
 	private Label lblVerkaufseinheit;
+	
+	private StockDetailComposite sdc;
 	
 	/**
 	 * Create the composite.
@@ -201,8 +196,11 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 				StructuredSelection ss = (StructuredSelection) event.getSelection();
 				if (ss.isEmpty()) {
 					drugPackageEigenartikel.setValue(null);
+					sdc.setArticle(null);
 				} else {
-					drugPackageEigenartikel.setValue((Eigenartikel) ss.getFirstElement());
+					Eigenartikel ea = (Eigenartikel) ss.getFirstElement();
+					drugPackageEigenartikel.setValue(ea);
+					sdc.setArticle(ea);
 				}
 			}
 		});
@@ -274,49 +272,14 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		btnHiCostAbsorption.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		btnHiCostAbsorption.setText(Messages.EigenartikelComposite_btnCheckButton_text);
 		
-		Label lblMinOnStock = new Label(compDpDetail, SWT.NONE);
-		lblMinOnStock.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblMinOnStock.setText(Messages.EigenartikelDisplay_minOnStock);
+		Group stockGroup = new Group(grpDrugPackages, SWT.NONE);
+		stockGroup.setText(Messages.EigenartikelComposite_stockGroup_text);
+		stockGroup.setLayout(new FillLayout(SWT.HORIZONTAL));
+		GridData gd_stockGroup = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
+		gd_stockGroup.heightHint = 100;
+		stockGroup.setLayoutData(gd_stockGroup);
 		
-		txtMinOnStock = new Text(compDpDetail, SWT.BORDER);
-		txtMinOnStock.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblMaxOnStock = new Label(compDpDetail, SWT.NONE);
-		lblMaxOnStock.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblMaxOnStock.setText(Messages.EigenartikelDisplay_maxOnStock);
-		
-		txtMaxOnStock = new Text(compDpDetail, SWT.BORDER);
-		txtMaxOnStock.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblCurrOnStock = new Label(compDpDetail, SWT.NONE);
-		lblCurrOnStock.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblCurrOnStock.setText(Messages.EigenartikelDisplay_actualOnStockPacks);
-		
-		txtCurrOnStock = new Text(compDpDetail, SWT.BORDER);
-		txtCurrOnStock.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compDpDetail, SWT.NONE);
-		new Label(compDpDetail, SWT.NONE);
-		
-		Link linkProvider = new Link(compDpDetail, SWT.NONE);
-		linkProvider.setText(Messages.EigenartikelComposite_linkProvider_text);
-		linkProvider.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		linkProvider.addListener(SWT.Selection, e -> {
-			KontaktSelektor ksl = new KontaktSelektor(Hub.getActiveShell(), Kontakt.class,
-				Messages.EigenartikelDisplay_dealer,
-				Messages.EigenartikelDisplay_pleaseChooseDealer, Kontakt.DEFAULT_SORT);
-			if (ksl.open() == Dialog.OK) {
-				Eigenartikel value = (Eigenartikel) drugPackageEigenartikel.getValue();
-				if(value !=null) {
-					Kontakt k = (Kontakt) ksl.getSelection();	
-					value.setLieferant(k);
-					lblProvider.setText(value.getLieferant().getLabel());
-				}
-			}
-		});
-		
-		lblProvider = new Label(compDpDetail, SWT.NONE);
-		lblProvider.setText("no provider set");
-		lblProvider.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		sdc = new StockDetailComposite(stockGroup, SWT.NONE);
 		
 		m_bindingContext = initDataBindings();
 		
@@ -431,39 +394,6 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtpubPriceObserveWidget,
 			drugPackageEigenartikelVKPreisObserveDetailValue, null, null);
-		//
-		IObservableValue observeTextTxtMaxOnStockObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txtMaxOnStock);
-		IObservableValue drugPackageEigenartikelMaxbestandObserveDetailValue =
-			PojoProperties.value(Eigenartikel.class, "maxOnStock", Integer.class)
-				.observeDetail(drugPackageEigenartikel);
-		bindingContext.bindValue(observeTextTxtMaxOnStockObserveWidget,
-			drugPackageEigenartikelMaxbestandObserveDetailValue, null, null);
-		//
-		IObservableValue observeTextTxtMinOnStockObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txtMinOnStock);
-		IObservableValue drugPackageEigenartikelMinbestandObserveDetailValue =
-			PojoProperties.value(Eigenartikel.class, "minOnStock", Integer.class)
-				.observeDetail(drugPackageEigenartikel);
-		bindingContext.bindValue(observeTextTxtMinOnStockObserveWidget,
-			drugPackageEigenartikelMinbestandObserveDetailValue, null, null);
-		//
-		IObservableValue observeTextTxtCurrOnStockObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txtCurrOnStock);
-		IObservableValue drugPackageEigenartikelIstbestandObserveDetailValue =
-			PojoProperties.value(Eigenartikel.class, "currentOnStock", Integer.class)
-				.observeDetail(drugPackageEigenartikel);
-		bindingContext.bindValue(observeTextTxtCurrOnStockObserveWidget,
-			drugPackageEigenartikelIstbestandObserveDetailValue, null, null);
-		//
-		IObservableValue observeTextLblProviderObserveWidget =
-			WidgetProperties.text().observe(lblProvider);
-		IObservableValue drugPackageEigenartikelLieferantlabelObserveDetailValue =
-			PojoProperties.value(Eigenartikel.class, "lieferant.label", String.class)
-				.observeDetail(drugPackageEigenartikel);
-		bindingContext.bindValue(observeTextLblProviderObserveWidget,
-			drugPackageEigenartikelLieferantlabelObserveDetailValue,
-			new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), null);
 		//
 		IObservableValue observeTextTxtMeasurementUnitObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtMeasurementUnit);

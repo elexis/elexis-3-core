@@ -12,8 +12,6 @@
 
 package ch.elexis.core.ui.views.artikel;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -40,7 +38,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.stock.IStockService.Availability;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -70,8 +70,8 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 		for (IConfigurationElement ice : list) {
 			if ("Artikel".equals(ice.getName())) { //$NON-NLS-1$
 				try {
-					CodeSelectorFactory cs =
-						(CodeSelectorFactory) ice.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+					CodeSelectorFactory cs = (CodeSelectorFactory) ice
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 					CTabItem ci = new CTabItem(ctab, SWT.NONE);
 					ci.setText(cs.getCodeSystemName());
 					ci.setData("csf", cs); //$NON-NLS-1$
@@ -91,12 +91,7 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 		tv.setContentProvider(new IStructuredContentProvider() {
 			
 			public Object[] getElements(final Object inputElement){
-				List<Artikel> lLager = Artikel.getLagerartikel();
-				if (lLager != null) {
-					return lLager.toArray();
-				} else {
-					return new Object[0];
-				}
+				return CoreHub.getStockService().getAllStockEntries().toArray();
 			}
 			
 			public void dispose(){}
@@ -184,9 +179,10 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 		public String getColumnText(final Object element, final int columnIndex){
 			if (element instanceof Artikel) {
 				Artikel art = (Artikel) element;
+				Availability availability = CoreHub.getStockService().getCumulatedAvailabilityForArticle(art);
 				String ret = art.getInternalName();
-				if (art.isLagerartikel()) {
-					ret += " (" + Integer.toString(art.getTotalCount()) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+				if (availability!=null) {
+					ret += " (" + availability.toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				return ret;
 			}
@@ -239,7 +235,8 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 					
 					cv.addDoubleClickListener(new CommonViewer.DoubleClickListener() {
 						
-						public void doubleClicked(final PersistentObject obj, final CommonViewer cv){
+						public void doubleClicked(final PersistentObject obj,
+							final CommonViewer cv){
 							EditEigenartikelUi.executeWithParams(obj);
 						}
 					});

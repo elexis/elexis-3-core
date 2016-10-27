@@ -13,12 +13,18 @@ import ch.elexis.data.Query;
 
 import static ch.elexis.core.eigenartikel.Eigenartikel.*;
 
+/**
+ * @deprecated remove in 3.3
+ * @see https://redmine.medelexis.ch/issues/5204
+ */
 public class EigenartikelDatabaseConverter {
 	
 	private static Logger log = LoggerFactory.getLogger(EigenartikelDatabaseConverter.class);
 	
 	/**
 	 * Convert the Eigenartikel contained in the ARTIKEL table to the 3.2 format
+	 * @deprecated
+	 * @see https://redmine.medelexis.ch/issues/5204
 	 */
 	public static void performConversionTo32Format(IProgressMonitor pm){
 		List<Eigenartikel> qre = new Query<Eigenartikel>(Eigenartikel.class).execute();
@@ -26,8 +32,8 @@ public class EigenartikelDatabaseConverter {
 		log.info(taskName);
 		pm.beginTask(taskName, qre.size());
 		for (Eigenartikel ea : qre) {
-			String[] values = ea.get(false, FLD_EAN, FLD_SUB_ID, FLD_LIEFERANT_ID, MAXBESTAND,
-				MINBESTAND, ISTBESTAND, FLD_EK_PREIS, FLD_VK_PREIS);
+			String[] values =
+				ea.get(false, FLD_EAN, FLD_SUB_ID, LIEFERANT_ID, FLD_EK_PREIS, FLD_VK_PREIS);
 			long count = Arrays.asList(values).stream().filter(Objects::nonNull)
 				.filter(p -> p.length() > 0).count();
 			if (count > 0) {

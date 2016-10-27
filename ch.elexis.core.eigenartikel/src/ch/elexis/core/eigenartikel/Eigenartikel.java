@@ -237,30 +237,6 @@ public class Eigenartikel extends Artikel {
 		return intVal.intValue();
 	}
 	
-	public Integer getMaxOnStock(){
-		return returnNaturalNumberIntegerOrNull(getMaxbestand());
-	}
-	
-	public void setMaxOnStock(Integer maxOnStock){
-		setMaxbestand(getNaturalIntOrZeroIfNull(maxOnStock));
-	}
-	
-	public Integer getMinOnStock(){
-		return returnNaturalNumberIntegerOrNull(getMinbestand());
-	}
-	
-	public void setMinOnStock(Integer minOnStock){
-		setMinbestand(getNaturalIntOrZeroIfNull(minOnStock));
-	}
-	
-	public Integer getCurrentOnStock(){
-		return returnNaturalNumberIntegerOrNull(getIstbestand());
-	}
-	
-	public void setCurrentOnStock(Integer currentStock){
-		setIstbestand(getNaturalIntOrZeroIfNull(currentStock));
-	}
-	
 	public Integer getPackageSize(){
 		return returnNaturalNumberIntegerOrNull(getPackungsGroesse());
 	}

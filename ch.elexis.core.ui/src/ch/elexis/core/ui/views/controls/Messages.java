@@ -9,6 +9,8 @@ public class Messages extends NLS {
 	public static String LaborSelectionComposite_message;
 	public static String LaborSelectionComposite_title;
 	
+	public static String StockDetailComposite_availableInStock;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

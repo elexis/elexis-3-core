@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006-2012, G. Weirich and Elexis
+ * Copyright (c) 2006-2016, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,197 +8,47 @@
  * Contributors:
  *    G. Weirich - initial implementation
  *    M. Descher - orders are now persisted into own table 
- *    
+ *    MEDEVIT - major refactoring to fit multi stock changes
  *******************************************************************************/
 
 package ch.elexis.data;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.List;
 
-import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.Log;
-import ch.rgw.tools.StringTool;
+import org.eclipse.core.runtime.IProgressMonitor;
+
+import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.util.IRunnableWithProgress;
+import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.stock.IOrder;
+import ch.elexis.core.stock.IOrderEntry;
+import ch.elexis.core.stock.IStock;
 import ch.rgw.tools.TimeTool;
 
-public class Bestellung extends PersistentObject {
-	public static final String VERSION = "1.0.0";
-	private static final String FLD_ITEMS = "Liste"; //$NON-NLS-1$
-	private static final String TABLENAME = "BESTELLUNGEN"; //$NON-NLS-1$
+public class Bestellung extends PersistentObject implements IOrder {
 	
-	public static final String ISORDERED = "ch.elexis.data.Bestellung.isOrdered"; //$NON-NLS-1$
+	public static final String TABLENAME = "BESTELLUNGEN";
 	
-	private List<Item> alItems;
-	private static PersistentObjectFactory poFactory = new PersistentObjectFactory();
-	private static Log logger = Log.get(Bestellung.class.getName());
+	public static final String FLD_DATE = "DATUM";
+	public static final String FLD_JOINT_BESTELLUNGEN_ENTRIES = "BESTELLUNGEN_ENTRIES";
+	
+	/** Deprecated - will be removed in 3.3 (https://redmine.medelexis.ch/issues/5204) **/
+	@Deprecated
+	public static final String FLD_ITEMS = "Liste";
+	/**/
 	
 	public enum ListenTyp {
-		PHARMACODE, NAME, VOLL
+			PHARMACODE, NAME, VOLL
 	};
 	
-	static final String create = "CREATE TABLE " + TABLENAME + " ("
-		+ "ID       	VARCHAR(80) primary key, " + "lastupdate BIGINT,"
-		+ "deleted  	CHAR(1) default '0'," + "datum      CHAR(8)," + "Contents 	BLOB);"
-		+ "INSERT INTO " + TABLENAME + " (ID,datum,deleted) VALUES ('1'," + JdbcLink.wrap(VERSION)
-		+ ",'1');";
-	
-	public static void initialize(){
-		createOrModifyTable(create);
-		
-		// Starting with 2.1.7.rc0 orders are excavated from the HEAP2 table into an own table,
-		// the following lines move the respective entries into the new table
-		Query<NamedBlob2> eoq = new Query<NamedBlob2>(NamedBlob2.class);
-		List<NamedBlob2> eor = eoq.execute();
-		for (NamedBlob2 nb2 : eor) {
-			String[] entry = nb2.getId().split(":");
-			if (entry.length == 3) {
-				Bestellung b = new Bestellung();
-				if (b.create(nb2.getId())) {
-					b.set(FLD_ITEMS, nb2.getString());
-					logger.log("Moved order " + nb2.getId() + " from HEAP2 to " + TABLENAME,
-						Log.INFOS);
-					nb2.delete();
-				} else {
-					logger.log("Error creating " + nb2.getId() + " in table " + TABLENAME,
-						Log.INFOS);
-				}
-			}
-		}
-	}
-	
 	static {
-		addMapping(TABLENAME, "Liste=S:C:Contents"); //$NON-NLS-1$
+		addMapping(TABLENAME, FLD_ITEMS + "=S:C:Contents", //$NON-NLS-1$
+			FLD_JOINT_BESTELLUNGEN_ENTRIES + "=LIST:BESTELLUNG:" + BestellungEntry.TABLENAME);
 		
-		// Starting with 2.1.7.rc0 orders are excavated from the HEAP2 table, here
-		// we check whether the table is existing (new method), else we need to call
-		// the merge code
-		if (!PersistentObject.tableExists(TABLENAME))
-			initialize();
-	}
-	
-	public Bestellung(String name, Anwender an){
-		TimeTool t = new TimeTool();
-		create(name + ":" + t.toString(TimeTool.TIMESTAMP) + ":" + an.getId()); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-	
-	@Override
-	public String getLabel(){
-		String[] i = getId().split(":"); //$NON-NLS-1$
-		TimeTool t = new TimeTool(i[1]);
-		return i[0] + ": " + t.toString(TimeTool.FULL_GER); //$NON-NLS-1$
-	}
-	
-	public String asString(ListenTyp type){
-		initItems();
-		StringBuilder ret = new StringBuilder();
-		for (Item i : alItems) {
-			switch (type) {
-			case PHARMACODE:
-				ret.append(i.art.getPharmaCode());
-				break;
-			case NAME:
-				ret.append(i.art.getLabel());
-				break;
-			case VOLL:
-				ret.append(i.art.getPharmaCode()).append(StringTool.space).append(i.art.getName());
-				break;
-			default:
-				break;
-			}
-			ret.append(",").append(i.num).append(StringTool.lf); //$NON-NLS-1$
-		}
-		return ret.toString();
-	}
-	
-	public List<Item> asList(){
-		initItems();
-		return alItems;
-	}
-	
-	public void addItem(Artikel art, int num){
-		initItems();
-		Item i = findItem(art);
-		if (i != null) {
-			i.num += num;
-		} else {
-			alItems.add(new Item(art, num));
-		}
-	}
-	
-	public Item findItem(Artikel art){
-		initItems();
-		for (Item i : alItems) {
-			if (i.art.getId().equals(art.getId())) {
-				return i;
-			}
-		}
-		return null;
-	}
-	
-	public void removeItem(Item art){
-		initItems();
-		alItems.remove(art);
-		
-	}
-	
-	public void save(){
-		initItems();
-		StringBuilder sb = new StringBuilder();
-		for (Item i : alItems) {
-			sb.append(i.art.storeToString()).append(",").append(i.num).append(";"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		set(FLD_ITEMS, sb.toString());
-	}
-	
-	private void initItems(){
-		if (alItems == null) {
-			load();
-		}
-	}
-	
-	public void load(){
-		String[] it = checkNull(get(FLD_ITEMS)).split(";"); //$NON-NLS-1$
-		if (alItems == null) {
-			alItems = new ArrayList<Item>();
-		} else {
-			alItems.clear();
-		}
-		
-		logger.log("Found articles to order: " + it.length, Log.DEBUGMSG);
-		for (String i : it) {
-			String[] fld = i.split(","); //$NON-NLS-1$
-			if (fld.length == 2) {
-				Artikel art = loadArtikel(fld[0]);
-				
-				if (art != null && art.exists()) {
-					alItems.add(new Item(art, Integer.parseInt(fld[1])));
-				}
-			}
-		}
-	}
-	
-	/**
-	 * loads the article via id or class::id value
-	 * 
-	 * @param articleIdentifier
-	 *            id or the {@code persistentObject.storeToString()} value (class::id)
-	 * @return found article, might NOT exists
-	 */
-	private Artikel loadArtikel(String articleIdentifier){
-		Artikel art = Artikel.load(articleIdentifier);
-		
-		if (art == null || !art.exists()) {
-			PersistentObject poFromString = poFactory.createFromString(articleIdentifier);
-			if (poFromString == null) {
-				logger.log("Article for 'Bestellung' not found via [" + articleIdentifier + "]",
-					Log.WARNINGS);
-			} else {
-				art = (Artikel) poFromString;
-			}
-		}
-		return art;
+		transferAllOrdersToNew32OrderModel();
 	}
 	
 	@Override
@@ -206,13 +56,70 @@ public class Bestellung extends PersistentObject {
 		return TABLENAME;
 	}
 	
-	public static Bestellung load(String id){
-		Bestellung ret = new Bestellung(id);
-		if (ret != null) {
-			// load items lazy
-			// ret.load();
+	/**
+	 * @deprecated to be removed in 3.3
+	 * @see https://redmine.medelexis.ch/issues/5204
+	 */
+	private static void transferAllOrdersToNew32OrderModel(){
+		if (!CoreHub.globalCfg.get("OrdersMigratedTo32", false)) {
+			IRunnableWithProgress irwp = new IRunnableWithProgress() {
+				
+				@Override
+				public void run(IProgressMonitor monitor)
+					throws InvocationTargetException, InterruptedException{
+					
+					Stock defStock = Stock.load(Stock.DEFAULT_STOCK_ID);
+					
+					List<Bestellung> orders = new Query<Bestellung>(Bestellung.class).execute();
+					for (Bestellung order : orders) {
+						String[] it =
+							checkNull(order.get(FLD_ITEMS)).split(StringConstants.SEMICOLON);
+						for (String i : it) {
+							String[] fld = i.split(StringConstants.COMMA);
+							if (fld.length == 2) {
+								Artikel art = Artikel.load(fld[0]);
+								if (art == null || !art.exists()) {
+									PersistentObject poFromString =
+										CoreHub.poFactory.createFromString(fld[0]);
+									if (poFromString != null) {
+										art = (Artikel) poFromString;
+									}
+								}
+								if (art != null) {
+									int count = 1;
+									try {
+										count = Integer.parseInt(fld[1]);
+									} catch (NumberFormatException nfe) {}
+									
+									String providerId = art.get(Artikel.LIEFERANT_ID);
+									Kontakt provider = null;
+									if (providerId != null && providerId.length() > 0) {
+										Kontakt load = Kontakt.load(providerId);
+										if (load.exists()) {
+											provider = load;
+										}
+									}
+									new BestellungEntry(order, art, defStock, provider, count);
+								} else {
+									log.warn(
+										"Article for 'Bestellung' not found via [" + fld[0] + "]");
+								}
+							}
+						}
+						order.set(FLD_ITEMS, null);
+					}
+					
+					CoreHub.globalCfg.set("OrdersMigratedTo32", true);
+					CoreHub.globalCfg.flush();
+				}
+			};
+			PersistentObject.cod.showProgress(irwp);
 		}
-		return ret;
+		
+	}
+	
+	public static Bestellung load(String id){
+		return new Bestellung(id);
 	}
 	
 	protected Bestellung(){}
@@ -221,33 +128,49 @@ public class Bestellung extends PersistentObject {
 		super(id);
 	}
 	
-	public static class Item {
-		public Item(Artikel a, int n){
-			art = a;
-			num = n;
+	public Bestellung(String name, Anwender an){
+		TimeTool t = new TimeTool();
+		create(name + StringConstants.COLON + t.toString(TimeTool.TIMESTAMP) + StringConstants.COLON
+			+ an.getId());
+	}
+	
+	@Override
+	public String getLabel(){
+		String[] i = getId().split(StringConstants.COLON);
+		TimeTool t = new TimeTool(i[1]);
+		return i[0] + ": " + t.toString(TimeTool.FULL_GER); //$NON-NLS-1$
+	}
+	
+	@Override
+	public IOrderEntry addEntry(Object article, IStock stock, Object provider, int num){
+		return addBestellungEntry(((Artikel) article), ((Stock) stock), ((Kontakt) provider), num);
+	}
+	
+	public BestellungEntry addBestellungEntry(Artikel article, Stock stock, Kontakt provider,
+		int num){
+		BestellungEntry i = findBestellungEntry(stock, article);
+		if (i != null) {
+			int count = i.getCount();
+			count = count += num;
+			i.setCount(count);
+		} else {
+			i = new BestellungEntry(this, article, stock, provider, num);
+		}
+		return i;
+	}
+	
+	public @Nullable BestellungEntry findBestellungEntry(@Nullable Stock stock, Artikel article){
+		Query<BestellungEntry> qbe = new Query<BestellungEntry>(BestellungEntry.class);
+		qbe.add(BestellungEntry.FLD_BESTELLUNG, Query.EQUALS, getId());
+		qbe.add(BestellungEntry.FLD_ARTICLE_ID, Query.EQUALS, article.getId());
+		qbe.add(BestellungEntry.FLD_ARTICLE_TYPE, Query.EQUALS, article.getClass().getName());
+		if (stock != null) {
+			qbe.add(BestellungEntry.FLD_STOCK, Query.EQUALS, stock.getId());
 		}
 		
-		public Artikel art;
-		public int num;
-	}
-	
-	public static void markAsOrdered(Item[] list){
-		for (Item item : list) {
-			if (item.art != null)
-				item.art.setExt(Bestellung.ISORDERED, "true");
-		}
-	}
-	
-	public static Bestellung lookupLastWithArticle(Artikel artikel){
-		Query<Bestellung> qbe = new Query<Bestellung>(Bestellung.class);
-		List<Bestellung> bestellungen = qbe.execute();
-		Collections.sort(bestellungen, new BestellungDateComparator());
-		for (Bestellung bestellung : bestellungen) {
-			List<Item> items = bestellung.asList();
-			for (Item item : items) {
-				if (item.art.getId().equals(artikel.getId()))
-					return bestellung;
-			}
+		List<BestellungEntry> result = qbe.execute();
+		if (result.size() > 0) {
+			return result.get(0);
 		}
 		return null;
 	}
@@ -269,12 +192,28 @@ public class Bestellung extends PersistentObject {
 		
 		private void setTimeTool(Bestellung bestellung, TimeTool timeTool){
 			try {
-				String[] i = bestellung.getId().split(":"); //$NON-NLS-1$
+				String[] i = bestellung.getId().split(StringConstants.COLON);
 				timeTool.set(i[1]);
 			} catch (Exception e) {
 				timeTool.set("1.1.1970");
 			}
 		}
 		
+	}
+	
+	public List<BestellungEntry> getEntries(){
+		List<BestellungEntry> execute = new Query<BestellungEntry>(BestellungEntry.class,
+			BestellungEntry.FLD_BESTELLUNG, getId()).execute();
+		return execute;
+	}
+	
+	public static void markAsOrdered(List<BestellungEntry> list){
+		for (BestellungEntry item : list) {
+			item.setState(BestellungEntry.STATE_ORDERED);
+		}
+	}
+	
+	public void removeEntry(BestellungEntry entry){
+		entry.removeFromDatabase();
 	}
 }

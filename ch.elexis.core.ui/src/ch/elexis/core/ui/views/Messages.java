@@ -278,6 +278,8 @@ public class Messages extends NLS {
 	public static String LagerView_maxBestand;
 	public static String LagerView_minBestand;
 	public static String LagerView_name;
+	public static String LagerView_gtin;
+	public static String LagerView_stock;
 	public static String LagerView_pharmacode;
 	public static String Leistungscodes_necessaryData;
 	public static String MediVerlaufView_dateFrom;
@@ -469,6 +471,7 @@ public class Messages extends NLS {
 	public static String SearchView_limitTo;
 	public static String SearchView_searchButtonCaption;
 	public static String SearchView_textToSearch;
+	public static String StockView_reload;
 	public static String TextView_15;
 	public static String TextView_NoCaseSelected;
 	public static String TextView_SaveNotPossibleNoCaseAndKonsSelected;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2009, G. Weirich and Elexis
+ * Copyright (c) 2005-2016, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    D. Lutz - initial implementation
- *    
+ *    MEDEVIT - refactoring after multi-stock adaptations
  *******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
@@ -52,12 +52,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.stock.IStockEntry;
 import ch.elexis.core.ui.actions.ScannerEvents;
 import ch.elexis.core.ui.text.ElexisText;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Bestellung;
-import ch.rgw.tools.StringTool;
+import ch.elexis.data.BestellungEntry;
+import ch.elexis.data.Stock;
+import ch.elexis.data.StockEntry;
 
 /*
  * @author Daniel Lutz
@@ -87,23 +91,30 @@ public class OrderImportDialog extends TitleAreaDialog {
 		setShellStyle(getShellStyle() | SWT.SHELL_TRIM);
 		
 		orderElements = new ArrayList<OrderElement>();
-		List<Bestellung.Item> items = bestellung.asList();
-		for (Bestellung.Item item : items) {
-			OrderElement orderElement = new OrderElement(item.art, item.num);
-			orderElements.add(orderElement);
+		List<BestellungEntry> items = bestellung.getEntries();
+		for (BestellungEntry item : items) {
+			
+			Stock stock = item.getStock();
+			if (stock != null) {
+				IStockEntry stockEntry = CoreHub.getStockService()
+					.findStockEntryForArticleInStock(stock, item.getArticle().storeToString());
+				if (stockEntry != null) {
+					OrderElement orderElement =
+						new OrderElement((StockEntry) stockEntry, item.getCount());
+					orderElements.add(orderElement);
+				}
+			}
 		}
 	}
 	
-	public OrderImportDialog(Shell parentShell, List<Bestellung.Item> items){
+	public OrderImportDialog(Shell parentShell, IStockEntry stockEntry){
 		super(parentShell);
 		
 		setShellStyle(getShellStyle() | SWT.SHELL_TRIM);
 		
 		orderElements = new ArrayList<OrderElement>();
-		for (Bestellung.Item item : items) {
-			OrderElement orderElement = new OrderElement(item.art, item.num);
-			orderElements.add(orderElement);
-		}
+		OrderElement orderElement = new OrderElement((StockEntry) stockEntry, 1);
+		orderElements.add(orderElement);
 	}
 	
 	@Override
@@ -171,14 +182,15 @@ public class OrderImportDialog extends TitleAreaDialog {
 				protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event){
 					return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
 						|| event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
-						|| (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && (event.keyCode == SWT.CR || event.character == ' '))
+						|| (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED
+							&& (event.keyCode == SWT.CR || event.character == ' '))
 						|| event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
 				}
 			};
 		
-		TableViewerEditor.create(viewer, mgr, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL
-			| ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR | ColumnViewerEditor.TABBING_VERTICAL
-			| ColumnViewerEditor.KEYBOARD_ACTIVATION);
+		TableViewerEditor.create(viewer, mgr, actSupport,
+			ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
+				| ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION);
 		
 		createViewerColumns();
 		
@@ -186,8 +198,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 		viewer.setInput(this);
 		viewer.setComparator(new ViewerComparator() {
 			public int compare(Viewer viewer, Object e1, Object e2){
-				Artikel a1 = ((OrderElement) e1).getArtikel();
-				Artikel a2 = ((OrderElement) e2).getArtikel();
+				Artikel a1 = ((OrderElement) e1).getArticle();
+				Artikel a2 = ((OrderElement) e2).getArticle();
 				
 				if (a1 != null && a2 != null) {
 					return a1.getName().compareTo(a2.getName());
@@ -390,9 +402,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 			updateOrderElement(orderElement, newAmount);
 		} else {
 			ScannerEvents.beep();
-			SWTHelper
-				.alert("Artikel nicht bestellt",
-					"Dieser Artikel wurde nicht bestellt. Der Bestand kann nicht automatisch angepasst werden.");
+			SWTHelper.alert("Artikel nicht bestellt",
+				"Dieser Artikel wurde nicht bestellt. Der Bestand kann nicht automatisch angepasst werden.");
 		}
 	}
 	
@@ -402,7 +413,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 		
 		for (OrderElement orderElement : orderElements) {
-			if (orderElement.getArtikel().getEAN().equals(ean)) {
+			if (orderElement.getArticle().getEAN().equals(ean)) {
 				return orderElement;
 			}
 		}
@@ -422,18 +433,10 @@ public class OrderImportDialog extends TitleAreaDialog {
 		try {
 			for (OrderElement orderElement : orderElements) {
 				if (orderElement.isVerified()) {
-					Artikel artikel = orderElement.getArtikel();
 					int diff = orderElement.getAmount();
-					int oldAmount = artikel.getIstbestand();
+					int oldAmount = orderElement.getStockEntry().getCurrentStock();
 					int newAmount = oldAmount + diff;
-					artikel.setIstbestand(newAmount);
-					
-					// reset ordered information
-					Boolean alreadyOrdered =
-						artikel.getExt(Bestellung.ISORDERED).equalsIgnoreCase("true");
-					if (alreadyOrdered) {
-						artikel.setExt(Bestellung.ISORDERED, "false");
-					}
+					orderElement.getStockEntry().setCurrentStock(newAmount);
 					
 					// reset amount
 					orderElement.setAmount(0);
@@ -524,7 +527,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
-				text = new Integer(orderElement.getArtikel().getIstbestand()).toString();
+				text = new Integer(orderElement.getStockEntry().getCurrentStock()).toString();
 			}
 			
 			return text;
@@ -537,7 +540,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
-				text = orderElement.artikel.getPharmaCode();
+				text = orderElement.getArticle().getPharmaCode();
 			}
 			
 			return text;
@@ -550,10 +553,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
-				text = orderElement.artikel.getExt("EAN");
-				if (StringTool.isNothing(text)) {
-					text = orderElement.artikel.getEAN();
-				}
+				text = orderElement.getArticle().getEAN();
 			}
 			
 			return text;
@@ -566,7 +566,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
-				text = orderElement.artikel.getName();
+				text = orderElement.getArticle().getName();
 			}
 			
 			return text;
@@ -576,11 +576,11 @@ public class OrderImportDialog extends TitleAreaDialog {
 	class OrderElement {
 		private boolean verified = false;
 		
-		private Artikel artikel;
+		private final StockEntry stockEntry;
 		private int amount;
 		
-		OrderElement(Artikel artikel, int amount){
-			this.artikel = artikel;
+		OrderElement(StockEntry stockEntry, int amount){
+			this.stockEntry = stockEntry;
 			this.amount = amount;
 		}
 		
@@ -598,12 +598,16 @@ public class OrderImportDialog extends TitleAreaDialog {
 			this.amount = amount;
 		}
 		
-		Artikel getArtikel(){
-			return artikel;
+		public Artikel getArticle(){
+			return stockEntry.getArticle();
 		}
 		
 		String getAmountAsString(){
 			return new Integer(amount).toString();
+		}
+		
+		public IStockEntry getStockEntry(){
+			return stockEntry;
 		}
 		
 		boolean isVerified(){

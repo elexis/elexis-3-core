@@ -13,6 +13,8 @@ package ch.elexis.core.data.preferences;
 import static ch.elexis.core.constants.Preferences.SETTINGS_PREFERENCE_STORE_DEFAULT;
 
 import java.io.File;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
@@ -53,6 +55,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		if (!userhome.exists()) {
 			userhome.mkdirs();
 		}
+		
 		CoreHub.localCfg.set(Preferences.ABL_LOGALERT + SETTINGS_PREFERENCE_STORE_DEFAULT, 1);
 		CoreHub.localCfg.set(Preferences.ABL_LOGLEVEL + SETTINGS_PREFERENCE_STORE_DEFAULT, 2);
 		CoreHub.localCfg.set(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none"); //$NON-NLS-1$
@@ -63,6 +66,12 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		CoreHub.localCfg.set(Preferences.ABL_HEARTRATE + SETTINGS_PREFERENCE_STORE_DEFAULT, 30);
 		CoreHub.localCfg.set(Preferences.ABL_BASEPATH + SETTINGS_PREFERENCE_STORE_DEFAULT,
 			userhome.getAbsolutePath());
+		
+		String string = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, "null");
+		if ("null".equals(string)) {
+			CoreHub.localCfg.set(Preferences.STATION_IDENT_ID,
+				Long.toString(Timestamp.valueOf(LocalDateTime.now()).toInstant().toEpochMilli()));
+		}
 		
 		// Texterstellung
 		if (System.getProperty("os.name").toLowerCase().startsWith("win")) { //$NON-NLS-1$ //$NON-NLS-2$

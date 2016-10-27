@@ -24,14 +24,21 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.service.StockService;
+import ch.elexis.core.stock.IStockEntry;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Bestellung;
-import ch.elexis.data.Bestellung.Item;
+import ch.elexis.data.BestellungEntry;
 import ch.elexis.data.Konsultation;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
+import ch.elexis.data.StockEntry;
 import ch.elexis.data.Verrechnet;
 
 public class DailyOrderDialog extends TitleAreaDialog {
@@ -39,6 +46,7 @@ public class DailyOrderDialog extends TitleAreaDialog {
 	private DateTime dtDate;
 	private TableViewer tableViewer;
 	private Bestellung currOrder;
+	private Text textMessage;
 	
 	public DailyOrderDialog(Shell parentShell, Bestellung currOrder){
 		super(parentShell);
@@ -96,33 +104,48 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		tcLayout.setColumnData(tcArticle, new ColumnPixelData(300, true, true));
 		tcArticle.setText(Messages.DailyOrderDialog_Article);
 		
+		textMessage = new Text(area, SWT.BORDER | SWT.MULTI);
+		textMessage.setText(Messages.DailyOrderDialog_text_text);
+		GridData gd_textMessage = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_textMessage.heightHint = 50;
+		textMessage.setLayoutData(gd_textMessage);
+		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new OrderLabelProvider());
 		
 		loadArticlesUsedOnSelectedDay();
-		tableViewer.setInput(currOrder.asList());
+		tableViewer.setInput(currOrder.getEntries());
 		
 		return area;
 	}
 	
 	private void loadArticlesUsedOnSelectedDay(){
-		currOrder.asList().clear();
-		
-		String date =
-			dtDate.getYear() + String.format("%02d", dtDate.getMonth() + 1)
-				+ String.format("%02d", dtDate.getDay());
+		String date = dtDate.getYear() + String.format("%02d", dtDate.getMonth() + 1)
+			+ String.format("%02d", dtDate.getDay());
 		
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add(Konsultation.FLD_DATE, Query.EQUALS, date);
 		List<Konsultation> cons = qbe.execute();
+		
+		StringBuilder sb = new StringBuilder();
 		
 		for (Konsultation c : cons) {
 			List<Verrechnet> leistungen = c.getLeistungen();
 			for (Verrechnet v : leistungen) {
 				IVerrechenbar vv = v.getVerrechenbar();
 				if (vv instanceof Artikel) {
-					Artikel a = (Artikel) vv;
-					currOrder.addItem(a, v.getZahl());
+					Artikel art = (Artikel) vv;
+					Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
+					IStockEntry stockEntry =
+						CoreHub.getStockService().findPreferredStockEntryForArticle(art.storeToString(),
+							(mandator != null) ? mandator.getId() : null);
+					if (stockEntry != null) {
+						StockEntry se = (StockEntry) stockEntry;
+						currOrder.addBestellungEntry(se.getArticle(), se.getStock(),
+							se.getProvider(), v.getZahl());
+					} else {
+						sb.append(art.getLabel() + " ist kein Lagerartikel.\n");
+					}
 				}
 			}
 		}
@@ -135,18 +158,15 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		}
 		
 		public String getColumnText(final Object element, final int columnIndex){
-			if (element instanceof Bestellung.Item) {
-				Item it = (Item) element;
-				switch (columnIndex) {
-				case 0:
-					return Integer.toString(it.num);
-				case 1:
-					return it.art.getLabel();
-				default:
-					return "?"; //$NON-NLS-1$
-				}
+			BestellungEntry be = (BestellungEntry) element;
+			switch (columnIndex) {
+			case 0:
+				return Integer.toString(be.getCount());
+			case 1:
+				return be.getArticle().getLabel();
+			default:
+				return "?"; //$NON-NLS-1$
 			}
-			return "??"; //$NON-NLS-1$
 		}
 		
 	}
@@ -157,10 +177,7 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		
 		@Override
 		public Object[] getElements(Object inputElement){
-			if (currOrder != null) {
-				return currOrder.asList().toArray();
-			}
-			return new Object[0];
+			return currOrder.getEntries().toArray(new BestellungEntry[0]);
 		}
 		
 		@Override
