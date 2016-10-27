@@ -1,7 +1,7 @@
 package ch.elexis.core.findings.fhir.po.model;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -15,6 +15,7 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Condition.ConditionClinicalStatus;
 import org.hl7.fhir.dstu3.model.DateTimeType;
+import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -200,18 +201,18 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 	}
 	
 	@Override
-	public void setStartTime(LocalDateTime startTime){
+	public void setStart(String start){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			org.hl7.fhir.dstu3.model.Condition fhirCondition =
 				(org.hl7.fhir.dstu3.model.Condition) resource.get();
-			fhirCondition.setOnset(new DateTimeType(getDate(startTime)));
+			fhirCondition.setOnset(new StringType(start));
 			saveResource(resource.get());
 		}
 	}
 	
 	@Override
-	public Optional<LocalDateTime> getStartTime(){
+	public Optional<String> getStart(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			org.hl7.fhir.dstu3.model.Condition fhirCondition =
@@ -220,8 +221,12 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 				if (fhirCondition.hasOnsetDateTimeType()) {
 					DateTimeType dateTime = fhirCondition.getOnsetDateTimeType();
 					if (dateTime != null) {
-						return Optional.of(getLocalDateTime(dateTime.getValue()));
+						Date date = dateTime.getValue();
+						SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+						return Optional.of(format.format(date));
 					}
+				} else if (fhirCondition.hasOnsetStringType()) {
+					return Optional.of(fhirCondition.getOnsetStringType().getValue());
 				}
 			} catch (FHIRException e) {
 				getLogger().error("Could not access start time.", e);
@@ -231,18 +236,18 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 	}
 	
 	@Override
-	public void setEndTime(LocalDateTime endTime){
+	public void setEnd(String end){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			org.hl7.fhir.dstu3.model.Condition fhirCondition =
 				(org.hl7.fhir.dstu3.model.Condition) resource.get();
-			fhirCondition.setAbatement(new DateTimeType(getDate(endTime)));
+			fhirCondition.setAbatement(new StringType(end));
 			saveResource(resource.get());
 		}
 	}
 	
 	@Override
-	public Optional<LocalDateTime> getEndTime(){
+	public Optional<String> getEnd(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			org.hl7.fhir.dstu3.model.Condition fhirCondition =
@@ -251,11 +256,15 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 				if (fhirCondition.hasOnsetDateTimeType()) {
 					DateTimeType dateTime = fhirCondition.getAbatementDateTimeType();
 					if (dateTime != null) {
-						return Optional.of(getLocalDateTime(dateTime.getValue()));
+						Date date = dateTime.getValue();
+						SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+						return Optional.of(format.format(date));
 					}
+				} else if (fhirCondition.hasAbatementStringType()) {
+					return Optional.of(fhirCondition.getAbatementStringType().getValue());
 				}
 			} catch (FHIRException e) {
-				getLogger().error("Could not access end time.", e);
+				getLogger().error("Could not access end.", e);
 			}
 		}
 		return Optional.empty();
@@ -324,7 +333,7 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 			if (codeableConcept == null) {
 				codeableConcept = new CodeableConcept();
 			}
-			ModelUtil.addCodingsToConcept(codeableConcept, coding);
+			ModelUtil.setCodingsToConcept(codeableConcept, coding);
 			fhirCondition.setCode(codeableConcept);
 			saveResource(resource.get());
 		}

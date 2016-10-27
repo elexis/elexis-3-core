@@ -10,16 +10,9 @@ import ch.elexis.core.findings.ICoding;
 
 public class ModelUtil {
 	
-	public static void addCodingsToConcept(CodeableConcept codeableConcept, List<ICoding> coding){
+	public static void setCodingsToConcept(CodeableConcept codeableConcept, List<ICoding> coding){
+		codeableConcept.getCoding().clear();
 		for (ICoding iCoding : coding) {
-			// check if it is already contained in the concept
-			List<Coding> conceptCoding = codeableConcept.getCoding();
-			for (Coding conceptCode : conceptCoding) {
-				if (conceptCode.getSystem().equals(iCoding.getSystem())
-					&& conceptCode.getCode().equals(iCoding.getCode())) {
-					return;
-				}
-			}
 			codeableConcept.addCoding(
 				new Coding(iCoding.getSystem(), iCoding.getCode(), iCoding.getDisplay()));
 		}

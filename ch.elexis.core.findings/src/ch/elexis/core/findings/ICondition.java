@@ -11,7 +11,6 @@
 package ch.elexis.core.findings;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Optional;
@@ -101,32 +100,32 @@ public interface ICondition extends IFinding {
 	public Optional<LocalDate> getDateRecorded();
 	
 	/**
-	 * Set the time when the {@link ICondition} began.
+	 * Set a description when the {@link ICondition} began.
 	 * 
-	 * @param startTime
+	 * @param start
 	 */
-	public void setStartTime(LocalDateTime startTime);
+	public void setStart(String start);
 	
 	/**
-	 * Get the time when the {@link ICondition} began.
+	 * Get a description when the {@link ICondition} began.
 	 * 
 	 * @return
 	 */
-	public Optional<LocalDateTime> getStartTime();
+	public Optional<String> getStart();
 	
 	/**
-	 * Set the time when the {@link ICondition} abated.
+	 * Set a description when the {@link ICondition} abated.
 	 * 
-	 * @param endTime
+	 * @param end
 	 */
-	public void setEndTime(LocalDateTime endTime);
+	public void setEnd(String end);
 	
 	/**
-	 * Get the time when the {@link ICondition} abated.
+	 * Get a description of when the {@link ICondition} abated.
 	 * 
 	 * @return
 	 */
-	public Optional<LocalDateTime> getEndTime();
+	public Optional<String> getEnd();
 	
 	/**
 	 * Add additional information about the {@link ICondition}.
