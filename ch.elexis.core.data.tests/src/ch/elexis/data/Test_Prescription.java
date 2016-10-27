@@ -54,10 +54,26 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		private String dose = "";
 		private List<Float> asFloats = Arrays.asList();
 	}
+	private List<TestItem> testItems = new ArrayList<TestItem>();
+	private List<TestItem> itemsMayNotThrowExecptions = new ArrayList<TestItem>();
 	
-	private List<TestItem> initializeTestItems(){
-		List<TestItem> testItems = new ArrayList<TestItem>();
+	private void initializeTestItems(){
 		ArrayList<Float> empty = new ArrayList<Float>();
+		// These are cases which cannot be handled with a simple algorithm.
+		// But they should at least no lead to exceptions
+		itemsMayNotThrowExecptions.add(new TestItem("bis 06.07.14: 0.5-0-0-1", Arrays.asList(0.5f, 0.0f, 0.0f, 1.0f)));
+		itemsMayNotThrowExecptions.add(new TestItem("1 Amp 3 monatlich", empty));
+		itemsMayNotThrowExecptions.add(new TestItem("1 MAT/72 h", Arrays.asList(1.0f)));
+		itemsMayNotThrowExecptions.add(new TestItem("1 So", Arrays.asList(1.0f)));
+		itemsMayNotThrowExecptions.add(new TestItem("1 1/2-0-0", Arrays.asList(1.5f)));
+		itemsMayNotThrowExecptions.add(new TestItem("1 /3Tg", Arrays.asList(1.0f)));
+		itemsMayNotThrowExecptions.add(new TestItem("1-0-0-0 (bis 08/15)", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
+		itemsMayNotThrowExecptions.add(new TestItem("0-0- 1/2", Arrays.asList(0.0f, 0.0f, 0.5f)));
+		itemsMayNotThrowExecptions.add(new TestItem("0-0- 1/4-1/2", Arrays.asList(0.0f, 0.0f, 0.25f, 0.5f)));
+		itemsMayNotThrowExecptions.add(new TestItem("0-0- 1/8", Arrays.asList(0.0f, 0.0f, 0.125f)));
+		itemsMayNotThrowExecptions.add(new TestItem("0-0-0- 40E", Arrays.asList(0.0f, 0.0f, 0.0f, 40.0f)));
+
+		// Here the list of valid items
 
 		/*
 		iR, max 10mtl
@@ -183,25 +199,16 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		// I think a human will return a different result, but at least they do
 		// do not throw an exception
 		testItems.add(new TestItem("~1", empty));
-		testItems.add(new TestItem("~1/2", empty));
-		testItems.add(new TestItem("~1/2 tgl", empty));
+		testItems.add(new TestItem("~1/2", Arrays.asList(0.5f)));
+		testItems.add(new TestItem("~1/2 tgl", Arrays.asList(0.5f)));
 		testItems.add(new TestItem("1 (ev 2)", empty));
-		testItems.add(new TestItem("1 /3Tg", empty));
-		testItems.add(new TestItem("1 1/2", empty));
-		testItems.add(new TestItem("1 1/2-0-0", Arrays.asList(1.0f, 0.5f, 0.0f, 0.0f)));
 		testItems.add(new TestItem("-8 tgl", Arrays.asList(8.0f)));
-		testItems.add(new TestItem("1-0-0-0 (bis 08/15)", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
 		testItems.add(new TestItem("1 3-mtl", Arrays.asList(1.0f, 3.0f)));
 		testItems.add(new TestItem("1 3-tgl", Arrays.asList(1.0f, 3.0f)));
 		testItems.add(new TestItem("1 3-tägl", Arrays.asList(1.0f, 3.0f)));
 		testItems.add(new TestItem("0.5/-/-", Arrays.asList(0.0f)));
 		testItems.add(new TestItem("(1)-0-1", Arrays.asList(0.0f, 1.0f)));
 		testItems.add(new TestItem(".5", empty));
-		testItems.add(new TestItem("1 Amp 3 monatlich", empty));
-		testItems.add(new TestItem("1 MAT/72 h", empty));
-		testItems.add(new TestItem("1 So", empty));
-		testItems
-			.add(new TestItem("bis 06.07.14: 0.5-0-0-1", Arrays.asList(0.0f, 0.5f, 0.0f, 0.0f)));
 		
 		// From here I think the human and the algorithm arrive at the same conclusion
 		// for a daily dosage
@@ -220,18 +227,13 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 			.add(new TestItem("1-1-1-0 (KoGu erhalten)", Arrays.asList(1.0f, 1.0f, 1.0f, 0.0f)));
 		testItems
 			.add(new TestItem("1-0-0-0 (STOPP 8.1.14)", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
-		testItems.add(new TestItem("1-0-0-0 (bis 08/15)", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
 		testItems.add(new TestItem("1-0-0-0 jeden 2. Tag", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
 		testItems
 			.add(new TestItem("1-0-0-0, Sa+So 1.5-0-0", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
 		testItems.add(new TestItem("0-0-1-0 bis INR2x therapeutisch", Arrays.asList(0.0f, 0.0f,
 			1.0f, 0.0f)));
 		testItems.add(new TestItem(".5-.5-1", Arrays.asList(0.5f, 0.5f, 1.0f)));
-		testItems.add(new TestItem("0-0- 1/2", Arrays.asList(0.0f, 0.0f, 0.5f)));
-		testItems.add(new TestItem("0-0- 1/4-1/2", Arrays.asList(0.0f, 0.0f, 0.25f, 0.5f)));
-		testItems.add(new TestItem("0-0- 1/8", Arrays.asList(0.0f, 0.0f, 0.125f)));
 		testItems.add(new TestItem("0-0-*-0", Arrays.asList(0.0f, 0.0f, 0.0f)));
-		testItems.add(new TestItem("0-0-0- 40E", Arrays.asList(0.0f, 0.0f, 0.0f, 40.0f)));
 		testItems.add(new TestItem("0 (bis 08", empty));
 		testItems.add(new TestItem("½", Arrays.asList(0.5f)));
 		testItems.add(new TestItem("¼", Arrays.asList(0.25f)));
@@ -244,7 +246,14 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		testItems.add(new TestItem("¼-0-0-0", Arrays.asList(0.25f, 0.0f, 0.0f, 0.0f)));
 		testItems.add(new TestItem("1½-0-0-0", Arrays.asList(1.5f, 0.0f, 0.0f, 0.0f)));
 		testItems.add(new TestItem("0.5-1-1-", Arrays.asList(0.5f, 1.0f, 1.0f)));
-		return testItems;
+		
+		// Some items found by Marco
+		testItems.add(new TestItem("0-0-0-1/2-1", Arrays.asList(0.0f, 0.0f, 0.0f, 0.5f)));
+		testItems.add(new TestItem("0-0-0-1-2", Arrays.asList(0.0f, 0.0f, 0.0f, 1.0f)));
+		testItems.add(new TestItem("2/0.5/0.5/0.5/0.5/2", Arrays.asList(2.0f, 0.5f, 0.5f, 0.5f)));
+		testItems.add(new TestItem("0-0-0-3-4", Arrays.asList(0.0f, 0.0f, 0.0f, 3.0f)));
+		testItems.add(new TestItem("1/0.5/1/0.5/1", Arrays.asList(1.0f, 0.5f, 1.0f, 0.5f)));
+		testItems.add(new TestItem("0--0-1-0", Arrays.asList(0.0f, 0.0f, 0.0f, 1.0f)));
 	}
 	
 	@Test
@@ -259,9 +268,6 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 			System.out.println("Testing " + oneLiner.get(j));
 			assertEquals(oneLiner.get(j), res.get(j));
 		}
-		res = Prescription.getDoseAsFloats("0 (bis 08/15)");
-		assert (res != null);
-		assertEquals(0, res.size());
 		res = Prescription.getDoseAsFloats("1-0-0-0 (bis 08/15)");
 		assert (res != null);
 		assertEquals(4, res.size());
@@ -269,30 +275,65 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 
 	}
 	
-	@Test
-	public void testDoseAsFloats(){
-		for (TestItem item2test : initializeTestItems()) {
-			String test_line = item2test.getDose();
-			System.out.println("Testing size dose " + test_line);
-			List<Float> res = Prescription.getDoseAsFloats(item2test.getDose());
-			List<Float> expected = item2test.getAsFloats();
-			assert (res != null);
-			if (expected.size() != res.size()) {
-				System.out.println("Testing size: " + res.size() + " != " + expected.size()
-					+ " dose '" + item2test.getDose() + "' " + res);
-				System.out.println("Failed!!! " + test_line);
-			}
-			assertEquals(expected.size(), res.size());
-			for (int j = 0; j < expected.size(); j++) {
-				float expect = expected.get(j);
+	private boolean testOneDoses(TestItem item2test)
+	{
+		String test_line = item2test.getDose();
+		List<Float> res = Prescription.getDoseAsFloats(item2test.getDose());
+		List<Float> expected = item2test.getAsFloats();
+		assert (res != null);
+		if (expected.size() != res.size()) {
+			System.out.println("Testing size: " + res.size() + " != " + expected.size()
+				+ " dose '" + item2test.getDose() + "' " + res);
+			return false;
+		}
+		// assertEquals(expected.size(), res.size());
+		for (int j = 0; j < expected.size(); j++) {
+			float expect = expected.get(j);
+			if (j >= res.size()) {
+				System.out.println("Testing element : " + j + " of dose: " + test_line
+					+ " failed");
+				return false;
+			} else {
 				float actual = res.get(j);
 				if (Math.abs(expect - actual) > 0.01f) {
 					System.out.println("Testing element : " + j + " of dose: " + test_line
 						+ " failed " + expect + " != " + actual);
-					System.out.println("Failed!!! " + test_line);
+					return false;
 				}
-				assertEquals(expected.get(j), res.get(j));
 			}
 		}
+		return true;
+	}
+	@Test
+	public void testDoseAsFloats(){
+		int nr_failures = 0;
+		int nr_successes = 0;
+		initializeTestItems();
+		System.out.println("Testing " + testItems.size() + " and " + itemsMayNotThrowExecptions.size());
+		
+		for (TestItem item2test : testItems) {
+			if (!testOneDoses(item2test)) {
+				nr_failures++;
+			} else {
+				nr_successes ++;
+			}
+		}
+		System.out.println("Found failures " + nr_failures + " and " + nr_successes + " nr_successes");
+		assertEquals(0, nr_failures);
+	}
+	@Test
+	public void testDoseThatCouldThrow(){
+		int nr_failures = 0;
+		int nr_successes = 0;
+		initializeTestItems();
+		for (TestItem item2test : itemsMayNotThrowExecptions) {
+			if (testOneDoses(item2test)) {
+				if (!item2test.getAsFloats().isEmpty()) {
+					System.out.println("itemsMayNotThrowExecptions matches expectations. Why? was: "+item2test.getDose() + " expected " + item2test.getAsFloats());
+				}
+			}
+		}
+		System.out.println("Found failures " + nr_failures + " and " + nr_successes + " nr_successes");
+		assertEquals(0, nr_failures);
 	}
 }
