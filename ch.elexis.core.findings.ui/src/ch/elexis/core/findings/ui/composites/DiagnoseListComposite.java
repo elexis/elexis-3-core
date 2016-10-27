@@ -10,8 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.findings.ui.composites;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,13 +54,13 @@ import ch.elexis.data.Patient;
  * @author thomas
  *
  */
-public class DiagnosesComposite extends Composite {
+public class DiagnoseListComposite extends Composite {
 	private NatTableWrapper natTableWrapper;
 	private ToolBarManager toolbarManager;
 	
 	private EventList<ICondition> dataList = new BasicEventList<>();
 	
-	public DiagnosesComposite(Composite parent, int style){
+	public DiagnoseListComposite(Composite parent, int style){
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		
@@ -116,19 +114,12 @@ public class DiagnosesComposite extends Composite {
 					text.append("<strong>");
 					ConditionStatus status = condition.getStatus();
 					text.append(status.getLocalized());
-					Optional<LocalDateTime> startTime = condition.getStartTime();
-					startTime.ifPresent(time -> {
-						text.append("(")
-							.append(time.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
-							.append(" - ");
-					});
-					Optional<LocalDateTime> endTime = condition.getEndTime();
-					endTime.ifPresent(time -> {
-						text.append(time.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-					});
-					startTime.ifPresent(time -> {
-						text.append(")");
-					});
+					Optional<String> start = condition.getStart();
+					start.ifPresent(string -> text.append(" (").append(string).append(" - "));
+					Optional<String> end = condition.getEnd();
+					end.ifPresent(string -> text.append(string));
+					start.ifPresent(string -> text.append(")"));
+					
 					List<String> notes = condition.getNotes();
 					if(!notes.isEmpty()) {
 						text.append(" (" + notes.size() + ")");

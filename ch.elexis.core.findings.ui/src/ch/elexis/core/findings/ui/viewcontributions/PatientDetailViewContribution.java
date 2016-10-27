@@ -10,7 +10,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IFinding;
-import ch.elexis.core.findings.ui.composites.DiagnosesComposite;
+import ch.elexis.core.findings.ui.composites.DiagnoseListComposite;
 import ch.elexis.core.findings.ui.preferences.SettingsConstants;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
@@ -18,7 +18,7 @@ import ch.elexis.data.Patient;
 
 public class PatientDetailViewContribution implements IViewContribution {
 	
-	DiagnosesComposite conditionsComposite;
+	DiagnoseListComposite conditionsComposite;
 	
 	@Override
 	public void setUnlocked(boolean unlocked){
@@ -38,7 +38,7 @@ public class PatientDetailViewContribution implements IViewContribution {
 	
 	@Override
 	public Composite initComposite(Composite parent){
-		conditionsComposite = new DiagnosesComposite(parent, SWT.NONE);
+		conditionsComposite = new DiagnoseListComposite(parent, SWT.NONE);
 		return conditionsComposite;
 	}
 	

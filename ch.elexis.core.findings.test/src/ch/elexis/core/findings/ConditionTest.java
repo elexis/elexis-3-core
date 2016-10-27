@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class ConditionTest {
 		condition.addNote("second note\nthird note");
 		
 		LocalDateTime startTime = LocalDateTime.of(2016, Month.OCTOBER, 1, 12, 0, 0);
-		condition.setStartTime(startTime);
+		condition.setStart(startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
 		
 		ICoding code = new ICoding() {
 			
@@ -88,8 +89,9 @@ public class ConditionTest {
 		assertTrue(notes.get(0).equals("first note"));
 		assertTrue(notes.get(1).equals("second note\nthird note"));
 		
-		assertTrue(readcondition.getStartTime().isPresent());
-		assertEquals(startTime, readcondition.getStartTime().get());
+		assertTrue(readcondition.getStart().isPresent());
+		assertEquals(startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+			readcondition.getStart().get());
 		
 		List<ICoding> coding = readcondition.getCoding();
 		assertNotNull(coding);

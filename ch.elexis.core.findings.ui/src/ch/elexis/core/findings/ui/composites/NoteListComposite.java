@@ -23,7 +23,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.NatTableFactory;
 import ch.elexis.core.ui.util.NatTableWrapper;
 
-public class NotesComposite extends Composite {
+public class NoteListComposite extends Composite {
 	
 	private NatTableWrapper natTableWrapper;
 	private ToolBarManager toolbarManager;
@@ -41,7 +41,7 @@ public class NotesComposite extends Composite {
 		public void removeNote(String note);
 	}
 	
-	public NotesComposite(Composite parent, int style){
+	public NoteListComposite(Composite parent, int style){
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
 		
