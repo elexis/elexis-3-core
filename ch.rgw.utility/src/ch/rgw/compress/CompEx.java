@@ -151,7 +151,11 @@ public class CompEx {
 		ByteArrayOutputStream baos;
 		byte[] siz = new byte[4];
 		try {
-			in.read(siz);
+			int read = in.read(siz);
+			// if we can not read the first 4 bytes, we can not expand
+			if (read == -1) {
+				return null;
+			}
 			long size = BinConverter.byteArrayToInt(siz, 0);
 			long typ = size & ~0x1fffffff;
 			size &= 0x1fffffff;

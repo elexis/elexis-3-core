@@ -2050,7 +2050,7 @@ public abstract class PersistentObject implements IPersistentObject {
 						return "";
 					}
 					byte[] exp = CompEx.expand(is);
-					return StringTool.createString(exp);
+					return exp != null ? StringTool.createString(exp) : null;
 					
 				case 'V':
 					byte[] in = rs.getBytes(mapped.substring(4));
