@@ -999,28 +999,42 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
-	 * Return the database field corresponding to an internal Elexis field valud
+	 * Return the database field corresponding to an internal Elexis field value
 	 * 
 	 * @param tableName
 	 *            the tableName
 	 * @param field
 	 *            the field name
-	 * @return the database field or **ERROR** if no mapping exists
+	  @return the database field or ERROR* if no mapping exists
 	 * @since 3.1
 	 */
 	public static String map(final String tableName, final String field){
+		return map(tableName, field, true);
+	}
+
+	/**
+	 * Return the database field corresponding to an internal Elexis field value
+	 *
+	 * @param tableName
+	 * @param field
+	 * @param markAsError
+	 *           whether to return ERROR* or <code>null</code> if no entry found
+	 * @return
+	 * @since 3.2
+	 */
+	public static String map(final String tableName, final String field, boolean markAsError){
 		if (field.equals("ID"))
 			return field;
-			
 		String res = mapping.get(tableName + field);
 		if (res == null) {
-			log.info("field is not mapped " + field);
-			return MAPPING_ERROR_MARKER + field + "**";
+			if (markAsError) {
+				log.info("field is not mapped " + field);
+				return MAPPING_ERROR_MARKER + field + "**";
+			}
 		}
-		
 		return res;
 	}
-	
+
 	public FieldType getFieldType(final String f){
 		String mapped = map(f);
 		if (mapped.startsWith("LIST:")) {
@@ -1343,7 +1357,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			throw new PersistenceException(
 				new ElexisStatus(Status.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					"PersistentObject.setTriStateBoolean(): Error on saving value " + newVal
-						+ " to field " + field,
+					+ " to field " + field,
 					null));
 		}
 	}

@@ -286,28 +286,35 @@ public class Query<T> {
 		link = " OR ";
 	}
 	
-
 	/**
-	 * Bedingung zufügen. Mehrere Bedingungen können hinzugefügt werden, indem jeweils zwischen
-	 * zwei add() Aufrufen and() oder or() aufgerufen wird. Die Abfrage wird noch nicht ausgeführt, 
+	 * Bedingung zufügen. Mehrere Bedingungen können hinzugefügt werden, indem jeweils zwischen zwei
+	 * add() Aufrufen and() oder or() aufgerufen wird. Die Abfrage wird noch nicht ausgeführt,
 	 * sondern erst beim abschliessenden execute().
 	 *
-	 * @param feld Das Feld, für das die Bedingung gilt
-	 * @param operator Vergleich (z.B. "=", "LIKE", ">", "<")
-	 * @param wert Der Wert, der gesucht wird. Für Wildcard suche kann der Wert % enthalten, 
-	 * der Operator muss dann aber "LIKE" sein
-	 * @param toLower ei true werden die Parameter mit der SQL-Funktion "lower()" in 
-	 * Kleinschreibung umgewandelt, so dass die Gross-/Kleinschreibung egal ist.
+	 * @param feld
+	 *            Das Feld, für das die Bedingung gilt
+	 * @param operator
+	 *            Vergleich (z.B. "=", "LIKE", ">", "<")
+	 * @param wert
+	 *            Der Wert, der gesucht wird. Für Wildcard suche kann der Wert % enthalten, der
+	 *            Operator muss dann aber "LIKE" sein.
+	 *            Falls ein Feldname angegeben wird, wird die Vergleichsoperation auf dem Feld
+	 *            ausgeführt.
+	 * @param toLower
+	 *            ei true werden die Parameter mit der SQL-Funktion "lower()" in Kleinschreibung
+	 *            umgewandelt, so dass die Gross-/Kleinschreibung egal ist.
 	 * @return bei Fehler in der Syntax oder nichtexistenten Feldern
 	 */
 	public boolean add(final String feld, String operator, String wert, final boolean toLower){
-		String mapped;
-		mapped = template.map(feld);
+		String mapped = template.map(feld);
+		String mappedValue =
+			(wert == null) ? null : template.map(template.getTableName(), wert, false);
 		// treat date parameter separately
 		// TODO This works only for european-style dates (dd.mm.yyyy)
 		if (mapped.startsWith("S:D:")) {
 			mapped = mapped.substring(4);
 			// if a date should be matched partially
+			wert = (wert == null) ? StringConstants.EMPTY : wert;
 			if (operator.equalsIgnoreCase("LIKE") && !wert.matches("[0-9]{8,8}")) {
 				StringBuilder sb = null;
 				wert = wert.replaceAll("%", "");
@@ -371,12 +378,17 @@ public class Query<T> {
 			}
 			append(mapped, "is", operator, "null");
 		} else {
-			wert = PersistentObject.getDefaultConnection().wrapFlavored(wert);
-			if (toLower) {
-				mapped = "lower(" + mapped + ")";
-				wert = "lower(" + wert + ")";
+			if (mappedValue != null && !mappedValue.equals(wert)) {
+				append(mapped, operator, mappedValue);
+			} else {
+				wert = PersistentObject.getDefaultConnection().wrapFlavored(wert);
+				if (toLower) {
+					mapped = "lower(" + mapped + ")";
+					wert = "lower(" + wert + ")";
+				}
+				append(mapped, operator, wert);
+
 			}
-			append(mapped, operator, wert);
 		}
 		
 		return true;

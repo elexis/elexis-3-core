@@ -19,6 +19,9 @@ import ch.rgw.tools.JdbcLink;
 public class Test_Query extends AbstractPersistentObjectTest {
 	
 	private JdbcLink link;
+	static final String FIRST_NAME = "first";
+	static final String SECOND_NAME = "second";
+	static final String THIRD_NAME = "third";
 	
 	@Before
 	public void setUp() throws Exception{
@@ -28,7 +31,9 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		}
 		link = initDB();
 		// create a instance of an PersistentObject ex. Organisation to test the query
-		new Organisation("orgname", "orgzusatz1");
+		new Organisation(SECOND_NAME, SECOND_NAME + "_zusatz");
+		new Organisation(FIRST_NAME, FIRST_NAME + "_zusatz");
+		new Organisation(THIRD_NAME, THIRD_NAME + "_zusatz");
 	}
 	
 	@After
@@ -45,7 +50,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		// if it does not fail with an exception the constructor worked ...
 		query.clear();
 		
-		query = new Query<Organisation>(Organisation.class, Organisation.FLD_NAME1, "orgname");
+		query = new Query<Organisation>(Organisation.class, Organisation.FLD_NAME1, FIRST_NAME);
 		// clear will access the template which is set in constructor ...
 		// if it does not fail with an exception the constructor worked ...
 		query.clear();
@@ -67,27 +72,57 @@ public class Test_Query extends AbstractPersistentObjectTest {
 			
 		}
 	}
-	
 	@Test
 	public void testGetPreparedStatement(){
-		// fail("Not yet implemented"); // TODO
+		PreparedStatement ps =
+				link.getPreparedStatement("SELECT " + Organisation.FLD_NAME1 + " FROM "
+					+ Organisation.TABLENAME);
+		Query<Organisation> query = new Query<Organisation>(Organisation.class);
+		ArrayList<String> result = query.execute(ps, new String[0]);
+		int nrOrgs = result.size();
+		new Organisation("NeueOrganistation", "Zusatznamen2");
+		result = query.execute(ps, new String[0]);
+		link.releasePreparedStatement(ps);
+		assertEquals(nrOrgs + 1, result.size());
 	}
-	
 	@Test
-	public void testExecutePreparedStatementStringArray(){
-		// fail("Not yet implemented"); // TODO
+	public void testUnordered(){
+		Query<Organisation> query = new Query<Organisation>(Organisation.class);
+		query.clear();
+		List<Organisation> result = query.execute();
+		query.orderBy(false, Organisation.FLD_NAME1);
+		assertEquals(3, result.size());
+		assertEquals(SECOND_NAME, result.get(0).get(Organisation.FLD_NAME1));
+		assertEquals(FIRST_NAME, result.get(1).get(Organisation.FLD_NAME1));
+		assertEquals(THIRD_NAME, result.get(2).get(Organisation.FLD_NAME1));
 	}
-	
 	@Test
 	public void testOrderBy(){
-		// fail("Not yet implemented"); // TODO
+		Query<Organisation> query = new Query<Organisation>(Organisation.class);
+		query.clear();
+		query.orderBy(false, Organisation.FLD_NAME1);
+		List<Organisation> result = query.execute();
+		assertEquals(3, result.size());
+		assertEquals(FIRST_NAME, result.get(0).get(Organisation.FLD_NAME1));
+		assertEquals(SECOND_NAME, result.get(1).get(Organisation.FLD_NAME1));
+		assertEquals(THIRD_NAME, result.get(2).get(Organisation.FLD_NAME1));
 	}
-	
+	@Test
+	public void testOrderByReverse(){
+		Query<Organisation> query = new Query<Organisation>(Organisation.class);
+		query.clear();
+		query.orderBy(true, Organisation.FLD_NAME1);
+		List<Organisation> result = query.execute();
+		assertEquals(3, result.size());
+		assertEquals(FIRST_NAME, result.get(2).get(Organisation.FLD_NAME1));
+		assertEquals(SECOND_NAME, result.get(1).get(Organisation.FLD_NAME1));
+		assertEquals(THIRD_NAME, result.get(0).get(Organisation.FLD_NAME1));
+	}
 	@Test
 	public void testExecute(){
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
 		query.clear();
-		query.add(Organisation.FLD_NAME1, "=", "orgname");
+		query.add(Organisation.FLD_NAME1, "=", FIRST_NAME);
 		List<Organisation> result = query.execute();
 		assertEquals(1, result.size());
 	}
@@ -96,7 +131,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 	public void testExecuteOnDBConnection() throws IOException{
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
 		query.clear();
-		query.add(Organisation.FLD_NAME1, "=", "orgname2");
+		query.add(Organisation.FLD_NAME1, "=", FIRST_NAME);
 		
 		// create a new DBConnection
 		DBConnection connection = new DBConnection();
@@ -113,7 +148,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		
 		// change default connection of PersistenObject and create an Organization
 		PersistentObject.connect(connection);
-		new Organisation("orgname2", "orgzusatz1");
+		new Organisation(FIRST_NAME, "orgzusatz1");
 		
 		result = query.execute(connection);
 		assertEquals(1, result.size());
@@ -144,7 +179,28 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		}
 		assertEquals(nrOrgs + 1, result.size());
 	}
-	
+	@Test
+	public void testQueryMappedExpression() {
+		final String MappingName = "TitelSuffix";
+		PreparedStatement ps =
+				link.getPreparedStatement("SELECT " + Organisation.FLD_NAME1 + " FROM "
+					+ Organisation.TABLENAME);
+		// Setup Query which will return always true
+		Query<Organisation> query = new Query<Organisation>(Organisation.class);
+		query.clear();
+		query.add(Organisation.FLD_COUNTRY, Query.LESS_OR_EQUAL, MappingName);
+		System.out.println("Must query via " + MappingName + ". Fieldname is " + Organisation.FLD_LAW_CODE);
+		System.out.println("getActualQuery: " +query.getActualQuery());
+		ArrayList<String> result = query.execute(ps, new String[0]);
+		assertEquals(4, result.size());
+		// Setup Query which will return always false
+		Query<Organisation> query2 = new Query<Organisation>(Organisation.class);
+		query2.clear();
+		query2.add(Organisation.FLD_COUNTRY, Query.GREATER, MappingName);
+		List<Organisation> result2 = query2.execute();
+		assertEquals(0, result2.size());
+	}
+
 	private class PersistentObjectImpl extends PersistentObject {
 		
 		@SuppressWarnings("unused")
