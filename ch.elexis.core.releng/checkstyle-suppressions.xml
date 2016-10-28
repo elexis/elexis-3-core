@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+"-//Puppy Crawl//DTD Suppressions 1.1//EN"
+"http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+  <suppress files="org.apache.*" checks=".*"/>
+  <suppress files="org.eclipse.*" checks=".*"/>
+  <suppress files="org.jdom.*" checks=".*"/>
+  <suppress files="com.tiff.*" checks=".*"/>
+</suppressions>
