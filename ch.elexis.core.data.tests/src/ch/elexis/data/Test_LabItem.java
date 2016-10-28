@@ -68,8 +68,15 @@ public class Test_LabItem extends AbstractPersistentObjectTest {
 		items = LabItem.getLabItems(org.getId(), null, "0-1", "0-2", "mg/dl");
 		assertEquals(2, items.size());
 		
+		items = LabItem.getLabItems(org.getId(), null, null, null, null);
+		assertEquals(2, items.size());
+
 		items = LabItem.getLabItems(org.getId(), REF_ITEM_KUERZEL, null, null, null);
 		assertEquals(1, items.size());
+
+		items = LabItem.getLabItems(org.getId(), REF_ITEM_KUERZEL + "_dummy", null, null, null);
+		assertEquals(0, items.size());
+
 	}
 	
 	@Test
