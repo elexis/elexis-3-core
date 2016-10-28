@@ -62,3 +62,23 @@ are contained and inter-dependent as follows:
 
 !FeatureStructure.png!
 
+h3. Generate Javadoc
+
+Elexis uses Javadoc go documents its API interface. The Eclipse IDE offers built-in support for reading the javadoc for a given method or class and provides also helper to generate it.
+
+This is accomplished by calling @mvn -DforceContextQualifier=javadoc javadoc:javadoc@. It generates a complete javadoc. The generated output can be search at "target/site/apidocs/index.html":target/site/apidocs/index.html. 
+
+Even when theses javadoc are not used often, they provide a convenient way to get an overview over methods, packages, etc.
+
+h3. Check whether Javadocs are correctly generated
+
+We use checkstyle to generate Javadoc. Use the following command line:
+
+@mvn checkstyle:checkstyle-aggregate site:site@
+
+This generates an browsable HTML file "target/site/index.html":target/site/index.html. The links to the modules do not work, unless you call afterwards @ch.elexis.core.releng/cleanup_after_checkstyle.rb@, a small ruby script which generates a few missing links (not supported on Windows).
+
+It uses the rules defined in @ch.elexis.core.releng/checkstyle.xml@ to generate warnings for missing Javadoc. For each project, there exists an error report. E.g "target/site/ch.rgw.utility/checkstyle.html":./target/site/ch.rgw.utility/checkstyle.html. An aggregated, overall statistics can be found under "target/site/checkstyle-aggregate.html":target/site/checkstyle-aggregate.html
+
+If you want to add even more checks, look at ch.elexis.core.releng/checkstyle_full.xml. Adding new checks should be discussed on the developers mailing list.
+
