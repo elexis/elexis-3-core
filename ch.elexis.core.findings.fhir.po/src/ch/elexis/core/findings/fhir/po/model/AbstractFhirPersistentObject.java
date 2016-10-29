@@ -44,6 +44,10 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 		return this;
 	}
 	
+	protected Logger getLogger(Class<?> clazz){
+		return LoggerFactory.getLogger(clazz);
+	}
+	
 	protected synchronized IParser getJsonParser(){
 		if(context == null) {
 			context = FhirContext.forDstu3();
@@ -140,7 +144,7 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 		if (resource.isPresent() && resource.get() instanceof DomainResource) {
 			DomainResource domainResource = (DomainResource) resource.get();
 			Narrative narrative = domainResource.getText();
-			if (narrative != null && narrative.getDivAsString() != null) {
+			if (narrative == null) {
 				narrative = new Narrative();
 			}
 			String divEncodedText = text.replaceAll("(\r\n|\r|\n)", "<br />");

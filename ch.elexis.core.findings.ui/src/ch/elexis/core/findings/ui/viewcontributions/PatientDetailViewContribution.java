@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.viewcontributions;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,10 +51,16 @@ public class PatientDetailViewContribution implements IViewContribution {
 			List<? extends IFinding> conditions = FindingsServiceComponent.getService()
 				.getPatientsFindings(((Patient) detailObject).getId(), ICondition.class);
 			conditions = conditions.stream()
-				.filter(finding -> (finding instanceof ICondition)
-					&& ((ICondition) finding).getCategory() == ConditionCategory.DIAGNOSIS)
+				.filter(finding -> isDiagnose(finding))
 				.collect(Collectors.toList());
 			conditionsComposite.setInput((List<ICondition>) conditions);
+		} else if (conditionsComposite != null) {
+			conditionsComposite.setInput(Collections.emptyList());
 		}
+	}
+	
+	private boolean isDiagnose(IFinding iFinding){
+		return iFinding instanceof ICondition
+			&& ((ICondition) iFinding).getCategory() == ConditionCategory.DIAGNOSIS;
 	}
 }

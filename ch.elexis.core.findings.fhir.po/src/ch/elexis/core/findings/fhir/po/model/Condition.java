@@ -17,8 +17,6 @@ import org.hl7.fhir.dstu3.model.Condition.ConditionClinicalStatus;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
@@ -79,10 +77,6 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 	public Condition(){
 		org.hl7.fhir.dstu3.model.Condition fhirCondition = new org.hl7.fhir.dstu3.model.Condition();
 		saveResource(fhirCondition);
-	}
-	
-	private Logger getLogger(){
-		return LoggerFactory.getLogger(Condition.class);
 	}
 	
 	@Override
@@ -229,7 +223,7 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 					return Optional.of(fhirCondition.getOnsetStringType().getValue());
 				}
 			} catch (FHIRException e) {
-				getLogger().error("Could not access start time.", e);
+				getLogger(Condition.class).error("Could not access start time.", e);
 			}
 		}
 		return Optional.empty();
@@ -264,7 +258,7 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 					return Optional.of(fhirCondition.getAbatementStringType().getValue());
 				}
 			} catch (FHIRException e) {
-				getLogger().error("Could not access end.", e);
+				getLogger(Condition.class).error("Could not access end.", e);
 			}
 		}
 		return Optional.empty();
