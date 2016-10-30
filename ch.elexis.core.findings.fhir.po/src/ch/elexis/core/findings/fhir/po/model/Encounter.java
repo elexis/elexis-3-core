@@ -117,7 +117,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
 				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
 			Period period = fhirEncounter.getPeriod();
-			if (period != null) {
+			if (period != null && period.getStart() != null) {
 				return Optional.of(getLocalDateTime(period.getStart()));
 			}
 		}
@@ -128,17 +128,47 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	public void setStartTime(LocalDateTime time){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
+				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
+			Period period = fhirEncounter.getPeriod();
+			if (period == null) {
+				period = new Period();
+			}
+			period.setStart(getDate(time));
+			
+			fhirEncounter.setPeriod(period);
+			saveResource(resource.get());
+		}
+	}
+	
+	@Override
+	public Optional<LocalDateTime> getEndTime(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
+				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
+			Period period = fhirEncounter.getPeriod();
+			if (period != null && period.getEnd() != null) {
+				return Optional.of(getLocalDateTime(period.getEnd()));
+			}
+		}
+		return Optional.empty();
+	}
+	
+	@Override
+	public void setEndTime(LocalDateTime time){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
 			org.hl7.fhir.dstu3.model.Encounter fhirEncounter = (org.hl7.fhir.dstu3.model.Encounter) resource.get();
 			Period period = fhirEncounter.getPeriod();
-			if(period == null) {
+			if (period == null) {
 				period = new Period();
-				period.setStart(getDate(time));
-			} else {
-				period.setStart(getDate(time));
 			}
+			period.setEnd(getDate(time));
+			
 			fhirEncounter.setPeriod(period);
+			saveResource(resource.get());
 		}
-		saveResource(resource.get());
 	}
 	
 	@Override

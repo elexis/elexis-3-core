@@ -39,7 +39,31 @@ public interface IEncounter extends IFinding {
 	 */
 	public void setIndication(List<ICondition> indication);
 	
-	Optional<LocalDateTime> getStartTime();
+	/**
+	 * Get the start date and time of the encounter.
+	 * 
+	 * @return
+	 */
+	public Optional<LocalDateTime> getStartTime();
 	
-	void setStartTime(LocalDateTime time);
+	/**
+	 * Set the start date and time of the encounter.
+	 * 
+	 * @param time
+	 */
+	public void setStartTime(LocalDateTime time);
+
+	/**
+	 * Get the end date and time of the encounter.
+	 * 
+	 * @return
+	 */
+	public Optional<LocalDateTime> getEndTime();
+
+	/**
+	 * Set the end date and time of the encounter.
+	 * 
+	 * @param time
+	 */
+	public void setEndTime(LocalDateTime time);
 }
