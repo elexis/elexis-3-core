@@ -22,5 +22,6 @@ Require-Bundle: ch.elexis.core.data,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.findings.ui.services.FindingsServiceComponent.xml,
- OSGI-INF/ch.elexis.core.findings.ui.services.CodingServiceComponent.xml
+ OSGI-INF/ch.elexis.core.findings.ui.services.CodingServiceComponent.xml,
+ OSGI-INF/ch.elexis.core.findings.ui.services.MigratorServiceComponent.xml
 Import-Package: ch.rgw.io

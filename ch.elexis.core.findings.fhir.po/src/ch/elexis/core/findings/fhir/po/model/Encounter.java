@@ -65,8 +65,6 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	}
 	
 	public Encounter(){
-		org.hl7.fhir.dstu3.model.Encounter fhirEncounter = new org.hl7.fhir.dstu3.model.Encounter();
-		saveResource(fhirEncounter);
 	}
 	
 	@Override

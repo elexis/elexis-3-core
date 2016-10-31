@@ -11,6 +11,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.Logger;
@@ -19,10 +20,11 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
-import ch.elexis.core.findings.ICondition.ConditionStatus;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFindingsService;
+import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.findings.ui.services.MigratorServiceComponent;
 import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
@@ -69,20 +71,17 @@ public class FindingsSettings extends FieldEditorPreferencePage
 									patients.size());
 								IFindingsService findingsService =
 									FindingsServiceComponent.getService();
+								IMigratorService migratorService =
+									MigratorServiceComponent.getService();
 								for (Patient patient : patients) {
 									String diagnosen = patient.getDiagnosen();
 									List<IFinding> existing =
 										getExistingDiagnoses(patient.getId(), findingsService);
-									// only create if there is a diagnosis and no structured diagnosis already there
+									// only migrate if there is a diagnosis and no structured diagnosis already there
 									if (diagnosen != null && !diagnosen.isEmpty()
 										&& existing.isEmpty()) {
-										ICondition condition =
-											findingsService.getFindingsFactory().createCondition();
-										condition.setPatientId(patient.getId());
-										condition.setCategory(ConditionCategory.DIAGNOSIS);
-										condition.setStatus(ConditionStatus.ACTIVE);
-										condition.setText(diagnosen);
-										findingsService.saveFinding(condition);
+										migratorService.migratePatientsFindings(patient.getId(),
+											ICondition.class);
 									}
 									monitor.worked(1);
 									if (monitor.isCanceled()) {
@@ -90,9 +89,14 @@ public class FindingsSettings extends FieldEditorPreferencePage
 									}
 								}
 								monitor.done();
-								MessageDialog.openInformation(getShell(),
-									"Strukturierte Diagnosen",
-									"Strukturierte Diagnosen erfolgreich erzeugt. Bitte starten sie Elexis neu um mit den strukturierten Diagnosen zu arbeiten.");
+								Display.getDefault().asyncExec(new Runnable() {
+									@Override
+									public void run(){
+										MessageDialog.openInformation(getShell(),
+											"Strukturierte Diagnosen",
+											"Strukturierte Diagnosen erfolgreich erzeugt. Bitte starten sie Elexis neu um mit den strukturierten Diagnosen zu arbeiten.");
+									}
+								});
 							}
 							
 							private List<IFinding> getExistingDiagnoses(String patientId,

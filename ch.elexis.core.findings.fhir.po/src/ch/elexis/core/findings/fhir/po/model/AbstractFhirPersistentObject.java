@@ -15,10 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.fhir.po.model.util.ModelUtil;
 import ch.elexis.data.PersistentObject;
 
 public abstract class AbstractFhirPersistentObject extends PersistentObject implements IFinding {
@@ -59,26 +59,12 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 	}
 	
 	protected Optional<IBaseResource> loadResource(){
-		String content = getRawContent();
-		IBaseResource resource = null;
-		if (content != null && !content.isEmpty()) {
-			try {
-				resource = getJsonParser().parseResource(content);
-			} catch (DataFormatException ex) {
-				logger.error("Could not load resource [" + this + "]", ex);
-			}
-		}
-		return Optional.ofNullable(resource);
+		return ModelUtil.loadResource(this);
 	}
 	
 	protected void saveResource(IBaseResource resource){
 		if (resource != null) {
-			try {
-				String resourceJson = getJsonParser().encodeResourceToString(resource);
-				setRawContent(resourceJson);
-			} catch (DataFormatException ex) {
-				logger.error("Could not save resource [" + this + "]", ex);
-			}
+			ModelUtil.saveResource(resource, this);
 		}
 	}
 	

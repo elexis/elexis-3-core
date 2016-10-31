@@ -75,8 +75,6 @@ public class Condition extends AbstractFhirPersistentObject implements IConditio
 	}
 	
 	public Condition(){
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = new org.hl7.fhir.dstu3.model.Condition();
-		saveResource(fhirCondition);
 	}
 	
 	@Override
