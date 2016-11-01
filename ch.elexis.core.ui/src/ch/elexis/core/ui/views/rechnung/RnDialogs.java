@@ -289,15 +289,21 @@ public class RnDialogs {
 			// Number num=df.parse(amount.getText());
 			Money ret = MoneyInput.getFromTextField(amount);
 			if (ret != null) {
-				Zahlung zahlung =
-					rn.addZahlung(ret, bemerkung.getText(), new TimeTool(dp.getDate().getTime()));
+				Account account = null;
+				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+				if (selection != null && !selection.isEmpty()) {
+					account = (Account) selection.getFirstElement();
+				}
+				String text = bemerkung.getText();
+				if ((text == null || text.isEmpty()) && account != null) {
+					text = account.getName();
+				}
+				Zahlung zahlung = rn.addZahlung(ret, text, new TimeTool(dp.getDate().getTime()));
 				if (zahlung != null) {
 					AccountTransaction transaction = zahlung.getTransaction();
 					if (transaction != null) {
-						IStructuredSelection selection =
-							(IStructuredSelection) viewer.getSelection();
-						if (selection != null && !selection.isEmpty()) {
-							transaction.setAccount((Account) selection.getFirstElement());
+						if (account != null) {
+							transaction.setAccount(account);
 						}
 					}
 				}
