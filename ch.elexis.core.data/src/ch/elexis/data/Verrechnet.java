@@ -380,18 +380,21 @@ public class Verrechnet extends PersistentObject {
 	 * @param neuAnzahl
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
 	public IStatus changeAnzahlValidated(int neuAnzahl){
 		int vorher = getZahl();
 		if (neuAnzahl == vorher) {
 			return Status.OK_STATUS;
 		}
 		
-		Konsultation kons = getKons();
-		IVerrechenbar verrechenbar = getVerrechenbar();
+		Konsultation kons = getKons();		
+		if (neuAnzahl == 0) {
+			kons.removeLeistung(this);
+			return Status.OK_STATUS;
+		}
 		
 		int difference = neuAnzahl - vorher;
 		if (difference > 0) {
+			IVerrechenbar verrechenbar = getVerrechenbar();
 			for (int i = 0; i < difference; i++) {
 				Result<IVerrechenbar> result = kons.addLeistung(verrechenbar);
 				if (!result.isOK()) {
