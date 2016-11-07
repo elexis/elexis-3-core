@@ -62,16 +62,16 @@ public class Verrechnet extends PersistentObject {
 	public static final String TABLENAME = "LEISTUNGEN";
 	
 	public static final String VATSCALE = "vat_scale";
-	/** the prescription ID of this if it is an article*/
+	/** the prescription ID of this if it is an article */
 	public static final String FLD_EXT_PRESC_ID = "prescriptionId";
 	
 	// keep a list of all ch.elexis.VerrechnetAdjuster extensions
 	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<IVerrechnetAdjuster>();
 	
 	static {
-		addMapping(TABLENAME, KONSULTATION+"=Behandlung", LEISTG_TXT, LEISTG_CODE, CLASS, COUNT,
+		addMapping(TABLENAME, KONSULTATION + "=Behandlung", LEISTG_TXT, LEISTG_CODE, CLASS, COUNT,
 			COST_BUYING, SCALE_TP_SELLING, SCALE_SELLING, PRICE_SELLING, SCALE, SCALE2,
-			"ExtInfo="+DETAIL, USERID);
+			"ExtInfo=" + DETAIL, USERID);
 		
 		List<IConfigurationElement> adjustersConfigurations =
 			Extensions.getExtensions(ExtensionPointConstantsData.VERRECHNUNGSCODE_ADJUSTER);
@@ -100,9 +100,9 @@ public class Verrechnet extends PersistentObject {
 			KONSULTATION, LEISTG_TXT, LEISTG_CODE, CLASS, COUNT, COST_BUYING, SCALE_TP_SELLING,
 			SCALE_SELLING, PRICE_SELLING, SCALE, SCALE2, USERID
 		}, new String[] {
-			kons.getId(), iv.getText(), iv.getId(), iv.getClass().getName(),
-			Integer.toString(zahl), iv.getKosten(dat).getCentsAsString(), Integer.toString(tp),
-			Double.toString(factor), Long.toString(preis), "100", "100", CoreHub.actUser.getId()
+			kons.getId(), iv.getText(), iv.getId(), iv.getClass().getName(), Integer.toString(zahl),
+			iv.getKosten(dat).getCentsAsString(), Integer.toString(tp), Double.toString(factor),
+			Long.toString(preis), "100", "100", CoreHub.actUser.getId()
 		});
 		if (iv instanceof Artikel) {
 			((Artikel) iv).einzelAbgabe(1);
@@ -400,16 +400,8 @@ public class Verrechnet extends PersistentObject {
 					return new Status(Status.ERROR, CoreHub.PLUGIN_ID, message);
 				}
 			}
-		} else {
-			int abs = Math.abs(difference);
-			for (int i = 0; i < abs; i++) {
-				Result<Verrechnet> result = kons.removeLeistung(this);
-				if (!result.isOK()) {
-					String message = result.getMessages().stream().map(m -> m.getText())
-						.collect(Collectors.joining(", "));
-					return new Status(Status.ERROR, CoreHub.PLUGIN_ID, message);
-				}
-			}
+		} else if (difference < 0) {
+			changeAnzahl(neuAnzahl);
 		}
 		
 		return Status.OK_STATUS;
