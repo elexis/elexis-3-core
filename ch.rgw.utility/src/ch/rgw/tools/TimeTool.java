@@ -14,17 +14,15 @@ package ch.rgw.tools;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.temporal.WeekFields;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -741,12 +739,16 @@ public class TimeTool extends GregorianCalendar {
 		LocalDateTime date = toLocalDateTime();
 		LocalDateTime now = LocalDateTime.now();
 		
-		int years = now.getYear() - date.getYear();
-		int months = now.getMonth().getValue() - date.getMonth().getValue();
-		WeekFields weekFields = WeekFields.of(Locale.getDefault());
-		int weeks = now.get(weekFields.weekOfYear()) - date.get(weekFields.weekOfYear());
-		Duration duration = Duration.between(date, now);
-		int days = (int) duration.toDays();
+		int years = (int) now.until(date, ChronoUnit.YEARS);
+		int weeks = (int) now.until(date, ChronoUnit.WEEKS);
+		int months = (int) now.until(date, ChronoUnit.MONTHS);
+		int days = (int) now.until(date, ChronoUnit.DAYS);
+		// check for date changed withing 24h
+		if (days == 0) {
+			int nowDay = now.getDayOfYear();
+			int dateDay = date.getDayOfYear();
+			days = dateDay - nowDay;
+		}
 		if (years != 0 && Math.abs(days) > 56) {
 			String format = getYearsFormat(years);
 			return String.format(format, Math.abs(years));
@@ -768,13 +770,13 @@ public class TimeTool extends GregorianCalendar {
 	}
 	
 	protected String getYearsFormat(int years){
-		if (years > 0) {
-			if (years > 1) {
+		if (years < 0) {
+			if (years < -1) {
 				return Messages.getString("TimeTool.yearsAgoFormat");
 			}
 			return Messages.getString("TimeTool.yearAgoFormat");
 		} else {
-			if (years < -1) {
+			if (years > 1) {
 				return Messages.getString("TimeTool.yearsToFormat");
 			}
 			return Messages.getString("TimeTool.yearToFormat");
@@ -782,13 +784,13 @@ public class TimeTool extends GregorianCalendar {
 	}
 	
 	protected String getMonthsFormat(int months){
-		if (months > 0) {
-			if (months > 1) {
+		if (months < 0) {
+			if (months < -1) {
 				return Messages.getString("TimeTool.monthsAgoFormat");
 			}
 			return Messages.getString("TimeTool.monthAgoFormat");
 		} else {
-			if (months < -1) {
+			if (months > 1) {
 				return Messages.getString("TimeTool.monthsToFormat");
 			}
 			return Messages.getString("TimeTool.monthToFormat");
@@ -796,13 +798,13 @@ public class TimeTool extends GregorianCalendar {
 	}
 	
 	protected String getWeeksFormat(int weeks){
-		if (weeks > 0) {
-			if (weeks > 1) {
+		if (weeks < 0) {
+			if (weeks < -1) {
 				return Messages.getString("TimeTool.weeksAgoFormat");
 			}
 			return Messages.getString("TimeTool.weekAgoFormat");
 		} else {
-			if (weeks < -1) {
+			if (weeks > 1) {
 				return Messages.getString("TimeTool.weeksToFormat");
 			}
 			return Messages.getString("TimeTool.weekToFormat");
@@ -810,13 +812,13 @@ public class TimeTool extends GregorianCalendar {
 	}
 	
 	protected String getDaysFormat(int days){
-		if (days > 0) {
-			if (days > 1) {
+		if (days < 0) {
+			if (days < -1) {
 				return Messages.getString("TimeTool.daysAgoFormat");
 			}
 			return Messages.getString("TimeTool.dayAgoFormat");
 		} else {
-			if (days < -1) {
+			if (days > 1) {
 				return Messages.getString("TimeTool.daysToFormat");
 			}
 			return Messages.getString("TimeTool.dayToFormat");
