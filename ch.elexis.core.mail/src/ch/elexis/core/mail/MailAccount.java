@@ -8,10 +8,23 @@ import javax.mail.internet.InternetAddress;
 
 import ch.elexis.data.Mandant;
 
+/**
+ * Class representing the configuration of a mail account.
+ * 
+ * @author thomas
+ *
+ */
 public class MailAccount {
 	
 	private static final String SEPARATOR = ",";
 	
+	/**
+	 * Definition of the different types of mail accounts. SMTP for sending mail, IMAP for receiving
+	 * mails.
+	 * 
+	 * @author thomas
+	 *
+	 */
 	public enum TYPE {
 			SMTP, IMAP
 	}
@@ -103,6 +116,12 @@ public class MailAccount {
 		this.mandants = mandants;
 	}
 	
+	/**
+	 * Set all fields from the String. Use {@link MailAccount#toString()} to generate such a String.
+	 * 
+	 * @param csv
+	 * @return
+	 */
 	public static MailAccount from(String csv){
 		MailAccount ret = null;
 		String[] parts = csv.split(SEPARATOR);
@@ -149,6 +168,10 @@ public class MailAccount {
 		}
 	}
 	
+	/**
+	 * Generated a String that can be saved, and used to reload the object with
+	 * {@link MailAccount#from(String)}.
+	 */
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
@@ -188,6 +211,13 @@ public class MailAccount {
 		return sb.toString();
 	}
 	
+	/**
+	 * Get the from address to use. If field is not set, the username is checked if it can be used
+	 * as from address.
+	 * 
+	 * @return
+	 * @throws AddressException
+	 */
 	public Address getFromAddress() throws AddressException{
 		if (from != null) {
 			if (from.contains("@")) {
@@ -209,6 +239,12 @@ public class MailAccount {
 			"From [" + from + "] Username [" + username + "] are no mail addresses.");
 	}
 	
+	/**
+	 * Test if this account is linked to the mandant identified by the id.
+	 * 
+	 * @param mandantId
+	 * @return
+	 */
 	public boolean isForMandant(String mandantId){
 		if (mandants != null && !mandants.isEmpty()) {
 			String[] ids = mandants.split("\\|\\|");
@@ -221,6 +257,11 @@ public class MailAccount {
 		return false;
 	}
 	
+	/**
+	 * Link the mandant to this account.
+	 * 
+	 * @param mandant
+	 */
 	public void addMandant(Mandant mandant){
 		String newId = mandant.getId();
 		if (mandants == null) {
@@ -230,6 +271,11 @@ public class MailAccount {
 		}
 	}
 	
+	/**
+	 * Remove a link between this account and the mandant.
+	 * 
+	 * @param mandant
+	 */
 	public void removeMandant(Mandant mandant){
 		if (mandants != null) {
 			StringBuilder sb = new StringBuilder();

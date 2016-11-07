@@ -52,18 +52,6 @@ public class MailClient implements IMailClient {
 	}
 	
 	@Override
-	public Optional<String> getDefaultAccount(){
-		// TODO Auto-generated method stub
-		return Optional.ofNullable(null);
-	}
-	
-	@Override
-	public void setDefaultAccount(String id){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
 	public Optional<MailAccount> getAccount(String id){
 		MailAccount ret = null;
 		String accountString = CoreHub.globalCfg.get(CONFIG_ACCOUNT + "/" + id, null);

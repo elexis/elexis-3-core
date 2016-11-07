@@ -89,7 +89,14 @@ public class MailAccountComposite extends Composite {
 		viewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
-				return ((TYPE)element).name();
+				TYPE type = (TYPE)element;
+				if (type == TYPE.IMAP) {
+					return "Eingehend " + "(" + type.name() + ")";
+				} else if (type == TYPE.SMTP) {
+					return "Ausgehend " + "(" + type.name() + ")";
+				} else {
+					return ((TYPE) element).name();
+				}
 			}
 		});
 		viewer.setInput(TYPE.values());
@@ -262,6 +269,7 @@ public class MailAccountComposite extends Composite {
 			}
 		}
 		layout();
+		redraw();
 	}
 	
 	public MailAccount getAccount(){
