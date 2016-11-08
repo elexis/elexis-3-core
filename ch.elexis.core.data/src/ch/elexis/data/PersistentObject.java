@@ -1277,12 +1277,17 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * Set a value in the {@link #FLD_EXTINFO} field, will create an ExtInfo field if required
 	 * 
 	 * @param key
-	 * @param value
+	 * @param value to store, if <code>null</code> removes the respective entry
 	 * @since 3.0
+	 * @since 3.1 if value <code>null</code> removes the respective entry
 	 */
 	public void setExtInfoStoredObjectByKey(final Object key, final Object value){
 		Map extinfo = getMap(FLD_EXTINFO);
-		extinfo.put(key, value);
+		if (value == null) {
+			extinfo.remove(key);
+		} else {
+			extinfo.put(key, value);
+		}
 		setMap(FLD_EXTINFO, extinfo);
 	}
 	
