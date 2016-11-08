@@ -53,6 +53,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.lock.ILocalLockService.Status;
 import ch.elexis.core.lock.types.LockResponse;
@@ -382,14 +383,16 @@ public class UserManagementPreferencePage extends PreferencePage
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				User user = (User) wvUser.getValue();
-				if (user == null)
+				if (user == null) {
 					return;
+				}
 				KontaktSelektor ks =
 					new KontaktSelektor(UiDesk.getTopShell(), Person.class, "Kontakt auswählen",
 						"Bitte selektieren Sie den zugeordneten Kontakt", new String[] {});
 				int ret = ks.open();
 				if (ret == Window.OK) {
 					Person p = (Person) ks.getSelection();
+					p.set(Anwender.FLD_IS_USER, StringConstants.ONE);
 					user.setAssignedContact(p);
 					linkContact.setText(p.getPersonalia() + " " + CHANGE_LINK);
 				}
