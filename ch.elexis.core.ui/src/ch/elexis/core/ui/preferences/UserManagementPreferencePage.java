@@ -54,6 +54,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.lock.ILocalLockService.Status;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.Hub;
@@ -129,6 +130,9 @@ public class UserManagementPreferencePage extends PreferencePage
 		
 		addUserAction =
 			new RestrictedAction(AccessControlDefaults.USER_CREATE, Messages.LabGroupPrefs_add) {
+				{
+					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+				}
 				
 				@Override
 				public void doRun(){
@@ -164,6 +168,7 @@ public class UserManagementPreferencePage extends PreferencePage
 					}
 				}
 			};
+		popManager.add(addUserAction);
 		
 		deleteUserAction = new LockedRestrictedAction<User>(AccessControlDefaults.USER_DELETE,
 			Messages.LabGroupPrefs_delete) {
@@ -187,25 +192,27 @@ public class UserManagementPreferencePage extends PreferencePage
 		};
 		popManager.add(deleteUserAction);
 		
-		lockUserAction = new RestrictedAction(AccessControlDefaults.USER_CREATE,
-			Messages.Leistungscodes_editItem) {
-			
-			@Override
-			public void doRun(){
-				StructuredSelection ss = (StructuredSelection) tableViewerUsers.getSelection();
-				User u = (User) ss.getFirstElement();
-				LockResponse acquireLock = CoreHub.getLocalLockService().acquireLock(u);
-				if (acquireLock.isOk()) {
-					setUnlocked(true);
+		if (!(Status.STANDALONE == CoreHub.getLocalLockService().getStatus())) {
+			lockUserAction = new RestrictedAction(AccessControlDefaults.USER_CREATE,
+				Messages.Leistungscodes_editItem) {
+				
+				@Override
+				public void doRun(){
+					StructuredSelection ss = (StructuredSelection) tableViewerUsers.getSelection();
+					User u = (User) ss.getFirstElement();
+					LockResponse acquireLock = CoreHub.getLocalLockService().acquireLock(u);
+					if (acquireLock.isOk()) {
+						setUnlocked(true);
+					}
 				}
-			}
-			
-			@Override
-			public ImageDescriptor getImageDescriptor(){
-				return Images.IMG_LOCK_OPEN.getImageDescriptor();
-			}
-		};
-		popManager.add(lockUserAction);
+				
+				@Override
+				public ImageDescriptor getImageDescriptor(){
+					return Images.IMG_LOCK_OPEN.getImageDescriptor();
+				}
+			};
+			popManager.add(lockUserAction);
+		}
 		
 		popManager.addMenuListener(new IMenuListener() {
 			
@@ -213,7 +220,9 @@ public class UserManagementPreferencePage extends PreferencePage
 			public void menuAboutToShow(IMenuManager manager){
 				addUserAction.reflectRight();
 				deleteUserAction.reflectRight();
-				lockUserAction.reflectRight();
+				if (lockUserAction != null) {
+					lockUserAction.reflectRight();
+				}
 			}
 		});
 		
@@ -237,25 +246,27 @@ public class UserManagementPreferencePage extends PreferencePage
 			}
 		});
 		
-		Button btnLock = new Button(compositeButtons, SWT.FLAT | SWT.TOGGLE);
-		btnLock.setSelection(
-			CoreHub.getLocalLockService().isLocked((IPersistentObject) wvUser.getValue()));
-		btnLock.setImage(Images.IMG_LOCK_OPEN.getImage());
-		btnLock.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				IPersistentObject user = (IPersistentObject) wvUser.getValue();
-				if (CoreHub.getLocalLockService().isLocked(user)) {
-					CoreHub.getLocalLockService().releaseLock(user);
-				} else {
-					lockUserAction.doRun();
+		if (!(Status.STANDALONE == CoreHub.getLocalLockService().getStatus())) {
+			Button btnLock = new Button(compositeButtons, SWT.FLAT | SWT.TOGGLE);
+			btnLock.setSelection(
+				CoreHub.getLocalLockService().isLocked((IPersistentObject) wvUser.getValue()));
+			btnLock.setImage(Images.IMG_LOCK_OPEN.getImage());
+			btnLock.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					IPersistentObject user = (IPersistentObject) wvUser.getValue();
+					if (CoreHub.getLocalLockService().isLocked(user)) {
+						CoreHub.getLocalLockService().releaseLock(user);
+					} else {
+						lockUserAction.doRun();
+					}
+					boolean locked = CoreHub.getLocalLockService()
+						.isLocked((IPersistentObject) wvUser.getValue());
+					btnLock.setSelection(locked);
+					setUnlocked(locked);
 				}
-				boolean locked =
-					CoreHub.getLocalLockService().isLocked((IPersistentObject) wvUser.getValue());
-				btnLock.setSelection(locked);
-				setUnlocked(locked);
-			}
-		});
+			});
+		}
 		
 		Composite compositeSelectorTable = new Composite(compositeLeft, SWT.NONE);
 		compositeSelectorTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -271,7 +282,7 @@ public class UserManagementPreferencePage extends PreferencePage
 			
 			StructuredSelection ss = (StructuredSelection) e.getSelection();
 			wvUser.setValue(ss == null ? null : ss.getFirstElement());
-			setUnlocked(false);
+			setUnlocked(Status.STANDALONE == CoreHub.getLocalLockService().getStatus());
 		});
 		
 		TableViewerColumn tableViewerColumnName = new TableViewerColumn(tableViewerUsers, SWT.NONE);
@@ -519,7 +530,7 @@ public class UserManagementPreferencePage extends PreferencePage
 		
 		updateUserList();
 		
-		setUnlocked(false);
+		setUnlocked(Status.STANDALONE == CoreHub.getLocalLockService().getStatus());
 		
 		return container;
 	}
