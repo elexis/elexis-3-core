@@ -5,14 +5,33 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.eigenartikel.Constants;
+import ch.elexis.core.types.LabItemTyp;
+import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 
 public class Test_Verrechnet extends AbstractPersistentObjectTest {
+	
+	private JdbcLink link;
+	
+	@Before
+	public void setUp(){
+		link = initDB();
+	}
+	
+	@After
+	public void tearDown(){
+		if (link != null) {
+			link.exec("DROP ALL OBJECTS");
+			link.disconnect();
+		}
+	}
 	
 	@Test
 	public void changeAnzahlValidated(){
@@ -30,12 +49,12 @@ public class Test_Verrechnet extends AbstractPersistentObjectTest {
 		art.setEKPreis(new Money(14.20));
 		art.setVKPreis(new Money(20.10));
 		
-		cons.addLeistung(art);	
+		cons.addLeistung(art);
 		List<Verrechnet> leistungen = cons.getLeistungen();
 		assertEquals(1, leistungen.size());
 		Verrechnet vr = leistungen.get(0);
 		assertEquals(1, vr.getZahl());
-
+		
 		cons.addLeistung(art);
 		cons.addLeistung(art);
 		leistungen = cons.getLeistungen();
