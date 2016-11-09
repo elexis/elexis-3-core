@@ -55,6 +55,9 @@ public class Eigenartikel extends Artikel {
 			
 			CoreHub.globalCfg.set(isConvertedTo32Key, true);
 		}
+		
+		transferAllStockInformationToNew32StockModel(new Query<Eigenartikel>(Eigenartikel.class),
+			Eigenartikel.class);
 	}
 	
 	public static final String TYPNAME = Constants.TYPE_NAME;

@@ -24,8 +24,10 @@ public class StockEntry extends PersistentObject implements IStockEntry {
 	public static final String FLD_PROVIDER = "PROVIDER";
 	
 	static {
-		addMapping(TABLENAME, FLD_STOCK, FLD_ARTICLE_TYPE, FLD_ARTICLE_ID, FLD_MIN, FLD_CURRENT,
-			FLD_MAX, FLD_FRACTIONUNITS, FLD_PROVIDER);
+		addMapping(TABLENAME, FLD_STOCK, FLD_ARTICLE_TYPE, FLD_ARTICLE_ID,
+			FLD_MIN + "=S:N:" + FLD_MIN, FLD_CURRENT + "=S:N:" + FLD_CURRENT,
+			FLD_MAX + "=S:N:" + FLD_MAX, FLD_FRACTIONUNITS + "=S:N:" + FLD_FRACTIONUNITS,
+			FLD_PROVIDER);
 	}
 	
 	protected StockEntry(){}

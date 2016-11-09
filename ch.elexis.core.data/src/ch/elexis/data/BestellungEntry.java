@@ -21,7 +21,7 @@ public class BestellungEntry extends PersistentObject implements IOrderEntry {
 	public static final String FLD_STATE = "STATE";
 	public static final String FLD_COUNT = "COUNT";
 	public static final String FLD_PROVIDER = "PROVIDER";
-		
+	
 	public static final int STATE_OPEN = 0;
 	public static final int STATE_ORDERED = 1;
 	public static final int STATE_PARTIAL_DELIVER = 2;
@@ -29,7 +29,7 @@ public class BestellungEntry extends PersistentObject implements IOrderEntry {
 	
 	static {
 		addMapping(TABLENAME, FLD_BESTELLUNG, FLD_ARTICLE_TYPE, FLD_ARTICLE_ID, FLD_STOCK,
-			FLD_STATE, FLD_COUNT, FLD_PROVIDER);
+			FLD_STATE + "S:N:" + FLD_STATE, FLD_COUNT + "=S:N:" + FLD_COUNT, FLD_PROVIDER);
 	}
 	
 	protected BestellungEntry(){}
@@ -45,13 +45,14 @@ public class BestellungEntry extends PersistentObject implements IOrderEntry {
 	public BestellungEntry(Bestellung order, Artikel article, @Nullable Stock stock,
 		@Nullable Kontakt provider, int count){
 		String[] fields = new String[] {
-			FLD_BESTELLUNG, FLD_ARTICLE_TYPE, FLD_ARTICLE_ID, FLD_COUNT, FLD_PROVIDER, FLD_STOCK
+			FLD_BESTELLUNG, FLD_ARTICLE_TYPE, FLD_ARTICLE_ID, FLD_PROVIDER, FLD_STOCK
 		};
 		String[] values = new String[] {
-			order.getId(), article.getClass().getName(), article.getId(), Integer.toString(count),
+			order.getId(), article.getClass().getName(), article.getId(),
 			(provider != null) ? provider.getId() : null, (stock != null) ? stock.getId() : null
 		};
 		create(null, fields, values);
+		set(FLD_COUNT, Integer.toString(count));
 	}
 	
 	@Override

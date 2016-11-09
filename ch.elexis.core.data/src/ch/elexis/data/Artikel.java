@@ -69,9 +69,6 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 			EIGENNAME + "=Name_intern", FLD_CODECLASS, FLD_KLASSE, FLD_ATC_CODE, FLD_EXTID);
 		Xid.localRegisterXIDDomainIfNotExists(XID_PHARMACODE, FLD_PHARMACODE,
 			Xid.ASSIGNMENT_REGIONAL);
-		
-		transferAllStockInformationToNew32StockModel(new Query<Artikel>(Artikel.class),
-			Artikel.class);
 	}
 	
 	@Override

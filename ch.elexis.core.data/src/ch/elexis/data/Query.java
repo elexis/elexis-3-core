@@ -475,7 +475,7 @@ public class Query<T> {
 					log.error("Ungültiges Feld " + s);
 					return;
 				}
-				if (mapped.startsWith("S:D:")) {
+				if (mapped.startsWith("S:D:") || mapped.startsWith("S:N:")) {
 					mapped = mapped.substring(4);
 				}
 				sb.append(mapped);
