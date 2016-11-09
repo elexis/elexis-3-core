@@ -171,10 +171,12 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		btnNotPatientRelated.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				Button btn = ((Button) e.widget);
-				if(btn.getSelection()) {
-					
+				if (btnNotPatientRelated.getSelection()) {
+					patient = null;
+				} else {
+					patient = ElexisEventDispatcher.getSelectedPatient();
 				}
+				updatePatientLabel();
 				super.widgetSelected(e);
 			}
 		});
@@ -352,14 +354,8 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 	}
 	
 	private void initialize(){
-		List<Visibility> visVal = new ArrayList<Visibility>(Arrays.asList(Visibility.values()));
-		
 		if (reminder == null) {
 			patient = ElexisEventDispatcher.getSelectedPatient();
-			if (patient == null) {
-				visVal.remove(Visibility.ON_PATIENT_SELECTION);
-				visVal.remove(Visibility.POPUP_ON_PATIENT_SELECTION);
-			}
 			
 			setReminderPriority(Priority.MEDIUM);
 			setReminderStatus(ProcessStatus.OPEN);
@@ -385,12 +381,15 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 				.setSelection(reminder.getCreator().getId().equals(reminder.getKontakt().getId()));
 		}
 		
+		updatePatientLabel();
+	}
+	
+	private void updatePatientLabel(){
+		List<Visibility> visVal = new ArrayList<Visibility>(Arrays.asList(Visibility.values()));
 		if (patient != null) {
 			if (reminder != null && reminder.getCreator() != null
 				&& patient.getId().equals(reminder.getCreator().getId())) {
 				lblRelatedPatient.setText(Messages.EditReminderDialog_noPatient);
-				visVal.remove(Visibility.ON_PATIENT_SELECTION);
-				visVal.remove(Visibility.POPUP_ON_PATIENT_SELECTION);
 			} else {
 				lblRelatedPatient.setText(patient.getLabel());
 				lblRelatedPatient.setBackground(SWTResourceManager.getColor(0, 0, 0));
@@ -398,9 +397,11 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			}
 		} else {
 			lblRelatedPatient.setText(Messages.EditReminderDialog_noPatientSelected);
+			visVal.remove(Visibility.ON_PATIENT_SELECTION);
+			visVal.remove(Visibility.POPUP_ON_PATIENT_SELECTION);
 		}
-		
 		cvVisibility.setInput(visVal);
+		
 		if (reminder == null) {
 			cvVisibility.setSelection(new StructuredSelection(Visibility.ALWAYS));
 		} else {
@@ -442,8 +443,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			(btnNotPatientRelated.getSelection()) ? CoreHub.actUser.getId() : patient.getId();
 		Visibility visibility =
 			(Visibility) ((StructuredSelection) cvVisibility.getSelection()).getFirstElement();
-		Type atype =
-			(Type) ((StructuredSelection) cvActionType.getSelection()).getFirstElement();
+		Type atype = (Type) ((StructuredSelection) cvActionType.getSelection()).getFirstElement();
 		if (atype == null) {
 			atype = Type.COMMON;
 		}

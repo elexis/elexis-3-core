@@ -108,8 +108,9 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 * addResponsible
 	 * 
 	 * @param ident
-	 *            The contact (i.e. Patient) the reminder belongs to. If ident is null, the reminder
-	 *            will be attributed to the corrent user
+	 *            The contact (i.e. Patient) the reminder belongs to. If <code>null</code>, the
+	 *            reminder will be attributed to the current user, making it a non-patient-related
+	 *            reminder.
 	 * @param due
 	 *            A date string
 	 * @param typ
