@@ -175,14 +175,15 @@
       </view>
       <view
             category="ch.elexis.datenKategorie"
-            class="ch.elexis.core.ui.views.LagerView"
+            class="ch.elexis.core.ui.views.StockView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/box_label.png"
-            id="ch.elexis.LagerView"
+            id="ch.elexis.core.ui.views.StockView"
             name="%elexis.stocksView">
       </view>
       <view
             category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.BestellView"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/cart.png"
             id="ch.elexis.BestellenView"
             name="%elexis.orderView">
       </view>
@@ -418,10 +419,10 @@
             name="%elexis.letterPerspective">
       </perspective>
       <perspective
-            class="ch.elexis.core.application.perspectives.BestellPerspektive"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/cart.png"
-            id="ch.elexis.bestellperspektive"
-            name="%perspective.name.0">
+            class="ch.elexis.core.application.perspectives.StockManagementPerspective"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/box_label.png"
+            id="ch.elexis.core.application.perspectives.StockManagementPerspective"
+            name="%elexis.stockManagementPerspective">
       </perspective>
    </extension>
    <extension

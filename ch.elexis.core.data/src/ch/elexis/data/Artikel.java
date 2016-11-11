@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2011, G. Weirich and Elexis
+ * Copyright (c) 2005-2016, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,44 +7,40 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ * 	  MEDEVIT - major refactorings due to multi-stock implementation
  *******************************************************************************/
 package ch.elexis.data;
 
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.constants.StringConstants;
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.data.util.IRunnableWithProgress;
+import ch.elexis.core.model.article.IArticle;
+import ch.elexis.core.stock.IStockEntry;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
-/**
- * Ein Artikel ist ein Objekt, das im Lager vorhanden ist oder sein sollte oder einem Patienten
- * verordnet werden kann
- */
-public class Artikel extends VerrechenbarAdapter {
+public class Artikel extends VerrechenbarAdapter implements IArticle {
+	
+	public static final String TABLENAME = "ARTIKEL";
+	
 	public static final String FLD_EAN = "EAN";
 	public static final String FLD_CODECLASS = "Codeclass";
 	public static final String FLD_KLASSE = "Klasse";
 	public static final String XID_PHARMACODE = "www.xid.ch/id/pharmacode/ch";
 	public static final String FLD_SUB_ID = "SubID";
 	public static final String ARTIKEL = "Artikel";
-	public static final String FLD_LIEFERANT_ID = "LieferantID";
 	public static final String FLD_PHARMACODE = "Pharmacode";
 	public static final String FLD_EXTID = "ExtID";
-	public static final String ANBRUCH = "Anbruch";
-	public static final String MINBESTAND = "Minbestand";
-	public static final String MAXBESTAND = "Maxbestand";
 	public static final String VERKAUFSEINHEIT = "Verkaufseinheit";
 	public static final String VERPACKUNGSEINHEIT = "Verpackungseinheit";
-	public static final String ISTBESTAND = "Istbestand";
 	public static final String FLD_VK_PREIS = "VK_Preis";
 	public static final String FLD_EK_PREIS = "EK_Preis";
 	public static final String EIGENNAME = "Eigenname";
@@ -52,24 +48,107 @@ public class Artikel extends VerrechenbarAdapter {
 	public static final String FLD_NAME = "Name";
 	public static final String FLD_ATC_CODE = "ATC_code";
 	
-	public static final String TABLENAME = "ARTIKEL";
+	/** Deprecated - will be removed in 3.3 (https://redmine.medelexis.ch/issues/5204) **/
+	@Deprecated
+	public static final String LIEFERANT_ID = "LieferantID";
+	@Deprecated
+	public static final String ISTBESTAND = "Istbestand";
+	@Deprecated
+	public static final String ANBRUCH = "Anbruch";
+	@Deprecated
+	public static final String MINBESTAND = "Minbestand";
+	@Deprecated
+	public static final String MAXBESTAND = "Maxbestand";
+	/** END **/
+	
 	public static final Pattern NAME_VE_PATTERN = Pattern.compile(".+ ([0-9]+) Stk.*");
+	
+	static {
+		addMapping(TABLENAME, LIEFERANT_ID, FLD_NAME, MAXBESTAND, MINBESTAND, ISTBESTAND,
+			FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP, FLD_EXTINFO, FLD_EAN, FLD_SUB_ID,
+			EIGENNAME + "=Name_intern", FLD_CODECLASS, FLD_KLASSE, FLD_ATC_CODE, FLD_EXTID);
+		Xid.localRegisterXIDDomainIfNotExists(XID_PHARMACODE, FLD_PHARMACODE,
+			Xid.ASSIGNMENT_REGIONAL);
+	}
 	
 	@Override
 	protected String getTableName(){
 		return TABLENAME;
 	}
 	
-	public String getXidDomain(){
-		return XID_PHARMACODE;
+	/**
+	 * @param qbe
+	 * @param clazz
+	 * @deprecated to be removed in 3.3
+	 * @see https://redmine.medelexis.ch/issues/5204
+	 */
+	public static void transferAllStockInformationToNew32StockModel(Query<? extends Artikel> qbe,
+		Class<? extends Artikel> clazz){
+		if (!CoreHub.globalCfg.get(clazz.getSimpleName() + "StocksMigratedTo32", false)) {
+			IRunnableWithProgress irwp = new IRunnableWithProgress() {
+				@Override
+				public void run(IProgressMonitor monitor)
+					throws InvocationTargetException, InterruptedException{
+					log.debug("Migrating stock information");
+					qbe.startGroup();
+					qbe.add(MINBESTAND, Query.NOT_EQUAL, null);
+					qbe.or();
+					qbe.add(ISTBESTAND, Query.NOT_EQUAL, null);
+					qbe.add(MAXBESTAND, Query.NOT_EQUAL, null);
+					qbe.add(LIEFERANT_ID, Query.NOT_EQUAL, null);
+					qbe.endGroup();
+					List<? extends Artikel> stockArticles = qbe.execute();
+					monitor.beginTask(
+						"Migrating " + clazz.getSimpleName() + " to new stock format.",
+						stockArticles.size());
+					Stock stdStock = Stock.load(Stock.DEFAULT_STOCK_ID);
+					for (Artikel art : stockArticles) {
+						if (art.isProduct()) {
+							log.warn("Article is product with stock [{}].", art.getId());
+							continue;
+						}
+						log.debug("Migrating stock information for [{}]", art.getLabel());
+						IStockEntry se = CoreHub.getStockService().storeArticleInStock(stdStock,
+							art.storeToString());
+						String[] fields = new String[] {
+							MINBESTAND, ISTBESTAND, MAXBESTAND, LIEFERANT_ID
+						};
+						String[] values = art.get(false, fields);
+						String anbruch = art.getExt(ANBRUCH);
+						if (anbruch != null && anbruch.length() > 0) {
+							se.setFractionUnits(Integer.valueOf(anbruch));
+							art.setExt(ANBRUCH, null);
+						}
+						for (int i = 0; i < values.length; i++) {
+							if (values[i] != null && values[i].length() > 0) {
+								if (i == 0) {
+									se.setMinimumStock(Integer.valueOf(values[i]));
+								} else if (i == 1) {
+									se.setCurrentStock(Integer.valueOf(values[i]));
+								} else if (i == 2) {
+									se.setMaximumStock(Integer.valueOf(values[i]));
+								} else if (i == 3) {
+									se.setProvider(values[i]);
+								}
+							}
+						}
+						for (String field : fields) {
+							art.set(field, null);
+						}
+						monitor.worked(1);
+					}
+					
+					CoreHub.globalCfg.set(clazz.getSimpleName() + "StocksMigratedTo32", true);
+					CoreHub.globalCfg.flush();
+					monitor.done();
+				}
+			};
+			PersistentObject.cod.showProgress(irwp);
+		}
 	}
 	
-	static {
-		addMapping(TABLENAME, FLD_LIEFERANT_ID, FLD_NAME, MAXBESTAND, MINBESTAND, ISTBESTAND,
-			FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP, FLD_EXTINFO, FLD_EAN, FLD_SUB_ID,
-			EIGENNAME + "=Name_intern", FLD_CODECLASS, FLD_KLASSE, FLD_ATC_CODE, FLD_EXTID);
-		Xid.localRegisterXIDDomainIfNotExists(XID_PHARMACODE, "Pharmacode",
-			Xid.ASSIGNMENT_REGIONAL);
+	public String getXidDomain(){
+		return XID_PHARMACODE;
 	}
 	
 	/**
@@ -225,20 +304,6 @@ public class Artikel extends VerrechenbarAdapter {
 	}
 	
 	/**
-	 * Herausfinden, wieviele Packungen wir noch auf Lager haben
-	 * 
-	 * @return den Istbestand
-	 */
-	public int getIstbestand(){
-		try {
-			return checkZero(get(ISTBESTAND));
-		} catch (Throwable ex) {
-			log.error("Fehler beim Einlesen von istbestand für " + getLabel());
-		}
-		return 0;
-	}
-	
-	/**
 	 * Versuche, die Verpakcungseinheit herauszufinden. Entweder haben wir sie im Artikeldetail
 	 * angegeben, dann ist es trivial, oder vielleicht steht im Namen etwas wie xx Stk.
 	 * 
@@ -261,229 +326,13 @@ public class Artikel extends VerrechenbarAdapter {
 		return ret;
 	}
 	
-	/**
-	 * Herausfinden, wieviele Exemplare wir noch auf Lager haben (Istbestand * Verpackungseinheit)
-	 * 
-	 * @return Zahl der Einzelabgaben, die noch gemacht werden können
-	 */
-	public int getTotalCount(){
-		int pack = getIstbestand();
-		int VE = getPackungsGroesse();
-		if (VE == 0) {
-			return pack;
-		}
-		int AE = getAbgabeEinheit();
-		if (AE < VE) {
-			return (pack * VE) + (getBruchteile() * AE);
-		}
-		return pack;
-	}
-	
-	/**
-	 * Eingestellten Höchstebestand holen
-	 * 
-	 * @return Wieviele Packungen der Anwender maximal auf Lager haben will
-	 */
-	public int getMaxbestand(){
-		try {
-			return checkZero(get(MAXBESTAND));
-		} catch (Throwable ex) {
-			log.error("Fehler beim Einlesen von Maxbestand für " + getLabel());
-		}
-		return 0;
-	}
-	
-	/**
-	 * Eingestellten Mindestbestand holen
-	 * 
-	 * @return Wieviele Packungen der Anwender mindestens auf Lager haben will.
-	 */
-	public int getMinbestand(){
-		try {
-			return checkZero(get(MINBESTAND));
-		} catch (Throwable ex) {
-			log.error("Fehler beim Einlesen von Minbestand für " + getLabel());
-		}
-		return 0;
-	}
-	
-	/**
-	 * Höchstbestand setzen
-	 * 
-	 * @param s
-	 *            Wieviele Packungen der Anwender höchstens auf Lager haben will
-	 */
-	public void setMaxbestand(final int s){
-		String sl = checkLimit(s);
-		if (sl != null) {
-			set(MAXBESTAND, sl);
-		}
-	}
-	
-	/**
-	 * Mindestbestand setzen
-	 * 
-	 * @param s
-	 *            Wieviele Packungen der Anwender mindestens auf Lager haben will
-	 */
-	public void setMinbestand(final int s){
-		String sl = checkLimit(s);
-		if (sl != null) {
-			set(MINBESTAND, sl);
-		}
-	}
-	
-	/**
-	 * Istbestand setzen. Wenn INVENTORY_CHECK_ILLEGAL-VALUES gesetzt ist, erscheint eine Warnung,
-	 * wenn der Istbestand unter null komt.
-	 * 
-	 * @param s
-	 *            Wieviele Packungen tatsächlich auf Lager sind
-	 */
-	public void setIstbestand(final int s){
-		String sl = null;
-		if (CoreHub.globalCfg.get(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES, true)) {
-			sl = checkLimit(s);
-		} else {
-			sl = Integer.toString(s);
-		}
-		if (sl != null) {
-			set(ISTBESTAND, sl);
-		}
-	}
-	
-	/**
-	 * Wieviele Abgabeeinheiten aus einer angebrochenen Packung sind da
-	 * 
-	 * @return Zahl der Abgabeheinheiten aus der angebrochenen Packung
-	 */
-	public int getBruchteile(){
-		return checkZero(getExt(ANBRUCH));
-	}
-	
-	public void setBruchteile(int number) {
-		setExt(ANBRUCH, Integer.toString(number));
-	}
-	
-	/**
-	 * Prüfen, ob der Lagerbestand ungültig ist
-	 * 
-	 * @param s
-	 * @return
-	 */
-	private String checkLimit(final int s){
-		String str = Integer.toString(s);
-		if (s > -1 && s < 1001) {
-			return str;
-		}
-		if (isLagerartikel()) {
-			MessageEvent.fireError("Ungültiger Lagerbestand", "Der Lagerbestand ist auf " + str
-				+ ". Bitte einen Wert zwischen 0 und 1000 eingeben.");
-		}
-		return null;
-	}
-	
-	/**
-	 * Check if the article is considered a stock article, this is the case if either a stock amount
-	 * is defined or there exists an upper or lower bound for the number of articles to be on stock
-	 * 
-	 * @return <code>true</code> if on stock
-	 * @since 3.1 the behaviour of the method has changed according to ticket #1496
-	 */
-	public boolean isLagerartikel(){
-		String[] result = new String[3];
-		get(new String[] {
-			ISTBESTAND, MINBESTAND, MAXBESTAND
-		}, result);
-		
-		if (checkZero(result[0]) > 0) {
-			return true;
-		}
-		
-		if ((checkZero(result[1]) > 0) || (checkZero(result[2]) > 0)) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Alle Lagerartikel holen.
-	 * 
-	 * @return
-	 */
-	public static List<Artikel> getLagerartikel(){
-		Query<Artikel> qbe = new Query<Artikel>(Artikel.class);
-		qbe.add(MINBESTAND, Query.GREATER, StringConstants.ZERO);
-		qbe.or();
-		qbe.add(MAXBESTAND, Query.GREATER, StringConstants.ZERO);
-		qbe.orderBy(false, new String[] {
-			FLD_NAME
-		});
-		List<Artikel> l = qbe.execute();
-		return l == null ? new ArrayList<Artikel>(0) : l;
-	}
-	
-	/**
-	 * Eine Abgabeeinheit eines Lagerartikels abgeben. Nörogenfalls wird eine neue Packung
-	 * angebrochen.
-	 * 
-	 * @param n
-	 */
-	public void einzelAbgabe(final int n){
-		int anbruch = getBruchteile();
-		int ve = getVerkaufseinheit();
-		int vk = getVerpackungsEinheit();
-		if (vk == 0) {
-			if (ve != 0) {
-				vk = ve;
-				setVerkaufseinheit(vk);
-			}
-		}
-		if (ve == 0) {
-			if (vk != 0) {
-				ve = vk;
-				setVerpackungsEinheit(ve);
-			}
-		}
-		int num = n * ve;
-		if (vk == ve) {
-			setIstbestand(getIstbestand() - n);
-		} else {
-			int rest = anbruch - num;
-			while (rest < 0) {
-				rest = rest + vk;
-				setIstbestand(getIstbestand() - 1);
-			}
-			setBruchteile(rest);
-		}
-	}
-	
-	/**
-	 * Eine Einzelabgabe wieder einbuchen
-	 * 
-	 * @param n
-	 */
-	public void einzelRuecknahme(final int n){
-		int anbruch = getBruchteile();
-		int ve = getVerkaufseinheit();
-		int vk = getVerpackungsEinheit();
-		int num = n * ve;
-		if (vk == ve) {
-			setIstbestand(getIstbestand() + n);
-		} else {
-			int rest = anbruch + num;
-			while (rest > vk) {
-				rest = rest - vk;
-				setIstbestand(getIstbestand() + 1);
-			}
-			setBruchteile(rest);
-		}
-	}
-	
 	public String getEAN(){
-		String ean = get(FLD_EAN);
-		return ean;
+		return get(FLD_EAN);
+	}
+	
+	@Override
+	public String getGTIN(){
+		return getEAN();
 	}
 	
 	public void setEAN(String ean){
@@ -509,19 +358,16 @@ public class Artikel extends VerrechenbarAdapter {
 		return checkNull(getExt(FLD_PHARMACODE));
 	}
 	
-	public Kontakt getLieferant(){
-		return Kontakt.load(get(FLD_LIEFERANT_ID));
-	}
-	
-	public void setLieferant(final Kontakt l){
-		set(FLD_LIEFERANT_ID, l.getId());
-	}
-	
 	public int getVerpackungsEinheit(){
 		return checkZero((String) getExtInfoStoredObjectByKey(VERPACKUNGSEINHEIT));
 	}
 	
-	public void setVerpackungsEinheit(int ve) {
+	@Override
+	public int getPackageUnit(){
+		return getVerpackungsEinheit();
+	}
+	
+	public void setVerpackungsEinheit(int ve){
 		setExt(VERPACKUNGSEINHEIT, Integer.toString(ve));
 	}
 	
@@ -529,7 +375,12 @@ public class Artikel extends VerrechenbarAdapter {
 		return checkZero(getExt(VERKAUFSEINHEIT));
 	}
 	
-	public void setVerkaufseinheit(int number) {
+	@Override
+	public int getSellingUnit(){
+		return getVerkaufseinheit();
+	}
+	
+	public void setVerkaufseinheit(int number){
 		setExt(VERKAUFSEINHEIT, Integer.toString(number));
 	}
 	
@@ -591,14 +442,7 @@ public class Artikel extends VerrechenbarAdapter {
 		return ARTIKEL;
 	}
 	
-	/**
-	 * Determine whether this article is a product or a package. A product is the abstract
-	 * definition of articles available as packages. Hence a product can not be billed, as it does
-	 * not represent a tangible element.
-	 * 
-	 * @return
-	 * @since 3.2
-	 */
+	@Override
 	public boolean isProduct(){
 		return false;
 	}
@@ -641,9 +485,8 @@ public class Artikel extends VerrechenbarAdapter {
 	@Override
 	protected String[] getExportFields(){
 		return new String[] {
-			FLD_EAN, FLD_SUB_ID, FLD_LIEFERANT_ID, FLD_KLASSE, FLD_NAME, MAXBESTAND, MINBESTAND,
-			ISTBESTAND, FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP, FLD_CODECLASS, FLD_ATC_CODE,
-			FLD_EXTINFO
+			FLD_EAN, FLD_SUB_ID, FLD_KLASSE, FLD_NAME, FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP,
+			FLD_CODECLASS, FLD_ATC_CODE, FLD_EXTINFO
 		};
 	}
 	

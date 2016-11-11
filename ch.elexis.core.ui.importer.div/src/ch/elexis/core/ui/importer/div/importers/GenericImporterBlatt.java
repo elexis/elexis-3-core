@@ -448,12 +448,8 @@ public class GenericImporterBlatt extends Composite {
 				} else if (template instanceof Artikel) {
 					fields.add(new Field(Artikel.FLD_SUB_ID, true));
 					fields.add(new Field(Artikel.FLD_NAME));
-					fields.add(new Field(Artikel.MAXBESTAND));
-					fields.add(new Field(Artikel.MINBESTAND));
-					fields.add(new Field(Artikel.ISTBESTAND));
 					fields.add(new Field(Artikel.FLD_TYP));
 					fields.add(new Field(Artikel.FLD_CODECLASS));
-					fields.add(new Field(Artikel.FLD_LIEFERANT_ID));
 				} else {
 					// unknown type
 				}

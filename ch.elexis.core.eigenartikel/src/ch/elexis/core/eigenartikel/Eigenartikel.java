@@ -55,6 +55,9 @@ public class Eigenartikel extends Artikel {
 			
 			CoreHub.globalCfg.set(isConvertedTo32Key, true);
 		}
+		
+		transferAllStockInformationToNew32StockModel(new Query<Eigenartikel>(Eigenartikel.class),
+			Eigenartikel.class);
 	}
 	
 	public static final String TYPNAME = Constants.TYPE_NAME;
@@ -235,30 +238,6 @@ public class Eigenartikel extends Artikel {
 			return 0;
 		}
 		return intVal.intValue();
-	}
-	
-	public Integer getMaxOnStock(){
-		return returnNaturalNumberIntegerOrNull(getMaxbestand());
-	}
-	
-	public void setMaxOnStock(Integer maxOnStock){
-		setMaxbestand(getNaturalIntOrZeroIfNull(maxOnStock));
-	}
-	
-	public Integer getMinOnStock(){
-		return returnNaturalNumberIntegerOrNull(getMinbestand());
-	}
-	
-	public void setMinOnStock(Integer minOnStock){
-		setMinbestand(getNaturalIntOrZeroIfNull(minOnStock));
-	}
-	
-	public Integer getCurrentOnStock(){
-		return returnNaturalNumberIntegerOrNull(getIstbestand());
-	}
-	
-	public void setCurrentOnStock(Integer currentStock){
-		setIstbestand(getNaturalIntOrZeroIfNull(currentStock));
 	}
 	
 	public Integer getPackageSize(){

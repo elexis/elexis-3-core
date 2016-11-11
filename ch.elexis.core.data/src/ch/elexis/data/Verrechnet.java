@@ -26,6 +26,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.IVerrechnetAdjuster;
+import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.data.util.Extensions;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
@@ -68,6 +69,8 @@ public class Verrechnet extends PersistentObject {
 	// keep a list of all ch.elexis.VerrechnetAdjuster extensions
 	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<IVerrechnetAdjuster>();
 	
+	private StockService stockService = CoreHub.getStockService();
+	
 	static {
 		addMapping(TABLENAME, KONSULTATION + "=Behandlung", LEISTG_TXT, LEISTG_CODE, CLASS, COUNT,
 			COST_BUYING, SCALE_TP_SELLING, SCALE_SELLING, PRICE_SELLING, SCALE, SCALE2,
@@ -105,7 +108,7 @@ public class Verrechnet extends PersistentObject {
 			Long.toString(preis), "100", "100", CoreHub.actUser.getId()
 		});
 		if (iv instanceof Artikel) {
-			((Artikel) iv).einzelAbgabe(1);
+			stockService.performSingleDisposal((Artikel) iv, 1);
 		}
 		// call the adjusters
 		for (IVerrechnetAdjuster adjuster : adjusters) {
@@ -368,8 +371,8 @@ public class Verrechnet extends PersistentObject {
 		IVerrechenbar vv = getVerrechenbar();
 		if (vv instanceof Artikel) {
 			Artikel art = (Artikel) vv;
-			art.einzelRuecknahme(vorher);
-			art.einzelAbgabe(neuAnzahl);
+			stockService.performSingleReturn(art, vorher);
+			stockService.performSingleDisposal(art, neuAnzahl);
 		}
 	}
 	

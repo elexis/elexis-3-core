@@ -72,11 +72,11 @@ public class Test_Query extends AbstractPersistentObjectTest {
 			
 		}
 	}
+	
 	@Test
 	public void testGetPreparedStatement(){
-		PreparedStatement ps =
-				link.getPreparedStatement("SELECT " + Organisation.FLD_NAME1 + " FROM "
-					+ Organisation.TABLENAME);
+		PreparedStatement ps = link.getPreparedStatement(
+			"SELECT " + Organisation.FLD_NAME1 + " FROM " + Organisation.TABLENAME);
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
 		ArrayList<String> result = query.execute(ps, new String[0]);
 		int nrOrgs = result.size();
@@ -85,6 +85,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		link.releasePreparedStatement(ps);
 		assertEquals(nrOrgs + 1, result.size());
 	}
+	
 	@Test
 	public void testUnordered(){
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
@@ -96,6 +97,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		assertEquals(FIRST_NAME, result.get(1).get(Organisation.FLD_NAME1));
 		assertEquals(THIRD_NAME, result.get(2).get(Organisation.FLD_NAME1));
 	}
+	
 	@Test
 	public void testOrderBy(){
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
@@ -107,6 +109,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		assertEquals(SECOND_NAME, result.get(1).get(Organisation.FLD_NAME1));
 		assertEquals(THIRD_NAME, result.get(2).get(Organisation.FLD_NAME1));
 	}
+	
 	@Test
 	public void testOrderByReverse(){
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
@@ -118,6 +121,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		assertEquals(SECOND_NAME, result.get(1).get(Organisation.FLD_NAME1));
 		assertEquals(THIRD_NAME, result.get(0).get(Organisation.FLD_NAME1));
 	}
+	
 	@Test
 	public void testExecute(){
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
@@ -160,9 +164,8 @@ public class Test_Query extends AbstractPersistentObjectTest {
 	
 	@Test
 	public void testQueryExpression(){
-		PreparedStatement ps =
-			link.prepareStatement("SELECT " + Organisation.FLD_NAME1 + " FROM "
-				+ Organisation.TABLENAME);
+		PreparedStatement ps = link.prepareStatement(
+			"SELECT " + Organisation.FLD_NAME1 + " FROM " + Organisation.TABLENAME);
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
 		ArrayList<String> result = query.execute(ps, new String[0]);
 		int nrOrgs = result.size();
@@ -172,25 +175,43 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		}
 		new Organisation("NeueOrganistation", "Zusatznamen2");
 		result = query.execute(ps, new String[0]);
-		System.out.println("After creating new organistaion found " + result.size()
-			+ " Organisation");
+		System.out
+			.println("After creating new organistaion found " + result.size() + " Organisation");
 		for (String s : result) {
 			System.out.println("Organisation: found " + s);
 		}
 		assertEquals(nrOrgs + 1, result.size());
 	}
+	
 	@Test
-	public void testQueryMappedExpression() {
+	public void testQueryNotNullExpression(){
+		Artikel art = new Artikel("TestARtikel", "Eigenartikel");
+		art.set(Artikel.FLD_SUB_ID, "notNull");
+		new Artikel("TestARtikel", "Eigenartikel");
+		
+		Query<Artikel> qbe = new Query<Artikel>(Artikel.class);
+		qbe.startGroup();
+		qbe.add(Artikel.FLD_SUB_ID, Query.NOT_EQUAL, null);
+		qbe.or();
+		qbe.add(Artikel.FLD_EAN, Query.NOT_EQUAL, null);
+		qbe.add(Artikel.FLD_EXTID, Query.NOT_EQUAL, null);
+		qbe.endGroup();
+		List<Artikel> execute = qbe.execute();
+		assertEquals(1, execute.size());
+	}
+	
+	@Test
+	public void testQueryMappedExpression(){
 		final String MappingName = "TitelSuffix";
-		PreparedStatement ps =
-				link.getPreparedStatement("SELECT " + Organisation.FLD_NAME1 + " FROM "
-					+ Organisation.TABLENAME);
+		PreparedStatement ps = link.getPreparedStatement(
+			"SELECT " + Organisation.FLD_NAME1 + " FROM " + Organisation.TABLENAME);
 		// Setup Query which will return always true
 		Query<Organisation> query = new Query<Organisation>(Organisation.class);
 		query.clear();
 		query.add(Organisation.FLD_COUNTRY, Query.LESS_OR_EQUAL, MappingName);
-		System.out.println("Must query via " + MappingName + ". Fieldname is " + Organisation.FLD_LAW_CODE);
-		System.out.println("getActualQuery: " +query.getActualQuery());
+		System.out.println(
+			"Must query via " + MappingName + ". Fieldname is " + Organisation.FLD_LAW_CODE);
+		System.out.println("getActualQuery: " + query.getActualQuery());
 		ArrayList<String> result = query.execute(ps, new String[0]);
 		assertTrue(result.size() >= 3);
 		// Setup Query which will return always false
@@ -200,7 +221,7 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		List<Organisation> result2 = query2.execute();
 		assertEquals(0, result2.size());
 	}
-
+	
 	private class PersistentObjectImpl extends PersistentObject {
 		
 		@SuppressWarnings("unused")

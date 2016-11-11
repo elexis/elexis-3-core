@@ -12,8 +12,16 @@
 
 package ch.elexis.core.data.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -39,8 +47,13 @@ public class DBUpdate {
 	private static final String ALTER_TABLE = "ALTER TABLE ";
 	private static final String ADD = " ADD ";
 	
-	private static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
-		.getCoreOperationAdvisor();
+	/**
+	 * Changeset is located in external file
+	 */
+	private static final String FILE_LOCATED = "FILE";
+	
+	private static AbstractCoreOperationAdvisor cod =
+		CoreOperationExtensionPoint.getCoreOperationAdvisor();
 	
 	//@formatter:off
 	static final String[] versions = {
@@ -49,7 +62,7 @@ public class DBUpdate {
 		"1.4.5", "1.4.6", "1.5.0", "1.6.0", "1.6.1", "1.6.2", "1.6.3", "1.6.4", "1.7.0", "1.7.1",
 		"1.7.2", "1.8.0", "1.8.1", "1.8.2", "1.8.3", "1.8.4", "1.8.5", "1.8.6", "1.8.7", "1.8.8",
 		"1.8.9", "1.8.10", "1.8.11", "1.8.12", "1.8.13", "1.8.14", "1.8.15", "1.8.16", "1.9.0", "3.0.0",
-		"3.1.0", "3.2.0", "3.2.1", "3.2.2", "3.2.3"
+		"3.1.0", "3.2.0", "3.2.1", "3.2.2", "3.2.3", "3.2.4"
 	};
 	static final String[] cmds =
 		{
@@ -402,11 +415,14 @@ public class DBUpdate {
 			ALTER_TABLE+Reminder.TABLENAME+ADD+Reminder.FLD_SUBJECT+" VARCHAR(160);",
 			
 			// 3.2.3
-			"ALTER TABLE KONTO ADD account CHAR(255);"
+			"ALTER TABLE KONTO ADD account CHAR(255);",
+			
+			// 3.2.4
+			FILE_LOCATED
 			};
 	//@formatter:on
 	
-	static Log log = Log.get(DBUpdate.class.getName());
+	protected static Logger log = LoggerFactory.getLogger(DBUpdate.class);
 	
 	static VersionInfo vi;
 	
@@ -421,15 +437,12 @@ public class DBUpdate {
 	public static void doUpdate(){
 		String dbv = CoreHub.globalCfg.get("dbversion", null);
 		if (dbv == null) {
-			log.log("Kann keine Version lesen", Log.ERRORS);
+			log.error("Kann keine Version lesen");
 			
-			ElexisStatus es =
-				new ElexisStatus(
-					ElexisStatus.LOG_ERRORS,
-					CoreHub.PLUGIN_ID,
-					ElexisStatus.CODE_RESTART,
-					"Fataler Fehler bei Datenbank-Update: Kann keine Versionsinformation lesen. Abbruch",
-					ElexisStatus.LOG_FATALS);
+			ElexisStatus es = new ElexisStatus(ElexisStatus.LOG_ERRORS, CoreHub.PLUGIN_ID,
+				ElexisStatus.CODE_RESTART,
+				"Fataler Fehler bei Datenbank-Update: Kann keine Versionsinformation lesen. Abbruch",
+				ElexisStatus.LOG_FATALS);
 			ElexisEventDispatcher.fireElexisStatusEvent(es);
 			
 			System.exit(0);
@@ -442,12 +455,21 @@ public class DBUpdate {
 			if (vi.isOlder(versions[i])) {
 				String[] cmd = cmds[i].split(";");
 				for (int cmdIdx = 0; cmdIdx < cmd.length; cmdIdx++)
-					sqlStrings.add(cmd[cmdIdx]);
+					if (FILE_LOCATED.equals(cmd[cmdIdx])) {
+						String dbscript = readDBScriptForVersionFromFile(versions[i]);
+						if (dbscript == null) {
+							return;
+						}
+						sqlStrings.add(dbscript);
+					} else {
+						sqlStrings.add(cmd[cmdIdx]);
+					}
+				
 			}
 		}
 		// create log message
-		log.log("Start DBUpdate from Version " + dbv + " to Version "
-			+ versions[versions.length - 1], Log.INFOS);
+		log.info(
+			"Start DBUpdate from Version " + dbv + " to Version " + versions[versions.length - 1]);
 		
 		boolean success =
 			cod.performDatabaseUpdate(sqlStrings.toArray(new String[0]), CoreHub.PLUGIN_ID);
@@ -458,11 +480,28 @@ public class DBUpdate {
 			CoreHub.globalCfg.set("ElexisVersion", CoreHub.Version);
 			CoreHub.globalCfg.flush();
 			// create log message
-			log.log("DBUpdate from Version " + dbv + " to Version " + versions[versions.length - 1]
-				+ " successful.", Log.INFOS);
+			log.info("DBUpdate from Version " + dbv + " to Version " + versions[versions.length - 1]
+				+ " successful.");
 		} else {
-			log.log("DBUpdate from Version " + dbv + " to Version " + versions[versions.length - 1]
-				+ " failed.", Log.ERRORS);
+			log.error("DBUpdate from Version " + dbv + " to Version "
+				+ versions[versions.length - 1] + " failed.");
+		}
+	}
+	
+	/**
+	 * 
+	 * @since 3.2
+	 */
+	public static String readDBScriptForVersionFromFile(String version){
+		String resourceName = "/rsc/dbScripts/" + version.replaceAll("\\.", "_");
+		resourceName += ".sql";
+		
+		try (InputStream inputStream = DBUpdate.class.getResourceAsStream(resourceName)) {
+			return new BufferedReader(new InputStreamReader(inputStream)).lines()
+				.collect(Collectors.joining("\n"));
+		} catch (IOException e) {
+			log.error("Error reading input file [{}] for version [{}]." + resourceName, version);
+			return null;
 		}
 	}
 }

@@ -343,6 +343,41 @@ public class Messages extends NLS {
 	public static String ServiceDiagnosis_UpTooltip;
 	public static String ServiceDiagnosis_DownTooltip;
 	public static String ServiceDiagnosis_View;
+	public static String StockManagementPreferencePage_tblclmnNewColumn_text;
+	public static String StockManagementPreferencePage_tblclmnNewColumn_text_1;
+	public static String StockManagementPreferencePage_tblclmnNewColumn_text_2;
+	public static String StockManagementPreferencePage_tblclmnNewColumn_text_3;
+	public static String StockManagementPreferencePage_group_text;
+	public static String StockManagementPreferencePage_lblCode_text;
+	public static String StockManagementPreferencePage_text_text;
+	public static String StockManagementPreferencePage_lblDescription_text;
+	public static String StockManagementPreferencePage_text_1_text;
+	public static String StockManagementPreferencePage_lblLocation_text;
+	public static String StockManagementPreferencePage_lblMachine_text;
+	public static String StockManagementPreferencePage_lblMachineuuid_text;
+	public static String StockManagementPreferencePage_txtOwner_text;
+	public static String StockManagementPreferencePage_lblOwner_text;
+	public static String StockManagementPreferencePage_lblNewLabel_text;
+	public static String StockManagementPreferencePage_lblResonsible_text;
+	public static String StockManagementPreferencePage_lblNewLabel_text_1;
+	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_toolTipText;
+	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_text;
+	public static String StockManagementPreferencePage_btnCheckButton_text;
+	public static String StockManagementPreferencePage_lblNewLabel_1_text;
+	public static String StockManagementPreferencePage_btnRadioButton_text;
+	public static String StockManagementPreferencePage_btnRadioButton_1_text;
+	public static String StockManagementPreferencePage_btnCheckButton_1_text;
+	public static String StockManagementPreferencePage_lblOwner_toolTipText;
+	public static String StockManagementPreferencePage_lblResponsible_toolTipText;
+	public static String StockManagementPreferencePage_lblMachine_toolTipText;
+	public static String StockManagementPreferencePage_lblLocation_toolTipText;
+	public static String StockManagementPreferencePage_lblCode_toolTipText;
+	public static String StockManagementPreferencePage_lblPrio_text;
+	public static String StockManagementPreferencePage_mntmNewItem_text;
+	public static String StockManagementPreferencePage_mntmNewItem_text_1;
+	public static String StockManagementPreferencePage_lblMachineConfig_text;
+	public static String SystemPreferencePage_editor_labelText;
+	public static String SystemPreferencePage_editor_labelText_1;
 	
 	static {
 		// load message values from bundle file

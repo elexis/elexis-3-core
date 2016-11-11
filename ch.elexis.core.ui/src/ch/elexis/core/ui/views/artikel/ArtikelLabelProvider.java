@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.stock.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
@@ -39,8 +39,9 @@ public class ArtikelLabelProvider extends DefaultLabelProvider implements ITable
 		if (element instanceof Artikel) {
 			Artikel art = (Artikel) element;
 			String ret = art.getInternalName();
-			if (art.isLagerartikel()) {
-				ret += " (" + Integer.toString(art.getTotalCount()) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			Integer amount = CoreHub.getStockService().getCumulatedStockForArticle(art);
+			if (amount != null) {
+				ret += " (" + Integer.toString(amount) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return ret;
 		}
@@ -48,35 +49,19 @@ public class ArtikelLabelProvider extends DefaultLabelProvider implements ITable
 	}
 	
 	/**
-	 * Lagerartikel are shown in blue, arrticles that should be ordered are shown in red
+	 * Lagerartikel are shown in blue, articles that should be ordered are shown in red
 	 */
 	public Color getForeground(Object element, int columnIndex){
 		if (element instanceof Artikel) {
 			Artikel art = (Artikel) element;
-			
-			if (art.isLagerartikel()) {
-				int trigger =
-					CoreHub.globalCfg.get(Preferences.INVENTORY_ORDER_TRIGGER,
-						Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
-				
-				int ist = art.getIstbestand();
-				int min = art.getMinbestand();
-				
-				boolean order = false;
-				switch (trigger) {
-				case Preferences.INVENTORY_ORDER_TRIGGER_BELOW:
-					order = (ist < min);
-					break;
-				case Preferences.INVENTORY_ORDER_TRIGGER_EQUAL:
-					order = (ist <= min);
-					break;
-				default:
-					order = (ist < min);
-				}
-				
-				if (order) {
+			Availability availability =
+				CoreHub.getStockService().getCumulatedAvailabilityForArticle(art);
+			if (availability != null) {
+				switch (availability) {
+				case CRITICAL_STOCK:
+				case OUT_OF_STOCK:
 					return UiDesk.getColor(UiDesk.COL_RED);
-				} else {
+				default:
 					return UiDesk.getColor(UiDesk.COL_BLUE);
 				}
 			}
@@ -86,7 +71,6 @@ public class ArtikelLabelProvider extends DefaultLabelProvider implements ITable
 	}
 	
 	public Color getBackground(Object element, int columnIndex){
-		
 		return null;
 	}
 }

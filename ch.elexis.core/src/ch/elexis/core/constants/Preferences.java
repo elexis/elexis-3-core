@@ -40,6 +40,11 @@ public class Preferences {
 	public static final String CFG_FOLDED_CONNECTION_CONNECTSTRING = "connectionstring";
 	public static final String CFG_STORED_JDBC_CONN = "verbindung/storedJDBCConnections/connection";
 	
+	
+	// Station
+	public static final String STATION_IDENT_ID = "station/identId";
+	public static final String STATION_IDENT_TEXT = "station/identText";
+	
 	// Ablauf
 	public static final String ABL_LANGUAGE = "ablauf/sprache"; //$NON-NLS-1$
 	public static final String ABL_LOGFILE = "ablauf/Log-Datei"; //$NON-NLS-1$
@@ -134,16 +139,8 @@ public class Preferences {
 	public static final String RNN_AMOUNT3RD = "rechnung/amount_3rd"; //$NON-NLS-1$
 	
 	// Lager
-	public static final String INVENTORY_ORDER_TRIGGER = "inventory/order_trigger"; //$NON-NLS-1$
-	public static final int INVENTORY_ORDER_TRIGGER_BELOW = 0;
-	public static final String INVENTORY_ORDER_TRIGGER_BELOW_VALUE = "0"; //$NON-NLS-1$
-	public static final int INVENTORY_ORDER_TRIGGER_EQUAL = 1;
-	public static final String INVENTORY_ORDER_TRIGGER_EQUAL_VALUE = "1"; //$NON-NLS-1$
-	public static final int INVENTORY_ORDER_TRIGGER_DEFAULT = INVENTORY_ORDER_TRIGGER_BELOW;
 	public static final String INVENTORY_CHECK_ILLEGAL_VALUES = "inventory/check_values"; //$NON-NLS-1$
 	public static final boolean INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT = true;
-	public static final String INVENTORY_MARK_AS_ORDERED = "inventory/set_orderstate";
-	public static final boolean INVENTORY_MARK_AS_ORDERED_DEFAULT = true;
 	
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$

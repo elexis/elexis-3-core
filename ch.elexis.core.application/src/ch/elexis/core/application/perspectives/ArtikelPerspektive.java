@@ -17,7 +17,6 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 import ch.elexis.core.ui.views.KompendiumView;
-import ch.elexis.core.ui.views.LagerView;
 import ch.elexis.core.ui.views.artikel.ArtikelView;
 
 /**
@@ -33,12 +32,7 @@ public class ArtikelPerspektive implements IPerspectiveFactory {
 		
 		IFolderLayout ifr = layout.createFolder("right", SWT.RIGHT, 1.0f, editorArea); //$NON-NLS-1$
 		ifr.addView(ArtikelView.ID);
-		ifr.addView(LagerView.ID);
 		ifr.addView(KompendiumView.ID);
-		
-		// layout.addView(Artikelliste.ID,SWT.RIGHT,0.5f,editorArea);
-		// layout.addView(Artikeldetail.ID,SWT.RIGHT,0.5f,editorArea);
-		
 	}
 	
 }

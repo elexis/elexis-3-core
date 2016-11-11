@@ -30,6 +30,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
@@ -162,7 +163,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	protected static AbstractCoreOperationAdvisor cod =
 		CoreOperationExtensionPoint.getCoreOperationAdvisor();
-		
+	
 	public static enum FieldType {
 			TEXT, LIST, JOINT
 	};
@@ -877,7 +878,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	private static String queryStickersString =
 		"SELECT etikette FROM " + Sticker.FLD_LINKTABLE + " WHERE obj=?";
-		
+	
 	/**
 	 * Return all Stickers attributed to this objecz
 	 * 
@@ -1005,25 +1006,25 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            the tableName
 	 * @param field
 	 *            the field name
-	  @return the database field or ERROR* if no mapping exists
+	 * @return the database field or ERROR* if no mapping exists
 	 * @since 3.1
 	 */
 	public static String map(final String tableName, final String field){
 		return map(tableName, field, true);
 	}
-
+	
 	/**
 	 * Return the database field corresponding to an internal Elexis field value
 	 *
 	 * @param tableName
 	 * @param field
 	 * @param markAsError
-	 *           whether to return ERROR* or <code>null</code> if no entry found
+	 *            whether to return ERROR* or <code>null</code> if no entry found
 	 * @return
 	 * @since 3.2
 	 */
 	public static String map(final String tableName, final String field, boolean markAsError){
-		if (field.equals("ID"))
+		if (FLD_ID.equalsIgnoreCase(field))
 			return field;
 		String res = mapping.get(tableName + field);
 		if (res == null) {
@@ -1034,7 +1035,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		return res;
 	}
-
+	
 	public FieldType getFieldType(final String f){
 		String mapped = map(f);
 		if (mapped.startsWith("LIST:")) {
@@ -1157,7 +1158,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		sql.append("SELECT ").append(mapped).append(" FROM ").append(table).append(" WHERE ID='")
 			.append(id).append("'");
-			
+		
 		Stm stm = getDBConnection().getStatement();
 		
 		String res = null;
@@ -1198,7 +1199,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		String table = getTableName();
 		sql.append("SELECT ").append(mapped).append(" FROM ").append(table).append(" WHERE ID='")
 			.append(id).append("'");
-			
+		
 		Stm stm = getDBConnection().getStatement();
 		
 		try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
@@ -1267,7 +1268,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		byte[] binaryRaw = getBinaryRaw(FLD_EXTINFO);
 		if (binaryRaw == null)
 			return null;
-			
+		
 		@SuppressWarnings("unchecked")
 		Map<Object, Object> ext = getMap(FLD_EXTINFO);
 		return ext.get(key);
@@ -1362,7 +1363,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			throw new PersistenceException(
 				new ElexisStatus(Status.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					"PersistentObject.setTriStateBoolean(): Error on saving value " + newVal
-					+ " to field " + field,
+						+ " to field " + field,
 					null));
 		}
 	}
@@ -1381,6 +1382,23 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<String> getList(final String field, final boolean reverse){
+		return getList(field, reverse, false);
+	}
+	
+	/**
+	 * Read a 1:n association from the database
+	 * 
+	 * @param field
+	 *            the field, as provided in the mapping declaration
+	 * @param reverse
+	 *            if <code>true</code> perform reverse ordering
+	 * @param includeDeleted
+	 *            if <code>true</code> include objects marked as deleted
+	 * @return
+	 * @since 3.2
+	 */
+	public List<String> getList(final String field, final boolean reverse,
+		final boolean includeDeleted){
 		StringBuffer sql = new StringBuffer();
 		String mapped = map(field);
 		if (mapped.startsWith("LIST:")) {
@@ -1390,7 +1408,9 @@ public abstract class PersistentObject implements IPersistentObject {
 				// String order=null;
 				
 				sql.append("SELECT ID FROM ").append(m[2]).append(" WHERE ");
-				sql.append("deleted=").append(JdbcLink.wrap("0")).append(" AND ");
+				if (!includeDeleted) {
+					sql.append("deleted=").append(JdbcLink.wrap("0")).append(" AND ");
+				}
 				
 				sql.append(m[1]).append("=").append(getWrappedId());
 				if (m.length > 3) {
@@ -1438,7 +1458,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 			sql.append(" FROM ").append(abfr[3]).append(" WHERE ").append(abfr[2]).append("=")
 				.append(getWrappedId());
-				
+			
 			Stm stm = getDBConnection().getStatement();
 			LinkedList<String[]> list = new LinkedList<String[]>();
 			try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
@@ -1490,8 +1510,13 @@ public abstract class PersistentObject implements IPersistentObject {
 		
 		if (value == null) {
 			getDBConnection().getCache().remove(key);
-			sql.append("UPDATE ").append(table).append(" SET ").append(mapped)
-				.append("=NULL, lastupdate=" + Long.toString(ts) + " WHERE ID=")
+			sql.append("UPDATE ").append(table).append(" SET ");
+			int i = -1;
+			while ((i = mapped.indexOf(StringConstants.COLON)) > 0) {
+				mapped = mapped.substring(i + 1);
+			}
+			sql.append(mapped);
+			sql.append("=NULL, lastupdate=" + Long.toString(ts) + " WHERE ID=")
 				.append(getWrappedId());
 			getDBConnection().exec(sql.toString());
 			return true;
@@ -1797,13 +1822,49 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true bei Erfolg
 	 */
 	protected boolean create(final String customID){
-		// String pattern=this.getClass().getSimpleName();
+		return create(customID, null, null);
+	}
+	
+	/**
+	 * Create a new object, persisting it into database, including the given fields and values.
+	 * 
+	 * @param customID
+	 *            if <code>null</code> generates an ID, else uses the provided
+	 * @param fields
+	 *            the fields to include in the insert statement, does currently NOT support special
+	 *            field types as defined in {@link #addMapping(String, String...)}. Use
+	 *            <code>null</code> if not applied
+	 * @param values
+	 *            the values, the length of this array must be equal to the fields array length. Use
+	 *            <code>null</code> if not applied
+	 * @return <code>true</code> if operation successful
+	 * @since 3.2
+	 */
+	protected boolean create(final String customID, final String[] fields, final String[] values){
 		if (customID != null) {
 			id = customID;
 		}
-		StringBuffer sql = new StringBuffer(300);
-		sql.append("INSERT INTO ").append(getTableName()).append("(ID) VALUES (")
-			.append(getWrappedId()).append(")");
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO " + getTableName() + " (");
+		
+		List<String> fieldS = new ArrayList<String>();
+		fieldS.add(FLD_ID);
+		List<String> valuesS = new ArrayList<String>();
+		valuesS.add(id);
+		if (fields != null && values != null && fields.length == values.length
+			&& fields.length > 0) {
+			fieldS.addAll(Arrays.asList(fields));
+			valuesS.addAll(Arrays.asList(values));
+		}
+		
+		sql.append(
+			fieldS.stream().map(s -> map(s)).reduce((u, t) -> u + StringConstants.COMMA + t).get());
+		sql.append(") VALUES (");
+		sql.append(valuesS.stream().map(s -> JdbcLink.wrap(ts(s)))
+			.reduce((u, t) -> u + StringConstants.COMMA + t).get());
+		sql.append(")");
+		
 		if (getDBConnection().exec(sql.toString()) != 0) {
 			setConstraint();
 			ElexisEventDispatcher.getInstance()
@@ -1836,6 +1897,19 @@ public abstract class PersistentObject implements IPersistentObject {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Effectively removes the object from the database by performing an SQL delete call.
+	 * 
+	 * @return whether the operation was successful
+	 * @since 3.2
+	 */
+	public boolean removeFromDatabase(){
+		log.debug("removeFromDatabase() [" + this.getClass().getName() + "@" + getId() + "]");
+		int result =
+			getDBConnection().exec("DELETE FROM " + getTableName() + " WHERE ID=" + getWrappedId());
+		return (result == 1);
 	}
 	
 	/**
@@ -2070,7 +2144,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					}
 					byte[] exp = CompEx.expand(is);
 					return exp != null ? StringTool.createString(exp) : null;
-					
+				
 				case 'V':
 					byte[] in = rs.getBytes(mapped.substring(4));
 					VersionedResource vr = VersionedResource.load(in);
@@ -2544,6 +2618,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	/**
 	 * Unfold a byte array as stored by {@link #flatten(Hashtable)}
+	 * 
 	 * @param flat
 	 * @return
 	 * @since 3.1
@@ -2829,11 +2904,11 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	public void addChangeListener(IChangeListener listener, String fieldToObserve){
-	
+		
 	}
 	
 	public void removeChangeListener(IChangeListener listener, String fieldObserved){
-	
+		
 	}
 	
 	/**
