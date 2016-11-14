@@ -40,6 +40,9 @@ public class Preferences {
 	public static final String CFG_FOLDED_CONNECTION_CONNECTSTRING = "connectionstring";
 	public static final String CFG_STORED_JDBC_CONN = "verbindung/storedJDBCConnections/connection";
 	
+	// Locale
+	/** 5292 assert network wide locale equality **/
+	public static final String CFG_LOCALE = "locale";
 	
 	// Station
 	public static final String STATION_IDENT_ID = "station/identId";

@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
@@ -483,6 +484,26 @@ public abstract class PersistentObject implements IPersistentObject {
 				log.error("User continues with Elexis / database version mismatch");
 			}
 		}
+		// verify locale
+		Locale locale = Locale.getDefault();
+		String dbStoredLocale = CoreHub.globalCfg.get(Preferences.CFG_LOCALE, null);
+		if (dbStoredLocale == null) {
+			CoreHub.globalCfg.set(Preferences.CFG_LOCALE, locale.toString());
+			CoreHub.globalCfg.flush();
+		} else {
+			if (!locale.toString().equals(dbStoredLocale)) {
+				String msg = String.format(
+					"Your locale %1s does not match the required database locale %2s. Ignore?",
+					dbStoredLocale, locale.toString());
+				log.error(msg);
+				if (!cod.openQuestion("Difference in locale setting ", msg)) {
+					System.exit(2);
+				} else {
+					log.error("User continues with difference locale set");
+				}
+			}
+		}
+		
 		connection.initTrace();
 		return true;
 	}
