@@ -1278,7 +1278,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * Set a value in the {@link #FLD_EXTINFO} field, will create an ExtInfo field if required
 	 * 
 	 * @param key
-	 * @param value to store, if <code>null</code> removes the respective entry
+	 * @param value
+	 *            to store, if <code>null</code> removes the respective entry
 	 * @since 3.0
 	 * @since 3.1 if value <code>null</code> removes the respective entry
 	 */
@@ -2782,15 +2783,24 @@ public abstract class PersistentObject implements IPersistentObject {
 				"TABLE"
 			});
 			if (rsTables != null) {
+				List<String> failedFirstRunTables = new ArrayList<String>();
 				while (rsTables.next()) {
-					// DatabaseMetaData#getTables() specifies TABLE_NAME is in
-					// column 3
-					tableName = rsTables.getString(3);
-					defaultConnection.exec("DROP TABLE " + tableName+ " CASCADE");
-					nrTables++;
+					try {
+						// DatabaseMetaData#getTables() specifies TABLE_NAME is in
+						// column 3
+						tableName = rsTables.getString(3);
+						defaultConnection.exec("DROP TABLE " + tableName + " CASCADE");
+						nrTables++;
+					} catch (JdbcLinkException e) {
+						log.warn("Failed table [{}] in first run with " + e.getMessage());
+						failedFirstRunTables.add(tableName);
+					}
+				}
+				for (String table : failedFirstRunTables) {
+					defaultConnection.exec("DROP TABLE " + table + " CASCADE");
 				}
 			}
-		} catch (SQLException e1) {
+		} catch (JdbcLinkException | SQLException e1) {
 			log.error("Error deleting table " + tableName);
 			return false;
 		} finally {
