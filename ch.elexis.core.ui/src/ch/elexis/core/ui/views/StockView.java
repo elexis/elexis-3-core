@@ -21,9 +21,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableColorProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -33,8 +30,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -44,17 +39,13 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.stock.IStockEntry;
-import ch.elexis.core.stock.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
-import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.StockSelectorDialog;
 import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
@@ -67,9 +58,9 @@ import ch.elexis.core.ui.util.viewers.CommonViewer.Message;
 import ch.elexis.core.ui.util.viewers.DefaultContentProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.WidgetProvider;
+import ch.elexis.core.ui.views.provider.StockEntryLabelProvider;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Stock;
@@ -95,7 +86,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				return new Query<StockEntry>(StockEntry.class).execute().toArray();
 			}
 			
-		}, new LagerLabelProvider() {}, null, new ViewerConfigurer.DefaultButtonProvider(),
+		}, new StockEntryLabelProvider() {}, null, new ViewerConfigurer.DefaultButtonProvider(),
 			new LagerWidgetProvider());
 		cv.create(vc, parent, SWT.NONE, getViewSite());
 		cv.getConfigurer().getContentProvider().startListening();
@@ -164,7 +155,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		};
 		
 	}
-
+	
 	@Override
 	public void setFocus(){
 		// cv.getConfigurer().getControlFieldProvider().setFocus();
@@ -175,71 +166,6 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		cv.getConfigurer().getContentProvider().stopListening();
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
-	}
-	
-	class LagerLabelProvider extends LabelProvider
-			implements ITableLabelProvider, ITableColorProvider {
-		
-		public Image getColumnImage(Object element, int columnIndex){
-			return null;
-		}
-		
-		public String getColumnText(Object element, int columnIndex){
-			StockEntry se = (StockEntry) element;
-			Artikel article = se.getArticle();
-			switch (columnIndex) {
-			case 0:
-				return se.getStock().getCode();
-			case 1:
-				return (article != null) ? article.getPharmaCode() : "";
-			case 2:
-				return (article != null) ? article.getEAN() : "";
-			case 3:
-				return (article != null) ? article.getLabel() : "";
-			case 4:
-				return Integer.toString(se.getCurrentStock());
-			case 5:
-				return Integer.toString(se.getMinimumStock());
-			case 6:
-				return Integer.toString(se.getMaximumStock());
-			case 7:
-				return (se.getProvider() != null) ? se.getProvider().getLabel()
-						: StringConstants.EMPTY;
-			default:
-				return StringConstants.EMPTY;
-			}
-			
-		}
-		
-		/**
-		 * Lagerartikel are shown in blue, articles that should be ordered are shown in red
-		 */
-		public Color getForeground(Object element, int columnIndex){
-			if (element instanceof StockEntry) {
-				StockEntry se = (StockEntry) element;
-				
-				Availability availability = StockService.determineAvailability(se);
-				if (availability != null) {
-					switch (availability) {
-					case CRITICAL_STOCK:
-					case OUT_OF_STOCK:
-						return UiDesk.getColor(UiDesk.COL_RED);
-					default:
-						return UiDesk.getColor(UiDesk.COL_BLUE);
-					}
-				}
-			}
-			return null;
-		}
-		
-		public Color getBackground(Object element, int columnIndex){
-			StockEntry se = (StockEntry) element;
-			Mandant owner = se.getStock().getOwner();
-			if (owner != null) {
-				return UiMandant.getColorForMandator(owner);
-			}
-			return null;
-		}
 	}
 	
 	class LagerWidgetProvider implements WidgetProvider {
@@ -348,9 +274,9 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2){
-				String s1 = ((LagerLabelProvider) cv.getConfigurer().getLabelProvider())
+				String s1 = ((StockEntryLabelProvider) cv.getConfigurer().getLabelProvider())
 					.getColumnText(e1, col).toLowerCase();
-				String s2 = ((LagerLabelProvider) cv.getConfigurer().getLabelProvider())
+				String s2 = ((StockEntryLabelProvider) cv.getConfigurer().getLabelProvider())
 					.getColumnText(e2, col).toLowerCase();
 				return s1.compareTo(s2);
 			}
@@ -424,12 +350,11 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		return true;
 	}
 	
-	public void activation(boolean mode){
-	}
+	public void activation(boolean mode){}
 	
 	public void visible(boolean mode){
 		if (mode) {
 			cv.notify(CommonViewer.Message.update);
-		} 
+		}
 	}
 }

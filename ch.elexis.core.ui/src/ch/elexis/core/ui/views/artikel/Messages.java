@@ -22,6 +22,7 @@ public class Messages extends NLS {
 	public static String ArtikelContextMenu_newActionTooltip;
 	public static String ArtikelContextMenu_pleaseEnterNameForArticle;
 	public static String ArtikelContextMenu_propertiesAction;
+	public static String ArtikelSelector_stockArticles;
 	public static String ArtikelContextMenu_propertiesTooltip;
 	public static String Artikeldetail_EAN;
 	public static String Artikeldetail_Einkaufspreis;

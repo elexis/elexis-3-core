@@ -14,24 +14,14 @@ package ch.elexis.core.ui.views.artikel;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DragSourceAdapter;
-import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -40,21 +30,21 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.stock.IStockService.Availability;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
-import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
-import ch.elexis.data.Artikel;
+import ch.elexis.core.ui.views.provider.StockEntryLabelProvider;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.StockEntry;
 import ch.rgw.tools.ExHandler;
 
 public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
+	public ArtikelSelektor(){}
+	
 	public static final String ID = "ch.elexis.ArtikelSelektor"; //$NON-NLS-1$
 	CTabFolder ctab;
 	TableViewer tv;
@@ -84,7 +74,7 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 		Composite c = new Composite(ctab, SWT.NONE);
 		c.setLayout(new GridLayout());
 		ci.setControl(c);
-		ci.setText("Lagerartikel"); //$NON-NLS-1$
+		ci.setText(Messages.ArtikelSelector_stockArticles);
 		Table table = new Table(c, SWT.SIMPLE | SWT.V_SCROLL);
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tv = new TableViewer(table);
@@ -100,53 +90,18 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 				final Object newInput){}
 			
 		});
-		// tv.setLabelProvider(new LagerLabelProvider());
-		tv.setLabelProvider(new ArtikelLabelProvider());
-		tv.addDragSupport(DND.DROP_COPY, new Transfer[] {
-			TextTransfer.getInstance()
-		}, new DragSourceAdapter() {
+		tv.setLabelProvider(new StockEntryLabelProvider() {
 			@Override
-			public void dragStart(final DragSourceEvent event){
-				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
-				if ((sel == null) || sel.isEmpty()) {
-					event.doit = false;
-				} else {
-					Object s = sel.getFirstElement();
-					if (s instanceof PersistentObject) {
-						PersistentObject po = (PersistentObject) s;
-						event.doit = po.isDragOK();
-					} else {
-						event.doit = false;
-					}
+			public String getColumnText(Object element, int columnIndex){
+				StockEntry se = (StockEntry) element;
+				String ret = se.getArticle().getName();
+				Integer amount =
+					CoreHub.getStockService().getCumulatedStockForArticle(se.getArticle());
+				if (amount != null) {
+					ret += " (" + Integer.toString(amount) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
+				return ret;
 			}
-			
-			@Override
-			public void dragSetData(final DragSourceEvent event){
-				IStructuredSelection isel = (IStructuredSelection) tv.getSelection();
-				StringBuilder sb = new StringBuilder();
-				Object[] sel = isel.toArray();
-				for (Object s : sel) {
-					if (s instanceof PersistentObject) {
-						sb.append(((PersistentObject) s).storeToString()).append(","); //$NON-NLS-1$
-					} else {
-						sb.append("error").append(","); //$NON-NLS-1$ //$NON-NLS-2$
-					}
-				}
-				event.data = sb.toString().replace(",$", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			
-		});
-		tv.addDoubleClickListener(new IDoubleClickListener() {
-			
-			public void doubleClick(final DoubleClickEvent event){
-				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
-				if ((sel != null) && (!sel.isEmpty())) {
-					Artikel art = (Artikel) sel.getFirstElement();
-					EditEigenartikelUi.executeWithParams(art);
-				}
-			}
-			
 		});
 		tv.setInput(this);
 	}
@@ -162,34 +117,32 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 		
 	}
 	
-	// replaced by ArtikelLabelProvider
-	
-	class LagerLabelProvider extends DefaultLabelProvider implements ITableLabelProvider {
-		
-		@Override
-		public Image getColumnImage(final Object element, final int columnIndex){
-			if (element instanceof Artikel) {
-				return null;
-			} else {
-				return Images.IMG_ACHTUNG.getImage();
-			}
-		}
-		
-		@Override
-		public String getColumnText(final Object element, final int columnIndex){
-			if (element instanceof Artikel) {
-				Artikel art = (Artikel) element;
-				Availability availability = CoreHub.getStockService().getCumulatedAvailabilityForArticle(art);
-				String ret = art.getInternalName();
-				if (availability!=null) {
-					ret += " (" + availability.toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-				}
-				return ret;
-			}
-			return super.getColumnText(element, columnIndex);
-		}
-		
-	}
+	//	class LagerLabelProvider extends DefaultLabelProvider implements ITableLabelProvider {
+	//		
+	//		@Override
+	//		public Image getColumnImage(final Object element, final int columnIndex){
+	//			if (element instanceof Artikel) {
+	//				return null;
+	//			} else {
+	//				return Images.IMG_ACHTUNG.getImage();
+	//			}
+	//		}
+	//		
+	//		@Override
+	//		public String getColumnText(final Object element, final int columnIndex){
+	//			if (element instanceof Artikel) {
+	//				Artikel art = (Artikel) element;
+	//				Availability availability = CoreHub.getStockService().getCumulatedAvailabilityForArticle(art);
+	//				String ret = art.getInternalName();
+	//				if (availability!=null) {
+	//					ret += " (" + availability.toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+	//				}
+	//				return ret;
+	//			}
+	//			return super.getColumnText(element, columnIndex);
+	//		}
+	//		
+	//	}
 	
 	/*
 	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
