@@ -773,7 +773,6 @@ public class LabeledInputField extends Composite {
 				case COMBO_VIEWER:
 					StructuredSelection selection =
 						def[i].selectionResolver.resolveStructuredSelection(val);
-					System.out.println(selection);
 					((StructuredViewer) (def[i].mine.getViewer())).setSelection(selection);
 					break;
 				}
