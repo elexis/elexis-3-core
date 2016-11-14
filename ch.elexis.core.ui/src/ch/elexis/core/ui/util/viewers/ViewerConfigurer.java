@@ -15,7 +15,6 @@ package ch.elexis.core.ui.util.viewers;
 import java.util.HashMap;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -44,7 +43,7 @@ import ch.rgw.tools.Tree;
 public class ViewerConfigurer {
 	
 	private ICommonViewerContentProvider contentProvider;
-	private BaseLabelProvider labelProvider;
+	private LabelProvider labelProvider;
 	ControlFieldProvider controlFieldProvider;
 	private ButtonProvider buttonProvider;
 	private WidgetProvider widgetProvider;
@@ -63,7 +62,7 @@ public class ViewerConfigurer {
 	 * @param wp
 	 * @param iscl
 	 */
-	public ViewerConfigurer(ICommonViewerContentProvider cnp, BaseLabelProvider lp,
+	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp,
 		ControlFieldProvider cfp, ButtonProvider bp, WidgetProvider wp, IDoubleClickListener idcl){
 		
 		contentProvider = cnp;
@@ -77,7 +76,7 @@ public class ViewerConfigurer {
 	/**
 	 * Standard Konstruktor. Erstellt einen Viewer mit Kontrollfeld und Button
 	 */
-	public ViewerConfigurer(ICommonViewerContentProvider cnp, BaseLabelProvider lp,
+	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp,
 		ControlFieldProvider cfp, ButtonProvider bp, WidgetProvider wp){
 		this(cnp, lp, cfp, bp, wp, null);
 	}
@@ -89,7 +88,7 @@ public class ViewerConfigurer {
 	 * @param lp
 	 * @param wp
 	 */
-	public ViewerConfigurer(ICommonViewerContentProvider cnp, BaseLabelProvider lp, WidgetProvider wp){
+	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp, WidgetProvider wp){
 		this(cnp, lp, null, new DefaultButtonProvider(), wp);
 	}
 	
@@ -219,7 +218,7 @@ public class ViewerConfigurer {
 		this.controlFieldProvider = controlFieldProvider;
 	}
 	
-	public BaseLabelProvider getLabelProvider(){
+	public LabelProvider getLabelProvider(){
 		return labelProvider;
 	}
 	
