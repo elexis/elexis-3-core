@@ -1,7 +1,6 @@
 package ch.elexis.core.ui.medication.handlers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -31,9 +30,7 @@ public class DispenseHandler extends AbstractHandler {
 		
 		ISelection selection =
 			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
-		if (selection.isEmpty()) {
-			prescRecipes = Arrays.asList(patient.getFixmedikation());
-		} else {
+		if (!selection.isEmpty()) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
 			for (MedicationTableViewerItem mtvItem : mtvItems) {

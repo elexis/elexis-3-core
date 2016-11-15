@@ -1,7 +1,6 @@
 package ch.elexis.core.ui.medication.handlers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -15,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.views.RezeptBlatt;
 import ch.elexis.data.Patient;
@@ -51,7 +51,7 @@ public class PrintTakingsListHandler extends AbstractHandler {
 				prescRecipes.addAll(strucSelection.toList());
 			}
 		} else {
-			prescRecipes = Arrays.asList(patient.getFixmedikation());
+			prescRecipes = patient.getMedication(EntryType.FIXED_MEDICATION);
 		}
 		
 		RezeptBlatt rpb;
