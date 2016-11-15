@@ -364,7 +364,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					StockEntry.TABLENAME, new String[] {
 						StockEntry.FLD_CURRENT, StockEntry.FLD_MAX
 				});
-				qbe.add(StockEntry.FLD_CURRENT, Query.LESS_OR_EQUAL, StockEntry.FLD_MIN);
+				qbe.add(StockEntry.FLD_CURRENT, Query.LESS, StockEntry.FLD_MIN);
 				List<StockEntry> stockEntries = qbe.execute();
 				for (StockEntry se : stockEntries) {
 					CoreHub.getOrderService().addRefillForStockEntryToOrder(se, actBestellung);
