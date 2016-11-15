@@ -24,12 +24,10 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.stock.IStockEntry;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
@@ -46,8 +44,7 @@ public class DailyOrderDialog extends TitleAreaDialog {
 	private DateTime dtDate;
 	private TableViewer tableViewer;
 	private Bestellung currOrder;
-	private Text textMessage;
-	
+
 	public DailyOrderDialog(Shell parentShell, Bestellung currOrder){
 		super(parentShell);
 		this.currOrder = currOrder;
@@ -103,12 +100,6 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		TableColumn tcArticle = tvc.getColumn();
 		tcLayout.setColumnData(tcArticle, new ColumnPixelData(300, true, true));
 		tcArticle.setText(Messages.DailyOrderDialog_Article);
-		
-		textMessage = new Text(area, SWT.BORDER | SWT.MULTI);
-		textMessage.setText(Messages.DailyOrderDialog_text_text);
-		GridData gd_textMessage = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_textMessage.heightHint = 50;
-		textMessage.setLayoutData(gd_textMessage);
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new OrderLabelProvider());
