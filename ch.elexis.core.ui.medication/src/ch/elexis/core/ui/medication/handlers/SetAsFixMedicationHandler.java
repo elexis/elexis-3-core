@@ -5,14 +5,14 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
-import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.data.Prescription;
 
 public class SetAsFixMedicationHandler extends AbstractHandler {
@@ -55,10 +55,8 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 							presc.setStopReason("Umgestellt auf Fix Medikation");
 						}
 					});
-					MedicationView medicationView =
-						(MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getActivePage().findView(MedicationView.PART_ID);
-					medicationView.refresh();
+					ElexisEventDispatcher.getInstance()
+						.fire(new ElexisEvent(presc, Prescription.class, ElexisEvent.EVENT_UPDATE));
 				}
 				
 			}
