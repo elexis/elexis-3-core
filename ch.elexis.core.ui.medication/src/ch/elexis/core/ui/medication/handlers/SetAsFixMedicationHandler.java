@@ -52,7 +52,7 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 								}
 							});
 							presc.stop(null);
-							presc.setStopReason("Umgestellt auf Reserve Medikation");
+							presc.setStopReason("Umgestellt auf Fix Medikation");
 						}
 					});
 					MedicationView medicationView =
