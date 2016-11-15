@@ -584,7 +584,7 @@ public class GlobalActions {
 			public void doRun(Fall element) {
 				if ((element.delete(false) == false)) {
 					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteCaseMessage,
-							Messages.GlobalActions_CouldntDeleteCaseExplanation + Messages.GlobalActions_93);
+						Messages.GlobalActions_CouldntDeleteCaseExplanation);
 				}
 				ElexisEventDispatcher.reload(Fall.class);
 			}

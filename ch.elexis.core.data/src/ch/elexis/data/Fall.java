@@ -592,16 +592,24 @@ public class Fall extends PersistentObject {
 	 * @return true if this Fall could be (and has been) deleted.
 	 */
 	public boolean delete(final boolean force){
-		Konsultation[] bh = getBehandlungen(false);
-		if ((bh.length == 0)
+		if (!hasDependent()
 			|| ((force == true) && (CoreHub.acl.request(AccessControlDefaults.DELETE_FORCED) == true))) {
-			for (Konsultation b : bh) {
+			for (Konsultation b : getBehandlungen(false)) {
 				b.delete(true);
 			}
 			delete_dependent();
 			return super.delete();
 		}
 		return false;
+	}
+	
+	private boolean hasDependent(){
+		Konsultation[] bh = getBehandlungen(false);
+		Query<AUF> qAUF = new Query<AUF>(AUF.class);
+		qAUF.add(AUF.FLD_CASE_ID, Query.EQUALS, getId());
+		Query<Rechnung> qRn = new Query<Rechnung>(Rechnung.class);
+		qRn.add(AUF.FLD_CASE_ID, Query.EQUALS, getId());
+		return (bh.length != 0) || !qAUF.execute().isEmpty() || !qRn.execute().isEmpty();
 	}
 	
 	private boolean delete_dependent(){
@@ -615,7 +623,6 @@ public class Fall extends PersistentObject {
 		for (Rechnung rn : qRn.execute()) {
 			rn.delete();
 		}
-		
 		return true;
 	}
 	

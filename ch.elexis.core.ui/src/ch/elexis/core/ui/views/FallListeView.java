@@ -26,13 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -108,6 +112,32 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		public void runInUi(final ElexisEvent ev){
 			Fall f = (Fall) ev.getObject();
 			setFall(f, null);
+		}
+	};
+	private IAction filterClosedAction = new Action("", Action.AS_CHECK_BOX) {
+		private ViewerFilter closedFilter;
+		{
+			setToolTipText(Messages.FaelleView_ShowOnlyOpenCase);
+			setImageDescriptor(Images.IMG_DOCUMENT_WRITE.getImageDescriptor());
+			closedFilter = new ViewerFilter() {
+				@Override
+				public boolean select(Viewer viewer, Object parentElement, Object element){
+					if (element instanceof Fall) {
+						Fall fall = (Fall) element;
+						return fall.isOpen();
+					}
+					return false;
+				}
+			};
+		}
+		
+		@Override
+		public void run(){
+			if (!isChecked()) {
+				fallViewer.getViewerWidget().removeFilter(closedFilter);
+			} else {
+				fallViewer.getViewerWidget().addFilter(closedFilter);
+			}
 		}
 	};
 	
@@ -262,7 +292,6 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		sash.setWeights(new int[] {
 			50, 50
 		});
-		// behandlungsFilter=null;
 		createMenuAndToolbar();
 		createContextMenu();
 		((DefaultContentProvider) fallCf.getContentProvider()).startListening();
@@ -335,7 +364,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		// mgr.add(filterAction);
 		IToolBarManager tmg = getViewSite().getActionBars().getToolBarManager();
 		tmg.add(GlobalActions.helpAction);
-		// tmg.add(filterAction);
+		tmg.add(filterClosedAction);
 	}
 	
 	@Override

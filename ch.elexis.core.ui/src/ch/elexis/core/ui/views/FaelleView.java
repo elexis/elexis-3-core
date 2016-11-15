@@ -25,6 +25,8 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IFilter;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PartInitException;
@@ -55,6 +57,7 @@ public class FaelleView extends ViewPart implements IActivationListener {
 	TableViewer tv;
 	ViewMenus menus;
 	private IAction konsFilterAction;
+	private IAction filterClosedAction;
 	private final FallKonsFilter filter = new FallKonsFilter();
 	
 	private final ElexisUiEventListenerImpl eeli_pat =
@@ -97,7 +100,7 @@ public class FaelleView extends ViewPart implements IActivationListener {
 		tv.setLabelProvider(new FaelleLabelProvider());
 		tv.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
 		menus = new ViewMenus(getViewSite());
-		menus.createToolbar(neuerFallAction, konsFilterAction);
+		menus.createToolbar(neuerFallAction, konsFilterAction, filterClosedAction);
 		menus.createViewerContextMenu(tv, delFallAction, openFallaction, reopenFallAction,
 			makeBillAction);
 		GlobalEventDispatcher.addActivationListener(this, this);
@@ -162,6 +165,32 @@ public class FaelleView extends ViewPart implements IActivationListener {
 				}
 			}
 			
+		};
+		filterClosedAction = new Action("", Action.AS_CHECK_BOX) {
+			private ViewerFilter closedFilter;
+			{
+				setToolTipText(Messages.FaelleView_ShowOnlyOpenCase); //$NON-NLS-1$
+				setImageDescriptor(Images.IMG_DOCUMENT_WRITE.getImageDescriptor());
+				closedFilter = new ViewerFilter() {
+					@Override
+					public boolean select(Viewer viewer, Object parentElement, Object element){
+						if (element instanceof Fall) {
+							Fall fall = (Fall) element;
+							return fall.isOpen();
+						}
+						return false;
+					}
+				};
+			}
+			
+			@Override
+			public void run(){
+				if (!isChecked()) {
+					tv.removeFilter(closedFilter);
+				} else {
+					tv.addFilter(closedFilter);
+				}
+			}
 		};
 	}
 	

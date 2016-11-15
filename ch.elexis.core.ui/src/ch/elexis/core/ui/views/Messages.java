@@ -119,6 +119,7 @@ public class Messages extends NLS {
 	public static String DiagnosenDisplay_RemoveDiagnoses;
 	public static String FaelleView_FilterConsultations;
 	public static String FaelleView_ShowOnlyConsOfThisCase;
+	public static String FaelleView_ShowOnlyOpenCase;
 	public static String FaelleView_partName;
 	public static String FallDetailBlatt2_29;
 	public static String FallDetailBlatt2_ApplyData;
