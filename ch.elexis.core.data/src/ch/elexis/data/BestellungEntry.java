@@ -29,7 +29,7 @@ public class BestellungEntry extends PersistentObject implements IOrderEntry {
 	
 	static {
 		addMapping(TABLENAME, FLD_BESTELLUNG, FLD_ARTICLE_TYPE, FLD_ARTICLE_ID, FLD_STOCK,
-			FLD_STATE + "S:N:" + FLD_STATE, FLD_COUNT + "=S:N:" + FLD_COUNT, FLD_PROVIDER);
+			FLD_STATE + "=S:N:" + FLD_STATE, FLD_COUNT + "=S:N:" + FLD_COUNT, FLD_PROVIDER);
 	}
 	
 	protected BestellungEntry(){}
