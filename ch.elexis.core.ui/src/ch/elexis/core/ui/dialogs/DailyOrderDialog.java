@@ -76,7 +76,7 @@ public class DailyOrderDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				loadArticlesUsedOnSelectedDay();
-				tableViewer.refresh(true);
+				tableViewer.setInput(currOrder.getEntries());
 			}
 		});
 		
