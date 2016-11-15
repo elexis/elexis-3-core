@@ -15,6 +15,7 @@ package ch.elexis.core.ui.exchange.elements;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Brief;
@@ -79,7 +80,7 @@ public class MedicalElement extends XChangeElement {
 			}
 			
 		}
-		Prescription[] medis = p.getFixmedikation();
+		List<Prescription> medis = p.getMedication(EntryType.FIXED_MEDICATION);
 		for (Prescription medi : medis) {
 			add(new MedicationElement().asExporter(parent, medi));
 		}
