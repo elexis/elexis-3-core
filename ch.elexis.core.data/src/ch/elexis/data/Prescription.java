@@ -46,12 +46,19 @@ public class Prescription extends PersistentObject {
 	/**
 	 * <ul>
 	 * <li><code>null</code> entry for fixed medication
-	 * <li><code>Direktabgabe</code> was dispensed in the course of a consultation
+	 * <li><code>Direktabgabe</code> was dispensed in the course of a consultation, deprecated
 	 * <li><code>Rezept-ID</code> dispensed in the form of a recipe, where the resp. ID is shown
 	 * </ul>
 	 */
 	public static final String FLD_REZEPT_ID = "RezeptID";
+	/**
+	 * Not used anymore.
+	 */
 	public static final String FLD_ARTICLE_ID = "ArtikelID";
+	/**
+	 * Is set with {@link IPersistentObject#storeToString()}. Can be loaded by
+	 * {@link PersistentObjectFactory}.
+	 */
 	public static final String FLD_ARTICLE = "Artikel";
 	public static final String FLD_PATIENT_ID = "PatientID";
 	public static final String FLD_EXT_TERMS = "terms";
