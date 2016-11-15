@@ -378,6 +378,9 @@ public class Messages extends NLS {
 	public static String StockManagementPreferencePage_lblMachineConfig_text;
 	public static String SystemPreferencePage_editor_labelText;
 	public static String SystemPreferencePage_editor_labelText_1;
+	public static String StockManagementPreferencePage_lblNewLabel_1_text_1;
+	public static String StockManagementPreferencePage_linkDefaultArticleProvider_text;
+	public static String StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText;
 	
 	static {
 		// load message values from bundle file

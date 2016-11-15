@@ -2,6 +2,7 @@ package ch.elexis.data;
 
 import org.apache.commons.lang.StringUtils;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.stock.IStockEntry;
@@ -37,11 +38,14 @@ public class StockEntry extends PersistentObject implements IStockEntry {
 	}
 	
 	public StockEntry(Stock stock, PersistentObject article){
+		String provider =
+			CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 		String[] fields = new String[] {
-			FLD_STOCK, FLD_ARTICLE_TYPE, FLD_ARTICLE_ID
+			FLD_STOCK, FLD_ARTICLE_TYPE, FLD_ARTICLE_ID, FLD_PROVIDER
 		};
 		String[] values = new String[] {
-			stock.getId(), article.getClass().getName(), article.getId()
+			stock.getId(), article.getClass().getName(), article.getId(),
+			(provider != null) ? provider : null
 		};
 		create(null, fields, values);
 	}

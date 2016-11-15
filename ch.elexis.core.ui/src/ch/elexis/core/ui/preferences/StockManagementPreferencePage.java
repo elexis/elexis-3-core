@@ -75,6 +75,8 @@ public class StockManagementPreferencePage extends PreferencePage
 	private TableViewer tableViewer;
 	private Text txtMachineConfig;
 	private Label lblMachineuuid;
+
+	private Label lblDefaultArticleProvider;
 	
 	/**
 	 * Create the preference page.
@@ -382,6 +384,50 @@ public class StockManagementPreferencePage extends PreferencePage
 
 		btnChkStoreInvalidNumbers = new Button(container, SWT.CHECK);
 		btnChkStoreInvalidNumbers.setText(Messages.LagerverwaltungPrefs_checkForInvalid);
+		
+		Composite compDefaultProvider = new Composite(container, SWT.NONE);
+		compDefaultProvider.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		GridLayout gl_compDefaultProvider = new GridLayout(3, false);
+		gl_compDefaultProvider.marginWidth = 0;
+		gl_compDefaultProvider.marginHeight = 0;
+		compDefaultProvider.setLayout(gl_compDefaultProvider);
+		
+		Link linkDefaultArticleProvider = new Link(compDefaultProvider, SWT.NONE);
+		linkDefaultArticleProvider.setToolTipText(
+			Messages.StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText);
+		linkDefaultArticleProvider
+			.setText(Messages.StockManagementPreferencePage_linkDefaultArticleProvider_text);
+		linkDefaultArticleProvider.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Kontakt.class,
+					"Standard-Lieferant auswählen",
+					"Bitte selektieren Sie den Standard-Lieferanten", new String[] {});
+				int ret = ks.open();
+				if (ret == Window.OK) {
+					Kontakt p = (Kontakt) ks.getSelection();
+					if (p != null) {
+						CoreHub.globalCfg.set(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER,
+							p.getId());
+						lblDefaultArticleProvider.setText(p.getLabel());
+					}
+				} else {
+					CoreHub.globalCfg.remove(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER);
+					lblDefaultArticleProvider.setText("");
+				}
+			}
+		});
+		
+		lblDefaultArticleProvider = new Label(compDefaultProvider, SWT.NONE);
+		lblDefaultArticleProvider.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		String id = CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+		lblDefaultArticleProvider.setText("");
+		if(id!=null) {
+			Kontakt load = Kontakt.load(id);
+			if(load.exists()) {
+				lblDefaultArticleProvider.setText(load.getLabel());
+			}
+		}
 		
 		tableViewer.setInput(new Query<Stock>(Stock.class).execute());
 		m_bindingContext = initDataBindings();

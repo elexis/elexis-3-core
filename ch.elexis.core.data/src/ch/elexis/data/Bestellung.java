@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.IRunnableWithProgress;
@@ -148,6 +149,18 @@ public class Bestellung extends PersistentObject implements IOrder {
 	
 	public BestellungEntry addBestellungEntry(Artikel article, Stock stock, Kontakt provider,
 		int num){
+		
+		if (provider == null) {
+			String providerId =
+				CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+			if (providerId != null) {
+				Kontakt defProvider = Kontakt.load(providerId);
+				if (defProvider.exists()) {
+					provider = defProvider;
+				}
+			}
+		}
+		
 		BestellungEntry i = findBestellungEntry(stock, article);
 		if (i != null) {
 			int count = i.getCount();
