@@ -171,7 +171,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	class LagerWidgetProvider implements WidgetProvider {
 		String[] columns = {
 			Messages.LagerView_stock, Messages.LagerView_pharmacode, Messages.LagerView_gtin,
-			Messages.LagerView_name, Messages.LagerView_istBestand, Messages.LagerView_minBestand,
+			Messages.LagerView_name, Messages.LagerView_minBestand, Messages.LagerView_istBestand,
 			Messages.LagerView_maxBestand, Messages.LagerView_dealer
 		};
 		int[] colwidth = {
@@ -200,9 +200,9 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				
 				PersistentObjectEditingSupport poes = null;
 				if (i == 4) {
-					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_CURRENT);
-				} else if (i == 5) {
 					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MIN);
+				} else if (i == 5) {
+					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_CURRENT);
 				} else if (i == 6) {
 					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MAX);
 				}
