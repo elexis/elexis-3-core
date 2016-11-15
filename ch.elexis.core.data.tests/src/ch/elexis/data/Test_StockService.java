@@ -198,4 +198,28 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 		assertEquals(1, stockService.findAllStockEntriesForArticle(artikel_C.storeToString()).size());
 	}
 	
+	@Test
+	public void testQueryMappedExpressionNumeric() {
+		Stock stock = new Stock("TestStock", 20);
+		Artikel art = new Artikel("TestARtikel", "Eigenartikel");
+		Artikel art2 = new Artikel("TestARtikel2", "Eigenartikel");
+		Artikel art3 = new Artikel("TestARtikel3", "Eigenartikel");
+		IStockEntry se = CoreHub.getStockService().storeArticleInStock(stock, art.storeToString());
+		se.setCurrentStock(12);
+		se.setMaximumStock(10);
+		se.setMinimumStock(5);
+		se = CoreHub.getStockService().storeArticleInStock(stock, art2.storeToString());
+		se.setCurrentStock(12);
+		se.setMaximumStock(12);
+		se.setMinimumStock(5);
+		se = CoreHub.getStockService().storeArticleInStock(stock, art3.storeToString());
+		se.setCurrentStock(4);
+		se.setMaximumStock(12);
+		se.setMinimumStock(5);
+		Query<StockEntry> qbe = new Query<StockEntry>(StockEntry.class);
+		qbe.add(StockEntry.FLD_STOCK, Query.EQUALS, stock.getId());
+		qbe.add(StockEntry.FLD_CURRENT, Query.LESS_OR_EQUAL, StockEntry.FLD_MIN);
+		List<StockEntry> execute = qbe.execute();
+		assertEquals(1, execute.size());
+	}
 }

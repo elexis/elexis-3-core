@@ -366,6 +366,8 @@ public class Query<T> {
 			append(table + ".ID=" + firsttable + "ID");
 			// append(mapped,operator,wert);
 			
+		} else if ((mapped.startsWith("S:N:"))) {
+			mapped = mapped.substring(4);
 		} else if (mapped.matches(".*:.*")) {
 			log.error("Ungültiges Feld " + feld);
 			return false;
@@ -381,6 +383,9 @@ public class Query<T> {
 			append(mapped, "IS", operator, "NULL");
 		} else {
 			if (mappedValue != null && !mappedValue.equals(wert)) {
+				if(mappedValue.startsWith("S:N:")) {
+					mappedValue = mappedValue.substring(4);
+				}
 				append(mapped, operator, mappedValue);
 			} else {
 				wert = PersistentObject.getDefaultConnection().wrapFlavored(wert);
