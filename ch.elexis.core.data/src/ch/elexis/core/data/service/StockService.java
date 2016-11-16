@@ -4,8 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.article.IArticle;
 import ch.elexis.core.stock.IStock;
@@ -87,34 +90,41 @@ public class StockService implements IStockService {
 				"No stock entry for article found");
 		}
 		
-		int fractionUnits = se.getFractionUnits();
-		int ve = article.getSellingUnit();
-		int vk = article.getPackageUnit();
-		
-		if (vk == 0) {
-			if (ve != 0) {
-				vk = ve;
-			}
-		}
-		if (ve == 0) {
-			if (vk != 0) {
-				ve = vk;
-			}
-		}
-		int num = count * ve;
-		int cs = se.getCurrentStock();
-		if (vk == ve) {
-			se.setCurrentStock(cs - count);
+		LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking((StockEntry) se, 1,
+			new NullProgressMonitor());
+		if (lr.isOk()) {
+			int fractionUnits = se.getFractionUnits();
+			int ve = article.getSellingUnit();
+			int vk = article.getPackageUnit();
 			
-		} else {
-			int rest = fractionUnits - num;
-			while (rest < 0) {
-				rest = rest + vk;
-				se.setCurrentStock(cs - 1);
+			if (vk == 0) {
+				if (ve != 0) {
+					vk = ve;
+				}
 			}
-			se.setFractionUnits(rest);
+			if (ve == 0) {
+				if (vk != 0) {
+					ve = vk;
+				}
+			}
+			int num = count * ve;
+			int cs = se.getCurrentStock();
+			if (vk == ve) {
+				se.setCurrentStock(cs - count);
+				
+			} else {
+				int rest = fractionUnits - num;
+				while (rest < 0) {
+					rest = rest + vk;
+					se.setCurrentStock(cs - 1);
+				}
+				se.setFractionUnits(rest);
+			}
+			CoreHub.getLocalLockService().releaseLock((StockEntry) se);
+			return Status.OK_STATUS;
 		}
-		return Status.OK_STATUS;
+		
+		return new Status(Status.WARNING, CoreHub.PLUGIN_ID, "Could not acquire lock");
 	}
 	
 	public void performSingleReturn(IArticle article, int count){
@@ -135,33 +145,39 @@ public class StockService implements IStockService {
 				"No stock entry for article found");
 		}
 		
-		int fractionUnits = se.getFractionUnits();
-		int ve = article.getSellingUnit();
-		int vk = article.getPackageUnit();
-		
-		if (vk == 0) {
-			if (ve != 0) {
-				vk = ve;
+		LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking((StockEntry) se, 1,
+			new NullProgressMonitor());
+		if (lr.isOk()) {
+			int fractionUnits = se.getFractionUnits();
+			int ve = article.getSellingUnit();
+			int vk = article.getPackageUnit();
+			
+			if (vk == 0) {
+				if (ve != 0) {
+					vk = ve;
+				}
 			}
-		}
-		if (ve == 0) {
-			if (vk != 0) {
-				ve = vk;
+			if (ve == 0) {
+				if (vk != 0) {
+					ve = vk;
+				}
 			}
-		}
-		int num = count * ve;
-		int cs = se.getCurrentStock();
-		if (vk == ve) {
-			se.setCurrentStock(cs + count);
-		} else {
-			int rest = fractionUnits + num;
-			while (rest > vk) {
-				rest = rest - vk;
-				se.setCurrentStock(cs + 1);
+			int num = count * ve;
+			int cs = se.getCurrentStock();
+			if (vk == ve) {
+				se.setCurrentStock(cs + count);
+			} else {
+				int rest = fractionUnits + num;
+				while (rest > vk) {
+					rest = rest - vk;
+					se.setCurrentStock(cs + 1);
+				}
+				se.setFractionUnits(rest);
 			}
-			se.setFractionUnits(rest);
+			CoreHub.getLocalLockService().releaseLock((StockEntry) se);
+			return Status.OK_STATUS;
 		}
-		return Status.OK_STATUS;
+		return new Status(Status.WARNING, CoreHub.PLUGIN_ID, "Could not acquire lock");
 	}
 	
 	@Override
@@ -290,10 +306,13 @@ public class StockService implements IStockService {
 	public void unstoreArticleFromStock(IStock stock, String article){
 		IStockEntry stockEntry = findStockEntryForArticleInStock((Stock) stock, article);
 		if (stockEntry != null) {
-			LockResponse lr = CoreHub.getLocalLockService().acquireLock((StockEntry) stockEntry);
+			LockResponse lr = CoreHub.getLocalLockService()
+				.acquireLockBlocking((StockEntry) stockEntry, 1, new NullProgressMonitor());
 			if (lr.isOk()) {
 				((StockEntry) stockEntry).delete();
 				CoreHub.getLocalLockService().releaseLock(((StockEntry) stockEntry));
+			} else {
+				log.warn("Could not unstore article [{}]", article);
 			}
 		}
 	}
