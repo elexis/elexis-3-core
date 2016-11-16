@@ -116,7 +116,8 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 				if (text != null) {
 					String divDecodedText = text.replaceAll(
 						"<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>", "");
-					divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n");
+					divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n")
+						.replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<");
 					return Optional.of(divDecodedText);
 				}
 			}
@@ -133,7 +134,8 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 			if (narrative == null) {
 				narrative = new Narrative();
 			}
-			String divEncodedText = text.replaceAll("(\r\n|\r|\n)", "<br />");
+			String divEncodedText = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+				.replaceAll("&", "&amp;").replaceAll("(\r\n|\r|\n)", "<br />");
 			narrative.setDivAsString(divEncodedText);
 			domainResource.setText(narrative);
 			saveResource(domainResource);
