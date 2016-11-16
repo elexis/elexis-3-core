@@ -8,11 +8,14 @@ import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.fhir.po.model.Encounter;
+import ch.elexis.core.findings.fhir.po.model.util.ModelUtil;
+import ch.elexis.core.findings.fhir.po.model.util.TransientCoding;
 import ch.elexis.core.findings.fhir.po.service.FindingsService;
 import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.text.model.Samdas;
@@ -153,6 +156,13 @@ public class MigratorService implements IMigratorService {
 		if (vr != null) {
 			Samdas samdas = new Samdas(vr.getHead());
 			encounter.setText(samdas.getRecordText());
+		}
+		
+		List<ICoding> coding = encounter.getType();
+		if (!ModelUtil.isSystemInList("www.elexis.info/encounter/type", coding)) {
+			coding.add(new TransientCoding("www.elexis.info/encounter/type", "text",
+				"Nicht strukturierte Konsultation"));
+			encounter.setType(coding);
 		}
 		
 		findingsService.saveFinding(encounter);

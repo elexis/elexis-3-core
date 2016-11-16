@@ -24,6 +24,22 @@ public interface IEncounter extends IFinding {
 	public void setServiceProviderId(String serviceProviderId);
 	
 	/**
+	 * Get the specific type of the encounter. Since there are many ways to
+	 * classify encounters, there is a list.
+	 * 
+	 * @return
+	 */
+	public List<ICoding> getType();
+
+	/**
+	 * Set the specific type of the encounter. Since there are many ways to classify
+	 * encounters, there is a list.
+	 * 
+	 * @return
+	 */
+	public void setType(List<ICoding> coding);
+
+	/**
 	 * Get all {@link ICondition} entries linked to this encounter. The reason the encounter takes
 	 * place.
 	 * 

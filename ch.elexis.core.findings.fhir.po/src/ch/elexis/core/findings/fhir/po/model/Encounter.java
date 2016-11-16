@@ -2,16 +2,20 @@ package ch.elexis.core.findings.fhir.po.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 import ca.uhn.fhir.model.primitive.IdDt;
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IEncounter;
+import ch.elexis.core.findings.fhir.po.model.util.ModelUtil;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.VersionInfo;
 
@@ -204,5 +208,40 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 			fhirEncounter.setIndication(theIndication);
 		}
 		saveResource(resource.get());
+	}
+	
+	@Override
+	public List<ICoding> getType(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
+				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
+			List<CodeableConcept> codeableConcepts = fhirEncounter.getType();
+			if (codeableConcepts != null) {
+				ArrayList<ICoding> ret = new ArrayList<>();
+				for (CodeableConcept codeableConcept : codeableConcepts) {
+					ret.addAll(ModelUtil.getCodingsFromConcept(codeableConcept));
+				}
+				return ret;
+			}
+		}
+		return Collections.emptyList();
+	}
+	
+	@Override
+	public void setType(List<ICoding> coding){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
+				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
+			List<CodeableConcept> codeableConcepts = fhirEncounter.getType();
+			if (!codeableConcepts.isEmpty()) {
+				codeableConcepts.clear();
+			}
+			CodeableConcept codeableConcept = new CodeableConcept();
+			ModelUtil.setCodingsToConcept(codeableConcept, coding);
+			fhirEncounter.setType(Collections.singletonList(codeableConcept));
+			saveResource(resource.get());
+		}
 	}
 }
