@@ -25,7 +25,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	protected static final String VERSION = "1.0.0";
 	
 	public static final String FLD_PATIENTID = "patientid"; //$NON-NLS-1$
-	public static final String FLD_SERVICEPROVIDERID = "serviceproviderid"; //$NON-NLS-1$
+	public static final String FLD_MANDATORID = "mandatorid"; //$NON-NLS-1$
 	public static final String FLD_CONSULTATIONID = "consultationid"; //$NON-NLS-1$
 	
 	//@formatter:off
@@ -35,7 +35,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	"lastupdate 		BIGINT," +
 	"deleted			CHAR(1) default '0'," + 
 	"patientid	        VARCHAR(80)," +
-	"serviceproviderid  VARCHAR(80)," +
+	"mandatorid         VARCHAR(80)," +
 	"consultationid     VARCHAR(80)," +
 	"content      		TEXT" + ");" + 
 	"CREATE INDEX CH_ELEXIS_CORE_FINDINGS_ENCOUNTER_IDX1 ON " + TABLENAME + " (patientid);" +
@@ -44,7 +44,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	//@formatter:on
 	
 	static {
-		addMapping(TABLENAME, FLD_PATIENTID, FLD_SERVICEPROVIDERID, FLD_CONSULTATIONID,
+		addMapping(TABLENAME, FLD_PATIENTID, FLD_MANDATORID, FLD_CONSULTATIONID,
 			FLD_CONTENT);
 		
 		Encounter version = load("VERSION");
@@ -103,13 +103,13 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	}
 	
 	@Override
-	public String getServiceProviderId(){
-		return get(FLD_SERVICEPROVIDERID);
+	public String getMandatorId(){
+		return get(FLD_MANDATORID);
 	}
 	
 	@Override
-	public void setServiceProviderId(String serviceProviderId){
-		set(FLD_SERVICEPROVIDERID, serviceProviderId);
+	public void setMandatorId(String serviceProviderId){
+		set(FLD_MANDATORID, serviceProviderId);
 	}
 	
 	@Override

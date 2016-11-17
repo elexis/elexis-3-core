@@ -137,7 +137,7 @@ public class MigratorService implements IMigratorService {
 	
 	private void updateEncounter(IEncounter encounter, Konsultation cons){
 		encounter.setConsultationId(cons.getId());
-		encounter.setServiceProviderId(cons.getMandant().getId());
+		encounter.setMandatorId(cons.getMandant().getId());
 		
 		LocalDate encounterDate = new TimeTool(cons.getDatum()).toLocalDate();
 		if (encounterDate != null) {
