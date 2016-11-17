@@ -1,7 +1,10 @@
 package ch.elexis.core.findings.fhir.po.model;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.data.PersistentObject;
@@ -85,5 +88,29 @@ public class ProcedureRequest extends AbstractFhirPersistentObject implements IP
 	@Override
 	public void setPatientId(String patientId){
 		set(FLD_PATIENTID, patientId);
+	}
+	
+	@Override
+	public List<ICoding> getCoding(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setCoding(List<ICoding> coding){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public Optional<LocalDateTime> getScheduledTime(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setScheduledTime(LocalDateTime time){
+		// TODO Auto-generated method stub
+		
 	}
 }
