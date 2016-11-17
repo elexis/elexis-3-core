@@ -37,7 +37,7 @@ public class EncounterTest {
 		FindingsServiceComponent.getService().saveFinding(encounter);
 		
 		List<IFinding> encounters = FindingsServiceComponent.getService()
-			.getConsultationsFindings(AllTests.CONSULTATION_ID, IEncounter.class);
+				.getConsultationsFindings(AllTests.CONSULTATION_ID, IEncounter.class);
 		assertNotNull(encounters);
 		assertFalse(encounters.isEmpty());
 		assertEquals(1, encounters.size());

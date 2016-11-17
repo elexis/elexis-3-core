@@ -19,9 +19,9 @@ public interface IEncounter extends IFinding {
 	
 	public void setConsultationId(String consultationId);
 	
-	public String getServiceProviderId();
+	public String getMandatorId();
 	
-	public void setServiceProviderId(String serviceProviderId);
+	public void setMandatorId(String mandatorId);
 	
 	/**
 	 * Get the specific type of the encounter. Since there are many ways to

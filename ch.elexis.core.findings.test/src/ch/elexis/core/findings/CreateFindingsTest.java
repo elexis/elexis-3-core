@@ -28,12 +28,14 @@ public class CreateFindingsTest {
 		assertNotNull(factory);
 		IEncounter encounter = factory.createEncounter();
 		assertNotNull(encounter);
+		assertNotNull(encounter.getId());
+		assertFalse(encounter.getId().isEmpty());
 		encounter.setConsultationId(AllTests.CONSULTATION_ID);
 		encounter.setPatientId(AllTests.PATIENT_ID);
 		FindingsServiceComponent.getService().saveFinding(encounter);
 		
 		List<IFinding> encounters = FindingsServiceComponent.getService()
-			.getConsultationsFindings(AllTests.CONSULTATION_ID, IEncounter.class);
+				.getConsultationsFindings(AllTests.CONSULTATION_ID, IEncounter.class);
 		assertNotNull(encounters);
 		assertFalse(encounters.isEmpty());
 		assertEquals(1, encounters.size());
@@ -71,7 +73,7 @@ public class CreateFindingsTest {
 		FindingsServiceComponent.getService().saveFinding(clinicalImpression);
 		
 		List<IFinding> clinicalImpressions = FindingsServiceComponent.getService()
-			.getConsultationsFindings(AllTests.CONSULTATION_ID, IClinicalImpression.class);
+				.getConsultationsFindings(AllTests.CONSULTATION_ID, IClinicalImpression.class);
 		assertNotNull(clinicalImpressions);
 		assertFalse(clinicalImpressions.isEmpty());
 		assertEquals(1, clinicalImpressions.size());
@@ -92,7 +94,7 @@ public class CreateFindingsTest {
 		FindingsServiceComponent.getService().saveFinding(observation);
 		
 		List<IFinding> observations = FindingsServiceComponent.getService()
-			.getConsultationsFindings(AllTests.CONSULTATION_ID, IObservation.class);
+				.getConsultationsFindings(AllTests.CONSULTATION_ID, IObservation.class);
 		assertNotNull(observations);
 		assertFalse(observations.isEmpty());
 		assertEquals(1, observations.size());
@@ -113,7 +115,7 @@ public class CreateFindingsTest {
 		FindingsServiceComponent.getService().saveFinding(procedureRequest);
 		
 		List<IFinding> procedureRequests = FindingsServiceComponent.getService()
-			.getConsultationsFindings(AllTests.CONSULTATION_ID, IProcedureRequest.class);
+				.getConsultationsFindings(AllTests.CONSULTATION_ID, IProcedureRequest.class);
 		assertNotNull(procedureRequests);
 		assertFalse(procedureRequests.isEmpty());
 		assertEquals(1, procedureRequests.size());

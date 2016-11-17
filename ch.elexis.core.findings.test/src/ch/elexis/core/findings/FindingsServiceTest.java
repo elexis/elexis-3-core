@@ -24,7 +24,7 @@ public class FindingsServiceTest {
 	@Test
 	public void getFindingsForConsultation(){
 		List<IFinding> finding =
-			FindingsServiceComponent.getService().getConsultationsFindings("abc", IFinding.class);
+				FindingsServiceComponent.getService().getConsultationsFindings("abc", IFinding.class);
 		assertNotNull(finding);
 	}
 }

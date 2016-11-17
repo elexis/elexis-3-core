@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.findings;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface IProcedureRequest extends IFinding {
@@ -21,10 +23,39 @@ public interface IProcedureRequest extends IFinding {
 	public Optional<IEncounter> getEncounter();
 	
 	/**
-	 * Update the {@link IEncounter} referenced. Also updates the patientId with the value of the
-	 * {@link IEncounter}.
+	 * Update the {@link IEncounter} referenced. Also updates the encounterId
+	 * with the value of the {@link IEncounter}.
 	 * 
 	 * @param encounter
 	 */
 	public void setEncounter(IEncounter encounter);
+
+	/**
+	 * Get the coding of the {@link ICondition}.
+	 * 
+	 * @return
+	 */
+	public List<ICoding> getCoding();
+
+	/**
+	 * Set the coding of the {@link ICondition}.
+	 * 
+	 * @return
+	 */
+	public void setCoding(List<ICoding> coding);
+
+	/**
+	 * Get the start date and time of the encounter.
+	 * 
+	 * @return
+	 */
+	public Optional<LocalDateTime> getScheduledTime();
+
+	/**
+	 * Set the start date and time of the encounter.
+	 * 
+	 * @param time
+	 */
+	public void setScheduledTime(LocalDateTime time);
+
 }
