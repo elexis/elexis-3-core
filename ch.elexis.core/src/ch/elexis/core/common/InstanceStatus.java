@@ -96,7 +96,8 @@ public class InstanceStatus {
 
 	@Override
 	public String toString() {
-		String ret = "[" + getUuid() + "] " + getActiveUser() + " (Version " + getVersion() + " @ "
+		String identifier = getIdentifier() != null ? " @ " + getIdentifier() : "";
+		String ret = "[" + getUuid() + "] " + getActiveUser() + identifier + " (Version " + getVersion() + " @ "
 				+ getOperatingSystem() + ") ";
 		if (getState() != STATE.ACTIVE) {
 			ret += getState();
