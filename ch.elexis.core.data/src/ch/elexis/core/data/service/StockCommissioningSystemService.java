@@ -66,5 +66,10 @@ public class StockCommissioningSystemService implements IStockCommissioningSyste
 	
 	@Override
 	public void shutdownInstances(){}
+
+	@Override
+	public IStatus synchronizeInventory(IStock stock, String articleId, Object data){
+		return Status.OK_STATUS;
+	}
 	
 }
