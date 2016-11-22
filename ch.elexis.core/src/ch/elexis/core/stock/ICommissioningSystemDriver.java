@@ -2,26 +2,25 @@ package ch.elexis.core.stock;
 
 import org.eclipse.core.runtime.IStatus;
 
+import ch.elexis.core.status.ObjectStatus;
+
 public interface ICommissioningSystemDriver {
-	
+
 	public IStatus initializeInstance(String configuration);
-	
+
 	public IStatus getStatus();
-	
+
 	public IStatus shutdownInstance();
-	
+
 	public IStatus performStockRemoval(String articleId, int quantity, Object data);
-	
+
 	/**
-	 * Synchronize the system stock data with the device stock data.
+	 * Retrieve the inventory of the stock commissioning system.
 	 * 
-	 * @param stock
-	 *            the system stock this device is allocated to
 	 * @param articleId
-	 *            if <code>null</code> synchronize stock information for all articles, else only the
-	 *            given
+	 *            if only for a specific article, or <code>null</code> for all
 	 * @param data
-	 * @return
+	 * @return on success, an {@link ObjectStatus} containing a
 	 */
-	public IStatus synchronizeInventory(IStock stock, String articleId, Object data);
+	public IStatus retrieveInventory(String articleId, Object data);
 }

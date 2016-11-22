@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.preferences;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -75,7 +74,7 @@ public class StockManagementPreferencePage extends PreferencePage
 	private TableViewer tableViewer;
 	private Text txtMachineConfig;
 	private Label lblMachineuuid;
-
+	
 	private Label lblDefaultArticleProvider;
 	
 	/**
@@ -334,8 +333,11 @@ public class StockManagementPreferencePage extends PreferencePage
 				if (s == null) {
 					return;
 				}
-				List<UUID> allDrivers = Collections.EMPTY_LIST;
+				List<UUID> allDrivers =
+					CoreHub.getStockCommissioningSystemService().listAllAvailableDrivers();
 				if (allDrivers.size() == 0) {
+					MessageDialog.openInformation(UiDesk.getTopShell(), "No drivers found",
+						"There are no stock commissioning system drivers available.");
 					return;
 				}
 				
@@ -347,12 +349,13 @@ public class StockManagementPreferencePage extends PreferencePage
 				ld.setLabelProvider(new LabelProvider() {
 					@Override
 					public String getText(Object element){
-						//						return stockCommissioningSystemService
-						//							.getInfoStringForDriver((UUID) element, true);
-						return "";
+						return CoreHub.getStockCommissioningSystemService()
+							.getInfoStringForDriver((UUID) element, true);
 					}
 				});
 				ld.setInput(allDrivers);
+				ld.setWidthInChars(80);
+				ld.setHeightInChars(5);
 				int retVal = ld.open();
 				UUID ics = null;
 				if (Dialog.OK == retVal) {
@@ -360,11 +363,13 @@ public class StockManagementPreferencePage extends PreferencePage
 					if (result.length > 0) {
 						ics = (UUID) result[0];
 					}
+				} else if (Dialog.CANCEL == retVal) {
+					ics = null;
 				}
 				if (ics != null) {
 					s.setDriverUuid(ics.toString());
-					//					lblMachineuuid.setText(
-					//						stockCommissioningSystemService.getInfoStringForDriver(ics, false));
+					lblMachineuuid.setText(CoreHub.getStockCommissioningSystemService()
+						.getInfoStringForDriver(ics, false));
 				} else {
 					s.setDriverUuid(null);
 					lblMachineuuid.setText(StringConstants.EMPTY);
@@ -381,7 +386,7 @@ public class StockManagementPreferencePage extends PreferencePage
 		lblMachineConfig.setText(Messages.StockManagementPreferencePage_lblMachineConfig_text);
 		txtMachineConfig = new Text(compositeDetail, SWT.BORDER);
 		txtMachineConfig.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-
+		
 		btnChkStoreInvalidNumbers = new Button(container, SWT.CHECK);
 		btnChkStoreInvalidNumbers.setText(Messages.LagerverwaltungPrefs_checkForInvalid);
 		
@@ -419,12 +424,13 @@ public class StockManagementPreferencePage extends PreferencePage
 		});
 		
 		lblDefaultArticleProvider = new Label(compDefaultProvider, SWT.NONE);
-		lblDefaultArticleProvider.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblDefaultArticleProvider
+			.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		String id = CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 		lblDefaultArticleProvider.setText("");
-		if(id!=null) {
+		if (id != null) {
 			Kontakt load = Kontakt.load(id);
-			if(load.exists()) {
+			if (load.exists()) {
 				lblDefaultArticleProvider.setText(load.getLabel());
 			}
 		}
@@ -449,9 +455,9 @@ public class StockManagementPreferencePage extends PreferencePage
 				}
 				String machineUuid = stock.getDriverUuid();
 				if (machineUuid != null && !machineUuid.isEmpty()) {
-//										String info = stockCommissioningSystemService
-//											.getInfoStringForDriver(UUID.fromString(machineUuid), false);
-					//					lblMachineuuid.setText(info);
+					String info = CoreHub.getStockCommissioningSystemService()
+						.getInfoStringForDriver(UUID.fromString(machineUuid), false);
+					lblMachineuuid.setText(info);
 				} else {
 					lblMachineuuid.setText("");
 				}
@@ -479,18 +485,6 @@ public class StockManagementPreferencePage extends PreferencePage
 		
 		setErrorMessage(null);
 		
-		Stock stock = (Stock) stockDetail.getValue();
-		if (stock != null) {
-			String machineUuid = stock.getDriverUuid();
-			//			if (machineUuid != null) {
-			//				IStatus machineStatus =
-			//					stockCommissioningSystemService.initializeStockCommissioningSystem(stock);
-			//				if (!machineStatus.isOK()) {
-			//					setErrorMessage(machineStatus.getMessage());
-			//				}
-			//			}
-		}
-		
 		super.performApply();
 	}
 	
@@ -503,28 +497,44 @@ public class StockManagementPreferencePage extends PreferencePage
 		
 		return super.performOk();
 	}
-	protected DataBindingContext initDataBindings() {
+	
+	protected DataBindingContext initDataBindings(){
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		IObservableValue observeTextTxtCodeObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtCode);
-		IObservableValue stockDetailCodeObserveDetailValue = PojoProperties.value(Stock.class, "code", String.class).observeDetail(stockDetail);
-		bindingContext.bindValue(observeTextTxtCodeObserveWidget, stockDetailCodeObserveDetailValue, null, null);
+		IObservableValue observeTextTxtCodeObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtCode);
+		IObservableValue stockDetailCodeObserveDetailValue =
+			PojoProperties.value(Stock.class, "code", String.class).observeDetail(stockDetail);
+		bindingContext.bindValue(observeTextTxtCodeObserveWidget, stockDetailCodeObserveDetailValue,
+			null, null);
 		//
-		IObservableValue observeTextTxtDescriptionObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtDescription);
-		IObservableValue stockDetailDescriptionObserveDetailValue = PojoProperties.value(Stock.class, "description", String.class).observeDetail(stockDetail);
-		bindingContext.bindValue(observeTextTxtDescriptionObserveWidget, stockDetailDescriptionObserveDetailValue, null, null);
+		IObservableValue observeTextTxtDescriptionObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtDescription);
+		IObservableValue stockDetailDescriptionObserveDetailValue = PojoProperties
+			.value(Stock.class, "description", String.class).observeDetail(stockDetail);
+		bindingContext.bindValue(observeTextTxtDescriptionObserveWidget,
+			stockDetailDescriptionObserveDetailValue, null, null);
 		//
-		IObservableValue observeTextTxtLocationObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtLocation);
-		IObservableValue stockDetailLocationObserveDetailValue = PojoProperties.value(Stock.class, "location", String.class).observeDetail(stockDetail);
-		bindingContext.bindValue(observeTextTxtLocationObserveWidget, stockDetailLocationObserveDetailValue, null, null);
+		IObservableValue observeTextTxtLocationObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtLocation);
+		IObservableValue stockDetailLocationObserveDetailValue =
+			PojoProperties.value(Stock.class, "location", String.class).observeDetail(stockDetail);
+		bindingContext.bindValue(observeTextTxtLocationObserveWidget,
+			stockDetailLocationObserveDetailValue, null, null);
 		//
-		IObservableValue observeTextTxtPrioObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtPrio);
-		IObservableValue stockDetailGlobalPreferenceObserveDetailValue = PojoProperties.value(Stock.class, "priority", Integer.class).observeDetail(stockDetail);
-		bindingContext.bindValue(observeTextTxtPrioObserveWidget, stockDetailGlobalPreferenceObserveDetailValue, null, null);
+		IObservableValue observeTextTxtPrioObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtPrio);
+		IObservableValue stockDetailGlobalPreferenceObserveDetailValue =
+			PojoProperties.value(Stock.class, "priority", Integer.class).observeDetail(stockDetail);
+		bindingContext.bindValue(observeTextTxtPrioObserveWidget,
+			stockDetailGlobalPreferenceObserveDetailValue, null, null);
 		//
-		IObservableValue observeTextTxtMachineConfigObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtMachineConfig);
-		IObservableValue stockDetailMachineConfigObserveDetailValue = PojoProperties.value(Stock.class, "driverConfig", String.class).observeDetail(stockDetail);
-		bindingContext.bindValue(observeTextTxtMachineConfigObserveWidget, stockDetailMachineConfigObserveDetailValue, null, null);
+		IObservableValue observeTextTxtMachineConfigObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtMachineConfig);
+		IObservableValue stockDetailMachineConfigObserveDetailValue = PojoProperties
+			.value(Stock.class, "driverConfig", String.class).observeDetail(stockDetail);
+		bindingContext.bindValue(observeTextTxtMachineConfigObserveWidget,
+			stockDetailMachineConfigObserveDetailValue, null, null);
 		//
 		return bindingContext;
 	}

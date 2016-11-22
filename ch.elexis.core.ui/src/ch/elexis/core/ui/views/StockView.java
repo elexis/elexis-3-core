@@ -12,6 +12,7 @@
 package ch.elexis.core.ui.views;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -67,6 +68,7 @@ import ch.elexis.data.Stock;
 import ch.elexis.data.StockEntry;
 
 public class StockView extends ViewPart implements ISaveablePart2, IActivationListener {
+	public StockView(){}
 	
 	public static final String ID = "ch.elexis.core.ui.views.StockView"; //$NON-NLS-1$
 	private Logger log = LoggerFactory.getLogger(StockView.class);
@@ -98,6 +100,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				manager.add(new CheckInOrderedAction(cv.getViewerWidget()));
+				manager.add(new ArticleLayoutAction(cv.getViewerWidget()));
 			}
 		});
 		
@@ -284,7 +287,49 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		}
 	}
 	
-	public static class CheckInOrderedAction extends Action {
+	public class ArticleLayoutAction extends Action {
+		private Viewer viewer;
+		
+		public ArticleLayoutAction(Viewer viewer){
+			this.viewer = viewer;
+		}
+		
+		@Override
+		public boolean isEnabled(){
+			StockEntry stockEntry = fetchSelection();
+			if (stockEntry != null) {
+				Stock stock = stockEntry.getStock();
+				if (stock != null) {
+					String driverUuid = stock.getDriverUuid();
+					return (driverUuid != null && driverUuid.length() > 8);
+				}
+			}
+			return false;
+		}
+		
+		@Override
+		public String getText(){
+			return Messages.StockView_OutlayArticle;
+		}
+		
+		public void run(){
+			StockEntry stockEntry = fetchSelection();
+			IStatus status = CoreHub.getStockCommissioningSystemService()
+				.performArticleOutlay(stockEntry, 1, null);
+			// TODO Status Dialog
+		}
+		
+		private StockEntry fetchSelection(){
+			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+			if (selection != null && !selection.isEmpty()
+				&& selection.getFirstElement() instanceof StockEntry) {
+				return (StockEntry) selection.getFirstElement();
+			}
+			return null;
+		};
+	}
+	
+	public class CheckInOrderedAction extends Action {
 		private Viewer viewer;
 		private StockEntry stockEntry;
 		

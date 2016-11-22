@@ -7,8 +7,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class ElexisEvent {
-
-	public static final String EVENT_BASE = "info/elexis/";
 	
 	private String topic;
 	private Map<String, String> properties;

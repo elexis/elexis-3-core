@@ -120,6 +120,12 @@ public class StockService implements IStockService {
 				}
 				se.setFractionUnits(rest);
 			}
+			
+			if (se.getStock().isCommissioningSystem()) {
+				return CoreHub.getStockCommissioningSystemService().performArticleOutlay(se, count,
+					null);
+			}
+			
 			CoreHub.getLocalLockService().releaseLock((StockEntry) se);
 			return Status.OK_STATUS;
 		}

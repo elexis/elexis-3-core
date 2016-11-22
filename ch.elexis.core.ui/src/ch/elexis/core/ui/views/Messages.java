@@ -473,6 +473,7 @@ public class Messages extends NLS {
 	public static String SearchView_searchButtonCaption;
 	public static String SearchView_textToSearch;
 	public static String StockView_reload;
+	public static String StockView_OutlayArticle;
 	public static String TextView_15;
 	public static String TextView_NoCaseSelected;
 	public static String TextView_SaveNotPossibleNoCaseAndKonsSelected;

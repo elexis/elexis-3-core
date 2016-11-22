@@ -36,6 +36,7 @@ import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
+import ch.elexis.core.data.events.IElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.events.PatientEventListener;
 import ch.elexis.core.data.interfaces.ShutdownJob;
@@ -43,10 +44,13 @@ import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.lock.LocalLockService;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
+import ch.elexis.core.data.server.ElexisServerEventService;
 import ch.elexis.core.data.service.OrderService;
+import ch.elexis.core.data.service.StockCommissioningSystemService;
 import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.lock.ILocalLockService;
 import ch.elexis.core.stock.IOrderService;
+import ch.elexis.core.stock.IStockCommissioningSystemService;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -135,6 +139,16 @@ public class CoreHub implements BundleActivator {
 	
 	/** Order Service **/
 	private static final IOrderService orderService = new OrderService();
+	
+	/** Event Service to transport Events to the Elexis Server */
+	private static final ElexisServerEventService elexisServerEventService =
+		new ElexisServerEventService();
+	
+	/**
+	 * Stock commissioning system service
+	 */
+	private static final IStockCommissioningSystemService stockCommissioningSystemService =
+		new StockCommissioningSystemService();
 	
 	/**
 	 * The listener for patient events
@@ -478,7 +492,15 @@ public class CoreHub implements BundleActivator {
 		return stockService;
 	}
 	
+	public static IStockCommissioningSystemService getStockCommissioningSystemService(){
+		return stockCommissioningSystemService;
+	}
+	
 	public static IOrderService getOrderService(){
 		return orderService;
+	}
+	
+	public static ElexisServerEventService getElexisServerEventService(){
+		return elexisServerEventService;
 	}
 }
