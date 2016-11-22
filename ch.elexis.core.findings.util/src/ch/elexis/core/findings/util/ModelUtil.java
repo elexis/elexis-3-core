@@ -6,11 +6,14 @@ import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
+import ca.uhn.fhir.rest.client.IGenericClient;
+import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.util.model.CodingWrapper;
@@ -23,6 +26,17 @@ public class ModelUtil {
 		return context.newJsonParser();
 	}
 	
+	public static IGenericClient getGenericClient(String theServerBase) {
+		// Create a logging interceptor
+		LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
+		loggingInterceptor.setLogRequestSummary(true);
+		loggingInterceptor.setLogRequestBody(true);
+
+		IGenericClient client = context.newRestfulGenericClient(theServerBase);
+		client.registerInterceptor(loggingInterceptor);
+		return client;
+	}
+
 	public static Optional<IBaseResource> loadResource(IFinding finding) throws DataFormatException{
 		IBaseResource resource = null;
 		if (finding.getRawContent() != null && !finding.getRawContent().isEmpty()) {
@@ -76,5 +90,17 @@ public class ModelUtil {
 			}
 		}
 		return false;
+	}
+
+	public static Optional<String> getNarrativeAsString(Narrative narrative) {
+		String text = narrative.getDivAsString();
+		if (text != null) {
+			String divDecodedText = text.replaceAll(
+				"<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>", "");
+			divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n")
+				.replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<");
+			return Optional.of(divDecodedText);
+		}
+		return Optional.empty();
 	}
 }

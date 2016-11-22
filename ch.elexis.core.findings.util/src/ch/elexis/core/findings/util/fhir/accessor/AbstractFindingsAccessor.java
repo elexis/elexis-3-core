@@ -15,19 +15,14 @@ import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.StringType;
 
+import ch.elexis.core.findings.util.ModelUtil;
+
 public abstract class AbstractFindingsAccessor {
 	
 	public Optional<String> getText(DomainResource resource){
 		Narrative narrative = resource.getText();
 		if (narrative != null && narrative.getDivAsString() != null) {
-			String text = narrative.getDivAsString();
-			if (text != null) {
-				String divDecodedText = text.replaceAll(
-					"<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>", "");
-				divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n")
-					.replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<");
-				return Optional.of(divDecodedText);
-			}
+			return ModelUtil.getNarrativeAsString(narrative);
 		}
 		return Optional.empty();
 	}
