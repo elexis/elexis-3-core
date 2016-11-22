@@ -65,6 +65,8 @@ public final class ElexisEventDispatcher extends Job {
 	
 	private final ElexisContext elexisUIContext;
 	
+	private List<Integer> blockEventTypes;
+	
 	public static ElexisEventDispatcher getInstance(){
 		if (theInstance == null) {
 			theInstance = new ElexisEventDispatcher();
@@ -188,6 +190,17 @@ public final class ElexisEventDispatcher extends Job {
 	}
 	
 	/**
+	 * Set a list of {@link ElexisEvent} types that will be skipped when fired. Is used for example
+	 * on import when many new objects are created, and we are not interest in calling the event
+	 * listeners. Set to null to reset.
+	 * 
+	 * @param blockEventTypes
+	 */
+	public synchronized void setBlockEventTypes(List<Integer> blockEventTypes){
+		this.blockEventTypes = blockEventTypes;
+	}
+	
+	/**
 	 * Fire an ElexisEvent. The class concerned is named in ee.getObjectClass. If a dispatcher for
 	 * that class was registered, the event will be forwarded to that dispatcher. Otherwise, it will
 	 * be sent to all registered listeners. The call to the dispatcher or the listener will always
@@ -201,6 +214,9 @@ public final class ElexisEventDispatcher extends Job {
 	 */
 	public void fire(final ElexisEvent... ees){
 		for (ElexisEvent ee : ees) {
+			if (blockEventTypes != null && blockEventTypes.contains(ee.getType())) {
+				continue;
+			}
 			// Those are single events
 			if (ee.getPriority() == ElexisEvent.PRIORITY_SYNC
 				&& ee.getType() != ElexisEvent.EVENT_SELECTED) {
