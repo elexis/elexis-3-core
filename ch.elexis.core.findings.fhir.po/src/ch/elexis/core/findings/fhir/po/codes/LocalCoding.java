@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import ch.elexis.core.findings.ICoding;
-import ch.elexis.core.findings.codes.ILocalCodingContribution;
-import ch.elexis.core.findings.fhir.po.model.util.TransientCoding;
+import ch.elexis.core.findings.codes.CodingSystem;
+import ch.elexis.core.findings.util.model.TransientCoding;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.VersionInfo;
 
@@ -70,7 +70,7 @@ public class LocalCoding extends PersistentObject implements ICoding {
 	
 	@Override
 	public String getSystem(){
-		return ILocalCodingContribution.LOCAL_CODE_SYSTEM;
+		return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
 	}
 	
 	@Override

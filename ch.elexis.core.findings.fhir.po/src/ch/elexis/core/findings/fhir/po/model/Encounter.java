@@ -6,16 +6,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
-import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IEncounter;
-import ch.elexis.core.findings.fhir.po.model.util.ModelUtil;
+import ch.elexis.core.findings.fhir.po.service.FindingsService;
+import ch.elexis.core.findings.util.fhir.accessor.EncounterAccessor;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.VersionInfo;
 
@@ -27,6 +25,8 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	public static final String FLD_PATIENTID = "patientid"; //$NON-NLS-1$
 	public static final String FLD_MANDATORID = "mandatorid"; //$NON-NLS-1$
 	public static final String FLD_CONSULTATIONID = "consultationid"; //$NON-NLS-1$
+	
+	private EncounterAccessor accessor = new EncounterAccessor();
 	
 	//@formatter:off
 	protected static final String createDB =
@@ -116,12 +116,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	public Optional<LocalDateTime> getStartTime(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
-				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
-			Period period = fhirEncounter.getPeriod();
-			if (period != null && period.getStart() != null) {
-				return Optional.of(getLocalDateTime(period.getStart()));
-			}
+			return accessor.getStartTime((DomainResource) resource.get());
 		}
 		return Optional.empty();
 	}
@@ -130,15 +125,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	public void setStartTime(LocalDateTime time){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
-				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
-			Period period = fhirEncounter.getPeriod();
-			if (period == null) {
-				period = new Period();
-			}
-			period.setStart(getDate(time));
-			
-			fhirEncounter.setPeriod(period);
+			accessor.setStartTime((DomainResource) resource.get(), time);
 			saveResource(resource.get());
 		}
 	}
@@ -147,12 +134,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	public Optional<LocalDateTime> getEndTime(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
-				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
-			Period period = fhirEncounter.getPeriod();
-			if (period != null && period.getEnd() != null) {
-				return Optional.of(getLocalDateTime(period.getEnd()));
-			}
+			return accessor.getEndTime((DomainResource) resource.get());
 		}
 		return Optional.empty();
 	}
@@ -161,14 +143,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	public void setEndTime(LocalDateTime time){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.Encounter fhirEncounter = (org.hl7.fhir.dstu3.model.Encounter) resource.get();
-			Period period = fhirEncounter.getPeriod();
-			if (period == null) {
-				period = new Period();
-			}
-			period.setEnd(getDate(time));
-			
-			fhirEncounter.setPeriod(period);
+			accessor.setEndTime((DomainResource) resource.get(), time);
 			saveResource(resource.get());
 		}
 	}
@@ -178,20 +153,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 		List<ICondition> indication = new ArrayList<>();
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
-				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
-			List<Reference> theIndication = fhirEncounter.getIndication();
-			for (Reference reference : theIndication) {
-				if (reference.getReference() != null
-					&& reference.getReference().contains("Condition")) {
-					String refString = reference.getReference();
-					String idString = refString;
-					if (refString.lastIndexOf("/") != -1) {
-						idString = refString.substring(refString.lastIndexOf("/"));
-					}
-					indication.add(Condition.load(idString));
-				}
-			}
+			return accessor.getIndication((DomainResource) resource.get(), new FindingsService());
 		}
 		return indication;
 	}
@@ -200,30 +162,16 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	public void setIndication(List<ICondition> indication){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.Encounter fhirEncounter = (org.hl7.fhir.dstu3.model.Encounter) resource.get();
-			List<Reference>theIndication = new ArrayList<>();
-			for (ICondition iCondition : indication) {
-				theIndication.add(new Reference(new IdDt("Condition", iCondition.getId())));
-			}
-			fhirEncounter.setIndication(theIndication);
+			accessor.setIndication((DomainResource) resource.get(), indication);
+			saveResource(resource.get());
 		}
-		saveResource(resource.get());
 	}
 	
 	@Override
 	public List<ICoding> getType(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
-				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
-			List<CodeableConcept> codeableConcepts = fhirEncounter.getType();
-			if (codeableConcepts != null) {
-				ArrayList<ICoding> ret = new ArrayList<>();
-				for (CodeableConcept codeableConcept : codeableConcepts) {
-					ret.addAll(ModelUtil.getCodingsFromConcept(codeableConcept));
-				}
-				return ret;
-			}
+			return accessor.getType((DomainResource) resource.get());
 		}
 		return Collections.emptyList();
 	}
@@ -232,15 +180,7 @@ public class Encounter extends AbstractFhirPersistentObject implements IEncounte
 	public void setType(List<ICoding> coding){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
-				(org.hl7.fhir.dstu3.model.Encounter) resource.get();
-			List<CodeableConcept> codeableConcepts = fhirEncounter.getType();
-			if (!codeableConcepts.isEmpty()) {
-				codeableConcepts.clear();
-			}
-			CodeableConcept codeableConcept = new CodeableConcept();
-			ModelUtil.setCodingsToConcept(codeableConcept, coding);
-			fhirEncounter.setType(Collections.singletonList(codeableConcept));
+			accessor.setType((DomainResource) resource.get(), coding);
 			saveResource(resource.get());
 		}
 	}

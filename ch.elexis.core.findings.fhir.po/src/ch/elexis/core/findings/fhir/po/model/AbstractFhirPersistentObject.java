@@ -14,23 +14,14 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.parser.IParser;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFinding;
-import ch.elexis.core.findings.fhir.po.model.util.ModelUtil;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.data.PersistentObject;
 
 public abstract class AbstractFhirPersistentObject extends PersistentObject implements IFinding {
 	
-	private static final Logger logger =
-		LoggerFactory.getLogger(AbstractFhirPersistentObject.class);
-	
 	public static final String FLD_CONTENT = "content"; //$NON-NLS-1$
-	
-	private static FhirContext context;
-	
-	private IParser parser;
 	
 	public AbstractFhirPersistentObject(){
 	}
@@ -46,16 +37,6 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 	
 	protected Logger getLogger(Class<?> clazz){
 		return LoggerFactory.getLogger(clazz);
-	}
-	
-	protected synchronized IParser getJsonParser(){
-		if(context == null) {
-			context = FhirContext.forDstu3();
-		}
-		if (parser == null) {
-			parser = context.newJsonParser();
-		}
-		return parser;
 	}
 	
 	protected Optional<IBaseResource> loadResource(){

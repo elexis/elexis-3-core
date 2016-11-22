@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ch.elexis.core.findings.ICoding;
-import ch.elexis.core.findings.codes.ILocalCodingContribution;
+import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.NatTableFactory;
 import ch.elexis.core.ui.util.NatTableWrapper;
@@ -61,7 +61,7 @@ public class CodingListComposite extends Composite {
 				}
 			}
 		});
-		selectionComposite.setCodeSystem(ILocalCodingContribution.LOCAL_CODE_SYSTEM);
+		selectionComposite.setCodeSystem(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
 		
 		toolbarManager = new ToolBarManager();
 		toolbarManager.add(new RemoveCodingAction());

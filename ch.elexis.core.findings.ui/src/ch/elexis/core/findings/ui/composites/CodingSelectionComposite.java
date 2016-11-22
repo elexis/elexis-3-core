@@ -28,9 +28,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.findings.ICoding;
-import ch.elexis.core.findings.codes.ILocalCodingContribution;
+import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.ui.dialogs.CodingEditDialog;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
+import ch.elexis.core.findings.util.model.TransientCoding;
 
 public class CodingSelectionComposite extends Composite implements ISelectionProvider {
 	
@@ -101,13 +102,14 @@ public class CodingSelectionComposite extends Composite implements ISelectionPro
 			@Override
 			public void run(){
 				TransientCoding transientCoding = new TransientCoding(
-					ILocalCodingContribution.LOCAL_CODE_SYSTEM, selectionTxt.getSelectionText(),
+					CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem(),
+					selectionTxt.getSelectionText(),
 					"");
 				CodingEditDialog editDialog = new CodingEditDialog(transientCoding, getShell());
 				if (editDialog.open() == CodingEditDialog.OK) {
 					CodingServiceComponent.getService().addLocalCoding(transientCoding);
 					// trigger reload of code system
-					setCodeSystem(ILocalCodingContribution.LOCAL_CODE_SYSTEM);
+					setCodeSystem(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
 				}
 			}
 			
@@ -116,7 +118,7 @@ public class CodingSelectionComposite extends Composite implements ISelectionPro
 				ISelection systemSelection = systemCombo.getSelection();
 				if (!(systemSelection instanceof StructuredSelection)
 					|| !((StructuredSelection) systemSelection).getFirstElement()
-						.equals(ILocalCodingContribution.LOCAL_CODE_SYSTEM)) {
+						.equals(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem())) {
 					return false;
 				}
 				String text = selectionTxt.getSelectionText();

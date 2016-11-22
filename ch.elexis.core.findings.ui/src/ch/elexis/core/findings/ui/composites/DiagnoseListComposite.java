@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.findings.ui.composites;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +41,7 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ICondition.ConditionStatus;
+import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.ui.dialogs.ConditionEditDialog;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.ui.icons.Images;
@@ -104,10 +107,11 @@ public class DiagnoseListComposite extends Composite {
 					if (codings != null && !codings.isEmpty()) {
 						for (ICoding iCoding : codings) {
 							if (contentText.length() > 0) {
-								contentText.append("\n");
+								contentText.append(", ");
 							}
-							contentText.append("[").append(iCoding.getCode()).append("] ")
-								.append(iCoding.getDisplay());
+							contentText.append("[").append(getCodingSystemShortname(iCoding))
+								.append(iCoding.getCode()).append("] ")
+								.append(iCoding.getDisplay() != null ? iCoding.getDisplay() : "");
 						}
 					}
 					// add additional information before content
@@ -164,8 +168,38 @@ public class DiagnoseListComposite extends Composite {
 		natTableWrapper.getNatTable().setMenu(mgr.createContextMenu(natTableWrapper.getNatTable()));
 	}
 	
+	private Object getCodingSystemShortname(ICoding iCoding){
+		String system = iCoding.getSystem();
+		if (system != null && !system.isEmpty()) {
+			if (CodingSystem.ELEXIS_ICD_CODESYSTEM.getSystem().equals(system)) {
+				return "ICD:";
+			}
+			if (CodingSystem.ELEXIS_ICPC_CODESYSTEM.getSystem().equals(system)) {
+				return "ICPC:";
+			}
+		}
+		return "";
+	}
+	
 	public void setInput(List<ICondition> conditions){
 		dataList.clear();
+		conditions.sort(new Comparator<ICondition>() {
+			@Override
+			public int compare(ICondition left, ICondition right){
+				Optional<LocalDate> lrecorded = left.getDateRecorded();
+				Optional<LocalDate> rrecorded = right.getDateRecorded();
+				if(lrecorded.isPresent() && rrecorded.isPresent()) {
+					return rrecorded.get().compareTo(lrecorded.get());
+				} else {
+					Optional<String> lstart = left.getStart();
+					Optional<String> rstart = right.getStart();
+					if (lstart.isPresent() && rstart.isPresent()) {
+						return rstart.get().compareTo(lstart.get());
+					}
+				}
+				return 0;
+			}
+		});
 		dataList.addAll(conditions);
 		natTableWrapper.getNatTable().refresh();
 	}

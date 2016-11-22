@@ -1,4 +1,4 @@
-package ch.elexis.core.findings.fhir.po.service.internal;
+package ch.elexis.core.findings.util.fhir.accessor;
 
 public class EnumMapping {
 

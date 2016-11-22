@@ -1,4 +1,4 @@
-package ch.elexis.core.findings.fhir.po.model.util;
+package ch.elexis.core.findings.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +13,13 @@ import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.util.model.CodingWrapper;
 
 public class ModelUtil {
 	
 	private static FhirContext context = FhirContext.forDstu3();
 	
-	private static IParser getJsonParser(){
+	public static IParser getJsonParser(){
 		return context.newJsonParser();
 	}
 	
@@ -53,31 +54,6 @@ public class ModelUtil {
 			ret.add(new CodingWrapper(code));
 		}
 		return ret;
-	}
-	
-
-	private static class CodingWrapper implements ICoding {
-		
-		private Coding coding;
-		
-		public CodingWrapper(Coding coding){
-			this.coding = coding;
-		}
-		
-		@Override
-		public String getSystem(){
-			return coding.getSystem();
-		}
-		
-		@Override
-		public String getCode(){
-			return coding.getCode();
-		}
-		
-		@Override
-		public String getDisplay(){
-			return coding.getDisplay();
-		}
 	}
 	
 	public static boolean isCodeInList(String system, String code, List<ICoding> list){

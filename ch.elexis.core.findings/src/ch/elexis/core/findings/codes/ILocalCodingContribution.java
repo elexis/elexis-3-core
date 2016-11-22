@@ -9,8 +9,6 @@ import ch.elexis.core.findings.ICoding;
  *
  */
 public interface ILocalCodingContribution extends ICodingContribution {
-	
-	public static final String LOCAL_CODE_SYSTEM = "www.elexis.info/coding/local";
 
 	/**
 	 * Add a {@link ICoding} to the code system.

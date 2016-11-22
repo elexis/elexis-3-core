@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Test;
 
 import ch.elexis.core.findings.ICoding;
+import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.codes.ILocalCodingContribution;
 
@@ -21,7 +22,7 @@ public class CodingServiceTest {
 		ICodingService codingService = CodingServiceComponent.getService();
 		assertNotNull(codingService);
 		List<ICoding> readCodes =
-			codingService.getAvailableCodes(ILocalCodingContribution.LOCAL_CODE_SYSTEM);
+			codingService.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
 		for (ICoding iCoding : readCodes) {
 			codingService.removeLocalCoding(iCoding);
 		}
@@ -41,14 +42,14 @@ public class CodingServiceTest {
 		ICodingService codingService = CodingServiceComponent.getService();
 		assertNotNull(codingService);
 		List<ICoding> readCodes =
-			codingService.getAvailableCodes(ILocalCodingContribution.LOCAL_CODE_SYSTEM);
+			codingService.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
 		assertNotNull(readCodes);
 		assertTrue(readCodes.isEmpty());
 		
 		codingService.addLocalCoding(new ICoding() {
 			@Override
 			public String getSystem(){
-				return ILocalCodingContribution.LOCAL_CODE_SYSTEM;
+				return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
 			}
 			
 			@Override
@@ -62,7 +63,7 @@ public class CodingServiceTest {
 			}
 		});
 		readCodes =
-			codingService.getAvailableCodes(ILocalCodingContribution.LOCAL_CODE_SYSTEM);
+			codingService.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
 		assertNotNull(readCodes);
 		assertFalse(readCodes.isEmpty());
 		assertEquals("code1", readCodes.get(0).getCode());

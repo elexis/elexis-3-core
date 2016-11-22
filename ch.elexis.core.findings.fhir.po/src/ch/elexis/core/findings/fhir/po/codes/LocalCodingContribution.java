@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.findings.ICoding;
+import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.codes.ICodingContribution;
 import ch.elexis.core.findings.codes.ILocalCodingContribution;
 import ch.elexis.data.Query;
@@ -16,7 +17,7 @@ public class LocalCodingContribution implements ICodingContribution, ILocalCodin
 	
 	@Override
 	public String getCodeSystem(){
-		return ILocalCodingContribution.LOCAL_CODE_SYSTEM;
+		return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
 	}
 	
 	@Override

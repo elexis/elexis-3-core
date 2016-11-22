@@ -1,4 +1,4 @@
-package ch.elexis.core.findings.fhir.po.model.util;
+package ch.elexis.core.findings.util.model;
 
 import ch.elexis.core.findings.ICoding;
 

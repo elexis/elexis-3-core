@@ -15,7 +15,7 @@ import ch.elexis.core.findings.fhir.po.model.Condition;
 import ch.elexis.core.findings.fhir.po.model.Encounter;
 import ch.elexis.core.findings.fhir.po.model.Observation;
 import ch.elexis.core.findings.fhir.po.model.ProcedureRequest;
-import ch.elexis.core.findings.fhir.po.model.util.ModelUtil;
+import ch.elexis.core.findings.util.ModelUtil;
 
 public class FindingsFactory implements IFindingsFactory {
 	
