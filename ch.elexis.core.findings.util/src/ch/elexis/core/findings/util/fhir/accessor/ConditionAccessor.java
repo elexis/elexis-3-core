@@ -138,7 +138,7 @@ public class ConditionAccessor extends AbstractFindingsAccessor {
 		org.hl7.fhir.dstu3.model.Condition fhirCondition =
 			(org.hl7.fhir.dstu3.model.Condition) resource;
 		try {
-			if (fhirCondition.hasOnsetDateTimeType()) {
+			if (fhirCondition.hasAbatementDateTimeType()) {
 				DateTimeType dateTime = fhirCondition.getAbatementDateTimeType();
 				if (dateTime != null) {
 					Date date = dateTime.getValue();
