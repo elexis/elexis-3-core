@@ -41,8 +41,8 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ICondition.ConditionStatus;
-import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.ui.dialogs.ConditionEditDialog;
+import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.NatTableFactory;
@@ -109,7 +109,8 @@ public class DiagnoseListComposite extends Composite {
 							if (contentText.length() > 0) {
 								contentText.append(", ");
 							}
-							contentText.append("[").append(getCodingSystemShortname(iCoding))
+							contentText.append("[")
+								.append(CodingServiceComponent.getService().getShortLabel(iCoding))
 								.append(iCoding.getCode()).append("] ")
 								.append(iCoding.getDisplay() != null ? iCoding.getDisplay() : "");
 						}
@@ -166,19 +167,6 @@ public class DiagnoseListComposite extends Composite {
 		mgr.setRemoveAllWhenShown(true);
 		mgr.addMenuListener(new ConditionsMenuListener());
 		natTableWrapper.getNatTable().setMenu(mgr.createContextMenu(natTableWrapper.getNatTable()));
-	}
-	
-	private Object getCodingSystemShortname(ICoding iCoding){
-		String system = iCoding.getSystem();
-		if (system != null && !system.isEmpty()) {
-			if (CodingSystem.ELEXIS_ICD_CODESYSTEM.getSystem().equals(system)) {
-				return "ICD:";
-			}
-			if (CodingSystem.ELEXIS_ICPC_CODESYSTEM.getSystem().equals(system)) {
-				return "ICPC:";
-			}
-		}
-		return "";
 	}
 	
 	public void setInput(List<ICondition> conditions){
