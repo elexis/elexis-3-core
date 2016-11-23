@@ -72,11 +72,7 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 		for (Reference reference : theIndication) {
 			if (reference.getReference() != null
 				&& reference.getReference().contains("Condition")) {
-				String refString = reference.getReference();
-				String idString = refString;
-				if (refString.lastIndexOf("/") != -1) {
-					idString = refString.substring(refString.lastIndexOf("/"));
-				}
+				String idString = reference.getReferenceElement().getIdPart();
 				service.findById(idString, ICondition.class)
 					.ifPresent(condition -> indication.add((ICondition) condition));
 			}

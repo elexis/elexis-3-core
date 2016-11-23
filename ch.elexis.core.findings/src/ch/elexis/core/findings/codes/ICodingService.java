@@ -42,4 +42,30 @@ public interface ICodingService {
 	 * @param coding
 	 */
 	public void removeLocalCoding(ICoding coding);
+
+	/**
+	 * Get a label for a {@link ICoding} object. The code system is represented
+	 * with the last part of the system uri. <br />
+	 * Examples: <br />
+	 * icd G21.0 Malignant neuroleptic syndrome<br />
+	 * icpc-2 K02 Druck/Engegefühl des Herzens
+	 * 
+	 * @param iCoding
+	 * @return
+	 */
+	public String getLabel(ICoding iCoding);
+
+	/**
+	 * Get a short label for a {@link ICoding} object. Only codesystem and code
+	 * represented. The code system is represented with the last part of the
+	 * system uri. <br />
+	 * Examples: <br />
+	 * icd:G21.0 <br />
+	 * icpc-2:K02
+	 * 
+	 * @param iCoding
+	 * @return
+	 */
+	public String getShortLabel(ICoding iCoding);
+
 }
