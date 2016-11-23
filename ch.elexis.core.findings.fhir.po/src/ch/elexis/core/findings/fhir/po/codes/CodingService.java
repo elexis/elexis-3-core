@@ -81,4 +81,46 @@ public class CodingService implements ICodingService {
 			localCoding.removeCoding(coding);
 		}
 	}
+	
+	@Override
+	public String getLabel(ICoding iCoding){
+		StringBuilder sb = new StringBuilder();
+		sb.append(getCodesystemShort(iCoding.getSystem()));
+		if (sb.length() > 0) {
+			sb.append(" ");
+		}
+		sb.append(iCoding.getCode());
+		if (sb.length() > 0) {
+			sb.append(" ");
+		}
+		String display = iCoding.getDisplay();
+		if (display == null || display.isEmpty()) {
+			display = getDisplay(iCoding);
+		}
+		sb.append(display);
+		return sb.toString();
+	}
+	
+	private String getDisplay(ICoding iCoding){
+		List<ICoding> availableCodes = getAvailableCodes(iCoding.getSystem());
+		if (availableCodes != null && !availableCodes.isEmpty()) {
+			// do work here, build cache?
+		}
+		return "";
+	}
+	
+	@Override
+	public String getShortLabel(ICoding iCoding){
+		StringBuilder sb = new StringBuilder();
+		sb.append(getCodesystemShort(iCoding.getSystem())).append(":").append(iCoding.getCode());
+		return sb.toString();
+	}
+	
+	private String getCodesystemShort(String system){
+		int lastIndex = system.lastIndexOf("/");
+		if (lastIndex != -1) {
+			return system.substring(lastIndex + 1);
+		}
+		return system;
+	}
 }
