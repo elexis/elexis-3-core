@@ -111,18 +111,26 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	public void showProgress(IRunnableWithProgress irwp){
 		try {
 			if (isDisplayAvailable()) {
-				ProgressMonitorDialog pmd = new ProgressMonitorDialog(Hub.getActiveShell());
-				org.eclipse.jface.operation.IRunnableWithProgress irpwAdapter =
-					new org.eclipse.jface.operation.IRunnableWithProgress() {
-						
-						@Override
-						public void run(IProgressMonitor monitor)
-							throws InvocationTargetException, InterruptedException{
-							irwp.run(monitor);
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run(){
+						ProgressMonitorDialog pmd = new ProgressMonitorDialog(Hub.getActiveShell());
+						org.eclipse.jface.operation.IRunnableWithProgress irpwAdapter =
+							new org.eclipse.jface.operation.IRunnableWithProgress() {
+								
+								@Override
+								public void run(IProgressMonitor monitor)
+									throws InvocationTargetException, InterruptedException{
+									irwp.run(monitor);
+								}
+							};
+						try {
+							pmd.run(false, true, irpwAdapter);
+						} catch (InvocationTargetException | InterruptedException e) {
+							log.error("Execution error", e);
 						}
-					};
-				
-				pmd.run(false, true, irpwAdapter);
+					}
+				});
 			} else {
 				irwp.run(new NullProgressMonitor());
 			}
