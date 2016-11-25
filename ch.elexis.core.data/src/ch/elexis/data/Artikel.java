@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.IRunnableWithProgress;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.article.IArticle;
-import ch.elexis.core.stock.IStockEntry;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;

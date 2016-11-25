@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -15,12 +14,11 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.article.IArticle;
-import ch.elexis.core.stock.IStock;
-import ch.elexis.core.stock.IStockEntry;
-import ch.elexis.core.stock.IStockService;
+import ch.elexis.core.services.IStockService;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.DBConnection;
 import ch.elexis.data.Mandant;
@@ -90,44 +88,44 @@ public class StockService implements IStockService {
 				"No stock entry for article found");
 		}
 		
-		LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking((StockEntry) se, 1,
-			new NullProgressMonitor());
-		if (lr.isOk()) {
-			int fractionUnits = se.getFractionUnits();
-			int ve = article.getSellingUnit();
-			int vk = article.getPackageUnit();
-			
-			if (vk == 0) {
-				if (ve != 0) {
-					vk = ve;
-				}
-			}
-			if (ve == 0) {
-				if (vk != 0) {
-					ve = vk;
-				}
-			}
-			int num = count * ve;
-			int cs = se.getCurrentStock();
-			if (vk == ve) {
-				se.setCurrentStock(cs - count);
+		if (se.getStock().isCommissioningSystem()) {
+			return CoreHub.getStockCommissioningSystemService().performArticleOutlay(se, count,
+				null);
+		} else {
+			LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking((StockEntry) se, 1,
+				new NullProgressMonitor());
+			if (lr.isOk()) {
+				int fractionUnits = se.getFractionUnits();
+				int ve = article.getSellingUnit();
+				int vk = article.getPackageUnit();
 				
-			} else {
-				int rest = fractionUnits - num;
-				while (rest < 0) {
-					rest = rest + vk;
-					se.setCurrentStock(cs - 1);
+				if (vk == 0) {
+					if (ve != 0) {
+						vk = ve;
+					}
 				}
-				se.setFractionUnits(rest);
+				if (ve == 0) {
+					if (vk != 0) {
+						ve = vk;
+					}
+				}
+				int num = count * ve;
+				int cs = se.getCurrentStock();
+				if (vk == ve) {
+					se.setCurrentStock(cs - count);
+					
+				} else {
+					int rest = fractionUnits - num;
+					while (rest < 0) {
+						rest = rest + vk;
+						se.setCurrentStock(cs - 1);
+					}
+					se.setFractionUnits(rest);
+				}
+				
+				CoreHub.getLocalLockService().releaseLock((StockEntry) se);
+				return Status.OK_STATUS;
 			}
-			
-			if (se.getStock().isCommissioningSystem()) {
-				return CoreHub.getStockCommissioningSystemService().performArticleOutlay(se, count,
-					null);
-			}
-			
-			CoreHub.getLocalLockService().releaseLock((StockEntry) se);
-			return Status.OK_STATUS;
 		}
 		
 		return new Status(Status.WARNING, CoreHub.PLUGIN_ID, "Could not acquire lock");
@@ -149,6 +147,11 @@ public class StockService implements IStockService {
 		if (se == null) {
 			return new Status(Status.WARNING, CoreHub.PLUGIN_ID,
 				"No stock entry for article found");
+		}
+		
+		if (se.getStock().isCommissioningSystem()) {
+			// updates must happen via manual inputs in the machine
+			return Status.OK_STATUS;
 		}
 		
 		LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking((StockEntry) se, 1,
@@ -266,8 +269,11 @@ public class StockService implements IStockService {
 		return null;
 	}
 	
-	public List<Stock> getAllStocks(){
+	public List<Stock> getAllStocks(boolean includeCommissioningSystems){
 		Query<Stock> qbe = new Query<Stock>(Stock.class);
+		if(!includeCommissioningSystems) {
+			qbe.add(Stock.FLD_DRIVER_UUID, Query.EQUALS, null);
+		}
 		qbe.orderBy(false, Stock.FLD_PRIORITY);
 		return qbe.execute();
 	}
@@ -330,6 +336,12 @@ public class StockService implements IStockService {
 		qre.add(StockEntry.FLD_ARTICLE_TYPE, Query.EQUALS, vals[0]);
 		qre.add(StockEntry.FLD_ARTICLE_ID, Query.EQUALS, vals[1]);
 		return qre.execute();
+	}
+	
+	@Override
+	public List<? extends IStockEntry> findAllStockEntriesForStock(IStock stock){
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -17,7 +17,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.stock.IStockService.Availability;
+import ch.elexis.core.services.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;

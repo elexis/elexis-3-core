@@ -19,9 +19,9 @@ public class StockSelectorDialog extends ListDialog {
 	
 	private Stock onlyOneStock = null;
 	
-	public StockSelectorDialog(Shell parent){
+	public StockSelectorDialog(Shell parent, boolean includeCommissioningSystems){
 		super(parent);
-		List<Stock> allStocks = CoreHub.getStockService().getAllStocks();
+		List<Stock> allStocks = CoreHub.getStockService().getAllStocks(includeCommissioningSystems);
 		if (allStocks.size() == 1) {
 			onlyOneStock = allStocks.get(0);
 		}

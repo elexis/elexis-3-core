@@ -19,6 +19,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -42,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.stock.IStockEntry;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -100,7 +101,13 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				manager.add(new CheckInOrderedAction(cv.getViewerWidget()));
-				manager.add(new ArticleLayoutAction(cv.getViewerWidget()));
+				ArticleMachineOutputAction amoa =
+					new ArticleMachineOutputAction(cv.getViewerWidget());
+				if (amoa.isVisible()) {
+					manager.add(amoa);
+					manager.add(new FullMachineInventoryAction(cv.getViewerWidget()));
+				}
+				
 			}
 		});
 		
@@ -111,7 +118,8 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				public void dropped(PersistentObject o, DropTargetEvent e){
 					if (o instanceof Artikel) {
 						Artikel art = (Artikel) o;
-						StockSelectorDialog ssd = new StockSelectorDialog(UiDesk.getTopShell());
+						StockSelectorDialog ssd =
+							new StockSelectorDialog(UiDesk.getTopShell(), false);
 						int open = ssd.open();
 						if (open == Dialog.OK) {
 							if (ssd.getResult().length > 0) {
@@ -205,7 +213,16 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				if (i == 4) {
 					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MIN);
 				} else if (i == 5) {
-					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_CURRENT);
+					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_CURRENT) {
+						protected boolean canEdit(Object element){
+							boolean canEdit = super.canEdit(element);
+							if (canEdit) {
+								StockEntry se = (StockEntry) element;
+								return !se.getStock().isCommissioningSystem();
+							}
+							return true;
+						};
+					};
 				} else if (i == 6) {
 					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MAX);
 				}
@@ -287,15 +304,47 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		}
 	}
 	
-	public class ArticleLayoutAction extends Action {
+	public class FullMachineInventoryAction extends Action {
 		private Viewer viewer;
 		
-		public ArticleLayoutAction(Viewer viewer){
+		public FullMachineInventoryAction(Viewer viewer){
 			this.viewer = viewer;
 		}
 		
 		@Override
-		public boolean isEnabled(){
+		public ImageDescriptor getImageDescriptor(){
+			return Images.IMG_SYNC.getImageDescriptor();
+		}
+		
+		@Override
+		public String getText(){
+			return Messages.StockView_PerformFullInventoryOnCommSystem;
+		}
+		
+		public void run(){
+			StockEntry stockEntry = fetchSelection();
+			CoreHub.getStockCommissioningSystemService().synchronizeInventory(stockEntry.getStock(),
+				null, null);
+		}
+		
+		private StockEntry fetchSelection(){
+			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+			if (selection != null && !selection.isEmpty()
+				&& selection.getFirstElement() instanceof StockEntry) {
+				return (StockEntry) selection.getFirstElement();
+			}
+			return null;
+		};
+	}
+	
+	public class ArticleMachineOutputAction extends Action {
+		private Viewer viewer;
+		
+		public ArticleMachineOutputAction(Viewer viewer){
+			this.viewer = viewer;
+		}
+		
+		public boolean isVisible(){
 			StockEntry stockEntry = fetchSelection();
 			if (stockEntry != null) {
 				Stock stock = stockEntry.getStock();

@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.stock.IStockEntry;
+import ch.elexis.core.model.IStockEntry;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package ch.elexis.core.stock;
+package ch.elexis.core.model.stock;
 
 import java.util.UUID;
 

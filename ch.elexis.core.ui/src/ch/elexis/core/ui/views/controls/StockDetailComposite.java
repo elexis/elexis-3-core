@@ -29,8 +29,8 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.stock.IStock;
-import ch.elexis.core.stock.IStockEntry;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Kontakt;
@@ -312,7 +312,7 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 		
-		List<Stock> stocks = stockService.getAllStocks();
+		List<Stock> stocks = stockService.getAllStocks(true);
 		for (Stock stock : stocks) {
 			stockEntries.put(stock, null);
 		}

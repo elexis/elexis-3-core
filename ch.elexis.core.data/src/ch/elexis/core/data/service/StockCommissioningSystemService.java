@@ -10,10 +10,10 @@ import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.internal.StockCommissioningSystemDriverFactories;
-import ch.elexis.core.stock.ICommissioningSystemDriver;
-import ch.elexis.core.stock.IStock;
-import ch.elexis.core.stock.IStockCommissioningSystemService;
-import ch.elexis.core.stock.IStockEntry;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.stock.ICommissioningSystemDriver;
+import ch.elexis.core.services.IStockCommissioningSystemService;
 import ch.elexis.data.StockEntry;
 
 /**
@@ -55,20 +55,32 @@ public class StockCommissioningSystemService implements IStockCommissioningSyste
 	}
 	
 	@Override
-	public IStatus shutdownStockCommissioningSytem(IStock stock){
-		return Status.OK_STATUS;
-	}
-	
-	@Override
 	public ICommissioningSystemDriver getDriverInstanceForStock(IStock stock){
 		return null;
 	}
 	
 	@Override
-	public void shutdownInstances(){}
-
+	public IStatus synchronizeInventory(IStock stock, List<String> articleIds, Object data){
+		ElexisEvent synchronizeEvent = new ElexisEvent();
+		synchronizeEvent.setTopic(ElexisEventTopics.TOPIC_STOCK_COMMISSIONING_SYNC_STOCK);
+		synchronizeEvent.getProperties()
+			.put(ElexisEventTopics.TOPIC_STOCK_COMMISSIONING_PROPKEY_STOCK_ID, stock.getId());
+		// TODO enable transfer of list
+		return CoreHub.getElexisServerEventService().postEvent(synchronizeEvent);
+	}
+	
 	@Override
-	public IStatus synchronizeInventory(IStock stock, String articleId, Object data){
+	public IStatus initializeInstancesUsingDriver(UUID driver){
+		return Status.OK_STATUS;
+	}
+	
+	@Override
+	public IStatus shutdownInstancesUsingDriver(UUID driver){
+		return Status.OK_STATUS;
+	}
+	
+	@Override
+	public IStatus shutdownStockCommissioningSytem(IStock stock){
 		return Status.OK_STATUS;
 	}
 	

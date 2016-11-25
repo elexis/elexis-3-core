@@ -1,9 +1,11 @@
-package ch.elexis.core.stock;
+package ch.elexis.core.services;
 
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.article.IArticle;
 
 public interface IStockService {
@@ -63,6 +65,14 @@ public interface IStockService {
 	 * @return the {@link Availability} of an article in a specific stock
 	 */
 	public Availability getArticleAvailabilityForStock(IStock stock, String article);
+
+	/**
+	 * Find all stock entries for the provided stock
+	 * 
+	 * @param stock
+	 * @return
+	 */
+	public List<? extends IStockEntry> findAllStockEntriesForStock(IStock stock);
 
 	/**
 	 * 

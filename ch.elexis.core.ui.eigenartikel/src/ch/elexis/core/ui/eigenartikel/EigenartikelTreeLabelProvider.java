@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.eigenartikel.Eigenartikel;
-import ch.elexis.core.stock.IStockService.Availability;
+import ch.elexis.core.services.IStockService.Availability;
 
 public class EigenartikelTreeLabelProvider extends LabelProvider {
 	

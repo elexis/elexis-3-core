@@ -12,8 +12,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.StockService;
-import ch.elexis.core.stock.IStockEntry;
-import ch.elexis.core.stock.IStockService.Availability;
+import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.services.IStockService.Availability;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkException;
 
@@ -87,7 +87,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 	@Test
 	public void testCreateEditAndDeleteStock(){
 		Stock stock = new Stock("TMP", 3);
-		List<Stock> allStocks = stockService.getAllStocks();
+		List<Stock> allStocks = stockService.getAllStocks(true);
 		assertEquals(4, allStocks.size());
 		for (int i = 0; i < allStocks.size(); i++) {
 			Stock s = allStocks.get(i);
@@ -106,7 +106,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 			}
 		}
 		stock.delete();
-		allStocks = stockService.getAllStocks();
+		allStocks = stockService.getAllStocks(true);
 		assertEquals(3, allStocks.size());
 	}
 	

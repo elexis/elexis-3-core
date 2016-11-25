@@ -9,6 +9,8 @@ public interface IArticle {
 	
 	public int getSellingUnit();
 	
+	public String getName();
+	
 	/**
 	 * Determine whether this article is a product or a package. A product is the abstract
 	 * definition of articles available as packages. Hence a product can not be billed, as it does

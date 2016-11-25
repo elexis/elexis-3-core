@@ -1,4 +1,4 @@
-package ch.elexis.core.stock;
+package ch.elexis.core.model;
 
 import ch.elexis.core.model.article.IArticle;
 

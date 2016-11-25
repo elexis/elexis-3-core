@@ -378,9 +378,7 @@ public class StockManagementPreferencePage extends PreferencePage
 		});
 		
 		lblMachineuuid = new Label(compositeDetail, SWT.NONE);
-		lblMachineuuid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeDetail, SWT.NONE);
-		new Label(compositeDetail, SWT.NONE);
+		lblMachineuuid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		Label lblMachineConfig = new Label(compositeDetail, SWT.NONE);
 		lblMachineConfig.setText(Messages.StockManagementPreferencePage_lblMachineConfig_text);
@@ -428,6 +426,7 @@ public class StockManagementPreferencePage extends PreferencePage
 			.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		String id = CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 		lblDefaultArticleProvider.setText("");
+		new Label(compDefaultProvider, SWT.NONE);
 		if (id != null) {
 			Kontakt load = Kontakt.load(id);
 			if (load.exists()) {

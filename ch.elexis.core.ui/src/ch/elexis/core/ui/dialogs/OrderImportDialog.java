@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.stock.IStockEntry;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.actions.ScannerEvents;
 import ch.elexis.core.ui.text.ElexisText;
 import ch.elexis.core.ui.util.SWTHelper;

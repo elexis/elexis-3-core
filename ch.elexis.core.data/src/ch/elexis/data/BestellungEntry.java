@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.stock.IOrderEntry;
+import ch.elexis.core.model.IOrderEntry;
 
 /**
  * @since 3.2

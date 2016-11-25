@@ -1,4 +1,8 @@
-package ch.elexis.core.stock;
+package ch.elexis.core.services;
+
+import ch.elexis.core.model.IOrder;
+import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IStockEntry;
 
 public interface IOrderService {
 	public IOrderEntry findOpenOrderEntryForStockEntry(IStockEntry ise);

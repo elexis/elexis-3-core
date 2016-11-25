@@ -24,9 +24,9 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.stock.IOrder;
-import ch.elexis.core.stock.IOrderEntry;
-import ch.elexis.core.stock.IStock;
+import ch.elexis.core.model.IOrder;
+import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IStock;
 import ch.rgw.tools.TimeTool;
 
 public class Bestellung extends PersistentObject implements IOrder {

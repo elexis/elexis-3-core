@@ -1,9 +1,13 @@
-package ch.elexis.core.stock;
+package ch.elexis.core.services;
 
 import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.core.runtime.IStatus;
+
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.stock.ICommissioningSystemDriver;
 
 public interface IStockCommissioningSystemService {
 
@@ -12,6 +16,14 @@ public interface IStockCommissioningSystemService {
 	public String getInfoStringForDriver(UUID driverUuid, boolean extended);
 
 	public IStatus initializeStockCommissioningSystem(IStock stock);
+
+	public IStatus shutdownStockCommissioningSytem(IStock stock);
+
+	public IStatus initializeInstancesUsingDriver(UUID driver);
+
+	public IStatus shutdownInstancesUsingDriver(UUID driver);
+
+	public ICommissioningSystemDriver getDriverInstanceForStock(IStock stock);
 
 	/**
 	 * Outlays the article by effectively ordering the respective the device to
@@ -31,16 +43,10 @@ public interface IStockCommissioningSystemService {
 	 * @param stock
 	 *            the stock to perform the synchronization on
 	 * @param articleId
-	 *            if <code>null</code> synchronize all articles, else only this
-	 *            one
+	 *            if <code>null</code> synchronize all articles, else only those
+	 *            with ids contained in the list
 	 * @param data
 	 * @return
 	 */
-	public IStatus synchronizeInventory(IStock stock, String articleId, Object data);
-
-	public IStatus shutdownStockCommissioningSytem(IStock stock);
-
-	public ICommissioningSystemDriver getDriverInstanceForStock(IStock stock);
-
-	public void shutdownInstances();
+	public IStatus synchronizeInventory(IStock stock, List<String> articleIds, Object data);
 }
