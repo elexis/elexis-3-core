@@ -96,6 +96,8 @@ public class VerrechnetCopy extends Verrechnet {
 				verrechnet.get(SCALE_SELLING), verrechnet.get(PRICE_SELLING),
 				verrechnet.get(SCALE), verrechnet.get(SCALE2), verrechnet.get(USERID)
 			});
+		// copy vat scale for reporting
+		setDetail(Verrechnet.VATSCALE, verrechnet.getDetail(Verrechnet.VATSCALE));
 	}
 	
 	/**
