@@ -103,4 +103,18 @@ public class ModelUtil {
 		}
 		return Optional.empty();
 	}
+	
+	public static boolean isSameCoding(ICoding left, ICoding right){
+		return left.getSystem().equals(right.getSystem()) && left.getCode().equals(right.getCode());
+	}
+	
+	public static void addCodingIfNotPresent(List<ICoding> coding, ICoding iCoding){
+		// check if this iCoding is already present
+		for (ICoding presentCoding : coding) {
+			if (isSameCoding(presentCoding, iCoding)) {
+				return;
+			}
+		}
+		coding.add(iCoding);
+	}
 }
