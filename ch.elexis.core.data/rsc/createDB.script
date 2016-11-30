@@ -508,6 +508,26 @@ CREATE TABLE LABGROUP_ITEM_JOINT(
      Comment        TEXT
 ); 
 
+CREATE TABLE LABORDER (
+	ID VARCHAR(25) primary key,
+	lastupdate BIGINT,
+	deleted CHAR(1) default '0',
+	userid VARCHAR(128),
+	mandant VARCHAR(128),
+	patient VARCHAR(128),
+	item VARCHAR(128),
+	result VARCHAR(128),
+	orderid VARCHAR(128),
+	groupname VARCHAR(255),
+	time VARCHAR(24),
+	observationtime VARCHAR(24),
+	state CHAR(1)		
+);
+
+CREATE INDEX laborder1 ON LABORDER (time);
+CREATE INDEX laborder2 ON LABORDER (mandant);
+CREATE INDEX laborder3 ON LABORDER (patient);
+CREATE INDEX laborder4 ON LABORDER (orderid);
 
 CREATE TABLE REZEPTE(
 	ID			VARCHAR(25) primary key,
