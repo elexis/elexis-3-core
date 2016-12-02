@@ -1,6 +1,7 @@
 package ch.elexis.core.findings.codes;
 
 import java.util.List;
+import java.util.Optional;
 
 import ch.elexis.core.findings.ICoding;
 
@@ -28,6 +29,15 @@ public interface ICodingService {
 	 * @return
 	 */
 	public List<ICoding> getAvailableCodes(String system);
+	
+	/**
+	 * Return a matching {@link ICoding} instance for the requested code of the system, or empty if
+	 * there is no such code.
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public Optional<ICoding> getCode(String system, String code);
 	
 	/**
 	 * Add a {@link ICoding} to the {@link ILocalCodingContribution} implementation.

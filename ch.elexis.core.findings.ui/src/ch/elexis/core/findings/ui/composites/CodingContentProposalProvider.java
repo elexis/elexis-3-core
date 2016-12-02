@@ -22,7 +22,7 @@ public class CodingContentProposalProvider implements IContentProposalProvider {
 	public IContentProposal[] getProposals(String contents, int position){
 		List<IContentProposal> ret = new ArrayList<IContentProposal>();
 		if (contents != null && !contents.isEmpty()) {
-			labelToCoding.keySet().parallelStream().forEach(label -> {
+			labelToCoding.keySet().stream().forEach(label -> {
 				String match = contents.toLowerCase();
 				if (label.toLowerCase().contains(match)) {
 					ret.add(new ContentProposal(label));

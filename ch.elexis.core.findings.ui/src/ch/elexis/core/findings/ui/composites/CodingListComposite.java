@@ -21,6 +21,7 @@ import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.CodingSystem;
+import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.NatTableFactory;
 import ch.elexis.core.ui.util.NatTableWrapper;
@@ -80,11 +81,23 @@ public class CodingListComposite extends Composite {
 				@Override
 				public Object getDataValue(ICoding coding, int arg1){
 					StringBuilder text = new StringBuilder();
-					
+					String display = coding.getDisplay();
+					if (display == null || display.isEmpty()) {
+						List<ICoding> codes = CodingServiceComponent.getService()
+							.getAvailableCodes(coding.getSystem());
+						if (codes != null && !codes.isEmpty()) {
+							ICoding code = searchForCode(coding.getCode(), codes);
+							if (code != null) {
+								display = code.getDisplay();
+							} else {
+								display = "?";
+							}
+						}
+					}
 					text.append("<strong>");
 					text.append("[").append(coding.getCode()).append("]");
 					text.append("</strong>");
-					text.append(" ").append(coding.getDisplay());
+					text.append(" ").append(display);
 					
 					return text.toString();
 				}
@@ -97,6 +110,15 @@ public class CodingListComposite extends Composite {
 		GridData tableGd = new GridData(GridData.FILL_BOTH);
 		tableGd.horizontalSpan = 2;
 		natTableWrapper.getNatTable().setLayoutData(tableGd);
+	}
+	
+	private ICoding searchForCode(String code, List<ICoding> codes){
+		for (ICoding iCoding : codes) {
+			if (iCoding.getCode().equals(code)) {
+				return iCoding;
+			}
+		}
+		return null;
 	}
 	
 	private class RemoveCodingAction extends Action {

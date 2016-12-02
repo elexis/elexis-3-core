@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.findings.codes.ICodingService"/>
    </service>
-   <reference bind="bindFhirTransformer" cardinality="0..1" interface="ch.elexis.core.findings.codes.ICodingContribution" name="FhirTransformer" policy="static" policy-option="greedy" unbind="unbindFhirTransformer"/>
+   <reference bind="bindFhirTransformer" cardinality="0..n" interface="ch.elexis.core.findings.codes.ICodingContribution" name="FhirTransformer" policy="static" policy-option="greedy" unbind="unbindFhirTransformer"/>
    <implementation class="ch.elexis.core.findings.fhir.po.codes.CodingService"/>
 </scr:component>

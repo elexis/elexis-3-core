@@ -3,6 +3,7 @@ package ch.elexis.core.findings.fhir.po.codes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
@@ -29,7 +30,7 @@ public class CodingService implements ICodingService {
 		return LoggerFactory.getLogger(CodingService.class);
 	}
 	
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
 	public synchronized void bindFhirTransformer(ICodingContribution contribution){
 		if (contributions == null) {
 			contributions = new ArrayList<ICodingContribution>();
@@ -66,6 +67,16 @@ public class CodingService implements ICodingService {
 			}
 		}
 		return Collections.emptyList();
+	}
+	
+	@Override
+	public Optional<ICoding> getCode(String system, String code){
+		for (ICodingContribution iCodingContribution : contributions) {
+			if (iCodingContribution.getCodeSystem().equals(system)) {
+				return iCodingContribution.getCode(code);
+			}
+		}
+		return Optional.empty();
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package ch.elexis.core.findings.codes;
 
 import java.util.List;
+import java.util.Optional;
 
 import ch.elexis.core.findings.ICoding;
 
@@ -25,4 +26,13 @@ public interface ICodingContribution {
 	 * @return
 	 */
 	public List<ICoding> getCodes();
+	
+	/**
+	 * Return a matching {@link ICoding} instance for the requested code, or empty if there is no
+	 * such code.
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public Optional<ICoding> getCode(String code);
 }

@@ -55,4 +55,9 @@ public class LocalCodingContribution implements ICodingContribution, ILocalCodin
 			exists.ifPresent(existing -> ((LocalCoding) existing).delete());
 		}
 	}
+	
+	@Override
+	public Optional<ICoding> getCode(String code){
+		return getCodingByCode(code);
+	}
 }

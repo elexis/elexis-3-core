@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.ToolBar;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
@@ -44,7 +45,11 @@ import ch.elexis.core.findings.ICondition.ConditionStatus;
 import ch.elexis.core.findings.ui.dialogs.ConditionEditDialog;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.AcquireLockUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.util.NatTableFactory;
 import ch.elexis.core.ui.util.NatTableWrapper;
 import ch.elexis.core.ui.util.NatTableWrapper.IDoubleClickListener;
@@ -111,8 +116,7 @@ public class DiagnoseListComposite extends Composite {
 							}
 							contentText.append("[")
 								.append(CodingServiceComponent.getService().getShortLabel(iCoding))
-								.append(iCoding.getCode()).append("] ")
-								.append(iCoding.getDisplay() != null ? iCoding.getDisplay() : "");
+								.append("] ");
 						}
 					}
 					// add additional information before content
@@ -135,7 +139,6 @@ public class DiagnoseListComposite extends Composite {
 						text.append("</strong> ").append(contentText.toString());
 					}
 					
-
 					return text.toString();
 				}
 				
@@ -149,16 +152,27 @@ public class DiagnoseListComposite extends Composite {
 		natTableWrapper.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
 			public void doubleClick(NatTableWrapper source, ISelection selection){
-				if(selection instanceof StructuredSelection && !selection.isEmpty()) {
-					ConditionEditDialog dialog =
-						new ConditionEditDialog(
-							(ICondition) ((StructuredSelection) selection).getFirstElement(),
-							getShell());
-					if (dialog.open() == Dialog.OK) {
-						dialog.getCondition().ifPresent(c -> {
-							source.getNatTable().refresh();
+				if (selection instanceof StructuredSelection && !selection.isEmpty()) {
+					ICondition condition =
+						(ICondition) ((StructuredSelection) selection).getFirstElement();
+					AcquireLockBlockingUi.aquireAndRun((IPersistentObject) condition,
+						new ILockHandler() {
+							@Override
+							public void lockFailed(){
+								// do nothing
+							}
+							
+							@Override
+							public void lockAcquired(){
+								ConditionEditDialog dialog =
+									new ConditionEditDialog(condition, getShell());
+								if (dialog.open() == Dialog.OK) {
+									dialog.getCondition().ifPresent(c -> {
+										source.getNatTable().refresh();
+									});
+								}
+							}
 						});
-					}
 				}
 			}
 		});
@@ -260,7 +274,16 @@ public class DiagnoseListComposite extends Composite {
 		
 		@Override
 		public void run(){
-			condition.setStatus(status);
+			AcquireLockUi.aquireAndRun((IPersistentObject) condition, new ILockHandler() {
+				@Override
+				public void lockFailed(){}
+				
+				@Override
+				public void lockAcquired(){
+					condition.setStatus(status);
+				}
+			});
+			
 			natTableWrapper.getNatTable().refresh();
 		}
 	}
@@ -286,6 +309,8 @@ public class DiagnoseListComposite extends Composite {
 				if (dialog.open() == Dialog.OK) {
 					dialog.getCondition().ifPresent(c -> {
 						c.setPatientId(selectedPatient.getId());
+						// touch after creation
+						CoreHub.getLocalLockService().acquireLock((IPersistentObject) c);
 						dataList.add(c);
 						natTableWrapper.getNatTable().refresh();
 					});
@@ -313,9 +338,17 @@ public class DiagnoseListComposite extends Composite {
 				@SuppressWarnings("unchecked")
 				List<ICondition> list = ((StructuredSelection) selection).toList();
 				list.stream().forEach(c -> {
-					FindingsServiceComponent.getService().deleteFinding(c);
-					dataList.remove(c);
-					natTableWrapper.getNatTable().refresh();
+					AcquireLockUi.aquireAndRun((IPersistentObject) c, new ILockHandler() {
+						@Override
+						public void lockFailed(){}
+						
+						@Override
+						public void lockAcquired(){
+							FindingsServiceComponent.getService().deleteFinding(c);
+							dataList.remove(c);
+							natTableWrapper.getNatTable().refresh();
+						}
+					});
 				});
 			}
 		}
