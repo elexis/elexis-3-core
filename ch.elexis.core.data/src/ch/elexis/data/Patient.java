@@ -352,8 +352,8 @@ public class Patient extends Person {
 			}
 			int lastNum = Integer.parseInt(pid) + 1;
 			rc = Integer.toString(lastNum);
-			getDBConnection()
-				.exec("UPDATE CONFIG set wert='" + rc + "' where param='PatientNummer'");
+			getDBConnection().exec("UPDATE CONFIG set wert='" + rc + "', lastupdate="
+				+ Long.toString(System.currentTimeMillis()) + " where param='PatientNummer'");
 			PersistentObject.unlock("PatNummer", lockid);
 			String exists = getDBConnection()
 				.queryString("SELECT ID FROM KONTAKT WHERE PatientNr=" + JdbcLink.wrap(rc));
