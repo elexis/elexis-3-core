@@ -7,5 +7,12 @@
             Class="ch.elexis.core.findings.fhir.po.factory.PersistentObjectFactory">
       </Factory>
    </extension>
+   <extension
+         point="ch.elexis.core.data.DataAccess">
+      <DataAccess
+            class="ch.elexis.core.findings.fhir.po.dataaccess.FindingsDataAccessor"
+            name="Befunde">
+      </DataAccess>
+   </extension>
 
 </plugin>
