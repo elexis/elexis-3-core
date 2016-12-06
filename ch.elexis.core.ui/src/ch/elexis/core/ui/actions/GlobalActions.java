@@ -114,8 +114,8 @@ public class GlobalActions {
 	public static final String PROPERTIES_COMMAND = "org.eclipse.ui.file.properties"; //$NON-NLS-1$
 	public static final String DEFAULTPERSPECTIVECFG = "/default_perspective"; //$NON-NLS-1$
 	
-	public static IWorkbenchAction exitAction, newWindowAction, copyAction, cutAction, pasteAction;
-	public static IAction loginAction, importAction, aboutAction, helpAction, prefsAction;
+	public static IWorkbenchAction newWindowAction, copyAction, cutAction, pasteAction;
+	public static IAction exitAction, loginAction, importAction, aboutAction, helpAction, prefsAction;
 	public static IAction connectWizardAction, changeMandantAction, savePerspectiveAction, savePerspectiveAsAction;
 	public static IAction savePerspectiveAsDefaultAction, resetPerspectiveAction, homeAction, fixLayoutAction;
 	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette;
@@ -139,7 +139,18 @@ public class GlobalActions {
 		logger = LoggerFactory.getLogger(this.getClass());
 		mainWindow = window;
 		help = Hub.plugin.getWorkbench().getHelpSystem();
-		exitAction = ActionFactory.QUIT.create(window);
+		exitAction = new Action(Messages.GlobalActions_MenuExit) { //$NON-NLS-1$		
+			@Override
+			public void run(){
+				// We need to unlock the layout, otherwise 
+				// the Workbench shutdown will fail
+				fixLayoutAction.setChecked(Preferences.USR_FIX_LAYOUT_DEFAULT);
+				fixLayoutAction.run();
+				IWorkbenchWindow workbench = Hub.plugin.getWorkbench().getActiveWorkbenchWindow();
+				workbench.close();
+			}
+		};
+		exitAction.setId("menuExit"); //$NON-NLS-1$
 		exitAction.setText(Messages.GlobalActions_MenuExit); //$NON-NLS-1$
 		newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
 		newWindowAction.setText(Messages.GlobalActions_NewWindow); //$NON-NLS-1$
