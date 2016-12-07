@@ -245,6 +245,20 @@ public class Prescription extends PersistentObject {
 		return checkNull(get(FLD_DOSAGE));
 	}
 	
+
+	 /**
+	  * Return whether we consider this to be equivalent to 1.0f
+	  * @param string
+	  * @return true if 'x' or 'bds' or '1x'
+	  */
+	 private static boolean means_one(String string)
+	 {
+	   return (string.equalsIgnoreCase("x") ||
+	       string.equalsIgnoreCase("bds") ||
+	       string.equalsIgnoreCase("1x") ||
+	       string.equalsIgnoreCase("(1)"));
+	 }
+
 	/**
 	 * Return the dose of a drugs as a list of up to 4 floats.<br>
 	 * Up to Version 3.0.10 (hopefully) Elexis did not specify exactly the dose of a drug, but used
@@ -264,7 +278,9 @@ public class Prescription extends PersistentObject {
 		if (dosis != null) {
 			// Match stuff like '1/2', '7/8', '~1,2'
 			// System.out.println(dosis.matches(special_num_at_start));
-			if (dosis.matches(special_num_at_start))  {
+			if (dosis.matches("x"))  {
+					list.add(1.0f); }
+			else if (dosis.matches(special_num_at_start))  {
 				list.add(getNum(dosis.replace("~", "")));
 			} else if (dosis.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
 				String[] dose = dosis.split("[xX]"); //$NON-NLS-1$
@@ -290,7 +306,9 @@ public class Prescription extends PersistentObject {
 				if (dos.length > 2) {
 					for (String d : dos) {
 						boolean hasDigit = d.matches("^[~/.]*[½¼0-9].*");
-						if (d.indexOf(' ') != -1)
+						if (means_one(d))
+							list.add(1.0f);
+						else if (d.indexOf(' ') != -1)
 							list.add(getNum(d.substring(0, d.indexOf(' '))));
 						else if (d.length() > 0 && hasDigit)
 							list.add(getNum(d));
@@ -314,7 +332,9 @@ public class Prescription extends PersistentObject {
 			if (dos.length > 2) {
 				for (String d : dos) {
 					boolean hasDigit = d.matches("^[~/.]*[½¼0-9].*");
-					if (d.indexOf(' ') != -1)
+					if (means_one(d))
+						list.add(1.0f);
+					else if (d.indexOf(' ') != -1)
 						list.add(getNum(d.substring(0, d.indexOf(' '))));
 					else if (d.length() > 0 && hasDigit)
 						list.add(getNum(d));
