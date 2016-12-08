@@ -247,17 +247,18 @@ public class Prescription extends PersistentObject {
 	
 
 	 /**
-	  * Return whether we consider this to be equivalent to 1.0f
-	  * @param string
-	  * @return true if 'x' or 'bds' or '1x'
+	  * A regular expresssion which allows us to match several string,
+	  * we consider to be equivalent to 1.0f. Needed for abbreviations like<br>
+	  * * 0-x-0-x<br>
+	  * * x-x-x-x<br>
+	  * * 1x-0-(1)-0<br>
+	  * * bds-0-bds-0<br>
+	  *
+	  * The abbreviation bds means (taken from)<br>
+	  *   http://www.pharmawiki.ch/wiki/index.php?wiki=Abkuerzungen_auf_aerztlichen_Rezepten<br>
+	  *   bds - beidseits, in beide Augen<br>
 	  */
-	 private static boolean means_one(String string)
-	 {
-	   return (string.equalsIgnoreCase("x") ||
-	       string.equalsIgnoreCase("bds") ||
-	       string.equalsIgnoreCase("1x") ||
-	       string.equalsIgnoreCase("(1)"));
-	 }
+    static final String MEANS_ONE_PATTERN = "1x|(\\(1\\))|x|bds";
 
 	/**
 	 * Return the dose of a drugs as a list of up to 4 floats.<br>
@@ -306,7 +307,7 @@ public class Prescription extends PersistentObject {
 				if (dos.length > 2) {
 					for (String d : dos) {
 						boolean hasDigit = d.matches("^[~/.]*[½¼0-9].*");
-						if (means_one(d))
+						if (d.matches(MEANS_ONE_PATTERN))
 							list.add(1.0f);
 						else if (d.indexOf(' ') != -1)
 							list.add(getNum(d.substring(0, d.indexOf(' '))));
@@ -332,7 +333,7 @@ public class Prescription extends PersistentObject {
 			if (dos.length > 2) {
 				for (String d : dos) {
 					boolean hasDigit = d.matches("^[~/.]*[½¼0-9].*");
-					if (means_one(d))
+					if (d.matches(MEANS_ONE_PATTERN))
 						list.add(1.0f);
 					else if (d.indexOf(' ') != -1)
 						list.add(getNum(d.substring(0, d.indexOf(' '))));

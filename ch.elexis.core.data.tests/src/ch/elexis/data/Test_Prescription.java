@@ -193,6 +193,10 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		1/2 - 0 - 1/2
 		1/2 - 0 -1/2
 		*/
+		// Is not really correct, as it humans would expect 1.0f, 1.0f
+		// But it is seen very often.
+		testItems.add(new TestItem("2x1", Arrays.asList(2.0f)));
+
 		testItems.add(new TestItem("1/2", Arrays.asList(0.5f)));
 		testItems.add(new TestItem("7/8", Arrays.asList(0.875f)));
 
