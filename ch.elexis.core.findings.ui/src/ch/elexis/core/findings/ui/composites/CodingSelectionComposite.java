@@ -1,6 +1,7 @@
 package ch.elexis.core.findings.ui.composites;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.action.Action;
@@ -59,7 +60,9 @@ public class CodingSelectionComposite extends Composite implements ISelectionPro
 				return super.getText(element);
 			}
 		});
-		systemCombo.setInput(CodingServiceComponent.getService().getAvailableCodeSystems());
+		systemCombo.setInput(CodingServiceComponent.getService().getAvailableCodeSystems().stream()
+			.filter(system -> !system.equals(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem()))
+			.collect(Collectors.toList()));
 		systemCombo.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
@@ -116,13 +119,14 @@ public class CodingSelectionComposite extends Composite implements ISelectionPro
 			@Override
 			public boolean isEnabled(){
 				ISelection systemSelection = systemCombo.getSelection();
-				if (!(systemSelection instanceof StructuredSelection)
-					|| !((StructuredSelection) systemSelection).getFirstElement()
-						.equals(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem())) {
-					return false;
+				if (systemSelection instanceof StructuredSelection) {
+					Object codeSystem = ((StructuredSelection) systemSelection).getFirstElement();
+					if(codeSystem instanceof String && codeSystem.equals(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem()) ) {
+						String text = selectionTxt.getSelectionText();
+						return text != null && !text.isEmpty();
+					}
 				}
-				String text = selectionTxt.getSelectionText();
-				return text != null && !text.isEmpty();
+				return false;
 			}
 		});
 		menuManager.addMenuListener(new IMenuListener() {
