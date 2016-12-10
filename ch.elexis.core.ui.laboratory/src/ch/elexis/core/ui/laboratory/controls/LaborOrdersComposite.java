@@ -57,6 +57,9 @@ public class LaborOrdersComposite extends Composite {
 	
 	private Patient actPatient;
 	
+	private Patient ordersPatient;
+	private List<LabOrder> patientsOrder;
+	
 	public LaborOrdersComposite(Composite parent, int style){
 		super(parent, style);
 		
@@ -226,9 +229,11 @@ public class LaborOrdersComposite extends Composite {
 	public void selectPatient(Patient patient){
 		setRedraw(false);
 		if (patient != null) {
-			actPatient = patient;
-			form.setText(actPatient.getLabel());
-			reload();
+			if (!patient.equals(actPatient)) {
+				actPatient = patient;
+				form.setText(actPatient.getLabel());
+				reload();
+			}
 		} else {
 			actPatient = patient;
 			form.setText(Messages.LaborOrdersComposite_NoPatientSelected);
@@ -261,52 +266,59 @@ public class LaborOrdersComposite extends Composite {
 	}
 	
 	private List<LabOrder> getOrders(){
-		List<LabOrder> ret = new ArrayList<LabOrder>();
-		List<LabOrder> orders = null;
-		if (CoreHub.userCfg.get(Preferences.LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY, false)) {
-			orders =
-				LabOrder.getLabOrders(actPatient, CoreHub.actMandant, null, null, null, null, null);
-		} else {
-			orders = LabOrder.getLabOrders(actPatient, null, null, null, null, null, null);
+		if (actPatient == null) {
+			ordersPatient = actPatient;
+			return Collections.emptyList();
+		}
+		if (!actPatient.equals(ordersPatient)) {
+			List<LabOrder> orders = null;
+			if (CoreHub.userCfg.get(Preferences.LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY, false)) {
+				orders = LabOrder.getLabOrders(actPatient, CoreHub.actMandant, null, null, null,
+					null, null);
+			} else {
+				orders = LabOrder.getLabOrders(actPatient, null, null, null, null, null, null);
+			}
+			
+			// Sorting by priority of labItem
+			if (orders != null) {
+				Collections.sort(orders, new Comparator<LabOrder>() {
+					// keep a cache with LabOrder to prio
+					private WeakHashMap<LabOrder, String> cache =
+						new WeakHashMap<LabOrder, String>();
+					
+					@Override
+					public int compare(LabOrder lo1, LabOrder lo2){
+						String prio1 = cache.get(lo1);
+						String prio2 = cache.get(lo2);
+						if (prio1 == null) {
+							LabItem item1 = lo1.getLabItem();
+							if (item1 != null && item1.getPrio() != null) {
+								prio1 = item1.getPrio();
+								cache.put(lo1, prio1);
+							} else {
+								prio1 = "";
+								cache.put(lo1, prio1);
+							}
+						}
+						if (prio2 == null) {
+							LabItem item2 = lo2.getLabItem();
+							if (item2 != null && item2.getPrio() != null) {
+								prio2 = item2.getPrio();
+								cache.put(lo2, prio2);
+							} else {
+								prio2 = "";
+								cache.put(lo2, prio2);
+							}
+						}
+						return prio1.compareTo(prio2);
+					}
+				});
+			}
+			ordersPatient = actPatient;
+			patientsOrder = new ArrayList<>(orders);
 		}
 		
-		// Sorting by priority of labItem
-		if (orders != null) {
-			Collections.sort(orders, new Comparator<LabOrder>() {
-				// keep a cache with LabOrder to prio
-				private WeakHashMap<LabOrder, String> cache = new WeakHashMap<LabOrder, String>();
-				
-				@Override
-				public int compare(LabOrder lo1, LabOrder lo2){
-					String prio1 = cache.get(lo1);
-					String prio2 = cache.get(lo2);
-					if (prio1 == null) {
-						LabItem item1 = lo1.getLabItem();
-						if (item1 != null && item1.getPrio() != null) {
-							prio1 = item1.getPrio();
-							cache.put(lo1, prio1);
-						} else {
-							prio1 = "";
-							cache.put(lo1, prio1);
-						}
-					}
-					if (prio2 == null) {
-						LabItem item2 = lo2.getLabItem();
-						if (item2 != null && item2.getPrio() != null) {
-							prio2 = item2.getPrio();
-							cache.put(lo2, prio2);
-						} else {
-							prio2 = "";
-							cache.put(lo2, prio2);
-						}
-					}
-					return prio1.compareTo(prio2);
-				}
-			});
-			ret.addAll(orders);
-		}
-		
-		return ret;
+		return patientsOrder;
 	}
 	
 	public TreeViewer getViewer(){
