@@ -141,8 +141,7 @@ public class CoreHub implements BundleActivator {
 	private static final IOrderService orderService = new OrderService();
 	
 	/** Event Service to transport Events to the Elexis Server */
-	private static final ElexisServerEventService elexisServerEventService =
-		new ElexisServerEventService();
+	private static ElexisServerEventService elexisServerEventService;
 	
 	/**
 	 * Stock commissioning system service
@@ -233,6 +232,7 @@ public class CoreHub implements BundleActivator {
 		plugin = this;
 		
 		localLockService = new LocalLockService();
+		elexisServerEventService = new ElexisServerEventService();
 		
 		startUpBundle();
 		setUserDir(userDir);

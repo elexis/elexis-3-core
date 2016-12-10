@@ -38,10 +38,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.UiDesk;
@@ -323,8 +325,12 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		
 		public void run(){
 			StockEntry stockEntry = fetchSelection();
-			CoreHub.getStockCommissioningSystemService().synchronizeInventory(stockEntry.getStock(),
-				null, null);
+			IStatus status = CoreHub.getStockCommissioningSystemService()
+				.synchronizeInventory(stockEntry.getStock(), null, null);
+			if(!status.isOK()) {
+				ElexisStatus elStatus = new ElexisStatus(status);
+				StatusManager.getManager().handle(elStatus, StatusManager.SHOW);
+			}
 		}
 		
 		private StockEntry fetchSelection(){
@@ -365,7 +371,10 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			StockEntry stockEntry = fetchSelection();
 			IStatus status = CoreHub.getStockCommissioningSystemService()
 				.performArticleOutlay(stockEntry, 1, null);
-			// TODO Status Dialog
+			if(!status.isOK()) {
+				ElexisStatus elStatus = new ElexisStatus(status);
+				StatusManager.getManager().handle(elStatus, StatusManager.SHOW);
+			}
 		}
 		
 		private StockEntry fetchSelection(){
