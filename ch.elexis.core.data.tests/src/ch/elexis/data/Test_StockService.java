@@ -1,6 +1,7 @@
 package ch.elexis.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -38,9 +39,8 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 		
 		User user = User.load("Administrator");
 		// set user in system
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
-		
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
 		
 		stock_A_5_public = new Stock("A", 5);
 		stock_B_10_private = new Stock("PRV", 10);
@@ -88,7 +88,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 	public void testCreateEditAndDeleteStock(){
 		Stock stock = new Stock("TMP", 3);
 		List<Stock> allStocks = stockService.getAllStocks(true);
-		assertEquals(4, allStocks.size());
+		assertTrue(allStocks.size() >= 4);
 		for (int i = 0; i < allStocks.size(); i++) {
 			Stock s = allStocks.get(i);
 			if (i == 0) {
@@ -186,20 +186,22 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 		prefSE = stockService.findPreferredStockEntryForArticle(artikel_C.storeToString(), null);
 		assertEquals(11, prefSE.getCurrentStock());
 		assertEquals(15, prefSE.getMinimumStock());
-
+		
 		stock.removeFromDatabase();
 	}
 	
 	@Test
 	public void testPerformMultipleStoreOnSingleStockForArticle(){
 		stockService.storeArticleInStock(defaultStock, artikel_C.storeToString());
-		assertEquals(1, stockService.findAllStockEntriesForArticle(artikel_C.storeToString()).size());
+		assertEquals(1,
+			stockService.findAllStockEntriesForArticle(artikel_C.storeToString()).size());
 		stockService.storeArticleInStock(defaultStock, artikel_C.storeToString());
-		assertEquals(1, stockService.findAllStockEntriesForArticle(artikel_C.storeToString()).size());
+		assertEquals(1,
+			stockService.findAllStockEntriesForArticle(artikel_C.storeToString()).size());
 	}
 	
 	@Test
-	public void testQueryMappedExpressionNumeric() {
+	public void testQueryMappedExpressionNumeric(){
 		Stock stock = new Stock("TestStock", 20);
 		Artikel art = new Artikel("TestARtikel", "Eigenartikel");
 		Artikel art2 = new Artikel("TestARtikel2", "Eigenartikel");
