@@ -414,11 +414,15 @@ public class Fall extends PersistentObject {
 		if (StringTool.isNothing(ret)) {
 			String[] systeme = getAbrechnungsSysteme();
 			String altGesetz = get("xGesetz"); //$NON-NLS-1$
-			int idx = StringTool.getIndex(systeme, altGesetz);
-			if (idx == -1) {
-				ret = systeme[0];
+			if (altGesetz != null) {
+				int idx = StringTool.getIndex(systeme, altGesetz);
+				if (idx == -1) {
+					ret = systeme[0];
+				} else {
+					ret = systeme[idx];
+				}
 			} else {
-				ret = systeme[idx];
+				ret = systeme[0];
 			}
 			setAbrechnungsSystem(ret);
 		}
