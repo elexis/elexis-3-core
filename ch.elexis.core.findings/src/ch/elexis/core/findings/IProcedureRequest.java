@@ -45,14 +45,14 @@ public interface IProcedureRequest extends IFinding {
 	public void setCoding(List<ICoding> coding);
 
 	/**
-	 * Get the start date and time of the encounter.
+	 * Get the scheduled date and time of the ProcedureRequest..
 	 * 
 	 * @return
 	 */
 	public Optional<LocalDateTime> getScheduledTime();
 
 	/**
-	 * Set the start date and time of the encounter.
+	 * Set the scheduled date and time of the ProcedureRequest..
 	 * 
 	 * @param time
 	 */

@@ -47,6 +47,8 @@ public interface ICondition extends IFinding {
 
 	/**
 	 * Get the condition category.
+	 * 
+	 * @return
 	 */
 	public ConditionCategory getCategory();
 
