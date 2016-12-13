@@ -1,0 +1,9 @@
+Dokumentation:
+
+Dieses Plugin ermöglicht die Verwendung eines Wikis für die Hilfestellung.
+In jeder View kann F1 gedrückt werden (alternativ der Hilfe-Schalter in der
+Toolbar). Dadurch wird die View "iatrix Hilfe" geöffnet. Diese View zeigt
+ein Wiki an. Das Wiki wird unter "Einstellungen/Help/Iatrix Wiki Hilfe"
+konfiguriert. Es können ein Basispfad (inklusive abschliessendem Slash)
+und eine Startseite (Wiki-Page) definiert werden. Es sind sinnvolle
+Standard-Werte definiert.

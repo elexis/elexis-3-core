@@ -280,6 +280,7 @@
 		<module>ch.elexis.core.findings.util</module>
 		<module>ch.elexis.core.findings.fhir.po</module>
 		<module>ch.elexis.core.findings.ui</module>
+    <module>org.iatrix.help.wiki</module>
 		<module>ch.rgw.utility</module>
 		<module>ch.rgw.utility.tests</module>
 		<module>ch.elexis.core.data.tests</module>

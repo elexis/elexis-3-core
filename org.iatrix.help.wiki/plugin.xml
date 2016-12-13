@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="Iatrix Help Category"
+            id="org.iatrix.help.wiki.commands.category">
+      </category>
+      <command
+            category="org.iatrix.help.wiki.commands.category"
+            categoryId="org.iatrix.help.wiki.commands.category"
+            id="org.iatrix.help.wiki.commands.helpCommand"
+            name="Iatrix Help Command">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="org.iatrix.help.wiki.commands.helpCommand"
+            class="org.iatrix.help.wiki.handlers.HelpHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.iatrix.help.wiki.commands.helpCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="F1"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.iatrix.help"
+            class="org.iatrix.help.wiki.views.WikiView"
+            icon="icons/help.gif"
+            id="org.iatrix.help.wiki.views.WikiView"
+            name="Iatrix Hilfe">
+      </view>
+      <category
+            id="org.iatrix.help"
+            name="Iatrix Hilfe">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="org.iatrix.help.wiki.toolbar">
+            <command
+                  commandId="org.iatrix.help.wiki.commands.helpCommand"
+                  icon="icons/help.gif"
+                  id="org.iatrix.help.wiki.toolbars.helpCommand"
+                  tooltip="Iatrix Online Hilfe">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.help.ui.browsersPreferencePage"
+            class="org.iatrix.help.wiki.preferences.WikiPreferences"
+            id="org.iatrix.help.wiki.preferences.WikiPreferences"
+            name="Iatrix Wiki Hilfe">
+      </page>
+   </extension>
+
+</plugin>
