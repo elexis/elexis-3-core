@@ -1,8 +1,10 @@
 package ch.elexis.core.findings.fhir.po.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.data.PersistentObject;
@@ -109,6 +111,42 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	
 	@Override
 	public void addTargetObservation(IObservation source){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public Optional<LocalDateTime> getEffectiveTime(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setEffectiveTime(LocalDateTime time){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public ObservationCategory getCategory(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setCategory(ObservationCategory category){
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public List<ICoding> getCoding(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setCoding(List<ICoding> coding){
 		// TODO Auto-generated method stub
 		
 	}
