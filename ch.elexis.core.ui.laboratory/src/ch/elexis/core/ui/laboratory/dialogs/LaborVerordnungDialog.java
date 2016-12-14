@@ -283,6 +283,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		}
 		
 		final List<LabOrder> orders = createLabOrders(selectionComposite.getSelectedItems());
+		ElexisEventDispatcher.reload(LabOrder.class);
 		if (getSelectedUser() != null) {
 			createReminder(getSelectedUser(), orders);
 		}

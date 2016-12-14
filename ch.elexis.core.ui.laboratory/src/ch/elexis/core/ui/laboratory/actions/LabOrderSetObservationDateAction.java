@@ -4,20 +4,21 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.StructuredViewer;
 
 import ch.elexis.core.ui.dialogs.DateTimeSelectorDialog;
-import ch.elexis.data.LabOrder;
+import ch.elexis.core.ui.laboratory.controls.LaborOrderViewerItem;
 import ch.rgw.tools.TimeTool;
 
 public class LabOrderSetObservationDateAction extends Action {
 	
-	private List<LabOrder> orders;
-	private TreeViewer viewer;
+	private List<LaborOrderViewerItem> orders;
+	private StructuredViewer viewer;
 	
-	public LabOrderSetObservationDateAction(List<LabOrder> orders, TreeViewer viewer){
+	public LabOrderSetObservationDateAction(List<LaborOrderViewerItem> list,
+		StructuredViewer viewer){
 		super("Beobachtungszeitpunkt für Auftrag ändern (inkl. Resultate)"); //$NON-NLS-1$
-		this.orders = orders;
+		this.orders = list;
 		this.viewer = viewer;
 	}
 	
@@ -30,11 +31,12 @@ public class LabOrderSetObservationDateAction extends Action {
 			date = new TimeTool();
 		}
 		
-		DateTimeSelectorDialog dsd = new DateTimeSelectorDialog(viewer.getTree().getShell(), date);
+		DateTimeSelectorDialog dsd =
+			new DateTimeSelectorDialog(viewer.getControl().getShell(), date);
 		if (dsd.open() == Dialog.OK) {
 			date = dsd.getSelectedDate();
-			for (LabOrder labOrder : orders) {
-				labOrder.setObservationTimeWithResults(date);
+			for (LaborOrderViewerItem labOrderViewerItem : orders) {
+				labOrderViewerItem.setObservationTimeWithResults(date);
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.laboratory.controls.util;
 
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
@@ -10,21 +11,21 @@ import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.TreeViewerEditor;
-import org.eclipse.jface.viewers.TreeViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerRow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.ui.laboratory.controls.LaborOrderViewerItem;
 import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.LabItem;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
@@ -34,9 +35,9 @@ public class LabOrderEditingSupport extends EditingSupport {
 	protected final String BIGGER = ">";
 
 	protected TextCellEditor textCellEditor;
-	protected TreeViewerFocusCellManager focusCell;
+	protected TableViewerFocusCellManager focusCell;
 	
-	public LabOrderEditingSupport(TreeViewer viewer){
+	public LabOrderEditingSupport(ColumnViewer viewer){
 		super(viewer);
 		
 		setUpCellEditor(viewer);
@@ -48,10 +49,11 @@ public class LabOrderEditingSupport extends EditingSupport {
 			@Override
 			public String isValid(Object value){
 				IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
-				LabOrder order = (LabOrder) selection.getFirstElement();
-				if (order != null && value instanceof String) {
-					if (order.getLabItem().getTyp() == LabItemTyp.NUMERIC
-						|| order.getLabItem().getTyp() == LabItemTyp.ABSOLUTE) {
+				LaborOrderViewerItem viewerItem =
+					(LaborOrderViewerItem) selection.getFirstElement();
+				if (viewerItem != null && value instanceof String) {
+					if (viewerItem.getLabItemTyp() == LabItemTyp.NUMERIC
+						|| viewerItem.getLabItemTyp() == LabItemTyp.ABSOLUTE) {
 						try {
 							String editedValue = (String) value;
 							if (editedValue.startsWith(SMALLER) || editedValue.startsWith(BIGGER)) {
@@ -71,9 +73,9 @@ public class LabOrderEditingSupport extends EditingSupport {
 		});
 	}
 	
-	protected void setUpCellEditor(TreeViewer viewer){
+	protected void setUpCellEditor(ColumnViewer viewer){
 		// set up validation of the cell editors
-		textCellEditor = new TextCellEditor(viewer.getTree());
+		textCellEditor = new TextCellEditor((Composite) viewer.getControl());
 
 		textCellEditor.addListener(new ICellEditorListener() {
 			@Override
@@ -100,7 +102,8 @@ public class LabOrderEditingSupport extends EditingSupport {
 			}
 		});
 		
-		focusCell = new TreeViewerFocusCellManager(viewer, new FocusCellHighlighter(viewer) {
+		focusCell =
+			new TableViewerFocusCellManager((TableViewer) viewer, new FocusCellHighlighter(viewer) {
 			
 		});
 		
@@ -116,21 +119,22 @@ public class LabOrderEditingSupport extends EditingSupport {
 				}
 			};
 		
-		TreeViewerEditor.create(viewer, focusCell, actSupport, ColumnViewerEditor.TABBING_VERTICAL
+		TableViewerEditor.create((TableViewer) viewer, focusCell, actSupport,
+			ColumnViewerEditor.TABBING_VERTICAL
 				| ColumnViewerEditor.KEYBOARD_ACTIVATION);
 	}
 
 	@Override
 	protected boolean canEdit(Object element){
-		return (element instanceof LabOrder)
-			&& (((LabOrder) element).getLabItem().getTyp() != LabItemTyp.FORMULA);
+		return (element instanceof LaborOrderViewerItem)
+			&& (((LaborOrderViewerItem) element).getLabItemTyp() != LabItemTyp.FORMULA);
 	}
 
 	@Override
 	protected CellEditor getCellEditor(Object element){
-		if (element instanceof LabOrder) {
-			LabItem labItem = ((LabOrder) element).getLabItem();
-			if (labItem.getTyp() == LabItemTyp.DOCUMENT) {
+		if (element instanceof LaborOrderViewerItem) {
+			LaborOrderViewerItem viewerItem = ((LaborOrderViewerItem) element);
+			if (viewerItem.getLabItemTyp() == LabItemTyp.DOCUMENT) {
 				return null;
 			} else {
 				return textCellEditor;
@@ -141,17 +145,17 @@ public class LabOrderEditingSupport extends EditingSupport {
 	
 	@Override
 	protected Object getValue(Object element){
-		if (element instanceof LabOrder) {
-			LabItem labItem = ((LabOrder) element).getLabItem();
-			if (labItem.getTyp() == LabItemTyp.DOCUMENT) {
+		if (element instanceof LaborOrderViewerItem) {
+			LaborOrderViewerItem viewerItem = (LaborOrderViewerItem) element;
+			if (viewerItem.getLabItemTyp() == LabItemTyp.DOCUMENT) {
 				return "Doc"; //$NON-NLS-1$
-			} else if (labItem.getTyp() == LabItemTyp.TEXT) {
-				ILabResult result = ((LabOrder) element).getLabResult();
+			} else if (viewerItem.getLabItemTyp() == LabItemTyp.TEXT) {
+				LabResult result = viewerItem.getLabResult();
 				if (result != null) {
 					return result.getComment();
 				}
 			} else {
-				ILabResult result = ((LabOrder) element).getLabResult();
+				LabResult result = viewerItem.getLabResult();
 				if (result != null) {
 					return result.getResult();
 				}
@@ -162,10 +166,11 @@ public class LabOrderEditingSupport extends EditingSupport {
 	
 	@Override
 	protected void setValue(final Object element, final Object value){
-		if (element instanceof LabOrder && value != null) {
-			LabResult result = (LabResult) ((LabOrder) element).getLabResult();
+		if (element instanceof LaborOrderViewerItem && value != null) {
+			LabResult result = (LabResult) ((LaborOrderViewerItem) element).getLabResult();
 			if (result == null) {
-				result = createResult((LabOrder) element, LabOrder.getOrCreateManualLabor());
+				result =
+					createResult((LaborOrderViewerItem) element, LabOrder.getOrCreateManualLabor());
 			}
 			final LabResult lockResult = result;
 			AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
@@ -181,12 +186,12 @@ public class LabOrderEditingSupport extends EditingSupport {
 					if (lockResult.getItem().getTyp() == LabItemTyp.TEXT) {
 						lockResult.setResult("Text"); //$NON-NLS-1$
 						lockResult.set(LabResult.COMMENT, value.toString());
-						((LabOrder) element).setState(LabOrder.State.DONE);
+						((LaborOrderViewerItem) element).setState(LabOrder.State.DONE);
 					} else if (lockResult.getItem().getTyp() == LabItemTyp.DOCUMENT) {
 						// dont know what todo ...
 					} else {
 						lockResult.setResult(value.toString());
-						((LabOrder) element).setState(LabOrder.State.DONE);
+						((LaborOrderViewerItem) element).setState(LabOrder.State.DONE);
 					}
 				}
 			});
@@ -194,7 +199,7 @@ public class LabOrderEditingSupport extends EditingSupport {
 			int columnIdx = focusCell.getFocusCell().getColumnIndex();
 			ViewerRow row = focusCell.getFocusCell().getViewerRow();
 			ViewerRow nextRow = row.getNeighbor(ViewerRow.BELOW, true);
-			getViewer().refresh();
+			((LaborOrderViewerItem) element).refreshResultString();
 			if (nextRow != null) {
 				getViewer().setSelection(new StructuredSelection(nextRow.getElement()), true);
 				getViewer().editElement(nextRow.getElement(), columnIdx);
@@ -202,8 +207,8 @@ public class LabOrderEditingSupport extends EditingSupport {
 		}
 	}
 
-	private LabResult createResult(LabOrder order, Kontakt origin){
-		LabResult result = order.createResult(origin);
+	private LabResult createResult(LaborOrderViewerItem viewerItem, Kontakt origin){
+		LabResult result = viewerItem.createResult(origin);
 		result.setTransmissionTime(new TimeTool());
 		return result;
 	}

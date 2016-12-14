@@ -350,7 +350,6 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 					new LaborVerordnungDialog(getSite().getShell(), patient, date);
 				if (dialog.open() == LaborVerordnungDialog.OK) {
 					tabFolder.setSelection(1);
-					ordersComposite.reload();
 				}
 			}
 		};
@@ -366,8 +365,6 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 			public void run(){
 				if (tabFolder.getSelectionIndex() == 0) {
 					resultsComposite.expandAll();
-				} else if (tabFolder.getSelectionIndex() == 1) {
-					ordersComposite.expandAll();
 				}
 			}
 			
@@ -381,8 +378,6 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 			public void run(){
 				if (tabFolder.getSelectionIndex() == 0) {
 					resultsComposite.collapseAll();
-				} else if (tabFolder.getSelectionIndex() == 1) {
-					ordersComposite.collapseAll();
 				}
 			}
 			

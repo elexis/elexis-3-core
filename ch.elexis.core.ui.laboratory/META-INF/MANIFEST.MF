@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.ui,
  ch.elexis.core.ui;bundle-version="3.0.0",
  ch.elexis.core.ui.icons;bundle-version="3.0.0",
  org.jdom
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.slf4j
 Export-Package: ch.elexis.core.ui.laboratory.controls,

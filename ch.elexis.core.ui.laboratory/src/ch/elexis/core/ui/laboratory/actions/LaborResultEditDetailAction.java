@@ -7,19 +7,18 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.ui.laboratory.controls.LaborOrderViewerItem;
 import ch.elexis.core.ui.laboratory.dialogs.EditLabResultDialog;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
-import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 
 public class LaborResultEditDetailAction extends Action {
 	private List<LabResult> results;
-	private List<LabOrder> orders;
+	private List<LaborOrderViewerItem> orders;
 	private StructuredViewer viewer;
 	
 	@SuppressWarnings("unchecked")
@@ -28,8 +27,8 @@ public class LaborResultEditDetailAction extends Action {
 		Object firstObject = list.get(0);
 		if (firstObject instanceof LabResult) {
 			this.results = (List<LabResult>) list;
-		} else if (firstObject instanceof LabOrder) {
-			this.orders = (List<LabOrder>) list;
+		} else if (firstObject instanceof LaborOrderViewerItem) {
+			this.orders = (List<LaborOrderViewerItem>) list;
 		} else {
 			throw new IllegalArgumentException("Unknown list type of class " //$NON-NLS-1$
 				+ firstObject.getClass());
@@ -59,14 +58,14 @@ public class LaborResultEditDetailAction extends Action {
 				});
 			}
 		} else if (orders != null) {
-			for (LabOrder order : orders) {
-				ILabResult result = order.getLabResult();
+			for (LaborOrderViewerItem orderViewerItem : orders) {
+				LabResult result = orderViewerItem.getLabResult();
 				if (result == null) {
-					result = order.createResult();
+					result = orderViewerItem.createResult();
 					result.setTransmissionTime(new TimeTool());
 				}
-				final LabResult lockingResult = (LabResult) result;
-				final LabOrder lockingOrder = order;
+				final LabResult lockingResult = result;
+				final LaborOrderViewerItem lockingOrder = orderViewerItem;
 				AcquireLockBlockingUi.aquireAndRun(lockingResult, new ILockHandler() {
 					@Override
 					public void lockFailed(){
@@ -99,10 +98,10 @@ public class LaborResultEditDetailAction extends Action {
 				}
 			}
 		} else if (orders != null) {
-			for (LabOrder order : orders) {
-				if (order.getLabItem() != null) {
-					if (order.getLabItem().getTyp() == LabItemTyp.DOCUMENT
-						|| order.getLabItem().getTyp() == LabItemTyp.FORMULA) {
+			for (LaborOrderViewerItem order : orders) {
+				if (order.hasLabItem()) {
+					LabItemTyp itemTyp = order.getLabItemTyp();
+					if (itemTyp == LabItemTyp.DOCUMENT || itemTyp == LabItemTyp.FORMULA) {
 						return false;
 					}
 				}

@@ -14,6 +14,7 @@ public class Messages extends NLS {
 	public static String LaborOrdersComposite_columnValue;
 	public static String LaborOrdersComposite_validatorNotNumber;
 	public static String LaborOrdersComposite_NoPatientSelected;
+	public static String LaborOrdersComposite_actionTooltipShowHistory;
 	
 	public static String LaborResultsComposite_columnParameter;
 	public static String LaborResultsComposite_columnReference;

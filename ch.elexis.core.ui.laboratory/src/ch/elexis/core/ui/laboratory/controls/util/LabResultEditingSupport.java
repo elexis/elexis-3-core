@@ -1,12 +1,25 @@
 package ch.elexis.core.ui.laboratory.controls.util;
 
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
+import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.FocusCellHighlighter;
+import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.TreeViewerEditor;
+import org.eclipse.jface.viewers.TreeViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerRow;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -22,7 +35,13 @@ import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 
-public class LabResultEditingSupport extends LabOrderEditingSupport {
+public class LabResultEditingSupport extends EditingSupport {
+	
+	protected final String SMALLER = "<";
+	protected final String BIGGER = ">";
+	
+	protected TextCellEditor textCellEditor;
+	protected TreeViewerFocusCellManager focusCell;
 	
 	private TreeViewerColumn column;
 	private LaborResultsComposite composite;
@@ -32,9 +51,63 @@ public class LabResultEditingSupport extends LabOrderEditingSupport {
 		super(viewer);
 		this.column = column;
 		this.composite = laborResultsComposite;
+		
+		setUpCellEditor(viewer);
+		addValidator();
 	}
 	
-	@Override
+	protected void setUpCellEditor(ColumnViewer viewer){
+		// set up validation of the cell editors
+		textCellEditor = new TextCellEditor((Composite) viewer.getControl());
+		
+		textCellEditor.addListener(new ICellEditorListener() {
+			@Override
+			public void editorValueChanged(boolean oldValidState, boolean newValidState){
+				if (newValidState) {
+					textCellEditor.getControl()
+						.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+				} else {
+					textCellEditor.getControl()
+						.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+				}
+			}
+			
+			@Override
+			public void cancelEditor(){
+				textCellEditor.getControl()
+					.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+			}
+			
+			@Override
+			public void applyEditorValue(){
+				textCellEditor.getControl()
+					.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+			}
+		});
+		
+		focusCell =
+			new TreeViewerFocusCellManager((TreeViewer) viewer, new FocusCellHighlighter(viewer) {
+			
+			});
+			
+		ColumnViewerEditorActivationStrategy actSupport =
+			new ColumnViewerEditorActivationStrategy(viewer) {
+				@Override
+				protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event){
+					return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
+						|| event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
+						|| (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED
+							&& event.keyCode == SWT.CR)
+						|| (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED
+							&& event.keyCode == SWT.KEYPAD_CR)
+						|| event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+				}
+			};
+		
+		TreeViewerEditor.create((TreeViewer) viewer, focusCell, actSupport,
+			ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION);
+	}
+	
 	protected void addValidator(){
 		textCellEditor.setValidator(new ICellEditorValidator() {
 			@Override
