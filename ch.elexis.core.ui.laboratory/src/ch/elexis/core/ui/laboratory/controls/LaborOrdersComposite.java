@@ -313,9 +313,11 @@ public class LaborOrdersComposite extends Composite {
 						return prio1.compareTo(prio2);
 					}
 				});
+				patientsOrder = new ArrayList<>(orders);
+			} else {
+				patientsOrder = Collections.emptyList();
 			}
 			ordersPatient = actPatient;
-			patientsOrder = new ArrayList<>(orders);
 		}
 		
 		return patientsOrder;
