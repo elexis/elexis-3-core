@@ -154,12 +154,17 @@
         name="org.eclipse.wb.rcp.feature.feature.group"/>
     <requirement
         name="org.eclipse.mylyn.wikitext_feature.feature.group"/>
+    <requirement
+        name="net.jeeeyul.pdetools.feature.feature.group"
+        filter=""/>
     <repository
         url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.9.0/N/LATEST/"/>
     <repository
         url="http://mbarbero.github.io/fr.obeo.releng.targetplatform/p2/latest/"/>
     <repository
         url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/"/>
+    <repository
+        url="http://eclipse.jeeeyul.net/update/"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -274,8 +279,12 @@
         <sourceLocator
             rootFolder="${medelexis.application.git.clone.location}"/>
       </setupTask>
+      <stream
+          name="master"/>
       <description>Core Application development setup for Medelexis</description>
     </project>
+    <stream
+        name="master"/>
     <description>Commercially developed version of Elexis, development environment</description>
   </project>
   <project name="Austria">
@@ -306,8 +315,7 @@
           rootFolder="${austria.git.clone.location}"/>
     </setupTask>
     <setupTask
-        xsi:type="setup.workingsets:WorkingSetTask"
-        id="">
+        xsi:type="setup.workingsets:WorkingSetTask">
       <workingSet
           name="elexis-3-austria">
         <predicate
@@ -315,10 +323,11 @@
             project="at.medevit.elexis.at"/>
       </workingSet>
     </setupTask>
+    <stream
+        name="master"/>
     <description>Elexis Österreich Plug-Ins</description>
   </project>
   <stream name="master"/>
-  <stream name="release"/>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
