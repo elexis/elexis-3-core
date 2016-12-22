@@ -13,6 +13,7 @@ package ch.elexis.core.ui.optifier;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -25,6 +26,9 @@ import ch.elexis.data.Konsultation;
 import ch.rgw.tools.Result;
 
 public class NoObligationOptifier extends DefaultOptifier {
+	
+	private Fall noOblFall;
+	
 	@Override
 	public Result<IVerrechenbar> add(IVerrechenbar code, Konsultation kons){
 		String gesetz = kons.getFall().getRequiredString("Gesetz");
@@ -32,11 +36,20 @@ public class NoObligationOptifier extends DefaultOptifier {
 		boolean forceObligation = CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OBLIGATION, false);
 		
 		if (forceObligation && gesetz.equalsIgnoreCase("KVG")) {
-			SelectFallNoObligationDialog dlg =
-				new SelectFallNoObligationDialog(kons.getFall(), code);
+			noOblFall = null;
+			Display.getDefault().syncExec(new Runnable() {
+				@Override
+				public void run(){
+					SelectFallNoObligationDialog dlg =
+						new SelectFallNoObligationDialog(kons.getFall(), code);
+					if (dlg.open() == Dialog.OK) {
+						noOblFall = dlg.getFall();
+					}
+					
+				}
+			});
 			
-			if (dlg.open() == Dialog.OK) {
-				Fall noOblFall = dlg.getFall();
+			if (noOblFall != null) {
 				// check if there is a Konsultation in the selected Fall on the same date
 				Konsultation noOblKons = getKonsFromFallByDate(noOblFall, kons.getDatum());
 				// create new Konsultation if there is none matching
