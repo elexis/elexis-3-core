@@ -61,6 +61,8 @@ Ein Elter-Recht definiert hierbei die Vererbung an alle Kinder. In der linken Gr
 === Perspektiven ===
 === Views ===
 == Funktionen ==
+
+<!-- Auskommentiert von Franz am 14. Sept 2016. Abschnitt ersetzt durch 'Medikamentenliste'
 === Medikationsliste ===
 [[File:medicationsliste.png|rechts]]
 ==== Definitionen ====
@@ -83,6 +85,10 @@ Bei jeder dieser Verschreibungsarten wird als Start-Zustand die einmalige Medika
 ==== Medikation Stoppen ====
 Vorzugsweise Angabe einer Begründug den Stop bestätigen
 [[File:medistop.png]]
+
+Ende von Auskommentiert von Franz am 14. Sept 2016. Abschnitt ersetzt durch 'Medikamentenliste' -->
+
+
 === Textvorlagen Management ===
 ==== Definitionen ====
 In der Textvorlagen Management View werden alle vorhandenen und vom System benötigten Vorlagen dargestellt.
