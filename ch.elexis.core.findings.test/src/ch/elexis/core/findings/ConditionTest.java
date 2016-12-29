@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,35 @@ public class ConditionTest {
 		assertTrue(findings.isEmpty());
 	}
 	
+	@Test
+	public void manyConditions() {
+		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
+		assertNotNull(factory);
+		// create many
+		for (int i = 0; i < 1000; i++) {
+			ICondition condition = factory.createCondition();
+			assertNotNull(condition);
+			// set the properties
+			condition.setPatientId(AllTests.PATIENT_ID);
+			LocalDate dateRecorded = LocalDate.of(2016, Month.DECEMBER, 29);
+			condition.setDateRecorded(dateRecorded);
+			condition.setCategory(ConditionCategory.DIAGNOSIS);
+			condition.setStatus(ConditionStatus.ACTIVE);
+			condition.setText("Condition " + i);
+			FindingsServiceComponent.getService().saveFinding(condition);
+		}
+		// test many
+		List<IFinding> findings = FindingsServiceComponent.getService().getPatientsFindings(AllTests.PATIENT_ID,
+				ICondition.class);
+		assertEquals(1000, findings.size());
+		for (IFinding iFinding : findings) {
+			assertTrue(iFinding instanceof ICondition);
+			Optional<LocalDate> dateRecorded = ((ICondition)iFinding).getDateRecorded();
+			assertTrue(dateRecorded.isPresent());
+			assertEquals(LocalDate.of(2016, Month.DECEMBER, 29), dateRecorded.get());
+		}
+	}
+
 	@Test
 	public void getProperties(){
 		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();

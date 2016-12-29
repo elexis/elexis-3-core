@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,34 @@ public class EncounterTest {
 		assertTrue(findings.isEmpty());
 	}
 	
+	@Test
+	public void manyEncounters() {
+		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
+		assertNotNull(factory);
+		// create many
+		for (int i = 0; i < 1000; i++) {
+			IEncounter encounter = factory.createEncounter();
+			assertNotNull(encounter);
+			// set the properties
+			encounter.setConsultationId(AllTests.CONSULTATION_ID);
+			encounter.setPatientId(AllTests.PATIENT_ID);
+			encounter.setStartTime(LocalDateTime.of(2016, Month.DECEMBER, 29, 9, 56));
+			encounter.setText("Encounter " + i);
+
+			FindingsServiceComponent.getService().saveFinding(encounter);
+		}
+		// test many
+		List<IFinding> findings = FindingsServiceComponent.getService().getPatientsFindings(AllTests.PATIENT_ID,
+				IEncounter.class);
+		assertEquals(1000, findings.size());
+		for (IFinding iFinding : findings) {
+			assertTrue(iFinding instanceof IEncounter);
+			Optional<LocalDateTime> startTime = ((IEncounter) iFinding).getStartTime();
+			assertTrue(startTime.isPresent());
+			assertEquals(LocalDateTime.of(2016, Month.DECEMBER, 29, 9, 56), startTime.get());
+		}
+	}
+
 	@Test
 	public void getProperties(){
 		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
