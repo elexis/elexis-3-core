@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
@@ -23,6 +24,8 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.jdt.Nullable;
+import ch.elexis.data.Prescription.EntryType;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -170,9 +173,51 @@ public class Patient extends Person {
 	}
 	
 	/**
+	 * Get the patients active medication filtered by {@link EntryType}.
+	 * 
+	 * @param filterType
+	 * @return
+	 */
+	public List<Prescription> getMedication(@Nullable EntryType filterType){
+		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
+		qbe.add(Prescription.FLD_REZEPT_ID, StringTool.leer, null);
+		String today = new TimeTool().toString(TimeTool.DATE_COMPACT);
+		qbe.startGroup();
+		qbe.add(Prescription.FLD_DATE_UNTIL, Query.GREATER_OR_EQUAL, today);
+		qbe.or();
+		qbe.add(Prescription.FLD_DATE_UNTIL, StringTool.leer, null);
+		qbe.endGroup();
+		List<Prescription> prescriptions = qbe.execute();
+		
+		if (filterType != null) {
+			return prescriptions.parallelStream().filter(p -> p.getEntryType() == filterType)
+				.collect(Collectors.toList());
+		} else {
+			return prescriptions;
+		}
+	}
+	
+	/**
+	 * Get the patients medication filtered by {@link EntryType} as text.
+	 * 
+	 * @param filterType
+	 * @return
+	 */
+	public String getMedicationText(@Nullable EntryType filterType){
+		List<Prescription> prescriptions = getMedication(filterType);
+		StringBuilder sb = new StringBuilder();
+		
+		prescriptions.stream().forEach(p -> sb.append(p.getLabel()).append(StringTool.lf));
+		return sb.toString();
+	}
+	
+	/**
 	 * Fixmedikation dieses Patienten einlesen
 	 * 
-	 * @return ein Array aus {@link Prescription.java}Prescriptions
+	 * @return ein Array aus {@link Prescription}
+	 * @deprecated does not filter by EntryType, use {@link Patient#getMedication(EntryType)}
+	 *             instead.
 	 */
 	public Prescription[] getFixmedikation(){
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
@@ -192,6 +237,8 @@ public class Patient extends Person {
 	 * Fixmedikation als Text
 	 * 
 	 * @return
+	 * @deprecated does not filter by EntryType, use {@link Patient#getMedication(EntryType)}
+	 *             instead.
 	 */
 	public String getMedikation(){
 		Prescription[] pre = getFixmedikation();

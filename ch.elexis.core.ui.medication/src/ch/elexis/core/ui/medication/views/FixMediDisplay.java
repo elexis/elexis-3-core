@@ -50,6 +50,7 @@ import ch.elexis.data.Artikel;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
+import ch.elexis.data.Prescription.EntryType;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -165,11 +166,8 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 		clear();
 		Patient act = ElexisEventDispatcher.getSelectedPatient();
 		if (act != null) {
-			List<Prescription> fix = Arrays.asList(act.getFixmedikation());
-			
-			for (Prescription pr : fix) {
-				add(pr);
-			}
+			List<Prescription> fix = act.getMedication(EntryType.FIXED_MEDICATION);
+			fix.stream().forEach(p -> add(p));
 			
 			lCost.setText(MedicationViewHelper.calculateDailyCostAsString(fix));
 		}
