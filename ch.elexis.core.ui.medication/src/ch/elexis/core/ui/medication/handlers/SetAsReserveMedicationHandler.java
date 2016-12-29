@@ -5,11 +5,11 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
-import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Prescription.EntryType;
 
@@ -32,10 +32,9 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 					reserveMedi.setEntryType(EntryType.RESERVE_MEDICATION);
 					presc.stop(null);
 					presc.setStopReason("Umgestellt auf Reserve Medikation");
-					MedicationView medicationView =
-						(MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getActivePage().findView(MedicationView.PART_ID);
-					medicationView.refresh();
+					
+					ElexisEventDispatcher.getInstance()
+						.fire(new ElexisEvent(presc, Prescription.class, ElexisEvent.EVENT_UPDATE));
 				}
 			}
 		}

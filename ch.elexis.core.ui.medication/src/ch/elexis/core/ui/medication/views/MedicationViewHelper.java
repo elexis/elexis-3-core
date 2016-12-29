@@ -106,25 +106,16 @@ public class MedicationViewHelper {
 	}
 	
 	private static List<Prescription> loadNonHistorical(String patId){
-		TimeTool thirtyDaysAgo = new TimeTool();
-		thirtyDaysAgo.addDays(-FILTER_PRESCRIPTION_AFTER_N_DAYS);
-		//SELECT * FROM PATIENT_ARTIKEL_JOINT WHERE deleted='0' AND PatientId='C7dc8b102d96407ed0632' 
+		// make sure just now closed are not included
+		TimeTool now = new TimeTool();
+		now.add(TimeTool.SECOND, 5);
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, patId);
-		
 		qbe.startGroup();
-		//(DateFrom >= '20150922' AND RezeptID is not null)
-		qbe.startGroup();
-		qbe.add(Prescription.FLD_DATE_FROM, Query.GREATER_OR_EQUAL,
-			thirtyDaysAgo.toString(TimeTool.DATE_COMPACT));
-		qbe.add(Prescription.FLD_REZEPT_ID, "not", null);
-		qbe.endGroup();
-		qbe.or();
-		//(RezeptID is null AND DateUntil is null)
-		qbe.startGroup();
-		qbe.add(Prescription.FLD_REZEPT_ID, Query.EQUALS, null);
 		qbe.add(Prescription.FLD_DATE_UNTIL, Query.EQUALS, null);
-		qbe.endGroup();
+		qbe.or();
+		qbe.add(Prescription.FLD_DATE_UNTIL, Query.GREATER,
+			now.toString(TimeTool.TIMESTAMP));
 		qbe.endGroup();
 		
 		List<Prescription> tmpPrescs = qbe.execute();
@@ -132,8 +123,13 @@ public class MedicationViewHelper {
 		List<Prescription> result = new ArrayList<Prescription>();
 		for (Prescription p : tmpPrescs) {
 			if (p.getArtikel() != null && p.getArtikel().getATC_code() != null) {
-				if (p.getArtikel().getATC_code().toUpperCase().startsWith("J07"))
+				if (p.getArtikel().getATC_code().toUpperCase().startsWith("J07")) {
 					continue;
+				}
+				if (p.getEntryType() == EntryType.RECIPE
+					|| p.getEntryType() == EntryType.SELF_DISPENSED) {
+					continue;
+				}
 			}
 			
 			result.add(p);
