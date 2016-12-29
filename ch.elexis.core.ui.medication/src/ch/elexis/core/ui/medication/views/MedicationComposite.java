@@ -563,7 +563,7 @@ public class MedicationComposite extends Composite
 		}
 		// change always stops
 		if (btnStopMedication.getSelection()) {
-			TimeTool endTime = new TimeTool(pres.getEndDate());
+			TimeTool endTime = new TimeTool(pres.getEndTime());
 			oldPrescription.stop(endTime);
 		} else {
 			oldPrescription.stop(null);

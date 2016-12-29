@@ -184,7 +184,7 @@ public class Patient extends Person {
 		qbe.add(Prescription.FLD_REZEPT_ID, StringTool.leer, null);
 		String today = new TimeTool().toString(TimeTool.DATE_COMPACT);
 		qbe.startGroup();
-		qbe.add(Prescription.FLD_DATE_UNTIL, Query.GREATER_OR_EQUAL, today);
+		qbe.add(Prescription.FLD_DATE_UNTIL, Query.GREATER, today);
 		qbe.or();
 		qbe.add(Prescription.FLD_DATE_UNTIL, StringTool.leer, null);
 		qbe.endGroup();
