@@ -26,6 +26,10 @@ public class MedicationSettings extends FieldEditorPreferencePage
 		addField(new BooleanFieldEditor(
 			CreatePrescriptionHelper.MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION,
 			"Bei Signatur Dialog Abgabe vorselektieren", getFieldEditorParent()));
+		
+		addField(new BooleanFieldEditor(
+			CreatePrescriptionHelper.MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT,
+			"Beim dispensieren auf Artikelstamm prüfen, und konvertieren", getFieldEditorParent()));
 	}
 	
 	@Override
