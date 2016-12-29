@@ -28,7 +28,7 @@
             commandId="org.iatrix.help.wiki.commands.helpCommand"
             contextId="org.eclipse.ui.contexts.window"
             sequence="F1"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+            schemeId="ch.elexis.ui.keybindingScheme">
       </key>
    </extension>
    <extension
