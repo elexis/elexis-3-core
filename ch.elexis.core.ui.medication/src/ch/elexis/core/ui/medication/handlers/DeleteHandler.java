@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
@@ -13,6 +14,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
+import ch.elexis.core.ui.medication.views.Messages;
 
 public class DeleteHandler extends AbstractHandler {
 	
@@ -30,11 +32,15 @@ public class DeleteHandler extends AbstractHandler {
 		}
 		
 		if (selection != null && !selection.isEmpty()) {
-			IStructuredSelection strucSelection = (IStructuredSelection) selection;
-			Iterator<MedicationTableViewerItem> selectionList = strucSelection.iterator();
-			while (selectionList.hasNext()) {
-				MedicationTableViewerItem item = selectionList.next();
-				item.getPrescription().remove();
+			if (MessageDialog.openQuestion(HandlerUtil.getActiveShell(event),
+				Messages.FixMediDisplay_DeleteUnrecoverable,
+				Messages.FixMediDisplay_DeleteUnrecoverable)) {
+				IStructuredSelection strucSelection = (IStructuredSelection) selection;
+				Iterator<MedicationTableViewerItem> selectionList = strucSelection.iterator();
+				while (selectionList.hasNext()) {
+					MedicationTableViewerItem item = selectionList.next();
+					item.getPrescription().remove();
+				}
 			}
 		}
 		return null;
