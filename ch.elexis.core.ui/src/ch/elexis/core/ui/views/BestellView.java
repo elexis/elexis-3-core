@@ -207,7 +207,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 	
 	private void setBestellung(final Bestellung b){
 		actBestellung = b;
-		if (b != null) {
+		if (b != null && !form.isDisposed()) {
 			form.setText(b.getLabel());
 			tv.refresh();
 			saveAction.setEnabled(true);
