@@ -30,12 +30,15 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.services.IEvaluationService;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.dialogs.MediDetailDialog;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.medication.handlers.PrintRecipeHandler;
 import ch.elexis.core.ui.medication.handlers.PrintTakingsListHandler;
@@ -76,6 +79,13 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 	static final String HINZU = Messages.FixMediDisplay_AddItem; //$NON-NLS-1$
 	static final String KOPIEREN = Messages.FixMediDisplay_Copy; //$NON-NLS-1$
 	
+	private ElexisEventListener eeli_presc = new ElexisUiEventListenerImpl(Prescription.class,
+		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE) {
+		public void runInUi(ElexisEvent ev){
+			reload();
+		}
+	};
+	
 	public FixMediDisplay(Composite parent, IViewSite viewSite){
 		super(parent, SWT.NONE, null);
 		this.viewSite = viewSite;
@@ -105,16 +115,17 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				}
 				
 				public void dropped(PersistentObject o, DropTargetEvent e){
-					
 					if (o instanceof Artikel) {
 						CreatePrescriptionHelper prescriptionHelper =
 							new CreatePrescriptionHelper((Artikel) o, getShell());
 						prescriptionHelper.createPrescription();
-						reload();
+						
+						ElexisEventDispatcher.getInstance().fire(
+							new ElexisEvent(null, Prescription.class, ElexisEvent.EVENT_UPDATE));
 					} else if (o instanceof Prescription) {
-						Prescription[] existing =
+						List<Prescription> existing =
 							((Patient) ElexisEventDispatcher.getSelected(Patient.class))
-								.getFixmedikation();
+								.getMedication(null);
 						Prescription pre = (Prescription) o;
 						for (Prescription pe : existing) {
 							if (pe.equals(pre)) {
@@ -124,7 +135,8 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 						new Prescription(pre.getArtikel(), ElexisEventDispatcher
 							.getSelectedPatient(), pre.getDosis(), pre.getBemerkung());
 						// self.add(now);
-						reload();
+						ElexisEventDispatcher.getInstance().fire(
+							new ElexisEvent(null, Prescription.class, ElexisEvent.EVENT_UPDATE));
 					}
 				}
 			});
@@ -146,6 +158,8 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				ElexisEventDispatcher.fireSelectionEvent(getSelection());
 			}
 		});
+		
+		ElexisEventDispatcher.getInstance().addListeners(eeli_presc);
 	}
 	
 	public MenuManager getMenuManager(){
@@ -227,8 +241,8 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					Prescription pr = getSelection();
 					if (pr != null) {
 						new MediDetailDialog(getShell(), pr).open();
-						reload();
-						redraw();
+						ElexisEventDispatcher.getInstance().fire(
+							new ElexisEvent(pr, Prescription.class, ElexisEvent.EVENT_UPDATE));
 					}
 				}
 			};
@@ -247,7 +261,8 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 						remove(pr);
 						pr.delete(); // this does not delete but stop the Medication. Sorry for
 						// that
-						reload();
+						ElexisEventDispatcher.getInstance().fire(
+							new ElexisEvent(pr, Prescription.class, ElexisEvent.EVENT_UPDATE));
 					}
 				}
 			};
@@ -283,11 +298,17 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 						remove(pr);
 						pr.remove(); // this does, in fact, remove the medication from the
 						// database
-						reload();
+						ElexisEventDispatcher.getInstance().fire(
+							new ElexisEvent(pr, Prescription.class, ElexisEvent.EVENT_UPDATE));
 					}
 				}
 			};
 		
 	}
 	
+	@Override
+	public void dispose(){
+		super.dispose();
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_presc);
+	}
 }
