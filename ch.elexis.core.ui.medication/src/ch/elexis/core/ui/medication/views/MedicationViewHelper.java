@@ -3,6 +3,7 @@ package ch.elexis.core.ui.medication.views;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
@@ -100,18 +101,14 @@ public class MedicationViewHelper {
 	
 	private static List<Prescription> loadNonHistorical(String patId){
 		// make sure just now closed are not included
-		TimeTool now = new TimeTool();
-		now.add(TimeTool.SECOND, 5);
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, patId);
-		qbe.startGroup();
-		qbe.add(Prescription.FLD_DATE_UNTIL, Query.EQUALS, null);
-		qbe.or();
-		qbe.add(Prescription.FLD_DATE_UNTIL, Query.GREATER_OR_EQUAL,
-			now.toString(TimeTool.TIMESTAMP));
-		qbe.endGroup();
-		
 		List<Prescription> tmpPrescs = qbe.execute();
+		// make sure just now closed are not included
+		TimeTool now = new TimeTool();
+		now.add(TimeTool.SECOND, 5);
+		tmpPrescs =
+			tmpPrescs.parallelStream().filter(p -> !p.isStopped(now)).collect(Collectors.toList());
 		
 		List<Prescription> result = new ArrayList<Prescription>();
 		for (Prescription p : tmpPrescs) {

@@ -185,14 +185,12 @@ public class Patient extends Person {
 	public List<Prescription> getMedication(@Nullable EntryType filterType){
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
-		qbe.add(Prescription.FLD_REZEPT_ID, StringTool.leer, null);
-		String today = new TimeTool().toString(TimeTool.DATE_COMPACT);
-		qbe.startGroup();
-		qbe.add(Prescription.FLD_DATE_UNTIL, Query.GREATER_OR_EQUAL, today);
-		qbe.or();
-		qbe.add(Prescription.FLD_DATE_UNTIL, StringTool.leer, null);
-		qbe.endGroup();
 		List<Prescription> prescriptions = qbe.execute();
+		// make sure just now closed are not included
+		TimeTool now = new TimeTool();
+		now.add(TimeTool.SECOND, 5);
+		prescriptions = prescriptions.parallelStream().filter(p -> !p.isStopped(now))
+			.collect(Collectors.toList());
 		
 		if (filterType != null) {
 			return prescriptions.parallelStream().filter(p -> p.getEntryType() == filterType)
