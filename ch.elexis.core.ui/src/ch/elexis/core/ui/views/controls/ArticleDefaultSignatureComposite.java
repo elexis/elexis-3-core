@@ -211,6 +211,14 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		btnRadioOnAtcCode.setEnabled(value);
 	}
 	
+	public void setMedicationTypeFix(){
+		medicationType.setVisible(false);
+		btnFix.setSelection(true);
+		btnSymtomatic.setSelection(false);
+		btnReserve.setSelection(false);
+		medicationType.getParent().layout();
+	}
+	
 	public DataBindingContext initDataBindings(DataBindingContext dbc){
 		if (dbc == null) {
 			databindingContext = new DataBindingContext();

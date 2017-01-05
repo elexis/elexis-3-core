@@ -118,6 +118,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					if (o instanceof Artikel) {
 						CreatePrescriptionHelper prescriptionHelper =
 							new CreatePrescriptionHelper((Artikel) o, getShell());
+						prescriptionHelper.setMedicationTypeFix(true);
 						prescriptionHelper.createPrescription();
 						
 						ElexisEventDispatcher.getInstance().fire(

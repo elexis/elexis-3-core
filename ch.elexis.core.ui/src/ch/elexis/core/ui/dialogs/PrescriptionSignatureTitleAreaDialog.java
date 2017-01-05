@@ -21,6 +21,7 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	private ArticleDefaultSignatureComposite adsc;
 	private Button btnAsDefault;
 	private ArticleSignature signature;
+	private boolean medicationTypeFix;
 	
 	/**
 	 * Create the dialog.
@@ -65,6 +66,9 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 		if (signature != null) {
 			adsc.setSignature(signature);
 		}
+		if (medicationTypeFix) {
+			adsc.setMedicationTypeFix();
+		}
 		
 		return area;
 	}
@@ -89,6 +93,10 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 		}
 		
 		super.okPressed();
+	}
+	
+	public void setMedicationTypeFix(boolean value){
+		this.medicationTypeFix = value;
 	}
 	
 	/**
