@@ -20,6 +20,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -321,21 +322,25 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				public void doRun(){
 					Prescription pr = getSelection();
 					if (pr != null) {
-						remove(pr);
-						AcquireLockUi.aquireAndRun(pr, new ILockHandler() {
-							
-							@Override
-							public void lockFailed(){
-								// do nothing
-							}
-							
-							@Override
-							public void lockAcquired(){
-								pr.remove(); // this does, in fact, remove the medication from the database
-							}
-						});
-						ElexisEventDispatcher.getInstance().fire(
-							new ElexisEvent(pr, Prescription.class, ElexisEvent.EVENT_UPDATE));
+						if (MessageDialog.openQuestion(getShell(),
+							Messages.FixMediDisplay_DeleteUnrecoverable,
+							Messages.FixMediDisplay_DeleteUnrecoverable)) {
+							remove(pr);
+							AcquireLockUi.aquireAndRun(pr, new ILockHandler() {
+								
+								@Override
+								public void lockFailed(){
+									// do nothing
+								}
+								
+								@Override
+								public void lockAcquired(){
+									pr.remove(); // this does, in fact, remove the medication from the database
+								}
+							});
+							ElexisEventDispatcher.getInstance().fire(
+								new ElexisEvent(pr, Prescription.class, ElexisEvent.EVENT_UPDATE));
+						}
 					}
 				}
 			};
