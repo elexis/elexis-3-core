@@ -45,9 +45,15 @@ public class CreatePrescriptionHelper {
 	private Artikel article;
 	private Shell parentShell;
 	
+	private boolean medicationTypeFix = false;
+	
 	public CreatePrescriptionHelper(Artikel article, Shell parentShell){
 		this.article = article;
 		this.parentShell = parentShell;
+	}
+	
+	public void setMedicationTypeFix(boolean value){
+		this.medicationTypeFix = value;
 	}
 	
 	public void createPrescription(){
@@ -70,6 +76,7 @@ public class CreatePrescriptionHelper {
 		Optional<ArticleSignature> preSelectedSignature){
 		PrescriptionSignatureTitleAreaDialog dialog =
 			new PrescriptionSignatureTitleAreaDialog(parentShell, (Artikel) article);
+		dialog.setMedicationTypeFix(medicationTypeFix);
 		preSelectedSignature.ifPresent(s -> dialog.setSignature(s));
 		if (dialog.open() != Dialog.OK) {
 			return Optional.empty();
@@ -112,7 +119,6 @@ public class CreatePrescriptionHelper {
 				if (shouldUpdateToArtikelstamm() && isArtikelstammAvailable()
 					&& !isEigenartikel(dispensationArticle)
 					&& !isArtikelstamm(dispensationArticle)) {
-					System.out.println("");
 					Optional<Artikel> item = getArtikelstammItem(dispensationArticle);
 					if (item.isPresent()) {
 						prescription.set(Prescription.FLD_ARTICLE, item.get().storeToString());
