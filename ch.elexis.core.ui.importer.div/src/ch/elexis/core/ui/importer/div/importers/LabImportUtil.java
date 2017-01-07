@@ -106,7 +106,8 @@ public class LabImportUtil implements ILabImportUtil {
 		// if no connection exists ask to which lab it should be linked
 		if (labor == null) {
 			KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Labor.class,
-				Messages.LabImporterUtil_Select, Messages.LabImporterUtil_SelectLab,
+				Messages.LabImporterUtil_Select,
+				Messages.LabImporterUtil_SelectLab + " [" + identifier + "]",
 				Kontakt.DEFAULT_SORT);
 			if (ks.open() == Dialog.OK) {
 				labor = (Labor) ks.getSelection();

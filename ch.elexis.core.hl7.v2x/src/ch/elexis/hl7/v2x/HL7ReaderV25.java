@@ -314,9 +314,9 @@ public class HL7ReaderV25 extends HL7Reader {
 		} else if (valueType != null && isTextOrNumeric(valueType)) {
 			name = obx.getObx4_ObservationSubID().getValue();
 			if (name == null) {
-				name = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
+				name = obx.getObx3_ObservationIdentifier().getCe2_Text().getValue();
 				if (name == null) {
-					name = obx.getObx3_ObservationIdentifier().getCe2_Text().getValue();
+					name = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
 				}
 			}
 			String value = "";
