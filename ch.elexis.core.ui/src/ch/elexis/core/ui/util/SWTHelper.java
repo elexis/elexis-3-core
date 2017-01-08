@@ -120,14 +120,18 @@ public class SWTHelper {
 	
 	/** Eine Alertbox anzeigen (synchron) */
 	public static void alert(final String title, final String message){
-		Shell shell = UiDesk.getDisplay().getActiveShell();
-		if (shell == null) {
-			shell = new Shell(UiDesk.getDisplay());
-		}
-		MessageBox msg = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-		msg.setText(title);
-		msg.setMessage(message);
-		msg.open();
+		UiDesk.getDisplay().syncExec(new Runnable() {
+			public void run(){
+				Shell shell = UiDesk.getDisplay().getActiveShell();
+				if (shell == null) {
+					shell = new Shell(UiDesk.getDisplay());
+				}
+				MessageBox msg = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+				msg.setText(title);
+				msg.setMessage(message);
+				msg.open();
+			}
+		});
 	}
 	
 	/**
