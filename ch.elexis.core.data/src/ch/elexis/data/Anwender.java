@@ -230,6 +230,10 @@ public class Anwender extends Person {
 		if (!user.exists()) {
 			return false;
 		}
+		
+		if(!username.equals(user.get(FLD_ID))) {
+			return false;
+		}
 
 		// is the user currently active, or locked?
 		if (!user.isActive()) {

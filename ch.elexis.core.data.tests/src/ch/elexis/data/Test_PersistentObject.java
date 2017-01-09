@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
@@ -117,7 +118,7 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		assertNotNull(id);
 	}
 	
-	@Test
+	@Test(expected = PersistenceException.class)
 	public void testGetFail(){
 		// mock a status manager for ignoring the error status
 		// StatusManager statusMock = PowerMockito.mock(StatusManager.class);
@@ -125,22 +126,14 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		// PowerMockito.when(StatusManager.getManager()).thenReturn(statusMock);
 		
 		PersistentObjectImpl impl = new PersistentObjectImpl();
-		try {
-			String ret = impl.get("");
-			assertNotNull(ret);
-			assertEquals(PersistentObject.MAPPING_ERROR_MARKER + "**", ret);
-		} catch (PersistenceException pe) {
-			
-		}
+		String ret = impl.get("");
+		assertNotNull(ret);
+		assertEquals(PersistentObject.MAPPING_ERROR_MARKER + "**", ret);
 		
 		// if we pass ID we should get to code that reaches into the db
 		// we have no table specified so a JdbcLinkException is expected
-		try {
-			impl.get("ID");
-			fail("Expected Exception not thrown!");
-		} catch (PersistenceException pe) {
-			
-		}
+		String id = impl.get("ID");
+		fail("Expected Exception not thrown! Value is " + id);
 	}
 	
 	@Test
@@ -152,8 +145,9 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		assertEquals(false, PersistentObject.tableExists("THIS_TABLE_SHOULD_NOT_EXISTS"));
 	}
 	
-	@Test
-	public void testCaseSensitiveIdLoad() {
+	@Ignore
+	public void testCaseSensitiveIdLoad(){
+		//#5514
 		Anwender anw = new Anwender("Username", "Uservorname", "16.1.1973", "w");
 		new User(anw, "user", "pass");
 		
@@ -167,7 +161,7 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		/** Definition of the database table */
 		String version = "1.0.0";
 		String createTable = "CREATE TABLE Dummy" + "(" + "ID VARCHAR(25) primary key," // This
-			// field must always be present
+		// field must always be present
 			+ "lastupdate BIGINT," // This field must always be present
 			+ "deleted CHAR(1) default '0'," // This field must always be present
 			+ "PatientID VARCHAR(25)," + "Title      VARCHAR(50)," // Use VARCHAR, CHAR, TEXT and
