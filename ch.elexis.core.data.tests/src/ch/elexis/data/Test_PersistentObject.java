@@ -1,9 +1,6 @@
 package ch.elexis.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -153,6 +150,16 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		// SQL can be case sensitive !!
 		// assertEquals(false, PersistentObject.tableExists("kontakt"));
 		assertEquals(false, PersistentObject.tableExists("THIS_TABLE_SHOULD_NOT_EXISTS"));
+	}
+	
+	@Test
+	public void testCaseSensitiveIdLoad() {
+		Anwender anw = new Anwender("Username", "Uservorname", "16.1.1973", "w");
+		new User(anw, "user", "pass");
+		
+		assertFalse(User.load("USER").exists());
+		assertFalse(User.load("User").exists());
+		assertTrue(User.load("user").exists());
 	}
 	
 	@Test

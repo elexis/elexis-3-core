@@ -19,6 +19,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import com.google.common.base.Strings;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -206,54 +208,55 @@ public class Anwender extends Person {
 	}
 	
 	/**
-	 * Login: Anwender anmelden, passenden Mandanten anmelden. (Jeder Anwender ist entweder selber
-	 * ein Mandant oder ist einem Mandanten zugeordnet)
+	 * Login: Anwender anmelden, passenden Mandanten anmelden. (Jeder Anwender
+	 * ist entweder selber ein Mandant oder ist einem Mandanten zugeordnet)
 	 * 
 	 * @param username
 	 *            Kurzname
 	 * @param password
 	 *            Passwort
-	 * @return <code>true</code> erfolgreich angemeldet, CoreHub.actUser gesetzt, else
-	 *         <code>false</code>
+	 * @return <code>true</code> erfolgreich angemeldet, CoreHub.actUser
+	 *         gesetzt, else <code>false</code>
 	 * @since 3.1 queries {@link User}
 	 */
-	public static boolean login(final String username, final String password){
+	public static boolean login(final String username, final String password) {
 		((LocalLockService) CoreHub.getLocalLockService()).reconfigure();
 		((ElexisServerEventService) CoreHub.getElexisServerEventService()).reconfigure();
-		
+
 		CoreHub.logoffAnwender();
-		
+
 		// check if user exists
 		User user = User.load(username);
-		if (user == null)
+		if (!user.exists()) {
 			return false;
-		
+		}
+
 		// is the user currently active, or locked?
-		if (!user.isActive())
+		if (!user.isActive()) {
 			return false;
-		
+		}
+
 		// check if password is valid
 		boolean result = user.verifyPassword(password);
-		if (!result)
+		if (!result) {
 			return false;
-		
+		}
+
 		// set user in system
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
+		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
 		CoreHub.actUser = Anwender.load(user.getAssignedContactId());
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-		
+		ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+
 		cod.adaptForUser();
-		
+
 		CoreHub.actUser.setInitialMandator();
-		
-		CoreHub.userCfg =
-			new SqlSettings(getConnection(), "USERCONFIG", "Param", "Value", "UserID="
-				+ CoreHub.actUser.getWrappedId());
-		
+
+		CoreHub.userCfg = new SqlSettings(getConnection(), "USERCONFIG", "Param", "Value",
+				"UserID=" + CoreHub.actUser.getWrappedId());
+
 		CoreHub.heart.resume(true);
-		
+
 		return true;
 	}
 	

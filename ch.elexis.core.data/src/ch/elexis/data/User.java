@@ -73,7 +73,14 @@ public class User extends PersistentObject {
 		super(id);
 	}
 	
-	public static User load(final String id){
+	/**
+	 * Generates a user object, which is not necessarily backed with a real db
+	 * object, use {@link #exists()} to check.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static @NonNull User load(final String id) {
 		return new User(id);
 	}
 	
