@@ -95,6 +95,8 @@ public class User extends PersistentObject {
 	private static void migrateToNewStructure(){
 		new Role(); // to call the static init header and init the roles
 		
+		log.info("Starting migration to new user structure");
+		
 		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
 		List<Anwender> users = qbe.execute();
 		for (Anwender anwender : users) {
@@ -117,6 +119,8 @@ public class User extends PersistentObject {
 				u = User.load(USERNAME_ADMINISTRATOR);
 				u.setAssignedContact(anwender);
 				u.setPassword(password);
+				log.info("Overriding Administrator password with password from anwender [{}]",
+					anwender.getLabel());
 			} else {
 				u = new User(anwender, username, password);
 			}
@@ -127,6 +131,9 @@ public class User extends PersistentObject {
 				u.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
 				u.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_DOCTOR), true);
 			}
+			
+			log.info("Migrated anwender [{}] to new user structure with id [{}]",
+				anwender.getLabel(), u.getId());
 			
 			// TODO delete the information from contact table?
 		}
