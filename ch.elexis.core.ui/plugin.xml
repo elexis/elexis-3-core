@@ -313,7 +313,8 @@
          <scheme
                description="KeyBindings that use this scheme will be displayed by the KeyAssistant in Elexis"
                id="ch.elexis.ui.keybindingScheme"
-               name="Elexis Keybinding Scheme">
+               name="Elexis Keybinding Scheme"
+               parentId="org.eclipse.ui.defaultAcceleratorConfiguration">
          </scheme>
          <key
                commandId="org.eclipse.ui.views.showView"
