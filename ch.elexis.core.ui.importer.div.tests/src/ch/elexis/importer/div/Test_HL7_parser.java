@@ -319,10 +319,10 @@ public class Test_HL7_parser {
 			}
 		}
 		assertEquals(7, qrr.size());
-		assertTrue(itemArray[0].getLabel().contains("BEM, BEM ()"));
-		assertTrue(itemArray[3].getLabel().contains("K, Kalium (/ mmol/l)"));
-		assertTrue(itemArray[4].getLabel().contains("LEUK, Leukozyten (/ G/l)"));
-		assertTrue(itemArray[5].getLabel().contains("PROG, Progesteron (/ nmol/l)"));
+		assertTrue(itemArray[0].getLabel().contains("BEM, BEM"));
+		assertTrue(itemArray[3].getLabel().contains("K, Kalium"));
+		assertTrue(itemArray[4].getLabel().contains("LEUK, Leukozyten"));
+		assertTrue(itemArray[5].getLabel().contains("PROG, Progesteron"));
 		boolean found = false;
 		for (j = 0; j < qrr.size(); j++) {
 			assertTrue(qrr.get(j).getLabel().contains("10.03.2004"));

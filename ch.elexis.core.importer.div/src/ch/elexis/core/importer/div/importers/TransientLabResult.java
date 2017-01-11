@@ -1,8 +1,6 @@
 package ch.elexis.core.importer.div.importers;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ILabItem;
@@ -152,9 +150,23 @@ public class TransientLabResult {
 	private void setFields(ILabResult labResult){
 		if (refMale != null) {
 			labResult.setRefMale(refMale);
+			ILabItem item = labResult.getItem();
+			if (item != null) {
+				String itemRefMale = item.getReferenceMale();
+				if (itemRefMale == null || itemRefMale.isEmpty()) {
+					item.setReferenceMale(refMale);
+				}
+			}
 		}
 		if (refFemale != null) {
 			labResult.setRefFemale(refFemale);
+			ILabItem item = labResult.getItem();
+			if (item != null) {
+				String itemRefFemale = item.getReferenceFemale();
+				if (itemRefFemale == null || itemRefFemale.isEmpty()) {
+					item.setReferenceFemale(refFemale);
+				}
+			}
 		}
 		if (unit != null) {
 			labResult.setUnit(unit);
