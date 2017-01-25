@@ -11,7 +11,9 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -574,18 +576,39 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				}
 			}
 			
-			StringBuilder sql = new StringBuilder();
-			sql.append("DELETE FROM BEHDL_DG_JOINT WHERE BEHANDLUNGSID=").append(getWrappedId())
-				.append(" AND ").append("DIAGNOSEID=").append(JdbcLink.wrap(dgid));
-			getDBConnection().exec(sql.toString());
+			if (dgid == null) {
+				log.warn(
+					"Requested delete of diagnosis which could not be resolved [{}] in consultation [{}]",
+					dg.getCode() + "/" + dg.getClass().getName(), getId());
+			} else {
+				StringBuilder sql = new StringBuilder();
+				sql.append("DELETE FROM BEHDL_DG_JOINT WHERE ID=").append(JdbcLink.wrap(dgid));
+				log.debug(sql.toString());
+				getDBConnection().exec(sql.toString());
+			}
 		}
 	}
 	
+	private final String STM_S_BDJ = "SELECT BDJ.ID FROM BEHDL_DG_JOINT BDJ, DIAGNOSEN D"
+		+ " WHERE BDJ.BehandlungsID=? AND D.ID = BDJ.DiagnoseID AND D.DG_CODE=? AND D.KLASSE=?;";
+	
 	private String prepareDiagnoseSelectWithCodeAndClass(String code, String classname){
-		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT ID FROM DIAGNOSEN WHERE DG_CODE=").append(JdbcLink.wrap(code))
-			.append(" AND ").append("KLASSE=").append(JdbcLink.wrap(classname));
-		return getDBConnection().queryString(sql.toString());
+		PreparedStatement pst = getDBConnection().getPreparedStatement(STM_S_BDJ);
+		try {
+			pst.setString(1, getId());
+			pst.setString(2, code);
+			pst.setString(3, classname);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				return rs.getString(1);
+			}
+		} catch (SQLException e) {
+			MessageEvent.fireError("Fehler beim Löschen", e.getMessage(), e);
+			log.error("Error deleting diagnosis", e);
+		} finally {
+			getDBConnection().releasePreparedStatement(pst);
+		}
+		return null;
 	}
 	
 	/** Die zu dieser Konsultation gehörenden Leistungen holen */
