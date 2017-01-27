@@ -175,6 +175,41 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.BriefAuswahlView">
+         <command
+               commandId="ch.elexis.core.ui.brief.send"
+               icon="icon://IMG_MAIL_SEND"
+               label="Versenden"
+               style="pulldown">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:ch.elexis.core.ui.brief.send">
+         <command
+               commandId="ch.elexis.core.ui.commands.SendBriefAsMail"
+               label="als E-Mail"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     property="ch.elexis.core.mail.ui.sendavailable">
+               </test>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.views.rechnung.BillingProposalView">
+         <command
+               commandId="ch.elexis.core.ui.StartBillingProposal"
+               icon="icon://IMG_WIZARD"
+               label="Rechnungs-Vorschlag"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -489,6 +524,10 @@
             id="ch.elexis.core.ui.command.templatePrintSettings"
             name="Druckeinstellungen">
       </command>
+      <command
+            id="ch.elexis.core.ui.StartBillingProposal"
+            name="Start Billing Proposal">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -580,6 +619,10 @@
                      property="ch.elexis.commands.propertyTester.ACE">
                </test>
             </enabledWhen>
+         </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.StartBillingProposalHandler"
+               commandId="ch.elexis.core.ui.StartBillingProposal">
          </handler>
       </extension>
 </plugin>
