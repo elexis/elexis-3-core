@@ -376,6 +376,14 @@
             name="Textvorlagen Management"
             restorable="true">
       </view>
+      <view
+            category="ch.elexis.abrechnungKategorie"
+            class="ch.elexis.core.ui.views.rechnung.BillingProposalView"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_red.png"
+            id="ch.elexis.core.ui.views.rechnung.BillingProposalView"
+            name="%elexis.BillingProposalView"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
