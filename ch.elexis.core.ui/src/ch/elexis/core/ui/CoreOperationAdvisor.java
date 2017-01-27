@@ -74,8 +74,34 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	@Override
 	public boolean openQuestion(String title, String message){
-		Display d = Display.getDefault();
-		return MessageDialog.openQuestion(d.getActiveShell(), title, message);
+		if (isDisplayAvailable()) {
+			QuestionDialogRunnable runnable = new QuestionDialogRunnable(title, message);
+			Display.getDefault().syncExec(runnable);
+			return runnable.getResult();
+		}
+		log.error("Could not ask question [" + title + "] [" + message + "]");
+		return false;
+	}
+	
+	private class QuestionDialogRunnable implements Runnable {
+		private String title;
+		private String message;
+		private boolean result;
+		
+		public QuestionDialogRunnable(String title, String message){
+			this.title = title;
+			this.message = message;
+		}
+		
+		@Override
+		public void run(){
+			result =
+				MessageDialog.openQuestion(Display.getDefault().getActiveShell(), title, message);
+		}
+		
+		public boolean getResult(){
+			return result;
+		}
 	}
 	
 	@Override
