@@ -31,9 +31,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.ui.views.controls.GenericSelectionComposite;
 import ch.elexis.core.ui.views.controls.KontaktSelectionComposite;
 import ch.elexis.core.ui.views.controls.TimeSpanSelectionComposite;
@@ -61,6 +63,8 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 	
 	private Button accountingOnly;
 	private GenericSelectionComposite accountingSelector;
+	
+	private Button errorneousOnly;
 	
 	public BillingProposalWizardDialog(Shell parentShell){
 		super(parentShell);
@@ -147,6 +151,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			}
 		});
 		
+		errorneousOnly = new Button(content, SWT.CHECK);
+		errorneousOnly.setText("nur fehlerhafte");
+		new Label(content, SWT.NONE);
+		
 		return ret;
 	}
 	
@@ -183,6 +191,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		
 		private IFilter insurerOnlyFilter;
 		private IFilter accountingOnlyFilter;
+		private IFilter errorneousOnlyFilter;
 		private Query<Konsultation> query;
 		
 		public QueryProposalRunnable(){
@@ -250,6 +259,14 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					}
 				};
 			}
+			if (errorneousOnly.getSelection()) {
+				errorneousOnlyFilter = new IFilter() {
+					@Override
+					public boolean select(Object element){
+						return !BillingUtil.getBillableResult((Konsultation) element).isOK();
+					}
+				};
+			}
 			
 		}
 		
@@ -269,6 +286,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					continue;
 				}
 				if (accountingOnlyFilter != null && !accountingOnlyFilter.select(konsultation)) {
+					monitor.worked(1);
+					continue;
+				}
+				if (errorneousOnlyFilter != null && !errorneousOnlyFilter.select(konsultation)) {
 					monitor.worked(1);
 					continue;
 				}
