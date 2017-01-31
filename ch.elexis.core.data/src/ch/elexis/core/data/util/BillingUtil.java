@@ -11,7 +11,10 @@
 package ch.elexis.core.data.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -20,6 +23,7 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Rechnung;
+import ch.elexis.data.Rechnungssteller;
 import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -34,7 +38,7 @@ import ch.rgw.tools.TimeTool;
  */
 public class BillingUtil {
 	
-	public static Result<Konsultation> check(Konsultation konsultation){
+	public static Result<Konsultation> getBillableResult(Konsultation konsultation){
 		TimeTool checkTool = new TimeTool();
 		Result<Konsultation> result = new Result<>(konsultation);
 		if (getTotal(konsultation).isZero()) {
@@ -48,7 +52,7 @@ public class BillingUtil {
 		if (fall == null) {
 			result.add(SEVERITY.ERROR, 1, "Fehlender Fall", konsultation, false);
 		}
-		if (fall != null && CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, false)
+		if (fall != null && CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
 			&& !fall.isValid()) {
 			result.add(SEVERITY.ERROR, 1, "Fall nicht gültig", konsultation, false);
 		}
@@ -69,5 +73,37 @@ public class BillingUtil {
 			total.addMoney(verrechnet.getNettoPreis());
 		}
 		return total;
+	}
+	
+	public static List<Konsultation> filterNotBillable(List<Konsultation> konsultationen){
+		return konsultationen.parallelStream().filter(k -> getBillableResult(k).isOK())
+			.collect(Collectors.toList());
+	}
+	
+	/**
+	 * Get a Map representation of bill able {@link Konsultation} instances. To be bill able the
+	 * lists of {@link Konsultation} is split by {@link Rechnungssteller} and {@link Fall}.
+	 * 
+	 * @param konsultationen
+	 * @return
+	 */
+	public static Map<Rechnungssteller, Map<Fall, List<Konsultation>>> getGroupedBillable(
+		List<Konsultation> konsultationen){
+		HashMap<Rechnungssteller, Map<Fall, List<Konsultation>>> ret = new HashMap<>();
+		for (Konsultation konsultation : konsultationen) {
+			Rechnungssteller invoicer = konsultation.getMandant().getRechnungssteller();
+			Map<Fall, List<Konsultation>> fallMap = ret.get(invoicer);
+			if (fallMap == null) {
+				fallMap = new HashMap<>();
+			}
+			List<Konsultation> list = fallMap.get(konsultation.getFall());
+			if (list == null) {
+				list = new ArrayList<>();
+			}
+			list.add(konsultation);
+			fallMap.put(konsultation.getFall(), list);
+			ret.put(invoicer, fallMap);
+		}
+		return ret;
 	}
 }

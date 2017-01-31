@@ -651,6 +651,7 @@ public class Prescription extends PersistentObject {
 				set(FLD_REZEPT_ID, "");
 				return EntryType.SELF_DISPENSED;
 			}
+			setEntryType(EntryType.RECIPE);
 			return EntryType.RECIPE;
 		}
 		

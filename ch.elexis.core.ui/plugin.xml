@@ -224,6 +224,44 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.views.rechnung.BillingProposalView">
+         <command
+               commandId="ch.elexis.core.ui.RefreshBillingProposalView"
+               icon="icon://IMG_REFRESH"
+               label="Rechnungs-Vorschlag aktualisieren"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.views.rechnung.BillingProposalView">
+         <command
+               commandId="ch.elexis.core.ui.BillingProposalViewCreateBills"
+               icon="icon://IMG_BILL"
+               label="Rechnungen erzeugen"
+               style="push">
+            <parameter
+                  name="ch.elexis.core.ui.BillingProposalViewCreateBills.selection"
+                  value="all">
+            </parameter>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.core.ui.views.rechnung.BillingProposalView">
+         <command
+               commandId="ch.elexis.core.ui.BillingProposalViewCreateBills"
+               icon="icon://IMG_BILL"
+               label="Rechnungen erzeugen"
+               style="push">
+            <parameter
+                  name="ch.elexis.core.ui.BillingProposalViewCreateBills.selection"
+                  value="selection">
+            </parameter>
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -591,7 +629,21 @@
       </command>
       <command
             id="ch.elexis.core.ui.StartBillingProposal"
-            name="Start Billing Proposal">
+            name="Start billing proposal">
+      </command>
+      <command
+            id="ch.elexis.core.ui.RefreshBillingProposalView"
+            name="Refresh billing proposals">
+      </command>
+      <command
+            id="ch.elexis.core.ui.BillingProposalViewCreateBills"
+            name="Create bills from proposal">
+         <commandParameter
+               id="ch.elexis.core.ui.BillingProposalViewCreateBills.selection"
+               name="selection"
+               optional="true"
+               values="all,selection">
+         </commandParameter>
       </command>
    </extension>
       <extension
@@ -692,6 +744,14 @@
          <handler
                class="ch.elexis.core.ui.commands.StartBillingProposalHandler"
                commandId="ch.elexis.core.ui.StartBillingProposal">
+         </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.RefreshBillingProposalViewHandler"
+               commandId="ch.elexis.core.ui.RefreshBillingProposalView">
+         </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.BillingProposalViewCreateBillsHandler"
+               commandId="ch.elexis.core.ui.BillingProposalViewCreateBills">
          </handler>
       </extension>
 </plugin>

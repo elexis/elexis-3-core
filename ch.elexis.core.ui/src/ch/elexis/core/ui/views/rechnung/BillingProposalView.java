@@ -12,23 +12,32 @@ package ch.elexis.core.ui.views.rechnung;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -48,13 +57,19 @@ public class BillingProposalView extends ViewPart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.BillingProposalView"; //$NON-NLS-1$
 	
 	private TableViewer viewer;
+	private BillingProposalViewerComparator comparator;
+	
+	private Color lightRed = UiDesk.getColorFromRGB("ff8d8d");
+	private Color lightGreen = UiDesk.getColorFromRGB("a6ffaa");
 	
 	@Override
 	public void createPartControl(Composite parent){
-		viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
+		viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.VIRTUAL);
 		
 		viewer.getTable().setHeaderVisible(true);
 		viewer.setContentProvider(new BillingInformationContentProvider(viewer));
+		comparator = new BillingProposalViewerComparator();
+		viewer.setComparator(comparator);
 		
 		TableViewerColumn patNameColumn = new TableViewerColumn(viewer, SWT.NONE);
 		patNameColumn.getColumn().setWidth(175);
@@ -69,6 +84,7 @@ public class BillingProposalView extends ViewPart {
 				}
 			}
 		});
+		patNameColumn.getColumn().addSelectionListener(getSelectionAdapter(0));
 		
 		TableViewerColumn patNrColumn = new TableViewerColumn(viewer, SWT.NONE);
 		patNrColumn.getColumn().setWidth(50);
@@ -83,6 +99,7 @@ public class BillingProposalView extends ViewPart {
 				}
 			}
 		});
+		patNrColumn.getColumn().addSelectionListener(getSelectionAdapter(1));
 		
 		TableViewerColumn dateColumn = new TableViewerColumn(viewer, SWT.NONE);
 		dateColumn.getColumn().setWidth(75);
@@ -98,6 +115,7 @@ public class BillingProposalView extends ViewPart {
 				}
 			}
 		});
+		dateColumn.getColumn().addSelectionListener(getSelectionAdapter(2));
 		
 		TableViewerColumn accountingSystemColumn = new TableViewerColumn(viewer, SWT.NONE);
 		accountingSystemColumn.getColumn().setWidth(75);
@@ -155,10 +173,9 @@ public class BillingProposalView extends ViewPart {
 			}
 			
 			@Override
-			public Color getForeground(Object element){
+			public Color getBackground(Object element){
 				if (element instanceof BillingInformation) {
-					return ((BillingInformation) element).isOk() ? UiDesk.getColor(UiDesk.COL_GREEN)
-							: UiDesk.getColor(UiDesk.COL_RED);
+					return ((BillingInformation) element).isOk() ? lightGreen : lightRed;
 				} else {
 					return super.getForeground(element);
 				}
@@ -179,6 +196,34 @@ public class BillingProposalView extends ViewPart {
 				}
 			}
 		});
+		
+		viewer.getControl().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e){
+				if (e.keyCode == SWT.F5) {
+					refresh();
+				}
+			}
+		});
+		
+		MenuManager menuManager = new MenuManager();
+		Menu menu = menuManager.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(menuManager, viewer);
+		getSite().setSelectionProvider(viewer);
+	}
+	
+	private SelectionAdapter getSelectionAdapter(int index){
+		SelectionAdapter selectionAdapter = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				comparator.setColumn(index);
+				int dir = comparator.getDirection();
+				viewer.getTable().setSortDirection(dir);
+				viewer.refresh();
+			}
+		};
+		return selectionAdapter;
 	}
 	
 	@Override
@@ -186,16 +231,48 @@ public class BillingProposalView extends ViewPart {
 		viewer.getControl().setFocus();
 	}
 	
+	/**
+	 * Set a {@link List} of {@link Konsultation} as the input for the viewer.
+	 * 
+	 * @param proposal
+	 */
 	public void setInput(List<Konsultation> proposal){
 		viewer.setInput(proposal);
 	}
 	
-	private static class BillingInformation {
+	/**
+	 * Refresh the current content of the viewer.
+	 */
+	public void refresh(){
+		((BillingInformationContentProvider) viewer.getContentProvider()).refresh();
+		viewer.refresh();
+	}
+	
+	/**
+	 * Get a {@link List} of all {@link Konsultation} instances of the viewer, erroneous and valid.
+	 */
+	public List<Konsultation> getToBill(){
+		List<BillingInformation> content =
+			((BillingInformationContentProvider) viewer.getContentProvider()).getCurrentContent();
+		if (content != null && !content.isEmpty()) {
+			return content.parallelStream().map(bi -> bi.getKonsultation())
+				.collect(Collectors.toList());
+		}
+		return Collections.emptyList();
+	}
+	
+	/**
+	 * View specific model class, including multi threaded property loading.
+	 * 
+	 * @author thomas
+	 *
+	 */
+	public static class BillingInformation {
 		
-		private static ExecutorService executorService = Executors.newCachedThreadPool();
+		private static ExecutorService executorService = Executors.newFixedThreadPool(8);
 		
-		private boolean resolved;
-		private boolean resolving;
+		private volatile boolean resolved;
+		private volatile boolean resolving;
 		
 		private StructuredViewer viewer;
 		private Fall fall;
@@ -203,6 +280,7 @@ public class BillingProposalView extends ViewPart {
 		
 		private LocalDate date;
 		
+		private int patientNr = -1;
 		private String insurerName;
 		private String accountingSystem;
 		private String amountTotal;
@@ -227,16 +305,31 @@ public class BillingProposalView extends ViewPart {
 			return fall.getPatient();
 		}
 		
+		public Integer getPatientNr(){
+			if (patientNr == -1) {
+				try {
+					patientNr = Integer.parseInt(fall.getPatient().getPatCode());
+				} catch (NumberFormatException e) {
+					patientNr = -1;
+				}
+			}
+			return patientNr;
+		}
+		
 		public LocalDate getDate(){
 			return date;
 		}
 		
-		public boolean isResolved(){
+		public synchronized boolean isResolved(){
 			if (!resolved && !resolving) {
 				resolving = true;
 				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
 			}
 			return resolved;
+		}
+		
+		public synchronized void refresh(){
+			resolved = false;
 		}
 		
 		public String getCheckResultMessage(){
@@ -247,7 +340,7 @@ public class BillingProposalView extends ViewPart {
 			}
 		}
 		
-		public boolean isOk(){
+		public Boolean isOk(){
 			if (!isResolved()) {
 				return false;
 			} else {
@@ -295,11 +388,12 @@ public class BillingProposalView extends ViewPart {
 				resolveTotal();
 				resolveCheckResult();
 				item.resolved = true;
+				item.resolving = false;
 				updateViewer();
 			}
 			
 			private void resolveCheckResult(){
-				Result<Konsultation> result = BillingUtil.check(item.konsultation);
+				Result<Konsultation> result = BillingUtil.getBillableResult(item.konsultation);
 				if (result.isOK()) {
 					item.checkResultMessage = "Ok";
 					item.checkResult = true;
@@ -332,18 +426,18 @@ public class BillingProposalView extends ViewPart {
 					item.insurerName = "";
 				}
 			}
-
+			
 			private void resolveAccountingSystem(){
 				item.accountingSystem = item.fall.getAbrechnungsSystem();
 			}
-
+			
 			private void updateViewer(){
 				Control control = viewer.getControl();
 				if (control != null && !control.isDisposed()) {
-					viewer.getControl().getDisplay().asyncExec(new Runnable() {
+					control.getDisplay().asyncExec(new Runnable() {
 						@Override
 						public void run(){
-							if (control.isVisible()) {
+							if (!control.isDisposed() && control.isVisible()) {
 								viewer.refresh(item, true);
 							}
 						}
@@ -353,25 +447,118 @@ public class BillingProposalView extends ViewPart {
 		}
 	}
 	
-	private class BillingInformationContentProvider extends ArrayContentProvider {
+	/**
+	 * View specific {@link IStructuredContentProvider} implementation for mapping a list of
+	 * {@link Konsultation} to a list of {@link BillingInformation}.
+	 * 
+	 * @author thomas
+	 *
+	 */
+	private class BillingInformationContentProvider implements IStructuredContentProvider {
 		
 		private StructuredViewer viewer;
-
+		private List<BillingInformation> currentContent;
+		
 		public BillingInformationContentProvider(StructuredViewer viewer){
 			this.viewer = viewer;
 		}
 		
-		@SuppressWarnings("unchecked")
+		/**
+		 * Refresh the current list of {@link BillingInformation}
+		 */
+		public void refresh(){
+			currentContent = currentContent.parallelStream()
+				.filter(bi -> bi.getKonsultation().getRechnung() == null)
+				.collect(Collectors.toList());
+			currentContent.parallelStream().forEach(bi -> bi.refresh());
+		}
+		
 		@Override
 		public Object[] getElements(Object inputElement){
 			if (inputElement instanceof List<?>) {
-				List<BillingInformation> billingInfoList = ((List<Konsultation>) inputElement)
-					.parallelStream()
-					.map(k -> new BillingInformation(viewer, k.getFall(), k)).collect(Collectors.toList());
-				return billingInfoList.toArray();
+				return currentContent.toArray();
 			}
-			return super.getElements(inputElement);
+			return Collections.emptyList().toArray();
 		}
 		
+		@SuppressWarnings("unchecked")
+		@Override
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+			if (newInput instanceof List<?>) {
+				currentContent = ((List<Konsultation>) newInput).parallelStream()
+					.map(k -> new BillingInformation(this.viewer, k.getFall(), k))
+					.collect(Collectors.toList());
+			}
+		}
+		
+		public List<BillingInformation> getCurrentContent(){
+			if (currentContent != null) {
+				return currentContent;
+			}
+			return Collections.emptyList();
+		}
+		
+		@Override
+		public void dispose(){
+			viewer = null;
+			currentContent = null;
+		}
+	}
+	
+	/**
+	 * View specific {@link ViewerComparator} implementation.
+	 * 
+	 * @author thomas
+	 *
+	 */
+	private class BillingProposalViewerComparator extends ViewerComparator {
+		private int propertyIndex;
+		private static final int DESCENDING = 1;
+		private int direction = DESCENDING;
+		
+		public BillingProposalViewerComparator(){
+			this.propertyIndex = 0;
+			direction = DESCENDING;
+		}
+		
+		public int getDirection(){
+			return direction == 1 ? SWT.DOWN : SWT.UP;
+		}
+		
+		public void setColumn(int column){
+			if (column == this.propertyIndex) {
+				// Same column as last sort; toggle the direction
+				direction = 1 - direction;
+			} else {
+				// New column; do an ascending sort
+				this.propertyIndex = column;
+				direction = DESCENDING;
+			}
+		}
+		
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2){
+			BillingInformation left = (BillingInformation) e1;
+			BillingInformation right = (BillingInformation) e2;
+			int rc = 0;
+			switch (propertyIndex) {
+			case 0:
+				rc = right.getPatient().getLabel(true).compareTo(left.getPatient().getLabel(true));
+				break;
+			case 1:
+				rc = right.getPatientNr().compareTo(left.getPatientNr());
+				break;
+			case 2:
+				rc = right.getDate().compareTo(left.getDate());
+				break;
+			default:
+				rc = 0;
+			}
+			// If descending order, flip the direction
+			if (direction == DESCENDING) {
+				rc = -rc;
+			}
+			return rc;
+		}
 	}
 }
