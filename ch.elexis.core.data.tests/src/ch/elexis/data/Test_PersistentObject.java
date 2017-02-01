@@ -25,7 +25,6 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		link = initDB();
 		DBConnection dbc = new DBConnection();
 		dbc.setJdbcLink(link);
-		executeDBScript(dbc, "/rsc/UserContactsToMigrate.sql");
 	}
 	
 	@After
@@ -149,6 +148,8 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		// assertEquals(false, PersistentObject.tableExists("kontakt"));
 		assertEquals(false, PersistentObject.tableExists("THIS_TABLE_SHOULD_NOT_EXISTS"));
 	}
+	
+
 	
 	@Ignore
 	public void testCaseSensitiveIdLoad(){
