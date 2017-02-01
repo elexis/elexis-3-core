@@ -1,5 +1,7 @@
 package ch.elexis.core.data.server;
 
+import javax.ws.rs.core.Response;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.slf4j.Logger;
@@ -24,6 +26,8 @@ public class ElexisServerEventService {
 		if (restUrl != null && restUrl.length() > 0) {
 			log.info("Operating against elexis-server instance on " + restUrl);
 			eventService = ConsumerFactory.createConsumer(restUrl, IEventService.class);
+		} else {
+			eventService = new NoRemoteEventService();
 		}
 	}
 	
@@ -37,5 +41,23 @@ public class ElexisServerEventService {
 			}
 		}
 		return new Status(Status.ERROR, CoreHub.PLUGIN_ID, "No EventService available");
+	}
+	
+	/**
+	 * @return <code>true</code> if connected to an Elexis-Server, else <code>false</code>
+	 */
+	public boolean deliversRemoteEvents(){
+		return !(eventService instanceof NoRemoteEventService);
+	}
+	
+	private class NoRemoteEventService implements IEventService {
+		
+		private final Response OK = Response.ok().build();
+		
+		@Override
+		public Response postEvent(ElexisEvent elexisEvent){
+			return OK;
+		}
+		
 	}
 }

@@ -202,7 +202,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 	
 	@Test
 	public void testQueryMappedExpressionNumeric(){
-		Stock stock = new Stock("TestStock", 20);
+		Stock stock = new Stock("TST", 20);
 		Artikel art = new Artikel("TestARtikel", "Eigenartikel");
 		Artikel art2 = new Artikel("TestARtikel2", "Eigenartikel");
 		Artikel art3 = new Artikel("TestARtikel3", "Eigenartikel");

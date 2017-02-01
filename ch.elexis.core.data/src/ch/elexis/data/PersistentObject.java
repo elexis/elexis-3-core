@@ -1872,8 +1872,10 @@ public abstract class PersistentObject implements IPersistentObject {
 		
 		List<String> fieldS = new ArrayList<String>();
 		fieldS.add(FLD_ID);
+		fieldS.add(FLD_LASTUPDATE);
 		List<String> valuesS = new ArrayList<String>();
 		valuesS.add(id);
+		valuesS.add(Long.toString(System.currentTimeMillis()));
 		if (fields != null && values != null && fields.length == values.length
 			&& fields.length > 0) {
 			fieldS.addAll(Arrays.asList(fields));

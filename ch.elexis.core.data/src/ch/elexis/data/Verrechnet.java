@@ -28,6 +28,7 @@ import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.IVerrechnetAdjuster;
 import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.verrechnet.Constants;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -62,9 +63,8 @@ public class Verrechnet extends PersistentObject {
 	public static final String USERID = "userID";
 	public static final String TABLENAME = "LEISTUNGEN";
 	
-	public static final String VATSCALE = "vat_scale";
-	/** the prescription ID of this if it is an article */
-	public static final String FLD_EXT_PRESC_ID = "prescriptionId";
+	public static final String VATSCALE = Constants.VAT_SCALE;
+	public static final String FLD_EXT_PRESC_ID = Constants.FLD_EXT_PRESC_ID;
 	
 	// keep a list of all ch.elexis.VerrechnetAdjuster extensions
 	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<IVerrechnetAdjuster>();
@@ -93,20 +93,22 @@ public class Verrechnet extends PersistentObject {
 	}
 	
 	public Verrechnet(final IVerrechenbar iv, final Konsultation kons, final int zahl){
-		create(null);
 		TimeTool dat = new TimeTool(kons.getDatum());
 		Fall fall = kons.getFall();
 		int tp = iv.getTP(dat, fall);
 		double factor = iv.getFactor(dat, fall);
 		long preis = Math.round(tp * factor);
-		set(new String[] {
+		String[] fields = new String[] {
 			KONSULTATION, LEISTG_TXT, LEISTG_CODE, CLASS, COUNT, COST_BUYING, SCALE_TP_SELLING,
 			SCALE_SELLING, PRICE_SELLING, SCALE, SCALE2, USERID
-		}, new String[] {
+		};
+		String[] values = new String[] {
 			kons.getId(), iv.getText(), iv.getId(), iv.getClass().getName(), Integer.toString(zahl),
 			iv.getKosten(dat).getCentsAsString(), Integer.toString(tp), Double.toString(factor),
 			Long.toString(preis), "100", "100", CoreHub.actUser.getId()
-		});
+		};
+		create(null, fields, values);
+		
 		if (iv instanceof Artikel) {
 			stockService.performSingleDisposal((Artikel) iv, 1);
 		}

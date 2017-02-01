@@ -10,6 +10,8 @@ import ch.rgw.tools.JdbcLink.Stm;
 
 public abstract class AbstractPersistentObjectTest {
 	
+	protected static JdbcLink link;
+	
 	/**
 	 * create a H2-JdbcLink with an initialized db for elexis.
 	 * 
@@ -17,7 +19,8 @@ public abstract class AbstractPersistentObjectTest {
 	 * Plugin-Test
 	 */
 	protected static JdbcLink initDB(){
-		return initDB("h2");
+		link = initDB("h2");
+		return link;
 	}
 	
 	/**
@@ -41,12 +44,21 @@ public abstract class AbstractPersistentObjectTest {
 	}
 	
 	protected static void initElexisDatabase(DBConnection connection) throws IOException{
+		executeDBScript(connection, "/rsc/createDB.script");
+	}
+	
+	protected static void executeDBScript(DBConnection connection, String filename)
+		throws IOException{
 		Stm stm = null;
-		try (InputStream is = PersistentObject.class.getResourceAsStream("/rsc/createDB.script")) {
+		try (InputStream is = PersistentObject.class.getResourceAsStream(filename)) {
 			stm = connection.getStatement();
-			stm.execScript(is, true, true);
+			boolean success = stm.execScript(is, true, true);
+			if (!success) {
+				throw new IOException();
+			}
 		} finally {
 			connection.releaseStatement(stm);
 		}
 	}
+	
 }

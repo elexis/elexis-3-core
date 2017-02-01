@@ -31,7 +31,7 @@ public class Test_OrderService extends AbstractPersistentObjectTest {
 	public static void init(){
 		link = initDB();
 		
-		stock_A_5_order = new Stock("AOrder", 5);
+		stock_A_5_order = new Stock("AOD", 5);
 		artikel_A = new Artikel("ArtikelAOrder", "Eigenartikel");
 		
 		stockEntry = (StockEntry) stockService.storeArticleInStock(stock_A_5_order,

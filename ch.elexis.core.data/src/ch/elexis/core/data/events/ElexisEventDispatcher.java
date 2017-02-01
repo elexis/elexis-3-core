@@ -26,7 +26,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.data.server.ServerEventMapper;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
@@ -258,6 +260,13 @@ public final class ElexisEventDispatcher extends Job {
 			
 			synchronized (eventQueue) {
 				eventQueue.offer(ee);
+			}
+			
+			if (CoreHub.getElexisServerEventService().deliversRemoteEvents()) {
+				ch.elexis.core.common.ElexisEvent mapEvent = ServerEventMapper.mapEvent(ee);
+				if(mapEvent!=null) {
+					CoreHub.getElexisServerEventService().postEvent(mapEvent);
+				}
 			}
 		}
 	}
