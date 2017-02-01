@@ -18,7 +18,7 @@ public class ElexisServerEventService {
 	
 	private Logger log = LoggerFactory.getLogger(ElexisServerEventService.class);
 	
-	private IEventService eventService;
+	private IEventService eventService = new NoRemoteEventService();
 	
 	public void reconfigure(){
 		final String restUrl =
