@@ -25,6 +25,7 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		link = initDB();
 		DBConnection dbc = new DBConnection();
 		dbc.setJdbcLink(link);
+		executeDBScript(dbc, "/rsc/UserContactsToMigrate.sql");
 	}
 	
 	@After
@@ -147,15 +148,6 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		// SQL can be case sensitive !!
 		// assertEquals(false, PersistentObject.tableExists("kontakt"));
 		assertEquals(false, PersistentObject.tableExists("THIS_TABLE_SHOULD_NOT_EXISTS"));
-	}
-	
-	@Test
-	public void testUpdateUser() throws IOException{
-		assertTrue(PersistentObject.tableExists("USER_"));
-		assertTrue(User.load("Administrator").exists());
-		assertTrue(PersistentObject.tableExists("ROLE"));
-		assertTrue(Kontakt.load("Y9f697146027a577d028").exists());
-//		assertTrue(User.load("cm").exists());
 	}
 	
 	@Ignore
