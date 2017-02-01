@@ -25,7 +25,6 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		link = initDB();
 		DBConnection dbc = new DBConnection();
 		dbc.setJdbcLink(link);
-		executeDBScript(dbc, "/rsc/UserContactsToMigrate.sql");
 	}
 	
 	@After
