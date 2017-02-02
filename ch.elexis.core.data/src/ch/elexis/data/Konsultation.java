@@ -494,7 +494,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		ArrayList<IDiagnose> ret = new ArrayList<IDiagnose>();
 		Stm stm = getDBConnection().getStatement();
 		ResultSet rs1 = stm.query(
-			"SELECT DIAGNOSEID FROM BEHDL_DG_JOINT inner join BEHANDLUNGEN on BehandlungsID=BEHANDLUNGEN.id where BEHDL_DG_JOINT.deleted='0' and BEHANDLUNGEN.deleted='0' AND BEHANDLUNGSID="
+			"SELECT DIAGNOSEID FROM BEHDL_DG_JOINT INNER JOIN BEHANDLUNGEN on BehandlungsID=BEHANDLUNGEN.id where BEHDL_DG_JOINT.deleted='0' and BEHANDLUNGEN.deleted='0' AND BEHANDLUNGSID="
 				+ JdbcLink.wrap(getId()));
 		StringBuilder sb = new StringBuilder();
 		try {
@@ -537,22 +537,28 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (!isEditable(true)) {
 			return;
 		}
-		String exists = getDBConnection().queryString(
+		
+		String dgid = prepareDiagnoseSelectWithCodeAndClass(dg.getCode(), dg.getClass().getName());
+		if (dgid != null) {
+			return;
+		}
+		
+		String diagnosisEntryExists = getDBConnection().queryString(
 			"SELECT ID FROM DIAGNOSEN WHERE KLASSE=" + JdbcLink.wrap(dg.getClass().getName())
 				+ " AND DG_CODE=" + JdbcLink.wrap(dg.getCode()));
 		StringBuilder sql = new StringBuilder(200);
-		if (StringTool.isNothing(exists)) {
-			exists = StringTool.unique("bhdl");
+		if (StringTool.isNothing(diagnosisEntryExists)) {
+			diagnosisEntryExists = StringTool.unique("bhdl");
 			sql.append("INSERT INTO DIAGNOSEN (ID, DG_CODE, DG_TXT, KLASSE) VALUES (")
-				.append(JdbcLink.wrap(exists)).append(",").append(JdbcLink.wrap(dg.getCode()))
-				.append(",").append(JdbcLink.wrap(dg.getText())).append(",")
-				.append(JdbcLink.wrap(dg.getClass().getName())).append(")");
+				.append(JdbcLink.wrap(diagnosisEntryExists)).append(",")
+				.append(JdbcLink.wrap(dg.getCode())).append(",").append(JdbcLink.wrap(dg.getText()))
+				.append(",").append(JdbcLink.wrap(dg.getClass().getName())).append(")");
 			getDBConnection().exec(sql.toString());
 			sql.setLength(0);
 		}
-		sql.append("INSERT INTO BEHDL_DG_JOINT (ID,BEHANDLUNGSID,DIAGNOSEID) VALUES (")
-			.append(JdbcLink.wrap(StringTool.unique("bhdx"))).append(",").append(getWrappedId())
-			.append(",").append(JdbcLink.wrap(exists)).append(")");
+		sql.append("INSERT INTO BEHDL_DG_JOINT (BEHANDLUNGSID,DIAGNOSEID) VALUES (")
+			.append(getWrappedId()).append(",").append(JdbcLink.wrap(diagnosisEntryExists))
+			.append(")");
 		getDBConnection().exec(sql.toString());
 		
 		// Statistik nachführen
@@ -566,7 +572,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (isEditable(true)) {
 			String dgid =
 				prepareDiagnoseSelectWithCodeAndClass(dg.getCode(), dg.getClass().getName());
-				
+			
 			if (dgid == null) {
 				String code = dg.getCode();
 				// chapter of a TI-Code
@@ -582,14 +588,15 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					dg.getCode() + "/" + dg.getClass().getName(), getId());
 			} else {
 				StringBuilder sql = new StringBuilder();
-				sql.append("DELETE FROM BEHDL_DG_JOINT WHERE ID=").append(JdbcLink.wrap(dgid));
+				sql.append("DELETE FROM BEHDL_DG_JOINT WHERE BehandlungsID=").append(getWrappedId())
+					.append(" AND DiagnoseId=" + JdbcLink.wrap(dgid));
 				log.debug(sql.toString());
 				getDBConnection().exec(sql.toString());
 			}
 		}
 	}
 	
-	private final String STM_S_BDJ = "SELECT BDJ.ID FROM BEHDL_DG_JOINT BDJ, DIAGNOSEN D"
+	private final String STM_S_BDJ = "SELECT BDJ.DiagnoseId FROM BEHDL_DG_JOINT BDJ, DIAGNOSEN D"
 		+ " WHERE BDJ.BehandlungsID=? AND D.ID = BDJ.DiagnoseID AND D.DG_CODE=? AND D.KLASSE=?;";
 	
 	private String prepareDiagnoseSelectWithCodeAndClass(String code, String classname){
@@ -784,7 +791,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 										 * JdbcLink . wrap (v .getClass ( ).getName ()))
 										 */
 				.append(" AND LEISTG_CODE=").append(JdbcLink.wrap(v.getId()));
-				
+			
 			getDBConnection().exec(sb.toString());
 		}
 	}
@@ -898,7 +905,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 *            the initial text to be set, or null if no initial text should be set.
 	 */
 	public static void neueKons(final String initialText){
-		Patient actPatient = ElexisEventDispatcher.getSelectedPatient();		
+		Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 		Fall actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 		if (actFall == null) {
 			if (actPatient == null) {
@@ -927,9 +934,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			}
 		} else {
 			if (!actFall.getPatient().equals(actPatient)) {
-				if(actPatient != null) {
+				if (actPatient != null) {
 					Konsultation lk = actPatient.getLetzteKons(false);
-					if(lk != null) {
+					if (lk != null) {
 						actFall = lk.getFall();
 					}
 				} else {
@@ -960,7 +967,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		}
 		if (getDefaultDiagnose() != null)
 			n.addDiagnose(getDefaultDiagnose());
-			
+		
 		ElexisEventDispatcher.fireSelectionEvent(actFall);
 		ElexisEventDispatcher.fireSelectionEvent(n);
 	}

@@ -270,11 +270,12 @@ CREATE TABLE DIAGNOSEN(
 CREATE INDEX dg1 on DIAGNOSEN (KLASSE,DG_CODE);
 
 CREATE TABLE BEHDL_DG_JOINT(
-	ID				VARCHAR(25) primary key,
+	ID				VARCHAR(25),
 	lastupdate      BIGINT,
 	deleted			CHAR(1) default '0',
 	BehandlungsID	VARCHAR(25),
-	DiagnoseID		VARCHAR(25)
+	DiagnoseID		VARCHAR(25),
+	PRIMARY KEY (BehandlungsID, DiagnoseID)
 );
 
 CREATE INDEX bdg1 on BEHDL_DG_JOINT (BehandlungsID);
