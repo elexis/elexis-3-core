@@ -14,6 +14,11 @@ package ch.rgw.tools;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -354,6 +359,26 @@ public class TimeTool extends GregorianCalendar {
 	 */
 	public TimeTool(final Date date){
 		this.setTimeInMillis(date.getTime());
+		resolution = defaultResolution;
+	}
+	
+	/**
+	 * @param localDate
+	 * @since 3.2/3.1
+	 */
+	public TimeTool(final LocalDate localDate){
+		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		this.setTimeInMillis(date.getTime());
+		resolution = defaultResolution;
+	}
+	
+	/**
+	 * @param localDate
+	 * @since 3.2/3.1
+	 */
+	public TimeTool(final LocalDateTime localDateTime){
+		ZonedDateTime atZone = localDateTime.atZone(ZoneId.systemDefault());
+		this.setTimeInMillis(atZone.toInstant().toEpochMilli());
 		resolution = defaultResolution;
 	}
 	
@@ -701,6 +726,105 @@ public class TimeTool extends GregorianCalendar {
 		}
 	}
 	
+	/**
+	 * Get a String representation of the duration of the date compared to now. Returns an
+	 * internationalized String.<br />
+	 * Examples: 2 weeks ago, in 1 week, 1 year ago, in 2 years
+	 * 
+	 * @since 3.2/3.1
+	 * 
+	 * @return
+	 */
+	public String getDurationToNowString(){
+		LocalDateTime date = toLocalDateTime();
+		LocalDateTime now = LocalDateTime.now();
+		
+		int years = (int) now.until(date, ChronoUnit.YEARS);
+		int weeks = (int) now.until(date, ChronoUnit.WEEKS);
+		int months = (int) now.until(date, ChronoUnit.MONTHS);
+		int days = (int) now.until(date, ChronoUnit.DAYS);
+		// check for date changed withing 24h
+		if (days == 0) {
+			int nowDay = now.getDayOfYear();
+			int dateDay = date.getDayOfYear();
+			days = dateDay - nowDay;
+		}
+		if (years != 0 && Math.abs(days) > 56) {
+			String format = getYearsFormat(years);
+			return String.format(format, Math.abs(years));
+		}
+		if (months != 0 && Math.abs(days) > 28) {
+			String format = getMonthsFormat(months);
+			return String.format(format, Math.abs(months));
+		}
+		if (weeks != 0 && Math.abs(days) > 14) {
+			String format = getWeeksFormat(weeks);
+			return String.format(format, Math.abs(weeks));
+		}
+		if (days != 0) {
+			String format = getDaysFormat(days);
+			return String.format(format, Math.abs(days));
+		} else {
+			return Messages.getString("TimeTool.today");
+		}
+	}
+	
+	protected String getYearsFormat(int years){
+		if (years < 0) {
+			if (years < -1) {
+				return Messages.getString("TimeTool.yearsAgoFormat");
+			}
+			return Messages.getString("TimeTool.yearAgoFormat");
+		} else {
+			if (years > 1) {
+				return Messages.getString("TimeTool.yearsToFormat");
+			}
+			return Messages.getString("TimeTool.yearToFormat");
+		}
+	}
+	
+	protected String getMonthsFormat(int months){
+		if (months < 0) {
+			if (months < -1) {
+				return Messages.getString("TimeTool.monthsAgoFormat");
+			}
+			return Messages.getString("TimeTool.monthAgoFormat");
+		} else {
+			if (months > 1) {
+				return Messages.getString("TimeTool.monthsToFormat");
+			}
+			return Messages.getString("TimeTool.monthToFormat");
+		}
+	}
+	
+	protected String getWeeksFormat(int weeks){
+		if (weeks < 0) {
+			if (weeks < -1) {
+				return Messages.getString("TimeTool.weeksAgoFormat");
+			}
+			return Messages.getString("TimeTool.weekAgoFormat");
+		} else {
+			if (weeks > 1) {
+				return Messages.getString("TimeTool.weeksToFormat");
+			}
+			return Messages.getString("TimeTool.weekToFormat");
+		}
+	}
+	
+	protected String getDaysFormat(int days){
+		if (days < 0) {
+			if (days < -1) {
+				return Messages.getString("TimeTool.daysAgoFormat");
+			}
+			return Messages.getString("TimeTool.dayAgoFormat");
+		} else {
+			if (days > 1) {
+				return Messages.getString("TimeTool.daysToFormat");
+			}
+			return Messages.getString("TimeTool.dayToFormat");
+		}
+	}
+	
 	public int getTimeInUnits(){
 		return (int) (getTimeInMillis() / resolution);
 	}
@@ -760,6 +884,24 @@ public class TimeTool extends GregorianCalendar {
 		} else {
 			wrap = false;
 		}
+	}
+	
+	/**
+	 * @since 3.2/3.1
+	 */
+	public LocalDate toLocalDate(){
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(getTimeInMillis());
+		return gc.toZonedDateTime().toLocalDate();
+	}
+	
+	/**
+	 * @since 3.2/3.1
+	 */
+	public LocalDateTime toLocalDateTime() {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(getTimeInMillis());
+		return gc.toZonedDateTime().toLocalDateTime();
 	}
 	
 	public String toDBString(final boolean full){
