@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import ch.elexis.core.constants.Preferences;
@@ -31,13 +32,21 @@ import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.TimeTool;
 
 /**
- * Util class with methods for checking and creating {@link Rechnung} and {@link Konsultation}.
+ * Util class with methods for checking and preparing {@link Konsultation}, with the goal to include
+ * them in a bill {@link Rechnung#build(List)}.
  * 
  * @author thomas
  *
  */
 public class BillingUtil {
 	
+	/**
+	 * Test if the {@link Konsultation} can be billed, and return a {@link Result} containing
+	 * possible error messages.
+	 * 
+	 * @param konsultation
+	 * @return
+	 */
 	public static Result<Konsultation> getBillableResult(Konsultation konsultation){
 		TimeTool checkTool = new TimeTool();
 		Result<Konsultation> result = new Result<>(konsultation);
@@ -66,6 +75,12 @@ public class BillingUtil {
 		return result;
 	}
 	
+	/**
+	 * Calculate the total amount of all {@link Verrechnet} of the {@link Konsultation}.
+	 * 
+	 * @param konsultation
+	 * @return
+	 */
 	public static Money getTotal(Konsultation konsultation){
 		Money total = new Money(0);
 		List<Verrechnet> leistungen = konsultation.getLeistungen();
@@ -75,6 +90,12 @@ public class BillingUtil {
 		return total;
 	}
 	
+	/**
+	 * Remove all not bill able {@link Konsultation} from the provided {@link List}.
+	 * 
+	 * @param konsultationen
+	 * @return filtered {@link List}
+	 */
 	public static List<Konsultation> filterNotBillable(List<Konsultation> konsultationen){
 		return konsultationen.parallelStream().filter(k -> getBillableResult(k).isOK())
 			.collect(Collectors.toList());
@@ -82,10 +103,10 @@ public class BillingUtil {
 	
 	/**
 	 * Get a Map representation of bill able {@link Konsultation} instances. To be bill able the
-	 * lists of {@link Konsultation} is split by {@link Rechnungssteller} and {@link Fall}.
+	 * list of {@link Konsultation} is split by {@link Rechnungssteller} and {@link Fall}.
 	 * 
 	 * @param konsultationen
-	 * @return
+	 * @return map sorted by billing criteria
 	 */
 	public static Map<Rechnungssteller, Map<Fall, List<Konsultation>>> getGroupedBillable(
 		List<Konsultation> konsultationen){
@@ -103,6 +124,26 @@ public class BillingUtil {
 			list.add(konsultation);
 			fallMap.put(konsultation.getFall(), list);
 			ret.put(invoicer, fallMap);
+		}
+		return ret;
+	}
+	
+	/**
+	 * Create bills {@link Rechnung} for all {@link Konsultation} contained in the map. Returns al
+	 * list with the {@link Result} of building the bills.
+	 * 
+	 * @param toBillMap
+	 * @return
+	 */
+	public static List<Result<Rechnung>> createBills(
+		Map<Rechnungssteller, Map<Fall, List<Konsultation>>> toBillMap){
+		List<Result<Rechnung>> ret = new ArrayList<>();
+		Set<Rechnungssteller> invoicers = toBillMap.keySet();
+		for (Rechnungssteller invoicer : invoicers) {
+			Set<Fall> faelle = toBillMap.get(invoicer).keySet();
+			for (Fall fall : faelle) {
+				ret.add(Rechnung.build(toBillMap.get(invoicer).get(fall)));
+			}
 		}
 		return ret;
 	}

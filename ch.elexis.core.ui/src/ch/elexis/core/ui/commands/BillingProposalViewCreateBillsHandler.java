@@ -15,7 +15,6 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -66,26 +65,22 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 						BillingUtil.getGroupedBillable(billable);
 					monitor.worked(1);
 					// create all bills
-					Set<Rechnungssteller> invoicers = toBillMap.keySet();
-					for (Rechnungssteller invoicer : invoicers) {
-						Set<Fall> faelle = toBillMap.get(invoicer).keySet();
-						for (Fall fall : faelle) {
-							Result<Rechnung> result =
-								Rechnung.build(toBillMap.get(invoicer).get(fall));
-							if (result.isOK()) {
-								successful++;
-							} else {
-								errorneousInfo.append(result.getSeverity()).append(" -> ");
-								List<Result<Rechnung>.msg> messages = result.getMessages();
-								for (int i = 0; i < messages.size(); i++) {
-									if (i > 0) {
-										errorneousInfo.append(" / ");
-									}
-									errorneousInfo.append(messages.get(i).getText());
+					List<Result<Rechnung>> results = BillingUtil.createBills(toBillMap);
+					// build information to show
+					for (Result<Rechnung> result : results) {
+						if (result.isOK()) {
+							successful++;
+						} else {
+							errorneousInfo.append(result.getSeverity()).append(" -> ");
+							List<Result<Rechnung>.msg> messages = result.getMessages();
+							for (int i = 0; i < messages.size(); i++) {
+								if (i > 0) {
+									errorneousInfo.append(" / ");
 								}
-								errorneousInfo.append("\n");
-								errorneous++;
+								errorneousInfo.append(messages.get(i).getText());
 							}
+							errorneousInfo.append("\n");
+							errorneous++;
 						}
 					}
 					monitor.worked(1);
