@@ -248,6 +248,16 @@
             </parameter>
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.views.rechnung.BillingProposalView">
+         <command
+               commandId="ch.elexis.core.ui.PrintBillingProposalView"
+               icon="icon://IMG_PRINTER"
+               label="Rechnungs-Vorschlag drucken"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -580,6 +590,10 @@
                values="all,selection">
          </commandParameter>
       </command>
+      <command
+            id="ch.elexis.core.ui.PrintBillingProposalView"
+            name="Print billing proposal">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -683,6 +697,10 @@
          <handler
                class="ch.elexis.core.ui.commands.BillingProposalViewCreateBillsHandler"
                commandId="ch.elexis.core.ui.BillingProposalViewCreateBills">
+         </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.PrintBillingProposalHandler"
+               commandId="ch.elexis.core.ui.PrintBillingProposalView">
          </handler>
       </extension>
 </plugin>
