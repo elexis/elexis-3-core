@@ -18,6 +18,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -46,7 +49,6 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Patient;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
@@ -78,7 +80,7 @@ public class BillingProposalView extends ViewPart {
 			@Override
 			public String getText(Object element){
 				if (element instanceof BillingInformation) {
-					return ((BillingInformation) element).getPatient().getLabel(true);
+					return ((BillingInformation) element).getPatientName();
 				} else {
 					return super.getText(element);
 				}
@@ -93,7 +95,7 @@ public class BillingProposalView extends ViewPart {
 			@Override
 			public String getText(Object element){
 				if (element instanceof BillingInformation) {
-					return ((BillingInformation) element).getPatient().getPatCode();
+					return Integer.toString(((BillingInformation) element).getPatientNr());
 				} else {
 					return super.getText(element);
 				}
@@ -261,26 +263,50 @@ public class BillingProposalView extends ViewPart {
 		return Collections.emptyList();
 	}
 	
+	public BillingLetter getToPrint(){
+		List<BillingInformation> content =
+			((BillingInformationContentProvider) viewer.getContentProvider()).getCurrentContent();
+		if (content != null && !content.isEmpty()) {
+			return new BillingLetter(content);
+		}
+		return new BillingLetter(Collections.emptyList());
+		
+	}
+	
+	@XmlRootElement
+	public static class BillingLetter {
+		private List<BillingInformation> content;
+		
+		public BillingLetter(List<BillingInformation> informations){
+			this.content = informations;
+		}
+	}
+	
 	/**
 	 * View specific model class, including multi threaded property loading.
 	 * 
 	 * @author thomas
 	 *
 	 */
+	@XmlRootElement
 	public static class BillingInformation {
-		
+		@XmlTransient
 		private static ExecutorService executorService = Executors.newFixedThreadPool(8);
-		
+		@XmlTransient
 		private volatile boolean resolved;
+		@XmlTransient
 		private volatile boolean resolving;
-		
+		@XmlTransient
 		private StructuredViewer viewer;
+		@XmlTransient
 		private Fall fall;
+		@XmlTransient
 		private Konsultation konsultation;
 		
 		private LocalDate date;
 		
 		private int patientNr = -1;
+		private String patientName;
 		private String insurerName;
 		private String accountingSystem;
 		private String amountTotal;
@@ -297,12 +323,15 @@ public class BillingProposalView extends ViewPart {
 			date = new TimeTool(konsultation.getDatum()).toLocalDate();
 		}
 		
-		public Konsultation getKonsultation(){
-			return konsultation;
+		public String getPatientName(){
+			if (patientName == null) {
+				patientName = fall.getPatient().getLabel(true);
+			}
+			return patientName;
 		}
 		
-		public Patient getPatient(){
-			return fall.getPatient();
+		public Konsultation getKonsultation(){
+			return konsultation;
 		}
 		
 		public Integer getPatientNr(){
@@ -467,10 +496,12 @@ public class BillingProposalView extends ViewPart {
 		 * Refresh the current list of {@link BillingInformation}
 		 */
 		public void refresh(){
-			currentContent = currentContent.parallelStream()
-				.filter(bi -> bi.getKonsultation().getRechnung() == null)
-				.collect(Collectors.toList());
-			currentContent.parallelStream().forEach(bi -> bi.refresh());
+			if (currentContent != null) {
+				currentContent = currentContent.parallelStream()
+					.filter(bi -> bi.getKonsultation().getRechnung() == null)
+					.collect(Collectors.toList());
+				currentContent.parallelStream().forEach(bi -> bi.refresh());
+			}
 		}
 		
 		@Override
@@ -543,7 +574,7 @@ public class BillingProposalView extends ViewPart {
 			int rc = 0;
 			switch (propertyIndex) {
 			case 0:
-				rc = right.getPatient().getLabel(true).compareTo(left.getPatient().getLabel(true));
+				rc = right.getPatientName().compareTo(left.getPatientName());
 				break;
 			case 1:
 				rc = right.getPatientNr().compareTo(left.getPatientNr());
