@@ -27,10 +27,10 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -188,10 +188,10 @@ public class BillingProposalView extends ViewPart {
 			}
 		});
 		
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
-			public void doubleClick(DoubleClickEvent event){
+			public void selectionChanged(SelectionChangedEvent event){
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection != null && !selection.isEmpty()) {
 					if (selection.getFirstElement() instanceof BillingInformation) {
@@ -553,6 +553,8 @@ public class BillingProposalView extends ViewPart {
 		
 		public void resolveAll(){
 			currentContent.parallelStream().forEach(bi -> {
+				// touch patient number
+				bi.getPatientNr();
 				if (!bi.isResolved()) {
 					bi.resolve();
 				}

@@ -107,7 +107,13 @@
 	<!-- child element: proposal -->
 	<!-- ========================= -->
 	<xsl:template match="proposal">
-		<fo:table-row>
+		  <xsl:variable name="bg-color">
+		    <xsl:choose>
+		      <xsl:when test="position() mod 2 = 0">white</xsl:when>
+		      <xsl:otherwise>lightgrey</xsl:otherwise>
+		    </xsl:choose>
+		  </xsl:variable>
+		<fo:table-row background-color="{$bg-color}">
 			<fo:table-cell>
 				<fo:block>
 					<xsl:value-of select="patientName"/>
