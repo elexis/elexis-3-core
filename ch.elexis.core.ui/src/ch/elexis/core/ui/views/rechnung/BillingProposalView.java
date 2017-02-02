@@ -13,13 +13,17 @@ package ch.elexis.core.ui.views.rechnung;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -263,23 +267,55 @@ public class BillingProposalView extends ViewPart {
 		return Collections.emptyList();
 	}
 	
-	public BillingLetter getToPrint(){
-		List<BillingInformation> content =
-			((BillingInformationContentProvider) viewer.getContentProvider()).getCurrentContent();
-		if (content != null && !content.isEmpty()) {
-			return new BillingLetter(content);
-		}
-		return new BillingLetter(Collections.emptyList());
+	public ProposalLetter getToPrint(){
+		BillingInformationContentProvider contentProvider =
+			((BillingInformationContentProvider) viewer.getContentProvider());
+		contentProvider.resolveAll();
 		
+		List<BillingInformation> content = contentProvider.getCurrentContent();
+		BillingProposalViewerComparator comparator =
+			(BillingProposalViewerComparator) viewer.getComparator();
+		content.sort(comparator);
+		
+		ProposalLetter ret = new ProposalLetter();
+		if (content != null && !content.isEmpty()) {
+			ret.setProposal(content);
+		} else {
+			ret.setProposal(Collections.emptyList());
+		}
+		return ret;
 	}
 	
 	@XmlRootElement
-	public static class BillingLetter {
-		private List<BillingInformation> content;
+	public static class ProposalLetter {
+		private List<BillingInformation> proposal;
 		
-		public BillingLetter(List<BillingInformation> informations){
-			this.content = informations;
+		public ProposalLetter(){
 		}
+		
+		public void setProposal(List<BillingInformation> proposal){
+			this.proposal = proposal;
+		}
+		
+		public List<BillingInformation> getProposal(){
+			return proposal;
+		}
+	}
+	
+	public static class LocalDateAdapter extends XmlAdapter<String, LocalDate> {
+		
+		private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		
+		@Override
+		public String marshal(LocalDate date) throws Exception{
+			return formatter.format(date);
+		}
+		
+		@Override
+		public LocalDate unmarshal(String string) throws Exception{
+			return LocalDate.parse(string, formatter);
+		}
+		
 	}
 	
 	/**
@@ -288,7 +324,7 @@ public class BillingProposalView extends ViewPart {
 	 * @author thomas
 	 *
 	 */
-	@XmlRootElement
+	@XmlRootElement(name = "proposal")
 	public static class BillingInformation {
 		@XmlTransient
 		private static ExecutorService executorService = Executors.newFixedThreadPool(8);
@@ -302,16 +338,26 @@ public class BillingProposalView extends ViewPart {
 		private Fall fall;
 		@XmlTransient
 		private Konsultation konsultation;
-		
+		@XmlElement
+		@XmlJavaTypeAdapter(LocalDateAdapter.class)
 		private LocalDate date;
-		
+		@XmlElement
 		private int patientNr = -1;
+		@XmlElement
 		private String patientName;
+		@XmlElement
 		private String insurerName;
+		@XmlElement
 		private String accountingSystem;
+		@XmlElement
 		private String amountTotal;
+		@XmlElement
 		private String checkResultMessage;
+		@XmlElement
 		private boolean checkResult;
+		
+		public BillingInformation(){
+		}
 		
 		public BillingInformation(StructuredViewer viewer, Fall fall, Konsultation konsultation){
 			this.viewer = viewer;
@@ -355,6 +401,17 @@ public class BillingProposalView extends ViewPart {
 				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
 			}
 			return resolved;
+		}
+		
+		public void resolve(){
+			executorService.execute(new ResolveLazyFieldsRunnable(null, this));
+			while (!isResolved()) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
 		}
 		
 		public synchronized void refresh(){
@@ -418,7 +475,9 @@ public class BillingProposalView extends ViewPart {
 				resolveCheckResult();
 				item.resolved = true;
 				item.resolving = false;
-				updateViewer();
+				if (viewer != null) {
+					updateViewer();
+				}
 			}
 			
 			private void resolveCheckResult(){
@@ -492,6 +551,14 @@ public class BillingProposalView extends ViewPart {
 			this.viewer = viewer;
 		}
 		
+		public void resolveAll(){
+			currentContent.parallelStream().forEach(bi -> {
+				if (!bi.isResolved()) {
+					bi.resolve();
+				}
+			});
+		}
+		
 		/**
 		 * Refresh the current list of {@link BillingInformation}
 		 */
@@ -542,7 +609,8 @@ public class BillingProposalView extends ViewPart {
 	 * @author thomas
 	 *
 	 */
-	private class BillingProposalViewerComparator extends ViewerComparator {
+	private class BillingProposalViewerComparator extends ViewerComparator
+			implements Comparator<BillingInformation> {
 		private int propertyIndex;
 		private static final int DESCENDING = 1;
 		private int direction = DESCENDING;
@@ -571,6 +639,11 @@ public class BillingProposalView extends ViewPart {
 		public int compare(Viewer viewer, Object e1, Object e2){
 			BillingInformation left = (BillingInformation) e1;
 			BillingInformation right = (BillingInformation) e2;
+			return compare(left, right);
+		}
+		
+		@Override
+		public int compare(BillingInformation left, BillingInformation right){
 			int rc = 0;
 			switch (propertyIndex) {
 			case 0:
