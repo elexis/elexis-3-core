@@ -87,7 +87,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		
 		insurerOnly = new Button(content, SWT.CHECK);
 		insurerOnly.setText("nur von folgendem Versicherer");
-		insurerSelection = new KontaktSelectionComposite(content, SWT.NONE);
+		insurerSelection = new KontaktSelectionComposite(content, SWT.NONE | SWT.MULTI);
 		insurerSelection.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		insurerSelection.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
@@ -229,16 +229,21 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			if (insurerOnly.getSelection()) {
 				insurerOnlyFilter = new IFilter() {
 					
-					private Kontakt insurer =
-						(Kontakt) ((IStructuredSelection) insurerSelection.getSelection())
-							.getFirstElement();
+					@SuppressWarnings("unchecked")
+					private List<Kontakt> insurers =
+						(List<Kontakt>) ((IStructuredSelection) insurerSelection.getSelection())
+							.toList();
 					
 					@Override
 					public boolean select(Object element){
 						Fall fall = ((Konsultation) element).getFall();
 						String garantId = fall.getInfoString("Kostenträger");
 						if (garantId != null && !garantId.isEmpty()) {
-							return garantId.equals(insurer.getId());
+							for (Kontakt insurer : insurers) {
+								if (garantId.equals(insurer.getId())) {
+									return true;
+								}
+							}
 						}
 						return false;
 					}
