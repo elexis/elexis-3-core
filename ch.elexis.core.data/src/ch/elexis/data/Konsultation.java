@@ -556,9 +556,13 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			getDBConnection().exec(sql.toString());
 			sql.setLength(0);
 		}
-		sql.append("INSERT INTO BEHDL_DG_JOINT (BEHANDLUNGSID,DIAGNOSEID) VALUES (")
-			.append(getWrappedId()).append(",").append(JdbcLink.wrap(diagnosisEntryExists))
-			.append(")");
+		/**
+		 * @deprecated remove ID,lastupdate,deleted in 3.3
+		 * @see https://redmine.medelexis.ch/issues/5629
+		 */
+		sql.append("INSERT INTO BEHDL_DG_JOINT (ID,BEHANDLUNGSID,DIAGNOSEID) VALUES (")
+			.append(JdbcLink.wrap(StringTool.unique("bhdx"))).append(",").append(getWrappedId())
+			.append(",").append(JdbcLink.wrap(diagnosisEntryExists)).append(")");
 		getDBConnection().exec(sql.toString());
 		
 		// Statistik nachführen
