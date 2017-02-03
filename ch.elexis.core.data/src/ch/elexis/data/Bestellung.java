@@ -86,7 +86,7 @@ public class Bestellung extends PersistentObject implements IOrder {
 										art = (Artikel) poFromString;
 									}
 								}
-								if (art != null) {
+								if (art != null && art.exists()) {
 									int count = 1;
 									try {
 										count = Integer.parseInt(fld[1]);
