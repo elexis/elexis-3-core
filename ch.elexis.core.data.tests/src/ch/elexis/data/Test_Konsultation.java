@@ -2,16 +2,13 @@ package ch.elexis.data;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkException;
 
@@ -28,9 +25,11 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 		link = initDB();
 		
 		User user = User.load("Administrator");
-		// set user in system
+		// set user and Mandant in system
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
+		Mandant m = new Mandant("Mandant", "Erwin", "26.07.1979", "m");
+		CoreHub.setMandant(m);
 		
 		pat = new Patient("Name", "Vorname", "26.8.2011", "m");
 		fall = new Fall(pat.getId(), "Bezeichnung", "Grund", "KVG");
