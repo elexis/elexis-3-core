@@ -1,5 +1,8 @@
 package ch.elexis.core.ui.views.controls;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,11 +30,13 @@ public class KontaktSelectionComposite extends Composite implements ISelectionPr
 	protected Button selectButton;
 	protected Label selectLabel;
 	
-	protected Kontakt kontakt;
+	protected List<Kontakt> kontakt;
+	protected boolean multi;
 	
 	public KontaktSelectionComposite(Composite parent, int style){
 		super(parent, style);
-		
+		multi = (style & SWT.MULTI) > 0;
+		kontakt = new ArrayList<>();
 		createContent();
 	}
 	
@@ -50,8 +55,8 @@ public class KontaktSelectionComposite extends Composite implements ISelectionPr
 			public void widgetSelected(SelectionEvent e){
 				KontaktSelektor ksl = getKontaktSelector();
 				if (ksl.open() == Dialog.OK) {
-					kontakt = (Kontakt) ksl.getSelection();
-					setKontakt(kontakt);
+					Kontakt selected = (Kontakt) ksl.getSelection();
+					setKontakt(selected);
 					callSelectionListeners();
 				}
 			}
@@ -64,18 +69,46 @@ public class KontaktSelectionComposite extends Composite implements ISelectionPr
 			Kontakt.DEFAULT_SORT);
 	}
 	
+	/**
+	 * Set the current selected {@link Kontakt}. If style is SWT.MULTI, the {@link Kontakt} is added
+	 * to the List of selected {@link Kontakt}.
+	 * 
+	 * @param kontakt
+	 */
 	public void setKontakt(Kontakt kontakt){
-		this.kontakt = kontakt;
-		if (kontakt != null) {
-			selectLabel.setText(kontakt.getLabel());
+		if (multi) {
+			this.kontakt.add(kontakt);
+		} else {
+			this.kontakt.clear();
+			this.kontakt.add(kontakt);
+		}
+		if (this.kontakt != null && !this.kontakt.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			this.kontakt.stream().forEach(k -> {
+				if (sb.length() > 0) {
+					sb.append(", ");
+				}
+				sb.append(k.getLabel());
+			});
+			selectLabel.setText(sb.toString());
 		} else {
 			selectLabel.setText(""); //$NON-NLS-1$
 		}
 		getParent().layout();
 	}
 	
+	/**
+	 * Get the selected {@link Kontakt}. Is SWT style is SWT.MULTI, the first {@link Kontakt} is
+	 * returned. Use {@link KontaktSelectionComposite#getSelection()} to access the {@link List} of
+	 * selected {@link Kontakt}.
+	 * 
+	 * @return
+	 */
 	public Kontakt getKontakt(){
-		return kontakt;
+		if (!kontakt.isEmpty()) {
+			return kontakt.get(0);
+		}
+		return null;
 	}
 	
 	private void callSelectionListeners(){
