@@ -202,7 +202,9 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		for (Artikel arti : articlesToOrder) {
 			actBestellung.addItem(arti, 1);
 		}
-		tv.refresh();
+		if (tv != null && !tv.getControl().isDisposed()) {
+			tv.refresh();
+		}
 	}
 	
 	private void setBestellung(final Bestellung b){
