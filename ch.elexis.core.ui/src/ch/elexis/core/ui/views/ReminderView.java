@@ -13,7 +13,6 @@ package ch.elexis.core.ui.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,6 +85,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	private boolean bVisible;
 	private boolean autoSelectPatient;
 	
+	private ReminderLabelProvider reminderLabelProvider = new ReminderLabelProvider();
+	
 	private IAction filterActionType[] = new IAction[Type.values().length];
 	private Set<Integer> filterActionSet = new HashSet<Integer>();
 	
@@ -137,6 +138,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				// update action's access rights
 				othersReminderAction.reflectRight();
 				
+				reminderLabelProvider.updateUserConfiguration();
+				
 				if (bVisible) {
 					cv.notify(CommonViewer.Message.update);
 				}
@@ -166,6 +169,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	
 	@Override
 	public void createPartControl(final Composite parent){
+		reminderLabelProvider.updateUserConfiguration();
+		
 		filter = new ReminderFilter();
 		vc = new ViewerConfigurer(new CommonContentProviderAdapter() {
 			@Override
@@ -202,7 +207,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				return reminders.toArray();
 				
 			}
-		}, new ReminderLabelProvider(), null, new ViewerConfigurer.DefaultButtonProvider(),
+		}, reminderLabelProvider, null, new ViewerConfigurer.DefaultButtonProvider(),
 			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.MULTI, cv));
 		
 		makeActions();
@@ -302,25 +307,33 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			implements IColorProvider, IFontProvider {
 		
 		private Font boldFont;
+		private Color colorDue;
+		private Color colorOverdue;
+		private Color colorOpen;
 		
 		public Color getBackground(final Object element){
 			if (element instanceof Reminder) {
 				ProcessStatus stat = ((Reminder) element).getStatus();
-				cfg = CoreHub.userCfg.getBranch(Preferences.USR_REMINDERCOLORS, true);
 				if (stat == ProcessStatus.DUE) {
-					return UiDesk
-						.getColorFromRGB(cfg.get(ProcessStatus.DUE.getLocaleText(), "FFFFFF")); //$NON-NLS-1$
+					return colorDue;
 				} else if (stat == ProcessStatus.OVERDUE) {
-					return UiDesk
-						.getColorFromRGB(cfg.get(ProcessStatus.OVERDUE.getLocaleText(), "FF0000")); //$NON-NLS-1$
+					return colorOverdue;
 				} else if (stat == ProcessStatus.OPEN) {
-					return UiDesk
-						.getColorFromRGB(cfg.get(ProcessStatus.OPEN.getLocaleText(), "00FF00")); //$NON-NLS-1$
+					return colorOpen;
 				} else {
 					return null;
 				}
 			}
 			return null;
+		}
+		
+		public void updateUserConfiguration(){
+			cfg = CoreHub.userCfg.getBranch(Preferences.USR_REMINDERCOLORS, true);
+			colorDue = UiDesk.getColorFromRGB(cfg.get(ProcessStatus.DUE.getLocaleText(), "FFFFFF")); //$NON-NLS-1$;
+			colorOverdue =
+				UiDesk.getColorFromRGB(cfg.get(ProcessStatus.OVERDUE.getLocaleText(), "FF0000")); //$NON-NLS-1$
+			colorOpen =
+				UiDesk.getColorFromRGB(cfg.get(ProcessStatus.OPEN.getLocaleText(), "00FF00")); //$NON-NLS-1$
 		}
 		
 		public Color getForeground(final Object element){
