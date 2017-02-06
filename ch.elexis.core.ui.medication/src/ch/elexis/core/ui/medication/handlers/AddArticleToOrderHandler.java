@@ -16,11 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
-import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.BestellView;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
-import ch.rgw.tools.StringTool;
 
 public class AddArticleToOrderHandler extends AbstractHandler {
 	private static final Logger log = LoggerFactory.getLogger(AddArticleToOrderHandler.class);
@@ -39,17 +37,12 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 		
 		// load BestellView and pass articles to order
 		try {
-			if (StringTool.isNothing(BestellView.ID)) {
-				log.warn("BestellView.ID not found or empty");
-				SWTHelper.alert("Fehler", "BestellView.ID");
+			BestellView bestellView = (BestellView) activePage.showView(BestellView.ID);
+			if (bestellView != null) {
+				bestellView.addItemsToOrder(articlesToOrder);
+			} else {
+				log.error("Cant't load BestellView to add articles to order");
 			}
-			
-			activePage.showView(BestellView.ID);
-			BestellView bestellView = (BestellView) activePage.findView(BestellView.ID);
-			//hide BestellView as we only need to make sure it's properly initialized
-			activePage.hideView(bestellView);
-			
-			bestellView.addItemsToOrder(articlesToOrder);
 		} catch (PartInitException e) {
 			log.error("Cant't load BestellView to add articles to order", e);
 		}

@@ -593,7 +593,9 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 			// SINGLE SHOT ORDER
 			actBestellung.addBestellungEntry((Artikel) arti, null, null, 1);
 		}
-		tv.refresh();
+		if (tv != null && !tv.getControl().isDisposed()) {
+			tv.refresh();
+		}
 	}
 	
 	/**
