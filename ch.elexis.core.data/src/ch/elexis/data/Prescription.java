@@ -662,7 +662,7 @@ public class Prescription extends PersistentObject {
 		String prescTypeString = get(FLD_PRESC_TYPE);
 		if (prescTypeString != null && !prescTypeString.isEmpty()) {
 			try {
-				return Integer.parseInt(prescTypeString);
+				return Integer.parseInt(prescTypeString.trim());
 			} catch (NumberFormatException e) {
 				// ignore and return -1
 			}
@@ -674,7 +674,7 @@ public class Prescription extends PersistentObject {
 		if (type == null) {
 			type = EntryType.FIXED_MEDICATION;
 		}
-		setInt(FLD_PRESC_TYPE, type.numericValue());
+		set(FLD_PRESC_TYPE, Integer.toString(type.numericValue()));
 	}
 	
 	/**

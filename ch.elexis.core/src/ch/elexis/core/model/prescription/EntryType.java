@@ -1,5 +1,7 @@
 package ch.elexis.core.model.prescription;
 
+import java.util.HashMap;
+
 import ch.elexis.core.interfaces.INumericEnum;
 
 /**
@@ -22,6 +24,8 @@ public enum EntryType implements INumericEnum {
 	
 	private int numeric;
 	
+	private static HashMap<Integer, EntryType> numericMap = new HashMap<>();
+	
 	private EntryType(int numeric){
 		this.numeric = numeric;
 	}
@@ -32,12 +36,12 @@ public enum EntryType implements INumericEnum {
 	}
 	
 	public static EntryType byNumeric(int numeric){
-		EntryType[] entries = values();
-		for (EntryType entryType : entries) {
-			if (entryType.numericValue() == numeric) {
-				return entryType;
+		if(numericMap.isEmpty()) {
+			EntryType[] entries = values();
+			for (int i = 0; i< entries.length ; i++) {
+				numericMap.put(entries[i].numericValue(), entries[i]);
 			}
 		}
-		return UNKNOWN;
+		return numericMap.getOrDefault(numeric, UNKNOWN);
 	}
 }
