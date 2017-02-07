@@ -3,7 +3,6 @@ package ch.elexis.core.ui.medication.views;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
@@ -13,11 +12,11 @@ import org.eclipse.ui.commands.ICommandService;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
 import ch.elexis.data.Artikel;
+import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
-import ch.rgw.tools.TimeTool;
 
 public class MedicationViewHelper {
 	private static final int FILTER_PRESCRIPTION_AFTER_N_DAYS = 30;
@@ -100,24 +99,17 @@ public class MedicationViewHelper {
 	}
 	
 	private static List<Prescription> loadNonHistorical(String patId){
-		// make sure just now closed are not included
-		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
-		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, patId);
-		List<Prescription> tmpPrescs = qbe.execute();
-		// make sure just now closed are not included
-		TimeTool now = new TimeTool();
-		now.add(TimeTool.SECOND, 5);
-		tmpPrescs =
-			tmpPrescs.parallelStream().filter(p -> !p.isStopped(now)).collect(Collectors.toList());
-		
+		List<Prescription> tmpPrescs = Patient.load(patId).getMedication(null);
 		List<Prescription> result = new ArrayList<Prescription>();
+		
 		for (Prescription p : tmpPrescs) {
+			if (p.getEntryType() == EntryType.RECIPE
+				|| p.getEntryType() == EntryType.SELF_DISPENSED) {
+				continue;
+			}
+			
 			if (p.getArtikel() != null && p.getArtikel().getATC_code() != null) {
 				if (p.getArtikel().getATC_code().toUpperCase().startsWith("J07")) {
-					continue;
-				}
-				if (p.getEntryType() == EntryType.RECIPE
-					|| p.getEntryType() == EntryType.SELF_DISPENSED) {
 					continue;
 				}
 			}
@@ -128,7 +120,12 @@ public class MedicationViewHelper {
 	}
 	
 	private static List<Prescription> loadAllHistorical(String patId){
-		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+		// prefetch the values needed for filter operations
+		Query<Prescription> qbe = new Query<Prescription>(Prescription.class, null, null,
+			Prescription.TABLENAME, new String[] {
+				Prescription.FLD_DATE_UNTIL, Prescription.FLD_REZEPT_ID,
+				Prescription.FLD_PRESC_TYPE, Prescription.FLD_ARTICLE
+			});
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, patId);
 		return qbe.execute();
 	}
