@@ -13,6 +13,7 @@
 package ch.elexis.core.data.events;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Patient;
@@ -68,6 +69,7 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	private final Class<?> objClass;
 	final int type;
 	private final int priority;
+	private final String updatedAttribute;
 	
 	/**
 	 * Create an ElexisEvent with default priority
@@ -84,9 +86,20 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	}
 	
 	/**
-	 * Create an {@link ElexisEvent} carrying a generic object. This event is of high priority and
-	 * should not be lightly used. Usage examples are communication of ElexisStatus events within
-	 * the system.
+	 * 
+	 * @param o
+	 * @param c
+	 * @param type
+	 * @param updatedAttribute
+	 * @since 3.1
+	 */
+	public ElexisEvent(final IPersistentObject o, final Class<?> c, final int type,
+		final @Nullable String updatedAttribute){
+		this(o, c, type, PRIORITY_NORMAL, updatedAttribute);
+	}
+	
+	/**
+	 * Create an {@link ElexisEvent} carrying a generic object.
 	 * 
 	 * @param genericObject
 	 * @param c
@@ -95,6 +108,22 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	 * @since 3.0.0
 	 */
 	public ElexisEvent(final Object genericObject, Class<?> c, int type, int priority){
+		this(genericObject, c, type, priority, null);
+	}
+	
+	/**
+	 * Create an {@link ElexisEvent} carrying a generic object.
+	 * 
+	 * @param genericObject
+	 * @param c
+	 * @param type
+	 * @param priority
+	 * @param updatedAttribute
+	 *            in case of {@link #EVENT_UPDATE} the updated attribute
+	 * @since 3.1
+	 */
+	public ElexisEvent(final Object genericObject, Class<?> c, int type, int priority,
+		@Nullable String updatedAttribute){
 		if (genericObject instanceof PersistentObject) {
 			obj = (PersistentObject) genericObject;
 			this.genericObject = null;
@@ -106,6 +135,7 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 		objClass = c;
 		this.type = type;
 		this.priority = priority;
+		this.updatedAttribute = updatedAttribute;
 	}
 	
 	/**
@@ -146,6 +176,14 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	 */
 	public int getType(){
 		return type;
+	}
+	
+	/**
+	 * 
+	 * @return if {@link #EVENT_UPDATE} (possibly) the updatedAttribute or <code>null</code>
+	 */
+	public @Nullable String getUpdatedAttribute(){
+		return updatedAttribute;
 	}
 	
 	/**

@@ -551,7 +551,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		}
 		mapping.put(prefix + "deleted", "deleted");
-		mapping.put(prefix + "lastupdate", "lastupdate");
+		mapping.put(prefix + FLD_LASTUPDATE, FLD_LASTUPDATE);
 	}
 	
 	/**
@@ -1538,7 +1538,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				mapped = mapped.substring(i + 1);
 			}
 			sql.append(mapped);
-			sql.append("=NULL, lastupdate=" + Long.toString(ts) + " WHERE ID=")
+			sql.append("=NULL, " + FLD_LASTUPDATE + "=" + Long.toString(ts) + " WHERE ID=")
 				.append(getWrappedId());
 			getDBConnection().exec(sql.toString());
 			return true;
@@ -1570,7 +1570,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				sql.append(mapped);
 			}
 		}
-		sql.append("=?, lastupdate=? WHERE ID=").append(getWrappedId());
+		sql.append("=?, " + FLD_LASTUPDATE + "=? WHERE ID=").append(getWrappedId());
 		String cmd = sql.toString();
 		DBConnection dbConnection = getDBConnection();
 		PreparedStatement pst = dbConnection.getPreparedStatement(cmd);
@@ -1648,7 +1648,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	private void setBinaryRaw(final String field, final byte[] value){
 		StringBuilder sql = new StringBuilder(1000);
 		sql.append("UPDATE ").append(getTableName()).append(" SET ").append(/* map */(field))
-			.append("=?, lastupdate=?").append(" WHERE ID=").append(getWrappedId());
+			.append("=?, " + FLD_LASTUPDATE + "=?").append(" WHERE ID=").append(getWrappedId());
 		String cmd = sql.toString();
 		DBConnection dbConnection = getDBConnection();
 		if (dbConnection.isTrace()) {
@@ -1710,6 +1710,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	public int addToList(final String field, final String oID, final String... extra){
 		String mapped = map(field);
 		DBConnection dbConnection = getDBConnection();
+		int numberOfAffectedRows = 0;
 		if (mapped.startsWith("JOINT:")) {
 			String[] m = mapped.split(":");// m[1] FremdID, m[2] eigene ID, m[3]
 			// Name Joint
@@ -1738,7 +1739,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					dbConnection.doTrace(sql);
 					return dbConnection.exec(sql);
 				}
-				return dbConnection.exec(head.toString());
+				numberOfAffectedRows = dbConnection.exec(head.toString());
 			}
 		} else if (mapped.startsWith("LIST:")) {
 			// LIST:EigeneID:Tabelle:orderby[:type]
@@ -1751,17 +1752,22 @@ public abstract class PersistentObject implements IPersistentObject {
 					ps = dbConnection.getPreparedStatement(psString);
 					ps.setString(1, oID);
 					ps.setString(2, getId());
-					int result = ps.executeUpdate();
-					return result;
+					numberOfAffectedRows = ps.executeUpdate();
 				} catch (SQLException e) {
 					log.error("Error executing prepared statement.", e);
 				} finally {
 					dbConnection.releasePreparedStatement(ps);
 				}
 			}
+		} else {
+			log.error("Fehlerhaftes Mapping: " + mapped);
+			return 0;
 		}
-		log.error("Fehlerhaftes Mapping: " + mapped);
-		return 0;
+		
+		if (numberOfAffectedRows > 0) {
+			refreshLastUpdateAndSendUpdateEvent(field);
+		}
+		return numberOfAffectedRows;
 	}
 	
 	/**
@@ -1783,7 +1789,10 @@ public abstract class PersistentObject implements IPersistentObject {
 					String sq = sql.toString();
 					dbConnection.doTrace(sq);
 				}
-				dbConnection.exec(sql.toString());
+				int numberOfAffectedRows = dbConnection.exec(sql.toString());
+				if (numberOfAffectedRows > 0) {
+					refreshLastUpdateAndSendUpdateEvent(field);
+				}
 				return;
 			}
 		}
@@ -1799,6 +1808,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	public void removeFromList(String field, String oID){
 		String mapped = map(field);
 		String[] m = mapped.split(":");
+		int numberOfAffectedRows = 0;
 		DBConnection dbConnection = getDBConnection();
 		if (mapped.startsWith("JOINT:")) {
 			//m: m[1] FremdID, m[2] eigene ID, m[3] table
@@ -1811,8 +1821,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					String sq = sql.toString();
 					dbConnection.doTrace(sq);
 				}
-				dbConnection.exec(sql.toString());
-				return;
+				numberOfAffectedRows = dbConnection.exec(sql.toString());
 			}
 		} else if (mapped.startsWith("LIST:")) {
 			//m: m[1] FremdID, m[2] table
@@ -1823,16 +1832,19 @@ public abstract class PersistentObject implements IPersistentObject {
 					ps = dbConnection.getPreparedStatement(psString);
 					ps.setString(1, getId());
 					ps.setString(2, oID);
-					ps.executeUpdate();
+					numberOfAffectedRows = ps.executeUpdate();
 				} catch (SQLException e) {
 					log.error("Error executing prepared statement.", e);
 				} finally {
 					dbConnection.releasePreparedStatement(ps);
 				}
-				return;
 			}
+		} else {
+			log.error("Fehlerhaftes Mapping: " + mapped);
 		}
-		log.error("Fehlerhaftes Mapping: " + mapped);
+		if (numberOfAffectedRows > 0) {
+			refreshLastUpdateAndSendUpdateEvent(field);
+		}
 	}
 	
 	/**
@@ -2007,7 +2019,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 			sql.append("=?,");
 		}
-		sql.append("lastupdate=?");
+		sql.append(FLD_LASTUPDATE + "=?");
 		// sql.delete(sql.length() - 1, 100000);
 		sql.append(" WHERE ID=").append(getWrappedId());
 		String cmd = sql.toString();
@@ -2472,13 +2484,61 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @return the time (as given in System.currentTimeMillis()) of the last write operation on this
 	 *         object or 0 if there was no valid lastupdate time
+	 * @since 3.1 use direct db access
 	 */
 	public long getLastUpdate(){
-		try {
-			return Long.parseLong(get("lastupdate"));
-		} catch (Exception ex) {
-			// ExHandler.handle(ex);
+		String result = getDBConnection().queryString(
+			"SELECT LASTUPDATE FROM " + getTableName() + " WHERE ID=" + getWrappedId());
+		if (result != null) {
+			return Long.parseLong(result);
+		} else {
 			return 0L;
+		}
+	}
+	
+	/**
+	 * Notify the system about a change in this object and refresh the {@link #FLD_LASTUPDATE} value
+	 * of this entry to {@link System#currentTimeMillis()}
+	 * 
+	 * @param updatedAttribute
+	 *            the attribute that was updated or <code>null</code>
+	 * @since 3.1
+	 */
+	public void refreshLastUpdateAndSendUpdateEvent(@Nullable String updatedAttribute){
+		getDBConnection().exec("UPDATE " + getTableName() + " SET " + FLD_LASTUPDATE + "="
+			+ Long.toString(System.currentTimeMillis()) + " WHERE ID=" + getWrappedId());
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_UPDATE, updatedAttribute));
+	}
+	
+	/**
+	 * Determine the highest last update value over all database entries of the given table
+	 * 
+	 * @return the retrieved value or 0 in any error case
+	 * @param tableName
+	 *            the database table name
+	 * @since 3.1
+	 */
+	public static long getHighestLastUpdate(String tableName){
+		DBConnection dbConnection = getDefaultConnection();
+		PreparedStatement ps =
+			dbConnection.getPreparedStatement("SELECT MAX(LASTUPDATE) FROM " + tableName);
+		try {
+			ResultSet res = ps.executeQuery();
+			while (res.next()) {
+				return res.getLong(1);
+			}
+			return 0l;
+		} catch (Exception ex) {
+			ExHandler.handle(ex);
+			return 0l;
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				// ignore
+			}
+			dbConnection.releasePreparedStatement(ps);
 		}
 	}
 	

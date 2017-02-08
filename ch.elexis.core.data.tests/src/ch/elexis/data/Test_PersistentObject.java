@@ -1,34 +1,47 @@
 package ch.elexis.data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.model.IXid;
+import ch.elexis.data.po.InvalidPersistentObjectImpl;
+import ch.elexis.data.po.OtherJointPersistentObject;
+import ch.elexis.data.po.OtherListPersistentObject;
+import ch.elexis.data.po.PersistentObjectImpl;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.JdbcLinkException;
+import ch.rgw.tools.JdbcLinkSyntaxException;
 
 public class Test_PersistentObject extends AbstractPersistentObjectTest {
 	
-	private JdbcLink link;
+	private static JdbcLink link;
 	
-	@Before
-	public void setUp() throws IOException{
+	@BeforeClass
+	public static void setUp() throws IOException{
 		link = initDB();
 		DBConnection dbc = new DBConnection();
 		dbc.setJdbcLink(link);
+		
+		boolean ret = PersistentObject.connect(link);
+		assertTrue(ret);
 	}
 	
-	@After
-	public void tearDown(){
+	@AfterClass
+	public static void tearDown(){
+		PersistentObject.disconnect();
 		try {
 			if (link == null || !link.isAlive())
 				return;
@@ -40,13 +53,6 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 			// for example testConnect(), ...
 			je.printStackTrace();
 		}
-	}
-	
-	@Test
-	public void testConnect(){
-		boolean ret = PersistentObject.connect(link);
-		assertTrue(ret);
-		PersistentObject.disconnect();
 	}
 	
 	@Test
@@ -82,19 +88,32 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 	}
 	
 	@Test
-	public void testGet(){
-		PersistentObjectImpl impl = new PersistentObjectImpl();
-		String ret = impl.get("TestGet");
-		assertNotNull(ret);
-		assertEquals("test", ret);
+	public void testState(){
+		PersistentObjectImpl impl = new PersistentObjectImpl(false);
+		int ret = impl.state();
+		assertEquals(PersistentObject.INEXISTENT, ret);
+		
+		impl = new PersistentObjectImpl();
+		ret = impl.state();
+		assertEquals(PersistentObject.EXISTS, ret);
+		
+		boolean delete = impl.delete();
+		assertTrue(delete);
+		ret = impl.state();
+		assertEquals(PersistentObject.DELETED, ret);
 	}
 	
 	@Test
-	public void testState(){
+	public void testDelete() throws InterruptedException{
 		PersistentObjectImpl impl = new PersistentObjectImpl();
-		impl.tablename = "abc";
-		int ret = impl.state();
-		assertEquals(PersistentObject.INEXISTENT, ret);
+		long lastUpdate = impl.getLastUpdate();
+		assertNotSame(0L, lastUpdate);
+		assertFalse(impl.getBoolean(PersistentObject.FLD_DELETED));
+		Thread.sleep(1);
+		impl.delete();
+		assertTrue(impl.getBoolean(PersistentObject.FLD_DELETED));
+		// TODO test removal of Xid
+		assertTrue(impl.getLastUpdate() > lastUpdate);
 	}
 	
 	@Test
@@ -102,7 +121,94 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		PersistentObjectImpl impl = new PersistentObjectImpl();
 		String ret = impl.storeToString();
 		assertNotNull(ret);
-		assertTrue(ret.startsWith("ch.elexis.data.Test_PersistentObject"));
+		assertTrue(ret.startsWith(PersistentObjectImpl.class.getName()));
+	}
+	
+	@Test
+	public void testGet(){
+		PersistentObjectImpl impl = new PersistentObjectImpl();
+		String ret = impl.get("TestGet");
+		assertNotNull(ret);
+		assertEquals("", ret);
+	}
+	
+	@Test
+	public void testGetFail(){
+		InvalidPersistentObjectImpl impl = new InvalidPersistentObjectImpl();
+		String ret = impl.get("");
+		assertNotNull(ret);
+		assertEquals(PersistentObject.MAPPING_ERROR_MARKER + "**", ret);
+	}
+	
+	@Test
+	public void testSet() throws InterruptedException{
+		PersistentObjectImpl impl = new PersistentObjectImpl();
+		long lastUpdate = impl.getLastUpdate();
+		assertNotSame(0L, lastUpdate);
+		Thread.sleep(1);
+		impl.set(PersistentObjectImpl.FLD_TEST, "Blafooo");
+		assertTrue(impl.getLastUpdate() > lastUpdate);
+	}
+	
+	@Test(expected = JdbcLinkSyntaxException.class)
+	public void testSetFail(){
+		PersistentObjectImpl impl = new PersistentObjectImpl();
+		impl.set("DOESNOTEXIST", "Nonsense");
+	}
+	
+	@Test
+	public void testAddRemoveToJoint() throws InterruptedException{
+		PersistentObjectImpl impl = new PersistentObjectImpl();
+		OtherJointPersistentObject opo = new OtherJointPersistentObject();
+		long lastUpdate = impl.getLastUpdate();
+		assertNotSame(0L, lastUpdate);
+		Thread.sleep(2);
+		int retVal =
+			impl.addToList(PersistentObjectImpl.FLD_JOINT_OTHER, opo.getId(), new String[0]);
+		assertNotSame(0, retVal);
+		assertEquals(1, impl.getList(PersistentObjectImpl.FLD_JOINT_OTHER, new String[0]).size());
+		assertTrue(impl.getLastUpdate() > lastUpdate);
+		Thread.sleep(2);
+		impl.removeFromList(PersistentObjectImpl.FLD_JOINT_OTHER, opo.getId());
+		assertEquals(0, impl.getList(PersistentObjectImpl.FLD_JOINT_OTHER, new String[0]).size());
+		assertTrue(impl.getLastUpdate() > lastUpdate);
+	}
+	
+	/**
+	 * https://redmine.medelexis.ch/issues/5655
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Ignore
+	public void testAddRemoveToList() throws InterruptedException{
+		PersistentObjectImpl impl = new PersistentObjectImpl();
+		OtherListPersistentObject opo = new OtherListPersistentObject();
+		long lastUpdate = impl.getLastUpdate();
+		assertNotSame(0L, lastUpdate);
+		Thread.sleep(2);
+		int retVal =
+			impl.addToList(PersistentObjectImpl.FLD_LIST_OTHER, opo.getId(), new String[0]);
+		assertNotSame(0, retVal);
+		assertEquals(1, impl.getList(PersistentObjectImpl.FLD_LIST_OTHER, new String[0]).size());
+		assertTrue(impl.getLastUpdate() > lastUpdate);
+		Thread.sleep(2);
+		impl.removeFromList(PersistentObjectImpl.FLD_LIST_OTHER, opo.getId());
+		assertEquals(0, impl.getList(PersistentObjectImpl.FLD_LIST_OTHER, new String[0]).size());
+		assertTrue(impl.getLastUpdate() > lastUpdate);
+	}
+	
+	@Test
+	public void testTableWideLastUpdate() throws InterruptedException{
+		long highestLastUpdate = PersistentObjectImpl.getHighestLastUpdate();
+		Thread.sleep(1);
+		PersistentObjectImpl impl = new PersistentObjectImpl();
+		long highestLastUpdate2 = PersistentObjectImpl.getHighestLastUpdate();
+		assertTrue(highestLastUpdate2 > highestLastUpdate);
+		Thread.sleep(1);
+		impl.delete();
+		highestLastUpdate = PersistentObjectImpl.getHighestLastUpdate();
+		assertTrue(highestLastUpdate > highestLastUpdate2);
+		assertEquals(impl.getLastUpdate(), highestLastUpdate);
 	}
 	
 	@Test
@@ -122,24 +228,6 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		assertNotNull(id);
 	}
 	
-	@Test(expected = PersistenceException.class)
-	public void testGetFail(){
-		// mock a status manager for ignoring the error status
-		// StatusManager statusMock = PowerMockito.mock(StatusManager.class);
-		// PowerMockito.mockStatic(StatusManager.class);
-		// PowerMockito.when(StatusManager.getManager()).thenReturn(statusMock);
-		
-		PersistentObjectImpl impl = new PersistentObjectImpl();
-		String ret = impl.get("");
-		assertNotNull(ret);
-		assertEquals(PersistentObject.MAPPING_ERROR_MARKER + "**", ret);
-		
-		// if we pass ID we should get to code that reaches into the db
-		// we have no table specified so a JdbcLinkException is expected
-		String id = impl.get("ID");
-		fail("Expected Exception not thrown! Value is " + id);
-	}
-	
 	@Test
 	public void testTableExists(){
 		assertTrue(PersistentObject.tableExists("CONFIG"));
@@ -148,8 +236,6 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		// assertEquals(false, PersistentObject.tableExists("kontakt"));
 		assertEquals(false, PersistentObject.tableExists("THIS_TABLE_SHOULD_NOT_EXISTS"));
 	}
-	
-
 	
 	@Ignore
 	public void testCaseSensitiveIdLoad(){
@@ -190,26 +276,5 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		Stm statement = link.getStatement();
 		statement.exec("INSERT INTO Dummy (ID, BoreFactor) VALUES ('TEST', '1234567890');");
 		link.releaseStatement(statement);
-	}
-	
-	private class PersistentObjectImpl extends PersistentObject {
-		
-		String tablename;
-		
-		@SuppressWarnings("unused")
-		public String getTestGet(){
-			return "test";
-		}
-		
-		@Override
-		public String getLabel(){
-			return null;
-		}
-		
-		@Override
-		protected String getTableName(){
-			return tablename;
-		}
-		
 	}
 }
