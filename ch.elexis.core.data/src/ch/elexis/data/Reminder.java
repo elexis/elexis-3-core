@@ -59,6 +59,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	public static final String FLD_ACTION_TYPE = "actionType";
 	public static final String FLD_SUBJECT = "subject";
 	public static final String FLD_PARAMS = "Params";
+	public static final String FLD_JOINT_RESPONSIBLES = "Responsibles";
 	
 	public enum LabelFields {
 			PAT_ID("PatientNr"), FIRSTNAME("Vorname"), LASTNAME("Name");
@@ -93,8 +94,8 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	static {
 		addMapping(TABLENAME, KONTAKT_ID, CREATOR + "=OriginID", DUE + "=S:D:DateDue", FLD_STATUS,
 			FLD_VISIBILITY, FLD_PARAMS, MESSAGE, RESPONSIBLE,
-			"Responsibles=JOINT:ResponsibleID:ReminderID:REMINDERS_RESPONSIBLE_LINK", FLD_PRIORITY,
-			FLD_ACTION_TYPE, FLD_SUBJECT);
+			FLD_JOINT_RESPONSIBLES + "=JOINT:ResponsibleID:ReminderID:REMINDERS_RESPONSIBLE_LINK",
+			FLD_PRIORITY, FLD_ACTION_TYPE, FLD_SUBJECT);
 	}
 	
 	Reminder(){/* leer */}
@@ -148,7 +149,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			if (anwender.getId().equalsIgnoreCase(a.getId()))
 				return;
 		}
-		addToList("Responsibles", a.getId(), (String[]) null);
+		addToList(FLD_JOINT_RESPONSIBLES, a.getId(), (String[]) null);
 	}
 	
 	/**
@@ -161,7 +162,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	public void removeResponsible(final Anwender a){
 		for (Anwender anwender : getResponsibles()) {
 			if (anwender.getId().equalsIgnoreCase(a.getId()))
-				removeFromList("Responsibles", a.getId());
+				removeFromList(FLD_JOINT_RESPONSIBLES, a.getId());
 		}
 	}
 	
@@ -252,7 +253,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	}
 	
 	public List<Anwender> getResponsibles(){
-		List<String[]> lResp = getList("Responsibles", new String[0]);
+		List<String[]> lResp = getList(FLD_JOINT_RESPONSIBLES, new String[0]);
 		ArrayList<Anwender> ret = new ArrayList<Anwender>(lResp.size());
 		for (String[] r : lResp) {
 			ret.add(Anwender.load(r[0]));

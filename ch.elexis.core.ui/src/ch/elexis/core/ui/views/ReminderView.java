@@ -90,6 +90,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	private IAction filterActionType[] = new IAction[Type.values().length];
 	private Set<Integer> filterActionSet = new HashSet<Integer>();
 	
+	private long cvHighestLastUpdate = 0l;
+	
 	// 1079 - nur wenn der View offen ist werden bei Patienten-Wechsel die Reminders abgefragt!
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
@@ -534,16 +536,19 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		if (mode) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user, eeli_reminder);
 			CoreHub.heart.addListener(this);
-			cv.notify(CommonViewer.Message.update);
+			heartbeat();
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_user, eeli_reminder);
 			CoreHub.heart.removeListener(this);
 		}
-		
 	}
 	
 	public void heartbeat(){
-		cv.notify(CommonViewer.Message.update);
+		long highestLastUpdate = PersistentObject.getHighestLastUpdate(Reminder.TABLENAME);
+		if (highestLastUpdate > cvHighestLastUpdate) {
+			cv.notify(CommonViewer.Message.update);
+			cvHighestLastUpdate = highestLastUpdate;
+		}
 	}
 	
 	class ReminderFilter extends ViewerFilter {
