@@ -6,7 +6,10 @@ import java.util.List;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.DateAndTimeObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
@@ -112,6 +115,9 @@ public class MedicationComposite extends Composite
 	private ControlDecoration ctrlDecor;
 	private Patient pat;
 	private PersistentObjectDropTarget dropTarget;
+	private Text txtIntakeOrder;
+	private Text txtDisposalComment;
+	private Text txtStopComment;
 	
 	/**
 	 * Create the composite.
@@ -502,23 +508,39 @@ public class MedicationComposite extends Composite
 		compositeMedicationTextDetails
 			.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
 		
-		Text txtIntakeOrder = new Text(compositeMedicationTextDetails, SWT.BORDER);
+		txtIntakeOrder = new Text(compositeMedicationTextDetails, SWT.BORDER);
 		txtIntakeOrder.setMessage(Messages.MedicationComposite_txtIntakeOrder_message);
 		txtIntakeOrder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		IObservableValue txtIntakeOrderObservable =
 			WidgetProperties.text(SWT.Modify).observeDelayed(100, txtIntakeOrder);
 		IObservableValue intakeOrderObservable =
-			PojoProperties.value("bemerkung", String.class).observeDetail(selectedMedication);
-		dbc.bindValue(txtIntakeOrderObservable, intakeOrderObservable);
+			PojoProperties.value("remark", String.class).observeDetail(selectedMedication);
+		dbc.bindValue(txtIntakeOrderObservable, intakeOrderObservable,
+			new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+			new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE));
+		txtIntakeOrderObservable.addChangeListener(new IChangeListener() {
+			@Override
+			public void handleChange(ChangeEvent event){
+				activateConfirmButton(true);
+			}
+		});
 		
-		Text txtDisposalComment = new Text(compositeMedicationTextDetails, SWT.BORDER);
+		txtDisposalComment = new Text(compositeMedicationTextDetails, SWT.BORDER);
 		txtDisposalComment.setMessage(Messages.MedicationComposite_txtComment_message);
 		txtDisposalComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		IObservableValue txtCommentObservable =
 			WidgetProperties.text(SWT.Modify).observeDelayed(100, txtDisposalComment);
 		IObservableValue commentObservable =
 			PojoProperties.value("disposalComment", String.class).observeDetail(selectedMedication);
-		dbc.bindValue(txtCommentObservable, commentObservable);
+		dbc.bindValue(txtCommentObservable, commentObservable,
+			new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+			new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE));
+		txtCommentObservable.addChangeListener(new IChangeListener() {
+			@Override
+			public void handleChange(ChangeEvent event){
+				activateConfirmButton(true);
+			}
+		});
 		
 		stackLayout.topControl = compositeMedicationTextDetails;
 		
@@ -533,23 +555,24 @@ public class MedicationComposite extends Composite
 		compositeStopMedicationTextDetails
 			.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
 		
-		Text txtStopComment = new Text(compositeStopMedicationTextDetails, SWT.BORDER);
+		txtStopComment = new Text(compositeStopMedicationTextDetails, SWT.BORDER);
 		txtStopComment.setMessage(Messages.MedicationComposite_stopReason);
 		txtStopComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		IObservableValue txtStopCommentObservableUi =
 			WidgetProperties.text(SWT.Modify).observeDelayed(100, txtStopComment);
 		IObservableValue txtStopCommentObservable =
 			PojoProperties.value("stopReason", String.class).observeDetail(selectedMedication);
-		dbc.bindValue(txtStopCommentObservableUi, txtStopCommentObservable);
+		dbc.bindValue(txtStopCommentObservableUi, txtStopCommentObservable,
+			new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+			new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE));
 		
-		//		Text txtIntolerance = new Text(compositeStopMedicationTextDetails, SWT.BORDER);
-		//		txtIntolerance.setMessage(Messages.MedicationComposite_intolerance);
-		//		txtIntolerance.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		//		IObservableValue txtCommentObservable =
-		//			WidgetProperties.text(SWT.Modify).observeDelayed(100, txtDisposalComment);
-		//		IObservableValue commentObservable =
-		//			PojoProperties.value("disposalComment", String.class).observeDetail(selectedMedication);
-		//		dbc.bindValue(txtCommentObservable, commentObservable);
+		txtStopCommentObservableUi.addChangeListener(new IChangeListener() {
+			@Override
+			public void handleChange(ChangeEvent event){
+				activateConfirmButton(true);
+			}
+		});
+		
 	}
 	
 	private void applyDetailChanges(){
@@ -557,23 +580,27 @@ public class MedicationComposite extends Composite
 		if (pres == null)
 			return; // prevent npe
 			
-		Prescription oldPrescription = pres.getPrescription();
-		
-		if (!btnStopMedication.getSelection()) {
-			Prescription newPrescription = new Prescription(oldPrescription);
-			newPrescription.setDosis(getDosisStringFromSignatureTextArray());
-		}
-		// change always stops
-		if (btnStopMedication.getSelection()) {
-			TimeTool endTime = new TimeTool(pres.getEndTime());
-			oldPrescription.stop(endTime);
-		} else {
-			oldPrescription.stop(null);
-		}
-		if (oldPrescription.getStopReason() == null
-				|| oldPrescription.getStopReason().isEmpty()) {
-				oldPrescription.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
-			}
+				Prescription oldPrescription = pres.getPrescription();
+				
+				if (!btnStopMedication.getSelection()) {
+					Prescription newPrescription = new Prescription(oldPrescription);
+					newPrescription.setDosis(getDosisStringFromSignatureTextArray());
+					newPrescription.setBemerkung(txtIntakeOrder.getText());
+					newPrescription.setDisposalComment(txtDisposalComment.getText());
+				}
+				// change always stops
+				if (btnStopMedication.getSelection()) {
+					TimeTool endTime = new TimeTool(pres.getEndTime());
+					oldPrescription.stop(endTime);
+				} else {
+					oldPrescription.stop(null);
+				}
+				// apply stop reason if set
+				if (txtStopComment.getText() == null || txtStopComment.getText().isEmpty()) {
+					oldPrescription.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
+				} else {
+					oldPrescription.setStopReason(txtStopComment.getText());
+				}
 		activateConfirmButton(false);
 		if (btnStopMedication.isEnabled())
 			showMedicationDetailComposite(null);
