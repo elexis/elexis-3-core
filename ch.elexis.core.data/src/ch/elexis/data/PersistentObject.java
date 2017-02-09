@@ -493,8 +493,8 @@ public abstract class PersistentObject implements IPersistentObject {
 		} else {
 			if (!locale.toString().equals(dbStoredLocale)) {
 				String msg = String.format(
-					"Your locale %1s does not match the required database locale %2s. Ignore?",
-					dbStoredLocale, locale.toString());
+					"Your locale [%1s] does not match the required database locale [%2s]. Ignore?",
+					locale.toString(), dbStoredLocale);
 				log.error(msg);
 				if (!cod.openQuestion("Difference in locale setting ", msg)) {
 					System.exit(2);
