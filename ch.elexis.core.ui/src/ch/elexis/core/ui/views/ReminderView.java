@@ -78,9 +78,9 @@ import ch.rgw.tools.TimeTool;
 public class ReminderView extends ViewPart implements IActivationListener, HeartListener {
 	public static final String ID = "ch.elexis.reminderview"; //$NON-NLS-1$
 	
-	private IAction newReminderAction, deleteReminderAction, onlyOpenReminderAction,
-			ownReminderAction, toggleAutoSelectPatientAction;
-	private RestrictedAction othersReminderAction;
+	private IAction newReminderAction, deleteReminderAction, showOnlyOwnDueReminderToggleAction,
+			showSelfCreatedReminderAction, toggleAutoSelectPatientAction;
+	private RestrictedAction showOthersRemindersAction;
 	private RestrictedAction selectPatientAction;
 	private boolean bVisible;
 	private boolean autoSelectPatient;
@@ -91,6 +91,14 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	private Set<Integer> filterActionSet = new HashSet<Integer>();
 	
 	private long cvHighestLastUpdate = 0l;
+	
+	private boolean showOnlyDueReminders =
+		CoreHub.userCfg.get(Preferences.USR_REMINDERSOPEN, false);
+	private boolean showOthersReminders =
+		(CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false)
+			&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
+	private boolean showSelfCreatedReminders =
+		CoreHub.userCfg.get(Preferences.USR_REMINDEROWN, false);
 	
 	// 1079 - nur wenn der View offen ist werden bei Patienten-Wechsel die Reminders abgefragt!
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
@@ -129,16 +137,16 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			
 			public void runInUi(ElexisEvent ev){
 				boolean bChecked = CoreHub.userCfg.get(Preferences.USR_REMINDERSOPEN, true);
-				onlyOpenReminderAction.setChecked(bChecked);
-				ownReminderAction
+				showOnlyOwnDueReminderToggleAction.setChecked(bChecked);
+				showSelfCreatedReminderAction
 					.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROWN, false));
 				
 				// get state from user's configuration
-				othersReminderAction
+				showOthersRemindersAction
 					.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false));
 				
 				// update action's access rights
-				othersReminderAction.reflectRight();
+				showOthersRemindersAction.reflectRight();
 				
 				reminderLabelProvider.updateUserConfiguration();
 				
@@ -184,26 +192,27 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				
 				SortedSet<Reminder> reminders = new TreeSet<Reminder>();
 				
-				boolean ownReminders = ownReminderAction.isChecked();
-				boolean otherReminders = (othersReminderAction.isChecked()
-					&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
-				
-				if(otherReminders) {
+				if (showOthersReminders
+					&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS)) {
 					qbe.clear();
 					reminders.addAll(qbe.execute());
 				} else {
-					if(ownReminders) {
+					reminders.addAll(Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser,
+						showOnlyDueReminders, null, false));
+					
+					if (showSelfCreatedReminders) {
 						qbe.clear();
 						qbe.add(Reminder.CREATOR, Query.EQUALS, CoreHub.actUser.getId());
 						qbe.or();
 						qbe.add(Reminder.RESPONSIBLE, Query.EQUALS, CoreHub.actUser.getId());
-
+						
 						reminders.addAll(qbe.execute());
 					}
 				}
 				
 				if (filterActionSet.size() > 0) {
-					reminders.removeIf( p->(filterActionSet.contains(p.getActionType().numericValue())));
+					reminders.removeIf(
+						p -> (filterActionSet.contains(p.getActionType().numericValue())));
 				}
 				
 				return reminders.toArray();
@@ -215,8 +224,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		makeActions();
 		
 		IAction[] list = new IAction[] {
-			newReminderAction, deleteReminderAction, null, onlyOpenReminderAction,
-			ownReminderAction, othersReminderAction, null
+			newReminderAction, deleteReminderAction, null, showOnlyOwnDueReminderToggleAction,
+			showSelfCreatedReminderAction, showOthersRemindersAction, null
 		};
 		List<IAction> actionList = new ArrayList<IAction>();
 		actionList.addAll(Arrays.asList(list));
@@ -229,11 +238,11 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		menu.createMenu(actionList.toArray(new IAction[] {}));
 		
 		if (CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS)) {
-			othersReminderAction.setEnabled(true);
-			othersReminderAction
+			showOthersRemindersAction.setEnabled(true);
+			showOthersRemindersAction
 				.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false));
 		} else {
-			othersReminderAction.setEnabled(false);
+			showOthersRemindersAction.setEnabled(false);
 		}
 		cv.create(vc, parent, SWT.NONE, getViewSite());
 		cv.addDoubleClickListener(new CommonViewer.DoubleClickListener() {
@@ -244,8 +253,11 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					public void lockAcquired(){
 						ReminderDetailDialog rdd =
 							new ReminderDetailDialog(UiDesk.getTopShell(), (Reminder) obj);
-						rdd.open();
-						cv.getViewerWidget().update(obj, null);
+						int retVal = rdd.open();
+						if (retVal == Dialog.OK) {
+							ElexisEventDispatcher.getInstance().fire(
+								new ElexisEvent(reminder, getClass(), ElexisEvent.EVENT_UPDATE));
+						}
 					}
 					
 					@Override
@@ -281,7 +293,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	@Override
 	public void dispose(){
 		GlobalEventDispatcher.removeActivationListener(this, getViewSite().getPart());
-		CoreHub.userCfg.set(Preferences.USR_REMINDERSOPEN, onlyOpenReminderAction.isChecked());
+		CoreHub.userCfg.set(Preferences.USR_REMINDERSOPEN,
+			showOnlyOwnDueReminderToggleAction.isChecked());
 	}
 	
 	private Images determineActionTypeImage(Type actionType){
@@ -425,7 +438,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				}
 			}
 		};
-		onlyOpenReminderAction =
+		showOnlyOwnDueReminderToggleAction =
 			new Action(Messages.ReminderView_onlyDueAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
 					setToolTipText(Messages.ReminderView_onlyDueToolTip); //$NON-NLS-1$
@@ -433,12 +446,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				
 				@Override
 				public void run(){
-					boolean bChecked = onlyOpenReminderAction.isChecked();
-					CoreHub.userCfg.set(Preferences.USR_REMINDERSOPEN, bChecked);
+					showOnlyDueReminders = showOnlyOwnDueReminderToggleAction.isChecked();
+					CoreHub.userCfg.set(Preferences.USR_REMINDERSOPEN, showOnlyDueReminders);
 					cv.notify(CommonViewer.Message.update_keeplabels);
 				}
 			};
-		ownReminderAction =
+		showSelfCreatedReminderAction =
 			new Action(Messages.ReminderView_myRemindersAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
 					setToolTipText(Messages.ReminderView_myRemindersToolTip); //$NON-NLS-1$
@@ -446,24 +459,26 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				
 				@Override
 				public void run(){
-					boolean bChecked = ownReminderAction.isChecked();
-					CoreHub.userCfg.set(Preferences.USR_REMINDEROWN, bChecked);
+					showSelfCreatedReminders = showSelfCreatedReminderAction.isChecked();
+					CoreHub.userCfg.set(Preferences.USR_REMINDEROWN, showSelfCreatedReminders);
 					cv.notify(CommonViewer.Message.update_keeplabels);
 				}
 			};
-		othersReminderAction = new RestrictedAction(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS,
-			Messages.ReminderView_foreignAction, Action.AS_CHECK_BOX) {
-			{
-				setToolTipText(Messages.ReminderView_foreignTooltip);
-			}
-			
-			@Override
-			public void doRun(){
-				CoreHub.userCfg.set(Preferences.USR_REMINDEROTHERS,
-					othersReminderAction.isChecked());
-				cv.notify(CommonViewer.Message.update_keeplabels);
-			}
-		};
+		showOthersRemindersAction =
+			new RestrictedAction(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS,
+				Messages.ReminderView_foreignAction, Action.AS_CHECK_BOX) {
+				{
+					setToolTipText(Messages.ReminderView_foreignTooltip);
+					setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
+				}
+				
+				@Override
+				public void doRun(){
+					showOthersReminders = showOthersRemindersAction.isChecked();
+					CoreHub.userCfg.set(Preferences.USR_REMINDEROTHERS, showOthersReminders);
+					cv.notify(CommonViewer.Message.update_keeplabels);
+				}
+			};
 		
 		selectPatientAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
 			Messages.ReminderView_activatePatientAction, Action.AS_UNSPECIFIED) {
@@ -557,7 +572,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			final Object element){
 			if (element instanceof Reminder) {
 				Reminder check = (Reminder) element;
-				if (onlyOpenReminderAction.isChecked()) {
+				if (showOnlyOwnDueReminderToggleAction.isChecked()) {
 					if (check.getDateDue().isAfter(new TimeTool())) {
 						return false;
 					}
