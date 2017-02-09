@@ -160,7 +160,7 @@ public class MedicationViewerHelper {
 			@Override
 			public String getText(Object element){
 				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
-				return pres.getBemerkung();
+				return pres.getRemark();
 			}
 		});
 		return ret;
