@@ -74,17 +74,11 @@ public class MedicationViewHelper {
 	}
 	
 	/**
-	 * <pre>
-	 * SELECT * FROM PATIENT_ARTIKEL_JOINT 
-	 * WHERE deleted='0' AND PatientId='C7dc8b102d96407ed0632' 
-	 * AND (
-	 * 	(DateFrom >= '20150922' AND RezeptID is not null)
-	 * 	OR
-	 * 	# FIXED MEDICATION
-	 * 	(RezeptID is null AND DateUntil is null)
-	 * )
-	 * </pre>
+	 * Load the {@link Prescription} for the {@link Patient} referenced by patId. If the
+	 * loadFullHistory parameter is false, a list of current active {@link Prescription} is
+	 * returned.
 	 * 
+	 * @param loadFullHistory
 	 * @param patId
 	 * @return
 	 */
@@ -123,10 +117,11 @@ public class MedicationViewHelper {
 		// prefetch the values needed for filter operations
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class, null, null,
 			Prescription.TABLENAME, new String[] {
-				Prescription.FLD_DATE_UNTIL, Prescription.FLD_REZEPT_ID,
+				Prescription.FLD_DATE_FROM, Prescription.FLD_DATE_UNTIL, Prescription.FLD_REZEPT_ID,
 				Prescription.FLD_PRESC_TYPE, Prescription.FLD_ARTICLE
 			});
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, patId);
+		qbe.orderBy(true, Prescription.FLD_DATE_FROM);
 		return qbe.execute();
 	}
 }
