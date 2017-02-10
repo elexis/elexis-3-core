@@ -1,38 +1,24 @@
 package ch.elexis.data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.eigenartikel.Constants;
-import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
-import ch.rgw.tools.Result;
 
 public class Test_Verrechnet extends AbstractPersistentObjectTest {
 	
-	private JdbcLink link;
-	
-	@Before
-	public void setUp(){
-		link = initDB();
+	public Test_Verrechnet(JdbcLink link){
+		super(link);
 	}
-	
-	@After
-	public void tearDown(){
-		if (link != null) {
-			link.exec("DROP ALL OBJECTS");
-			link.disconnect();
-		}
-	}
-	
+
 	@Test
 	public void changeAnzahlValidated(){
 		

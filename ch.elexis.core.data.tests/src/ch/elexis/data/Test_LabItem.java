@@ -17,7 +17,10 @@ import ch.rgw.tools.TimeTool;
 
 public class Test_LabItem extends AbstractPersistentObjectTest {
 	
-	private JdbcLink link;
+	public Test_LabItem(JdbcLink link){
+		super(link);
+	}
+
 	private Organisation org;
 	
 	private Patient formulaPat;
@@ -31,21 +34,20 @@ public class Test_LabItem extends AbstractPersistentObjectTest {
 	private static final String REF_ITEM_REFW = "0-2";
 	private static final String REF_ITEM_GROUP = "G gruppe";
 	
+	private LabItem currentLabItem;
+	
 	@Before
 	public void setUp(){
-		link = initDB();
 		// create a instance of an PersistentObject ex. Organisation to test the query
 		org = new Organisation("orgname", "orgzusatz1");
-		new LabItem(REF_ITEM_KUERZEL, REF_ITEM_NAME, org, REF_ITEM_REFM, REF_ITEM_REFW,
+		currentLabItem = new LabItem(REF_ITEM_KUERZEL, REF_ITEM_NAME, org, REF_ITEM_REFM, REF_ITEM_REFW,
 			REF_ITEM_UNIT, LabItemTyp.NUMERIC, REF_ITEM_GROUP, "0");
 	}
 	
 	@After
-	public void tearDown(){
-		if (link != null) {
-			link.exec("DROP ALL OBJECTS");
-			link.disconnect();
-		}
+	public void after() {
+		currentLabItem.delete();
+		org.delete();
 	}
 	
 	@Test
@@ -76,7 +78,8 @@ public class Test_LabItem extends AbstractPersistentObjectTest {
 
 		items = LabItem.getLabItems(org.getId(), REF_ITEM_KUERZEL + "_dummy", null, null, null);
 		assertEquals(0, items.size());
-
+		
+		item.delete();
 	}
 	
 	@Test

@@ -76,9 +76,11 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 		try {
 			ResultSet result = stm.query(sb.toString());
 			boolean step = result.next();
-			if (!step)
+			if (!step) {
 				return ret;
-			ret = result.getBoolean(1);
+			}
+			int counts = result.getInt(1);
+			ret = (counts > 0);
 		} catch (SQLException e) {
 			log.error("Error querying access right ", e);
 		} finally {

@@ -1573,17 +1573,19 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.append("=?, " + FLD_LASTUPDATE + "=? WHERE ID=").append(getWrappedId());
 		String cmd = sql.toString();
 		DBConnection dbConnection = getDBConnection();
-		PreparedStatement pst = dbConnection.getPreparedStatement(cmd);
-		
-		encode(1, pst, field, value);
-		if (dbConnection.isTrace()) {
-			StringBuffer params = new StringBuffer();
-			params.append("[");
-			params.append(value);
-			params.append("]");
-			dbConnection.doTrace(cmd + " " + params);
-		}
+		PreparedStatement pst = null;
 		try {
+			pst = dbConnection.getPreparedStatement(cmd);
+			
+			encode(1, pst, field, value);
+			if (dbConnection.isTrace()) {
+				StringBuffer params = new StringBuffer();
+				params.append("[");
+				params.append(value);
+				params.append("]");
+				dbConnection.doTrace(cmd + " " + params);
+			}
+			
 			pst.setLong(2, ts);
 			pst.executeUpdate();
 			// ElexisEventDispatcher.getInstance().fire(new
@@ -1598,10 +1600,12 @@ public abstract class PersistentObject implements IPersistentObject {
 													// existing code.
 													// return false; // See api doc. Return false on errors.
 		} finally {
-			try {
-				pst.close();
-			} catch (SQLException e) {}
-			dbConnection.releasePreparedStatement(pst);
+			if(pst!=null) {
+				try {
+					pst.close();
+				} catch (SQLException e) {}
+				dbConnection.releasePreparedStatement(pst);
+			}
 		}
 		
 	}

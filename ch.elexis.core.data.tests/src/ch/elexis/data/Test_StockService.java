@@ -5,8 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
@@ -16,27 +15,26 @@ import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.IStockService.Availability;
 import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.JdbcLinkException;
 
 public class Test_StockService extends AbstractPersistentObjectTest {
 	
-	private static JdbcLink link;
+	public Test_StockService(JdbcLink link){
+		super(link);
+	}
 	
-	private static Stock defaultStock;
-	private static Stock stock_A_5_public;
-	private static Stock stock_B_10_private;
-	private static Mandant stock_B_10_owner;
+	private Stock defaultStock;
+	private Stock stock_A_5_public;
+	private Stock stock_B_10_private;
+	private Mandant stock_B_10_owner;
 	
-	private static Artikel artikel_A;
-	private static Artikel artikel_B;
-	private static Artikel artikel_C;
+	private Artikel artikel_A;
+	private Artikel artikel_B;
+	private Artikel artikel_C;
 	
 	private static StockService stockService = CoreHub.getStockService();
 	
-	@BeforeClass
-	public static void init(){
-		link = initDB();
-		
+	@Before
+	public void init(){
 		User user = User.load("Administrator");
 		// set user in system
 		ElexisEventDispatcher.getInstance()
@@ -67,21 +65,6 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 			stockService.storeArticleInStock(defaultStock, artikel_B.storeToString());
 		IStockEntry stockEntry_B_5 =
 			stockService.storeArticleInStock(stock_A_5_public, artikel_B.storeToString());
-	}
-	
-	@AfterClass
-	public static void tearDown(){
-		try {
-			if (link == null || !link.isAlive())
-				return;
-			link.exec("DROP ALL OBJECTS");
-			link.disconnect();
-		} catch (JdbcLinkException je) {
-			// just tell what happend and resume
-			// excpetion is allowed for tests which get rid of the connection on their own
-			// for example testConnect(), ...
-			je.printStackTrace();
-		}
 	}
 	
 	@Test

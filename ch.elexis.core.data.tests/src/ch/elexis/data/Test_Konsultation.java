@@ -2,28 +2,26 @@ package ch.elexis.data;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.JdbcLinkException;
 
 public class Test_Konsultation extends AbstractPersistentObjectTest {
 	
-	private static JdbcLink link;
+	public Test_Konsultation(JdbcLink link){
+		super(link);
+	}
 	
 	private static Patient pat;
 	private static Fall fall;
 	private static Konsultation kons;
 	
-	@BeforeClass
-	public static void init(){
-		link = initDB();
-		
+	@Before
+	public void init(){
 		User user = User.load("Administrator");
 		// set user and Mandant in system
 		ElexisEventDispatcher.getInstance()
@@ -34,21 +32,8 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 		pat = new Patient("Name", "Vorname", "26.8.2011", "m");
 		fall = new Fall(pat.getId(), "Bezeichnung", "Grund", "KVG");
 		kons = new Konsultation(fall);
-	}
-	
-	@AfterClass
-	public static void tearDown(){
-		try {
-			if (link == null || !link.isAlive())
-				return;
-			link.exec("DROP ALL OBJECTS");
-			link.disconnect();
-		} catch (JdbcLinkException je) {
-			// just tell what happend and resume
-			// excpetion is allowed for tests which get rid of the connection on their own
-			// for example testConnect(), ...
-			je.printStackTrace();
-		}
+		
+		FreeTextDiagnose.checkInitTable();
 	}
 	
 	@Test

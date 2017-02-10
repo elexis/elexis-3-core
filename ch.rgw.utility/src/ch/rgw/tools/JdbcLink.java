@@ -368,6 +368,9 @@ public class JdbcLink {
 				if (flavor.startsWith(DBFLAVOR_POSTGRESQL) || flavor.startsWith("hsql")) {
 					out[j++] = '\'';
 					break;
+				} else if (flavor.startsWith(DBFLAVOR_H2)) {
+					out[j++] = 39;
+					break;
 				}
 			case 92:
 				boolean before = (i > 1 && in[i - 1] == 92);

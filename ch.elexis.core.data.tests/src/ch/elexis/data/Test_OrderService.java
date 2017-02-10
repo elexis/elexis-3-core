@@ -3,7 +3,6 @@ package ch.elexis.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -12,13 +11,14 @@ import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.services.IOrderService;
 import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.JdbcLinkException;
 
 
 public class Test_OrderService extends AbstractPersistentObjectTest {
-	
-	private static JdbcLink link;
-	
+		
+	public Test_OrderService(JdbcLink link){
+		super(link);
+	}
+
 	private static IOrderService orderService = CoreHub.getOrderService();
 	
 	private static Stock stock_A_5_order;
@@ -29,8 +29,6 @@ public class Test_OrderService extends AbstractPersistentObjectTest {
 	
 	@BeforeClass
 	public static void init(){
-		link = initDB();
-		
 		stock_A_5_order = new Stock("AOD", 5);
 		artikel_A = new Artikel("ArtikelAOrder", "Eigenartikel");
 		
@@ -40,21 +38,6 @@ public class Test_OrderService extends AbstractPersistentObjectTest {
 		stockEntry.setCurrentStock(10);
 		stockEntry.setMaximumStock(15);
 		
-	}
-	
-	@AfterClass
-	public static void tearDown(){
-		try {
-			if (link == null || !link.isAlive())
-				return;
-			link.exec("DROP ALL OBJECTS");
-			link.disconnect();
-		} catch (JdbcLinkException je) {
-			// just tell what happend and resume
-			// excpetion is allowed for tests which get rid of the connection on their own
-			// for example testConnect(), ...
-			je.printStackTrace();
-		}
 	}
 	
 	@Test

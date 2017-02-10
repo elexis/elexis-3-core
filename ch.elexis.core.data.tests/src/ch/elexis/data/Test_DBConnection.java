@@ -5,38 +5,35 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.Ignore;
 
 import ch.rgw.tools.JdbcLink;
 
 public class Test_DBConnection extends AbstractPersistentObjectTest {
 
-	private static JdbcLink link;
+	public Test_DBConnection(JdbcLink link){
+		super(link);
+	}
+
+	private static Organisation organisation;
 	
 	@BeforeClass
-	public static void setUp() throws Exception{
-		if (link != null) {
-			PersistentObject.deleteAllTables();
-			link.disconnect();
-		}
-		link = initDB();
+	public static void beforeClass() throws Exception{
 		// create a instance of an PersistentObject ex. Organisation to test the query
-		new Organisation("orgname", "orgzusatz1");
+		organisation = new Organisation("orgname", "orgzusatz1");
 	}
 	
 	@AfterClass
-	public static void tearDown() throws Exception{
-		PersistentObject.deleteAllTables();
-		link.exec("DROP ALL OBJECTS");
-		link.disconnect();
+	public static void afterClass() {
+		organisation.delete();
 	}
 	
-	@Test
+	@Ignore
 	public void testConnect(){
 		// connect using link
 		DBConnection connection = new DBConnection();
 		assertFalse(connection.connect());
-		connection.setJdbcLink(link);
+		connection.setJdbcLink(getLink());
 		connection.setDBUser("elexis");
 		connection.setDBPassword("elexisTest");
 		assertTrue(connection.connect());

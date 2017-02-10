@@ -6,10 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -22,37 +18,16 @@ import ch.elexis.data.po.OtherListPersistentObject;
 import ch.elexis.data.po.PersistentObjectImpl;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
-import ch.rgw.tools.JdbcLinkException;
 import ch.rgw.tools.JdbcLinkSyntaxException;
 
 public class Test_PersistentObject extends AbstractPersistentObjectTest {
 	
-	private static JdbcLink link;
-	
-	@BeforeClass
-	public static void setUp() throws IOException{
-		link = initDB();
-		DBConnection dbc = new DBConnection();
-		dbc.setJdbcLink(link);
-		
-		boolean ret = PersistentObject.connect(link);
-		assertTrue(ret);
-	}
-	
-	@AfterClass
-	public static void tearDown(){
-		PersistentObject.disconnect();
-		try {
-			if (link == null || !link.isAlive())
-				return;
-			link.exec("DROP ALL OBJECTS");
-			link.disconnect();
-		} catch (JdbcLinkException je) {
-			// just tell what happend and resume
-			// excpetion is allowed for tests which get rid of the connection on their own
-			// for example testConnect(), ...
-			je.printStackTrace();
-		}
+	public Test_PersistentObject(JdbcLink link){
+		super(link);
+		// we need to manually call this again, as after the class
+		// was loaded static {} is not called again, though the DB changed
+		PersistentObjectImpl.initTable();
+		OtherJointPersistentObject.initTable();
 	}
 	
 	@Ignore("Needs fixing, breaks PersistentObject connection link")
@@ -150,7 +125,7 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		assertTrue(impl.getLastUpdate() > lastUpdate);
 	}
 	
-	@Test(expected = JdbcLinkSyntaxException.class)
+	@Test(expected = PersistenceException.class)
 	public void testSetFail(){
 		PersistentObjectImpl impl = new PersistentObjectImpl();
 		impl.set("DOESNOTEXIST", "Nonsense");
@@ -265,16 +240,14 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 			// Do not forget to insert some version information
 			+ "INSERT INTO Dummy (ID, Title) VALUES ('VERSION'," + JdbcLink.wrap(version) + ");";
 		String modifyTable = "ALTER TABLE Dummy MODIFY BoreFactor VARCHAR(12);";
-		PersistentObject.getConnection().DBFlavor = "h2";
 		// create
 		PersistentObject.createOrModifyTable(createTable);
 		// modify
 		PersistentObject.createOrModifyTable(modifyTable);
 		// test the JdbcException thrown by the statement if FunFactor was still VARCHAR(6)
 		// will stop the test if one of the createOrModifyTable failed ...
-		JdbcLink link = PersistentObject.getConnection();
-		Stm statement = link.getStatement();
+		Stm statement = getLink().getStatement();
 		statement.exec("INSERT INTO Dummy (ID, BoreFactor) VALUES ('TEST', '1234567890');");
-		link.releaseStatement(statement);
+		getLink().releaseStatement(statement);
 	}
 }

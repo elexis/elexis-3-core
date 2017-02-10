@@ -41,6 +41,10 @@ public class FreeTextDiagnose extends PersistentObject implements IDiagnose {
 	static {
 		addMapping(TABLENAME, FLD_TEXT);
 		
+		checkInitTable();
+	}
+	
+	protected static void checkInitTable(){
 		if (!tableExists(TABLENAME)) {
 			createOrModifyTable(create);
 		} else {

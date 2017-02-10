@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
@@ -14,43 +12,29 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
 import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.JdbcLinkException;
 import ch.rgw.tools.TimeTool;
 
 public class Test_Reminder extends AbstractPersistentObjectTest {
-	private static JdbcLink link;
 	
-	private static Anwender anwender;
-	private static Patient patient;
+	private Anwender anwender;
+	private Patient patient;
 	
-	@BeforeClass
-	public static void init(){
-		link = initDB();
+	public Test_Reminder(JdbcLink link){
+		super(link);
 		
 		User user = User.load("Administrator");
-		anwender = new Anwender("Name", "Vorname", (String) null, "w");
-		user.setAssignedContact(anwender);
+		if(user.getAssignedContact()==null) {
+			anwender = new Anwender("Name", "Vorname", (String) null, "w");
+			user.setAssignedContact(anwender);
+		} else {
+			anwender = user.getAssignedContact();
+		}	
 		// set user and Mandant in system
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
 		Mandant m = new Mandant("Mandant", "Erwin", "26.07.1979", "m");
 		patient = new Patient("Mia", "Krank", "22041982", "w");
 		CoreHub.setMandant(m);
-	}
-	
-	@AfterClass
-	public static void tearDown(){
-		try {
-			if (link == null || !link.isAlive())
-				return;
-			link.exec("DROP ALL OBJECTS");
-			link.disconnect();
-		} catch (JdbcLinkException je) {
-			// just tell what happened and resume
-			// exception is allowed for tests which get rid of the connection on their own
-			// for example testConnect(), ...
-			je.printStackTrace();
-		}
 	}
 	
 	@Test
@@ -60,6 +44,7 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 		long lastUpdate = reminder.getLastUpdate();
 		assertNotSame(0L, reminder.getLastUpdate());
 		Thread.sleep(2);
+		reminder.addResponsible(anwender);
 		reminder.addResponsible(anwender);
 		assertTrue(reminder.getLastUpdate() > lastUpdate);
 		assertEquals(1, reminder.getResponsibles().size());
@@ -82,8 +67,6 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 		Reminder reminder = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.ALWAYS, "", "TestMessage");
 		reminder.addResponsible(CoreHub.actUser);
-		assertEquals(1,
-			Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser, false, null, false).size());
 		assertEquals(1,
 			Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser, false, null, false).size());
 		
