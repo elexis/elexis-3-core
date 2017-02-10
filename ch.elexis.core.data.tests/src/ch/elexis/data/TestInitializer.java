@@ -20,7 +20,7 @@ public class TestInitializer {
 	public static JdbcLink initTestDBConnection(String dbflavor){
 		JdbcLink link = null;
 		if (dbflavor == FLAVOR_H2) {
-			link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "hsql");
+			link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "h2");
 		} else if (dbflavor == FLAVOR_MYSQL) {
 			link = JdbcLink.createMySqlLink("localhost", "unittests");
 		} else if (dbflavor == FLAVOR_POSTGRES) {

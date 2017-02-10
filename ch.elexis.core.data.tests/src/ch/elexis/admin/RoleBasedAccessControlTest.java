@@ -32,19 +32,10 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 	private static final String USERNAME = "user";
 	private static final String PASSWORD = "password";
 	
-	private Anwender anwender;
 	private User user;
 	
 	@Before
 	public void before() throws Exception{
-		User load = User.load(USERNAME);
-		if (load != null && load.exists()) {
-			anwender = load.getAssignedContact();
-		} else {
-			anwender = new Anwender(USERNAME, PASSWORD);
-		}
-		boolean succ = Anwender.login(USERNAME, PASSWORD);
-		assertTrue(succ);
 		user = (User) ElexisEventDispatcher.getSelected(User.class);
 		assertNotNull(user);
 		assertEquals(user.getAssignedContact().getId(), anwender.getId());
@@ -85,8 +76,6 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 			}
 		}
 		assertTrue(userHasRole);
-		
-		CoreHub.acl.grant(ur, AccessControlDefaults.AC_EXIT);
 		
 		boolean roleHasRight =
 			RoleBasedAccessControl.queryRightForRole(ur, AccessControlDefaults.AC_EXIT);
