@@ -125,6 +125,7 @@ public class SqlRunner {
 						statement.exec(link.translateFlavor(sqlString));
 					} catch (JdbcLinkException e) {
 						setStatus(SqlStatus.FAIL);
+						log.error("Error " + e.getMessage() + " during db update", e);
 						try {
 							ElexisStatus status =
 								new ElexisStatus(ElexisStatus.ERROR, pluginId,
@@ -132,7 +133,6 @@ public class SqlRunner {
 										+ " during db update", e);
 							ElexisEventDispatcher.getInstance().fireElexisStatusEvent(status);
 						} catch (AssertionFailedException appnotinit) {
-							log.error("Error " + e.getMessage() + " during db update", e);
 						}
 					}
 				}

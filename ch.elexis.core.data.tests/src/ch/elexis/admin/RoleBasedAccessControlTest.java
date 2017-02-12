@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,23 +28,14 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 		super(link);
 	}
 	
-	private static final String USERNAME = "user";
-	private static final String PASSWORD = "password";
-	
 	private User user;
 	
 	@Before
 	public void before() throws Exception{
 		user = (User) ElexisEventDispatcher.getSelected(User.class);
 		assertNotNull(user);
-		assertEquals(user.getAssignedContact().getId(), anwender.getId());
 	}
-	
-	@After
-	public void after(){
-		anwender.delete();
-	}
-	
+		
 	@Test
 	public void testInitialState(){
 		User user = User.load(User.USERNAME_ADMINISTRATOR);
@@ -109,7 +99,7 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 	public void testUserLock(){
 		user.setActive(false);
 		CoreHub.logoffAnwender();
-		boolean rightFalse = Anwender.login(USERNAME, PASSWORD);
+		boolean rightFalse = Anwender.login(testUserName, PASSWORD);
 		assertFalse(rightFalse);
 		
 		// activate user again

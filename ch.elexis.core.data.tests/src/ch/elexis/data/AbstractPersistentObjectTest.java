@@ -16,28 +16,31 @@ import ch.rgw.tools.JdbcLink;
 @RunWith(Parameterized.class)
 public class AbstractPersistentObjectTest {
 	
-	private static final String USERNAME = "user";
-	private static final String PASSWORD = "password";
+	protected JdbcLink link;
+	protected String testUserName;
+	protected final String PASSWORD = "password";
 	
 	@Parameters
 	public static Collection<Object[]> data() throws IOException{
-		return AllTests.getConnections();
+		return AllDataTests.getConnections();
 	}
-	
-	protected JdbcLink link;
-	protected Anwender anwender;
 	
 	public AbstractPersistentObjectTest(JdbcLink link){
 		this.link = link;
 		PersistentObject.connect(link);
 		
-		User load = User.load(USERNAME);
-		if (load != null && load.exists()) {
-			anwender = load.getAssignedContact();
-		} else {
-			anwender = new Anwender(USERNAME, PASSWORD);
+		User.initTables();
+		
+		if (testUserName == null) {
+			testUserName = "ut_user_" + link.DBFlavor;
 		}
-		boolean succ = Anwender.login(USERNAME, PASSWORD);
+		
+		User existingUser = User.load(testUserName);
+		if (!existingUser.exists()) {
+			new Anwender(testUserName, PASSWORD);
+		} 
+		
+		boolean succ = Anwender.login(testUserName, PASSWORD);
 		assertTrue(succ);
 	}
 	

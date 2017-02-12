@@ -43,6 +43,10 @@ public class User extends PersistentObject {
 			FLD_HASHED_PASSWORD, FLD_SALT, FLD_KEYSTORE,
 			FLD_JOINT_ROLES + "=LIST:USER_ID:USER_ROLE_JOINT");
 			
+		initTables();
+	}
+	
+	protected static void initTables() {
 		if (!tableExists(TABLENAME)) {
 			executeDBInitScriptForClass(User.class, null);
 			User.migrateToNewStructure();
@@ -93,7 +97,7 @@ public class User extends PersistentObject {
 	 * @see https://redmine.medelexis.ch/issues/771
 	 */
 	private static void migrateToNewStructure(){
-		new Role(); // to call the static init header and init the roles
+		Role.initTables();
 		
 		log.info("Starting migration to new user structure");
 		

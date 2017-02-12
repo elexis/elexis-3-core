@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +32,7 @@ import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Leistungsblock;
+import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Reminder;
 import ch.rgw.tools.VersionInfo;
@@ -434,8 +436,10 @@ public class DBUpdate {
 	 * <ul>
 	 * <li>direkt ein SQL-Befehl,
 	 * <li>eine ; getrennte Liste von SQL-Befehlen</li>
+	 * 
+	 * @return
 	 */
-	public static void doUpdate(){
+	public static boolean doUpdate(){
 		String dbv = CoreHub.globalCfg.get("dbversion", null);
 		if (dbv == null) {
 			log.error("Kann keine Version lesen");
@@ -457,9 +461,10 @@ public class DBUpdate {
 				String[] cmd = cmds[i].split(";");
 				for (int cmdIdx = 0; cmdIdx < cmd.length; cmdIdx++)
 					if (FILE_LOCATED.equals(cmd[cmdIdx])) {
-						String dbscript = readDBScriptForVersionFromFile(versions[i]);
+						String dbscript = readDBScriptForVersionFromFile(versions[i],
+							PersistentObject.getConnection().DBFlavor);
 						if (dbscript == null) {
-							return;
+							return false;
 						}
 						sqlStrings.add(dbscript);
 					} else {
@@ -487,19 +492,27 @@ public class DBUpdate {
 			log.error("DBUpdate from Version " + dbv + " to Version "
 				+ versions[versions.length - 1] + " failed.");
 		}
+		return success;
 	}
 	
 	/**
 	 * 
-	 * @since 3.2
+	 * @param dBFlavor
+	 * @since 3.1 considers flavor specific scripts
 	 */
-	public static String readDBScriptForVersionFromFile(String version){
+	public static String readDBScriptForVersionFromFile(String version, String dBFlavor){
 		String resourceName = "/rsc/dbScripts/" + version.replaceAll("\\.", "_");
-		resourceName += ".sql";
+		
+		URL resource = DBUpdate.class.getResource(resourceName + "_" + dBFlavor + ".sql");
+		if (resource != null) {
+			resourceName += "_" + dBFlavor + ".sql";
+		} else {
+			resourceName += ".sql";
+		}
 		
 		try (InputStream inputStream = DBUpdate.class.getResourceAsStream(resourceName)) {
 			return new BufferedReader(new InputStreamReader(inputStream)).lines()
-				.collect(Collectors.joining("\n"));
+				.filter(s -> !s.startsWith("#")).collect(Collectors.joining("\n"));
 		} catch (IOException e) {
 			log.error("Error reading input file [{}] for version [{}]." + resourceName, version);
 			return null;

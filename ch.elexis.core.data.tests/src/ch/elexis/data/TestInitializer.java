@@ -1,5 +1,7 @@
 package ch.elexis.data;
 
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -32,9 +34,6 @@ public class TestInitializer {
 		}
 		try {
 			boolean connectionOk = link.connect("elexisTest", "elexisTest");
-			PersistentObject.connect(link);
-			// TODO why is the next set necessary?
-			PersistentObject.getConnection().DBFlavor = dbflavor;
 			if (connectionOk) {
 				return link;
 			}
@@ -45,21 +44,18 @@ public class TestInitializer {
 		return link;
 	}
 	
-	protected static void initElexisDatabase(DBConnection connection) throws IOException{
-		executeDBScript(connection, "/rsc/createDB.script");
-	}
-	
 	protected static void executeDBScript(DBConnection connection, String filename)
-			throws IOException{
-			Stm stm = null;
-			try (InputStream is = PersistentObject.class.getResourceAsStream(filename)) {
-				stm = connection.getStatement();
-				boolean success = stm.execScript(is, true, true);
-				if (!success) {
-					throw new IOException();
-				}
-			} finally {
-				connection.releaseStatement(stm);
+		throws IOException{
+		Stm stm = null;
+		try (InputStream is = PersistentObject.class.getResourceAsStream(filename)) {
+			stm = connection.getStatement();
+			boolean success = stm.execScript(is, true, true);
+			if (!success) {
+				fail("Error executing script!");
+				throw new IOException();
 			}
+		} finally {
+			connection.releaseStatement(stm);
 		}
+	}
 }

@@ -2,9 +2,11 @@ package ch.elexis.data;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -21,8 +23,8 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 	private static Konsultation kons;
 	
 	@Before
-	public void init(){
-		User user = User.load("Administrator");
+	public void before(){
+		User user = User.load(testUserName);
 		// set user and Mandant in system
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
@@ -34,6 +36,24 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 		kons = new Konsultation(fall);
 		
 		FreeTextDiagnose.checkInitTable();
+	}
+	
+	@After
+	public void after() {
+		kons.delete();
+		fall.delete();
+		pat.delete();
+	}
+	
+	@Test
+	public void testConsultationCreation() {
+		// #5612 test default diagnosis
+		FreeTextDiagnose ftd = new FreeTextDiagnose("TextDefault", true);
+		CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, ftd.storeToString());
+		Konsultation kons = new Konsultation(fall);
+		assertEquals(1, kons.getDiagnosen().size());
+		assertEquals(ftd.getId(), kons.getDiagnosen().get(0).getId());
+		CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, "");
 	}
 	
 	@Test

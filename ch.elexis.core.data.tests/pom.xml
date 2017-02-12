@@ -19,9 +19,9 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-surefire-plugin</artifactId>
-        <version>${tycho-version}</version>
         <configuration>
           <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Delexis.run.dbtests=${elexis.run.dbtests}</argLine>
+          <testClass>ch.elexis.AllTests</testClass>
           <showEclipseLog>false</showEclipseLog>
           <useUIHarness>false</useUIHarness>
           <useUIThread>true</useUIThread>
