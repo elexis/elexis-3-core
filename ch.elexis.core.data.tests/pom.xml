@@ -21,6 +21,7 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
           <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Delexis.run.dbtests=${elexis.run.dbtests}</argLine>
+          <testSuite>ch.elexis.core.data.tests</testSuite>
           <testClass>ch.elexis.AllTests</testClass>
           <showEclipseLog>false</showEclipseLog>
           <useUIHarness>false</useUIHarness>
