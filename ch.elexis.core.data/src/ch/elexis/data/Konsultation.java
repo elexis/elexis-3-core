@@ -55,6 +55,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	public static final String FLD_BILL_ID = "RechnungsID";
 	public static final String FLD_CASE_ID = "FallID";
 	public static final String FLD_MANDATOR_ID = "MandantID";
+	public static final String FLD_JOINT_DIAGNOSEN = "Diagnosen";
+	
 	private static final String TABLENAME = "BEHANDLUNGEN";
 	volatile int actEntry;
 	
@@ -65,7 +67,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	static {
 		addMapping(TABLENAME, FLD_MANDATOR_ID, PersistentObject.DATE_COMPOUND, FLD_CASE_ID,
 			FLD_BILL_ID, "Eintrag=S:V:Eintrag",
-			"Diagnosen=JOINT:BehandlungsID:DiagnoseID:BEHDL_DG_JOINT");
+			FLD_JOINT_DIAGNOSEN + "=JOINT:BehandlungsID:DiagnoseID:BEHDL_DG_JOINT");
 	}
 	
 	protected Konsultation(String id){
@@ -551,8 +553,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		StringBuilder sql = new StringBuilder(200);
 		if (StringTool.isNothing(diagnosisEntryExists)) {
 			diagnosisEntryExists = StringTool.unique("bhdl");
-			sql.append("INSERT INTO DIAGNOSEN (ID, DG_CODE, DG_TXT, KLASSE) VALUES (")
+			sql.append("INSERT INTO DIAGNOSEN (ID, LASTUPDATE, DG_CODE, DG_TXT, KLASSE) VALUES (")
 				.append(JdbcLink.wrap(diagnosisEntryExists)).append(",")
+				.append(Long.toString(System.currentTimeMillis())).append(",")
 				.append(JdbcLink.wrap(dg.getCode())).append(",").append(JdbcLink.wrap(dg.getText()))
 				.append(",").append(JdbcLink.wrap(dg.getClass().getName())).append(")");
 			getDBConnection().exec(sql.toString());
@@ -571,6 +574,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		getFall().getPatient().countItem(dg);
 		CoreHub.actUser.countItem(dg);
 		
+		refreshLastUpdateAndSendUpdateEvent(FLD_JOINT_DIAGNOSEN);
 	}
 	
 	/** Eine Diagnose aus der Diagnoseliste entfernen */
@@ -598,6 +602,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					.append(" AND DiagnoseId=" + JdbcLink.wrap(dgid));
 				log.debug(sql.toString());
 				getDBConnection().exec(sql.toString());
+				refreshLastUpdateAndSendUpdateEvent(FLD_JOINT_DIAGNOSEN);
 			}
 		}
 	}

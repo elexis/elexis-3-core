@@ -1,6 +1,6 @@
 package ch.elexis.data;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -39,14 +39,14 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 	}
 	
 	@After
-	public void after() {
+	public void after(){
 		kons.delete();
 		fall.delete();
 		pat.delete();
 	}
 	
 	@Test
-	public void testConsultationCreation() {
+	public void testConsultationCreation(){
 		// #5612 test default diagnosis
 		FreeTextDiagnose ftd = new FreeTextDiagnose("TextDefault", true);
 		CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, ftd.storeToString());
@@ -58,6 +58,7 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 	
 	@Test
 	public void testDiagnosisCreation(){
+		long currentTimeMillis = System.currentTimeMillis();
 		FreeTextDiagnose ftd = new FreeTextDiagnose("Text", true);
 		kons.addDiagnose(ftd);
 		kons.addDiagnose(ftd);
@@ -66,7 +67,12 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 			.queryString("SELECT COUNT(*) FROM DIAGNOSEN WHERE KLASSE="
 				+ JdbcLink.wrap(ftd.getClass().getName()) + " AND DG_CODE="
 				+ JdbcLink.wrap(ftd.getCode()));
-		assertEquals("1", count);
+		assertEquals(Integer.toString(1), count);
+		String lastUpdateSet = ftd.getDBConnection()
+			.queryString("SELECT LASTUPDATE FROM DIAGNOSEN WHERE KLASSE="
+				+ JdbcLink.wrap(ftd.getClass().getName()) + " AND DG_CODE="
+				+ JdbcLink.wrap(ftd.getCode()));
+		assertTrue(currentTimeMillis < Long.valueOf(lastUpdateSet));
 		
 		kons.removeDiagnose(ftd);
 		assertEquals(0, kons.getDiagnosen().size());
