@@ -28,6 +28,7 @@ import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
 import ch.rgw.tools.ExHandler;
+import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -389,7 +390,8 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		DBConnection dbConnection = getDefaultConnection();
 		StringBuilder query = new StringBuilder(PS_REMINDERS_BASE);
 		if (onlyDue) {
-			query.append(" AND r.DateDue < " + new TimeTool().toString(TimeTool.DATE_COMPACT));
+			query.append(" AND r.DateDue < "
+				+ JdbcLink.wrap(new TimeTool().toString(TimeTool.DATE_COMPACT)));
 		}
 		if (patient != null) {
 			query.append(" AND r.IdentID = " + patient.getWrappedId());

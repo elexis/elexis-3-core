@@ -4,6 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
+import java.util.List;
+
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
@@ -23,12 +29,12 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 		super(link);
 		
 		User user = User.load("Administrator");
-		if(user.getAssignedContact()==null) {
+		if (user.getAssignedContact() == null) {
 			anwender = new Anwender("Name", "Vorname", (String) null, "w");
 			user.setAssignedContact(anwender);
 		} else {
 			anwender = user.getAssignedContact();
-		}	
+		}
 		// set user and Mandant in system
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
@@ -88,6 +94,17 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 		assertEquals(1,
 			Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser, false, patient, true).size());
 		
+		TimeTool timeTool = new TimeTool(LocalDate.now().minusDays(1));
+		Reminder dueReminder = new Reminder(null, timeTool.toString(TimeTool.DATE_GER),
+			Visibility.ALWAYS, "", "TestMessage");
+		dueReminder.addResponsible(anwender);
+		// is 120217
+		List<Reminder> dueReminders =
+			Reminder.findOpenRemindersResponsibleFor(anwender, true, null, false);
+		assertEquals(1, dueReminders.size());
+		assertEquals(dueReminder.getId(), dueReminders.get(0).getId());
+		
+		dueReminder.delete();
 		reminderClosed.delete();
 		reminder.delete();
 		patientSpecificReminder.delete();
