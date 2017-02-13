@@ -130,6 +130,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				CoreHub.actMandant.getId());
 			fall.getPatient().setInfoElement("LetzteBehandlung", getId());
 		}
+		if (getDefaultDiagnose() != null)
+			addDiagnose(getDefaultDiagnose());
 	}
 	
 	/** Eine Konsultation anhand ihrer ID von der Datenbank einlesen */
@@ -937,8 +939,6 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (initialText != null) {
 			n.updateEintrag(initialText, false);
 		}
-		if (getDefaultDiagnose() != null)
-			n.addDiagnose(getDefaultDiagnose());
 			
 		ElexisEventDispatcher.fireSelectionEvent(actFall);
 		ElexisEventDispatcher.fireSelectionEvent(n);
