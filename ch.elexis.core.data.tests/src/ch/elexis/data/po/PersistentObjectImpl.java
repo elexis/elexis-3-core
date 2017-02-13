@@ -20,6 +20,10 @@ public class PersistentObjectImpl extends PersistentObject {
 			FLD_JOINT_OTHER + "=JOINT:PersistentObjectId:OtherId:PO_OTHER_JOINT",
 			FLD_LIST_OTHER + "=LIST:PersistentObjectId:OTHERLIST");
 		
+		initTable();
+	}
+	
+	public static void initTable(){
 		if (!tableExists(TABLENAME)) {
 			createOrModifyTable(create);
 			createOrModifyTable(createJoint);

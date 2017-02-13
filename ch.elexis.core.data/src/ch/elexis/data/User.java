@@ -42,6 +42,10 @@ public class User extends PersistentObject {
 			FLD_HASHED_PASSWORD, FLD_SALT, FLD_KEYSTORE,
 			FLD_JOINT_ROLES + "=LIST:USER_ID:USER_ROLE_JOINT");
 			
+		initTables();
+	}
+	
+	protected static void initTables() {
 		if (!tableExists(TABLENAME)) {
 			executeDBInitScriptForClass(User.class, null);
 			User.migrateToNewStructure();

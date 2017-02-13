@@ -1,52 +1,50 @@
 package ch.elexis.data;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Collection;
+
+import org.junit.Ignore;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.JdbcLink.Stm;
 
-public abstract class AbstractPersistentObjectTest {
+@Ignore
+@RunWith(Parameterized.class)
+public class AbstractPersistentObjectTest {
 	
-	/**
-	 * create a H2-JdbcLink with an initialized db for elexis.
-	 * 
-	 * the creation script is taken from the rsc directory of the host plugin when running a
-	 * Plugin-Test
-	 */
-	protected static JdbcLink initDB(){
-		return initDB("h2");
+	protected JdbcLink link;
+	protected String testUserName;
+	protected final String PASSWORD = "password";
+	
+	@Parameters
+	public static Collection<Object[]> data() throws IOException{
+		return AllDataTests.getConnections();
 	}
 	
-	/**
-	 * create a JdbcLink with an initialized db for elexis the creation script is taken from the rsc
-	 * directory of the host plugin when running a Plugin-Test
-	 */
-	protected static JdbcLink initDB(String dbflavor){
-		JdbcLink link = null;
-		
-		if (dbflavor == "h2")
-			link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "hsql");
-		else if (dbflavor == "mysql")
-			link = JdbcLink.createMySqlLink("localhost", "unittests");
-		else if (dbflavor == "postgresql")
-			link = JdbcLink.createPostgreSQLLink("localhost", "unittests");
-		
-		assertNotNull(link);
-		link.connect("elexis", "elexisTest");
+	public AbstractPersistentObjectTest(JdbcLink link){
+		this.link = link;
 		PersistentObject.connect(link);
-		return link;
+		
+		User.initTables();
+		
+		if (testUserName == null) {
+			testUserName = "ut_user_" + link.DBFlavor;
+		}
+		
+		User existingUser = User.load(testUserName);
+		if (!existingUser.exists()) {
+			new Anwender(testUserName, PASSWORD);
+		} 
+		
+		boolean succ = Anwender.login(testUserName, PASSWORD);
+		assertTrue(succ);
 	}
 	
-	protected static void initElexisDatabase(DBConnection connection) throws IOException{
-		Stm stm = null;
-		try (InputStream is = PersistentObject.class.getResourceAsStream("/rsc/createDB.script")) {
-			stm = connection.getStatement();
-			stm.execScript(is, true, true);
-		} finally {
-			connection.releaseStatement(stm);
-		}
+	public JdbcLink getLink(){
+		return link;
 	}
 }
