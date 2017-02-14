@@ -50,7 +50,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	public static final String DUE = "Due";
 	public static final String CREATOR = "Creator";
 	public static final String KONTAKT_ID = "IdentID";
-	static final String TABLENAME = "REMINDERS";
+	public static final String TABLENAME = "REMINDERS";
 	
 	public static final String STATE_PLANNED = "geplant";
 	public static final String STATE_DUE = "fällig";
