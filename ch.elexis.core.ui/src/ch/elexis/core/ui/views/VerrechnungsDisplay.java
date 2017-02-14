@@ -63,7 +63,9 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.IUnlockable;
+import ch.elexis.core.ui.locks.LockDeniedNoActionLockHandler;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
@@ -85,8 +87,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private IWorkbenchPage page;
 	private final Hyperlink hVer;
 	private final PersistentObjectDropTarget dropTarget;
-	private IAction applyMedicationAction, chPriceAction, chCountAction,
-			chTextAction, removeAction, removeAllAction;
+	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction,
+			removeAllAction;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
 	private static final String CHCOUNT = Messages.VerrechnungsDisplay_changeNumber;
@@ -334,18 +336,25 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			@Override
 			public void run(){
 				Verrechnet v = loadSelectedVerrechnet();
-				v.setDetail(Verrechnet.VATSCALE, Double.toString(0.0));
-				
-				int packungsGroesse = ((Artikel) v.getVerrechenbar()).getPackungsGroesse();
-				String proposal = (packungsGroesse > 0) ? "1/" + packungsGroesse : "1";
-				changeQuantityDialog(proposal, v);
-				Object prescriptionId = v.getDetail(Verrechnet.FLD_EXT_PRESC_ID);
-				if (prescriptionId instanceof String) {
-					Prescription prescription = Prescription.load((String) prescriptionId);
-					if (prescription.getEntryType() == EntryType.SELF_DISPENSED) {
-						prescription.setApplied(true);
+				AcquireLockUi.aquireAndRun(v, new LockDeniedNoActionLockHandler() {
+
+					@Override
+					public void lockAcquired(){
+						v.setDetail(Verrechnet.VATSCALE, Double.toString(0.0));
+						
+						int packungsGroesse = ((Artikel) v.getVerrechenbar()).getPackungsGroesse();
+						String proposal = (packungsGroesse > 0) ? "1/" + packungsGroesse : "1";
+						changeQuantityDialog(proposal, v);
+						Object prescriptionId = v.getDetail(Verrechnet.FLD_EXT_PRESC_ID);
+						if (prescriptionId instanceof String) {
+							Prescription prescription = Prescription.load((String) prescriptionId);
+							if (prescription.getEntryType() == EntryType.SELF_DISPENSED) {
+								prescription.setApplied(true);
+							}
+						}
 					}
-				}
+				});
+
 			}
 			
 			@Override
@@ -360,14 +369,20 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				int[] sel = tVerr.getSelectionIndices();
 				for (int i : sel) {
 					TableItem ti = tVerr.getItem(i);
-					Result<Verrechnet> result =
-						((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class))
-							.removeLeistung((Verrechnet) ti.getData());
-					if (!result.isOK()) {
-						SWTHelper.alert(Messages.VerrechnungsDisplay_PositionCanootBeRemoved,
-							result //$NON-NLS-1$
-								.toString());
-					}
+					Verrechnet v = (Verrechnet) ti.getData();
+					AcquireLockUi.aquireAndRun(v, new LockDeniedNoActionLockHandler() {
+						@Override
+						public void lockAcquired(){
+							Result<Verrechnet> result = ((Konsultation) ElexisEventDispatcher
+								.getSelected(Konsultation.class)).removeLeistung(v);
+							if (!result.isOK()) {
+								SWTHelper.alert(
+									Messages.VerrechnungsDisplay_PositionCanootBeRemoved, result //$NON-NLS-1$
+										.toString());
+							}
+						}
+						
+					});
 				}
 				setLeistungen((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class));
 			}
@@ -378,17 +393,23 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			public void run(){
 				TableItem[] items = tVerr.getItems();
 				for (TableItem ti : items) {
-					if (!((Verrechnet) ti.getData()).getKons().isEditable(true)) {
+					Verrechnet v = (Verrechnet) ti.getData();
+					if (!v.getKons().isEditable(true)) {
 						return;
 					}
-					Result<Verrechnet> result =
-						((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class))
-							.removeLeistung((Verrechnet) ti.getData());
-					if (!result.isOK()) {
-						SWTHelper.alert(Messages.VerrechnungsDisplay_PositionCanootBeRemoved,
-							result //$NON-NLS-1$
-								.toString());
-					}
+					AcquireLockUi.aquireAndRun(v, new LockDeniedNoActionLockHandler() {
+						@Override
+						public void lockAcquired(){
+							Result<Verrechnet> result = ((Konsultation) ElexisEventDispatcher
+								.getSelected(Konsultation.class)).removeLeistung(v);
+							if (!result.isOK()) {
+								SWTHelper.alert(
+									Messages.VerrechnungsDisplay_PositionCanootBeRemoved, result //$NON-NLS-1$
+										.toString());
+							}
+						}
+					});
+					
 				}
 				setLeistungen((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class));
 			}
@@ -406,35 +427,41 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return;
 				}
 				
-				Money oldPrice = v.getBruttoPreis();
-				String p = oldPrice.getAmountAsString();
-				InputDialog dlg =
-					new InputDialog(UiDesk.getTopShell(),
-						Messages.VerrechnungsDisplay_changePriceForService, //$NON-NLS-1$
-						Messages.VerrechnungsDisplay_enterNewPrice, p, //$NON-NLS-1$
-						null);
-				if (dlg.open() == Dialog.OK) {
-					try {
-						String val = dlg.getValue().trim();
-						Money newPrice = new Money(oldPrice);
-						if (val.endsWith("%") && val.length() > 1) { //$NON-NLS-1$
-							val = val.substring(0, val.length() - 1);
-							double percent = Double.parseDouble(val);
-							double factor = 1.0 + (percent / 100.0);
-							v.setSecondaryScaleFactor(factor);
-						} else {
-							newPrice = new Money(val);
-							v.setTP(newPrice.getCents());
-							v.setSecondaryScaleFactor(1);
+				AcquireLockUi.aquireAndRun(v, new LockDeniedNoActionLockHandler() {
+
+					@Override
+					public void lockAcquired(){
+						Money oldPrice = v.getBruttoPreis();
+						String p = oldPrice.getAmountAsString();
+						InputDialog dlg = new InputDialog(UiDesk.getTopShell(),
+							Messages.VerrechnungsDisplay_changePriceForService, //$NON-NLS-1$
+							Messages.VerrechnungsDisplay_enterNewPrice, p, //$NON-NLS-1$
+							null);
+						if (dlg.open() == Dialog.OK) {
+							try {
+								String val = dlg.getValue().trim();
+								Money newPrice = new Money(oldPrice);
+								if (val.endsWith("%") && val.length() > 1) { //$NON-NLS-1$
+									val = val.substring(0, val.length() - 1);
+									double percent = Double.parseDouble(val);
+									double factor = 1.0 + (percent / 100.0);
+									v.setSecondaryScaleFactor(factor);
+								} else {
+									newPrice = new Money(val);
+									v.setTP(newPrice.getCents());
+									v.setSecondaryScaleFactor(1);
+								}
+								// v.setPreis(newPrice);
+								setLeistungen(
+									(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class));
+							} catch (ParseException ex) {
+								SWTHelper.showError(Messages.VerrechnungsDisplay_badAmountCaption, //$NON-NLS-1$
+									Messages.VerrechnungsDisplay_badAmountBody); //$NON-NLS-1$
+							}
 						}
-						// v.setPreis(newPrice);
-						setLeistungen((Konsultation) ElexisEventDispatcher
-							.getSelected(Konsultation.class));
-					} catch (ParseException ex) {
-						SWTHelper.showError(Messages.VerrechnungsDisplay_badAmountCaption, //$NON-NLS-1$
-							Messages.VerrechnungsDisplay_badAmountBody); //$NON-NLS-1$
 					}
-				}
+					
+				});
 			}
 			
 		};
@@ -451,7 +478,13 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				}
 				
 				String p = Integer.toString(v.getZahl());
-				changeQuantityDialog(p, v);
+				AcquireLockUi.aquireAndRun(v, new LockDeniedNoActionLockHandler() {
+					
+					@Override
+					public void lockAcquired(){
+						changeQuantityDialog(p, v);
+					}
+				});
 			}
 		};
 		
@@ -466,25 +499,29 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return;
 				}
 				
-				String oldText = v.getText();
-				InputDialog dlg =
-					new InputDialog(UiDesk.getTopShell(),
-						Messages.VerrechnungsDisplay_changeTextCaption, //$NON-NLS-1$
-						Messages.VerrechnungsDisplay_changeTextBody, //$NON-NLS-1$
-						oldText, null);
-				if (dlg.open() == Dialog.OK) {
-					String input = dlg.getValue();
-					if (input.matches("[0-9\\.,]+")) { //$NON-NLS-1$
-						if (!SWTHelper.askYesNo(
-							Messages.VerrechnungsDisplay_confirmChangeTextCaption, //$NON-NLS-1$
-							Messages.VerrechnungsDisplay_confirmChangeTextBody)) { //$NON-NLS-1$
-							return;
+				AcquireLockUi.aquireAndRun(v, new LockDeniedNoActionLockHandler() {
+					@Override
+					public void lockAcquired(){
+						String oldText = v.getText();
+						InputDialog dlg = new InputDialog(UiDesk.getTopShell(),
+							Messages.VerrechnungsDisplay_changeTextCaption, //$NON-NLS-1$
+							Messages.VerrechnungsDisplay_changeTextBody, //$NON-NLS-1$
+							oldText, null);
+						if (dlg.open() == Dialog.OK) {
+							String input = dlg.getValue();
+							if (input.matches("[0-9\\.,]+")) { //$NON-NLS-1$
+								if (!SWTHelper.askYesNo(
+									Messages.VerrechnungsDisplay_confirmChangeTextCaption, //$NON-NLS-1$
+									Messages.VerrechnungsDisplay_confirmChangeTextBody)) { //$NON-NLS-1$
+									return;
+								}
+							}
+							v.setText(input);
+							setLeistungen((Konsultation) ElexisEventDispatcher
+								.getSelected(Konsultation.class));
 						}
 					}
-					v.setText(input);
-					setLeistungen((Konsultation) ElexisEventDispatcher
-						.getSelected(Konsultation.class));
-				}
+				});
 			}
 		};
 	}
@@ -497,51 +534,48 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
 	private void changeQuantityDialog(String p, Verrechnet v){
 		InputDialog dlg =
-				new InputDialog(UiDesk.getTopShell(),
-					Messages.VerrechnungsDisplay_changeNumberCaption, //$NON-NLS-1$
-					Messages.VerrechnungsDisplay_changeNumberBody, //$NON-NLS-1$
-					p, null);
-			if (dlg.open() == Dialog.OK) {
-				try {
-					String val = dlg.getValue();
-					if (!StringTool.isNothing(val)) {
-						int changeAnzahl;
-						double secondaryScaleFactor = 1.0;
-						String text = v.getVerrechenbar().getText();
-						
-						if (val.indexOf(StringConstants.SLASH) > 0) {
-							changeAnzahl = 1;
-							String[] frac = val.split(StringConstants.SLASH);
-							secondaryScaleFactor =
-								Double.parseDouble(frac[0]) / Double.parseDouble(frac[1]);
-							text = v.getText()
-								+ " (" + val + Messages.VerrechnungsDisplay_Orininalpackungen; //$NON-NLS-1$
-						} else if (val.indexOf('.') > 0) {
-							changeAnzahl = 1;
-							secondaryScaleFactor = Double.parseDouble(val);
-							text = v.getText() + " (" + Double.toString(secondaryScaleFactor) + ")";
-						} else {
-							changeAnzahl = Integer.parseInt(dlg.getValue());
-						}
-						
-						IStatus ret = v.changeAnzahlValidated(changeAnzahl);
-						if(ret.isOK()) {
-							v.setSecondaryScaleFactor(secondaryScaleFactor);
-							v.setText(text);
-						} else {
-							SWTHelper.showError(Messages.VerrechnungsDisplay_error,
-								ret.getMessage());
-						}
+			new InputDialog(UiDesk.getTopShell(), Messages.VerrechnungsDisplay_changeNumberCaption, //$NON-NLS-1$
+				Messages.VerrechnungsDisplay_changeNumberBody, //$NON-NLS-1$
+				p, null);
+		if (dlg.open() == Dialog.OK) {
+			try {
+				String val = dlg.getValue();
+				if (!StringTool.isNothing(val)) {
+					int changeAnzahl;
+					double secondaryScaleFactor = 1.0;
+					String text = v.getVerrechenbar().getText();
+					
+					if (val.indexOf(StringConstants.SLASH) > 0) {
+						changeAnzahl = 1;
+						String[] frac = val.split(StringConstants.SLASH);
+						secondaryScaleFactor =
+							Double.parseDouble(frac[0]) / Double.parseDouble(frac[1]);
+						text = v.getText() + " (" + val //$NON-NLS-1$
+							+ Messages.VerrechnungsDisplay_Orininalpackungen;
+					} else if (val.indexOf('.') > 0) {
+						changeAnzahl = 1;
+						secondaryScaleFactor = Double.parseDouble(val);
+						text = v.getText() + " (" + Double.toString(secondaryScaleFactor) + ")";
+					} else {
+						changeAnzahl = Integer.parseInt(dlg.getValue());
 					}
-					setLeistungen((Konsultation) ElexisEventDispatcher
-						.getSelected(Konsultation.class));
-				} catch (NumberFormatException ne) {
-					SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, //$NON-NLS-1$
-						Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$
+					
+					IStatus ret = v.changeAnzahlValidated(changeAnzahl);
+					if (ret.isOK()) {
+						v.setSecondaryScaleFactor(secondaryScaleFactor);
+						v.setText(text);
+					} else {
+						SWTHelper.showError(Messages.VerrechnungsDisplay_error, ret.getMessage());
+					}
 				}
+				setLeistungen((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class));
+			} catch (NumberFormatException ne) {
+				SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, //$NON-NLS-1$
+					Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$
 			}
+		}
 	}
-
+	
 	@Override
 	public void setUnlocked(boolean unlocked) {
 		setEnabled(unlocked);
