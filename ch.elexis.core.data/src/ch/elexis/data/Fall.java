@@ -645,7 +645,7 @@ public class Fall extends PersistentObject {
 		if (extinfo.get(name) instanceof String)
 			return checkNull((String) extinfo.get(name));
 		log.warn("Invalid object in Fall.getInfoString(" + name + "), not castable to String: "
-			+ extinfo.get(name));
+			+ extinfo.get(name), new Throwable("Invalid object"));
 		return "";
 	}
 	
