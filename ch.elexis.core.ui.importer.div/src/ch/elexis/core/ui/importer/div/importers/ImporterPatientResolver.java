@@ -44,8 +44,10 @@ public class ImporterPatientResolver extends HL7PatientResolver {
 			pat = (Patient) KontaktSelektor.showInSync(Patient.class, Messages.HL7_SelectPatient,
 				Messages.HL7_WhoIs + lastname + " " + firstname + " ," + birthStr + "?");
 		}
-		
-		return new ContactBean(pat);
+		if (pat != null) {
+			return new ContactBean(pat);
+		}
+		return null;
 	}
 	
 	@Override
