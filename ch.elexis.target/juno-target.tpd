@@ -9,6 +9,14 @@ location "http://download.eclipse.org/eclipse/updates/4.3/" {
 	org.eclipse.osgi.util [3.2.300.v20130513-1956,3.2.300.v20130513-1956]
 }
 
+// fix for NPE in TreeViewerFocusCellManager#getInitialFocusCell #4081
+location "http://download.eclipse.org/eclipse/updates/4.5/" {
+	org.eclipse.swt
+	org.eclipse.swt.cocoa.macosx.x86_64
+	org.eclipse.swt.gtk.linux.x86
+	org.eclipse.swt.gtk.linux.x86_64
+}
+
 location "http://hstaudacher.github.io/osgi-jax-rs-connector/5.2.1/" {
 	com.eclipsesource.jaxrs.consumer [5.2.0.201511150719,5.2.0.201511150719]
 	com.eclipsesource.jaxrs.jersey-min [2.22.1,2.22.1]

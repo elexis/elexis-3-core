@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Juno for Elexis 3.1 (Updated for Java 8)" sequenceNumber="1476860498">
+<target name="Juno for Elexis 3.1 (Updated for Java 8)" sequenceNumber="1487253126">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.osgi" version="3.9.1.v20140110-1610"/>
       <unit id="org.eclipse.osgi.services" version="3.3.100.v20130513-1956"/>
       <unit id="org.eclipse.osgi.util" version="3.2.300.v20130513-1956"/>
       <repository location="http://download.eclipse.org/eclipse/updates/4.3/"/>
+    </location>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.swt" version="3.104.2.v20160212-1350"/>
+      <unit id="org.eclipse.swt.cocoa.macosx.x86_64" version="3.104.2.v20160212-1350"/>
+      <unit id="org.eclipse.swt.gtk.linux.x86" version="3.104.2.v20160212-1350"/>
+      <unit id="org.eclipse.swt.gtk.linux.x86_64" version="3.104.2.v20160212-1350"/>
+      <repository location="http://download.eclipse.org/eclipse/updates/4.5/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="com.eclipsesource.jaxrs.consumer" version="5.2.0.201511150719"/>
