@@ -37,6 +37,10 @@ public class Role extends PersistentObject {
 		addMapping(TABLENAME, FLD_ID, FLD_SYSTEM_ROLE, FLD_EXTINFO,
 			FLD_JOINT_RIGHTS + "=LIST:ROLE_ID:ROLE_RIGHT_JOINT");
 			
+		initTables();
+	}
+	
+	protected static void initTables() {
 		if (!tableExists(TABLENAME)) {
 			executeDBInitScriptForClass(Role.class, null);
 			ACE.initializeACEDefaults(false);

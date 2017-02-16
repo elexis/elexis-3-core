@@ -86,7 +86,7 @@ public class User extends PersistentObject {
 	 * @see https://redmine.medelexis.ch/issues/771
 	 */
 	private static void migrateToNewStructure(){
-		new Role(); // to call the static init header and init the roles
+		Role.initTables();
 		
 		log.info("Starting migration to new user structure");
 		
