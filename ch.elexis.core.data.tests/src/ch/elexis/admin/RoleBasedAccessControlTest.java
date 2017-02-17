@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +47,8 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 		assertTrue("Administrator is denied login", queryRightForUser);
 		
 		List<Right> rights = new Query<Right>(Right.class).execute();
+		System.out.println("Rights set: "
+			+ rights.stream().map(r -> r.getLabel()).collect(Collectors.joining(",")));
 		assertEquals(40, rights.size());
 		List<Role> roles = new Query<Role>(Role.class).execute();
 		assertEquals(6, roles.size());
