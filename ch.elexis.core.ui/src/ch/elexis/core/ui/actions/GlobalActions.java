@@ -114,8 +114,8 @@ public class GlobalActions {
 	public static final String PROPERTIES_COMMAND = "org.eclipse.ui.file.properties"; //$NON-NLS-1$
 	public static final String DEFAULTPERSPECTIVECFG = "/default_perspective"; //$NON-NLS-1$
 	
-	public static IWorkbenchAction exitAction, newWindowAction, copyAction, cutAction, pasteAction;
-	public static IAction loginAction, importAction, aboutAction, helpAction, prefsAction;
+	public static IWorkbenchAction newWindowAction, copyAction, cutAction, pasteAction;
+	public static IAction exitAction, loginAction, importAction, aboutAction, helpAction, prefsAction;
 	public static IAction connectWizardAction, changeMandantAction, savePerspectiveAction, savePerspectiveAsAction;
 	public static IAction savePerspectiveAsDefaultAction, resetPerspectiveAction, homeAction, fixLayoutAction;
 	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette;
@@ -139,7 +139,18 @@ public class GlobalActions {
 		logger = LoggerFactory.getLogger(this.getClass());
 		mainWindow = window;
 		help = Hub.plugin.getWorkbench().getHelpSystem();
-		exitAction = ActionFactory.QUIT.create(window);
+		exitAction = new Action(Messages.GlobalActions_MenuExit) { //$NON-NLS-1$
+			@Override
+			public void run(){
+				// We need to unlock the layout, otherwise
+				// the Workbench shutdown will fail
+				fixLayoutAction.setChecked(Preferences.USR_FIX_LAYOUT_DEFAULT);
+				fixLayoutAction.run();
+				IWorkbenchWindow workbench = Hub.plugin.getWorkbench().getActiveWorkbenchWindow();
+				workbench.close();
+			}
+		};
+		exitAction.setId("menuExit"); //$NON-NLS-1$
 		exitAction.setText(Messages.GlobalActions_MenuExit); //$NON-NLS-1$
 		newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
 		newWindowAction.setText(Messages.GlobalActions_NewWindow); //$NON-NLS-1$
@@ -151,14 +162,11 @@ public class GlobalActions {
 		pasteAction.setText(Messages.GlobalActions_Paste); //$NON-NLS-1$
 		aboutAction = ActionFactory.ABOUT.create(window);
 		aboutAction.setText(Messages.GlobalActions_MenuAbout); //$NON-NLS-1$
-		// helpAction=ActionFactory.HELP_CONTENTS.create(window);
-		// helpAction.setText(Messages.getString("GlobalActions.HelpIndex")); //$NON-NLS-1$
 		prefsAction = ActionFactory.PREFERENCES.create(window);
 		prefsAction.setText(Messages.GlobalActions_Preferences); //$NON-NLS-1$
 		savePerspectiveAction = new Action(Messages.GlobalActions_SavePerspective) { //$NON-NLS-1$
 				{
 					setId("savePerspektive"); //$NON-NLS-1$
-					// setActionDefinitionId(Hub.COMMAND_PREFIX+"savePerspektive"); //$NON-NLS-1$
 					setToolTipText(Messages.GlobalActions_SavePerspectiveToolTip); //$NON-NLS-1$
 					setImageDescriptor(Images.IMG_DISK.getImageDescriptor()); //$NON-NLS-1$
 				}
@@ -200,7 +208,6 @@ public class GlobalActions {
 			};
 		savePerspectiveAsAction = ActionFactory.SAVE_PERSPECTIVE.create(window);
 		
-		// ActionFactory.SAVE_PERSPECTIVE.create(window);
 		resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create(window);
 		resetPerspectiveAction.setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
 		
@@ -215,8 +222,6 @@ public class GlobalActions {
 				
 				@Override
 				public void run(){
-					// String
-					// perspektive=CoreHub.actUser.getInfoString("StartPerspektive");
 					String perspektive =
 						CoreHub.localCfg.get(CoreHub.actUser + DEFAULTPERSPECTIVECFG, null);
 					if (StringTool.isNothing(perspektive)) {
@@ -225,7 +230,6 @@ public class GlobalActions {
 					try {
 						IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						PlatformUI.getWorkbench().showPerspective(perspektive, win);
-						// Hub.heart.resume(true);
 					} catch (Exception ex) {
 						ExHandler.handle(ex);
 					}
@@ -234,14 +238,12 @@ public class GlobalActions {
 		savePerspectiveAsDefaultAction = new Action(Messages.GlobalActions_saveasstartperspective) { //$NON-NLS-1$
 				{
 					setId("start"); //$NON-NLS-1$
-					// setActionDefinitionId(Hub.COMMAND_PREFIX+"startPerspective");
 				}
 				
 				@Override
 				public void run(){
 					IPerspectiveDescriptor p = mainWindow.getActivePage().getPerspective();
 					CoreHub.localCfg.set(CoreHub.actUser + DEFAULTPERSPECTIVECFG, p.getId());
-					// CoreHub.actUser.setInfoElement("StartPerspektive",p.getId());
 				}
 				
 			};
@@ -266,7 +268,6 @@ public class GlobalActions {
 						dlg.create();
 						dlg.setTitle(Messages.GlobalActions_LoginDialogTitle); //$NON-NLS-1$
 						dlg.setMessage(Messages.GlobalActions_LoginDialogMessage); //$NON-NLS-1$
-						// dlg.getButton(IDialogConstants.CANCEL_ID).setText("Beenden");
 						dlg.getShell().setText(Messages.GlobalActions_LoginDialogShelltext); //$NON-NLS-1$
 						if (dlg.open() == Dialog.CANCEL) {
 							exitAction.run();
@@ -315,7 +316,6 @@ public class GlobalActions {
 		changeMandantAction = new Action(Messages.GlobalActions_Mandator) { //$NON-NLS-1$
 				{
 					setId("changeMandant"); //$NON-NLS-1$
-					// setActionDefinitionId(Hub.COMMAND_PREFIX+"changeMandant"); //$NON-NLS-1$
 				}
 				
 				@Override
@@ -528,13 +528,8 @@ public class GlobalActions {
 								Messages.GlobalActions_Error, Messages //$NON-NLS-1$
 								.GlobalActions_BillErrorMessage, ResultAdapter //$NON-NLS-1$
 									.getResultAsStatus(res));
-							// Rechnung rn=(Rechnung)res.get();
-							// rn.storno(true);
-							// rn.delete();
-							
 						}
 					}
-					// setFall(actFall,null);
 				}
 			};
 		moveBehandlungAction = new LockedAction<Konsultation>(Messages.GlobalActions_AssignCase) {
@@ -620,7 +615,6 @@ public class GlobalActions {
 					try {
 						Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 							.showView(FallDetailView.ID);
-						// getViewSite().getPage().showView(FallDetailView.ID);
 					} catch (Exception ex) {
 						ExHandler.handle(ex);
 					}
@@ -859,7 +853,6 @@ public class GlobalActions {
 	 */
 	public void adaptForUser(){
 		setMenuForUser(AC_EXIT, exitAction);
-		// setMenuForUser(AC_UPDATE,updateAction); //$NON-NLS-1$
 		setMenuForUser(AC_NEWWINDOW, newWindowAction);
 		setMenuForUser(AC_LOGIN, loginAction);
 		setMenuForUser(AC_IMORT, importAction);
@@ -867,7 +860,6 @@ public class GlobalActions {
 		setMenuForUser(AC_HELP, helpAction);
 		setMenuForUser(AC_PREFS, prefsAction);
 		setMenuForUser(AC_CHANGEMANDANT, changeMandantAction);
-		// setMenuForUser("importTarmedAction",importTarmedAction);
 		setMenuForUser(AC_CONNECT, connectWizardAction);
 		if (CoreHub.acl.request(AC_SHOWPERSPECTIVE) == true) {
 			perspectiveList.setVisible(true);
@@ -885,11 +877,8 @@ public class GlobalActions {
 			boolean fixLayoutChecked =
 				CoreHub.userCfg.get(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
 			fixLayoutAction.setChecked(fixLayoutChecked);
-			// System.err.println("fixLayoutAction: set to " +
-			// fixLayoutChecked);
 		} else {
 			fixLayoutAction.setChecked(Preferences.USR_FIX_LAYOUT_DEFAULT);
-			// System.err.println("fixLayoutAction: reset to false");
 		}
 	}
 	
