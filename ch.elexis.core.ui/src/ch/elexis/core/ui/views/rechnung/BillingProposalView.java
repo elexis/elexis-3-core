@@ -267,6 +267,11 @@ public class BillingProposalView extends ViewPart {
 		return Collections.emptyList();
 	}
 	
+	public void removeToBill(List<BillingInformation> list){
+		((BillingInformationContentProvider) viewer.getContentProvider()).removeContent(list);
+		viewer.refresh();
+	}
+	
 	public ProposalLetter getToPrint(){
 		BillingInformationContentProvider contentProvider =
 			((BillingInformationContentProvider) viewer.getContentProvider());
@@ -549,6 +554,10 @@ public class BillingProposalView extends ViewPart {
 		
 		public BillingInformationContentProvider(StructuredViewer viewer){
 			this.viewer = viewer;
+		}
+		
+		public void removeContent(List<BillingInformation> list){
+			currentContent.removeAll(list);
 		}
 		
 		public void resolveAll(){

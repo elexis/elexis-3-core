@@ -23,6 +23,7 @@ import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
+import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.Rechnungssteller;
 import ch.elexis.data.Verrechnet;
@@ -40,37 +41,241 @@ import ch.rgw.tools.TimeTool;
  */
 public class BillingUtil {
 	
+	public static String BILLINGCHECK_ENABLED_CFG = "ch.elexis.core.data/billablecheck/";
+	
+	/**
+	 * Interface definition for checking a {@link Konsultation} if it can be included on a bill.
+	 * 
+	 */
+	public static interface IBillableCheck {
+		/**
+		 * Get a unique id of the check.
+		 * 
+		 * @return
+		 */
+		public String getId();
+		
+		/**
+		 * Get a human readable description of the check.
+		 * 
+		 * @return
+		 */
+		public String getDescription();
+		
+		/**
+		 * Test if the {@link Konsultation} is bill able. If no the error is added to the
+		 * {@link Result}.
+		 * 
+		 * @param konsultation
+		 * @param result
+		 * @return
+		 */
+		public boolean isBillable(Konsultation konsultation, Result<Konsultation> result);
+	}
+	
+	/**
+	 * Array of {@link IBillableCheck} implementations. Implementations can be disabled or enabled
+	 * using {@link BillingUtil#setCheckEnabled(IBillableCheck, boolean)}.
+	 * 
+	 */
+	public static IBillableCheck[] billableChecks = {
+		// Check for zero sales.
+		new IBillableCheck() {
+			@Override
+			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
+				boolean fail = getTotal(konsultation).isZero();
+				if (fail) {
+					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+				}
+				return !fail;
+			}
+			
+			@Override
+			public String getId(){
+				return "zeroSales";
+			}
+
+			@Override
+			public String getDescription(){
+				return "Behandlung mit Umsatz 0";
+			}
+		},
+		// Check for invalid Mandant.
+		new IBillableCheck() {
+			@Override
+			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
+				Mandant mandant = konsultation.getMandant();
+				boolean fail = (mandant == null || !mandant.isValid());
+				if (fail) {
+					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+				}
+				return !fail;
+			}
+			
+			@Override
+			public String getId(){
+				return "invalidMandant";
+			}
+			
+			@Override
+			public String getDescription(){
+				return "Ungültiger Mandant";
+			}
+		},
+		// Check for missing coverage.
+		new IBillableCheck() {
+			@Override
+			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
+				Fall fall = konsultation.getFall();
+				boolean fail = (fall == null);
+				if (fail) {
+					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+				}
+				return !fail;
+			}
+			
+			@Override
+			public String getId(){
+				return "noCoverage";
+			}
+			
+			@Override
+			public String getDescription(){
+				return "Fehlender Fall";
+			}
+		},
+		// Check for invalid coverage.
+		new IBillableCheck() {
+			@Override
+			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
+				Fall fall = konsultation.getFall();
+				boolean fail = (fall != null
+					&& CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
+					&& !fall.isValid());
+				if (fail) {
+					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+				}
+				return !fail;
+			}
+			
+			@Override
+			public String getId(){
+				return "invalidCoverage";
+			}
+			
+			@Override
+			public String getDescription(){
+				return "Fall nicht gültig";
+			}
+		},
+		// Check for missing diagnose.
+		new IBillableCheck() {
+			@Override
+			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
+				ArrayList<IDiagnose> diagnosen = konsultation.getDiagnosen();
+				boolean fail = (diagnosen == null || diagnosen.isEmpty());
+				if (fail) {
+					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+				}
+				return !fail;
+			}
+			
+			@Override
+			public String getId(){
+				return "noDiagnose";
+			}
+			
+			@Override
+			public String getDescription(){
+				return "Keine Diagnose";
+			}
+		},
+		// Check for invalid date.
+		new IBillableCheck() {
+			private TimeTool checkTool = new TimeTool();
+			
+			@Override
+			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
+				boolean fail = (checkTool.set(konsultation.getDatum()) == false);
+				if (fail) {
+					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+				}
+				return !fail;
+			}
+			
+			@Override
+			public String getId(){
+				return "invalidDate";
+			}
+			
+			@Override
+			public String getDescription(){
+				return "Ungültiges Datum";
+			}
+		},
+		// Check for missing diagnose in open Konsultation series. 
+		new IBillableCheck() {
+			@Override
+			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
+				boolean fail = false;
+				ArrayList<IDiagnose> diagnosen = konsultation.getDiagnosen();
+				if (diagnosen == null || diagnosen.isEmpty()) {
+					fail = true;
+					// get other open konsultation of the case
+					Query<Konsultation> query = new Query<>(Konsultation.class);
+					query.add(Konsultation.FLD_BILL_ID, Query.EQUALS, null);
+					query.add(Konsultation.FLD_CASE_ID, Query.EQUALS,
+						konsultation.getFall().getId());
+					List<Konsultation> openKonsultationen = query.execute();
+					for (Konsultation openKons : openKonsultationen) {
+						ArrayList<IDiagnose> diag = openKons.getDiagnosen();
+						if (diag != null && !diag.isEmpty()) {
+							fail = false;
+							break;
+						}
+					}
+					if (fail) {
+						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+					}
+				}
+				return !fail;
+			}
+			
+			@Override
+			public String getId(){
+				return "noDiagnoseInSeries";
+			}
+			
+			@Override
+			public String getDescription(){
+				return "Keine Diagnose in der Behandlungsserie";
+			}
+		}
+	};
+	
+	public static boolean isCheckEnabled(IBillableCheck check){
+		return CoreHub.globalCfg.get(BILLINGCHECK_ENABLED_CFG + check.getId(), true);
+	}
+	
+	public static void setCheckEnabled(IBillableCheck check, boolean enabled){
+		CoreHub.globalCfg.set(BILLINGCHECK_ENABLED_CFG + check.getId(), enabled);
+	}
+	
 	/**
 	 * Test if the {@link Konsultation} can be billed, and return a {@link Result} containing
-	 * possible error messages.
+	 * possible error messages. {@link IBillableCheck} are applied if enabled.
 	 * 
 	 * @param konsultation
 	 * @return
 	 */
 	public static Result<Konsultation> getBillableResult(Konsultation konsultation){
-		TimeTool checkTool = new TimeTool();
+		
 		Result<Konsultation> result = new Result<>(konsultation);
-		if (getTotal(konsultation).isZero()) {
-			result.add(SEVERITY.ERROR, 1, "Behandlung mit Umsatz 0", konsultation, false);
-		}
-		Mandant mandant = konsultation.getMandant();
-		if (mandant == null || !mandant.isValid()) {
-			result.add(SEVERITY.ERROR, 1, "Ungültiger Mandant", konsultation, false);
-		}
-		Fall fall = konsultation.getFall();
-		if (fall == null) {
-			result.add(SEVERITY.ERROR, 1, "Fehlender Fall", konsultation, false);
-		}
-		if (fall != null && CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
-			&& !fall.isValid()) {
-			result.add(SEVERITY.ERROR, 1, "Fall nicht gültig", konsultation, false);
-		}
-		ArrayList<IDiagnose> diagnosen = konsultation.getDiagnosen();
-		if (diagnosen == null || diagnosen.isEmpty()) {
-			result.add(SEVERITY.ERROR, 1, "Keine Diagnose", konsultation, false);
-		}
-		if (checkTool.set(konsultation.getDatum()) == false) {
-			result.add(SEVERITY.ERROR, 1, "Ungültiges Datum", konsultation, false);
+		
+		for (IBillableCheck iBillableCheck : billableChecks) {
+			if (isCheckEnabled(iBillableCheck)) {
+				iBillableCheck.isBillable(konsultation, result);
+			}
 		}
 		return result;
 	}
