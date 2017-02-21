@@ -272,6 +272,16 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.core.ui.views.rechnung.BillingProposalView">
+         <command
+               commandId="ch.elexis.core.ui.BillingProposalViewRemove"
+               icon="icon://IMG_DELETE"
+               label="aus Vorschlag entfernen"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -404,6 +414,12 @@
             class="ch.elexis.core.ui.preferences.AccountsPreferencePage"
             id="ch.elexis.core.ui.billing.accounts"
             name="%elexis.accounts">
+      </page>
+      <page
+            category="ch.elexis.Leistungscodes"
+            class="ch.elexis.core.ui.preferences.BillingChecksPreferencePage"
+            id="ch.elexis.core.ui.billing.accounts"
+            name="%elexis.billingcheck">
       </page>
    </extension>
       <extension
@@ -659,6 +675,10 @@
             id="ch.elexis.core.ui.PrintBillingProposalView"
             name="Print billing proposal">
       </command>
+      <command
+            id="ch.elexis.core.ui.BillingProposalViewRemove"
+            name="Remove from proposal">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -770,6 +790,13 @@
          <handler
                class="ch.elexis.core.ui.commands.PrintBillingProposalHandler"
                commandId="ch.elexis.core.ui.PrintBillingProposalView">
+         </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.BillingProposalRemoveHandler"
+               commandId="ch.elexis.core.ui.BillingProposalViewRemove">
+         </handler>
+         <handler
+               commandId="ch.elexis.core.ui.BillingProposalViewRemove">
          </handler>
       </extension>
 </plugin>
