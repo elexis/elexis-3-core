@@ -1,7 +1,6 @@
 package ch.elexis.data;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -9,8 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.IStockService.Availability;
@@ -22,26 +19,37 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 		super(link);
 	}
 	
-	private Stock defaultStock;
-	private Stock stock_A_5_public;
-	private Stock stock_B_10_private;
-	private Mandant stock_B_10_owner;
+	private static Stock defaultStock;
+	private static Stock stock_A_5_public;
+	private static Stock stock_B_10_private;
+	private static Mandant stock_B_10_owner;
 	
-	private Artikel artikel_A;
-	private Artikel artikel_B;
-	private Artikel artikel_C;
+	private static Artikel artikel_A;
+	private static Artikel artikel_B;
+	private static Artikel artikel_C;
 	
 	private static StockService stockService = CoreHub.getStockService();
 	
 	@Before
-	public void init(){
-		User user = User.load("Administrator");
-		// set user in system
-		ElexisEventDispatcher.getInstance()
-			.fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
+	public void before(){		
+		Query<Stock> qre = new Query<Stock>(Stock.class);
+		qre.add(Stock.FLD_CODE, Query.EQUALS, "A");
+		List<Stock> execute = qre.execute();
+		if (execute.size() > 0) {
+			stock_A_5_public = execute.get(0);
+		} else {
+			stock_A_5_public = new Stock("A", 5);
+		}
 		
-		stock_A_5_public = new Stock("A", 5);
-		stock_B_10_private = new Stock("PRV", 10);
+		qre.clear();
+		qre.add(Stock.FLD_CODE, Query.EQUALS, "PRV");
+		execute = qre.execute();
+		if (execute.size() > 0) {
+			stock_B_10_private = execute.get(0);
+		} else {
+			stock_B_10_private = new Stock("PRV", 10);
+		}
+		
 		stock_B_10_owner = new Mandant("Mandant", "Musterfrau", "26081950", "s");
 		stock_B_10_private.setOwner(stock_B_10_owner);
 		
@@ -69,9 +77,10 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 	
 	@Test
 	public void testCreateEditAndDeleteStock(){
+		int size = stockService.getAllStocks(true).size();
 		Stock stock = new Stock("TMP", 3);
 		List<Stock> allStocks = stockService.getAllStocks(true);
-		assertTrue(allStocks.size() >= 4);
+		assertEquals(size + 1, allStocks.size());
 		for (int i = 0; i < allStocks.size(); i++) {
 			Stock s = allStocks.get(i);
 			if (i == 0) {
@@ -92,7 +101,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 		}
 		stock.delete();
 		allStocks = stockService.getAllStocks(true);
-		assertEquals(3, allStocks.size());
+		assertEquals(size, allStocks.size());
 	}
 	
 	@Test
