@@ -3,6 +3,7 @@ package ch.elexis.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,6 +39,11 @@ public class Test_OrderService extends AbstractPersistentObjectTest {
 		stockEntry.setCurrentStock(10);
 		stockEntry.setMaximumStock(15);
 		
+	}
+	
+	@AfterClass
+	public static void afterClass() {
+		stock_A_5_order.removeFromDatabase();
 	}
 	
 	@Test
