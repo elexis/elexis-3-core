@@ -18,15 +18,14 @@ public class Test_Patient extends AbstractPersistentObjectTest {
 		final String familyNameWithApostrophe = "D'Andrea";
 		Patient male = new Patient("Mustermann", "Max", "1.1.2000", "m");
 		male.set(Patient.FLD_NAME, familyNameWithApostrophe);
-		System.out.println("male.getName() is " + male.getName());
 		assert (male.getName() == familyNameWithApostrophe);
 		
 		// query it
 		Query<Patient> qbe = new Query<Patient>(Patient.class);
 		qbe.add(Patient.FLD_NAME, Query.LIKE, familyNameWithApostrophe);
 		List<Patient> res = qbe.execute();
-//		System.out.println("Search via " + dbFlavor + " returned " + res.size() + " patients");
 		assert (res.size() == 1);
+		male.delete();
 	}
 	
 	@Test

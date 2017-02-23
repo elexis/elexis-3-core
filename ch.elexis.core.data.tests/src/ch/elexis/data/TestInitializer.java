@@ -2,15 +2,18 @@ package ch.elexis.data;
 
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
 public class TestInitializer {
 	
-	public static final String FLAVOR_H2 = "h2";
+	public static final String FLAVOR_H2_MEM = "h2";
 	public static final String FLAVOR_MYSQL = "mysql";
 	public static final String FLAVOR_POSTGRES = "postgresql";
 	
@@ -21,7 +24,7 @@ public class TestInitializer {
 	 */
 	public static JdbcLink initTestDBConnection(String dbflavor){
 		JdbcLink link = null;
-		if (dbflavor == FLAVOR_H2) {
+		if (dbflavor == FLAVOR_H2_MEM) {
 			link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "h2");
 		} else if (dbflavor == FLAVOR_MYSQL) {
 			link = JdbcLink.createMySqlLink("localhost", "unittests");
@@ -57,5 +60,32 @@ public class TestInitializer {
 		} finally {
 			connection.releaseStatement(stm);
 		}
+	}
+	
+	public static JdbcLink initDemoDbConnection(){
+		String demoDBLocation = System.getProperty(ElexisSystemPropertyConstants.DEMO_DB_LOCATION);
+		if (demoDBLocation == null) {
+			demoDBLocation = CoreHub.getWritableUserDir() + File.separator + "demoDB";
+		}
+		
+		File demo = new File(demoDBLocation);
+		
+		// --
+		// returns if either, demo db, direct connection or run from scratch
+		// --
+		if (demo.exists() && demo.isDirectory()) {
+			// open demo database connection
+			JdbcLink link = JdbcLink.createH2Link(demo.getAbsolutePath() + File.separator + "db");
+			try {
+				boolean connectionOk = link.connect("sa", "");
+				if (connectionOk) {
+					return link;
+				}
+			} catch (Exception jle) {
+				jle.printStackTrace();
+				link = null;
+			}
+		}
+		return null;
 	}
 }

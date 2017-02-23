@@ -30,7 +30,8 @@ public class AllDataTests {
 	public static final boolean PERFORM_UPDATE_TESTS = false;
 	
 	static {
-		JdbcLink h2JdbcLink = TestInitializer.initTestDBConnection(TestInitializer.FLAVOR_H2);
+		JdbcLink h2JdbcLink = TestInitializer.initTestDBConnection(TestInitializer.FLAVOR_H2_MEM);
+		JdbcLink h2DemoDbJdbcLink = TestInitializer.initDemoDbConnection();
 		JdbcLink mySQLJdbcLink = TestInitializer.initTestDBConnection(TestInitializer.FLAVOR_MYSQL);
 		JdbcLink pgJdbcLink = TestInitializer.initTestDBConnection(TestInitializer.FLAVOR_POSTGRES);
 		
@@ -38,6 +39,11 @@ public class AllDataTests {
 		AllDataTests.connections.add(new Object[] {
 			h2JdbcLink
 		});
+		if (h2DemoDbJdbcLink != null) {
+			AllDataTests.connections.add(new Object[] {
+				h2DemoDbJdbcLink
+			});
+		}
 		if (mySQLJdbcLink != null) {
 			AllDataTests.connections.add(new Object[] {
 				mySQLJdbcLink

@@ -204,6 +204,18 @@ public class Test_Query extends AbstractPersistentObjectTest {
 	}
 	
 	@Test
+	public void testQueryWithApostrophe() {
+		Patient testPatient = new Patient("D'Andrea", "Max", "1.1.2000", "m");
+		assertEquals("D'Andrea", testPatient.getName());
+		Query<Person> qre = new Query<Person>(Person.class);
+		qre.add(Person.FLD_NAME1, Query.EQUALS, "D'Andrea");
+		List<Person> result = qre.execute();
+		assertEquals(1, result.size());
+		assertEquals("D'Andrea", result.get(0).getName());
+		testPatient.delete();
+	}
+	
+	@Test
 	public void testQueryMappedExpression(){
 		final String MappingName = "TitelSuffix";
 		PreparedStatement ps = getLink().getPreparedStatement(
