@@ -23,6 +23,8 @@ public class Test_TimeTool {
 		assertTrue(containsDigit(duration));
 		String[] split = splitByFormat(timeTool.getDaysFormat(1));
 		assertTrue(split.length == 2);
+		assertNotNull(timeTool.toString(), split[0]);
+		assertNotNull(timeTool.toString(), split[1]);
 		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -32,16 +34,25 @@ public class Test_TimeTool {
 		assertTrue(containsDigit(duration));
 		split = splitByFormat(timeTool.getDaysFormat(-1));
 		assertTrue(split.length == 2);
-		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
+		assertNotNull(timeTool.toString(), split[0]);
+		assertNotNull(timeTool.toString(), split[1]);
+		assertTrue(timeTool.toString(),
+			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
 		timeTool.addDays(15);
+		// in order not to break the week / day barrier in 
+		// timeTool.getDurationToNowString() due to the required time for test execution
+		timeTool.addSeconds(10);
 		duration = timeTool.getDurationToNowString();
 		assertNotNull(timeTool.toString(), duration);
 		assertTrue(containsDigit(duration));
 		split = splitByFormat(timeTool.getWeeksFormat(2));
 		assertTrue(split.length == 2);
-		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
+		assertNotNull(timeTool.toString(), split[0]);
+		assertNotNull(timeTool.toString(), split[1]);
+		assertTrue(timeTool.toString() + ": " + duration + " | " + split[0] + " | " + split[1],
+			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
 		timeTool.addDays(-15);
@@ -50,7 +61,10 @@ public class Test_TimeTool {
 		assertTrue(containsDigit(duration));
 		split = splitByFormat(timeTool.getWeeksFormat(-2));
 		assertTrue(split.length == 2);
-		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
+		assertNotNull(timeTool.toString(), split[0]);
+		assertNotNull(timeTool.toString(), split[1]);
+		assertTrue(timeTool.toString(),
+			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
 		timeTool.addDays(62);
@@ -59,7 +73,10 @@ public class Test_TimeTool {
 		assertTrue(containsDigit(duration));
 		split = splitByFormat(timeTool.getMonthsFormat(2));
 		assertTrue(split.length == 2);
-		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
+		assertNotNull(timeTool.toString(), split[0]);
+		assertNotNull(timeTool.toString(), split[1]);
+		assertTrue(timeTool.toString(),
+			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
 		timeTool.addDays(-62);
@@ -68,7 +85,10 @@ public class Test_TimeTool {
 		assertTrue(containsDigit(duration));
 		split = splitByFormat(timeTool.getMonthsFormat(-2));
 		assertTrue(split.length == 2);
-		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
+		assertNotNull(timeTool.toString(), split[0]);
+		assertNotNull(timeTool.toString(), split[1]);
+		assertTrue(timeTool.toString(),
+			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
 		timeTool.addDays(732);
@@ -77,7 +97,10 @@ public class Test_TimeTool {
 		assertTrue(containsDigit(duration));
 		split = splitByFormat(timeTool.getYearsFormat(2));
 		assertTrue(split.length == 2);
-		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
+		assertNotNull(timeTool.toString(), split[0]);
+		assertNotNull(timeTool.toString(), split[1]);
+		assertTrue(timeTool.toString(),
+			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
 		timeTool.addDays(-732);
@@ -86,7 +109,10 @@ public class Test_TimeTool {
 		assertTrue(containsDigit(duration));
 		split = splitByFormat(timeTool.getYearsFormat(-2));
 		assertTrue(split.length == 2);
-		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
+		assertNotNull(timeTool.toString(), split[0]);
+		assertNotNull(timeTool.toString(), split[1]);
+		assertTrue(timeTool.toString(),
+			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 	}
 	
 	private boolean containsDigit(String duration){
