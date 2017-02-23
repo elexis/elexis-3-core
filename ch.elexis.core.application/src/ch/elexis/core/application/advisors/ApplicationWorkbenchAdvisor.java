@@ -32,6 +32,7 @@ import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.data.Reminder;
 import ch.rgw.tools.ExHandler;
@@ -113,7 +114,9 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public boolean preShutdown(){
-		CoreHub.userCfg.set(Preferences.USR_FIX_LAYOUT, false);
+		if (GlobalActions.fixLayoutAction != null) {
+			GlobalActions.fixLayoutAction.setChecked(false);
+		}
 		return super.preShutdown();
 	}
 	
