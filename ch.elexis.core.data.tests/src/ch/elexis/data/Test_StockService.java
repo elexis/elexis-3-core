@@ -83,8 +83,10 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 				assertEquals("TMP", s.getCode());
 			} else if (i == 2) {
 				assertEquals(Integer.valueOf(5), Integer.valueOf(s.getPriority()));
+				assertEquals("A", s.getCode());
 			} else if (i == 3) {
 				assertEquals(Integer.valueOf(10), Integer.valueOf(s.getPriority()));
+				assertEquals("PRV", s.getCode());
 				assertEquals(stock_B_10_owner.getId(), s.getOwner().getId());
 			}
 		}
@@ -206,5 +208,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 		qbe.add(StockEntry.FLD_CURRENT, Query.LESS_OR_EQUAL, StockEntry.FLD_MIN);
 		List<StockEntry> execute = qbe.execute();
 		assertEquals(1, execute.size());
+		
+		stock.removeFromDatabase();
 	}
 }
