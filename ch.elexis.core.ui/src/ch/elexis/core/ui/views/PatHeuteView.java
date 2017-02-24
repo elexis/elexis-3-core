@@ -153,7 +153,6 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	
 	@Override
 	public void createPartControl(final Composite parent){
-		setPartName(Messages.PatHeuteView_partName); //$NON-NLS-1$
 		parent.setLayout(new GridLayout());
 		this.parent = parent;
 		makeActions();
