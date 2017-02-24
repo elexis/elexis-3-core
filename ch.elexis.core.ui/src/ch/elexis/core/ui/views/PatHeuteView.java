@@ -59,6 +59,8 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
+import com.tiff.common.ui.datepicker.DatePickerCombo;
+
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -104,8 +106,6 @@ import ch.rgw.tools.IFilter;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
-
-import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 public class PatHeuteView extends ViewPart implements IActivationListener, ISaveablePart2,
 		BackgroundJobListener {
@@ -446,7 +446,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 						sc = new StatCounter(v.getVerrechenbar());
 						counter.put(v.getVerrechenbar(), sc);
 					}
-					sc.add(v.getZahl(), v.getEffPreis(), v.getKosten());
+					sc.add(v.getZahl(), v.getNettoPreis(), v.getKosten());
 				}
 				monitor.worked(1);
 				if (monitor.isCanceled()) {
