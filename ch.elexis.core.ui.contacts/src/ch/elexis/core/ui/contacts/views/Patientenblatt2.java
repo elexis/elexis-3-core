@@ -1088,8 +1088,6 @@ public class Patientenblatt2 extends Composite implements IActivationListener {
 		hHA.setEnabled(!bLock);
 		// delZA.setEnabled(!bLock);
 		removeZAAction.setEnabled(!bLock);
-		dmd.setEnabled(!bLock);
-		dmd.redraw();
 		if (bLock) {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
 			lockAction.setImageDescriptor(Images.IMG_LOCK_CLOSED.getImageDescriptor());
