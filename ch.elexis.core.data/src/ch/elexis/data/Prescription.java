@@ -310,16 +310,24 @@ public class Prescription extends PersistentObject {
 			//			if (signature.matches("^[0-9]/[0-9]$")) {
 			if (signature.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
 				String[] split = signature.split("[xX]");//$NON-NLS-1$
-				System.arraycopy(split, 0, daytimeSignature, 0, split.length);
+				if (split.length > 0 && split.length < 5) {
+					System.arraycopy(split, 0, daytimeSignature, 0, split.length);
+					return getDayTimeOrFreetextSignatureArray(daytimeSignature);
+				}
 			} else if (signature.indexOf('-') != -1) {
 				String[] split = signature.split("[-]"); //$NON-NLS-1$
-				System.arraycopy(split, 0, daytimeSignature, 0, split.length);
+				if (split.length > 0 && split.length < 5) {
+					System.arraycopy(split, 0, daytimeSignature, 0, split.length);
+					return getDayTimeOrFreetextSignatureArray(daytimeSignature);
+				}
 			} else if (signature.indexOf("/") != -1) {
 				String[] split = signature.split("[/]"); //$NON-NLS-1$
-				System.arraycopy(split, 0, daytimeSignature, 0, split.length);
-			} else {
-				daytimeSignature[0] = signature;
+				if (split.length > 0 && split.length < 5) {
+					System.arraycopy(split, 0, daytimeSignature, 0, split.length);
+					return getDayTimeOrFreetextSignatureArray(daytimeSignature);
+				}
 			}
+			daytimeSignature[0] = signature;
 		}
 		return getDayTimeOrFreetextSignatureArray(daytimeSignature);
 	}

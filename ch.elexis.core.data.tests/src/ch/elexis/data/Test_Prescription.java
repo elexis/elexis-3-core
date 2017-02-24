@@ -1,6 +1,9 @@
 package ch.elexis.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -267,7 +270,27 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		assert (res != null);
 		assertEquals(4, res.size());
 		assertEquals(Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f), res);
+	}
+	
+	@Test
+	public void testGetSignatureAsStringArray(){
+		String[] res = Prescription.getSignatureAsStringArray("1-1-1-1");
+		assert (res != null);
+		assertEquals(4, res.length);
+		assertEquals("1", res[0]);
+		assertFalse(res[1].isEmpty());
 		
+		res = Prescription.getSignatureAsStringArray("1-0-0-0 (bis 08/15)");
+		assertNotNull(res);
+		assertEquals(4, res.length);
+		assertEquals("1-0-0-0 (bis 08/15)", res[0]);
+		assertTrue(res[1].isEmpty());
+		
+		res = Prescription.getSignatureAsStringArray("1/2-0-0-0-0-0");
+		assertNotNull(res);
+		assertEquals(4, res.length);
+		assertEquals("1/2-0-0-0-0-0", res[0]);
+		assertTrue(res[1].isEmpty());
 	}
 	
 	private boolean testOneDoses(TestItem item2test){
