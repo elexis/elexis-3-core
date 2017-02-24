@@ -31,6 +31,8 @@ import org.eclipse.nebula.widgets.nattable.style.Style;
 import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -62,8 +64,6 @@ public class NatTableFactory {
 		NatTableWrapper natTableWrapper = new NatTableWrapper();
 		
 		DataLayer bodyDataLayer = new DataLayer(dataProvider);
-		bodyDataLayer.setColumnPercentageSizing(true);
-		bodyDataLayer.setColumnWidthPercentageByPosition(0, 100);
 		// disable drawing cells lines
 		SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer) {
 			private CellLayerPainter painter = new CellLayerPainter();
@@ -84,14 +84,41 @@ public class NatTableFactory {
 		if (customConfiguration != null) {
 			natTable.addConfiguration(customConfiguration);
 		}
-		
 		natTableWrapper.setNatTable(natTable);
 		natTableWrapper.setDataProvider((IRowDataProvider<Object>) dataProvider);
 		natTableWrapper.setSelectionLayer(selectionLayer);
 		
 		natTableWrapper.configure();
+		// workaround for setting column with to 100% as this is currently broken due to a SWT update of Elexis
+		// TODO revert after NatTable / Target update for Elexis 3.3
+		// bodyDataLayer.setColumnPercentageSizing(true);
+		// bodyDataLayer.setColumnWidthPercentageByPosition(0, 100);
+		natTable.addControlListener(new ResizeColumnListener(bodyDataLayer));
 		
 		return natTableWrapper;
+	}
+	
+	private static class ResizeColumnListener implements ControlListener {
+		
+		private DataLayer bodyDataLayer;
+		
+		public ResizeColumnListener(DataLayer bodyDataLayer){
+			this.bodyDataLayer = bodyDataLayer;
+		}
+		
+		@Override
+		public void controlMoved(ControlEvent e){
+			// do nothing
+			
+		}
+		
+		@Override
+		public void controlResized(ControlEvent e){
+			if(e.widget instanceof NatTable) {
+				this.bodyDataLayer.setColumnWidthByPosition(0,
+					((NatTable) e.widget).getBounds().width - 25);
+			}
+		}
 	}
 	
 	public static class DefaultSingleColumnStyleConfiguration
