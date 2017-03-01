@@ -80,7 +80,9 @@ public class KontaktSelectionComposite extends Composite implements ISelectionPr
 			this.kontakt.add(kontakt);
 		} else {
 			this.kontakt.clear();
-			this.kontakt.add(kontakt);
+			if (kontakt != null) {
+				this.kontakt.add(kontakt);
+			}
 		}
 		if (this.kontakt != null && !this.kontakt.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
