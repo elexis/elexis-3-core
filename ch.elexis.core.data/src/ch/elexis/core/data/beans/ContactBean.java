@@ -495,6 +495,12 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		Gender sex;
 		
 		public ContactCache(){
+			// make sure Patient field mapping is initialized
+			if (PersistentObject.map(Patient.TABLENAME, Patient.FLD_PATID)
+				.startsWith(PersistentObject.MAPPING_ERROR_MARKER)) {
+				Patient.load("0");
+			}
+			
 			String[] labels = new String[14];
 			entity.get(new String[] {
 				Kontakt.FLD_DELETED, Kontakt.FLD_IS_PERSON, Kontakt.FLD_IS_ORGANIZATION,
