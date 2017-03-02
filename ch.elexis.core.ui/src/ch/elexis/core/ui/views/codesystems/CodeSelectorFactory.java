@@ -23,6 +23,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -40,7 +41,9 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +60,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -653,5 +657,55 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				}
 			}
 		});
+	}
+	
+	/**
+	 * Test if the {@link CodeSelectorFactory} implementation has a context menu, that should be
+	 * registered with the workbench.
+	 * 
+	 * @return
+	 */
+	public boolean hasContextMenu(){
+		return getSelectionProvider() != null && getMenuManager() != null;
+	}
+	
+	/**
+	 * Get the {@link ISelectionProvider} of this {@link CodeSelectorFactory}. Override this method
+	 * and {@link #getMenuManager()}, so a {@link IViewPart} can register the context menu with the
+	 * workbench using
+	 * {@link #activateContextMenu(IWorkbenchPartSite, DelegatingSelectionProvider, String)}.
+	 * 
+	 * @return
+	 */
+	public ISelectionProvider getSelectionProvider(){
+		return null;
+	}
+	
+	/**
+	 * Get the {@link MenuManager} of this {@link MenuManager}. Override this method and
+	 * {@link #getSelectionProvider()}, so a {@link IViewPart} can register the context menu with
+	 * the workbench using
+	 * {@link #activateContextMenu(IWorkbenchPartSite, DelegatingSelectionProvider, String)}.
+	 * 
+	 * @return
+	 */
+	public MenuManager getMenuManager(){
+		return null;
+	}
+	
+	/**
+	 * Registers the context menu, if {@link #hasContextMenu()} returns true, with the site. The id
+	 * of the context menu is viewId plus . and {@link #getCodeSystemName()}. <br />
+	 * example ids: <i>ch.elexis.codedetailview.Block</i> or <i>ch.elexis.LeistungenView.Block</i>
+	 * 
+	 * @param site
+	 */
+	public void activateContextMenu(IWorkbenchPartSite site,
+		DelegatingSelectionProvider selectionProvider, String viewId){
+		if (hasContextMenu()) {
+			selectionProvider.setSelectionProviderDelegate(getSelectionProvider());
+			site.registerContextMenu(viewId + "." + getCodeSystemName(), getMenuManager(),
+				selectionProvider);
+		}
 	}
 }

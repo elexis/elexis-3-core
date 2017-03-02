@@ -49,6 +49,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -62,6 +63,8 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 	private IAction importAction;
 	private ViewMenus viewmenus;
 	private Hashtable<String, ImporterPage> importers;
+	
+	private DelegatingSelectionProvider delegatingSelectionProvider;
 	
 	@Override
 	public void createPartControl(Composite parent){
@@ -77,6 +80,16 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				CTabItem selected = ctab.getSelection();
+				
+				if (selected != null) {
+					if (selected.getControl() instanceof MasterDetailsPage) {
+						MasterDetailsPage page = (MasterDetailsPage) selected.getControl();
+						if (page.getCodeSelectorFactory().hasContextMenu()) {
+							page.getCodeSelectorFactory().activateContextMenu(getSite(),
+								delegatingSelectionProvider, ID);
+						}
+					}
+				}
 				
 				if (selected instanceof FavoritenCTabItem)
 					return;
@@ -94,6 +107,8 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		viewmenus = new ViewMenus(getViewSite());
 		viewmenus.createMenu(importAction /* ,deleteAction */);
 		GlobalEventDispatcher.addActivationListener(this, this);
+		delegatingSelectionProvider = new DelegatingSelectionProvider();
+		getSite().setSelectionProvider(delegatingSelectionProvider);
 	}
 	
 	private void makeActions(){
@@ -266,26 +281,25 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		}
 	}
 	
-	/*
-	 * public void selectionEvent(PersistentObject obj) { if (obj != null) { CTabItem top =
-	 * ctab.getSelection(); if (top != null) { IDetailDisplay ids = (IDetailDisplay) top.getData();
-	 * Class cl = ids.getElementClass(); String o1 = obj.getClass().getName(); String o2 =
-	 * cl.getName(); if (o1.equals(o2)) { ids.display(obj); } } } }
-	 */
-	
-	class MasterDetailsPage extends Composite {
-		SashForm sash;
-		CommonViewer cv;
-		IDetailDisplay detailDisplay;
+	private class MasterDetailsPage extends Composite {
+		private SashForm sash;
+		private CommonViewer cv;
+		private CodeSelectorFactory master;
+		private IDetailDisplay detail;
 		
-		ElexisEventListenerImpl eeli_div;
+		private ElexisEventListenerImpl eeli_div;
 		
-		MasterDetailsPage(Composite parent, CodeSelectorFactory master, IDetailDisplay detail){
+		public MasterDetailsPage(Composite parent, CodeSelectorFactory codeSelectorFactory,
+			IDetailDisplay displayDetail){
 			super(parent, SWT.NONE);
-			eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass(), ElexisEvent.EVENT_SELECTED) {
+			
+			this.detail = displayDetail;
+			this.master = codeSelectorFactory;
+			eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass(),
+				ElexisEvent.EVENT_SELECTED) {
 				@Override
 				public void runInUi(ElexisEvent ev){
-					detailDisplay.display(ev.getObject());
+					detail.display(ev.getObject());
 				}
 			};
 			setLayout(new FillLayout());
@@ -293,12 +307,13 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 			cv = new CommonViewer();
 			cv.setViewName(master.getCodeSystemName());
 			cv.create(master.createViewerConfigurer(cv), sash, SWT.NONE, getViewSite());
-			// cv.getViewerWidget().addSelectionChangedListener(
-			// GlobalEventDispatcher.getInstance().getDefaultListener());
-			/* Composite page= */detail.createDisplay(sash, getViewSite());
+			detail.createDisplay(sash, getViewSite());
 			cv.getConfigurer().getContentProvider().startListening();
-			detailDisplay = detail;
 			ElexisEventDispatcher.getInstance().addListeners(eeli_div);
+		}
+		
+		public CodeSelectorFactory getCodeSelectorFactory(){
+			return master;
 		}
 		
 		public void dispose(){
@@ -324,7 +339,8 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 	/** Vom ActivationListener */
 	public void activation(boolean mode){
 		CTabItem selected = ctab.getSelection();
-		if(selected instanceof FavoritenCTabItem) return;
+		if (selected instanceof FavoritenCTabItem)
+			return;
 		if (selected != null) {
 			MasterDetailsPage page = (MasterDetailsPage) selected.getControl();
 			ViewerConfigurer vc = page.cv.getConfigurer();

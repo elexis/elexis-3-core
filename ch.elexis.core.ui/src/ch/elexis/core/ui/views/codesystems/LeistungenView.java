@@ -39,6 +39,7 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
@@ -50,6 +51,8 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 	public CTabFolder ctab;
 	CTabItem selected;
 	private String defaultRGB;
+	
+	private DelegatingSelectionProvider delegatingSelectionProvider;
 	
 	public LeistungenView(){
 		defaultRGB = UiDesk.createColor(new RGB(255, 255, 255));
@@ -73,16 +76,21 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 					return;
 				
 				if (selected != null) {
+					CodeSelectorFactory codeSelectorFactory =
+						(CodeSelectorFactory) selected.getData("csf");
 					cPage page = (cPage) selected.getControl();
 					if (page == null) {
 						//SWTHelper.alert(CAPTION_ERROR, "cPage=null"); //$NON-NLS-1$
 						page =
-							new cPage(ctab, (ICodeElement) selected.getData(),
-								(CodeSelectorFactory) selected.getData("csf"));
+							new cPage(ctab, (ICodeElement) selected.getData(), codeSelectorFactory);
 						selected.setControl(page);
 						// parent.redraw();
 					}
 					page.cv.getConfigurer().getControlFieldProvider().clearValues();
+					if (codeSelectorFactory != null && codeSelectorFactory.hasContextMenu()) {
+						codeSelectorFactory.activateContextMenu(getSite(),
+							delegatingSelectionProvider, ID);
+					}
 				}
 				((cPage) selected.getControl()).refresh();
 				setFocus();
@@ -112,6 +120,8 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 		CodeSelectorFactory.makeTabs(ctab, getViewSite(),
 			ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
 		GlobalEventDispatcher.addActivationListener(this, this);
+		delegatingSelectionProvider = new DelegatingSelectionProvider();
+		getSite().setSelectionProvider(delegatingSelectionProvider);
 	}
 	
 	public void dispose(){

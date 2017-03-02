@@ -23,6 +23,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -30,9 +31,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -42,17 +41,12 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.core.ui.actions.CodeSelectorHandler;
-import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
-import ch.elexis.core.ui.actions.TreeDataLoader;
 import ch.elexis.core.ui.commands.ExportiereBloeckeCommand;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
 import ch.elexis.core.ui.selectors.SelectorPanel;
-import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
@@ -66,9 +60,9 @@ import ch.rgw.tools.IFilter;
 import ch.rgw.tools.Tree;
 
 public class BlockSelector extends CodeSelectorFactory {
-	IAction deleteAction, createAction, exportAction;
-	CommonViewer cv;
-	MenuManager mgr;
+	private IAction deleteAction, createAction, exportAction;
+	private CommonViewer cv;
+	private MenuManager mgr;
 	static SelectorPanelProvider slp;
 	int eventType = SWT.KeyDown;
 	
@@ -190,16 +184,6 @@ public class BlockSelector extends CodeSelectorFactory {
 				}
 			}
 		};
-	}
-	
-	static class BlockContentProvider2 extends TreeDataLoader {
-		ViewerFilter filter;
-		
-		public BlockContentProvider2(CommonViewer cv, Query<? extends PersistentObject> qbe,
-			String parentField){
-			super(cv, qbe, parentField, "Name");
-		}
-		
 	}
 	
 	public static class BlockContentProvider implements
@@ -352,12 +336,13 @@ public class BlockSelector extends CodeSelectorFactory {
 		return "Block";
 	}
 	
-	public MenuManager getMgr(){
+	@Override
+	public ISelectionProvider getSelectionProvider(){
+		return cv.getViewerWidget();
+	}
+	
+	@Override
+	public MenuManager getMenuManager(){
 		return mgr;
 	}
-	
-	public CommonViewer getCv(){
-		return cv;
-	}
-	
 }
