@@ -90,11 +90,13 @@ public class ACE implements Serializable {
 			}
 			Right.resetTable();
 		}
-		try {
-			getACLContributionExtensions().stream()
-				.forEach(ace -> ace.initializeDefaults(CoreHub.acl));
-		} catch (Exception e) {
-			log.warn("initializeACEDefaults", e);
+		List<IACLContributor> aclContributionExtensions = getACLContributionExtensions();
+		for (IACLContributor iaclContributor : aclContributionExtensions) {
+			try {
+				iaclContributor.initializeDefaults(CoreHub.acl);
+			} catch (Exception e) {
+				log.warn("Problem initializing defaults for [{}]", iaclContributor.getClass().getName(), e);
+			}
 		}
 	}
 	
