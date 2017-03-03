@@ -21,7 +21,7 @@ import ch.rgw.tools.JdbcLinkException;
 	Test_DBInitialState.class, Test_PersistentObject.class, Test_Prescription.class,
 	Test_Patient.class, Test_LabItem.class, Test_DBImage.class, Test_Query.class,
 	Test_Verrechnet.class, Test_Reminder.class, Test_StockService.class, Test_OrderService.class,
-	Test_Konsultation.class, RoleBasedAccessControlTest.class
+	Test_Konsultation.class, RoleBasedAccessControlTest.class, Test_VkPreise.class
 })
 public class AllDataTests {
 	
