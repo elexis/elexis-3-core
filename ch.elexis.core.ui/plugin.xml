@@ -39,6 +39,12 @@
                      label="%showLockStatusDialog"
                      style="push"
                      tooltip="Show lock status information">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <test
+                           property="ch.elexis.commands.propertyTester.STANDALONE">
+                     </test>
+                  </visibleWhen>
                </command>
             </toolbar>
          </menuContribution>
