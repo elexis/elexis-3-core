@@ -20,23 +20,17 @@ public class Test_VkPreise extends AbstractPersistentObjectTest {
 	
 
 	@Test
-	public void testVKMultiplikator()
+	public void testVKMultiplikator()  throws SQLException 
 	{
 		Eigenleistung leistung = new Eigenleistung("TD999", "Leistung.xy999", "99", "10");
 		TimeTool now = new TimeTool(System.currentTimeMillis());
 		leistung.setVKMultiplikator(now, null, 98.12345, "typ");
 		Assert.assertEquals(98.12345, leistung.getVKMultiplikator(now, "typ"));
-	}
-
-
-	@Test
-	public void testStoringVkPreise	() throws SQLException{
-		String id = String.valueOf(UUID.randomUUID()).substring(0, 20);
-		link.exec("INSERT INTO VK_PREISE (ID) VALUES (" + JdbcLink.wrap(id)  +")");
-		ResultSet res = link.getStatement().query("SELECT id FROM VK_PREISE WHERE ID=" + JdbcLink.wrap(id));
+		
+		ResultSet res = link.getStatement().query("SELECT ID FROM VK_PREISE WHERE TYP='typ'");
 		if (res.next())
 		{
-			Assert.assertEquals(id, res.getString("ID"));	
+			Assert.assertNotNull(res.getString("ID"));
 		}
 		else
 		{
@@ -44,13 +38,13 @@ public class Test_VkPreise extends AbstractPersistentObjectTest {
 		}
 		
 	}
-	
+
 	@Test
 	public void testStoringVkPreiseWithSameId() {
 		try
 		{
 			String id = String.valueOf(UUID.randomUUID()).substring(0, 20);
-			link.exec("INSERT INTO VK_PREISE (ID) VALUES (" + JdbcLink.wrap(id)  +")");
+			Assert.assertEquals(1, link.exec("INSERT INTO VK_PREISE (ID) VALUES (" + JdbcLink.wrap(id)  +")"));
 			link.exec("INSERT INTO VK_PREISE (ID) VALUES (" + JdbcLink.wrap(id)  +")");
 			Assert.fail("should not happen");
 		}
