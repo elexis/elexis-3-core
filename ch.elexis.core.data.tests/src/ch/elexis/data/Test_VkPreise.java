@@ -30,6 +30,7 @@ public class Test_VkPreise extends AbstractPersistentObjectTest {
 		ResultSet res = link.getStatement().query("SELECT ID FROM VK_PREISE WHERE TYP='typ'");
 		if (res.next())
 		{
+			// checks if id is generated successfully after insert
 			Assert.assertNotNull(res.getString("ID"));
 		}
 		else
