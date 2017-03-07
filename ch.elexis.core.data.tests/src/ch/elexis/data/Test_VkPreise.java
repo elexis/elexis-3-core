@@ -9,12 +9,23 @@ import org.junit.Test;
 
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkException;
+import ch.rgw.tools.TimeTool;
 import junit.framework.Assert;
 	
 public class Test_VkPreise extends AbstractPersistentObjectTest {
 	
 	public Test_VkPreise(JdbcLink link){
 		super(link);
+	}
+	
+
+	@Test
+	public void testVKMultiplikator()
+	{
+		Eigenleistung leistung = new Eigenleistung("TD999", "Leistung.xy999", "99", "10");
+		TimeTool now = new TimeTool(System.currentTimeMillis());
+		leistung.setVKMultiplikator(now, null, 98.12345, "typ");
+		Assert.assertEquals(98.12345, leistung.getVKMultiplikator(now, "typ"));
 	}
 
 
@@ -31,6 +42,7 @@ public class Test_VkPreise extends AbstractPersistentObjectTest {
 		{
 			Assert.fail("no result for vk_preise");
 		}
+		
 	}
 	
 	@Test
