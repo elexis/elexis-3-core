@@ -23,7 +23,9 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ITableColorProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.SameShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -90,8 +92,8 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private RestrictedAction newPatAction;
 	private IAction filterAction, copySelectedPatInfosToClipboardAction,
 			copySelectedAddressesToClipboardAction;
-	private Patient actPatient;
 	private boolean initiated = false;
+	private String[] currentUserFields;
 	PatListFilterBox plfb;
 	PatListeContentProvider plcp;
 	DefaultControlFieldProvider dcfp;
@@ -146,13 +148,14 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 		cv = new CommonViewer();
 
-		plcp = new PatListeContentProvider(cv, collectFields(), this);
+		collectUserFields();
+		plcp = new PatListeContentProvider(cv, currentUserFields, this);
 		makeActions();
 		plfb = new PatListFilterBox(parent);
 		plfb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		((GridData) plfb.getLayoutData()).heightHint = 0;
 
-		dcfp = new DefaultControlFieldProvider(cv, collectFields());
+		dcfp = new DefaultControlFieldProvider(cv, currentUserFields);
 		updateFocusField();
 
 		vc = new ViewerConfigurer(
@@ -210,7 +213,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		}
 	}
 
-	private String[] collectFields() {
+	private void collectUserFields() {
 		ArrayList<String> fields = new ArrayList<String>();
 		initiated = !("".equals(CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, "")));
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, false)) {
@@ -225,7 +228,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWDOB, true)) {
 			fields.add(Patient.BIRTHDATE + Query.EQUALS + Messages.PatientenListeView_PatientBirthdate); // $NON-NLS-1$
 		}
-		return fields.toArray(new String[fields.size()]);
+		currentUserFields = fields.toArray(new String[fields.size()]);
 	}
 
 	private void populateViewMenu(){
@@ -370,13 +373,24 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 						ctlFields.put(Patient.FLD_DOB, fx[i++]);
 					}
 				}
+
 				PatientErfassenDialog ped = new PatientErfassenDialog(getViewSite().getShell(), ctlFields);
 				if (ped.open() == Dialog.OK) {
-					vc.getControlFieldProvider().clearValues();
-					actPatient = ped.getResult();
-					plcp.invalidate();
-					cv.notify(CommonViewer.Message.update);
-					cv.setSelection(actPatient, true);
+					plcp.temporaryAddObject(ped.getResult());
+					Patient pat = ped.getResult();
+					for (int j = 0; j < currentUserFields.length; j++) {
+						String current = currentUserFields[j];
+						if (current.startsWith(Patient.FLD_PATID)) {
+							dcfp.setValue(j, pat.getPatCode());
+						} else if (current.startsWith(Patient.FLD_NAME) && pat.getName()!=null) {
+							dcfp.setValue(j, pat.getName());
+						} else if (current.startsWith(Patient.FLD_FIRSTNAME) && pat.getVorname()!=null) {
+							dcfp.setValue(j, pat.getVorname());
+						}
+					}
+					plcp.syncRefresh();
+					TableViewer tv = (TableViewer) cv.getViewerWidget();
+					tv.setSelection(new StructuredSelection(pat), true);
 				}
 			}
 		};
@@ -869,8 +883,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 			cv.notify(CommonViewer.Message.update);
 
-			dcfp.updateFields(collectFields(), true);
-			plcp.updateFields(collectFields());
+			collectUserFields();
+			dcfp.updateFields(currentUserFields, true);
+			plcp.updateFields(currentUserFields);
 
 			updateFocusField();
 			dcfp.getParent().layout(true);

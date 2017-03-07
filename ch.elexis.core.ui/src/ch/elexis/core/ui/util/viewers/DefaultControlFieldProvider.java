@@ -314,6 +314,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	 */
 	@Override
 	public void clearValues(){
+		myViewer.getViewerWidget().setSelection(null);
 		if (!isEmpty()) {
 			bCeaseFire = true;
 			for (int i = 0; i < selectors.length; i++) {
@@ -324,6 +325,25 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 			bCeaseFire = false;
 			fireChangedEvent();
 		}
+	}
+	
+	/**
+	 * Set a value on the filters specific index. Does not call {@link #fireChangedEvent()}.
+	 * 
+	 * @param index
+	 * @param value
+	 * @since 3.2
+	 */
+	public void setValue(int index, String value){
+		if (index > lastFiltered.length) {
+			return;
+		}
+		
+		bCeaseFire = true;
+		selectors[index].setText(value);
+		lastFiltered[index] = value;
+		modified = true;
+		bCeaseFire = false;
 	}
 	
 	@Override

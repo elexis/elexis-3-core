@@ -11,6 +11,8 @@
  *******************************************************************************/
 package ch.elexis.core.ui.contacts.views;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,6 +28,7 @@ import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
@@ -96,6 +99,51 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		bValid = false;
 	}
 	
+	/**
+	 * @since 3.2
+	 */
+	public void syncRefresh() {
+		qbe.clear();
+		viewer.getConfigurer().getControlFieldProvider().setQuery(qbe);
+		String[] actualOrder;
+		int idx = StringTool.getIndex(orderFields, firstOrder);
+		if ((idx == -1) || (idx == 0)) {
+			actualOrder = orderFields;
+		} else {
+			actualOrder = new String[orderFields.length];
+			int n = 0;
+			int begin = idx;
+			do {
+				actualOrder[n++] = orderFields[idx++];
+				if (idx >= orderFields.length) {
+					idx = 0;
+				}
+			} while (idx != begin);
+		}
+		qbe.orderBy(false, actualOrder);
+		List<Patient> lPats = qbe.execute();
+		if (lPats == null) {
+			pats = new Patient[0];
+		} else {
+			pats = lPats.toArray(new Patient[0]);
+		}
+		UiDesk.getDisplay().syncExec(new Runnable() {
+			
+			@Override
+			public void run(){
+				TableViewer tv = (TableViewer) viewer.getViewerWidget();
+				tv.setItemCount(pats.length);
+				bValid = true;
+				if (pfilter != null) {
+					pfilter.finished();
+				}
+				tv.refresh();
+				bUpdating = false;
+			}
+		});
+	}
+	
+	
 	@Override
 	public Object[] getElements(Object inputElement){
 		if (bValid || bUpdating) {
@@ -108,70 +156,29 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 			((TableViewer) viewer.getViewerWidget()).setItemCount(1);
 		}
 		
-		// viewer.getViewerWidget().refresh(true);
 		if (!CoreHub.acl.request(AccessControlDefaults.PATIENT_DISPLAY)) {
 			return new Object[0];
 		}
 		
-		Job job = new Job(Messages.PatListeContentProvider_LoadingPatients) { //$NON-NLS-1$
+		Job job = new Job(Messages.PatListeContentProvider_LoadingPatients) {
 			
-				@Override
-				protected IStatus run(IProgressMonitor monitor){
-					monitor.beginTask(Messages.PatListeContentProvider_LoadPatients,
-						IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-					
-					qbe.clear();
-					if (pfilter != null) {
-						if (pfilter.aboutToStart() == false) {
-							return Status.CANCEL_STATUS;
-						}
+			@Override
+			protected IStatus run(IProgressMonitor monitor){
+				monitor.beginTask(Messages.PatListeContentProvider_LoadPatients,
+					IProgressMonitor.UNKNOWN);
+				if (pfilter != null) {
+					if (pfilter.aboutToStart() == false) {
+						return Status.CANCEL_STATUS;
 					}
-					viewer.getConfigurer().getControlFieldProvider().setQuery(qbe);
-					String[] actualOrder;
-					int idx = StringTool.getIndex(orderFields, firstOrder);
-					if ((idx == -1) || (idx == 0)) {
-						actualOrder = orderFields;
-					} else {
-						actualOrder = new String[orderFields.length];
-						int n = 0;
-						int begin = idx;
-						do {
-							actualOrder[n++] = orderFields[idx++];
-							if (idx >= orderFields.length) {
-								idx = 0;
-							}
-						} while (idx != begin);
-					}
-					qbe.orderBy(false, actualOrder);
-					List<Patient> lPats = qbe.execute();
-					if (lPats == null) {
-						pats = new Patient[0];
-					} else {
-						pats = lPats.toArray(new Patient[0]);
-					}
-					UiDesk.getDisplay().syncExec(new Runnable() {
-						
-						@Override
-						public void run(){
-							((TableViewer) viewer.getViewerWidget()).setItemCount(pats.length);
-							bValid = true;
-							if (pfilter != null) {
-								pfilter.finished();
-							}
-							viewer.getViewerWidget().refresh();
-							bUpdating = false;
-							
-						}
-						
-					});
-					monitor.done();
-					return Status.OK_STATUS;
 				}
-				
-			};
+				syncRefresh();
+				monitor.done();
+				return Status.OK_STATUS;
+			}
+			
+		};
 		job.setPriority(Job.SHORT);
 		job.setUser(false);
-		// job.setSystem(true);
 		bUpdating = true;
 		IWorkbenchSiteProgressService siteService =
 			(IWorkbenchSiteProgressService) site.getSite().getAdapter(
@@ -180,7 +187,6 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		
 		job.setProperty(IProgressConstants.ICON_PROPERTY, Images.IMG_AUSRUFEZ_ROT.getImage());
 		
-		// job.schedule();
 		return pats;
 	}
 	
@@ -225,15 +231,32 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		if (!bValid) {
 			getElements(viewer);
 		}
+		
+		TableViewer tv = (TableViewer) viewer.getViewerWidget();
 		if (pats.length > index) {
-			((TableViewer) viewer.getViewerWidget()).replace(pats[index], index);
+			tv.replace(pats[index], index);
 		} else {
-			((TableViewer) viewer.getViewerWidget()).replace("-", index); //$NON-NLS-1$
+			tv.replace(StringConstants.DASH, index);
 		}
 	}
 	
 	public void invalidate(){
 		bValid = false;
+	}
+	
+	/**
+	 * Directly add an object to the content providers held array.
+	 * 
+	 * @param newObject
+	 * @return
+	 * @see https://redmine.medelexis.ch/issues/5719 for use case
+	 * @since 3.2
+	 */
+	void temporaryAddObject(Object newObject){
+		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(pats));
+		temp.add(newObject);
+		pats = temp.toArray();
+		((TableViewer) viewer.getViewerWidget()).setItemCount(pats.length);
 	}
 	
 	@Override
