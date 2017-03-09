@@ -27,6 +27,13 @@
             properties="isDeleted"
             type="ch.elexis.core.model.IContact">
       </propertyTester>
+      <propertyTester
+            class="ch.elexis.core.data.propertyTester.ElexisPropertyTester"
+            id="ch.elexis.commands.propertyTester.ElexisPropertyTester"
+            namespace="ch.elexis.commands.elexisPropertyTester"
+            properties="STANDALONE"
+            type="java.lang.Object">
+      </propertyTester>
    </extension>
   <extension
         point="ch.elexis.core.data.ACLContribution">
