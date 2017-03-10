@@ -1,11 +1,17 @@
 package ch.elexis.core.ui.editors;
 
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.ICellEditorListener;
+import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +32,61 @@ public class PersistentObjectEditingSupport extends EditingSupport {
 		this.field = field;
 		this.editor = new TextCellEditor(columnViewer.getTable());
 	}
+	
+	public PersistentObjectEditingSupport(TableViewer columnViewer, String field, Class<? extends Serializable> fieldTypeClazz)
+	{
+		this(columnViewer, field, fieldTypeClazz, false);
+	}
+	
+	public PersistentObjectEditingSupport(TableViewer columnViewer, String field, Class<? extends Serializable> fieldTypeClazz, boolean markValidationFailed){
+		this(columnViewer, field);
+		if (fieldTypeClazz != null)
+		{
+			editor.setValidator(new ICellEditorValidator() {
+				
+				@Override
+				public String isValid(Object value) {
+					try 
+					{
+						String val = (String) value;
+						fieldTypeClazz.getDeclaredMethod("valueOf", String.class).invoke(null, val);
+						return null;
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassCastException e) {
+						return "dummy";
+					}
+				}
+			});
+			
+			if (markValidationFailed)
+			{
+				editor.addListener(new ICellEditorListener() {
+					@Override
+					public void editorValueChanged(boolean oldValidState, boolean newValidState){
+						if (newValidState) {
+							editor.getControl().setBackground(
+								Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+						} else {
+							editor.getControl().setBackground(
+								Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+						}
+					}
+					
+					@Override
+					public void cancelEditor(){
+						editor.getControl().setBackground(
+							Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+					}
+					
+					@Override
+					public void applyEditorValue(){
+						editor.getControl().setBackground(
+							Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+					}
+				});
+			}
+		}
+	}
+	
 	
 	@Override
 	protected CellEditor getCellEditor(Object element){

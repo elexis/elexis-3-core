@@ -223,9 +223,9 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				
 				PersistentObjectEditingSupport poes = null;
 				if (i == 4) {
-					poes = new NumberedPersistentObjectEditingSupport(ret, StockEntry.FLD_MIN);
+					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MIN, Integer.class, true);
 				} else if (i == 5) {
-					poes = new NumberedPersistentObjectEditingSupport(ret, StockEntry.FLD_CURRENT) {
+					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_CURRENT, Integer.class, true) {
 						protected boolean canEdit(Object element){
 							boolean canEdit = super.canEdit(element);
 							if (canEdit) {
@@ -236,7 +236,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 						};
 					};
 				} else if (i == 6) {
-					poes = new NumberedPersistentObjectEditingSupport(ret, StockEntry.FLD_MAX);
+					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MAX, Integer.class, true);
 				}
 				
 				if (poes != null) {
@@ -521,22 +521,6 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	public void visible(boolean mode){
 		if (mode) {
 			cv.notify(CommonViewer.Message.update);
-		}
-	}
-	
-	private class NumberedPersistentObjectEditingSupport extends PersistentObjectEditingSupport
-	{
-
-		public NumberedPersistentObjectEditingSupport(TableViewer columnViewer, String field) {
-			super(columnViewer, field);
-		}
-		
-		@Override
-		protected void setValue(Object element, Object value) {
-			try {
-				Integer.valueOf((String) value);
-				super.setValue(element, value);
-			} catch (NumberFormatException nfe) {}
 		}
 	}
 }
