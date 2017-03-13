@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -166,11 +167,12 @@ public class LabOrderEditingSupport extends EditingSupport {
 	
 	@Override
 	protected void setValue(final Object element, final Object value){
-		if (element instanceof LaborOrderViewerItem && value != null) {
-			LabResult result = (LabResult) ((LaborOrderViewerItem) element).getLabResult();
+		LaborOrderViewerItem viewerItem = getSelectedItem();
+		if (viewerItem instanceof LaborOrderViewerItem && value != null) {
+			LabResult result = (LabResult) viewerItem.getLabResult();
 			if (result == null) {
 				result =
-					createResult((LaborOrderViewerItem) element, LabOrder.getOrCreateManualLabor());
+					createResult(viewerItem, LabOrder.getOrCreateManualLabor());
 			}
 			final LabResult lockResult = result;
 			AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
@@ -186,12 +188,12 @@ public class LabOrderEditingSupport extends EditingSupport {
 					if (lockResult.getItem().getTyp() == LabItemTyp.TEXT) {
 						lockResult.setResult("Text"); //$NON-NLS-1$
 						lockResult.set(LabResult.COMMENT, value.toString());
-						((LaborOrderViewerItem) element).setState(LabOrder.State.DONE);
+						viewerItem.setState(LabOrder.State.DONE);
 					} else if (lockResult.getItem().getTyp() == LabItemTyp.DOCUMENT) {
 						// dont know what todo ...
 					} else {
 						lockResult.setResult(value.toString());
-						((LaborOrderViewerItem) element).setState(LabOrder.State.DONE);
+						viewerItem.setState(LabOrder.State.DONE);
 					}
 				}
 			});
@@ -199,7 +201,7 @@ public class LabOrderEditingSupport extends EditingSupport {
 			int columnIdx = focusCell.getFocusCell().getColumnIndex();
 			ViewerRow row = focusCell.getFocusCell().getViewerRow();
 			ViewerRow nextRow = row.getNeighbor(ViewerRow.BELOW, true);
-			((LaborOrderViewerItem) element).refreshResultString();
+			viewerItem.refreshResultString();
 			if (nextRow != null) {
 				getViewer().setSelection(new StructuredSelection(nextRow.getElement()), true);
 				getViewer().editElement(nextRow.getElement(), columnIdx);
@@ -207,6 +209,14 @@ public class LabOrderEditingSupport extends EditingSupport {
 		}
 	}
 
+	private LaborOrderViewerItem getSelectedItem(){
+		ISelection selection = getViewer().getSelection();
+		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+			return (LaborOrderViewerItem) ((IStructuredSelection) selection).getFirstElement();
+		}
+		return null;
+	}
+	
 	private LabResult createResult(LaborOrderViewerItem viewerItem, Kontakt origin){
 		LabResult result = viewerItem.createResult(origin);
 		result.setTransmissionTime(new TimeTool());
