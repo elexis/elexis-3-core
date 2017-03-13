@@ -11,6 +11,8 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
@@ -19,14 +21,21 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -103,6 +112,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				manager.add(new CheckInOrderedAction(cv.getViewerWidget()));
+				manager.add(new DeleteStockEntryAction(cv.getViewerWidget()));
 				ArticleMachineOutputAction amoa =
 					new ArticleMachineOutputAction(cv.getViewerWidget());
 				if (amoa.isVisible()) {
@@ -213,9 +223,9 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				
 				PersistentObjectEditingSupport poes = null;
 				if (i == 4) {
-					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MIN);
+					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MIN, Integer.class, true);
 				} else if (i == 5) {
-					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_CURRENT) {
+					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_CURRENT, Integer.class, true) {
 						protected boolean canEdit(Object element){
 							boolean canEdit = super.canEdit(element);
 							if (canEdit) {
@@ -226,7 +236,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 						};
 					};
 				} else if (i == 6) {
-					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MAX);
+					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MAX, Integer.class, true);
 				}
 				
 				if (poes != null) {
@@ -284,6 +294,18 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				}
 			}
 			ret.setSorter(new LagerTableSorter(3));
+			
+			TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(ret, new FocusCellHighlighter(ret) {});
+			ColumnViewerEditorActivationStrategy editorActivationStrategy = new ColumnViewerEditorActivationStrategy(ret) {
+	            @Override
+	            protected boolean isEditorActivationEvent(
+	                ColumnViewerEditorActivationEvent event) {
+	                    ViewerCell cell = (ViewerCell) event.getSource();
+	                   return cell.getColumnIndex() > 3 && cell.getColumnIndex() < 7;
+	            }
+			};
+			TableViewerEditor.create(ret, focusCellManager, editorActivationStrategy, TableViewerEditor.TABBING_HORIZONTAL);		
+		
 			return ret;
 		}
 		
@@ -424,6 +446,55 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			
 		}
 	}
+	
+	public class DeleteStockEntryAction extends Action {
+		private Viewer viewer;
+		private StockEntry stockEntry;
+		
+		public DeleteStockEntryAction(Viewer viewer){
+			this.viewer = viewer;
+		}
+		
+		@Override
+		public boolean isEnabled(){
+			stockEntry = null;
+			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+			if (selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof StockEntry) {
+				stockEntry = (StockEntry) selection.getFirstElement();
+				if (stockEntry != null)
+				{
+					Stock stock = stockEntry.getStock();
+					return stock != null && !stock.isCommissioningSystem();
+				}
+			}
+			return false;
+		}
+		
+		@Override
+		public String getText(){
+			return Messages.LagerView_deleteAction;
+		}
+		
+		@Override
+		public String getToolTipText() {
+			return Messages.LagerView_deleteActionToolTip;
+		}
+
+		@Override
+		public void run(){
+			if (stockEntry != null)
+			{
+				Artikel article = stockEntry.getArticle();
+				if (article != null && MessageDialog.openConfirm(
+					viewer.getControl().getShell(),
+					Messages.LagerView_deleteActionConfirmCaption,
+					MessageFormat.format(Messages.LagerView_deleteConfirmBody, article.getName()))) {
+					stockEntry.delete();
+					viewer.refresh();
+				}
+			}
+		}
+	}	
 	
 	/***********************************************************************************************
 	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
