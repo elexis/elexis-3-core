@@ -457,7 +457,17 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		
 		@Override
 		public boolean isEnabled(){
-			return true;
+			stockEntry = null;
+			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+			if (selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof StockEntry) {
+				stockEntry = (StockEntry) selection.getFirstElement();
+				if (stockEntry != null)
+				{
+					Stock stock = stockEntry.getStock();
+					return stock != null && !stock.isCommissioningSystem();
+				}
+			}
+			return false;
 		}
 		
 		@Override
@@ -472,12 +482,10 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 
 		@Override
 		public void run(){
-			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-			if (selection != null && !selection.isEmpty()
-					&& selection.getFirstElement() instanceof StockEntry) {
-				stockEntry = (StockEntry) selection.getFirstElement() ;
+			if (stockEntry != null)
+			{
 				Artikel article = stockEntry.getArticle();
-				if (MessageDialog.openConfirm(
+				if (article != null && MessageDialog.openConfirm(
 					viewer.getControl().getShell(),
 					Messages.LagerView_deleteActionConfirmCaption,
 					MessageFormat.format(Messages.LagerView_deleteConfirmBody, article.getName()))) {
