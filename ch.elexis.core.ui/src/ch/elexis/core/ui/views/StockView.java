@@ -11,6 +11,8 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
@@ -19,6 +21,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -103,6 +106,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				manager.add(new CheckInOrderedAction(cv.getViewerWidget()));
+				manager.add(new DeleteStockEntryAction(cv.getViewerWidget()));
 				ArticleMachineOutputAction amoa =
 					new ArticleMachineOutputAction(cv.getViewerWidget());
 				if (amoa.isVisible()) {
@@ -424,6 +428,55 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			
 		}
 	}
+	
+	public class DeleteStockEntryAction extends Action {
+		private Viewer viewer;
+		private StockEntry stockEntry;
+		
+		public DeleteStockEntryAction(Viewer viewer){
+			this.viewer = viewer;
+		}
+		
+		@Override
+		public boolean isEnabled(){
+			stockEntry = null;
+			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+			if (selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof StockEntry) {
+				stockEntry = (StockEntry) selection.getFirstElement();
+				if (stockEntry != null)
+				{
+					Stock stock = stockEntry.getStock();
+					return stock != null && !stock.isCommissioningSystem();
+				}
+			}
+			return false;
+		}
+		
+		@Override
+		public String getText(){
+			return Messages.LagerView_deleteAction;
+		}
+		
+		@Override
+		public String getToolTipText() {
+			return Messages.LagerView_deleteActionToolTip;
+		}
+
+		@Override
+		public void run(){
+			if (stockEntry != null)
+			{
+				Artikel article = stockEntry.getArticle();
+				if (article != null && MessageDialog.openConfirm(
+					viewer.getControl().getShell(),
+					Messages.LagerView_deleteActionConfirmCaption,
+					MessageFormat.format(Messages.LagerView_deleteConfirmBody, article.getName()))) {
+					stockEntry.delete();
+					viewer.refresh();
+				}
+			}
+		}
+	}	
 	
 	/***********************************************************************************************
 	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
