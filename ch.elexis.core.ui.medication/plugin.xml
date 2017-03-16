@@ -12,19 +12,21 @@
                style="push">
          </command>
          <command
-               commandId="ch.elexis.core.ui.medication.PrintRecipe"
-               icon="icon://IMG_VIEW_RECIPES"
-               style="push">
-         </command>
-         <command
-               commandId="ch.elexis.core.ui.medication.PrintTakingsList"
-               icon="icon://IMG_PRINTER"
-               style="push">
-         </command>
-         <command
                commandId="ch.elexis.core.ui.medication.ApplyCustomSorting"
                icon="icon://IMG_SORT_STAR"
                style="toggle">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.PrintTakingsListMenu"
+               icon="icon://IMG_PRINT_FIX"
+               label="Einnahmeliste"
+               style="pulldown">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.PrintRecipeMenu"
+               icon="icon://IMG_RECIPE_FIX"
+               label="Rezept"
+               style="pulldown">
          </command>
       </menuContribution>
       <menuContribution
@@ -74,6 +76,10 @@
                commandId="ch.elexis.core.ui.medication.PrintRecipe"
                icon="icon://IMG_VIEW_RECIPES"
                style="push">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="selection">
+            </parameter>
          </command>
          <command
                commandId="ch.elexis.core.ui.medication.Dispense"
@@ -84,6 +90,10 @@
                commandId="ch.elexis.core.ui.medication.PrintTakingsList"
                icon="icon://IMG_PRINTER"
                style="push">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="selection">
+            </parameter>
          </command>
          <command
                commandId="ch.elexis.core.ui.medication.Delete"
@@ -91,17 +101,100 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:ch.elexis.core.ui.medication.PrintTakingsListMenu">
+         <command
+               commandId="ch.elexis.core.ui.medication.PrintTakingsList"
+               icon="icon://IMG_PRINTER"
+               label="Einnahmeliste drucken"
+               style="push"
+               tooltip="Einnahmeliste drucken">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="all">
+            </parameter>
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.PrintTakingsList"
+               icon="icon://IMG_PRINT_FIX"
+               label="Fix Medikation Einnahmeliste drucken"
+               style="push"
+               tooltip="Fix Medikation Einnahmeliste drucken">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="fix">
+            </parameter>
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.PrintTakingsList"
+               icon="icon://IMG_PRINT_RESERVE"
+               label="Reserve Medikation Einnahmeliste drucken"
+               style="push"
+               tooltip="Reserve Medikation Einnahmeliste drucken">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="reserve">
+            </parameter>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:ch.elexis.core.ui.medication.PrintRecipeMenu">
+         <command
+               commandId="ch.elexis.core.ui.medication.PrintRecipe"
+               icon="icon://IMG_VIEW_RECIPES"
+               label="Medikation rezeptieren"
+               style="push"
+               tooltip="Medikation rezeptieren">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="all">
+            </parameter>
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.PrintRecipe"
+               icon="icon://IMG_RECIPE_FIX"
+               label="Fix Medikation rezeptieren"
+               style="push"
+               tooltip="Fix Medikation rezeptieren">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="fix">
+            </parameter>
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.PrintRecipe"
+               icon="icon://IMG_RECIPE_RESERVE"
+               label="Reserve Medikation rezeptieren"
+               style="push"
+               tooltip="Reserve Medikation rezeptieren">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="reserve">
+            </parameter>
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
-            description="Ausgewählte Medikamente rezeptieren und Rezept ausdrucken"
             id="ch.elexis.core.ui.medication.PrintRecipe"
-            name="Rezeptieren">
+            name="Rezept drucken">
+         <commandParameter
+               id="ch.elexis.core.ui.medication.commandParameter.medication"
+               name="Medication"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             id="ch.elexis.core.ui.medication.PrintTakingsList"
             name="Einnahmeliste drucken">
+         <commandParameter
+               id="ch.elexis.core.ui.medication.commandParameter.medication"
+               name="Medication"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             description="Ausgewählte Medikamente dispensieren (werden zu aktueller Konsultation verrechnet)"
@@ -154,6 +247,16 @@
             id="ch.elexis.core.ui.medication.AddArticleToOrder"
             name="Artikel auf Bestellliste setzen">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.medication.handlers.DefaultPrintTakingsListHandler"
+            id="ch.elexis.core.ui.medication.PrintTakingsListMenu"
+            name="Einnahmeliste">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.medication.handlers.DefaultPrintRecipeHandler"
+            id="ch.elexis.core.ui.medication.PrintRecipeMenu"
+            name="Rezept">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -166,16 +269,6 @@
                <equals
                      value="TRUE">
                </equals>
-               <and>
-                  <with
-                        variable="selection">
-                     <not>
-                        <count
-                              value="0">
-                        </count>
-                     </not>
-                  </with>
-               </and>
             </with>
          </activeWhen>
       </handler>
