@@ -84,8 +84,12 @@ public enum Images {
 		IMG_VIP_OVERLAY,
 		/** a printer */
 		IMG_PRINTER,
-		/** a big printer icon */
-		IMG_PRINTER_BIG,
+			/** a big printer icon */
+	IMG_PRINTER_BIG,
+	/** a big printer icon */
+	IMG_PRINT_FIX,
+	/** a big printer icon */
+	IMG_PRINT_RESERVE,
 		/** a filter */
 		IMG_FILTER,
 		/** creating a new Object */
@@ -198,6 +202,8 @@ public enum Images {
 		IMG_DOCUMENT_WRITE,
 		/** remove document */
 		IMG_DOCUMENT_REMOVE, IMG_MENUBAR, IMG_TOOLBAR,
+		/** recipe */
+		IMG_RECIPE_FIX, IMG_RECIPE_RESERVE,
 		/** a bill */
 		IMG_BILL, IMG_VIEW_WORK_INCAPABLE, IMG_VIEW_CONSULTATION_DETAIL, IMG_VIEW_LABORATORY, IMG_VIEW_PATIENT_DETAIL, IMG_VIEW_RECIPES, IMG_DATABASE, IMG_CONFLICT, IMG_QUESTION_MARK, IMG_FLAG_AT, IMG_FLAG_DE, IMG_FLAG_CH, IMG_FLAG_FR, IMG_FLAG_IT, IMG_FLAG_FL,
 		/** a generic group icon */

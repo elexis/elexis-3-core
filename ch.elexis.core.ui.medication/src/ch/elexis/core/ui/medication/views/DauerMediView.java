@@ -61,6 +61,7 @@ public class DauerMediView extends ViewPart implements IActivationListener, Elex
 	
 	public void dispose(){
 		GlobalEventDispatcher.removeActivationListener(this, this);
+		dmd.dispose();
 	}
 	
 	@Override

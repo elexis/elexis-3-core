@@ -217,14 +217,18 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					site.getPage().showView(LeistungenView.ID);
 					CodeSelectorHandler.getInstance().setCodeSelectorTarget(target);
 				} else if (l.equals(LISTE)) {
+					HashMap<String, String> parameterMap = new HashMap<>();
+					parameterMap.put("ch.elexis.core.ui.medication.commandParameter.medication", "fix");
 					IEvaluationService evaluationService =
 						(IEvaluationService) viewSite.getService(IEvaluationService.class);
-					new PrintTakingsListHandler().execute(new ExecutionEvent(null, new HashMap(),
+					new PrintTakingsListHandler().execute(new ExecutionEvent(null, parameterMap,
 						null, evaluationService.getCurrentState()));
 				} else if (l.equals(REZEPT)) {
+					HashMap<String, String> parameterMap = new HashMap<>();
+					parameterMap.put("ch.elexis.core.ui.medication.commandParameter.medication", "fix");
 					IEvaluationService evaluationService =
 						(IEvaluationService) viewSite.getService(IEvaluationService.class);
-					new PrintRecipeHandler().execute(new ExecutionEvent(null, new HashMap(), null,
+					new PrintRecipeHandler().execute(new ExecutionEvent(null, parameterMap, null,
 						evaluationService.getCurrentState()));
 				} else if (l.equals(KOPIEREN)) {
 					toClipBoard(true);

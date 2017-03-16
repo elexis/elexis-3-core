@@ -1,7 +1,7 @@
 package ch.elexis.core.ui.medication.handlers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -29,50 +29,75 @@ public class PrintRecipeHandler extends AbstractHandler {
 	
 	private static Logger log = LoggerFactory.getLogger(PrintRecipeHandler.class);
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
 		Patient patient = ElexisEventDispatcher.getSelectedPatient();
-		if(patient == null) return null;
+		if (patient == null)
+			return null;
 		
-		List<Prescription> prescRecipes = new ArrayList<Prescription>();
+		String medicationType =
+			event.getParameter("ch.elexis.core.ui.medication.commandParameter.medication"); //$NON-NLS-1$
+		// if not set use selection
+		if (medicationType == null || medicationType.isEmpty()) {
+			medicationType = "selection";
+		}
 		
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
-		if(selection == null || selection.isEmpty()) {
-			prescRecipes = patient.getMedication(EntryType.FIXED_MEDICATION);
-		} else {
-			IStructuredSelection strucSelection = (IStructuredSelection) selection;
-			if (strucSelection.getFirstElement() instanceof MedicationTableViewerItem) {
-				List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
-				for (MedicationTableViewerItem mtvItem : mtvItems) {
-					Prescription p = mtvItem.getPrescription();
-					if (p != null) {
-						prescRecipes.add(p);
-					}
-				}
-			} else if (strucSelection.getFirstElement() instanceof Prescription) {
-				prescRecipes.addAll(strucSelection.toList());
+		List<Prescription> prescRecipes = getPrescriptions(patient, medicationType, event);
+		if (!prescRecipes.isEmpty()) {
+			Rezept rp = new Rezept(patient);
+			for (Prescription p : prescRecipes) {
+				Prescription prescription = new Prescription(p);
+				prescription.setEndDate(null);
+				rp.addPrescription(prescription);
 			}
-		}
-
-		Rezept rp = new Rezept(patient);
-		for (Prescription p : prescRecipes) {
-			rp.addPrescription(new Prescription(p));
-		}
-		
-		// PMDI - Dependency Injection through ElexisConfigurationConstants
-		RezeptBlatt rpb;
-		try {
-			rpb =
-				(RezeptBlatt) HandlerUtil.getActiveWorkbenchWindow(event).getActivePage()
+			
+			// PMDI - Dependency Injection through ElexisConfigurationConstants
+			RezeptBlatt rpb;
+			try {
+				rpb = (RezeptBlatt) HandlerUtil.getActiveWorkbenchWindow(event).getActivePage()
 					.showView(ElexisConfigurationConstants.rezeptausgabe);
-			rpb.createRezept(rp);
-		} catch (PartInitException e) {
-			log.error("Error outputting recipe", e);
+				rpb.createRezept(rp);
+			} catch (PartInitException e) {
+				log.error("Error outputting recipe", e);
+			}
+			// PMDI - Dependency Injection through ElexisConfigurationConstants
 		}
-		// PMDI - Dependency Injection through ElexisConfigurationConstants
-		
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Prescription> getPrescriptions(Patient patient, String medicationType,
+		ExecutionEvent event){
+		if ("selection".equals(medicationType)) {
+			ISelection selection =
+				HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+			if (selection != null && !selection.isEmpty()) {
+				List<Prescription> ret = new ArrayList<Prescription>();
+				IStructuredSelection strucSelection = (IStructuredSelection) selection;
+				if (strucSelection.getFirstElement() instanceof MedicationTableViewerItem) {
+					List<MedicationTableViewerItem> mtvItems =
+						(List<MedicationTableViewerItem>) strucSelection.toList();
+					for (MedicationTableViewerItem mtvItem : mtvItems) {
+						Prescription p = mtvItem.getPrescription();
+						if (p != null) {
+							ret.add(p);
+						}
+					}
+				} else if (strucSelection.getFirstElement() instanceof Prescription) {
+					ret.addAll(strucSelection.toList());
+				}
+				return ret;
+			}
+		} else if ("all".equals(medicationType)) {
+			List<Prescription> ret = new ArrayList<Prescription>();
+			ret.addAll(patient.getMedication(EntryType.FIXED_MEDICATION));
+			ret.addAll(patient.getMedication(EntryType.RESERVE_MEDICATION));
+			return ret;
+		} else if ("fix".equals(medicationType)) {
+			return patient.getMedication(EntryType.FIXED_MEDICATION);
+		} else if ("reserve".equals(medicationType)) {
+			return patient.getMedication(EntryType.RESERVE_MEDICATION);
+		}
+		return Collections.emptyList();
 	}
 }
