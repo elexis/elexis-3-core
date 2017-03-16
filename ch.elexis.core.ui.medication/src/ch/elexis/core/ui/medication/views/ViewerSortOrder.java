@@ -5,6 +5,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 
 import ch.elexis.data.Prescription;
+import ch.elexis.data.Prescription.EntryType;
 import ch.rgw.tools.TimeTool;
 
 public enum ViewerSortOrder {
@@ -88,7 +89,9 @@ public enum ViewerSortOrder {
 			int rc = 0;
 			switch (propertyIdx) {
 			case 0:
-				rc = 0;
+				EntryType et1 = p1.getEntryType();
+				EntryType et2 = p2.getEntryType();
+				rc = Integer.compare(et1.numericValue(), et2.numericValue());
 				break;
 			case 1:
 				String l1 = p1.getArtikelLabel();

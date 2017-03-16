@@ -37,6 +37,8 @@ public class MedicationViewerHelper {
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblclmnStateDisposition = ret.getColumn();
 		layout.setColumnData(tblclmnStateDisposition, new ColumnPixelData(20, false, false));
+		tblclmnStateDisposition.addSelectionListener(
+			getSelectionAdapter(viewer, tblclmnStateDisposition, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
 			public String getText(Object element){
