@@ -310,7 +310,7 @@ public enum Images {
 	 * 
 	 * @return an {@link Image}
 	 */
-	public Image getImage(ImageSize is){
+	public synchronized Image getImage(ImageSize is){
 		Image image = JFaceResources.getImageRegistry().get(this.name() + is.name);
 		if (image == null) {
 			addIconImageDescriptor(this.name(), is);

@@ -9,14 +9,18 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.ElexisConfigurationConstants;
+import ch.elexis.core.ui.medication.handlers.PrintTakingsListHandler.SorterAdapter;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
+import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.views.RezeptBlatt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
@@ -44,6 +48,8 @@ public class PrintRecipeHandler extends AbstractHandler {
 		
 		List<Prescription> prescRecipes = getPrescriptions(patient, medicationType, event);
 		if (!prescRecipes.isEmpty()) {
+			prescRecipes = sortPrescriptions(prescRecipes, event);
+			
 			Rezept rp = new Rezept(patient);
 			for (Prescription p : prescRecipes) {
 				Prescription prescription = new Prescription(p);
@@ -54,8 +60,8 @@ public class PrintRecipeHandler extends AbstractHandler {
 			// PMDI - Dependency Injection through ElexisConfigurationConstants
 			RezeptBlatt rpb;
 			try {
-				rpb = (RezeptBlatt) HandlerUtil.getActiveWorkbenchWindow(event).getActivePage()
-					.showView(ElexisConfigurationConstants.rezeptausgabe);
+				rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().showView(ElexisConfigurationConstants.rezeptausgabe);
 				rpb.createRezept(rp);
 			} catch (PartInitException e) {
 				log.error("Error outputting recipe", e);
@@ -63,6 +69,16 @@ public class PrintRecipeHandler extends AbstractHandler {
 			// PMDI - Dependency Injection through ElexisConfigurationConstants
 		}
 		return null;
+	}
+	
+	private List<Prescription> sortPrescriptions(List<Prescription> prescRecipes,
+		ExecutionEvent event){
+		SorterAdapter sorter = new SorterAdapter(event);
+		IWorkbenchPart part = HandlerUtil.getActivePart(event);
+		if (part instanceof MedicationView) {
+			return sorter.getSorted(prescRecipes);
+		}
+		return prescRecipes;
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -13,6 +13,7 @@ package ch.elexis.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -112,7 +113,10 @@ public class Rezept extends PersistentObject {
 	}
 	
 	/**
-	 * Get all prescriptions of the recipe.
+	 * Get all prescriptions of the recipe. <br />
+	 * <br />
+	 * Since 3.1 the {@link Prescription} will be in the same order they were added
+	 * {@link Rezept#addPrescription(Prescription)}.
 	 * 
 	 * @return all prescriptions with a matching recipe id entry
 	 */
@@ -122,7 +126,9 @@ public class Rezept extends PersistentObject {
 		for (String s : list) {
 			ret.add(Prescription.load(s));
 		}
-		return ret;
+		return ret.stream()
+			.sorted((p1, p2) -> Integer.compare(p1.getRecipeOrder(), p2.getRecipeOrder()))
+			.collect(Collectors.toList());
 	}
 	
 	/**
@@ -137,7 +143,10 @@ public class Rezept extends PersistentObject {
 	/**
 	 * Add a prescription to the recipe. The Prescription will be marked as recipe entry, and will
 	 * be stopped immediately. The prescription will be deleted if it is removed from the recipe. It
-	 * should not be altered afterwards.
+	 * should not be altered afterwards. <br />
+	 * <br />
+	 * Since 3.1 the {@link Prescription} will be added at the end of the list of the
+	 * {@link Rezept}, and the same order will be applied on {@link Rezept#getLines()}.
 	 * 
 	 * @param p
 	 */
@@ -145,6 +154,15 @@ public class Rezept extends PersistentObject {
 		p.setEndDate(null);
 		p.setEntryType(EntryType.RECIPE);
 		p.set(Prescription.FLD_REZEPT_ID, getId());
+		p.setRecipeOrder(getNextOrder());
+	}
+	
+	private int getNextOrder(){
+		List<Prescription> prescriptions = getLines();
+		if (prescriptions != null && !prescriptions.isEmpty()) {
+			return prescriptions.stream().mapToInt(p -> p.getRecipeOrder()).max().orElse(0) + 1;
+		}
+		return 0;
 	}
 	
 	@Override
