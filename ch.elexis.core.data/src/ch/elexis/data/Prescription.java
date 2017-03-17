@@ -13,6 +13,7 @@ package ch.elexis.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -26,6 +27,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.data.Prescription.EntryType;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -763,7 +765,7 @@ public class Prescription extends PersistentObject {
 		String prescTypeString = get(FLD_PRESC_TYPE);
 		if (prescTypeString != null && !prescTypeString.isEmpty()) {
 			try {
-				return Integer.parseInt(prescTypeString);
+				return Integer.parseInt(prescTypeString.trim());
 			} catch (NumberFormatException e) {
 				// ignore and return -1
 			}
@@ -775,7 +777,7 @@ public class Prescription extends PersistentObject {
 		if (type == null) {
 			type = EntryType.FIXED_MEDICATION;
 		}
-		setInt(FLD_PRESC_TYPE, type.numericValue());
+		set(FLD_PRESC_TYPE, Integer.toString(type.numericValue()));
 	}
 	
 	/**
@@ -798,6 +800,8 @@ public class Prescription extends PersistentObject {
 		
 		private int numeric;
 		
+		private static HashMap<Integer, EntryType> numericMap = new HashMap<>();
+		
 		private EntryType(int numeric){
 			this.numeric = numeric;
 		}
@@ -807,13 +811,13 @@ public class Prescription extends PersistentObject {
 		}
 		
 		public static EntryType byNumeric(int numeric){
-			EntryType[] entries = values();
-			for (EntryType entryType : entries) {
-				if (entryType.numericValue() == numeric) {
-					return entryType;
+			if (numericMap.isEmpty()) {
+				EntryType[] entries = values();
+				for (int i = 0; i < entries.length; i++) {
+					numericMap.put(entries[i].numericValue(), entries[i]);
 				}
 			}
-			return UNKNOWN;
+			return numericMap.getOrDefault(numeric, UNKNOWN);
 		}
 	}
 	

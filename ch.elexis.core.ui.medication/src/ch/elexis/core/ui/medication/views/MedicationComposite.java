@@ -58,6 +58,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
+import ch.elexis.core.ui.medication.views.MedicationTableViewerContentProvider.MedicationContentProviderComposite;
 import ch.elexis.core.ui.medication.views.provider.MedicationFilter;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
@@ -118,6 +119,7 @@ public class MedicationComposite extends Composite
 	private Text txtIntakeOrder;
 	private Text txtDisposalComment;
 	private Text txtStopComment;
+	private MedicationContentProviderComposite contentProviderComp;
 	
 	/**
 	 * Create the composite.
@@ -179,7 +181,8 @@ public class MedicationComposite extends Composite
 		tablesLayout = new StackLayout();
 		tablesComposite.setLayout(tablesLayout);
 		
-		medicationTableComposite = new MedicationTableComposite(tablesComposite, SWT.NONE);
+		medicationTableComposite =
+			new MedicationTableComposite(tablesComposite, SWT.NONE | SWT.VIRTUAL);
 		medicationTableComposite.setMedicationComposite(this);
 		MedicationViewerHelper.addKeyMoveUpDown(medicationTableComposite.getTableViewer(), this);
 		MedicationViewerHelper.addContextMenu(medicationTableComposite.getTableViewer(), this,
@@ -188,7 +191,7 @@ public class MedicationComposite extends Composite
 		medicationTableComposite.getTableViewer().addSelectionChangedListener(this);
 		
 		medicationHistoryTableComposite =
-			new MedicationHistoryTableComposite(tablesComposite, SWT.NONE);
+			new MedicationHistoryTableComposite(tablesComposite, SWT.NONE | SWT.VIRTUAL);
 		medicationHistoryTableComposite.setMedicationComposite(this);
 		MedicationViewerHelper.addKeyMoveUpDown(medicationHistoryTableComposite.getTableViewer(),
 			this);
@@ -229,6 +232,12 @@ public class MedicationComposite extends Composite
 		compositeState.setLayout(gl_compositeState);
 		compositeState.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		
+		contentProviderComp = new MedicationContentProviderComposite(compositeState, SWT.NONE);
+		contentProviderComp
+			.setContentProvider((MedicationTableViewerContentProvider) medicationTableComposite
+				.getTableViewer().getContentProvider());
+		contentProviderComp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		Label lblLastDisposal = new Label(compositeState, SWT.NONE);
 		lblLastDisposal.setText(Messages.MedicationComposite_lastReceived);
 		
@@ -261,12 +270,18 @@ public class MedicationComposite extends Composite
 					medicationHistoryTableComposite.setPendingInput();
 					medicationHistoryTableComposite.getTableViewer().refresh();
 					switchToViewerSoftOrderIfNotActive(ViewerSortOrder.DEFAULT);
+					contentProviderComp.setContentProvider(
+						(MedicationTableViewerContentProvider) medicationHistoryTableComposite
+							.getTableViewer().getContentProvider());
 				} else {
 					showSearchFilterComposite(false);
 					tablesLayout.topControl = medicationTableComposite;
 					tablesLayout.topControl = medicationTableComposite;
 					medicationTableComposite.setPendingInput();
 					medicationTableComposite.getTableViewer().refresh();
+					contentProviderComp.setContentProvider(
+						(MedicationTableViewerContentProvider) medicationTableComposite
+							.getTableViewer().getContentProvider());
 				}
 				tablesComposite.layout();
 				
@@ -678,18 +693,13 @@ public class MedicationComposite extends Composite
 		}
 		
 		List<Prescription> medicationInput = MedicationViewHelper.loadInputData(false, pat.getId());
-		List<MedicationTableViewerItem> tvMedicationInput =
-			MedicationTableViewerItem.createFromPrescriptionList(medicationInput,
-				medicationTableComposite.getTableViewer());
-		medicationTableComposite.setInput(tvMedicationInput);
+		medicationTableComposite.setInput(medicationInput);
 		
 		List<Prescription> medicationHistoryInput =
 			MedicationViewHelper.loadInputData(true, pat.getId());
-		List<MedicationTableViewerItem> tvMedicationHistoryInput =
-			MedicationTableViewerItem.createFromPrescriptionList(medicationHistoryInput,
-				medicationHistoryTableComposite.getTableViewer());
-		medicationHistoryTableComposite.setInput(tvMedicationHistoryInput);
+		medicationHistoryTableComposite.setInput(medicationHistoryInput);
 		
+		contentProviderComp.refresh();
 		selectedMedication.setValue(null);
 		lblLastDisposalLink.setText("");
 		showMedicationDetailComposite(null);

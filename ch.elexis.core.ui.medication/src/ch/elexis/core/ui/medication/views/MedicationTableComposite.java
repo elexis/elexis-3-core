@@ -3,7 +3,6 @@ package ch.elexis.core.ui.medication.views;
 import java.util.List;
 
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -16,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.data.Prescription;
 
 public class MedicationTableComposite extends Composite {
 	
@@ -23,7 +23,7 @@ public class MedicationTableComposite extends Composite {
 	private TableColumnLayout layout;
 	
 	private MedicationComposite medicationComposite;
-	private List<MedicationTableViewerItem> pendingInput;
+	private List<Prescription> pendingInput;
 	
 	public MedicationTableComposite(Composite parent, int style){
 		super(parent, style);
@@ -60,7 +60,7 @@ public class MedicationTableComposite extends Composite {
 		MedicationViewerHelper.createIntakeCommentColumn(viewer, layout, 4);
 		MedicationViewerHelper.createMandantColumn(viewer, layout, 5);
 		
-		viewer.setContentProvider(ArrayContentProvider.getInstance());
+		viewer.setContentProvider(new MedicationTableViewerContentProvider(viewer));
 	}
 	
 	public void setMedicationComposite(MedicationComposite medicationComposite){
@@ -71,11 +71,11 @@ public class MedicationTableComposite extends Composite {
 		return viewer;
 	}
 	
-	public void setInput(List<MedicationTableViewerItem> tvMedicationInput){
+	public void setInput(List<Prescription> medicationInput){
 		if (isVisible()) {
-			viewer.setInput(tvMedicationInput);
+			viewer.setInput(medicationInput);
 		} else {
-			pendingInput = tvMedicationInput;
+			pendingInput = medicationInput;
 		}
 	}
 	

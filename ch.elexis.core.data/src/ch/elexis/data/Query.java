@@ -115,6 +115,11 @@ public class Query<T> {
 		@Nullable final String[] prefetch){
 		
 		try {
+			template = CoreHub.poFactory.createTemplate(cl);
+			load = cl.getMethod("load", new Class[] {
+				String.class
+			});
+			
 			if (prefetch != null) {
 				// resolve the delivered field names to the real database columns
 				// consider the resp. datatypes stored
@@ -136,11 +141,6 @@ public class Query<T> {
 			} else {
 				fetchVals = ID_FETCH_VAL;
 			}
-			
-			template = CoreHub.poFactory.createTemplate(cl);
-			load = cl.getMethod("load", new Class[] {
-				String.class
-			});
 			clear(false);
 			
 			if (field != null && value != null) {

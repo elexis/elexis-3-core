@@ -179,7 +179,12 @@ public class Patient extends Person {
 	 * @return
 	 */
 	public List<Prescription> getMedication(@Nullable EntryType filterType){
-		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+		// prefetch the values needed for filter operations
+		Query<Prescription> qbe = new Query<Prescription>(Prescription.class, null, null,
+			Prescription.TABLENAME, new String[] {
+				Prescription.FLD_DATE_UNTIL, Prescription.FLD_REZEPT_ID,
+				Prescription.FLD_PRESC_TYPE, Prescription.FLD_ARTICLE
+			});
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
 		qbe.add(Prescription.FLD_REZEPT_ID, StringTool.leer, null);
 		String today = new TimeTool().toString(TimeTool.DATE_COMPACT);
@@ -208,7 +213,12 @@ public class Patient extends Person {
 		List<Prescription> prescriptions = getMedication(filterType);
 		StringBuilder sb = new StringBuilder();
 		
-		prescriptions.stream().forEach(p -> sb.append(p.getLabel()).append(StringTool.lf));
+		prescriptions.stream().forEach(p -> {
+			if (sb.length() > 0) {
+				sb.append(StringTool.lf);
+			}
+			sb.append(p.getLabel());
+		});
 		return sb.toString();
 	}
 	
