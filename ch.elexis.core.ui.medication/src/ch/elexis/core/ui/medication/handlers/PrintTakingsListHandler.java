@@ -5,11 +5,16 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.State;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
+import ch.elexis.core.ui.medication.views.MedicationView;
+import ch.elexis.core.ui.medication.views.ViewerSortOrder;
 import ch.elexis.core.ui.views.RezeptBlatt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
@@ -42,8 +49,9 @@ public class PrintTakingsListHandler extends AbstractHandler {
 		
 		List<Prescription> prescRecipes = getPrescriptions(patient, medicationType, event);
 		if (!prescRecipes.isEmpty()) {
+			prescRecipes = sortPrescriptions(prescRecipes, event);
 			try {
-				RezeptBlatt rpb = (RezeptBlatt) HandlerUtil.getActiveWorkbenchWindow(event)
+				RezeptBlatt rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getActivePage().showView(RezeptBlatt.ID);
 				rpb.createEinnahmeliste(patient,
 					prescRecipes.toArray(new Prescription[prescRecipes.size()]));
@@ -53,6 +61,16 @@ public class PrintTakingsListHandler extends AbstractHandler {
 		}
 		
 		return null;
+	}
+	
+	private List<Prescription> sortPrescriptions(List<Prescription> prescRecipes,
+		ExecutionEvent event){
+		SorterAdapter sorter = new SorterAdapter(event);
+		IWorkbenchPart part = HandlerUtil.getActivePart(event);
+		if (part instanceof MedicationView) {
+			return sorter.getSorted(prescRecipes);
+		}
+		return prescRecipes;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -89,5 +107,61 @@ public class PrintTakingsListHandler extends AbstractHandler {
 			return patient.getMedication(EntryType.RESERVE_MEDICATION);
 		}
 		return Collections.emptyList();
+	}
+	
+	/**
+	 * Adpater class to use {@link ViewerSortOrder} sorter implementations to sort a list of
+	 * {@link Prescription}. Sorting is done using the current UI state of the
+	 * {@link ViewerSortOrder} implementation.
+	 * 
+	 * @author thomas
+	 *
+	 */
+	public static class SorterAdapter {
+		private ViewerSortOrder.ManualViewerComparator manualComparator =
+			new ViewerSortOrder.ManualViewerComparator();
+		
+		private ViewerSortOrder.DefaultViewerComparator defaultComparator =
+			new ViewerSortOrder.DefaultViewerComparator();
+		
+		private enum CompareMode {
+				MANUAL, DEFAULT
+		}
+		
+		private CompareMode mode = CompareMode.DEFAULT;
+		
+		public SorterAdapter(ExecutionEvent event){
+			ICommandService commandService = (ICommandService) HandlerUtil.getActiveSite(event)
+				.getService(ICommandService.class);
+			if (commandService != null) {
+				Command command = commandService.getCommand(ApplyCustomSortingHandler.CMD_ID);
+				State state = command.getState(ApplyCustomSortingHandler.STATE_ID);
+				if (state.getValue() instanceof Boolean) {
+					if ((Boolean) state.getValue()) {
+						mode = SorterAdapter.CompareMode.MANUAL;
+					}
+				}
+			}
+		}
+		
+		public List<Prescription> getSorted(List<Prescription> list){
+			MedicationTableViewerItem[] toSort =
+				MedicationTableViewerItem.createFromPrescriptionList(list, null)
+					.toArray(new MedicationTableViewerItem[list.size()]);
+			// make sure properties are resolved for sorting
+			for (MedicationTableViewerItem medicationTableViewerItem : toSort) {
+				medicationTableViewerItem.resolve();
+			}
+			if (mode == CompareMode.DEFAULT) {
+				defaultComparator.sort(null, toSort);
+			} else if (mode == CompareMode.MANUAL) {
+				manualComparator.sort(null, toSort);
+			}
+			ArrayList<Prescription> ret = new ArrayList<>();
+			for (int i = 0; i < toSort.length; i++) {
+				ret.add(toSort[i].getPrescription());
+			}
+			return ret;
+		}
 	}
 }

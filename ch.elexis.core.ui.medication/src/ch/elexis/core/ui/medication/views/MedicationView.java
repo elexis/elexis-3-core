@@ -8,11 +8,13 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.medication.PreferenceConstants;
 import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 
 public class MedicationView extends ViewPart implements IActivationListener {
@@ -31,6 +33,17 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	private ElexisEventListener eeli_presc = new ElexisUiEventListenerImpl(Prescription.class,
 		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE) {
 		public void runInUi(ElexisEvent ev){
+			PersistentObject prescObj = ev.getObject();
+			if (prescObj instanceof Prescription) {
+				// ignore updates of recipe and self dispensed entries, if not showing history
+				if (!getMedicationComposite().isShowingHistory()) {
+					EntryType entryType = ((Prescription) prescObj).getEntryType();
+					if (entryType == EntryType.RECIPE || entryType == EntryType.SELF_DISPENSED) {
+						return;
+					}
+					
+				}
+			}
 			updateUi(ElexisEventDispatcher.getSelectedPatient(), true);
 		}
 	};
@@ -49,7 +62,8 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void setFocus(){
-		updateUi(ElexisEventDispatcher.getSelectedPatient(), true);
+		tpc.setFocus();
+		updateUi(ElexisEventDispatcher.getSelectedPatient(), false);
 	}
 	
 	private void updateUi(Patient pat, boolean forceUpdate){

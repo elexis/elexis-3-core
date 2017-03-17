@@ -292,6 +292,13 @@ public class MedicationComposite extends Composite
 		});
 	}
 	
+	public boolean isShowingHistory(){
+		if (btnShowHistory != null && !btnShowHistory.isDisposed()) {
+			return btnShowHistory.getSelection();
+		}
+		return false;
+	}
+	
 	private void medicationDetailComposite(){
 		compositeMedicationDetail = new Composite(this, SWT.BORDER);
 		GridLayout gl_compositeMedicationDetail = new GridLayout(6, false);
