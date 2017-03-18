@@ -53,10 +53,12 @@ public class MedicationView extends ViewPart implements IActivationListener {
 		tpc = new MedicationComposite(parent, SWT.NONE, getSite());
 		getSite().setSelectionProvider(tpc);
 		GlobalEventDispatcher.addActivationListener(this, this);
+		int sorter = CoreHub.userCfg.get(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, 1);
+		tpc.setViewerSortOrder(ViewerSortOrder.getSortOrderPerValue(sorter));
 	}
 	
 	public void setMedicationTableViewerComparator(ViewerSortOrder order){
-		tpc.setComparator(order.vc);
+		tpc.setViewerSortOrder(order);
 		CoreHub.userCfg.set(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, order.val);
 	}
 	
@@ -74,8 +76,6 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	public void activation(boolean mode){
 		if (mode) {
 			setFocus();
-			int sorter = CoreHub.userCfg.get(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, 1);
-			tpc.setComparator(ViewerSortOrder.getSortOrderPerValue(sorter).vc);
 		}
 	}
 	
