@@ -187,21 +187,6 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:ch.elexis.core.ui.brief.send">
-         <command
-               commandId="ch.elexis.core.ui.commands.SendBriefAsMail"
-               label="als E-Mail"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <test
-                     property="ch.elexis.core.mail.ui.sendavailable">
-               </test>
-            </visibleWhen>
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
             locationURI="toolbar:ch.elexis.core.ui.views.rechnung.BillingProposalView">
          <command
                commandId="ch.elexis.core.ui.StartBillingProposal"
@@ -246,16 +231,6 @@
                   name="ch.elexis.core.ui.BillingProposalViewCreateBills.selection"
                   value="selection">
             </parameter>
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:ch.elexis.core.ui.views.rechnung.BillingProposalView">
-         <command
-               commandId="ch.elexis.core.ui.PrintBillingProposalView"
-               icon="icon://IMG_PRINTER"
-               label="Rechnungs-Vorschlag drucken"
-               style="push">
          </command>
       </menuContribution>
       <menuContribution
@@ -607,10 +582,6 @@
          </commandParameter>
       </command>
       <command
-            id="ch.elexis.core.ui.PrintBillingProposalView"
-            name="Print billing proposal">
-      </command>
-      <command
             id="ch.elexis.core.ui.BillingProposalViewRemove"
             name="Remove from proposal">
       </command>
@@ -717,10 +688,6 @@
          <handler
                class="ch.elexis.core.ui.commands.BillingProposalViewCreateBillsHandler"
                commandId="ch.elexis.core.ui.BillingProposalViewCreateBills">
-         </handler>
-         <handler
-               class="ch.elexis.core.ui.commands.PrintBillingProposalHandler"
-               commandId="ch.elexis.core.ui.PrintBillingProposalView">
          </handler>
          <handler
                class="ch.elexis.core.ui.commands.BillingProposalRemoveHandler"
