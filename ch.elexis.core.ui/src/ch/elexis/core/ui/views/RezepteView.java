@@ -356,9 +356,9 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 						return;
 					}
 				}
-				new Rezept(act);
+				Rezept rezept = new Rezept(act);
 				tv.refresh();
-				doSelectNewRezept();
+				doSelectNewRezept(rezept);
 				doAddLine();
 				}
 			};
@@ -461,9 +461,9 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 		deleteRpAction.setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 	}
 	
-	private void doSelectNewRezept(){
+	private void doSelectNewRezept(Rezept rezept){
 		tv.getTable().setFocus();
-		tv.setSelection(new StructuredSelection(tv.getElementAt(0)), true);
+		tv.setSelection(new StructuredSelection(rezept), true);
 	}
 	
 	private void doAddLine(){
