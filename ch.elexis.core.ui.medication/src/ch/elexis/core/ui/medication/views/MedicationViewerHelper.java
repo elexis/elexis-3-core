@@ -3,21 +3,17 @@ package ch.elexis.core.ui.medication.views;
 import java.text.MessageFormat;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import ch.elexis.core.constants.StringConstants;
@@ -25,8 +21,6 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableDownAction;
-import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpAction;
 import ch.elexis.data.Rezept;
 import ch.elexis.data.Verrechnet;
 
@@ -37,6 +31,8 @@ public class MedicationViewerHelper {
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblclmnStateDisposition = ret.getColumn();
 		layout.setColumnData(tblclmnStateDisposition, new ColumnPixelData(20, false, false));
+		tblclmnStateDisposition.addSelectionListener(
+			getSelectionAdapter(viewer, tblclmnStateDisposition, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -265,53 +261,11 @@ public class MedicationViewerHelper {
 		IWorkbenchPartSite site){
 		// register context menu for table viewer
 		MenuManager menuManager = new MenuManager();
-		menuManager.add(new MovePrescriptionPositionInTableUpAction(viewer, medicationComposite));
-		menuManager.add(new MovePrescriptionPositionInTableDownAction(viewer, medicationComposite));
-		menuManager.add(new Separator());
-		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		Menu menu = menuManager.createContextMenu(viewer.getTable());
 		
 		viewer.getTable().setMenu(menu);
 		if (site != null) {
 			site.registerContextMenu("ch.elexis.core.ui.medication.tables", menuManager, viewer);
-		}
-	}
-	
-	public static void addKeyMoveUpDown(TableViewer viewer,
-		MedicationComposite medicationComposite){
-		viewer.getTable().addKeyListener(new UpDownKeyAdapter(viewer, medicationComposite));
-	}
-	
-	private static class UpDownKeyAdapter extends KeyAdapter {
-		private MovePrescriptionPositionInTableUpAction upAction;
-		private MovePrescriptionPositionInTableDownAction downAction;
-		
-		public UpDownKeyAdapter(TableViewer viewer, MedicationComposite medicationComposite){
-			upAction = new MovePrescriptionPositionInTableUpAction(viewer, medicationComposite);
-			downAction = new MovePrescriptionPositionInTableDownAction(viewer, medicationComposite);
-		}
-		
-		@Override
-		public void keyPressed(KeyEvent e){
-			if ((e.stateMask == SWT.COMMAND || e.stateMask == SWT.CTRL)
-				&& (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN)) {
-				if (e.keyCode == SWT.ARROW_UP) {
-					upAction.run();
-				} else if (e.keyCode == SWT.ARROW_DOWN) {
-					downAction.run();
-				}
-				e.doit = false;
-			} else {
-				super.keyPressed(e);
-			}
-		}
-		
-		@Override
-		public void keyReleased(KeyEvent e){
-			if (e.stateMask == SWT.COMMAND
-				&& (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN))
-				return;
-			super.keyReleased(e);
 		}
 	}
 	

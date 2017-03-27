@@ -8,11 +8,13 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.medication.PreferenceConstants;
 import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 
 public class MedicationView extends ViewPart implements IActivationListener {
@@ -31,6 +33,17 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	private ElexisEventListener eeli_presc = new ElexisUiEventListenerImpl(Prescription.class,
 		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE) {
 		public void runInUi(ElexisEvent ev){
+			PersistentObject prescObj = ev.getObject();
+			if (prescObj instanceof Prescription) {
+				// ignore updates of recipe and self dispensed entries, if not showing history
+				if (!getMedicationComposite().isShowingHistory()) {
+					EntryType entryType = ((Prescription) prescObj).getEntryType();
+					if (entryType == EntryType.RECIPE || entryType == EntryType.SELF_DISPENSED) {
+						return;
+					}
+					
+				}
+			}
 			updateUi(ElexisEventDispatcher.getSelectedPatient(), true);
 		}
 	};
@@ -40,16 +53,19 @@ public class MedicationView extends ViewPart implements IActivationListener {
 		tpc = new MedicationComposite(parent, SWT.NONE, getSite());
 		getSite().setSelectionProvider(tpc);
 		GlobalEventDispatcher.addActivationListener(this, this);
+		int sorter = CoreHub.userCfg.get(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, 1);
+		tpc.setViewerSortOrder(ViewerSortOrder.getSortOrderPerValue(sorter));
 	}
 	
 	public void setMedicationTableViewerComparator(ViewerSortOrder order){
-		tpc.setComparator(order.vc);
+		tpc.setViewerSortOrder(order);
 		CoreHub.userCfg.set(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, order.val);
 	}
 	
 	@Override
 	public void setFocus(){
-		updateUi(ElexisEventDispatcher.getSelectedPatient(), true);
+		tpc.setFocus();
+		updateUi(ElexisEventDispatcher.getSelectedPatient(), false);
 	}
 	
 	private void updateUi(Patient pat, boolean forceUpdate){
@@ -60,8 +76,6 @@ public class MedicationView extends ViewPart implements IActivationListener {
 	public void activation(boolean mode){
 		if (mode) {
 			setFocus();
-			int sorter = CoreHub.userCfg.get(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, 1);
-			tpc.setComparator(ViewerSortOrder.getSortOrderPerValue(sorter).vc);
 		}
 	}
 	

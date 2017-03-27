@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -40,6 +40,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -186,7 +187,6 @@ public class MedicationComposite extends Composite
 		medicationTableComposite =
 			new MedicationTableComposite(tablesComposite, SWT.NONE | SWT.VIRTUAL);
 		medicationTableComposite.setMedicationComposite(this);
-		MedicationViewerHelper.addKeyMoveUpDown(medicationTableComposite.getTableViewer(), this);
 		MedicationViewerHelper.addContextMenu(medicationTableComposite.getTableViewer(), this,
 			partSite);
 		// this composite manages selection of both tables
@@ -195,8 +195,6 @@ public class MedicationComposite extends Composite
 		medicationHistoryTableComposite =
 			new MedicationHistoryTableComposite(tablesComposite, SWT.NONE | SWT.VIRTUAL);
 		medicationHistoryTableComposite.setMedicationComposite(this);
-		MedicationViewerHelper.addKeyMoveUpDown(medicationHistoryTableComposite.getTableViewer(),
-			this);
 		MedicationViewerHelper.addContextMenu(medicationHistoryTableComposite.getTableViewer(),
 			this, partSite);
 		// this composite manages selection of both tables
@@ -208,13 +206,7 @@ public class MedicationComposite extends Composite
 		tablesLayout.topControl = medicationTableComposite;
 	}
 	
-	public void switchToViewerSoftOrderIfNotActive(ViewerSortOrder vso){
-		ViewerSortOrder order = MedicationViewHelper.getSelectedComparator();
-		
-		if (order.equals(vso)) {
-			return;
-		}
-
+	public void setViewerSortOrder(ViewerSortOrder vso){
 		medicationTableComposite.getTableViewer().setComparator(vso.vc);
 		medicationHistoryTableComposite.getTableViewer().setComparator(vso.vc);
 		
@@ -271,7 +263,7 @@ public class MedicationComposite extends Composite
 					tablesLayout.topControl = medicationHistoryTableComposite;
 					medicationHistoryTableComposite.setPendingInput();
 					medicationHistoryTableComposite.getTableViewer().refresh();
-					switchToViewerSoftOrderIfNotActive(ViewerSortOrder.DEFAULT);
+					setViewerSortOrder(ViewerSortOrder.DEFAULT);
 					contentProviderComp.setContentProvider(
 						(MedicationTableViewerContentProvider) medicationHistoryTableComposite
 							.getTableViewer().getContentProvider());
@@ -290,6 +282,13 @@ public class MedicationComposite extends Composite
 				updateUi(pat, false);
 			}
 		});
+	}
+	
+	public boolean isShowingHistory(){
+		if (btnShowHistory != null && !btnShowHistory.isDisposed()) {
+			return btnShowHistory.getSelection();
+		}
+		return false;
 	}
 	
 	private void medicationDetailComposite(){
@@ -860,9 +859,14 @@ public class MedicationComposite extends Composite
 		medicationHistoryTableComposite.getTableViewer().refresh();
 	}
 	
-	public void setComparator(ViewerComparator vc){
-		medicationTableComposite.getTableViewer().setComparator(vc);
-		medicationHistoryTableComposite.getTableViewer().setComparator(vc);
+	public TableViewer getActiveTableViewer(){
+		Control topControl = tablesLayout.topControl;
+		if (topControl instanceof MedicationTableComposite) {
+			return ((MedicationTableComposite) topControl).getTableViewer();
+		} else if (topControl instanceof MedicationHistoryTableComposite) {
+			return ((MedicationHistoryTableComposite) topControl).getTableViewer();
+		}
+		return null;
 	}
 	
 	/**

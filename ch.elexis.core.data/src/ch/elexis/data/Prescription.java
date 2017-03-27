@@ -398,11 +398,39 @@ public class Prescription extends PersistentObject {
 	 * Mark this prescription as an applied article. Typically only prescriptions with
 	 * {@link EntryType.SELF_DISPENSED} are marked as applied.
 	 * 
-	 * @param disposalComment
+	 * @param value
 	 * @since 3.1.0
 	 */
 	public void setApplied(Boolean value){
 		setExtInfoStoredObjectByKey(Constants.FLD_EXT_IS_APPLIED, Boolean.toString(value));
+	}
+	
+	/**
+	 * @return Index of the prescription on the recipe. Should only be used for {@link Prescription}
+	 *         with type {@link EntryType#RECIPE}.
+	 * @since 3.1.0
+	 */
+	public int getRecipeOrder(){
+		String value = checkNull((String) getExtInfoStoredObjectByKey(Constants.FLD_EXT_RECIPE_ORDER));
+		if (value != null && !value.isEmpty()) {
+			try {
+				return Integer.valueOf(value);
+			} catch (NumberFormatException e) {
+				// ignore and return 0
+			}
+		}
+		return 0;
+	}
+	
+	/**
+	 * Set the index of the prescription on the recipe. Should only be used for {@link Prescription}
+	 * with type {@link EntryType#RECIPE}.
+	 * 
+	 * @param value
+	 * @since 3.1.0
+	 */
+	public void setRecipeOrder(int value){
+		setExtInfoStoredObjectByKey(Constants.FLD_EXT_RECIPE_ORDER, Integer.toString(value));
 	}
 	
 	/**
