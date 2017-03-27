@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -351,14 +352,14 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 						Konsultation k = act.getLetzteKons(false);
 						if (k == null) {
 							SWTHelper.alert(Messages.RezepteView_noCaseSelected, //$NON-NLS-1$
-								Messages.RezepteView_pleaseCreateOrChooseCase); //$NON-NLS-1$
-							return;
-						} else {
-							fall = k.getFall();
-						}
+							Messages.RezepteView_pleaseCreateOrChooseCase); //$NON-NLS-1$							
+						return;
 					}
-					new Rezept(act);
-					tv.refresh();
+				}
+				Rezept rezept = new Rezept(act);
+				tv.refresh();
+				doSelectNewRezept(rezept);
+				doAddLine();
 				}
 			};
 		deleteRpAction = new Action(Messages.RezepteView_deletePrescriptionActiom) { //$NON-NLS-1$
@@ -393,21 +394,7 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 		addLineAction = new Action(Messages.RezepteView_newLineAction) { //$NON-NLS-1$
 				@Override
 				public void run(){
-					try {
-						LeistungenView lv1 =
-							(LeistungenView) getViewSite().getPage().showView(LeistungenView.ID);
-						CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
-						CTabItem[] tabItems = lv1.ctab.getItems();
-						for (CTabItem tab : tabItems) {
-							ICodeElement ics = (ICodeElement) tab.getData();
-							if (ics instanceof Artikel) {
-								lv1.ctab.setSelection(tab);
-								break;
-							}
-						}
-					} catch (PartInitException ex) {
-						ExHandler.handle(ex);
-					}
+					doAddLine();
 				}
 			};
 		printAction = new Action(Messages.RezepteView_printAction) { //$NON-NLS-1$
@@ -472,6 +459,29 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 		addLineAction.setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 		printAction.setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 		deleteRpAction.setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
+	}
+	
+	private void doSelectNewRezept(Rezept rezept){
+		tv.getTable().setFocus();
+		tv.setSelection(new StructuredSelection(rezept), true);
+	}
+	
+	private void doAddLine(){
+		try {
+			LeistungenView lv1 =
+				(LeistungenView) getViewSite().getPage().showView(LeistungenView.ID);
+			CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
+			CTabItem[] tabItems = lv1.ctab.getItems();
+			for (CTabItem tab : tabItems) {
+				ICodeElement ics = (ICodeElement) tab.getData();
+				if (ics instanceof Artikel) {
+					lv1.ctab.setSelection(tab);
+					break;
+				}
+			}
+		} catch (PartInitException ex) {
+			ExHandler.handle(ex);
+		}
 	}
 	
 	public void activation(final boolean mode){
