@@ -14,6 +14,8 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -24,7 +26,10 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -76,6 +81,8 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 	private Patient actPatient;
 	
 	private Action addPaymentAction, removePaymentAction;
+	private int sortColumn;
+	private boolean sortReverse;
 	
 	// column indices
 	private static final int DATE = 0;
@@ -117,6 +124,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 			}
 		};
 	
+	@Override
 	public void createPartControl(Composite parent){
 		initializeJobs();
 		
@@ -147,15 +155,35 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
+		SelectionAdapter sortListener = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				TableColumn col = (TableColumn) e.getSource();
+				Integer colNo = (Integer) col.getData();
+				if (colNo == sortColumn) {
+					sortReverse = !sortReverse;
+				} else {
+					sortReverse = false;
+					sortColumn = colNo;
+				}
+				accountViewer.getTable().setSortDirection(sortReverse ? SWT.DOWN : SWT.UP);
+				accountViewer.getTable().setSortColumn(col);
+				accountViewer.refresh();
+			}
+		};
+		
 		// columns
 		TableColumn[] tc = new TableColumn[COLUMN_TEXT.length];
 		for (int i = 0; i < COLUMN_TEXT.length; i++) {
 			tc[i] = new TableColumn(table, SWT.NONE);
 			tc[i].setText(COLUMN_TEXT[i]);
 			tc[i].setWidth(COLUMN_WIDTH[i]);
+			tc[i].setData(new Integer(i));
+			tc[i].addSelectionListener(sortListener);
 		}
 		
 		accountViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public Object[] getElements(Object inputElement){
 				if (actPatient == null) {
 					return new Object[] {
@@ -163,36 +191,42 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 					};
 				}
 				Query<AccountTransaction> qa =
-					new Query<AccountTransaction>(AccountTransaction.class);
+					new Query<>(AccountTransaction.class);
 				qa.add(AccountTransaction.FLD_PATIENT_ID, Query.EQUALS, actPatient.getId());
-				qa.orderBy(false, new String[] {
+				qa.orderBy(true, new String[] {
 					AccountTransaction.FLD_DATE
 				});
 				return qa.execute().toArray();
 				
 			}
 			
+			@Override
 			public void dispose(){
 				// nothing to do
 			}
 			
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
 				// nothing to do
 			}
 		});
 		accountViewer.setLabelProvider(new ITableLabelProvider() {
+			@Override
 			public void addListener(ILabelProviderListener listener){
 				// nothing to do
 			}
 			
+			@Override
 			public void removeListener(ILabelProviderListener listener){
 				// nothing to do
 			}
 			
+			@Override
 			public void dispose(){
 				// nothing to do
 			}
 			
+			@Override
 			public String getColumnText(Object element, int columnIndex){
 				if (!(element instanceof AccountTransaction)) {
 					return "";
@@ -224,18 +258,22 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 				return text;
 			}
 			
+			@Override
 			public Image getColumnImage(Object element, int columnIndex){
 				return null;
 			}
 			
+			@Override
 			public boolean isLabelProperty(Object element, String property){
 				return false;
 			}
 		});
 		
+		accountViewer.setSorter(new AccountTransactionSorter());
 		// viewer.setSorter(new NameSorter());
 		accountViewer.setInput(getViewSite());
 		
+
 		/*
 		 * makeActions(); hookContextMenu(); hookDoubleClickAction(); contributeToActionBars();
 		 */
@@ -248,11 +286,17 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 		GlobalEventDispatcher.addActivationListener(this, this);
 		accountViewer.addSelectionChangedListener(GlobalEventDispatcher.getInstance()
 			.getDefaultListener());
+		
+		if (sortColumn == DATE) {
+			sortReverse = true;
+		}
+		
 	}
 	
 	private void initializeJobs(){
 		accountExcessJob = new AccountExcessJob(ACCOUNT_EXCESS_JOB_NAME);
 		accountExcessJob.addListener(new BackgroundJobListener() {
+			@Override
 			public void jobFinished(BackgroundJob j){
 				setKontoText();
 			}
@@ -267,6 +311,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus(){
 		accountViewer.getControl().setFocus();
 	}
@@ -336,10 +381,12 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 	 * ActivationListener
 	 */
 	
+	@Override
 	public void activation(boolean mode){
 		// nothing to do
 	}
 	
+	@Override
 	public void visible(boolean mode){
 		if (mode == true) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_at, eeli_pat);
@@ -356,25 +403,31 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}
@@ -430,6 +483,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 			super(name);
 		}
 		
+		@Override
 		public IStatus execute(IProgressMonitor monitor){
 			if (AccountView.this.actPatient != null) {
 				result = actPatient.getAccountExcess();
@@ -442,8 +496,48 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 			return Status.OK_STATUS;
 		}
 		
+		@Override
 		public int getSize(){
 			return 1;
+		}
+	}
+	
+	class AccountTransactionSorter extends ViewerSorter {
+		
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2){
+			if ((e1 instanceof AccountTransaction) && (e2 instanceof AccountTransaction)) {
+				AccountTransaction accountTransaction1 = (AccountTransaction) e1;
+				AccountTransaction accountTransaction2 = (AccountTransaction) e2;
+				int retVal = 0;
+				switch (sortColumn) {
+				case DATE:
+					retVal = ObjectUtils.compare(accountTransaction1.getDate(),
+						accountTransaction2.getDate());
+					break;
+				case AMOUNT:
+					retVal = ObjectUtils.compare(accountTransaction1.getAmount(),
+						accountTransaction2.getAmount());
+					break;
+				case BILL:
+					Rechnung rechnung1 = accountTransaction1.getRechnung();
+					Rechnung rechnung2 = accountTransaction2.getRechnung();
+					if (rechnung1 == null)
+						retVal = -1;
+					else if (rechnung2 == null)
+						retVal = 1;
+					else
+						retVal = ObjectUtils.compare(NumberUtils.toInt(rechnung1.getNr()),
+							NumberUtils.toInt(rechnung2.getNr()));
+					break;
+				case REMARKS:
+					retVal = ObjectUtils.compare(accountTransaction1.getRemark(),
+						accountTransaction2.getRemark());
+					break;
+				}
+				return sortReverse ? retVal * -1 : retVal;
+			}
+			return 0;
 		}
 	}
 }
