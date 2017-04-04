@@ -351,7 +351,7 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
-	 * the prescription order for the intake (Einnahmevorschrift)
+	 * Get the prescription order for the intake (Anwendungsinstruktion)
 	 * 
 	 * @return
 	 */
@@ -360,12 +360,17 @@ public class Prescription extends PersistentObject {
 		
 	}
 	
+	/**
+	 * Set the prescription order for the intake (Anwendungsinstruktion)
+	 * 
+	 * @param value
+	 */
 	public void setBemerkung(String value){
 		set(FLD_REMARK, checkNull(value));
 	}
 	
 	/**
-	 * @return a disposal comment (Abgabekommentar)
+	 * @return a disposal comment (Anwendungsgrund)
 	 * @since 3.1.0
 	 */
 	public String getDisposalComment(){
@@ -374,7 +379,7 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
-	 * set a disposal comment (Abgabekommentar)
+	 * set a disposal comment (Anwendungsgrund)
 	 * 
 	 * @param disposalComment
 	 * @since 3.1.0
