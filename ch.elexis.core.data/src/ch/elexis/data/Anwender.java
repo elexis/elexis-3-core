@@ -19,8 +19,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Strings;
-
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -169,7 +167,7 @@ public class Anwender extends Person {
 			hashSet.remove(m);
 		}
 		List<String> edList = hashSet.stream().map(p -> p.getLabel()).collect(Collectors.toList());
-		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, ts(edList));
+		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, edList.isEmpty() ? "" : ts(edList));
 	}
 
 	@Override
