@@ -362,9 +362,10 @@ public class Kontakt extends PersistentObject {
 	 *            ein Text, der die Beziehung dieser Adresse zum Kontakt definiert (z.B.
 	 *            "Geschäftlich" oder "Orthopäde" oder so)
 	 */
-	public BezugsKontakt addBezugsKontakt(Kontakt adr, String sBezug){
-		if ((adr != null) && (sBezug != null)) {
-			return new BezugsKontakt(this, adr, sBezug);
+	public BezugsKontakt addBezugsKontakt(Kontakt adr,
+		BezugsKontaktRelation bezugsKontaktRelation){
+		if (adr != null && bezugsKontaktRelation != null) {
+			return new BezugsKontakt(this, adr, bezugsKontaktRelation);
 		}
 		return null;
 	}

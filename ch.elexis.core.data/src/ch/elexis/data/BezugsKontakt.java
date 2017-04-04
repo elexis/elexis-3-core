@@ -25,11 +25,15 @@ public class BezugsKontakt extends PersistentObject {
 		addMapping(TABLENAME, MY_ID, OTHER_ID, RELATION, FLD_MY_RTYPE, FLD_OTHER_RTYPE);
 	}
 	
-	public BezugsKontakt(Kontakt kontakt, Kontakt adr, String bezug){
+
+	public BezugsKontakt(Kontakt kontakt, Kontakt adr, BezugsKontaktRelation bezugsKontaktType){
 		create(null);
+		
 		set(new String[] {
-			MY_ID, OTHER_ID, RELATION
-		}, kontakt.getId(), adr.getId(), bezug);
+			MY_ID, OTHER_ID, RELATION, FLD_MY_RTYPE, FLD_OTHER_RTYPE
+		}, kontakt.getId(), adr.getId(), bezugsKontaktType.getName(),
+			String.valueOf(bezugsKontaktType.getDestRelationType().getValue()),
+			String.valueOf(bezugsKontaktType.getSrcRelationType().getValue()));
 	}
 	
 	@Override
@@ -65,5 +69,4 @@ public class BezugsKontakt extends PersistentObject {
 	protected BezugsKontakt(String id){
 		super(id);
 	}
-	
 }

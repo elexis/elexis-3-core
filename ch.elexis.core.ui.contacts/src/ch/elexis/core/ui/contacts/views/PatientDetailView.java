@@ -66,6 +66,7 @@ import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
+import ch.elexis.data.Person;
 import ch.rgw.tools.StringTool;
 
 public class PatientDetailView extends ViewPart implements IUnlockable {
@@ -212,16 +213,17 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 																						// //$NON-NLS-2$
 					if (ksl.open() == Dialog.OK) {
 						Kontakt k = (Kontakt) ksl.getSelection();
-						BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl();
-						// InputDialog id=new
-						// InputDialog(getShell(),"Bezugstext für
-						// Adresse","Geben Sie bitte einen Text ein, der die
-						// Bedeutung dieser Adresse erklärt","",null);
-						if (bza.open() == Dialog.OK) {
-							String bezug = bza.getResult();
-							BezugsKontakt bk = sp.addBezugsKontakt(k, bezug);
-							inpZusatzAdresse.add(bk);
-							scrldfrm.reflow(true);
+							if (k != null) {
+							BezugsKontaktAuswahl bza =
+									new BezugsKontaktAuswahl(sp.getLabel(true),
+										k.istPerson() ? Person.load(k.getId()).getLabel(true)
+												: k.getLabel(true));
+								if (bza.open() == Dialog.OK && sp != null) {
+									BezugsKontakt bk =
+										sp.addBezugsKontakt(k, bza.getBezugKonkaktRelation());
+									inpZusatzAdresse.add(bk);
+									scrldfrm.reflow(true);
+								}
 						}
 					}
 				}
