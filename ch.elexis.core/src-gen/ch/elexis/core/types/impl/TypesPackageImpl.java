@@ -382,10 +382,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.AGENERIC);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.BUSINESS_EMPLOYER);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.BUSINESS_EMPLOYEE);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_HUSBAND);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_WIFE);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_PARENT);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_CHILD);
+		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_GUARDIAN);
+		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_ICE);
+		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_ALTERNATIVE);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_GENERAL_PRACTITIONER);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_PATIENT);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_CONSULTANT);

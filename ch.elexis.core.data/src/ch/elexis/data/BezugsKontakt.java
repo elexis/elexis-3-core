@@ -12,6 +12,8 @@
 
 package ch.elexis.data;
 
+import ch.elexis.core.types.RelationshipType;
+
 public class BezugsKontakt extends PersistentObject {
 	public static final String RELATION = "Bezug"; //$NON-NLS-1$
 	public static final String OTHER_ID = "otherID"; //$NON-NLS-1$
@@ -25,11 +27,32 @@ public class BezugsKontakt extends PersistentObject {
 		addMapping(TABLENAME, MY_ID, OTHER_ID, RELATION, FLD_MY_RTYPE, FLD_OTHER_RTYPE);
 	}
 	
+	/**
+	 * @deprecated
+	 * @param kontakt
+	 * @param adr
+	 * @param bezug
+	 */
 	public BezugsKontakt(Kontakt kontakt, Kontakt adr, String bezug){
+		this(kontakt, adr,
+			new BezugsKontaktRelation(bezug, RelationshipType.AGENERIC, RelationshipType.AGENERIC));
+	}
+	
+	/**
+	 * 
+	 * @param kontakt
+	 * @param adr
+	 * @param bezugsKontaktType
+	 * @since 3.2
+	 */
+	public BezugsKontakt(Kontakt kontakt, Kontakt adr, BezugsKontaktRelation bezugsKontaktType){
 		create(null);
+		
 		set(new String[] {
-			MY_ID, OTHER_ID, RELATION
-		}, kontakt.getId(), adr.getId(), bezug);
+			MY_ID, OTHER_ID, RELATION, FLD_MY_RTYPE, FLD_OTHER_RTYPE
+		}, kontakt.getId(), adr.getId(), bezugsKontaktType.getName(),
+			String.valueOf(bezugsKontaktType.getDestRelationType().getValue()),
+			String.valueOf(bezugsKontaktType.getSrcRelationType().getValue()));
 	}
 	
 	@Override
@@ -65,5 +88,4 @@ public class BezugsKontakt extends PersistentObject {
 	protected BezugsKontakt(String id){
 		super(id);
 	}
-	
 }

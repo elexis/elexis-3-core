@@ -356,6 +356,25 @@ public class Kontakt extends PersistentObject {
 	/**
 	 * Eine neue Zusatzadresse zu diesem Kontakt zufügen
 	 * 
+	 * @since 3.2
+	 * @param adr
+	 *            die Adresse
+	 * @param sBezug
+	 *            ein Text, der die Beziehung dieser Adresse zum Kontakt definiert (z.B.
+	 *            "Geschäftlich" oder "Orthopäde" oder so)
+	 */
+	public BezugsKontakt addBezugsKontakt(Kontakt adr,
+		BezugsKontaktRelation bezugsKontaktRelation){
+		if (adr != null && bezugsKontaktRelation != null) {
+			return new BezugsKontakt(this, adr, bezugsKontaktRelation);
+		}
+		return null;
+	}
+	
+	/**
+	 * Eine neue Zusatzadresse zu diesem Kontakt zufügen
+	 * 
+	 * @deprecated
 	 * @param adr
 	 *            die Adresse
 	 * @param sBezug

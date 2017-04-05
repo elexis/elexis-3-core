@@ -482,18 +482,18 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						Messages.Patientenblatt2_contactForAdditionalAddress,
 						Messages.Patientenblatt2_pleaseSelectardress, sortFields); // $NON-NLS-1$
 																																																		// //$NON-NLS-2$
-					if (ksl.open() == Dialog.OK) {
+					if (ksl.open() == Dialog.OK && actPatient != null) {
 						Kontakt k = (Kontakt) ksl.getSelection();
-						BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl();
-						// InputDialog id=new
-						// InputDialog(getShell(),"Bezugstext für Adresse","Geben
-						// Sie bitte einen Text ein, der die Bedeutung dieser
-						// Adresse erklärt","",null);
-						if (bza.open() == Dialog.OK) {
-							String bezug = bza.getResult();
-							BezugsKontakt bk = actPatient.addBezugsKontakt(k, bezug);
-							inpZusatzAdresse.add(bk);
-							form.reflow(true);
+						if (k != null) {
+							BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(
+								actPatient.getLabel(true), k.istPerson()
+										? Person.load(k.getId()).getLabel(true) : k.getLabel(true));
+							if (bza.open() == Dialog.OK) {
+								BezugsKontakt bk =
+									actPatient.addBezugsKontakt(k, bza.getBezugKonkaktRelation());
+								inpZusatzAdresse.add(bk);
+								form.reflow(true);
+							}
 						}
 						
 					}
