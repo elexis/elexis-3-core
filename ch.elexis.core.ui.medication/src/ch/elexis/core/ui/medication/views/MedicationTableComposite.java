@@ -22,6 +22,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IPersistentObject;
@@ -29,6 +31,7 @@ import ch.elexis.data.Prescription;
 
 public class MedicationTableComposite extends Composite {
 	
+	private static Logger log = LoggerFactory.getLogger(MedicationTableComposite.class);
 	private TableViewer viewer;
 	private TableColumnLayout layout;
 	
@@ -77,7 +80,7 @@ public class MedicationTableComposite extends Composite {
 							| NotHandledException e) {
 						MessageDialog.openError(getShell(), "Fehler",
 							"Eigenschaften konnten nicht geöffnet werden.");
-						e.printStackTrace();
+						log.error("cannot open article detail dialog", e);
 					}
 				}
 			}
