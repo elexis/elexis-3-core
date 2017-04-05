@@ -95,7 +95,7 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 		TableColumn tblclmnStock = tableViewerColumn.getColumn();
-		tblclmnStock.setResizable(false);
+		tblclmnStock.setResizable(true);
 		tblclmnStock.setAlignment(SWT.CENTER);
 		tcl_composite.setColumnData(tblclmnStock, new ColumnPixelData(100, false, false));
 		tblclmnStock.setText("Verfügbar in Lager");
@@ -124,7 +124,7 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 		TableColumn tblclmnMin = tvcMin.getColumn();
-		tblclmnMin.setResizable(false);
+		tblclmnMin.setResizable(true);
 		tblclmnMin.setAlignment(SWT.CENTER);
 		tcl_composite.setColumnData(tblclmnMin, new ColumnPixelData(30, false, true));
 		tblclmnMin.setText("Min");
@@ -152,7 +152,7 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 		TableColumn tblclmnNewColumn = tvcIst.getColumn();
-		tblclmnNewColumn.setResizable(false);
+		tblclmnNewColumn.setResizable(true);
 		tcl_composite.setColumnData(tblclmnNewColumn, new ColumnPixelData(30, false, true));
 		tblclmnNewColumn.setText("Ist");
 		
@@ -179,7 +179,7 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 		TableColumn tblclmnMax = tvcMax.getColumn();
-		tblclmnMax.setResizable(false);
+		tblclmnMax.setResizable(true);
 		tcl_composite.setColumnData(tblclmnMax, new ColumnPixelData(30, true, true));
 		tblclmnMax.setText("Max");
 		
@@ -206,7 +206,7 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 		TableColumn tblclmnFraction = tvcFraction.getColumn();
-		tblclmnFraction.setResizable(false);
+		tblclmnFraction.setResizable(true);
 		tcl_composite.setColumnData(tblclmnFraction, new ColumnPixelData(30, false, true));
 		tblclmnFraction.setText("Anbruch");
 		
