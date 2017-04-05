@@ -302,6 +302,10 @@
                optional="false">
          </commandParameter>
       </command>
+      <command
+            id="ch.elexis.core.ui.medication.OpenArticelDetailDialog"
+            name="Open Article Detail">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -511,6 +515,15 @@
                   property="ch.elexis.core.ui.medication.property.showCustomSort">
             </test>
          </enabledWhen>
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.OpenArticelDetailDialogHandler"
+            commandId="ch.elexis.core.ui.medication.OpenArticelDetailDialog">
+         <activeWhen>
+            <test
+                  property="ch.elexis.core.ui.medication.property.isDefaultArticle">
+            </test>
+         </activeWhen>
       </handler>    
    </extension>
    <extension
@@ -535,7 +548,7 @@
             class="ch.elexis.core.ui.medication.property.MedicationUiTester"
             id="ch.elexis.core.ui.medication.property.MedicationUiTester"
             namespace="ch.elexis.core.ui.medication.property"
-            properties="showCustomSort"
+            properties="showCustomSort,isDefaultArticle"
             type="java.lang.Object">
       </propertyTester>
    </extension>
