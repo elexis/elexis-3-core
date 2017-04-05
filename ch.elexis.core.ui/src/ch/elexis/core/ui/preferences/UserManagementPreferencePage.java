@@ -121,6 +121,15 @@ public class UserManagementPreferencePage extends PreferencePage
 		TableColumnLayout tcl_compositeSelectorTable = new TableColumnLayout();
 		compositeSelectorTable.setLayout(tcl_compositeSelectorTable);
 		
+		Composite compositeEdit = new Composite(container, SWT.NONE);
+		GridLayout gl_compositeEdit = new GridLayout(2, false);
+		gl_compositeEdit.horizontalSpacing = 0;
+		gl_compositeEdit.verticalSpacing = 0;
+		gl_compositeEdit.marginWidth = 0;
+		gl_compositeEdit.marginHeight = 0;
+		compositeEdit.setLayout(gl_compositeEdit);
+		compositeEdit.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
 		tableViewerUsers = new TableViewer(compositeSelectorTable, SWT.BORDER | SWT.FULL_SELECTION);
 		tableViewerUsers.setContentProvider(ArrayContentProvider.getInstance());
 		Table tableUsers = tableViewerUsers.getTable();
@@ -128,6 +137,7 @@ public class UserManagementPreferencePage extends PreferencePage
 		tableViewerUsers.addSelectionChangedListener(e -> {
 			StructuredSelection ss = (StructuredSelection) e.getSelection();
 			wvUser.setValue(ss == null ? null : ss.getFirstElement());
+			compositeEdit.layout(true, true);
 		});
 		
 		TableViewerColumn tableViewerColumnName = new TableViewerColumn(tableViewerUsers, SWT.NONE);
@@ -167,13 +177,6 @@ public class UserManagementPreferencePage extends PreferencePage
 				updateUserList();
 			}
 		});
-		
-		Composite compositeEdit = new Composite(container, SWT.NONE);
-		GridLayout gl_compositeEdit = new GridLayout(2, false);
-		gl_compositeEdit.marginHeight = 0;
-		gl_compositeEdit.marginWidth = 0;
-		compositeEdit.setLayout(gl_compositeEdit);
-		compositeEdit.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpSysAccess = new Group(compositeEdit, SWT.NONE);
 		grpSysAccess.setText("Systemzugang");
@@ -248,14 +251,11 @@ public class UserManagementPreferencePage extends PreferencePage
 			}
 		});
 		
-		Composite sashComposite = new Composite(compositeEdit, SWT.NONE);
-		sashComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		sashComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		grpAccounting = new Group(sashComposite, SWT.NONE);
+		grpAccounting = new Group(compositeEdit, SWT.NONE);
+		grpAccounting.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 2, 1));
 		grpAccounting.setText("Verrechnung");
 		GridLayout gl_grpAccounting = new GridLayout(1, false);
-		gl_grpAccounting.marginHeight = 0;
+		gl_grpAccounting.marginHeight = 5;
 		grpAccounting.setLayout(gl_grpAccounting);
 		
 		Composite compositeContact = new Composite(grpAccounting, SWT.NONE);
@@ -268,7 +268,7 @@ public class UserManagementPreferencePage extends PreferencePage
 		compositeContact.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		
 		Label lblKontakt = new Label(compositeContact, SWT.NONE);
-		lblKontakt.setText("Kontakt");
+		lblKontakt.setText("Kontakt: ");
 		
 		linkContact = new Link(compositeContact, SWT.NONE);
 		linkContact.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -291,10 +291,6 @@ public class UserManagementPreferencePage extends PreferencePage
 				}
 			}
 		});
-		
-		btnIsExecutiveDoctor = new Button(grpAccounting, SWT.CHECK);
-		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		btnIsExecutiveDoctor.setText("ist verantwortlicher Arzt");
 		
 		Composite compositeIsRespPhys = new Composite(grpAccounting, SWT.BORDER);
 		compositeIsRespPhys.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
@@ -325,10 +321,10 @@ public class UserManagementPreferencePage extends PreferencePage
 		});
 		
 		Label lblRechnungssteller = new Label(compositeIsRespPhys, SWT.NONE);
-		lblRechnungssteller.setText("Rechnungssteller");
+		lblRechnungssteller.setText("Rechnungssteller:");
 		
 		linkRechnungssteller = new Link(compositeIsRespPhys, SWT.NONE);
-		linkRechnungssteller.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		linkRechnungssteller.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		linkRechnungssteller.setText("nicht gesetzt " + CHANGE_LINK);
 		linkRechnungssteller.addSelectionListener(new SelectionAdapter() {
 			
@@ -356,12 +352,22 @@ public class UserManagementPreferencePage extends PreferencePage
 			}
 		});
 		
-		Label lblFrVerantwortlichenArzt = new Label(grpAccounting, SWT.NONE);
-		lblFrVerantwortlichenArzt
-			.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		lblFrVerantwortlichenArzt.setText("tätig für");
+		btnIsExecutiveDoctor = new Button(grpAccounting, SWT.CHECK);
+		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		btnIsExecutiveDoctor.setText("ist verantwortlicher Arzt");
 		
-		Composite compositeAssociation = new Composite(grpAccounting, SWT.NONE);
+		Composite compositeAccounting = new Composite(grpAccounting, SWT.NONE);
+		compositeAccounting.setLayout(new GridLayout(2, false));
+		compositeAccounting.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		
+		Group grpAssociation = new Group(compositeAccounting, SWT.NONE);
+		grpAssociation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpAssociation.setText("tätig für");
+		GridLayout gl_grp = new GridLayout(2, false);
+		gl_grp.marginHeight = 0;
+		grpAssociation.setLayout(gl_grp);
+		
+		Composite compositeAssociation = new Composite(grpAssociation, SWT.NONE);
 		compositeAssociation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		TableColumnLayout tcl_compositeAssociation = new TableColumnLayout();
 		compositeAssociation.setLayout(tcl_compositeAssociation);
@@ -381,7 +387,8 @@ public class UserManagementPreferencePage extends PreferencePage
 			}
 		});
 		
-		Group grpRoles = new Group(sashComposite, SWT.NONE);
+		Group grpRoles = new Group(compositeAccounting, SWT.NONE);
+		grpRoles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpRoles.setText("Rollenzuordnung");
 		GridLayout gl_grpRoles = new GridLayout(2, false);
 		gl_grpRoles.marginHeight = 0;
