@@ -155,6 +155,8 @@
     <requirement
         name="org.eclipse.mylyn.wikitext_feature.feature.group"/>
     <requirement
+        name="org.eclipse.dltk.ruby.feature.group"/>
+    <requirement
         name="net.jeeeyul.pdetools.feature.feature.group"
         filter=""/>
     <repository
