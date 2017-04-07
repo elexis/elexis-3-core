@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.types.impl;
 
+import ch.elexis.core.types.AddressType;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +80,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EEnum relationshipTypeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum addressTypeEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -235,6 +243,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getAddressType() {
+		return addressTypeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getMoney() {
 		return moneyEDataType;
 	}
@@ -313,6 +330,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		contactTypeEEnum = createEEnum(CONTACT_TYPE);
 		contactGenderEEnum = createEEnum(CONTACT_GENDER);
 		relationshipTypeEEnum = createEEnum(RELATIONSHIP_TYPE);
+		addressTypeEEnum = createEEnum(ADDRESS_TYPE);
 
 		// Create data types
 		moneyEDataType = createEDataType(MONEY);
@@ -392,6 +410,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_CONSULTANT);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_INSURER);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_INSUREE);
+
+		initEEnum(addressTypeEEnum, AddressType.class, "AddressType");
+		addEEnumLiteral(addressTypeEEnum, AddressType.PRINCIPAL_RESIDENCE);
+		addEEnumLiteral(addressTypeEEnum, AddressType.SECONDARY_RESIDENCE);
+		addEEnumLiteral(addressTypeEEnum, AddressType.HOLIDAY_HOME);
+		addEEnumLiteral(addressTypeEEnum, AddressType.PLACE_OF_RESIDENCE);
+		addEEnumLiteral(addressTypeEEnum, AddressType.EMPLOYER);
+		addEEnumLiteral(addressTypeEEnum, AddressType.FAMILY_FRIENDS);
+		addEEnumLiteral(addressTypeEEnum, AddressType.ATTACHMENT_FIGURE);
+		addEEnumLiteral(addressTypeEEnum, AddressType.PRISON);
+		addEEnumLiteral(addressTypeEEnum, AddressType.NURSING_HOME);
+		addEEnumLiteral(addressTypeEEnum, AddressType.OTHER);
 
 		// Initialize data types
 		initEDataType(moneyEDataType, Money.class, "Money", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

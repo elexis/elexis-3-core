@@ -53,6 +53,7 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.dialogs.ZusatzAdresseEingabeDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
@@ -67,6 +68,7 @@ import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
+import ch.elexis.data.ZusatzAdresse;
 import ch.rgw.tools.StringTool;
 
 public class PatientDetailView extends ViewPart implements IUnlockable {
@@ -88,8 +90,10 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 	private Text txtBemerkungen;
 	private ClientCustomTextComposite compClientCustomText;
 	private StickerComposite stickerComposite;
-	private IAction removeZAAction, showZAAction;
+	private IAction removeZAAction, showZAAction, removeAdditionalAddressAction,
+			showAdditionalAddressAction;
 	private ListDisplay<BezugsKontakt> inpZusatzAdresse;
+	private ListDisplay<ZusatzAdresse> additionalAddresses;
 	private IObservableValue patientObservable = new WritableValue(null, Patient.class);
 
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
@@ -153,6 +157,10 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 		for (BezugsKontakt za : p.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);
 		}
+		additionalAddresses.clear();
+		for (ZusatzAdresse zusatzAdresse : p.getZusatzAdressen()) {
+			additionalAddresses.add(zusatzAdresse);
+		}
 		dmd.reload();
 		scrldfrm.reflow(true);
 
@@ -187,7 +195,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 			stickerComposite = new StickerComposite(scrldfrm.getBody(), SWT.NONE, toolkit);
 		}
 
-		// additional addresses
+		// bezugs kontakte
 		{
 			ExpandableComposite ecZA = WidgetFactory.createExpandableComposite(toolkit, scrldfrm,
 					Messages.Patientenblatt2_additionalAdresses); // $NON-NLS-1$
@@ -273,6 +281,50 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 			inpZusatzAdresse.setMenu(removeZAAction, showZAAction);
 
 			ecZA.setClient(inpZusatzAdresse);
+		}
+		
+		// zusatz adressen
+		{
+			ExpandableComposite compAdditionalAddresses =
+				WidgetFactory.createExpandableComposite(toolkit, scrldfrm,
+				"Zusatzadressen"); // $NON-NLS-1$
+			compAdditionalAddresses.addExpansionListener(new SectionExpansionHandler());
+			
+			additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
+				new ListDisplay.LDListener() {
+					public void hyperlinkActivated(final String l){
+						Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
+						if (actPatient != null) {
+							ZusatzAdresseEingabeDialog aed =
+								new ZusatzAdresseEingabeDialog(
+									PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+									actPatient);
+							if (aed.open() == Dialog.OK) {
+								additionalAddresses.add(aed.getZusatzAdresse());
+								scrldfrm.reflow(true);
+							}
+						}
+					}
+					
+					public String getLabel(Object o){
+						ZusatzAdresse address = (ZusatzAdresse) o;
+						if (address != null) {
+							return address.getLabel();
+						}
+						return "?"; //$NON-NLS-1$
+					}
+				});
+			
+			// Hyperlink "Hinzu..." über der Adressliste hinzufügen
+			additionalAddresses.addHyperlinks(Messages.Patientenblatt2_add); // $NON-NLS-1$
+			
+			// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
+			
+			// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
+			makeAdditionalAddressActions();
+			additionalAddresses.setMenu(removeAdditionalAddressAction, showAdditionalAddressAction);
+			
+			compAdditionalAddresses.setClient(additionalAddresses);
 		}
 
 		// diagnosis
@@ -487,6 +539,31 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 				Kontakt a = Kontakt.load(((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
 				KontaktDetailDialog kdd = new KontaktDetailDialog(scrldfrm.getShell(), a);
 				kdd.open();
+			}
+		};
+	}
+	
+	private void makeAdditionalAddressActions(){
+		removeAdditionalAddressAction = new Action(Messages.Patientenblatt2_removeAddress) {
+			@Override
+			public void run(){
+					ZusatzAdresse a = (ZusatzAdresse) additionalAddresses.getSelection();
+					a.delete();
+				setPatient(ElexisEventDispatcher.getSelectedPatient());
+				
+			}
+		};
+		
+		showAdditionalAddressAction = new Action(Messages.Patientenblatt2_showAddress) {
+			@Override
+			public void run(){
+				Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
+				ZusatzAdresse zusatzAdresse = (ZusatzAdresse) additionalAddresses.getSelection();
+				ZusatzAdresseEingabeDialog aed =
+					new ZusatzAdresseEingabeDialog(scrldfrm.getShell(), actPatient, zusatzAdresse);
+				if (aed.open() == Dialog.OK) {
+					setPatient(actPatient);
+				}
 			}
 		};
 	}

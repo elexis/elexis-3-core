@@ -151,6 +151,16 @@ public interface TypesPackage extends EPackage {
 	int RELATIONSHIP_TYPE = 5;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.types.AddressType <em>Address Type</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.AddressType
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getAddressType()
+	 * @generated
+	 */
+	int ADDRESS_TYPE = 6;
+
+	/**
 	 * The meta object id for the '<em>Money</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -158,7 +168,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 	 * @generated
 	 */
-	int MONEY = 6;
+	int MONEY = 7;
 
 	/**
 	 * The meta object id for the '<em>Time Tool</em>' data type.
@@ -168,7 +178,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTimeTool()
 	 * @generated
 	 */
-	int TIME_TOOL = 7;
+	int TIME_TOOL = 8;
 
 	/**
 	 * The meta object id for the '<em>Gender</em>' data type.
@@ -178,7 +188,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getGender()
 	 * @generated
 	 */
-	int GENDER = 8;
+	int GENDER = 9;
 
 
 	/**
@@ -189,7 +199,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
 	 * @generated
 	 */
-	int LAB_ITEM_TYP = 9;
+	int LAB_ITEM_TYP = 10;
 
 
 	/**
@@ -200,7 +210,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountry()
 	 * @generated
 	 */
-	int COUNTRY = 10;
+	int COUNTRY = 11;
 
 
 	/**
@@ -265,6 +275,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getRelationshipType();
+
+	/**
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.AddressType <em>Address Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Address Type</em>'.
+	 * @see ch.elexis.core.types.AddressType
+	 * @generated
+	 */
+	EEnum getAddressType();
 
 	/**
 	 * Returns the meta object for data type '{@link ch.rgw.tools.Money <em>Money</em>}'.
@@ -402,6 +422,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum RELATIONSHIP_TYPE = eINSTANCE.getRelationshipType();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.types.AddressType <em>Address Type</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.AddressType
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getAddressType()
+		 * @generated
+		 */
+		EEnum ADDRESS_TYPE = eINSTANCE.getAddressType();
 
 		/**
 		 * The meta object literal for the '<em>Money</em>' data type.
