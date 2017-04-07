@@ -49,6 +49,14 @@ public class ZusatzAdresse extends PersistentObject implements ITransferable<Zus
 		super(id);
 	}
 	
+	public ZusatzAdresse(Kontakt kontakt){
+		create(null, new String[] {
+			KONTAKT_ID
+		}, new String[] {
+			kontakt.getId()
+		});
+	}
+	
 	public static ZusatzAdresse load(String id){
 		return new ZusatzAdresse(id);
 	}

@@ -52,8 +52,34 @@ public class Test_ZusatzAdresse extends AbstractPersistentObjectTest {
 		
 		ZusatzAdresse savedZusatzAdresse = zusatzAdressen.get(0);
 		
+		Assert.assertNotNull(savedZusatzAdresse.getId());
 		Assert.assertEquals("Teststreet 1", savedZusatzAdresse.getDTO().getStreet1());
 		Assert.assertEquals("Teststreet 1", savedZusatzAdresse.get(ZusatzAdresse.STREET1));
+		Assert.assertEquals(savedZusatzAdresse.getId(), savedZusatzAdresse.getDTO().getId());
+		Assert.assertEquals(savedZusatzAdresse.get(ZusatzAdresse.KONTAKT_ID),
+			savedZusatzAdresse.getDTO().getKontaktId());
+	}
+	
+	@Test
+	public void TestZusatzAdresseWithoutDTOPersisting() throws ElexisException{
+		Patient patient = new Patient("Mustermann", "Max", "1.1.2000", "m");
+		ZusatzAdresse zusatzAdresse = new ZusatzAdresse(patient);
+		zusatzAdresse.set(new String[] {
+			ZusatzAdresse.STREET1, ZusatzAdresse.TYPE
+		}, new String[] {
+			"Teststreet 2", String.valueOf(AddressType.FAMILY_FRIENDS.getValue())
+		});
+		
+		List<ZusatzAdresse> zusatzAdressen = patient.getZusatzAdressen();
+		Assert.assertTrue(zusatzAdressen.size() == 1);
+		
+		ZusatzAdresse savedZusatzAdresse = zusatzAdressen.get(0);
+		
+		Assert.assertNotNull(savedZusatzAdresse.getId());
+		Assert.assertEquals("Teststreet 2", savedZusatzAdresse.getDTO().getStreet1());
+		Assert.assertEquals("Teststreet 2", savedZusatzAdresse.get(ZusatzAdresse.STREET1));
+		Assert.assertEquals(String.valueOf(AddressType.FAMILY_FRIENDS.getValue()),
+			savedZusatzAdresse.get(ZusatzAdresse.TYPE));
 		Assert.assertEquals(savedZusatzAdresse.getId(), savedZusatzAdresse.getDTO().getId());
 		Assert.assertEquals(savedZusatzAdresse.get(ZusatzAdresse.KONTAKT_ID),
 			savedZusatzAdresse.getDTO().getKontaktId());
