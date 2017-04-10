@@ -185,6 +185,18 @@ public class Kontakt extends PersistentObject {
 		return qbe.execute();
 	}
 	
+	/**
+	 * Ein Array mit allen zu diesem Kontakt definierten {@link ZusatzAdresse} holen
+	 * 
+	 * @return Ein {@link ZusatzAdresse}-Array
+	 */
+	public List<ZusatzAdresse> getZusatzAdressen(){
+		Query<ZusatzAdresse> qbe = new Query<ZusatzAdresse>(ZusatzAdresse.class);
+		qbe.add(ZusatzAdresse.KONTAKT_ID, StringTool.equals, getId()); //$NON-NLS-1$
+		qbe.orderBy(false, ZusatzAdresse.TYPE, ZusatzAdresse.FLD_LASTUPDATE);
+		return qbe.execute();
+	}
+	
 	/** Die Anschrift dieses Kontakts holen */
 	public Anschrift getAnschrift(){
 		return new Anschrift(this);
@@ -214,7 +226,16 @@ public class Kontakt extends PersistentObject {
 	
 	public String createStdAnschrift(){
 		Anschrift an = getAnschrift();
-		String ret = StringTool.leer;
+		String ret = getSalutation() + an.getEtikette(false, true);
+		// create the postal if it does not exist yet
+		String old = get(FLD_ANSCHRIFT);
+		if (StringTool.isNothing(old)) {
+			set(FLD_ANSCHRIFT, ret);
+		}
+		return ret;
+	}
+	
+	public String getSalutation(){
 		StringBuilder sb = new StringBuilder();
 		if (istPerson() == true) {
 			Person p = Person.load(getId());
@@ -235,8 +256,7 @@ public class Kontakt extends PersistentObject {
 			}
 			sb.append(p.getVorname()).append(StringTool.space).append(p.getName())
 				.append(StringTool.lf);
-			sb.append(an.getEtikette(false, true));
-			ret = sb.toString();
+			
 		} else {
 			Organisation o = Organisation.load(getId());
 			String[] rx = new String[2];
@@ -245,18 +265,8 @@ public class Kontakt extends PersistentObject {
 			}, rx);
 			sb.append(rx[0]).append(StringTool.space).append(checkNull(rx[1]))
 				.append(StringTool.lf);
-			sb.append(an.getEtikette(false, true));
-			ret = sb.toString();
 		}
-		/*
-		 * else{ ret= an.getEtikette(true, true); }
-		 */
-		// create the postal if it does not exist yet
-		String old = get(FLD_ANSCHRIFT);
-		if (StringTool.isNothing(old)) {
-			set(FLD_ANSCHRIFT, ret);
-		}
-		return ret;
+		return sb.toString();
 	}
 	
 	/**

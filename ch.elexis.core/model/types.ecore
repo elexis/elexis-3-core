@@ -49,4 +49,16 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Gender" instanceClassName="ch.elexis.core.types.Gender"/>
   <eClassifiers xsi:type="ecore:EDataType" name="LabItemTyp" instanceClassName="ch.elexis.core.types.LabItemTyp"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Country" instanceClassName="ch.elexis.core.types.Country"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="AddressType">
+    <eLiterals name="PRINCIPAL_RESIDENCE" literal="PRINCIPAL_RESIDENCE"/>
+    <eLiterals name="SECONDARY_RESIDENCE" value="1" literal="SECONDARY_RESIDENCE"/>
+    <eLiterals name="HOLIDAY_HOME" value="2" literal="HOLIDAY_HOME"/>
+    <eLiterals name="PLACE_OF_RESIDENCE" value="3" literal="PLACE_OF_RESIDENCE"/>
+    <eLiterals name="EMPLOYER" value="4" literal="EMPLOYER"/>
+    <eLiterals name="FAMILY_FRIENDS" value="5" literal="FAMILY_FRIENDS"/>
+    <eLiterals name="ATTACHMENT_FIGURE" value="6" literal="ATTACHMENT_FIGURE"/>
+    <eLiterals name="PRISON" value="7" literal="PRISON"/>
+    <eLiterals name="NURSING_HOME" value="8" literal="NURSING_HOME"/>
+    <eLiterals name="OTHER" value="9" literal="OTHER"/>
+  </eClassifiers>
 </ecore:EPackage>

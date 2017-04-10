@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.types.impl;
 
+import ch.elexis.core.types.AddressType;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -91,6 +92,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createContactGenderFromString(eDataType, initialValue);
 			case TypesPackage.RELATIONSHIP_TYPE:
 				return createRelationshipTypeFromString(eDataType, initialValue);
+			case TypesPackage.ADDRESS_TYPE:
+				return createAddressTypeFromString(eDataType, initialValue);
 			case TypesPackage.MONEY:
 				return createMoneyFromString(eDataType, initialValue);
 			case TypesPackage.TIME_TOOL:
@@ -120,6 +123,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertContactGenderToString(eDataType, instanceValue);
 			case TypesPackage.RELATIONSHIP_TYPE:
 				return convertRelationshipTypeToString(eDataType, instanceValue);
+			case TypesPackage.ADDRESS_TYPE:
+				return convertAddressTypeToString(eDataType, instanceValue);
 			case TypesPackage.MONEY:
 				return convertMoneyToString(eDataType, instanceValue);
 			case TypesPackage.TIME_TOOL:
@@ -192,6 +197,26 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertRelationshipTypeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AddressType createAddressTypeFromString(EDataType eDataType, String initialValue) {
+		AddressType result = AddressType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertAddressTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

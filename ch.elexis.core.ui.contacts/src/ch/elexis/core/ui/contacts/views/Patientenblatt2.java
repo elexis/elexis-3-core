@@ -82,6 +82,7 @@ import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.dialogs.ZusatzAdresseEingabeDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.events.ElexisUiSyncEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
@@ -111,6 +112,7 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
+import ch.elexis.data.ZusatzAdresse;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -124,7 +126,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private final FormToolkit tk;
 	private InputPanel ipp;
 	private IAction removeZAAction, showZAAction, copySelectedContactInfosToClipboardAction,
-			copySelectedAddressesToClipboardAction;
+			copySelectedAddressesToClipboardAction, removeAdditionalAddressAction,
+			showAdditionalAddressAction;
 	// MenuItem delZA;
 	public final static String CFG_BEZUGSKONTAKTTYPEN = "views/patientenblatt/Bezugskontakttypen"; //$NON-NLS-1$
 	public final static String CFG_EXTRAFIELDS = "views/patientenblatt/extrafelder"; //$NON-NLS-1$
@@ -199,14 +202,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private final static String FIXMEDIKATION = Messages.Patientenblatt2_fixmedication; // $NON-NLS-1$
 	// private final static String[] lbLists={"Fixmedikation"/*,"Reminders" */};
 	private final FormText inpAdresse;
-	private final ListDisplay<BezugsKontakt> inpZusatzAdresse /* , dlReminder */;
+	private final ListDisplay<BezugsKontakt> inpZusatzAdresse;
+	private final ListDisplay<ZusatzAdresse> additionalAddresses; /* , dlReminder */;
 	private final FixMediDisplay dmd;
 	Patient actPatient;
 	IViewSite viewsite;
 	private final Hyperlinkreact hr = new Hyperlinkreact();
 	private final ScrolledForm form;
 	private final ViewMenus viewmenu;
-	private final ExpandableComposite ecdm, ecZA;
+	private final ExpandableComposite ecdm, ecZA, compAdditionalAddresses;
 	private boolean bLocked = true;
 	private Composite cUserfields;
 	Hyperlink hHA;
@@ -552,6 +556,51 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		
 		ecZA.setClient(inpZusatzAdresse);
 		
+		// zusatz adressen
+		compAdditionalAddresses = WidgetFactory.createExpandableComposite(tk, form,
+			"Zusatzadressen"); // $NON-NLS-1$
+		compAdditionalAddresses.addExpansionListener(ecExpansionListener);
+		
+		additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
+			new ListDisplay.LDListener() {
+				/*
+				 * public boolean dropped(final PersistentObject dropped) { return
+				 * false; }
+				 */
+				
+				public void hyperlinkActivated(final String l){
+					if (actPatient != null) {
+						ZusatzAdresseEingabeDialog aed =
+							new ZusatzAdresseEingabeDialog(form.getShell(), actPatient);
+						if (aed.open() == Dialog.OK) {
+							additionalAddresses.add(aed.getZusatzAdresse());
+							form.reflow(true);
+						}
+					}
+				}
+				
+				public String getLabel(Object o){
+					ZusatzAdresse address = (ZusatzAdresse) o;
+					if (address != null) {
+						return address.getLabel();
+					}
+					return "?"; //$NON-NLS-1$
+				}
+			});
+		
+		// Hyperlink "Hinzu..." über der Adressliste hinzufügen
+		additionalAddresses.addHyperlinks(Messages.Patientenblatt2_add); // $NON-NLS-1$
+		
+		// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
+		
+		// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
+		makeAdditionalAddressActions();
+		additionalAddresses.setMenu(removeAdditionalAddressAction, showAdditionalAddressAction);
+		
+		compAdditionalAddresses.setClient(additionalAddresses);
+		
+		//-------------------------------------------------------------
+		
 		for (int i = 0; i < lbExpandable.size(); i++) {
 			ec.add(WidgetFactory.createExpandableComposite(tk, form, lbExpandable.get(i)));
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
@@ -710,6 +759,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			inpZusatzAdresse.add(za);
 		}
 		
+		additionalAddresses.clear();
+		for (ZusatzAdresse zusatzAdresse : p.getZusatzAdressen()) {
+			additionalAddresses.add(zusatzAdresse);
+		}
+		
 		for (int i = 0; i < dfExpandable.size(); i++) {
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + ec.get(i).getText());
 			txExpandable.get(i).setText(p.get(dfExpandable.get(i)));
@@ -722,6 +776,34 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	
 	public void refresh(){
 		form.reflow(true);
+	}
+	
+	private void makeAdditionalAddressActions(){
+		removeAdditionalAddressAction = new Action(Messages.Patientenblatt2_removeAddress) {
+			@Override
+			public void run(){
+				if (!bLocked) {
+					ZusatzAdresse a = (ZusatzAdresse) additionalAddresses.getSelection();
+					a.delete();
+					setPatient(actPatient);
+				}
+			}
+		};
+		
+		showAdditionalAddressAction = new Action(Messages.Patientenblatt2_showAddress) {
+			@Override
+			public void run(){
+				if (!bLocked) {
+					ZusatzAdresse zusatzAdresse =
+						(ZusatzAdresse) additionalAddresses.getSelection();
+					ZusatzAdresseEingabeDialog aed =
+						new ZusatzAdresseEingabeDialog(form.getShell(), actPatient, zusatzAdresse);
+					if (aed.open() == Dialog.OK) {
+						setPatient(actPatient);
+					}
+				}
+			}
+		};
 	}
 	
 	private void makeActions(){
