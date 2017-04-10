@@ -1,15 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2005-2010, G. Weirich and Elexis
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    G. Weirich - initial implementation
- *    
- *******************************************************************************/
-
 package ch.elexis.data;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -24,15 +12,15 @@ import ch.rgw.tools.StringTool;
 public class ZusatzAdresse extends PersistentObject implements ITransferable<ZusatzAdresseDTO> {
 	
 	protected static final String KONTAKT_ID = "Kontakt_Id";
-	private static final String COUNTRY = "Land"; //$NON-NLS-
-	private static final String PLACE = "Ort"; //$NON-NLS-1$
-	private static final String ZIP = "Plz"; //$NON-NLS-1$
-	public static final String STREET1 = "Strasse1"; //$NON-NLS-1$
-	private static final String STREET2 = "Strasse2"; //$NON-NLS-1$
+	private static final String COUNTRY = "Land";
+	private static final String PLACE = "Ort";
+	private static final String ZIP = "Plz";
+	public static final String STREET1 = "Strasse1";
+	private static final String STREET2 = "Strasse2";
 	public static final String TYPE = "Typ";
 	public static final String POSTAL_ADDRESS = "Anschrift";
 	
-	public static final String TABLENAME = "ZusatzAdresse"; //$NON-NLS-1$
+	public static final String TABLENAME = "ZusatzAdresse";
 	
 	private static final String[] FIELDS = new String[] {
 		KONTAKT_ID, STREET1, STREET2, COUNTRY, PLACE, ZIP, TYPE, POSTAL_ADDRESS
@@ -78,7 +66,7 @@ public class ZusatzAdresse extends PersistentObject implements ITransferable<Zus
 	{
 		String sep = StringTool.lf;
 		if (multiline == false) {
-			sep = ", "; //$NON-NLS-1$
+			sep = ", ";
 		}
 		StringBuilder ret = new StringBuilder(100);
 		if (withName == true) {
@@ -88,7 +76,7 @@ public class ZusatzAdresse extends PersistentObject implements ITransferable<Zus
 			ret.append(street1).append(sep);
 		}
 		if (!StringTool.isNothing(country)) {
-			ret.append(country).append(" - "); //$NON-NLS-1$
+			ret.append(country).append(" - ");
 		}
 		if ((zip != null) && (place != null)) {
 			ret.append(zip).append(StringTool.space).append(place);
