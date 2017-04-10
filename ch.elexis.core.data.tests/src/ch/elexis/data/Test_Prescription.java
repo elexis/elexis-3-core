@@ -191,6 +191,10 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		1/2 - 0 - 1/2
 		1/2 - 0 -1/2
 		*/
+		// Is not really correct, as it humans would expect 1.0f, 1.0f
+		// But it is seen very often.
+		testItems.add(new TestItem("2x1", Arrays.asList(2.0f)));
+
 		testItems.add(new TestItem("1/2", Arrays.asList(0.5f)));
 		testItems.add(new TestItem("7/8", Arrays.asList(0.875f)));
 		
@@ -205,7 +209,7 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		testItems.add(new TestItem("1 3-tgl", Arrays.asList(1.0f, 3.0f)));
 		testItems.add(new TestItem("1 3-tägl", Arrays.asList(1.0f, 3.0f)));
 		testItems.add(new TestItem("0.5/-/-", Arrays.asList(0.0f)));
-		testItems.add(new TestItem("(1)-0-1", Arrays.asList(0.0f, 1.0f)));
+		testItems.add(new TestItem("(1)-0-1", Arrays.asList(1.0f, 0.0f, 1.0f)));
 		testItems.add(new TestItem(".5", empty));
 		
 		// From here I think the human and the algorithm arrive at the same conclusion
@@ -252,6 +256,27 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		testItems.add(new TestItem("0-0-0-3-4", Arrays.asList(0.0f, 0.0f, 0.0f, 3.0f)));
 		testItems.add(new TestItem("1/0.5/1/0.5/1", Arrays.asList(1.0f, 0.5f, 1.0f, 0.5f)));
 		testItems.add(new TestItem("0--0-1-0", Arrays.asList(0.0f, 0.0f, 0.0f, 1.0f)));
+		
+		// Items found with Vitodata import december 2016
+		testItems.add(new TestItem("bds-0-bds-0", Arrays.asList(1.0f, 0.0f, 1.0f, 0.0f)));
+		testItems.add(new TestItem("x", Arrays.asList(1.0f)));
+		testItems.add(new TestItem("1/2", Arrays.asList(0.5f)));
+		testItems.add(new TestItem("1/4", Arrays.asList(0.25f)));
+
+		testItems.add(new TestItem("1x-0-1x-0", Arrays.asList(1.0f, 0.0f, 1.0f, 0.0f)));
+		testItems.add(new TestItem("1x-0-(1)-0", Arrays.asList(1.0f, 0.0f, 1.0f, 0.0f)));
+
+		testItems.add(new TestItem("0", Arrays.asList(0.0f)));
+		testItems.add(new TestItem("1", Arrays.asList(1.0f)));
+		testItems.add(new TestItem("2", Arrays.asList(2.0f)));
+		testItems.add(new TestItem("3", Arrays.asList(3.0f)));
+
+		testItems.add(new TestItem("0-0-0-x", Arrays.asList(0.0f, 0.0f, 0.0f, 1.0f)));
+		testItems.add(new TestItem("x-0-x-0", Arrays.asList(1.0f, 0.0f, 1.0f, 0.0f)));
+		testItems.add(new TestItem("x-0-0-0", Arrays.asList(1.0f, 0.0f, 0.0f, 0.0f)));
+		testItems.add(new TestItem("x-x-x-0", Arrays.asList(1.0f, 1.0f, 1.0f, 0.0f)));
+		testItems.add(new TestItem("x-x-x-x", Arrays.asList(1.0f, 1.0f, 1.0f, 1.0f)));
+
 	}
 	
 	@Test

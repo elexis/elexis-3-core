@@ -245,6 +245,21 @@ public class Prescription extends PersistentObject {
 		return checkNull(get(FLD_DOSAGE));
 	}
 	
+
+	 /**
+	  * A regular expresssion which allows us to match several string,
+	  * we consider to be equivalent to 1.0f. Needed for abbreviations like<br>
+	  * * 0-x-0-x<br>
+	  * * x-x-x-x<br>
+	  * * 1x-0-(1)-0<br>
+	  * * bds-0-bds-0<br>
+	  *
+	  * The abbreviation bds means (taken from)<br>
+	  *   http://www.pharmawiki.ch/wiki/index.php?wiki=Abkuerzungen_auf_aerztlichen_Rezepten<br>
+	  *   bds - beidseits, in beide Augen<br>
+	  */
+    static final String MEANS_ONE_PATTERN = "1x|(\\(1\\))|x|bds";
+
 	/**
 	 * Return the dose of a drugs as a list of up to 4 floats.<br>
 	 * Up to Version 3.0.10 (hopefully) Elexis did not specify exactly the dose of a drug, but used
@@ -264,7 +279,9 @@ public class Prescription extends PersistentObject {
 		if (dosis != null) {
 			// Match stuff like '1/2', '7/8', '~1,2'
 			// System.out.println(dosis.matches(special_num_at_start));
-			if (dosis.matches(special_num_at_start))  {
+			if (dosis.matches("x"))  {
+					list.add(1.0f); }
+			else if (dosis.matches(special_num_at_start))  {
 				list.add(getNum(dosis.replace("~", "")));
 			} else if (dosis.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
 				String[] dose = dosis.split("[xX]"); //$NON-NLS-1$
@@ -290,7 +307,9 @@ public class Prescription extends PersistentObject {
 				if (dos.length > 2) {
 					for (String d : dos) {
 						boolean hasDigit = d.matches("^[~/.]*[½¼0-9].*");
-						if (d.indexOf(' ') != -1)
+						if (d.matches(MEANS_ONE_PATTERN))
+							list.add(1.0f);
+						else if (d.indexOf(' ') != -1)
 							list.add(getNum(d.substring(0, d.indexOf(' '))));
 						else if (d.length() > 0 && hasDigit)
 							list.add(getNum(d));
@@ -314,7 +333,9 @@ public class Prescription extends PersistentObject {
 			if (dos.length > 2) {
 				for (String d : dos) {
 					boolean hasDigit = d.matches("^[~/.]*[½¼0-9].*");
-					if (d.indexOf(' ') != -1)
+					if (d.matches(MEANS_ONE_PATTERN))
+						list.add(1.0f);
+					else if (d.indexOf(' ') != -1)
 						list.add(getNum(d.substring(0, d.indexOf(' '))));
 					else if (d.length() > 0 && hasDigit)
 						list.add(getNum(d));
