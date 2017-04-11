@@ -37,7 +37,11 @@ public abstract class LockRequestingAction<T extends PersistentObject> extends A
 			LockResponseHelper.showInfo(lr, object, null);
 		}
 	};
-
+	
+	/**
+	 * 
+	 * @return the object the lock is requested for, or <code>null</code> to return without action
+	 */
 	public abstract T getTargetedObject();
 
 	public abstract void doRun(T element);

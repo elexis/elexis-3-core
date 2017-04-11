@@ -1,12 +1,9 @@
 package ch.elexis.core.ui.locks;
 
-import java.text.MessageFormat;
-
 import ch.elexis.admin.ACE;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.RestrictedAction;
-import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.PersistentObject;
 
 public abstract class LockRequestingRestrictedAction<T extends PersistentObject>
