@@ -290,7 +290,7 @@ public class BillingUtil {
 		Money total = new Money(0);
 		List<Verrechnet> leistungen = konsultation.getLeistungen();
 		for (Verrechnet verrechnet : leistungen) {
-			total.addMoney(verrechnet.getNettoPreis());
+			total.addMoney(verrechnet.getNettoPreis().multiply(verrechnet.getZahl()));
 		}
 		return total;
 	}
