@@ -35,11 +35,13 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.ui.Hub;
-import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.commands.Handler;
 import ch.elexis.core.ui.commands.MahnlaufCommand;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.AllOrNoneLockRequestingAction;
+import ch.elexis.core.ui.locks.AllOrNoneLockRequestingRestrictedAction;
+import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -143,20 +145,31 @@ public class RnActions {
 				}
 				
 			};
-		delRnAction = new Action(Messages.RnActions_deleteBillAction) { //$NON-NLS-1$
+		delRnAction =
+			new AllOrNoneLockRequestingAction<Rechnung>(Messages.RnActions_deleteBillAction) {
+				
 				@Override
-				public void run(){
-					List<Rechnung> list = view.createList();
-					for (Rechnung rn : list) {
+				public List<Rechnung> getTargetedObjects(){
+					return view.createList();
+				}
+				
+				@Override
+				public void doRun(List<Rechnung> lockedElements){
+					for (Rechnung rn : lockedElements) {
 						rn.storno(true);
 					}
 				}
 			};
-		reactivateRnAction = new Action(Messages.RnActions_reactivateBillAction) { //$NON-NLS-1$
+		reactivateRnAction = new AllOrNoneLockRequestingAction<Rechnung>(Messages.RnActions_reactivateBillAction) {
+			
 				@Override
-				public void run(){
-					List<Rechnung> list = view.createList();
-					for (Rechnung rn : list) {
+				public List<Rechnung> getTargetedObjects(){
+					return view.createList();
+				}
+
+				@Override
+				public void doRun(List<Rechnung> lockedElements){
+					for (Rechnung rn : lockedElements) {
 						rn.setStatus(RnStatus.OFFEN);
 					}
 				}
@@ -246,48 +259,55 @@ public class RnActions {
 			};
 		
 		changeStatusAction =
-			new RestrictedAction(AccessControlDefaults.ADMIN_CHANGE_BILLSTATUS_MANUALLY,
+			new AllOrNoneLockRequestingRestrictedAction<Rechnung>(AccessControlDefaults.ADMIN_CHANGE_BILLSTATUS_MANUALLY,
 				Messages.RnActions_changeStateAction) { //$NON-NLS-1$
 				{
 					setToolTipText(Messages.RnActions_changeStateTooltip); //$NON-NLS-1$
 					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 				}
-				
+
 				@Override
-				public void doRun(){
-					List<Rechnung> list = view.createList();
-					if (!list.isEmpty()) {
-						if (list.size() == 1) {
-							Rechnung actRn = list.get(0);
-							if (new RnDialogs.StatusAendernDialog(view.getViewSite().getShell(),
-								actRn).open() == Dialog.OK) {
-								ElexisEventDispatcher.update(actRn);
-							}
-						} else {
-							if (new RnDialogs.MultiStatusAendernDialog(view.getViewSite()
-								.getShell(), list).open() == Dialog.OK) {
-								for (Rechnung rn : list) {
-									ElexisEventDispatcher.update(rn);
-								}
+				public List<Rechnung> getTargetedObjects(){
+					return view.createList();
+				}
+
+				@Override
+				public void doRun(List<Rechnung> list){
+					if (list.size() == 1) {
+						Rechnung actRn = list.get(0);
+						if (new RnDialogs.StatusAendernDialog(view.getViewSite().getShell(),
+							actRn).open() == Dialog.OK) {
+							ElexisEventDispatcher.update(actRn);
+						}
+					} else {
+						if (new RnDialogs.MultiStatusAendernDialog(view.getViewSite()
+							.getShell(), list).open() == Dialog.OK) {
+							for (Rechnung rn : list) {
+								ElexisEventDispatcher.update(rn);
 							}
 						}
 					}
 				}
 			};
-		stornoAction = new Action(Messages.RnActions_stornoAction) { //$NON-NLS-1$
+		stornoAction = new LockRequestingAction<Rechnung>(Messages.RnActions_stornoAction) {
 				{
 					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-					setToolTipText(Messages.RnActions_stornoActionTooltip); //$NON-NLS-1$
+					setToolTipText(Messages.RnActions_stornoActionTooltip);
 				}
-				
+
 				@Override
-				public void run(){
+				public Rechnung getTargetedObject(){
 					List<Rechnung> list = view.createList();
 					if (!list.isEmpty()) {
-						Rechnung actRn = list.get(0);
-						if (new RnDialogs.StornoDialog(view.getViewSite().getShell(), actRn).open() == Dialog.OK) {
-							ElexisEventDispatcher.update(actRn);
-						}
+						return list.get(0);
+					}
+					return null;
+				}
+
+				@Override
+				public void doRun(Rechnung actRn){
+					if (new RnDialogs.StornoDialog(view.getViewSite().getShell(), actRn).open() == Dialog.OK) {
+						ElexisEventDispatcher.update(actRn);
 					}
 				}
 			};
