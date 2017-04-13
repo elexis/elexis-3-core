@@ -16,14 +16,24 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -35,15 +45,17 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISaveablePart2;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
@@ -52,13 +64,16 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -84,12 +99,20 @@ public class BriefAuswahl extends ViewPart implements
 	public final static String ID = "ch.elexis.BriefAuswahlView"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private Form form;
-	private Action briefNeuAction, briefLadenAction, editNameAction;
+	private Action briefNeuAction, briefLadenAction, editNameAction, startLocalEditAction,
+			endLocalEditAction, cancelLocalEditAction;
 	private Action deleteAction;
 	private ViewMenus menus;
 	private ArrayList<sPage> pages = new ArrayList<sPage>();
 	CTabFolder ctab;
-	
+	private ElexisEventListener updateListener =
+		new ElexisUiEventListenerImpl(Brief.class, ElexisEvent.EVENT_RELOAD) {
+			@Override
+			public void runInUi(ElexisEvent ev){
+				relabel();
+			}
+	};
+
 	// private ViewMenus menu;
 	// private IAction delBriefAction;
 	public BriefAuswahl(){
@@ -130,7 +153,13 @@ public class BriefAuswahl extends ViewPart implements
 			ct.setText(cat);
 			sPage page = new sPage(ctab, cat);
 			pages.add(page);
-			menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction, deleteAction);
+			if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
+				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction,
+					deleteAction, startLocalEditAction, endLocalEditAction, cancelLocalEditAction);
+			} else {
+				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction,
+					deleteAction);
+			}
 			ct.setData(page.cv);
 			ct.setControl(page);
 			page.cv.addDoubleClickListener(new DoubleClickListener() {
@@ -142,12 +171,13 @@ public class BriefAuswahl extends ViewPart implements
 		}
 		
 		ctab.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e){
-				relabel();
-			}
-			
-		});
+	
+	@Override
+	public void widgetSelected(final SelectionEvent e){
+		relabel();
+	}
+	
+	});
 		
 		GlobalEventDispatcher.addActivationListener(this, this);
 		menus.createMenu(briefNeuAction, briefLadenAction, editNameAction, deleteAction);
@@ -292,6 +322,16 @@ public class BriefAuswahl extends ViewPart implements
 				public String getText(Object element){
 					Brief b = (Brief) element;
 					return b.getBetreff();
+				}
+				
+				@Override
+				public Image getImage(Object element){
+					if (LocalDocumentServiceHolder.getService().isPresent()) {
+						if (LocalDocumentServiceHolder.getService().get().contains(element)) {
+							return Images.IMG_EDIT.getImage();
+						}
+					}
+					return super.getImage(element);
 				}
 			});
 		}
@@ -439,20 +479,24 @@ public class BriefAuswahl extends ViewPart implements
 		briefLadenAction = new Action(Messages.BriefAuswahlOpenButtonText) { //$NON-NLS-1$
 				@Override
 				public void run(){
-					try {
-						TextView tv = (TextView) getViewSite().getPage().showView(TextView.ID);
-						CTabItem sel = ctab.getSelection();
-						if (sel != null) {
-							CommonViewer cv = (CommonViewer) sel.getData();
-							Object[] o = cv.getSelection();
-							if ((o != null) && (o.length > 0)) {
-								Brief brief = (Brief) o[0];
-								if (brief.getMimeType().equalsIgnoreCase("pdf")) {
+				try {
+					CTabItem sel = ctab.getSelection();
+					if (sel != null) {
+						CommonViewer cv = (CommonViewer) sel.getData();
+						Object[] o = cv.getSelection();
+						if ((o != null) && (o.length > 0)) {
+							Brief brief = (Brief) o[0];
+							if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
+								startLocalEditAction.run();
+							} else {
+								TextView tv =
+									(TextView) getViewSite().getPage().showView(TextView.ID);
+								if (brief.getMimeType().equalsIgnoreCase("pdf")) { //$NON-NLS-1$
 									try {
 										File temp = File.createTempFile("letter_", ".pdf"); //$NON-NLS-1$ //$NON-NLS-2$
 										temp.deleteOnExit();
 										FileOutputStream fos = new FileOutputStream(temp);
-									
+										
 										fos.write(brief.loadBinary());
 										fos.close();
 										Program.launch(temp.getAbsolutePath());
@@ -464,12 +508,14 @@ public class BriefAuswahl extends ViewPart implements
 									SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
 										Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
 								}
-							} else {
-								tv.createDocument(null, null);
 							}
-							cv.notify(CommonViewer.Message.update);
+						} else {
+							TextView tv = (TextView) getViewSite().getPage().showView(TextView.ID);
+							tv.createDocument(null, null);
 						}
-					} catch (PartInitException e) {
+						cv.notify(CommonViewer.Message.update);
+					}
+				} catch (PartInitException e) {
 						ExHandler.handle(e);
 					}
 					
@@ -514,7 +560,117 @@ public class BriefAuswahl extends ViewPart implements
 						cv.notify(CommonViewer.Message.update);
 					}
 				}
-			};
+		};
+		startLocalEditAction = new Action() {
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_EDIT.getImageDescriptor();
+			}
+			
+			@Override
+			public String getText(){
+				return Messages.BriefAuswahl_actionlocaledittext;
+			}
+			
+			@Override
+			public void run(){
+				Brief brief = getSelectedBrief();
+				if (brief != null) {
+					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+						.getService(ICommandService.class);
+					Command command = commandService
+						.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
+					
+					EvaluationContext appContext =
+						new EvaluationContext(null, Collections.EMPTY_LIST);
+					appContext.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME,
+						new StructuredSelection(brief));
+					ExecutionEvent event =
+						new ExecutionEvent(command, Collections.EMPTY_MAP, this, appContext);
+					try {
+						command.executeWithChecks(event);
+					} catch (ExecutionException | NotDefinedException | NotEnabledException
+							| NotHandledException e) {
+						MessageDialog.openError(getSite().getShell(), Messages.BriefAuswahl_errorttile,
+							Messages.BriefAuswahl_erroreditmessage);
+					}
+					refreshSelectedViewer();
+				}
+			}
+		};
+		endLocalEditAction = new Action() {
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_EDIT_DONE.getImageDescriptor();
+			}
+			
+			@Override
+			public String getText(){
+				return Messages.BriefAuswahl_actionlocaleditstopmessage;
+			}
+			
+			@Override
+			public void run(){
+				Brief brief = getSelectedBrief();
+				if (brief != null) {
+					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+					Command command =
+						commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument"); //$NON-NLS-1$
+					
+					EvaluationContext appContext =
+						new EvaluationContext(null, Collections.EMPTY_LIST);
+					appContext.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME,
+						new StructuredSelection(brief));
+					ExecutionEvent event =
+						new ExecutionEvent(command, Collections.EMPTY_MAP, this, appContext);
+					try {
+						command.executeWithChecks(event);
+					} catch (ExecutionException | NotDefinedException | NotEnabledException
+							| NotHandledException e) {
+						MessageDialog.openError(getSite().getShell(), Messages.BriefAuswahl_errortitle,
+							Messages.BriefAuswahl_errorlocaleditendmessage);
+					}
+				}
+				refreshSelectedViewer();
+			}
+		};
+		cancelLocalEditAction = new Action() {
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_EDIT_ABORT.getImageDescriptor();
+			}
+			
+			@Override
+			public String getText(){
+				return Messages.BriefAuswahl_actionlocaleditabortmessage;
+			}
+			
+			@Override
+			public void run(){
+				Brief brief = getSelectedBrief();
+				if (brief != null) {
+					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+						.getService(ICommandService.class);
+					Command command =
+						commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"); //$NON-NLS-1$
+					
+					EvaluationContext appContext =
+						new EvaluationContext(null, Collections.EMPTY_LIST);
+					appContext.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME,
+						new StructuredSelection(brief));
+					ExecutionEvent event =
+						new ExecutionEvent(command, Collections.EMPTY_MAP, this, appContext);
+					try {
+						command.executeWithChecks(event);
+					} catch (ExecutionException | NotDefinedException | NotEnabledException
+							| NotHandledException e) {
+						MessageDialog.openError(getSite().getShell(), Messages.BriefAuswahl_errortitle,
+							Messages.BriefAuswahl_errorlocaleditabortmessage);
+					}
+				}
+				refreshSelectedViewer();
+			}
+		};
 		/*
 		 * importAction=new Action("Importieren..."){ public void run(){
 		 * 
@@ -530,6 +686,28 @@ public class BriefAuswahl extends ViewPart implements
 		deleteAction.setToolTipText(Messages.BriefAuswahlDeleteDocument); //$NON-NLS-1$
 	}
 	
+	public Brief getSelectedBrief(){
+		CTabItem sel = ctab.getSelection();
+		if ((sel != null)) {
+			CommonViewer cv = (CommonViewer) sel.getData();
+			Object[] o = cv.getSelection();
+			if ((o != null) && (o.length > 0)) {
+				if (o[0] instanceof Brief) {
+					return (Brief) o[0];
+				}
+			}
+		}
+		return null;
+	}
+	
+	public void refreshSelectedViewer(){
+		CTabItem sel = ctab.getSelection();
+		if ((sel != null)) {
+			CommonViewer cv = (CommonViewer) sel.getData();
+			cv.notify(CommonViewer.Message.update);
+		}
+	}
+	
 	public void activation(final boolean mode){
 		// TODO Auto-generated method stub
 		
@@ -538,9 +716,11 @@ public class BriefAuswahl extends ViewPart implements
 	public void visible(final boolean mode){
 		if (mode == true) {
 			ElexisEventDispatcher.getInstance().addListeners(this);
+			ElexisEventDispatcher.getInstance().addListeners(updateListener);
 			relabel();
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(this);
+			ElexisEventDispatcher.getInstance().removeListeners(updateListener);
 		}
 		
 	}

@@ -32,4 +32,6 @@ Export-Package: .,
  ch.elexis.data,
  ch.elexis.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Service-Component: OSGI-INF/*.xml
 Bundle-Activator: ch.elexis.core.data.activator.CoreHub
+Import-Package: org.osgi.service.component.annotations

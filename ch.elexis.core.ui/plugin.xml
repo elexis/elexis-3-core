@@ -184,6 +184,19 @@
                label="Versenden"
                style="pulldown">
          </command>
+         <command
+               commandId="ch.elexis.core.ui.command.openLocalDocuments"
+               icon="icon://IMG_EDIT"
+               label="Offene lokale Dokumente"
+               style="push"
+               tooltip="Offene lokale Dokumente">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     property="ch.elexis.core.ui.property.documenteditlocal">
+               </test>
+            </visibleWhen>
+         </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -585,6 +598,22 @@
             id="ch.elexis.core.ui.BillingProposalViewRemove"
             name="Remove from proposal">
       </command>
+      <command
+            id="ch.elexis.core.ui.command.openLocalDocuments"
+            name="Open local documents">
+      </command>
+      <command
+            id="ch.elexis.core.ui.command.endLocalDocument"
+            name="End local document">
+      </command>
+      <command
+            id="ch.elexis.core.ui.command.abortLocalDocument"
+            name="Abort local document">
+      </command>
+      <command
+            id="ch.elexis.core.ui.command.startEditLocalDocument"
+            name="Start edit local document">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -696,5 +725,37 @@
          <handler
                commandId="ch.elexis.core.ui.BillingProposalViewRemove">
          </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.EndLocalDocumentHandler"
+               commandId="ch.elexis.core.ui.command.endLocalDocument">
+         </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.AbortLocalDocumentHandler"
+               commandId="ch.elexis.core.ui.command.abortLocalDocument">
+         </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.OpenLocalDocumentsHandler"
+               commandId="ch.elexis.core.ui.command.openLocalDocuments">
+         </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.StartEditLocalDocumentHandler"
+               commandId="ch.elexis.core.ui.command.startEditLocalDocument">
+         </handler>
+      </extension>
+      <extension
+            point="org.eclipse.ui.startup">
+         <startup
+               class="ch.elexis.core.ui.startup.UiStartup">
+         </startup>
+      </extension>
+      <extension
+            point="org.eclipse.core.expressions.propertyTesters">
+         <propertyTester
+               class="ch.elexis.core.ui.property.PropertyTester"
+               id="ch.elexis.core.ui.propertyTester"
+               namespace="ch.elexis.core.ui.property"
+               properties="documenteditlocal"
+               type="java.lang.Object">
+         </propertyTester>
       </extension>
 </plugin>
