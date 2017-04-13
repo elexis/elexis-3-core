@@ -40,26 +40,25 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 						
 						@Override
 						public void lockAcquired(){
-							LocalDocumentServiceHolder.getService().ifPresent(service -> {
-								Optional<File> file = service.add(object,
-									new IConflictHandler() {
-										@Override
-										public Result getResult(){
-											if (MessageDialog.openQuestion(parentShell, Messages.StartEditLocalDocumentHandler_conflicttitle,
-												Messages.StartEditLocalDocumentHandler_conflictmessage)) {
-												return Result.KEEP;
-											} else {
-												return Result.OVERWRITE;
-											}
-										}
-									});
-								if (file.isPresent()) {
-									Program.launch(file.get().getAbsolutePath());
-								} else {
-									MessageDialog.openError(parentShell, Messages.StartEditLocalDocumentHandler_errortitle,
-										Messages.StartEditLocalDocumentHandler_errormessage);
+							Optional<File> file = service.add(object, new IConflictHandler() {
+								@Override
+								public Result getResult(){
+									if (MessageDialog.openQuestion(parentShell,
+										Messages.StartEditLocalDocumentHandler_conflicttitle,
+										Messages.StartEditLocalDocumentHandler_conflictmessage)) {
+										return Result.KEEP;
+									} else {
+										return Result.OVERWRITE;
+									}
 								}
 							});
+							if (file.isPresent()) {
+								Program.launch(file.get().getAbsolutePath());
+							} else {
+								MessageDialog.openError(parentShell,
+									Messages.StartEditLocalDocumentHandler_errortitle,
+									Messages.StartEditLocalDocumentHandler_errormessage);
+							}
 						}
 					});
 				});
