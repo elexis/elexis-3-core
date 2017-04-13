@@ -520,9 +520,17 @@
             class="ch.elexis.core.ui.medication.handlers.OpenArticelDetailDialogHandler"
             commandId="ch.elexis.core.ui.medication.OpenArticelDetailDialog">
          <activeWhen>
-            <test
-                  property="ch.elexis.core.ui.medication.property.isDefaultArticle">
-            </test>
+            <and>
+               <test
+                     property="ch.elexis.core.ui.medication.property.isDefaultArticle">
+               </test>
+               <with
+                  variable="activeWorkbenchWindow">
+               <instanceof
+                     value="org.eclipse.ui.IWorkbenchWindow">
+               </instanceof>
+            </with>
+            </and>
          </activeWhen>
       </handler>    
    </extension>
