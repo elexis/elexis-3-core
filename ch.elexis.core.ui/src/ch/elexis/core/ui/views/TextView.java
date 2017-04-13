@@ -17,16 +17,28 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,7 +158,7 @@ public class TextView extends ViewPart implements IActivationListener {
 				}
 				try {
 					File tmp = File.createTempFile("elexis", "brief." + ext); //$NON-NLS-1$ //$NON-NLS-2$
-					log.debug("TextView.openDocument createTempFile: " + tmp.getAbsolutePath() + " mime " + doc.getMimeType()); //$NON-NLS-1$
+					log.debug("TextView.openDocument createTempFile: " + tmp.getAbsolutePath() + " mime " + doc.getMimeType()); //$NON-NLS-1$ //$NON-NLS-2$
 					tmp.deleteOnExit();
 					byte[] buffer = doc.loadBinary();
 					if (buffer == null) {
@@ -165,7 +177,7 @@ public class TextView extends ViewPart implements IActivationListener {
 				}
 				return false;
 			} else {
-				log.warn("TextView.openDocument: Preferences do not allow alternative method of documents created with legacy text-plugins");
+				log.warn("TextView.openDocument: Preferences do not allow alternative method of documents created with legacy text-plugins"); //$NON-NLS-1$
 				// Do not show a message box, as this happens often when you load a document
 				// with an invalid content. Eg. with demoDB and Rezept of Absolut Erfunden
 				return false;
@@ -220,6 +232,27 @@ public class TextView extends ViewPart implements IActivationListener {
 		actBrief =
 			txt.createFromTemplate(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN,
 				adressat, subject);
+		if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
+			// open for editing
+			ICommandService commandService =
+				(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+			Command command =
+				commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
+			
+			EvaluationContext appContext = new EvaluationContext(null, Collections.EMPTY_LIST);
+			appContext.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME,
+				new StructuredSelection(actBrief));
+			ExecutionEvent event =
+				new ExecutionEvent(command, Collections.EMPTY_MAP, this, appContext);
+			try {
+				command.executeWithChecks(event);
+			} catch (ExecutionException | NotDefinedException | NotEnabledException
+					| NotHandledException e) {
+				MessageDialog.openError(getSite().getShell(), Messages.TextView_errortitle,
+					Messages.TextView_errorlocaleditmessage);
+			}
+			getViewSite().getPage().hideView(this);
+		}
 		setName();
 		if (actBrief == null) {
 			return false;

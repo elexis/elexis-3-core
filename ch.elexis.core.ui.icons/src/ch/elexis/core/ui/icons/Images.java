@@ -100,6 +100,7 @@ public enum Images {
 		IMG_EXPORT, IMG_GOFURTHER,
 		/** editing an item */
 		IMG_EDIT,
+		IMG_EDIT_DONE, IMG_EDIT_ABORT,
 		/** warning */
 		IMG_ACHTUNG,
 		/** red bullet */

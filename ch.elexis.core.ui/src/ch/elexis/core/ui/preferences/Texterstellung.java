@@ -14,9 +14,9 @@ package ch.elexis.core.ui.preferences;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
-import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -47,6 +47,11 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 				Messages.Texterstellung_Support_Legacy, getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Preferences.P_TEXT_RENAME_WITH_F2,
 				Messages.Texterstellung_Rename_with_F2, getFieldEditorParent()));
+		
+		addField(new BooleanFieldEditor(Preferences.P_TEXT_EDIT_LOCAL,
+			Messages.Texterstellung_texteditlocaldesc,
+			getFieldEditorParent()));
+		
 		String[][] rows = new String[list.size()][];
 		int i = 0;
 		for (IConfigurationElement ice : list) {
