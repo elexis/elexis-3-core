@@ -136,6 +136,22 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIPeriodAdapter();
 			}
 			@Override
+			public Adapter caseIDocument(IDocument object) {
+				return createIDocumentAdapter();
+			}
+			@Override
+			public Adapter caseITag(ITag object) {
+				return createITagAdapter();
+			}
+			@Override
+			public Adapter caseICategory(ICategory object) {
+				return createICategoryAdapter();
+			}
+			@Override
+			public Adapter caseIHistory(IHistory object) {
+				return createIHistoryAdapter();
+			}
+			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
 				return createComparableAdapter();
 			}
@@ -366,6 +382,62 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIPeriodAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDocument <em>IDocument</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IDocument
+	 * @generated
+	 */
+	public Adapter createIDocumentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ITag <em>ITag</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ITag
+	 * @generated
+	 */
+	public Adapter createITagAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ICategory
+	 * @generated
+	 */
+	public Adapter createICategoryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IHistory <em>IHistory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IHistory
+	 * @generated
+	 */
+	public Adapter createIHistoryAdapter() {
 		return null;
 	}
 

@@ -61,4 +61,11 @@
     <eLiterals name="NURSING_HOME" value="8" literal="NURSING_HOME"/>
     <eLiterals name="OTHER" value="9" literal="OTHER"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="DocumentStatus">
+    <eLiterals name="NEW"/>
+    <eLiterals name="CHANGED" value="1"/>
+    <eLiterals name="VALIDATED" value="2"/>
+    <eLiterals name="SENT" value="3"/>
+    <eLiterals name="RECIVED" value="4"/>
+  </eClassifiers>
 </ecore:EPackage>

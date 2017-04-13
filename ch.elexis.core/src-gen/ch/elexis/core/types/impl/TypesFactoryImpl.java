@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
+import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.RelationshipType;
@@ -94,6 +95,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createRelationshipTypeFromString(eDataType, initialValue);
 			case TypesPackage.ADDRESS_TYPE:
 				return createAddressTypeFromString(eDataType, initialValue);
+			case TypesPackage.DOCUMENT_STATUS:
+				return createDocumentStatusFromString(eDataType, initialValue);
 			case TypesPackage.MONEY:
 				return createMoneyFromString(eDataType, initialValue);
 			case TypesPackage.TIME_TOOL:
@@ -125,6 +128,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertRelationshipTypeToString(eDataType, instanceValue);
 			case TypesPackage.ADDRESS_TYPE:
 				return convertAddressTypeToString(eDataType, instanceValue);
+			case TypesPackage.DOCUMENT_STATUS:
+				return convertDocumentStatusToString(eDataType, instanceValue);
 			case TypesPackage.MONEY:
 				return convertMoneyToString(eDataType, instanceValue);
 			case TypesPackage.TIME_TOOL:
@@ -217,6 +222,26 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertAddressTypeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DocumentStatus createDocumentStatusFromString(EDataType eDataType, String initialValue) {
+		DocumentStatus result = DocumentStatus.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertDocumentStatusToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

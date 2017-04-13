@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
+import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.RelationshipType;
@@ -87,6 +88,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EEnum addressTypeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum documentStatusEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -252,6 +260,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getDocumentStatus() {
+		return documentStatusEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getMoney() {
 		return moneyEDataType;
 	}
@@ -331,6 +348,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		contactGenderEEnum = createEEnum(CONTACT_GENDER);
 		relationshipTypeEEnum = createEEnum(RELATIONSHIP_TYPE);
 		addressTypeEEnum = createEEnum(ADDRESS_TYPE);
+		documentStatusEEnum = createEEnum(DOCUMENT_STATUS);
 
 		// Create data types
 		moneyEDataType = createEDataType(MONEY);
@@ -422,6 +440,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(addressTypeEEnum, AddressType.PRISON);
 		addEEnumLiteral(addressTypeEEnum, AddressType.NURSING_HOME);
 		addEEnumLiteral(addressTypeEEnum, AddressType.OTHER);
+
+		initEEnum(documentStatusEEnum, DocumentStatus.class, "DocumentStatus");
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.NEW);
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.CHANGED);
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.VALIDATED);
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.SENT);
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.RECIVED);
 
 		// Initialize data types
 		initEDataType(moneyEDataType, Money.class, "Money", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

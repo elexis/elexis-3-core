@@ -161,6 +161,16 @@ public interface TypesPackage extends EPackage {
 	int ADDRESS_TYPE = 6;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.types.DocumentStatus <em>Document Status</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.DocumentStatus
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getDocumentStatus()
+	 * @generated
+	 */
+	int DOCUMENT_STATUS = 7;
+
+	/**
 	 * The meta object id for the '<em>Money</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -168,7 +178,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 	 * @generated
 	 */
-	int MONEY = 7;
+	int MONEY = 8;
 
 	/**
 	 * The meta object id for the '<em>Time Tool</em>' data type.
@@ -178,7 +188,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTimeTool()
 	 * @generated
 	 */
-	int TIME_TOOL = 8;
+	int TIME_TOOL = 9;
 
 	/**
 	 * The meta object id for the '<em>Gender</em>' data type.
@@ -188,7 +198,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getGender()
 	 * @generated
 	 */
-	int GENDER = 9;
+	int GENDER = 10;
 
 
 	/**
@@ -199,7 +209,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
 	 * @generated
 	 */
-	int LAB_ITEM_TYP = 10;
+	int LAB_ITEM_TYP = 11;
 
 
 	/**
@@ -210,7 +220,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountry()
 	 * @generated
 	 */
-	int COUNTRY = 11;
+	int COUNTRY = 12;
 
 
 	/**
@@ -285,6 +295,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getAddressType();
+
+	/**
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.DocumentStatus <em>Document Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Document Status</em>'.
+	 * @see ch.elexis.core.types.DocumentStatus
+	 * @generated
+	 */
+	EEnum getDocumentStatus();
 
 	/**
 	 * Returns the meta object for data type '{@link ch.rgw.tools.Money <em>Money</em>}'.
@@ -432,6 +452,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum ADDRESS_TYPE = eINSTANCE.getAddressType();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.types.DocumentStatus <em>Document Status</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.DocumentStatus
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getDocumentStatus()
+		 * @generated
+		 */
+		EEnum DOCUMENT_STATUS = eINSTANCE.getDocumentStatus();
 
 		/**
 		 * The meta object literal for the '<em>Money</em>' data type.
