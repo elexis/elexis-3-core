@@ -312,6 +312,7 @@ public class Messages extends NLS {
 	public static String LagerView_gtin;
 	public static String LagerView_stock;
 	public static String LagerView_pharmacode;
+	public static String LagerView_exportAction;
 	public static String LagerView_deleteAction;
 	public static String LagerView_deleteActionConfirmCaption;
 	public static String LagerView_deleteActionToolTip;

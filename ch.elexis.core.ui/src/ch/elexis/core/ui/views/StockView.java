@@ -11,6 +11,8 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,6 +45,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISaveablePart2;
@@ -65,6 +68,7 @@ import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
 import ch.elexis.core.ui.editors.PersistentObjectEditingSupport;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.Message;
@@ -78,6 +82,8 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Stock;
 import ch.elexis.data.StockEntry;
+import ch.elexis.scripting.CSVWriter;
+import ch.rgw.tools.ExHandler;
 
 public class StockView extends ViewPart implements ISaveablePart2, IActivationListener {
 	public StockView(){}
@@ -88,7 +94,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	private CommonViewer cv;
 	private ViewerConfigurer vc;
 	private ViewMenus viewMenus;
-	private IAction refreshAction;
+	private IAction refreshAction, exportAction;
 	
 	@Override
 	public void createPartControl(Composite parent){
@@ -161,6 +167,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		makeActions();
 		viewMenus = new ViewMenus(getViewSite());
 		viewMenus.createToolbar(refreshAction);
+		viewMenus.createMenu(exportAction);
 		
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
@@ -177,6 +184,105 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			}
 		};
 		
+		exportAction =
+			new Action(Messages.LagerView_exportAction, Images.IMG_EXPORT.getImageDescriptor()) {
+				@Override
+				public void run(){
+					FileDialog dialog = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
+					dialog.setFilterExtensions(new String[] {
+						"*.csv"
+					});
+					dialog.setFilterNames(new String[] {
+						"Comma Separated Values (CSV)"
+					});
+					
+					dialog.setOverwrite(true);
+					dialog.setFileName("lager_export.csv");
+					String pathToSave = dialog.open();
+					if (pathToSave != null) {
+						CSVWriter csv = null;
+						try {
+							int errorUnkownArticle = 0;
+							int success = 0;
+							csv = new CSVWriter(new FileWriter(pathToSave));
+							log.debug("csv export started for: " + pathToSave);
+							String[] header = new String[] {
+								"Name", "Pharmacode", "EAN", "Max", "Min",
+								"Aktuell Packung an Lager", "Aktuell an Lager (Anbruch)",
+								" Stück pro Packung", "Stück pro Abgabe", "Einkaufspreis",
+								"Verkaufspreis",
+								"Typ nach Liste (SL, SL-Betäubung, P, N, LPPV, Migl)", "Lieferant"
+							};
+							csv.writeNext(header);
+							
+							for (Object o : vc.getContentProvider().getElements(null)) {
+								if (o instanceof StockEntry) {
+									String[] line = new String[header.length];
+									StockEntry stockEntry = (StockEntry) o;
+									Artikel artikel = stockEntry.getArticle();
+									if (artikel != null) {
+										line[0] = artikel.getLabel();
+										line[1] = artikel.getPharmaCode();
+										line[2] = artikel.getEAN();
+										line[3] = String.valueOf(stockEntry.getMaximumStock());
+										line[4] = String.valueOf(stockEntry.getMinimumStock());
+										line[5] = String.valueOf(stockEntry.getCurrentStock());
+										line[6] = String.valueOf(stockEntry.getFractionUnits());
+										line[7] = String.valueOf(artikel.getPackungsGroesse());
+										line[8] = String.valueOf(artikel.getAbgabeEinheit());
+										line[9] = artikel.getEKPreis().getAmountAsString();
+										line[10] = artikel.getVKPreis().getAmountAsString();
+										line[11] = artikel.get(Artikel.FLD_TYP);
+										Kontakt provider = stockEntry.getProvider();
+										if (provider != null) {
+											line[12] = provider.getLabel();
+										}
+										csv.writeNext(line);
+										success++;
+									} else {
+										errorUnkownArticle++;
+										log.warn("cannot export: id [" + stockEntry.getId()
+											+ "] artikelId ["
+											+ stockEntry.get(StockEntry.FLD_ARTICLE_ID)
+											+ "] artikelType ["
+											+ stockEntry.get(StockEntry.FLD_ARTICLE_TYPE) + "] ");
+									}
+									
+								}
+							}
+							csv.close();
+							log.debug("csv export finished for: " + pathToSave);
+							StringBuffer msg = new StringBuffer();
+							msg.append("Der Export nach ");
+							msg.append(pathToSave);
+							msg.append(" ist abgeschlossen.");
+							msg.append("\n\n");
+							msg.append(success);
+							msg.append(" Artikel wurden erfolgreich exportiert.");
+							if (errorUnkownArticle > 0) {
+								msg.append("\n");
+								msg.append(errorUnkownArticle);
+								msg.append(
+									" Artikel konnten nicht exportiert werden (Unbekannte Artikel Typen).");
+							}
+							SWTHelper.showInfo("Lager export", msg.toString());
+						} catch (Exception ex) {
+							ExHandler.handle(ex);
+							log.error("csv exporter error", ex);
+							SWTHelper.showError("Fehler", ex.getMessage());
+						} finally {
+							if (csv != null) {
+								try {
+									csv.close();
+								} catch (IOException e) {
+									log.error("cannot close csv exporter", e);
+								}
+							}
+						}
+					}
+					
+				}
+			};
 	}
 	
 	@Override
