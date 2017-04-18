@@ -124,7 +124,7 @@ private
     formatter = REXML::Formatters::Pretty.new
     formatter.compact = true # This is the magic line that does what you need!
     ausgabe = File.open("#{@filename}", 'w+')
-    formatter.write(doc.root, ausgabe,)
+    formatter.write(doc.root, ausgabe)
   end
 
   def writeOutput(content)

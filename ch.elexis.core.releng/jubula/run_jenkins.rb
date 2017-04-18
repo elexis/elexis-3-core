@@ -49,7 +49,7 @@ workArounds = '-Declipse.p2.unsignedPolicy=allow -Dorg.eclipse.swt.browser.Defau
 
 jubula = JubulaRun.new(:portNumber => 60000 + (Process.pid % 1000),
                        :vmargs => "#{dbOpts} #{dbRunMode} #{workArounds} ",
-                       :autid => 'elexis',
+                       :autid => 'elexis'
                        )
 # For unknown reasons (which took me a few hours to code around) I decided
 # that is is not my aim to use a MySQL database to store the Jubula testcases
