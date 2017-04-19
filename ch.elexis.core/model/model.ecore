@@ -199,7 +199,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="startTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IDocument" abstract="true" interface="true">
+  <eClassifiers xsi:type="ecore:EClass" name="IDocument" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="patientId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="authorId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

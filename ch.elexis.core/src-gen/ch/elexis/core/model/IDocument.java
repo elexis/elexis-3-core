@@ -41,7 +41,7 @@ import java.util.List;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IDocument {
+public interface IDocument extends Identifiable {
 	/**
 	 * Returns the value of the '<em><b>Patient Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->

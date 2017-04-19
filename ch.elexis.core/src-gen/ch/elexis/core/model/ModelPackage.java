@@ -1583,7 +1583,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__PATIENT_ID = 0;
+	int IDOCUMENT__PATIENT_ID = IDENTIFIABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Author Id</b></em>' attribute.
@@ -1592,7 +1592,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__AUTHOR_ID = 1;
+	int IDOCUMENT__AUTHOR_ID = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Title</b></em>' attribute.
@@ -1601,7 +1601,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__TITLE = 2;
+	int IDOCUMENT__TITLE = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -1610,7 +1610,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__DESCRIPTION = 3;
+	int IDOCUMENT__DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Status</b></em>' attribute.
@@ -1619,7 +1619,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__STATUS = 4;
+	int IDOCUMENT__STATUS = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Created</b></em>' attribute.
@@ -1628,7 +1628,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__CREATED = 5;
+	int IDOCUMENT__CREATED = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Lastchanged</b></em>' attribute.
@@ -1637,7 +1637,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__LASTCHANGED = 6;
+	int IDOCUMENT__LASTCHANGED = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Mime Type</b></em>' attribute.
@@ -1646,7 +1646,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__MIME_TYPE = 7;
+	int IDOCUMENT__MIME_TYPE = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Category</b></em>' reference.
@@ -1655,7 +1655,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__CATEGORY = 8;
+	int IDOCUMENT__CATEGORY = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Tags</b></em>' reference list.
@@ -1664,7 +1664,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__TAGS = 9;
+	int IDOCUMENT__TAGS = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>History</b></em>' reference list.
@@ -1673,7 +1673,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__HISTORY = 10;
+	int IDOCUMENT__HISTORY = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>IDocument</em>' class.
@@ -1682,7 +1682,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT_FEATURE_COUNT = 11;
+	int IDOCUMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ITag <em>ITag</em>}' class.

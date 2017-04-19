@@ -1389,6 +1389,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iLabResultEClass.getESuperTypes().add(this.getIdentifiable());
 		iLabOrderEClass.getESuperTypes().add(this.getIdentifiable());
 		iPeriodEClass.getESuperTypes().add(this.getIdentifiable());
+		iDocumentEClass.getESuperTypes().add(this.getIdentifiable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(iContactEClass, IContact.class, "IContact", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

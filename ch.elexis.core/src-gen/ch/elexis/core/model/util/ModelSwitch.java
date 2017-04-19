@@ -187,6 +187,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			case ModelPackage.IDOCUMENT: {
 				IDocument iDocument = (IDocument)theEObject;
 				T1 result = caseIDocument(iDocument);
+				if (result == null) result = caseIdentifiable(iDocument);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
