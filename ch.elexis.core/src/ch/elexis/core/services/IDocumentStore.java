@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
@@ -44,27 +45,44 @@ public interface IDocumentStore {
 		@Nullable ICategory category, @Nullable List<ITag> tag);
 	
 	/**
+	 * Load a {@link IDocument} with the id from the store.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Optional<IDocument> loadDocument(String id);
+	
+	/**
 	 * Load the content of the document.
 	 * 
 	 * @param document
 	 * @return
 	 */
-	public InputStream loadDocument(IDocument document);
+	public Optional<InputStream> loadDocument(IDocument document);
 	
 	/**
 	 * Save changes to the meta information of the document. Not the content.
 	 * 
 	 * @param document
+	 * @return saved document
 	 */
-	public void saveDocument(IDocument document);
+	public IDocument saveDocument(IDocument document);
 	
 	/**
 	 * Save changes to the meta information and the content of the document.
 	 * 
 	 * @param document
 	 * @param content
+	 * @return saved document
 	 */
-	public void saveDocument(IDocument document, InputStream content);
+	public IDocument saveDocument(IDocument document, InputStream content);
+	
+	/**
+	 * Remove the {@link IDocument} from the store.
+	 * 
+	 * @param document
+	 */
+	public void removeDocument(IDocument document);
 	
 	/**
 	 * Get a list of all categories known to the store.
@@ -113,5 +131,5 @@ public interface IDocumentStore {
 	 * 
 	 * @param tag
 	 */
-	public void removeTag(ITag tag);
+	public void removeTag(ITag tag) throws IllegalStateException;
 }
