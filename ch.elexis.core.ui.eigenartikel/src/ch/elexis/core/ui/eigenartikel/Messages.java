@@ -32,7 +32,6 @@ public class Messages extends NLS {
 	public static String EigenartikelComposite_lblProductType_text;
 	public static String EigenartikelComposite_lblInternalName_text;
 	public static String EigenartikelComposite_lblPharmacode_text;
-	public static String EigenartikelComposite_text_text;
 	public static String EigenartikelComposite_linkProvider_text;
 	public static String EigenartikelComposite_lblMeasurementUnit_text;
 	public static String EigenartikelComposite_lblPackagesstring_text;

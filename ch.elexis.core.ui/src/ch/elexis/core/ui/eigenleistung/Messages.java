@@ -13,13 +13,10 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.eigenleistung.messages";//$NON-NLS-1$
-	public static String EigenleistungContextMenu_create;
 	public static String EigenleistungContextMenu_deleteAction;
 	public static String EigenleistungContextMenu_deleteActionConfirmCaption;
 	public static String EigenleistungContextMenu_deleteActionToolTip;
 	public static String EigenleistungContextMenu_deleteConfirmBody;
-	public static String EigenleistungContextMenu_newAction;
-	public static String EigenleistungContextMenu_newActionTooltip;
 	public static String EigenleistungContextMenu_pleaseEnterNameForArticle;
 	public static String EigenleistungContextMenu_propertiesAction;
 	public static String EigenleistungContextMenu_propertiesTooltip;
