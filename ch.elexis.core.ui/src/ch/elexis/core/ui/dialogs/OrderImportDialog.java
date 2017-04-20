@@ -14,6 +14,7 @@ package ch.elexis.core.ui.dialogs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -53,6 +54,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.actions.ScannerEvents;
 import ch.elexis.core.ui.text.ElexisText;
@@ -433,19 +435,29 @@ public class OrderImportDialog extends TitleAreaDialog {
 		try {
 			for (OrderElement orderElement : orderElements) {
 				if (orderElement.isVerified()) {
-					int diff = orderElement.getAmount();
-					int oldAmount = orderElement.getStockEntry().getCurrentStock();
-					int newAmount = oldAmount + diff;
-					orderElement.getStockEntry().setCurrentStock(newAmount);
-					
-					// reset amount
-					orderElement.setAmount(0);
-					orderElement.setVerified(false);
+					StockEntry stockEntry = (StockEntry) orderElement.getStockEntry();
+					LockResponse lockResponse = CoreHub.getLocalLockService()
+						.acquireLockBlocking((StockEntry) stockEntry, 1, new NullProgressMonitor());
+					if (lockResponse.isOk()) {
+						int diff = orderElement.getAmount();
+						int oldAmount = stockEntry.getCurrentStock();
+						int newAmount = oldAmount + diff;
+						stockEntry.setCurrentStock(newAmount);
+						
+						// reset amount
+						orderElement.setAmount(0);
+						orderElement.setVerified(false);
+						
+						CoreHub.getLocalLockService().releaseLock(lockResponse.getLockInfo());
+					} else {
+						throw new IllegalStateException(
+							"Could not acquire lock for stockEntry [" + stockEntry.getArticle().getLabel() + "]");
+					}
 				}
 			}
 		} catch (Exception ex) {
 			SWTHelper.showError("Fehler bei Anpassung der Bestände",
-				"Bestände konnten teilweise nicht korrekt angepasst werden.");
+				"Bestände konnten teilweise nicht korrekt angepasst werden: " + ex.getMessage());
 		}
 		
 		viewer.refresh();
