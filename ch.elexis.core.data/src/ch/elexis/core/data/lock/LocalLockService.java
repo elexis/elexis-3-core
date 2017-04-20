@@ -148,7 +148,7 @@ public class LocalLockService implements ILocalLockService {
 			return LockResponse.DENIED(null);
 		}
 		if (monitor != null) {
-			monitor.beginTask("Acquiring Lock for [" + po.getLabel() + "]", secTimeout * 2);
+			monitor.beginTask("Acquiring Lock for [" + po.getLabel() + "]", (secTimeout * 10) + 1);
 		}
 		logger.debug("Acquiring lock blocking on [" + po + "]");
 		String storeToString = po.storeToString();
@@ -156,13 +156,14 @@ public class LocalLockService implements ILocalLockService {
 		LockResponse response = acquireLock(storeToString);
 		int sleptMilli = 0;
 		while (!response.isOk()) {
+			if (response.getStatus() == LockResponse.Status.DENIED_PERMANENT) {
+				return response;
+			}
+			
 			try {
-				Thread.sleep(1000);
-				sleptMilli += 1000;
+				Thread.sleep(100);
+				sleptMilli += 100;
 				response = acquireLock(storeToString);
-				if (response.getStatus() == LockResponse.Status.DENIED_PERMANENT) {
-					return response;
-				}
 				if (sleptMilli > (secTimeout * 1000)) {
 					return response;
 				}
