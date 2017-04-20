@@ -353,7 +353,6 @@ public class Messages extends NLS {
 	public static String PatHeuteView_noCase;
 	public static String PatHeuteView_onlyOpen;
 	public static String PatHeuteView_open;
-	public static String PatHeuteView_partName;
 	public static String PatHeuteView_printBillingExpl;
 	public static String PatHeuteView_printBillingList;
 	public static String PatHeuteView_printList;

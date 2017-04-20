@@ -44,7 +44,6 @@ public class Messages extends NLS {
 	public static String MedicationComposite_txtIntakeOrder_message;
 	public static String MedicationComposite_lblNewLabel_text;
 	public static String MedicationComposite_lblNewLabel_text_1;
-	public static String MedicationComposite_btnNewButton_text;
 	public static String MedicationComposite_btnConfirm;
 	public static String MedicationComposite_btnStop;
 	public static String MedicationComposite_btnPRNMedication_text;
