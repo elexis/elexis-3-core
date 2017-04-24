@@ -259,7 +259,7 @@ public class LocalDocumentService implements ILocalDocumentService {
 		if (mime.length() < 5) {
 			return mime;
 		} else {
-			String ret = MimeTool.getMimeType(mime);
+			String ret = MimeTool.getExtension(mime);
 			if (ret.length() > 5) {
 				return getDefaultFileEnding();
 			} else {
