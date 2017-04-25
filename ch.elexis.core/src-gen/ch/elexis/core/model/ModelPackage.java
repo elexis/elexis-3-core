@@ -1676,13 +1676,22 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT__HISTORY = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
+	 * The feature id for the '<em><b>Store Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__STORE_ID = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
 	 * The number of structural features of the '<em>IDocument</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 11;
+	int IDOCUMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ITag <em>ITag</em>}' class.
@@ -2826,6 +2835,17 @@ public interface ModelPackage extends EPackage {
 	EReference getIDocument_History();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getStoreId <em>Store Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Store Id</em>'.
+	 * @see ch.elexis.core.model.IDocument#getStoreId()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_StoreId();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ITag <em>ITag</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3733,6 +3753,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IDOCUMENT__HISTORY = eINSTANCE.getIDocument_History();
+
+		/**
+		 * The meta object literal for the '<em><b>Store Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__STORE_ID = eINSTANCE.getIDocument_StoreId();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ITag <em>ITag</em>}' class.

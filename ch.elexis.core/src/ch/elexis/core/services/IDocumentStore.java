@@ -18,6 +18,10 @@ import ch.elexis.core.model.ITag;
  */
 public interface IDocumentStore {
 	
+	public enum Capability {
+			CATEGORY, TAG
+	}
+	
 	/**
 	 * Get the id of the implementation.
 	 * 
@@ -58,7 +62,7 @@ public interface IDocumentStore {
 	 * @param document
 	 * @return
 	 */
-	public Optional<InputStream> loadDocument(IDocument document);
+	public Optional<InputStream> loadContent(IDocument document);
 	
 	/**
 	 * Save changes to the meta information of the document. Not the content.
@@ -132,4 +136,10 @@ public interface IDocumentStore {
 	 * @param tag
 	 */
 	public void removeTag(ITag tag) throws IllegalStateException;
+	
+	public default boolean isAllowed(Capability restricted)
+	{
+		return true;
+	}
+	
 }

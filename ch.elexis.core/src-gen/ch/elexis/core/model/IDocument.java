@@ -35,6 +35,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IDocument#getCategory <em>Category</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getTags <em>Tags</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getHistory <em>History</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IDocument#getStoreId <em>Store Id</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIDocument()
@@ -310,5 +311,31 @@ public interface IDocument extends Identifiable {
 	 * @generated
 	 */
 	List<IHistory> getHistory();
+
+	/**
+	 * Returns the value of the '<em><b>Store Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Store Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Store Id</em>' attribute.
+	 * @see #setStoreId(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIDocument_StoreId()
+	 * @model
+	 * @generated
+	 */
+	String getStoreId();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IDocument#getStoreId <em>Store Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Store Id</em>' attribute.
+	 * @see #getStoreId()
+	 * @generated
+	 */
+	void setStoreId(String value);
 
 } // IDocument
