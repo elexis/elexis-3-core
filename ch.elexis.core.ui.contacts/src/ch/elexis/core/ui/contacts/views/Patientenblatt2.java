@@ -680,7 +680,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 			for (int i = 0; i < txExpandable.size(); i++) {
 				String field = dfExpandable.get(i);
-				String oldvalue = actPatient.get(field);
+				String oldvalue = StringTool.unNull(actPatient.get(field));
 				String newvalue = txExpandable.get(i).getText();
 				if (bLocked) {
 					txExpandable.get(i).setText(oldvalue);
@@ -766,7 +766,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		
 		for (int i = 0; i < dfExpandable.size(); i++) {
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + ec.get(i).getText());
-			txExpandable.get(i).setText(p.get(dfExpandable.get(i)));
+			txExpandable.get(i).setText(StringTool.unNull(p.get(dfExpandable.get(i))));
 		}
 		dmd.reload();
 		form.reflow(true);
