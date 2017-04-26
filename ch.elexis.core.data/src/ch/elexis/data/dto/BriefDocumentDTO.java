@@ -11,10 +11,13 @@ import ch.rgw.tools.TimeTool;
 
 public class BriefDocumentDTO extends AbstractDocumentDTO {
 	
-	public BriefDocumentDTO(){
+	public BriefDocumentDTO(String storeId){
+		setStoreId(storeId);
 	}
 	
 	public BriefDocumentDTO(Brief brief, String storeId){
+		this(storeId);
+		
 		String[] fetch = new String[]
 		{
 			Brief.FLD_PATIENT_ID, Brief.FLD_SENDER_ID, Brief.FLD_NOTE, Brief.FLD_SUBJECT,
@@ -42,9 +45,6 @@ public class BriefDocumentDTO extends AbstractDocumentDTO {
 					DocumentStatus.SENT, kontakt.getLabel()));
 			}
 		}
-		if (StringUtils.isNotEmpty(data[6])) {
-			setCategory(new CategoryDocumentDTO(data[6]));
-		}
-		setStoreId(storeId);
+		setCategory(new CategoryDocumentDTO(data[6]));
 	}
 }

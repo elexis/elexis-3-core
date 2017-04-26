@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICategory;
@@ -65,21 +66,34 @@ public interface IDocumentStore {
 	public Optional<InputStream> loadContent(IDocument document);
 	
 	/**
+	 * Creates a empty {@link IDocument} for the given patientId
+	 * 
+	 * @param patientId
+	 * @param title
+	 * 
+	 * @return
+	 */
+	public IDocument createDocument(@NonNull String patientId, String title);
+	
+	/**
 	 * Save changes to the meta information of the document. Not the content.
 	 * 
 	 * @param document
 	 * @return saved document
+	 * @throws ElexisException
 	 */
-	public IDocument saveDocument(IDocument document);
+	public IDocument saveDocument(IDocument document) throws ElexisException;
 	
 	/**
-	 * Save changes to the meta information and the content of the document.
+	 * Save changes to the meta information and the content of the document. If an
+	 * {@link InputStream} is given it will be closed.
 	 * 
 	 * @param document
 	 * @param content
-	 * @return saved document
+	 * @return
+	 * @throws ElexisException
 	 */
-	public IDocument saveDocument(IDocument document, InputStream content);
+	public IDocument saveDocument(IDocument document, InputStream content) throws ElexisException;
 	
 	/**
 	 * Remove the {@link IDocument} from the store.
@@ -96,13 +110,12 @@ public interface IDocumentStore {
 	public List<ICategory> getCategories();
 	
 	/**
-	 * Add a {@link ICategory} with the provided name to the store. If a {@link ICategory} with that
-	 * name is already known to the store, it will be returned.
+	 * Creates a {@link ICategory} with the provided name to the store.
 	 * 
 	 * @param name
 	 * @return
 	 */
-	public ICategory addCategory(String name);
+	public ICategory createCategory(String name);
 	
 	/**
 	 * Remove the {@link ICategory} from the store. Only empty {@link ICategory} can be removed. If

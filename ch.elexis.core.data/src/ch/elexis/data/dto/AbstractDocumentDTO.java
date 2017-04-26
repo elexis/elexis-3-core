@@ -13,7 +13,7 @@ import ch.elexis.core.types.DocumentStatus;
 public abstract class AbstractDocumentDTO implements IDocument {
 	private String patientId;
 	private String authorId;
-	private String title;
+	private String title = "";
 	private String description;
 	private DocumentStatus status = DocumentStatus.NEW;
 	private Date created;

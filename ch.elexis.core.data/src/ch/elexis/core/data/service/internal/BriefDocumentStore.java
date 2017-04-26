@@ -3,8 +3,6 @@ package ch.elexis.core.data.service.internal;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,17 +13,18 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.ITag;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.dto.BriefDocumentDTO;
 import ch.elexis.data.dto.CategoryDocumentDTO;
-import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.TimeTool;
 
 @Component
@@ -67,26 +66,19 @@ public class BriefDocumentStore implements IDocumentStore {
 	
 	@Override
 	public List<ICategory> getCategories(){
-		Stm stm = PersistentObject.getDefaultConnection().getStatement();
-		ResultSet rs = stm.query("select distinct " + Brief.FLD_TYPE + " from " + Brief.TABLENAME + " order by " + Brief.FLD_TYPE);
 		List<ICategory> categories = new ArrayList<>();
-		try {
-			while (rs.next()) {
-				String typ = rs.getString(Brief.FLD_TYPE );
-				if (typ != null) {
-					categories.add(new CategoryDocumentDTO(typ));
-				}
-			}
-		} catch (SQLException e) {
-			log.error("Error executing distinct brief category selection", e);
-		}
-		PersistentObject.getDefaultConnection().releaseStatement(stm);
-		
+		categories.add(new CategoryDocumentDTO(BriefConstants.TEMPLATE));
+		categories.add(new CategoryDocumentDTO(BriefConstants.AUZ));
+		categories.add(new CategoryDocumentDTO(BriefConstants.RP));
+		categories.add(new CategoryDocumentDTO(BriefConstants.UNKNOWN));
+		categories.add(new CategoryDocumentDTO(BriefConstants.LABOR));
+		categories.add(new CategoryDocumentDTO(BriefConstants.BESTELLUNG));
+		categories.add(new CategoryDocumentDTO(BriefConstants.RECHNUNG));
 		return categories;
 	}
 	
 	@Override
-	public ICategory addCategory(String name){
+	public ICategory createCategory(String name){
 		return new CategoryDocumentDTO(name);
 	}
 	
@@ -109,8 +101,7 @@ public class BriefDocumentStore implements IDocumentStore {
 	public void removeTag(ITag tag){
 		
 	}
-
-
+	
 	@Override
 	public void removeDocument(IDocument document){
 		Brief brief = Brief.load(document.getId());
@@ -120,50 +111,55 @@ public class BriefDocumentStore implements IDocumentStore {
 	}
 	
 	@Override
-	public IDocument saveDocument(IDocument document){
+	public IDocument saveDocument(IDocument document) throws ElexisException{
 		return save(document, null);
 	}
 	
 	@Override
-	public IDocument saveDocument(IDocument document, InputStream content){
+	public IDocument saveDocument(IDocument document, InputStream content) throws ElexisException{
 		return save(document, content);
 	}
 	
-	private IDocument save(IDocument document, InputStream content){
-		Brief brief = Brief.load(document.getId());
-		if (brief.exists()) {
-			String category =
-				document.getCategory() != null ? document.getCategory().getName() : null;
-			// update an existing document
-			String[] fetch = new String[] {
-				Brief.FLD_PATIENT_ID, Brief.FLD_SENDER_ID, Brief.FLD_NOTE, Brief.FLD_SUBJECT,
-				Brief.FLD_MIME_TYPE, Brief.FLD_TYPE
-			};
-			String[] data = new String[] {
-				document.getPatientId(), document.getAuthorId(), document.getDescription(),
-				document.getTitle(), document.getMimeType(), category
-			};
-			brief.set(fetch, data);
-		} else {
-			// persist a new document
-			brief = new Brief(document.getTitle(),
-				document.getCreated() != null ? new TimeTool(document.getCreated()) : null,
-				Kontakt.load(document.getAuthorId()), null, null, document.getCategory().getName());
-			brief.set(new String[] {
-				Brief.FLD_PATIENT_ID, Brief.FLD_MIME_TYPE, Brief.FLD_NOTE
-			}, new String[] {
-				document.getPatientId(), document.getMimeType(), document.getDescription()
-			});
-		}
-		
-		if (content != null) {
-			try {
+	private IDocument save(IDocument document, InputStream content) throws ElexisException{
+		try {
+			Brief brief = Brief.load(document.getId());
+			if (brief.exists()) {
+				String category =
+					document.getCategory() != null ? document.getCategory().getName() : null;
+				// update an existing document
+				String[] fetch = new String[] {
+					Brief.FLD_PATIENT_ID, Brief.FLD_SENDER_ID, Brief.FLD_NOTE, Brief.FLD_SUBJECT,
+					Brief.FLD_MIME_TYPE, Brief.FLD_TYPE
+				};
+				String[] data = new String[] {
+					document.getPatientId(), document.getAuthorId(), document.getDescription(),
+					document.getTitle(), document.getMimeType(), category
+				};
+				brief.set(fetch, data);
+			} else {
+				// persist a new document
+				brief = new Brief(document.getTitle(),
+					document.getCreated() != null ? new TimeTool(document.getCreated()) : null,
+					Kontakt.load(document.getAuthorId()), null, null,
+					document.getCategory().getName());
+				brief.set(new String[] {
+					Brief.FLD_PATIENT_ID, Brief.FLD_MIME_TYPE, Brief.FLD_NOTE
+				}, new String[] {
+					document.getPatientId(), document.getMimeType(), document.getDescription()
+				});
+			}
+			
+			if (content != null) {
 				brief.save(IOUtils.toByteArray(content), document.getMimeType());
-			} catch (IOException e) {
-				log.error("cannot save document contents", e);
+			}
+			return new BriefDocumentDTO(brief, STORE_ID);
+		} catch (IOException | PersistenceException e) {
+			throw new ElexisException("cannot save", e);
+		} finally {
+			if (content != null) {
+				IOUtils.closeQuietly(content);
 			}
 		}
-		return new BriefDocumentDTO(brief, STORE_ID);
 	}
 	
 	@Override
@@ -190,5 +186,13 @@ public class BriefDocumentStore implements IDocumentStore {
 			return false;
 		}
 		return IDocumentStore.super.isAllowed(restricted);
+	}
+	
+	@Override
+	public IDocument createDocument(String patientId, String title){
+		BriefDocumentDTO briefDocumentDTO = new BriefDocumentDTO(STORE_ID);
+		briefDocumentDTO.setTitle(title);
+		briefDocumentDTO.setPatientId(patientId);
+		return briefDocumentDTO;
 	}
 }
