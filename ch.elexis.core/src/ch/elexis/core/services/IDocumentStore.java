@@ -70,10 +70,11 @@ public interface IDocumentStore {
 	 * 
 	 * @param patientId
 	 * @param title
+	 * @param categoryName
 	 * 
 	 * @return
 	 */
-	public IDocument createDocument(@NonNull String patientId, String title);
+	public IDocument createDocument(@NonNull String patientId, String title, String categoryName);
 	
 	/**
 	 * Save changes to the meta information of the document. Not the content.

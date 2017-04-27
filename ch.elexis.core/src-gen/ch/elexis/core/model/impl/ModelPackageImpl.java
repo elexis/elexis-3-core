@@ -1122,6 +1122,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIDocument_Extension() {
+		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getITag() {
 		return iTagEClass;
 	}
@@ -1337,6 +1346,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iDocumentEClass, IDOCUMENT__TAGS);
 		createEReference(iDocumentEClass, IDOCUMENT__HISTORY);
 		createEAttribute(iDocumentEClass, IDOCUMENT__STORE_ID);
+		createEAttribute(iDocumentEClass, IDOCUMENT__EXTENSION);
 
 		iTagEClass = createEClass(ITAG);
 		createEAttribute(iTagEClass, ITAG__NAME);
@@ -1606,6 +1616,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIDocument_Tags(), this.getITag(), null, "tags", null, 0, -1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIDocument_History(), this.getIHistory(), null, "history", null, 0, -1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIDocument_StoreId(), ecorePackage.getEString(), "storeId", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIDocument_Extension(), ecorePackage.getEString(), "extension", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iTagEClass, ITag.class, "ITag", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getITag_Name(), ecorePackage.getEString(), "name", null, 0, 1, ITag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

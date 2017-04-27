@@ -1685,13 +1685,22 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT__STORE_ID = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Extension</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__EXTENSION = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>IDocument</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int IDOCUMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ITag <em>ITag</em>}' class.
@@ -2846,6 +2855,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIDocument_StoreId();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getExtension <em>Extension</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Extension</em>'.
+	 * @see ch.elexis.core.model.IDocument#getExtension()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_Extension();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ITag <em>ITag</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3761,6 +3781,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IDOCUMENT__STORE_ID = eINSTANCE.getIDocument_StoreId();
+
+		/**
+		 * The meta object literal for the '<em><b>Extension</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__EXTENSION = eINSTANCE.getIDocument_Extension();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ITag <em>ITag</em>}' class.

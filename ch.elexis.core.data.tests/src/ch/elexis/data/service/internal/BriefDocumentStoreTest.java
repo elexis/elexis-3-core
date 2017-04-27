@@ -13,6 +13,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.services.IDocumentStore;
@@ -33,10 +34,10 @@ public class BriefDocumentStoreTest {
 	}
 	
 	@Test
-	public void testCrudAndSearchDocuments() throws IOException{
+	public void testCrudAndSearchDocuments() throws IOException, ElexisException{
 		
 		// persist metadata of documents
-		BriefDocumentDTO briefDocumentDTO = new BriefDocumentDTO();
+		BriefDocumentDTO briefDocumentDTO = new BriefDocumentDTO("ch.elexis.data.store.brief");
 		briefDocumentDTO.setPatientId("-1");
 		briefDocumentDTO.setStatus(DocumentStatus.RECIVED); // invalid state for a new document
 		briefDocumentDTO.setDescription("Test desc");

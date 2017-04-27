@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.ITag;
 import ch.elexis.core.types.DocumentStatus;
+import ch.rgw.tools.MimeTool;
 
 public abstract class AbstractDocumentDTO implements IDocument {
 	private String patientId;
@@ -25,6 +29,7 @@ public abstract class AbstractDocumentDTO implements IDocument {
 	private String label;
 	private String id;
 	private String storeId;
+	private String extension;
 	
 	@Override
 	public String getPatientId(){
@@ -160,5 +165,58 @@ public abstract class AbstractDocumentDTO implements IDocument {
 	@Override
 	public void setStoreId(String value){
 		this.storeId = value;
+	}
+	
+	@Override
+	public void setExtension(String value){
+		this.extension = value;
+		
+	}
+	
+	@Override
+	public String getExtension(){
+		return extension;
+	}
+	
+	public String evaluateExtension(String input){
+		String ext = MimeTool.getExtension(input);
+		if (StringUtils.isEmpty(ext)) {
+			ext = FilenameUtils.getExtension(input);
+			if (StringUtils.isEmpty(ext)) {
+				ext = input;
+			}
+		}
+		return ext;
+	}
+	
+	@Override
+	public int hashCode(){
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractDocumentDTO other = (AbstractDocumentDTO) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (patientId == null) {
+			if (other.patientId != null)
+				return false;
+		} else if (!patientId.equals(other.patientId))
+			return false;
+		return true;
 	}
 }

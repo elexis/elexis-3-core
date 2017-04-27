@@ -10,10 +10,10 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.types.DocumentStatus;
-
 import java.util.Date;
 import java.util.List;
+
+import ch.elexis.core.types.DocumentStatus;
 
 /**
  * <!-- begin-user-doc -->
@@ -36,6 +36,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IDocument#getTags <em>Tags</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getHistory <em>History</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getStoreId <em>Store Id</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IDocument#getExtension <em>Extension</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIDocument()
@@ -337,5 +338,31 @@ public interface IDocument extends Identifiable {
 	 * @generated
 	 */
 	void setStoreId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Extension</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Extension</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Extension</em>' attribute.
+	 * @see #setExtension(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Extension()
+	 * @model
+	 * @generated
+	 */
+	String getExtension();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IDocument#getExtension <em>Extension</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Extension</em>' attribute.
+	 * @see #getExtension()
+	 * @generated
+	 */
+	void setExtension(String value);
 
 } // IDocument

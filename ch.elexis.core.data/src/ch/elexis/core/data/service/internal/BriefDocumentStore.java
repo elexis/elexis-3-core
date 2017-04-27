@@ -189,10 +189,13 @@ public class BriefDocumentStore implements IDocumentStore {
 	}
 	
 	@Override
-	public IDocument createDocument(String patientId, String title){
+	public IDocument createDocument(String patientId, String title, String categoryName){
 		BriefDocumentDTO briefDocumentDTO = new BriefDocumentDTO(STORE_ID);
 		briefDocumentDTO.setTitle(title);
 		briefDocumentDTO.setPatientId(patientId);
+		ICategory iCategory =
+			new CategoryDocumentDTO(categoryName != null ? categoryName : Brief.UNKNOWN);
+		briefDocumentDTO.setCategory(iCategory);
 		return briefDocumentDTO;
 	}
 }

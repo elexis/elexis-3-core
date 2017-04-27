@@ -37,6 +37,8 @@ public class BriefDocumentDTO extends AbstractDocumentDTO {
 		setLastchanged(new Date(Long.valueOf(brief.get(Brief.FLD_LASTUPDATE))));
 		setCreated(new TimeTool(brief.get(Brief.FLD_DATE)).getTime());
 		
+		setExtension(evaluateExtension(data[4]));
+		
 		if (StringUtils.isNotEmpty(data[5])) {
 			setStatus(DocumentStatus.SENT);
 			Kontakt kontakt = Kontakt.load(data[5]);
