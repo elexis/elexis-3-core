@@ -194,8 +194,13 @@ public class BriefDocumentStore implements IDocumentStore {
 		briefDocumentDTO.setTitle(title);
 		briefDocumentDTO.setPatientId(patientId);
 		ICategory iCategory =
-			new CategoryDocumentDTO(categoryName != null ? categoryName : Brief.UNKNOWN);
+			categoryName != null ? new CategoryDocumentDTO(categoryName) : getCategoryDefault();
 		briefDocumentDTO.setCategory(iCategory);
 		return briefDocumentDTO;
+	}
+	
+	@Override
+	public ICategory getCategoryDefault(){
+		return new CategoryDocumentDTO(Brief.UNKNOWN);
 	}
 }

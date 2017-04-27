@@ -111,6 +111,13 @@ public interface IDocumentStore {
 	public List<ICategory> getCategories();
 	
 	/**
+	 * Returns the default category for a store.
+	 * 
+	 * @return
+	 */
+	public ICategory getCategoryDefault();
+	
+	/**
 	 * Creates a {@link ICategory} with the provided name to the store.
 	 * 
 	 * @param name
