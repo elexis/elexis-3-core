@@ -18,6 +18,7 @@ import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.ITag;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.data.Brief;
@@ -203,4 +204,10 @@ public class BriefDocumentStore implements IDocumentStore {
 	public ICategory getCategoryDefault(){
 		return new CategoryDocumentDTO(Brief.UNKNOWN);
 	}
+	
+	@Override
+	public Optional<IPersistentObject> getPersistenceObject(IDocument iDocument){
+		return Optional.of(Brief.load(iDocument.getId()));
+	}
+	
 }
