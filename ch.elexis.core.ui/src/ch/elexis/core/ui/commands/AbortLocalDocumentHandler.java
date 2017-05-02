@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.commands;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,6 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 
 public class AbortLocalDocumentHandler extends AbstractHandler implements IHandler {
@@ -26,9 +28,13 @@ public class AbortLocalDocumentHandler extends AbstractHandler implements IHandl
 			for (Object object : selected) {
 				LocalDocumentServiceHolder.getService().ifPresent(service -> {
 					if (service.contains(object)) {
+						Optional<LocalLock> lock = LocalLock.getManagedLock(object);
+						lock.ifPresent(localDocumentLock -> localDocumentLock.unlock());
+						
 						service.remove(object);
 					} else {
-						MessageDialog.openInformation(parentShell, Messages.AbortLocalDocumentHandler_infotitle,
+						MessageDialog.openInformation(parentShell,
+							Messages.AbortLocalDocumentHandler_infotitle,
 							Messages.AbortLocalDocumentHandler_infomessage);
 					}
 				});

@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 
@@ -29,6 +30,23 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 			Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			for (Object object : selected) {
 				LocalDocumentServiceHolder.getService().ifPresent(service -> {
+					LocalLock lock = new LocalLock(object);
+					if (!lock.tryLock()) {
+						if (MessageDialog.openQuestion(parentShell, Messages.StartEditLocalDocumentHandler_warning,
+							Messages.StartEditLocalDocumentHandler_alreadyOpenStart + lock.getLockMessage()
+								+ Messages.StartEditLocalDocumentHandler_alreadyOpenEnd)) {
+							lock.unlock();
+							if (!lock.tryLock()) {
+								MessageDialog.openError(parentShell,
+									Messages.StartEditLocalDocumentHandler_errortitle,
+									Messages.StartEditLocalDocumentHandler_errormessage);
+								return;
+							}
+						} else {
+							return;
+						}
+					}
+					
 					Optional<File> file = service.add(object, new IConflictHandler() {
 						@Override
 						public Result getResult(){
