@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="ch.elexis.textKategorie"
+            class="ch.elexis.core.ui.documents.views.DocumentsView"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/dokument.gif"
+            id="ch.elexis.core.ui.documents.views.DocumentsView"
+            name="Dokumente">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="ch.elexis.core.ui.documents.handler.DocumentCrudHandler"
+            id="ch.elexis.core.ui.documents.commandUpdate"
+            name="Update Document">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.documents.handler.DocumentCrudHandler"
+            id="ch.elexis.core.ui.documents.commandDelete"
+            name="Delete Document">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.documents.handler.DocumentCrudHandler"
+            id="ch.elexis.core.ui.documents.commandCreate"
+            name="Create Dokument">
+      </command>
+      <command
+            id="ch.elexis.core.ui.documents.commandExport"
+            name="Export Dokument">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.documents.handler.DocumentLocalEditHandler"
+            id="ch.elexis.core.ui.documents.commandLocalEditStart"
+            name="Local Edit Dokument Start">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.documents.handler.DocumentLocalEditHandler"
+            id="ch.elexis.core.ui.documents.commandLocalEditAbort"
+            name="Local Edit Abort Dokument">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.documents.handler.DocumentLocalEditHandler"
+            id="ch.elexis.core.ui.documents.commandLocalEditDone"
+            name="Local Edit Done Dokument">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.documents.handler.DocumentLocalEditHandler"
+            id="ch.elexis.core.ui.documents.commandLocalEditOverview"
+            name="Local Edit Overview Dokument">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.core.ui.documents.views.DocumentsView">
+         <command
+               commandId="ch.elexis.core.ui.documents.commandUpdate"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit.png"
+               label="Bearbeiten"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ch.elexis.core.model.IDocument">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.documents.commandDelete"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/delete.gif"
+               label="Löschen"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ch.elexis.core.model.IDocument">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <separator
+               name="ch.elexis.core.ui.documents.separator1"
+               visible="true">
+         </separator>
+         <command
+               commandId="ch.elexis.core.ui.documents.commandLocalEditStart"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit.png"
+               label="Start edit local document"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ch.elexis.core.model.IDocument">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.documents.commandLocalEditDone"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit_done.png"
+               label="End local document"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ch.elexis.core.model.IDocument">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.documents.commandLocalEditAbort"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit_abort.png"
+               label="Abort local document"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ch.elexis.core.model.IDocument">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.documents.views.DocumentsView">
+         <command
+               commandId="ch.elexis.core.ui.documents.commandCreate"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/import.gif"
+               label="Externes Dokument importieren"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.documents.views.DocumentsView">
+         <command
+               commandId="ch.elexis.core.ui.documents.commandExport"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/export.ico"
+               label="Das Dokument in eine Datei exportieren"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.documents.views.DocumentsView">
+         <command
+               commandId="ch.elexis.core.ui.documents.commandLocalEditOverview"
+               icon="icon://IMG_EDIT"
+               label="Offene lokale Dokumente"
+               style="push"
+               tooltip="Offene lokale Dokumente">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     property="ch.elexis.core.ui.property.documenteditlocal">
+               </test>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="ch.elexis.core.ui.documents.handler.DocumentExportHandler"
+            commandId="ch.elexis.core.ui.documents.commandExport">
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <instanceof
+                     value="ch.elexis.core.model.IDocument">
+               </instanceof>
+            </iterate>
+         </enabledWhen>
+      </handler>
+   </extension>
+
+</plugin>
