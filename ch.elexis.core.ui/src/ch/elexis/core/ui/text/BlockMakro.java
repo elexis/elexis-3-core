@@ -22,17 +22,21 @@ public class BlockMakro implements IKonsMakro {
 		List<Leistungsblock> macros = Leistungsblock.findMacrosValidForCurrentMandator(makro);
 		if ((macros != null) && (macros.size() > 0) && (actKons != null)) {
 			Leistungsblock lb = macros.get(0);
-			for (ICodeElement ice : lb.getElements()) {
-				if (ice instanceof IVerrechenbar) {
-					Result<IVerrechenbar> res = actKons.addLeistung((IVerrechenbar) ice);
-					if (!res.isOK()) {
-						MessageEvent.fireError("Error", res.toString());
-					}
-				} else if (ice instanceof IDiagnose) {
-					actKons.addDiagnose((IDiagnose) ice);
-				}
-			}
+			addBlock(actKons, lb);
 		}
 		return StringConstants.EMPTY;
+	}
+	
+	public void addBlock(Konsultation kons, Leistungsblock block){
+		for (ICodeElement ice : block.getElements()) {
+			if (ice instanceof IVerrechenbar) {
+				Result<IVerrechenbar> res = kons.addLeistung((IVerrechenbar) ice);
+				if (!res.isOK()) {
+					MessageEvent.fireError("Error", res.toString());
+				}
+			} else if (ice instanceof IDiagnose) {
+				kons.addDiagnose((IDiagnose) ice);
+			}
+		}
 	}
 }
