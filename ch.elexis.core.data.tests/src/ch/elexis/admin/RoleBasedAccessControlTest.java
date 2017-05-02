@@ -53,7 +53,7 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 		assertEquals(6, roles.size());
 		Role ur = Role.load(Role.SYSTEMROLE_LITERAL_USER);
 		ACE[] assignedUserRights = ur.getAssignedAccessRights();
-		assertEquals(53, assignedUserRights.length);
+		assertEquals(54, assignedUserRights.length);
 	}
 	
 	@Test
