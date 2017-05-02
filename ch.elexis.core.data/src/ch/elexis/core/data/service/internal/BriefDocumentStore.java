@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,31 +75,6 @@ public class BriefDocumentStore implements IDocumentStore {
 		categories.add(new CategoryDocumentDTO(BriefConstants.BESTELLUNG));
 		categories.add(new CategoryDocumentDTO(BriefConstants.RECHNUNG));
 		return categories;
-	}
-	
-	@Override
-	public ICategory createCategory(String name){
-		return new CategoryDocumentDTO(name);
-	}
-	
-	@Override
-	public void removeCategory(ICategory category) throws IllegalStateException{
-		
-	}
-	
-	@Override
-	public List<ITag> getTags(){
-		return Collections.emptyList();
-	}
-	
-	@Override
-	public ITag addTag(String name){
-		return null;
-	}
-	
-	@Override
-	public void removeTag(ITag tag){
-		
 	}
 	
 	@Override
@@ -183,7 +157,7 @@ public class BriefDocumentStore implements IDocumentStore {
 	
 	@Override
 	public boolean isAllowed(Capability restricted){
-		if (Capability.CATEGORY.equals(restricted) || Capability.TAG.equals(restricted)) {
+		if (Capability.CATEGORY.equals(restricted) || Capability.KEYWORDS.equals(restricted)) {
 			return false;
 		}
 		return IDocumentStore.super.isAllowed(restricted);
@@ -208,6 +182,22 @@ public class BriefDocumentStore implements IDocumentStore {
 	@Override
 	public Optional<IPersistentObject> getPersistenceObject(IDocument iDocument){
 		return Optional.of(Brief.load(iDocument.getId()));
+	}
+	
+	@Override
+	public ICategory createCategory(String name){
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public void removeCategory(IDocument iDocument, String newCategory)
+		throws IllegalStateException{
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public void renameCategory(ICategory category, String newCategory){
+		throw new UnsupportedOperationException();
 	}
 	
 }

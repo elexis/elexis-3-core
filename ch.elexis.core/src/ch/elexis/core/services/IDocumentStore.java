@@ -21,7 +21,7 @@ import ch.elexis.core.model.ITag;
 public interface IDocumentStore {
 	
 	public enum Capability {
-			CATEGORY, TAG
+			CATEGORY, KEYWORDS
 	}
 	
 	/**
@@ -119,7 +119,7 @@ public interface IDocumentStore {
 	public ICategory getCategoryDefault();
 	
 	/**
-	 * Creates a {@link ICategory} with the provided name to the store.
+	 * Creates or returns an existing {@link ICategory} with the provided name from the store.
 	 * 
 	 * @param name
 	 * @return
@@ -131,33 +131,19 @@ public interface IDocumentStore {
 	 * there are {@link IDocument} referencing the {@link ICategory} an
 	 * {@link IllegalStateException} is thrown.
 	 * 
+	 * @param iDocument
+	 * @param newCategory
+	 */
+	public void removeCategory(IDocument iDocument, String newCategory)
+		throws IllegalStateException;
+	
+	/**
+	 * Rename the {@link ICategory} from the store.
+	 * 
 	 * @param category
+	 * @param newCategory
 	 */
-	public void removeCategory(ICategory category) throws IllegalStateException;
-	
-	/**
-	 * Get a list of all {@link ITag} known to the store.
-	 * 
-	 * @return
-	 */
-	public List<ITag> getTags();
-	
-	/**
-	 * Add a {@link ITag} with the provided name to the store. If a {@link ITag} with that name is
-	 * already known to the store, it will be returned.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public ITag addTag(String name);
-	
-	/**
-	 * Remove the {@link ITag} from the store. Only empty {@link ITag} can be removed. If there are
-	 * {@link IDocument} referencing the {@link ITag} an {@link IllegalStateException} is thrown.
-	 * 
-	 * @param tag
-	 */
-	public void removeTag(ITag tag) throws IllegalStateException;
+	public void renameCategory(ICategory category, String newCategory);
 	
 	public default boolean isAllowed(Capability restricted)
 	{

@@ -10,7 +10,6 @@ import org.apache.commons.lang.StringUtils;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IHistory;
-import ch.elexis.core.model.ITag;
 import ch.elexis.core.types.DocumentStatus;
 import ch.rgw.tools.MimeTool;
 
@@ -24,7 +23,7 @@ public abstract class AbstractDocumentDTO implements IDocument {
 	private Date lastchanged;
 	private String mimeType;
 	private ICategory category;
-	private List<ITag> tags = new ArrayList<>();
+	private String keywords = "";
 	private List<IHistory> history = new ArrayList<>();
 	private String label;
 	private String id;
@@ -122,12 +121,13 @@ public abstract class AbstractDocumentDTO implements IDocument {
 	}
 	
 	@Override
-	public List<ITag> getTags(){
-		return tags;
+	public void setKeywords(String value){
+		this.keywords = value;
 	}
 	
-	public void setTags(List<ITag> tags){
-		this.tags = tags;
+	@Override
+	public String getKeywords(){
+		return keywords;
 	}
 	
 	@Override

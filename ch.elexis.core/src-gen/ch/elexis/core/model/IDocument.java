@@ -33,10 +33,10 @@ import ch.elexis.core.types.DocumentStatus;
  *   <li>{@link ch.elexis.core.model.IDocument#getLastchanged <em>Lastchanged</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getMimeType <em>Mime Type</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getCategory <em>Category</em>}</li>
- *   <li>{@link ch.elexis.core.model.IDocument#getTags <em>Tags</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getHistory <em>History</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getStoreId <em>Store Id</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getExtension <em>Extension</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IDocument#getKeywords <em>Keywords</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIDocument()
@@ -282,22 +282,6 @@ public interface IDocument extends Identifiable {
 	void setCategory(ICategory value);
 
 	/**
-	 * Returns the value of the '<em><b>Tags</b></em>' reference list.
-	 * The list contents are of type {@link ch.elexis.core.model.ITag}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Tags</em>' reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Tags</em>' reference list.
-	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Tags()
-	 * @model
-	 * @generated
-	 */
-	List<ITag> getTags();
-
-	/**
 	 * Returns the value of the '<em><b>History</b></em>' reference list.
 	 * The list contents are of type {@link ch.elexis.core.model.IHistory}.
 	 * <!-- begin-user-doc -->
@@ -364,5 +348,31 @@ public interface IDocument extends Identifiable {
 	 * @generated
 	 */
 	void setExtension(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Keywords</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Keywords</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Keywords</em>' attribute.
+	 * @see #setKeywords(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Keywords()
+	 * @model
+	 * @generated
+	 */
+	String getKeywords();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IDocument#getKeywords <em>Keywords</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Keywords</em>' attribute.
+	 * @see #getKeywords()
+	 * @generated
+	 */
+	void setKeywords(String value);
 
 } // IDocument

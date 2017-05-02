@@ -140,10 +140,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIDocumentAdapter();
 			}
 			@Override
-			public Adapter caseITag(ITag object) {
-				return createITagAdapter();
-			}
-			@Override
 			public Adapter caseICategory(ICategory object) {
 				return createICategoryAdapter();
 			}
@@ -396,20 +392,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIDocumentAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ITag <em>ITag</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.ITag
-	 * @generated
-	 */
-	public Adapter createITagAdapter() {
 		return null;
 	}
 
