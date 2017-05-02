@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.commands;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,6 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 
@@ -27,15 +29,20 @@ public class EndLocalDocumentHandler extends AbstractHandler implements IHandler
 			for (Object object : selected) {
 				LocalDocumentServiceHolder.getService().ifPresent(service -> {
 					if (service.contains(object)) {
+						Optional<LocalLock> lock = LocalLock.getManagedLock(object);
+						lock.ifPresent(localDocumentLock -> localDocumentLock.unlock());
+						
 						if (!service.save(object)) {
-							MessageDialog.openError(parentShell, Messages.EndLocalDocumentHandler_errorttitle,
+							MessageDialog.openError(parentShell,
+								Messages.EndLocalDocumentHandler_errorttitle,
 								Messages.EndLocalDocumentHandler_errormessage);
 						}
 						
 						service.remove(object, new IConflictHandler() {
 							@Override
 							public Result getResult(){
-								if (MessageDialog.openQuestion(parentShell, Messages.EndLocalDocumentHandler_conflicttitle,
+								if (MessageDialog.openQuestion(parentShell,
+									Messages.EndLocalDocumentHandler_conflicttitle,
 									Messages.EndLocalDocumentHandler_conflictmessage)) {
 									return Result.OVERWRITE;
 								} else {
@@ -44,7 +51,8 @@ public class EndLocalDocumentHandler extends AbstractHandler implements IHandler
 							}
 						});
 					} else {
-						MessageDialog.openInformation(parentShell, Messages.EndLocalDocumentHandler_infotitle,
+						MessageDialog.openInformation(parentShell,
+							Messages.EndLocalDocumentHandler_infotitle,
 							Messages.EndLocalDocumentHandler_infomessage);
 					}
 				});

@@ -16,8 +16,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.util.LocalLock;
+import ch.elexis.core.lock.ILocalLockService.Status;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.services.IConflictHandler;
+import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
@@ -32,38 +36,61 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 			Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			for (Object object : selected) {
 				LocalDocumentServiceHolder.getService().ifPresent(service -> {
-					AcquireLockUi.aquireAndRun((IPersistentObject) object, new ILockHandler() {
-						@Override
-						public void lockFailed(){
-							// no action required ...
-						}
-						
-						@Override
-						public void lockAcquired(){
-							Optional<File> file = service.add(object, new IConflictHandler() {
-								@Override
-								public Result getResult(){
-									if (MessageDialog.openQuestion(parentShell,
-										Messages.StartEditLocalDocumentHandler_conflicttitle,
-										Messages.StartEditLocalDocumentHandler_conflictmessage)) {
-										return Result.KEEP;
-									} else {
-										return Result.OVERWRITE;
-									}
+					if(CoreHub.getLocalLockService().getStatus() == Status.REMOTE) {
+						AcquireLockUi.aquireAndRun((IPersistentObject) object, new ILockHandler() {
+							@Override
+							public void lockFailed(){
+								// no action required ...
+							}
+							
+							@Override
+							public void lockAcquired(){
+								startEditLocal(object, service, parentShell);
+							}
+						});						
+					} else {
+						LocalLock lock = new LocalLock(object);
+						if (!lock.tryLock()) {
+							if (MessageDialog.openQuestion(parentShell, Messages.StartEditLocalDocumentHandler_warning,
+								Messages.StartEditLocalDocumentHandler_alreadyOpenStart + lock.getLockMessage()
+									+ Messages.StartEditLocalDocumentHandler_alreadyOpenEnd)) {
+								lock.unlock();
+								if (!lock.tryLock()) {
+									MessageDialog.openError(parentShell,
+										Messages.StartEditLocalDocumentHandler_errortitle,
+										Messages.StartEditLocalDocumentHandler_errormessage);
+									return;
 								}
-							});
-							if (file.isPresent()) {
-								Program.launch(file.get().getAbsolutePath());
 							} else {
-								MessageDialog.openError(parentShell,
-									Messages.StartEditLocalDocumentHandler_errortitle,
-									Messages.StartEditLocalDocumentHandler_errormessage);
+								return;
 							}
 						}
-					});
+						startEditLocal(object, service, parentShell);
+					}
 				});
 			}
 		}
 		return null;
+	}
+	
+	private void startEditLocal(Object object, ILocalDocumentService service, Shell parentShell){
+		Optional<File> file = service.add(object, new IConflictHandler() {
+			@Override
+			public Result getResult(){
+				if (MessageDialog.openQuestion(parentShell,
+					Messages.StartEditLocalDocumentHandler_conflicttitle,
+					Messages.StartEditLocalDocumentHandler_conflictmessage)) {
+					return Result.KEEP;
+				} else {
+					return Result.OVERWRITE;
+				}
+			}
+		});
+		if (file.isPresent()) {
+			Program.launch(file.get().getAbsolutePath());
+		} else {
+			MessageDialog.openError(parentShell, Messages.StartEditLocalDocumentHandler_errortitle,
+				Messages.StartEditLocalDocumentHandler_errormessage);
+		}
 	}
 }

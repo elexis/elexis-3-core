@@ -42,6 +42,10 @@ public class Messages extends NLS {
 	public static String LoadTemplateCommand_Error;
 	public static String LoadTemplateCommand_NoTextTemplate;
 	
+	public static String StartEditLocalDocumentHandler_alreadyOpenEnd;
+
+	public static String StartEditLocalDocumentHandler_alreadyOpenStart;
+
 	public static String StartEditLocalDocumentHandler_conflictmessage;
 
 	public static String StartEditLocalDocumentHandler_conflicttitle;
@@ -49,6 +53,8 @@ public class Messages extends NLS {
 	public static String StartEditLocalDocumentHandler_errormessage;
 
 	public static String StartEditLocalDocumentHandler_errortitle;
+
+	public static String StartEditLocalDocumentHandler_warning;
 
 	static {
 		// load message values from bundle file
