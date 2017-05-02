@@ -256,6 +256,23 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.Konsdetail">
+         <command
+               commandId="ch.elexis.core.ui.command.openLocalDocuments"
+               icon="icon://IMG_EDIT"
+               label="Offene lokale Dokumente"
+               style="push"
+               tooltip="Offene lokale Dokumente">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     property="ch.elexis.core.ui.property.documenteditlocal">
+               </test>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
