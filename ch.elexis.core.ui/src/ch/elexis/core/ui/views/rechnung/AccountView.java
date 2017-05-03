@@ -355,7 +355,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 		}
 		
 		String balanceText = ""; //$NON-NLS-1$
-		String excessText = Messages.AccountView_23; //$NON-NLS-1$
+		String excessText = "..."; //$NON-NLS-1$
 		
 		if (actPatient != null) {
 			balanceText = actPatient.getKontostand().getAmountAsString();
