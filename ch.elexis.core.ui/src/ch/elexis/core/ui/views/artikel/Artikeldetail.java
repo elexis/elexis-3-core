@@ -26,6 +26,7 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -100,7 +101,7 @@ public class Artikeldetail extends ViewPart implements IActivationListener, ISav
 	ScrolledForm form;
 	LabeledInputField.AutoForm tblArtikel;
 	
-	private ElexisEventListenerImpl eeli_art = new ElexisEventListenerImpl(Artikel.class) {
+	private ElexisEventListenerImpl eeli_art = new ElexisUiEventListenerImpl(Artikel.class) {
 		
 		public void runInUi(ElexisEvent ev){
 			form.setText(ev.getObject().getLabel());
