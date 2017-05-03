@@ -60,6 +60,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -360,7 +361,8 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		int[] sashWeights = null;
 		ResizeListener resizeListener;
 		
-		private final ElexisEventListenerImpl eeli_user = new ElexisEventListenerImpl(
+		private final ElexisEventListenerImpl eeli_user =
+			new ElexisUiEventListenerImpl(
 			Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
 			
 			public void runInUi(ElexisEvent ev){
