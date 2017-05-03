@@ -20,7 +20,6 @@ public class Messages extends NLS {
 	public static String AccountListView_firstname;
 	public static String AccountListView_loadingData;
 	public static String AccountListView_name;
-	public static String AccountView_23;
 	public static String AccountView_NoPatientSelected;
 	public static String AccountView_account;
 	public static String AccountView_accountAmount;
