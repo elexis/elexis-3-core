@@ -52,6 +52,7 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -107,7 +108,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 		160, // REMARKS
 		80 // ACCOUNT
 	};
-	private ElexisEventListenerImpl eeli_pat = new ElexisEventListenerImpl(Patient.class) {
+	private ElexisEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
 		public void runInUi(ElexisEvent ev){
 			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
@@ -121,7 +122,7 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 	};
 	
 	private ElexisEventListenerImpl eeli_at =
-		new ElexisEventListenerImpl(AccountTransaction.class) {
+		new ElexisUiEventListenerImpl(AccountTransaction.class) {
 			
 			public void runInUi(ElexisEvent ev){
 				removePaymentAction.setEnabled(ev.getType() == ElexisEvent.EVENT_SELECTED);

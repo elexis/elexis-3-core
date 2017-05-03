@@ -29,6 +29,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
@@ -59,7 +60,7 @@ public class Artikeldetail extends ViewPart implements IActivationListener, ISav
 	ScrolledForm form;
 	LabeledInputField.AutoForm tblArtikel;
 	
-	private ElexisEventListenerImpl eeli_art = new ElexisEventListenerImpl(Artikel.class) {
+	private ElexisEventListenerImpl eeli_art = new ElexisUiEventListenerImpl(Artikel.class) {
 		
 		public void runInUi(ElexisEvent ev){
 			form.setText(ev.getObject().getLabel());
