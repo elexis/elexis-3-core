@@ -9,17 +9,23 @@ require 'trollop'
 @options = Trollop::options do
   version "#{File.basename(__FILE__)} (c) by Niklaus Giger <niklaus.giger@member.fsf.org>"
   banner <<-EOS
-  #{version}
 Useage:
-  * update the ChangeLog.txt
+  if --from is given, --to must be given, too, e.g. --from=release/3.0.25 --to=release/3.1.0
+  Collects all release tag, limits them to the local history, creates statistic for
+  each tag and then the Changelog
+  #{version}
 EOS
   opt :force_tag,       "Use HEAD and force it as tag_name ", :type => String, :default => nil
   opt :changelog,       'Name of file to be written', :type => String, :default => 'Changelog'
+  opt :from,            'Only a difference from the given tag', :type => String, :default => nil
+  opt :to,              'Only a difference to the given tag', :type => String, :default => nil
 end
 
 require 'rugged'
 MAX_ID = 999
 FORCE_TAG_NUMERIC = (MAX_ID.to_s*4).to_i
+TIME_FORMAT = '%Y.%m.%d'
+
 def tag_name_to_numerical_value(tag_name)
   items = []
   if tag_name.index('.b') # beta_vesion
@@ -32,36 +38,32 @@ def tag_name_to_numerical_value(tag_name)
   sprintf('%03i%03i%03i%03i', items[0], items[1], items[2], items[3]).to_i
 end
 
+TAG_INFO = Struct.new('TAG_INFO', :tag_name, :numerical, :tag, :commit_id, :parent)
+@all_taginfos = []
+
+def get_taginfo_by_name(tag_name)
+  @all_taginfos.find{ |taginfo| taginfo.tag_name.eql?(tag_name)}
+end
+
 def get_release_tags
-  @numeric_tags = {}
   @repo = Rugged::Repository.new(Dir.pwd)
   tags = @repo.tags.find_all{|x| x.name.index('release/')}
   tags_hash = {}
   tags.each do |tag|
     next unless /^release/i.match(tag.name)
     next if /alpha/i.match(tag.name)
-    @numeric_tags[tag_name_to_numerical_value(tag.name)] = tag
     tags_hash[tag.name] = tag.target_id
+    @all_taginfos << TAG_INFO.new(tag.name, tag_name_to_numerical_value(tag.name),
+                                  tag, tag.target_id)
   end
   if @options[:force_tag]
     tag = @repo.references["refs/heads/master"]
-    @numeric_tags[FORCE_TAG_NUMERIC] = tag
+    @all_taginfos << TAG_INFO.new(@options[:force_tag], FORCE_TAG_NUMERIC, tag, tag.target_id)
   end
   tags_hash
 rescue => error
   puts error
   binding.pry
-end
-
-def find_release_tags
-  @ids_2_tag = {}
-  puts "Numerically sorted IDs are #{@numeric_tags.sort.collect{|x| x.first}.join(',')}" if $VERBOSE
-  @numeric_tags.sort.each_with_index do |tag, idx|
-    info = tag.last
-    tag_name = (FORCE_TAG_NUMERIC == tag.first) ? @options[:force_tag] : info.name
-    commit_id = info.target_id
-    @ids_2_tag[commit_id] = tag_name
-  end
 end
 
 def find_tags_in_current_branch
@@ -71,39 +73,20 @@ def find_tags_in_current_branch
   walker.sorting(Rugged::SORT_TOPO | Rugged::SORT_REVERSE) # optional
   walker.push(newer_id)
   res = walker.collect{|c| c};
-  @tag_ids_in_local_branch = {}
+  @tag_in_local_branch = []
   res.each do |commit|
-    if (tag = @ids_2_tag[commit.oid])
-      value = @numeric_tags.find{ |num, info| info.target_id.eql?(commit.oid) }.first
-      puts "Adding local tag #{tag} #{value} for commit #{commit.oid}"  if $VERBOSE
-      @tag_ids_in_local_branch[commit.oid] = [ tag, value]
+    if (info = @all_taginfos.find{|taginfo| taginfo.commit_id == commit.oid})
+      @tag_in_local_branch << info
+      puts "Adding local tag #{info.tag_name} commit #{info.commit_id}"  if $VERBOSE
     end
   end
 end
 
 def build_branch_history
-  @history = []
   previous = nil
-  sorted = @tag_ids_in_local_branch.sort_by { |key, value| value.last }
-  puts "Sorted are #{sorted.collect{ |x| x.last}.join(',')}"  if $VERBOSE
-  sorted.each_with_index do |tag, idx|
-    current = OpenStruct.new
-    info = tag.last
-    tag_name = info.first
-    info = @numeric_tags[tag_name_to_numerical_value(tag_name)]
-    if info
-      current.commit_id = info.target_id
-      commit = @repo.lookup(info.target_id)
-    else
-      commit =  @repo.lookup(tag.first) # master
-      current.commit_id = @repo.lookup(tag.first).oid
-    end
-    # binding.pry unless commit && defined? commit.name
-    current.tag_name = (FORCE_TAG_NUMERIC == tag.first) ? @options[:force_tag] : tag_name
-    current.subject = commit.message.strip
-    current.author = commit.author[:name]
-    current.date = commit.time.strftime('%Y.%m.%d')
-    @ids_2_tag[current.commit_id] = current.tag_name
+  sorted = @tag_in_local_branch.sort_by { |info| info.numerical}
+  puts "Sorted are #{sorted.collect{ |x| x.tag_name}.join(',')}"  if $VERBOSE
+  sorted.each_with_index do |current, idx|
     unless previous
       previous = current
       next
@@ -114,16 +97,14 @@ def build_branch_history
   end
 end
 
-def show_history(old_id, newer_id)
-  #  "git log --pretty=format:'%H - %an, %ad : %s' #{tag_prev}..#{tag_cur}"
-  binding.pry unless old_id && newer_id
+def get_history(old_id, newer_id)
   old = @repo.lookup(old_id)
   newer = @repo.lookup(newer_id)
-  return show_history(newer_id, old_id) if old.time > newer.time
+  return get_history(newer_id, old_id) if old.time > newer.time
 
   info = OpenStruct.new
   walker = Rugged::Walker.new(@repo)
-  walker.sorting(Rugged::SORT_TOPO) # optional
+  # walker.sorting(Rugged::SORT_TOPO || Rugged::SORT_DATE) # optional
   walker.push(newer_id)
   walker.hide(old_id)
 
@@ -131,7 +112,7 @@ def show_history(old_id, newer_id)
   info.authors = {}
   walker.each do |c|
     author = c.author[:name]
-    info.commits  << "#{c.tree_id} #{sprintf('%20s', author)} #{c.time} #{c.message.split("\n").first}"
+    info.commits  << "#{c.oid} #{c.author[:time]} #{sprintf('%20s', author)} #{c.message.split("\n").first}"
     info.authors[author] ||= 0
     info.authors[author] += 1
   end
@@ -139,40 +120,60 @@ def show_history(old_id, newer_id)
   info
 end
 
-def emit_history(filename)
-  walk = @history
-  File.open(filename, 'w+') do |ausgabe|
-    while walk && walk.parent
-      unless @tag_ids_in_local_branch[walk.parent.commit_id]
-        walk = walk.parent
-        next
-      end
-      old_name = walk.parent.tag_name.sub('release/', '')
-      new_name = walk.tag_name.sub('release/', '')
-      info = show_history( walk.commit_id, walk.parent.commit_id)
-      header = []
-      header << ''
-      line = "#{info.commits.size} commits between #{old_name} (#{walk.parent.date}) and #{new_name} (#{walk.date})"
-      header << line
-      header << '-' * line.size
-      header << '   number changes by authors are'
-      info.authors.sort_by{|key, value| value}.reverse.each do |author, nr_commits|
-        header << "   #{sprintf("%3i", nr_commits)}: #{author}"
-      end
-      header << '-' * line.size
+def emit_changes(ausgabe, from=nil, to=nil)
+  raise "from and to must be given" unless to && from
+  from_tag =@all_taginfos.find{|x| x.tag_name == from}
+  from_commit = @repo.lookup(from_tag.commit_id)
+  from_date = from_commit.time.strftime(TIME_FORMAT)
+  to_tag =@all_taginfos.find{|x| x.tag_name == to}
+  to_commit = @repo.lookup(to_tag.commit_id)
+  to_date = to_commit.time.strftime(TIME_FORMAT)
 
-      header << ''
-      puts header if $VERBOSE
-      ausgabe.puts header.join("\n")
-      ausgabe.puts info.commits.join("\n")
-      walk = walk.parent
+  info = get_history(from_tag.commit_id, to_tag.commit_id)
+  header = []
+  header << ''
+  line = "#{info.commits.size} commits between #{from_tag.tag_name} (#{from_date}) and #{to_tag.tag_name} (#{to_date})"
+  header << line
+  header << '-' * line.size
+  header << '   number changes by authors are'
+  info.authors.sort_by{|key, value| value}.reverse.each do |author, nr_commits|
+    header << "   #{sprintf("%3i", nr_commits)}: #{author}"
+  end
+  header << '-' * line.size
+
+  header << ''
+  puts header if $VERBOSE
+  ausgabe.puts header.join("\n")
+  ausgabe.puts info.commits.join("\n")
+end
+def emit_history(filename, from=nil, to=nil)
+  walk = @history
+  filename += "-#{from.sub('release/','')}-#{to.sub('release/','')}" if from && to
+  File.open(filename, 'w+') do |ausgabe|
+    ausgabe.puts "# Generated by #{File.basename(__FILE__)} on #{Time.now.strftime(TIME_FORMAT)}"
+    ausgabe.puts "# similar to git log --date=iso --pretty=format:'%H %ad %an %s' release/3.0.25..release/3.1.0"
+    if from && to
+      emit_changes(ausgabe, from, to)
+    else
+      while walk && walk.parent
+        unless @tag_in_local_branch.find{|x| x.commit_id == walk.parent.commit_id}
+          walk = walk.parent
+          next
+        end
+        emit_changes(ausgabe, walk.parent.tag_name, walk.tag_name)
+        walk = walk.parent
+      end
     end
   end
 end
 
 # Order of next calls is necessary!
+@history = []
 get_release_tags
-find_release_tags
-find_tags_in_current_branch
-build_branch_history
-emit_history(@options[:changelog])
+if @options[:from] && @options[:to]
+  emit_history(@options[:changelog], @options[:from], @options[:to])
+else
+  find_tags_in_current_branch
+  build_branch_history
+  emit_history(@options[:changelog])
+end
