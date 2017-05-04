@@ -27,7 +27,7 @@ def tag_name_to_numerical_value(tag_name)
     items = tag_name.split('/').last.split(/\.(beta|b)|\./).collect{|x| x.to_i if /^\d/.match(x) }.compact
   else
     items = tag_name.split('/').last.split('.').collect{|x| x.to_i}
-    items << MAX_ID
+    items.insert(-2, MAX_ID)
   end
   sprintf('%03i%03i%03i%03i', items[0], items[1], items[2], items[3]).to_i
 end
@@ -84,7 +84,7 @@ end
 def build_branch_history
   @history = []
   previous = nil
-  sorted = @tag_ids_in_local_branch.sort_by { |key, value| value }
+  sorted = @tag_ids_in_local_branch.sort_by { |key, value| value.last }
   puts "Sorted are #{sorted.collect{ |x| x.last}.join(',')}"  if $VERBOSE
   sorted.each_with_index do |tag, idx|
     current = OpenStruct.new
@@ -155,7 +155,7 @@ def emit_history(filename)
       line = "#{info.commits.size} commits between #{old_name} (#{walk.parent.date}) and #{new_name} (#{walk.date})"
       header << line
       header << '-' * line.size
-      header << '   changes by authors are'
+      header << '   number changes by authors are'
       info.authors.sort_by{|key, value| value}.reverse.each do |author, nr_commits|
         header << "   #{sprintf("%3i", nr_commits)}: #{author}"
       end
