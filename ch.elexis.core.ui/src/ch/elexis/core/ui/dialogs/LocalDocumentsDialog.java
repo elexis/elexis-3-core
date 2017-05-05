@@ -180,7 +180,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		Method[] methods = clazz.getMethods();
 		for (Method method : methods) {
 			if (method.getName().equalsIgnoreCase("getpatient") //$NON-NLS-1$
-				&& method.getReturnType().isAssignableFrom(Person.class)
+				&& Person.class.isAssignableFrom(method.getReturnType())
 				&& method.getParameterTypes().length == 0) {
 				return method;
 			}

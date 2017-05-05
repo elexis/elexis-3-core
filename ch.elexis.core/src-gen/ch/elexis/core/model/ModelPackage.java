@@ -1658,22 +1658,40 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT__CATEGORY = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
-	 * The feature id for the '<em><b>Tags</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IDOCUMENT__TAGS = IDENTIFIABLE_FEATURE_COUNT + 9;
-
-	/**
 	 * The feature id for the '<em><b>History</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__HISTORY = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IDOCUMENT__HISTORY = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Store Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__STORE_ID = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Extension</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__EXTENSION = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
+	 * The feature id for the '<em><b>Keywords</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__KEYWORDS = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The number of structural features of the '<em>IDocument</em>' class.
@@ -1682,35 +1700,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 11;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.ITag <em>ITag</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.ITag
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITag()
-	 * @generated
-	 */
-	int ITAG = 16;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITAG__NAME = 0;
-
-	/**
-	 * The number of structural features of the '<em>ITag</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITAG_FEATURE_COUNT = 1;
+	int IDOCUMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}' class.
@@ -1720,7 +1710,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICategory()
 	 * @generated
 	 */
-	int ICATEGORY = 17;
+	int ICATEGORY = 16;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1748,7 +1738,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIHistory()
 	 * @generated
 	 */
-	int IHISTORY = 18;
+	int IHISTORY = 17;
 
 	/**
 	 * The feature id for the '<em><b>Date</b></em>' attribute.
@@ -1793,7 +1783,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 	 * @generated
 	 */
-	int STRING_ARRAY = 19;
+	int STRING_ARRAY = 18;
 
 
 	/**
@@ -2804,17 +2794,6 @@ public interface ModelPackage extends EPackage {
 	EReference getIDocument_Category();
 
 	/**
-	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IDocument#getTags <em>Tags</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Tags</em>'.
-	 * @see ch.elexis.core.model.IDocument#getTags()
-	 * @see #getIDocument()
-	 * @generated
-	 */
-	EReference getIDocument_Tags();
-
-	/**
 	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IDocument#getHistory <em>History</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2826,25 +2805,37 @@ public interface ModelPackage extends EPackage {
 	EReference getIDocument_History();
 
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.ITag <em>ITag</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getStoreId <em>Store Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>ITag</em>'.
-	 * @see ch.elexis.core.model.ITag
+	 * @return the meta object for the attribute '<em>Store Id</em>'.
+	 * @see ch.elexis.core.model.IDocument#getStoreId()
+	 * @see #getIDocument()
 	 * @generated
 	 */
-	EClass getITag();
+	EAttribute getIDocument_StoreId();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ITag#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getExtension <em>Extension</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see ch.elexis.core.model.ITag#getName()
-	 * @see #getITag()
+	 * @return the meta object for the attribute '<em>Extension</em>'.
+	 * @see ch.elexis.core.model.IDocument#getExtension()
+	 * @see #getIDocument()
 	 * @generated
 	 */
-	EAttribute getITag_Name();
+	EAttribute getIDocument_Extension();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getKeywords <em>Keywords</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Keywords</em>'.
+	 * @see ch.elexis.core.model.IDocument#getKeywords()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_Keywords();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}'.
@@ -3719,14 +3710,6 @@ public interface ModelPackage extends EPackage {
 		EReference IDOCUMENT__CATEGORY = eINSTANCE.getIDocument_Category();
 
 		/**
-		 * The meta object literal for the '<em><b>Tags</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference IDOCUMENT__TAGS = eINSTANCE.getIDocument_Tags();
-
-		/**
 		 * The meta object literal for the '<em><b>History</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3735,22 +3718,28 @@ public interface ModelPackage extends EPackage {
 		EReference IDOCUMENT__HISTORY = eINSTANCE.getIDocument_History();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.ITag <em>ITag</em>}' class.
+		 * The meta object literal for the '<em><b>Store Id</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.model.ITag
-		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITag()
 		 * @generated
 		 */
-		EClass ITAG = eINSTANCE.getITag();
+		EAttribute IDOCUMENT__STORE_ID = eINSTANCE.getIDocument_StoreId();
 
 		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Extension</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ITAG__NAME = eINSTANCE.getITag_Name();
+		EAttribute IDOCUMENT__EXTENSION = eINSTANCE.getIDocument_Extension();
+
+		/**
+		 * The meta object literal for the '<em><b>Keywords</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__KEYWORDS = eINSTANCE.getIDocument_Keywords();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}' class.

@@ -92,6 +92,7 @@ public enum Images {
 	IMG_PRINT_RESERVE,
 		/** a filter */
 		IMG_FILTER,
+		IMG_FOLDER,
 		/** creating a new Object */
 		IMG_NEW,
 		/** importing items */
