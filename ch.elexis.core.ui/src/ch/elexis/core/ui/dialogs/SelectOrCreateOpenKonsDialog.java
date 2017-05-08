@@ -23,10 +23,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 
+import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.actions.Messages;
+import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
@@ -75,7 +79,38 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		lbl.setText("Konsultation erstellen");
 		
 		ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
-		tbManager.add(GlobalActions.neueKonsAction);
+		tbManager.add(new RestrictedAction(AccessControlDefaults.KONS_CREATE,
+			Messages.GlobalActions_NewKons) {
+			{
+				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+				setToolTipText(Messages.GlobalActions_NewKonsToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void doRun(){
+				Konsultation kons = null;
+				Fall fall = null;
+				StructuredSelection selection = (StructuredSelection) fallCombo.getSelection();
+				if (selection.isEmpty()) {
+					List<Fall> openFall = getOpenFall();
+					if (openFall.isEmpty()) {
+						fall = patient.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
+							Fall.getDefaultCaseLaw());
+					}
+				} else {
+					fall = (Fall) selection.getFirstElement();
+				}
+				
+				if (fall != null) {
+					kons = fall.neueKonsultation();
+				}
+				
+				if (kons != null && kons.exists()) {
+					CoreHub.getLocalLockService().acquireLock(kons);
+					CoreHub.getLocalLockService().releaseLock(kons);
+				}
+			}
+		});
 		ToolBar toolbar = tbManager.createControl(areaComposite);
 		
 		FormData fd = new FormData();
