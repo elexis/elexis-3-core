@@ -52,6 +52,15 @@
             id="ch.elexis.core.ui.documents.commandLocalEditOverview"
             name="Local Edit Overview Dokument">
       </command>
+      <command
+            id="ch.elexis.core.ui.documents.commandSendAsMail"
+            name="Send As Mail">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.documents.handler.DefaultDocumentSendHandler"
+            id="ch.elexis.core.ui.documents.send"
+            name="send">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -142,6 +151,25 @@
                </iterate>
             </visibleWhen>
          </command>
+         <separator
+               name="ch.elexis.core.ui.documents.separator2"
+               visible="true">
+         </separator>
+         <menu
+               icon="icon://IMG_MAIL_SEND"
+               label="Versenden">
+            <command
+                  commandId="ch.elexis.core.ui.documents.commandSendAsMail"
+                  label="als E-Mail"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <test
+                        property="ch.elexis.core.mail.ui.sendavailable">
+                  </test>
+               </visibleWhen>
+            </command>
+         </menu>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -152,20 +180,12 @@
                label="Externes Dokument importieren"
                style="push">
          </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:ch.elexis.core.ui.documents.views.DocumentsView">
          <command
                commandId="ch.elexis.core.ui.documents.commandExport"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/export.ico"
                label="Das Dokument in eine Datei exportieren"
                style="push">
          </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:ch.elexis.core.ui.documents.views.DocumentsView">
          <command
                commandId="ch.elexis.core.ui.documents.commandLocalEditOverview"
                icon="icon://IMG_EDIT"
@@ -176,6 +196,27 @@
                   checkEnabled="false">
                <test
                      property="ch.elexis.core.ui.property.documenteditlocal">
+               </test>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.documents.send"
+               icon="icon://IMG_MAIL_SEND"
+               label="Versenden"
+               style="pulldown">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:ch.elexis.core.ui.documents.send">
+         <command
+               commandId="ch.elexis.core.ui.documents.commandSendAsMail"
+               label="als E-Mail"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     property="ch.elexis.core.mail.ui.sendavailable">
                </test>
             </visibleWhen>
          </command>
@@ -195,6 +236,10 @@
                </instanceof>
             </iterate>
          </enabledWhen>
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.documents.handler.DocumentSendAsMailHandler"
+            commandId="ch.elexis.core.ui.documents.commandSendAsMail">
       </handler>
    </extension>
 

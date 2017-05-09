@@ -170,7 +170,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	
 	public void setAttachments(String attachments){
 		if (attachments != null && !attachments.isEmpty()) {
-			attachmentsString = attachments;
+			attachmentsString = attachments.replaceAll(",", ",\n");
 		}
 	}
 	

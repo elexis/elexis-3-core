@@ -409,7 +409,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		tSearch.addModifyListener(searchListener);
 		
 		// Table to display documents
-		table = new Tree(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		table = new Tree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		TreeColumn[] cols = new TreeColumn[colLabels.length];
 		for (int i = 0; i < colLabels.length; i++) {
 			cols[i] = new TreeColumn(table, SWT.NONE);
