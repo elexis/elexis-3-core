@@ -333,7 +333,11 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	public Rechnung getRechnung(){
-		return Rechnung.load(get(FLD_BILL_ID));
+		String invoiceId = get(FLD_BILL_ID);
+		if (invoiceId == null) {
+			return null;
+		}
+		return Rechnung.load(invoiceId);
 	}
 	
 	/**
@@ -455,9 +459,12 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	public int getStatus(){
-		Rechnung r = getRechnung();
-		if (r != null) {
-			return r.getStatus();
+		return getStatus(getRechnung());
+	}
+	
+	private int getStatus(Rechnung invoice){
+		if (invoice != null) {
+			return invoice.getStatus();
 		}
 		Mandant rm = getMandant();
 		if ((rm != null) && (rm.equals(ElexisEventDispatcher.getSelected(Mandant.class)))) {
@@ -469,11 +476,19 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		} else {
 			return RnStatus.NICHT_VON_IHNEN;
 		}
-		
 	}
 	
 	public String getStatusText(){
-		return RnStatus.getStatusText(getStatus());
+		String statusText = "";
+		
+		Rechnung rechnung = getRechnung();
+		if (rechnung != null) {
+			statusText += "RG " + rechnung.getNr() + ": ";
+		}
+		
+		statusText += RnStatus.getStatusText(getStatus(rechnung));
+		
+		return statusText;
 	}
 	
 	/** Eine einzeilige Beschreibung dieser Konsultation holen */
