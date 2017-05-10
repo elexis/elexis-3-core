@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Verify
+Bundle-SymbolicName: ch.elexis.core.verify
+Bundle-Version: 3.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: ch.elexis.core;bundle-version="3.2.0",
+ org.eclipse.core.runtime;bundle-version="3.8.0",
+ ch.rgw.utility;bundle-version="3.2.0",
+ com.eclipsesource.jaxrs.consumer,
+ com.eclipsesource.jaxrs.jersey-min;bundle-version="2.22.1"
+Import-Package: com.google.gson;version="2.7.0",
+ javax.ws.rs;version="2.0.1",
+ javax.ws.rs.core;version="2.0.1",
+ javax.ws.rs.ext;version="1.1.1"
+Export-Package: ch.elexis.core.verify
+Bundle-ActivationPolicy: lazy

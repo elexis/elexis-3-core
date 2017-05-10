@@ -18,6 +18,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -36,7 +37,7 @@ import ch.rgw.tools.TimeTool;
  * @author gerry
  * 
  */
-public interface IVerrechenbar extends ICodeElement {
+public interface IVerrechenbar extends ICodeElement, IBillable {
 	/**
 	 * Definition von Informationen zu der Leistung welche für die MWSt relevant sind.
 	 * <p>

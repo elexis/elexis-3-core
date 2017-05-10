@@ -226,4 +226,50 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EEnum types.ecore#//DocumentStatus"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IBillable" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IVerifyContext" abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="items" upperBound="-1"
+        eType="#//IVerify" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="errors" upperBound="-1"
+        eType="#//IVerify" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="iVerifyConverter" eType="#//IVerifyConverter"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="info" changeable="false"
+        transient="true">
+      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eGenericType>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IVerify" abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="billable" eType="#//IBillable"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType types.ecore#//Status"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="info" changeable="false"
+        transient="true">
+      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eGenericType>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="verifyType" eType="ecore:EEnum types.ecore#//VerifyType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="validatorId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IVerifyConverter" abstract="true" interface="true">
+    <eOperations name="convert">
+      <eGenericType eClassifier="ecore:EDataType types.ecore#//Optional">
+        <eTypeArguments eClassifier="#//IVerify"/>
+      </eGenericType>
+      <eParameters name="iBillable" eType="#//IBillable"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IVerifyService" abstract="true" interface="true">
+    <eOperations name="validate" eType="#//IVerify">
+      <eParameters name="iVerifyContext" eType="#//IVerifyContext"/>
+      <eParameters name="iVerify" eType="#//IVerify"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="validatorId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false"/>
+  </eClassifiers>
 </ecore:EPackage>

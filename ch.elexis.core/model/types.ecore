@@ -68,4 +68,12 @@
     <eLiterals name="SENT" value="3"/>
     <eLiterals name="RECIVED" value="4"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Status" instanceClassName="org.eclipse.core.runtime.IStatus"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="VerifyType">
+    <eLiterals name="TARMED" literal="TARMED"/>
+    <eLiterals name="LABOR" value="1" literal="LABOR"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Optional" instanceClassName="java.util.Optional">
+    <eTypeParameters name="T"/>
+  </eClassifiers>
 </ecore:EPackage>

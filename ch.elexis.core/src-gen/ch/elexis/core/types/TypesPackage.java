@@ -121,6 +121,16 @@ public interface TypesPackage extends EPackage {
 	int MAP_FEATURE_COUNT = 0;
 
 	/**
+	 * The meta object id for the '<em>Optional</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.util.Optional
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOptional()
+	 * @generated
+	 */
+	int OPTIONAL = 15;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -171,6 +181,16 @@ public interface TypesPackage extends EPackage {
 	int DOCUMENT_STATUS = 7;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.types.VerifyType <em>Verify Type</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.VerifyType
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVerifyType()
+	 * @generated
+	 */
+	int VERIFY_TYPE = 8;
+
+	/**
 	 * The meta object id for the '<em>Money</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -178,7 +198,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 	 * @generated
 	 */
-	int MONEY = 8;
+	int MONEY = 9;
 
 	/**
 	 * The meta object id for the '<em>Time Tool</em>' data type.
@@ -188,7 +208,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTimeTool()
 	 * @generated
 	 */
-	int TIME_TOOL = 9;
+	int TIME_TOOL = 10;
 
 	/**
 	 * The meta object id for the '<em>Gender</em>' data type.
@@ -198,7 +218,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getGender()
 	 * @generated
 	 */
-	int GENDER = 10;
+	int GENDER = 11;
 
 
 	/**
@@ -209,7 +229,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
 	 * @generated
 	 */
-	int LAB_ITEM_TYP = 11;
+	int LAB_ITEM_TYP = 12;
 
 
 	/**
@@ -220,7 +240,18 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountry()
 	 * @generated
 	 */
-	int COUNTRY = 12;
+	int COUNTRY = 13;
+
+
+	/**
+	 * The meta object id for the '<em>Status</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.core.runtime.IStatus
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getStatus()
+	 * @generated
+	 */
+	int STATUS = 14;
 
 
 	/**
@@ -255,6 +286,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getMap();
+
+	/**
+	 * Returns the meta object for data type '{@link java.util.Optional <em>Optional</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Optional</em>'.
+	 * @see java.util.Optional
+	 * @model instanceClass="java.util.Optional" typeParameters="T"
+	 * @generated
+	 */
+	EDataType getOptional();
 
 	/**
 	 * Returns the meta object for enum '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}'.
@@ -305,6 +347,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getDocumentStatus();
+
+	/**
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.VerifyType <em>Verify Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Verify Type</em>'.
+	 * @see ch.elexis.core.types.VerifyType
+	 * @generated
+	 */
+	EEnum getVerifyType();
 
 	/**
 	 * Returns the meta object for data type '{@link ch.rgw.tools.Money <em>Money</em>}'.
@@ -362,6 +414,17 @@ public interface TypesPackage extends EPackage {
 	EDataType getCountry();
 
 	/**
+	 * Returns the meta object for data type '{@link org.eclipse.core.runtime.IStatus <em>Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Status</em>'.
+	 * @see org.eclipse.core.runtime.IStatus
+	 * @model instanceClass="org.eclipse.core.runtime.IStatus"
+	 * @generated
+	 */
+	EDataType getStatus();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -414,6 +477,16 @@ public interface TypesPackage extends EPackage {
 		EClass MAP = eINSTANCE.getMap();
 
 		/**
+		 * The meta object literal for the '<em>Optional</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.util.Optional
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOptional()
+		 * @generated
+		 */
+		EDataType OPTIONAL = eINSTANCE.getOptional();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -464,6 +537,16 @@ public interface TypesPackage extends EPackage {
 		EEnum DOCUMENT_STATUS = eINSTANCE.getDocumentStatus();
 
 		/**
+		 * The meta object literal for the '{@link ch.elexis.core.types.VerifyType <em>Verify Type</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.VerifyType
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVerifyType()
+		 * @generated
+		 */
+		EEnum VERIFY_TYPE = eINSTANCE.getVerifyType();
+
+		/**
 		 * The meta object literal for the '<em>Money</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -512,6 +595,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType COUNTRY = eINSTANCE.getCountry();
+
+		/**
+		 * The meta object literal for the '<em>Status</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.core.runtime.IStatus
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getStatus()
+		 * @generated
+		 */
+		EDataType STATUS = eINSTANCE.getStatus();
 
 	}
 

@@ -209,6 +209,37 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IBILLABLE: {
+				IBillable iBillable = (IBillable)theEObject;
+				T1 result = caseIBillable(iBillable);
+				if (result == null) result = caseIdentifiable(iBillable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IVERIFY_CONTEXT: {
+				IVerifyContext iVerifyContext = (IVerifyContext)theEObject;
+				T1 result = caseIVerifyContext(iVerifyContext);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IVERIFY: {
+				IVerify iVerify = (IVerify)theEObject;
+				T1 result = caseIVerify(iVerify);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IVERIFY_CONVERTER: {
+				IVerifyConverter iVerifyConverter = (IVerifyConverter)theEObject;
+				T1 result = caseIVerifyConverter(iVerifyConverter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IVERIFY_SERVICE: {
+				IVerifyService iVerifyService = (IVerifyService)theEObject;
+				T1 result = caseIVerifyService(iVerifyService);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -495,6 +526,81 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIHistory(IHistory object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBillable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBillable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIBillable(IBillable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IVerify Context</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IVerify Context</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIVerifyContext(IVerifyContext object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IVerify</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IVerify</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIVerify(IVerify object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IVerify Converter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IVerify Converter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIVerifyConverter(IVerifyConverter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IVerify Service</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IVerify Service</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIVerifyService(IVerifyService object) {
 		return null;
 	}
 
