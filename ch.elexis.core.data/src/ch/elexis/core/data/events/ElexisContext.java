@@ -111,13 +111,13 @@ public class ElexisContext {
 				if (obj1 != obj2) {
 					events.add(new ElexisEvent((PersistentObject) obj1, clazz,
 						ElexisEvent.EVENT_DESELECTED));
-					log.debug("[DESEL] " + clazz + " \t|| " + obj2 + " --> \t " + obj1);
+					log.debug("[DESEL] " + clazz + " || " + toString(obj2) + " --> " + toString(obj1));
 				}
 			} else {
 				if (!obj1.equals(obj2)) {
 					events.add(new ElexisEvent((PersistentObject) obj1, clazz,
 						ElexisEvent.EVENT_SELECTED));
-					log.debug("[SEL] " + clazz + " \t|| " + obj2 + " --> \t " + obj1);
+					log.debug("[SEL] " + clazz + "  || " + toString(obj2) + " --> " + toString(obj1));
 				}
 			}
 		}
@@ -127,6 +127,17 @@ public class ElexisContext {
 		return events;
 	}
 	
+	private String toString(Object obj){
+		if (obj == null) {
+			return "null";
+		}
+		if (obj instanceof PersistentObject) {
+			PersistentObject po = (PersistentObject) obj;
+			return po.getId();
+		}
+		return obj.toString();
+	}
+
 	/**
 	 * selects a {@link Fall} and guards for the respective context validity
 	 * 
