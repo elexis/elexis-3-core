@@ -73,6 +73,8 @@ public class AccessControlDefaults {
 		new ACE(DELETE, "Laborwerte", Messages.AccessControlDefaults_labValues); //$NON-NLS-1$
 	public static final ACE DELETE_CASE = 
 		new ACE(DELETE, "Delete_Case", Messages.AccessControlDefaults_deleteCase); //$NON-NLS-1$
+	public static final ACE KONS_DELETE =
+			new ACE(DELETE, "Konsultation", Messages.AccessControlDefaults_consultation); //$NON-NLS-1$
 		
 	public static final ACE DATA =
 		new ACE(ACE.ACE_ROOT, "Daten", Messages.AccessControlDefaults_data); //$NON-NLS-1$
@@ -128,8 +130,6 @@ public class AccessControlDefaults {
 		new ACE(KONS, "Erstellen", Messages.AccessControlDefaults_create); //$NON-NLS-1$
 	public static final ACE KONS_EDIT =
 		new ACE(KONS, "Bearbeiten", Messages.AccessControlDefaults_modify2); //$NON-NLS-1$
-	public static final ACE KONS_DELETE =
-		new ACE(DELETE, "Konsultation", Messages.AccessControlDefaults_consultation); //$NON-NLS-1$
 	public static final ACE KONS_REASSIGN =
 		new ACE(KONS, "zuordnen", Messages.AccessControlDefaults_assign); //$NON-NLS-1$
 		
@@ -227,7 +227,7 @@ public class AccessControlDefaults {
 			ACCOUNTING_READ, ADMIN_REMINDERS, ACCOUNTING_BILLCREATE, ACTIONS, ACCOUNTING,
 			CASE_DEFINE_SPECIALS, CASE_COPY, CASE_MODIFY, DELETE_MEDICATION, DELETE_LABITEMS, DOCUMENT_CREATE,
 			DOCUMENT_CATCREATE, DOCUMENT_DELETE, DOCUMENT_SYSTEMPLATE, DOCUMENT_TEMPLATE, KONTAKT,
-			KONS, LEISTUNGEN, LABITEM_MERGE, PATIENT, SCRIPT
+			KONS, KONS_DELETE, LEISTUNGEN, LABITEM_MERGE, PATIENT, SCRIPT
 		};
 	}
 	
