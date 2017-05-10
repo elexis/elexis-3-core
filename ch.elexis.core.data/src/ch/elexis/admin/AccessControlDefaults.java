@@ -70,8 +70,6 @@ public class AccessControlDefaults {
 		new ACE(DELETE, "Dauermedikation", Messages.AccessControlDefaults_fixedMedication); //$NON-NLS-1$
 	public static final ACE DELETE_LABITEMS =
 		new ACE(DELETE, "Laborwerte", Messages.AccessControlDefaults_labValues); //$NON-NLS-1$
-	public static final ACE DELETE_CASE = 
-		new ACE(DELETE, "Delete_Case", Messages.AccessControlDefaults_deleteCase); //$NON-NLS-1$
 	public static final ACE KONS_DELETE =
 			new ACE(DELETE, "Konsultation", Messages.AccessControlDefaults_consultation); //$NON-NLS-1$
 		
