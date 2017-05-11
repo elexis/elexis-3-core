@@ -116,7 +116,15 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 						String[] values = art.get(false, fields);
 						String anbruch = art.getExt(ANBRUCH);
 						if (anbruch != null && anbruch.length() > 0) {
-							se.setFractionUnits(Integer.valueOf(anbruch));
+							int anbruchValue = 0;
+							try {
+								anbruchValue = Integer.valueOf(anbruch);
+							} catch (NumberFormatException nfe) {
+								log.warn(
+									"Error converting fraction value [{}] for id [{}], setting 0.",
+									anbruch, art.getId(), nfe);
+							}
+							se.setFractionUnits(anbruchValue);
 							art.setExt(ANBRUCH, null);
 						}
 						for (int i = 0; i < values.length; i++) {
