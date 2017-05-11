@@ -296,6 +296,8 @@ public class Messages extends NLS {
 	public static String LagerView_minBestand;
 	public static String LagerView_name;
 	public static String LagerView_pharmacode;
+	public static String LagerView_exportAction;
+	public static String LagerView_reload;
 	public static String Leistungscodes_necessaryData;
 	public static String MediVerlaufView_dateFrom;
 	public static String MediVerlaufView_dateUntil;
