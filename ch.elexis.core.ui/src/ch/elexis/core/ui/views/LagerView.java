@@ -158,7 +158,6 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 					if (pathToSave != null) {
 						CSVWriter csv = null;
 						try {
-							int errorUnkownArticle = 0;
 							int success = 0;
 							csv = new CSVWriter(new FileWriter(pathToSave));
 							log.debug("csv export started for: " + pathToSave);
@@ -189,19 +188,12 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 										line[10] = artikel.getVKPreis().getAmountAsString();
 										line[11] = artikel.get(Artikel.FLD_TYP);
 										Kontakt provider = artikel.getLieferant();
-										if (provider != null) {
+										if (provider != null && provider.exists()) {
 											line[12] = provider.getLabel();
 										}
 										csv.writeNext(line);
 										success++;
-									} else {
-										errorUnkownArticle++;
-										log.warn("cannot export: artikelId ["
-											+ artikel.getId()
-											+ "] artikelType ["
-											+ artikel.get(Artikel.FLD_TYP) + "] ");
 									}
-									
 								}
 							}
 							csv.close();
@@ -213,12 +205,6 @@ public class LagerView extends ViewPart implements DoubleClickListener, ISaveabl
 							msg.append("\n\n");
 							msg.append(success);
 							msg.append(" Artikel wurden erfolgreich exportiert.");
-							if (errorUnkownArticle > 0) {
-								msg.append("\n");
-								msg.append(errorUnkownArticle);
-								msg.append(
-									" Artikel konnten nicht exportiert werden (Unbekannte Artikel Typen).");
-							}
 							SWTHelper.showInfo("Lager export", msg.toString());
 						} catch (Exception ex) {
 							ExHandler.handle(ex);
