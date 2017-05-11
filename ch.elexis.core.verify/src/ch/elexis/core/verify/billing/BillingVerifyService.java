@@ -1,18 +1,18 @@
-package ch.elexis.core.verify;
+package ch.elexis.core.verify.billing;
 
 
 import ch.elexis.core.model.IVerify;
 import ch.elexis.core.model.IVerifyContext;
 import ch.elexis.core.model.IVerifyService;
-import ch.elexis.core.verify.internal.ElexisVerifyService;
-import ch.elexis.core.verify.internal.SumexVerifyService;
+import ch.elexis.core.verify.billing.internal.ElexisVerifyService;
+import ch.elexis.core.verify.billing.internal.SumexVerifyService;
 
-public class VerifyService implements IVerifyService {
+public class BillingVerifyService implements IVerifyService {
 	
 	SumexVerifyService sumexVerifyService = new SumexVerifyService();
 	ElexisVerifyService elexisVerifyService = new ElexisVerifyService();
 	
-	public VerifyService(){
+	public BillingVerifyService(){
 		
 	}
 	

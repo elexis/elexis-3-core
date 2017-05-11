@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.Status;
 
 import ch.elexis.core.types.VerifyType;
 
-public class Verify implements IVerify {
+public class BillingVerify implements IVerify {
 	
 	private double count;
 	private IStatus iStatus;
@@ -18,11 +18,11 @@ public class Verify implements IVerify {
 	
 	private Map<String, String> info = new HashMap<>();
 	
-	private Verify(){
+	private BillingVerify(){
 	}
 	
 	public static IVerify create(IBillable verrechenbar, VerifyType verifyType, double count){
-		IVerify ret = new Verify();
+		IVerify ret = new BillingVerify();
 		ret.setCount(count);
 		ret.setStatus(Status.OK_STATUS);
 		ret.setBillable(verrechenbar);

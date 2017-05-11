@@ -1,4 +1,4 @@
-package ch.elexis.core.verify.internal;
+package ch.elexis.core.verify.billing.internal;
 
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IVerify;
 import ch.elexis.core.model.IVerifyContext;
 import ch.elexis.core.model.IVerifyService;
-import ch.elexis.core.model.Verify;
+import ch.elexis.core.model.BillingVerify;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -26,7 +26,7 @@ public class ElexisVerifyService implements IVerifyService {
 			case LABOR:
 				break;
 			case TARMED:
-				return validateTarmed(iVerifyContext, (Verify) iVerify);
+				return validateTarmed(iVerifyContext, (BillingVerify) iVerify);
 			default:
 				break;
 			

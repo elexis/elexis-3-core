@@ -1,4 +1,4 @@
-package ch.elexis.core.verify.internal;
+package ch.elexis.core.verify.billing.internal;
 
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IVerify;
 import ch.elexis.core.model.IVerifyContext;
 import ch.elexis.core.model.IVerifyService;
-import ch.elexis.core.model.Verify;
+import ch.elexis.core.model.BillingVerify;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.verify.jax.rs.GsonProvider;
 import ch.rgw.tools.TimeTool;
@@ -98,7 +98,7 @@ public class SumexVerifyService implements IVerifyService {
 				case LABOR:
 					break;
 				case TARMED:
-					return validateTarmedWithSumex(iVerifyContext, (Verify) iVerify);
+					return validateTarmedWithSumex(iVerifyContext, (BillingVerify) iVerify);
 				default:
 					break;
 				
@@ -110,7 +110,7 @@ public class SumexVerifyService implements IVerifyService {
 		
 	}
 	
-	private IVerify validateTarmedWithSumex(IVerifyContext verifyContext, Verify iVerify){
+	private IVerify validateTarmedWithSumex(IVerifyContext verifyContext, BillingVerify iVerify){
 		ClientConfig config = new ClientConfig();
 		config.register(new GsonProvider<Object>());
 		TarmedValidatorResource tarmedValidatorResource = ConsumerFactory
