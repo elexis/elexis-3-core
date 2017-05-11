@@ -1777,13 +1777,207 @@ public interface ModelPackage extends EPackage {
 	int IHISTORY_FEATURE_COUNT = 3;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IBillable
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillable()
+	 * @generated
+	 */
+	int IBILLABLE = 18;
+
+	/**
+	 * The number of structural features of the '<em>IBillable</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLABLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IVerifyContext <em>IVerify Context</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IVerifyContext
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVerifyContext()
+	 * @generated
+	 */
+	int IVERIFY_CONTEXT = 19;
+
+	/**
+	 * The feature id for the '<em><b>Items</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY_CONTEXT__ITEMS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Errors</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY_CONTEXT__ERRORS = 1;
+
+	/**
+	 * The feature id for the '<em><b>IVerify Converter</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY_CONTEXT__IVERIFY_CONVERTER = 2;
+
+	/**
+	 * The feature id for the '<em><b>Info</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY_CONTEXT__INFO = 3;
+
+	/**
+	 * The number of structural features of the '<em>IVerify Context</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY_CONTEXT_FEATURE_COUNT = 4;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IVerify <em>IVerify</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IVerify
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVerify()
+	 * @generated
+	 */
+	int IVERIFY = 20;
+
+	/**
+	 * The feature id for the '<em><b>Billable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY__BILLABLE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY__COUNT = 1;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY__STATUS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Info</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY__INFO = 3;
+
+	/**
+	 * The feature id for the '<em><b>Verify Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY__VERIFY_TYPE = 4;
+
+	/**
+	 * The feature id for the '<em><b>Validator Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY__VALIDATOR_ID = 5;
+
+	/**
+	 * The number of structural features of the '<em>IVerify</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY_FEATURE_COUNT = 6;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IVerifyConverter <em>IVerify Converter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IVerifyConverter
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVerifyConverter()
+	 * @generated
+	 */
+	int IVERIFY_CONVERTER = 21;
+
+	/**
+	 * The number of structural features of the '<em>IVerify Converter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY_CONVERTER_FEATURE_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IVerifyService <em>IVerify Service</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IVerifyService
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVerifyService()
+	 * @generated
+	 */
+	int IVERIFY_SERVICE = 22;
+
+	/**
+	 * The feature id for the '<em><b>Validator Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY_SERVICE__VALIDATOR_ID = 0;
+
+	/**
+	 * The number of structural features of the '<em>IVerify Service</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVERIFY_SERVICE_FEATURE_COUNT = 1;
+
+	/**
 	 * The meta object id for the '<em>String Array</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 	 * @generated
 	 */
-	int STRING_ARRAY = 18;
+	int STRING_ARRAY = 23;
 
 
 	/**
@@ -2902,6 +3096,177 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIHistory_Description();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IBillable</em>'.
+	 * @see ch.elexis.core.model.IBillable
+	 * @generated
+	 */
+	EClass getIBillable();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IVerifyContext <em>IVerify Context</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IVerify Context</em>'.
+	 * @see ch.elexis.core.model.IVerifyContext
+	 * @generated
+	 */
+	EClass getIVerifyContext();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IVerifyContext#getItems <em>Items</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Items</em>'.
+	 * @see ch.elexis.core.model.IVerifyContext#getItems()
+	 * @see #getIVerifyContext()
+	 * @generated
+	 */
+	EReference getIVerifyContext_Items();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IVerifyContext#getErrors <em>Errors</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Errors</em>'.
+	 * @see ch.elexis.core.model.IVerifyContext#getErrors()
+	 * @see #getIVerifyContext()
+	 * @generated
+	 */
+	EReference getIVerifyContext_Errors();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IVerifyContext#getIVerifyConverter <em>IVerify Converter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>IVerify Converter</em>'.
+	 * @see ch.elexis.core.model.IVerifyContext#getIVerifyConverter()
+	 * @see #getIVerifyContext()
+	 * @generated
+	 */
+	EReference getIVerifyContext_IVerifyConverter();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVerifyContext#getInfo <em>Info</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Info</em>'.
+	 * @see ch.elexis.core.model.IVerifyContext#getInfo()
+	 * @see #getIVerifyContext()
+	 * @generated
+	 */
+	EAttribute getIVerifyContext_Info();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IVerify <em>IVerify</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IVerify</em>'.
+	 * @see ch.elexis.core.model.IVerify
+	 * @generated
+	 */
+	EClass getIVerify();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IVerify#getBillable <em>Billable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Billable</em>'.
+	 * @see ch.elexis.core.model.IVerify#getBillable()
+	 * @see #getIVerify()
+	 * @generated
+	 */
+	EReference getIVerify_Billable();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVerify#getCount <em>Count</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Count</em>'.
+	 * @see ch.elexis.core.model.IVerify#getCount()
+	 * @see #getIVerify()
+	 * @generated
+	 */
+	EAttribute getIVerify_Count();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVerify#getStatus <em>Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Status</em>'.
+	 * @see ch.elexis.core.model.IVerify#getStatus()
+	 * @see #getIVerify()
+	 * @generated
+	 */
+	EAttribute getIVerify_Status();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVerify#getInfo <em>Info</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Info</em>'.
+	 * @see ch.elexis.core.model.IVerify#getInfo()
+	 * @see #getIVerify()
+	 * @generated
+	 */
+	EAttribute getIVerify_Info();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVerify#getVerifyType <em>Verify Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Verify Type</em>'.
+	 * @see ch.elexis.core.model.IVerify#getVerifyType()
+	 * @see #getIVerify()
+	 * @generated
+	 */
+	EAttribute getIVerify_VerifyType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVerify#getValidatorId <em>Validator Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Validator Id</em>'.
+	 * @see ch.elexis.core.model.IVerify#getValidatorId()
+	 * @see #getIVerify()
+	 * @generated
+	 */
+	EAttribute getIVerify_ValidatorId();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IVerifyConverter <em>IVerify Converter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IVerify Converter</em>'.
+	 * @see ch.elexis.core.model.IVerifyConverter
+	 * @generated
+	 */
+	EClass getIVerifyConverter();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IVerifyService <em>IVerify Service</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IVerify Service</em>'.
+	 * @see ch.elexis.core.model.IVerifyService
+	 * @generated
+	 */
+	EClass getIVerifyService();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVerifyService#getValidatorId <em>Validator Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Validator Id</em>'.
+	 * @see ch.elexis.core.model.IVerifyService#getValidatorId()
+	 * @see #getIVerifyService()
+	 * @generated
+	 */
+	EAttribute getIVerifyService_ValidatorId();
+
+	/**
 	 * Returns the meta object for data type '<em>String Array</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3792,6 +4157,144 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IHISTORY__DESCRIPTION = eINSTANCE.getIHistory_Description();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IBillable
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillable()
+		 * @generated
+		 */
+		EClass IBILLABLE = eINSTANCE.getIBillable();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IVerifyContext <em>IVerify Context</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IVerifyContext
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVerifyContext()
+		 * @generated
+		 */
+		EClass IVERIFY_CONTEXT = eINSTANCE.getIVerifyContext();
+
+		/**
+		 * The meta object literal for the '<em><b>Items</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IVERIFY_CONTEXT__ITEMS = eINSTANCE.getIVerifyContext_Items();
+
+		/**
+		 * The meta object literal for the '<em><b>Errors</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IVERIFY_CONTEXT__ERRORS = eINSTANCE.getIVerifyContext_Errors();
+
+		/**
+		 * The meta object literal for the '<em><b>IVerify Converter</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IVERIFY_CONTEXT__IVERIFY_CONVERTER = eINSTANCE.getIVerifyContext_IVerifyConverter();
+
+		/**
+		 * The meta object literal for the '<em><b>Info</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVERIFY_CONTEXT__INFO = eINSTANCE.getIVerifyContext_Info();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IVerify <em>IVerify</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IVerify
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVerify()
+		 * @generated
+		 */
+		EClass IVERIFY = eINSTANCE.getIVerify();
+
+		/**
+		 * The meta object literal for the '<em><b>Billable</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IVERIFY__BILLABLE = eINSTANCE.getIVerify_Billable();
+
+		/**
+		 * The meta object literal for the '<em><b>Count</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVERIFY__COUNT = eINSTANCE.getIVerify_Count();
+
+		/**
+		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVERIFY__STATUS = eINSTANCE.getIVerify_Status();
+
+		/**
+		 * The meta object literal for the '<em><b>Info</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVERIFY__INFO = eINSTANCE.getIVerify_Info();
+
+		/**
+		 * The meta object literal for the '<em><b>Verify Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVERIFY__VERIFY_TYPE = eINSTANCE.getIVerify_VerifyType();
+
+		/**
+		 * The meta object literal for the '<em><b>Validator Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVERIFY__VALIDATOR_ID = eINSTANCE.getIVerify_ValidatorId();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IVerifyConverter <em>IVerify Converter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IVerifyConverter
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVerifyConverter()
+		 * @generated
+		 */
+		EClass IVERIFY_CONVERTER = eINSTANCE.getIVerifyConverter();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IVerifyService <em>IVerify Service</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IVerifyService
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVerifyService()
+		 * @generated
+		 */
+		EClass IVERIFY_SERVICE = eINSTANCE.getIVerifyService();
+
+		/**
+		 * The meta object literal for the '<em><b>Validator Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVERIFY_SERVICE__VALIDATOR_ID = eINSTANCE.getIVerifyService_ValidatorId();
 
 		/**
 		 * The meta object literal for the '<em>String Array</em>' data type.

@@ -15,6 +15,7 @@ import ch.elexis.core.types.TypesPackage;
 import java.util.List;
 import java.util.Map;
 
+import java.util.Optional;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
