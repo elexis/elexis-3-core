@@ -329,7 +329,8 @@ public class DocumentStore {
 			return iDocumentStore;
 		}
 		
-		MessageEvent.fireError("Document store error", "No store defined for: " + storeId);
+		MessageEvent.fireError(Messages.getString("DocumentStore.storeError"),
+			Messages.getString("DocumentStore.storeErrorText") + " " + storeId);
 		return new EmptyDocumentStore();
 	}
 	
