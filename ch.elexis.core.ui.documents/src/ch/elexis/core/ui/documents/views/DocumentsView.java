@@ -343,7 +343,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 			case 3:
 				return new TimeTool(dh.getLastchanged()).toString(TimeTool.FULL_GER);
 			case 4:
-				return new TimeTool(dh.getCreated()).toString(TimeTool.FULL_GER);
+				return new TimeTool(dh.getCreated()).toString(TimeTool.DATE_GER);
 			case 5:
 				return dh.getTitle();
 			case 6:
