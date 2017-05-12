@@ -1083,6 +1083,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         sollte, ein nicht existierendes Feld auszulesen
 	 */
 	public String get(final String field){
+		if (getId() == null || getId().isEmpty()) {
+			log.error("Get with no ID on object of type [" + this.getClass().getName() + "]");
+		}
 		DBConnection dbConnection = getDBConnection();
 		String key = getKey(field);
 		Object ret = dbConnection.getCache().get(key, getCacheTime());
@@ -2095,6 +2098,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true if values were set, else <code>false</code> and exception is created
 	 */
 	public boolean get(final String[] fields, final String[] values){
+		if (getId() == null || getId().isEmpty()) {
+			log.error("Get with no ID on object of type [" + this.getClass().getName() + "]");
+		}
 		if ((fields == null) || (values == null) || (fields.length != values.length)) {
 			log.error("Falscher Aufruf von get(String[],String[]");
 			return false;
