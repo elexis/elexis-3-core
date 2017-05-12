@@ -226,7 +226,8 @@ public class HL7Parser {
 						
 						ILabItem labItem = labImportUtil.getDocumentLabItem(liShort, liName, labor);
 						if (labItem == null) {
-							labImportUtil.createLabItem(liShort, liName, labor, "", "", fileType,
+							labItem = labImportUtil.createLabItem(liShort, liName, labor, "", "",
+								fileType,
 								LabItemTyp.DOCUMENT, hl7EncData.getGroup(), "");
 						}
 						
