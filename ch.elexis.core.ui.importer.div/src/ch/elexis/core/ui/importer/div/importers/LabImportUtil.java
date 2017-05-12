@@ -432,6 +432,8 @@ public class LabImportUtil implements ILabImportUtil {
 		Patient pat = Patient.load(patient.getId());
 		LabItem item = LabItem.load(labItem.getId());
 		Labor labor = Labor.load(origin.getId());
+		logger.debug("Creating result with patient [" + pat.getId() + "] labitem [" + item.getId()
+			+ "] origin [" + labor.getId() + "]");
 		LabResult labResult = new LabResult(pat, date, item, result, comment, labor);
 		if (refVal != null) {
 			if (Person.MALE.equalsIgnoreCase(pat.getGeschlecht())) {
