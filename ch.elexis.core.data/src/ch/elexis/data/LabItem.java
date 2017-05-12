@@ -445,7 +445,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		String[] vals = new String[fields.length];
 		get(fields, vals);
 		sb.append(vals[0]).append(", ").append(vals[1]); //$NON-NLS-1$
-		if (vals[5].equals(StringConstants.ZERO)) {
+		if (StringConstants.ZERO.equals(vals[5])) {
 			sb.append(" (").append(vals[2]).append("/").append(getRefW()).append(StringTool.space) //$NON-NLS-1$ //$NON-NLS-2$
 				.append(vals[4]).append(")"); //$NON-NLS-1$
 		} else {
