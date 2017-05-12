@@ -13,21 +13,21 @@ package ch.elexis.core.model;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IVerify Service</b></em>'.
+ * A representation of the model object '<em><b>IVerification Service</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IVerifyService#getValidatorId <em>Validator Id</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IVerificationService#getValidatorId <em>Validator Id</em>}</li>
  * </ul>
  *
- * @see ch.elexis.core.model.ModelPackage#getIVerifyService()
+ * @see ch.elexis.core.model.ModelPackage#getIVerificationService()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IVerifyService {
+public interface IVerificationService<T> {
 	/**
 	 * Returns the value of the '<em><b>Validator Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -37,7 +37,7 @@ public interface IVerifyService {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Validator Id</em>' attribute.
-	 * @see ch.elexis.core.model.ModelPackage#getIVerifyService_ValidatorId()
+	 * @see ch.elexis.core.model.ModelPackage#getIVerificationService_ValidatorId()
 	 * @model changeable="false"
 	 * @generated
 	 */
@@ -49,6 +49,6 @@ public interface IVerifyService {
 	 * @model
 	 * @generated
 	 */
-	IVerify validate(IVerifyContext iVerifyContext, IVerify iVerify);
+	T validate(IVerificationContext<T> iVerificationContext, T verification);
 
-} // IVerifyService
+} // IVerificationService

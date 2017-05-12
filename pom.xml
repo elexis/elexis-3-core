@@ -282,7 +282,7 @@
 		<module>ch.elexis.core.findings.ui</module>
 		<module>ch.elexis.core.documents</module>
 		<module>ch.elexis.core.ui.documents</module>
-		<module>ch.elexis.core.verify</module>
+		<module>ch.elexis.core.verification</module>
     	<module>org.iatrix.help.wiki</module>
 		<module>ch.rgw.utility</module>
 		<module>ch.rgw.utility.tests</module>

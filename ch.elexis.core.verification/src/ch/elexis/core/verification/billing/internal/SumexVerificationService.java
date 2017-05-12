@@ -1,4 +1,4 @@
-package ch.elexis.core.verify.billing.internal;
+package ch.elexis.core.verification.billing.internal;
 
 
 import java.io.IOException;
@@ -24,21 +24,20 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import com.eclipsesource.jaxrs.consumer.ConsumerFactory;
 
+import ch.elexis.core.model.BillingVerification;
 import ch.elexis.core.model.IBillable;
-import ch.elexis.core.model.IVerify;
-import ch.elexis.core.model.IVerifyContext;
-import ch.elexis.core.model.IVerifyService;
-import ch.elexis.core.model.BillingVerify;
+import ch.elexis.core.model.IVerificationContext;
+import ch.elexis.core.model.IVerificationService;
 import ch.elexis.core.types.Gender;
-import ch.elexis.core.verify.jax.rs.GsonProvider;
+import ch.elexis.core.verification.jax.rs.GsonProvider;
 import ch.rgw.tools.TimeTool;
 
-public class SumexVerifyService implements IVerifyService {
+public class SumexVerificationService implements IVerificationService<BillingVerification> {
 	
 	private static final String SUMEX_SERVER_URL_KEY = "sumexServerUrl";
 	private List<InputDignity> dignities = new ArrayList<>();
 	
-	public SumexVerifyService(){
+	public SumexVerificationService(){
 		
 	}
 	
@@ -83,34 +82,39 @@ public class SumexVerifyService implements IVerifyService {
 		return false;
 	}
 
+	
 	@Override
-	public IVerify validate(IVerifyContext iVerifyContext, IVerify iVerify){
+	public BillingVerification validate(
+		IVerificationContext<BillingVerification> iVerificationContext,
+		BillingVerification billingVerification){
 		if (!isConnected()) {
 			return null;
 		} else
 		{
-			if (iVerify.getVerifyType() != null) {
+			if (billingVerification.getVerificationType() != null) {
 				
 				if (dignities.isEmpty()) {
 					loadDignities();
 				}
-				switch (iVerify.getVerifyType()) {
+				switch (billingVerification.getVerificationType()) {
 				case LABOR:
 					break;
 				case TARMED:
-					return validateTarmedWithSumex(iVerifyContext, (BillingVerify) iVerify);
+					return validateTarmedWithSumex(iVerificationContext, billingVerification);
 				default:
 					break;
 				
 				}
 			}
 			
-			return iVerify;
+			return billingVerification;
 		}
 		
 	}
 	
-	private IVerify validateTarmedWithSumex(IVerifyContext verifyContext, BillingVerify iVerify){
+	private BillingVerification validateTarmedWithSumex(
+		IVerificationContext<BillingVerification> iVerificationContext,
+		BillingVerification billingVerification){
 		ClientConfig config = new ClientConfig();
 		config.register(new GsonProvider<Object>());
 		TarmedValidatorResource tarmedValidatorResource = ConsumerFactory
@@ -119,14 +123,15 @@ public class SumexVerifyService implements IVerifyService {
 		ValidationRequest validationRequest = new ValidationRequest();
 		
 		Patient patient = new Patient();
-		if (verifyContext.getInfo().get("patBirthdate") != null) {
+		if (iVerificationContext.getInfo().get("patBirthdate") != null) {
 			patient
-				.setBirthDate(new TimeTool(verifyContext.getInfo().get("patBirthdate")).getTime());
+				.setBirthDate(
+					new TimeTool(iVerificationContext.getInfo().get("patBirthdate")).getTime());
 			
 		}
-		if (verifyContext.getInfo().get("patSex") != null) {
+		if (iVerificationContext.getInfo().get("patSex") != null) {
 			patient.setSex(
-				Gender.fromValue(verifyContext.getInfo().get("patSex")).equals(Gender.FEMALE)
+				Gender.fromValue(iVerificationContext.getInfo().get("patSex")).equals(Gender.FEMALE)
 						? SEX.female : SEX.male);
 			
 		}
@@ -135,32 +140,34 @@ public class SumexVerifyService implements IVerifyService {
 		}
 		
 		Treatment tr = new Treatment();
-		tr.setEan(verifyContext.getInfo().get("treatmentEan"));
-		if (verifyContext.getInfo().get("treatmentCanton") != null) {
-			tr.setCanton(CANTON.parse(verifyContext.getInfo().get("treatmentCanton")));
+		tr.setEan(iVerificationContext.getInfo().get("treatmentEan"));
+		if (iVerificationContext.getInfo().get("treatmentCanton") != null) {
+			tr.setCanton(CANTON.parse(iVerificationContext.getInfo().get("treatmentCanton")));
 			
 		}
-		tr.setLaw(LAW.parse(verifyContext.getInfo().get("gesetz")));
+		tr.setLaw(LAW.parse(iVerificationContext.getInfo().get("gesetz")));
 		
 		Physician physician = new Physician();
-		physician.setEan(verifyContext.getInfo().get("physicianEan"));
+		physician.setEan(iVerificationContext.getInfo().get("physicianEan"));
 		
 		validationRequest.setDignities(dignities);
 		validationRequest.setPatient(patient);
 		validationRequest.setTreatment(tr);
 		validationRequest.setPhysician(physician);
 		
-		for (IVerify verify : verifyContext.getItems()) {
+		for (BillingVerification verification : iVerificationContext.getItems()) {
 			validationRequest.getServices()
-				.add(new Service(verify.getInfo().get("code"), verify.getCount()));
+				.add(new Service(verification.getInfo().get("code"),
+					billingVerification.getCount()));
 		}
 		
 
-		Service service = new Service(iVerify.getInfo().get("code"), iVerify.getCount());
+		Service service =
+			new Service(billingVerification.getInfo().get("code"), billingVerification.getCount());
 		validationRequest.getServices().add(service);
 		ValidationResponse result = tarmedValidatorResource.performRequest(validationRequest);
 		if (result.getStatus().equals(STATUS.success)) {
-			iVerify.setStatus(Status.OK_STATUS);
+			billingVerification.setStatus(Status.OK_STATUS);
 		} else {
 			StringBuffer buf = new StringBuffer();
 			for (Error err : result.getErrors()) {
@@ -168,11 +175,11 @@ public class SumexVerifyService implements IVerifyService {
 				buf.append("\n");
 			}
 			
-			iVerify.setStatus(
+			billingVerification.setStatus(
 				new Status(IStatus.ERROR, "unknown", buf.toString()));
 		}
-		iVerify.setCount(result.getAmount().getTotal());
-		return iVerify;
+		billingVerification.setCount(result.getAmount().getTotal());
+		return billingVerification;
 	}
 	
 	@Path("/validation")
@@ -908,6 +915,6 @@ public class SumexVerifyService implements IVerifyService {
 	
 	@Override
 	public String getValidatorId(){
-		return SumexVerifyService.class.getName();
+		return SumexVerificationService.class.getName();
 	}
 }

@@ -1,4 +1,4 @@
-package ch.elexis.core.verify.billing.internal;
+package ch.elexis.core.verification.billing.internal;
 
 
 import java.util.ArrayList;
@@ -8,40 +8,43 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+import ch.elexis.core.model.BillingVerification;
 import ch.elexis.core.model.IBillable;
-import ch.elexis.core.model.IVerify;
-import ch.elexis.core.model.IVerifyContext;
-import ch.elexis.core.model.IVerifyService;
-import ch.elexis.core.model.BillingVerify;
+import ch.elexis.core.model.IVerificationContext;
+import ch.elexis.core.model.IVerificationService;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
-public class ElexisVerifyService implements IVerifyService {
+public class ElexisVerificationService implements IVerificationService<BillingVerification> {
 	
 	@Override
-	public IVerify validate(IVerifyContext iVerifyContext, IVerify iVerify){
-		if (iVerify.getVerifyType() != null)
+	public BillingVerification validate(
+		IVerificationContext<BillingVerification> iVerificationContext,
+		BillingVerification billingVerification){
+		if (billingVerification.getVerificationType() != null)
 		{
-			switch (iVerify.getVerifyType()) {
+			switch (billingVerification.getVerificationType()) {
 			case LABOR:
 				break;
 			case TARMED:
-				return validateTarmed(iVerifyContext, (BillingVerify) iVerify);
+				return validateTarmed(iVerificationContext,
+					(BillingVerification) billingVerification);
 			default:
 				break;
 			
 			}
 		}
-		return iVerify;
+		return billingVerification;
 	}
 	
-	
-	private IVerify validateTarmed(IVerifyContext verifyContext, IVerify iVerify){
+	private BillingVerification validateTarmed(
+		IVerificationContext<BillingVerification> iVerificationContext,
+		BillingVerification billingVerification){
 		boolean checkBezug = false;
 		boolean bezugOK = true;
 		boolean bOptify = false;
 		
-		Map<String, String> mapInfo = iVerify.getInfo();
+		Map<String, String> mapInfo = billingVerification.getInfo();
 		
 		String isTarmed = mapInfo.get("isTarmed");
 		String bezug = mapInfo.get("Bezug");
@@ -51,8 +54,8 @@ public class ElexisVerifyService implements IVerifyService {
 
 		
 		if (!"true".equals(isTarmed)) {
-			addStatus(IStatus.ERROR, 6, "Falscher Leistungstyp", code, iVerify);
-			return iVerify;
+			addStatus(IStatus.ERROR, 6, "Falscher Leistungstyp", code, billingVerification);
+			return billingVerification;
 		}
 		
 		// Bezug prüfen
@@ -71,15 +74,17 @@ public class ElexisVerifyService implements IVerifyService {
 			if (!StringTool.isNothing(gueltigVon)) {
 				TimeTool tVon = new TimeTool(gueltigVon);
 				if (date.isBefore(tVon)) {
-					addStatus(IStatus.WARNING, 7, "noch nicht g\u00FCltig", code, iVerify);
-					return iVerify;
+					addStatus(IStatus.WARNING, 7, "noch nicht g\u00FCltig", code,
+						billingVerification);
+					return billingVerification;
 				}
 			}
 			if (!StringTool.isNothing(gueltigBis)) {
 				TimeTool tBis = new TimeTool(gueltigBis);
 				if (date.isAfter(tBis)) {
-					addStatus(IStatus.WARNING, 8, "nicht mehr g\u00FCltig", code, iVerify);
-					return iVerify;
+					addStatus(IStatus.WARNING, 8, "nicht mehr g\u00FCltig", code,
+						billingVerification);
+					return billingVerification;
 				}
 			}
 			
@@ -87,9 +92,9 @@ public class ElexisVerifyService implements IVerifyService {
 		
 		if (code.matches("35.0020")) {
 			
-			List<IVerify> opCodes = new ArrayList<>();
-			List<IVerify> opReduction = new ArrayList<IVerify>();
-			for (IVerify v : verifyContext.getItems()) {
+			List<BillingVerification> opCodes = new ArrayList<>();
+			List<BillingVerification> opReduction = new ArrayList<BillingVerification>();
+			for (BillingVerification v : iVerificationContext.getItems()) {
 				if ("true".equals(v.getInfo().get("isTarmed"))) {
 					IBillable iBillable = v.getBillable();
 					if ("OP I".equals(v.getInfo().get("sparteAsText"))) {
@@ -101,14 +106,14 @@ public class ElexisVerifyService implements IVerifyService {
 				}
 			}
 
-			List<IVerify> availableCodes = new ArrayList<IVerify>();
+			List<BillingVerification> availableCodes = new ArrayList<BillingVerification>();
 			availableCodes.addAll(opCodes);
 			// update already mapped
-			for (IVerify reductionVerrechnet : opReduction) {
+			for (BillingVerification reductionVerrechnet : opReduction) {
 				boolean isMapped = false;
 				String redBezug = reductionVerrechnet.getInfo().get("Bezug");
 				if (redBezug != null && !redBezug.isEmpty()) {
-					for (IVerify opVerrechnet : opCodes) {
+					for (BillingVerification opVerrechnet : opCodes) {
 						IBillable opVerrechenbar = opVerrechnet.getBillable();
 						String opCodeString = opVerrechnet.getInfo().get("code");
 						if (bezug.equals(opCodeString)) {
@@ -125,21 +130,22 @@ public class ElexisVerifyService implements IVerifyService {
 				}
 			}
 			if (availableCodes.isEmpty()) {
-				addStatus(IStatus.WARNING, 3, code, "", iVerify);
-				return iVerify;
+				addStatus(IStatus.WARNING, 3, code, "", billingVerification);
+				return billingVerification;
 			}
-			addStatus(IStatus.OK, 0, code, "", iVerify);
-			return iVerify;
+			addStatus(IStatus.OK, 0, code, "", billingVerification);
+			return billingVerification;
 		}
 		
-		IVerify newVerrechnet = null;
+		BillingVerification newVerrechnet = null;
 		String newVerrechnetSide = null;
 		boolean requiresAsSide = "true".equals(mapInfo.get("requiresSide"));
 		// Ist der Hinzuzufügende Code vielleicht schon in der Liste? Dann
 				// nur Zahl erhöhen.
-			for (IVerify v : verifyContext.getItems()) {
-			if (iVerify.getInfo().get("className").equals(v.getInfo().get("dbClass"))
-				&& iVerify.getInfo().get("id").equals(v.getInfo().get("dbLeistGCode"))) {
+		for (BillingVerification v : iVerificationContext.getItems()) {
+			if (billingVerification.getInfo().get("className").equals(v.getInfo().get("dbClass"))
+				&& billingVerification.getInfo().get("id")
+					.equals(v.getInfo().get("dbLeistGCode"))) {
 				if (!requiresAsSide) {
 						newVerrechnet = v;
 						newVerrechnet.setCount(newVerrechnet.getCount() + 1);
@@ -161,13 +167,15 @@ public class ElexisVerifyService implements IVerifyService {
 		
 		if (requiresAsSide) {
 			int countSideLeft = 0;
-			IVerify leftVerrechnet = null;
+			BillingVerification leftVerrechnet = null;
 			int countSideRight = 0;
-			IVerify rightVerrechnet = null;
+			BillingVerification rightVerrechnet = null;
 			
-			for (IVerify v : verifyContext.getItems()) {
-				if (iVerify.getInfo().get("className").equals(v.getInfo().get("dbClass"))
-					&& iVerify.getInfo().get("id").equals(v.getInfo().get("dbLeistGCode"))) {
+			for (BillingVerification v : iVerificationContext.getItems()) {
+				if (billingVerification.getInfo().get("className")
+					.equals(v.getInfo().get("dbClass"))
+					&& billingVerification.getInfo().get("id")
+						.equals(v.getInfo().get("dbLeistGCode"))) {
 					String side = v.getInfo().get("Seite");
 					if (side.equals("l")) {
 						countSideLeft += v.getCount();
@@ -195,15 +203,15 @@ public class ElexisVerifyService implements IVerifyService {
 		
 		// Ausschliessende Kriterien prüfen ("Nicht zusammen mit")
 		if (newVerrechnet == null) {
-			newVerrechnet = iVerify;
+			newVerrechnet = billingVerification;
 			// make sure side is initialized
 			if (requiresAsSide) {
 				newVerrechnet.getInfo().put("Seite", newVerrechnetSide);
 			}
 			// Exclusionen
 			if (bOptify) {
-				IVerify newTarmed = iVerify;
-				for (IVerify v : verifyContext.getItems()) {
+				BillingVerification newTarmed = billingVerification;
+				for (BillingVerification v : iVerificationContext.getItems()) {
 					if ("true".equals(v.getInfo().get("isTarmed"))) {
 						IBillable tarmed = v.getBillable();
 						if (tarmed != null && "true".equals(v.getInfo().get("dbStateExists"))) {
@@ -250,7 +258,7 @@ public class ElexisVerifyService implements IVerifyService {
 								}
 							}
 							if (!iStatus.equals(Status.OK_STATUS)) {
-								verifyContext.getErrors().add(newVerrechnet);
+								iVerificationContext.getErrors().add(newVerrechnet);
 								return newVerrechnet;
 							}
 						}
@@ -265,12 +273,12 @@ public class ElexisVerifyService implements IVerifyService {
 					} else {
 						excludeCode = "00.0010";
 					}
-					for (IVerify v : verifyContext.getItems()) {
+					for (BillingVerification v : iVerificationContext.getItems()) {
 						if (v.getInfo().get("code").equals(excludeCode)) {
 							addStatus(IStatus.WARNING, 4, null,
 								"00.0750 ist nicht im Rahmen einer ärztlichen Beratung 00.0010 verrechnenbar.",
 								newVerrechnet);
-							verifyContext.getErrors().add(newVerrechnet);
+							iVerificationContext.getErrors().add(newVerrechnet);
 							return newVerrechnet;
 						}
 					}
@@ -304,14 +312,14 @@ public class ElexisVerifyService implements IVerifyService {
 										addStatus(IStatus.WARNING, 2, null,
 											"Code maximal " + menge + " Mal pro Sitzung",
 											newVerrechnet);
-										verifyContext.getErrors().add(newVerrechnet);
+										iVerificationContext.getErrors().add(newVerrechnet);
 										return newVerrechnet;
 										
 									} else if (limitCode == 10) {
 										addStatus(IStatus.WARNING, 2, null,
 											"Code maximal " + menge + "  Mal pro Seite",
 											newVerrechnet);
-										verifyContext.getErrors().add(newVerrechnet);
+										iVerificationContext.getErrors().add(newVerrechnet);
 										return newVerrechnet;
 									}
 								}
@@ -325,7 +333,7 @@ public class ElexisVerifyService implements IVerifyService {
 									newVerrechnet.setCount(menge);
 									addStatus(IStatus.WARNING, 2, null,
 										"Code maximal " + menge + "  Mal pro Tag", newVerrechnet);
-									verifyContext.getErrors().add(newVerrechnet);
+									iVerificationContext.getErrors().add(newVerrechnet);
 									return newVerrechnet;
 								}
 							}
@@ -345,23 +353,25 @@ public class ElexisVerifyService implements IVerifyService {
 			addStatus(IStatus.OK, 0, null, "", newVerrechnet);
 		}
 
-		verifyContext.getItems().add(newVerrechnet);
+		iVerificationContext.getItems().add(newVerrechnet);
 		return newVerrechnet;
 	}
 	
-	private IStatus addStatus(int severity, int type, String code, String message, IVerify iVerify){
+	private IStatus addStatus(int severity, int type, String code, String message,
+		BillingVerification billingVerification){
 		IStatus iStatus =
 			new Status(severity, "unknown", type, (code != null ? (code + " ") : "") + message,
 				null);
-		if (iVerify != null) {
-			iVerify.setStatus(iStatus);
+		if (billingVerification != null) {
+			billingVerification.setStatus(iStatus);
 		}
 		return iStatus;
 	}
 
 	@Override
 	public String getValidatorId(){
-		return ElexisVerifyService.class.getName();
+		return ElexisVerificationService.class.getName();
 	}
+
 	
 }

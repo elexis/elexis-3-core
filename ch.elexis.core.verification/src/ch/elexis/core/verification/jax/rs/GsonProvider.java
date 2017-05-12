@@ -1,4 +1,4 @@
-package ch.elexis.core.verify.jax.rs;
+package ch.elexis.core.verification.jax.rs;
 
 import java.io.IOException;
 import java.io.InputStream;

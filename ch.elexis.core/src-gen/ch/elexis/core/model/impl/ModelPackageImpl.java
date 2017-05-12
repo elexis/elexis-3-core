@@ -10,15 +10,6 @@
  */
 package ch.elexis.core.model.impl;
 
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EGenericType;
-import org.eclipse.emf.ecore.EOperation;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.ICategory;
@@ -35,17 +26,27 @@ import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.ISticker;
-import ch.elexis.core.model.ITag;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.model.IVerify;
-import ch.elexis.core.model.IVerifyContext;
-import ch.elexis.core.model.IVerifyConverter;
-import ch.elexis.core.model.IVerifyService;
+import ch.elexis.core.model.IVerificationContext;
+import ch.elexis.core.model.IVerificationConverter;
+import ch.elexis.core.model.IVerificationService;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelFactory;
 import ch.elexis.core.model.ModelPackage;
+
 import ch.elexis.core.types.TypesPackage;
+
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EGenericType;
+import org.eclipse.emf.ecore.EOperation;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.ETypeParameter;
+
+import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -192,28 +193,21 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass iVerifyContextEClass = null;
+	private EClass iVerificationContextEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass iVerifyEClass = null;
+	private EClass iVerificationConverterEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass iVerifyConverterEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass iVerifyServiceEClass = null;
+	private EClass iVerificationServiceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1227,8 +1221,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getIVerifyContext() {
-		return iVerifyContextEClass;
+	public EClass getIVerificationContext() {
+		return iVerificationContextEClass;
 	}
 
 	/**
@@ -1236,8 +1230,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIVerifyContext_Items() {
-		return (EReference)iVerifyContextEClass.getEStructuralFeatures().get(0);
+	public EReference getIVerificationContext_Items() {
+		return (EReference)iVerificationContextEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1245,8 +1239,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIVerifyContext_Errors() {
-		return (EReference)iVerifyContextEClass.getEStructuralFeatures().get(1);
+	public EReference getIVerificationContext_Errors() {
+		return (EReference)iVerificationContextEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1254,8 +1248,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIVerifyContext_IVerifyConverter() {
-		return (EReference)iVerifyContextEClass.getEStructuralFeatures().get(2);
+	public EAttribute getIVerificationContext_Info() {
+		return (EAttribute)iVerificationContextEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1263,8 +1257,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIVerifyContext_Info() {
-		return (EAttribute)iVerifyContextEClass.getEStructuralFeatures().get(3);
+	public EClass getIVerificationConverter() {
+		return iVerificationConverterEClass;
 	}
 
 	/**
@@ -1272,8 +1266,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getIVerify() {
-		return iVerifyEClass;
+	public EClass getIVerificationService() {
+		return iVerificationServiceEClass;
 	}
 
 	/**
@@ -1281,80 +1275,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIVerify_Billable() {
-		return (EReference)iVerifyEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIVerify_Count() {
-		return (EAttribute)iVerifyEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIVerify_Status() {
-		return (EAttribute)iVerifyEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIVerify_Info() {
-		return (EAttribute)iVerifyEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIVerify_VerifyType() {
-		return (EAttribute)iVerifyEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIVerify_ValidatorId() {
-		return (EAttribute)iVerifyEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getIVerifyConverter() {
-		return iVerifyConverterEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getIVerifyService() {
-		return iVerifyServiceEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIVerifyService_ValidatorId() {
-		return (EAttribute)iVerifyServiceEClass.getEStructuralFeatures().get(0);
+	public EAttribute getIVerificationService_ValidatorId() {
+		return (EAttribute)iVerificationServiceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1517,24 +1439,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		iBillableEClass = createEClass(IBILLABLE);
 
-		iVerifyContextEClass = createEClass(IVERIFY_CONTEXT);
-		createEReference(iVerifyContextEClass, IVERIFY_CONTEXT__ITEMS);
-		createEReference(iVerifyContextEClass, IVERIFY_CONTEXT__ERRORS);
-		createEReference(iVerifyContextEClass, IVERIFY_CONTEXT__IVERIFY_CONVERTER);
-		createEAttribute(iVerifyContextEClass, IVERIFY_CONTEXT__INFO);
+		iVerificationContextEClass = createEClass(IVERIFICATION_CONTEXT);
+		createEReference(iVerificationContextEClass, IVERIFICATION_CONTEXT__ITEMS);
+		createEReference(iVerificationContextEClass, IVERIFICATION_CONTEXT__ERRORS);
+		createEAttribute(iVerificationContextEClass, IVERIFICATION_CONTEXT__INFO);
 
-		iVerifyEClass = createEClass(IVERIFY);
-		createEReference(iVerifyEClass, IVERIFY__BILLABLE);
-		createEAttribute(iVerifyEClass, IVERIFY__COUNT);
-		createEAttribute(iVerifyEClass, IVERIFY__STATUS);
-		createEAttribute(iVerifyEClass, IVERIFY__INFO);
-		createEAttribute(iVerifyEClass, IVERIFY__VERIFY_TYPE);
-		createEAttribute(iVerifyEClass, IVERIFY__VALIDATOR_ID);
+		iVerificationConverterEClass = createEClass(IVERIFICATION_CONVERTER);
 
-		iVerifyConverterEClass = createEClass(IVERIFY_CONVERTER);
-
-		iVerifyServiceEClass = createEClass(IVERIFY_SERVICE);
-		createEAttribute(iVerifyServiceEClass, IVERIFY_SERVICE__VALIDATOR_ID);
+		iVerificationServiceEClass = createEClass(IVERIFICATION_SERVICE);
+		createEAttribute(iVerificationServiceEClass, IVERIFICATION_SERVICE__VALIDATOR_ID);
 
 		// Create data types
 		stringArrayEDataType = createEDataType(STRING_ARRAY);
@@ -1567,6 +1480,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		TypesPackage theTypesPackage = (TypesPackage)EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI);
 
 		// Create type parameters
+		ETypeParameter iVerificationContextEClass_T = addETypeParameter(iVerificationContextEClass, "T");
+		ETypeParameter iVerificationConverterEClass_U = addETypeParameter(iVerificationConverterEClass, "U");
+		ETypeParameter iVerificationConverterEClass_T = addETypeParameter(iVerificationConverterEClass, "T");
+		ETypeParameter iVerificationServiceEClass_T = addETypeParameter(iVerificationServiceEClass, "T");
 
 		// Set bounds for type parameters
 
@@ -1806,45 +1723,40 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iBillableEClass, IBillable.class, "IBillable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(iVerifyContextEClass, IVerifyContext.class, "IVerifyContext", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIVerifyContext_Items(), this.getIVerify(), null, "items", null, 0, -1, IVerifyContext.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIVerifyContext_Errors(), this.getIVerify(), null, "errors", null, 0, -1, IVerifyContext.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIVerifyContext_IVerifyConverter(), this.getIVerifyConverter(), null, "iVerifyConverter", null, 0, 1, IVerifyContext.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iVerificationContextEClass, IVerificationContext.class, "IVerificationContext", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		g1 = createEGenericType(iVerificationContextEClass_T);
+		initEReference(getIVerificationContext_Items(), g1, null, "items", null, 0, -1, IVerificationContext.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(iVerificationContextEClass_T);
+		initEReference(getIVerificationContext_Errors(), g1, null, "errors", null, 0, -1, IVerificationContext.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		g1 = createEGenericType(ecorePackage.getEMap());
 		g2 = createEGenericType(ecorePackage.getEString());
 		g1.getETypeArguments().add(g2);
 		g2 = createEGenericType(ecorePackage.getEString());
 		g1.getETypeArguments().add(g2);
-		initEAttribute(getIVerifyContext_Info(), g1, "info", null, 0, 1, IVerifyContext.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIVerificationContext_Info(), g1, "info", null, 0, 1, IVerificationContext.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(iVerifyEClass, IVerify.class, "IVerify", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIVerify_Billable(), this.getIBillable(), null, "billable", null, 0, 1, IVerify.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIVerify_Count(), ecorePackage.getEDouble(), "count", null, 0, 1, IVerify.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIVerify_Status(), theTypesPackage.getStatus(), "status", null, 0, 1, IVerify.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		g1 = createEGenericType(ecorePackage.getEMap());
-		g2 = createEGenericType(ecorePackage.getEString());
-		g1.getETypeArguments().add(g2);
-		g2 = createEGenericType(ecorePackage.getEString());
-		g1.getETypeArguments().add(g2);
-		initEAttribute(getIVerify_Info(), g1, "info", null, 0, 1, IVerify.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIVerify_VerifyType(), theTypesPackage.getVerifyType(), "verifyType", null, 0, 1, IVerify.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIVerify_ValidatorId(), ecorePackage.getEString(), "validatorId", null, 0, 1, IVerify.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iVerificationConverterEClass, IVerificationConverter.class, "IVerificationConverter", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(iVerifyConverterEClass, IVerifyConverter.class, "IVerifyConverter", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		op = addEOperation(iVerifyConverterEClass, null, "convert", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getIBillable(), "iBillable", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iVerificationConverterEClass, null, "convert", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(iVerificationConverterEClass_U);
+		addEParameter(op, g1, "iBillable", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(theTypesPackage.getOptional());
-		g2 = createEGenericType(this.getIVerify());
+		g2 = createEGenericType(iVerificationConverterEClass_T);
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 
-		initEClass(iVerifyServiceEClass, IVerifyService.class, "IVerifyService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIVerifyService_ValidatorId(), ecorePackage.getEString(), "validatorId", null, 0, 1, IVerifyService.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iVerificationServiceEClass, IVerificationService.class, "IVerificationService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIVerificationService_ValidatorId(), ecorePackage.getEString(), "validatorId", null, 0, 1, IVerificationService.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		op = addEOperation(iVerifyServiceEClass, this.getIVerify(), "validate", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getIVerifyContext(), "iVerifyContext", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getIVerify(), "iVerify", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iVerificationServiceEClass, null, "validate", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(this.getIVerificationContext());
+		g2 = createEGenericType(iVerificationServiceEClass_T);
+		g1.getETypeArguments().add(g2);
+		addEParameter(op, g1, "iVerificationContext", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(iVerificationServiceEClass_T);
+		addEParameter(op, g1, "verification", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(iVerificationServiceEClass_T);
+		initEOperation(op, g1);
 
 		// Initialize data types
 		initEDataType(stringArrayEDataType, String[].class, "StringArray", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

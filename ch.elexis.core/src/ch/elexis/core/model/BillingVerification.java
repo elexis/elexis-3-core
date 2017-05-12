@@ -6,89 +6,90 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import ch.elexis.core.types.VerifyType;
+import ch.elexis.core.types.VerificationType;
 
-public class BillingVerify implements IVerify {
+public class BillingVerification {
 	
 	private double count;
 	private IStatus iStatus;
 	private IBillable iBillable;
-	private VerifyType verifyType;
+	private VerificationType verificationType;
 	private String validatorId;
 	
 	private Map<String, String> info = new HashMap<>();
 	
-	private BillingVerify(){
+	private BillingVerification(){
 	}
 	
-	public static IVerify create(IBillable verrechenbar, VerifyType verifyType, double count){
-		IVerify ret = new BillingVerify();
+	public static BillingVerification create(IBillable verrechenbar,
+		VerificationType verificationType,
+		double count){
+		BillingVerification ret = new BillingVerification();
 		ret.setCount(count);
 		ret.setStatus(Status.OK_STATUS);
 		ret.setBillable(verrechenbar);
-		ret.setVerifyType(verifyType);
+		ret.setVerificationType(verificationType);
 		return ret;
 	}
 	
-	@Override
+
 	public double getCount(){
 		return count;
 	}
 	
-	@Override
+
 	public void setCount(double d){
 		this.count = d;
 	}
 	
-	@Override
+
 	public IStatus getStatus(){
 		return iStatus;
 	}
 	
-	@Override
+
 	public void setStatus(IStatus value){
 		this.iStatus = value;
 	}
 	
-	@Override
+
 	public IBillable getBillable(){
 		return iBillable;
 	}
 	
-	@Override
+
 	public void setBillable(IBillable value){
 		this.iBillable = value;
 	}
 	
-	@Override
+
 	public Map<String, String> getInfo(){
 		return info;
 	}
 	
-	@Override
-	public String toString(){
-		return "Verify [count=" + count + ", iStatus=" + iStatus + ", iBillable=" + iBillable
-			+ ", info=" + info.keySet().toArray() + "]";
+	public void setVerificationType(VerificationType verificationType){
+		this.verificationType = verificationType;
 	}
 	
-	@Override
-	public VerifyType getVerifyType(){
-		return verifyType;
+	public VerificationType getVerificationType(){
+		return verificationType;
 	}
 	
-	@Override
-	public void setVerifyType(VerifyType value){
-		this.verifyType = value;
-	}
-	
-	@Override
+
 	public String getValidatorId(){
 		return validatorId;
 	}
 	
-	@Override
+
 	public void setValidatorId(String value){
 		this.validatorId = value;
 		
+	}
+	
+	@Override
+	public String toString(){
+		return "BillingVerification [count=" + count + ", iStatus=" + iStatus + ", iBillable="
+			+ iBillable + ", verificationType=" + verificationType + ", validatorId=" + validatorId
+			+ ", info=" + info + "]";
 	}
 }

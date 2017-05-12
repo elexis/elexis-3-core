@@ -131,6 +131,16 @@ public interface TypesPackage extends EPackage {
 	int OPTIONAL = 15;
 
 	/**
+	 * The meta object id for the '<em>Billing Verification</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.BillingVerification
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getBillingVerification()
+	 * @generated
+	 */
+	int BILLING_VERIFICATION = 16;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -181,14 +191,14 @@ public interface TypesPackage extends EPackage {
 	int DOCUMENT_STATUS = 7;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.types.VerifyType <em>Verify Type</em>}' enum.
+	 * The meta object id for the '{@link ch.elexis.core.types.VerificationType <em>Verification Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.types.VerifyType
-	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVerifyType()
+	 * @see ch.elexis.core.types.VerificationType
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVerificationType()
 	 * @generated
 	 */
-	int VERIFY_TYPE = 8;
+	int VERIFICATION_TYPE = 8;
 
 	/**
 	 * The meta object id for the '<em>Money</em>' data type.
@@ -299,6 +309,17 @@ public interface TypesPackage extends EPackage {
 	EDataType getOptional();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.BillingVerification <em>Billing Verification</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Billing Verification</em>'.
+	 * @see ch.elexis.core.model.BillingVerification
+	 * @model instanceClass="ch.elexis.core.model.BillingVerification"
+	 * @generated
+	 */
+	EDataType getBillingVerification();
+
+	/**
 	 * Returns the meta object for enum '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -349,14 +370,14 @@ public interface TypesPackage extends EPackage {
 	EEnum getDocumentStatus();
 
 	/**
-	 * Returns the meta object for enum '{@link ch.elexis.core.types.VerifyType <em>Verify Type</em>}'.
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.VerificationType <em>Verification Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Verify Type</em>'.
-	 * @see ch.elexis.core.types.VerifyType
+	 * @return the meta object for enum '<em>Verification Type</em>'.
+	 * @see ch.elexis.core.types.VerificationType
 	 * @generated
 	 */
-	EEnum getVerifyType();
+	EEnum getVerificationType();
 
 	/**
 	 * Returns the meta object for data type '{@link ch.rgw.tools.Money <em>Money</em>}'.
@@ -487,6 +508,16 @@ public interface TypesPackage extends EPackage {
 		EDataType OPTIONAL = eINSTANCE.getOptional();
 
 		/**
+		 * The meta object literal for the '<em>Billing Verification</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.BillingVerification
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getBillingVerification()
+		 * @generated
+		 */
+		EDataType BILLING_VERIFICATION = eINSTANCE.getBillingVerification();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -537,14 +568,14 @@ public interface TypesPackage extends EPackage {
 		EEnum DOCUMENT_STATUS = eINSTANCE.getDocumentStatus();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.types.VerifyType <em>Verify Type</em>}' enum.
+		 * The meta object literal for the '{@link ch.elexis.core.types.VerificationType <em>Verification Type</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.types.VerifyType
-		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVerifyType()
+		 * @see ch.elexis.core.types.VerificationType
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVerificationType()
 		 * @generated
 		 */
-		EEnum VERIFY_TYPE = eINSTANCE.getVerifyType();
+		EEnum VERIFICATION_TYPE = eINSTANCE.getVerificationType();
 
 		/**
 		 * The meta object literal for the '<em>Money</em>' data type.

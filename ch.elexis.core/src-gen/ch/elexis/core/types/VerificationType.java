@@ -18,14 +18,14 @@ import org.eclipse.emf.common.util.Enumerator;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Verify Type</b></em>',
+ * A representation of the literals of the enumeration '<em><b>Verification Type</b></em>',
  * and utility methods for working with them.
  * <!-- end-user-doc -->
- * @see ch.elexis.core.types.TypesPackage#getVerifyType()
+ * @see ch.elexis.core.types.TypesPackage#getVerificationType()
  * @model
  * @generated
  */
-public enum VerifyType implements Enumerator {
+public enum VerificationType implements Enumerator {
 	/**
 	 * The '<em><b>TARMED</b></em>' literal object.
 	 * <!-- begin-user-doc -->
@@ -77,36 +77,36 @@ public enum VerifyType implements Enumerator {
 	public static final int LABOR_VALUE = 1;
 
 	/**
-	 * An array of all the '<em><b>Verify Type</b></em>' enumerators.
+	 * An array of all the '<em><b>Verification Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private static final VerifyType[] VALUES_ARRAY =
-		new VerifyType[] {
+	private static final VerificationType[] VALUES_ARRAY =
+		new VerificationType[] {
 			TARMED,
 			LABOR,
 		};
 
 	/**
-	 * A public read-only list of all the '<em><b>Verify Type</b></em>' enumerators.
+	 * A public read-only list of all the '<em><b>Verification Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final List<VerifyType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+	public static final List<VerificationType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Verify Type</b></em>' literal with the specified literal value.
+	 * Returns the '<em><b>Verification Type</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param literal the literal.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static VerifyType get(String literal) {
+	public static VerificationType get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			VerifyType result = VALUES_ARRAY[i];
+			VerificationType result = VALUES_ARRAY[i];
 			if (result.toString().equals(literal)) {
 				return result;
 			}
@@ -115,16 +115,16 @@ public enum VerifyType implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Verify Type</b></em>' literal with the specified name.
+	 * Returns the '<em><b>Verification Type</b></em>' literal with the specified name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param name the name.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static VerifyType getByName(String name) {
+	public static VerificationType getByName(String name) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			VerifyType result = VALUES_ARRAY[i];
+			VerificationType result = VALUES_ARRAY[i];
 			if (result.getName().equals(name)) {
 				return result;
 			}
@@ -133,14 +133,14 @@ public enum VerifyType implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Verify Type</b></em>' literal with the specified integer value.
+	 * Returns the '<em><b>Verification Type</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the integer value.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static VerifyType get(int value) {
+	public static VerificationType get(int value) {
 		switch (value) {
 			case TARMED_VALUE: return TARMED;
 			case LABOR_VALUE: return LABOR;
@@ -175,7 +175,7 @@ public enum VerifyType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private VerifyType(int value, String name, String literal) {
+	private VerificationType(int value, String name, String literal) {
 		this.value = value;
 		this.name = name;
 		this.literal = literal;
@@ -219,4 +219,4 @@ public enum VerifyType implements Enumerator {
 		return literal;
 	}
 	
-} //VerifyType
+} //VerificationType

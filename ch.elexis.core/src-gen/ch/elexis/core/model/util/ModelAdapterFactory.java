@@ -152,20 +152,16 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIBillableAdapter();
 			}
 			@Override
-			public Adapter caseIVerifyContext(IVerifyContext object) {
-				return createIVerifyContextAdapter();
+			public <T> Adapter caseIVerificationContext(IVerificationContext<T> object) {
+				return createIVerificationContextAdapter();
 			}
 			@Override
-			public Adapter caseIVerify(IVerify object) {
-				return createIVerifyAdapter();
+			public <U, T> Adapter caseIVerificationConverter(IVerificationConverter<U, T> object) {
+				return createIVerificationConverterAdapter();
 			}
 			@Override
-			public Adapter caseIVerifyConverter(IVerifyConverter object) {
-				return createIVerifyConverterAdapter();
-			}
-			@Override
-			public Adapter caseIVerifyService(IVerifyService object) {
-				return createIVerifyServiceAdapter();
+			public <T> Adapter caseIVerificationService(IVerificationService<T> object) {
+				return createIVerificationServiceAdapter();
 			}
 			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
@@ -458,58 +454,44 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IVerifyContext <em>IVerify Context</em>}'.
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IVerificationContext <em>IVerification Context</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IVerifyContext
+	 * @see ch.elexis.core.model.IVerificationContext
 	 * @generated
 	 */
-	public Adapter createIVerifyContextAdapter() {
+	public Adapter createIVerificationContextAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IVerify <em>IVerify</em>}'.
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IVerificationConverter <em>IVerification Converter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IVerify
+	 * @see ch.elexis.core.model.IVerificationConverter
 	 * @generated
 	 */
-	public Adapter createIVerifyAdapter() {
+	public Adapter createIVerificationConverterAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IVerifyConverter <em>IVerify Converter</em>}'.
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IVerificationService <em>IVerification Service</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IVerifyConverter
+	 * @see ch.elexis.core.model.IVerificationService
 	 * @generated
 	 */
-	public Adapter createIVerifyConverterAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IVerifyService <em>IVerify Service</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IVerifyService
-	 * @generated
-	 */
-	public Adapter createIVerifyServiceAdapter() {
+	public Adapter createIVerificationServiceAdapter() {
 		return null;
 	}
 

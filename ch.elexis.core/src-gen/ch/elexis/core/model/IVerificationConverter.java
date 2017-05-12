@@ -12,24 +12,23 @@ package ch.elexis.core.model;
 
 import java.util.Optional;
 
-
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IVerify Converter</b></em>'.
+ * A representation of the model object '<em><b>IVerification Converter</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see ch.elexis.core.model.ModelPackage#getIVerifyConverter()
+ * @see ch.elexis.core.model.ModelPackage#getIVerificationConverter()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IVerifyConverter {
+public interface IVerificationConverter<U, T> {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model dataType="ch.elexis.core.types.Optional<ch.elexis.core.model.IVerify>"
+	 * @model dataType="ch.elexis.core.types.Optional<T>"
 	 * @generated
 	 */
-	Optional<IVerify> convert(IBillable iBillable);
+	Optional<T> convert(U iBillable);
 
-} // IVerifyConverter
+} // IVerificationConverter
