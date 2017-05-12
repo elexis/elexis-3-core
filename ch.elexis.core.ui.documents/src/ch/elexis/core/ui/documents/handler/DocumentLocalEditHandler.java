@@ -14,7 +14,6 @@ import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -90,13 +89,11 @@ public class DocumentLocalEditHandler extends AbstractHandler implements IHandle
 	}
 
 	private void sendLocalEditEvent(IDocument document, Command command){
-		Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-		
-			DocumentStoreServiceHolder.getService().getPersistenceObject(document).ifPresent(po -> {
-				createEvent(command, po);
-			});
+		DocumentStoreServiceHolder.getService().getPersistenceObject(document).ifPresent(po -> {
+			createEvent(command, po);
+		});
 	}
-
+	
 	private void createEvent(Command command, IPersistentObject po){
 		EvaluationContext appContext = null;
 		if (po != null) {

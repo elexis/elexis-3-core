@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -21,13 +22,17 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.documents.views.DocumentsMetaDataDialog;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
 
@@ -63,8 +68,7 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 					File file = new File(path);
 					if (validateFile(file)) {
 						openMetaDataDialog(shell, DocumentStoreServiceHolder.getService()
-							.createDocument(null, patient.getId(), path, category),
-							file,
+							.createDocument(null, patient.getId(), path, category), file,
 							ElexisEvent.EVENT_CREATE);
 					}
 				}
@@ -109,8 +113,7 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 			SWTHelper.showError(Messages.DocumentView_cantReadCaption,
 				MessageFormat.format(Messages.DocumentView_cantReadText, file));
 			return false;
-		}
-		else if (file.getName().length() > 255) {
+		} else if (file.getName().length() > 255) {
 			SWTHelper.showError(Messages.DocumentView_cantReadCaption,
 				Messages.DocumentView_fileNameTooLong);
 			return false;
@@ -121,31 +124,89 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 	private void openDeleteDialog(Shell shell, IDocument document, int eventType){
 		if (SWTHelper.askYesNo(Messages.DocumentView_reallyDeleteCaption, MessageFormat
 			.format(Messages.DocumentView_reallyDeleteContents, document.getTitle()))) {
-			DocumentStoreServiceHolder.getService().removeDocument(document);
-			ElexisEventDispatcher.getInstance().fire(
-				new ElexisEvent(document, IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
+			
+			Optional<IPersistentObject> documentPo =
+				DocumentStoreServiceHolder.getService().getPersistenceObject(document);
+			// we can only lock IPersistentObject based ...
+			if (documentPo.isPresent()) {
+				AcquireLockBlockingUi.aquireAndRun(documentPo.get(), new ILockHandler() {
+					@Override
+					public void lockFailed(){
+						// no change required
+					}
+					
+					@Override
+					public void lockAcquired(){
+						DocumentStoreServiceHolder.getService().removeDocument(document);
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(document,
+							IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
+					}
+				});
+			} else {
+				DocumentStoreServiceHolder.getService().removeDocument(document);
+				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(document, IDocument.class,
+					eventType, ElexisEvent.PRIORITY_NORMAL));
+			}
 		}
 	}
 	
 	private void openMetaDataDialog(Shell shell, IDocument document, File file, int eventType){
+		if (eventType == ElexisEvent.EVENT_CREATE) {
+			Optional<IDocument> newDocument =
+				openMetaDataDialogNoLocking(shell, document, file, eventType);
+			
+			newDocument.ifPresent(doc -> {
+				// we can only lock IPersistentObject based ...
+				Optional<IPersistentObject> documentPo =
+					DocumentStoreServiceHolder.getService().getPersistenceObject(doc);
+				documentPo.ifPresent(po -> {
+					CoreHub.getLocalLockService().acquireLock(po);
+					CoreHub.getLocalLockService().releaseLock(po);
+				});
+			});
+		} else {
+			Optional<IPersistentObject> documentPo =
+				DocumentStoreServiceHolder.getService().getPersistenceObject(document);
+			// we can only lock IPersistentObject based ...
+			if (documentPo.isPresent()) {
+				AcquireLockBlockingUi.aquireAndRun(documentPo.get(), new ILockHandler() {
+					@Override
+					public void lockFailed(){
+						// no change required
+					}
+					
+					@Override
+					public void lockAcquired(){
+						openMetaDataDialogNoLocking(shell, document, file, eventType);
+					}
+				});
+			} else {
+				openMetaDataDialogNoLocking(shell, document, file, eventType);
+			}
+		}
+	}
+	
+	private Optional<IDocument> openMetaDataDialogNoLocking(Shell shell, IDocument document,
+		File file, int eventType){
 		DocumentsMetaDataDialog documentsMetaDataDialog =
 			new DocumentsMetaDataDialog(document, shell);
 		if (documentsMetaDataDialog.open() == Dialog.OK) {
 			try {
-				document = DocumentStoreServiceHolder.getService().saveDocument(document,
-					file != null ? new FileInputStream(file) : null);
-				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(document, IDocument.class,
-					eventType, ElexisEvent.PRIORITY_NORMAL));
+				IDocument savedDocument = DocumentStoreServiceHolder.getService()
+					.saveDocument(document, file != null ? new FileInputStream(file) : null);
+				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(savedDocument,
+					IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
+				return Optional.of(savedDocument);
 			} catch (FileNotFoundException e) {
 				logger.error("file not found", e);
 				SWTHelper.showError(Messages.DocumentView_importErrorCaption,
 					Messages.DocumentView_importErrorText2);
-			}
-			catch (ElexisException e) {
+			} catch (ElexisException e) {
 				logger.error("cannot save", e);
 				SWTHelper.showError(Messages.DocumentView_saveErrorCaption,
 					Messages.DocumentView_saveErrorText);
 			}
 		}
+		return Optional.empty();
 	}
 }
