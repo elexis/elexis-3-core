@@ -67,9 +67,12 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 				if (path != null) {
 					File file = new File(path);
 					if (validateFile(file)) {
-						openMetaDataDialog(shell, DocumentStoreServiceHolder.getService()
-							.createDocument(null, patient.getId(), path, category), file,
-							ElexisEvent.EVENT_CREATE);
+						IDocument document =
+							DocumentStoreServiceHolder.getService().createDocument(null,
+							patient.getId(), path, category);
+						if (document != null) {
+							openMetaDataDialog(shell, document, file, ElexisEvent.EVENT_CREATE);
+						}
 					}
 				}
 				break;
@@ -104,6 +107,9 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 					break;
 				}
 			}
+		}
+		else {
+			SWTHelper.showInfo("Kein Patient ausgewählt", "Bitte wählen Sie einen Patienten aus!");
 		}
 		return null;
 	}
