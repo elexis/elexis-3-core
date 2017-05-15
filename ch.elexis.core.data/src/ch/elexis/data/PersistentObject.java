@@ -1193,10 +1193,10 @@ public abstract class PersistentObject implements IPersistentObject {
 				} else {
 					res = rs.getString(mapped);
 				}
+				getDBConnection().getCache().put(key, res, getCacheTime());
 				if (res == null) {
 					res = "";
 				}
-				getDBConnection().getCache().put(key, res, getCacheTime());
 			}
 		} catch (SQLException ex) {
 			ExHandler.handle(ex);
@@ -2139,9 +2139,10 @@ public abstract class PersistentObject implements IPersistentObject {
 						if (decode[i] == true) {
 							values[i] = decode(fields[i], rs);
 						} else {
-							values[i] = checkNull(rs.getString(map(fields[i])));
+							String dbValue = rs.getString(map(fields[i]));
+							values[i] = checkNull(dbValue);
+							dbConnection.getCache().put(getKey(fields[i]), dbValue, getCacheTime());
 						}
-						dbConnection.getCache().put(getKey(fields[i]), values[i], getCacheTime());
 					}
 				}
 			}

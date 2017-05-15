@@ -13,13 +13,21 @@ public class MultiGuavaCache<K> implements IPersistentObjectCache<K> {
 	private Cache<K, Object> shortTermCache;
 	private Cache<K, Object> longTermCache;
 	
+	// enable for debugging ...
+	private static boolean STAT_ENABLED = false;
+	
 	public MultiGuavaCache(long duration, TimeUnit unit){
-		shortTermCache =
-			CacheBuilder.newBuilder().softValues().recordStats().expireAfterWrite(duration, unit)
-				.build();
-		longTermCache =
-			CacheBuilder.newBuilder().softValues().recordStats().maximumSize(Long.MAX_VALUE)
-				.build();
+		if (STAT_ENABLED) {
+			shortTermCache = CacheBuilder.newBuilder().softValues().recordStats()
+				.expireAfterWrite(duration, unit).build();
+			longTermCache = CacheBuilder.newBuilder().softValues().recordStats()
+				.maximumSize(Long.MAX_VALUE).build();
+		} else {
+			shortTermCache =
+				CacheBuilder.newBuilder().softValues().expireAfterWrite(duration, unit).build();
+			longTermCache =
+				CacheBuilder.newBuilder().softValues().maximumSize(Long.MAX_VALUE).build();
+		}
 	}
 	
 	@Override
@@ -63,20 +71,22 @@ public class MultiGuavaCache<K> implements IPersistentObjectCache<K> {
 	
 	@Override
 	public void stat(){
-		CacheStats shortStats = shortTermCache.stats();
-		CacheStats longStats = longTermCache.stats();
-		System.out.println("--------- GUAVA CACHE Statistics ---------");
-		System.out.println("|>--- SHORT-TERM");
-		System.out.println("| Hits (count/rate): " + shortStats.hitCount() + " / "
-			+ String.format("%.2f%%", shortStats.hitRate() * 100));
-		System.out.println("| Misses (count/rate): " + shortStats.missCount() + " / "
-			+ String.format("%.2f%%", shortStats.missRate() * 100));
-		System.out.println("|>--- LONG-TERM ");
-		System.out.println("| Hits (count/rate): " + longStats.hitCount() + " / "
-			+ String.format("%.2f%%", longStats.hitRate() * 100));
-		System.out.println("| Misses (count/rate): " + longStats.missCount() + " / "
-			+ String.format("%.2f%%", longStats.missRate() * 100));
-		System.out.println("------------------------------------------");
+		if (STAT_ENABLED) {
+			CacheStats shortStats = shortTermCache.stats();
+			CacheStats longStats = longTermCache.stats();
+			System.out.println("--------- GUAVA CACHE Statistics ---------");
+			System.out.println("|>--- SHORT-TERM");
+			System.out.println("| Hits (count/rate): " + shortStats.hitCount() + " / "
+				+ String.format("%.2f%%", shortStats.hitRate() * 100));
+			System.out.println("| Misses (count/rate): " + shortStats.missCount() + " / "
+				+ String.format("%.2f%%", shortStats.missRate() * 100));
+			System.out.println("|>--- LONG-TERM ");
+			System.out.println("| Hits (count/rate): " + longStats.hitCount() + " / "
+				+ String.format("%.2f%%", longStats.hitRate() * 100));
+			System.out.println("| Misses (count/rate): " + longStats.missCount() + " / "
+				+ String.format("%.2f%%", longStats.missRate() * 100));
+			System.out.println("------------------------------------------");
+		}
 	}
 	
 	@Override
