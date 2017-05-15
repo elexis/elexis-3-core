@@ -23,6 +23,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
+import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
@@ -213,9 +214,12 @@ public class DocumentStore {
 		IDocument iDocument = getService(storeId != null ? storeId : DEFAULT_STORE_ID)
 			.createDocument(patientId,
 			title, categoryName);
-		iDocument.setMimeType(mimeType);
-		iDocument.setExtension(mimeType);
-		return iDocument;
+		if (iDocument != null) {
+			iDocument.setMimeType(mimeType);
+			iDocument.setExtension(mimeType);
+			return iDocument;
+		}
+		return null;
 	}
 	
 	/**
@@ -324,14 +328,105 @@ public class DocumentStore {
 		if (iDocumentStore != null) {
 			return iDocumentStore;
 		}
-		throw new IllegalAccessError("no store defined for id: " + storeId);
+		
+		MessageEvent.fireError(Messages.getString("DocumentStore.storeError"),
+			Messages.getString("DocumentStore.storeErrorText") + " " + storeId);
+		return new EmptyDocumentStore();
 	}
 	
 	public boolean isAllowed(IDocument document, Capability restricted){
-		return getService(document.getStoreId()).isAllowed(restricted);
+		if (document != null) {
+			return getService(document.getStoreId()).isAllowed(restricted);
+		}
+		return false;
 	}
 	
 	public Optional<IPersistentObject> getPersistenceObject(IDocument document){
 		return getService(document.getStoreId()).getPersistenceObject(document);
+	}
+	
+	public IDocumentStore getDefaultDocumentStore(){
+		return getService(DEFAULT_STORE_ID);
+	}
+	
+	private class EmptyDocumentStore implements IDocumentStore {
+		
+		@Override
+		public String getId(){
+			return "empty";
+		}
+		
+		@Override
+		public String getName(){
+			return "empty";
+		}
+		
+		@Override
+		public List<IDocument> getDocuments(String patientId, String authorId, ICategory category,
+			List<ITag> tag){
+			return Collections.emptyList();
+		}
+		
+		@Override
+		public Optional<IDocument> loadDocument(String id){
+			return Optional.empty();
+		}
+		
+		@Override
+		public Optional<InputStream> loadContent(IDocument document){
+			return Optional.empty();
+		}
+		
+		@Override
+		public IDocument createDocument(String patientId, String title, String categoryName){
+			return null;
+		}
+		
+		@Override
+		public IDocument saveDocument(IDocument document) throws ElexisException{
+			return null;
+		}
+		
+		@Override
+		public IDocument saveDocument(IDocument document, InputStream content)
+			throws ElexisException{
+			return null;
+		}
+		
+		@Override
+		public void removeDocument(IDocument document){
+			
+		}
+		
+		@Override
+		public List<ICategory> getCategories(){
+			return Collections.emptyList();
+		}
+		
+		@Override
+		public ICategory getCategoryDefault(){
+			return null;
+		}
+		
+		@Override
+		public ICategory createCategory(String name){
+			return null;
+		}
+		
+		@Override
+		public void removeCategory(IDocument iDocument, String newCategory)
+			throws IllegalStateException{
+		}
+		
+		@Override
+		public void renameCategory(ICategory category, String newCategory){
+			
+		}
+		
+		@Override
+		public Optional<IPersistentObject> getPersistenceObject(IDocument iDocument){
+			return Optional.empty();
+		}
+		
 	}
 }

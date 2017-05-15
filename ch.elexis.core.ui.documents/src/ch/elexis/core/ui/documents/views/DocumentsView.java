@@ -343,7 +343,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 			case 3:
 				return new TimeTool(dh.getLastchanged()).toString(TimeTool.FULL_GER);
 			case 4:
-				return new TimeTool(dh.getCreated()).toString(TimeTool.FULL_GER);
+				return new TimeTool(dh.getCreated()).toString(TimeTool.DATE_GER);
 			case 5:
 				return dh.getTitle();
 			case 6:
@@ -557,7 +557,6 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		getSite().setSelectionProvider(viewer);
 		
 		viewer.setInput(ElexisEventDispatcher.getSelectedPatient());
-
 	}
 	
 	private SelectionListener getSelectionAdapter(final TreeColumn column, final int index){
@@ -625,7 +624,9 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus(){
-		viewer.getControl().setFocus();
+		if (viewer != null) {
+			viewer.getControl().setFocus();
+		}
 	}
 	
 	public void activation(boolean mode){
