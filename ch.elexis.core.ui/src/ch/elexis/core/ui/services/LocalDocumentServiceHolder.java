@@ -59,7 +59,19 @@ public class LocalDocumentServiceHolder {
 			@Override
 			public InputStream load(Object documentSource){
 				Brief brief = (Brief) documentSource;
-				return new ByteArrayInputStream(brief.loadBinary());
+				
+				try {
+					byte[] bytes = brief.loadBinary();
+					if (bytes != null) {
+						return new ByteArrayInputStream(bytes);
+					}
+					LoggerFactory.getLogger(getClass())
+						.warn("Document is empty - id: " + brief.getId());
+					return new ByteArrayInputStream(new byte[0]);
+				} catch (Exception e) {
+					LoggerFactory.getLogger(getClass()).error("Error loading document", e);
+				}
+				return null;
 			}
 		});
 	}

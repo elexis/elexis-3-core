@@ -56,12 +56,16 @@ public class LocalDocumentService implements ILocalDocumentService {
 		}
 		
 		String fileName = getFileName(documentSource);
-		Optional<File> ret =
-			writeLocalFile(fileName, loadHandler.load(documentSource), conflictHandler, readOnly);
-		ret.ifPresent(file -> {
-			managedFiles.put(documentSource, file);
-		});
-		return ret;
+		InputStream in = loadHandler.load(documentSource);
+		if (in != null) {
+			Optional<File> ret = writeLocalFile(fileName, in,
+				conflictHandler, readOnly);
+			ret.ifPresent(file -> {
+				managedFiles.put(documentSource, file);
+			});
+			return ret;
+		}
+		return Optional.empty();
 	}
 	
 	@Override
