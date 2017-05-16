@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.io.FilenameUtils;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
@@ -283,6 +284,8 @@ public class LocalDocumentService implements ILocalDocumentService {
 			String ret = MimeTool.getExtension(mime);
 			if (ret.length() > 5) {
 				return getDefaultFileEnding();
+			} else if (ret.isEmpty()) {
+				return FilenameUtils.getExtension(mime);
 			} else {
 				return ret;
 			}
