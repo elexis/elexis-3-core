@@ -73,7 +73,8 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 					
 					List<Brief> existing = findExistingEquivalentTemplates(
 						textTemplate.isSystemTemplate(),
-						textTemplate.getName());
+						textTemplate.getName(),
+						textTemplate.getMandant() != null ? textTemplate.getMandant().getId() : "");
 					if(!existing.isEmpty()) {
 						if (MessageDialog.openQuestion(HandlerUtil.getActiveShell(event),
 							"Vorlagen existieren",
@@ -86,9 +87,8 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 						}
 					}
 					
-					Brief bTemplate =
-						new Brief(textTemplate.getName(), null, CoreHub.actUser, null, null,
-							Brief.TEMPLATE);
+					Brief bTemplate = new Brief(textTemplate.getName(), null, CoreHub.actUser,
+						textTemplate.getMandant(), null, Brief.TEMPLATE);
 					if (textTemplate.isSystemTemplate()) {
 						bTemplate.set(Brief.FLD_KONSULTATION_ID, Brief.SYS_TEMPLATE);
 						textTemplate.addSystemTemplateReference(bTemplate);
@@ -121,7 +121,7 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 		return null;
 	}
 	
-	private List<Brief> findExistingEquivalentTemplates(boolean isSysTemplate, String name){
+	private List<Brief> findExistingEquivalentTemplates(boolean isSysTemplate, String name, String mandantId){
 		Query<Brief> qbe = new Query<Brief>(Brief.class);
 		qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, name);
 		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
@@ -134,9 +134,7 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringConstants.EMPTY);
 			qbe.endGroup();
 		} else {
-			// treat as form template
-			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS,
-				ElexisEventDispatcher.getSelectedMandator().getId());
+			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, mandantId);
 		}
 		
 		return qbe.execute();
