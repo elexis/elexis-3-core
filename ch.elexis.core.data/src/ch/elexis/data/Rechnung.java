@@ -586,14 +586,14 @@ public class Rechnung extends PersistentObject {
 	}
 	
 	private boolean shouldRemoveOpenReminders(Money betrag){
-		if (hasOpenReminders()) {
+		if (hasReminders()) {
 			Money open = getOffenerBetrag();
-			return open.subtractMoney(betrag).equals(getOpenRemindersBetrag());
+			return open.subtractMoney(betrag).equals(getRemindersBetrag());
 		}
 		return false;
 	}
 	
-	private Money getOpenRemindersBetrag(){
+	private Money getRemindersBetrag(){
 		Money ret = new Money(0);
 		for (Zahlung zahlung : getZahlungen()) {
 			String comment = zahlung.getBemerkung();
@@ -606,7 +606,7 @@ public class Rechnung extends PersistentObject {
 		return ret.isNegative() ? ret.multiply(-1d) : ret;
 	}
 	
-	public boolean hasOpenReminders(){
+	public boolean hasReminders(){
 		for (Zahlung zahlung : getZahlungen()) {
 			String comment = zahlung.getBemerkung();
 			if (comment.equals(Messages.Rechnung_Mahngebuehr1)
