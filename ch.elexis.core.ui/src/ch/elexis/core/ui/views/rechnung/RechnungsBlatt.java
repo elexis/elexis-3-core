@@ -20,12 +20,17 @@ import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EX
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES;
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
@@ -46,6 +51,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -78,6 +84,7 @@ import ch.elexis.data.VerrechnetCopy;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
+import ch.rgw.tools.TimeTool;
 
 public class RechnungsBlatt extends Composite implements IActivationListener {
 	
@@ -107,10 +114,72 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	private final List<IViewContribution> detailComposites = Extensions.getClasses(VIEWCONTRIBUTION,
 		VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, RnDetailView.ID);
 	
-	static final InputData[] rndata = {
-		new InputData(Messages.RechnungsBlatt_billNumber, Rechnung.BILL_NUMBER, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.RechnungsBlatt_billDate, Rechnung.BILL_DATE, Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.RechnungsBlatt_billState, Rechnung.BILL_STATE, //$NON-NLS-1$
+	private static LabeledInputField.IContentProvider openAmountContentProvider =
+		new LabeledInputField.IContentProvider() {
+			
+			public void displayContent(PersistentObject po, InputData ltf){
+				Rechnung invoice = (Rechnung) po;
+				Money openAmount = invoice.getOffenerBetrag();
+				ltf.setText(openAmount.getAmountAsString());
+				if (openAmount.isMoreThan(new Money())
+					&& RnStatus.STORNIERT == invoice.getStatus()) {
+					ltf.setLabel(Messages.RechnungsBlatt_compensateAmount);
+				} else {
+					ltf.setLabel(Messages.RechnungsBlatt_amountOpen);
+				}
+			}
+			
+			public void reloadContent(PersistentObject po, InputData ltf){
+				Rechnung invoice = (Rechnung) po;
+				Money openAmount = invoice.getOffenerBetrag();
+				
+				if (RnStatus.STORNIERT == invoice.getStatus()
+					&& openAmount.isMoreThan(new Money())) {
+					if (!CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_BILLMODIFY)) {
+						MessageDialog.openError(
+							Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							"Insufficient rights", "You are not authorized to perform this action");
+						return;
+					}
+					String compensateAmountMessage = MessageFormat.format(
+						Messages.RechnungsBlatt_compensateAmountMessage, openAmount.toString());
+					InputDialog compensateDialog = new InputDialog(
+						Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						Messages.RechnungsBlatt_compensateAmountTitle, compensateAmountMessage,
+						null, new IInputValidator() {
+							
+							@Override
+							public String isValid(String newText){
+								boolean valid = StringUtils.isNotBlank(newText);
+								return (valid) ? null : Messages.RechnungsBlatt_missingReason;
+							}
+						});
+					int retVal = compensateDialog.open();
+					if (retVal == Dialog.OK) {
+						String text = compensateDialog.getValue();
+						new Zahlung(invoice, openAmount, text, new TimeTool());
+						ElexisEventDispatcher.update(invoice);
+					}
+				} else {
+					try {
+						if (new RnDialogs.BuchungHinzuDialog(
+							Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							(Rechnung) po).open() == Dialog.OK) {
+							ElexisEventDispatcher.update(po);
+						}
+					} catch (ElexisException e) {
+						SWTHelper.showError("Buchung kann nicht hinzugefügt werden",
+							e.getLocalizedMessage());
+					}
+				}
+			}
+			
+		};
+	
+	private static final InputData[] rndata = {
+		new InputData(Messages.RechnungsBlatt_billNumber, Rechnung.BILL_NUMBER, Typ.STRING, null),
+		new InputData(Messages.RechnungsBlatt_billDate, Rechnung.BILL_DATE, Typ.STRING, null),
+		new InputData(Messages.RechnungsBlatt_billState, Rechnung.BILL_STATE,
 			new LabeledInputField.IContentProvider() {
 				
 				public void displayContent(PersistentObject po, InputData ltf){
@@ -128,35 +197,15 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				
 			}),
 		new InputData(Messages.RechnungsBlatt_treatmentsFrom, Rechnung.BILL_DATE_FROM, Typ.STRING,
-			null), //$NON-NLS-1$
-		new InputData(Messages.RechnungsBlatt_treatmentsUntil, Rechnung.BILL_DATE_UNTIL,
-			Typ.STRING, null), //$NON-NLS-1$
-		new InputData(Messages.RechnungsBlatt_amountTotal, Rechnung.BILL_AMOUNT_CENTS,
-			Typ.CURRENCY, null), //$NON-NLS-1$
-		new InputData(Messages.RechnungsBlatt_amountOpen, Rechnung.BILL_AMOUNT_CENTS, //$NON-NLS-1$
-			new LabeledInputField.IContentProvider() {
-				
-				public void displayContent(PersistentObject po, InputData ltf){
-					Rechnung rn = (Rechnung) po;
-					Money offen = rn.getOffenerBetrag();
-					ltf.setText(offen.getAmountAsString());
-				}
-				
-				public void reloadContent(PersistentObject po, InputData ltf){
-					try {
-						if (new RnDialogs.BuchungHinzuDialog(Hub.plugin.getWorkbench()
-							.getActiveWorkbenchWindow().getShell(), (Rechnung) po).open() == Dialog.OK) {
-							ElexisEventDispatcher.update(po);
-						}
-					} catch (ElexisException e) {
-						SWTHelper.showError("Buchung kann nicht hinzugefügt werden",
-							e.getLocalizedMessage());
-					}
-				}
-				
-			})
+			null),
+		new InputData(Messages.RechnungsBlatt_treatmentsUntil, Rechnung.BILL_DATE_UNTIL, Typ.STRING,
+			null),
+		new InputData(Messages.RechnungsBlatt_amountTotal, Rechnung.BILL_AMOUNT_CENTS, Typ.CURRENCY,
+			null),
+		new InputData(Messages.RechnungsBlatt_amountOpen, Rechnung.BILL_AMOUNT_CENTS,
+			openAmountContentProvider)
 	};
-	LabeledInputField.AutoForm rnform;
+	private LabeledInputField.AutoForm rnform;
 	
 	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
 		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE

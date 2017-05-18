@@ -93,6 +93,10 @@ public class Messages extends NLS {
 	public static String KonsZumVerrechnenView2_refreshList;
 	public static String RechnungsBlatt_adressee;
 	public static String RechnungsBlatt_amountOpen;
+	public static String RechnungsBlatt_compensateAmount;
+	public static String RechnungsBlatt_compensateAmountTitle;
+	public static String RechnungsBlatt_compensateAmountMessage;
+	public static String RechnungsBlatt_missingReason;
 	public static String RechnungsBlatt_amountTotal;
 	public static String RechnungsBlatt_billDate;
 	public static String RechnungsBlatt_billNumber;
