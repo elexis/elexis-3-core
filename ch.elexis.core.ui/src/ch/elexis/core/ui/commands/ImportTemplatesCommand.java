@@ -15,7 +15,9 @@ import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.TextTemplateImportConflictDialog;
@@ -126,6 +128,9 @@ public class ImportTemplatesCommand extends AbstractHandler {
 			ExHandler.handle(ex);
 			logger.error("Error during import of text templates", ex);
 		}
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(Brief.class, null, ElexisEvent.EVENT_RELOAD,
+				ElexisEvent.PRIORITY_NORMAL));
 		return null;
 	}
 	
@@ -153,7 +158,11 @@ public class ImportTemplatesCommand extends AbstractHandler {
 		
 		// treat as system template
 		if (isSysTemplate) {
+			qbe.startGroup();
 			qbe.addToken(Brief.FLD_DESTINATION_ID + " is NULL");
+			qbe.or();
+			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringConstants.EMPTY);
+			qbe.endGroup();
 		} else {
 			// treat as form template
 			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, mandantId);

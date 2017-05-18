@@ -2,10 +2,12 @@ package ch.elexis.core.ui.commands;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.FileDialog;
@@ -15,13 +17,17 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.MimeTypeUtil;
 import ch.elexis.core.ui.views.textsystem.TextTemplateView;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
+import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
 public class ImportSelectedTemplateCommand extends AbstractHandler {
@@ -65,6 +71,21 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 					fis.read(contentToStore);
 					fis.close();
 					
+					List<Brief> existing = findExistingEquivalentTemplates(
+						textTemplate.isSystemTemplate(),
+						textTemplate.getName());
+					if(!existing.isEmpty()) {
+						if (MessageDialog.openQuestion(HandlerUtil.getActiveShell(event),
+							"Vorlagen existieren",
+							String.format(
+								"Sollen die existierenden %s Vorlagen überschrieben werden?",
+								textTemplate.getName()))) {
+							for (Brief brief : existing) {
+								brief.delete();
+							}
+						}
+					}
+					
 					Brief bTemplate =
 						new Brief(textTemplate.getName(), null, CoreHub.actUser, null, null,
 							Brief.TEMPLATE);
@@ -81,6 +102,8 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 		} catch (Throwable ex) {
 			ExHandler.handle(ex);
 		}
+		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(Brief.class, null,
+			ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
 		return null;
 	}
 	
@@ -96,5 +119,26 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 			}
 		}
 		return null;
+	}
+	
+	private List<Brief> findExistingEquivalentTemplates(boolean isSysTemplate, String name){
+		Query<Brief> qbe = new Query<Brief>(Brief.class);
+		qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, name);
+		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
+		
+		// treat as system template
+		if (isSysTemplate) {
+			qbe.startGroup();
+			qbe.addToken(Brief.FLD_DESTINATION_ID + " is NULL");
+			qbe.or();
+			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringConstants.EMPTY);
+			qbe.endGroup();
+		} else {
+			// treat as form template
+			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS,
+				ElexisEventDispatcher.getSelectedMandator().getId());
+		}
+		
+		return qbe.execute();
 	}
 }

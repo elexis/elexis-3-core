@@ -5,11 +5,10 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.ui.views.textsystem.TextTemplateView;
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
 
@@ -30,11 +29,8 @@ public class DeleteTemplateCommand extends AbstractHandler {
 				if (template != null) {
 					template.delete();
 					
-					IWorkbenchPage activePage =
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					TextTemplateView textTemplateView =
-						(TextTemplateView) activePage.findView(TextTemplateView.ID);
-					textTemplateView.refresh();
+					ElexisEventDispatcher.getInstance().fire(new ElexisEvent(Brief.class, null,
+						ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
 				}
 			}
 		}
