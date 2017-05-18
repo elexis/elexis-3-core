@@ -232,7 +232,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		
 		// *** checkbox for enforcing separate Fall for obligations and non obligations
 		final Button bObligation = new Button(ret, SWT.CHECK);
-		bObligation.setText("Pflichtleistungen und Nichtpflichtleistungen trennen");
+		bObligation.setText(Messages.Leistungscodes_separateObligations);
 		bObligation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
@@ -243,6 +243,21 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		});
 		bObligation.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OBLIGATION, false));
 		bObligation.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+		
+		// *** checkbox for removing open reminders if bill is fully payed
+		final Button bRemoveOpenReminders = new Button(ret, SWT.CHECK);
+		bRemoveOpenReminders.setText(Messages.Leistungscodes_removeOpenReminders);
+		bRemoveOpenReminders.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e){
+				CoreHub.globalCfg.set(Preferences.RNN_REMOVE_OPEN_REMINDER,
+					bRemoveOpenReminders.getSelection());
+			}
+			
+		});
+		bRemoveOpenReminders
+			.setSelection(CoreHub.globalCfg.get(Preferences.RNN_REMOVE_OPEN_REMINDER, false));
+		bRemoveOpenReminders.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		// *** populate the table with items
 		reload();

@@ -537,6 +537,12 @@ public class Rechnung extends PersistentObject {
 		if (betrag.isZero()) {
 			return null;
 		}
+		// reset open reminder bookings if configured and bill will be fully payed
+		if (CoreHub.globalCfg.get(Preferences.RNN_REMOVE_OPEN_REMINDER, false)
+			&& shouldRemoveOpenReminders(betrag)) {
+			removeOpenReminders();
+		}
+		
 		Money oldOffen = getOffenerBetrag();
 		int oldOffenCents = oldOffen.getCents();
 		Money newOffen = new Money(oldOffen);
@@ -577,6 +583,50 @@ public class Rechnung extends PersistentObject {
 			setStatus(RnStatus.TEILZAHLUNG);
 		}
 		return new Zahlung(this, betrag, text, date);
+	}
+	
+	private boolean shouldRemoveOpenReminders(Money betrag){
+		if (hasOpenReminders()) {
+			Money open = getOffenerBetrag();
+			return open.subtractMoney(betrag).equals(getOpenRemindersBetrag());
+		}
+		return false;
+	}
+	
+	private Money getOpenRemindersBetrag(){
+		Money ret = new Money(0);
+		for (Zahlung zahlung : getZahlungen()) {
+			String comment = zahlung.getBemerkung();
+			if (comment.equals(Messages.Rechnung_Mahngebuehr1)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr2)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr3)) {
+				ret.addMoney(zahlung.getBetrag());
+			}
+		}
+		return ret.isNegative() ? ret.multiply(-1d) : ret;
+	}
+	
+	public boolean hasOpenReminders(){
+		for (Zahlung zahlung : getZahlungen()) {
+			String comment = zahlung.getBemerkung();
+			if (comment.equals(Messages.Rechnung_Mahngebuehr1)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr2)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr3)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void removeOpenReminders(){
+		for (Zahlung zahlung : getZahlungen()) {
+			String comment = zahlung.getBemerkung();
+			if (comment.equals(Messages.Rechnung_Mahngebuehr1)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr2)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr3)) {
+				zahlung.delete();
+			}
+		}
 	}
 	
 	/** EIne Liste aller Zahlungen holen */

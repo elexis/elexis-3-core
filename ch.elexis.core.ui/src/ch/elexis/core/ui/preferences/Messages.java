@@ -212,6 +212,10 @@ public class Messages extends NLS {
 	public static String Leistungscodes_reallyDelete;
 	public static String Leistungscodes_reallyWantToDeleteItem;
 	public static String Leistungscodes_removeConstraintTT;
+
+	public static String Leistungscodes_removeOpenReminders;
+	public static String Leistungscodes_separateObligations;
+
 	public static String Leistungscodes_strictValidityCheck;
 	public static String Leistungscodes_systemDisabled;
 	public static String Leistungscodes_text;

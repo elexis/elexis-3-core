@@ -141,7 +141,7 @@ public class Preferences {
 	public static final String RNN_AMOUNT1ST = "rechnung/amount_1st"; //$NON-NLS-1$
 	public static final String RNN_AMOUNT2ND = "rechnung/amount_2nd"; //$NON-NLS-1$
 	public static final String RNN_AMOUNT3RD = "rechnung/amount_3rd"; //$NON-NLS-1$
-	
+	public static final String RNN_REMOVE_OPEN_REMINDER = "rechnung/reminder/removeopen";
 	// Lager
 	public static final String INVENTORY_CHECK_ILLEGAL_VALUES = "inventory/check_values"; //$NON-NLS-1$
 	public static final boolean INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT = true;

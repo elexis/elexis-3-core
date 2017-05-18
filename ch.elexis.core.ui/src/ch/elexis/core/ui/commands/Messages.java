@@ -33,9 +33,7 @@ public class Messages extends NLS {
 	public static String FallPlaneRechnung_PlanBillingAfterDays;
 	public static String FallPlaneRechnung_PlanBillingHeading;
 	public static String FallPlaneRechnung_PlanBillingPleaseEnterPositiveInteger;
-	public static String MahnlaufCommand_Mahngebuehr2;
-	public static String MahnlaufCommand_Mahngebuehr1;
-	public static String MahnlaufCommand_Mahngebuehr3;
+	
 	public static String FallCopyCommand_RelatedConsultations;
 	public static String FallCopyCommand_TransferConsultations;
 	public static String FallCopyCommand_AttentionTransferConsultations;
