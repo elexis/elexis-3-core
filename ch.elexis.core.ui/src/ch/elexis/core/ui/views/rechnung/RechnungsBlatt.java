@@ -160,7 +160,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	
 	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
 		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE
-			| ElexisEvent.EVENT_SELECTED) {
+			| ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED) {
 		
 		public void runInUi(ElexisEvent ev){
 			switch (ev.getType()) {
@@ -168,17 +168,17 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				doSelect((Rechnung) ev.getObject());
 				break;
 			case ElexisEvent.EVENT_DESELECTED: // fall thru
+				doSelect(null);
+				break;
 			case ElexisEvent.EVENT_DELETE:
 				if (actRn != null && actRn.getId().equals(ev.getObject().getId())) {
-					actRn = null;
-					display();
+					doSelect(null);
 				}
 				break;
 			case ElexisEvent.EVENT_SELECTED:
 				doSelect((Rechnung) ev.getObject());
 				break;
-			}
-			
+			}	
 		}
 	};
 	
@@ -231,8 +231,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
 			
 			public Object[] getElements(Object inputElement){
-				Rechnung actRn =
-					(Rechnung) ElexisEventDispatcher.getInstance().getSelected(Rechnung.class);
+				Rechnung actRn = (Rechnung) inputElement;
 				if (actRn == null) {
 					return new String[] {
 						Messages.RechnungsBlatt_noBillSelected
@@ -269,6 +268,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				}
 			}
 		});
+		buchungen.setInput(null);
 		// new Label(body,SWT.SEPARATOR|SWT.HORIZONTAL);
 		ecBemerkungen =
 			WidgetFactory.createExpandableComposite(tk, form, Messages.RechnungsBlatt_remarks); //$NON-NLS-1$
@@ -489,8 +489,6 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		});
 		stornoViewer.setInput(this);
 		
-		buchungen.setInput(site);
-		
 		List<IViewContribution> filtered =
 			ViewContributionHelper.getFilteredAndPositionSortedContributions(detailComposites, 0);
 		for (IViewContribution ivc : filtered) {
@@ -573,14 +571,13 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	
 	public void display(){
 		rnform.reload(actRn);
-		rnAdressat.setText(StringConstants.EMPTY);
-		buchungen.refresh(true);
-		lbJournal.removeAll();
-		tRejects.setText(StringConstants.EMPTY);
+		
+		lbJournal.removeAll();	
 		lbOutputs.removeAll();
+		
 		if (actRn != null) {
 			rnAdressat.setText(Messages.RechnungsBlatt_adressee
-				+ actRn.getFall().getGarant().getLabel()); //$NON-NLS-1$
+				+ actRn.getFall().getGarant().getLabel());
 			form.setText(actRn.getLabel());
 			List<String> trace = actRn.getTrace(Rechnung.STATUS_CHANGED);
 			for (String s : trace) {
@@ -603,8 +600,13 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				lbOutputs.add(o);
 			}
 			tBemerkungen.setText(actRn.getBemerkung());
+		} else {
+			rnAdressat.setText(StringConstants.EMPTY);
+			tRejects.setText(StringConstants.EMPTY);
+			form.setText(null);
 		}
 		
+		buchungen.setInput(actRn);
 		konsultationenViewer.refresh();
 		stornoViewer.refresh();
 		
