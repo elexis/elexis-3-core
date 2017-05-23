@@ -39,6 +39,8 @@ public class Messages extends NLS {
 	public static String EigenartikelComposite_lblPackagesstring_toolTipText;
 	public static String EigenartikelComposite_lblVerkaufseinheit_text;
 	public static String EigenartikelComposite_stockGroup_text;
+	public static String EigenartikelComposite_newArticle_text;
+	public static String EigenartikelComposite_deleteArticle_text;
 	
 	static {
 		// initialize resource bundle

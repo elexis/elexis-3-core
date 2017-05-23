@@ -41,6 +41,8 @@ public class Messages extends NLS {
 	public static String ArtikelView_errorText;
 	public static String ArtikelView_importAction;
 	public static String ArtikelView_importCaption;
+	public static String ArtikelContextMenu_deleteProductToolTipText;
+	public static String ArtikelContextMenu_createProductToolTipText;
 	
 	static {
 		// load message values from bundle file
