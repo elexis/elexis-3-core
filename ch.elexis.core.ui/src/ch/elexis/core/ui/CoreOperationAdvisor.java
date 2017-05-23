@@ -126,4 +126,18 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	public boolean performDatabaseUpdate(String[] array, String pluginId){
 		return new SqlWithUiRunner(array, pluginId).runSql();
 	}
+	
+	protected boolean isDisplayAvailable(){
+		try {
+			Class.forName("org.eclipse.swt.widgets.Display");
+		} catch (ClassNotFoundException e) {
+			return false;
+		} catch (NoClassDefFoundError e) {
+			return false;
+		}
+		if (Display.getDefault() == null)
+			return false;
+		else
+			return true;
+	}
 }
