@@ -57,6 +57,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		this.drugPackageEigenartikel.setValue(eigenartikel);
 		
 		setLayout(new GridLayout(2, false));
+		setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
 		createArticlePart();
 	}
 	
