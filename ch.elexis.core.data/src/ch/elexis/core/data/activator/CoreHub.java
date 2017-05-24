@@ -263,16 +263,13 @@ public class CoreHub implements BundleActivator {
 		Properties prop = new Properties();
 		String elexis_version = "Developer";
 		String url_name = "platform:/plugin/ch.elexis.core.data/version.properties";
-		try {
-			URL url;
-			url = new URL(url_name);
-			InputStream inputStream = url.openConnection().getInputStream();
+		try (InputStream inputStream = new URL(url_name).openConnection().getInputStream()) {
 			if (inputStream != null) {
 				prop.load(inputStream);
 				elexis_version = prop.getProperty("elexis.version");
 			}
 		} catch (IOException e) {
-			log.warn("Error reading build version information from " + url_name);
+			log.warn("Error reading build version information from [{}]", url_name, e);
 		}
 		return elexis_version.replace("-SNAPSHOT", "");
 	}
