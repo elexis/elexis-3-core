@@ -271,6 +271,21 @@ public class Messages extends NLS {
 	public static String VerrDetailDialog_NoPatientSelected;
 	public static String VerrDetailDialog_billingData;
 	public static String VerrDetailDialog_detailsOfOpenKons;
+	public static String InvoiceListView_tblclmnInvoiceNo_text;
+	public static String InvoiceListView_tblclmnInvoiceState_text;
+	public static String InvoiceListView_tblclmnPatient_text;
+	public static String InvoiceListView_tblclmnLaw_text;
+	public static String InvoiceListView_tblclmnType_text;
+	public static String InvoiceListView_tblclmnReceiver_text;
+	public static String InvoiceListView_tblclmnTreatmentperiod_text;
+	public static String InvoiceListView_tblclmnOpenAmount_text;
+	public static String InvoiceListView_tblclmnTotalAmount_text;
+	public static String InvoiceListHeaderComposite_lblType_text;
+	public static String InvoiceListHeaderComposite_lblNewLabel_text;
+	public static String InvoiceListHeaderComposite_btnClear_text;
+	public static String InvoiceListHeaderComposite_btnNewButton_text;
+	public static String InvoiceListHeaderComposite_btnLimit_toolTipText;
+	public static String InvoiceListHeaderComposite_limitControlDecoration_descriptionText;
 	
 	static {
 		// load message values from bundle file

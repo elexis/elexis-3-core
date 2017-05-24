@@ -384,6 +384,12 @@
             name="%elexis.BillingProposalView"
             restorable="true">
       </view>
+      <view
+            class="ch.elexis.core.ui.views.rechnung.InvoiceListView"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_copy.png"
+            id="ch.elexis.core.ui.views.rechnung.InvoiceListView"
+            name="Rechnungsliste (beta)">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">

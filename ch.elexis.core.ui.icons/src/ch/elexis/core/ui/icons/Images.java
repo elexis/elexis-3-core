@@ -253,7 +253,8 @@ public enum Images {
 		/** shopping cart **/
 		IMG_CART,
 		/** wizard for some day event **/
-		IMG_WIZ_DAY, IMG_CALENDAR;
+		IMG_WIZ_DAY, IMG_CALENDAR,
+		IMG_COUNTER_STOP;
 		
 	private Images(){}
 	

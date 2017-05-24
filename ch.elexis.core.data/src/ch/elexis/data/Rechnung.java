@@ -30,6 +30,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.model.InvoiceState;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -519,6 +520,16 @@ public class Rechnung extends PersistentObject {
 		} catch (NumberFormatException e) {
 			return RnStatus.UNBEKANNT;
 		}
+	}
+	
+	/**
+	 * 
+	 * @return the {@link InvoiceState} of this invoice
+	 * @since 3.2
+	 */
+	public InvoiceState getInvoiceState(){
+		int i = Integer.parseInt(checkNull(get(BILL_STATE)));
+		return InvoiceState.fromState(i);
 	}
 	
 	/** Rechnungsstatus setzen */
