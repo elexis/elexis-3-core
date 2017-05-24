@@ -128,9 +128,10 @@ public class ProductComposite extends Composite implements IUnlockable {
 		sc.setExpandVertical(true);
 		
 		btnAddDrugPackage.setVisible(false);
-		txtProductName.setEnabled(false);
-		txtAtcCode.setEnabled(false);
+		txtProductName.setEditable(false);
+		txtAtcCode.setEditable(false);
 		comboProductType.setEnabled(false);
+		btnAddDrugPackage.setEnabled(false);
 		
 		comboProductType.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -173,6 +174,12 @@ public class ProductComposite extends Composite implements IUnlockable {
 			txtAtcCode.setEditable(unlocked);
 			comboProductType.setEnabled(unlocked);
 			btnAddDrugPackage.setEnabled(unlocked);
+			
+			for (Control c : compositeArticles.getChildren()) {
+				if (c instanceof EigenartikelComposite) {
+					((EigenartikelComposite) c).setUnlocked(unlocked);
+				}
+			}
 		}
 		
 	}
@@ -190,19 +197,12 @@ public class ProductComposite extends Composite implements IUnlockable {
 		if (productEigenartikel != null && productEigenartikel.isProduct()) {
 			btnAddDrugPackage.setVisible(true);
 			sc.setVisible(true);
-			txtProductName.setEnabled(true);
-			txtAtcCode.setEnabled(true);
-			comboProductType.setEnabled(true);
 			List<Eigenartikel> packages = productEigenartikel.getPackages();
 			for (Eigenartikel eigenartikel : packages) {
 				createEigenartikelComposite(eigenartikel);
 			}
 		} else {
 			sc.setVisible(false);
-			btnAddDrugPackage.setVisible(false);
-			txtProductName.setEnabled(false);
-			txtAtcCode.setEnabled(false);
-			comboProductType.setEnabled(false);
 			btnAddDrugPackage.setVisible(false);
 		}
 		sc.setMinSize(compositeArticles.computeSize(SWT.DEFAULT, SWT.DEFAULT));
@@ -250,6 +250,8 @@ public class ProductComposite extends Composite implements IUnlockable {
 	}
 
 	private void createEigenartikelComposite(Eigenartikel articleNew){
-		new EigenartikelComposite(compositeArticles, SWT.NONE, articleNew);
+		EigenartikelComposite eigenartikelComposite =
+			new EigenartikelComposite(compositeArticles, SWT.NONE, articleNew);
+		eigenartikelComposite.setUnlocked(btnAddDrugPackage.isEnabled());
 	}
 }

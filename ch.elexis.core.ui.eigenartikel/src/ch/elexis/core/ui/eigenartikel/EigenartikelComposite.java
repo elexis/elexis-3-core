@@ -13,7 +13,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -36,14 +35,13 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	private Text txtPackageSizeInt;
 	private Text txtExfPrice;
 	private Text txtpubPrice;
-	private Combo comboProductType;
 	private Label lblMeasurementUnit;
 	private Text txtMeasurementUnit;
 	private Group grpDrugPackages;
 	private Button btnHiCostAbsorption;
 	private Text txtSellUnit;
 	private Label lblVerkaufseinheit;
-	
+	private StockDetailComposite stockDetailComposite;
 	
 	private final Eigenartikel eigenartikel;
 	
@@ -167,8 +165,9 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		gd_stockGroup.heightHint = 100;
 		stockGroup.setLayoutData(gd_stockGroup);
 		
-		StockDetailComposite sdc = new StockDetailComposite(stockGroup, SWT.NONE);
-		sdc.setArticle(eigenartikel);
+		stockDetailComposite = new StockDetailComposite(stockGroup, SWT.NONE);
+		stockDetailComposite.setArticle(eigenartikel);
+		
 		initDataBindings();
 	}
 	
@@ -180,7 +179,6 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	
 	@Override
 	public void setUnlocked(boolean unlocked){
-		comboProductType.setEnabled(unlocked);
 		btnDeleteDrugPackage.setEnabled(unlocked);
 		btnHiCostAbsorption.setEnabled(unlocked);
 		txtGtin.setEditable(unlocked);
@@ -190,6 +188,8 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		txtPackageSizeString.setEditable(unlocked);
 		txtExfPrice.setEditable(unlocked);
 		txtpubPrice.setEditable(unlocked);
+		txtSellUnit.setEditable(unlocked);
+		stockDetailComposite.setEnabled(unlocked);
 	}
 	
 	protected DataBindingContext initDataBindings(){

@@ -54,15 +54,16 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	private RestrictedAction toggleLockAction =
 		new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY, "lock", SWT.TOGGLE) {
 			{
-				setImageDescriptor(Images.IMG_LOCK_OPEN.getImageDescriptor());
+				setImageDescriptor(Images.IMG_LOCK_CLOSED.getImageDescriptor());
 			}
 			
 			@Override
 			public void setChecked(boolean checked){
 				if (checked) {
-					setImageDescriptor(Images.IMG_LOCK_CLOSED.getImageDescriptor());
-				} else {
 					setImageDescriptor(Images.IMG_LOCK_OPEN.getImageDescriptor());
+				} else {
+					
+					setImageDescriptor(Images.IMG_LOCK_CLOSED.getImageDescriptor());
 				}
 				super.setChecked(checked);
 			}
@@ -103,18 +104,21 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 			
 			@Override
 			public void doRun(Eigenartikel act){
-				if (MessageDialog.openConfirm(site.getShell(),
-					ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteActionConfirmCaption,
-					MessageFormat.format(
-						ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteConfirmBody,
-						act.getName()))) {
-					act.delete();
+				if (currentLock != null
+					|| CoreHub.getLocalLockService().getStatus() == Status.STANDALONE) {
+					if (MessageDialog.openConfirm(site.getShell(),
+						ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteActionConfirmCaption,
+						MessageFormat.format(
+							ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteConfirmBody,
+							act.getName()))) {
+						act.delete();
+						
+						if (ec != null) {
+							ec.setProductEigenartikel(null);
+						}
+					}
+					ElexisEventDispatcher.reload(Eigenartikel.class);
 				}
-				ElexisEventDispatcher.reload(Eigenartikel.class);
-				if (ec != null) {
-					ec.setProductEigenartikel(null);
-				}
-				
 			}
 		};
 	
