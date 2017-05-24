@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -554,6 +555,15 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			return;
 		}
 		
+		String abr = f.getAbrechnungsSystem();
+		// auto select accident if uvg is selected
+		if ("UVG".equals(abr)) {
+			int idx = ArrayUtils.indexOf(Reasons, FallConstants.TYPE_ACCIDENT);
+			if (idx > -1) {
+				f.setGrund(Reasons[idx]);
+			}
+		}
+		
 		form.setText(f.getLabel());
 		
 		// *** set Fallbezeichnung
@@ -566,7 +576,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			ix = 0;
 		}
 		cReason.select(ix);
-		String abr = f.getAbrechnungsSystem();
+		
 		cAbrechnung.setText(abr);
 		
 		// *** set startDate/EndDate
