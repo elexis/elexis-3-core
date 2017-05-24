@@ -353,6 +353,10 @@ public class Connection implements PortEventListener {
 	}
 	
 	public void close(){
+		close(5000);
+	}
+	
+	public void close(int sleepTime){
 		if ((watchdogThread != null) && watchdogThread.isAlive()) {
 			watchdogThread.interrupt();
 		}
@@ -361,7 +365,7 @@ public class Connection implements PortEventListener {
 			
 			public void run(){
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(sleepTime);
 					sPort.close();
 					bOpen = false;
 					
@@ -425,5 +429,13 @@ public class Connection implements PortEventListener {
 			listener.timeout();
 		}
 		
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public String getMyPort(){
+		return myPort;
 	}
 }

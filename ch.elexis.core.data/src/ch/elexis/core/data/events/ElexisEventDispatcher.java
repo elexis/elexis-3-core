@@ -405,7 +405,8 @@ public final class ElexisEventDispatcher extends Job {
 	private void doDispatch(final ElexisEvent ee){
 		if (ee != null) {
 			synchronized (listeners) {
-				for (final ElexisEventListener l : listeners) {
+				List<ElexisEventListener> listenersCopy = new ArrayList<>(listeners);
+				for (final ElexisEventListener l : listenersCopy) {
 					if (ee.matches(l.getElexisEventFilter())) {
 						l.catchElexisEvent(ee);
 					}
