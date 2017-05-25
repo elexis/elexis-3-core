@@ -17,6 +17,7 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -101,6 +102,14 @@ public class InvoiceListView extends ViewPart {
 		
 		tableViewerInvoiceList =
 			new TableViewer(compositeInvoiceList, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		tableViewerInvoiceList.addSelectionChangedListener(selection -> {
+			StructuredSelection ss = (StructuredSelection) selection.getSelection();
+			if (!ss.isEmpty()) {
+				InvoiceEntry firstElement = (InvoiceEntry) ss.getFirstElement();
+				Rechnung load = Rechnung.load(firstElement.getInvoiceId());
+				ElexisEventDispatcher.fireSelectionEvent(load);
+			}
+		});
 		Table tableInvoiceList = tableViewerInvoiceList.getTable();
 		tableInvoiceList.setHeaderVisible(true);
 		tableInvoiceList.setLinesVisible(false);
