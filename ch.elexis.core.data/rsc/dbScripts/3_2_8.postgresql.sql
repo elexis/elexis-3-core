@@ -25,16 +25,16 @@ CREATE OR REPLACE VIEW INVOICE_LIST_VIEW AS
                 r.rndatumvon,
                 r.rndatumbis,
                 r.fallid,
-                CAST(r.rnstatus AS UNSIGNED) AS InvoiceState,
-                CAST(r.betrag AS SIGNED) AS InvoiceTotal,
+                CAST(r.rnstatus AS NUMERIC) AS InvoiceState,
+                CAST(r.betrag AS NUMERIC) AS InvoiceTotal,
                 COUNT(z.id) AS paymentCount,
-                SUM(CAST(z.betrag AS SIGNED)) AS paidAmount,
-                (CAST(r.betrag AS SIGNED) - SUM(CAST(z.betrag AS SIGNED))) AS openAmount
+                SUM(CAST(z.betrag AS NUMERIC)) AS paidAmount,
+                (CAST(r.betrag AS NUMERIC) - SUM(CAST(z.betrag AS NUMERIC))) AS openAmount
         FROM
             RECHNUNGEN r
-        LEFT JOIN zahlungen z ON z.rechnungsID = r.id AND z.deleted = 0
+        LEFT JOIN zahlungen z ON z.rechnungsID = r.id AND z.deleted = '0'
         WHERE
-            r.deleted = 0
+            r.deleted = '0'
         GROUP BY r.id) rz
             LEFT JOIN
         faelle f ON rz.FallID = f.ID
