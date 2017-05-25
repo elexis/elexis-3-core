@@ -1,70 +1,49 @@
 package ch.elexis.core.ui.eigenartikel;
 
-import java.util.List;
-
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewerProperties;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.eigenartikel.Eigenartikel;
-import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.views.controls.StockDetailComposite;
 
 public class EigenartikelComposite extends Composite implements IUnlockable {
-	private DataBindingContext m_bindingContext;
 	
-	private WritableValue productEigenartikel = new WritableValue(null, Eigenartikel.class);
 	private WritableValue drugPackageEigenartikel = new WritableValue(null, Eigenartikel.class);
 	
-	private Button btnAddDrugPackage;
+
 	private Button btnDeleteDrugPackage;
-	private Text txtProductName;
-	private Text txtAtcCode;
 	private Text txtPackageSizeString;
 	private Text txtGtin;
 	private Text txtPharmacode;
 	private Text txtPackageSizeInt;
 	private Text txtExfPrice;
 	private Text txtpubPrice;
-	private Combo comboDpSelector;
-	private ComboViewer comboViewerDpSelector;
-	private ComboViewer comboViewerProductType;
-	private Combo comboProductType;
-	private Label lblAtcCode;
 	private Label lblMeasurementUnit;
 	private Text txtMeasurementUnit;
 	private Group grpDrugPackages;
 	private Button btnHiCostAbsorption;
 	private Text txtSellUnit;
 	private Label lblVerkaufseinheit;
+	private StockDetailComposite stockDetailComposite;
 	
-	private StockDetailComposite sdc;
+	private final Eigenartikel eigenartikel;
 	
 	/**
 	 * Create the composite.
@@ -72,135 +51,42 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	 * @param parent
 	 * @param style
 	 */
-	public EigenartikelComposite(Composite parent, int style){
+	public EigenartikelComposite(Composite parent, int style, Eigenartikel eigenartikel){
 		super(parent, style);
+		this.eigenartikel = eigenartikel;
+		this.drugPackageEigenartikel.setValue(eigenartikel);
+		
 		setLayout(new GridLayout(2, false));
-		
-		Label lblProductName = new Label(this, SWT.NONE);
-		lblProductName.setAlignment(SWT.RIGHT);
-		lblProductName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblProductName.setText(Messages.EigenartikelDisplay_productName);
-		
-		txtProductName = new Text(this, SWT.BORDER);
-		txtProductName.setTextLimit(127);
-		txtProductName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblProductType = new Label(this, SWT.NONE);
-		lblProductType.setAlignment(SWT.RIGHT);
-		lblProductType.setText(Messages.EigenartikelComposite_lblProductType_text);
-		
-		comboViewerProductType = new ComboViewer(this, SWT.NONE);
-		comboProductType = comboViewerProductType.getCombo();
-		comboProductType.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				Eigenartikel.copyProductAttributesToArticleSetAsChild(getProductArtikel(), null);
-				ElexisEventDispatcher.update(getProductArtikel());
-			}
-		});
-		GridData gd_comboProductType = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboProductType.widthHint = 150;
-		comboProductType.setLayoutData(gd_comboProductType);
-		comboViewerProductType.setContentProvider(ArrayContentProvider.getInstance());
-		comboViewerProductType.setLabelProvider(new LabelProvider() {
-			@Override
-			public String getText(Object element){
-				return ((EigenartikelTyp) element).getLocaleText();
-			}
-		});
-		comboViewerProductType.setInput(EigenartikelTyp.values());
-		
-		lblAtcCode = new Label(this, SWT.NONE);
-		lblAtcCode.setAlignment(SWT.RIGHT);
-		lblAtcCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblAtcCode.setText(Messages.EigenartikelDisplay_atcCode);
-		
-		Composite compAtcCode = new Composite(this, SWT.NONE);
-		GridLayout gl_compAtcCode = new GridLayout(2, false);
-		gl_compAtcCode.marginWidth = 0;
-		gl_compAtcCode.marginHeight = 0;
-		compAtcCode.setLayout(gl_compAtcCode);
-		compAtcCode.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		
-		txtAtcCode = new Text(compAtcCode, SWT.BORDER);
-		GridData gd_txtAtcCode = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_txtAtcCode.widthHint = 80;
-		txtAtcCode.setLayoutData(gd_txtAtcCode);
-		txtAtcCode.setTextLimit(8);
-		new Label(compAtcCode, SWT.NONE);
-
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		
+		createArticlePart();
+	}
+	
+	private void createArticlePart(){
 		grpDrugPackages = new Group(this, SWT.NONE);
 		grpDrugPackages.setLayout(new GridLayout(1, false));
 		grpDrugPackages.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 2, 1));
-		grpDrugPackages.setText(Messages.EigenartikelComposite_grpDrugPackages_text);
+		grpDrugPackages.setText("");
 		
 		Composite compDpSelector = new Composite(grpDrugPackages, SWT.NONE);
 		compDpSelector.setLayout(new GridLayout(3, false));
 		compDpSelector.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		btnAddDrugPackage = new Button(compDpSelector, SWT.FLAT);
-		btnAddDrugPackage.setImage(Images.IMG_NEW.getImage());
-		btnAddDrugPackage.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				Eigenartikel product = (Eigenartikel) productEigenartikel.getValue();
-				if (product != null) {
-					Eigenartikel articleNew =
-						new Eigenartikel(product.getName(), product.getInternalName());
-					Eigenartikel.copyProductAttributesToArticleSetAsChild(product, articleNew);
-					comboViewerDpSelector.add(articleNew);
-					comboViewerDpSelector.setSelection(new StructuredSelection(articleNew));
-					ElexisEventDispatcher.reload(Eigenartikel.class);
-				}
-			}
-			
-		});
-		
 		btnDeleteDrugPackage = new Button(compDpSelector, SWT.FLAT);
+		btnDeleteDrugPackage.setText(Messages.EigenartikelComposite_deleteArticle_text);
+		btnDeleteDrugPackage.setToolTipText(Messages.EigenartikelComposite_deleteArticle_text);
 		btnDeleteDrugPackage.setImage(Images.IMG_DELETE.getImage());
 		btnDeleteDrugPackage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				StructuredSelection ss = (StructuredSelection) comboViewerDpSelector.getSelection();
-				if (ss.isEmpty()) {
-					return;
-				}
-				
-				Eigenartikel selection = (Eigenartikel) ss.getFirstElement();
-				selection.delete();
-				comboViewerDpSelector.remove(selection);
-			}
-		});
-		
-		comboViewerDpSelector = new ComboViewer(compDpSelector, SWT.NONE);
-		comboDpSelector = comboViewerDpSelector.getCombo();
-		comboDpSelector.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboViewerDpSelector.setContentProvider(ArrayContentProvider.getInstance());
-		comboViewerDpSelector.setLabelProvider(new LabelProvider() {
-			@Override
-			public String getText(Object element){
-				Eigenartikel ea = (Eigenartikel) element;
-				String id = "EAN: " + ea.getEAN() + " Pharmacode: " + ea.getPharmaCode();
-				return ea.getPackageSizeLabel() + " (" + id + ")";
-			}
-		});
-		comboViewerDpSelector.addSelectionChangedListener(new ISelectionChangedListener() {
-			
-			@Override
-			public void selectionChanged(SelectionChangedEvent event){
-				StructuredSelection ss = (StructuredSelection) event.getSelection();
-				if (ss.isEmpty()) {
-					drugPackageEigenartikel.setValue(null);
-					sdc.setArticle(null);
-				} else {
-					Eigenartikel ea = (Eigenartikel) ss.getFirstElement();
-					drugPackageEigenartikel.setValue(ea);
-					sdc.setArticle(ea);
+				if (eigenartikel != null && eigenartikel.exists()) {
+					eigenartikel.delete();
+					Composite p = getParent();
+					dispose();
+					
+					if (p.getParent() instanceof ScrolledComposite) {
+						ScrolledComposite sc = (ScrolledComposite) p.getParent();
+						sc.setMinSize(p.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+						sc.layout(true, true);
+					}
 				}
 			}
 		});
@@ -276,31 +162,15 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		stockGroup.setText(Messages.EigenartikelComposite_stockGroup_text);
 		stockGroup.setLayout(new FillLayout(SWT.HORIZONTAL));
 		GridData gd_stockGroup = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
-		gd_stockGroup.heightHint = 100;
+		gd_stockGroup.heightHint = 80;
 		stockGroup.setLayoutData(gd_stockGroup);
 		
-		sdc = new StockDetailComposite(stockGroup, SWT.NONE);
+		stockDetailComposite = new StockDetailComposite(stockGroup, SWT.NONE);
+		stockDetailComposite.setArticle(eigenartikel);
 		
-		m_bindingContext = initDataBindings();
-		
+		initDataBindings();
 	}
 	
-	public void setProductEigenartikel(Eigenartikel productEigenartikel){
-		this.productEigenartikel.setValue(productEigenartikel);
-		this.drugPackageEigenartikel.setValue(null);
-		
-		if (productEigenartikel != null && productEigenartikel.isProduct()) {
-			grpDrugPackages.setVisible(true);
-			List<Eigenartikel> packages = productEigenartikel.getPackages();
-			comboViewerDpSelector.setInput(productEigenartikel.getPackages());
-			if (packages.size() > 0) {
-				comboViewerDpSelector.setSelection(new StructuredSelection(packages.get(0)));
-			}
-		} else {
-			comboViewerDpSelector.setInput(null);
-			grpDrugPackages.setVisible(false);
-		}
-	}
 	
 	@Override
 	protected void checkSubclass(){
@@ -309,10 +179,6 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	
 	@Override
 	public void setUnlocked(boolean unlocked){
-		txtProductName.setEditable(unlocked);
-		txtAtcCode.setEditable(unlocked);
-		comboProductType.setEnabled(unlocked);
-		btnAddDrugPackage.setEnabled(unlocked);
 		btnDeleteDrugPackage.setEnabled(unlocked);
 		btnHiCostAbsorption.setEnabled(unlocked);
 		txtGtin.setEditable(unlocked);
@@ -322,47 +188,12 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		txtPackageSizeString.setEditable(unlocked);
 		txtExfPrice.setEditable(unlocked);
 		txtpubPrice.setEditable(unlocked);
-	}
-	
-	public Eigenartikel getProductArtikel(){
-		return (Eigenartikel) productEigenartikel.getValue();
+		txtSellUnit.setEditable(unlocked);
+		stockDetailComposite.setEnabled(unlocked);
 	}
 	
 	protected DataBindingContext initDataBindings(){
 		DataBindingContext bindingContext = new DataBindingContext();
-		
-		UpdateValueStrategy strategyUpdateProductChilds = new UpdateValueStrategy() {
-			@Override
-			protected IStatus doSet(IObservableValue observableValue, Object value){
-				IStatus status = super.doSet(observableValue, value);
-				Eigenartikel.copyProductAttributesToArticleSetAsChild(getProductArtikel(), null);
-				ElexisEventDispatcher.update(getProductArtikel());
-				return status;
-			}
-		};
-		
-		//
-		IObservableValue observeTextTxtProductNameObserveWidget =
-			WidgetProperties.text(SWT.Modify).observeDelayed(300, txtProductName);
-		IObservableValue productEigenartikelNameObserveDetailValue = PojoProperties
-			.value(Eigenartikel.class, "name", String.class).observeDetail(productEigenartikel);
-		bindingContext.bindValue(observeTextTxtProductNameObserveWidget,
-			productEigenartikelNameObserveDetailValue, strategyUpdateProductChilds, null);
-		//
-		IObservableValue observeSingleSelectionComboViewerProductType =
-			ViewerProperties.singleSelection().observe(comboViewerProductType);
-		IObservableValue productEigenartikelTypObserveDetailValue =
-			PojoProperties.value(Eigenartikel.class, "typ", EigenartikelTyp.class)
-				.observeDetail(productEigenartikel);
-		bindingContext.bindValue(observeSingleSelectionComboViewerProductType,
-			productEigenartikelTypObserveDetailValue, null, null);
-		//
-		IObservableValue observeTextTxtAtcCodeObserveWidget =
-			WidgetProperties.text(SWT.Modify).observeDelayed(300, txtAtcCode);
-		IObservableValue productEigenartikelATC_codeObserveDetailValue = PojoProperties
-			.value(Eigenartikel.class, "ATC_code", String.class).observeDetail(productEigenartikel);
-		bindingContext.bindValue(observeTextTxtAtcCodeObserveWidget,
-			productEigenartikelATC_codeObserveDetailValue, strategyUpdateProductChilds, null);
 		//
 		IObservableValue observeTextTxtGtinObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtGtin);
@@ -437,7 +268,6 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeSelectionBtnHiCostAbsorptionObserveWidget,
 			drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue, null, null);
-		
 		return bindingContext;
 	}
 }

@@ -31,7 +31,7 @@ import ch.elexis.data.PersistentObject;
 public class EigenartikelDetailDisplay implements IDetailDisplay {
 	private IViewSite site;
 	
-	private EigenartikelComposite ec;
+	private EigenartikelProductComposite ec;
 	private Eigenartikel selectedObject;
 	private Eigenartikel currentLock;
 	
@@ -40,7 +40,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		{
 			setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 			setToolTipText(
-				ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_newActionTooltip);
+				ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_createProductToolTipText);
 		}
 		
 		@Override
@@ -54,15 +54,16 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	private RestrictedAction toggleLockAction =
 		new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY, "lock", SWT.TOGGLE) {
 			{
-				setImageDescriptor(Images.IMG_LOCK_OPEN.getImageDescriptor());
+				setImageDescriptor(Images.IMG_LOCK_CLOSED.getImageDescriptor());
 			}
 			
 			@Override
 			public void setChecked(boolean checked){
 				if (checked) {
-					setImageDescriptor(Images.IMG_LOCK_CLOSED.getImageDescriptor());
-				} else {
 					setImageDescriptor(Images.IMG_LOCK_OPEN.getImageDescriptor());
+				} else {
+					
+					setImageDescriptor(Images.IMG_LOCK_CLOSED.getImageDescriptor());
 				}
 				super.setChecked(checked);
 			}
@@ -92,8 +93,8 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 			ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteAction) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-				setToolTipText(Eigenartikel.class.getSimpleName()
-					+ ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteActionToolTip);
+				setToolTipText(
+					ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteProductToolTipText);
 			}
 			
 			@Override
@@ -109,6 +110,10 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 						ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteConfirmBody,
 						act.getName()))) {
 					act.delete();
+					
+					if (ec != null) {
+						ec.setProductEigenartikel(null);
+					}
 				}
 				ElexisEventDispatcher.reload(Eigenartikel.class);
 			}
@@ -155,7 +160,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		manager.update(true);
 		toolBar.pack();
 		
-		ec = new EigenartikelComposite(comp, SWT.None);
+		ec = new EigenartikelProductComposite(comp, SWT.None);
 		ec.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		ec.setUnlocked(CoreHub.getLocalLockService().getStatus() == Status.STANDALONE);
 		
