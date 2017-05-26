@@ -3,7 +3,9 @@ package ch.elexis.core.ui.views.rechnung.invoice;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -18,6 +20,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
@@ -26,6 +29,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.DBConnection;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
@@ -109,6 +113,10 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				countPatients = res.getInt(2);
 			}
 		} catch (SQLException e) {
+			if ("42S02".equals(e.getSQLState())) {
+				// view does not exist, lets create id
+			}
+			
 			ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 				CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Count stats failed", e);
 			ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
@@ -210,9 +218,30 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	private String determinePreparedStatementConditionals(){
 		List<String> conditionalTokens = new ArrayList<>();
 		
+		if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
+			Mandant selectedMandator = ElexisEventDispatcher.getSelectedMandator();
+			if (selectedMandator != null) {
+				conditionalTokens
+					.add(Rechnung.MANDATOR_ID + Query.EQUALS + selectedMandator.getId());
+			}
+		}
+		
 		Integer invoiceStateNo = invoiceListHeaderComposite.getSelectedInvoiceStateNo();
 		if (invoiceStateNo != null) {
-			conditionalTokens.add("InvoiceState" + Query.EQUALS + Integer.toString(invoiceStateNo));
+			if (InvoiceState.OWING.numericValue() == invoiceStateNo) {
+				String conditional = Arrays.asList(InvoiceState.owingStates()).stream()
+					.map(is -> Integer.toString(is.numericValue()))
+					.reduce((u, t) -> u + " OR InvoiceState = " + t).get();
+				conditionalTokens.add("( InvoiceState = " + conditional + ")");
+			} else if (InvoiceState.TO_PRINT.numericValue() == invoiceStateNo) {
+				String conditional = Arrays.asList(InvoiceState.toPrintStates()).stream()
+					.map(is -> Integer.toString(is.numericValue()))
+					.reduce((u, t) -> u + " OR InvoiceState = " + t).get();
+				conditionalTokens.add("( InvoiceState = " + conditional + ")");
+			} else {
+				conditionalTokens
+					.add("InvoiceState" + Query.EQUALS + Integer.toString(invoiceStateNo));
+			}
 		}
 		
 		String invoiceId = invoiceListHeaderComposite.getSelectedInvoiceId();
@@ -227,18 +256,21 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		
 		String totalAmount = invoiceListHeaderComposite.getSelectedTotalAmount();
 		if (StringUtils.isNotBlank(totalAmount)) {
-			if (totalAmount.contains(",") || totalAmount.contains(".")) {
-				totalAmount = totalAmount.replaceAll(",", ".");
-				try {
-					Double amount = new Double(totalAmount);
-					Money money = new Money();
-					money.addAmount(amount);
-					conditionalTokens.add("InvoiceTotal LIKE '" + money.getCents() + "%'");
-				} catch (NumberFormatException nfe) {
-					nfe.printStackTrace();
-				}
-			} else {
-				conditionalTokens.add("InvoiceTotal LIKE '" + totalAmount + "%'");
+			char prefix = '=';
+			
+			if (totalAmount.startsWith(">") || totalAmount.startsWith("<")) {
+				prefix = totalAmount.charAt(0);
+				totalAmount = totalAmount.substring(1, totalAmount.length());
+			}
+			
+			Money money;
+			try {
+				money = new Money(totalAmount);
+				conditionalTokens.add("InvoiceTotal " + prefix + money.getCents());
+			} catch (ParseException e) {
+				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
+					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Invalid amount", e);
+				ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
 			}
 		}
 		
@@ -251,7 +283,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
-		
+		// TODO ??
 	}
 	
 	@Override

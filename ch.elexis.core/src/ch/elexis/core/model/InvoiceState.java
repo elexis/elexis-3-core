@@ -31,7 +31,7 @@ public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 	NOT_FROM_YOU(21),
 	DEFECTIVE(22),
 	TO_PRINT(23),
-	OUTSTANDING(24),
+	OWING(24),
 	STOP_LEGAL_PROCEEDING(25),
 	DEPRECIATED(26), // (Abgeschrieben) Storniert und Kons nicht mehr freigegeben
 	REJECTED(27);
@@ -55,6 +55,25 @@ public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 	@Override
 	public int numericValue(){
 		return state;
+	}
+	
+	/**
+	 * @return the combined (or) states that represent the owing state
+	 */
+	public static InvoiceState[] owingStates(){
+		return new InvoiceState[] {
+			OPEN_AND_PRINTED, DEMAND_NOTE_1_PRINTED, DEMAND_NOTE_2_PRINTED, DEMAND_NOTE_3_PRINTED
+		};
+	}
+	
+	/**
+	 * 
+	 * @return the combined (or) states that represent the to print state
+	 */
+	public static InvoiceState[] toPrintStates() {
+		return new InvoiceState[] {
+			OPEN, DEMAND_NOTE_1, DEMAND_NOTE_2, DEMAND_NOTE_3
+		};
 	}
 	
 	/**

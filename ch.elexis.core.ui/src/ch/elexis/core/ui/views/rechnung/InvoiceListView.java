@@ -101,7 +101,7 @@ public class InvoiceListView extends ViewPart {
 		compositeInvoiceList.setLayout(tcl_compositeInvoiceList);
 		
 		tableViewerInvoiceList =
-			new TableViewer(compositeInvoiceList, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
+			new TableViewer(compositeInvoiceList, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		tableViewerInvoiceList.addSelectionChangedListener(selection -> {
 			StructuredSelection ss = (StructuredSelection) selection.getSelection();
 			if (!ss.isEmpty()) {
@@ -142,7 +142,7 @@ public class InvoiceListView extends ViewPart {
 				return super.getText(element);
 			}
 		});
-		tblclmnInvoiceNo.addSelectionListener(selectionAdapter);
+		tblclmnInvoiceNo.addSelectionListener(sortAdapter);
 		
 		TableViewerColumn tvcInvoiceState = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnInvoiceState = tvcInvoiceState.getColumn();
@@ -173,7 +173,7 @@ public class InvoiceListView extends ViewPart {
 				return super.getText(element);
 			}
 		});
-		tblclmnPatient.addSelectionListener(selectionAdapter);
+		tblclmnPatient.addSelectionListener(sortAdapter);
 		
 		TableViewerColumn tvcLaw = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnLaw = tvcLaw.getColumn();
@@ -234,7 +234,7 @@ public class InvoiceListView extends ViewPart {
 				return super.getText(element);
 			}
 		});
-		tblclmnTreatmentperiod.addSelectionListener(selectionAdapter);
+		tblclmnTreatmentperiod.addSelectionListener(sortAdapter);
 		
 		TableViewerColumn tvcOpenAmount = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnOpenAmount = tvcOpenAmount.getColumn();
@@ -294,7 +294,7 @@ public class InvoiceListView extends ViewPart {
 		refresh();
 	}
 	
-	private SelectionAdapter selectionAdapter = new SelectionAdapter() {
+	private SelectionAdapter sortAdapter = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent e){
 			TableColumn sortColumn = tableViewerInvoiceList.getTable().getSortColumn();

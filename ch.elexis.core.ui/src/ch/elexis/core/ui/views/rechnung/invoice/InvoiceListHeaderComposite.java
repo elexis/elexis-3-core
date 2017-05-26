@@ -11,8 +11,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -192,7 +190,7 @@ public class InvoiceListHeaderComposite extends Composite {
 		values.add(InvoiceState.CANCELLED);
 		values.add(InvoiceState.DEFECTIVE);
 		values.add(InvoiceState.TO_PRINT);
-		values.add(InvoiceState.OUTSTANDING);
+		values.add(InvoiceState.OWING);
 		values.add(InvoiceState.STOP_LEGAL_PROCEEDING);
 		values.add(InvoiceState.DEPRECIATED);
 		values.add(InvoiceState.REJECTED);
@@ -231,24 +229,22 @@ public class InvoiceListHeaderComposite extends Composite {
 		comboType.select(indexOfAll);
 		comboType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		txtInvoiceno = new Text(this, SWT.BORDER);
-		txtInvoiceno.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e){
-				invoiceListView.refresh();
-			}
-		});
-		txtInvoiceno.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		txtAmount = new Text(this, SWT.BORDER);
-		txtAmount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtAmount.addListener(SWT.Traverse, new Listener() {
+		Listener enterListener = new Listener() {
 			@Override
 			public void handleEvent(Event event){
 				if (event.detail == SWT.TRAVERSE_RETURN) {
 					invoiceListView.refresh();
 				}
 			}
-		});
+		};
+		
+		txtInvoiceno = new Text(this, SWT.BORDER);
+		txtInvoiceno.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtInvoiceno.addListener(SWT.Traverse, enterListener);
+		
+		txtAmount = new Text(this, SWT.BORDER);
+		txtAmount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtAmount.addListener(SWT.Traverse, enterListener);
 		
 		btnLimit = new Button(this, SWT.FLAT | SWT.TOGGLE | SWT.CENTER);
 		btnLimit.addSelectionListener(new SelectionAdapter() {
