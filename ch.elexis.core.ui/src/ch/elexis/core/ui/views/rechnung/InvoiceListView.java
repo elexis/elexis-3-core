@@ -101,7 +101,7 @@ public class InvoiceListView extends ViewPart {
 		compositeInvoiceList.setLayout(tcl_compositeInvoiceList);
 		
 		tableViewerInvoiceList =
-			new TableViewer(compositeInvoiceList, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+			new TableViewer(compositeInvoiceList, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
 		tableViewerInvoiceList.addSelectionChangedListener(selection -> {
 			StructuredSelection ss = (StructuredSelection) selection.getSelection();
 			if (!ss.isEmpty()) {
