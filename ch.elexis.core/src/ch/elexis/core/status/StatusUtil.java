@@ -31,15 +31,18 @@ public class StatusUtil {
 		print(out, "", status);
 	}
 
-	private static void print(PrintStream log, String indent, IStatus status) {
+	private static void print(PrintStream printStream, String indent, IStatus status) {
 		if (status.isMultiStatus()) {
-			log.print(indent + status.getMessage());
+			printStream.print(indent + status.getMessage());
 			String childIndent = indent + "  ";
 			for (IStatus c : status.getChildren()) {
-				print(log, childIndent, c);
+				print(printStream, childIndent, c);
 			}
+		} else if (status instanceof ObjectStatus) {
+			ObjectStatus os = (ObjectStatus) status;
+			printStream.println((os != null) ? os.getObject().toString() : null);
 		} else {
-			log.println(indent + status.getMessage());
+			printStream.println(indent + status.getMessage());
 		}
 	}
 
