@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW INVOICE_LIST_VIEW AS
+CREATE OR REPLACE VIEW INVOICE_BILL_STATE AS
     SELECT 
         rz.id AS InvoiceId,
         rz.RnNummer AS InvoiceNo,
@@ -31,22 +31,22 @@ CREATE OR REPLACE VIEW INVOICE_LIST_VIEW AS
                 r.statusdatum,
                 r.fallid,
                 r.MandantId,
-                CAST(r.rnstatus AS UNSIGNED) AS InvoiceState,
-                CAST(r.betrag AS SIGNED) AS InvoiceTotal,
+                CAST(r.rnstatus AS NUMERIC) AS InvoiceState,
+                CAST(r.betrag AS NUMERIC) AS InvoiceTotal,
                 COUNT(z.id) AS paymentCount,
                 CASE
-                    WHEN COUNT(z.id) = 0 THEN 0
-                    ELSE SUM(CAST(z.betrag AS SIGNED))
+                    WHEN COUNT(z.id) = '0' THEN 0
+                    ELSE SUM(CAST(z.betrag AS NUMERIC))
                 END paidAmount,
                 CASE
-                    WHEN COUNT(z.id) = 0 THEN CAST(r.betrag AS SIGNED)
-                    ELSE (CAST(r.betrag AS SIGNED) - SUM(CAST(z.betrag AS SIGNED)))
+                    WHEN COUNT(z.id) = '0' THEN CAST(r.betrag AS NUMERIC)
+                    ELSE (CAST(r.betrag AS NUMERIC) - SUM(CAST(z.betrag AS NUMERIC)))
                 END openAmount
         FROM
             RECHNUNGEN r
-        LEFT JOIN zahlungen z ON z.rechnungsID = r.id AND z.deleted = 0
+        LEFT JOIN zahlungen z ON z.rechnungsID = r.id AND z.deleted = '0'
         WHERE
-            r.deleted = 0
+            r.deleted = '0'
         GROUP BY r.id) rz
             LEFT JOIN
         faelle f ON rz.FallID = f.ID

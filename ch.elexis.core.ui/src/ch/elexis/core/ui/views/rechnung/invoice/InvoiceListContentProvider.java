@@ -33,14 +33,17 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
+import ch.elexis.data.views.InvoiceBillState;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
+import static ch.elexis.data.views.InvoiceBillState.*;
+
 public class InvoiceListContentProvider implements IStructuredContentProvider {
 	
 	private List<InvoiceEntry> currentContent = new ArrayList<InvoiceEntry>();
-	private StructuredViewer structuredViewer;
+	private TableViewer structuredViewer;
 	private InvoiceListHeaderComposite invoiceListHeaderComposite;
 	private InvoiceListBottomComposite invoiceListBottomComposite;
 	
@@ -53,43 +56,46 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	}
 	
 	@Override
-	public void dispose(){}
+	public void dispose(){
+		structuredViewer = null;
+		currentContent = null;
+	}
 	
 	//@formatter:off
-	public static final String FETCH_PS_MYSQL =
-		" SELECT \n" + 
-		"    InvoiceId,\n" + 
-		"    InvoiceNo,\n" + 
-		"    rndatumvon,\n" + 
-		"    rndatumbis,\n" + 
-		"    InvoiceState,\n" + 
-		"    InvoiceTotal,\n" + 
-		"    PatientId,\n" + 
-		"    PatName1,\n" + 
-		"    PatName2,\n" + 
-		"    PatSex,\n" + 
-		"    PatDob,\n" + 
-		"    FallId,\n" + 
-		"    FallGesetz,\n" + 
-		"    FallGarantId,\n" + 
-		"    FallKostentrID,\n" + 
-		"    paymentCount,\n" + 
-		"    paidAmount,\n" + 
-		"    openAmount\n" + 
-		"FROM" + 
-		"    invoice_list_view" + 
+	private static final String FETCH_PS_MYSQL =
+		" SELECT " + 
+		"    InvoiceId," + 
+		VIEW_FLD_INVOICENO+"," + 
+		"    rndatumvon," + 
+		"    rndatumbis," + 
+		VIEW_FLD_INVOICESTATE+"," + 
+		VIEW_FLD_INVOICETOTAL+"," + 
+		"    PatientId," + 
+		"    PatName1," + 
+		"    PatName2," + 
+		"    PatSex," + 
+		"    PatDob," + 
+		"    FallId," + 
+		"    FallGesetz," + 
+		"    FallGarantId," + 
+		"    FallKostentrID," + 
+		"    paymentCount," + 
+		"    paidAmount," + 
+		VIEW_FLD_OPENAMOUNT + 
+		" FROM" + 
+		" " +InvoiceBillState.VIEW_NAME+ 
 		"REPLACE_WITH_CONDITIONALS " + 
 		"REPLACE_WITH_ORDER " + 
 		"REPLACE_WITH_LIMIT";
 	
-	public static final String COUNT_STATS_MYSQL = "SELECT \n" + 
-		"    COUNT(InvoiceId),\n" + 
-		"    COUNT(DISTINCT (patientid)),\n" + 
-		"    SUM(invoiceTotal),\n" + 
-		"    SUM(openAmount)\n" + 
-		"FROM\n" + 
-		"    invoice_list_view\n" + 
-		"REPLACE_WITH_CONDITIONALS\n" + 
+	private static final String COUNT_STATS_MYSQL = "SELECT " + 
+		"    COUNT(InvoiceId)," + 
+		"    COUNT(DISTINCT (patientid))," + 
+		"    SUM(invoiceTotal)," + 
+		"    SUM(openAmount)" + 
+		"FROM" + 
+		" "+InvoiceBillState.VIEW_NAME + 
+		"REPLACE_WITH_CONDITIONALS" + 
 		"REPLACE_WITH_LIMIT";
 	//@formatter:on
 	
@@ -113,13 +119,12 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				countPatients = res.getInt(2);
 			}
 		} catch (SQLException e) {
-			if ("42S02".equals(e.getSQLState())) {
-				// view does not exist, lets create id
-			}
-			
 			ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 				CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Count stats failed", e);
 			ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
+			
+			System.out.println(ps); // to ease on-premise debugging
+			return;
 		} finally {
 			dbConnection.releasePreparedStatement(ps);
 		}
@@ -131,6 +136,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				"Query limit of set. You will only see the first " + queryLimit + " results.");
 		} else {
 			invoiceListHeaderComposite.setLimitWarning(null);
+			structuredViewer.getTable().setItemCount(countInvoices);
 		}
 		
 		String preparedStatement = performPreparedStatementReplacements(FETCH_PS_MYSQL, true);
@@ -138,7 +144,6 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		
 		int openAmounts = 0;
 		int owingAmounts = 0;
-		System.out.println(ps);
 		try (ResultSet res = ps.executeQuery()) {
 			while (res.next()) {
 				String invoiceId = res.getString(1);
@@ -169,6 +174,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 				CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Fetch results failed", e);
 			ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
+			System.out.println(ps); // to ease on-premise debugging
 		} finally {
 			dbConnection.releasePreparedStatement(ps);
 		}
@@ -185,17 +191,6 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		}
 		
 		structuredViewer.setInput(currentContent);
-		
-		resolveAll();
-	}
-	
-	private void resolveAll(){
-		currentContent.parallelStream().forEach(invoiceEntry -> {
-			// touch patient number
-			if (!invoiceEntry.isResolved()) {
-				invoiceEntry.resolve();
-			}
-		});
 	}
 	
 	private String performPreparedStatementReplacements(String original,
@@ -240,7 +235,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				conditionalTokens.add("( InvoiceState = " + conditional + ")");
 			} else {
 				conditionalTokens
-					.add("InvoiceState" + Query.EQUALS + Integer.toString(invoiceStateNo));
+					.add(VIEW_FLD_INVOICESTATE + Query.EQUALS + Integer.toString(invoiceStateNo));
 			}
 		}
 		
@@ -256,17 +251,33 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		
 		String totalAmount = invoiceListHeaderComposite.getSelectedTotalAmount();
 		if (StringUtils.isNotBlank(totalAmount)) {
-			char prefix = '=';
+			String prefix = "=";
+			String boundaryAmount = null;
 			
 			if (totalAmount.startsWith(">") || totalAmount.startsWith("<")) {
-				prefix = totalAmount.charAt(0);
+				prefix = Character.toString(totalAmount.charAt(0)) + "=";
 				totalAmount = totalAmount.substring(1, totalAmount.length());
 			}
+			if (totalAmount.contains("-")) {
+				String[] split = totalAmount.split("-");
+				if (split.length > 0) {
+					totalAmount = split[0];
+				}
+				if (split.length > 1) {
+					boundaryAmount = split[1];
+				}
+			}
 			
-			Money money;
 			try {
-				money = new Money(totalAmount);
-				conditionalTokens.add("InvoiceTotal " + prefix + money.getCents());
+				Money totalMoney = new Money(totalAmount);
+				if (boundaryAmount == null) {
+					conditionalTokens.add(VIEW_FLD_INVOICETOTAL + prefix + totalMoney.getCents());
+				} else {
+					Money boundaryMoney = new Money(boundaryAmount);
+					conditionalTokens
+						.add("(" + VIEW_FLD_INVOICETOTAL + " >=" + totalMoney.getCents() + " AND "
+							+ VIEW_FLD_INVOICETOTAL + " <=" + boundaryMoney.getCents() + ")");
+				}
 			} catch (ParseException e) {
 				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Invalid amount", e);
@@ -282,9 +293,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	}
 	
 	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
-		// TODO ??
-	}
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
 	
 	@Override
 	public Object[] getElements(Object inputElement){
@@ -296,10 +305,11 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	
 	public void setSortOrderAndDirection(Object data, int sortDirection){
 		String sortDirectionString = (SWT.UP == sortDirection) ? "ASC" : "DESC";
-		if (Rechnung.BILL_NUMBER.equals(data)) {
-			orderBy = "ORDER BY LENGTH(RnNummer) " + sortDirectionString + ",RnNummer "
-				+ sortDirectionString;
-		} else if (Rechnung.BILL_DATE_FROM.equals(data)) {
+		if (VIEW_FLD_INVOICENO.equals(data)) {
+			orderBy = "ORDER BY LENGTH(" + VIEW_FLD_INVOICENO + ") " + sortDirectionString + ","
+				+ VIEW_FLD_INVOICENO + " " + sortDirectionString;
+		} else if (Rechnung.BILL_DATE_FROM.equals(data) || VIEW_FLD_INVOICETOTAL.equals(data)
+			|| VIEW_FLD_OPENAMOUNT.equals(data)) {
 			orderBy = "ORDER BY " + data + " " + sortDirectionString;
 		} else if (Kontakt.FLD_NAME1.equals(data)) {
 			orderBy =
@@ -524,7 +534,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 						@Override
 						public void run(){
 							if (!control.isDisposed() && control.isVisible()) {
-								viewer.refresh(invoiceEntry, true);
+								viewer.update(invoiceEntry, null);
 							}
 						}
 					});

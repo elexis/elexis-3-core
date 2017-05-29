@@ -45,8 +45,11 @@ import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListHeaderComposite;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Rechnung;
+import ch.elexis.data.views.InvoiceBillState;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
+
+import static ch.elexis.data.views.InvoiceBillState.*;
 
 public class InvoiceListView extends ViewPart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceListView"; //$NON-NLS-1$
@@ -56,6 +59,10 @@ public class InvoiceListView extends ViewPart {
 	private InvoiceListHeaderComposite invoiceListHeaderComposite;
 	private InvoiceListBottomComposite invoiceListBottomComposite;
 	private InvoiceListContentProvider invoiceListContentProvider;
+	
+	static {
+		InvoiceBillState.initializeSqlViewIfRequired();
+	}
 	
 	/**
 	 * @param rnStellerSettings
@@ -83,7 +90,7 @@ public class InvoiceListView extends ViewPart {
 		}
 	};
 	
-	public void refresh() {
+	public void refresh(){
 		if (invoiceListContentProvider != null) {
 			invoiceListContentProvider.reload();
 		}
@@ -100,8 +107,8 @@ public class InvoiceListView extends ViewPart {
 		TableColumnLayout tcl_compositeInvoiceList = new TableColumnLayout();
 		compositeInvoiceList.setLayout(tcl_compositeInvoiceList);
 		
-		tableViewerInvoiceList =
-			new TableViewer(compositeInvoiceList, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		tableViewerInvoiceList = new TableViewer(compositeInvoiceList,
+			SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.VIRTUAL);
 		tableViewerInvoiceList.addSelectionChangedListener(selection -> {
 			StructuredSelection ss = (StructuredSelection) selection.getSelection();
 			if (!ss.isEmpty()) {
@@ -116,7 +123,8 @@ public class InvoiceListView extends ViewPart {
 		
 		InvoiceActions invoiceActions = new InvoiceActions(tableViewerInvoiceList);
 		ViewMenus viewMenu = new ViewMenus(getViewSite());
-		viewMenu.createToolbar(reloadViewAction, invoiceActions.rnExportAction, invoiceActions.printListeAction, invoiceActions.addAccountExcessAction);
+		viewMenu.createToolbar(reloadViewAction, invoiceActions.rnExportAction,
+			invoiceActions.printListeAction, invoiceActions.addAccountExcessAction);
 		
 		tableViewerInvoiceList.getControl().addKeyListener(new KeyAdapter() {
 			@Override
@@ -129,7 +137,7 @@ public class InvoiceListView extends ViewPart {
 		
 		TableViewerColumn tvcInvoiceNo = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnInvoiceNo = tvcInvoiceNo.getColumn();
-		tblclmnInvoiceNo.setData(Rechnung.BILL_NUMBER);
+		tblclmnInvoiceNo.setData(VIEW_FLD_INVOICENO);
 		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceNo,
 			new ColumnPixelData(35, true, true));
 		tblclmnInvoiceNo.setText(Messages.InvoiceListView_tblclmnInvoiceNo_text);
@@ -241,6 +249,7 @@ public class InvoiceListView extends ViewPart {
 		tcl_compositeInvoiceList.setColumnData(tblclmnOpenAmount,
 			new ColumnPixelData(50, true, true));
 		tblclmnOpenAmount.setText(Messages.InvoiceListView_tblclmnOpenAmount_text);
+		tblclmnOpenAmount.setData(VIEW_FLD_OPENAMOUNT);
 		tvcOpenAmount.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -251,9 +260,11 @@ public class InvoiceListView extends ViewPart {
 				return super.getText(element);
 			}
 		});
+		tblclmnOpenAmount.addSelectionListener(sortAdapter);
 		
 		TableViewerColumn tvcTotalAmount = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnTotalAmount = tvcTotalAmount.getColumn();
+		tblclmnTotalAmount.setData(VIEW_FLD_INVOICETOTAL);
 		tcl_compositeInvoiceList.setColumnData(tblclmnTotalAmount,
 			new ColumnPixelData(50, true, true));
 		tblclmnTotalAmount.setText(Messages.InvoiceListView_tblclmnTotalAmount_text);
@@ -267,6 +278,7 @@ public class InvoiceListView extends ViewPart {
 				return super.getText(element);
 			}
 		});
+		tblclmnTotalAmount.addSelectionListener(sortAdapter);
 		
 		invoiceListBottomComposite =
 			new InvoiceListBottomComposite(parent, SWT.NONE, rnStellerSettings);
@@ -283,12 +295,12 @@ public class InvoiceListView extends ViewPart {
 		menuManager.add(new Separator());
 		menuManager.add(invoiceActions.changeStatusAction);
 		menuManager.add(invoiceActions.stornoAction);
-
+		
 		Menu contextMenu = menuManager.createContextMenu(tableViewerInvoiceList.getTable());
 		tableInvoiceList.setMenu(contextMenu);
 		getSite().registerContextMenu(menuManager, tableViewerInvoiceList);
 		getSite().setSelectionProvider(tableViewerInvoiceList);
-	
+		
 		setSortOrder(tblclmnPatient, SWT.UP);
 		
 		refresh();
@@ -309,16 +321,15 @@ public class InvoiceListView extends ViewPart {
 			
 			setSortOrder(selectedColumn, sortDirection);
 		}
-
-
+		
 	};
 	
 	private void setSortOrder(TableColumn selectedColumn, int sortDirection){
 		tableViewerInvoiceList.getTable().setSortColumn(selectedColumn);
 		tableViewerInvoiceList.getTable().setSortDirection(sortDirection);
-		invoiceListContentProvider.setSortOrderAndDirection(selectedColumn.getData(), sortDirection);
+		invoiceListContentProvider.setSortOrderAndDirection(selectedColumn.getData(),
+			sortDirection);
 	}
-
 	
 	@Override
 	public void setFocus(){

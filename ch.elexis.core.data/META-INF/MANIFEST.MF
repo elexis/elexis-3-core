@@ -34,6 +34,7 @@ Export-Package: .,
  ch.elexis.core.data.util,
  ch.elexis.data,
  ch.elexis.data.dto,
+ ch.elexis.data.views,
  ch.elexis.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Service-Component: OSGI-INF/*.xml

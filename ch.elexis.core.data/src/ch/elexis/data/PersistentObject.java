@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -2927,35 +2928,42 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            name of the table to check existence for
 	 */
 	public static boolean tableExists(String tableName){
+		return tableExists(tableName, false);
+	}
+	
+	/**
+	 * 
+	 * @param tableName
+	 * @param considerViews consider views too in searching for existing elements
+	 * @since 3.2
+	 * @return
+	 */
+	public static boolean tableExists(String tableName, boolean considerViews){
 		int nrFounds = 0;
 		// Vergleich schaut nicht auf Gross/Klein-Schreibung, da thomas
 		// schon H2-DB gesehen hat, wo entweder alles gross oder alles klein war
-		Connection conn = null;
-		try {
-			conn = defaultConnection.getConnection();
+		try (Connection conn = defaultConnection.getConnection()) {
 			DatabaseMetaData dmd = conn.getMetaData();
-			String[] onlyTables = {
-				"TABLE"
-			};
-			ResultSet rs = dmd.getTables(null, null, "%", onlyTables);
-			if (rs != null) {
-				while (rs.next()) {
-					// DatabaseMetaData#getTables() specifies TABLE_NAME is in
-					// column 3
-					if (rs.getString(3).equalsIgnoreCase(tableName))
-						nrFounds++;
-				}
+			String[] searchBase;
+			if (considerViews) {
+				searchBase = new String[] {
+					"TABLE", "VIEW"
+				};
+			} else {
+				searchBase = new String[] {
+					"TABLE"
+				};
 			}
+			ResultSet rs = dmd.getTables(null, null, "%", searchBase);
+			while (rs.next()) {
+				// DatabaseMetaData#getTables() specifies TABLE_NAME is in
+				// column 3
+				if (rs.getString(3).equalsIgnoreCase(tableName))
+					nrFounds++;
+			}
+			
 		} catch (SQLException je) {
 			log.error("Fehler beim abrufen der Datenbank Tabellen Information.", je);
-		} finally {
-			try {
-				if (conn != null) {
-					conn.close();
-				}
-			} catch (SQLException e) {
-				log.error("Error closing connection " + e);
-			}
 		}
 		if (nrFounds > 1) {
 			// Dies kann vorkommen, wenn man eine MySQL-datenbank von Windows ->
@@ -3036,13 +3044,20 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @param clazz
 	 * @since 3.1
+	 * @since 3.2 considers db flavor specific sql files, return value on error
 	 */
 	public static void executeDBInitScriptForClass(Class<?> clazz, @Nullable VersionInfo vi){
 		String resourceName = "/rsc/dbScripts/" + clazz.getName();
-		if (vi == null) {
-			resourceName += ".sql";
+		if (vi != null) {
+			resourceName += "_" + vi.version();
+		}
+		
+		String dbFlavor = getConnection().DBFlavor;
+		URL resource = PersistentObject.class.getResource(resourceName + "_" + dbFlavor + ".sql");
+		if (resource != null) {
+			resourceName += "_" + dbFlavor + ".sql";
 		} else {
-			resourceName += "_" + vi.version() + ".sql";
+			resourceName += ".sql";
 		}
 		
 		Stm stm = defaultConnection.getStatement();

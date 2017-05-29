@@ -138,6 +138,7 @@ public class InvoiceListHeaderComposite extends Composite {
 		Label lblAmount = new Label(this, SWT.NONE);
 		lblAmount.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		lblAmount.setText(Messages.RnControlFieldProvider_amount);
+		lblAmount.setToolTipText(Messages.InvoiceListHeaderComposite_txtAmount_toolTipText);
 		
 		lblLimitWarn = new Label(this, SWT.NONE);
 		lblLimitWarn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -243,6 +244,7 @@ public class InvoiceListHeaderComposite extends Composite {
 		txtInvoiceno.addListener(SWT.Traverse, enterListener);
 		
 		txtAmount = new Text(this, SWT.BORDER);
+		txtAmount.setToolTipText(Messages.InvoiceListHeaderComposite_txtAmount_toolTipText);
 		txtAmount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtAmount.addListener(SWT.Traverse, enterListener);
 		
