@@ -28,7 +28,11 @@ public class KonsZumVerrechnenViewViewerComparator extends ViewerComparator {
 		if (lt1.contents instanceof Patient && lt2.contents instanceof Patient) {
 			Patient p1 = (Patient) lt1.contents;
 			Patient p2 = (Patient) lt2.contents;
-			return (p1.getName().compareTo(p2.getName()));
+			int ct = p1.getName().compareTo(p2.getName());
+			if (ct == 0) {
+				return p1.getVorname().compareTo(p2.getVorname());
+			}
+			return ct;
 		} else if (lt1.contents instanceof Fall && lt2.contents instanceof Fall) {
 			Fall f1 = (Fall) lt1.contents;
 			Fall f2 = (Fall) lt2.contents;
