@@ -230,23 +230,30 @@ public class InvoiceListHeaderComposite extends Composite {
 		comboType.select(indexOfAll);
 		comboType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Listener enterListener = new Listener() {
+		txtInvoiceno = new Text(this, SWT.BORDER);
+		txtInvoiceno.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtInvoiceno.addListener(SWT.Traverse, new Listener() {
+			
+			@Override
+			public void handleEvent(Event event){
+				if (event.detail == SWT.TRAVERSE_RETURN) {
+					comboViewerStatus.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
+					// execution will be started via comboViewerStatus#sclistener
+				}
+			}
+		});
+		
+		txtAmount = new Text(this, SWT.BORDER);
+		txtAmount.setToolTipText(Messages.InvoiceListHeaderComposite_txtAmount_toolTipText);
+		txtAmount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtAmount.addListener(SWT.Traverse, new Listener() {
 			@Override
 			public void handleEvent(Event event){
 				if (event.detail == SWT.TRAVERSE_RETURN) {
 					invoiceListView.refresh();
 				}
 			}
-		};
-		
-		txtInvoiceno = new Text(this, SWT.BORDER);
-		txtInvoiceno.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtInvoiceno.addListener(SWT.Traverse, enterListener);
-		
-		txtAmount = new Text(this, SWT.BORDER);
-		txtAmount.setToolTipText(Messages.InvoiceListHeaderComposite_txtAmount_toolTipText);
-		txtAmount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtAmount.addListener(SWT.Traverse, enterListener);
+		});
 		
 		btnLimit = new Button(this, SWT.FLAT | SWT.TOGGLE | SWT.CENTER);
 		btnLimit.addSelectionListener(new SelectionAdapter() {
