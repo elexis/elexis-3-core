@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Control;
 
 import ch.elexis.admin.AccessControlDefaults;
@@ -102,95 +103,102 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	public static String orderBy = "";
 	private static int queryLimit = 1000;
 	
-	public void reload(){
+	private final Runnable reloadRunnable = new Runnable() {
 		
-		currentContent.clear();
-		
-		DBConnection dbConnection = PersistentObject.getDefaultConnection();
-		
-		int countInvoices = 0;
-		int countPatients = 0;
-		
-		String statement = performPreparedStatementReplacements(COUNT_STATS_MYSQL, false);
-		PreparedStatement ps = dbConnection.getPreparedStatement(statement);
-		try (ResultSet res = ps.executeQuery()) {
-			while (res.next()) {
-				countInvoices = res.getInt(1);
-				countPatients = res.getInt(2);
-			}
-		} catch (SQLException e) {
-			ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
-				CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Count stats failed", e);
-			ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
+		@Override
+		public void run(){
+			currentContent.clear();
 			
-			System.out.println(ps); // to ease on-premise debugging
-			return;
-		} finally {
-			dbConnection.releasePreparedStatement(ps);
-		}
-		
-		boolean limitReached = (queryLimit > 0 && countInvoices >= queryLimit);
-		if (limitReached) {
-			invoiceListHeaderComposite.setLimitWarning(queryLimit);
-			MessageDialog.openInformation(UiDesk.getTopShell(), "Query-Limit reached",
-				"Query limit of set. You will only see the first " + queryLimit + " results.");
-		} else {
-			invoiceListHeaderComposite.setLimitWarning(null);
-			structuredViewer.getTable().setItemCount(countInvoices);
-		}
-		
-		String preparedStatement = performPreparedStatementReplacements(FETCH_PS_MYSQL, true);
-		ps = dbConnection.getPreparedStatement(preparedStatement);
-		
-		int openAmounts = 0;
-		int owingAmounts = 0;
-		try (ResultSet res = ps.executeQuery()) {
-			while (res.next()) {
-				String invoiceId = res.getString(1);
-				String invoiceNumber = res.getString(2);
-				String dateFrom = res.getString(3);
-				String dateTo = res.getString(4);
-				int invoiceStatus = res.getInt(5);
-				int totalAmount = res.getInt(6);
-				String patientId = res.getString(7);
-				String patientName =
-					res.getString(8) + " " + res.getString(9) + " (" + res.getString(10) + ")";
-				String dob = res.getString(11);
-				if (StringUtils.isNumeric(dob)) {
-					patientName += ", " + new TimeTool(dob).toString(TimeTool.DATE_GER);
+			DBConnection dbConnection = PersistentObject.getDefaultConnection();
+			
+			int countInvoices = 0;
+			int countPatients = 0;
+			
+			String statement = performPreparedStatementReplacements(COUNT_STATS_MYSQL, false);
+			PreparedStatement ps = dbConnection.getPreparedStatement(statement);
+			try (ResultSet res = ps.executeQuery()) {
+				while (res.next()) {
+					countInvoices = res.getInt(1);
+					countPatients = res.getInt(2);
 				}
-				String garantId = res.getString(14);
-				int openAmount = res.getInt(18);
+			} catch (SQLException e) {
+				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
+					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Count stats failed", e);
+				ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
 				
-				openAmounts += openAmount;
-				owingAmounts += (totalAmount - openAmount);
-				
-				InvoiceEntry ie = new InvoiceEntry(structuredViewer, invoiceId, patientId, garantId,
-					invoiceNumber, invoiceStatus, dateFrom, dateTo, totalAmount, openAmount,
-					patientName);
-				currentContent.add(ie);
+				System.out.println(ps); // to ease on-premise debugging
+				return;
+			} finally {
+				dbConnection.releasePreparedStatement(ps);
 			}
-		} catch (SQLException e) {
-			ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
-				CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Fetch results failed", e);
-			ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
-			System.out.println(ps); // to ease on-premise debugging
-		} finally {
-			dbConnection.releasePreparedStatement(ps);
+			
+			boolean limitReached = (queryLimit > 0 && countInvoices >= queryLimit);
+			if (limitReached) {
+				invoiceListHeaderComposite.setLimitWarning(queryLimit);
+				MessageDialog.openInformation(UiDesk.getTopShell(), "Query-Limit reached",
+					"Query limit of set. You will only see the first " + queryLimit + " results.");
+			} else {
+				invoiceListHeaderComposite.setLimitWarning(null);
+				structuredViewer.getTable().setItemCount(countInvoices);
+			}
+			
+			String preparedStatement = performPreparedStatementReplacements(FETCH_PS_MYSQL, true);
+			ps = dbConnection.getPreparedStatement(preparedStatement);
+			
+			int openAmounts = 0;
+			int owingAmounts = 0;
+			try (ResultSet res = ps.executeQuery()) {
+				while (res.next()) {
+					String invoiceId = res.getString(1);
+					String invoiceNumber = res.getString(2);
+					String dateFrom = res.getString(3);
+					String dateTo = res.getString(4);
+					int invoiceStatus = res.getInt(5);
+					int totalAmount = res.getInt(6);
+					String patientId = res.getString(7);
+					String patientName =
+						res.getString(8) + " " + res.getString(9) + " (" + res.getString(10) + ")";
+					String dob = res.getString(11);
+					if (StringUtils.isNumeric(dob)) {
+						patientName += ", " + new TimeTool(dob).toString(TimeTool.DATE_GER);
+					}
+					String garantId = res.getString(14);
+					int openAmount = res.getInt(18);
+					
+					openAmounts += openAmount;
+					owingAmounts += (totalAmount - openAmount);
+					
+					InvoiceEntry ie = new InvoiceEntry(structuredViewer, invoiceId, patientId, garantId,
+						invoiceNumber, invoiceStatus, dateFrom, dateTo, totalAmount, openAmount,
+						patientName);
+					currentContent.add(ie);
+				}
+			} catch (SQLException e) {
+				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
+					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Fetch results failed", e);
+				ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
+				System.out.println(ps); // to ease on-premise debugging
+			} finally {
+				dbConnection.releasePreparedStatement(ps);
+			}
+			
+			if (limitReached) {
+				invoiceListBottomComposite.update(Integer.toString(countPatients),
+					queryLimit + " (" + Integer.toString(countInvoices) + ")",
+					new Money(openAmounts).getAmountAsString(),
+					new Money(owingAmounts).getAmountAsString());
+			} else {
+				invoiceListBottomComposite.update(Integer.toString(countPatients),
+					Integer.toString(countInvoices), new Money(openAmounts).getAmountAsString(),
+					new Money(owingAmounts).getAmountAsString());
+			}
+			
+			structuredViewer.setInput(currentContent);
 		}
-		
-		if (limitReached) {
-			invoiceListBottomComposite.update(Integer.toString(countPatients),
-				queryLimit + " (" + Integer.toString(countInvoices) + ")",
-				new Money(openAmounts).getAmountAsString(),
-				new Money(owingAmounts).getAmountAsString());
-		} else {
-			invoiceListBottomComposite.update(Integer.toString(countPatients),
-				Integer.toString(countInvoices), new Money(openAmounts).getAmountAsString(),
-				new Money(owingAmounts).getAmountAsString());
-		}
-		
-		structuredViewer.setInput(currentContent);
+	};
+	
+	public void reload(){
+		BusyIndicator.showWhile(UiDesk.getDisplay(), reloadRunnable);
 	}
 	
 	private String performPreparedStatementReplacements(String original,
