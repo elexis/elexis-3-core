@@ -24,6 +24,7 @@ import java.util.TooManyListenersException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
 import gnu.io.CommPortIdentifier;
@@ -404,11 +405,17 @@ public class Connection implements PortEventListener {
 	
 	@SuppressWarnings("unchecked")
 	public static String[] getComPorts(){
-		Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
 		ArrayList<String> p = new ArrayList<String>();
-		while (ports.hasMoreElements()) {
-			CommPortIdentifier port = ports.nextElement();
-			p.add(port.getName());
+		try {
+			Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
+			
+			while (ports.hasMoreElements()) {
+				CommPortIdentifier port = ports.nextElement();
+				p.add(port.getName());
+			}
+		} catch (LinkageError error) {
+			SWTHelper.showError("COM Port Initialization Error", error.getMessage()+"\nPlease see log file and/or https://wiki.elexis.info/SerialConfiguration.");
+			log.error("COM Port Initialization", error);
 		}
 		return p.toArray(new String[0]);
 	}
