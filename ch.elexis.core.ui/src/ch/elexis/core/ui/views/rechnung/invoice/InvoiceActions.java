@@ -11,22 +11,18 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.ui.IViewSite;
 
-import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.Handler;
 import ch.elexis.core.ui.commands.MahnlaufCommand;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.locks.AllOrNoneLockRequestingRestrictedAction;
 import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.rechnung.Messages;
 import ch.elexis.core.ui.views.rechnung.RnDialogs;
 import ch.elexis.core.ui.views.rechnung.RnListeDruckDialog;
 import ch.elexis.core.ui.views.rechnung.RnOutputDialog;
-import ch.elexis.core.ui.views.rechnung.dialogs.MultiStatusAendernDialog;
-import ch.elexis.core.ui.views.rechnung.dialogs.StatusAendernDialog;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.InvoiceEntry;
 import ch.elexis.data.AccountTransaction;
 import ch.elexis.data.Fall;
@@ -38,7 +34,7 @@ import ch.rgw.tools.Money;
 public class InvoiceActions {
 	
 	public Action addPaymentAction, rnExportAction, increaseLevelAction, addExpenseAction,
-			changeStatusAction, stornoAction, addAccountExcessAction, printListeAction,
+			stornoAction, addAccountExcessAction, printListeAction,
 			mahnWizardAction;
 	
 	private final StructuredViewer viewer;
@@ -142,37 +138,6 @@ public class InvoiceActions {
 					} catch (ElexisException e) {
 						SWTHelper.showError("Zahlung hinzufügen ist nicht möglich",
 							e.getLocalizedMessage());
-					}
-				}
-			}
-		};
-		
-		changeStatusAction = new AllOrNoneLockRequestingRestrictedAction<Rechnung>(
-			AccessControlDefaults.ADMIN_CHANGE_BILLSTATUS_MANUALLY,
-			Messages.RnActions_changeStateAction) { //$NON-NLS-1$
-			{
-				setToolTipText(Messages.RnActions_changeStateTooltip); //$NON-NLS-1$
-				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-			}
-			
-			@Override
-			public List<Rechnung> getTargetedObjects(){
-				return getInvoiceSelections(viewer);
-			}
-			
-			@Override
-			public void doRun(List<Rechnung> list){
-				if (list.size() == 1) {
-					Rechnung actRn = list.get(0);
-					if (new StatusAendernDialog(UiDesk.getTopShell(), actRn).open() == Dialog.OK) {
-						ElexisEventDispatcher.update(actRn);
-					}
-				} else {
-					if (new MultiStatusAendernDialog(UiDesk.getTopShell(), list)
-						.open() == Dialog.OK) {
-						for (Rechnung rn : list) {
-							ElexisEventDispatcher.update(rn);
-						}
 					}
 				}
 			}

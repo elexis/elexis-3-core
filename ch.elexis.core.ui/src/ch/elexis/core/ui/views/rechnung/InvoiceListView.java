@@ -303,7 +303,6 @@ public class InvoiceListView extends ViewPart {
 		menuManager.add(invoiceActions.addExpenseAction);
 		menuManager.add(invoiceActions.increaseLevelAction);
 		menuManager.add(new Separator());
-		menuManager.add(invoiceActions.changeStatusAction);
 		menuManager.add(invoiceActions.stornoAction);
 		
 		Menu contextMenu = menuManager.createContextMenu(tableViewerInvoiceList.getTable());
