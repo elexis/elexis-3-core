@@ -1,5 +1,10 @@
 package ch.elexis.core.ui.views.rechnung.invoice;
 
+import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICENO;
+import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICESTATE;
+import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICETOTAL;
+import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_OPENAMOUNT;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +17,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -27,6 +34,9 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.views.rechnung.Messages;
+import ch.elexis.core.ui.views.rechnung.RnFilterDialog;
 import ch.elexis.data.DBConnection;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
@@ -39,14 +49,17 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
-import static ch.elexis.data.views.InvoiceBillState.*;
-
 public class InvoiceListContentProvider implements IStructuredContentProvider {
 	
 	private List<InvoiceEntry> currentContent = new ArrayList<InvoiceEntry>();
 	private TableViewer structuredViewer;
 	private InvoiceListHeaderComposite invoiceListHeaderComposite;
 	private InvoiceListBottomComposite invoiceListBottomComposite;
+	
+	private TimeTool invoiceDateFrom;
+	private TimeTool invoiceDateTo;
+	private TimeTool invoiceStateDateFrom;
+	private TimeTool invoiceStateDateTo;
 	
 	public InvoiceListContentProvider(TableViewer tableViewerInvoiceList,
 		InvoiceListHeaderComposite invoiceListHeaderComposite,
@@ -103,6 +116,32 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	public static String orderBy = "";
 	private static int queryLimit = 1000;
 	
+	public Action rnFilterAction =
+		new Action(Messages.RnActions_filterListAction, Action.AS_CHECK_BOX) {
+			{
+				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
+				setToolTipText(Messages.RnActions_filterLIstTooltip);
+			}
+			
+			public void run(){
+				if (isChecked()) {
+					RnFilterDialog rfd = new RnFilterDialog(UiDesk.getTopShell(), false);
+					if (rfd.open() == Dialog.OK) {
+						invoiceDateFrom = rfd.getInvoiceDateFrom();
+						invoiceDateTo = rfd.getInvoiceDateTo();
+						invoiceStateDateFrom = rfd.getInvoiceStateDateFrom();
+						invoiceStateDateTo = rfd.getInvoiceStateDateTo();
+					}
+				} else {
+					invoiceDateFrom = null;
+					invoiceDateTo = null;
+					invoiceStateDateFrom = null;
+					invoiceDateTo = null;
+				}
+				reload();
+			};
+		};
+	
 	private final Runnable reloadRunnable = new Runnable() {
 		
 		@Override
@@ -121,6 +160,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 					countInvoices = res.getInt(1);
 					countPatients = res.getInt(2);
 				}
+				System.out.println(ps);
 			} catch (SQLException e) {
 				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Count stats failed", e);
@@ -168,11 +208,12 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 					openAmounts += openAmount;
 					owingAmounts += (totalAmount - openAmount);
 					
-					InvoiceEntry ie = new InvoiceEntry(structuredViewer, invoiceId, patientId, garantId,
-						invoiceNumber, invoiceStatus, dateFrom, dateTo, totalAmount, openAmount,
-						patientName);
+					InvoiceEntry ie = new InvoiceEntry(structuredViewer, invoiceId, patientId,
+						garantId, invoiceNumber, invoiceStatus, dateFrom, dateTo, totalAmount,
+						openAmount, patientName);
 					currentContent.add(ie);
 				}
+				System.out.println(ps);
 			} catch (SQLException e) {
 				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Fetch results failed", e);
@@ -226,6 +267,30 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			if (selectedMandator != null) {
 				conditionalTokens
 					.add(Rechnung.MANDATOR_ID + Query.EQUALS + selectedMandator.getId());
+			}
+		}
+		
+		if (invoiceDateFrom != null) {
+			if (invoiceDateTo != null) {
+				conditionalTokens.add("( " + InvoiceBillState.VIEW_FLD_INVOICEDATE + ">="
+					+ invoiceDateFrom.toString(TimeTool.DATE_COMPACT) + " AND "
+					+ InvoiceBillState.VIEW_FLD_INVOICEDATE + "<="
+					+ invoiceDateTo.toString(TimeTool.DATE_COMPACT) + ")");
+			} else {
+				conditionalTokens.add(InvoiceBillState.VIEW_FLD_INVOICEDATE + " >="
+					+ invoiceDateFrom.toString(TimeTool.DATE_COMPACT));
+			}
+		}
+		
+		if (invoiceStateDateFrom != null) {
+			if (invoiceStateDateTo != null) {
+				conditionalTokens.add("( " + InvoiceBillState.VIEW_FLD_INVOICESTATEDATE + ">="
+					+ invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT) + " AND "
+					+ InvoiceBillState.VIEW_FLD_INVOICESTATEDATE + "<="
+					+ invoiceStateDateTo.toString(TimeTool.DATE_COMPACT) + ")");
+			} else {
+				conditionalTokens.add(InvoiceBillState.VIEW_FLD_INVOICESTATEDATE + " >="
+					+ invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT));
 			}
 		}
 		

@@ -180,7 +180,6 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 			.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ViewMenus menu = new ViewMenus(getViewSite());
 		actions = new RnActions(this);
-		InvoiceActions iActions = new InvoiceActions(cv.getViewerWidget());
 		menu.createToolbar(actions.reloadAction, actions.mahnWizardAction, actions.rnFilterAction,
 			null, actions.rnExportAction);
 		menu.createMenu(actions.expandAllAction, actions.collapseAllAction,

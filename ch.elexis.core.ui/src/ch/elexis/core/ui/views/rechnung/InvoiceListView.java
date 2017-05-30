@@ -10,7 +10,13 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
+import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICENO;
+import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICETOTAL;
+import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_OPENAMOUNT;
+
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -36,7 +42,6 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceActions;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider;
@@ -48,8 +53,6 @@ import ch.elexis.data.Rechnung;
 import ch.elexis.data.views.InvoiceBillState;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
-
-import static ch.elexis.data.views.InvoiceBillState.*;
 
 public class InvoiceListView extends ViewPart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceListView"; //$NON-NLS-1$
@@ -78,9 +81,9 @@ public class InvoiceListView extends ViewPart {
 		rnStellerSettings = CoreHub.getUserSetting(currMandant.getRechnungssteller());
 	}
 	
-	private Action reloadViewAction = new Action(Messages.RnActions_reloadAction) { //$NON-NLS-1$
+	private Action reloadViewAction = new Action(Messages.RnActions_reloadAction) {
 		{
-			setToolTipText(Messages.RnActions_reloadTooltip); //$NON-NLS-1$
+			setToolTipText(Messages.RnActions_reloadTooltip);
 			setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
 		}
 		
@@ -121,11 +124,6 @@ public class InvoiceListView extends ViewPart {
 		tableInvoiceList.setHeaderVisible(true);
 		tableInvoiceList.setLinesVisible(false);
 		
-		InvoiceActions invoiceActions = new InvoiceActions(tableViewerInvoiceList);
-		ViewMenus viewMenu = new ViewMenus(getViewSite());
-		viewMenu.createToolbar(reloadViewAction, invoiceActions.rnExportAction,
-			invoiceActions.printListeAction, invoiceActions.addAccountExcessAction);
-		
 		tableViewerInvoiceList.getControl().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e){
@@ -139,7 +137,7 @@ public class InvoiceListView extends ViewPart {
 		TableColumn tblclmnInvoiceNo = tvcInvoiceNo.getColumn();
 		tblclmnInvoiceNo.setData(VIEW_FLD_INVOICENO);
 		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceNo,
-			new ColumnPixelData(35, true, true));
+			new ColumnPixelData(50, true, true));
 		tblclmnInvoiceNo.setText(Messages.InvoiceListView_tblclmnInvoiceNo_text);
 		tvcInvoiceNo.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -185,7 +183,7 @@ public class InvoiceListView extends ViewPart {
 		
 		TableViewerColumn tvcLaw = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnLaw = tvcLaw.getColumn();
-		tcl_compositeInvoiceList.setColumnData(tblclmnLaw, new ColumnPixelData(20, true, true));
+		tcl_compositeInvoiceList.setColumnData(tblclmnLaw, new ColumnPixelData(50, true, true));
 		tblclmnLaw.setText(Messages.InvoiceListView_tblclmnLaw_text);
 		tvcLaw.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -199,7 +197,7 @@ public class InvoiceListView extends ViewPart {
 		
 		TableViewerColumn tvcPayerType = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnType = tvcPayerType.getColumn();
-		tcl_compositeInvoiceList.setColumnData(tblclmnType, new ColumnPixelData(20, true, true));
+		tcl_compositeInvoiceList.setColumnData(tblclmnType, new ColumnPixelData(50, true, true));
 		tblclmnType.setText(Messages.InvoiceListView_tblclmnType_text);
 		tvcPayerType.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -247,7 +245,7 @@ public class InvoiceListView extends ViewPart {
 		TableViewerColumn tvcOpenAmount = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnOpenAmount = tvcOpenAmount.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnOpenAmount,
-			new ColumnPixelData(50, true, true));
+			new ColumnPixelData(60, true, true));
 		tblclmnOpenAmount.setText(Messages.InvoiceListView_tblclmnOpenAmount_text);
 		tblclmnOpenAmount.setData(VIEW_FLD_OPENAMOUNT);
 		tvcOpenAmount.setLabelProvider(new ColumnLabelProvider() {
@@ -266,7 +264,7 @@ public class InvoiceListView extends ViewPart {
 		TableColumn tblclmnTotalAmount = tvcTotalAmount.getColumn();
 		tblclmnTotalAmount.setData(VIEW_FLD_INVOICETOTAL);
 		tcl_compositeInvoiceList.setColumnData(tblclmnTotalAmount,
-			new ColumnPixelData(50, true, true));
+			new ColumnPixelData(60, true, true));
 		tblclmnTotalAmount.setText(Messages.InvoiceListView_tblclmnTotalAmount_text);
 		tvcTotalAmount.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -286,6 +284,18 @@ public class InvoiceListView extends ViewPart {
 		invoiceListContentProvider = new InvoiceListContentProvider(tableViewerInvoiceList,
 			invoiceListHeaderComposite, invoiceListBottomComposite);
 		tableViewerInvoiceList.setContentProvider(invoiceListContentProvider);
+		
+		InvoiceActions invoiceActions = new InvoiceActions(tableViewerInvoiceList, getViewSite());
+		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();
+		tbm.add(reloadViewAction);
+		tbm.add(invoiceActions.mahnWizardAction);
+		tbm.add(invoiceListContentProvider.rnFilterAction);
+		tbm.add(new Separator());
+		tbm.add(invoiceActions.rnExportAction);
+		
+		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
+		viewMenuManager.add(invoiceActions.printListeAction);
+		viewMenuManager.add(invoiceActions.addAccountExcessAction);
 		
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(invoiceActions.rnExportAction);
@@ -334,7 +344,6 @@ public class InvoiceListView extends ViewPart {
 	@Override
 	public void setFocus(){
 		tableViewerInvoiceList.getTable().setFocus();
-		
 	}
 	
 	public InvoiceListContentProvider getInvoiceListContentProvider(){

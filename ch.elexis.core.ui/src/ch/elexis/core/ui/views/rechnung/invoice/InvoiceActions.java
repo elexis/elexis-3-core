@@ -6,13 +6,17 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.ui.IViewSite;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.commands.Handler;
+import ch.elexis.core.ui.commands.MahnlaufCommand;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AllOrNoneLockRequestingRestrictedAction;
 import ch.elexis.core.ui.locks.LockRequestingAction;
@@ -21,6 +25,8 @@ import ch.elexis.core.ui.views.rechnung.Messages;
 import ch.elexis.core.ui.views.rechnung.RnDialogs;
 import ch.elexis.core.ui.views.rechnung.RnListeDruckDialog;
 import ch.elexis.core.ui.views.rechnung.RnOutputDialog;
+import ch.elexis.core.ui.views.rechnung.dialogs.MultiStatusAendernDialog;
+import ch.elexis.core.ui.views.rechnung.dialogs.StatusAendernDialog;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.InvoiceEntry;
 import ch.elexis.data.AccountTransaction;
 import ch.elexis.data.Fall;
@@ -32,12 +38,15 @@ import ch.rgw.tools.Money;
 public class InvoiceActions {
 	
 	public Action addPaymentAction, rnExportAction, increaseLevelAction, addExpenseAction,
-			changeStatusAction, stornoAction, addAccountExcessAction, printListeAction;
+			changeStatusAction, stornoAction, addAccountExcessAction, printListeAction,
+			mahnWizardAction;
 	
 	private final StructuredViewer viewer;
+	private final IViewSite iViewSite;
 	
-	public InvoiceActions(StructuredViewer structuredViewer){
+	public InvoiceActions(StructuredViewer structuredViewer, IViewSite iViewSite){
 		this.viewer = structuredViewer;
+		this.iViewSite = iViewSite;
 		
 		rnExportAction = new Action(Messages.RechnungsListeView_printAction) {
 			{
@@ -155,12 +164,11 @@ public class InvoiceActions {
 			public void doRun(List<Rechnung> list){
 				if (list.size() == 1) {
 					Rechnung actRn = list.get(0);
-					if (new RnDialogs.StatusAendernDialog(UiDesk.getTopShell(), actRn)
-						.open() == Dialog.OK) {
+					if (new StatusAendernDialog(UiDesk.getTopShell(), actRn).open() == Dialog.OK) {
 						ElexisEventDispatcher.update(actRn);
 					}
 				} else {
-					if (new RnDialogs.MultiStatusAendernDialog(UiDesk.getTopShell(), list)
+					if (new MultiStatusAendernDialog(UiDesk.getTopShell(), list)
 						.open() == Dialog.OK) {
 						for (Rechnung rn : list) {
 							ElexisEventDispatcher.update(rn);
@@ -219,14 +227,11 @@ public class InvoiceActions {
 							amount = new Money(prepayment);
 						}
 						
-						if (SWTHelper
-							.askYesNo(
-								Messages.RnActions_transferMoneyCaption, //$NON-NLS-1$
-								"Das Konto von Patient \""
-									+ patient.getLabel()
-									+ "\" weist ein positives Kontoguthaben auf. Wollen Sie den Betrag von "
-									+ amount.toString() + " dieser Rechnung \"" + actRn.getNr()
-									+ ": " + fall.getLabel() + "\" zuweisen?")) {
+						if (SWTHelper.askYesNo(Messages.RnActions_transferMoneyCaption, //$NON-NLS-1$
+							"Das Konto von Patient \"" + patient.getLabel()
+								+ "\" weist ein positives Kontoguthaben auf. Wollen Sie den Betrag von "
+								+ amount.toString() + " dieser Rechnung \"" + actRn.getNr() + ": "
+								+ fall.getLabel() + "\" zuweisen?")) {
 							
 							// remove amount from account and transfer it to the
 							// bill
@@ -251,6 +256,23 @@ public class InvoiceActions {
 			public void run(){
 				List<Rechnung> invoiceSelections = getInvoiceSelections(viewer);
 				new RnListeDruckDialog(UiDesk.getTopShell(), invoiceSelections).open();
+			}
+		};
+		
+		mahnWizardAction = new Action(Messages.RnActions_remindersAction) { //$NON-NLS-1$
+			{
+				setToolTipText(Messages.RnActions_remindersTooltip); //$NON-NLS-1$
+				setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());
+			}
+			
+			@Override
+			public void run(){
+				if (!MessageDialog.openConfirm(UiDesk.getTopShell(),
+					Messages.RnActions_reminderConfirmCaption,
+					Messages.RnActions_reminderConfirmMessage)) {
+					return;
+				}
+				Handler.execute(iViewSite, MahnlaufCommand.ID, null);
 			}
 		};
 	}

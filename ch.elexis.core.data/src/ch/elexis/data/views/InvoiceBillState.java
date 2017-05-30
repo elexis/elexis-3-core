@@ -21,6 +21,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.data.DBConnection;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Rechnung;
 
 /**
  * Aggregates the information of all Invoices, payments and states in a single SQL view. Used by
@@ -35,6 +36,8 @@ public class InvoiceBillState {
 	public static final String VIEW_FLD_INVOICETOTAL = "InvoiceTotal";
 	public static final String VIEW_FLD_OPENAMOUNT = "openAmount";
 	public static final String VIEW_FLD_INVOICESTATE = "InvoiceState";
+	public static final String VIEW_FLD_INVOICEDATE = Rechnung.BILL_DATE;
+	public static final String VIEW_FLD_INVOICESTATEDATE = Rechnung.BILL_STATE_DATE;
 	
 	private static final String COUNT_STATS_MYSQL =
 		"SELECT COUNT(InvoiceId), COUNT(DISTINCT (patientid)), SUM(invoiceTotal), SUM(openAmount) FROM "
