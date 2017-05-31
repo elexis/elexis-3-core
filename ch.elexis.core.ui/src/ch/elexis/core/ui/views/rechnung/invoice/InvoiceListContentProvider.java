@@ -12,7 +12,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -104,13 +106,10 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	
 	private static final String COUNT_STATS_MYSQL = "SELECT " + 
 		"    COUNT(InvoiceId)," + 
-		"    COUNT(DISTINCT (patientid))," + 
-		"    SUM(invoiceTotal)," + 
-		"    SUM(openAmount)" + 
-		"FROM" + 
+		"    COUNT(DISTINCT (patientid))" + 
+		" FROM" + 
 		" "+InvoiceBillState.VIEW_NAME + 
-		"REPLACE_WITH_CONDITIONALS" + 
-		"REPLACE_WITH_LIMIT";
+		"REPLACE_WITH_CONDITIONALS";
 	//@formatter:on
 	
 	public static String orderBy = "";
@@ -150,15 +149,15 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			
 			DBConnection dbConnection = PersistentObject.getDefaultConnection();
 			
-			int countInvoices = 0;
-			int countPatients = 0;
+			int countInvoicesWoLimit = 0;
+			int countPatientsWoLimit = 0;
 			
-			String statement = performPreparedStatementReplacements(COUNT_STATS_MYSQL, false);
+			String statement = performPreparedStatementReplacements(COUNT_STATS_MYSQL, false, false);
 			PreparedStatement ps = dbConnection.getPreparedStatement(statement);
 			try (ResultSet res = ps.executeQuery()) {
 				while (res.next()) {
-					countInvoices = res.getInt(1);
-					countPatients = res.getInt(2);
+					countInvoicesWoLimit = res.getInt(1);
+					countPatientsWoLimit = res.getInt(2);
 				}
 				System.out.println(ps);
 			} catch (SQLException e) {
@@ -172,21 +171,23 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				dbConnection.releasePreparedStatement(ps);
 			}
 			
-			boolean limitReached = (queryLimit > 0 && countInvoices >= queryLimit);
+			boolean limitReached = (queryLimit > 0 && countInvoicesWoLimit >= queryLimit);
 			if (limitReached) {
 				invoiceListHeaderComposite.setLimitWarning(queryLimit);
 				MessageDialog.openInformation(UiDesk.getTopShell(), "Query-Limit reached",
 					"Query limit of set. You will only see the first " + queryLimit + " results.");
 			} else {
 				invoiceListHeaderComposite.setLimitWarning(null);
-				structuredViewer.getTable().setItemCount(countInvoices);
+				structuredViewer.getTable().setItemCount(countInvoicesWoLimit);
 			}
 			
-			String preparedStatement = performPreparedStatementReplacements(FETCH_PS_MYSQL, true);
+			String preparedStatement = performPreparedStatementReplacements(FETCH_PS_MYSQL, true, true);
 			ps = dbConnection.getPreparedStatement(preparedStatement);
 			
 			int openAmounts = 0;
 			int owingAmounts = 0;
+			Set<String> countPatients = new HashSet<>();
+			
 			try (ResultSet res = ps.executeQuery()) {
 				while (res.next()) {
 					String invoiceId = res.getString(1);
@@ -196,6 +197,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 					int invoiceStatus = res.getInt(5);
 					int totalAmount = res.getInt(6);
 					String patientId = res.getString(7);
+					countPatients.add(patientId);
 					String patientName =
 						res.getString(8) + " " + res.getString(9) + " (" + res.getString(10) + ")";
 					String dob = res.getString(11);
@@ -213,7 +215,6 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 						openAmount, patientName);
 					currentContent.add(ie);
 				}
-				System.out.println(ps);
 			} catch (SQLException e) {
 				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Fetch results failed", e);
@@ -224,13 +225,15 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			}
 			
 			if (limitReached) {
-				invoiceListBottomComposite.update(Integer.toString(countPatients),
-					queryLimit + " (" + Integer.toString(countInvoices) + ")",
+				invoiceListBottomComposite.update(
+					countPatients.size() + " (" + Integer.toString(countPatientsWoLimit) + ")",
+					queryLimit + " (" + Integer.toString(countInvoicesWoLimit) + ")",
 					new Money(openAmounts).getAmountAsString(),
 					new Money(owingAmounts).getAmountAsString());
 			} else {
-				invoiceListBottomComposite.update(Integer.toString(countPatients),
-					Integer.toString(countInvoices), new Money(openAmounts).getAmountAsString(),
+				invoiceListBottomComposite.update(Integer.toString(countPatientsWoLimit),
+					Integer.toString(countInvoicesWoLimit),
+					new Money(openAmounts).getAmountAsString(),
 					new Money(owingAmounts).getAmountAsString());
 			}
 			
@@ -242,7 +245,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		BusyIndicator.showWhile(UiDesk.getDisplay(), reloadRunnable);
 	}
 	
-	private String performPreparedStatementReplacements(String original,
+	private String performPreparedStatementReplacements(String original, boolean includeLimitReplacement,
 		boolean includeOrderReplacement){
 		String conditionals = determinePreparedStatementConditionals();
 		String preparedStatement = original.replace("REPLACE_WITH_CONDITIONALS", conditionals);
@@ -251,11 +254,15 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			preparedStatement = preparedStatement.replaceAll("REPLACE_WITH_ORDER", orderBy);
 		}
 		
-		if (queryLimit > 0) {
-			return preparedStatement.replaceAll("REPLACE_WITH_LIMIT",
-				" LIMIT 0," + Integer.toString(queryLimit));
+		if(includeLimitReplacement) {
+			if (queryLimit > 0) {
+				return preparedStatement.replaceAll("REPLACE_WITH_LIMIT",
+					" LIMIT 0," + Integer.toString(queryLimit));
+			} else {
+				return preparedStatement.replaceAll("REPLACE_WITH_LIMIT", "");
+			}
 		} else {
-			return preparedStatement.replaceAll("REPLACE_WITH_LIMIT", "");
+			return preparedStatement;
 		}
 	}
 	
@@ -266,7 +273,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			Mandant selectedMandator = ElexisEventDispatcher.getSelectedMandator();
 			if (selectedMandator != null) {
 				conditionalTokens
-					.add(Rechnung.MANDATOR_ID + Query.EQUALS + selectedMandator.getId());
+					.add(Rechnung.MANDATOR_ID + Query.EQUALS + JdbcLink.wrap(selectedMandator.getId()));
 			}
 		}
 		
