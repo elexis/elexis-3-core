@@ -23,7 +23,6 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Rechnung;
 
 /**
  * The ElexisContext contains a current set of selected elements. It takes care that at any time,
@@ -159,10 +158,6 @@ public class ElexisContext {
 			newSelection.put(Patient.class, p);
 			newSelection.put(Fall.class, f);
 			newSelection.put(Konsultation.class, f.getLetzteBehandlung());
-			if (currentSelection.containsKey(Rechnung.class)
-				&& !p.equals(currentSelection.get(Patient.class))) {
-				newSelection.put(Rechnung.class, null);
-			}
 		} else {
 			log.error("Fall " + f + " without Patient!");
 			return;
@@ -197,10 +192,6 @@ public class ElexisContext {
 			newSelection.put(Patient.class, p);
 			newSelection.put(Fall.class, f);
 			newSelection.put(Konsultation.class, k);
-			if (currentSelection.containsKey(Rechnung.class)
-					&& !p.equals(currentSelection.get(Patient.class))) {
-					newSelection.put(Rechnung.class, null);
-				}
 		} else {
 			log.error("Fall " + f + " without Patient!");
 			return;
@@ -217,7 +208,6 @@ public class ElexisContext {
 			newSelection.put(Patient.class, null);
 			newSelection.put(Fall.class, null);
 			newSelection.put(Konsultation.class, null);
-			newSelection.put(Rechnung.class, null);
 			return;
 		}
 		
@@ -230,7 +220,6 @@ public class ElexisContext {
 		newSelection.put(Patient.class, p);
 		newSelection.put(Fall.class, f);
 		newSelection.put(Konsultation.class, k);
-		newSelection.put(Rechnung.class, null);
 	}
 	
 	/**
