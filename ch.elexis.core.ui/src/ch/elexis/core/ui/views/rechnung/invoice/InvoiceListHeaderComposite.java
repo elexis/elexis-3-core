@@ -334,7 +334,6 @@ public class InvoiceListHeaderComposite extends Composite {
 		if (queryLimit != null) {
 			float val = queryLimit / 1000f;
 			lblLimitWarn.setText(val + "k");
-			System.out.println(val + "k");
 			lblLimitWarn.setToolTipText(
 				"Result set was limited to " + queryLimit + ", you do not see all results!");
 			lblLimitWarn.setBackground(UiDesk.getColor(UiDesk.COL_RED));
