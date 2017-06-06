@@ -735,7 +735,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	
 	@SuppressWarnings("unchecked")
 	public void setPatient(final Patient p){
-		save();
 		actPatient = p;
 		ipp.getAutoForm().reload(actPatient);
 		
