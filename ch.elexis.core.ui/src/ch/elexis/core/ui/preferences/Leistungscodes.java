@@ -230,6 +230,20 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bOptify.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OPTIFY, true));
 		bOptify.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
+		final Button bOptifyXray = new Button(ret, SWT.CHECK);
+		bOptifyXray.setText(Messages.Leistungscodes_optifyXrayPositions);
+		bOptifyXray.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e){
+				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_OPTIFY_XRAY,
+					bOptifyXray.getSelection());
+			}
+			
+		});
+		bOptifyXray.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OPTIFY_XRAY, true));
+		bOptifyXray.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+		
+
 		// *** checkbox for enforcing separate Fall for obligations and non obligations
 		final Button bObligation = new Button(ret, SWT.CHECK);
 		bObligation.setText(Messages.Leistungscodes_separateObligations);

@@ -201,6 +201,7 @@ public class Messages extends NLS {
 	public static String Leistungscodes_necessaryData;
 	public static String Leistungscodes_new;
 	public static String Leistungscodes_notUndoable;
+	public static String Leistungscodes_optifyXrayPositions;
 	public static String Leistungscodes_optionalData;
 	public static String Leistungscodes_pleaseEnterDataForBillingSystem;
 	public static String Leistungscodes_pleaseEnterName;
