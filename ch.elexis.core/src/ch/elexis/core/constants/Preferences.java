@@ -167,6 +167,7 @@ public class Preferences {
 	public final static String LEISTUNGSCODES_BILLING_STRICT = "billing/strict"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_BILLING_ZERO_CHECK = "billing/zero_check"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_OPTIFY = "billing/optify"; //$NON-NLS-1$
+	public final static String LEISTUNGSCODES_OPTIFY_XRAY = "billing/optify/XRAY"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_COLOR = "billing/color/"; //$NON-NLS-1$
 	
 }
