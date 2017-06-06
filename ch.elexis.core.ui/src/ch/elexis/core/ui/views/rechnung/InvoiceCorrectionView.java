@@ -157,7 +157,7 @@ public class InvoiceCorrectionView extends ViewPart {
 	class InvoiceHeaderComposite extends Composite {
 		
 		String[] lbls = new String[] {
-			"Rechnung", "Empfänger", "Telefon Versicherer", "Sachbearbeiter/in", "Rückweisungsgrund"
+			"Rechnung", "Patient", "Telefon Versicherer", "Sachbearbeiter/in", "Rückweisungsgrund"
 		};
 		
 		public InvoiceHeaderComposite(Composite parent){
