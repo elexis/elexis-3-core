@@ -310,6 +310,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 				
 				public void reloadContent(PersistentObject po, InputData ltf){
+					if(bLocked) {
+						return;
+					}
 					KontaktSelektor ks = new KontaktSelektor(getShell(), Kontakt.class,
 						Messages.Patientenblatt2_selectRegularPhysicianTitle,
 						Messages.Patientenblatt2_selectRegularPhysicianMessage, null);
@@ -336,6 +339,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 				
 				public void reloadContent(final PersistentObject po, final InputData ltf){
+					if(bLocked) {
+						return;
+					}
 					ArrayList<String> extFlds = new ArrayList<String>();
 					Kontakt k = (Kontakt) po;
 					for (String dom : Xid.getXIDDomains()) {
@@ -372,6 +378,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				
 				@Override
 				public void reloadContent(PersistentObject po, InputData ltf){
+					if(bLocked) {
+						return;
+					}
 					KontaktSelektor ks = new KontaktSelektor(getShell(), Kontakt.class,
 						Messages.Patientenblatt2_selectLegalGuardianTitle,
 						Messages.Patientenblatt2_selectLegalGuardianMessage, null);
@@ -1326,6 +1335,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		hHA.setEnabled(unlocked);
 		// delZA.setEnabled(!bLock);
 		removeZAAction.setEnabled(unlocked);
+		additionalAddresses.setUnlocked(unlocked);
 		dmd.setUnlocked(false); // https://redmine.medelexis.ch/issues/4602
 		if (unlocked) {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
