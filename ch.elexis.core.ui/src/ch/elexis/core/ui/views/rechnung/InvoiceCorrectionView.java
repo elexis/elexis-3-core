@@ -1,15 +1,10 @@
 package ch.elexis.core.ui.views.rechnung;
 
-import java.util.Calendar;
-
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
@@ -21,7 +16,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -37,14 +31,14 @@ import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.views.FallDetailBlatt2;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Rechnung;
+import ch.elexis.data.dto.FallDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO.DiagnosesDTO;
-import ch.elexis.data.dto.InvoiceCorrectionDTO.FallDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO.KonsultationDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO.LeistungDTO;
-import ch.rgw.tools.TimeTool;
 
 public class InvoiceCorrectionView extends ViewPart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView";
@@ -226,8 +220,8 @@ public class InvoiceCorrectionView extends ViewPart {
 	class InvoiceContentHeaderComposite extends Composite {
 		public InvoiceContentHeaderComposite(Composite parent){
 			super(parent, SWT.BORDER);
-			setLayout(new GridLayout(6, false));
-			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 6, 1));
+			setLayout(new GridLayout(1, false));
+			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		}
 		
 		public void createComponents(FallDTO fallDTO){
@@ -235,8 +229,11 @@ public class InvoiceCorrectionView extends ViewPart {
 			Label lblTitle = new Label(this, SWT.NONE);
 			lblTitle.setText("Fallangaben");
 			lblTitle.setFont(SWTResourceManager.getFont("Noto Sans", 9, SWT.BOLD));
-			lblTitle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 6, 1));
+			lblTitle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 			
+			FallDetailBlatt2 fallDetailBlatt2 = new FallDetailBlatt2(this, fallDTO, true);
+			fallDetailBlatt2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+			/*
 			Label lblLaw = new Label(this, SWT.NONE);
 			lblLaw.setText("Gesetz");
 			
@@ -260,7 +257,7 @@ public class InvoiceCorrectionView extends ViewPart {
 			dateAccident.setDate(doa.get(Calendar.YEAR), doa.get(Calendar.MONTH),
 				doa.get(Calendar.DAY_OF_MONTH));
 			Label lblAccidentNr = new Label(this, SWT.NONE);
-			lblAccidentNr.setText("Unfall Nummer");
+			lblAccidentNr.setText("Unfall Nummer");	
 			CLabel txtAccidentNr = new CLabel(this, SWT.BORDER);
 			txtAccidentNr.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 			txtAccidentNr.setText(fallDTO.getNumber());
@@ -289,6 +286,8 @@ public class InvoiceCorrectionView extends ViewPart {
 			text.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 			text.setText(fallDTO.getCostReceiver());
 			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
+			
+			*/
 		}
 	}
 	

@@ -1,7 +1,6 @@
 package ch.elexis.data.dto;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
@@ -11,7 +10,6 @@ import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
 import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
-import ch.rgw.tools.TimeTool;
 
 public class InvoiceCorrectionDTO {
 	private final String id;
@@ -75,73 +73,6 @@ public class InvoiceCorrectionDTO {
 	
 	public FallDTO getFallDTO(){
 		return fallDTO;
-	}
-	
-	public class FallDTO
-	{
-		private final String id;
-		private String number;
-		private String abrechnungsSystem;
-		private Date beginnDate;
-		private String costReceiver;
-		private String receiver;
-		
-		public FallDTO(){
-			this.id = null;
-		}
-		
-		public FallDTO(Fall fall){
-			this.id = fall.getId();
-			this.number = "TODO"; //fall.getInfoString("Fallnummer");fall.getFallNummer()
-			this.abrechnungsSystem = fall.getAbrechnungsSystem();
-			this.beginnDate = new TimeTool(fall.getBeginnDatum()).getTime();
-			this.costReceiver = fall.getGarant().getLabel(); //TODO ?
-			this.receiver = fall.getGarant().istPatient() ? "PATIENT" : "SUVA"; //TODO
-		}
-		
-		public void setAbrechnungsSystem(String abrechnungsSystem){
-			this.abrechnungsSystem = abrechnungsSystem;
-		}
-		
-		public void setBeginnDate(Date beginnDate){
-			this.beginnDate = beginnDate;
-		}
-		
-		public void setCostReceiver(String costReceiver){
-			this.costReceiver = costReceiver;
-		}
-		
-		public void setNumber(String number){
-			this.number = number;
-		}
-		
-		public String getAbrechnungsSystem(){
-			return abrechnungsSystem;
-		}
-		
-		public Date getBeginnDate(){
-			return beginnDate;
-		}
-		
-		public String getCostReceiver(){
-			return costReceiver;
-		}
-		
-		public String getId(){
-			return id;
-		}
-		
-		public String getNumber(){
-			return number;
-		}
-		
-		public void setReceiver(String receiver){
-			this.receiver = receiver;
-		}
-		
-		public String getReceiver(){
-			return receiver;
-		}
 	}
 	
 	public class KonsultationDTO {
