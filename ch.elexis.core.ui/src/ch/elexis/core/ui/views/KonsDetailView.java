@@ -448,10 +448,9 @@ public class KonsDetailView extends ViewPart
 	
 	private void updateFallCombo(){
 		Patient pat = ElexisEventDispatcher.getSelectedPatient();
-		if (pat != null) {
+		if (pat != null && comboViewerFall != null) {
 			Fall[] faelle = pat.getFaelle();
 			comboViewerFall.setInput(faelle);
-			
 			if (actKons != null) {
 				comboFallSelectionListener.ignoreSelectionEventOnce();
 				comboViewerFall.setSelection(new StructuredSelection(actKons.getFall()));
