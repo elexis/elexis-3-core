@@ -520,7 +520,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		}
 		
 		public String getReceiverLabel(){
-			if (garantId.equals(patientId)) {
+			if (garantId != null && garantId.equals(patientId)) {
 				garantLabel = getPatientName();
 			}
 			return garantLabel;
