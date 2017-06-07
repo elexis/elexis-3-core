@@ -229,7 +229,7 @@ def emit_changes(ausgabe, from=nil, to=nil)
   end
 end
 
-def emit_history(filename:, from: nil, to: nil)
+def emit_history(filename, from = nil, to = nil)
   walk = @history
   filename += "-#{from.sub('release/','')}-#{to.sub('release/','')}" if from && to
   File.open(filename, 'w+') do |ausgabe|
@@ -265,11 +265,11 @@ end if  @options[:with_tickets]
 @history = []
 get_release_tags
 if @options[:from] && @options[:to]
-  emit_history(filename: @options[:changelog], from: @options[:from], to: @options[:to])
+  emit_history(@options[:changelog], @options[:from], @options[:to])
 else
   find_tags_in_current_branch
   build_branch_history
-  emit_history(filename: @options[:changelog])
+  emit_history(@options[:changelog])
 end
 puts "\nCreated #{File.expand_path(@options[:changelog])}" +
     "#{@csv_file_name ? ' and ' +  File.expand_path(@csv_file_name) : ' '}" +
