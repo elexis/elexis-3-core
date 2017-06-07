@@ -203,6 +203,31 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IBILLABLE: {
+				IBillable iBillable = (IBillable)theEObject;
+				T1 result = caseIBillable(iBillable);
+				if (result == null) result = caseIdentifiable(iBillable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IVERIFICATION_CONTEXT: {
+				IVerificationContext<?> iVerificationContext = (IVerificationContext<?>)theEObject;
+				T1 result = caseIVerificationContext(iVerificationContext);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IVERIFICATION_CONVERTER: {
+				IVerificationConverter<?, ?> iVerificationConverter = (IVerificationConverter<?, ?>)theEObject;
+				T1 result = caseIVerificationConverter(iVerificationConverter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IVERIFICATION_SERVICE: {
+				IVerificationService<?> iVerificationService = (IVerificationService<?>)theEObject;
+				T1 result = caseIVerificationService(iVerificationService);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -474,6 +499,66 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIHistory(IHistory object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBillable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBillable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIBillable(IBillable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IVerification Context</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IVerification Context</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public <T> T1 caseIVerificationContext(IVerificationContext<T> object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IVerification Converter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IVerification Converter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public <U, T> T1 caseIVerificationConverter(IVerificationConverter<U, T> object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IVerification Service</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IVerification Service</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public <T> T1 caseIVerificationService(IVerificationService<T> object) {
 		return null;
 	}
 

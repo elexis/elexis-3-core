@@ -10,14 +10,9 @@
  */
 package ch.elexis.core.types.impl;
 
-import ch.elexis.core.types.AddressType;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.impl.EFactoryImpl;
-import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import ch.elexis.core.model.BillingVerification;
 
+import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
@@ -27,8 +22,23 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
+import ch.elexis.core.types.VerificationType;
+
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
+
+import java.util.Optional;
+
+import org.eclipse.core.runtime.IStatus;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+
+import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc -->
@@ -97,6 +107,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createAddressTypeFromString(eDataType, initialValue);
 			case TypesPackage.DOCUMENT_STATUS:
 				return createDocumentStatusFromString(eDataType, initialValue);
+			case TypesPackage.VERIFICATION_TYPE:
+				return createVerificationTypeFromString(eDataType, initialValue);
 			case TypesPackage.MONEY:
 				return createMoneyFromString(eDataType, initialValue);
 			case TypesPackage.TIME_TOOL:
@@ -107,6 +119,12 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createLabItemTypFromString(eDataType, initialValue);
 			case TypesPackage.COUNTRY:
 				return createCountryFromString(eDataType, initialValue);
+			case TypesPackage.STATUS:
+				return createStatusFromString(eDataType, initialValue);
+			case TypesPackage.OPTIONAL:
+				return createOptionalFromString(eDataType, initialValue);
+			case TypesPackage.BILLING_VERIFICATION:
+				return createBillingVerificationFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -130,6 +148,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertAddressTypeToString(eDataType, instanceValue);
 			case TypesPackage.DOCUMENT_STATUS:
 				return convertDocumentStatusToString(eDataType, instanceValue);
+			case TypesPackage.VERIFICATION_TYPE:
+				return convertVerificationTypeToString(eDataType, instanceValue);
 			case TypesPackage.MONEY:
 				return convertMoneyToString(eDataType, instanceValue);
 			case TypesPackage.TIME_TOOL:
@@ -140,6 +160,12 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertLabItemTypToString(eDataType, instanceValue);
 			case TypesPackage.COUNTRY:
 				return convertCountryToString(eDataType, instanceValue);
+			case TypesPackage.STATUS:
+				return convertStatusToString(eDataType, instanceValue);
+			case TypesPackage.OPTIONAL:
+				return convertOptionalToString(eDataType, instanceValue);
+			case TypesPackage.BILLING_VERIFICATION:
+				return convertBillingVerificationToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -250,6 +276,26 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public VerificationType createVerificationTypeFromString(EDataType eDataType, String initialValue) {
+		VerificationType result = VerificationType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertVerificationTypeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Money createMoneyFromString(EDataType eDataType, String initialValue) {
 		return (Money)super.createFromString(eDataType, initialValue);
 	}
@@ -332,6 +378,60 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertCountryToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IStatus createStatusFromString(EDataType eDataType, String initialValue) {
+		return (IStatus)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertStatusToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Optional<?> createOptionalFromString(EDataType eDataType, String initialValue) {
+		return (Optional<?>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertOptionalToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BillingVerification createBillingVerificationFromString(EDataType eDataType, String initialValue) {
+		return (BillingVerification)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertBillingVerificationToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

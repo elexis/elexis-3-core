@@ -15,6 +15,7 @@ import ch.elexis.core.types.TypesPackage;
 import java.util.List;
 import java.util.Map;
 
+import java.util.Optional;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 

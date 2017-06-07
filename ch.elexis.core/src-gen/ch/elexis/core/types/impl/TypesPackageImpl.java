@@ -10,16 +10,9 @@
  */
 package ch.elexis.core.types.impl;
 
+import ch.elexis.core.model.BillingVerification;
+
 import ch.elexis.core.types.AddressType;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
@@ -29,9 +22,25 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
+import ch.elexis.core.types.VerificationType;
+
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
+
 import java.lang.Comparable;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.eclipse.core.runtime.IStatus;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EPackage;
+
+import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -101,6 +110,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EEnum verificationTypeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EDataType moneyEDataType = null;
 
 	/**
@@ -130,6 +146,27 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType countryEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType statusEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType optionalEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType billingVerificationEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -269,6 +306,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getVerificationType() {
+		return verificationTypeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getMoney() {
 		return moneyEDataType;
 	}
@@ -314,6 +360,33 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getStatus() {
+		return statusEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EDataType getOptional() {
+		return optionalEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EDataType getBillingVerification() {
+		return billingVerificationEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TypesFactory getTypesFactory() {
 		return (TypesFactory)getEFactoryInstance();
 	}
@@ -349,6 +422,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		relationshipTypeEEnum = createEEnum(RELATIONSHIP_TYPE);
 		addressTypeEEnum = createEEnum(ADDRESS_TYPE);
 		documentStatusEEnum = createEEnum(DOCUMENT_STATUS);
+		verificationTypeEEnum = createEEnum(VERIFICATION_TYPE);
 
 		// Create data types
 		moneyEDataType = createEDataType(MONEY);
@@ -356,6 +430,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		genderEDataType = createEDataType(GENDER);
 		labItemTypEDataType = createEDataType(LAB_ITEM_TYP);
 		countryEDataType = createEDataType(COUNTRY);
+		statusEDataType = createEDataType(STATUS);
+		optionalEDataType = createEDataType(OPTIONAL);
+		billingVerificationEDataType = createEDataType(BILLING_VERIFICATION);
 	}
 
 	/**
@@ -386,6 +463,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addETypeParameter(listEClass, "E");
 		addETypeParameter(mapEClass, "K");
 		addETypeParameter(mapEClass, "V");
+		addETypeParameter(optionalEDataType, "T");
 
 		// Set bounds for type parameters
 
@@ -448,12 +526,19 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(documentStatusEEnum, DocumentStatus.SENT);
 		addEEnumLiteral(documentStatusEEnum, DocumentStatus.RECIVED);
 
+		initEEnum(verificationTypeEEnum, VerificationType.class, "VerificationType");
+		addEEnumLiteral(verificationTypeEEnum, VerificationType.TARMED);
+		addEEnumLiteral(verificationTypeEEnum, VerificationType.LABOR);
+
 		// Initialize data types
 		initEDataType(moneyEDataType, Money.class, "Money", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(timeToolEDataType, TimeTool.class, "TimeTool", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(genderEDataType, Gender.class, "Gender", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(labItemTypEDataType, LabItemTyp.class, "LabItemTyp", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(countryEDataType, Country.class, "Country", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(statusEDataType, IStatus.class, "Status", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(optionalEDataType, Optional.class, "Optional", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(billingVerificationEDataType, BillingVerification.class, "BillingVerification", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);
