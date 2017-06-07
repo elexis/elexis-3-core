@@ -69,6 +69,7 @@ location "http://download.elexis.info/mirror.4.elexis/snapshot" {
 
 location "http://download.elexis.info/elexis-server/elexis-server-dependencies" {
 	hapi-fhir-osgi-core
+	org.springframework.spring-web
 	woodstox-core-asl
 	javax.xml.stream.stax-api
 	stax2-api
@@ -76,7 +77,7 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	com.phloc.commons
 	com.phloc.schematron
 	findbugsAnnotations
-	com.google.gson
+	com.google.code.gson
 	org.thymeleaf
 	ognl
 	org.attoparser

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.DomainResource;
+import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Period;
@@ -68,10 +69,10 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 		List<ICondition> indication = new ArrayList<>();
 		org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
 			(org.hl7.fhir.dstu3.model.Encounter) resource;
-		List<Reference> theIndication = fhirEncounter.getIndication();
-		for (Reference reference : theIndication) {
-			if (reference.getReference() != null
-				&& reference.getReference().contains("Condition")) {
+		List<DiagnosisComponent> theIndication = fhirEncounter.getDiagnosis();
+		for (DiagnosisComponent component : theIndication) {
+			Reference reference = component.getCondition();
+			if (reference.getReference() != null) {
 				String idString = reference.getReferenceElement().getIdPart();
 				service.findById(idString, ICondition.class)
 					.ifPresent(condition -> indication.add((ICondition) condition));
@@ -83,11 +84,11 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 	public void setIndication(DomainResource resource, List<ICondition> indication){
 		org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
 			(org.hl7.fhir.dstu3.model.Encounter) resource;
-		List<Reference> theIndication = new ArrayList<>();
+		List<DiagnosisComponent> theIndication = new ArrayList<>();
 		for (ICondition iCondition : indication) {
-			theIndication.add(new Reference(new IdDt("Condition", iCondition.getId())));
+			theIndication.add(new DiagnosisComponent(new Reference(new IdDt("Condition", iCondition.getId()))));
 		}
-		fhirEncounter.setIndication(theIndication);
+		fhirEncounter.setDiagnosis(theIndication);
 	}
 	
 	public List<ICoding> getType(DomainResource resource){
@@ -118,7 +119,7 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 
 	public void setPatientId(DomainResource resource, String patientId) {
 		org.hl7.fhir.dstu3.model.Encounter fhirEncounter = (org.hl7.fhir.dstu3.model.Encounter) resource;
-		fhirEncounter.setPatient(new Reference(new IdDt("Patient", patientId)));
+		fhirEncounter.setSubject(new Reference(new IdDt("Patient", patientId)));
 	}
 
 	public void setConsultationId(DomainResource resource, String consultationId) {

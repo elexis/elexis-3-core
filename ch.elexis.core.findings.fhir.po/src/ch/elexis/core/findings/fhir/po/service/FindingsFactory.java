@@ -39,7 +39,7 @@ public class FindingsFactory implements IFindingsFactory {
 		Condition ret = (Condition) new Condition().create();
 		org.hl7.fhir.dstu3.model.Condition fhirCondition = new org.hl7.fhir.dstu3.model.Condition();
 		fhirCondition.setId(new IdType("Condition", ret.getId()));
-		fhirCondition.setDateRecorded(new Date());
+		fhirCondition.setAssertedDate(new Date());
 		ModelUtil.saveResource(fhirCondition, ret);
 		return ret;
 	}
