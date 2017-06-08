@@ -291,6 +291,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		qbe.or();
 		qbe.add(Leistungsblock.FLD_MACRO, Query.EQUALS, macro);
 		qbe.endGroup();
+		qbe.and();
 		qbe.startGroup();
 		qbe.add(Leistungsblock.FLD_MANDANT_ID, Query.EQUALS,
 			selectedMandator.getId());
