@@ -7,9 +7,11 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.model.Primitive;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.Messages;
 import ch.rgw.tools.StringTool;
@@ -25,6 +27,8 @@ public abstract class HL7Reader {
 	public HL7Reader(Message message){
 		this.message = message;
 	}
+	
+	public abstract OrcMessage getOrcMessage();
 	
 	public abstract String getSender() throws ElexisException;
 	
@@ -118,5 +122,36 @@ public abstract class HL7Reader {
 		// currently we use the default, please augment
 		// on specific requirements
 		return parseTextValue(ftValue);
+	}
+	
+	private String extractName(Primitive nameObj){
+		if (nameObj != null) {
+			String val = nameObj.getValue();
+			if (val != null) {
+				return val.trim();
+			}
+		}
+		return null;
+	}
+	
+	public void addNameValuesToOrcMessage(Primitive nameObj, Primitive name2Obj,
+		OrcMessage orcMessage){
+		if (orcMessage != null) {
+			String name = extractName(nameObj);
+			if (name != null) {
+				orcMessage.getNames().add(name);
+			}
+			
+			//for case firstname and lastname
+			if (name2Obj != null) {
+				String name2 = extractName(name2Obj);
+				if (name2 != null) {
+					orcMessage.getNames().add(name2);
+					if (name != null) {
+						orcMessage.getNames().add(name + " " + name2);
+					}
+				}
+			}
+		}
 	}
 }

@@ -13,13 +13,16 @@ import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v251.datatype.CE;
 import ca.uhn.hl7v2.model.v251.datatype.ED;
+import ca.uhn.hl7v2.model.v251.datatype.FN;
 import ca.uhn.hl7v2.model.v251.datatype.FT;
 import ca.uhn.hl7v2.model.v251.datatype.NM;
 import ca.uhn.hl7v2.model.v251.datatype.SN;
 import ca.uhn.hl7v2.model.v251.datatype.ST;
 import ca.uhn.hl7v2.model.v251.datatype.TX;
 import ca.uhn.hl7v2.model.v251.datatype.XAD;
+import ca.uhn.hl7v2.model.v251.datatype.XCN;
 import ca.uhn.hl7v2.model.v251.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v251.group.ORU_R01_PATIENT_RESULT;
 import ca.uhn.hl7v2.model.v251.group.OUL_R22_ORDER;
 import ca.uhn.hl7v2.model.v251.message.ORU_R01;
 import ca.uhn.hl7v2.model.v251.message.OUL_R22;
@@ -27,6 +30,7 @@ import ca.uhn.hl7v2.model.v251.segment.MSH;
 import ca.uhn.hl7v2.model.v251.segment.NTE;
 import ca.uhn.hl7v2.model.v251.segment.OBR;
 import ca.uhn.hl7v2.model.v251.segment.OBX;
+import ca.uhn.hl7v2.model.v251.segment.ORC;
 import ca.uhn.hl7v2.model.v251.segment.PID;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
@@ -38,6 +42,7 @@ import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.model.EncapsulatedData;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.model.TextData;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
@@ -446,5 +451,45 @@ public class HL7ReaderV251 extends HL7Reader {
 		} else {
 			logger.error(MessageFormat.format("Value type {0} is not implemented!", valueType));
 		}
+	}
+	
+
+	@Override
+	public OrcMessage getOrcMessage(){
+		try {
+			ORU_R01 oru = (ORU_R01) message;
+			if (oru != null) {
+				ORU_R01_PATIENT_RESULT pr = oru.getPATIENT_RESULT();
+				if (pr != null) {
+					ORU_R01_ORDER_OBSERVATION oo = pr.getORDER_OBSERVATION();
+					if (oo != null) {
+						return extractOrc(oo.getORC());
+					}
+				}
+			}
+		} catch (Exception e) {
+			LoggerFactory.getLogger(HL7Reader.class).warn("orc parsing failed", e);
+		}
+		return null;
+	}
+	
+	private OrcMessage extractOrc(ORC orc) throws HL7Exception{
+		if (orc != null) {
+			OrcMessage orcMessage = new OrcMessage();
+			XCN[] ops = orc.getOrderingProvider();
+			for (XCN op : ops) {
+				FN fn = op.getFamilyName();
+				ST familyName = null;
+				if (fn != null) {
+					familyName = fn.getSurname();
+					if (familyName == null) {
+						familyName = fn.getOwnSurname();
+					}
+				}
+				addNameValuesToOrcMessage(op.getGivenName(), familyName, orcMessage);
+			}
+			return orcMessage;
+		}
+		return null;
 	}
 }

@@ -35,6 +35,7 @@ import ch.elexis.hl7.model.EncapsulatedData;
 import ch.elexis.hl7.model.IValueType;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.model.TextData;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.rgw.tools.Result;
@@ -119,6 +120,13 @@ public class HL7Parser {
 					obsMessage.getPatientId(), true);
 			}
 			
+			OrcMessage orcMessage = hl7Reader.getOrcMessage();
+			if (orcMessage != null) {
+				if (orcMessage.getNames().isEmpty()) {
+					logger.warn("Cannot parse mandant name for ORC message");
+				}
+			}
+
 			int number = 0;
 			List<TransientLabResult> results = new ArrayList<TransientLabResult>();
 			List<IValueType> observations = obsMessage.getObservations();
@@ -178,7 +186,9 @@ public class HL7Parser {
 								.flags(hl7LabResult.isFlagged() ? LabResultConstants.PATHOLOGIC : 0)
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 								.observationTime(obrDateTime).analyseTime(obxDateTime)
-								.transmissionTime(transmissionTime).build(labImportUtil);
+								.transmissionTime(transmissionTime)
+								.orcMessage(orcMessage)
+								.build(labImportUtil);
 						results.add(importedResult);
 						logger.debug(importedResult.toString());
 					} else {
@@ -192,7 +202,9 @@ public class HL7Parser {
 											: 0)
 									.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 									.observationTime(obrDateTime).analyseTime(obxDateTime)
-									.transmissionTime(transmissionTime).build(labImportUtil);
+									.transmissionTime(transmissionTime)
+									.orcMessage(orcMessage)
+									.build(labImportUtil);
 						results.add(importedResult);
 						logger.debug(importedResult.toString());
 					}
@@ -233,6 +245,7 @@ public class HL7Parser {
 						
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem, title).date(date)
+								.orcMessage(orcMessage)
 								.build(labImportUtil);
 						results.add(importedResult);
 						
