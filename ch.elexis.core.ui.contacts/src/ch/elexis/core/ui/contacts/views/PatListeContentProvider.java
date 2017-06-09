@@ -236,7 +236,10 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		if (pats.length > index) {
 			tv.replace(pats[index], index);
 		} else {
-			tv.replace(StringConstants.DASH, index);
+			Object elementAt = tv.getElementAt(index);
+			if(elementAt != null) {
+				tv.replace(StringConstants.DASH, index);
+			}
 		}
 	}
 	
