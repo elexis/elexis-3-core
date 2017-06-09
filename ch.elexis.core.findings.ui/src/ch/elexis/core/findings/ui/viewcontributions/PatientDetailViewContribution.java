@@ -61,6 +61,6 @@ public class PatientDetailViewContribution implements IViewContribution {
 	
 	private boolean isDiagnose(IFinding iFinding){
 		return iFinding instanceof ICondition
-			&& ((ICondition) iFinding).getCategory() == ConditionCategory.DIAGNOSIS;
+			&& ((ICondition) iFinding).getCategory() == ConditionCategory.PROBLEMLISTITEM;
 	}
 }

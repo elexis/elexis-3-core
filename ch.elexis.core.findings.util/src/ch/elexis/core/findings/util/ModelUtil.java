@@ -8,6 +8,7 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
@@ -16,6 +17,7 @@ import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.util.internal.FindingsFormatUtil;
 import ch.elexis.core.findings.util.model.CodingWrapper;
 
 public class ModelUtil {
@@ -39,8 +41,17 @@ public class ModelUtil {
 
 	public static Optional<IBaseResource> loadResource(IFinding finding) throws DataFormatException{
 		IBaseResource resource = null;
-		if (finding.getRawContent() != null && !finding.getRawContent().isEmpty()) {
-			resource = getJsonParser().parseResource(finding.getRawContent());
+		String rawContent = finding.getRawContent();
+		if (rawContent != null && !rawContent.isEmpty()) {
+			// always convert to newest json format
+			if (!FindingsFormatUtil.isCurrentFindingsFormat(rawContent)) {
+				Optional<String> convertedContent =
+					FindingsFormatUtil.convertToCurrentFindingsFormat(rawContent);
+				if (convertedContent.isPresent()) {
+					rawContent = convertedContent.get();
+				}
+			}
+			resource = getJsonParser().parseResource(rawContent);
 		}
 		return Optional.ofNullable(resource);
 	}

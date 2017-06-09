@@ -1,8 +1,10 @@
 package ch.elexis.core.findings.test;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -45,5 +47,9 @@ public class AllTests {
 				initializer.initalize();
 			}
 		}
+	}
+	
+	public static String getResourceAsString(String resourcePath) throws IOException{
+		return IOUtils.toString(AllTests.class.getResourceAsStream(resourcePath));
 	}
 }

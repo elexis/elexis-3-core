@@ -104,7 +104,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 								return findingsService
 									.getPatientsFindings(patientId, ICondition.class).stream()
 									.filter(condition -> ((ICondition) condition)
-										.getCategory() == ConditionCategory.DIAGNOSIS)
+										.getCategory() == ConditionCategory.PROBLEMLISTITEM)
 									.collect(Collectors.toList());
 							};
 						});

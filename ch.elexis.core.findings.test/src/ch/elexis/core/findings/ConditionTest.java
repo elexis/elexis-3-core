@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -42,7 +43,7 @@ public class ConditionTest {
 			condition.setPatientId(AllTests.PATIENT_ID);
 			LocalDate dateRecorded = LocalDate.of(2016, Month.DECEMBER, 29);
 			condition.setDateRecorded(dateRecorded);
-			condition.setCategory(ConditionCategory.DIAGNOSIS);
+			condition.setCategory(ConditionCategory.PROBLEMLISTITEM);
 			condition.setStatus(ConditionStatus.ACTIVE);
 			condition.setText("Condition " + i);
 			FindingsServiceComponent.getService().saveFinding(condition);
@@ -69,7 +70,7 @@ public class ConditionTest {
 		condition.setPatientId(AllTests.PATIENT_ID);
 		LocalDate dateRecorded = LocalDate.of(2016, Month.OCTOBER, 19);
 		condition.setDateRecorded(dateRecorded);
-		condition.setCategory(ConditionCategory.DIAGNOSIS);
+		condition.setCategory(ConditionCategory.PROBLEMLISTITEM);
 		condition.setStatus(ConditionStatus.ACTIVE);
 		
 		condition.addNote("first note");
@@ -132,5 +133,18 @@ public class ConditionTest {
 		assertFalse(extensions.isEmpty());
 		assertTrue(extensions.containsKey("test"));
 		assertEquals("testValue", extensions.get("test"));
+	}
+	
+	@Test
+	public void testFindingsFormatConversion() throws IOException{
+		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
+		assertNotNull(factory);
+		ICondition condition = factory.createCondition();
+		assertNotNull(condition);
+		// condition format of HAPI FHIR 2.0
+		condition.setRawContent(AllTests.getResourceAsString("/rsc/json/ConditionFormat20.json"));
+		// category changed from diagnosis to problem-list-item
+		ConditionCategory category = condition.getCategory();
+		assertTrue(category == ConditionCategory.PROBLEMLISTITEM);
 	}
 }

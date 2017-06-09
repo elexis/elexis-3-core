@@ -27,79 +27,94 @@ import ch.elexis.core.findings.ICondition.ConditionStatus;
 import ch.elexis.core.findings.util.ModelUtil;
 
 public class ConditionAccessor extends AbstractFindingsAccessor {
-
-	private EnumMapping categoryMapping = new EnumMapping(org.hl7.fhir.instance.model.valuesets.ConditionCategory.class,
-			ch.elexis.core.findings.ICondition.ConditionCategory.class);
-	private EnumMapping statusMapping = new EnumMapping(ConditionClinicalStatus.class,
-			ch.elexis.core.findings.ICondition.ConditionStatus.class);
-
-	public Optional<LocalDate> getDateRecorded(DomainResource resource) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	private EnumMapping categoryMapping =
+		new EnumMapping(org.hl7.fhir.dstu3.model.codesystems.ConditionCategory.class,
+			org.hl7.fhir.dstu3.model.codesystems.ConditionCategory.PROBLEMLISTITEM,
+			ch.elexis.core.findings.ICondition.ConditionCategory.class,
+			ConditionCategory.PROBLEMLISTITEM);
+	private EnumMapping statusMapping =
+		new EnumMapping(ConditionClinicalStatus.class, ConditionClinicalStatus.ACTIVE,
+			ch.elexis.core.findings.ICondition.ConditionStatus.class, ConditionStatus.ACTIVE);
+	
+	public Optional<LocalDate> getDateRecorded(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		Date date = fhirCondition.getAssertedDate();
 		if (date != null) {
 			return Optional.of(getLocalDate(date));
 		}
 		return Optional.empty();
 	}
-
-	public void setDateRecorded(DomainResource resource, LocalDate date) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public void setDateRecorded(DomainResource resource, LocalDate date){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		fhirCondition.setAssertedDate(getDate(date));
 	}
-
-	public ConditionCategory getCategory(DomainResource resource) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public ConditionCategory getCategory(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		if (!fhirCondition.getCategory().isEmpty()) {
 			List<Coding> coding = fhirCondition.getCategory().get(0).getCoding();
 			if (!coding.isEmpty()) {
 				for (Coding categoryCoding : coding) {
-					if (categoryCoding.getSystem().equals("http://hl7.org/fhir/condition-category")) {
+					if (categoryCoding.getSystem()
+						.equals("http://hl7.org/fhir/condition-category")) {
 						return (ConditionCategory) categoryMapping
-								.getLocalEnumValueByCode(categoryCoding.getCode().toUpperCase());
+							.getLocalEnumValueByCode(categoryCoding.getCode().toUpperCase());
 					}
 				}
 			}
 		}
 		return ConditionCategory.UNKNOWN;
 	}
-
-	public void setCategory(DomainResource resource, ConditionCategory category) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public void setCategory(DomainResource resource, ConditionCategory category){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		CodeableConcept categoryCode = new CodeableConcept();
-		org.hl7.fhir.instance.model.valuesets.ConditionCategory fhirCategoryCode = (org.hl7.fhir.instance.model.valuesets.ConditionCategory) categoryMapping
+		org.hl7.fhir.dstu3.model.codesystems.ConditionCategory fhirCategoryCode =
+			(org.hl7.fhir.dstu3.model.codesystems.ConditionCategory) categoryMapping
 				.getFhirEnumValueByEnum(category);
 		if (fhirCategoryCode != null) {
-			categoryCode.setCoding(Collections.singletonList(new Coding(fhirCategoryCode.getSystem(),
+			categoryCode
+				.setCoding(Collections.singletonList(new Coding(fhirCategoryCode.getSystem(),
 					fhirCategoryCode.toCode(), fhirCategoryCode.getDisplay())));
 			fhirCondition.setCategory(Collections.singletonList(categoryCode));
 		}
 	}
-
-	public ConditionStatus getStatus(DomainResource resource) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public ConditionStatus getStatus(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		ConditionClinicalStatus fhirStatus = fhirCondition.getClinicalStatus();
 		if (fhirStatus != null) {
 			return (ConditionStatus) statusMapping.getLocalEnumValueByCode(fhirStatus.name());
 		}
 		return ConditionStatus.UNKNOWN;
 	}
-
-	public void setStatus(DomainResource resource, ConditionStatus status) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
-		ConditionClinicalStatus fhirCategoryCode = (ConditionClinicalStatus) statusMapping
-				.getFhirEnumValueByEnum(status);
+	
+	public void setStatus(DomainResource resource, ConditionStatus status){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
+		ConditionClinicalStatus fhirCategoryCode =
+			(ConditionClinicalStatus) statusMapping.getFhirEnumValueByEnum(status);
 		if (fhirCategoryCode != null) {
 			fhirCondition.setClinicalStatus(fhirCategoryCode);
 		}
 	}
-
-	public void setStart(DomainResource resource, String start) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public void setStart(DomainResource resource, String start){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		fhirCondition.setOnset(new StringType(start));
 	}
-
-	public Optional<String> getStart(DomainResource resource) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public Optional<String> getStart(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		try {
 			if (fhirCondition.hasOnsetDateTimeType()) {
 				DateTimeType dateTime = fhirCondition.getOnsetDateTimeType();
@@ -112,18 +127,21 @@ public class ConditionAccessor extends AbstractFindingsAccessor {
 				return Optional.of(fhirCondition.getOnsetStringType().getValue());
 			}
 		} catch (FHIRException e) {
-			LoggerFactory.getLogger(ConditionAccessor.class).error("Could not access start time.", e);
+			LoggerFactory.getLogger(ConditionAccessor.class).error("Could not access start time.",
+				e);
 		}
 		return Optional.empty();
 	}
-
-	public void setEnd(DomainResource resource, String end) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public void setEnd(DomainResource resource, String end){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		fhirCondition.setAbatement(new StringType(end));
 	}
-
-	public Optional<String> getEnd(DomainResource resource) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public Optional<String> getEnd(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		try {
 			if (fhirCondition.hasAbatementDateTimeType()) {
 				DateTimeType dateTime = fhirCondition.getAbatementDateTimeType();
@@ -140,38 +158,44 @@ public class ConditionAccessor extends AbstractFindingsAccessor {
 		}
 		return Optional.empty();
 	}
-
-	public void addNote(DomainResource resource, String text) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public void addNote(DomainResource resource, String text){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		Annotation annotation = new Annotation();
 		annotation.setText(text);
 		fhirCondition.addNote(annotation);
 	}
-
-	public void removeNote(DomainResource resource, String text) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public void removeNote(DomainResource resource, String text){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		List<Annotation> notes = new ArrayList<Annotation>(fhirCondition.getNote());
-		notes = notes.stream().filter(annotation -> !text.equals(annotation.getText())).collect(Collectors.toList());
+		notes = notes.stream().filter(annotation -> !text.equals(annotation.getText()))
+			.collect(Collectors.toList());
 		fhirCondition.setNote(notes);
 	}
-
-	public List<String> getNotes(DomainResource resource) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public List<String> getNotes(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		List<Annotation> notes = fhirCondition.getNote();
 		return notes.stream().map(annotation -> annotation.getText()).collect(Collectors.toList());
 	}
-
-	public List<ICoding> getCoding(DomainResource resource) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public List<ICoding> getCoding(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		CodeableConcept codeableConcept = fhirCondition.getCode();
 		if (codeableConcept != null) {
 			return ModelUtil.getCodingsFromConcept(codeableConcept);
 		}
 		return Collections.emptyList();
 	}
-
-	public void setCoding(DomainResource resource, List<ICoding> coding) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public void setCoding(DomainResource resource, List<ICoding> coding){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		CodeableConcept codeableConcept = fhirCondition.getCode();
 		if (codeableConcept == null) {
 			codeableConcept = new CodeableConcept();
@@ -179,9 +203,10 @@ public class ConditionAccessor extends AbstractFindingsAccessor {
 		ModelUtil.setCodingsToConcept(codeableConcept, coding);
 		fhirCondition.setCode(codeableConcept);
 	}
-
-	public void setPatientId(DomainResource resource, String patientId) {
-		org.hl7.fhir.dstu3.model.Condition fhirCondition = (org.hl7.fhir.dstu3.model.Condition) resource;
+	
+	public void setPatientId(DomainResource resource, String patientId){
+		org.hl7.fhir.dstu3.model.Condition fhirCondition =
+			(org.hl7.fhir.dstu3.model.Condition) resource;
 		fhirCondition.setSubject(new Reference(new IdDt("Patient", patientId)));
 	}
 }

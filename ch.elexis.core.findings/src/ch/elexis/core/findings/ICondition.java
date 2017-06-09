@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 
 public interface ICondition extends IFinding {
 	public enum ConditionCategory {
-			UNKNOWN, DIAGNOSIS, COMPLAINT;
+			UNKNOWN, PROBLEMLISTITEM, ENCOUNTERDIAGNOSIS;
 		
 		public String getLocalized(){
 			try {

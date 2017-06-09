@@ -11,5 +11,7 @@ Require-Bundle: ch.elexis.core.findings;bundle-version="1.0.0",
 Export-Package: ch.elexis.core.findings.util,
  ch.elexis.core.findings.util.fhir.accessor,
  ch.elexis.core.findings.util.model
-Import-Package: org.osgi.framework;version="1.7.0",
+Import-Package: com.google.gson,
+ com.google.gson.internal,
+ org.osgi.framework;version="1.7.0",
  org.slf4j

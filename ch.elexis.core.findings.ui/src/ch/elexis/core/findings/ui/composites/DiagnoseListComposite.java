@@ -305,7 +305,7 @@ public class DiagnoseListComposite extends Composite {
 			Patient selectedPatient = ElexisEventDispatcher.getSelectedPatient();
 			if (selectedPatient != null) {
 				ConditionEditDialog dialog =
-					new ConditionEditDialog(ConditionCategory.DIAGNOSIS, getShell());
+					new ConditionEditDialog(ConditionCategory.PROBLEMLISTITEM, getShell());
 				if (dialog.open() == Dialog.OK) {
 					dialog.getCondition().ifPresent(c -> {
 						c.setPatientId(selectedPatient.getId());

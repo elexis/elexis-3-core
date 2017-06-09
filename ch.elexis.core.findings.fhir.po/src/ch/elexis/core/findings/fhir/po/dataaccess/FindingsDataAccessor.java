@@ -102,7 +102,7 @@ public class FindingsDataAccessor implements IDataAccess {
 		findings.stream().forEach(finding -> {
 			if (finding instanceof ICondition) {
 				ICondition iCondition = (ICondition) finding;
-				if (iCondition.getCategory().equals(ConditionCategory.DIAGNOSIS)) {
+				if (iCondition.getCategory().equals(ConditionCategory.PROBLEMLISTITEM)) {
 					ret.add(iCondition);
 				}
 			}
