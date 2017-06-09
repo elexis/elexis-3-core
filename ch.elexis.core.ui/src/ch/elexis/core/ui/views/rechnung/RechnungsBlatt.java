@@ -24,6 +24,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -74,7 +75,9 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.data.Anwender;
+import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
+import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
@@ -236,6 +239,30 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		
 		public void runInUi(ElexisEvent ev){
 			display();
+		}
+	};
+	
+	private final ElexisEventListenerImpl eeli_patient = new ElexisUiEventListenerImpl(
+		Patient.class, ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED) {
+		
+		public void runInUi(ElexisEvent ev){
+			Patient pat = (Patient) ev.getObject();
+			switch (ev.getType()) {
+			case ElexisEvent.EVENT_DESELECTED: // fall thru
+				doSelect(null);
+				break;
+			case ElexisEvent.EVENT_SELECTED:
+				if (actRn != null) {
+					Fall fall = actRn.getFall();
+					if (fall.exists()) {
+						Patient patient = fall.getPatient();
+						if (!Objects.equals(pat, patient)) {
+							doSelect(null);
+						}
+					}
+				}
+				break;
+			}
 		}
 	};
 	
@@ -598,13 +625,13 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	
 	public void visible(boolean mode){
 		if (mode) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_rn, eeli_user);
+			ElexisEventDispatcher.getInstance().addListeners(eeli_rn, eeli_user, eeli_patient);
 			Rechnung selected = (Rechnung) ElexisEventDispatcher.getSelected(Rechnung.class);
 			if (selected != null) {
 				doSelect(selected);
 			}
 		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_rn, eeli_user);
+			ElexisEventDispatcher.getInstance().removeListeners(eeli_rn, eeli_user, eeli_patient);
 		}
 	}
 	
