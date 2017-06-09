@@ -20,13 +20,16 @@ import ca.uhn.hl7v2.model.v231.datatype.SN;
 import ca.uhn.hl7v2.model.v231.datatype.ST;
 import ca.uhn.hl7v2.model.v231.datatype.TX;
 import ca.uhn.hl7v2.model.v231.datatype.XAD;
+import ca.uhn.hl7v2.model.v231.datatype.XCN;
 import ca.uhn.hl7v2.model.v231.group.ORU_R01_OBXNTE;
 import ca.uhn.hl7v2.model.v231.group.ORU_R01_ORCOBRNTEOBXNTECTI;
+import ca.uhn.hl7v2.model.v231.group.ORU_R01_PIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI;
 import ca.uhn.hl7v2.model.v231.message.ORU_R01;
 import ca.uhn.hl7v2.model.v231.segment.MSH;
 import ca.uhn.hl7v2.model.v231.segment.NTE;
 import ca.uhn.hl7v2.model.v231.segment.OBR;
 import ca.uhn.hl7v2.model.v231.segment.OBX;
+import ca.uhn.hl7v2.model.v231.segment.ORC;
 import ca.uhn.hl7v2.model.v231.segment.PID;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
@@ -38,6 +41,7 @@ import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.model.EncapsulatedData;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.model.TextData;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
@@ -366,5 +370,42 @@ public class HL7ReaderV231 extends HL7Reader {
 		} else {
 			logger.error(MessageFormat.format("Value type {0} is not implemented!", valueType));
 		}
+	}
+	
+	@Override
+	public OrcMessage getOrcMessage(){
+		try {
+			ORU_R01 oru = (ORU_R01) message;
+			if (oru != null) {
+				ORU_R01_PIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI pr =
+					oru.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI();
+				if (pr != null) {
+					ORU_R01_ORCOBRNTEOBXNTECTI oo = pr.getORCOBRNTEOBXNTECTI();
+					if (oo != null) {
+						return extractOrc(oo.getORC());
+					}
+				}
+			}
+		} catch (Exception e) {
+			LoggerFactory.getLogger(HL7Reader.class).warn("orc parsing failed", e);
+		}
+		return null;
+	}
+	
+	private OrcMessage extractOrc(ORC orc) throws HL7Exception{
+		if (orc != null) {
+			OrcMessage orcMessage = new OrcMessage();
+			XCN[] ops = orc.getOrderingProvider();
+			for (XCN op : ops) {
+				FN fn = op.getFamilyLastName();
+				ST familyName = null;
+				if (fn != null) {
+					familyName = fn.getFamilyName();
+				}
+				addNameValuesToOrcMessage(op.getGivenName(), familyName, orcMessage);
+			}
+			return orcMessage;
+		}
+		return null;
 	}
 }

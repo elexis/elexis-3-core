@@ -33,10 +33,12 @@ import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Labor;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.elexis.data.Xid;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.model.TextData;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.rgw.tools.TimeTool;
@@ -185,11 +187,12 @@ public class LabImportUtil implements ILabImportUtil {
 	 */
 	public String importLabResults(List<TransientLabResult> results, ImportHandler uiHandler){
 		boolean overWriteAll = false;
+		String mandantId = findMandantForLabResults(results);
 		String orderId = LabOrder.getNextOrderId();
 		for (TransientLabResult transientLabResult : results) {
 			List<LabResult> existing = getExistingResults(transientLabResult);
 			if (existing.isEmpty()) {
-				ILabResult labResult = createLabResult(transientLabResult, orderId);
+				ILabResult labResult = createLabResult(transientLabResult, orderId, mandantId);
 				
 				CoreHub.getLocalLockService().acquireLock((LabResult) labResult);
 				CoreHub.getLocalLockService().releaseLock((LabResult) labResult);
@@ -232,6 +235,54 @@ public class LabImportUtil implements ILabImportUtil {
 	}
 	
 	/**
+	 * Tries to find the {@link Mandant} Id for given {@link TransientLabResult}
+	 * 
+	 * @param results
+	 * @return
+	 */
+	private String findMandantForLabResults(List<TransientLabResult> results){
+		if (results != null && !results.isEmpty()) {
+			TransientLabResult transientLabResult = results.get(0);
+			OrcMessage orcMessage = transientLabResult.getOrcMessage();
+			if (orcMessage != null && !orcMessage.getNames().isEmpty()) {
+				for (String name : orcMessage.getNames()) {
+					String[] splitNames = name.split(" ");
+					int size = splitNames.length;
+					if (size > 1) {
+						Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
+						qbe.startGroup();
+						qbe.add(Kontakt.FLD_NAME1, Query.LIKE, splitNames[0], true);
+						qbe.and();
+						qbe.add(Kontakt.FLD_NAME2, Query.LIKE, splitNames[1], true);
+						qbe.endGroup();
+						qbe.or();
+						qbe.startGroup();
+						qbe.add(Kontakt.FLD_NAME1, Query.LIKE, splitNames[1], true);
+						qbe.and();
+						qbe.add(Kontakt.FLD_NAME2, Query.LIKE, splitNames[0], true);
+						qbe.endGroup();
+						List<Mandant> list = qbe.execute();
+						if (list.size() == 1) {
+							return list.get(0).getId();
+						}
+					}
+				}
+				logger.warn("mandants " + orcMessage.getNames().toString()
+					+ " not found or not unique in db");
+			}
+		}
+		//TODO from last konsultation
+		
+
+		// use the current mandant
+		Mandant mandant = ElexisEventDispatcher.getSelectedMandator();
+		if (mandant != null) {
+			return mandant.getId();
+		}
+		throw new RuntimeException("No selected mandantor found!"); //should not happen!
+	}
+	
+	/**
 	 * Match for existing result with same item and date. Matching dates are checked for validitiy
 	 * (not same as transmission date).
 	 * 
@@ -264,11 +315,18 @@ public class LabImportUtil implements ILabImportUtil {
 	 * LabOrder. If it is in State.ORDERED the created LabResult is set to that LabOrder, else
 	 * create a new LabOrder and add the LabResult to it.
 	 * 
+	 * @deprecated Use {@link #createLabResult(TransientLabResult, String, String)}
 	 * @param transientLabResult
 	 * @param orderId
 	 * @return the created lab result element
 	 */
+	@Deprecated
 	public ILabResult createLabResult(TransientLabResult transientLabResult, String orderId){
+		return createLabResult(transientLabResult, orderId, CoreHub.actMandant.getId());
+	}
+	
+	public ILabResult createLabResult(TransientLabResult transientLabResult, String orderId,
+		String mandantId){
 		ILabResult labResult = transientLabResult.persist();
 		
 		List<LabOrder> existing = LabOrder.getLabOrders(transientLabResult.getPatient().getId(),
@@ -286,7 +344,7 @@ public class LabImportUtil implements ILabImportUtil {
 					time = new TimeTool();
 				}
 			}
-			labOrder = new LabOrder(CoreHub.actUser.getId(), CoreHub.actMandant.getId(),
+			labOrder = new LabOrder(CoreHub.actUser.getId(), mandantId,
 				transientLabResult.getPatient().getId(), transientLabResult.getLabItem(),
 				labResult.getId(), orderId, "Import", time);
 		} else {

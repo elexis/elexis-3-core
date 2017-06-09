@@ -8,6 +8,7 @@ import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
 
 public class TransientLabResult {
@@ -30,6 +31,8 @@ public class TransientLabResult {
 	private Map<String, String> setProperties;
 	private ILabImportUtil labImportUtil;
 	
+	private OrcMessage orcMessage;
+	
 	private TransientLabResult(Builder builder, ILabImportUtil labImportUtil){
 		this.patient = builder.patient;
 		this.labItem = builder.labItem;
@@ -50,6 +53,7 @@ public class TransientLabResult {
 		this.setProperties = builder.setProperties;
 		
 		this.labImportUtil = labImportUtil;
+		this.orcMessage = builder.orcMessage;
 	}
 	
 	/**
@@ -231,6 +235,10 @@ public class TransientLabResult {
 		return analyseTime;
 	}
 	
+	public OrcMessage getOrcMessage(){
+		return orcMessage;
+	}
+	
 	/**
 	 * Check if analyse time is valid, by comparing it with the transmission time.
 	 * 
@@ -291,6 +299,7 @@ public class TransientLabResult {
 		private TimeTool transmissionTime;
 		
 		private Map<String, String> setProperties;
+		private OrcMessage orcMessage;
 		
 		public Builder(IPatient patient, IContact origin, ILabItem labItem, String result){
 			this.patient = patient;
@@ -356,6 +365,12 @@ public class TransientLabResult {
 		public TransientLabResult build(ILabImportUtil labImportUtil){
 			return new TransientLabResult(this, labImportUtil);
 		}
+		
+		public Builder orcMessage(OrcMessage orcMessage){
+			this.orcMessage = orcMessage;
+			return this;
+		}
+		
 		
 //		public Builder setProperty(String property, String value){
 //			if (setProperties == null) {
