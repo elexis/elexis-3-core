@@ -267,8 +267,8 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		return Anwender.load(checkNull(get(CREATOR)));
 	}
 	
-	private static String PS_REMINDERS_RESPONSIBLE =
-		"SELECT r.ID FROM reminders r LEFT JOIN reminders_responsible_link rrl ON (r.id = rrl.ReminderId) WHERE rrl.ResponsibleID = ? AND r.deleted = '0'";
+	private static String PS_REMINDERS_RESPONSIBLE = "SELECT r.ID FROM " + TABLENAME
+		+ " r LEFT JOIN REMINDERS_RESPONSIBLE_LINK rrl ON (r.id = rrl.ReminderId) WHERE rrl.ResponsibleID = ? AND r.deleted = '0'";
 	
 	public static List<Reminder> findAllUserIsResponsibleFor(Anwender anwender,
 		boolean showOnlyDueReminders){
@@ -360,8 +360,8 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		return qbe.execute();
 	}
 	
-	private static String PS_REMINDERS_BASE =
-		"SELECT r.ID FROM reminders r LEFT JOIN reminders_responsible_link rrl ON (r.id = rrl.ReminderId) WHERE rrl.ResponsibleID = ? AND r.deleted = '0' AND r.Status != '3'";
+	private static String PS_REMINDERS_BASE = "SELECT r.ID FROM " + TABLENAME
+		+ " r LEFT JOIN REMINDERS_RESPONSIBLE_LINK rrl ON (r.id = rrl.ReminderId) WHERE rrl.ResponsibleID = ? AND r.deleted = '0' AND r.Status != '3'";
 	
 	/**
 	 * Retrieve all reminders the given {@link Anwender} is responsible for. The select can be
