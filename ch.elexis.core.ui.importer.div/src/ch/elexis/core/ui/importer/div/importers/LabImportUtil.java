@@ -26,6 +26,7 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.text.GenericDocument;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabMapping;
@@ -187,7 +188,7 @@ public class LabImportUtil implements ILabImportUtil {
 	 */
 	public String importLabResults(List<TransientLabResult> results, ImportHandler uiHandler){
 		boolean overWriteAll = false;
-		String mandantId = findMandantForLabResults(results);
+		String mandantId = findMandantIdForLabResults(results);
 		String orderId = LabOrder.getNextOrderId();
 		for (TransientLabResult transientLabResult : results) {
 			List<LabResult> existing = getExistingResults(transientLabResult);
@@ -240,10 +241,11 @@ public class LabImportUtil implements ILabImportUtil {
 	 * @param results
 	 * @return
 	 */
-	private String findMandantForLabResults(List<TransientLabResult> results){
+	private String findMandantIdForLabResults(List<TransientLabResult> results){
 		if (results != null && !results.isEmpty()) {
 			TransientLabResult transientLabResult = results.get(0);
 			OrcMessage orcMessage = transientLabResult.getOrcMessage();
+			// case 1 try to find mandant via orc message
 			if (orcMessage != null && !orcMessage.getNames().isEmpty()) {
 				for (String name : orcMessage.getNames()) {
 					String[] splitNames = name.split(" ");
@@ -263,20 +265,42 @@ public class LabImportUtil implements ILabImportUtil {
 						qbe.endGroup();
 						List<Mandant> list = qbe.execute();
 						if (list.size() == 1) {
-							return list.get(0).getId();
+							String id = list.get(0).getId();
+							if (id != null) {
+								logger.debug("labimport - mandantor [" + id
+									+ "] found with orc name db match");
+								return id;
+							}
+							
 						}
 					}
 				}
-				logger.warn("mandants " + orcMessage.getNames().toString()
-					+ " not found or not unique in db");
+				logger.warn("labimport - " + orcMessage.getNames().toString()
+					+ " not found or not unique in db - try to find mandantor via last konsultation");
+			}
+			
+			// case 2 try to find mandant via last consultation for patient
+			IPatient iPatient = transientLabResult.getPatient();
+			if (iPatient != null) {
+				Patient patient = Patient.load(iPatient.getId());
+				if (patient.exists()) {
+					Konsultation konsultation = patient.findLastKonsultationIgnoreMandant();
+					if (konsultation.exists()) {
+						Mandant mandant = konsultation.getMandant();
+						if (mandant != null && mandant.getId() != null) {
+							logger.debug("labimport - mandantor found [" + mandant.getId()
+								+ "] with last konsultation");
+							return mandant.getId();
+						}
+					}
+				}
 			}
 		}
-		//TODO from last konsultation
-		
 
-		// use the current mandant
+		// case 3 use the current mandant
 		Mandant mandant = ElexisEventDispatcher.getSelectedMandator();
 		if (mandant != null) {
+			logger.debug("labimport - use the active selected mandantor [" + mandant.getId() + "]");
 			return mandant.getId();
 		}
 		throw new RuntimeException("No selected mandantor found!"); //should not happen!
