@@ -124,6 +124,12 @@ public abstract class HL7Reader {
 		return parseTextValue(ftValue);
 	}
 	
+	/**
+	 * Extracts and trims the String value from a {@link Primitive}
+	 * 
+	 * @param nameObj
+	 * @return
+	 */
 	private String extractName(Primitive nameObj){
 		if (nameObj != null) {
 			String val = nameObj.getValue();
@@ -134,22 +140,31 @@ public abstract class HL7Reader {
 		return null;
 	}
 	
-	public void addNameValuesToOrcMessage(Primitive nameObj, Primitive name2Obj,
+	/**
+	 * Collects all potential not null name values and adds them to the OrcMessage. All not null
+	 * values like firstName, secondName and combination of firstName and secondName will also be
+	 * added to the OrcMessage.
+	 * 
+	 * Example firstName is Max and secondName is Muster: Method collects: Max, Muster, Max Muster
+	 * in OrcMessage
+	 * 
+	 * @param firstName
+	 * @param secondName
+	 * @param orcMessage
+	 */
+	public void addNameValuesToOrcMessage(Primitive firstName, Primitive secondName,
 		OrcMessage orcMessage){
 		if (orcMessage != null) {
-			String name = extractName(nameObj);
+			String name = extractName(firstName);
 			if (name != null) {
 				orcMessage.getNames().add(name);
 			}
 			
-			//for case firstname and lastname
-			if (name2Obj != null) {
-				String name2 = extractName(name2Obj);
-				if (name2 != null) {
-					orcMessage.getNames().add(name2);
-					if (name != null) {
-						orcMessage.getNames().add(name + " " + name2);
-					}
+			String name2 = extractName(secondName);
+			if (name2 != null) {
+				orcMessage.getNames().add(name2);
+				if (name != null) {
+					orcMessage.getNames().add(name + " " + name2);
 				}
 			}
 		}
