@@ -124,8 +124,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				Rechnung invoice = (Rechnung) po;
 				Money openAmount = invoice.getOffenerBetrag();
 				ltf.setText(openAmount.getAmountAsString());
-				if (openAmount.isMoreThan(new Money())
-					&& RnStatus.STORNIERT == invoice.getStatus()) {
+				if (RnStatus.STORNIERT == invoice.getStatus()) {
 					ltf.setLabel(Messages.RechnungsBlatt_compensateAmount);
 				} else {
 					ltf.setLabel(Messages.RechnungsBlatt_amountOpen);
@@ -134,10 +133,11 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			
 			public void reloadContent(PersistentObject po, InputData ltf){
 				Rechnung invoice = (Rechnung) po;
-				Money openAmount = invoice.getOffenerBetrag();
-				
-				if (RnStatus.STORNIERT == invoice.getStatus()
-					&& openAmount.isMoreThan(new Money())) {
+				if (RnStatus.STORNIERT == invoice.getStatus()) {
+					Money openAmount = invoice.getOffenerBetrag();
+					if(openAmount.isZero()) {
+						return;
+					}
 					if (!CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_BILLMODIFY)) {
 						MessageDialog.openError(
 							Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
