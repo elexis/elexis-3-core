@@ -190,6 +190,7 @@ public class Patient extends Person {
 				Prescription.FLD_PRESC_TYPE, Prescription.FLD_ARTICLE
 			});
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
+		qbe.add(Prescription.FLD_REZEPT_ID, StringTool.leer, null);
 		List<Prescription> prescriptions = qbe.execute();
 		// make sure just now closed are not included
 		TimeTool now = new TimeTool();
@@ -250,16 +251,9 @@ public class Patient extends Person {
 	 * Fixmedikation als Text
 	 * 
 	 * @return
-	 * @deprecated does not filter by EntryType, use {@link Patient#getMedication(EntryType)}
-	 *             instead.
 	 */
 	public String getMedikation(){
-		Prescription[] pre = getFixmedikation();
-		StringBuilder sb = new StringBuilder();
-		for (Prescription p : pre) {
-			sb.append(p.getLabel()).append(StringTool.lf);
-		}
-		return sb.toString();
+		return getMedicationText(EntryType.FIXED_MEDICATION);
 	}
 	
 	/**
