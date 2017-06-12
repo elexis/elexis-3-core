@@ -31,6 +31,7 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.ITag;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.services.IDocumentStore.Capability;
+import ch.elexis.core.utils.FileUtil;
 
 @Component(service = DocumentStore.class)
 public class DocumentStore {
@@ -152,7 +153,8 @@ public class DocumentStore {
 					tempFileSuffix = "tmp";
 				}
 				File tmpFile =
-					new File(FileUtils.getTempDirectory(), tempFilePrefix + "." + tempFileSuffix);
+					new File(FileUtils.getTempDirectory(),
+						FileUtil.removeInvalidChars(tempFilePrefix) + "." + tempFileSuffix);
 				FileUtils.copyInputStreamToFile(in.get(), tmpFile);
 				if (deleteOnExit) {
 					tmpFile.deleteOnExit();
