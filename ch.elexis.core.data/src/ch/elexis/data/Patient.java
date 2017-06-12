@@ -323,7 +323,7 @@ public class Patient extends Person {
 	 * 
 	 * @return
 	 */
-	public Konsultation findLastKonsultationIgnoreMandant(){
+	public Konsultation getLastKonsultation(){
 		Konsultation fromDB = null;
 		if (getId() != null) {
 			PreparedStatement preparedStatement =
