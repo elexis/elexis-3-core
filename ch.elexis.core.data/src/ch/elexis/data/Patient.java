@@ -190,7 +190,6 @@ public class Patient extends Person {
 				Prescription.FLD_PRESC_TYPE, Prescription.FLD_ARTICLE
 			});
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
-		qbe.add(Prescription.FLD_REZEPT_ID, StringTool.leer, null);
 		List<Prescription> prescriptions = qbe.execute();
 		// make sure just now closed are not included
 		TimeTool now = new TimeTool();
