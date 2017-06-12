@@ -15,11 +15,15 @@ package ch.elexis.data;
 import static ch.elexis.core.model.PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN;
 import static ch.elexis.core.model.PatientConstants.FLD_EXTINFO_STAMMARZT;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
@@ -312,6 +316,35 @@ public class Patient extends Person {
 		} else {
 			return list.get(0);
 		}
+	}
+	
+	/**
+	 * Finds the last non deleted {@link Konsultation} over all mandants
+	 * 
+	 * @return
+	 */
+	public Konsultation getLastKonsultation(){
+		Konsultation fromDB = null;
+		if (getId() != null) {
+			PreparedStatement preparedStatement =
+				PersistentObject.getDefaultConnection().getPreparedStatement(
+					"SELECT BH.id FROM BEHANDLUNGEN BH LEFT JOIN FAELLE FA ON BH.FallID = FA.id AND BH.deleted = FA.deleted WHERE FA.PatientID = ? and FA.deleted = '0' order by BH.Datum desc, BH.lastupdate desc limit 1");
+			try {
+				preparedStatement.setString(1, getId());
+				ResultSet results = preparedStatement.executeQuery();
+				// map key date string, list string ids of results
+				if ((results != null) && (results.next() == true)) {
+					String consId = results.getString(1);
+					fromDB = Konsultation.load(consId);
+				}
+			} catch (SQLException e) {
+				LoggerFactory.getLogger(Patient.class)
+					.error("Could not load consultations of patient [" + getId() + "]", e);
+			} finally {
+				PersistentObject.getDefaultConnection().releasePreparedStatement(preparedStatement);
+			}
+		}
+		return fromDB;
 	}
 	
 	public Konsultation createFallUndKons(){
