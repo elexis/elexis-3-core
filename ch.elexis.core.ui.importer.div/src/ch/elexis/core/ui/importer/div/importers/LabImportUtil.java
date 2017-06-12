@@ -285,7 +285,7 @@ public class LabImportUtil implements ILabImportUtil {
 				Patient patient = Patient.load(iPatient.getId());
 				if (patient.exists()) {
 					Konsultation konsultation = patient.getLastKonsultation();
-					if (konsultation.exists()) {
+					if (konsultation != null && konsultation.exists()) {
 						Mandant mandant = konsultation.getMandant();
 						if (mandant != null && mandant.getId() != null) {
 							logger.debug("labimport - mandantor found [" + mandant.getId()
