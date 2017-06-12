@@ -26,6 +26,7 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.services.IConflictHandler.Result;
 import ch.elexis.core.services.ILocalDocumentService;
+import ch.elexis.core.utils.FileUtil;
 import ch.rgw.tools.MimeTool;
 
 @Component
@@ -251,7 +252,7 @@ public class LocalDocumentService implements ILocalDocumentService {
 			// default
 			sb.append(getDefaultFileEnding());
 		}
-		return sb.toString();
+		return FileUtil.removeInvalidChars(sb.toString());
 	}
 	
 	private boolean isGetIdMethod(Method method){
