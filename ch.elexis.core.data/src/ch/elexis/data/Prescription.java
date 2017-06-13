@@ -671,6 +671,21 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
+	 * Check if the prescription is stopped at the time provided.
+	 * 
+	 * @param time
+	 * @return
+	 */
+	public boolean isStopped(TimeTool time){
+		String timestamp = checkNull(get(FLD_DATE_UNTIL));
+		if (!timestamp.isEmpty()) {
+			TimeTool timetool = new TimeTool(timestamp);
+			return timetool.isBefore(time);
+		}
+		return false;
+	}
+	
+	/**
 	 * 
 	 * @return
 	 * @since 3.1.0
