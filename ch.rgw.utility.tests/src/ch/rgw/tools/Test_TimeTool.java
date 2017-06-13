@@ -67,7 +67,7 @@ public class Test_TimeTool {
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
-		timeTool.addDays(62);
+		timeTool.addDays(64);
 		duration = timeTool.getDurationToNowString();
 		assertNotNull(timeTool.toString(), duration);
 		assertTrue(containsDigit(duration));
@@ -79,7 +79,7 @@ public class Test_TimeTool {
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
-		timeTool.addDays(-62);
+		timeTool.addDays(-64);
 		duration = timeTool.getDurationToNowString();
 		assertNotNull(timeTool.toString(), duration);
 		assertTrue(containsDigit(duration));

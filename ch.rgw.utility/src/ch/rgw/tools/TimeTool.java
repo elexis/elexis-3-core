@@ -753,7 +753,7 @@ public class TimeTool extends GregorianCalendar {
 			String format = getYearsFormat(years);
 			return String.format(format, Math.abs(years));
 		}
-		if (months != 0 && Math.abs(days) > 28) {
+		if (months != 0 && Math.abs(days) > 63) {
 			String format = getMonthsFormat(months);
 			return String.format(format, Math.abs(months));
 		}
