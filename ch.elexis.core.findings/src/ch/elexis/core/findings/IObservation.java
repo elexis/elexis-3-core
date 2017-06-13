@@ -18,7 +18,19 @@ import java.util.ResourceBundle;
 
 public interface IObservation extends IFinding {
 	public enum ObservationCategory {
-		SOCIALHISTORY, VITALSIGNS, IMAGING, LABORATORY, PROCEDURE, SURVEY, EXAM, THERAPY;
+		SOCIALHISTORY("social-history"), VITALSIGNS("vital-signs"), IMAGING("imaging"), LABORATORY(
+				"laboratory"), PROCEDURE("procedure"), SURVEY("survey"), EXAM(
+						"exam"), THERAPY("therapy"), SOAP_SUBJECTIVE("subjective"), SOAP_OBJECTIVE("objective");
+
+		private String code;
+
+		private ObservationCategory(String code) {
+			this.code = code;
+		}
+
+		public String getCode() {
+			return code;
+		}
 
 		public String getLocalized() {
 			try {
@@ -32,20 +44,20 @@ public interface IObservation extends IFinding {
 	}
 
 	public List<IObservation> getSourceObservations();
-	
+
 	public void addSourceObservation(IObservation source);
-	
+
 	public List<IObservation> getTargetObseravtions();
-	
+
 	public void addTargetObservation(IObservation source);
-	
+
 	/**
 	 * Get the {@link IEncounter} referenced.
 	 * 
 	 * @return
 	 */
 	public Optional<IEncounter> getEncounter();
-	
+
 	/**
 	 * Update the {@link IEncounter} referenced. Also updates the encounterId
 	 * with the value of the {@link IEncounter}.
