@@ -254,16 +254,9 @@ public class Patient extends Person {
 	 * Fixmedikation als Text
 	 * 
 	 * @return
-	 * @deprecated does not filter by EntryType, use {@link Patient#getMedication(EntryType)}
-	 *             instead.
 	 */
 	public String getMedikation(){
-		Prescription[] pre = getFixmedikation();
-		StringBuilder sb = new StringBuilder();
-		for (Prescription p : pre) {
-			sb.append(p.getLabel()).append(StringTool.lf);
-		}
-		return sb.toString();
+		return getMedicationText(EntryType.FIXED_MEDICATION);
 	}
 	
 	/**
