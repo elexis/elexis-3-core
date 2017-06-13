@@ -1,3 +1,4 @@
+
 target "Juno for Elexis 3.1 (Updated for Java 8)" 
 
 with source allEnvironments
@@ -17,9 +18,9 @@ location "http://download.eclipse.org/eclipse/updates/4.5/" {
 	org.eclipse.swt.gtk.linux.x86_64
 }
 
-location "http://hstaudacher.github.io/osgi-jax-rs-connector/5.2.1/" {
-	com.eclipsesource.jaxrs.consumer [5.2.0.201511150719,5.2.0.201511150719]
-	com.eclipsesource.jaxrs.jersey-min [2.22.1,2.22.1]
+location "http://hstaudacher.github.io/osgi-jax-rs-connector/5.3.1/" {
+	com.eclipsesource.jaxrs.consumer [5.3.1.201602281253,5.3.1.201602281253]
+	com.eclipsesource.jaxrs.jersey-min [2.22.2,2.23.0)
 }
 
 location "http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository" {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Juno for Elexis 3.1 (Updated for Java 8)" sequenceNumber="1496851412">
+<target name="Juno for Elexis 3.1 (Updated for Java 8)" sequenceNumber="1497350142">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.osgi" version="3.9.1.v20140110-1610"/>
@@ -17,9 +17,9 @@
       <repository location="http://download.eclipse.org/eclipse/updates/4.5/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="com.eclipsesource.jaxrs.consumer" version="5.2.0.201511150719"/>
-      <unit id="com.eclipsesource.jaxrs.jersey-min" version="2.22.1"/>
-      <repository location="http://hstaudacher.github.io/osgi-jax-rs-connector/5.2.1/"/>
+      <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.201602281253"/>
+      <unit id="com.eclipsesource.jaxrs.jersey-min" version="2.22.2"/>
+      <repository location="http://hstaudacher.github.io/osgi-jax-rs-connector/5.3.1/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.apache.httpcomponents.httpcore" version="4.3.3.v201411290715"/>

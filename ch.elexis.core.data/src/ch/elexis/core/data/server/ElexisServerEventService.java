@@ -25,7 +25,8 @@ public class ElexisServerEventService {
 			System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
 		if (restUrl != null && restUrl.length() > 0) {
 			log.info("Operating against elexis-server instance on " + restUrl);
-			eventService = ConsumerFactory.createConsumer(restUrl, IEventService.class);
+			eventService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
+				IEventService.class);
 		} else {
 			eventService = new NoRemoteEventService();
 		}

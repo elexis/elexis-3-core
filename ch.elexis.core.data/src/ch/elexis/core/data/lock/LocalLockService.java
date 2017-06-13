@@ -25,6 +25,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.server.ElexisServerInstanceService;
+import ch.elexis.core.data.server.ElexisServerLockService;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.ILocalLockService;
 import ch.elexis.core.lock.types.LockInfo;
@@ -88,8 +90,8 @@ public class LocalLockService implements ILocalLockService {
 		if (restUrl != null && restUrl.length() > 0) {
 			standalone = false;
 			logger.info("Operating against elexis-server instance on " + restUrl);
-			ils = ConsumerFactory.createConsumer(restUrl, ILockService.class);
-			iis = ConsumerFactory.createConsumer(restUrl, IInstanceService.class);
+			ils = new ElexisServerLockService(restUrl);
+			iis = new ElexisServerInstanceService(restUrl);
 			String identId = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, "");
 			String identTxt = CoreHub.localCfg.get(Preferences.STATION_IDENT_TEXT, "");
 			inst.setIdentifier(identTxt + " [" + identId + "]");

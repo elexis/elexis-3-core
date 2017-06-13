@@ -12,9 +12,10 @@ Require-Bundle: org.slf4j.api;bundle-version="1.7.2";visibility:=reexport,
  org.apache.commons.lang;bundle-version="2.6.0",
  org.jdom;bundle-version="1.1.0",
  com.google.guava;bundle-version="15.0.0",
- ch.rgw.utility;bundle-version="3.0.0",
- ch.elexis.core;bundle-version="3.2.0";visibility:=reexport,
- com.eclipsesource.jaxrs.consumer;bundle-version="5.2.0"
+ com.eclipsesource.jaxrs.jersey-min;bundle-version="2.22.2",
+ com.eclipsesource.jaxrs.consumer;bundle-version="5.3.1",
+ ch.rgw.utility;bundle-version="3.2.0",
+ ch.elexis.core;bundle-version="3.2.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Export-Package: .,
  ch.elexis.admin,
@@ -39,6 +40,8 @@ Export-Package: .,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Service-Component: OSGI-INF/*.xml
 Bundle-Activator: ch.elexis.core.data.activator.CoreHub
-Import-Package: javax.ws.rs;version="[2.0.0,2.1.0)",
+Import-Package: com.google.gson,
+ javax.ws.rs;version="[2.0.0,2.1.0)",
  javax.ws.rs.core;version="1.1.1",
+ javax.ws.rs.ext;version="1.1.1",
  org.apache.commons.io;version="2.4.0"
