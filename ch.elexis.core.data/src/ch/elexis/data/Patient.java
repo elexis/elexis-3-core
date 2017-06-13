@@ -241,6 +241,15 @@ public class Patient extends Person {
 	}
 	
 	/**
+	 * ReserveMedikation als Text wird unter anderem fuer Platzhalter verwendet
+	 * 
+	 * @return
+	 */
+	public String getReserveMedikation(){
+		return getMedicationText(EntryType.RESERVE_MEDICATION);
+	}
+	
+	/**
 	 * Fixmedikation als Text
 	 * 
 	 * @return

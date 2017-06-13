@@ -79,6 +79,7 @@ Patient.Geburtsdatum=Geburtsdatum des aktuell selektierten Patienten
 Patient.Geschlecht=Geschlecht des aktuell selektierten Patienten
 Patient.PersAnamnese=Anamnese wie auf dem Titelblatt
 Patient.Medikation=Aktuelle Fixmedikation des aktuell selektierten Patienten
+Patient.ReserveMedikation=Aktuelle Reservemedikation des aktuell selektierten Patienten
 Patient.Allergien=Allergien wie auf dem Titelblatt
 Patient.Diagnosen=Diagnosen wie auf dem Titelblatt genannt
 Patient.Stammarzt=Hausarzt des Patienten
