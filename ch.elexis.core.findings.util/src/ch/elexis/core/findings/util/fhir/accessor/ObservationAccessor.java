@@ -55,10 +55,15 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 			for (CodeableConcept categoryConcept : fhirObservation.getCategory()) {
 				List<Coding> coding = categoryConcept.getCoding();
 				for (Coding code : coding) {
-					if (code.getSystem().equals("http://hl7.org/fhir/condition-category")
-							|| code.getSystem().equals(IdentifierSystem.ELEXIS_SOAP)) {
+					if (code.getSystem().equals("http://hl7.org/fhir/condition-category")) {
 						ch.elexis.core.findings.IObservation.ObservationCategory mappedCategory = (ch.elexis.core.findings.IObservation.ObservationCategory) categoryMapping
 								.getLocalEnumValueByCode(code.getCode().toUpperCase());
+						if (mappedCategory != null) {
+							return mappedCategory;
+						}
+					} else if (code.getSystem().equals(IdentifierSystem.ELEXIS_SOAP.getSystem())) {
+						ch.elexis.core.findings.IObservation.ObservationCategory mappedCategory = (ch.elexis.core.findings.IObservation.ObservationCategory) categoryMapping
+								.getLocalEnumValueByCode("SOAP_" + code.getCode().toUpperCase());
 						if (mappedCategory != null) {
 							return mappedCategory;
 						}
