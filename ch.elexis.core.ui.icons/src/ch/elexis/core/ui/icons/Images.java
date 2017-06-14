@@ -254,7 +254,9 @@ public enum Images {
 		IMG_CART,
 		/** wizard for some day event **/
 		IMG_WIZ_DAY, IMG_CALENDAR,
-		IMG_COUNTER_STOP;
+		IMG_COUNTER_STOP,
+		IMG_USER_IDLE, 
+		IMG_SYSTEM_MONITOR;
 		
 	private Images(){}
 	
