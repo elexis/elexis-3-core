@@ -20,7 +20,8 @@ public interface IObservation extends IFinding {
 	public enum ObservationCategory {
 		SOCIALHISTORY("social-history"), VITALSIGNS("vital-signs"), IMAGING("imaging"), LABORATORY(
 				"laboratory"), PROCEDURE("procedure"), SURVEY("survey"), EXAM(
-						"exam"), THERAPY("therapy"), SOAP_SUBJECTIVE("subjective"), SOAP_OBJECTIVE("objective");
+						"exam"), THERAPY("therapy"), SOAP_SUBJECTIVE(
+								"subjective"), SOAP_OBJECTIVE("objective"), UNKNOWN("unknown");
 
 		private String code;
 
