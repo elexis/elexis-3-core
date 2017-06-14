@@ -262,7 +262,9 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				public void doRun(){
 					Prescription pr = getSelection();
 					if (pr != null) {
-						new MediDetailDialog(getShell(), pr).open();
+						MediDetailDialog md = new MediDetailDialog(getShell(), pr);
+						md.setExecutedFrom(FixMediDisplay.class.getSimpleName());
+						md.open();
 						ElexisEventDispatcher.getInstance().fire(
 							new ElexisEvent(pr, Prescription.class, ElexisEvent.EVENT_UPDATE));
 					}

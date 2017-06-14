@@ -46,6 +46,8 @@ public class MediDetailDialog extends TitleAreaDialog {
 	private Artikel article;
 	private Button btnReserveMedication;
 	
+	private String executedFrom;
+	
 	/**
 	 * @wbp.parser.constructor
 	 */
@@ -159,6 +161,12 @@ public class MediDetailDialog extends TitleAreaDialog {
 			btnReserveMedication.setSelection(prescription.isReserveMedication());
 		}
 		stackCompositeDosage.layout();
+		
+		// show or hide components dependent on caller
+		if ("FixMediDisplay".equals(executedFrom)) {
+			btnReserveMedication.setVisible(false);
+		}
+		
 		return ret;
 	}
 	
@@ -283,5 +291,13 @@ public class MediDetailDialog extends TitleAreaDialog {
 	public boolean isFreeText(String[] signatureArray){
 		return !signatureArray[0].isEmpty() && signatureArray[1].isEmpty()
 			&& signatureArray[2].isEmpty() && signatureArray[3].isEmpty();
+	}
+	
+	public void setExecutedFrom(String executedFrom){
+		this.executedFrom = executedFrom;
+	}
+	
+	public String getExecutedFrom(){
+		return executedFrom;
 	}
 }
