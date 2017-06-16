@@ -1,6 +1,10 @@
-package ch.elexis.core.findings.util.internal;
+package ch.elexis.core.findings.util;
 
 import java.util.Optional;
+
+import ch.elexis.core.findings.util.internal.FindingsFormat;
+import ch.elexis.core.findings.util.internal.FindingsFormat20;
+import ch.elexis.core.findings.util.internal.FindingsFormat24;
 
 public class FindingsFormatUtil {
 	
