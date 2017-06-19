@@ -1,6 +1,6 @@
 target "Elexis" with source allEnvironments
 
-location "http://download.elexis.info/elexis/p2/master/target/" {
+location "http://download.elexis.info/elexis/p2/3.2/target/" {
 	org.eclipse.osgi [3.9.1.v20140110-1610,3.9.1.v20140110-1610]
 	org.eclipse.osgi.services [3.3.100.v20130513-1956,3.3.100.v20130513-1956]
 	org.eclipse.osgi.util [3.2.300.v20130513-1956,3.2.300.v20130513-1956]
