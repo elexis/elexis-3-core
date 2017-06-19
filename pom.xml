@@ -437,7 +437,7 @@
 					<target>
 						<artifact>
 							<groupId>ch.elexis</groupId>
-							<artifactId>juno-target</artifactId>
+							<artifactId>elexis</artifactId>
 							<version>3.2.0-SNAPSHOT</version>
 							<!-- we cannot use a classifier here, or mvn compile would file in
 								any other project!! classifier>elexis-3</classifier -->
