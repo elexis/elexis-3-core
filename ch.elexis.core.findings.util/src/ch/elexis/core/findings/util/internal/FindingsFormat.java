@@ -29,19 +29,20 @@ public abstract class FindingsFormat {
 		return resourceFieldsMap;
 	}
 	
-	public abstract boolean isFindingsFormat(String rawContent);
+	public abstract int isFindingsFormat(String rawContent);
 	
 	public abstract Optional<String> convertToCurrentFormat(String rawContent);
 	
-	protected boolean checkFields(Map<String, JsonStructuralFeature> structuralFeatureMap,
+	protected int checkFields(Map<String, JsonStructuralFeature> structuralFeatureMap,
 		JsonObject jsonObject){
+		int matches = 0;
 		for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 			JsonStructuralFeature structuralFeature = structuralFeatureMap.get(entry.getKey());
-			if (structuralFeature != null && !structuralFeature.isSameType(entry.getValue())) {
-				return false;
+			if (structuralFeature != null && structuralFeature.isSameType(entry.getValue())) {
+				matches++;
 			}
 		}
-		return true;
+		return matches;
 	}
 	
 	protected Optional<String> convert(

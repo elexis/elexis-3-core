@@ -22,10 +22,14 @@ public class ModelUtil {
 	
 	private static FhirContext context = FhirContext.forDstu3();
 	
-	public static IParser getJsonParser(){
+	private static IParser getJsonParser() {
 		return context.newJsonParser();
 	}
 	
+	public static IBaseResource getAsResource(String jsonResource) {
+		return getJsonParser().parseResource(jsonResource);
+	}
+
 	public static IGenericClient getGenericClient(String theServerBase) {
 		// Create a logging interceptor
 		LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
@@ -49,7 +53,7 @@ public class ModelUtil {
 					rawContent = convertedContent.get();
 				}
 			}
-			resource = getJsonParser().parseResource(rawContent);
+			resource = getAsResource(rawContent);
 		}
 		return Optional.ofNullable(resource);
 	}

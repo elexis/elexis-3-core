@@ -25,21 +25,40 @@ public class FindingsFormat20 extends FindingsFormat {
 		conditionFields.put("dateRecorded",
 			new JsonStructuralFeature("dateRecorded", Type.PRIMITIVE));
 		resourceFieldsMap.put("Condition", conditionFields);
+
+		HashMap<String, JsonStructuralFeature> encounterFields = new HashMap<>();
+		encounterFields.put("resourceType", new JsonStructuralFeature("resourceType", Type.PRIMITIVE));
+		encounterFields.put("id", new JsonStructuralFeature("id", Type.PRIMITIVE));
+		encounterFields.put("text", new JsonStructuralFeature("text", Type.OBJECT));
+		encounterFields.put("indication", new JsonStructuralFeature("indication", Type.ARRAY));
+		encounterFields.put("patient", new JsonStructuralFeature("patient", Type.OBJECT));
+		resourceFieldsMap.put("Encounter", encounterFields);
+
+		HashMap<String, JsonStructuralFeature> procedureRequestFields = new HashMap<>();
+		procedureRequestFields.put("resourceType", new JsonStructuralFeature("resourceType", Type.PRIMITIVE));
+		procedureRequestFields.put("id", new JsonStructuralFeature("id", Type.PRIMITIVE));
+		procedureRequestFields.put("text", new JsonStructuralFeature("text", Type.OBJECT));
+		procedureRequestFields.put("encounter", new JsonStructuralFeature("encounter", Type.OBJECT));
+		resourceFieldsMap.put("ProcedureRequest", procedureRequestFields);
 	}
 	
-	public boolean isFindingsFormat(String rawContent){
+	public int isFindingsFormat(String rawContent) {
 		JsonObject jsonObject = getJsonObject(rawContent);
 		JsonElement resourceType = jsonObject.get("resourceType");
 		
 		return checkFindingsFormatProperties(resourceType, jsonObject);
 	}
 	
-	private boolean checkFindingsFormatProperties(JsonElement resourceType, JsonObject jsonObject){
+	private int checkFindingsFormatProperties(JsonElement resourceType, JsonObject jsonObject) {
 		switch (resourceType.getAsString()) {
 		case "Condition":
 			return checkFields(resourceFieldsMap.get("Condition"), jsonObject);
+		case "Encounter":
+			return checkFields(resourceFieldsMap.get("Encounter"), jsonObject);
+		case "ProcedureRequest":
+			return checkFields(resourceFieldsMap.get("ProcedureRequest"), jsonObject);
 		}
-		return false;
+		return 0;
 	}
 	
 	@Override
@@ -53,8 +72,8 @@ public class FindingsFormat20 extends FindingsFormat {
 	private Optional<String> convertToCurrentFormat(JsonElement resourceType,
 		JsonObject jsonObject){
 		
-		HashMap<String, JsonStructuralFeatureTransformation> transformations = new HashMap<>();
-		transformations.put("dateRecorded", new JsonStructuralFeatureTransformation() {
+		HashMap<String, JsonStructuralFeatureTransformation> conditionTransformations = new HashMap<>();
+		conditionTransformations.put("dateRecorded", new JsonStructuralFeatureTransformation() {
 			@Override
 			public JsonElement transformValue(JsonElement element){
 				return element;
@@ -65,7 +84,7 @@ public class FindingsFormat20 extends FindingsFormat {
 				return "assertedDate";
 			}
 		});
-		transformations.put("category", new JsonStructuralFeatureTransformation() {
+		conditionTransformations.put("category", new JsonStructuralFeatureTransformation() {
 			
 			@Override
 			public String transformKey(String key){
@@ -105,9 +124,59 @@ public class FindingsFormat20 extends FindingsFormat {
 			}
 		});
 		
+		HashMap<String, JsonStructuralFeatureTransformation> encounterTransformations = new HashMap<>();
+		encounterTransformations.put("indication", new JsonStructuralFeatureTransformation() {
+			@Override
+			public JsonElement transformValue(JsonElement element) {
+				JsonArray diagnosisArray = new JsonArray();
+				if (element instanceof JsonArray) {
+					JsonArray referenceArray = (JsonArray) element;
+					for (JsonElement jsonElement : referenceArray) {
+						JsonObject condition = new JsonObject();
+						condition.add("condition", jsonElement);
+						diagnosisArray.add(condition);
+					}
+				}
+				return diagnosisArray;
+			}
+
+			@Override
+			public String transformKey(String key) {
+				return "diagnosis";
+			}
+		});
+		encounterTransformations.put("patient", new JsonStructuralFeatureTransformation() {
+			@Override
+			public JsonElement transformValue(JsonElement element) {
+				return element;
+			}
+
+			@Override
+			public String transformKey(String key) {
+				return "subject";
+			}
+		});
+
+		HashMap<String, JsonStructuralFeatureTransformation> procedureRequestTransformations = new HashMap<>();
+		procedureRequestTransformations.put("encounter", new JsonStructuralFeatureTransformation() {
+			@Override
+			public JsonElement transformValue(JsonElement element) {
+				return element;
+			}
+
+			@Override
+			public String transformKey(String key) {
+				return "context";
+			}
+		});
+		
 		switch (resourceType.getAsString()) {
 		case "Condition":
-			return convert(transformations, jsonObject);
+			return convert(conditionTransformations, jsonObject);
+		case "Encounter":
+			return convert(encounterTransformations, jsonObject);
+		case "ProcedureRequest":
+			return convert(procedureRequestTransformations, jsonObject);
 		}
 		
 		return Optional.empty();
