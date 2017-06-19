@@ -77,19 +77,23 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	public void setCategory(DomainResource resource, ObservationCategory category) {
 		org.hl7.fhir.dstu3.model.Observation fhirObservation = (org.hl7.fhir.dstu3.model.Observation) resource;
 		CodeableConcept categoryCode = new CodeableConcept();
-		org.hl7.fhir.dstu3.model.codesystems.ObservationCategory fhirCategoryCode = (org.hl7.fhir.dstu3.model.codesystems.ObservationCategory) categoryMapping
-				.getFhirEnumValueByEnum(category);
-		if (fhirCategoryCode != null) {
-			// lookup matching fhir category
-			categoryCode.setCoding(Collections.singletonList(new Coding(fhirCategoryCode.getSystem(),
-					fhirCategoryCode.toCode(), fhirCategoryCode.getDisplay())));
-			fhirObservation.setCategory(Collections.singletonList(categoryCode));
-		} else if (category.name().startsWith("SOAP_")) {
+		if (category.name().startsWith("SOAP_")) {
 			// elexis soap categories
 			categoryCode.setCoding(Collections.singletonList(
 					new Coding(IdentifierSystem.ELEXIS_SOAP.getSystem(), category.getCode(), category.getLocalized())));
 		} else {
-			throw new IllegalStateException("Unknown observation category " + category);
+			org.hl7.fhir.dstu3.model.codesystems.ObservationCategory fhirCategoryCode = (org.hl7.fhir.dstu3.model.codesystems.ObservationCategory) categoryMapping
+					.getFhirEnumValueByEnum(category);
+			if (fhirCategoryCode != null) {
+				// lookup matching fhir category
+				categoryCode.setCoding(Collections.singletonList(new Coding(fhirCategoryCode.getSystem(),
+						fhirCategoryCode.toCode(), fhirCategoryCode.getDisplay())));
+			} else {
+				throw new IllegalStateException("Unknown observation category " + category);
+			}
+		}
+		if (!categoryCode.getCoding().isEmpty()) {
+			fhirObservation.setCategory(Collections.singletonList(categoryCode));
 		}
 	}
 

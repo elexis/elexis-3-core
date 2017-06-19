@@ -22,21 +22,40 @@ public class FindingsFormat24 extends FindingsFormat {
 		conditionFields.put("assertedDate",
 			new JsonStructuralFeature("assertedDate", Type.PRIMITIVE));
 		resourceFieldsMap.put("Condition", conditionFields);
+
+		HashMap<String, JsonStructuralFeature> encounterFields = new HashMap<>();
+		encounterFields.put("resourceType", new JsonStructuralFeature("resourceType", Type.PRIMITIVE));
+		encounterFields.put("id", new JsonStructuralFeature("id", Type.PRIMITIVE));
+		encounterFields.put("text", new JsonStructuralFeature("text", Type.OBJECT));
+		encounterFields.put("diagnosis", new JsonStructuralFeature("diagnosis", Type.ARRAY));
+		encounterFields.put("subject", new JsonStructuralFeature("subject", Type.OBJECT));
+		resourceFieldsMap.put("Encounter", encounterFields);
+
+		HashMap<String, JsonStructuralFeature> procedureRequestFields = new HashMap<>();
+		procedureRequestFields.put("resourceType", new JsonStructuralFeature("resourceType", Type.PRIMITIVE));
+		procedureRequestFields.put("id", new JsonStructuralFeature("id", Type.PRIMITIVE));
+		procedureRequestFields.put("text", new JsonStructuralFeature("text", Type.OBJECT));
+		procedureRequestFields.put("context", new JsonStructuralFeature("context", Type.OBJECT));
+		resourceFieldsMap.put("ProcedureRequest", procedureRequestFields);
 	}
 	
-	public boolean isFindingsFormat(String rawContent){
+	public int isFindingsFormat(String rawContent) {
 		JsonObject jsonObject = getJsonObject(rawContent);
 		JsonElement resourceType = jsonObject.get("resourceType");
 		
 		return checkFindingsFormatProperties(resourceType, jsonObject);
 	}
 	
-	private boolean checkFindingsFormatProperties(JsonElement resourceType, JsonObject jsonObject){
+	private int checkFindingsFormatProperties(JsonElement resourceType, JsonObject jsonObject) {
 		switch (resourceType.getAsString()) {
 		case "Condition":
 			return checkFields(resourceFieldsMap.get("Condition"), jsonObject);
+		case "Encounter":
+			return checkFields(resourceFieldsMap.get("Encounter"), jsonObject);
+		case "ProcedureRequest":
+			return checkFields(resourceFieldsMap.get("ProcedureRequest"), jsonObject);
 		}
-		return false;
+		return 0;
 	}
 	
 	@Override
