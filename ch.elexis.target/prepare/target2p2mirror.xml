@@ -1,0 +1,33 @@
+<project default="custom.build" name="jbosstools target platform p2.mirror generator">
+	<!-- don't forget to increment these files when moving up a version:
+	     build.xml, *.target*, publish.sh, target2p2mirror.xml; also jbds/trunk/releng/org.jboss.ide.eclipse.releng/requirements/jbds-target-platform/build.properties;
+	     also all devstudio-5.0_*.updatesite jobs (4) need to be pointed at the new Target Platform URL -->
+
+	<property name="targetFile" value="e421RC2-wtp341M.target" />
+
+	<!-- if useLatest = true, omit versions from p2.mirror script to fetch latest version available; 
+		 if useLatest = false, include versions and fetch specific versions requested. -->
+	<property name="useLatest" value="false" />
+
+	<target name="custom.build" depends="gen.p2mirror.script" />
+
+	<target name="gen.p2mirror.script" description="use XSLT to generate a p2.mirror script from .target">
+		<echo level="verbose">Generate ${targetFile}.p2mirror.xml from ${targetFile} using useLatest=${useLatest}" />
+</echo>
+		<delete file="${targetFile}.p2mirror.xml" quiet="true" />
+		<xslt style="target2p2mirrorXml.xsl" in="${targetFile}" out="${targetFile}.p2mirror.xml" processor="trax">
+			<param name="useLatest" expression="${useLatest}" />
+		</xslt>
+		<echo>-----------
+
+	Next, be sure to run the resulting p2.mirror script. 
+	You may need to run it a few times for it to complete 
+	successfully (due to network timeouts and invalid mirrors).
+			
+	For instructions on running the script, do this:
+			
+		ant -f ${targetFile}.p2mirror.xml help
+		</echo>
+	</target>
+
+</project>
