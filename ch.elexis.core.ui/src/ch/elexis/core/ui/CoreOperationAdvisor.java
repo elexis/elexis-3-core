@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
@@ -56,8 +55,6 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 			initialPerspectiveString =
 				CoreHub.localCfg.get(CoreHub.actUser + GlobalActions.DEFAULTPERSPECTIVECFG, null);
 		}
-		
-		UiDesk.updateFont(Preferences.USR_DEFAULTFONT);
 	}
 	
 	@Override
