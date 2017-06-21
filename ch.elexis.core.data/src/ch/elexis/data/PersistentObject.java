@@ -738,7 +738,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	
 	public int state(){
-		if (StringTool.isNothing(getId())) {
+		if (StringTool.isNothing(getId()) || getId().contains("'")) {
 			return INVALID_ID;
 		}
 		
