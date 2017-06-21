@@ -725,8 +725,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return a value between INEXISTENT and EXISTS
 	 */
 
-	public int state() {
-		if (StringTool.isNothing(getId())) {
+	 public int state(){
+		if (StringTool.isNothing(getId()) || getId().contains("'")) {
 			return INVALID_ID;
 		}
 
