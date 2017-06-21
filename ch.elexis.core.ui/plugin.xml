@@ -179,12 +179,6 @@
             allPopups="false"
             locationURI="toolbar:ch.elexis.BriefAuswahlView">
          <command
-               commandId="ch.elexis.core.ui.brief.send"
-               icon="icon://IMG_MAIL_SEND"
-               label="Versenden"
-               style="pulldown">
-         </command>
-         <command
                commandId="ch.elexis.core.ui.command.openLocalDocuments"
                icon="icon://IMG_EDIT"
                label="Offene lokale Dokumente"
