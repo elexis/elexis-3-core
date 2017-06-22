@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IFinding;
@@ -54,7 +55,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 		addField(diagStructFieldEditor);
 		
 		persAnamneseStructFieldEditor =
-			new BooleanFieldEditor(SettingsConstants.PERSANAMNESE_SETTINGS_USE_STRUCTURED,
+			new BooleanFieldEditor(SettingsConstants.PERSANAM_SETTINGS_USE_STRUCTURED,
 				"Persönliche Anamnese strukturiert anzeigen", getFieldEditorParent());
 		addField(persAnamneseStructFieldEditor);
 	}
@@ -215,10 +216,19 @@ public class FindingsSettings extends FieldEditorPreferencePage
 							IFindingsService findingsService){
 							return findingsService
 								.getPatientsFindings(patientId, IObservation.class).stream()
-								.filter(oberservation -> ((IObservation) oberservation)
-									.getCategory() == ObservationCategory.SOCIALHISTORY
-									&& ((IObservation) oberservation).getCoding()
-										.contains(ObservationCode.ANAM_PERSONAL))
+								.filter(oberservation ->
+								{
+									if (((IObservation) oberservation)
+										.getCategory() == ObservationCategory.SOCIALHISTORY) {
+										for (ICoding code : ((IObservation) oberservation)
+											.getCoding()) {
+											if (ObservationCode.ANAM_PERSONAL.isSame(code)) {
+												return true;
+											}
+										}
+									}
+									return false;
+								})
 								.collect(Collectors.toList());
 						};
 					});
@@ -229,7 +239,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 				}
 			} else {
 				getPreferenceStore()
-					.setValue(SettingsConstants.PERSANAMNESE_SETTINGS_USE_STRUCTURED, false);
+					.setValue(SettingsConstants.PERSANAM_SETTINGS_USE_STRUCTURED, false);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
 					@Override
@@ -246,7 +256,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 					"Bitte starten sie Elexis neu um mit den Text Persönliche Anamnese zu arbeiten.");
 			} else {
 				getPreferenceStore()
-					.setValue(SettingsConstants.PERSANAMNESE_SETTINGS_USE_STRUCTURED,
+					.setValue(SettingsConstants.PERSANAM_SETTINGS_USE_STRUCTURED,
 					true);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {

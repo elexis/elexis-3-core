@@ -464,6 +464,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				// remove unstructured diagnosis ui
 				lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
 				dfExpandable.remove("Diagnosen");
+				lbExpandable.remove(Messages.Patientenblatt2_persAnamnesisLbl);
+				dfExpandable.remove("PersAnamnese");
 			}
 			ExpandableComposite ec =
 				WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());

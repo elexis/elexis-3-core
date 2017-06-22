@@ -12,7 +12,11 @@
    <extension
          point="ch.elexis.core.ui.ViewContribution">
       <detailComposite
-            class="ch.elexis.core.findings.ui.viewcontributions.PatientDetailViewContribution"
+            class="ch.elexis.core.findings.ui.viewcontributions.DiagnoseViewContribution"
+            viewId="ch.elexis.PatDetail_v2">
+      </detailComposite>
+      <detailComposite
+            class="ch.elexis.core.findings.ui.viewcontributions.PersonalAnamnesisViewContribution"
             viewId="ch.elexis.PatDetail_v2">
       </detailComposite>
    </extension>
