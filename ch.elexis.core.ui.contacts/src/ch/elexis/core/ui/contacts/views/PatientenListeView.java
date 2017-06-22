@@ -382,7 +382,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 						vc.getControlFieldProvider().clearValues();
 						actPatient = ped.getResult();
 						plcp.invalidate();
-						cv.notify(CommonViewer.Message.update);
+					vc.getControlFieldProvider().fireChangedEvent();
 						cv.setSelection(actPatient, true);
 					}
 				}
