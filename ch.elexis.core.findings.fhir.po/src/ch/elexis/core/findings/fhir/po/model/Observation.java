@@ -1,12 +1,17 @@
 package ch.elexis.core.findings.fhir.po.model;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import org.hl7.fhir.dstu3.model.DomainResource;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IObservation;
+import ch.elexis.core.findings.util.fhir.accessor.ObservationAccessor;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.VersionInfo;
 
@@ -18,6 +23,8 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	public static final String FLD_PATIENTID = "patientid"; //$NON-NLS-1$
 	public static final String FLD_ENCOUNTERID = "encounterid"; //$NON-NLS-1$
 	public static final String FLD_PERFORMERID = "performerid"; //$NON-NLS-1$
+	
+	private ObservationAccessor accessor = new ObservationAccessor();
 	
 	//@formatter:off
 	protected static final String createDB =
@@ -89,6 +96,11 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	@Override
 	public void setPatientId(String patientId){
 		set(FLD_PATIENTID, patientId);
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setPatientId((DomainResource) resource.get(), patientId);
+			saveResource(resource.get());
+		}
 	}
 	
 	@Override
@@ -117,37 +129,55 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	
 	@Override
 	public Optional<LocalDateTime> getEffectiveTime(){
-		// TODO Auto-generated method stub
-		return null;
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getEffectiveTime((DomainResource) resource.get());
+		}
+		return Optional.empty();
 	}
 	
 	@Override
 	public void setEffectiveTime(LocalDateTime time){
-		// TODO Auto-generated method stub
-		
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setEffectiveTime((DomainResource) resource.get(), time);
+			saveResource(resource.get());
+		}
 	}
 	
 	@Override
 	public ObservationCategory getCategory(){
-		// TODO Auto-generated method stub
-		return null;
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getCategory((DomainResource) resource.get());
+		}
+		return ObservationCategory.UNKNOWN;
 	}
 	
 	@Override
 	public void setCategory(ObservationCategory category){
-		// TODO Auto-generated method stub
-		
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setCategory((DomainResource) resource.get(), category);
+			saveResource(resource.get());
+		}
 	}
 	
 	@Override
 	public List<ICoding> getCoding(){
-		// TODO Auto-generated method stub
-		return null;
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getCoding((DomainResource) resource.get());
+		}
+		return Collections.emptyList();
 	}
 	
 	@Override
 	public void setCoding(List<ICoding> coding){
-		// TODO Auto-generated method stub
-		
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setCoding((DomainResource) resource.get(), coding);
+			saveResource(resource.get());
+		}
 	}
 }

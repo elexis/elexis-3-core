@@ -30,8 +30,11 @@ public class FindingsFactory implements IFindingsFactory {
 	
 	@Override
 	public IObservation createObservation(){
-		Observation ret = new Observation();
-		return (IObservation) ret.create();
+		Observation ret = (Observation) new Observation().create();
+		org.hl7.fhir.dstu3.model.Observation fhirOberservation = new org.hl7.fhir.dstu3.model.Observation();
+		fhirOberservation.setId(new IdType("Observation", ret.getId()));
+		ModelUtil.saveResource(fhirOberservation, ret);
+		return ret;
 	}
 	
 	@Override

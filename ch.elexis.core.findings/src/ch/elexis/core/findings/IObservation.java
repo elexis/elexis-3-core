@@ -43,7 +43,34 @@ public interface IObservation extends IFinding {
 			}
 		}
 	}
-
+	
+	public enum ObservationCode {
+			ANAM_PERSONAL(IdentifierSystem.ELEXIS_ANAMNESE, "personal"),
+			ANAM_RISK(IdentifierSystem.ELEXIS_ANAMNESE, "risk");
+		
+		private String code;
+		private IdentifierSystem identifierSystem;
+		
+		private ObservationCode(IdentifierSystem identifierSystem, String code){
+			this.code = code;
+			this.identifierSystem = identifierSystem;
+		}
+		
+		public String getCode(){
+			return code;
+		}
+		
+		public IdentifierSystem getIdentifierSystem(){
+			return identifierSystem;
+		}
+		
+		public boolean isSame(ICoding iCoding){
+			return code != null && code.equals(iCoding.getCode()) && identifierSystem != null
+				&& identifierSystem.getSystem() != null
+				&& identifierSystem.getSystem().equals(iCoding.getSystem());
+		}
+	}
+	
 	public List<IObservation> getSourceObservations();
 
 	public void addSourceObservation(IObservation source);
