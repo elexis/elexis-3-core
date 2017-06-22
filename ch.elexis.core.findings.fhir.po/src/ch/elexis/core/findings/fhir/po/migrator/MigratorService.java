@@ -51,9 +51,13 @@ public class MigratorService implements IMigratorService {
 				migratePatientCondition(patientId);
 			}
 			
-			if (filter.isAssignableFrom(IObservation.class)
-				&& ObservationCode.ANAM_PERSONAL.isSame(coding)) {
-				migratePatientPersAnamnese(patientId);
+			if (filter.isAssignableFrom(IObservation.class)) {
+				if (ObservationCode.ANAM_PERSONAL.isSame(coding)) {
+					migratePatientPersAnamnese(patientId);
+				}
+				else if (ObservationCode.ANAM_RISK.isSame(coding)) {
+					migratePatientRiskfactors(patientId);
+				}
 			}
 		}
 	}
@@ -100,6 +104,37 @@ public class MigratorService implements IMigratorService {
 	}
 	
 	/**
+	 * Migrate the existing risk factors text of a patient to an {@link IObservation} instance.
+	 * Migration is only performed if there is not already a risk factors in form of an
+	 * {@link IObservation} present for the patient.
+	 * 
+	 * @param patientId
+	 */
+	private void migratePatientRiskfactors(String patientId){
+		Patient patient = Patient.load(patientId);
+		if (patient != null && patient.exists()) {
+			String risk = patient.getRisk();
+			if (risk != null && !risk.isEmpty()) {
+				List<IFinding> observations =
+					findingsService.getPatientsFindings(patientId, IObservation.class);
+				observations = observations.parallelStream()
+					.filter(iFinding -> isRiskfactor(iFinding))
+					.collect(Collectors.toList());
+				if (observations.isEmpty()) {
+					IObservation observation =
+						findingsService.getFindingsFactory().createObservation();
+					observation.setPatientId(patientId);
+					observation.setCategory(ObservationCategory.SOCIALHISTORY);
+					observation.setText(risk);
+					observation.setCoding(Collections
+						.singletonList(new TransientCoding(ObservationCode.ANAM_RISK)));
+					findingsService.saveFinding(observation);
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Migrate the existing personal animesis text of a patient to an {@link ICondition} instance.
 	 * Migration is only performed if there is not already a diagnose in form of an
 	 * {@link ICondition} present for the patient.
@@ -132,8 +167,27 @@ public class MigratorService implements IMigratorService {
 	}
 	
 	private boolean isPersAnamnese(IFinding iFinding){
-		return iFinding instanceof IObservation
-			&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY;
+		if (iFinding instanceof IObservation
+			&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY) {
+			for (ICoding code : ((IObservation) iFinding).getCoding()) {
+				if (ObservationCode.ANAM_PERSONAL.isSame(code)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean isRiskfactor(IFinding iFinding){
+		if (iFinding instanceof IObservation
+			&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY) {
+			for (ICoding code : ((IObservation) iFinding).getCoding()) {
+				if (ObservationCode.ANAM_RISK.isSame(code)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	private List<Konsultation> findAllConsultationsForPatient(Patient patient){

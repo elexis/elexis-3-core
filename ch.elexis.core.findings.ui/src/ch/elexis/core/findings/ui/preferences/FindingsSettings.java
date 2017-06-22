@@ -41,6 +41,8 @@ public class FindingsSettings extends FieldEditorPreferencePage
 	
 	private BooleanFieldEditor persAnamneseStructFieldEditor;
 	
+	private BooleanFieldEditor riskFactorStructFieldEditor;
+	
 	@Override
 	public void init(IWorkbench workbench){
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
@@ -58,6 +60,11 @@ public class FindingsSettings extends FieldEditorPreferencePage
 			new BooleanFieldEditor(SettingsConstants.PERSANAM_SETTINGS_USE_STRUCTURED,
 				"Persönliche Anamnese strukturiert anzeigen", getFieldEditorParent());
 		addField(persAnamneseStructFieldEditor);
+		
+		riskFactorStructFieldEditor =
+			new BooleanFieldEditor(SettingsConstants.RISKFACTOR_SETTINGS_USE_STRUCTURED,
+				"Risiken strukturiert anzeigen", getFieldEditorParent());
+		addField(riskFactorStructFieldEditor);
 	}
 	
 	private Logger getLogger(){
@@ -74,7 +81,9 @@ public class FindingsSettings extends FieldEditorPreferencePage
 			else if (event.getSource() == persAnamneseStructFieldEditor) {
 				anamnesePropertyChange(event);
 			}
-			
+			else if (event.getSource() == riskFactorStructFieldEditor) {
+				riskFactorPropertyChange(event);
+			}
 		}
 	}
 
@@ -170,7 +179,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 	private void anamnesePropertyChange(PropertyChangeEvent event){
 		if (event.getNewValue().equals(Boolean.TRUE)) {
 			if (MessageDialog.openConfirm(getShell(), "Strukturierte Persönliche Anamnese",
-				"Bisher erfasste Persönliche Anamnese Einträge wird automatisch in strukturierte umgewandelt.\n"
+				"Bisher erfasste Persönliche Anamnese Einträge werden automatisch in strukturierte umgewandelt.\n"
 					+ "Wollen Sie wirklich von nun an strukturierte Persönliche Anamnese Einträge verwenden?")) {
 				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
 				try {
@@ -263,6 +272,104 @@ public class FindingsSettings extends FieldEditorPreferencePage
 					@Override
 					public void run(){
 						persAnamneseStructFieldEditor.load();
+					}
+				});
+			}
+		}
+	}
+	
+	private void riskFactorPropertyChange(PropertyChangeEvent event){
+		if (event.getNewValue().equals(Boolean.TRUE)) {
+			if (MessageDialog.openConfirm(getShell(), "Strukturierte Risiken",
+				"Bisher erfasste Risiken werden automatisch in strukturierte umgewandelt.\n"
+					+ "Wollen Sie wirklich von nun an strukturierte Risiken verwenden?")) {
+				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
+				try {
+					progressDialog.run(true, true, new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor)
+							throws InvocationTargetException, InterruptedException{
+							Query<Patient> query = new Query<>(Patient.class);
+							List<Patient> patients = query.execute();
+							monitor.beginTask("Strukturierte Risiken erzeugen", patients.size());
+							IFindingsService findingsService =
+								FindingsServiceComponent.getService();
+							IMigratorService migratorService =
+								MigratorServiceComponent.getService();
+							for (Patient patient : patients) {
+								String risk = patient.getRisk();
+								List<IFinding> existing =
+									getExistingRiskfactors(patient.getId(), findingsService);
+								// only migrate if there is a risk factor and no structured risk factor already there
+								if (risk != null && !risk.isEmpty()
+									&& existing.isEmpty()) {
+									migratorService.migratePatientsFindings(patient.getId(),
+										IObservation.class,
+										new TransientCoding(ObservationCode.ANAM_RISK));
+								}
+								monitor.worked(1);
+								if (monitor.isCanceled()) {
+									break;
+								}
+							}
+							monitor.done();
+							Display.getDefault().asyncExec(new Runnable() {
+								@Override
+								public void run(){
+									MessageDialog.openInformation(getShell(),
+										"Strukturierte Risiken",
+										"Strukturierte Risiken erfolgreich erzeugt. Bitte starten sie Elexis neu um mit den strukturierten Risiken zu arbeiten.");
+								}
+							});
+						}
+						
+						private List<IFinding> getExistingRiskfactors(String patientId,
+							IFindingsService findingsService){
+							return findingsService
+								.getPatientsFindings(patientId, IObservation.class).stream()
+								.filter(oberservation -> {
+									if (((IObservation) oberservation)
+										.getCategory() == ObservationCategory.SOCIALHISTORY) {
+										for (ICoding code : ((IObservation) oberservation)
+											.getCoding()) {
+											if (ObservationCode.ANAM_RISK.isSame(code)) {
+												return true;
+											}
+										}
+									}
+									return false;
+								}).collect(Collectors.toList());
+						};
+					});
+				} catch (InvocationTargetException | InterruptedException e) {
+					MessageDialog.openError(getShell(), "Risiken konvertieren",
+						"Fehler beim erzeugen der strukturierten Risiken Einträgen.");
+					getLogger().error("Error creating structured risk factors", e);
+				}
+			} else {
+				getPreferenceStore().setValue(SettingsConstants.RISKFACTOR_SETTINGS_USE_STRUCTURED,
+					false);
+				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
+				getShell().getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run(){
+						riskFactorStructFieldEditor.load();
+					}
+				});
+			}
+		} else {
+			if (MessageDialog.openConfirm(getShell(), "Strukturierte Risiken",
+				"Bisher erfasste strukturierte Risiken werden nicht in Text umgewandelt.\n"
+					+ "Wollen Sie wirklich von nun an Text Risiken verwenden?")) {
+				MessageDialog.openInformation(getShell(), "Text Risiken",
+					"Bitte starten sie Elexis neu um mit den Text Risiken zu arbeiten.");
+			} else {
+				getPreferenceStore().setValue(SettingsConstants.RISKFACTOR_SETTINGS_USE_STRUCTURED,
+					true);
+				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
+				getShell().getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run(){
+						riskFactorStructFieldEditor.load();
 					}
 				});
 			}

@@ -6,4 +6,7 @@ public class SettingsConstants {
 	public static final String PERSANAM_SETTINGS_USE_STRUCTURED =
 		"persanamnese/settings/useStructured";
 	
+	public static final String RISKFACTOR_SETTINGS_USE_STRUCTURED =
+		"riskfactor/settings/useStructured";
+	
 }
