@@ -189,13 +189,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		};
 	
-	private static ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(
+	private ArrayList<String> lbExpandable =
+		new ArrayList<>(Arrays.asList(
 		Messages.Patientenblatt2_diagnosesLbl, Messages.Patientenblatt2_persAnamnesisLbl,
 		Messages.Patientenblatt2_allergiesLbl, Messages.Patientenblatt2_risksLbl,
 		Messages.Patientenblatt2_remarksLbk
 	));
 	private final List<Text> txExpandable = new ArrayList<>();
-	private static ArrayList<String> dfExpandable = new ArrayList<>(Arrays.asList(
+	private ArrayList<String> dfExpandable =
+		new ArrayList<>(Arrays.asList(
 		"Diagnosen", "PersAnamnese", //$NON-NLS-1$ //$NON-NLS-2$
 		"Allergien", "Risiken", "Bemerkung" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	));
@@ -461,11 +463,19 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		for (IViewContribution ivc : filtered) {
 			if (ivc.getClass().getPackage().getName()
 				.startsWith("ch.elexis.core.findings.ui.viewcontributions")) {
-				// remove unstructured diagnosis ui
-				lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
-				dfExpandable.remove("Diagnosen");
-				lbExpandable.remove(Messages.Patientenblatt2_persAnamnesisLbl);
-				dfExpandable.remove("PersAnamnese");
+				if (ivc.isAvailable()) {
+					// remove unstructured diagnosis ui
+					if (ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) {
+						lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
+						dfExpandable.remove("Diagnosen");
+					}
+					if (ivc.getClass().getSimpleName()
+						.equals("PersonalAnamnesisViewContribution")) {
+						lbExpandable.remove(Messages.Patientenblatt2_persAnamnesisLbl);
+						dfExpandable.remove("PersAnamnese");
+					}
+				}
+				
 			}
 			ExpandableComposite ec =
 				WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
@@ -658,12 +668,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		List<IViewContribution> lContrib =
 			ViewContributionHelper.getFilteredAndPositionSortedContributions(detailComposites, 1);
 		for (IViewContribution ivc : lContrib) {
-			if (ivc.getClass().getPackage().getName()
-				.startsWith("ch.elexis.core.findings.ui.viewcontributions")) {
-				// remove unstructured diagnosis ui
-				lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
-				dfExpandable.remove("Diagnosen");
-			}
 			ExpandableComposite ec =
 				WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
 			ec.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
