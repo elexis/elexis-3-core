@@ -674,7 +674,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		
 		viewmenu = new ViewMenus(viewsite);
 		viewmenu.createMenu(GlobalActions.printEtikette, GlobalActions.printAdresse,
-			GlobalActions.printBlatt, GlobalActions.printRoeBlatt,
+			GlobalActions.printBlatt, GlobalActions.showBlatt, GlobalActions.printRoeBlatt,
 			copySelectedContactInfosToClipboardAction, copySelectedAddressesToClipboardAction);
 		
 		viewmenu.createToolbar(copySelectedContactInfosToClipboardAction);
