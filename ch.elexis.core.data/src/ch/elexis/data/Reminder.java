@@ -399,18 +399,20 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		
 		PreparedStatement ps = dbConnection.getPreparedStatement(query.toString());
 		try {
-			ps.setString(1, anwender.getId());
-			ResultSet res = ps.executeQuery();
-			while (res.next()) {
-				Reminder reminder = Reminder.load(res.getString(1));
-				reminder.setDBConnection(dbConnection);
-				if (onlyPopup
-					&& (reminder.getVisibility() != Visibility.POPUP_ON_PATIENT_SELECTION)) {
-					continue;
+			if (anwender != null) {
+				ps.setString(1, anwender.getId());
+				ResultSet res = ps.executeQuery();
+				while (res.next()) {
+					Reminder reminder = Reminder.load(res.getString(1));
+					reminder.setDBConnection(dbConnection);
+					if (onlyPopup
+						&& (reminder.getVisibility() != Visibility.POPUP_ON_PATIENT_SELECTION)) {
+						continue;
+					}
+					ret.add(reminder);
 				}
-				ret.add(reminder);
+				res.close();
 			}
-			res.close();
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return new ArrayList<Reminder>(ret);
