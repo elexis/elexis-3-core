@@ -474,8 +474,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						lbExpandable.remove(Messages.Patientenblatt2_persAnamnesisLbl);
 						dfExpandable.remove("PersAnamnese");
 					}
+					if (ivc.getClass().getSimpleName().equals("RiskViewContribution")) {
+						lbExpandable.remove(Messages.Patientenblatt2_risksLbl);
+						dfExpandable.remove("Risiken");
+					}
 				}
-				
 			}
 			ExpandableComposite ec =
 				WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
