@@ -390,7 +390,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		DBConnection dbConnection = getDefaultConnection();
 		StringBuilder query = new StringBuilder(PS_REMINDERS_BASE);
 		if (onlyDue) {
-			query.append(" AND r.DateDue < "
+			query.append(" AND r.DateDue <= "
 				+ JdbcLink.wrap(new TimeTool().toString(TimeTool.DATE_COMPACT)));
 		}
 		if (patient != null) {
