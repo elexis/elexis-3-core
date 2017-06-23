@@ -69,6 +69,7 @@ public class Messages extends NLS {
 	public static String GlobalActions_PrintContactLabel;
 	public static String GlobalActions_PrintContactLabelToolTip;
 	public static String GlobalActions_PrintEMR;
+	public static String GlobalActions_ShowEMR;
 	public static String GlobalActions_PrintLabel;
 	public static String GlobalActions_PrintLabelJobName;
 	public static String GlobalActions_PrintLabelToolTip;

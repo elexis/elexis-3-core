@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
@@ -90,6 +91,7 @@ import ch.elexis.core.ui.util.Importer;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
 import ch.elexis.core.ui.views.FallDetailView;
+import ch.elexis.core.ui.views.TemplatePrintView;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -118,7 +120,8 @@ public class GlobalActions {
 	public static IAction loginAction, importAction, aboutAction, helpAction, prefsAction;
 	public static IAction connectWizardAction, changeMandantAction, savePerspectiveAction, savePerspectiveAsAction;
 	public static IAction savePerspectiveAsDefaultAction, resetPerspectiveAction, homeAction, fixLayoutAction;
-	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette;
+	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette,
+			showBlatt;
 	public static IAction printRoeBlatt;
 	public static IAction openFallaction, filterAction, makeBillAction, planeRechnungAction;
 	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction, neueKonsAction;
@@ -483,6 +486,23 @@ public class GlobalActions {
 					new TemplateDrucker(TT_KG_COVER_SHEET, printer, tray).doPrint(actPatient); //$NON-NLS-1$
 				}
 			};
+		showBlatt = new Action(Messages.GlobalActions_ShowEMR) { //$NON-NLS-1$
+			@Override
+			public void run(){
+				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
+				try {
+					TemplatePrintView tpw = (TemplatePrintView) PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage().showView(TemplatePrintView.ID);
+					tpw.doShow(actPatient, TT_KG_COVER_SHEET);
+				} catch (PartInitException e) {
+					MessageDialog.openError(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Fehler",
+						"Konnte View nicht öffnen");
+					LoggerFactory.getLogger(getClass())
+						.error("Error showing " + TemplatePrintView.ID, e);
+				}
+			}
+		};
 		printRoeBlatt = new Action(Messages.GlobalActions_PrintXRay) { //$NON-NLS-1$
 				@Override
 				public void run(){
