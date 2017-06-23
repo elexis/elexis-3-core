@@ -19,16 +19,21 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -97,7 +102,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	EnhancedTextField text;
 	private Label lBeh, lVersion;
 	Hyperlink hlMandant;
-	Combo cbFall;
+	ComboViewer comboViewerFall;	
 	private Konsultation actKons;
 	FormToolkit tk;
 	Form form;
@@ -114,6 +119,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 	Composite cEtiketten;
 	private int[] sashWeights = null;
 	private SashForm sash;
+	private ComboFallSelectionListener comboFallSelectionListener;
 
 	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class,
 		ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_RELOAD) {
@@ -204,55 +210,20 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		});
 		hlMandant.setBackground(p.getBackground());
 		
-		cbFall = new Combo(form.getBody(), SWT.SINGLE);
-		cbFall.addSelectionListener(new SelectionAdapter() {
-			
+		comboViewerFall = new ComboViewer(form.getBody(), SWT.SINGLE);
+		comboViewerFall.setContentProvider(ArrayContentProvider.getInstance());
+		comboViewerFall.setLabelProvider(new LabelProvider() {
 			@Override
-			public void widgetSelected(final SelectionEvent e){
-				Fall[] faelle = (Fall[]) cbFall.getData();
-				int i = cbFall.getSelectionIndex();
-				if (i > -1 && i < faelle.length) {
-					Fall nFall = faelle[i];
-					
-					Fall actFall = null;
-					String fallId = "";
-					String fallLabel = "Current Case NOT found!!";//$NON-NLS-1$
-					if (actKons != null) {
-						actFall = actKons.getFall();
-						fallId = actFall.getId();
-						fallLabel = actFall.getLabel();
-					}
-					
-					if (!nFall.getId().equals(fallId)) {
-						if (!nFall.isOpen()) {
-							SWTHelper.alert(Messages.KonsDetailView_CaseClosedCaption, //$NON-NLS-1$
-								Messages.KonsDetailView_CaseClosedBody); //$NON-NLS-1$
-						} else {
-							MessageDialog msd =
-								new MessageDialog(
-									getViewSite().getShell(),
-									Messages.KonsDetailView_ChangeCaseCaption, //$NON-NLS-1$
-									Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize),
-									MessageFormat.format(
-										Messages.KonsDetailView_ConfirmChangeConsToCase,
-										new Object[] {
-											fallLabel, nFall.getLabel()
-										}), MessageDialog.QUESTION, new String[] {
-										Messages.KonsDetailView_Yes, //$NON-NLS-1$
-										Messages.KonsDetailView_No
-									}, 0); //$NON-NLS-1$
-							if (msd.open() == 0) {
-								actKons.setFall(nFall);
-								setKons(actKons);
-							}
-						}
-					}
-				}
+			public String getText(Object element){
+				return ((Fall) element).getLabel();
 			}
-			
 		});
+		
+		comboFallSelectionListener = new ComboFallSelectionListener();
+		comboViewerFall.addSelectionChangedListener(comboFallSelectionListener);
+		
 		GridData gdFall = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		cbFall.setLayoutData(gdFall);
+		comboViewerFall.getCombo().setLayoutData(gdFall);
 		
 		lVersion = tk.createLabel(form.getBody(), Messages.KonsDetailView_actual); //$NON-NLS-1$
 		GridData gdVer = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
@@ -383,15 +354,15 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		}
 		form.layout();
 	}
-	
+
 	private void updateFallCombo(){
 		Patient pat = ElexisEventDispatcher.getSelectedPatient();
-		if (pat != null) {
+		if (pat != null && comboViewerFall != null) {
 			Fall[] faelle = pat.getFaelle();
-			cbFall.removeAll();
-			cbFall.setData(faelle);
-			for (Fall f : faelle) {
-				cbFall.add(f.getLabel());
+			comboViewerFall.setInput(faelle);
+			if (actKons != null) {
+				comboFallSelectionListener.ignoreSelectionEventOnce();
+				comboViewerFall.setSelection(new StructuredSelection(actKons.getFall()));
 			}
 		}
 	}
@@ -415,14 +386,9 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 			setPatient(act.getPatient());
 			setKonsText(b, b.getHeadVersion());
 			
-			Fall[] faelle = (Fall[]) cbFall.getData();
-			for (int i = 0; i < faelle.length; i++) {
-				if (faelle[i].getId().equals(act.getId())) {
-					cbFall.select(i);
-					break;
-				}
-			}
-			cbFall.setEnabled(act.isOpen());
+			comboFallSelectionListener.ignoreSelectionEventOnce();
+			comboViewerFall.setSelection(new StructuredSelection(act));
+			comboViewerFall.getCombo().setEnabled(act.isOpen());
 			Mandant m = b.getMandant();
 			lBeh.setText(Messages.KonsDetailView_ConsOfDate + " " + b.getDatum()); //$NON-NLS-1$
 			StringBuilder sb = new StringBuilder();
@@ -470,6 +436,10 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		}
 		actKons = b;
 		cDesc.layout();
+		if (comboViewerFall != null)
+		{
+			comboViewerFall.getCombo().setEnabled(actKons != null); // only for Elexis V3.1.x
+		}
 	}
 	
 	void setKonsText(final Konsultation b, final int version){
@@ -648,4 +618,62 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		vd.addPersistentObject(artikel);
 	}
 	
+
+	private class ComboFallSelectionListener implements ISelectionChangedListener {
+		private boolean ignoreEventSelectionChanged;
+		
+		public void ignoreSelectionEventOnce(){
+			this.ignoreEventSelectionChanged = true;
+		}
+		
+		@Override
+		public void selectionChanged(SelectionChangedEvent event){
+			if (!ignoreEventSelectionChanged) {
+				ISelection selection = event.getSelection();
+				if (selection instanceof StructuredSelection) {
+					if (!selection.isEmpty()) {
+						Fall nFall = (Fall) ((StructuredSelection) selection).getFirstElement();
+						
+						Fall actFall = null;
+						String fallId = "";
+						String fallLabel = "Current Case NOT found!!";//$NON-NLS-1$
+						if (actKons != null) {
+							actFall = actKons.getFall();
+							fallId = actFall.getId();
+							fallLabel = actFall.getLabel();
+						}
+						
+						if (!nFall.getId().equals(fallId)) {
+							if (!nFall.isOpen()) {
+								SWTHelper.alert(Messages.KonsDetailView_CaseClosedCaption, // $NON-NLS-1$
+									Messages.KonsDetailView_CaseClosedBody); // $NON-NLS-1$
+							} else {
+								MessageDialog msd = new MessageDialog(getViewSite().getShell(),
+									Messages.KonsDetailView_ChangeCaseCaption, // $NON-NLS-1$
+									Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize),
+									MessageFormat.format(
+										Messages.KonsDetailView_ConfirmChangeConsToCase,
+										new Object[] {
+											fallLabel, nFall.getLabel()
+										}), MessageDialog.QUESTION, new String[] {
+											Messages.KonsDetailView_Yes, // $NON-NLS-1$
+											Messages.KonsDetailView_No
+									}, 0); // $NON-NLS-1$
+								if (msd.open() == Window.OK) {
+									actKons.setFall(nFall);
+									setKons(actKons);
+								} else {
+									ignoreSelectionEventOnce();
+									comboViewerFall.setSelection(new StructuredSelection(actFall));
+								}
+							}
+						}
+					}
+				}
+			}
+			ignoreEventSelectionChanged = false;
+		}
+		
+
+	}
 }
