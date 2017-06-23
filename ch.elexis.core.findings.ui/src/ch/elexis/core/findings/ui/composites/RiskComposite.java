@@ -22,13 +22,13 @@ import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.util.model.TransientCoding;
 import ch.elexis.data.Patient;
 
-public class PersonalAnamnesisComposite extends Composite {
+public class RiskComposite extends Composite {
 	
 	private StyledText textOberservation = null;
 	
-	protected WritableValue item = new WritableValue(null, PersAnamnesisText.class);
+	protected WritableValue item = new WritableValue(null, RiskText.class);
 	
-	public PersonalAnamnesisComposite(Composite parent, int style){
+	public RiskComposite(Composite parent, int style){
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		textOberservation =
@@ -43,7 +43,7 @@ public class PersonalAnamnesisComposite extends Composite {
 	
 	public void setInput(Optional<IObservation> input){
 		if (textOberservation != null) {
-			item.setValue(new PersAnamnesisText(input.isPresent() ? input.get() : null));
+			item.setValue(new RiskText(input.isPresent() ? input.get() : null));
 		}
 	}
 	
@@ -52,15 +52,15 @@ public class PersonalAnamnesisComposite extends Composite {
 		IObservableValue target =
 			WidgetProperties.text(SWT.Modify).observeDelayed(1500, textOberservation);
 		IObservableValue model =
-			PojoProperties.value(PersAnamnesisText.class, "text", String.class).observeDetail(item);
+			PojoProperties.value(RiskText.class, "text", String.class).observeDetail(item);
 		
 		bindingContext.bindValue(target, model, null, null);
 	}
 	
-	class PersAnamnesisText {
+	class RiskText {
 		IObservation iObservation;
 		
-		public PersAnamnesisText(IObservation iObservation){
+		public RiskText(IObservation iObservation){
 			super();
 			this.iObservation = iObservation;
 		}
@@ -74,7 +74,7 @@ public class PersonalAnamnesisComposite extends Composite {
 					iObservation.setPatientId(patient.getId());
 					iObservation.setCategory(ObservationCategory.SOCIALHISTORY);
 					iObservation.setCoding(Collections
-						.singletonList(new TransientCoding(ObservationCode.ANAM_PERSONAL)));
+						.singletonList(new TransientCoding(ObservationCode.ANAM_RISK)));
 				}
 			}
 			

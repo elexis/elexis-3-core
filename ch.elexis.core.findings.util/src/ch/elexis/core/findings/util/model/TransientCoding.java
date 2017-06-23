@@ -1,6 +1,7 @@
 package ch.elexis.core.findings.util.model;
 
 import ch.elexis.core.findings.ICoding;
+import ch.elexis.core.findings.IObservation.ObservationCode;
 
 public class TransientCoding implements ICoding {
 	
@@ -12,6 +13,12 @@ public class TransientCoding implements ICoding {
 		this.system = system;
 		this.code = code;
 		this.display = display;
+	}
+	
+	public TransientCoding(ObservationCode code){
+		this.system = code.getIdentifierSystem().getSystem();
+		this.code = code.getCode();
+		this.display = "";
 	}
 	
 	@Override
