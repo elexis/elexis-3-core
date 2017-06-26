@@ -7,12 +7,14 @@ import org.hl7.fhir.dstu3.model.IdType;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IEncounter;
+import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFindingsFactory;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.fhir.po.model.ClinicalImpression;
 import ch.elexis.core.findings.fhir.po.model.Condition;
 import ch.elexis.core.findings.fhir.po.model.Encounter;
+import ch.elexis.core.findings.fhir.po.model.FamilyMemberHistory;
 import ch.elexis.core.findings.fhir.po.model.Observation;
 import ch.elexis.core.findings.fhir.po.model.ProcedureRequest;
 import ch.elexis.core.findings.util.ModelUtil;
@@ -57,5 +59,15 @@ public class FindingsFactory implements IFindingsFactory {
 	public IProcedureRequest createProcedureRequest(){
 		ProcedureRequest ret = new ProcedureRequest();
 		return (IProcedureRequest) ret.create();
+	}
+	
+	@Override
+	public IFamilyMemberHistory createFamilyMemberHistory(){
+		FamilyMemberHistory ret = (FamilyMemberHistory) new FamilyMemberHistory().create();
+		org.hl7.fhir.dstu3.model.FamilyMemberHistory fhFamilyMemberHistory =
+			new org.hl7.fhir.dstu3.model.FamilyMemberHistory();
+		fhFamilyMemberHistory.setId(new IdType("FamilyMemberHistory", ret.getId()));
+		ModelUtil.saveResource(fhFamilyMemberHistory, ret);
+		return ret;
 	}
 }

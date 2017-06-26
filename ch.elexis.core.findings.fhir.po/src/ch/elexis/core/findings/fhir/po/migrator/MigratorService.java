@@ -13,6 +13,7 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IEncounter;
+import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
@@ -58,6 +59,9 @@ public class MigratorService implements IMigratorService {
 				else if (ObservationCode.ANAM_RISK.isSame(coding)) {
 					migratePatientRiskfactors(patientId);
 				}
+			}
+			if (filter.isAssignableFrom(IFamilyMemberHistory.class)) {
+				migratePatientFamAnamnese(patientId);
 			}
 		}
 	}
@@ -156,6 +160,31 @@ public class MigratorService implements IMigratorService {
 					condition.setCategory(ConditionCategory.PROBLEMLISTITEM);
 					condition.setText(diagnosis);
 					findingsService.saveFinding(condition);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Migrate the existing family anamnesis text of a patient to an {@link IFamilyMemberHistory}
+	 * instance. Migration is only performed if there is not already a family anamnesis in form of
+	 * an {@link IFamilyMemberHistory} present for the patient.
+	 * 
+	 * @param patientId
+	 */
+	private void migratePatientFamAnamnese(String patientId){
+		Patient patient = Patient.load(patientId);
+		if (patient != null && patient.exists()) {
+			String anamnese = patient.getFamilyAnamnese();
+			if (anamnese != null && !anamnese.isEmpty()) {
+				List<IFinding> iFindings =
+					findingsService.getPatientsFindings(patientId, IFamilyMemberHistory.class);
+				if (iFindings.isEmpty()) {
+					IFamilyMemberHistory familyMemberHistory =
+						findingsService.getFindingsFactory().createFamilyMemberHistory();
+					familyMemberHistory.setPatientId(patientId);
+					familyMemberHistory.setText(anamnese);
+					findingsService.saveFinding(familyMemberHistory);
 				}
 			}
 		}

@@ -21,6 +21,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
+import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
@@ -42,6 +43,8 @@ public class FindingsSettings extends FieldEditorPreferencePage
 	private BooleanFieldEditor persAnamneseStructFieldEditor;
 	
 	private BooleanFieldEditor riskFactorStructFieldEditor;
+	
+	private BooleanFieldEditor famAnamneseStructFieldEditor;
 	
 	@Override
 	public void init(IWorkbench workbench){
@@ -65,6 +68,11 @@ public class FindingsSettings extends FieldEditorPreferencePage
 			new BooleanFieldEditor(SettingsConstants.RISKFACTOR_SETTINGS_USE_STRUCTURED,
 				"Risiken strukturiert anzeigen", getFieldEditorParent());
 		addField(riskFactorStructFieldEditor);
+		
+		famAnamneseStructFieldEditor =
+			new BooleanFieldEditor(SettingsConstants.FAMANAM_SETTINGS_USE_STRUCTURED,
+				"Familien Anamnese strukturiert anzeigen", getFieldEditorParent());
+		addField(famAnamneseStructFieldEditor);
 	}
 	
 	private Logger getLogger(){
@@ -79,10 +87,13 @@ public class FindingsSettings extends FieldEditorPreferencePage
 				diagPropertyChange(event);
 			}
 			else if (event.getSource() == persAnamneseStructFieldEditor) {
-				anamnesePropertyChange(event);
+				persAnamnesePropertyChange(event);
 			}
 			else if (event.getSource() == riskFactorStructFieldEditor) {
 				riskFactorPropertyChange(event);
+			}
+			else if (event.getSource() == famAnamneseStructFieldEditor) {
+				famAnamnesePropertyChange(event);
 			}
 		}
 	}
@@ -176,7 +187,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 		}
 	}
 	
-	private void anamnesePropertyChange(PropertyChangeEvent event){
+	private void persAnamnesePropertyChange(PropertyChangeEvent event){
 		if (event.getNewValue().equals(Boolean.TRUE)) {
 			if (MessageDialog.openConfirm(getShell(), "Strukturierte Persönliche Anamnese",
 				"Bisher erfasste Persönliche Anamnese Einträge werden automatisch in strukturierte umgewandelt.\n"
@@ -370,6 +381,93 @@ public class FindingsSettings extends FieldEditorPreferencePage
 					@Override
 					public void run(){
 						riskFactorStructFieldEditor.load();
+					}
+				});
+			}
+		}
+	}
+	
+	private void famAnamnesePropertyChange(PropertyChangeEvent event){
+		if (event.getNewValue().equals(Boolean.TRUE)) {
+			if (MessageDialog.openConfirm(getShell(), "Strukturierte Familien Anamnese",
+				"Bisher erfasste Familien Anamnese Einträge werden automatisch in strukturierte umgewandelt.\n"
+					+ "Wollen Sie wirklich von nun an strukturierte Familien Anamnese Einträge verwenden?")) {
+				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
+				try {
+					progressDialog.run(true, true, new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor)
+							throws InvocationTargetException, InterruptedException{
+							Query<Patient> query = new Query<>(Patient.class);
+							List<Patient> patients = query.execute();
+							monitor.beginTask("Strukturierte Familien Anamnese erzeugen",
+								patients.size());
+							IFindingsService findingsService =
+								FindingsServiceComponent.getService();
+							IMigratorService migratorService =
+								MigratorServiceComponent.getService();
+							for (Patient patient : patients) {
+								String famAnamesis = patient.getFamilyAnamnese();
+								List<IFinding> existing =
+									getExistingFamAnamnese(patient.getId(), findingsService);
+								// only migrate if there is a fam anamnesis and no structured fam anamnesis already there
+								if (famAnamesis != null && !famAnamesis.isEmpty()
+									&& existing.isEmpty()) {
+									migratorService.migratePatientsFindings(patient.getId(),
+										IFamilyMemberHistory.class,
+										null);
+								}
+								monitor.worked(1);
+								if (monitor.isCanceled()) {
+									break;
+								}
+							}
+							monitor.done();
+							Display.getDefault().asyncExec(new Runnable() {
+								@Override
+								public void run(){
+									MessageDialog.openInformation(getShell(),
+										"Strukturierte Familien Anamnese",
+										"Strukturierte Familien Anamnese erfolgreich erzeugt. Bitte starten sie Elexis neu um mit den strukturierten Familien Anamnese Einträgen zu arbeiten.");
+								}
+							});
+						}
+						
+						private List<IFinding> getExistingFamAnamnese(String patientId,
+							IFindingsService findingsService){
+							return findingsService.getPatientsFindings(patientId,
+								IFamilyMemberHistory.class);
+						};
+					});
+				} catch (InvocationTargetException | InterruptedException e) {
+					MessageDialog.openError(getShell(), "Familien Anamnese konvertieren",
+						"Fehler beim erzeugen der strukturierten Familien Anamnese Einträgen.");
+					getLogger().error("Error creating structured anamnesis family", e);
+				}
+			} else {
+				getPreferenceStore().setValue(SettingsConstants.FAMANAM_SETTINGS_USE_STRUCTURED,
+					false);
+				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
+				getShell().getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run(){
+						famAnamneseStructFieldEditor.load();
+					}
+				});
+			}
+		} else {
+			if (MessageDialog.openConfirm(getShell(), "Strukturierte Familien Anamnese",
+				"Bisher erfasste strukturierte Familien Anamnese werden nicht in Text umgewandelt.\n"
+					+ "Wollen Sie wirklich von nun an Text Familien Anamnese verwenden?")) {
+				MessageDialog.openInformation(getShell(), "Text Familien Anamnese",
+					"Bitte starten sie Elexis neu um mit den Text Familien Anamnese zu arbeiten.");
+			} else {
+				getPreferenceStore().setValue(SettingsConstants.FAMANAM_SETTINGS_USE_STRUCTURED,
+					true);
+				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
+				getShell().getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run(){
+						famAnamneseStructFieldEditor.load();
 					}
 				});
 			}

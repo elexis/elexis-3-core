@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IEncounter;
+import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFindingsFactory;
 import ch.elexis.core.findings.IFindingsService;
@@ -19,6 +20,7 @@ import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.fhir.po.model.ClinicalImpression;
 import ch.elexis.core.findings.fhir.po.model.Condition;
 import ch.elexis.core.findings.fhir.po.model.Encounter;
+import ch.elexis.core.findings.fhir.po.model.FamilyMemberHistory;
 import ch.elexis.core.findings.fhir.po.model.Observation;
 import ch.elexis.core.findings.fhir.po.model.ProcedureRequest;
 import ch.elexis.core.model.IPersistentObject;
@@ -48,6 +50,9 @@ public class FindingsService implements IFindingsService {
 			if (filter.isAssignableFrom(IProcedureRequest.class)) {
 				ret.addAll(getProcedureRequests(patientId, null));
 			}
+			if (filter.isAssignableFrom(IFamilyMemberHistory.class)) {
+				ret.addAll(getFamilyMemberHistory(patientId));
+			}
 		}
 		return ret;
 	}
@@ -76,6 +81,14 @@ public class FindingsService implements IFindingsService {
 	
 	private List<Condition> getConditions(String patientId){
 		Query<Condition> query = new Query<>(Condition.class);
+		if (patientId != null) {
+			query.add(Condition.FLD_PATIENTID, Query.EQUALS, patientId);
+		}
+		return query.execute();
+	}
+	
+	private List<FamilyMemberHistory> getFamilyMemberHistory(String patientId){
+		Query<FamilyMemberHistory> query = new Query<>(FamilyMemberHistory.class);
 		if (patientId != null) {
 			query.add(Condition.FLD_PATIENTID, Query.EQUALS, patientId);
 		}
