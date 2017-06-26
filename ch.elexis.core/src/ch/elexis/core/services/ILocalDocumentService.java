@@ -101,4 +101,11 @@ public interface ILocalDocumentService {
 	 * @return
 	 */
 	public List<Object> getAll();
+	
+	/**
+	 * Returns the document cache directory.
+	 * 
+	 * @return
+	 */
+	public String getDocumentCachePath();
 }
