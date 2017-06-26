@@ -52,4 +52,11 @@ public interface IFindingsFactory {
 	 * @return
 	 */
 	public IProcedureRequest createProcedureRequest();
+	
+	/**
+	 * Create a new persistent {@link IFamilyMemberHistory} instance.
+	 * 
+	 * @return
+	 */
+	public IFamilyMemberHistory createFamilyMemberHistory();
 }
