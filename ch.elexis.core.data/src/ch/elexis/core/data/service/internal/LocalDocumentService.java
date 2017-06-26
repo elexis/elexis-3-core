@@ -12,11 +12,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.AgeFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang.time.DateUtils;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
@@ -113,10 +119,46 @@ public class LocalDocumentService implements ILocalDocumentService {
 	
 	private boolean tryDelete(Path path){
 		try {
-			Files.delete(path);
+			if (tryBackup(path)) {
+				Files.delete(path);
+				return true;
+			}
+		} catch (IOException e) {
+			
+		}
+		return false;
+	}
+	
+	private boolean tryBackup(Path path){
+		try {
+			File src = path.toFile();
+			File backupDir = new File(getDocumentCachePath() + File.separator + "backup");
+			deleteBackupFilesOlderThen(backupDir, 90);
+			FileUtils.copyFile(src,
+				new File(backupDir, "bak_" + System.currentTimeMillis() + "_" + src.getName()));
 			return true;
 		} catch (IOException e) {
+			LoggerFactory.getLogger(getClass()).warn("Cannot create backup for file.", e);
 			return false;
+		}
+	}
+	
+	private void deleteBackupFilesOlderThen(File backupDir, int days){
+		try {
+			if (backupDir.isDirectory()) {
+				Collection<File> filesToDelete = FileUtils.listFiles(backupDir,
+					new AgeFileFilter(DateUtils.addDays(new Date(), days * -1)),
+					TrueFileFilter.TRUE);
+				for (File file : filesToDelete) {
+					boolean success = FileUtils.deleteQuietly(file);
+					if (!success) {
+						LoggerFactory.getLogger(getClass())
+							.warn("Cannot delete old backup file at: " + file.getAbsolutePath());
+					}
+				}
+			}
+		} catch (Exception e) {
+			LoggerFactory.getLogger(getClass()).warn("Cannot delete old backup files.", e);
 		}
 	}
 	
@@ -150,7 +192,7 @@ public class LocalDocumentService implements ILocalDocumentService {
 	 */
 	private Optional<File> writeLocalFile(String fileName, InputStream content,
 		IConflictHandler conflictHandler, boolean readOnly){
-		Path dirPath = Paths.get(CoreHub.getWritableUserDir().getAbsolutePath(), ".localdoc");
+		Path dirPath = Paths.get(getDocumentCachePath());
 		if (!Files.exists(dirPath, new LinkOption[0])) {
 			try {
 				Files.createDirectories(dirPath);
@@ -159,8 +201,7 @@ public class LocalDocumentService implements ILocalDocumentService {
 				return Optional.empty();
 			}
 		}
-		Path filePath = Paths.get(CoreHub.getWritableUserDir().getAbsolutePath(),
-			".localdoc" + File.separator, fileName);
+		Path filePath = Paths.get(getDocumentCachePath() + File.separator, fileName);
 		if (Files.exists(filePath)) {
 			Result result = conflictHandler.getResult();
 			if (result == Result.ABORT) {
@@ -174,6 +215,12 @@ public class LocalDocumentService implements ILocalDocumentService {
 			return Optional.ofNullable(writeFile(filePath, content, readOnly));
 		}
 		return Optional.empty();
+	}
+	
+	@Override
+	public String getDocumentCachePath(){
+		return CoreHub.getWritableUserDir().getAbsolutePath() + File.separator + ".localdoc";
+		
 	}
 	
 	private File writeFile(Path path, InputStream content, boolean readOnly){
