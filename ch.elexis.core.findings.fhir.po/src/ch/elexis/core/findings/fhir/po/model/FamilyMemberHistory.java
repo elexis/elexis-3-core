@@ -6,7 +6,7 @@ import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 import ch.elexis.core.findings.IFamilyMemberHistory;
-import ch.elexis.core.findings.util.fhir.accessor.ConditionAccessor;
+import ch.elexis.core.findings.util.fhir.accessor.FamilyMemberHistoryAccessor;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.VersionInfo;
 
@@ -18,7 +18,7 @@ public class FamilyMemberHistory extends AbstractFhirPersistentObject
 	
 	public static final String FLD_PATIENTID = "patientid"; //$NON-NLS-1$
 	
-	private ConditionAccessor accessor = new ConditionAccessor();
+	private FamilyMemberHistoryAccessor accessor = new FamilyMemberHistoryAccessor();
 	
 	//@formatter:off
 	protected static final String createDB =

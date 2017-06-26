@@ -9,4 +9,7 @@ public class SettingsConstants {
 	public static final String RISKFACTOR_SETTINGS_USE_STRUCTURED =
 		"riskfactor/settings/useStructured";
 	
+	public static final String FAMANAM_SETTINGS_USE_STRUCTURED =
+		"familyanamnese/settings/useStructured";
+	
 }
