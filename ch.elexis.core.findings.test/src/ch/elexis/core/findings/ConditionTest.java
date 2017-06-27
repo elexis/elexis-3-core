@@ -33,11 +33,9 @@ public class ConditionTest {
 	
 	@Test
 	public void manyConditions() {
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
 		// create many
 		for (int i = 0; i < 1000; i++) {
-			ICondition condition = factory.createCondition();
+			ICondition condition = FindingsServiceComponent.getService().create(ICondition.class);
 			assertNotNull(condition);
 			// set the properties
 			condition.setPatientId(AllTests.PATIENT_ID);
@@ -62,9 +60,7 @@ public class ConditionTest {
 
 	@Test
 	public void getProperties(){
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
-		ICondition condition = factory.createCondition();
+		ICondition condition = FindingsServiceComponent.getService().create(ICondition.class);
 		assertNotNull(condition);
 		// set the properties
 		condition.setPatientId(AllTests.PATIENT_ID);

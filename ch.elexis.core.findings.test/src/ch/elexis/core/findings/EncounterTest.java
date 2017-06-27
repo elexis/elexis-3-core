@@ -27,11 +27,9 @@ public class EncounterTest {
 	
 	@Test
 	public void manyEncounters() {
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
 		// create many
 		for (int i = 0; i < 1000; i++) {
-			IEncounter encounter = factory.createEncounter();
+			IEncounter encounter = FindingsServiceComponent.getService().create(IEncounter.class);
 			assertNotNull(encounter);
 			// set the properties
 			encounter.setConsultationId(AllTests.CONSULTATION_ID);
@@ -55,9 +53,7 @@ public class EncounterTest {
 
 	@Test
 	public void getProperties(){
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
-		IEncounter encounter = factory.createEncounter();
+		IEncounter encounter = FindingsServiceComponent.getService().create(IEncounter.class);
 		assertNotNull(encounter);
 		encounter.setConsultationId(AllTests.CONSULTATION_ID);
 		encounter.setPatientId(AllTests.PATIENT_ID);

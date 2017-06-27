@@ -66,8 +66,7 @@ public class FamilyAnamnesisComposite extends Composite {
 				Patient patient = ElexisEventDispatcher.getSelectedPatient();
 				if (patient != null && patient.exists()) {
 					iFamilyMemberHistory =
-						FindingsServiceComponent.getService().getFindingsFactory()
-							.createFamilyMemberHistory();
+						FindingsServiceComponent.getService().create(IFamilyMemberHistory.class);
 					iFamilyMemberHistory.setPatientId(patient.getId());
 				}
 			}

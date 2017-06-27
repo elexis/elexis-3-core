@@ -1,9 +1,11 @@
 package ch.elexis.core.findings.fhir.po.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.hl7.fhir.dstu3.model.IdType;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +15,6 @@ import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFinding;
-import ch.elexis.core.findings.IFindingsFactory;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IProcedureRequest;
@@ -23,6 +24,7 @@ import ch.elexis.core.findings.fhir.po.model.Encounter;
 import ch.elexis.core.findings.fhir.po.model.FamilyMemberHistory;
 import ch.elexis.core.findings.fhir.po.model.Observation;
 import ch.elexis.core.findings.fhir.po.model.ProcedureRequest;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -180,10 +182,6 @@ public class FindingsService implements IFindingsService {
 		}
 	}
 	
-	@Override
-	public IFindingsFactory getFindingsFactory(){
-		return new FindingsFactory();
-	}
 	
 	@Override
 	public Optional<IFinding> findById(String idPart){
@@ -200,6 +198,53 @@ public class FindingsService implements IFindingsService {
 		if (loadedObj != null && ((IPersistentObject) loadedObj).exists()) {
 			return Optional.of(loadedObj);
 		}
+		IObservation observation = create(IObservation.class);
 		return Optional.empty();
+	}
+	
+	@Override
+	public <T extends IFinding> T create(Class<T> type){
+		if (type.equals(IEncounter.class)) {
+			Encounter ret = (Encounter) new Encounter().create();
+			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
+				new org.hl7.fhir.dstu3.model.Encounter();
+			fhirEncounter.setId(new IdType("Encounter", ret.getId()));
+			ModelUtil.saveResource(fhirEncounter, ret);
+			return type.cast(ret);
+		}
+		else if (type.equals(IObservation.class)) {
+			Observation ret = (Observation) new Observation().create();
+			org.hl7.fhir.dstu3.model.Observation fhirOberservation =
+				new org.hl7.fhir.dstu3.model.Observation();
+			fhirOberservation.setId(new IdType("Observation", ret.getId()));
+			ModelUtil.saveResource(fhirOberservation, ret);
+			return type.cast(ret);
+		}
+		else if (type.equals(ICondition.class)) {
+			Condition ret = (Condition) new Condition().create();
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				new org.hl7.fhir.dstu3.model.Condition();
+			fhirCondition.setId(new IdType("Condition", ret.getId()));
+			fhirCondition.setAssertedDate(new Date());
+			ModelUtil.saveResource(fhirCondition, ret);
+			return type.cast(ret);
+		}
+		else if (type.equals(IClinicalImpression.class)) {
+			ClinicalImpression ret = new ClinicalImpression();
+			return type.cast((IClinicalImpression) ret.create());
+		}
+		else if (type.equals(IProcedureRequest.class)) {
+			ProcedureRequest ret = new ProcedureRequest();
+			return type.cast((IProcedureRequest) ret.create());
+		}
+		else if (type.equals(IFamilyMemberHistory.class)) {
+			FamilyMemberHistory ret = (FamilyMemberHistory) new FamilyMemberHistory().create();
+			org.hl7.fhir.dstu3.model.FamilyMemberHistory fhFamilyMemberHistory =
+				new org.hl7.fhir.dstu3.model.FamilyMemberHistory();
+			fhFamilyMemberHistory.setId(new IdType("FamilyMemberHistory", ret.getId()));
+			ModelUtil.saveResource(fhFamilyMemberHistory, ret);
+			return type.cast(ret);
+		}
+		return null;
 	}
 }

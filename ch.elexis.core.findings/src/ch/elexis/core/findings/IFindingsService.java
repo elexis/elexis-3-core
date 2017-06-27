@@ -56,12 +56,12 @@ public interface IFindingsService {
 	public void deleteFinding(IFinding finding);
 
 	/**
-	 * Get a {@link IFindingsFactory} that can be used to create implementations of
-	 * {@link IFinding}.
+	 * Factory method to create new {@link IFinding} instances.
 	 * 
+	 * @param type
 	 * @return
 	 */
-	public IFindingsFactory getFindingsFactory();
+	public <T extends IFinding> T create(Class<T> type);
 
 	/**
 	 * Try to load an {@link IFinding} instance by its id.

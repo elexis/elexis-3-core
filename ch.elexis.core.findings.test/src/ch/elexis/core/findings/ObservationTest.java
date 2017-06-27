@@ -35,11 +35,9 @@ public class ObservationTest {
 	}
 
 	private void testObservationText(String text, int size){
-		
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
 
-		IObservation iObservation = factory.createObservation();
+		IObservation iObservation =
+			FindingsServiceComponent.getService().create(IObservation.class);
 		assertNotNull(iObservation);
 		// set the properties
 		iObservation.setCategory(ObservationCategory.SOCIALHISTORY);

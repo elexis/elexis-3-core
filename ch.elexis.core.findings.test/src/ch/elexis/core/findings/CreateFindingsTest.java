@@ -24,9 +24,7 @@ public class CreateFindingsTest {
 	
 	@Test
 	public void createEncounter(){
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
-		IEncounter encounter = factory.createEncounter();
+		IEncounter encounter = FindingsServiceComponent.getService().create(IEncounter.class);
 		assertNotNull(encounter);
 		assertNotNull(encounter.getId());
 		assertFalse(encounter.getId().isEmpty());
@@ -45,9 +43,7 @@ public class CreateFindingsTest {
 	
 	@Test
 	public void createCondition(){
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
-		ICondition condition = factory.createCondition();
+		ICondition condition = FindingsServiceComponent.getService().create(ICondition.class);
 		condition.setPatientId(AllTests.PATIENT_ID);
 		FindingsServiceComponent.getService().saveFinding(condition);
 		
@@ -61,14 +57,13 @@ public class CreateFindingsTest {
 	
 	@Test
 	public void createClinicalImpression(){
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
-		IEncounter encounter = factory.createEncounter();
+		IEncounter encounter = FindingsServiceComponent.getService().create(IEncounter.class);
 		assertNotNull(encounter);
 		encounter.setConsultationId(AllTests.CONSULTATION_ID);
 		encounter.setPatientId(AllTests.PATIENT_ID);
 		FindingsServiceComponent.getService().saveFinding(encounter);
-		IClinicalImpression clinicalImpression = factory.createClinicalImpression();
+		IClinicalImpression clinicalImpression =
+			FindingsServiceComponent.getService().create(IClinicalImpression.class);
 		clinicalImpression.setEncounter(encounter);
 		FindingsServiceComponent.getService().saveFinding(clinicalImpression);
 		
@@ -82,14 +77,12 @@ public class CreateFindingsTest {
 	
 	@Test
 	public void createObservation(){
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
-		IEncounter encounter = factory.createEncounter();
+		IEncounter encounter = FindingsServiceComponent.getService().create(IEncounter.class);
 		assertNotNull(encounter);
 		encounter.setConsultationId(AllTests.CONSULTATION_ID);
 		encounter.setPatientId(AllTests.PATIENT_ID);
 		FindingsServiceComponent.getService().saveFinding(encounter);
-		IObservation observation = factory.createObservation();
+		IObservation observation = FindingsServiceComponent.getService().create(IObservation.class);
 		observation.setEncounter(encounter);
 		FindingsServiceComponent.getService().saveFinding(observation);
 		
@@ -103,14 +96,13 @@ public class CreateFindingsTest {
 	
 	@Test
 	public void createProcedureRequest(){
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
-		IEncounter encounter = factory.createEncounter();
+		IEncounter encounter = FindingsServiceComponent.getService().create(IEncounter.class);
 		assertNotNull(encounter);
 		encounter.setConsultationId(AllTests.CONSULTATION_ID);
 		encounter.setPatientId(AllTests.PATIENT_ID);
 		FindingsServiceComponent.getService().saveFinding(encounter);
-		IProcedureRequest procedureRequest = factory.createProcedureRequest();
+		IProcedureRequest procedureRequest =
+			FindingsServiceComponent.getService().create(IProcedureRequest.class);
 		procedureRequest.setEncounter(encounter);
 		FindingsServiceComponent.getService().saveFinding(procedureRequest);
 		
