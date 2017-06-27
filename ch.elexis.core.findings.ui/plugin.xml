@@ -27,6 +27,10 @@
             class="ch.elexis.core.findings.ui.viewcontributions.FamilyAnamnesisViewContribution"
             viewId="ch.elexis.PatDetail_v2">
       </detailComposite>
+      <detailComposite
+            class="ch.elexis.core.findings.ui.viewcontributions.AllergyIntoleranceViewContribution"
+            viewId="ch.elexis.PatDetail_v2">
+      </detailComposite>
    </extension>
 
 </plugin>

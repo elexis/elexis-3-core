@@ -10,6 +10,7 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IEncounter;
@@ -18,6 +19,7 @@ import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IProcedureRequest;
+import ch.elexis.core.findings.fhir.po.model.AllergyIntolerance;
 import ch.elexis.core.findings.fhir.po.model.ClinicalImpression;
 import ch.elexis.core.findings.fhir.po.model.Condition;
 import ch.elexis.core.findings.fhir.po.model.Encounter;
@@ -55,6 +57,9 @@ public class FindingsService implements IFindingsService {
 			if (filter.isAssignableFrom(IFamilyMemberHistory.class)) {
 				ret.addAll(getFamilyMemberHistory(patientId));
 			}
+			if (filter.isAssignableFrom(IAllergyIntolerance.class)) {
+				ret.addAll(getAllergyIntolerance(patientId));
+			}
 		}
 		return ret;
 	}
@@ -91,6 +96,14 @@ public class FindingsService implements IFindingsService {
 	
 	private List<FamilyMemberHistory> getFamilyMemberHistory(String patientId){
 		Query<FamilyMemberHistory> query = new Query<>(FamilyMemberHistory.class);
+		if (patientId != null) {
+			query.add(Condition.FLD_PATIENTID, Query.EQUALS, patientId);
+		}
+		return query.execute();
+	}
+	
+	private List<AllergyIntolerance> getAllergyIntolerance(String patientId){
+		Query<AllergyIntolerance> query = new Query<>(AllergyIntolerance.class);
 		if (patientId != null) {
 			query.add(Condition.FLD_PATIENTID, Query.EQUALS, patientId);
 		}
@@ -243,6 +256,14 @@ public class FindingsService implements IFindingsService {
 				new org.hl7.fhir.dstu3.model.FamilyMemberHistory();
 			fhFamilyMemberHistory.setId(new IdType("FamilyMemberHistory", ret.getId()));
 			ModelUtil.saveResource(fhFamilyMemberHistory, ret);
+			return type.cast(ret);
+		}
+		else if (type.equals(IAllergyIntolerance.class)) {
+			AllergyIntolerance ret = (AllergyIntolerance) new AllergyIntolerance().create();
+			org.hl7.fhir.dstu3.model.AllergyIntolerance fhAllergyIntolerance =
+				new org.hl7.fhir.dstu3.model.AllergyIntolerance();
+			fhAllergyIntolerance.setId(new IdType("AllergyIntolerance", ret.getId()));
+			ModelUtil.saveResource(fhAllergyIntolerance, ret);
 			return type.cast(ret);
 		}
 		return null;
