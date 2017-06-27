@@ -69,8 +69,7 @@ public class PersonalAnamnesisComposite extends Composite {
 			if (iObservation == null && text != null && text.length() > 0) {
 				Patient patient = ElexisEventDispatcher.getSelectedPatient();
 				if (patient != null && patient.exists()) {
-					iObservation = FindingsServiceComponent.getService().getFindingsFactory()
-						.createObservation();
+					iObservation = FindingsServiceComponent.getService().create(IObservation.class);
 					iObservation.setPatientId(patient.getId());
 					iObservation.setCategory(ObservationCategory.SOCIALHISTORY);
 					iObservation.setCoding(Collections

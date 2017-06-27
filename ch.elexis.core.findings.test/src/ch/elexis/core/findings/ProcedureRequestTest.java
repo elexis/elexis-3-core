@@ -26,10 +26,8 @@ public class ProcedureRequestTest {
 
 	@Test
 	public void manyProcedureRequests() {
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
 
-		IEncounter encounter = factory.createEncounter();
+		IEncounter encounter = FindingsServiceComponent.getService().create(IEncounter.class);
 		assertNotNull(encounter);
 		encounter.setConsultationId(AllTests.CONSULTATION_ID);
 		encounter.setPatientId(AllTests.PATIENT_ID);
@@ -38,7 +36,8 @@ public class ProcedureRequestTest {
 
 		// create many
 		for (int i = 0; i < 1000; i++) {
-			IProcedureRequest procedureRequest = factory.createProcedureRequest();
+			IProcedureRequest procedureRequest =
+				FindingsServiceComponent.getService().create(IProcedureRequest.class);
 			assertNotNull(procedureRequest);
 			// set the properties
 			procedureRequest.setPatientId(AllTests.PATIENT_ID);
@@ -58,17 +57,15 @@ public class ProcedureRequestTest {
 
 	@Test
 	public void getProperties() {
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
-
-		IEncounter encounter = factory.createEncounter();
+		IEncounter encounter = FindingsServiceComponent.getService().create(IEncounter.class);
 		assertNotNull(encounter);
 		encounter.setConsultationId(AllTests.CONSULTATION_ID);
 		encounter.setPatientId(AllTests.PATIENT_ID);
 		encounter.setStartTime(LocalDateTime.of(2016, Month.DECEMBER, 29, 9, 56));
 		FindingsServiceComponent.getService().saveFinding(encounter);
 
-		IProcedureRequest procedureRequest = factory.createProcedureRequest();
+		IProcedureRequest procedureRequest =
+			FindingsServiceComponent.getService().create(IProcedureRequest.class);
 		assertNotNull(procedureRequest);
 		// set the properties
 		procedureRequest.setPatientId(AllTests.PATIENT_ID);
