@@ -95,7 +95,7 @@ public class MigratorService implements IMigratorService {
 					.collect(Collectors.toList());
 				if (observations.isEmpty()) {
 					IObservation observation =
-						findingsService.getFindingsFactory().createObservation();
+						findingsService.create(IObservation.class);
 					observation.setPatientId(patientId);
 					observation.setCategory(ObservationCategory.SOCIALHISTORY);
 					observation.setText(anamnese);
@@ -126,7 +126,7 @@ public class MigratorService implements IMigratorService {
 					.collect(Collectors.toList());
 				if (observations.isEmpty()) {
 					IObservation observation =
-						findingsService.getFindingsFactory().createObservation();
+						findingsService.create(IObservation.class);
 					observation.setPatientId(patientId);
 					observation.setCategory(ObservationCategory.SOCIALHISTORY);
 					observation.setText(risk);
@@ -155,7 +155,7 @@ public class MigratorService implements IMigratorService {
 				conditions = conditions.parallelStream().filter(iFinding -> isDiagnose(iFinding))
 					.collect(Collectors.toList());
 				if (conditions.isEmpty()) {
-					ICondition condition = findingsService.getFindingsFactory().createCondition();
+					ICondition condition = findingsService.create(ICondition.class);
 					condition.setPatientId(patientId);
 					condition.setCategory(ConditionCategory.PROBLEMLISTITEM);
 					condition.setText(diagnosis);
@@ -181,7 +181,7 @@ public class MigratorService implements IMigratorService {
 					findingsService.getPatientsFindings(patientId, IFamilyMemberHistory.class);
 				if (iFindings.isEmpty()) {
 					IFamilyMemberHistory familyMemberHistory =
-						findingsService.getFindingsFactory().createFamilyMemberHistory();
+						findingsService.create(IFamilyMemberHistory.class);
 					familyMemberHistory.setPatientId(patientId);
 					familyMemberHistory.setText(anamnese);
 					findingsService.saveFinding(familyMemberHistory);
@@ -261,7 +261,7 @@ public class MigratorService implements IMigratorService {
 	}
 	
 	private void createEncounter(Konsultation cons){
-		IEncounter encounter = findingsService.getFindingsFactory().createEncounter();
+		IEncounter encounter = findingsService.create(IEncounter.class);
 		updateEncounter(encounter, cons);
 	}
 	

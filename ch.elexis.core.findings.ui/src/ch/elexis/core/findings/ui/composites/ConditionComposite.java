@@ -201,7 +201,7 @@ public class ConditionComposite extends Composite {
 	public void udpateModel(){
 		if (!condition.isPresent()) {
 			condition = Optional
-				.of(FindingsServiceComponent.getService().getFindingsFactory().createCondition());
+				.of(FindingsServiceComponent.getService().create(ICondition.class));
 			condition.get().setCategory(category);
 		}
 		if (transientConditionValue.getValue() instanceof TransientCondition) {
