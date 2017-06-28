@@ -12,6 +12,13 @@ package ch.elexis.core.data.util;
 
 import java.io.File;
 
+import ch.elexis.core.utils.FileUtil;
+
+/**
+ * @deprecated Use org.apache.commons.io.FileUtils or {@link FileUtil}
+ * @author med1
+ *
+ */
 public class FileUtility {
 	public static String DIRECTORY_SEPARATOR = File.separator;
 	

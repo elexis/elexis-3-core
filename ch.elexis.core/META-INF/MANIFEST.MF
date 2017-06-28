@@ -24,4 +24,5 @@ Export-Package: ch.elexis.core.constants,
  ch.elexis.core.text.model,
  ch.elexis.core.types,
  ch.elexis.core.types.impl,
- ch.elexis.core.types.util
+ ch.elexis.core.types.util,
+ ch.elexis.core.utils
