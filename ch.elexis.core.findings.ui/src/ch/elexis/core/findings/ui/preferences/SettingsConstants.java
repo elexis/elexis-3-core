@@ -12,4 +12,7 @@ public class SettingsConstants {
 	public static final String FAMANAM_SETTINGS_USE_STRUCTURED =
 		"familyanamnese/settings/useStructured";
 	
+	public static final String ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED =
+		"allergyintolerance/settings/useStructured";
+	
 }

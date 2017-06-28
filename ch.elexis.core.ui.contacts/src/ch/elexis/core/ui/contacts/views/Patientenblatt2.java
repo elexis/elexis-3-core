@@ -478,6 +478,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						lbExpandable.remove(Messages.Patientenblatt2_risksLbl);
 						dfExpandable.remove("Risiken");
 					}
+					if (ivc.getClass().getSimpleName()
+						.equals("AllergyIntoleranceViewContribution")) {
+						lbExpandable.remove(Messages.Patientenblatt2_allergiesLbl);
+						dfExpandable.remove("Allergien");
+					}
 				}
 			}
 			ExpandableComposite ec =
