@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 
+import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
@@ -62,6 +63,9 @@ public class MigratorService implements IMigratorService {
 			}
 			if (filter.isAssignableFrom(IFamilyMemberHistory.class)) {
 				migratePatientFamAnamnese(patientId);
+			}
+			if (filter.isAssignableFrom(IAllergyIntolerance.class)) {
+				migrateAllergyIntolerance(patientId);
 			}
 		}
 	}
@@ -185,6 +189,31 @@ public class MigratorService implements IMigratorService {
 					familyMemberHistory.setPatientId(patientId);
 					familyMemberHistory.setText(anamnese);
 					findingsService.saveFinding(familyMemberHistory);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Migrate the existing allergy intolerance text of a patient to an {@link IAllergyIntolerance}
+	 * instance. Migration is only performed if there is not already a allergy intolerance in form
+	 * of an {@link IAllergyIntolerance} present for the patient.
+	 * 
+	 * @param patientId
+	 */
+	private void migrateAllergyIntolerance(String patientId){
+		Patient patient = Patient.load(patientId);
+		if (patient != null && patient.exists()) {
+			String allergies = patient.getAllergies();
+			if (allergies != null && !allergies.isEmpty()) {
+				List<IFinding> iFindings =
+					findingsService.getPatientsFindings(patientId, IAllergyIntolerance.class);
+				if (iFindings.isEmpty()) {
+					IAllergyIntolerance allergyIntolerance =
+						findingsService.create(IAllergyIntolerance.class);
+					allergyIntolerance.setPatientId(patientId);
+					allergyIntolerance.setText(allergies);
+					findingsService.saveFinding(allergyIntolerance);
 				}
 			}
 		}

@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
@@ -46,6 +47,8 @@ public class FindingsSettings extends FieldEditorPreferencePage
 	
 	private BooleanFieldEditor famAnamneseStructFieldEditor;
 	
+	private BooleanFieldEditor allergyIntoleranceStructFieldEditor;
+	
 	@Override
 	public void init(IWorkbench workbench){
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
@@ -73,6 +76,11 @@ public class FindingsSettings extends FieldEditorPreferencePage
 			new BooleanFieldEditor(SettingsConstants.FAMANAM_SETTINGS_USE_STRUCTURED,
 				"Familien Anamnese strukturiert anzeigen", getFieldEditorParent());
 		addField(famAnamneseStructFieldEditor);
+		
+		allergyIntoleranceStructFieldEditor =
+			new BooleanFieldEditor(SettingsConstants.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
+				"Allergien strukturiert anzeigen", getFieldEditorParent());
+		addField(allergyIntoleranceStructFieldEditor);
 	}
 	
 	private Logger getLogger(){
@@ -94,6 +102,9 @@ public class FindingsSettings extends FieldEditorPreferencePage
 			}
 			else if (event.getSource() == famAnamneseStructFieldEditor) {
 				famAnamnesePropertyChange(event);
+			}
+			else if (event.getSource() == allergyIntoleranceStructFieldEditor) {
+				allergyIntolerancePropertyChange(event);
 			}
 		}
 	}
@@ -468,6 +479,94 @@ public class FindingsSettings extends FieldEditorPreferencePage
 					@Override
 					public void run(){
 						famAnamneseStructFieldEditor.load();
+					}
+				});
+			}
+		}
+	}
+	
+	private void allergyIntolerancePropertyChange(PropertyChangeEvent event){
+		if (event.getNewValue().equals(Boolean.TRUE)) {
+			if (MessageDialog.openConfirm(getShell(), "Strukturierte Allergien",
+				"Bisher erfasste Allergien Einträge werden automatisch in strukturierte umgewandelt.\n"
+					+ "Wollen Sie wirklich von nun an strukturierte Allergien Einträge verwenden?")) {
+				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
+				try {
+					progressDialog.run(true, true, new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor)
+							throws InvocationTargetException, InterruptedException{
+							Query<Patient> query = new Query<>(Patient.class);
+							List<Patient> patients = query.execute();
+							monitor.beginTask("Strukturierte Allergien erzeugen",
+								patients.size());
+							IFindingsService findingsService =
+								FindingsServiceComponent.getService();
+							IMigratorService migratorService =
+								MigratorServiceComponent.getService();
+							for (Patient patient : patients) {
+								String allergies = patient.getAllergies();
+								List<IFinding> existing =
+									getExistingAllergyIntolerance(patient.getId(), findingsService);
+								// only migrate if there is allergies and no structured allergies already there
+								if (allergies != null && !allergies.isEmpty()
+									&& existing.isEmpty()) {
+									migratorService.migratePatientsFindings(patient.getId(),
+										IAllergyIntolerance.class, null);
+								}
+								monitor.worked(1);
+								if (monitor.isCanceled()) {
+									break;
+								}
+							}
+							monitor.done();
+							Display.getDefault().asyncExec(new Runnable() {
+								@Override
+								public void run(){
+									MessageDialog.openInformation(getShell(),
+										"Strukturierte Allergien",
+										"Strukturierte Allergien erfolgreich erzeugt. Bitte starten sie Elexis neu um mit den strukturierten Allergien Einträgen zu arbeiten.");
+								}
+							});
+						}
+						
+						private List<IFinding> getExistingAllergyIntolerance(String patientId,
+							IFindingsService findingsService){
+							return findingsService.getPatientsFindings(patientId,
+								IAllergyIntolerance.class);
+						};
+					});
+				} catch (InvocationTargetException | InterruptedException e) {
+					MessageDialog.openError(getShell(), "Allergien konvertieren",
+						"Fehler beim erzeugen der strukturierten Allergien Einträgen.");
+					getLogger().error("Error creating structured allergy intolerances", e);
+				}
+			} else {
+				getPreferenceStore().setValue(
+					SettingsConstants.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
+					false);
+				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
+				getShell().getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run(){
+						allergyIntoleranceStructFieldEditor.load();
+					}
+				});
+			}
+		} else {
+			if (MessageDialog.openConfirm(getShell(), "Strukturierte Allergien",
+				"Bisher erfasste strukturierte Allergien werden nicht in Text umgewandelt.\n"
+					+ "Wollen Sie wirklich von nun an Text Allergien verwenden?")) {
+				MessageDialog.openInformation(getShell(), "Text Allergien",
+					"Bitte starten sie Elexis neu um mit den Text Allergien zu arbeiten.");
+			} else {
+				getPreferenceStore()
+					.setValue(SettingsConstants.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
+					true);
+				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
+				getShell().getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run(){
+						allergyIntoleranceStructFieldEditor.load();
 					}
 				});
 			}
