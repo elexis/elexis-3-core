@@ -62,7 +62,7 @@ public class RecordElement extends XChangeElement {
 				String st = record.getText();
 				if (st != null) {
 					Element eText = new Element(ELEMENT_TEXT, getContainer().getNamespace());
-					eText.addContent(st);
+					eText.addContent(XMLTool.getValidXMLString(st));
 					getElement().addContent(eText);
 					List<XRef> xrefs = record.getXrefs();
 					for (XRef xref : xrefs) {

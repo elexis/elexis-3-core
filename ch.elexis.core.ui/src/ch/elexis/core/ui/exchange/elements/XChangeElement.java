@@ -21,6 +21,7 @@ import ch.elexis.core.ui.exchange.XChangeImporter;
 import ch.elexis.data.Xid;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Result;
+import ch.rgw.tools.XMLTool;
 
 /**
  * Base class for all xChange Elements
@@ -214,6 +215,6 @@ public abstract class XChangeElement {
 	}
 	
 	public void setAttribute(String attr, String value){
-		ex.setAttribute(attr, value);
+		ex.setAttribute(attr, XMLTool.getValidXMLString(value));
 	}
 }
