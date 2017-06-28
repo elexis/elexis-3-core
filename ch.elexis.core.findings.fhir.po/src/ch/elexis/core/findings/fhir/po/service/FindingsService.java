@@ -35,8 +35,9 @@ import ch.elexis.data.Query;
 public class FindingsService implements IFindingsService {
 	private Logger logger = LoggerFactory.getLogger(FindingsService.class);
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<IFinding> getPatientsFindings(String patientId, Class<? extends IFinding> filter){
+	public <T extends IFinding> List<T> getPatientsFindings(String patientId, Class<T> filter){
 		List<IFinding> ret = new ArrayList<>();
 		if (patientId != null && !patientId.isEmpty()) {
 			if (filter.isAssignableFrom(IEncounter.class)) {
@@ -61,7 +62,7 @@ public class FindingsService implements IFindingsService {
 				ret.addAll(getAllergyIntolerance(patientId));
 			}
 		}
-		return ret;
+		return (List<T>) ret;
 	}
 	
 	private List<ProcedureRequest> getProcedureRequests(String patientId, String encounterId){
@@ -129,9 +130,10 @@ public class FindingsService implements IFindingsService {
 		return query.execute();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<IFinding> getConsultationsFindings(String consultationId,
-		Class<? extends IFinding> filter){
+	public <T extends IFinding> List<T> getConsultationsFindings(String consultationId,
+		Class<T> filter){
 		List<IFinding> ret = new ArrayList<>();
 		if (consultationId != null && !consultationId.isEmpty()) {
 			Optional<IEncounter> encounter = getEncounter(consultationId);
@@ -150,7 +152,7 @@ public class FindingsService implements IFindingsService {
 				}
 			}
 		}
-		return ret;
+		return (List<T>) ret;
 	}
 	
 	private Optional<IEncounter> getEncounter(String consultationId){
@@ -195,21 +197,14 @@ public class FindingsService implements IFindingsService {
 		}
 	}
 	
-	
 	@Override
-	public Optional<IFinding> findById(String idPart){
-		// TODO ...
-		return Optional.empty();
-	}
-	
-	@Override
-	public Optional<IFinding> findById(String id, Class<? extends IFinding> clazz){
+	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz){
 		IFinding loadedObj = null;
 		if (clazz.isAssignableFrom(ICondition.class)) {
 			loadedObj = Condition.load(id);
 		}
 		if (loadedObj != null && ((IPersistentObject) loadedObj).exists()) {
-			return Optional.of(loadedObj);
+			return Optional.of(clazz.cast(loadedObj));
 		}
 		IObservation observation = create(IObservation.class);
 		return Optional.empty();

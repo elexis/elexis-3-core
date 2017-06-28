@@ -92,7 +92,7 @@ public class MigratorService implements IMigratorService {
 		if (patient != null && patient.exists()) {
 			String anamnese = patient.getPersAnamnese();
 			if (anamnese != null && !anamnese.isEmpty()) {
-				List<IFinding> observations =
+				List<IObservation> observations =
 					findingsService.getPatientsFindings(patientId, IObservation.class);
 				observations = observations.parallelStream()
 					.filter(iFinding -> isPersAnamnese(iFinding))
@@ -123,7 +123,7 @@ public class MigratorService implements IMigratorService {
 		if (patient != null && patient.exists()) {
 			String risk = patient.getRisk();
 			if (risk != null && !risk.isEmpty()) {
-				List<IFinding> observations =
+				List<IObservation> observations =
 					findingsService.getPatientsFindings(patientId, IObservation.class);
 				observations = observations.parallelStream()
 					.filter(iFinding -> isRiskfactor(iFinding))
@@ -154,7 +154,7 @@ public class MigratorService implements IMigratorService {
 		if (patient != null && patient.exists()) {
 			String diagnosis = patient.getDiagnosen();
 			if (diagnosis != null && !diagnosis.isEmpty()) {
-				List<IFinding> conditions =
+				List<ICondition> conditions =
 					findingsService.getPatientsFindings(patientId, ICondition.class);
 				conditions = conditions.parallelStream().filter(iFinding -> isDiagnose(iFinding))
 					.collect(Collectors.toList());
@@ -181,7 +181,7 @@ public class MigratorService implements IMigratorService {
 		if (patient != null && patient.exists()) {
 			String anamnese = patient.getFamilyAnamnese();
 			if (anamnese != null && !anamnese.isEmpty()) {
-				List<IFinding> iFindings =
+				List<IFamilyMemberHistory> iFindings =
 					findingsService.getPatientsFindings(patientId, IFamilyMemberHistory.class);
 				if (iFindings.isEmpty()) {
 					IFamilyMemberHistory familyMemberHistory =
@@ -206,7 +206,7 @@ public class MigratorService implements IMigratorService {
 		if (patient != null && patient.exists()) {
 			String allergies = patient.getAllergies();
 			if (allergies != null && !allergies.isEmpty()) {
-				List<IFinding> iFindings =
+				List<IAllergyIntolerance> iFindings =
 					findingsService.getPatientsFindings(patientId, IAllergyIntolerance.class);
 				if (iFindings.isEmpty()) {
 					IAllergyIntolerance allergyIntolerance =
@@ -219,15 +219,14 @@ public class MigratorService implements IMigratorService {
 		}
 	}
 	
-	private boolean isDiagnose(IFinding iFinding){
-		return iFinding instanceof ICondition
-			&& ((ICondition) iFinding).getCategory() == ConditionCategory.PROBLEMLISTITEM;
+	private boolean isDiagnose(ICondition iFinding){
+		return iFinding.getCategory() == ConditionCategory.PROBLEMLISTITEM;
 	}
 	
-	private boolean isPersAnamnese(IFinding iFinding){
+	private boolean isPersAnamnese(IObservation iFinding){
 		if (iFinding instanceof IObservation
 			&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY) {
-			for (ICoding code : ((IObservation) iFinding).getCoding()) {
+			for (ICoding code : iFinding.getCoding()) {
 				if (ObservationCode.ANAM_PERSONAL.isSame(code)) {
 					return true;
 				}
@@ -236,10 +235,9 @@ public class MigratorService implements IMigratorService {
 		return false;
 	}
 	
-	private boolean isRiskfactor(IFinding iFinding){
-		if (iFinding instanceof IObservation
-			&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY) {
-			for (ICoding code : ((IObservation) iFinding).getCoding()) {
+	private boolean isRiskfactor(IObservation iFinding){
+		if (iFinding.getCategory() == ObservationCategory.SOCIALHISTORY) {
+			for (ICoding code : iFinding.getCoding()) {
 				if (ObservationCode.ANAM_RISK.isSame(code)) {
 					return true;
 				}

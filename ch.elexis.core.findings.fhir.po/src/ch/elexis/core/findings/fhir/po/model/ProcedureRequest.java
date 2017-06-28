@@ -105,7 +105,7 @@ public class ProcedureRequest extends AbstractFhirPersistentObject implements IP
 	@Override
 	public Optional<LocalDateTime> getScheduledTime(){
 		// TODO Auto-generated method stub
-		return null;
+		return Optional.empty();
 	}
 	
 	@Override

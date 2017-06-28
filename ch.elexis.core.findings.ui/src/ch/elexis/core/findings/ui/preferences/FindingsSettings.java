@@ -418,7 +418,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 								MigratorServiceComponent.getService();
 							for (Patient patient : patients) {
 								String famAnamesis = patient.getFamilyAnamnese();
-								List<IFinding> existing =
+								List<IFamilyMemberHistory> existing =
 									getExistingFamAnamnese(patient.getId(), findingsService);
 								// only migrate if there is a fam anamnesis and no structured fam anamnesis already there
 								if (famAnamesis != null && !famAnamesis.isEmpty()
@@ -443,7 +443,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 							});
 						}
 						
-						private List<IFinding> getExistingFamAnamnese(String patientId,
+						private List<IFamilyMemberHistory> getExistingFamAnamnese(String patientId,
 							IFindingsService findingsService){
 							return findingsService.getPatientsFindings(patientId,
 								IFamilyMemberHistory.class);
@@ -505,7 +505,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 								MigratorServiceComponent.getService();
 							for (Patient patient : patients) {
 								String allergies = patient.getAllergies();
-								List<IFinding> existing =
+								List<IAllergyIntolerance> existing =
 									getExistingAllergyIntolerance(patient.getId(), findingsService);
 								// only migrate if there is allergies and no structured allergies already there
 								if (allergies != null && !allergies.isEmpty()
@@ -529,7 +529,8 @@ public class FindingsSettings extends FieldEditorPreferencePage
 							});
 						}
 						
-						private List<IFinding> getExistingAllergyIntolerance(String patientId,
+						private List<IAllergyIntolerance> getExistingAllergyIntolerance(
+							String patientId,
 							IFindingsService findingsService){
 							return findingsService.getPatientsFindings(patientId,
 								IAllergyIntolerance.class);
