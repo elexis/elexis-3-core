@@ -32,7 +32,7 @@ public class CreateFindingsTest {
 		encounter.setPatientId(AllTests.PATIENT_ID);
 		FindingsServiceComponent.getService().saveFinding(encounter);
 		
-		List<IFinding> encounters = FindingsServiceComponent.getService()
+		List<IEncounter> encounters = FindingsServiceComponent.getService()
 				.getConsultationsFindings(AllTests.CONSULTATION_ID, IEncounter.class);
 		assertNotNull(encounters);
 		assertFalse(encounters.isEmpty());
@@ -47,7 +47,7 @@ public class CreateFindingsTest {
 		condition.setPatientId(AllTests.PATIENT_ID);
 		FindingsServiceComponent.getService().saveFinding(condition);
 		
-		List<IFinding> conditions = FindingsServiceComponent.getService()
+		List<ICondition> conditions = FindingsServiceComponent.getService()
 			.getPatientsFindings(AllTests.PATIENT_ID, ICondition.class);
 		assertNotNull(conditions);
 		assertFalse(conditions.isEmpty());
@@ -67,7 +67,7 @@ public class CreateFindingsTest {
 		clinicalImpression.setEncounter(encounter);
 		FindingsServiceComponent.getService().saveFinding(clinicalImpression);
 		
-		List<IFinding> clinicalImpressions = FindingsServiceComponent.getService()
+		List<IClinicalImpression> clinicalImpressions = FindingsServiceComponent.getService()
 				.getConsultationsFindings(AllTests.CONSULTATION_ID, IClinicalImpression.class);
 		assertNotNull(clinicalImpressions);
 		assertFalse(clinicalImpressions.isEmpty());
@@ -86,7 +86,7 @@ public class CreateFindingsTest {
 		observation.setEncounter(encounter);
 		FindingsServiceComponent.getService().saveFinding(observation);
 		
-		List<IFinding> observations = FindingsServiceComponent.getService()
+		List<IObservation> observations = FindingsServiceComponent.getService()
 				.getConsultationsFindings(AllTests.CONSULTATION_ID, IObservation.class);
 		assertNotNull(observations);
 		assertFalse(observations.isEmpty());
@@ -106,7 +106,7 @@ public class CreateFindingsTest {
 		procedureRequest.setEncounter(encounter);
 		FindingsServiceComponent.getService().saveFinding(procedureRequest);
 		
-		List<IFinding> procedureRequests = FindingsServiceComponent.getService()
+		List<IProcedureRequest> procedureRequests = FindingsServiceComponent.getService()
 				.getConsultationsFindings(AllTests.CONSULTATION_ID, IProcedureRequest.class);
 		assertNotNull(procedureRequests);
 		assertFalse(procedureRequests.isEmpty());

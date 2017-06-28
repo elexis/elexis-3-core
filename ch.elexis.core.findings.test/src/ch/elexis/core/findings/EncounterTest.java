@@ -40,12 +40,12 @@ public class EncounterTest {
 			FindingsServiceComponent.getService().saveFinding(encounter);
 		}
 		// test many
-		List<IFinding> findings = FindingsServiceComponent.getService().getPatientsFindings(AllTests.PATIENT_ID,
+		List<IEncounter> findings = FindingsServiceComponent.getService()
+			.getPatientsFindings(AllTests.PATIENT_ID,
 				IEncounter.class);
 		assertEquals(1000, findings.size());
-		for (IFinding iFinding : findings) {
-			assertTrue(iFinding instanceof IEncounter);
-			Optional<LocalDateTime> startTime = ((IEncounter) iFinding).getStartTime();
+		for (IEncounter iFinding : findings) {
+			Optional<LocalDateTime> startTime = iFinding.getStartTime();
 			assertTrue(startTime.isPresent());
 			assertEquals(LocalDateTime.of(2016, Month.DECEMBER, 29, 9, 56), startTime.get());
 		}
@@ -61,7 +61,7 @@ public class EncounterTest {
 		encounter.setStartTime(effectiveTime);
 		FindingsServiceComponent.getService().saveFinding(encounter);
 		
-		List<IFinding> encounters = FindingsServiceComponent.getService()
+		List<IEncounter> encounters = FindingsServiceComponent.getService()
 				.getConsultationsFindings(AllTests.CONSULTATION_ID, IEncounter.class);
 		assertNotNull(encounters);
 		assertFalse(encounters.isEmpty());

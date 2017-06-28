@@ -47,12 +47,11 @@ public class ObservationTest {
 		FindingsServiceComponent.getService().saveFinding(iObservation);
 		
 		// test many
-		List<IFinding> findings = FindingsServiceComponent.getService().getPatientsFindings(AllTests.PATIENT_ID,
+		List<IObservation> findings = FindingsServiceComponent.getService()
+			.getPatientsFindings(AllTests.PATIENT_ID,
 				IObservation.class);
 		assertEquals(size, findings.size());
-		IFinding iFinding = findings.get(size - 1);
-		assertTrue(iFinding instanceof IObservation);
-		IObservation found = (IObservation) iFinding;
+		IObservation found = findings.get(size - 1);
 		Assert.assertTrue(found.getText().get().equals(text));
 		Assert.assertEquals(ObservationCategory.SOCIALHISTORY, found.getCategory());
 			

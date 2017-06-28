@@ -13,7 +13,6 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDataAccess;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
-import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.data.Patient;
@@ -81,7 +80,7 @@ public class FindingsDataAccessor implements IDataAccess {
 		
 		if (patient != null) {
 			if (descriptor.equalsIgnoreCase(FINDINGS_PATIENT_DIAGNOSIS)) {
-				List<IFinding> findings =
+				List<ICondition> findings =
 					findingsService.getPatientsFindings(patient.getId(), ICondition.class);
 				List<ICondition> conditions = getDiagnosis(findings);
 				StringBuilder sb = new StringBuilder();
@@ -97,15 +96,14 @@ public class FindingsDataAccessor implements IDataAccess {
 		return result;
 	}
 	
-	private List<ICondition> getDiagnosis(List<IFinding> findings){
+	private List<ICondition> getDiagnosis(List<ICondition> findings){
 		List<ICondition> ret = new ArrayList<>();
 		findings.stream().forEach(finding -> {
-			if (finding instanceof ICondition) {
-				ICondition iCondition = (ICondition) finding;
-				if (iCondition.getCategory().equals(ConditionCategory.PROBLEMLISTITEM)) {
-					ret.add(iCondition);
-				}
+			ICondition iCondition = finding;
+			if (iCondition.getCategory().equals(ConditionCategory.PROBLEMLISTITEM)) {
+				ret.add(iCondition);
 			}
+			
 		});
 		ret.sort((left, right) -> {
 			LocalDate lRecorded =

@@ -29,7 +29,8 @@ public interface IFindingsService {
 	 * @param filter
 	 * @return
 	 */
-	public List<IFinding> getPatientsFindings(String patientId, Class<? extends IFinding> filter);
+	public <T extends IFinding> List<T> getPatientsFindings(String patientId,
+		Class<T> filter);
 
 	/**
 	 * Find {@link IFinding} instances referring to the consultationId. With the filter parameter
@@ -39,7 +40,8 @@ public interface IFindingsService {
 	 * @param filter
 	 * @return
 	 */
-	public List<IFinding> getConsultationsFindings(String consultationId, Class<? extends IFinding> filter);
+	public <T extends IFinding> List<T> getConsultationsFindings(String consultationId,
+		Class<T> filter);
 
 	/**
 	 * Save the {@link IFinding} instance to a persistent state.
@@ -62,14 +64,6 @@ public interface IFindingsService {
 	 * @return
 	 */
 	public <T extends IFinding> T create(Class<T> type);
-
-	/**
-	 * Try to load an {@link IFinding} instance by its id.
-	 * 
-	 * @param idPart
-	 * @return
-	 */
-	public Optional<IFinding> findById(String idPart);
 	
 	/**
 	 * Try to load an {@link IFinding} instance by its id, using a specific IFinding class for
@@ -79,5 +73,5 @@ public interface IFindingsService {
 	 * @param clazz
 	 * @return
 	 */
-	public Optional<IFinding> findById(String id, Class<? extends IFinding> clazz);
+	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz);
 }
