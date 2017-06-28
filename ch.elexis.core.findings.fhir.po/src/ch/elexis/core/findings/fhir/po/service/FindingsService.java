@@ -97,7 +97,7 @@ public class FindingsService implements IFindingsService {
 	private List<FamilyMemberHistory> getFamilyMemberHistory(String patientId){
 		Query<FamilyMemberHistory> query = new Query<>(FamilyMemberHistory.class);
 		if (patientId != null) {
-			query.add(Condition.FLD_PATIENTID, Query.EQUALS, patientId);
+			query.add(FamilyMemberHistory.FLD_PATIENTID, Query.EQUALS, patientId);
 		}
 		return query.execute();
 	}
@@ -105,7 +105,7 @@ public class FindingsService implements IFindingsService {
 	private List<AllergyIntolerance> getAllergyIntolerance(String patientId){
 		Query<AllergyIntolerance> query = new Query<>(AllergyIntolerance.class);
 		if (patientId != null) {
-			query.add(Condition.FLD_PATIENTID, Query.EQUALS, patientId);
+			query.add(AllergyIntolerance.FLD_PATIENTID, Query.EQUALS, patientId);
 		}
 		return query.execute();
 	}
