@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import ch.elexis.core.importer.div.importers.HL7Parser;
-import ch.elexis.core.importer.div.importers.ILabItemResolver;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
 import ch.rgw.tools.Result;
@@ -30,7 +29,15 @@ public interface IFileImportStrategy {
 	 */
 	public Result<Object> execute(File file, Map<String, Object> context, HL7Parser hl7Parser,
 		IPersistenceHandler persistenceHandler) throws IOException;
-		
-	public void setTestMode(boolean testing);
 	
+	/**
+	 * Specify if imported files should be moved to archive and error directory inside the import
+	 * directory. Default is false.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public IFileImportStrategy setMoveAfterImport(boolean value);
+	
+	public void setTestMode(boolean testing);
 }

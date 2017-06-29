@@ -25,6 +25,8 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 	
 	private boolean testMode;
 	
+	private boolean moveAfterImport;
+	
 	public static final String CFG_IMPORT_ENCDATA = "hl7Parser/importencdata";
 	
 	@SuppressWarnings("unchecked")
@@ -37,8 +39,14 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 		if (testMode) {
 			// we need to enable patient creation when testing otherwise test will fail
 			result = (Result<Object>) hl7Parser.importFile(file.getAbsolutePath(), true);
+			if (moveAfterImport) {
+				FileImportStrategyUtil.moveAfterImport(result.isOK(), file);
+			}
 		} else {
 			result = (Result<Object>) hl7Parser.importFile(file.getAbsolutePath(), false);
+			if (moveAfterImport) {
+				FileImportStrategyUtil.moveAfterImport(result.isOK(), file);
+			}
 		}
 		
 		Object resultObj = result.get();
@@ -67,5 +75,11 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 	@Override
 	public void setTestMode(boolean testing){
 		this.testMode = testing;
+	}
+	
+	@Override
+	public IFileImportStrategy setMoveAfterImport(boolean value){
+		this.moveAfterImport = value;
+		return this;
 	}
 }
