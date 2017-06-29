@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.importer.div.importers.multifile.strategy.BasicFileImportStrategyFactory;
 import ch.elexis.core.importer.div.importers.multifile.strategy.DefaultHL7ImportStrategy;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
+import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
 import ch.rgw.io.FileTool;
 
 /**
@@ -23,6 +24,8 @@ import ch.rgw.io.FileTool;
  */
 public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory {
 	private static final Logger log = LoggerFactory.getLogger(DefaultImportStrategyFactory.class);
+	
+	private boolean moveAfterImport;
 	
 	@Override
 	public Map<File, IFileImportStrategy> createImportStrategyMap(File hl7File){
@@ -41,8 +44,19 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 				ret.put(mFile, pdfImportStrategy);
 			}
 		}
+		ret.values().forEach(strategy -> strategy.setMoveAfterImport(moveAfterImport));
 		return ret;
 	}
 	
-
+	/**
+	 * Specify if imported files should be moved to archiv and error directory inside the import
+	 * directory. Default is false.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public IFileImportStrategyFactory setMoveAfterImport(boolean value){
+		this.moveAfterImport = value;
+		return this;
+	}
 }
