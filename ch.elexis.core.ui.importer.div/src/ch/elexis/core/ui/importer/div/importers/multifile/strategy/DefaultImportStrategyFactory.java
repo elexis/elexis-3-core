@@ -34,18 +34,18 @@ public class DefaultImportStrategyFactory implements IFileImportStrategyFactory 
 		ret.put(hl7File, new DefaultHL7ImportStrategy());
 		
 		List<File> matchingFiles = getMatchingFiles(hl7File);
-		// no matching files for this hl7 file
-		if (matchingFiles.isEmpty())
-			return ret;
-			
-		DefaultPDFImportStrategy pdfImportStrategy = new DefaultPDFImportStrategy();
-		for (File mFile : matchingFiles) {
-			String type = FileTool.getExtension(mFile.getName()).toLowerCase();
-			if ("pdf".equals(type)) {
-				log.debug("... adding [" + mFile.getName() + "] with DefaultPDFImportStrategy");
-				ret.put(mFile, pdfImportStrategy);
+		// matching files for this hl7 file, probably pdf
+		if (!matchingFiles.isEmpty()) {
+			DefaultPDFImportStrategy pdfImportStrategy = new DefaultPDFImportStrategy();
+			for (File mFile : matchingFiles) {
+				String type = FileTool.getExtension(mFile.getName()).toLowerCase();
+				if ("pdf".equals(type)) {
+					log.debug("... adding [" + mFile.getName() + "] with DefaultPDFImportStrategy");
+					ret.put(mFile, pdfImportStrategy);
+				}
 			}
 		}
+			
 		ret.values().forEach(strategy -> strategy.setMoveAfterImport(moveAfterImport));
 		return ret;
 	}
