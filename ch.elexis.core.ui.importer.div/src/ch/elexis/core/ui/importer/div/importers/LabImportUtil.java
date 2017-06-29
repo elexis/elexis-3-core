@@ -190,11 +190,12 @@ public class LabImportUtil implements ILabImportUtil {
 		boolean overWriteAll = false;
 		String mandantId = findMandantIdForLabResults(results);
 		String orderId = LabOrder.getNextOrderId();
+		boolean newResult = false;
 		for (TransientLabResult transientLabResult : results) {
 			List<LabResult> existing = getExistingResults(transientLabResult);
 			if (existing.isEmpty()) {
 				ILabResult labResult = createLabResult(transientLabResult, orderId, mandantId);
-				
+				newResult = true;
 				CoreHub.getLocalLockService().acquireLock((LabResult) labResult);
 				CoreHub.getLocalLockService().releaseLock((LabResult) labResult);
 			} else {
@@ -226,6 +227,17 @@ public class LabImportUtil implements ILabImportUtil {
 						CoreHub.getLocalLockService().releaseLock((LabResult) labResult);
 						continue;
 					}
+				}
+			}
+		}
+		// if no result was created, no laborder was created, lookup existing orderid with 1st result
+		if (!newResult && !results.isEmpty()) {
+			List<LabResult> existing = getExistingResults(results.get(0));
+			if (!existing.isEmpty()) {
+				List<LabOrder> orders = LabOrder.getLabOrders(existing.get(0).getPatient().getId(),
+					null, null, existing.get(0), null, null, null);
+				if (!orders.isEmpty()) {
+					orderId = orders.get(0).get(LabOrder.FLD_ORDERID);
 				}
 			}
 		}
