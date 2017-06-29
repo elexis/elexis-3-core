@@ -23,6 +23,8 @@ import ch.rgw.io.FileTool;
 public class DefaultImportStrategyFactory implements IFileImportStrategyFactory {
 	private static final Logger log = LoggerFactory.getLogger(DefaultImportStrategyFactory.class);
 	
+	private boolean moveAfterImport;
+	
 	@Override
 	public Map<File, IFileImportStrategy> createImportStrategyMap(File hl7File){
 		Map<File, IFileImportStrategy> ret = new HashMap<>();
@@ -44,7 +46,20 @@ public class DefaultImportStrategyFactory implements IFileImportStrategyFactory 
 				ret.put(mFile, pdfImportStrategy);
 			}
 		}
+		ret.values().forEach(strategy -> strategy.setMoveAfterImport(moveAfterImport));
 		return ret;
+	}
+	
+	/**
+	 * Specify if imported files should be moved to archiv and error directory inside the import
+	 * directory. Default is false.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public IFileImportStrategyFactory setMoveAfterImport(boolean value){
+		this.moveAfterImport = value;
+		return this;
 	}
 	
 	private List<File> getMatchingFiles(File hl7File){

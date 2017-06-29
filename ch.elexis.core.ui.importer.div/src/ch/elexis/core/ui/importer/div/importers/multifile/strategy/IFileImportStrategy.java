@@ -26,6 +26,15 @@ public interface IFileImportStrategy {
 	 */
 	public Result<Object> execute(File file, Map<String, Object> context);
 	
+	/**
+	 * Specify if imported files should be moved to archive and error directory inside the import
+	 * directory. Default is false.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public IFileImportStrategy setMoveAfterImport(boolean value);
+	
 	public void setTestMode(boolean testing);
 	
 }

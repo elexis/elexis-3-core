@@ -26,6 +26,8 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 	private HL7Parser hl7Parser;
 	private boolean testMode;
 	
+	private boolean moveAfterImport;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Result<Object> execute(File file, Map<String, Object> context){
@@ -36,8 +38,14 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 			hl7Parser.setTestMode(true);
 			// we need to enable patient creation when testing otherwise test will fail
 			result = (Result<Object>) hl7Parser.importFile(file.getAbsolutePath(), true);
+			if (moveAfterImport) {
+				FileImportStrategyUtil.moveAfterImport(result.isOK(), file);
+			}
 		} else {
 			result = (Result<Object>) hl7Parser.importFile(file.getAbsolutePath(), false);
+			if (moveAfterImport) {
+				FileImportStrategyUtil.moveAfterImport(result.isOK(), file);
+			}
 		}
 		
 		Object resultObj = result.get();
@@ -67,5 +75,11 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 	@Override
 	public void setTestMode(boolean testing){
 		this.testMode = testing;
+	}
+	
+	@Override
+	public IFileImportStrategy setMoveAfterImport(boolean value){
+		this.moveAfterImport = value;
+		return this;
 	}
 }

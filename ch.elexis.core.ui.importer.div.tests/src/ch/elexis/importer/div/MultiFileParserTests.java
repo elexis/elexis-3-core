@@ -1,6 +1,7 @@
 package ch.elexis.importer.div;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -75,6 +76,29 @@ public class MultiFileParserTests {
 		}
 	}
 
+	@Test
+	public void testMoveAfterImport(){
+		File moveAfterImportDir = new File(workDir.toString(), "MoveAfterImport");
+		
+		Result<Object> result =
+			mfParser.importFromDirectory(moveAfterImportDir,
+				new DefaultImportStrategyFactory().setMoveAfterImport(true));
+		if (result.isOK()) {
+			assertTrue(true); // show import was successful
+			assertEquals(4, result.getMessages().size());
+			
+			assertTrue(new File(moveAfterImportDir, "archive").exists());
+			assertFalse(new File(moveAfterImportDir, "error").exists());
+			// 1 because directory is returned by listFiles
+			assertTrue(moveAfterImportDir.listFiles().length == 1);
+			
+			removeAllPatientsAndDependants();
+		} else {
+			String msg = "Import of 'Laborbefund-Musterfrau.HL7' failed";
+			fail(msg);
+		}
+	}
+	
 	static private void removeAllPatientsAndDependants(){
 		Query<Patient> qr = new Query<Patient>(Patient.class);
 		List<Patient> qrr = qr.execute();

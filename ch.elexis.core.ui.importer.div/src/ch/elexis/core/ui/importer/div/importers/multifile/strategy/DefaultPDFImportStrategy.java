@@ -54,6 +54,8 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	
 	private boolean testMode = false;
 	
+	private boolean moveAfterImport;
+	
 	public DefaultPDFImportStrategy(){
 		Object os = Extensions.findBestService(GlobalServiceDescriptors.DOCUMENT_MANAGEMENT);
 		if (os != null) {
@@ -64,6 +66,9 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	@Override
 	public Result<Object> execute(File file, Map<String, Object> context){
 		if (this.docManager == null) {
+			if (moveAfterImport) {
+				FileImportStrategyUtil.moveAfterImport(false, file);
+			}
 			return new Result<Object>(SEVERITY.ERROR, 2,
 				MessageFormat.format(Messages.DefaultPDFImportStrategy_NoDocManager, file.getName(),
 					patient.getLabel()),
@@ -73,6 +78,9 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		try {
 			initValuesFromContext(context);
 		} catch (IllegalStateException ise) {
+			if (moveAfterImport) {
+				FileImportStrategyUtil.moveAfterImport(false, file);
+			}
 			return new Result<Object>(SEVERITY.ERROR, 2,
 				Messages.DefaultPDFImportStrategy_InitContextFailed + "\n" + ise.getMessage(),
 				context, true);
@@ -106,6 +114,9 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		} catch (IOException | ElexisException e) {
 			log.error(
 				"error saving pdf [" + file.getAbsolutePath() + "] in document manager (omnivore)");
+		}
+		if (moveAfterImport) {
+			FileImportStrategyUtil.moveAfterImport(true, file);
 		}
 		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$	
 	}
@@ -214,5 +225,11 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	@Override
 	public void setTestMode(boolean testing){
 		this.testMode = testing;
+	}
+	
+	@Override
+	public IFileImportStrategy setMoveAfterImport(boolean value){
+		this.moveAfterImport = value;
+		return this;
 	}
 }
