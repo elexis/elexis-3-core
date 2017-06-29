@@ -175,10 +175,12 @@ public class LabImportUtil {
 		ImportUiHandler uiHandler){
 		boolean overWriteAll = false;
 		String orderId = LabOrder.getNextOrderId();
+		boolean newResult = false;
 		for (TransientLabResult transientLabResult : results) {
 			List<LabResult> existing = getExistingResults(transientLabResult);
 			if (existing.isEmpty()) {
 				createLabResult(transientLabResult, orderId);
+				newResult = true;
 			} else {
 				for (LabResult labResult : existing) {
 					if (overWriteAll) {
@@ -203,6 +205,17 @@ public class LabImportUtil {
 						transientLabResult.overwriteExisting(labResult);
 						continue;
 					}
+				}
+			}
+		}
+		// if no result was created, no laborder was created, lookup existing orderid with 1st result
+		if (!newResult && !results.isEmpty()) {
+			List<LabResult> existing = getExistingResults(results.get(0));
+			if (!existing.isEmpty()) {
+				List<LabOrder> orders = LabOrder.getLabOrders(existing.get(0).getPatient(),
+					null, null, existing.get(0), null, null, null);
+				if (!orders.isEmpty()) {
+					orderId = orders.get(0).get(LabOrder.FLD_ORDERID);
 				}
 			}
 		}
