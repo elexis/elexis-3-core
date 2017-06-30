@@ -61,6 +61,7 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.TimeTool;
 
 /**
  * This view shows the current patient's account
@@ -504,17 +505,17 @@ public class AccountView extends ViewPart implements IActivationListener, ISavea
 	}
 	
 	class AccountTransactionSorter extends ViewerSorter {
-		
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2){
+			
 			if ((e1 instanceof AccountTransaction) && (e2 instanceof AccountTransaction)) {
 				AccountTransaction accountTransaction1 = (AccountTransaction) e1;
 				AccountTransaction accountTransaction2 = (AccountTransaction) e2;
 				int retVal = 0;
 				switch (sortColumn) {
 				case DATE:
-					retVal = ObjectUtils.compare(accountTransaction1.getDate(),
-						accountTransaction2.getDate());
+					retVal = ObjectUtils.compare(new TimeTool(accountTransaction1.getDate()),
+						new TimeTool(accountTransaction2.getDate()));
 					break;
 				case AMOUNT:
 					retVal = ObjectUtils.compare(accountTransaction1.getAmount(),
