@@ -60,6 +60,8 @@ public class LabResult extends PersistentObject implements ILabResult {
 	public static final String REFFEMALE = "reffemale"; //$NON-NLS-1$
 	public static final String ORIGIN_ID = "OriginID"; //$NON-NLS-1$
 	
+	public static final String EXTINFO_HL7_SUBID = "Hl7SubId";
+	
 	private static final String TABLENAME = "LABORWERTE"; //$NON-NLS-1$
 	private final String SMALLER = "<";
 	private final String BIGGER = ">";

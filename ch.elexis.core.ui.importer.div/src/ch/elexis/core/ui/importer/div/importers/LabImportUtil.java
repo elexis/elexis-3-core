@@ -2,6 +2,7 @@ package ch.elexis.core.ui.importer.div.importers;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -342,6 +343,18 @@ public class LabImportUtil implements ILabImportUtil {
 				ret = LabImportUtil.getLabResults(transientLabResult.getPatient(),
 					transientLabResult.getLabItem(), transientLabResult.getDate(), null, null);
 			}
+			
+			// filter by subid
+			if (transientLabResult.getSubId() != null) {
+				Iterator<LabResult> it = ret.iterator();
+				while (it.hasNext()) {
+					LabResult result = it.next();
+					String subId = result.getDetail(LabResult.EXTINFO_HL7_SUBID);
+					if (subId != null && !transientLabResult.getSubId().equals(subId)) {
+						it.remove();
+					}
+				}
+			}
 		}
 		return ret;
 	}
@@ -522,7 +535,7 @@ public class LabImportUtil implements ILabImportUtil {
 	
 	@Override
 	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem,
-		String result, String comment, String refVal, IContact origin){
+		String result, String comment, String refVal, IContact origin, String subId){
 		Patient pat = Patient.load(patient.getId());
 		LabItem item = LabItem.load(labItem.getId());
 		Labor labor = Labor.load(origin.getId());
@@ -536,7 +549,19 @@ public class LabImportUtil implements ILabImportUtil {
 				labResult.setRefFemale(refVal);
 			}
 		}
+		if (subId != null) {
+			labResult.setDetail(LabResult.EXTINFO_HL7_SUBID, subId);
+		}
 		// TODO LockHook too early
 		return labResult;
 	}
+	
+	@Override
+	public void updateLabResult(ILabResult iLabResult, TransientLabResult transientLabResult){
+		if (iLabResult != null) {
+			((LabResult) iLabResult).setDetail(LabResult.EXTINFO_HL7_SUBID,
+				transientLabResult.getSubId());
+		}
+	}
+	
 }

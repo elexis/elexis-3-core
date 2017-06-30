@@ -354,7 +354,8 @@ public class HL7ReaderV25 extends HL7Reader {
 			
 			LabResultData lrd =
 				new LabResultData(itemCode, name, unit, value, range, flag, defaultDateTime,
-					observationTime, commentNTE, group, sequence, status);
+					observationTime, commentNTE, group, sequence, status,
+					extractName(obx.getObx4_ObservationSubID()));
 			
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)
 				|| valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN)) {

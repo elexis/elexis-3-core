@@ -187,7 +187,7 @@ public class HL7Parser {
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 								.observationTime(obrDateTime).analyseTime(obxDateTime)
 								.transmissionTime(transmissionTime)
-								.orcMessage(orcMessage)
+								.orcMessage(orcMessage).subId(hl7LabResult.getSubId())
 								.build(labImportUtil);
 						results.add(importedResult);
 						logger.debug(importedResult.toString());
@@ -203,7 +203,7 @@ public class HL7Parser {
 									.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 									.observationTime(obrDateTime).analyseTime(obxDateTime)
 									.transmissionTime(transmissionTime)
-									.orcMessage(orcMessage)
+									.orcMessage(orcMessage).subId(hl7LabResult.getSubId())
 									.build(labImportUtil);
 						results.add(importedResult);
 						logger.debug(importedResult.toString());

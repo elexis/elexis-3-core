@@ -26,6 +26,7 @@ public class LabResultData extends AbstractData {
 	private String unit;
 	private String value;
 	private String range;
+	private String subId;
 	private LabResultStatus resultStatus;
 	private Date obrDateTime;
 	private boolean flag;
@@ -35,7 +36,7 @@ public class LabResultData extends AbstractData {
 	
 	public LabResultData(String code, String name, String unit, String value, String range,
 		boolean flag, String obrDateTime, String dateStr, String comment, String group,
-		String sequence, String resultStatus) throws ParseException{
+		String sequence, String resultStatus, String subId) throws ParseException{
 		super(name, dateStr, comment, group, sequence);
 		
 		this.setCode(code);
@@ -43,6 +44,7 @@ public class LabResultData extends AbstractData {
 		this.setValue(value);
 		this.setRange(range);
 		this.setFlagged(flag);
+		this.subId = subId;
 		this.resultStatus = LabResultStatus.getStatus(resultStatus);
 		if (obrDateTime != null && obrDateTime.length() > 0) {
 			this.obrDateTime = HL7Helper.stringToDate(obrDateTime);
@@ -129,6 +131,14 @@ public class LabResultData extends AbstractData {
 	
 	public void setIsPlainText(boolean isPlainText){
 		this.isPlainText = isPlainText;
+	}
+	
+	public String getSubId(){
+		return subId;
+	}
+	
+	public void setSubId(String subId){
+		this.subId = subId;
 	}
 	
 }

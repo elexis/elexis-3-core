@@ -21,6 +21,7 @@ public class TransientLabResult {
 	private String refMale;
 	private String refFemale;
 	private String unit;
+	private String subId;
 	private int flags;
 	
 	private TimeTool date;
@@ -54,6 +55,7 @@ public class TransientLabResult {
 		
 		this.labImportUtil = labImportUtil;
 		this.orcMessage = builder.orcMessage;
+		this.subId = builder.subId;
 	}
 	
 	/**
@@ -106,12 +108,14 @@ public class TransientLabResult {
 		}
 		
 		ILabResult labResult =
-			labImportUtil.createLabResult(patient, date, labItem, result, comment, refVal, origin);
+			labImportUtil.createLabResult(patient, date, labItem, result, comment, refVal, origin,
+				subId);
 		// pathologic check takes place in labResult if it is numeric
 		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
 			flags = labResult.getFlags();
 		}
 		setFields(labResult);
+		
 		return labResult;
 	}
 	
@@ -186,7 +190,7 @@ public class TransientLabResult {
 		}
 		// set all flags at once, flags is a string in the database
 		labResult.setFlags(flags);
-		
+		labImportUtil.updateLabResult(labResult, this);
 //		if (setProperties != null) {
 //			Set<String> keys = setProperties.keySet();
 //			for (String string : keys) {
@@ -239,6 +243,10 @@ public class TransientLabResult {
 		return orcMessage;
 	}
 	
+	public String getSubId(){
+		return subId;
+	}
+	
 	/**
 	 * Check if analyse time is valid, by comparing it with the transmission time.
 	 * 
@@ -285,6 +293,7 @@ public class TransientLabResult {
 		private ILabItem labItem;
 		private IContact origin;
 		private String result;
+		private String subId;
 		
 		// optional parameters
 		private String comment;
@@ -371,6 +380,10 @@ public class TransientLabResult {
 			return this;
 		}
 		
+		public Builder subId(String subId){
+			this.subId = subId;
+			return this;
+		}
 		
 //		public Builder setProperty(String property, String value){
 //			if (setProperties == null) {
