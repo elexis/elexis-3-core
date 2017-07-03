@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="ch.elexis.core.application.ElexisApp"
+            name="Elexis OpenSource">
+         <property
+               name="appName"
+               value="Elexis OpenSource">
+         </property>
+         <property
+               name="windowImages"
+               value="rsc/elexis2_16.gif,rsc/elexis32_2.gif,rsc/elexis48.gif">
+         </property>
+         <property
+               name="aboutText"
+               value="Elexis 3.3 - www.elexis.info">
+         </property>
+         <property
+               name="aboutImage"
+               value="rsc/elexislogo2.png">
+         </property>
+      </product>
+   </extension>
+</plugin>
