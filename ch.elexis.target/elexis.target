@@ -1,54 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Elexis" sequenceNumber="1497857696">
+<target name="Elexis" sequenceNumber="1499077257">
   <locations>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.osgi" version="3.9.1.v20140110-1610"/>
-      <unit id="org.eclipse.osgi.services" version="3.3.100.v20130513-1956"/>
-      <unit id="org.eclipse.osgi.util" version="3.2.300.v20130513-1956"/>
-      <unit id="org.eclipse.swt" version="3.104.2.v20160212-1350"/>
-      <unit id="org.eclipse.swt.cocoa.macosx.x86_64" version="3.104.2.v20160212-1350"/>
-      <unit id="org.eclipse.swt.gtk.linux.x86" version="3.104.2.v20160212-1350"/>
-      <unit id="org.eclipse.swt.gtk.linux.x86_64" version="3.104.2.v20160212-1350"/>
+    <location includeMode="slicer" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.300.v20161122-1740"/>
+      <unit id="org.eclipse.rcp.feature.group" version="4.6.3.v20170301-0400"/>
+      <unit id="org.eclipse.platform.feature.group" version="4.6.3.v20170301-0400"/>
+      <unit id="org.junit" version="4.12.0.v201504281640"/>
+      <unit id="org.eclipse.ecf.core.feature.feature.group" version="1.3.0.v20160405-1820"/>
+      <unit id="org.eclipse.ecf.core.ssl.feature.feature.group" version="1.1.0.v20160405-1820"/>
+      <unit id="org.eclipse.ecf.filetransfer.feature.feature.group" version="3.13.1.v20160405-1820"/>
+      <unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="1.1.0.v20160405-1820"/>
+      <unit id="org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group" version="3.13.1.v20160405-1820"/>
+      <unit id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group" version="1.1.0.v20160405-1820"/>
+      <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
+      <unit id="ch.qos.logback.core" version="1.0.7.v20121108-1250"/>
+      <unit id="ch.qos.logback.slf4j" version="1.0.7.v201505121915"/>
+      <unit id="org.eclipse.emf.sdk.feature.group" version="2.12.0.v20160526-0356"/>
+      <unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="2.10.1.v20161129-1925"/>
+      <unit id="org.hamcrest.core" version="1.3.0.v201303031735"/>
+      <unit id="org.hamcrest.library" version="1.3.0.v201505072020"/>
+      <unit id="org.eclipse.nebula.widgets.nattable.core" version="1.4.0.201606011907"/>
+      <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="1.4.0.201606011907"/>
+      <unit id="ca.odell.glazedlists" version="1.9.0.v201303080712"/>
+      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.0.0.201706221838"/>
+      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.0.0.201706221838"/>
+      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.0.0.201706221838"/>
       <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.201602281253"/>
       <unit id="com.eclipsesource.jaxrs.jersey-min" version="2.22.2"/>
-      <unit id="org.apache.httpcomponents.httpcore" version="4.3.3.v201411290715"/>
-      <unit id="org.apache.httpcomponents.httpclient" version="4.3.6.v201511171540"/>
-      <unit id="edu.emory.mathcs.backport" version="3.1.0.v200902251154"/>
+      <unit id="org.apache.httpcomponents.httpcore" version="4.4.6.v20170210-0925"/>
+      <unit id="org.apache.httpcomponents.httpclient" version="4.5.2.v20170210-0925"/>
+      <unit id="edu.emory.mathcs.backport" version="3.1.0.v201505121915"/>
       <unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
-      <unit id="org.apache.commons.codec" version="1.6.0.v201305230611"/>
       <unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
       <unit id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
       <unit id="javax.xml" version="1.3.4.v201005080400"/>
-      <unit id="ca.odell.glazedlists" version="1.9.0.v201303080712"/>
       <unit id="javax.mail.glassfish" version="1.4.1.v201108011116"/>
       <unit id="javax.activation" version="1.1.0.v201211130549"/>
-      <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
-      <unit id="ch.qos.logback.core" version="1.0.7.v20121108-1250"/>
-      <unit id="ch.qos.logback.slf4j" version="1.0.7.v20121108-1250"/>
+      <unit id="com.google.guava" version="15.0.0.v201403281430"/>
+      <unit id="org.apache.commons.dbcp" version="1.4.0.v201204271417"/>
+      <unit id="org.apache.commons.codec" version="1.9.0.v20170208-1614"/>
+      <unit id="org.apache.commons.collections" version="3.2.2.v201511171945"/>
+      <unit id="org.apache.commons.cli" version="1.2.0.v201404270220"/>
+      <unit id="org.apache.commons.exec" version="1.1.0.v201301240602"/>
+      <unit id="org.apache.commons.lang" version="2.6.0.v201404270220"/>
+      <unit id="org.apache.commons.lang3" version="3.1.0.v201403281430"/>
+      <unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
+      <unit id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
       <unit id="javax.ws.rs" version="1.1.1.v20130318-1750"/>
-      <unit id="org.eclipse.emf.sdk.feature.group" version="2.8.3.v20130125-0826"/>
-      <unit id="org.eclipse.equinox.executable" version="3.6.0.v20121119-201001-7P7OG2BFLWUl7UnqBnO8V4Of"/>
-      <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.0.v20121119-201001-7P7OG2BFLWUl7UnqBnO8V4Of"/>
-      <unit id="org.eclipse.gyrex.features.addons.jersey.jaxrs.feature.group" version="1.0.0.v20120604-1901"/>
-      <unit id="org.eclipse.pde.junit.runtime.standalone.feature.group" version="1.1.0.v20121207-183635-7a81FKwFBBqyauz0GKeGkIx3IS70"/>
-      <unit id="org.eclipse.platform.feature.group" version="3.8.1.v20130118-180812-9jF7oIBFG8eU2pim-VbIlTuQjY0RWWK3x-bv4I"/>
-      <unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="2.3.2.v20150217-2315"/>
       <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
       <unit id="org.slf4j.ext" version="1.7.2.v20121108-1250"/>
       <unit id="org.slf4j.jcl" version="1.7.2.v20130115-1340"/>
       <unit id="org.slf4j.jul" version="1.7.2.v20121108-1250"/>
       <unit id="org.slf4j.log4j" version="1.7.2.v20130115-1340"/>
       <unit id="org.slf4j.nop" version="1.7.2.v201212060727"/>
-      <unit id="org.eclipse.nebula.widgets.nattable.core.feature.feature.group" version="1.0.1.201307031725"/>
-      <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists.feature.feature.group" version="1.0.1.201307031725"/>
-      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="0.9.0.201502231632"/>
-      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="0.14.0.201502231632"/>
-      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.0.0.201502231632"/>
-      <unit id="com.google.guava" version="15.0.0.v201403281430"/>
-      <unit id="org.aspectj.feature.group" version="1.7.3.20130613144500-a"/>
-      <unit id="org.eclipse.mylyn.wikitext.textile.core" version="2.3.2.v20150217-2315"/>
       <unit id="hapi-fhir-osgi-core" version="2.4.0"/>
       <unit id="org.springframework.spring-web" version="4.3.8.RELEASE"/>
       <unit id="woodstox-core-asl" version="4.4.1"/>
@@ -146,12 +152,6 @@
       <unit id="com.thoughtworks.xstream" version="1.2.2"/>
       <unit id="com.thoughtworks.xstream.source" version="1.2.2"/>
       <unit id="com.wutka.dtdparser" version="1.21.0"/>
-      <unit id="commons-cli" version="1.0.0"/>
-      <unit id="commons-cli.source" version="1.0.0"/>
-      <unit id="commons-collections" version="3.1.0"/>
-      <unit id="commons-collections.source" version="3.1.0"/>
-      <unit id="commons-io" version="1.1.0"/>
-      <unit id="commons-io.source" version="1.1.0"/>
       <unit id="commons-lang" version="2.0.0"/>
       <unit id="commons-lang.source" version="2.0.0"/>
       <unit id="commons-logging" version="1.1.1"/>
@@ -201,28 +201,16 @@
       <unit id="net.sf.barcode4j.fop-ext-complete.source" version="2.0.0"/>
       <unit id="net.sf.opencsv" version="1.8.0"/>
       <unit id="net.sf.opencsv.source" version="1.8.0"/>
+      <unit id="org.apache.commons.jexl" version="2.1.1"/>
+      <unit id="org.apache.commons.io" version="2.4.0"/>
       <unit id="ognl.source" version="2.7.3"/>
-      <unit id="org.apache.ant" version="1.8.3.v201301120609"/>
+      <unit id="org.apache.ant" version="1.9.6.v201510161327"/>
       <unit id="org.apache.ant.launcher" version="1.7.0"/>
       <unit id="org.apache.ant.source" version="1.7.0"/>
       <unit id="org.apache.avalon.framework.avalon-framework-api" version="4.3.1"/>
       <unit id="org.apache.avalon.framework.avalon-framework-api.source" version="4.3.1"/>
       <unit id="org.apache.avalon.framework.avalon-framework-impl" version="4.3.1"/>
       <unit id="org.apache.avalon.framework.avalon-framework-impl.source" version="4.3.1"/>
-      <unit id="org.apache.commons.dbcp" version="1.4.0"/>
-      <unit id="org.apache.commons.dbcp.source" version="1.4.0"/>
-      <unit id="org.apache.commons.exec" version="1.1.0"/>
-      <unit id="org.apache.commons.exec.source" version="1.1.0"/>
-      <unit id="org.apache.commons.io" version="2.4.0"/>
-      <unit id="org.apache.commons.io.source" version="2.4.0"/>
-      <unit id="org.apache.commons.jexl" version="2.1.1"/>
-      <unit id="org.apache.commons.jexl.source" version="2.1.1"/>
-      <unit id="org.apache.commons.lang" version="2.6.0"/>
-      <unit id="org.apache.commons.lang.source" version="2.6.0"/>
-      <unit id="org.apache.commons.lang3" version="3.1.0"/>
-      <unit id="org.apache.commons.lang3.source" version="3.1.0"/>
-      <unit id="org.apache.commons.pool" version="1.6.0"/>
-      <unit id="org.apache.commons.pool.source" version="1.6.0"/>
       <unit id="org.apache.ibatis.sqlmap" version="2.3.0"/>
       <unit id="org.apache.poi" version="3.0.2.FINAL"/>
       <unit id="org.apache.servicemix.bundles.zxing" version="3.0.1.1"/>

@@ -1,56 +1,62 @@
-target "Elexis" with source allEnvironments
+target "Elexis" with source
 
 location "http://download.elexis.info/elexis/p2/master/target/" {
-	org.eclipse.osgi [3.9.1.v20140110-1610,3.9.1.v20140110-1610]
-	org.eclipse.osgi.services [3.3.100.v20130513-1956,3.3.100.v20130513-1956]
-	org.eclipse.osgi.util [3.2.300.v20130513-1956,3.2.300.v20130513-1956]
+	org.eclipse.equinox.executable.feature.group
+	org.eclipse.rcp.feature.group
+	org.eclipse.platform.feature.group
+	org.junit
+	org.eclipse.ecf.core.feature.feature.group
+	org.eclipse.ecf.core.ssl.feature.feature.group
+	org.eclipse.ecf.filetransfer.feature.feature.group
+	org.eclipse.ecf.filetransfer.ssl.feature.feature.group
+	org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group
+	org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group
 
-	org.eclipse.swt
-	org.eclipse.swt.cocoa.macosx.x86_64
-	org.eclipse.swt.gtk.linux.x86
-	org.eclipse.swt.gtk.linux.x86_64
+	ch.qos.logback.classic
+	ch.qos.logback.core
+	ch.qos.logback.slf4j
+	org.eclipse.emf.sdk.feature.group
+	org.eclipse.mylyn.wikitext_feature.feature.group
+	org.hamcrest.core
+	org.hamcrest.library
+	org.eclipse.nebula.widgets.nattable.core
+	org.eclipse.nebula.widgets.nattable.extension.glazedlists
+	ca.odell.glazedlists
+
+	org.eclipse.nebula.cwt.feature.feature.group
+	org.eclipse.nebula.widgets.cdatetime.feature.feature.group
+	org.eclipse.nebula.widgets.tablecombo.feature.feature.group
 
 	com.eclipsesource.jaxrs.consumer [5.3.1.201602281253,5.3.1.201602281253]
 	com.eclipsesource.jaxrs.jersey-min [2.22.2,2.23.0)
-
+	
 	org.apache.httpcomponents.httpcore
 	org.apache.httpcomponents.httpclient
-
 	edu.emory.mathcs.backport [3.1.0,3.1.1)
 	org.apache.xerces [2.9.0.v201101211617,2.9.0.v201101211617]
-	org.apache.commons.codec [1.6.0.v201305230611,1.6.0.v201305230611]
 	org.apache.xml.serializer [2.7.1.v201005080400,2.7.1.v201005080400]
 	org.apache.xml.resolver [1.2.0.v201005080400,1.2.0.v201005080400]
 	javax.xml [1.3.4.v201005080400,1.3.4.v201005080400]
-	ca.odell.glazedlists [1.9.0.v201303080712,1.9.0.v201303080712]
-	javax.mail.glassfish [1.4.0, 1.5.0)
-	javax.activation [1.1.0, 1.2.0)
+	javax.mail.glassfish [1.4.0,1.5.0)
+	javax.activation [1.1.0,1.2.0)
+	com.google.guava [15.0.0,16.0.0)
+	org.apache.commons.dbcp
+	org.apache.commons.codec
+	org.apache.commons.collections
+	org.apache.commons.cli
+	org.apache.commons.exec
+	org.apache.commons.lang
+	org.apache.commons.lang3
+	org.apache.commons.pool
+	org.apache.commons.httpclient
 
-	ch.qos.logback.classic [1.0.7,1.0.8)
-	ch.qos.logback.core [1.0.7,1.0.8)
-	ch.qos.logback.slf4j [1.0.7,1.0.8)
 	javax.ws.rs [1.1.1,1.1.2)
-	org.eclipse.emf.sdk.feature.group [2.8.3,2.8.4)
-	org.eclipse.equinox.executable [3.6.0,3.6.1)
-	org.eclipse.equinox.executable.feature.group [3.6.0,3.6.1)
-	org.eclipse.gyrex.features.addons.jersey.jaxrs.feature.group [1.0.0,1.0.1)
-	org.eclipse.pde.junit.runtime.standalone.feature.group [1.1.0,1.1.1)
-	org.eclipse.platform.feature.group [3.8.1,3.8.2)
-	org.eclipse.mylyn.wikitext_feature.feature.group [2.3.2.v20150217-2315,2.3.2.v20150217-2315]
 	org.slf4j.api [1.7.2,1.7.3)
 	org.slf4j.ext [1.7.2,1.7.3)
 	org.slf4j.jcl [1.7.2,1.7.3)
 	org.slf4j.jul [1.7.2,1.7.3)
 	org.slf4j.log4j [1.7.2,1.7.3)
 	org.slf4j.nop [1.7.2,1.7.3)
-	org.eclipse.nebula.widgets.nattable.core.feature.feature.group
-	org.eclipse.nebula.widgets.nattable.extension.glazedlists.feature.feature.group
-	org.eclipse.nebula.cwt.feature.feature.group
-	org.eclipse.nebula.widgets.cdatetime.feature.feature.group
-	org.eclipse.nebula.widgets.tablecombo.feature.feature.group
-	com.google.guava [15.0.0,16.0.0)
-	org.aspectj.feature.group
-	org.eclipse.mylyn.wikitext.textile.core
 
 	hapi-fhir-osgi-core
 	org.springframework.spring-web
@@ -150,12 +156,6 @@ location "http://download.elexis.info/elexis/p2/master/target/" {
 	com.thoughtworks.xstream 1.2.2
 	com.thoughtworks.xstream.source 1.2.2
 	com.wutka.dtdparser 1.21.0
-	commons-cli 1.0.0
-	commons-cli.source 1.0.0
-	commons-collections 3.1.0
-	commons-collections.source 3.1.0
-	commons-io 1.1.0
-	commons-io.source 1.1.0
 	commons-lang 2.0.0
 	commons-lang.source 2.0.0
 	commons-logging 1.1.1
@@ -205,7 +205,8 @@ location "http://download.elexis.info/elexis/p2/master/target/" {
 	net.sf.barcode4j.fop-ext-complete.source 2.0.0
 	net.sf.opencsv 1.8.0
 	net.sf.opencsv.source 1.8.0
-	ognl 2.7.3
+	org.apache.commons.jexl [2.1.1,2.2.0)
+	org.apache.commons.io [2.4.0,2.5.0)
 	ognl.source 2.7.3
 	org.apache.ant 1.7.0
 	org.apache.ant.launcher 1.7.0
@@ -214,20 +215,6 @@ location "http://download.elexis.info/elexis/p2/master/target/" {
 	org.apache.avalon.framework.avalon-framework-api.source 4.3.1
 	org.apache.avalon.framework.avalon-framework-impl 4.3.1
 	org.apache.avalon.framework.avalon-framework-impl.source 4.3.1
-	org.apache.commons.dbcp 1.4.0
-	org.apache.commons.dbcp.source 1.4.0
-	org.apache.commons.exec 1.1.0
-	org.apache.commons.exec.source 1.1.0
-	org.apache.commons.io 2.4.0
-	org.apache.commons.io.source 2.4.0
-	org.apache.commons.jexl 2.1.1
-	org.apache.commons.jexl.source 2.1.1
-	org.apache.commons.lang 2.6.0
-	org.apache.commons.lang.source 2.6.0
-	org.apache.commons.lang3 3.1.0
-	org.apache.commons.lang3.source 3.1.0
-	org.apache.commons.pool 1.6.0
-	org.apache.commons.pool.source 1.6.0
 	org.apache.ibatis.sqlmap 2.3.0
 	org.apache.poi 3.0.2.FINAL
 	org.apache.servicemix.bundles.zxing 3.0.1.1

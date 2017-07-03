@@ -15,7 +15,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
@@ -26,6 +25,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -34,6 +35,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -52,7 +54,7 @@ import ch.elexis.data.Mandant;
  * 
  * @since 3.1 do enable items according to {@link Anwender#getExecutiveDoctorsWorkingFor()}
  */
-public class MandantSelectionContributionItem extends ContributionItem {
+public class MandantSelectionContributionItem extends WorkbenchWindowControlContribution {
 	
 	private ToolItem item;
 	private Menu menu;
@@ -123,7 +125,10 @@ public class MandantSelectionContributionItem extends ContributionItem {
 	}
 	
 	@Override
-	public void fill(ToolBar parent, int index){
+//	public void fill(ToolBar parent, int index){
+	protected Control createControl(Composite parent) {
+		ToolBar toolbar = new ToolBar(parent, SWT.NONE);
+		
 		// dispose old items first
 		disposeItems();
 		if (item != null) {
@@ -133,7 +138,7 @@ public class MandantSelectionContributionItem extends ContributionItem {
 			menu.dispose();
 		}
 		
-		fParent = parent;
+		fParent = toolbar;
 		menu = new Menu(fParent);
 		
 		List<Mandant> qre = Hub.getMandantenList();
@@ -145,9 +150,9 @@ public class MandantSelectionContributionItem extends ContributionItem {
 		});
 		mandants = qre.toArray(new Mandant[] {});
 		if (mandants.length < 2)
-			return;
+			return null;
 		
-		item = new ToolItem(parent, SWT.DROP_DOWN);
+		item = new ToolItem(toolbar, SWT.DROP_DOWN);
 		item.setToolTipText("Aktuell ausgewählter Mandant bzw. Mandantenauswahl");
 		
 		menuItems = new MenuItem[mandants.length];
@@ -177,6 +182,9 @@ public class MandantSelectionContributionItem extends ContributionItem {
 		}
 		
 		adaptForAnwender(null);
+		
+		toolbar.pack();
+		return toolbar;
 	}
 	
 	private final Listener selectionListener = new Listener() {
