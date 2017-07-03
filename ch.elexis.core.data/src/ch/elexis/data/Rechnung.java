@@ -41,6 +41,9 @@ import ch.rgw.tools.TimeTool;
 
 public class Rechnung extends PersistentObject {
 	public static final String REMARK = "Bemerkung";
+	/**
+	 * The date the current state was set, if in the future, we have a temporary state
+	 */
 	public static final String BILL_STATE_DATE = "StatusDatum";
 	public static final String BILL_DATE = "RnDatum";
 	public static final String BILL_AMOUNT_CENTS = "Betragx100";
@@ -509,34 +512,82 @@ public class Rechnung extends PersistentObject {
 		return total;
 	}
 	
-	/** Rechnungsstatus holen */
+	/**
+	 * @return the current {@link InvoiceState} numeric value
+	 * @since 3.2 resolves via {@link #getInvoiceState()}
+	 */
 	public int getStatus(){
-		try {
-			int i = Integer.parseInt(checkNull(get(BILL_STATE)));
-			if ((i < 0) || (i >= RnStatus.getStatusTexts().length)) {
-				return RnStatus.UNBEKANNT;
-			}
-			return i;
-		} catch (NumberFormatException e) {
-			return RnStatus.UNBEKANNT;
-		}
+		return getInvoiceState().numericValue();
 	}
 	
 	/**
+	 * Resolves the current state of the invoice. If a temporary state has been set, the
+	 * {@link #BILL_STATE_DATE} lies ahead. In this case the current state is resolved out of the
+	 * trace histories last state value.
 	 * 
 	 * @return the {@link InvoiceState} of this invoice
 	 * @since 3.2
 	 */
 	public InvoiceState getInvoiceState(){
-		int i = Integer.parseInt(checkNull(get(BILL_STATE)));
-		return InvoiceState.fromState(i);
+		String[] values = new String[2];
+		get(new String[] {
+			BILL_STATE, BILL_STATE_DATE
+		}, values);
+		
+		int stateNumeric = 0;
+		
+		TimeTool stateDate = new TimeTool(values[1]);
+		if (stateDate.isAfterOrEqual(new TimeTool())) {
+			// state date is in the future, hence we have a temporary state change
+			// fetch current state from history
+			
+			@SuppressWarnings("unchecked")
+			List<String> stateChanges = (List<String>) getExtInfoStoredObjectByKey(STATUS_CHANGED);
+			String lastElement = stateChanges.get(stateChanges.size() - 1);
+			String[] split = lastElement.split(": ");
+			try {
+				stateNumeric = Integer.parseInt(split[1]);
+			} catch (NumberFormatException nfe) {
+				log.error("Error resolving invoice state [{}] in element [{}], returning UNKNOWN.",
+					split[1], lastElement);
+			}
+		} else {
+			try {
+				stateNumeric = Integer.parseInt(checkNull(get(BILL_STATE)));
+			} catch (NumberFormatException nfe) {
+				log.error("Error resolving invoice state [{}], returning UNKNOWN.", stateNumeric);
+			}
+		}
+		return InvoiceState.fromState(stateNumeric);
 	}
 	
-	/** Rechnungsstatus setzen */
-	public void setStatus(final int stat){
-		set(BILL_STATE, Integer.toString(stat));
+	/**
+	 * Set a temporary state for this bill.
+	 * 
+	 * @param state
+	 *            the temporary state to set.
+	 * @param expiryDate
+	 *            the date this temporary state will expire, setting the invoice back to the former
+	 *            state.
+	 * @since 3.2
+	 */
+	public void setTemporaryState(final int temporaryState, TimeTool expiryDate){
+		addTrace(STATUS_CHANGED, Integer.toString(temporaryState));
+		setExtInfo("TEMPORARY_STATE", Integer.toString(temporaryState));
+		set(BILL_STATE_DATE, expiryDate.toString(TimeTool.DATE_GER));
+	}
+	
+	/**
+	 * Set the new invoice state. Setting the value will also update {@link #BILL_STATE_DATE} and
+	 * add a trace entry.
+	 * 
+	 * @param state
+	 *            as defined by {@link InvoiceState#numericValue()}
+	 */
+	public void setStatus(final int state){
+		set(BILL_STATE, Integer.toString(state));
 		set(BILL_STATE_DATE, new TimeTool().toString(TimeTool.DATE_GER));
-		addTrace(STATUS_CHANGED, Integer.toString(stat));
+		addTrace(STATUS_CHANGED, Integer.toString(state));
 	}
 	
 	/**

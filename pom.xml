@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <url>http://www.elexis.info/</url>
-  <modelVersion>4.0.0 </modelVersion>
+	<url>http://www.elexis.info/</url>
+	<modelVersion>4.0.0 </modelVersion>
 	<groupId>ch.elexis</groupId>
 	<artifactId>elexis-3-core</artifactId>
 	<name>Elexis 3 Core for ${repo_variant}</name>
-	<version>3.2.0-SNAPSHOT</version>
+	<version>3.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<prerequisites>
 		<maven>3.0.5</maven>
@@ -228,12 +228,12 @@
 					<failsOnError>false</failsOnError>
 					<headerLocation>ch.elexis.core.releng/epl-v10.html</headerLocation>
 					<configLocation>ch.elexis.core.releng/checkstyle.xml</configLocation>
-            <suppressionsLocation>ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
+					<suppressionsLocation>ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
 				</configuration>
 				<reportSets>
 					<reportSet>
-            <inherited>false</inherited>
-            <reports>
+						<inherited>false</inherited>
+						<reports>
 							<report>checkstyle-aggregate</report>
 						</reports>
 					</reportSet>
@@ -259,7 +259,7 @@
 		<module>ch.elexis.core.scripting.beanshell</module>
 		<module>ch.elexis.core.mail</module>
 		<module>ch.elexis.core.mail.ui</module>
-    		<module>ch.elexis.core.releng</module>
+		<module>ch.elexis.core.releng</module>
 		<module>ch.elexis.core.ui</module>
 		<module>ch.elexis.core.ui.eigenartikel</module>
 		<module>ch.elexis.core.ui.eigendiagnosen</module>
@@ -283,15 +283,15 @@
 		<module>ch.elexis.core.findings.ui</module>
 		<module>ch.elexis.core.documents</module>
 		<module>ch.elexis.core.ui.documents</module>
-    <module>org.iatrix.help.wiki</module>
+		<module>org.iatrix.help.wiki</module>
 		<module>ch.rgw.utility</module>
 		<module>ch.rgw.utility.tests</module>
 		<module>ch.elexis.core.data.tests</module>
 		<module>ch.elexis.core.ui.importer.div.tests</module>
 		<module>ch.elexis.core.hl7.v2x.tests</module>
-		<!-- the ch.elexis.core.p2site creates an zipped installable application
+		<!-- the ch.elexis.core.p2site creates an zipped installable application 
 			and a p2 update site -->
-    <module>ch.elexis.core.p2site</module>
+		<module>ch.elexis.core.p2site</module>
 	</modules>
 	<properties>
 		<scm_url>git@github.com:elexis/elexis-3-core.git</scm_url>
@@ -304,7 +304,7 @@
 	</properties>
 	<build>
 		<plugins>
-      <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>2.17</version>
@@ -316,7 +316,7 @@
 					<failsOnError>false</failsOnError>
 					<headerLocation>ch.elexis.core.releng/epl-v10.html</headerLocation>
 					<configLocation>ch.elexis.core.releng/checkstyle.xml</configLocation>
-            <suppressionsLocation>ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
+					<suppressionsLocation>ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -376,8 +376,8 @@
 				<version>${tycho-version}</version>
 			</plugin>
 			<plugin>
-				<!-- we want to ensure that the bin directory created by the Eclipse
-					gets cleaned, too. Without it Maven would put two versions of each class
+				<!-- we want to ensure that the bin directory created by the Eclipse 
+					gets cleaned, too. Without it Maven would put two versions of each class 
 					file into the jars -->
 				<artifactId>maven-clean-plugin </artifactId>
 				<version>2.6.1</version>
@@ -392,7 +392,7 @@
 			<plugin>
 				<!-- Use compiler plugin with tycho as the adapter to the JDT compiler. -->
 				<artifactId>maven-compiler-plugin </artifactId>
-				<version>3.3</version>
+				<version>3.2</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8 </target>
@@ -429,18 +429,18 @@
 							</requirement>
 						</extraRequirements>
 					</dependency-resolution>
-					<!-- see http://wiki.eclipse.org/Tycho/Target_Platform we want to use
-						the first alternative: If you are already using a target file in Eclipse,
-						and that target file only contains "Software Site" locations (i.e. location
-						elements with type="InstallableUnit"), use that target file for the Tycho
-						build. This approach is the only way to share the same target platform configuration
+					<!-- see http://wiki.eclipse.org/Tycho/Target_Platform we want to use 
+						the first alternative: If you are already using a target file in Eclipse, 
+						and that target file only contains "Software Site" locations (i.e. location 
+						elements with type="InstallableUnit"), use that target file for the Tycho 
+						build. This approach is the only way to share the same target platform configuration 
 						between Tycho and Eclipse. -->
 					<target>
 						<artifact>
 							<groupId>ch.elexis</groupId>
 							<artifactId>elexis</artifactId>
-							<version>3.2.0-SNAPSHOT</version>
-							<!-- we cannot use a classifier here, or mvn compile would file in
+							<version>3.3.0-SNAPSHOT</version>
+							<!-- we cannot use a classifier here, or mvn compile would file in 
 								any other project!! classifier>elexis-3</classifier -->
 						</artifact>
 					</target>
@@ -566,13 +566,13 @@
 					<configuration>
 						<additionalparam>-Xdoclint:none</additionalparam>
 						<aggregate>true</aggregate>
-						<doctitle>Dokumentation der Java Schnittstellen f&#xFC;r Elexis
+						<doctitle>Dokumentation der Java Schnittstellen für Elexis
 							${project.version}.</doctitle>
 						<header><![CDATA[Elexis ${project.version}. See also <a href="http://elexis.info">http://elexis.info</a>]]></header>
 						<bottom><![CDATA[Copyright 2006-2013 Gerry Weirich and many more. See also <a href="http://elexis.info">Elexis</a>: eine freie Software von Ärzten für Ärzte]]></bottom>
 					</configuration>
 				</plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -595,7 +595,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
