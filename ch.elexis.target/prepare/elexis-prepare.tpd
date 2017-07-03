@@ -1,5 +1,9 @@
 target "Neon for Elexis 3.3" with source allEnvironments
 
+location "http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/" {
+	org.eclipse.e4.tools.spies.feature.feature.group
+}
+
 location "http://download.eclipse.org/eclipse/updates/4.6/" {
 	org.eclipse.equinox.executable.feature.group
 	org.eclipse.rcp.feature.group
