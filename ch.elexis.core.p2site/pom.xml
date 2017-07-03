@@ -91,35 +91,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>com.github.goldin </groupId>
-				<!-- see http://evgeny-goldin.com/wiki/Copy-maven-plugin -->
-				<artifactId>copy-maven-plugin</artifactId>
-				<version>0.2.5 </version>
-				<executions>
-					<execution>
-						<id>create-archive</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<resources>
-								<!-- We have to copy the Elexis.product, as we cannot build a plug-in 
-									and a target inside the same Maven project (or at least don't know howto) 
-									Under Linux a symbolic link would suffice. But this did not work under Windows -->
-								<resource>
-									<targetPath>${basedir}</targetPath>
-									<directory>ch.elexis.core.product</directory>
-									<includes>
-										<include>Elexis.product</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<!-- Remove Elexis.product on clean -->
 				<artifactId>maven-clean-plugin</artifactId>
 				<configuration>
@@ -128,7 +99,6 @@
 							<directory>${basedir}</directory>
 							<includes>
 								<include>repo.properties</include>
-								<include>Elexis.product</include>
 								<include>Elexis.p2.inf</include>
 							</includes>
 						</fileset>
@@ -162,18 +132,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<products>
-						<product>
-							<id>ch.elexis.core.application.ElexisApp</id>
-							<rootFolder></rootFolder>
-							<rootFolders>
-								<macosx>Elexis3.app</macosx>
-								<win32></win32>
-							</rootFolders>
-						</product>
-					</products>
-				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
