@@ -130,7 +130,7 @@ public abstract class HL7Reader {
 	 * @param nameObj
 	 * @return
 	 */
-	private String extractName(Primitive nameObj){
+	public String extractName(Primitive nameObj){
 		if (nameObj != null) {
 			String val = nameObj.getValue();
 			if (val != null) {

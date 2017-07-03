@@ -315,7 +315,8 @@ public class HL7ReaderV22 extends HL7Reader {
 			status = obx.getObx11_ObservationResultStatus().getValue();
 			
 			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag,
-				defaultDateTime, observationTime, commentNTE, group, sequence, status);
+				defaultDateTime, observationTime, commentNTE, group, sequence, status,
+				extractName(obx.getObx4_ObservationSubID()));
 				
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)) {
 				lrd.setIsNumeric(true);
