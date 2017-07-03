@@ -109,7 +109,7 @@
 									Under Linux a symbolic link would suffice. But this did not work under Windows -->
 								<resource>
 									<targetPath>${basedir}</targetPath>
-									<directory>ch.elexis.core.application</directory>
+									<directory>ch.elexis.core.product</directory>
 									<includes>
 										<include>Elexis.product</include>
 									</includes>
