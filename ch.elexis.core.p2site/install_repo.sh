@@ -1,5 +1,6 @@
 #!/bin/bash
 # abort bash on error
+# Used upto elexis 3.2 to install the products into the download site
 set -e
 
 if [ -z "$ROOT_ELEXIS_CORE" ]
