@@ -15,6 +15,11 @@ location "http://download.eclipse.org/eclipse/updates/4.6/" {
 	org.eclipse.ecf.filetransfer.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group
 	org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group
+	org.eclipse.e4.rcp.feature.group
+	org.eclipse.e4.tools
+	org.eclipse.e4.tools.compat
+	org.eclipse.e4.tools.services
+	org.eclipse.e4.tools.emf.ui
 }
 
 location "http://download.eclipse.org/releases/neon" {
