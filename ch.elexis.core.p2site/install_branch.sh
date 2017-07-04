@@ -2,12 +2,12 @@
 # abort bash on error
 set -e
 
-NAME=`basename $PWD`
-export GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 if [ -z "$GIT_BRANCH" ]; then
   echo no GIT_BRANCH defined
   exit 1
 fi
+PROJECT_NAME=`echo $GIT_BRANCH | cut -d '/' -f1`
+PROJECT_BRANCH=`echo $GIT_BRANCH | cut -d '/' -f2`
 
 if [ -z "$P2_ROOT" ]
 then
@@ -20,7 +20,7 @@ then
 fi
 
 
-TARGETDIRECTORY=${P2_ROOT}/${GIT_BRANCH}/${NAME}
+TARGETDIRECTORY=${P2_ROOT}/${PROJECT_BRANCH}/${PROJECT_NAME}
 mkdir -p $TARGETDIRECTORY
 
 # Maven must have prepared a repo.properties file under ch.medelexis.p2site
@@ -32,25 +32,23 @@ then
   echo "File ${act_version_file} must exist!"
   exit 1
 fi
-export backup_root=${TARGETDIRECTORY}/backup/$GIT_BRANCH
+echo $0: TARGETDIRECTORY is $TARGETDIRECTORY and PROJECT_BRANCH is $PROJECT_BRANCH.
 
-echo $0: TARGETDIRECTORY is $TARGETDIRECTORY and GIT_BRANCH is $GIT_BRANCH.
-
-rm -rf ${TARGETDIRECTORY}/$GIT_BRANCH
-mkdir -p  ${TARGETDIRECTORY}/$GIT_BRANCH/products
-cp -rpu *product/target/products/*.zip   ${TARGETDIRECTORY}/$GIT_BRANCH/products
-cp -rpu *p2site/target/repository ${TARGETDIRECTORY}/$GIT_BRANCH
-cp -rpvu *p2site/repo.properties ${TARGETDIRECTORY}/$GIT_BRANCH/repo.version
-export title="Elexis-Application P2-repository ($GIT_BRANCH)"
-echo "Creating repository $TARGETDIRECTORY/$GIT_BRANCH/index.html"
-tee  ${TARGETDIRECTORY}/$GIT_BRANCH/index.html <<EOF
+rm -rf ${TARGETDIRECTORY}
+mkdir -p  ${TARGETDIRECTORY}/products
+cp -rpu *product/target/products/*.zip   ${TARGETDIRECTORY}/products
+cp -rpu *p2site/target/repository ${TARGETDIRECTORY}
+cp -rpvu *p2site/repo.properties ${TARGETDIRECTORY}/repo.version
+export title="Elexis-Application P2-repository ($PROJECT_BRANCH)"
+echo "Creating repository $TARGETDIRECTORY/index.html"
+tee  ${TARGETDIRECTORY}/index.html <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <html>
   <head><title>$title</title></head>
   <body>
     <h1>$title</h1>
     <ul>
-      <li><a href="products">ZIP files for Elexis-Application (OS-specific)  $GIT_BRANCH</a></li>
+      <li><a href="products">ZIP files for Elexis-Application (OS-specific)  $PROJECT_BRANCH</a></li>
       <li><a href="repository/binary">binary</a></li>
       <li><a href="repository/plugins">plugins</a></li>
       <li><a href="repository/features">features</a></li>
