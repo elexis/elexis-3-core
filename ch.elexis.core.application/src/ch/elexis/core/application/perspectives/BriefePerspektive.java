@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006-2009, G. Weirich and Elexis
+ * Copyright (c) 2006-2017, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,10 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *    MEDEVIT <office@medevit.at> - e4 port compatibility
  *******************************************************************************/
-
 package ch.elexis.core.application.perspectives;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -27,17 +25,15 @@ public class BriefePerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.BriefePerspektive"; //$NON-NLS-1$
 	
 	public void createInitialLayout(IPageLayout layout){
-		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		IFolderLayout left = layout.createFolder("Links.folder", SWT.LEFT, 0.3f, editorArea); //$NON-NLS-1$
-		IFolderLayout main = layout.createFolder("Haupt.Folder", SWT.RIGHT, 0.7f, editorArea); //$NON-NLS-1$
+		
+		IFolderLayout left = layout.createFolder("Links.folder", IPageLayout.LEFT, 0.3f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout main = layout.createFolder("Haupt.Folder", IPageLayout.LEFT, 0.7f, IPageLayout.ID_EDITOR_AREA);
 		left.addView(BriefAuswahl.ID);
 		main.addView(TextView.ID);
 		main.addView(TextTemplateView.ID);
-		// layout.addFastView(BriefErstellen.ID);
-		layout.addFastView(UiResourceConstants.PatientDetailView2_ID);
-		layout.addFastView(KonsDetailView.ID);
+
 		layout.addPerspectiveShortcut(ID);
 		layout.addShowViewShortcut(UiResourceConstants.PatientDetailView2_ID);
 		layout.addShowViewShortcut(KonsDetailView.ID);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006-2009, G. Weirich and Elexis
+ * Copyright (c) 2006-2017, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *    MEDEVIT <office@medevit.at> - e4 port compatibility
  *******************************************************************************/
 
 package ch.elexis.core.application.perspectives;
@@ -26,8 +26,6 @@ import ch.elexis.core.ui.views.KonsListe;
 import ch.elexis.core.ui.views.PatHeuteView;
 import ch.elexis.core.ui.views.RezepteView;
 import ch.elexis.core.ui.views.TextView;
-import ch.elexis.core.ui.views.codesystems.DiagnosenView;
-import ch.elexis.core.ui.views.codesystems.LeistungenView;
 
 /**
  * Aufbau des initalen Layouts der "Patient"-Seite
@@ -35,11 +33,10 @@ import ch.elexis.core.ui.views.codesystems.LeistungenView;
 public class PatientPerspektive implements IPerspectiveFactory {
 	
 	public void createInitialLayout(final IPageLayout layout){
-		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
 		IFolderLayout left =
-			layout.createFolder("Links.folder", IPageLayout.LEFT, 0.4f, editorArea); //$NON-NLS-1$
+			layout.createFolder("Links.folder", IPageLayout.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA);
 		IFolderLayout main =
 			layout.createFolder("Haupt.Folder", IPageLayout.RIGHT, 0.3f, "Links.folder"); //$NON-NLS-1$
 		IFolderLayout leftbottom =
@@ -62,8 +59,7 @@ public class PatientPerspektive implements IPerspectiveFactory {
 		main.addPlaceholder(FallDetailView.ID);
 		main.addPlaceholder(TextView.ID);
 		main.addPlaceholder(KompendiumView.ID);
-		layout.addFastView(LeistungenView.ID, 0.5f);
-		layout.addFastView(DiagnosenView.ID, 0.5f);
+
 		layout.addPerspectiveShortcut(UiResourceConstants.PatientPerspektive_ID);
 		layout.addShowViewShortcut(UiResourceConstants.PatientDetailView2_ID);
 		layout.addShowViewShortcut(UiResourceConstants.PatientenListeView_ID);

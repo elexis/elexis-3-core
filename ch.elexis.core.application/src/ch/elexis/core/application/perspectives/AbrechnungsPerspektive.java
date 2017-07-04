@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2009, G. Weirich and Elexis
+ * Copyright (c) 2006-2017, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,10 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *    MEDEVIT <office@medevit.at> - e4 port compatibility
  *******************************************************************************/
-
 package ch.elexis.core.application.perspectives;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -35,12 +33,10 @@ public class AbrechnungsPerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.AbrechnungPerspektive"; //$NON-NLS-1$
 	
 	public void createInitialLayout(IPageLayout layout){
-		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		IFolderLayout fld = layout.createFolder("AbrechnungsFolder", SWT.RIGHT, //$NON-NLS-1$
-			0.6f, editorArea);
-		IFolderLayout frd = layout.createFolder("Detailfolder", SWT.RIGHT, 0.4f, editorArea); //$NON-NLS-1$
+		IFolderLayout fld = layout.createFolder("AbrechnungsFolder", IPageLayout.LEFT, 0.6f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout frd = layout.createFolder("Detailfolder", IPageLayout.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA);
 		fld.addView(PatHeuteView.ID);
 		fld.addView(KonsZumVerrechnenView.ID);
 		fld.addView(RechnungsListeView.ID);
