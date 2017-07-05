@@ -7,12 +7,12 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.services.IConflictHandler;
@@ -22,7 +22,9 @@ public class EndLocalDocumentHandler extends AbstractHandler implements IHandler
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		ISelection selection = HandlerUtil.getCurrentSelection(event);
+		IEclipseContext iEclipseContext =
+			PlatformUI.getWorkbench().getService(IEclipseContext.class);
+		ISelection selection = (ISelection) iEclipseContext.get(event.getCommand().getId());
 		if (selection instanceof StructuredSelection && !selection.isEmpty()) {
 			List<?> selected = ((StructuredSelection) selection).toList();
 			Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();

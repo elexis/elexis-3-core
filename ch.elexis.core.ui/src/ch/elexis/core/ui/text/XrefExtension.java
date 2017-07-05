@@ -19,15 +19,14 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISources;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -80,12 +79,11 @@ public class XrefExtension implements IKonsExtension {
 				(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 			Command command =
 				commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
-			
-			EvaluationContext appContext = new EvaluationContext(null, Collections.EMPTY_LIST);
-			appContext.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME,
-				new StructuredSelection(brief));
+			IEclipseContext iEclipseContext =
+				PlatformUI.getWorkbench().getService(IEclipseContext.class);
+			iEclipseContext.set(command.getId(), new StructuredSelection(brief));
 			ExecutionEvent event =
-				new ExecutionEvent(command, Collections.EMPTY_MAP, this, appContext);
+				new ExecutionEvent(command, Collections.EMPTY_MAP, this, iEclipseContext);
 			try {
 				command.executeWithChecks(event);
 			} catch (ExecutionException | NotDefinedException | NotEnabledException
