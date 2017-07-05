@@ -679,13 +679,12 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 								.getWorkbench().getService(ICommandService.class);
 							Command command = commandService
 								.getCommand("ch.elexis.core.ui.command.startEditLocalDocument");
-							IEclipseContext iEclipseContext =
-								PlatformUI.getWorkbench().getService(IEclipseContext.class);
-							iEclipseContext.set(command.getId(), new StructuredSelection(po));
-							ExecutionEvent newEvent = new ExecutionEvent(command,
-								Collections.EMPTY_MAP, null, iEclipseContext);
+							PlatformUI.getWorkbench().getService(IEclipseContext.class)
+								.set(command.getId().concat(".selection"),
+									new StructuredSelection(po));
 							try {
-								command.executeWithChecks(newEvent);
+								command.executeWithChecks(
+									new ExecutionEvent(command, Collections.EMPTY_MAP, null, null));
 							} catch (ExecutionException | NotDefinedException | NotEnabledException
 									| NotHandledException e) {
 								e.printStackTrace();

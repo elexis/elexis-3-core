@@ -594,13 +594,11 @@ public class BriefAuswahl extends ViewPart implements
 						.getService(ICommandService.class);
 					Command command = commandService
 						.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
-					IEclipseContext iEclipseContext =
-						PlatformUI.getWorkbench().getService(IEclipseContext.class);
-					iEclipseContext.set(command.getId(), new StructuredSelection(brief));
-					ExecutionEvent event =
-						new ExecutionEvent(command, Collections.EMPTY_MAP, this, iEclipseContext);
+					PlatformUI.getWorkbench().getService(IEclipseContext.class)
+						.set(command.getId().concat(".selection"), new StructuredSelection(brief));
 					try {
-						command.executeWithChecks(event);
+						command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP,
+							this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException
 							| NotHandledException e) {
 						MessageDialog.openError(getSite().getShell(), Messages.BriefAuswahl_errorttile,
@@ -629,13 +627,11 @@ public class BriefAuswahl extends ViewPart implements
 					Command command =
 						commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument"); //$NON-NLS-1$
 					
-					IEclipseContext iEclipseContext =
-						PlatformUI.getWorkbench().getService(IEclipseContext.class);
-					iEclipseContext.set(command.getId(), new StructuredSelection(brief));
-					ExecutionEvent event =
-						new ExecutionEvent(command, Collections.EMPTY_MAP, this, iEclipseContext);
+					PlatformUI.getWorkbench().getService(IEclipseContext.class)
+						.set(command.getId().concat(".selection"), new StructuredSelection(brief));
 					try {
-						command.executeWithChecks(event);
+						command.executeWithChecks(
+							new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException
 							| NotHandledException e) {
 						MessageDialog.openError(getSite().getShell(), Messages.BriefAuswahl_errortitle,
@@ -665,13 +661,11 @@ public class BriefAuswahl extends ViewPart implements
 					Command command =
 						commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"); //$NON-NLS-1$
 					
-					IEclipseContext iEclipseContext =
-						PlatformUI.getWorkbench().getService(IEclipseContext.class);
-					iEclipseContext.set(command.getId(), new StructuredSelection(brief));
-					ExecutionEvent event =
-						new ExecutionEvent(command, Collections.EMPTY_MAP, this, iEclipseContext);
+					PlatformUI.getWorkbench().getService(IEclipseContext.class)
+						.set(command.getId().concat(".selection"), new StructuredSelection(brief));
 					try {
-						command.executeWithChecks(event);
+						command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP,
+							this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException
 							| NotHandledException e) {
 						MessageDialog.openError(getSite().getShell(), Messages.BriefAuswahl_errortitle,

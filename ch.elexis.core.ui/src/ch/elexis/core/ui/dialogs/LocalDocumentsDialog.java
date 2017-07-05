@@ -192,13 +192,11 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument"); //$NON-NLS-1$
 		
-		IEclipseContext iEclipseContext =
-			PlatformUI.getWorkbench().getService(IEclipseContext.class);
-		iEclipseContext.set(command.getId(), selection);
-		ExecutionEvent event =
-			new ExecutionEvent(command, Collections.EMPTY_MAP, this, iEclipseContext);
+		PlatformUI.getWorkbench().getService(IEclipseContext.class)
+			.set(command.getId().concat(".selection"), selection);
 		try {
-			command.executeWithChecks(event);
+			command
+				.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			tableViewer.setInput(service.getAll());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException
 				| NotHandledException e) {
@@ -212,13 +210,10 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"); //$NON-NLS-1$
 		
-		IEclipseContext iEclipseContext =
-			PlatformUI.getWorkbench().getService(IEclipseContext.class);
-		iEclipseContext.set(command.getId(), selection);
-		ExecutionEvent event =
-			new ExecutionEvent(command, Collections.EMPTY_MAP, this, iEclipseContext);
+		PlatformUI.getWorkbench().getService(IEclipseContext.class)
+			.set(command.getId().concat(".selection"), selection);
 		try {
-			command.executeWithChecks(event);
+			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			tableViewer.setInput(service.getAll());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException
 				| NotHandledException e) {

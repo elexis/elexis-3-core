@@ -238,13 +238,11 @@ public class TextView extends ViewPart implements IActivationListener {
 			Command command =
 				commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
 			
-			IEclipseContext iEclipseContext =
-				PlatformUI.getWorkbench().getService(IEclipseContext.class);
-			iEclipseContext.set(command.getId(), new StructuredSelection(actBrief));
-			ExecutionEvent event =
-				new ExecutionEvent(command, Collections.EMPTY_MAP, this, iEclipseContext);
+			PlatformUI.getWorkbench().getService(IEclipseContext.class)
+				.set(command.getId().concat(".selection"), new StructuredSelection(actBrief));
 			try {
-				command.executeWithChecks(event);
+				command.executeWithChecks(
+					new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			} catch (ExecutionException | NotDefinedException | NotEnabledException
 					| NotHandledException e) {
 				MessageDialog.openError(getSite().getShell(), Messages.TextView_errortitle,

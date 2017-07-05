@@ -79,13 +79,12 @@ public class XrefExtension implements IKonsExtension {
 				(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 			Command command =
 				commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
-			IEclipseContext iEclipseContext =
-				PlatformUI.getWorkbench().getService(IEclipseContext.class);
-			iEclipseContext.set(command.getId(), new StructuredSelection(brief));
-			ExecutionEvent event =
-				new ExecutionEvent(command, Collections.EMPTY_MAP, this, iEclipseContext);
+			
+			PlatformUI.getWorkbench().getService(IEclipseContext.class)
+				.set(command.getId().concat(".selection"), new StructuredSelection(brief));
 			try {
-				command.executeWithChecks(event);
+				command.executeWithChecks(
+					new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			} catch (ExecutionException | NotDefinedException | NotEnabledException
 					| NotHandledException e) {
 				MessageDialog.openError(Display.getDefault().getActiveShell(),

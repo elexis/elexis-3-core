@@ -10,7 +10,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Shell;
@@ -30,12 +29,10 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		IEclipseContext iEclipseContext =
-			PlatformUI.getWorkbench().getService(IEclipseContext.class);
-		ISelection selection =
-			(ISelection) iEclipseContext.get(event.getCommand().getId());
-		if (selection instanceof StructuredSelection && !selection.isEmpty()) {
-			List<?> selected = ((StructuredSelection) selection).toList();
+		StructuredSelection selection = (StructuredSelection) PlatformUI.getWorkbench()
+			.getService(IEclipseContext.class).get(event.getCommand().getId().concat(".selection"));
+		if (!selection.isEmpty()) {
+			List<?> selected = selection.toList();
 			Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			for (Object object : selected) {
 				LocalDocumentServiceHolder.getService().ifPresent(service -> {

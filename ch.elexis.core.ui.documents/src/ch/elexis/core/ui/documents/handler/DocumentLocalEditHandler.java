@@ -98,12 +98,12 @@ public class DocumentLocalEditHandler extends AbstractHandler implements IHandle
 		if (po != null) {
 			iStructuredSelection = new StructuredSelection(po);
 		}
-		IEclipseContext iEclipseContext =
-			PlatformUI.getWorkbench().getService(IEclipseContext.class);
-		iEclipseContext.set(command.getId(), iStructuredSelection);
+		PlatformUI.getWorkbench().getService(IEclipseContext.class)
+			.set(command.getId().concat(".selection"),
+			iStructuredSelection);
 		try {
 			command.executeWithChecks(
-				new ExecutionEvent(command, Collections.EMPTY_MAP, this, iEclipseContext));
+				new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 		} catch (ExecutionException | NotDefinedException | NotEnabledException
 				| NotHandledException e) {
 			logger.error("cannot executre local edit event", e);
