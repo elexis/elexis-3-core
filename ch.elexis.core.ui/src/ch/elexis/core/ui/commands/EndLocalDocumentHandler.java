@@ -21,10 +21,13 @@ public class EndLocalDocumentHandler extends AbstractHandler implements IHandler
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
+		IEclipseContext iEclipseContext =
+			PlatformUI.getWorkbench().getService(IEclipseContext.class);
 		StructuredSelection selection =
-			(StructuredSelection) PlatformUI.getWorkbench().getService(IEclipseContext.class)
+			(StructuredSelection) iEclipseContext
 				.get(event.getCommand().getId().concat(".selection"));
-		if (!selection.isEmpty()) {
+		iEclipseContext.remove(event.getCommand().getId().concat(".selection"));
+		if (selection != null && !selection.isEmpty()) {
 			List<?> selected = selection.toList();
 			Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			for (Object object : selected) {

@@ -29,9 +29,12 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		StructuredSelection selection = (StructuredSelection) PlatformUI.getWorkbench()
-			.getService(IEclipseContext.class).get(event.getCommand().getId().concat(".selection"));
-		if (!selection.isEmpty()) {
+		IEclipseContext iEclipseContext =
+			PlatformUI.getWorkbench().getService(IEclipseContext.class);
+		StructuredSelection selection = (StructuredSelection) iEclipseContext
+			.get(event.getCommand().getId().concat(".selection"));
+		iEclipseContext.remove(event.getCommand().getId().concat(".selection"));
+		if (selection != null && !selection.isEmpty()) {
 			List<?> selected = selection.toList();
 			Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			for (Object object : selected) {
