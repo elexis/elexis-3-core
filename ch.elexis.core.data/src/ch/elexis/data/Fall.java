@@ -23,10 +23,14 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
+import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.interfaces.ITransferable;
 import ch.elexis.core.model.FallConstants;
+import ch.elexis.data.dto.FallDTO;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -38,7 +42,7 @@ import ch.rgw.tools.TimeTool;
  * @author Gerry
  * 
  */
-public class Fall extends PersistentObject {
+public class Fall extends PersistentObject implements IFall, ITransferable<FallDTO> {
 	
 	public static final String VVG_NAME = Messages.Fall_VVG_Name;
 	public static final String PRIVATE_NAME = Messages.Fall_Private_Name; //$NON-NLS-1$
@@ -1000,5 +1004,15 @@ public class Fall extends PersistentObject {
 		// TODO
 		
 		return null;
+	}
+	
+	@Override
+	public FallDTO getDTO(){
+		return new FallDTO(this);
+	}
+	
+	@Override
+	public void persistDTO(FallDTO dto) throws ElexisException{
+		throw new UnsupportedOperationException();
 	}
 }
