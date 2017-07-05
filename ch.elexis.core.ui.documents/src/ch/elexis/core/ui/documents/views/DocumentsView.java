@@ -27,7 +27,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.expressions.EvaluationContext;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -63,7 +63,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
@@ -676,18 +675,16 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 					IDocument dh = (IDocument) obj;
 					DocumentStoreServiceHolder.getService().getPersistenceObject(dh)
 						.ifPresent(po -> {
-							EvaluationContext appContext = null;
-							appContext = new EvaluationContext(null, Collections.EMPTY_LIST);
-							appContext.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME,
-								new StructuredSelection(po));
 							ICommandService commandService = (ICommandService) PlatformUI
 								.getWorkbench().getService(ICommandService.class);
 							Command command = commandService
 								.getCommand("ch.elexis.core.ui.command.startEditLocalDocument");
-							ExecutionEvent newEvent = new ExecutionEvent(command,
-								Collections.EMPTY_MAP, this, appContext);
+							PlatformUI.getWorkbench().getService(IEclipseContext.class)
+								.set(command.getId().concat(".selection"),
+									new StructuredSelection(po));
 							try {
-								command.executeWithChecks(newEvent);
+								command.executeWithChecks(
+									new ExecutionEvent(command, Collections.EMPTY_MAP, null, null));
 							} catch (ExecutionException | NotDefinedException | NotEnabledException
 									| NotHandledException e) {
 								e.printStackTrace();

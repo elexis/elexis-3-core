@@ -11,10 +11,10 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.expressions.EvaluationContext;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -28,7 +28,6 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 
 public class DocumentLocalEditHandler extends AbstractHandler implements IHandler {
-	
 	private static Logger logger = LoggerFactory.getLogger(DocumentLocalEditHandler.class);
 	
 	private static final String LOCAL_EDIT_START =
@@ -42,7 +41,7 @@ public class DocumentLocalEditHandler extends AbstractHandler implements IHandle
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		
+		// command triggered from menu item
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof StructuredSelection
 			&& !((StructuredSelection) selection).isEmpty()) {
@@ -95,20 +94,19 @@ public class DocumentLocalEditHandler extends AbstractHandler implements IHandle
 	}
 	
 	private void createEvent(Command command, IPersistentObject po){
-		EvaluationContext appContext = null;
+		IStructuredSelection iStructuredSelection = null;
 		if (po != null) {
-			appContext = new EvaluationContext(null, Collections.EMPTY_LIST);
-			appContext.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME,
-				new StructuredSelection(po));
+			iStructuredSelection = new StructuredSelection(po);
 		}
-		ExecutionEvent newEvent =
-			new ExecutionEvent(command, Collections.EMPTY_MAP, this, appContext);
+		PlatformUI.getWorkbench().getService(IEclipseContext.class)
+			.set(command.getId().concat(".selection"),
+			iStructuredSelection);
 		try {
-			command.executeWithChecks(newEvent);
+			command.executeWithChecks(
+				new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 		} catch (ExecutionException | NotDefinedException | NotEnabledException
 				| NotHandledException e) {
 			logger.error("cannot executre local edit event", e);
 		}
 	}
-	
 }

@@ -10,7 +10,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.expressions.EvaluationContext;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
@@ -193,11 +192,11 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument"); //$NON-NLS-1$
 		
-		EvaluationContext appContext = new EvaluationContext(null, Collections.EMPTY_LIST);
-		appContext.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME, selection);
-		ExecutionEvent event = new ExecutionEvent(command, Collections.EMPTY_MAP, this, appContext);
+		PlatformUI.getWorkbench().getService(IEclipseContext.class)
+			.set(command.getId().concat(".selection"), selection);
 		try {
-			command.executeWithChecks(event);
+			command
+				.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			tableViewer.setInput(service.getAll());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException
 				| NotHandledException e) {
@@ -211,11 +210,10 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"); //$NON-NLS-1$
 		
-		EvaluationContext appContext = new EvaluationContext(null, Collections.EMPTY_LIST);
-		appContext.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME, selection);
-		ExecutionEvent event = new ExecutionEvent(command, Collections.EMPTY_MAP, this, appContext);
+		PlatformUI.getWorkbench().getService(IEclipseContext.class)
+			.set(command.getId().concat(".selection"), selection);
 		try {
-			command.executeWithChecks(event);
+			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			tableViewer.setInput(service.getAll());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException
 				| NotHandledException e) {
