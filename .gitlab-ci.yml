@@ -1,0 +1,8 @@
+# Build script used by gitlab.medelexis.ch
+build:
+  script: "mvn clean verify -B -Pall-archs -Dmaven.test.skip=true"
+  artifacts:
+    paths:
+    - ch.elexis.core.product/target/products/*.zip
+    - ch.elexis.core.p2site/target/*.zip
+    expire_in: 1 week
