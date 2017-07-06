@@ -44,9 +44,9 @@ echo $0: TARGETDIRECTORY is $TARGETDIRECTORY. Project is ${PROJECT_NAME} on bran
 
 rm -rf ${TARGETDIRECTORY}
 mkdir -p  ${TARGETDIRECTORY}/products
-cp -rpu */target/products/*.zip   ${TARGETDIRECTORY}/products
-cp -rpu *p2site/target/repository ${TARGETDIRECTORY}
-cp -rpvu *p2site/repo.properties ${TARGETDIRECTORY}/repo.version
+cp -rpu */target/products/*.zip       ${TARGETDIRECTORY}/products
+cp -rpu *p2site/target/repository/*   ${TARGETDIRECTORY}
+cp -rpvu *p2site/repo.properties      ${TARGETDIRECTORY}/repo.version
 export title="Elexis-Application P2-repository ($PROJECT_BRANCH)"
 echo "Creating repository $TARGETDIRECTORY/index.html"
 tee  ${TARGETDIRECTORY}/index.html <<EOF
@@ -57,9 +57,9 @@ tee  ${TARGETDIRECTORY}/index.html <<EOF
     <h1>$title</h1>
     <ul>
       <li><a href="products">ZIP files for Elexis-Application (OS-specific)  $PROJECT_BRANCH</a></li>
-      <li><a href="repository/binary">binary</a></li>
-      <li><a href="repository/plugins">plugins</a></li>
-      <li><a href="repository/features">features</a></li>
+      <li><a href="binary">binary</a></li>
+      <li><a href="plugins">plugins</a></li>
+      <li><a href="features">features</a></li>
     </ul>
     </p>
     <p>Installed `date`
