@@ -6,12 +6,20 @@ if [ -z "$GIT_BRANCH" ]; then
   echo no GIT_BRANCH defined
   exit 1
 fi
-PROJECT_NAME=`echo $GIT_BRANCH | cut -d '/' -f1`
+if [ -z "$1" ]; then
+  echo "Please pass the PROJECT_NAME as parameter"
+  exit 2
+fi
+PROJECT_NAME="$1"
 PROJECT_BRANCH=`echo $GIT_BRANCH | cut -d '/' -f2`
 
 if [ -z "$P2_ROOT" ]
 then
   export P2_ROOT=/home/jenkins/downloads/p2
+fi
+if [ -z "${PROJECT_BRANCH}" ]; then
+  echo "Could not determine the PROJECT_BRANCH"
+  exit 2
 fi
 if [ ! -d "$P2_ROOT" ]
 then
@@ -32,12 +40,12 @@ then
   echo "File ${act_version_file} must exist!"
   exit 1
 fi
-echo $0: TARGETDIRECTORY is $TARGETDIRECTORY and PROJECT_BRANCH is $PROJECT_BRANCH.
+echo $0: TARGETDIRECTORY is $TARGETDIRECTORY. Project is ${PROJECT_NAME} on branch ${PROJECT_BRANCH}.
 
 rm -rf ${TARGETDIRECTORY}
 mkdir -p  ${TARGETDIRECTORY}/products
 cp -rpu *product/target/products/*.zip   ${TARGETDIRECTORY}/products
-cp -rpu *p2site/target/ ${TARGETDIRECTORY}
+cp -rpu *p2site/target/repository/*   ${TARGETDIRECTORY}
 cp -rpvu *p2site/repo.properties ${TARGETDIRECTORY}/repo.version
 export title="Elexis-Application P2-repository ($PROJECT_BRANCH)"
 echo "Creating repository $TARGETDIRECTORY/index.html"
