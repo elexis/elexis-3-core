@@ -511,7 +511,7 @@ elexis_version
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-packaging-plugin </artifactId>
+					<artifactId>tycho-packaging-plugin</artifactId>
 					<version>${tycho-version}</version>
 					<dependencies>
 						<dependency>
@@ -521,7 +521,7 @@ elexis_version
 						</dependency>
 					</dependencies>
 					<configuration>
-						<strictBinIncludes>false </strictBinIncludes>
+						<strictBinIncludes>false</strictBinIncludes>
 						<format>${timestamp_format}</format>
 						<timestampProvider>jgit </timestampProvider>
 						<jgit.ignore>pom.xml</jgit.ignore>
@@ -577,4 +577,11 @@ elexis_version
 			</plugins>
 		</pluginManagement>
 	</build>
+<repositories>
+  <repository>
+    <id>elexis.3.target.master</id>
+    <url>http://download.elexis.info/elexis/p2/master/target</url>
+    <layout>p2</layout>
+  </repository>
+</repositories>
 </project>
