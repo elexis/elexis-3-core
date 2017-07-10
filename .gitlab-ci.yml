@@ -23,3 +23,10 @@ deploy_master_snapshot:
         url: http://download.elexis.info/elexis/p2/$CI_COMMIT_REF_NAME/elexis-3-core
     only:
     - master
+
+trigger_elexis-3-base_build:
+    stage: deploy
+    script:
+    - "curl -X POST -F token=$TRIGGER_TOKEN_ELEXIS_3_BASE -F ref=$CI_COMMIT_REF_NAME https://gitlab.medelexis.ch/api/v4/projects/14/trigger/pipeline"
+    only:
+    - master
