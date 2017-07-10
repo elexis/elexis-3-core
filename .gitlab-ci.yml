@@ -4,6 +4,7 @@ stages:
     - deploy
 
 build:
+  stage: build
   script: "mvn clean verify -B -Pall-archs -Dmaven.test.skip=true"
   artifacts:
     paths:
