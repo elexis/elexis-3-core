@@ -2,6 +2,7 @@
 stages:
     - build
     - deploy
+    - trigger_other_builds
 
 build:
   stage: build
@@ -25,7 +26,7 @@ deploy_master_snapshot:
     - master
 
 trigger_elexis-3-base_build:
-    stage: deploy
+    stage: trigger_other_builds
     script:
     - "curl -X POST -F token=$TRIGGER_TOKEN_ELEXIS_3_BASE -F ref=$CI_COMMIT_REF_NAME https://gitlab.medelexis.ch/api/v4/projects/14/trigger/pipeline"
     only:
