@@ -1,8 +1,24 @@
 # Build script used by gitlab.medelexis.ch
+stages:
+    - build
+    - deploy
+
 build:
   script: "mvn clean verify -B -Pall-archs -Dmaven.test.skip=true"
   artifacts:
     paths:
     - ch.elexis.core.product/target/products/*.zip
     - ch.elexis.core.p2site/target/*.zip
-    expire_in: 1 week
+    expire_in: 1 day
+
+deploy_master_snapshot:
+    stage: deploy
+    script:
+    - mkdir upload; unzip ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip -d upload/
+    - ch.elexis.core.releng/upload-dav.sh upload/ https://download.elexis.info/elexis/p2/ $CI_COMMIT_REF_NAME/elexis-3-core $DEPLOY_USER $DEPLOY_PASSWORD
+    - rm -Rf upload/
+    environment:
+        name: elexis-3-core/$CI_COMMIT_REF_NAME
+        url: http://download.elexis.info/elexis/p2/$CI_COMMIT_REF_NAME/elexis-3-core
+    only:
+    - master
