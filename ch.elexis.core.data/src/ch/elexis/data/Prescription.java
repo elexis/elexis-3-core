@@ -676,8 +676,8 @@ public class Prescription extends PersistentObject {
 			return EntryType.byNumeric(typeNum);
 		}
 		
-		String rezeptId = get(FLD_REZEPT_ID);
-		if (rezeptId != null && !rezeptId.isEmpty()) {
+		String rezeptId = getRaw(FLD_REZEPT_ID);
+		if (rezeptId != null) {
 			// this is necessary due to a past impl. where self dispensed was not set as entry type
 			if (rezeptId.equals(Prescription.FLD_REZEPTID_VAL_DIREKTABGABE)) {
 				setEntryType(EntryType.SELF_DISPENSED);

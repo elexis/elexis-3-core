@@ -1207,6 +1207,34 @@ public abstract class PersistentObject implements IPersistentObject {
 		return res;
 	}
 	
+	/**
+	 * Similar to {@link PersistentObject#get(String)}, but never use cache, checkNull or decode.
+	 * Simply read the value from the database. <b>Only use with non encoded fields!</b>
+	 * 
+	 * @param field
+	 * @return
+	 */
+	protected String getRaw(String field){
+		StringBuffer sql = new StringBuffer();
+		String mapped = map(field);
+		String table = getTableName();
+		sql.append("SELECT ").append(mapped).append(" FROM ").append(table).append(" WHERE ID='")
+			.append(id).append("'");
+		
+		Stm stm = getDBConnection().getStatement();
+		String res = null;
+		try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
+			if ((rs != null) && (rs.next() == true)) {
+				res = rs.getString(mapped);
+			}
+		} catch (SQLException ex) {
+			ExHandler.handle(ex);
+		} finally {
+			getDBConnection().releaseStatement(stm);
+		}
+		return res;
+	}
+	
 	public byte[] getBinary(final String field){
 		String key = getKey(field);
 		Object o = getDBConnection().getCache().get(key, getCacheTime());
