@@ -6,7 +6,7 @@ stages:
 
 build:
   stage: build
-  script: "mvn clean verify -B -Pall-archs -Dmaven.test.skip=true"
+  script: "mvn clean verify -B -Pall-archs"
   artifacts:
     paths:
     - ch.elexis.core.product/target/products/*.zip
