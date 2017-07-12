@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.util.DBConnection;
-import ch.elexis.core.data.util.DBConnection.DBType;
+import ch.elexis.core.common.DBConnection;
+import ch.elexis.core.common.DBConnection.DBType;
 import ch.elexis.data.PersistentObject;
 
 public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage {

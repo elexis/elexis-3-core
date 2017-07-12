@@ -20,11 +20,12 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.PlatformUI;
 
+import ch.elexis.core.common.DBConnection;
+import ch.elexis.core.common.DBConnection.DBType;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.util.DBConnection;
-import ch.elexis.core.data.util.DBConnection.DBType;
+
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.PersistentObject;
