@@ -70,13 +70,6 @@
                </visibleWhen>
             </command>
          </toolbar>
-         <toolbar
-               id="ch.elexis.coolbar.MandantSelection">
-            <dynamic
-                  class="ch.elexis.core.ui.coolbar.MandantSelectionContributionItem"
-                  id="ch.elexis.core.ui.coolbar.MandantSelectionContributionItem">
-            </dynamic>
-         </toolbar>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -885,4 +878,11 @@
                type="java.lang.Object">
          </propertyTester>
       </extension>
+      <extension
+	         id="ch.elexis.core.ui.fragment"
+	         point="org.eclipse.e4.workbench.model">
+	      <fragment
+	            uri="fragment.e4xmi">
+	      </fragment>
+	   </extension>
 </plugin>
