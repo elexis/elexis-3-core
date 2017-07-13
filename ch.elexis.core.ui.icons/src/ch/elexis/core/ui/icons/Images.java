@@ -12,6 +12,7 @@ package ch.elexis.core.ui.icons;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -146,6 +147,9 @@ public enum Images {
 		IMG_DISK,
 		/** a closed lock */
 		IMG_LOCK_CLOSED,
+		IMG_LOCK_CLOSED_YELLOW,
+		IMG_LOCK_CLOSED_GREEN,
+		IMG_LOCK_CLOSED_GREY,
 		/** An opened lock */
 		IMG_LOCK_OPEN,
 		/** Clipboard symbol */
@@ -329,6 +333,21 @@ public enum Images {
 	 */
 	public ImageDescriptor getImageDescriptor(ImageSize is){
 		return getImageDescriptor(this.name(), is);
+	}
+	
+	/**
+	 * 
+	 * @return an {@link ImageDescriptor} of type URLImageDescriptor
+	 * @since 3.3
+	 */
+	public ImageDescriptor getURLImageDescriptor(){
+		try {
+			URL imageDesciptorUrl = new URL(getIconURI());
+			return ImageDescriptor.createFromURL(imageDesciptorUrl);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
