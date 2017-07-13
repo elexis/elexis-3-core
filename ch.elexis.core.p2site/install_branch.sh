@@ -3,7 +3,7 @@
 set -e
 
 if [ -z "$GIT_BRANCH" ]; then
-  echo no GIT_BRANCH defined
+  echo "no GIT_BRANCH (e.g. origin/master) defined"
   exit 1
 fi
 if [ -z "$1" ]; then

@@ -10,75 +10,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.google.code.maven-replacer-plugin</groupId>
-				<artifactId>replacer</artifactId>
-				<version>1.5.3</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>replace</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<outputDir>../ch.elexis.core.p2site</outputDir>
-					<basedir>ch.elexis.core.application</basedir>
-					<filesToInclude>repo.properties,Elexis.p2.inf</filesToInclude>
-					<replacements>
-						<replacement>
-							<token>project_name</token>
-							<value>${project.name}</value>
-						</replacement>
-						<replacement>
-							<token>project_version</token>
-							<value>${project.version}</value>
-						</replacement>
-						<replacement>
-							<token>buildQualifier</token>
-							<!-- we want to take the actual time to update the snapshots! -->
-							<value>${groovyBuildQualifier}</value>
-						</replacement>
-						<replacement>
-							<token>versionFromPomViaGroovy</token>
-							<!-- we want to take versionFromPomViaGroovy from ch.elexis.core.data/pom.xml -->
-							<value>${versionFromPomViaGroovy}</value>
-						</replacement>
-						<replacement>
-							<token>unqualifiedVersion</token>
-							<value>${unqualifiedVersion}</value>
-						</replacement>
-						<replacement>
-							<token>repo_name</token>
-							<value>${repo_name}</value>
-						</replacement>
-						<replacement>
-							<token>repo_branch</token>
-							<value>${gitBranch}</value>
-						</replacement>
-						<replacement>
-							<token>projectVersion=</token>
-							<value>${project.version}</value>
-						</replacement>
-					</replacements>
-				</configuration>
-			</plugin>
-			<plugin>
-				<!-- Remove Elexis.product on clean -->
-				<artifactId>maven-clean-plugin</artifactId>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>${basedir}</directory>
-							<includes>
-								<include>repo.properties</include>
-								<include>Elexis.p2.inf</include>
-							</includes>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.eclipse.tycho </groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<configuration>
@@ -129,25 +60,6 @@
 										</versionRange>
 										<goals>
 											<goal>copy</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											com.google.code.maven-replacer-plugin
-										</groupId>
-										<artifactId>
-											replacer
-										</artifactId>
-										<versionRange>
-											[1.5.3,)
-										</versionRange>
-										<goals>
-											<goal>replace</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
