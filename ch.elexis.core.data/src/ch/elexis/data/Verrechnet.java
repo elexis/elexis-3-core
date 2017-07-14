@@ -352,20 +352,26 @@ public class Verrechnet extends PersistentObject {
 	}
 	
 	/**
-	 * Change the count for this service or article. If it ist an Artikel, the store will be updated
-	 * accordingly
+	 * Change the count for this service or article. If it ist an Artikel, the
+	 * store will be updated accordingly
 	 * 
 	 * @param neuAnzahl
 	 *            new count this service is to be billed.
 	 */
-	public void changeAnzahl(int neuAnzahl){
+	public void changeAnzahl(int neuAnzahl) {
 		int vorher = getZahl();
 		setZahl(neuAnzahl);
 		IVerrechenbar vv = getVerrechenbar();
 		if (vv instanceof Artikel) {
 			Artikel art = (Artikel) vv;
-			art.einzelRuecknahme(vorher);
-			art.einzelAbgabe(neuAnzahl);
+
+			int diff = neuAnzahl - vorher;
+			if (diff > 0) {
+				art.einzelAbgabe(diff);
+			} else {
+				art.einzelRuecknahme(diff);
+			}
+
 		}
 	}
 	
