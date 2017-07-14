@@ -15,8 +15,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.jface.action.ICoolBarManager;
-import org.eclipse.jface.window.ApplicationWindow;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -34,8 +35,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -54,7 +53,7 @@ import ch.elexis.data.Mandant;
  * 
  * @since 3.1 do enable items according to {@link Anwender#getExecutiveDoctorsWorkingFor()}
  */
-public class MandantSelectionContributionItem extends WorkbenchWindowControlContribution {
+public class MandantSelectionContributionItem {
 	
 	private ToolItem item;
 	private Menu menu;
@@ -65,9 +64,7 @@ public class MandantSelectionContributionItem extends WorkbenchWindowControlCont
 	private ElexisEventListener eeli_mandant = new ElexisUiEventListenerImpl(Mandant.class,
 		ElexisEvent.EVENT_MANDATOR_CHANGED) {
 		public void runInUi(ElexisEvent ev){
-			ICoolBarManager icb =
-				((ApplicationWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow())
-					.getCoolBarManager2();
+			
 			Mandant m = (Mandant) ev.getObject();
 			if (m != null && item != null) {
 				item.setText(m.getMandantLabel());
@@ -75,7 +72,6 @@ public class MandantSelectionContributionItem extends WorkbenchWindowControlCont
 				if (menuItems == null) {
 					// We have a read-only coolbar item entry
 					fParent.pack();
-					icb.update(true);
 					return;
 				}
 				for (int i = 0; i < menuItems.length; i++) {
@@ -85,12 +81,12 @@ public class MandantSelectionContributionItem extends WorkbenchWindowControlCont
 						// TODO: Anordnung Elemente in Coolbar speicherbar?
 						// TODO: Programmatische Anordnung Elemente coolbar
 						menuItems[i].setSelection(true);
-						icb.update(true);
 					} else {
 						menuItems[i].setSelection(false);
 					}
 				}
 			}
+			fParent.getParent().layout();
 		}
 	};
 	
@@ -124,8 +120,7 @@ public class MandantSelectionContributionItem extends WorkbenchWindowControlCont
 		ElexisEventDispatcher.getInstance().addListeners(eeli_mandant, eeli_user);
 	}
 	
-	@Override
-//	public void fill(ToolBar parent, int index){
+	@PostConstruct
 	protected Control createControl(Composite parent) {
 		ToolBar toolbar = new ToolBar(parent, SWT.NONE);
 		
@@ -226,14 +221,8 @@ public class MandantSelectionContributionItem extends WorkbenchWindowControlCont
 		return image;
 	}
 	
-	@Override
+	@PreDestroy
 	public void dispose(){
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_mandant, eeli_user);
 	}
-	
-	@Override
-	public boolean isDynamic(){
-		return true;
-	}
-	
 }
