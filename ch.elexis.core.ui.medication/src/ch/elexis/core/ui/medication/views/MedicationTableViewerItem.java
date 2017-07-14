@@ -317,22 +317,22 @@ public class MedicationTableViewerItem {
 		}
 		
 		private void resolvePrescriptorLabel(){
+			
+			item.prescriptorLabel = "";
 			if (item.prescriptorId != null && !item.prescriptorId.isEmpty()) {
-				Anwender prescriptor = Anwender.load(item.prescriptorId);
-				if (prescriptor != null && prescriptor.exists()) {
-					item.prescriptorLabel = prescriptor.getKuerzel();
-					if (item.prescriptorLabel == null || item.prescriptorLabel.isEmpty()) {
-						Query<User> query = new Query<>(User.class);
-						query.add(User.FLD_ASSOC_CONTACT, Query.EQUALS, item.prescriptorId);
-						List<User> users = query.execute();
-						if (!users.isEmpty()) {
-							item.prescriptorLabel = users.get(0).getId();
-						}
+				Query<User> query = new Query<>(User.class);
+				query.add(User.FLD_ASSOC_CONTACT, Query.EQUALS, item.prescriptorId);
+				List<User> users = query.execute();
+				if (!users.isEmpty()) {
+					item.prescriptorLabel = users.get(0).getId();
+				}
+				if (item.prescriptorLabel == null || item.prescriptorLabel.isEmpty()) {
+					Anwender prescriptor = Anwender.load(item.prescriptorId);
+					if (prescriptor != null && prescriptor.exists()) {
+						item.prescriptorLabel = prescriptor.getKuerzel();
 					}
-					return;
 				}
 			}
-			item.prescriptorLabel = "";
 		}
 		
 		private void resolveDisposalComment(){
