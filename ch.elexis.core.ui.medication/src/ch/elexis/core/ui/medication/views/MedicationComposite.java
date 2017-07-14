@@ -633,7 +633,8 @@ public class MedicationComposite extends Composite
 			showMedicationDetailComposite(null);
 
 		ElexisEventDispatcher.getInstance()
-			.fire(new ElexisEvent(null, Prescription.class, ElexisEvent.EVENT_UPDATE));
+			.fire(new ElexisEvent(pres.getPrescription(), Prescription.class,
+				ElexisEvent.EVENT_UPDATE));
 	}
 	
 	/**
@@ -715,6 +716,18 @@ public class MedicationComposite extends Composite
 		} else {
 			lblDailyTherapyCost.setText("");
 		}
+	}
+	
+	@Override
+	public boolean setFocus(){
+		if (medicationTableComposite != null && medicationTableComposite.isVisible()) {
+			medicationTableComposite.setPendingInput();
+		}
+		if (medicationHistoryTableComposite != null && medicationHistoryTableComposite.isVisible()) {
+			medicationHistoryTableComposite.setPendingInput();
+		}
+		
+		return super.setFocus();
 	}
 	
 	private void setValuesForTextSignature(String[] signatureArray){
