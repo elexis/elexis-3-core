@@ -428,31 +428,34 @@ public class Artikel extends VerrechenbarAdapter {
 	 * @param n
 	 */
 	public void einzelAbgabe(final int n){
-		int anbruch = getBruchteile();
-		int ve = getVerkaufseinheit();
-		int vk = getVerpackungsEinheit();
-		if (vk == 0) {
-			if (ve != 0) {
-				vk = ve;
-				setVerkaufseinheit(vk);
+		if (isLagerartikel())
+		{
+			int anbruch = getBruchteile();
+			int ve = getVerkaufseinheit();
+			int vk = getVerpackungsEinheit();
+			if (vk == 0) {
+				if (ve != 0) {
+					vk = ve;
+					setVerkaufseinheit(vk);
+				}
 			}
-		}
-		if (ve == 0) {
-			if (vk != 0) {
-				ve = vk;
-				setVerpackungsEinheit(ve);
+			if (ve == 0) {
+				if (vk != 0) {
+					ve = vk;
+					setVerpackungsEinheit(ve);
+				}
 			}
-		}
-		int num = n * ve;
-		if (vk == ve) {
-			setIstbestand(getIstbestand() - n);
-		} else {
-			int rest = anbruch - num;
-			while (rest < 0) {
-				rest = rest + vk;
-				setIstbestand(getIstbestand() - 1);
+			int num = n * ve;
+			if (vk == ve) {
+				setIstbestand(getIstbestand() - n);
+			} else {
+				int rest = anbruch - num;
+				while (rest < 0) {
+					rest = rest + vk;
+					setIstbestand(getIstbestand() - 1);
+				}
+				setBruchteile(rest);
 			}
-			setBruchteile(rest);
 		}
 	}
 	
@@ -462,19 +465,22 @@ public class Artikel extends VerrechenbarAdapter {
 	 * @param n
 	 */
 	public void einzelRuecknahme(final int n){
-		int anbruch = getBruchteile();
-		int ve = getVerkaufseinheit();
-		int vk = getVerpackungsEinheit();
-		int num = n * ve;
-		if (vk == ve) {
-			setIstbestand(getIstbestand() + n);
-		} else {
-			int rest = anbruch + num;
-			while (rest > vk) {
-				rest = rest - vk;
-				setIstbestand(getIstbestand() + 1);
+		if (isLagerartikel())
+		{
+			int anbruch = getBruchteile();
+			int ve = getVerkaufseinheit();
+			int vk = getVerpackungsEinheit();
+			int num = n * ve;
+			if (vk == ve) {
+				setIstbestand(getIstbestand() + n);
+			} else {
+				int rest = anbruch + num;
+				while (rest > vk) {
+					rest = rest - vk;
+					setIstbestand(getIstbestand() + 1);
+				}
+				setBruchteile(rest);
 			}
-			setBruchteile(rest);
 		}
 	}
 	
