@@ -720,7 +720,7 @@ public class MedicationComposite extends Composite
 	
 	@Override
 	public boolean setFocus(){
-		if (medicationTableComposite != null) {
+		if (medicationTableComposite != null && medicationTableComposite.isVisible()) {
 			medicationTableComposite.setPendingInput();
 		}
 		if (medicationHistoryTableComposite != null && medicationHistoryTableComposite.isVisible()) {
