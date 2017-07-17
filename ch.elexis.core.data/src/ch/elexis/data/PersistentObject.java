@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.sql.Connection;
@@ -171,8 +172,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	};
 	
 	/**
-	 * the possible states of a tristate checkbox: true/checked, false/unchecked, undefined/
-	 * "filled with a square"/"partly selected"
+	 * the possible states of a tristate checkbox: true/checked, false/unchecked, undefined/ "filled
+	 * with a square"/"partly selected"
 	 * 
 	 * @since 3.0.0
 	 */
@@ -1632,7 +1633,7 @@ public abstract class PersistentObject implements IPersistentObject {
 													// existing code.
 													// return false; // See api doc. Return false on errors.
 		} finally {
-			if(pst!=null) {
+			if (pst != null) {
 				try {
 					pst.close();
 				} catch (SQLException e) {}
@@ -2741,20 +2742,65 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
-	 * Unfold a byte array as stored by {@link #flatten(Hashtable)}
+	 * Recreate a Hashtable from a byte array as created by flatten()
 	 * 
 	 * @param flat
-	 * @return
-	 * @since 3.1
+	 *            the byte array
+	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 */
+	@SuppressWarnings("unchecked")
+	public static Hashtable<Object, Object> fold(final byte[] flat, IClassResolver resolver){
+		return (Hashtable<Object, Object>) foldObject(flat, resolver);
+	}
+	
+	/**
+	 * Recreate a Hashtable from a byte array as created by flatten()
+	 * 
+	 * @param flat
+	 *            the byte array
+	 * 
+	 * @return the original Hashtable or null if no Hashtable could be created from the array
 	 */
 	public static Object foldObject(final byte[] flat){
+		return foldObject(flat, null);
+	}
+	
+	/**
+	 * Interface for use with {@link PersistentObject#foldObject(byte[], IClassResolver)} to map
+	 * classes on deserialisation using {@link ObjectInputStream}.
+	 *
+	 */
+	public static interface IClassResolver {
+		public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException;
+	}
+	
+	/**
+	 * Recreate a Hashtable from a byte array as created by flatten()
+	 * 
+	 * @param flat
+	 *            the byte array
+	 * @param resolver
+	 *            {@link IClassResolver} implementation used for class resolving / mapping
+	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 */
+	public static Object foldObject(final byte[] flat, IClassResolver resolver){
 		if (flat.length == 0) {
 			return null;
 		}
 		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(flat))) {
 			ZipEntry entry = zis.getNextEntry();
 			if (entry != null) {
-				try (ObjectInputStream ois = new ObjectInputStream(zis)) {
+				try (ObjectInputStream ois = new ObjectInputStream(zis) {
+					protected java.lang.Class<?> resolveClass(java.io.ObjectStreamClass desc)
+						throws IOException, ClassNotFoundException{
+						if (resolver != null) {
+							Class<?> resolved = resolver.resolveClass(desc);
+							return (resolved != null) ? resolved : super.resolveClass(desc);
+						} else {
+							return super.resolveClass(desc);
+						}
+					};
+				}) {
 					return ois.readObject();
 				}
 			} else {
@@ -2962,7 +3008,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	/**
 	 * 
 	 * @param tableName
-	 * @param considerViews consider views too in searching for existing elements
+	 * @param considerViews
+	 *            consider views too in searching for existing elements
 	 * @since 3.2
 	 * @return
 	 */

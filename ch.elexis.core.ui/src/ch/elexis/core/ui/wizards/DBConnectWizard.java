@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.wizards;
 
+import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -25,10 +26,10 @@ import ch.elexis.core.common.DBConnection.DBType;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.PersistentObject.IClassResolver;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
@@ -203,7 +204,23 @@ public class DBConnectWizard extends Wizard {
 	public @Nullable DBConnection getCurrentConnection(){
 		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
-			Hashtable<Object, Object> hConn = PersistentObject.fold(StringTool.dePrintable(cnt));
+			Hashtable<Object, Object> hConn =
+				PersistentObject.fold(StringTool.dePrintable(cnt), new IClassResolver() {
+					// map DBConnection classes due to moving the implementation to ch.elexis.core.common
+					@Override
+					public Class<?> resolveClass(ObjectStreamClass desc)
+						throws ClassNotFoundException{
+						if (desc.getName().equals("ch.elexis.core.data.util.DBConnection")) {
+							return Thread.currentThread().getContextClassLoader()
+								.loadClass("ch.elexis.core.common.DBConnection");
+						} else if (desc.getName()
+							.equals("ch.elexis.core.data.util.DBConnection$DBType")) {
+							return Thread.currentThread().getContextClassLoader()
+								.loadClass("ch.elexis.core.common.DBConnection$DBType");
+						}
+						return null;
+					}
+				});
 			if (hConn != null) {
 				String currConnString =
 					PersistentObject.checkNull(hConn
