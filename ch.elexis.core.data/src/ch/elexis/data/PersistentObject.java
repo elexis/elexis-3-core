@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -174,8 +175,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	};
 
 	/**
-	 * the possible states of a tristate checkbox: true/checked,
-	 * false/unchecked, undefined/ "filled with a square"/"partly selected"
+	 * the possible states of a tristate checkbox: true/checked, false/unchecked, undefined/ "filled
+	 * with a square"/"partly selected"
 	 * 
 	 * @since 3.0.0
 	 */
@@ -186,7 +187,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	private static Hashtable<String, String> mapping;
 
 	static {
-		mapping = new Hashtable<String, String>();
+		mapping = new Hashtable<>();
 	}
 
 	/**
@@ -295,12 +296,12 @@ public abstract class PersistentObject implements IPersistentObject {
 		// --
 		Hashtable<Object, Object> hConn = getConnectionHashtable();
 		if (hConn != null) {
-			dbConnection.setDBDriver(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER)));
-			dbConnection.setDBUser(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER)));
-			dbConnection.setDBPassword(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS)));
-			dbConnection.setDBFlavor(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE)));
+			dbConnection.setDBDriver(checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER)));
+			dbConnection.setDBUser(checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER)));
+			dbConnection.setDBPassword(checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS)));
+			dbConnection.setDBFlavor(checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE)));
 			dbConnection
-					.setDBConnectString(checkNull((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING)));
+					.setDBConnectString(checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING)));
 		}
 		log.info("Driver is " + dbConnection.getDBDriver());
 		try {
@@ -500,6 +501,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @deprecated do not use direct JdbcLink access
 	 * @return den JdbcLink, der die Verbindung zur Datenbank enthält
 	 */
+	@Deprecated
 	public static JdbcLink getConnection() {
 		return defaultConnection.getJdbcLink();
 	}
@@ -641,6 +643,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 
 	/** Einen menschenlesbaren Identifikationsstring für dieses Objet liefern */
+	@Override
 	abstract public String getLabel();
 
 	/**
@@ -656,6 +659,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @return true wenn die Daten gültig (nicht notwendigerweise korrekt) sind
 	 */
+	@Override
 	public boolean isValid() {
 		if (state() < EXISTS) {
 			return false;
@@ -670,6 +674,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @return die ID.
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -704,6 +709,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return der code-String, aus dem mit {@link PersistentObjectFactory}
 	 *         .createFromString wieder das Objekt erstellt werden kann
 	 */
+	@Override
 	public String storeToString() {
 		return getClass().getName() + StringConstants.DOUBLECOLON + getId();
 	}
@@ -725,7 +731,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return a value between INEXISTENT and EXISTS
 	 */
 
-	 public int state(){
+	 @Override
+	public int state(){
 		if (StringTool.isNothing(getId()) || getId().contains("'")) {
 			return INVALID_ID;
 		}
@@ -758,6 +765,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         gelöscht wurde
 	 */
 
+	@Override
 	public boolean exists() {
 		return state() == EXISTS;
 	}
@@ -769,6 +777,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @return true, if the object is available in the database, false otherwise
 	 */
+	@Override
 	public boolean isAvailable() {
 		return (state() >= DELETED);
 	}
@@ -780,11 +789,12 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return an identifier that may be empty but will never be null
 	 */
 
+	@Override
 	public String getXid(final String domain) {
 		if (domain.equals(Xid.DOMAIN_ELEXIS)) {
 			return getId();
 		}
-		Query<Xid> qbe = new Query<Xid>(Xid.class);
+		Query<Xid> qbe = new Query<>(Xid.class);
 		qbe.add(Xid.FLD_OBJECT, Query.EQUALS, getId());
 		qbe.add(Xid.FLD_DOMAIN, Query.EQUALS, domain);
 		List<Xid> res = qbe.execute();
@@ -799,6 +809,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * highest quality. If no xid is given for this object, a newly created xid
 	 * of local quality will be returned
 	 */
+	@Override
 	public IXid getXid() {
 		List<IXid> res = getXids();
 		if (res.size() == 0) {
@@ -828,8 +839,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @return a List that might be empty but is never null
 	 */
+	@Override
 	public List<IXid> getXids() {
-		Query<IXid> qbe = new Query<IXid>(Xid.class);
+		Query<IXid> qbe = new Query<>(Xid.class);
 		qbe.add(Xid.FLD_OBJECT, Query.EQUALS, getId());
 		return qbe.execute();
 	}
@@ -846,6 +858,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            exists. Otherwise the method will fail if a collision occurs.
 	 * @return true on success, false on failure
 	 */
+	@Override
 	public boolean addXid(final String domain, final String domain_id, final boolean updateIfExists) {
 		Xid oldXID = Xid.findXID(this, domain);
 		if (oldXID != null) {
@@ -902,7 +915,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (ret != null) {
 			return ret;
 		}
-		ret = new ArrayList<ISticker>();
+		ret = new ArrayList<>();
 		PreparedStatement queryStickers = dbConnection.getPreparedStatement(queryStickersString);
 		try {
 			queryStickers.setString(1, id);
@@ -989,6 +1002,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @return true wenn ja.
 	 */
+	@Override
 	public boolean isDragOK() {
 		return false;
 	}
@@ -1056,6 +1070,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return Der Inhalt des Felds (kann auch null sein), oder **ERROR**, wenn
 	 *         versucht werden sollte, ein nicht existierendes Feld auszulesen
 	 */
+	@Override
 	public String get(final String field) {
 		DBConnection dbConnection = getDBConnection();
 		String key = getKey(field);
@@ -1463,7 +1478,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			sql.append(" FROM ").append(abfr[3]).append(" WHERE ").append(abfr[2]).append("=").append(getWrappedId());
 
 			Stm stm = getDBConnection().getStatement();
-			LinkedList<String[]> list = new LinkedList<String[]>();
+			LinkedList<String[]> list = new LinkedList<>();
 			try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
 				while ((rs != null) && rs.next()) {
 					String[] line = new String[extra.length + 1];
@@ -1503,6 +1518,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            Einzusetzender Wert (der vorherige Wert wird überschrieben)
 	 * @return true bei Erfolg
 	 */
+	@Override
 	public boolean set(final String field, String value) {
 		String mapped = map(field);
 		String table = getTableName();
@@ -1576,7 +1592,7 @@ public abstract class PersistentObject implements IPersistentObject {
 													// doc. Return false on
 													// errors.
 		} finally {
-			if(pst!=null) {
+			if (pst != null) {
 				try {
 					pst.close();
 				} catch (SQLException e) {}
@@ -1901,7 +1917,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public boolean undelete() {
 		if (set("deleted", "0")) {
-			Query<Xid> qbe = new Query<Xid>(Xid.class);
+			Query<Xid> qbe = new Query<>(Xid.class);
 			qbe.clear(true);
 			qbe.add(Xid.FLD_OBJECT, Query.EQUALS, getId());
 			List<Xid> xids = qbe.execute();
@@ -2014,6 +2030,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true if values were set, else <code>false</code> and exception is
 	 *         created
 	 */
+	@Override
 	public boolean get(final String[] fields, final String[] values) {
 		if ((fields == null) || (values == null) || (fields.length != values.length)) {
 			log.error("Falscher Aufruf von get(String[],String[]");
@@ -2415,6 +2432,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         lastupdate time
 	 * @since 3.1 use direct db access
 	 */
+	@Override
 	public long getLastUpdate() {
 		String result = getDBConnection()
 				.queryString("SELECT LASTUPDATE FROM " + getTableName() + " WHERE ID=" + getWrappedId());
@@ -2633,20 +2651,66 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 
 	/**
-	 * Unfold a byte array as stored by {@link #flatten(Hashtable)}
+	 * Recreate a Hashtable from a byte array as created by flatten()
 	 * 
 	 * @param flat
-	 * @return
-	 * @since 3.1
+	 *            the byte array
+	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 */
+	@SuppressWarnings("unchecked")
+	public static Hashtable<Object, Object> fold(final byte[] flat, IClassResolver resolver){
+		return (Hashtable<Object, Object>) foldObject(flat, resolver);
+	}
+	
+	/**
+	 * Recreate a Hashtable from a byte array as created by flatten()
+	 * 
+	 * @param flat
+	 *            the byte array
+	 * 
+	 * @return the original Hashtable or null if no Hashtable could be created from the array
 	 */
 	public static Object foldObject(final byte[] flat) {
+		return foldObject(flat, null);
+	}
+	
+	/**
+	 * Interface for use with {@link PersistentObject#foldObject(byte[], IClassResolver)} to map
+	 * classes on deserialisation using {@link ObjectInputStream}.
+	 *
+	 */
+	public static interface IClassResolver {
+		public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException;
+	}
+	
+	/**
+	 * Recreate a Hashtable from a byte array as created by flatten()
+	 * 
+	 * @param flat
+	 *            the byte array
+	 * @param resolver
+	 *            {@link IClassResolver} implementation used for class resolving / mapping
+	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 */
+	public static Object foldObject(final byte[] flat, IClassResolver resolver){
 		if (flat.length == 0) {
 			return null;
 		}
 		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(flat))) {
 			ZipEntry entry = zis.getNextEntry();
 			if (entry != null) {
-				try (ObjectInputStream ois = new ObjectInputStream(zis)) {
+				try (ObjectInputStream ois = new ObjectInputStream(zis) {
+					@Override
+					protected java.lang.Class<?> resolveClass(java.io.ObjectStreamClass desc)
+						throws IOException, ClassNotFoundException{
+						if (resolver != null) {
+							Class<?> resolved = resolver.resolveClass(desc);
+							return (resolved != null) ? resolved : super.resolveClass(desc);
+						} else {
+							return super.resolveClass(desc);
+						}
+					};
+				}) {
 					return ois.readObject();
 				}
 			} else {
@@ -2836,6 +2900,18 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            name of the table to check existence for
 	 */
 	public static boolean tableExists(String tableName) {
+		return tableExists(tableName, false);
+	}
+	
+	/**
+	 * 
+	 * @param tableName
+	 * @param considerViews
+	 *            consider views too in searching for existing elements
+	 * @since 3.2
+	 * @return
+	 */
+	public static boolean tableExists(String tableName, boolean considerViews){
 		int nrFounds = 0;
 		// Vergleich schaut nicht auf Gross/Klein-Schreibung, da thomas
 		// schon H2-DB gesehen hat, wo entweder alles gross oder alles klein war
@@ -2909,7 +2985,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		if (in instanceof List) {
 			List<?> inList = (List<?>) in;
-			return (String) inList.stream().map(o -> o.toString()).reduce((u, t) -> u + StringConstants.COMMA + t)
+			return inList.stream().map(o -> o.toString()).reduce((u, t) -> u + StringConstants.COMMA + t)
 					.get();
 		}
 		return "";

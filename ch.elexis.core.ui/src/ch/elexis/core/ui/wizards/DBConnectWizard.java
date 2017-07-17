@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.wizards;
 
+import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -28,6 +29,7 @@ import ch.elexis.core.data.util.DBConnection.DBType;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.PersistentObject.IClassResolver;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
@@ -61,7 +63,7 @@ public class DBConnectWizard extends Wizard {
 	}
 	
 	public List<DBConnection> getStoredConnectionList(){
-		ArrayList<DBConnection> arrayList = new ArrayList<DBConnection>(storedConnectionList);
+		ArrayList<DBConnection> arrayList = new ArrayList<>(storedConnectionList);
 		arrayList.add(0, new DBConnection());
 		return arrayList;
 	}
@@ -125,7 +127,7 @@ public class DBConnectWizard extends Wizard {
 				(List<DBConnection>) PersistentObject.foldObject(StringTool.dePrintable(storage));
 		} else {
 			// initialize the current connection (if available)
-			storedConnectionList = new ArrayList<DBConnection>();
+			storedConnectionList = new ArrayList<>();
 			String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 			if (cnt != null) {
 				Hashtable<Object, Object> hConn =
@@ -202,7 +204,23 @@ public class DBConnectWizard extends Wizard {
 	public @Nullable DBConnection getCurrentConnection(){
 		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
-			Hashtable<Object, Object> hConn = PersistentObject.fold(StringTool.dePrintable(cnt));
+			Hashtable<Object, Object> hConn =
+				PersistentObject.fold(StringTool.dePrintable(cnt), new IClassResolver() {
+					// map DBConnection classes due to moving the implementation to ch.elexis.core.common
+					@Override
+					public Class<?> resolveClass(ObjectStreamClass desc)
+						throws ClassNotFoundException{
+						if (desc.getName().equals("ch.elexis.core.data.util.DBConnection")) {
+							return Thread.currentThread().getContextClassLoader()
+								.loadClass("ch.elexis.core.common.DBConnection");
+						} else if (desc.getName()
+							.equals("ch.elexis.core.data.util.DBConnection$DBType")) {
+							return Thread.currentThread().getContextClassLoader()
+								.loadClass("ch.elexis.core.common.DBConnection$DBType");
+						}
+						return null;
+					}
+				});
 			if (hConn != null) {
 				String currConnString =
 					PersistentObject.checkNull(hConn
@@ -223,7 +241,7 @@ public class DBConnectWizard extends Wizard {
 	}
 	
 	private boolean setUsedConnection(){
-		Hashtable<String, String> h = new Hashtable<String, String>();
+		Hashtable<String, String> h = new Hashtable<>();
 		h.put(Preferences.CFG_FOLDED_CONNECTION_DRIVER, targetedConnection.rdbmsType.driverName);
 		h.put(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING, targetedConnection.connectionString);
 		h.put(Preferences.CFG_FOLDED_CONNECTION_USER, targetedConnection.username);
