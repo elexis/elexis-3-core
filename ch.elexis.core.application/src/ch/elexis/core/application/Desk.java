@@ -103,6 +103,8 @@ public class Desk implements IApplication {
 		cod.performLogin(UiDesk.getDisplay().getActiveShell());
 		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
 			// no valid user, exit (don't consider this as an error)
+			MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), Messages.LoginFailedTitle,
+				CoreHub.actUser == null ? Messages.UserContactNull : Messages.UserContactInvalid);
 			log.warn("Exit because no valid user logged-in"); //$NON-NLS-1$
 			PersistentObject.disconnect();
 			System.exit(0);

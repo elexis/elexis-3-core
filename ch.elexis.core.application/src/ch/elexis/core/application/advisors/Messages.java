@@ -36,6 +36,9 @@ public class Messages extends NLS {
 	public static String Warning_tooManyTitle;
 	public static String Warning_tooManyMessage;
 	public static String ReminderView_importantRemindersOnLogin;
+	public static String LoginFailedTitle;
+	public static String UserContactInvalid;
+	public static String UserContactNull;
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
