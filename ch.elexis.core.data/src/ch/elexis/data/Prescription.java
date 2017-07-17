@@ -570,6 +570,9 @@ public class Prescription extends PersistentObject {
 				if (n.endsWith(".")) {
 					n = n.substring(0, n.length() - 1);
 				}
+				if (n.isEmpty()) {
+					return 0.0f;
+				}
 				return Float.parseFloat(n);
 			}
 		} catch (NumberFormatException e) {
