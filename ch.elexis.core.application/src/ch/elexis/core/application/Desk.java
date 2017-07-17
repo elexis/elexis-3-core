@@ -105,7 +105,7 @@ public class Desk implements IApplication {
 			// no valid user, exit (don't consider this as an error)
 			MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), Messages.LoginFailedTitle,
 				CoreHub.actUser == null ? Messages.UserContactNull : Messages.UserContactInvalid);
-			log.warn("Exit because no valid user logged-in"); //$NON-NLS-1$
+			log.error("Exit because no valid user logged-in"); //$NON-NLS-1$
 			PersistentObject.disconnect();
 			System.exit(0);
 		}
