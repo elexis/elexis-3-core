@@ -124,14 +124,14 @@ public class DBConnectWizard extends Wizard {
 		String storage = CoreHub.localCfg.get(Preferences.CFG_STORED_JDBC_CONN, null);
 		if (storage != null) {
 			storedConnectionList =
-				(List<DBConnection>) PersistentObject.foldObject(StringTool.dePrintable(storage));
+				(List<DBConnection>) PersistentObject.foldObject(StringTool.dePrintable(storage), ccResolver);
 		} else {
 			// initialize the current connection (if available)
 			storedConnectionList = new ArrayList<>();
 			String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 			if (cnt != null) {
 				Hashtable<Object, Object> hConn =
-					PersistentObject.fold(StringTool.dePrintable(cnt));
+					PersistentObject.fold(StringTool.dePrintable(cnt), ccResolver);
 				if (hConn != null) {
 					String connectionString =
 						PersistentObject.checkNull(hConn
@@ -194,6 +194,23 @@ public class DBConnectWizard extends Wizard {
 		CoreHub.localCfg.flush();
 	}
 	
+	private final IClassResolver ccResolver = new IClassResolver() {
+		// map DBConnection classes due to moving the implementation to ch.elexis.core.common
+		@Override
+		public Class<?> resolveClass(ObjectStreamClass desc)
+			throws ClassNotFoundException{
+			if (desc.getName().equals("ch.elexis.core.data.util.DBConnection")) {
+				return Thread.currentThread().getContextClassLoader()
+					.loadClass("ch.elexis.core.common.DBConnection");
+			} else if (desc.getName()
+				.equals("ch.elexis.core.data.util.DBConnection$DBType")) {
+				return Thread.currentThread().getContextClassLoader()
+					.loadClass("ch.elexis.core.common.DBConnection$DBType");
+			}
+			return null;
+		}
+	};
+	
 	/**
 	 * retrieve the current {@link DBConnection} by parsing the value stored in the local
 	 * configuration with key {@link Preferences#CFG_FOLDED_CONNECTION}
@@ -205,22 +222,7 @@ public class DBConnectWizard extends Wizard {
 		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
 			Hashtable<Object, Object> hConn =
-				PersistentObject.fold(StringTool.dePrintable(cnt), new IClassResolver() {
-					// map DBConnection classes due to moving the implementation to ch.elexis.core.common
-					@Override
-					public Class<?> resolveClass(ObjectStreamClass desc)
-						throws ClassNotFoundException{
-						if (desc.getName().equals("ch.elexis.core.data.util.DBConnection")) {
-							return Thread.currentThread().getContextClassLoader()
-								.loadClass("ch.elexis.core.common.DBConnection");
-						} else if (desc.getName()
-							.equals("ch.elexis.core.data.util.DBConnection$DBType")) {
-							return Thread.currentThread().getContextClassLoader()
-								.loadClass("ch.elexis.core.common.DBConnection$DBType");
-						}
-						return null;
-					}
-				});
+				PersistentObject.fold(StringTool.dePrintable(cnt), ccResolver);
 			if (hConn != null) {
 				String currConnString =
 					PersistentObject.checkNull(hConn
