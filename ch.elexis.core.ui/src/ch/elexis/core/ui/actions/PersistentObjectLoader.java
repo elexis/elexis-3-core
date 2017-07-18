@@ -15,12 +15,15 @@ package ch.elexis.core.ui.actions;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.Viewer;
 
-import ch.elexis.core.ui.actions.DelayableJob.IWorker;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
+import ch.elexis.core.ui.util.viewers.ViewerConfigurer.IWorker;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 
@@ -37,20 +40,27 @@ import ch.elexis.data.Query;
  * 
  */
 public abstract class PersistentObjectLoader implements ICommonViewerContentProvider, IWorker {
+	
 	public final static String PARAM_FIELDNAMES = "fieldnames"; //$NON-NLS-1$
 	public final static String PARAM_VALUES = "fieldvalues"; //$NON-NLS-1$
 	protected CommonViewer cv;
 	protected Query<? extends PersistentObject> qbe;
 	private final LinkedList<QueryFilter> queryFilters = new LinkedList<QueryFilter>();
-	// protected IFilter viewerFilter;
-	protected DelayableJob dj;
 	protected String[] orderFields;
 	private boolean bSuspended;
+	
+	protected Job job;
+	protected HashMap<String, Object> privdata = new HashMap<String, Object>();
 	
 	public PersistentObjectLoader(CommonViewer cv, Query<? extends PersistentObject> qbe){
 		this.cv = cv;
 		this.qbe = qbe;
-		dj = new DelayableJob(Messages.PersistentObjectLoader_LoadingData, this); //$NON-NLS-1$
+		job = new Job(Messages.PersistentObjectLoader_LoadingData) {
+			@Override
+			protected IStatus run(IProgressMonitor monitor){
+				return PersistentObjectLoader.this.work(monitor, privdata);
+			}
+		};
 	}
 	
 	public Query<? extends PersistentObject> getQuery(){
@@ -81,8 +91,8 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	
 	public void dispose(){
 		stopListening();
-		if (dj != null) {
-			dj.cancel();
+		if (job != null) {
+			job.cancel();
 		}
 	}
 	
@@ -90,7 +100,7 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	 * This will be called by the CommonViewer on construction
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
-		dj.launch(0);
+		job.schedule(0);
 	}
 	
 	/**
@@ -110,8 +120,8 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 				cv.notify(CommonViewer.Message.notempty);
 			}
 		}
-		dj.setRuntimeData(PARAM_VALUES, values);
-		dj.launch(DelayableJob.DELAY_ADAPTIVE);
+		setRuntimeData(PARAM_VALUES, values);
+		job.schedule();
 	}
 	
 	/**
@@ -124,7 +134,7 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 		setOrderFields(new String[] {
 			field
 		});
-		dj.launch(20);
+		job.schedule();
 	}
 	
 	public void selected(){
@@ -153,6 +163,30 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	
 	public void setOrderFields(String... name){
 		orderFields = name;
+	}
+	
+	/**
+	 * set arbitrary data that can be retrieved at run time
+	 * 
+	 * @param key
+	 *            a unique key
+	 * @param value
+	 *            an arbitrary object
+	 */
+	public void setRuntimeData(String key, Object value){
+		privdata.put(key, value);
+	}
+	
+	/**
+	 * retrieve a formerly set data object
+	 * 
+	 * @param key
+	 *            the unique key
+	 * @return the object associated with this key. This can be null if no such object exists, or if
+	 *         null was associated with this key
+	 */
+	public Object getRuntimeData(String key){
+		return privdata.get(key);
 	}
 	
 	/**
