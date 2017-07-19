@@ -882,7 +882,8 @@
 	         id="ch.elexis.core.ui.fragment"
 	         point="org.eclipse.e4.workbench.model">
 	      <fragment
-	            uri="fragment.e4xmi">
+             apply="initial"
+             uri="fragment.e4xmi">
 	      </fragment>
 	   </extension>
 </plugin>

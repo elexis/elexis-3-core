@@ -521,6 +521,14 @@
              name="appName"
              value="Elexis OpenSource">
        </property>
+       <property
+        name="rendererFactoryUri"
+        value="platform:/plugin/ch.elexis.core.ui/ch.elexis.core.ui.renderer.ElexisRendererFactory">
+      </property>
+       <property
+             name="applicationCSS"
+             value="platform:/plugin/ch.elexis.core.ui/rsc/css/style.css">
+       </property>
     </product>
  </extension>
 </plugin>
