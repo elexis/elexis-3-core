@@ -15,17 +15,21 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.PlatformUI;
 
+@SuppressWarnings("restriction")
 public class ElexisRenderer extends StackRenderer {
 	public static final String ELEXIS_FASTVIEW_STACK = "my.minimized.parts";
 	
-	public static <T> T getService(final Class<T> clazz){
-		return PlatformUI.getWorkbench().getService(clazz);
+	@Override
+	protected void populateTabMenu(final Menu menu, MPart part){
+		super.populateTabMenu(menu, part);
+		createFastViewMenuItem(menu, part);
 	}
 	
 	private MStackElement getStackElementById(String placeholderId){
-		EModelService modelService = getService(EModelService.class);
+		EModelService eModelService = getService(EModelService.class);
 		MApplication mApplication = getService(MApplication.class);
-		MPartStack stack = (MPartStack) modelService.find(ELEXIS_FASTVIEW_STACK, mApplication);
+		
+		MPartStack stack = (MPartStack) eModelService.find(ELEXIS_FASTVIEW_STACK, mApplication);
 		
 		for (MStackElement stackElement : stack.getChildren()) {
 			if (stackElement.getElementId().equals(placeholderId)) {
@@ -35,10 +39,17 @@ public class ElexisRenderer extends StackRenderer {
 		return null;
 	}
 	
-	protected void populateTabMenu(final Menu menu, MPart part){
-		super.populateTabMenu(menu, part);
-		
+	private static <T> T getService(final Class<T> clazz){
+		return PlatformUI.getWorkbench().getService(clazz);
+	}
 
+	private void createFastViewMenuItem(final Menu menu, MPart part){
+		EModelService eModelService = getService(EModelService.class);
+		MApplication mApplication = getService(MApplication.class);
+		EPartService ePartService = getService(EPartService.class);
+		
+		MPartStack stack = (MPartStack) eModelService.find(ELEXIS_FASTVIEW_STACK, mApplication);
+		
 		// e4 doesnt support fastviews thats we need our own fastview menu
 		MenuItem menuItemClose = new MenuItem(menu, SWT.NONE);
 		menuItemClose.setText("Fast View");
@@ -48,35 +59,29 @@ public class ElexisRenderer extends StackRenderer {
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				MPart part = (MPart) menu.getData("stack_selected_part");
-				EPartService partService = getContextForParent(part).get(EPartService.class);
 				
-				if (partService.savePart(part, true)) {
+				// save and close the current view
+				if (ePartService.savePart(part, true)) {
 					String id = part.getElementId();
-					partService.hidePart(part, true);
+					ePartService.hidePart(part, true);
 					
-					EModelService modelService = getService(EModelService.class);
-					MApplication mApplication = getService(MApplication.class);
-					EPartService ePartService = getService(EPartService.class);
 					MPartStack stack =
-						(MPartStack) modelService.find(ELEXIS_FASTVIEW_STACK, mApplication);
+						(MPartStack) eModelService.find(ELEXIS_FASTVIEW_STACK, mApplication);
 					
 					if (getStackElementById("ph_" + part.getElementId()) == null) {
 						MPlaceholder placeholder =
-							modelService.createModelElement(MPlaceholder.class);
+							eModelService.createModelElement(MPlaceholder.class);
 						placeholder.setElementId("ph_" + id);
 						placeholder.setCloseable(true);
 						placeholder.getTags().add(EPartService.REMOVE_ON_HIDE_TAG);
 						placeholder.setRef(part);
-						
+
 
 						stack.getChildren().add(placeholder); // Add part to stack
-						//ePartService.activate(currentPart);
-						//ePartService.savePart(currentPart, false);
 					}
 				}
 				
 			}
 		});
-		
 	}
 }
