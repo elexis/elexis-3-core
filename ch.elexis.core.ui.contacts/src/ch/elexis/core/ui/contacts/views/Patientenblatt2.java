@@ -849,10 +849,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			Messages.Patientenblatt2_showAddress) {
 			@Override
 			public void doRun(){
-				Kontakt a = Kontakt.load(
-					((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
-				KontaktDetailDialog kdd = new KontaktDetailDialog(form.getShell(), a);
-				kdd.open();
+				if (!bLocked) {
+					Kontakt a = Kontakt.load(((BezugsKontakt) inpZusatzAdresse.getSelection())
+						.get(BezugsKontakt.OTHER_ID));
+					KontaktDetailDialog kdd = new KontaktDetailDialog(form.getShell(), a);
+					if (kdd.open() == Dialog.OK) {
+						setPatient(actPatient);
+					}
+				}
 			}
 		};
 		
@@ -1354,6 +1358,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		hHA.setEnabled(unlocked);
 		// delZA.setEnabled(!bLock);
 		removeZAAction.setEnabled(unlocked);
+		removeAdditionalAddressAction.setEnabled(unlocked);
+		showAdditionalAddressAction.setEnabled(unlocked);
 		additionalAddresses.setUnlocked(unlocked);
 		dmd.setUnlocked(false); // https://redmine.medelexis.ch/issues/4602
 		if (unlocked) {

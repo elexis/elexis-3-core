@@ -12,6 +12,7 @@
 
 package ch.elexis.data;
 
+import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.core.types.RelationshipType;
 
 public class BezugsKontakt extends PersistentObject {
@@ -59,11 +60,24 @@ public class BezugsKontakt extends PersistentObject {
 	public String getLabel(){
 		Kontakt k = Kontakt.load(get(OTHER_ID));
 		if (k.isValid()) {
-			return get(RELATION) + ": " + k.getLabel(); //$NON-NLS-1$
+			String rel = get(RELATION);
+			if (rel.isEmpty()) {
+				rel = get(FLD_OTHER_RTYPE);
+				if (!rel.isEmpty()) {
+					try {
+						RelationshipType type = RelationshipType.get(Integer.parseInt(rel));
+						if (type != null) {
+							rel = LocalizeUtil.getLocaleText(type);
+						}
+					} catch (Exception e) {
+						
+					}
+				}
+			}
+			return rel + ": " + k.getLabel(); //$NON-NLS-1$
 		} else {
 			return Messages.BezugsKontakt_ContactDoesntExist;
 		}
-		
 	}
 	
 	public static BezugsKontakt load(String id){
