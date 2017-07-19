@@ -13,6 +13,7 @@
 package ch.elexis.core.ui.dialogs;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -47,6 +48,7 @@ public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
 	
 	private final ZusatzAdresseDTO zusatzAdresseDTO;
 	private final ZusatzAdresse zusatzAdresse;
+	private boolean locked = false;
 
 	public ZusatzAdresseEingabeDialog(Shell parentShell, Kontakt kontakt){
 		this(parentShell, kontakt, null);
@@ -61,12 +63,25 @@ public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
 		this.zusatzAdresseDTO.setKontaktId(kontakt.getId());
 	}
 	
+	public ZusatzAdresseEingabeDialog(Shell parentShell, Kontakt kontakt,
+		ZusatzAdresse paramZusatzadresse, boolean locked){
+		this(parentShell, kontakt, paramZusatzadresse);
+		this.locked = locked;
+	}
+	
 	@Override
 	public void create(){
 		super.create();
 		setTitle(Messages.AnschriftEingabeDialog_enterAddress); //$NON-NLS-1$
 		setMessage(Messages.AnschriftEingabeDialog_enterData); //$NON-NLS-1$
 		getShell().setText(Messages.AnschriftEingabeDialog_postalAddress); //$NON-NLS-1$
+		
+		if (locked) {
+			Button btnOk = getButton(IDialogConstants.OK_ID);
+			if (btnOk != null) {
+				btnOk.setEnabled(false);
+			}
+		}
 	}
 	
 	@Override

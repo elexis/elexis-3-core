@@ -150,7 +150,6 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 		additionalAddresses.setUnlocked(unlocked);
 		removeAdditionalAddressAction.setEnabled(unlocked);
 		removeZAAction.setEnabled(unlocked);
-		showAdditionalAddressAction.setEnabled(unlocked);
 	}
 
 	void setPatient(Patient p) {
@@ -542,13 +541,11 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 				Messages.Patientenblatt2_showAddress) {
 			@Override
 			public void doRun() {
-				if (!bLocked) {
-					Kontakt a = Kontakt.load(((BezugsKontakt) inpZusatzAdresse.getSelection())
-						.get(BezugsKontakt.OTHER_ID));
-					KontaktDetailDialog kdd = new KontaktDetailDialog(scrldfrm.getShell(), a);
-					if (kdd.open() == Dialog.OK) {
-						setPatient(ElexisEventDispatcher.getSelectedPatient());
-					}
+				Kontakt a = Kontakt.load(
+					((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
+				KontaktDetailDialog kdd = new KontaktDetailDialog(scrldfrm.getShell(), a, bLocked);
+				if (kdd.open() == Dialog.OK) {
+					setPatient(ElexisEventDispatcher.getSelectedPatient());
 				}
 			}
 		};
@@ -571,7 +568,8 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 				Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 				ZusatzAdresse zusatzAdresse = (ZusatzAdresse) additionalAddresses.getSelection();
 				ZusatzAdresseEingabeDialog aed =
-					new ZusatzAdresseEingabeDialog(scrldfrm.getShell(), actPatient, zusatzAdresse);
+					new ZusatzAdresseEingabeDialog(scrldfrm.getShell(), actPatient, zusatzAdresse,
+						bLocked);
 				if (aed.open() == Dialog.OK) {
 					setPatient(actPatient);
 				}
