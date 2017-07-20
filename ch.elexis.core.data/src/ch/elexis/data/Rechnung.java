@@ -655,7 +655,7 @@ public class Rechnung extends PersistentObject {
 		return false;
 	}
 	
-	private Money getRemindersBetrag(){
+	public Money getRemindersBetrag(){
 		Money ret = new Money(0);
 		for (Zahlung zahlung : getZahlungen()) {
 			String comment = zahlung.getBemerkung();
