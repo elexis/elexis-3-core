@@ -49,39 +49,40 @@ public class ElexisRenderer extends StackRenderer {
 		EPartService ePartService = getService(EPartService.class);
 		
 		MPartStack stack = (MPartStack) eModelService.find(ELEXIS_FASTVIEW_STACK, mApplication);
-		
-		// e4 doesnt support fastviews thats we need our own fastview menu
-		MenuItem menuItemClose = new MenuItem(menu, SWT.NONE);
-		menuItemClose.setText("Fast View");
-		
-		menuItemClose.setEnabled(getStackElementById("ph_" + part.getElementId()) == null);
-		menuItemClose.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				MPart part = (MPart) menu.getData("stack_selected_part");
-				
-				// save and close the current view
-				if (ePartService.savePart(part, true)) {
-					String id = part.getElementId();
-					ePartService.hidePart(part, true);
+		if (stack != null) {
+			// e4 doesnt support fastviews thats we need our own fastview menu
+			MenuItem menuItemClose = new MenuItem(menu, SWT.NONE);
+			menuItemClose.setText("Fast View");
+			
+			menuItemClose.setEnabled(getStackElementById("ph_" + part.getElementId()) == null);
+			menuItemClose.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					MPart part = (MPart) menu.getData("stack_selected_part");
 					
-					MPartStack stack =
-						(MPartStack) eModelService.find(ELEXIS_FASTVIEW_STACK, mApplication);
-					
-					if (getStackElementById("ph_" + part.getElementId()) == null) {
-						MPlaceholder placeholder =
-							eModelService.createModelElement(MPlaceholder.class);
-						placeholder.setElementId("ph_" + id);
-						placeholder.setCloseable(true);
-						placeholder.getTags().add(EPartService.REMOVE_ON_HIDE_TAG);
-						placeholder.setRef(part);
+					// save and close the current view
+					if (ePartService.savePart(part, true)) {
+						String id = part.getElementId();
+						ePartService.hidePart(part, true);
+						
+						MPartStack stack =
+							(MPartStack) eModelService.find(ELEXIS_FASTVIEW_STACK, mApplication);
+						
+						if (getStackElementById("ph_" + part.getElementId()) == null) {
+							MPlaceholder placeholder =
+								eModelService.createModelElement(MPlaceholder.class);
+							placeholder.setElementId("ph_" + id);
+							placeholder.setCloseable(true);
+							placeholder.getTags().add(EPartService.REMOVE_ON_HIDE_TAG);
+							placeholder.setRef(part);
 
 
-						stack.getChildren().add(placeholder); // Add part to stack
+							stack.getChildren().add(placeholder); // Add part to stack
+						}
 					}
+					
 				}
-				
-			}
-		});
+			});
+		}
 	}
 }
