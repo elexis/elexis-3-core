@@ -25,15 +25,16 @@ public class ElexisRenderer extends StackRenderer {
 		createFastViewMenuItem(menu, part);
 	}
 	
-	private MStackElement getStackElementById(String placeholderId){
+	private MStackElement getStackChildElementById(String placeholderId){
 		EModelService eModelService = getService(EModelService.class);
 		MApplication mApplication = getService(MApplication.class);
 		
 		MPartStack stack = (MPartStack) eModelService.find(ELEXIS_FASTVIEW_STACK, mApplication);
-		
-		for (MStackElement stackElement : stack.getChildren()) {
-			if (stackElement.getElementId().equals(placeholderId)) {
-				return stackElement;
+		if (stack != null) {
+			for (MStackElement stackElement : stack.getChildren()) {
+				if (stackElement.getElementId().equals(placeholderId)) {
+					return stackElement;
+				}
 			}
 		}
 		return null;
@@ -54,7 +55,7 @@ public class ElexisRenderer extends StackRenderer {
 			MenuItem menuItemClose = new MenuItem(menu, SWT.NONE);
 			menuItemClose.setText("Fast View");
 			
-			menuItemClose.setEnabled(getStackElementById("ph_" + part.getElementId()) == null);
+			menuItemClose.setEnabled(getStackChildElementById("ph_" + part.getElementId()) == null);
 			menuItemClose.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
@@ -68,7 +69,7 @@ public class ElexisRenderer extends StackRenderer {
 						MPartStack stack =
 							(MPartStack) eModelService.find(ELEXIS_FASTVIEW_STACK, mApplication);
 						
-						if (getStackElementById("ph_" + part.getElementId()) == null) {
+						if (getStackChildElementById("ph_" + part.getElementId()) == null) {
 							MPlaceholder placeholder =
 								eModelService.createModelElement(MPlaceholder.class);
 							placeholder.setElementId("ph_" + id);
