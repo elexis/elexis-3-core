@@ -1,11 +1,14 @@
 package ch.elexis.core.ui.processor;
 
+import java.util.List;
+
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.SideValue;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 
@@ -25,6 +28,12 @@ public class ElexisProcessor {
 		// no stack found create one
 		if (stack == null) {
 			MTrimmedWindow window = (MTrimmedWindow) eModelService.find("IDEWindow", mApplication);
+			if (window == null) {
+				List<MWindow> windows = mApplication.getChildren();
+				if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
+					window = (MTrimmedWindow) windows.get(0);
+				}
+			}
 			if (window != null) {
 				MPartStack mPartStack = eModelService.createModelElement(MPartStack.class);
 				mPartStack.setElementId(ElexisRenderer.ELEXIS_FASTVIEW_STACK);
@@ -50,7 +59,5 @@ public class ElexisProcessor {
 				mTrimBar.setToBeRendered(true);
 			}
 		}
-
-		
 	}
 }
