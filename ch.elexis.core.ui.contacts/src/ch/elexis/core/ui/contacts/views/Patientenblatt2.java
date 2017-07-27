@@ -820,14 +820,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		showAdditionalAddressAction = new Action(Messages.Patientenblatt2_showAddress) {
 			@Override
 			public void run(){
-				if (!bLocked) {
-					ZusatzAdresse zusatzAdresse =
-						(ZusatzAdresse) additionalAddresses.getSelection();
-					ZusatzAdresseEingabeDialog aed =
-						new ZusatzAdresseEingabeDialog(form.getShell(), actPatient, zusatzAdresse);
-					if (aed.open() == Dialog.OK) {
-						setPatient(actPatient);
-					}
+				ZusatzAdresse zusatzAdresse = (ZusatzAdresse) additionalAddresses.getSelection();
+				ZusatzAdresseEingabeDialog aed = new ZusatzAdresseEingabeDialog(form.getShell(),
+					actPatient, zusatzAdresse, bLocked);
+				if (aed.open() == Dialog.OK) {
+					setPatient(actPatient);
 				}
 			}
 		};
@@ -851,8 +848,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			public void doRun(){
 				Kontakt a = Kontakt.load(
 					((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
-				KontaktDetailDialog kdd = new KontaktDetailDialog(form.getShell(), a);
-				kdd.open();
+				KontaktDetailDialog kdd = new KontaktDetailDialog(form.getShell(), a, bLocked);
+				if (kdd.open() == Dialog.OK) {
+					setPatient(actPatient);
+				}
 			}
 		};
 		
@@ -1354,6 +1353,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		hHA.setEnabled(unlocked);
 		// delZA.setEnabled(!bLock);
 		removeZAAction.setEnabled(unlocked);
+		removeAdditionalAddressAction.setEnabled(unlocked);
 		additionalAddresses.setUnlocked(unlocked);
 		dmd.setUnlocked(false); // https://redmine.medelexis.ch/issues/4602
 		if (unlocked) {
