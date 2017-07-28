@@ -78,6 +78,12 @@ public class ModelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.INPUT_DATA: {
+				InputData inputData = (InputData)theEObject;
+				T result = caseInputData(inputData);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.INPUT_DATA_NUMERIC: {
 				InputDataNumeric inputDataNumeric = (InputDataNumeric)theEObject;
 				T result = caseInputDataNumeric(inputDataNumeric);
@@ -99,9 +105,10 @@ public class ModelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.INPUT_DATA: {
-				InputData inputData = (InputData)theEObject;
-				T result = caseInputData(inputData);
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT: {
+				InputDataGroupComponent inputDataGroupComponent = (InputDataGroupComponent)theEObject;
+				T result = caseInputDataGroupComponent(inputDataGroupComponent);
+				if (result == null) result = caseInputData(inputDataGroupComponent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -187,6 +194,21 @@ public class ModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseInputDataGroup(InputDataGroup object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Input Data Group Component</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Input Data Group Component</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInputDataGroupComponent(InputDataGroupComponent object) {
 		return null;
 	}
 

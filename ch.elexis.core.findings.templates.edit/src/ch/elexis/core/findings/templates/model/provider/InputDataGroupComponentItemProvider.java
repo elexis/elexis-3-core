@@ -3,12 +3,21 @@
 package ch.elexis.core.findings.templates.model.provider;
 
 
+import ch.elexis.core.findings.templates.model.DataType;
+import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
+import ch.elexis.core.findings.templates.model.ModelFactory;
+import ch.elexis.core.findings.templates.model.ModelPackage;
+
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.common.util.ResourceLocator;
+
+import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -21,17 +30,13 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
-import ch.elexis.core.findings.templates.model.FindingsTemplate;
-import ch.elexis.core.findings.templates.model.ModelFactory;
-import ch.elexis.core.findings.templates.model.ModelPackage;
-
 /**
- * This is the item provider adapter for a {@link ch.elexis.core.findings.templates.model.FindingsTemplate} object.
+ * This is the item provider adapter for a {@link ch.elexis.core.findings.templates.model.InputDataGroupComponent} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class FindingsTemplateItemProvider 
+public class InputDataGroupComponentItemProvider 
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -46,7 +51,7 @@ public class FindingsTemplateItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FindingsTemplateItemProvider(AdapterFactory adapterFactory) {
+	public InputDataGroupComponentItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -61,28 +66,26 @@ public class FindingsTemplateItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addTypePropertyDescriptor(object);
-			addTitlePropertyDescriptor(object);
-			addCodePropertyDescriptor(object);
+			addDataTypePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Type feature.
+	 * This adds a property descriptor for the Data Type feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addTypePropertyDescriptor(Object object) {
+	protected void addDataTypePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_FindingsTemplate_type_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_FindingsTemplate_type_feature", "_UI_FindingsTemplate_type"),
-				 ModelPackage.Literals.FINDINGS_TEMPLATE__TYPE,
-				 true,
+				 getString("_UI_InputDataGroupComponent_dataType_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_InputDataGroupComponent_dataType_feature", "_UI_InputDataGroupComponent_type"),
+				 ModelPackage.Literals.INPUT_DATA_GROUP_COMPONENT__DATA_TYPE,
+				 false,
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
@@ -91,60 +94,59 @@ public class FindingsTemplateItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Code feature.
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addCodePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_FindingsTemplate_code_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_FindingsTemplate_code_feature", "_UI_FindingsTemplate_type"),
-				 ModelPackage.Literals.FINDINGS_TEMPLATE__CODE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(ModelPackage.Literals.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
+		}
+		return childrenFeatures;
 	}
 
 	/**
-	 * This adds a property descriptor for the Title feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addTitlePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_FindingsTemplate_title_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_FindingsTemplate_title_feature", "_UI_FindingsTemplate_type"),
-				 ModelPackage.Literals.FINDINGS_TEMPLATE__TITLE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated NOT
+	 * This returns InputDataGroupComponent.gif.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object getImage(Object object) {
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/InputDataGroupComponent"));
+	}
+
+	/**
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((FindingsTemplate)object).getTitle();
+		DataType labelValue = ((InputDataGroupComponent)object).getDataType();
+		String label = labelValue == null ? null : labelValue.toString();
 		return label == null || label.length() == 0 ?
-				"" : label;
+			getString("_UI_InputDataGroupComponent_type") :
+			getString("_UI_InputDataGroupComponent_type") + " " + label;
 	}
 	
 
@@ -159,12 +161,12 @@ public class FindingsTemplateItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(FindingsTemplate.class)) {
-			case ModelPackage.FINDINGS_TEMPLATE__TYPE:
-			case ModelPackage.FINDINGS_TEMPLATE__TITLE:
-			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
-			case ModelPackage.FINDINGS_TEMPLATE__CODE:
+		switch (notification.getFeatureID(InputDataGroupComponent.class)) {
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__DATA_TYPE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -183,23 +185,8 @@ public class FindingsTemplateItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(ModelPackage.Literals.FINDINGS_TEMPLATE__INPUT_DATA,
-				 ModelFactory.eINSTANCE.createInputDataNumeric()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ModelPackage.Literals.FINDINGS_TEMPLATE__INPUT_DATA,
-				 ModelFactory.eINSTANCE.createInputDataText()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ModelPackage.Literals.FINDINGS_TEMPLATE__INPUT_DATA,
-				 ModelFactory.eINSTANCE.createInputDataGroup()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ModelPackage.Literals.FINDINGS_TEMPLATE__INPUT_DATA,
-				 ModelFactory.eINSTANCE.createInputDataGroupComponent()));
+				(ModelPackage.Literals.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES,
+				 ModelFactory.eINSTANCE.createFindingsTemplate()));
 	}
 
 	/**

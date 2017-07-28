@@ -189,6 +189,29 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory impleme
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link ch.elexis.core.findings.templates.model.InputDataGroupComponent} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected InputDataGroupComponentItemProvider inputDataGroupComponentItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link ch.elexis.core.findings.templates.model.InputDataGroupComponent}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createInputDataGroupComponentAdapter() {
+		if (inputDataGroupComponentItemProvider == null) {
+			inputDataGroupComponentItemProvider = new InputDataGroupComponentItemProvider(this);
+		}
+
+		return inputDataGroupComponentItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link ch.elexis.core.findings.templates.model.Coding} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -315,6 +338,7 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory impleme
 		if (inputDataNumericItemProvider != null) inputDataNumericItemProvider.dispose();
 		if (inputDataTextItemProvider != null) inputDataTextItemProvider.dispose();
 		if (inputDataGroupItemProvider != null) inputDataGroupItemProvider.dispose();
+		if (inputDataGroupComponentItemProvider != null) inputDataGroupComponentItemProvider.dispose();
 		if (codingItemProvider != null) codingItemProvider.dispose();
 	}
 

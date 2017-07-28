@@ -76,6 +76,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createFindingsTemplateAdapter();
 			}
 			@Override
+			public Adapter caseInputData(InputData object) {
+				return createInputDataAdapter();
+			}
+			@Override
 			public Adapter caseInputDataNumeric(InputDataNumeric object) {
 				return createInputDataNumericAdapter();
 			}
@@ -88,8 +92,8 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createInputDataGroupAdapter();
 			}
 			@Override
-			public Adapter caseInputData(InputData object) {
-				return createInputDataAdapter();
+			public Adapter caseInputDataGroupComponent(InputDataGroupComponent object) {
+				return createInputDataGroupComponentAdapter();
 			}
 			@Override
 			public Adapter caseCoding(Coding object) {
@@ -182,6 +186,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createInputDataGroupAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.findings.templates.model.InputDataGroupComponent <em>Input Data Group Component</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.findings.templates.model.InputDataGroupComponent
+	 * @generated
+	 */
+	public Adapter createInputDataGroupComponentAdapter() {
 		return null;
 	}
 

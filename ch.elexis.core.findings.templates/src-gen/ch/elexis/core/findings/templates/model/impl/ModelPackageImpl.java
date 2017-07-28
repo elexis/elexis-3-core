@@ -8,6 +8,7 @@ import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputData;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
+import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.InputDataNumeric;
 import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.findings.templates.model.ModelFactory;
@@ -63,6 +64,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass inputDataGroupEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass inputDataGroupComponentEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -320,6 +328,33 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getInputDataGroupComponent() {
+		return inputDataGroupComponentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getInputDataGroupComponent_FindingsTemplates() {
+		return (EReference)inputDataGroupComponentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getInputDataGroupComponent_DataType() {
+		return (EAttribute)inputDataGroupComponentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getInputData() {
 		return inputDataEClass;
 	}
@@ -417,6 +452,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(findingsTemplateEClass, FINDINGS_TEMPLATE__INPUT_DATA);
 		createEReference(findingsTemplateEClass, FINDINGS_TEMPLATE__CODE);
 
+		inputDataEClass = createEClass(INPUT_DATA);
+
 		inputDataNumericEClass = createEClass(INPUT_DATA_NUMERIC);
 		createEAttribute(inputDataNumericEClass, INPUT_DATA_NUMERIC__UNIT);
 		createEAttribute(inputDataNumericEClass, INPUT_DATA_NUMERIC__DECIMAL_PLACE);
@@ -429,7 +466,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(inputDataGroupEClass, INPUT_DATA_GROUP__FINDINGS_TEMPLATES);
 		createEAttribute(inputDataGroupEClass, INPUT_DATA_GROUP__DATA_TYPE);
 
-		inputDataEClass = createEClass(INPUT_DATA);
+		inputDataGroupComponentEClass = createEClass(INPUT_DATA_GROUP_COMPONENT);
+		createEReference(inputDataGroupComponentEClass, INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
+		createEAttribute(inputDataGroupComponentEClass, INPUT_DATA_GROUP_COMPONENT__DATA_TYPE);
 
 		codingEClass = createEClass(CODING);
 		createEAttribute(codingEClass, CODING__SYSTEM);
@@ -472,6 +511,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		inputDataNumericEClass.getESuperTypes().add(this.getInputData());
 		inputDataTextEClass.getESuperTypes().add(this.getInputData());
 		inputDataGroupEClass.getESuperTypes().add(this.getInputData());
+		inputDataGroupComponentEClass.getESuperTypes().add(this.getInputData());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(findingsTemplatesEClass, FindingsTemplates.class, "FindingsTemplates", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -485,6 +525,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getFindingsTemplate_InputData(), this.getInputData(), null, "inputData", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFindingsTemplate_Code(), this.getCoding(), null, "code", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(inputDataEClass, InputData.class, "InputData", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		initEClass(inputDataNumericEClass, InputDataNumeric.class, "InputDataNumeric", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getInputDataNumeric_Unit(), ecorePackage.getEString(), "unit", null, 0, 1, InputDataNumeric.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getInputDataNumeric_DecimalPlace(), ecorePackage.getEInt(), "decimalPlace", null, 0, 1, InputDataNumeric.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -495,9 +537,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(inputDataGroupEClass, InputDataGroup.class, "InputDataGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getInputDataGroup_FindingsTemplates(), this.getFindingsTemplate(), null, "findingsTemplates", null, 0, -1, InputDataGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getInputDataGroup_DataType(), this.getDataType(), "dataType", "GROUP_COMPONENT", 0, 1, InputDataGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getInputDataGroup_DataType(), this.getDataType(), "dataType", "GROUP", 0, 1, InputDataGroup.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(inputDataEClass, InputData.class, "InputData", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(inputDataGroupComponentEClass, InputDataGroupComponent.class, "InputDataGroupComponent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getInputDataGroupComponent_FindingsTemplates(), this.getFindingsTemplate(), null, "findingsTemplates", null, 0, -1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getInputDataGroupComponent_DataType(), this.getDataType(), "dataType", "GROUP_COMPONENT", 0, 1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(codingEClass, Coding.class, "Coding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCoding_System(), ecorePackage.getEString(), "system", null, 0, 1, Coding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -508,7 +552,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEEnum(dataTypeEEnum, DataType.class, "DataType");
 		addEEnumLiteral(dataTypeEEnum, DataType.NUMERIC);
 		addEEnumLiteral(dataTypeEEnum, DataType.TEXT);
-		addEEnumLiteral(dataTypeEEnum, DataType.GROUP_REFERENCE);
+		addEEnumLiteral(dataTypeEEnum, DataType.GROUP);
 		addEEnumLiteral(dataTypeEEnum, DataType.GROUP_COMPONENT);
 
 		initEEnum(typeEEnum, Type.class, "Type");

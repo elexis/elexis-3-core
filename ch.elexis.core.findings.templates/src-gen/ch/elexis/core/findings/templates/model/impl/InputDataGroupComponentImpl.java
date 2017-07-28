@@ -4,34 +4,40 @@ package ch.elexis.core.findings.templates.model.impl;
 
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
-import ch.elexis.core.findings.templates.model.InputDataGroup;
+import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 
 import java.util.Collection;
+
+import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Input Data Group</b></em>'.
+ * An implementation of the model object '<em><b>Input Data Group Component</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupImpl#getFindingsTemplates <em>Findings Templates</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupImpl#getDataType <em>Data Type</em>}</li>
+ *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl#getFindingsTemplates <em>Findings Templates</em>}</li>
+ *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl#getDataType <em>Data Type</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements InputDataGroup {
+public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container implements InputDataGroupComponent {
 	/**
-	 * The cached value of the '{@link #getFindingsTemplates() <em>Findings Templates</em>}' reference list.
+	 * The cached value of the '{@link #getFindingsTemplates() <em>Findings Templates</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getFindingsTemplates()
@@ -48,7 +54,7 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected static final DataType DATA_TYPE_EDEFAULT = DataType.GROUP;
+	protected static final DataType DATA_TYPE_EDEFAULT = DataType.GROUP_COMPONENT;
 
 	/**
 	 * The cached value of the '{@link #getDataType() <em>Data Type</em>}' attribute.
@@ -65,7 +71,7 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected InputDataGroupImpl() {
+	protected InputDataGroupComponentImpl() {
 		super();
 	}
 
@@ -76,7 +82,7 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ModelPackage.Literals.INPUT_DATA_GROUP;
+		return ModelPackage.Literals.INPUT_DATA_GROUP_COMPONENT;
 	}
 
 	/**
@@ -86,7 +92,7 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	 */
 	public EList<FindingsTemplate> getFindingsTemplates() {
 		if (findingsTemplates == null) {
-			findingsTemplates = new EObjectResolvingEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.INPUT_DATA_GROUP__FINDINGS_TEMPLATES);
+			findingsTemplates = new EObjectContainmentEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
 		}
 		return findingsTemplates;
 	}
@@ -106,11 +112,25 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
+				return ((InternalEList<?>)getFindingsTemplates()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_GROUP__FINDINGS_TEMPLATES:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
 				return getFindingsTemplates();
-			case ModelPackage.INPUT_DATA_GROUP__DATA_TYPE:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__DATA_TYPE:
 				return getDataType();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -125,7 +145,7 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_GROUP__FINDINGS_TEMPLATES:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
 				getFindingsTemplates().clear();
 				getFindingsTemplates().addAll((Collection<? extends FindingsTemplate>)newValue);
 				return;
@@ -141,7 +161,7 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_GROUP__FINDINGS_TEMPLATES:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
 				getFindingsTemplates().clear();
 				return;
 		}
@@ -156,9 +176,9 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_GROUP__FINDINGS_TEMPLATES:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
 				return findingsTemplates != null && !findingsTemplates.isEmpty();
-			case ModelPackage.INPUT_DATA_GROUP__DATA_TYPE:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__DATA_TYPE:
 				return dataType != DATA_TYPE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
@@ -180,4 +200,4 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 		return result.toString();
 	}
 
-} //InputDataGroupImpl
+} //InputDataGroupComponentImpl

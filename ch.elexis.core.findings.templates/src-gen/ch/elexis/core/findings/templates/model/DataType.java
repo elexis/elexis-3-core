@@ -39,14 +39,14 @@ public enum DataType implements Enumerator {
 	TEXT(100, "TEXT", "TEXT"),
 
 	/**
-	 * The '<em><b>GROUP REFERENCE</b></em>' literal object.
+	 * The '<em><b>GROUP</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #GROUP_REFERENCE_VALUE
+	 * @see #GROUP_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	GROUP_REFERENCE(200, "GROUP_REFERENCE", "GROUP_REFERENCE"), /**
+	GROUP(200, "GROUP", "GROUP"), /**
 	 * The '<em><b>GROUP COMPONENT</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -87,19 +87,19 @@ public enum DataType implements Enumerator {
 	public static final int TEXT_VALUE = 100;
 
 	/**
-	 * The '<em><b>GROUP REFERENCE</b></em>' literal value.
+	 * The '<em><b>GROUP</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>GROUP REFERENCE</b></em>' literal object isn't clear,
+	 * If the meaning of '<em><b>GROUP</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @see #GROUP_REFERENCE
+	 * @see #GROUP
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int GROUP_REFERENCE_VALUE = 200;
+	public static final int GROUP_VALUE = 200;
 
 	/**
 	 * The '<em><b>GROUP COMPONENT</b></em>' literal value.
@@ -126,7 +126,7 @@ public enum DataType implements Enumerator {
 		new DataType[] {
 			NUMERIC,
 			TEXT,
-			GROUP_REFERENCE,
+			GROUP,
 			GROUP_COMPONENT,
 		};
 
@@ -186,7 +186,7 @@ public enum DataType implements Enumerator {
 		switch (value) {
 			case NUMERIC_VALUE: return NUMERIC;
 			case TEXT_VALUE: return TEXT;
-			case GROUP_REFERENCE_VALUE: return GROUP_REFERENCE;
+			case GROUP_VALUE: return GROUP;
 			case GROUP_COMPONENT_VALUE: return GROUP_COMPONENT;
 		}
 		return null;

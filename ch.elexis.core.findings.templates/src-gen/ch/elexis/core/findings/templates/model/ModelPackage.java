@@ -184,7 +184,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getInputData()
 	 * @generated
 	 */
-	int INPUT_DATA = 5;
+	int INPUT_DATA = 2;
 
 	/**
 	 * The number of structural features of the '<em>Input Data</em>' class.
@@ -212,7 +212,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getInputDataNumeric()
 	 * @generated
 	 */
-	int INPUT_DATA_NUMERIC = 2;
+	int INPUT_DATA_NUMERIC = 3;
 
 	/**
 	 * The feature id for the '<em><b>Unit</b></em>' attribute.
@@ -267,7 +267,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getInputDataText()
 	 * @generated
 	 */
-	int INPUT_DATA_TEXT = 3;
+	int INPUT_DATA_TEXT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Data Type</b></em>' attribute.
@@ -304,7 +304,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getInputDataGroup()
 	 * @generated
 	 */
-	int INPUT_DATA_GROUP = 4;
+	int INPUT_DATA_GROUP = 5;
 
 	/**
 	 * The feature id for the '<em><b>Findings Templates</b></em>' reference list.
@@ -343,6 +343,52 @@ public interface ModelPackage extends EPackage {
 	int INPUT_DATA_GROUP_OPERATION_COUNT = INPUT_DATA_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl <em>Input Data Group Component</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl
+	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getInputDataGroupComponent()
+	 * @generated
+	 */
+	int INPUT_DATA_GROUP_COMPONENT = 6;
+
+	/**
+	 * The feature id for the '<em><b>Findings Templates</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES = INPUT_DATA_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Data Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_GROUP_COMPONENT__DATA_TYPE = INPUT_DATA_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Input Data Group Component</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_GROUP_COMPONENT_FEATURE_COUNT = INPUT_DATA_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>Input Data Group Component</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_GROUP_COMPONENT_OPERATION_COUNT = INPUT_DATA_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.impl.CodingImpl <em>Coding</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -350,7 +396,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getCoding()
 	 * @generated
 	 */
-	int CODING = 6;
+	int CODING = 7;
 
 	/**
 	 * The feature id for the '<em><b>System</b></em>' attribute.
@@ -405,7 +451,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getDataType()
 	 * @generated
 	 */
-	int DATA_TYPE = 7;
+	int DATA_TYPE = 8;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.Type <em>Type</em>}' enum.
@@ -415,7 +461,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getType()
 	 * @generated
 	 */
-	int TYPE = 8;
+	int TYPE = 9;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.FindingsTemplates <em>Findings Templates</em>}'.
@@ -609,6 +655,38 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getInputDataGroup_DataType();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.InputDataGroupComponent <em>Input Data Group Component</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Input Data Group Component</em>'.
+	 * @see ch.elexis.core.findings.templates.model.InputDataGroupComponent
+	 * @generated
+	 */
+	EClass getInputDataGroupComponent();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ch.elexis.core.findings.templates.model.InputDataGroupComponent#getFindingsTemplates <em>Findings Templates</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Findings Templates</em>'.
+	 * @see ch.elexis.core.findings.templates.model.InputDataGroupComponent#getFindingsTemplates()
+	 * @see #getInputDataGroupComponent()
+	 * @generated
+	 */
+	EReference getInputDataGroupComponent_FindingsTemplates();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.InputDataGroupComponent#getDataType <em>Data Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Data Type</em>'.
+	 * @see ch.elexis.core.findings.templates.model.InputDataGroupComponent#getDataType()
+	 * @see #getInputDataGroupComponent()
+	 * @generated
+	 */
+	EAttribute getInputDataGroupComponent_DataType();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.InputData <em>Input Data</em>}'.
@@ -859,6 +937,32 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute INPUT_DATA_GROUP__DATA_TYPE = eINSTANCE.getInputDataGroup_DataType();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl <em>Input Data Group Component</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl
+		 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getInputDataGroupComponent()
+		 * @generated
+		 */
+		EClass INPUT_DATA_GROUP_COMPONENT = eINSTANCE.getInputDataGroupComponent();
+
+		/**
+		 * The meta object literal for the '<em><b>Findings Templates</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES = eINSTANCE.getInputDataGroupComponent_FindingsTemplates();
+
+		/**
+		 * The meta object literal for the '<em><b>Data Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INPUT_DATA_GROUP_COMPONENT__DATA_TYPE = eINSTANCE.getInputDataGroupComponent_DataType();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.InputData <em>Input Data</em>}' class.

@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
+import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.InputDataNumeric;
 import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.findings.templates.model.ModelFactory;
@@ -175,14 +176,62 @@ public class FindingsDetailComposite extends Composite {
 			c.dispose();
 		}
 		switch (dataType) {
-		case GROUP_COMPONENT:
-		case GROUP_REFERENCE:
+		case GROUP:
 			InputDataGroup inputDataGroup = selection.getInputData() instanceof InputDataGroup
 					? (InputDataGroup) selection.getInputData()
 					: ModelFactory.eINSTANCE.createInputDataGroup();
-			inputDataGroup.setDataType(dataType);
+
+			
+			Label lblGroup = new Label(compositeInputData, SWT.NONE);
+			lblGroup.setText("");
+			lblGroup.setLayoutData(minGd);
+			Composite c = new Composite(compositeInputData, SWT.NONE);
+			c.setLayout(new GridLayout(2, false));
+			c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+			Label lblGrouplist = new Label(c, SWT.NONE);
+			lblGrouplist.setText("Nicht definiert");
+			
+			Button button = new Button(c, SWT.PUSH);
+			button.setText("ändern..");
+			button.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					
+
+				}
+			});
+			
 			selection.setInputData(inputDataGroup);
+			compositeInputData.layout();
 			break;
+		case GROUP_COMPONENT:
+			InputDataGroupComponent inputDataGroupComponent =
+				selection.getInputData() instanceof InputDataGroupComponent
+						? (InputDataGroupComponent) selection.getInputData()
+						: ModelFactory.eINSTANCE.createInputDataGroupComponent();
+			
+			Label lblGroupComponent = new Label(compositeInputData, SWT.NONE);
+			lblGroupComponent.setText("");
+			lblGroupComponent.setLayoutData(minGd);
+			Composite cGroupComponent = new Composite(compositeInputData, SWT.NONE);
+			cGroupComponent.setLayout(new GridLayout(2, false));
+			cGroupComponent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+			Label lblGroupComponentlist = new Label(cGroupComponent, SWT.NONE);
+			lblGroupComponentlist.setText("Nicht definiert");
+			
+			Button buttonGroupComponent = new Button(cGroupComponent, SWT.PUSH);
+			buttonGroupComponent.setText("ändern..");
+			buttonGroupComponent.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+				
+				}
+			});
+				
+			selection.setInputData(inputDataGroupComponent);
+			compositeInputData.layout();
+			break;
+		
 		case NUMERIC:
 			InputDataNumeric inputDataNumeric = selection.getInputData() instanceof InputDataNumeric
 					? (InputDataNumeric) selection.getInputData()
@@ -265,6 +314,10 @@ public class FindingsDetailComposite extends Composite {
 			} else if (selection.getInputData() instanceof InputDataGroup) {
 				comboInputData.setSelection(new StructuredSelection(
 					((InputDataGroup) selection.getInputData()).getDataType()));
+			}
+			else if (selection.getInputData() instanceof InputDataGroupComponent) {
+				comboInputData.setSelection(new StructuredSelection(
+					((InputDataGroupComponent) selection.getInputData()).getDataType()));
 			}
 			this.setVisible(true);
 		} else {

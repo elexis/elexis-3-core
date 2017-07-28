@@ -19,7 +19,7 @@
   <eClassifiers xsi:type="ecore:EEnum" name="DataType">
     <eLiterals name="NUMERIC" value="1"/>
     <eLiterals name="TEXT" value="100"/>
-    <eLiterals name="GROUP_REFERENCE" value="200" literal="GROUP_REFERENCE"/>
+    <eLiterals name="GROUP" value="200" literal="GROUP"/>
     <eLiterals name="GROUP_COMPONENT" value="300" literal="GROUP_COMPONENT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Type">
@@ -31,6 +31,7 @@
     <eLiterals name="CONDITION" value="200" literal="CONDITION"/>
     <eLiterals name="EVALUATION" value="300"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputData" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="InputDataNumeric" eSuperTypes="#//InputData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="decimalPlace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -45,9 +46,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="findingsTemplates" upperBound="-1"
         eType="#//FindingsTemplate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
-        defaultValueLiteral="GROUP_COMPONENT"/>
+        changeable="false" defaultValueLiteral="GROUP"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InputData" abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InputDataGroupComponent" eSuperTypes="#//InputData">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="findingsTemplates" upperBound="-1"
+        eType="#//FindingsTemplate" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
+        changeable="false" defaultValueLiteral="GROUP_COMPONENT"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Coding">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="system" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
