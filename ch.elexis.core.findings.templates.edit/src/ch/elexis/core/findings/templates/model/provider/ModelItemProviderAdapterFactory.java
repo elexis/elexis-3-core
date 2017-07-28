@@ -189,6 +189,29 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory impleme
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link ch.elexis.core.findings.templates.model.Coding} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected CodingItemProvider codingItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link ch.elexis.core.findings.templates.model.Coding}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createCodingAdapter() {
+		if (codingItemProvider == null) {
+			codingItemProvider = new CodingItemProvider(this);
+		}
+
+		return codingItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -292,6 +315,7 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory impleme
 		if (inputDataNumericItemProvider != null) inputDataNumericItemProvider.dispose();
 		if (inputDataTextItemProvider != null) inputDataTextItemProvider.dispose();
 		if (inputDataGroupItemProvider != null) inputDataGroupItemProvider.dispose();
+		if (codingItemProvider != null) codingItemProvider.dispose();
 	}
 
 }

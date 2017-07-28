@@ -2,8 +2,7 @@
  */
 package ch.elexis.core.findings.templates.model.impl;
 
-import ch.elexis.core.findings.fhir.po.codes.LocalCoding;
-
+import ch.elexis.core.findings.templates.model.Coding;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
@@ -17,7 +16,6 @@ import ch.elexis.core.findings.templates.model.Type;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -78,6 +76,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass codingEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EEnum dataTypeEEnum = null;
 
 	/**
@@ -86,13 +91,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EEnum typeEEnum = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType localCodingEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -214,8 +212,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getFindingsTemplate_Code() {
-		return (EAttribute)findingsTemplateEClass.getEStructuralFeatures().get(1);
+	public EReference getFindingsTemplate_Code() {
+		return (EReference)findingsTemplateEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -224,7 +222,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EAttribute getFindingsTemplate_Title() {
-		return (EAttribute)findingsTemplateEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)findingsTemplateEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -233,7 +231,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EReference getFindingsTemplate_InputData() {
-		return (EReference)findingsTemplateEClass.getEStructuralFeatures().get(3);
+		return (EReference)findingsTemplateEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -331,6 +329,42 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getCoding() {
+		return codingEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCoding_System() {
+		return (EAttribute)codingEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCoding_Code() {
+		return (EAttribute)codingEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCoding_Display() {
+		return (EAttribute)codingEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getDataType() {
 		return dataTypeEEnum;
 	}
@@ -342,15 +376,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	public EEnum getType() {
 		return typeEEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EDataType getLocalCoding() {
-		return localCodingEDataType;
 	}
 
 	/**
@@ -388,9 +413,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		findingsTemplateEClass = createEClass(FINDINGS_TEMPLATE);
 		createEAttribute(findingsTemplateEClass, FINDINGS_TEMPLATE__TYPE);
-		createEAttribute(findingsTemplateEClass, FINDINGS_TEMPLATE__CODE);
 		createEAttribute(findingsTemplateEClass, FINDINGS_TEMPLATE__TITLE);
 		createEReference(findingsTemplateEClass, FINDINGS_TEMPLATE__INPUT_DATA);
+		createEReference(findingsTemplateEClass, FINDINGS_TEMPLATE__CODE);
 
 		inputDataNumericEClass = createEClass(INPUT_DATA_NUMERIC);
 		createEAttribute(inputDataNumericEClass, INPUT_DATA_NUMERIC__UNIT);
@@ -406,12 +431,14 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		inputDataEClass = createEClass(INPUT_DATA);
 
+		codingEClass = createEClass(CODING);
+		createEAttribute(codingEClass, CODING__SYSTEM);
+		createEAttribute(codingEClass, CODING__CODE);
+		createEAttribute(codingEClass, CODING__DISPLAY);
+
 		// Create enums
 		dataTypeEEnum = createEEnum(DATA_TYPE);
 		typeEEnum = createEEnum(TYPE);
-
-		// Create data types
-		localCodingEDataType = createEDataType(LOCAL_CODING);
 	}
 
 	/**
@@ -454,9 +481,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(findingsTemplateEClass, FindingsTemplate.class, "FindingsTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getFindingsTemplate_Type(), this.getType(), "type", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getFindingsTemplate_Code(), this.getLocalCoding(), "code", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFindingsTemplate_Title(), ecorePackage.getEString(), "title", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFindingsTemplate_InputData(), this.getInputData(), null, "inputData", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFindingsTemplate_Code(), this.getCoding(), null, "code", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(inputDataNumericEClass, InputDataNumeric.class, "InputDataNumeric", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getInputDataNumeric_Unit(), ecorePackage.getEString(), "unit", null, 0, 1, InputDataNumeric.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -472,6 +499,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(inputDataEClass, InputData.class, "InputData", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEClass(codingEClass, Coding.class, "Coding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCoding_System(), ecorePackage.getEString(), "system", null, 0, 1, Coding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCoding_Code(), ecorePackage.getEString(), "code", null, 0, 1, Coding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCoding_Display(), ecorePackage.getEString(), "display", null, 0, 1, Coding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		// Initialize enums and add enum literals
 		initEEnum(dataTypeEEnum, DataType.class, "DataType");
 		addEEnumLiteral(dataTypeEEnum, DataType.NUMERIC);
@@ -486,9 +518,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEEnumLiteral(typeEEnum, Type.PROCEDURE);
 		addEEnumLiteral(typeEEnum, Type.CONDITION);
 		addEEnumLiteral(typeEEnum, Type.EVALUATION);
-
-		// Initialize data types
-		initEDataType(localCodingEDataType, LocalCoding.class, "LocalCoding", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

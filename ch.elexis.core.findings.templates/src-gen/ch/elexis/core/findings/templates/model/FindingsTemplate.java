@@ -2,8 +2,6 @@
  */
 package ch.elexis.core.findings.templates.model;
 
-import ch.elexis.core.findings.fhir.po.codes.LocalCoding;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -16,9 +14,9 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getType <em>Type</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getCode <em>Code</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getTitle <em>Title</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getInputData <em>Input Data</em>}</li>
+ *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getCode <em>Code</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.findings.templates.model.ModelPackage#getFindingsTemplate()
@@ -56,30 +54,30 @@ public interface FindingsTemplate extends EObject {
 	void setType(Type value);
 
 	/**
-	 * Returns the value of the '<em><b>Code</b></em>' attribute.
+	 * Returns the value of the '<em><b>Code</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Code</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Code</em>' attribute.
-	 * @see #setCode(LocalCoding)
+	 * @return the value of the '<em>Code</em>' containment reference.
+	 * @see #setCode(Coding)
 	 * @see ch.elexis.core.findings.templates.model.ModelPackage#getFindingsTemplate_Code()
-	 * @model dataType="ch.elexis.core.findings.templates.model.LocalCoding"
+	 * @model containment="true"
 	 * @generated
 	 */
-	LocalCoding getCode();
+	Coding getCode();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getCode <em>Code</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getCode <em>Code</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Code</em>' attribute.
+	 * @param value the new value of the '<em>Code</em>' containment reference.
 	 * @see #getCode()
 	 * @generated
 	 */
-	void setCode(LocalCoding value);
+	void setCode(Coding value);
 
 	/**
 	 * Returns the value of the '<em><b>Title</b></em>' attribute.

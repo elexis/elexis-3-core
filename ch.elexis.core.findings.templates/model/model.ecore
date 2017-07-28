@@ -10,9 +10,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FindingsTemplate">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//Type"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//LocalCoding"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="#//InputData"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="code" eType="#//Coding"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="DataType">
@@ -29,7 +30,6 @@
     <eLiterals name="CONDITION" value="200" literal="CONDITION"/>
     <eLiterals name="EVALUATION" value="300"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="LocalCoding" instanceClassName="ch.elexis.core.findings.fhir.po.codes.LocalCoding"/>
   <eClassifiers xsi:type="ecore:EClass" name="InputDataNumeric" eSuperTypes="#//InputData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="decimalPlace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -47,4 +47,9 @@
         changeable="false" defaultValueLiteral="GROUP"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InputData" abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Coding">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="system" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
 </ecore:EPackage>

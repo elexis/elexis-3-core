@@ -21,7 +21,7 @@ import ch.elexis.data.NamedBlob;
 @Component(service = FindingsTemplateService.class)
 public class FindingsTemplateService {
 	
-	private static final String FINDINGS_TEMPLATE_ID = "FindingsTemplate_1";
+	private static final String FINDINGS_TEMPLATE_ID = "Findings_Template_1";
 	
 	public FindingsTemplateService(){
 		

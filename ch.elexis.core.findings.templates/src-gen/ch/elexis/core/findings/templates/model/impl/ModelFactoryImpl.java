@@ -2,8 +2,6 @@
  */
 package ch.elexis.core.findings.templates.model.impl;
 
-import ch.elexis.core.findings.fhir.po.codes.LocalCoding;
-
 import ch.elexis.core.findings.templates.model.*;
 
 import org.eclipse.emf.ecore.EClass;
@@ -64,6 +62,7 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 			case ModelPackage.INPUT_DATA_NUMERIC: return createInputDataNumeric();
 			case ModelPackage.INPUT_DATA_TEXT: return createInputDataText();
 			case ModelPackage.INPUT_DATA_GROUP: return createInputDataGroup();
+			case ModelPackage.CODING: return createCoding();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -81,8 +80,6 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 				return createDataTypeFromString(eDataType, initialValue);
 			case ModelPackage.TYPE:
 				return createTypeFromString(eDataType, initialValue);
-			case ModelPackage.LOCAL_CODING:
-				return createLocalCodingFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -100,8 +97,6 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 				return convertDataTypeToString(eDataType, instanceValue);
 			case ModelPackage.TYPE:
 				return convertTypeToString(eDataType, instanceValue);
-			case ModelPackage.LOCAL_CODING:
-				return convertLocalCodingToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -162,6 +157,16 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Coding createCoding() {
+		CodingImpl coding = new CodingImpl();
+		return coding;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public DataType createDataTypeFromString(EDataType eDataType, String initialValue) {
 		DataType result = DataType.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
@@ -195,24 +200,6 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 */
 	public String convertTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public LocalCoding createLocalCodingFromString(EDataType eDataType, String initialValue) {
-		return (LocalCoding)super.createFromString(eDataType, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertLocalCodingToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

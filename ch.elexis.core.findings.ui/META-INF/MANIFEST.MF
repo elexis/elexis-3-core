@@ -27,3 +27,4 @@ Service-Component: OSGI-INF/ch.elexis.core.findings.ui.services.FindingsServiceC
  OSGI-INF/ch.elexis.core.findings.ui.services.MigratorServiceComponent.xml
 Import-Package: ch.rgw.io,
  org.eclipse.core.databinding.property.value
+Export-Package: ch.elexis.core.findings.ui.composites

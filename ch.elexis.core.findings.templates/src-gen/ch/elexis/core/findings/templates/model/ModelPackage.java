@@ -4,7 +4,6 @@ package ch.elexis.core.findings.templates.model;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -133,22 +132,13 @@ public interface ModelPackage extends EPackage {
 	int FINDINGS_TEMPLATE__TYPE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Code</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FINDINGS_TEMPLATE__CODE = 1;
-
-	/**
 	 * The feature id for the '<em><b>Title</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FINDINGS_TEMPLATE__TITLE = 2;
+	int FINDINGS_TEMPLATE__TITLE = 1;
 
 	/**
 	 * The feature id for the '<em><b>Input Data</b></em>' containment reference.
@@ -157,7 +147,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FINDINGS_TEMPLATE__INPUT_DATA = 3;
+	int FINDINGS_TEMPLATE__INPUT_DATA = 2;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINDINGS_TEMPLATE__CODE = 3;
 
 	/**
 	 * The number of structural features of the '<em>Findings Template</em>' class.
@@ -344,6 +343,61 @@ public interface ModelPackage extends EPackage {
 	int INPUT_DATA_GROUP_OPERATION_COUNT = INPUT_DATA_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.impl.CodingImpl <em>Coding</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.findings.templates.model.impl.CodingImpl
+	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getCoding()
+	 * @generated
+	 */
+	int CODING = 6;
+
+	/**
+	 * The feature id for the '<em><b>System</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODING__SYSTEM = 0;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODING__CODE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Display</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODING__DISPLAY = 2;
+
+	/**
+	 * The number of structural features of the '<em>Coding</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODING_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Coding</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODING_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.DataType <em>Data Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -351,7 +405,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getDataType()
 	 * @generated
 	 */
-	int DATA_TYPE = 6;
+	int DATA_TYPE = 7;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.Type <em>Type</em>}' enum.
@@ -361,18 +415,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getType()
 	 * @generated
 	 */
-	int TYPE = 7;
-
-	/**
-	 * The meta object id for the '<em>Local Coding</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.findings.fhir.po.codes.LocalCoding
-	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getLocalCoding()
-	 * @generated
-	 */
-	int LOCAL_CODING = 8;
-
+	int TYPE = 8;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.FindingsTemplates <em>Findings Templates</em>}'.
@@ -439,15 +482,15 @@ public interface ModelPackage extends EPackage {
 	EAttribute getFindingsTemplate_Type();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getCode <em>Code</em>}'.
+	 * Returns the meta object for the containment reference '{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getCode <em>Code</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Code</em>'.
+	 * @return the meta object for the containment reference '<em>Code</em>'.
 	 * @see ch.elexis.core.findings.templates.model.FindingsTemplate#getCode()
 	 * @see #getFindingsTemplate()
 	 * @generated
 	 */
-	EAttribute getFindingsTemplate_Code();
+	EReference getFindingsTemplate_Code();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getTitle <em>Title</em>}'.
@@ -578,6 +621,49 @@ public interface ModelPackage extends EPackage {
 	EClass getInputData();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.Coding <em>Coding</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Coding</em>'.
+	 * @see ch.elexis.core.findings.templates.model.Coding
+	 * @generated
+	 */
+	EClass getCoding();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.Coding#getSystem <em>System</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>System</em>'.
+	 * @see ch.elexis.core.findings.templates.model.Coding#getSystem()
+	 * @see #getCoding()
+	 * @generated
+	 */
+	EAttribute getCoding_System();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.Coding#getCode <em>Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Code</em>'.
+	 * @see ch.elexis.core.findings.templates.model.Coding#getCode()
+	 * @see #getCoding()
+	 * @generated
+	 */
+	EAttribute getCoding_Code();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.Coding#getDisplay <em>Display</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Display</em>'.
+	 * @see ch.elexis.core.findings.templates.model.Coding#getDisplay()
+	 * @see #getCoding()
+	 * @generated
+	 */
+	EAttribute getCoding_Display();
+
+	/**
 	 * Returns the meta object for enum '{@link ch.elexis.core.findings.templates.model.DataType <em>Data Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -596,17 +682,6 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getType();
-
-	/**
-	 * Returns the meta object for data type '{@link ch.elexis.core.findings.fhir.po.codes.LocalCoding <em>Local Coding</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Local Coding</em>'.
-	 * @see ch.elexis.core.findings.fhir.po.codes.LocalCoding
-	 * @model instanceClass="ch.elexis.core.findings.fhir.po.codes.LocalCoding"
-	 * @generated
-	 */
-	EDataType getLocalCoding();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -684,12 +759,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute FINDINGS_TEMPLATE__TYPE = eINSTANCE.getFindingsTemplate_Type();
 
 		/**
-		 * The meta object literal for the '<em><b>Code</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Code</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute FINDINGS_TEMPLATE__CODE = eINSTANCE.getFindingsTemplate_Code();
+		EReference FINDINGS_TEMPLATE__CODE = eINSTANCE.getFindingsTemplate_Code();
 
 		/**
 		 * The meta object literal for the '<em><b>Title</b></em>' attribute feature.
@@ -796,6 +871,40 @@ public interface ModelPackage extends EPackage {
 		EClass INPUT_DATA = eINSTANCE.getInputData();
 
 		/**
+		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.impl.CodingImpl <em>Coding</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.findings.templates.model.impl.CodingImpl
+		 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getCoding()
+		 * @generated
+		 */
+		EClass CODING = eINSTANCE.getCoding();
+
+		/**
+		 * The meta object literal for the '<em><b>System</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CODING__SYSTEM = eINSTANCE.getCoding_System();
+
+		/**
+		 * The meta object literal for the '<em><b>Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CODING__CODE = eINSTANCE.getCoding_Code();
+
+		/**
+		 * The meta object literal for the '<em><b>Display</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CODING__DISPLAY = eINSTANCE.getCoding_Display();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.DataType <em>Data Type</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -814,16 +923,6 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum TYPE = eINSTANCE.getType();
-
-		/**
-		 * The meta object literal for the '<em>Local Coding</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.findings.fhir.po.codes.LocalCoding
-		 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getLocalCoding()
-		 * @generated
-		 */
-		EDataType LOCAL_CODING = eINSTANCE.getLocalCoding();
 
 	}
 

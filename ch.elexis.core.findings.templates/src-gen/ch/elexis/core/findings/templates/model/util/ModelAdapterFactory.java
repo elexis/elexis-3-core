@@ -92,6 +92,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createInputDataAdapter();
 			}
 			@Override
+			public Adapter caseCoding(Coding object) {
+				return createCodingAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -192,6 +196,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createInputDataAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.findings.templates.model.Coding <em>Coding</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.findings.templates.model.Coding
+	 * @generated
+	 */
+	public Adapter createCodingAdapter() {
 		return null;
 	}
 

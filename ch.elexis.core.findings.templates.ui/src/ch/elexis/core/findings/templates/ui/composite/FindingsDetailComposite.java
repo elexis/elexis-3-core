@@ -1,5 +1,7 @@
 package ch.elexis.core.findings.templates.ui.composite;
 
+import java.util.Optional;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -9,6 +11,7 @@ import org.eclipse.emf.databinding.EMFUpdateValueStrategy;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -16,6 +19,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -32,6 +37,7 @@ import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
+import ch.elexis.core.findings.templates.ui.dlg.CodeSystemsDialog;
 
 @SuppressWarnings("unchecked")
 public class FindingsDetailComposite extends Composite {
@@ -84,20 +90,7 @@ public class FindingsDetailComposite extends Composite {
 			public void selectionChanged(SelectionChangedEvent event){
 				Type type = (Type) ((StructuredSelection) event.getSelection()).getFirstElement();
 				selection.setType(type);
-				switch (type) {
-				
-				case OBSERVATION:
-					compositeType.setVisible(true);
-					break;
-				case CONDITION:
-				case EVALUATION:
-				case PROCEDURE:
-					compositeType.setVisible(false);
-					break;
-				default:
-					break;
-				
-				}
+				compositeType.setVisible(type.getValue() < 100);
 			}
 		});
 		
@@ -108,10 +101,27 @@ public class FindingsDetailComposite extends Composite {
 		compCodes.setLayout(new GridLayout(2, false));
 		
 		txtCodes = new Label(compCodes, SWT.NONE);
-		txtCodes.setText("");
+		txtCodes.setText("Nicht definiert");
 		
 		Button button = new Button(compCodes, SWT.PUSH);
 		button.setText("ändern");
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				CodeSystemsDialog codeSystemsDialog =
+					new CodeSystemsDialog(getShell(), selection.getCode() != null
+							? Optional.of(selection.getCode()) : Optional.empty());
+				int ret = codeSystemsDialog.open();
+				if (ret == MessageDialog.OK) {
+					codeSystemsDialog.getSelectedCode()
+						.ifPresent(code -> {
+							selection.setCode(code);
+							setSelection(selection);
+					});
+				}
+				
+			}
+		});
 		
 		compositeType = new Composite(this, SWT.NONE);
 		compositeType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
@@ -239,7 +249,9 @@ public class FindingsDetailComposite extends Composite {
 		if (selection != null) {
 			item.setValue(selection);
 			txtCodes.setText(
-				selection.getCode() == null ? "Nicht definiert" : selection.getCode().getLabel());
+				selection.getCode() == null ? "Nicht definiert"
+						: "[" + selection.getCode().getCode() + "] "
+							+ selection.getCode().getDisplay());
 			
 			comboType.setSelection(new StructuredSelection(selection.getType()));
 			if (selection.getInputData() instanceof InputDataNumeric) {
@@ -255,6 +267,7 @@ public class FindingsDetailComposite extends Composite {
 		} else {
 			this.setVisible(false);
 		}
+		layout();
 	}
 	
 	public FindingsTemplate getSelection(){
