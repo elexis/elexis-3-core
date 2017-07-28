@@ -64,8 +64,8 @@ public class FindingsDetailComposite extends Composite {
 	public void createContents(){
 		Label lblTitle = new Label(this, SWT.NONE);
 		lblTitle.setText("Titel");
-		minGd = new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1);
-		minGd.widthHint = 80;
+		minGd = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		minGd.widthHint = 100;
 		lblTitle.setLayoutData(minGd);
 		
 		textTitle = new Text(this, SWT.BORDER);
@@ -183,7 +183,7 @@ public class FindingsDetailComposite extends Composite {
 
 			
 			Label lblGroup = new Label(compositeInputData, SWT.NONE);
-			lblGroup.setText("");
+			lblGroup.setText("Gruppe (Referenz)");
 			lblGroup.setLayoutData(minGd);
 			Composite c = new Composite(compositeInputData, SWT.NONE);
 			c.setLayout(new GridLayout(2, false));
@@ -211,7 +211,7 @@ public class FindingsDetailComposite extends Composite {
 						: ModelFactory.eINSTANCE.createInputDataGroupComponent();
 			
 			Label lblGroupComponent = new Label(compositeInputData, SWT.NONE);
-			lblGroupComponent.setText("");
+			lblGroupComponent.setText("Gruppe (Umfasst)");
 			lblGroupComponent.setLayoutData(minGd);
 			Composite cGroupComponent = new Composite(compositeInputData, SWT.NONE);
 			cGroupComponent.setLayout(new GridLayout(2, false));
