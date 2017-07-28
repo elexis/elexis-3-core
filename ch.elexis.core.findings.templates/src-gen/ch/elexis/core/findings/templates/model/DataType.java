@@ -26,7 +26,7 @@ public enum DataType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	NUMERIC(0, "NUMERIC", "NUMERIC"),
+	NUMERIC(1, "NUMERIC", "NUMERIC"),
 
 	/**
 	 * The '<em><b>TEXT</b></em>' literal object.
@@ -36,17 +36,25 @@ public enum DataType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	TEXT(1, "TEXT", "TEXT"),
+	TEXT(100, "TEXT", "TEXT"),
 
 	/**
-	 * The '<em><b>GROUP</b></em>' literal object.
+	 * The '<em><b>GROUP REFERENCE</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #GROUP_VALUE
+	 * @see #GROUP_REFERENCE_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	GROUP(2, "GROUP", "GROUP");
+	GROUP_REFERENCE(200, "GROUP_REFERENCE", "GROUP_REFERENCE"), /**
+	 * The '<em><b>GROUP COMPONENT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #GROUP_COMPONENT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	GROUP_COMPONENT(300, "GROUP_COMPONENT", "GROUP_COMPONENT");
 
 	/**
 	 * The '<em><b>NUMERIC</b></em>' literal value.
@@ -61,7 +69,7 @@ public enum DataType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int NUMERIC_VALUE = 0;
+	public static final int NUMERIC_VALUE = 1;
 
 	/**
 	 * The '<em><b>TEXT</b></em>' literal value.
@@ -76,22 +84,37 @@ public enum DataType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TEXT_VALUE = 1;
+	public static final int TEXT_VALUE = 100;
 
 	/**
-	 * The '<em><b>GROUP</b></em>' literal value.
+	 * The '<em><b>GROUP REFERENCE</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>GROUP</b></em>' literal object isn't clear,
+	 * If the meaning of '<em><b>GROUP REFERENCE</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @see #GROUP
+	 * @see #GROUP_REFERENCE
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int GROUP_VALUE = 2;
+	public static final int GROUP_REFERENCE_VALUE = 200;
+
+	/**
+	 * The '<em><b>GROUP COMPONENT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>GROUP COMPONENT</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #GROUP_COMPONENT
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int GROUP_COMPONENT_VALUE = 300;
 
 	/**
 	 * An array of all the '<em><b>Data Type</b></em>' enumerators.
@@ -103,7 +126,8 @@ public enum DataType implements Enumerator {
 		new DataType[] {
 			NUMERIC,
 			TEXT,
-			GROUP,
+			GROUP_REFERENCE,
+			GROUP_COMPONENT,
 		};
 
 	/**
@@ -162,7 +186,8 @@ public enum DataType implements Enumerator {
 		switch (value) {
 			case NUMERIC_VALUE: return NUMERIC;
 			case TEXT_VALUE: return TEXT;
-			case GROUP_VALUE: return GROUP;
+			case GROUP_REFERENCE_VALUE: return GROUP_REFERENCE;
+			case GROUP_COMPONENT_VALUE: return GROUP_COMPONENT;
 		}
 		return null;
 	}

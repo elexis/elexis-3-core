@@ -17,9 +17,10 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="DataType">
-    <eLiterals name="NUMERIC"/>
-    <eLiterals name="TEXT" value="1"/>
-    <eLiterals name="GROUP" value="2" literal="GROUP"/>
+    <eLiterals name="NUMERIC" value="1"/>
+    <eLiterals name="TEXT" value="100"/>
+    <eLiterals name="GROUP_REFERENCE" value="200" literal="GROUP_REFERENCE"/>
+    <eLiterals name="GROUP_COMPONENT" value="300" literal="GROUP_COMPONENT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Type">
     <eLiterals name="OBSERVATION" value="1"/>
@@ -44,7 +45,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="findingsTemplates" upperBound="-1"
         eType="#//FindingsTemplate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
-        changeable="false" defaultValueLiteral="GROUP"/>
+        defaultValueLiteral="GROUP_COMPONENT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InputData" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Coding">

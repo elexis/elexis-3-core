@@ -40,7 +40,7 @@ public interface InputDataGroup extends InputData {
 
 	/**
 	 * Returns the value of the '<em><b>Data Type</b></em>' attribute.
-	 * The default value is <code>"GROUP"</code>.
+	 * The default value is <code>"GROUP_COMPONENT"</code>.
 	 * The literals are from the enumeration {@link ch.elexis.core.findings.templates.model.DataType}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -50,10 +50,22 @@ public interface InputDataGroup extends InputData {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Data Type</em>' attribute.
 	 * @see ch.elexis.core.findings.templates.model.DataType
+	 * @see #setDataType(DataType)
 	 * @see ch.elexis.core.findings.templates.model.ModelPackage#getInputDataGroup_DataType()
-	 * @model default="GROUP" changeable="false"
+	 * @model default="GROUP_COMPONENT"
 	 * @generated
 	 */
 	DataType getDataType();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.findings.templates.model.InputDataGroup#getDataType <em>Data Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Data Type</em>' attribute.
+	 * @see ch.elexis.core.findings.templates.model.DataType
+	 * @see #getDataType()
+	 * @generated
+	 */
+	void setDataType(DataType value);
 
 } // InputDataGroup

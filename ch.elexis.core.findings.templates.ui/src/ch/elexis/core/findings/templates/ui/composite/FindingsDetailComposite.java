@@ -104,7 +104,7 @@ public class FindingsDetailComposite extends Composite {
 		txtCodes.setText("Nicht definiert");
 		
 		Button button = new Button(compCodes, SWT.PUSH);
-		button.setText("ändern");
+		button.setText("ändern..");
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
@@ -175,10 +175,12 @@ public class FindingsDetailComposite extends Composite {
 			c.dispose();
 		}
 		switch (dataType) {
-		case GROUP:
+		case GROUP_COMPONENT:
+		case GROUP_REFERENCE:
 			InputDataGroup inputDataGroup = selection.getInputData() instanceof InputDataGroup
 					? (InputDataGroup) selection.getInputData()
 					: ModelFactory.eINSTANCE.createInputDataGroup();
+			inputDataGroup.setDataType(dataType);
 			selection.setInputData(inputDataGroup);
 			break;
 		case NUMERIC:
@@ -261,7 +263,8 @@ public class FindingsDetailComposite extends Composite {
 				comboInputData.setSelection(new StructuredSelection(DataType.TEXT));
 				
 			} else if (selection.getInputData() instanceof InputDataGroup) {
-				comboInputData.setSelection(new StructuredSelection(DataType.GROUP));
+				comboInputData.setSelection(new StructuredSelection(
+					((InputDataGroup) selection.getInputData()).getDataType()));
 			}
 			this.setVisible(true);
 		} else {

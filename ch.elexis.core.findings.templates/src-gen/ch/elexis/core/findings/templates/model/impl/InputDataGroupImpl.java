@@ -9,10 +9,12 @@ import ch.elexis.core.findings.templates.model.ModelPackage;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
@@ -50,7 +52,7 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected static final DataType DATA_TYPE_EDEFAULT = DataType.GROUP;
+	protected static final DataType DATA_TYPE_EDEFAULT = DataType.GROUP_COMPONENT;
 
 	/**
 	 * The cached value of the '{@link #getDataType() <em>Data Type</em>}' attribute.
@@ -107,6 +109,18 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public void setDataType(DataType newDataType) {
+		DataType oldDataType = dataType;
+		dataType = newDataType == null ? DATA_TYPE_EDEFAULT : newDataType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.INPUT_DATA_GROUP__DATA_TYPE, oldDataType, dataType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -131,6 +145,9 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 				getFindingsTemplates().clear();
 				getFindingsTemplates().addAll((Collection<? extends FindingsTemplate>)newValue);
 				return;
+			case ModelPackage.INPUT_DATA_GROUP__DATA_TYPE:
+				setDataType((DataType)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -145,6 +162,9 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 		switch (featureID) {
 			case ModelPackage.INPUT_DATA_GROUP__FINDINGS_TEMPLATES:
 				getFindingsTemplates().clear();
+				return;
+			case ModelPackage.INPUT_DATA_GROUP__DATA_TYPE:
+				setDataType(DATA_TYPE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);

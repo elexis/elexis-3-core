@@ -495,7 +495,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(inputDataGroupEClass, InputDataGroup.class, "InputDataGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getInputDataGroup_FindingsTemplates(), this.getFindingsTemplate(), null, "findingsTemplates", null, 0, -1, InputDataGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getInputDataGroup_DataType(), this.getDataType(), "dataType", "GROUP", 0, 1, InputDataGroup.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getInputDataGroup_DataType(), this.getDataType(), "dataType", "GROUP_COMPONENT", 0, 1, InputDataGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(inputDataEClass, InputData.class, "InputData", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -508,7 +508,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEEnum(dataTypeEEnum, DataType.class, "DataType");
 		addEEnumLiteral(dataTypeEEnum, DataType.NUMERIC);
 		addEEnumLiteral(dataTypeEEnum, DataType.TEXT);
-		addEEnumLiteral(dataTypeEEnum, DataType.GROUP);
+		addEEnumLiteral(dataTypeEEnum, DataType.GROUP_REFERENCE);
+		addEEnumLiteral(dataTypeEEnum, DataType.GROUP_COMPONENT);
 
 		initEEnum(typeEEnum, Type.class, "Type");
 		addEEnumLiteral(typeEEnum, Type.OBSERVATION);

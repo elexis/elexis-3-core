@@ -115,7 +115,7 @@ public class FindingsComposite extends Composite {
 	
 	private void fillContextMenu(IMenuManager contextMenu, FindingsTemplate findingsTemplate){
 		contextMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-		contextMenu.add(new Action("Delete") {
+		contextMenu.add(new Action("entfernen") {
 			@Override
 			public void run(){
 				getModel().ifPresent(item -> item.getFindingsTemplates().remove(findingsTemplate));
