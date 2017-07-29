@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.application.feature"
       label="Elexis OpenSource Application Feature"
-      version="3.1.4.qualifier"
+      version="3.1.5.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -22,7 +22,7 @@
          id="ch.elexis.core.application"
          download-size="0"
          install-size="0"
-         version="3.1.4"
+         version="3.1.5"
          unpack="false"/>
 
    <plugin
