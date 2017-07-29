@@ -571,6 +571,18 @@ public class Rechnung extends PersistentObject {
 		}
 		new Zahlung(this, betrag, text, date);
 	}
+	public Money getRemindersBetrag(){
+			Money ret = new Money(0);
+			for (Zahlung zahlung : getZahlungen()) {
+					String comment = zahlung.getBemerkung();
+					if (comment.equals(Messages.Rechnung_Mahngebuehr1)
+							|| comment.equals(Messages.Rechnung_Mahngebuehr2)
+							|| comment.equals(Messages.Rechnung_Mahngebuehr3)) {
+							ret.addMoney(zahlung.getBetrag());
+					}
+			}
+			return ret.isNegative() ? ret.multiply(-1d) : ret;
+	}
 	
 	/** EIne Liste aller Zahlungen holen */
 	public List<Zahlung> getZahlungen(){

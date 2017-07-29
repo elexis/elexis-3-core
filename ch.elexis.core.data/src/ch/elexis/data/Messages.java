@@ -71,6 +71,10 @@ public final class Messages extends NLS {
 	public static String LabOrder_stateOrdered;
 	public static String LabOrder_contactOwnLabName;
 	
+	public static String Rechnung_Mahngebuehr2;
+	public static String Rechnung_Mahngebuehr1;
+	public static String Rechnung_Mahngebuehr3;
+	
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
