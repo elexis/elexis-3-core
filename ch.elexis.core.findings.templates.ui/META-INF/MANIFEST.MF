@@ -35,4 +35,5 @@ Import-Package: ch.elexis.core.findings,
  org.eclipse.jface.databinding.viewers,
  org.eclipse.ui.views.properties,
  org.osgi.service.component.annotations;version="1.2.0"
-Service-Component: OSGI-INF/ch.elexis.core.findings.templates.ui.views.FindingsTemplateView.xml
+Service-Component: OSGI-INF/ch.elexis.core.findings.templates.ui.views.FindingsTemplateView.xml,
+ OSGI-INF/ch.elexis.core.findings.templates.ui.views.FindingsView.xml

@@ -1,11 +1,10 @@
 package ch.elexis.core.findings.templates.ui.dlg;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -22,20 +21,19 @@ import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
-import ch.elexis.core.findings.templates.model.InputData;
-import ch.elexis.core.findings.templates.model.InputDataGroup;
-import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 
 public class FindingsSelectionDialog extends TitleAreaDialog {
 	private final FindingsTemplates model;
-	private final InputData inputData;
+	private List<FindingsTemplate> selection;
 	private TableViewer viewer;
+	private boolean multiSelection;
 	
 	public FindingsSelectionDialog(Shell parentShell, FindingsTemplates model,
-		InputData inputData){
+		List<FindingsTemplate> selection, boolean multiSelection){
 		super(parentShell);
 		this.model = model;
-		this.inputData = inputData;
+		this.selection = selection;
+		this.multiSelection = multiSelection;
 	}
 	
 	/**
@@ -45,19 +43,16 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent){
-		setMessage("Wählen Sie Vorlagen aus");
+		setMessage(multiSelection ? "Wählen Sie Vorlagen aus" : "Wählen Sie eine Vorlage aus");
 		setTitle("Befund Vorlage");
 		
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		viewer = new TableViewer(composite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI);
+		viewer = new TableViewer(composite,
+			SWT.FULL_SELECTION | SWT.BORDER | (multiSelection ? SWT.MULTI : SWT.SINGLE));
 		viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		ComposedAdapterFactory composedAdapterFactory =
-			new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-		
 		viewer.setContentProvider(new ArrayContentProvider());
 		viewer.setLabelProvider(new LabelProvider() {
 			@Override
@@ -93,8 +88,7 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		});
 		
 		viewer.setInput(model.getFindingsTemplates());
-		viewer.setSelection(new StructuredSelection(getInputDataList()));
-		
+		viewer.setSelection(new StructuredSelection(selection));
 		return composite;
 
 
@@ -118,30 +112,21 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		List<FindingsTemplate> findingsTemplates = getInputDataList();
-		findingsTemplates.clear();
-		StructuredSelection structuredSelection = (StructuredSelection) viewer.getSelection();
-		for (Object o : structuredSelection.toArray()) {
-			if (o instanceof FindingsTemplate) {
-				if (inputData instanceof InputDataGroup) {
-					findingsTemplates.add((FindingsTemplate) o);
-					
-				} else if (inputData instanceof InputDataGroupComponent) {
-					findingsTemplates.add(EcoreUtil.copy((FindingsTemplate) o));
-				}
-			}
-		}
 		super.okPressed();
 	}
 	
-	private List<FindingsTemplate> getInputDataList(){
-		List<FindingsTemplate> findingsTemplates = Collections.emptyList();
-		if (inputData instanceof InputDataGroup) {
-			InputDataGroup group = (InputDataGroup) inputData;
-			findingsTemplates = group.getFindingsTemplates();
-		} else if (inputData instanceof InputDataGroupComponent) {
-			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
-			findingsTemplates = group.getFindingsTemplates();
+	public List<FindingsTemplate> getSelection(boolean asCopy){
+		List<FindingsTemplate> findingsTemplates = new ArrayList<>();
+		StructuredSelection structuredSelection = (StructuredSelection) viewer.getSelection();
+		for (Object o : structuredSelection.toArray()) {
+			if (o instanceof FindingsTemplate) {
+				if (asCopy) {
+					findingsTemplates.add(EcoreUtil.copy((FindingsTemplate) o));
+				}
+				else {
+					findingsTemplates.add((FindingsTemplate) o);
+				}
+			}
 		}
 		return findingsTemplates;
 	}

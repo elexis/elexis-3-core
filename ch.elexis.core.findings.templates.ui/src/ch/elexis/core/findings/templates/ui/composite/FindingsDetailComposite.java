@@ -206,8 +206,11 @@ public class FindingsDetailComposite extends Composite {
 				public void widgetSelected(SelectionEvent e){
 					FindingsSelectionDialog findingsSelectionDialog =
 						new FindingsSelectionDialog(getShell(),
-							model, inputDataGroup);
+							model, inputDataGroup.getFindingsTemplates(), true);
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
+						inputDataGroup.getFindingsTemplates().clear();
+						inputDataGroup.getFindingsTemplates()
+							.addAll(findingsSelectionDialog.getSelection(false));
 						lblGrouplist.setText(getInputDataGroupText(inputDataGroup));
 						selection.setInputData(inputDataGroup);
 						compositeInputData.layout(true, true);
@@ -239,8 +242,11 @@ public class FindingsDetailComposite extends Composite {
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					FindingsSelectionDialog findingsSelectionDialog = new FindingsSelectionDialog(
-						getShell(), model, inputDataGroupComponent);
+						getShell(), model, inputDataGroupComponent.getFindingsTemplates(), true);
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
+						inputDataGroupComponent.getFindingsTemplates().clear();
+						inputDataGroupComponent.getFindingsTemplates()
+							.addAll(findingsSelectionDialog.getSelection(true));
 						lblGroupComponentlist
 							.setText(getInputDataGroupText(inputDataGroupComponent));
 						selection.setInputData(inputDataGroupComponent);
