@@ -60,10 +60,12 @@ public class FindingsComposite extends Composite {
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
-				if (event.getSelection() instanceof StructuredSelection) {
+				Optional<FindingsTemplates> model = getModel();
+				if (model.isPresent() && event.getSelection() instanceof StructuredSelection) {
 					StructuredSelection s = (StructuredSelection) event.getSelection();
 					Object element = s.getFirstElement();
-					findingsDetailComposite.setSelection(element instanceof FindingsTemplate
+					findingsDetailComposite.setSelection(model.get(),
+						element instanceof FindingsTemplate
 							? (FindingsTemplate) s.getFirstElement() : null);
 				}
 			}

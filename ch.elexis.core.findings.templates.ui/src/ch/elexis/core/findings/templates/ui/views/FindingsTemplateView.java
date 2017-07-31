@@ -63,7 +63,7 @@ public class FindingsTemplateView extends ViewPart implements IActivationListene
 		FindingsTemplates model = findingsTemplateService.getFindingsTemplates();
 		findingsComposite = new FindingsComposite(compositeTemplates, model);
 		FindingsDetailComposite findingsDetailComposite =
-			new FindingsDetailComposite(compositeTemplates);
+			new FindingsDetailComposite(compositeTemplates, model);
 		findingsComposite.setFindingsDetailComposite(findingsDetailComposite);
 		
 		findingsComposite.createContents();

@@ -32,13 +32,13 @@ public class FindingsDialog extends TitleAreaDialog {
 		setMessage("Neue Befund Vorlage anlgen");
 		setTitle("Befund Vorlage");
 		
-		findingsDetailComposite = new FindingsDetailComposite(parent);
+		findingsDetailComposite = new FindingsDetailComposite(parent, model);
 		findingsDetailComposite.createContents();
 		FindingsTemplate findingsTemplate = ModelFactory.eINSTANCE.createFindingsTemplate();
 		findingsTemplate.setTitle("Neue Vorlage");
 		findingsTemplate.setType(Type.OBSERVATION);
 		findingsTemplate.setInputData(ModelFactory.eINSTANCE.createInputDataNumeric());
-		findingsDetailComposite.setSelection(findingsTemplate);
+		findingsDetailComposite.setSelection(model, findingsTemplate);
 		
 		return findingsDetailComposite;
 	}

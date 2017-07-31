@@ -1,5 +1,7 @@
 package ch.elexis.core.findings.templates.ui.composite;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -31,6 +33,8 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
+import ch.elexis.core.findings.templates.model.FindingsTemplates;
+import ch.elexis.core.findings.templates.model.InputData;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.InputDataNumeric;
@@ -39,6 +43,7 @@ import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.core.findings.templates.ui.dlg.CodeSystemsDialog;
+import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
 
 @SuppressWarnings("unchecked")
 public class FindingsDetailComposite extends Composite {
@@ -54,11 +59,14 @@ public class FindingsDetailComposite extends Composite {
 	private Composite compositeType;
 	private Composite compositeInputData;
 	private GridData minGd;
+	private FindingsTemplates model;
+
 	
-	public FindingsDetailComposite(Composite parent){
+	public FindingsDetailComposite(Composite parent, FindingsTemplates model){
 		super(parent, SWT.BORDER);
 		this.setLayout(new GridLayout(2, false));
 		this.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		this.model = model;
 	}
 	
 	public void createContents(){
@@ -117,7 +125,7 @@ public class FindingsDetailComposite extends Composite {
 					codeSystemsDialog.getSelectedCode()
 						.ifPresent(code -> {
 							selection.setCode(code);
-							setSelection(selection);
+							setSelection(model, selection);
 					});
 				}
 				
@@ -189,15 +197,21 @@ public class FindingsDetailComposite extends Composite {
 			c.setLayout(new GridLayout(2, false));
 			c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 			Label lblGrouplist = new Label(c, SWT.NONE);
-			lblGrouplist.setText("Nicht definiert");
+			lblGrouplist.setText(getInputDataGroupText(inputDataGroup));
 			
 			Button button = new Button(c, SWT.PUSH);
 			button.setText("ändern..");
 			button.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
-					
-
+					FindingsSelectionDialog findingsSelectionDialog =
+						new FindingsSelectionDialog(getShell(),
+							model, inputDataGroup);
+					if (findingsSelectionDialog.open() == MessageDialog.OK) {
+						lblGrouplist.setText(getInputDataGroupText(inputDataGroup));
+						selection.setInputData(inputDataGroup);
+						compositeInputData.layout(true, true);
+					}
 				}
 			});
 			
@@ -217,14 +231,22 @@ public class FindingsDetailComposite extends Composite {
 			cGroupComponent.setLayout(new GridLayout(2, false));
 			cGroupComponent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 			Label lblGroupComponentlist = new Label(cGroupComponent, SWT.NONE);
-			lblGroupComponentlist.setText("Nicht definiert");
+			lblGroupComponentlist.setText(getInputDataGroupText(inputDataGroupComponent));
 			
 			Button buttonGroupComponent = new Button(cGroupComponent, SWT.PUSH);
 			buttonGroupComponent.setText("ändern..");
 			buttonGroupComponent.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
-				
+					FindingsSelectionDialog findingsSelectionDialog = new FindingsSelectionDialog(
+						getShell(), model, inputDataGroupComponent);
+					if (findingsSelectionDialog.open() == MessageDialog.OK) {
+						lblGroupComponentlist
+							.setText(getInputDataGroupText(inputDataGroupComponent));
+						selection.setInputData(inputDataGroupComponent);
+						compositeInputData.layout(true, true);
+					}
+					
 				}
 			});
 				
@@ -294,8 +316,29 @@ public class FindingsDetailComposite extends Composite {
 		}
 	}
 	
-	public void setSelection(FindingsTemplate findingsTemplate){
-		this.selection = findingsTemplate;
+	private String getInputDataGroupText(InputData inputData){
+		
+		List<FindingsTemplate> findingsTemplates = Collections.emptyList();
+		if (inputData instanceof InputDataGroup) {
+			findingsTemplates = ((InputDataGroup) inputData).getFindingsTemplates();
+		}
+		else if (inputData instanceof InputDataGroupComponent) {
+			findingsTemplates = ((InputDataGroupComponent) inputData).getFindingsTemplates();
+		}
+		
+		StringBuffer buf = new StringBuffer();
+		for (FindingsTemplate findingsTemplate : findingsTemplates) {
+			if (buf.length() > 0) {
+				buf.append("\n");
+			}
+			buf.append(findingsTemplate.getTitle());
+		}
+		return buf.length() == 0 ? "Nicht definiert" : buf.toString();
+	}
+	
+	public void setSelection(FindingsTemplates model, FindingsTemplate selection){
+		this.model = model;
+		this.selection = selection;
 		
 		if (selection != null) {
 			item.setValue(selection);
