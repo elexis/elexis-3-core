@@ -10,11 +10,14 @@
  ******************************************************************************/
 package ch.elexis.core.findings;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 
 public interface IObservation extends IFinding {
 	public enum ObservationCategory {
@@ -71,13 +74,13 @@ public interface IObservation extends IFinding {
 		}
 	}
 	
-	public List<IObservation> getSourceObservations();
+	public List<IObservation> getSourceObservations(ObservationLinkType type);
 
-	public void addSourceObservation(IObservation source);
+	public void addSourceObservation(IObservation source, ObservationLinkType type);
 
-	public List<IObservation> getTargetObseravtions();
+	public List<IObservation> getTargetObseravtions(ObservationLinkType type);
 
-	public void addTargetObservation(IObservation source);
+	public void addTargetObservation(IObservation source, ObservationLinkType type);
 
 	/**
 	 * Get the {@link IEncounter} referenced.
@@ -135,4 +138,25 @@ public interface IObservation extends IFinding {
 	 * @return
 	 */
 	public void setCoding(List<ICoding> coding);
+	
+	/**
+	 * Set the quantity of the observation.
+	 * 
+	 * @return
+	 */
+	public void setQuantity(BigDecimal bigDecimal, String unit);
+	
+	/**
+	 * Get the value
+	 * 
+	 * @return
+	 */
+	public Optional<BigDecimal> getValue();
+	
+	/**
+	 * Get the Unit
+	 * 
+	 * @return
+	 */
+	public Optional<String> getUnit();
 }

@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util.fhir.accessor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
@@ -11,8 +12,10 @@ import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.Quantity;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Type;
+import org.hl7.fhir.exceptions.FHIRException;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
@@ -119,5 +122,46 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	public void setPatientId(DomainResource resource, String patientId) {
 		org.hl7.fhir.dstu3.model.Observation fhirObservation = (org.hl7.fhir.dstu3.model.Observation) resource;
 		fhirObservation.setSubject(new Reference(new IdDt("Patient", patientId)));
+	}
+	
+	public void setQuantity(DomainResource resource,  BigDecimal value, String unit){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		Quantity q = new Quantity();
+		q.setUnit(unit);
+		q.setValue(value);
+		fhirObservation.setValue(q);
+	}
+	
+	public Optional<BigDecimal> getValue(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		if (fhirObservation.hasValueQuantity()) {
+			try {
+				Quantity quantity = fhirObservation.getValueQuantity();
+				if (quantity != null) {
+					return Optional.of(quantity.getValue());
+				}
+			} catch (FHIRException e) {
+				/* ignore */
+			}
+		}
+		return Optional.empty();
+	}
+	
+	public Optional<String> getUnit(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		if (fhirObservation.hasValueQuantity()) {
+			try {
+				Quantity quantity = fhirObservation.getValueQuantity();
+				if (quantity != null) {
+					return Optional.of(quantity.getUnit());
+				}
+			} catch (FHIRException e) {
+				/* ignore */
+			}
+		}
+		return Optional.empty();
 	}
 }

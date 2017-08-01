@@ -2,6 +2,7 @@ package ch.elexis.core.findings.templates.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +25,14 @@ import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
+import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputData;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
+import ch.elexis.core.findings.templates.model.InputDataNumeric;
 import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.data.NamedBlob;
@@ -170,15 +173,28 @@ public class FindingsTemplateService {
 		InputData inputData = findingsTemplate.getInputData();
 		if (inputData instanceof InputDataGroup) {
 			InputDataGroup group = (InputDataGroup) inputData;
+			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
+				IFinding iFinding = createFinding(patient, findingsTemplates);
+				if (iFinding instanceof IObservation) {
+					IObservation target = (IObservation) iFinding;
+					iObservation.addTargetObservation(target, ObservationLinkType.REF);
+				}
+			}
 		} else if (inputData instanceof InputDataGroupComponent) {
 			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
 			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
 				IFinding iFinding = createFinding(patient, findingsTemplates);
 				if (iFinding instanceof IObservation) {
 					IObservation target = (IObservation) iFinding;
-					iObservation.addTargetObservation(target);
+					iObservation.addTargetObservation(target, ObservationLinkType.COMP);
 				}
 			}
+		}
+		else if (inputData instanceof InputDataNumeric) {
+			InputDataNumeric inputDataNumeric = (InputDataNumeric) inputData;
+			BigDecimal bigDecimal = new BigDecimal(0);
+			bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
+			iObservation.setQuantity(bigDecimal, inputDataNumeric.getUnit());
 		}
 		return iObservation;
 	}
@@ -207,7 +223,8 @@ public class FindingsTemplateService {
 					|| category == ObservationCategory.SOAP_SUBJECTIVE
 					|| category == ObservationCategory.SOAP_OBJECTIVE) {
 					
-					return item.getSourceObservations().isEmpty(); // has no parents
+					return item.getSourceObservations(ObservationLinkType.COMP).isEmpty()
+						&& item.getSourceObservations(ObservationLinkType.REF).isEmpty(); // has no parents
 				}
 				return false;
 			}).collect(Collectors.toList());
