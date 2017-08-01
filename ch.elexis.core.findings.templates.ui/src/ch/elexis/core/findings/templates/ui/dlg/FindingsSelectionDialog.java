@@ -1,6 +1,7 @@
 package ch.elexis.core.findings.templates.ui.dlg;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -112,22 +113,36 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
+		selection = new ArrayList<>();
+		StructuredSelection structuredSelection = (StructuredSelection) viewer.getSelection();
+		for (Object o : structuredSelection.toArray()) {
+			if (o instanceof FindingsTemplate) {
+				selection.add((FindingsTemplate) o);
+			}
+		}
+		
 		super.okPressed();
 	}
 	
 	public List<FindingsTemplate> getSelection(boolean asCopy){
-		List<FindingsTemplate> findingsTemplates = new ArrayList<>();
-		StructuredSelection structuredSelection = (StructuredSelection) viewer.getSelection();
-		for (Object o : structuredSelection.toArray()) {
-			if (o instanceof FindingsTemplate) {
-				if (asCopy) {
-					findingsTemplates.add(EcoreUtil.copy((FindingsTemplate) o));
-				}
-				else {
-					findingsTemplates.add((FindingsTemplate) o);
-				}
-			}
+		if (selection == null) {
+			selection = Collections.emptyList();
 		}
-		return findingsTemplates;
+		if (asCopy) {
+			List<FindingsTemplate> findingsTemplates = new ArrayList<>();
+			for (FindingsTemplate findingsTemplate : selection) {
+				findingsTemplates.add(EcoreUtil.copy(findingsTemplate));
+			}
+			return findingsTemplates;
+		}
+		return selection;
+	}
+	
+	public FindingsTemplate getSingleSelection(boolean asCopy){
+		List<FindingsTemplate> findingsTemplates = getSelection(asCopy);
+		if (findingsTemplates.size() > 0) {
+			return findingsTemplates.get(0);
+		}
+		return null;
 	}
 }

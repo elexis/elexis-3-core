@@ -53,18 +53,19 @@ public class ObservationLink extends PersistentObject implements IObservationLin
 		super(id);
 	}
 	
-	public ObservationLink(){}
+	public ObservationLink(){
+		super();
+		create(getId());
+	}
 	
 	@Override
 	public String getLabel(){
-		// TODO Auto-generated method stub
-		return null;
+		return getId();
 	}
 	
 	@Override
 	protected String getTableName(){
-		// TODO Auto-generated method stub
-		return null;
+		return TABLENAME;
 	}
 	
 }
