@@ -194,7 +194,7 @@ public class FindingsTemplateService {
 			InputDataNumeric inputDataNumeric = (InputDataNumeric) inputData;
 			BigDecimal bigDecimal = new BigDecimal(0);
 			bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
-			iObservation.setQuantity(bigDecimal, inputDataNumeric.getUnit());
+			iObservation.setNumericValue(bigDecimal, inputDataNumeric.getUnit());
 		}
 		return iObservation;
 	}

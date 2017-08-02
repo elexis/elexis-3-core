@@ -212,29 +212,30 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		}
 	}
 	
+	
 	@Override
-	public void setQuantity(BigDecimal bigDecimal, String unit){
+	public void setNumericValue(BigDecimal bigDecimal, String unit){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			accessor.setQuantity((DomainResource) resource.get(), bigDecimal, unit);
+			accessor.setNumericValue((DomainResource) resource.get(), bigDecimal, unit);
 			saveResource(resource.get());
 		}
 	}
 	
 	@Override
-	public Optional<BigDecimal> getValue(){
+	public Optional<BigDecimal> getNumericValue(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			return accessor.getValue((DomainResource) resource.get());
+			return accessor.getNumericValue((DomainResource) resource.get());
 		}
 		return Optional.empty();
 	}
 	
 	@Override
-	public Optional<String> getUnit(){
+	public Optional<String> getNumericValueUnit(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			return accessor.getUnit((DomainResource) resource.get());
+			return accessor.getNumericValueUnit((DomainResource) resource.get());
 		}
 		return Optional.empty();
 	}

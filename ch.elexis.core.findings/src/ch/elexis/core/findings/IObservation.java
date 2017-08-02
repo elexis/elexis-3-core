@@ -21,25 +21,25 @@ import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 
 public interface IObservation extends IFinding {
 	public enum ObservationCategory {
-		SOCIALHISTORY("social-history"), VITALSIGNS("vital-signs"), IMAGING("imaging"), LABORATORY(
-				"laboratory"), PROCEDURE("procedure"), SURVEY("survey"), EXAM(
-						"exam"), THERAPY("therapy"), SOAP_SUBJECTIVE(
-								"subjective"), SOAP_OBJECTIVE("objective"), UNKNOWN("unknown");
-
+			SOCIALHISTORY("social-history"), VITALSIGNS("vital-signs"), IMAGING("imaging"),
+			LABORATORY("laboratory"), PROCEDURE("procedure"), SURVEY("survey"), EXAM("exam"),
+			THERAPY("therapy"), SOAP_SUBJECTIVE("subjective"), SOAP_OBJECTIVE("objective"),
+			UNKNOWN("unknown");
+		
 		private String code;
-
-		private ObservationCategory(String code) {
+		
+		private ObservationCategory(String code){
 			this.code = code;
 		}
-
-		public String getCode() {
+		
+		public String getCode(){
 			return code;
 		}
-
-		public String getLocalized() {
+		
+		public String getLocalized(){
 			try {
 				String localized = ResourceBundle.getBundle("ch.elexis.core.findings.messages")
-						.getString(this.getClass().getSimpleName() + "_" + this.name());
+					.getString(this.getClass().getSimpleName() + "_" + this.name());
 				return localized;
 			} catch (MissingResourceException e) {
 				return this.toString();
@@ -75,63 +75,63 @@ public interface IObservation extends IFinding {
 	}
 	
 	public List<IObservation> getSourceObservations(ObservationLinkType type);
-
+	
 	public void addSourceObservation(IObservation source, ObservationLinkType type);
-
+	
 	public List<IObservation> getTargetObseravtions(ObservationLinkType type);
-
+	
 	public void addTargetObservation(IObservation source, ObservationLinkType type);
-
+	
 	/**
 	 * Get the {@link IEncounter} referenced.
 	 * 
 	 * @return
 	 */
 	public Optional<IEncounter> getEncounter();
-
+	
 	/**
-	 * Update the {@link IEncounter} referenced. Also updates the encounterId
-	 * with the value of the {@link IEncounter}.
+	 * Update the {@link IEncounter} referenced. Also updates the encounterId with the value of the
+	 * {@link IEncounter}.
 	 * 
 	 * @param encounter
 	 */
 	public void setEncounter(IEncounter encounter);
-
+	
 	/**
 	 * Get the effective date and time of the observation.
 	 * 
 	 * @return
 	 */
 	public Optional<LocalDateTime> getEffectiveTime();
-
+	
 	/**
 	 * Set the effective date and time of the observation.
 	 * 
 	 * @param time
 	 */
 	public void setEffectiveTime(LocalDateTime time);
-
+	
 	/**
 	 * Get the category of the observation.
 	 * 
 	 * @return
 	 */
 	public ObservationCategory getCategory();
-
+	
 	/**
 	 * Set the category of the observation.
 	 * 
 	 * @param category
 	 */
 	public void setCategory(ObservationCategory category);
-
+	
 	/**
 	 * Get the coding of the {@link ICondition}.
 	 * 
 	 * @return
 	 */
 	public List<ICoding> getCoding();
-
+	
 	/**
 	 * Set the coding of the {@link ICondition}.
 	 * 
@@ -144,19 +144,19 @@ public interface IObservation extends IFinding {
 	 * 
 	 * @return
 	 */
-	public void setQuantity(BigDecimal bigDecimal, String unit);
+	public void setNumericValue(BigDecimal bigDecimal, String unit);
 	
 	/**
-	 * Get the value
+	 * Get the value as numeric
 	 * 
 	 * @return
 	 */
-	public Optional<BigDecimal> getValue();
+	public Optional<BigDecimal> getNumericValue();
 	
 	/**
 	 * Get the Unit
 	 * 
 	 * @return
 	 */
-	public Optional<String> getUnit();
+	public Optional<String> getNumericValueUnit();
 }

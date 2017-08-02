@@ -124,7 +124,7 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		fhirObservation.setSubject(new Reference(new IdDt("Patient", patientId)));
 	}
 	
-	public void setQuantity(DomainResource resource,  BigDecimal value, String unit){
+	public void setNumericValue(DomainResource resource, BigDecimal value, String unit){
 		org.hl7.fhir.dstu3.model.Observation fhirObservation =
 			(org.hl7.fhir.dstu3.model.Observation) resource;
 		Quantity q = new Quantity();
@@ -133,13 +133,13 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		fhirObservation.setValue(q);
 	}
 	
-	public Optional<BigDecimal> getValue(DomainResource resource){
+	public Optional<BigDecimal> getNumericValue(DomainResource resource){
 		org.hl7.fhir.dstu3.model.Observation fhirObservation =
 			(org.hl7.fhir.dstu3.model.Observation) resource;
 		if (fhirObservation.hasValueQuantity()) {
 			try {
 				Quantity quantity = fhirObservation.getValueQuantity();
-				if (quantity != null) {
+				if (quantity != null && quantity.getValue() != null) {
 					return Optional.of(quantity.getValue());
 				}
 			} catch (FHIRException e) {
@@ -149,13 +149,13 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		return Optional.empty();
 	}
 	
-	public Optional<String> getUnit(DomainResource resource){
+	public Optional<String> getNumericValueUnit(DomainResource resource){
 		org.hl7.fhir.dstu3.model.Observation fhirObservation =
 			(org.hl7.fhir.dstu3.model.Observation) resource;
 		if (fhirObservation.hasValueQuantity()) {
 			try {
 				Quantity quantity = fhirObservation.getValueQuantity();
-				if (quantity != null) {
+				if (quantity != null && quantity.getUnit() != null) {
 					return Optional.of(quantity.getUnit());
 				}
 			} catch (FHIRException e) {
