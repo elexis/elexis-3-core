@@ -438,6 +438,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_selectRegularPhysicianMessage;
 	public static String Patientenblatt2_sex;
 	public static String Patientenblatt2_showAddress;
+	public static String Patientenblatt2_showBezugKontaktRelation;
 	public static String Patientenblatt2_ahvNumber;
 	public static String Patientenblatt2_legalGuardian;
 	public static String Patientenblatt2_selectLegalGuardianTitle;

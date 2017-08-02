@@ -126,7 +126,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private static final String KEY_PATIENTENBLATT = "Patientenblatt/"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private InputPanel ipp;
-	private IAction removeZAAction, showZAAction, copySelectedContactInfosToClipboardAction,
+	private IAction removeZAAction, showZAAction, showBKAction,
+			copySelectedContactInfosToClipboardAction,
 			copySelectedAddressesToClipboardAction, removeAdditionalAddressAction,
 			showAdditionalAddressAction;
 	// MenuItem delZA;
@@ -581,7 +582,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
 		
 		// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
-		inpZusatzAdresse.setMenu(removeZAAction, showZAAction,
+		inpZusatzAdresse.setMenu(removeZAAction, showZAAction, showBKAction,
 			copySelectedContactInfosToClipboardAction, copySelectedAddressesToClipboardAction);
 		
 		ecZA.setClient(inpZusatzAdresse);
@@ -851,6 +852,25 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				KontaktDetailDialog kdd = new KontaktDetailDialog(form.getShell(), a, bLocked);
 				if (kdd.open() == Dialog.OK) {
 					setPatient(actPatient);
+				}
+			}
+		};
+		
+		showBKAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
+			Messages.Patientenblatt2_showBezugKontaktRelation) {
+			@Override
+			public void doRun(){
+				BezugsKontakt bezugsKontakt = (BezugsKontakt) inpZusatzAdresse.getSelection();
+				if (bezugsKontakt != null) {
+					Kontakt k = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
+					BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(actPatient.getLabel(true),
+						k.istPerson() ? Person.load(k.getId()).getLabel(true) : k.getLabel(true),
+						bezugsKontakt, bLocked);
+					if (bezugsKontakt != null && bza.open() == Dialog.OK
+						&& bza.getBezugKonkaktRelation() != null) {
+						bezugsKontakt.updateRelation(bza.getBezugKonkaktRelation());
+						setPatient(actPatient);
+					}
 				}
 			}
 		};
