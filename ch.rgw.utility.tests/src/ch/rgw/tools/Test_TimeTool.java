@@ -4,6 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 public class Test_TimeTool {
@@ -25,7 +27,8 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
+		assertTrue(printFailure(timeTool, duration, split),
+			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
 		timeTool.addDays(-1);
@@ -36,7 +39,7 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -51,7 +54,7 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString() + ": " + duration + " | " + split[0] + " | " + split[1],
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -63,7 +66,7 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -75,7 +78,7 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -87,7 +90,7 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -99,7 +102,7 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -111,8 +114,12 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
+	}
+	
+	private String printFailure(TimeTool timeTool, String duration, String[] split){
+		return timeTool.toDBString(true) + ": duration=" + duration + ", " + Arrays.toString(split);
 	}
 	
 	private boolean containsDigit(String duration){
