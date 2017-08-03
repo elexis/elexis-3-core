@@ -20,6 +20,23 @@ public class BezugsKontaktRelation {
 		this.srcRelationType = bezugsKontaktRelation.getSrcRelationType();
 		this.destRelationType = bezugsKontaktRelation.getDestRelationType();
 	}
+	
+	public BezugsKontaktRelation(BezugsKontakt bezugsKontakt){
+		if (bezugsKontakt != null && bezugsKontakt.exists()) {
+			this.id = bezugsKontakt.getId();
+			try {
+				this.name = bezugsKontakt.getBezug();
+				this.srcRelationType = RelationshipType
+					.get(Integer.parseInt(bezugsKontakt.get(BezugsKontakt.FLD_OTHER_RTYPE)));
+				this.destRelationType = RelationshipType
+					.get(Integer.parseInt(bezugsKontakt.get(BezugsKontakt.FLD_MY_RTYPE)));
+			} catch (NumberFormatException e) {
+				/* ignore */
+			}
+		} else {
+			this.id = UUID.randomUUID().toString();
+		}
+	}
 
 	public BezugsKontaktRelation(){
 		super();
@@ -104,12 +121,7 @@ public class BezugsKontaktRelation {
 	public void updateToNewBezugKontakt(BezugsKontaktRelation newBezugKontaktRelation){
 		List<BezugsKontakt> bezugsKontakts = findAllBezugKontaksByName(this.getName(), true);
 		for (BezugsKontakt bezugsKontakt : bezugsKontakts) {
-			bezugsKontakt.set(new String[] {
-				BezugsKontakt.RELATION,
-				BezugsKontakt.FLD_MY_RTYPE, BezugsKontakt.FLD_OTHER_RTYPE
-			}, newBezugKontaktRelation.getName(),
-				String.valueOf(newBezugKontaktRelation.getDestRelationType().getValue()),
-				String.valueOf(newBezugKontaktRelation.getSrcRelationType().getValue()));
+			bezugsKontakt.updateRelation(newBezugKontaktRelation);
 		}
 	}
 	

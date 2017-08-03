@@ -56,6 +56,19 @@ public class BezugsKontakt extends PersistentObject {
 			String.valueOf(bezugsKontaktType.getSrcRelationType().getValue()));
 	}
 	
+	/**
+	 * Updates the relation of a {@link BezugsKontakt}
+	 * 
+	 * @param bezugsKontaktRelation
+	 */
+	public void updateRelation(BezugsKontaktRelation bezugsKontaktRelation){
+		set(new String[] {
+			BezugsKontakt.RELATION, BezugsKontakt.FLD_MY_RTYPE, BezugsKontakt.FLD_OTHER_RTYPE
+		}, bezugsKontaktRelation.getName(),
+			String.valueOf(bezugsKontaktRelation.getDestRelationType().getValue()),
+			String.valueOf(bezugsKontaktRelation.getSrcRelationType().getValue()));
+	}
+	
 	@Override
 	public String getLabel(){
 		Kontakt k = Kontakt.load(get(OTHER_ID));
