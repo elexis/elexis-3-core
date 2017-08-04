@@ -10,12 +10,13 @@
 
   See also http://logback.qos.ch/documentation.html especially
   http://logback.qos.ch/manual/configuration.html
-
-  The file (ch.elexis.core.logging.feature/logback.xml) is used when Elexis is started from the commandline, where it
+  
+  
+  This file (ch.elexis.core.logging.feature/logback.xml) is used when Elexis is started from the commandline, where it 
   was copied along the executable.
   When you edit here while Elexis is running, the changes will take effect immediately.
+  It overrides the defaults specified in ch.elexis.core.logging.default_configuration/rsc/logback.xml
   Keep in mind. When running from IDE it has no effect.
-  It overrides the defaults specified  here (ch.elexis.core.logging.default_configuration/rsc/logback.xml).
   
 -->
 <configuration scan="true" debug="false">
