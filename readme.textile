@@ -1,5 +1,7 @@
 h1. Elexis 3 Core Repository
 
+*BETA* This branch only supports building beta versions. It is only used by the Medelexis AG for one customer.
+
 *IMPORTANT* Please employ the @3lexisFormatterProfile.xml@ as Eclipse default formatter prior to development and pull requests.
 This accounts for all Elexis 3 related development.
 

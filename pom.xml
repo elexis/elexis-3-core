@@ -195,24 +195,6 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-			<id>prerelease</id>
-			<activation>
-				<property>
-					<name>repo_variant</name>
-					<value>prerelease</value>
-				</property>
-			</activation>
-		</profile>
-		<profile>
-			<id>release</id>
-			<activation>
-				<property>
-					<name>repo_variant</name>
-					<value>release</value>
-				</property>
-			</activation>
-		</profile>
 	</profiles>
 	<reporting>
 		<plugins>
@@ -298,7 +280,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-extras.version>${tycho-version}</tycho-extras.version>
 		<repo_name>elexis.3.core</repo_name>
-		<repo_variant>snapshot</repo_variant>
+		<repo_variant>beta</repo_variant>
 		<ROOT>${project.basedir}/compositeRepository</ROOT>
 	</properties>
 	<build>
