@@ -77,6 +77,13 @@ public class MedicationViewerHelper {
 					if (date != null && !date.isEmpty()) {
 						label = MessageFormat.format(Messages.MedicationComposite_startedAt, date);
 					}
+					// check if stop date is set
+					String endDate = pres.getEndDate();
+					if (endDate != null && !endDate.isEmpty()) {
+						String reason = pres.getStopReason() == null ? "?" : pres.getStopReason();
+						label += ("\n" + MessageFormat.format(
+							Messages.MedicationComposite_stopDateAndReason, endDate, reason));
+					}
 				} else {
 					IPersistentObject po = pres.getLastDisposed();
 					if (po != null) {
