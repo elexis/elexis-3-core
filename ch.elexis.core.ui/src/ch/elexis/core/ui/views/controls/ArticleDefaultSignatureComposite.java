@@ -16,6 +16,8 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -35,6 +37,7 @@ import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.ArticleDefaultSignature.ArticleSignature;
 import ch.elexis.data.Artikel;
+import ch.rgw.tools.TimeTool;
 
 public class ArticleDefaultSignatureComposite extends Composite {
 	
@@ -68,6 +71,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private Text txtFreeTextDosage;
 	private Composite compositeFreeTextDosage;
 	private Composite stackCompositeDosage;
+	private Composite compositeMedicationTypeDetail;
+	
+	private Label lblCalcEndDate;
 	
 	private List<SavingTargetToModelStrategy> targetToModelStrategies;
 	
@@ -185,6 +191,8 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		btnFix.setText(Messages.ArticleDefaultSignatureComposite_fix);
 		btnFix.addSelectionListener(new SavingSelectionAdapter());
 		
+		createMedicationTypeDetails(this);
+
 		disposalType = new Composite(this, SWT.NONE);
 		disposalType.setLayout(new RowLayout());
 		disposalType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
@@ -196,6 +204,71 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		btnDispensation = new Button(disposalType, SWT.RADIO);
 		btnDispensation.setText(Messages.ArticleDefaultSignatureComposite_dispensation);
 		btnDispensation.addSelectionListener(new SavingSelectionAdapter());
+	}
+
+	private void createMedicationTypeDetails(Composite parent){
+		compositeMedicationTypeDetail = new Composite(parent, SWT.NONE);
+		compositeMedicationTypeDetail.setLayout(new GridLayout(4, false));
+		compositeMedicationTypeDetail
+			.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		Label lblEnddate = new Label(compositeMedicationTypeDetail, SWT.NONE);
+		lblEnddate.setText("Stoppdatum:");
+		
+		GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
+		lblCalcEndDate = new Label(compositeMedicationTypeDetail, SWT.NONE);
+		lblCalcEndDate.setText("");
+		gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
+		gd.widthHint = 70;
+		lblCalcEndDate.setLayoutData(gd);
+		TimeTool t = new TimeTool();
+		lblCalcEndDate.setText("(" + t.toString(TimeTool.DATE_GER) + ")");
+		lblCalcEndDate.setData(t);
+		Text txtEnddate = new Text(compositeMedicationTypeDetail, SWT.BORDER | SWT.CENTER);
+		txtEnddate.setText("");
+		gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
+		gd.widthHint = 30;
+		txtEnddate.setLayoutData(gd);
+		
+		Label lblDays = new Label(compositeMedicationTypeDetail, SWT.NONE);
+		lblDays.setText("Tage");
+		
+		txtEnddate.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e){
+				String endDate = txtEnddate.getText();
+				int days = 0;
+				try {
+					int parseDays = Integer.parseInt(endDate);
+					if (parseDays > 0) {
+						days = parseDays;
+					}
+					
+				} catch (NumberFormatException ex) {
+					/** ignore **/
+				}
+				
+				TimeTool t = new TimeTool();
+				if (days > (365 * 500)) {
+					days = 365 * 500;
+				}
+				t.addDays(days);
+				lblCalcEndDate.setText("(" + t.toString(TimeTool.DATE_GER) + ")");
+				lblCalcEndDate.setData(t);
+			}
+		});
+		
+		updateMedicationTypeDetails();
+	}
+	
+	public void updateMedicationTypeDetails(){
+		if (compositeMedicationTypeDetail != null) {
+			boolean visible = btnSymtomatic != null && btnSymtomatic.getSelection();
+			compositeMedicationTypeDetail.setVisible(visible);
+			GridData data = (GridData) compositeMedicationTypeDetail.getLayoutData();
+			data.exclude = !visible;
+			compositeMedicationTypeDetail.getParent().layout();
+		}
 	}
 	
 	public void setToolbarVisible(boolean value){
@@ -356,6 +429,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			}
 			if (btnSymtomatic.getSelection()) {
 				signature.setMedicationType(EntryType.SYMPTOMATIC_MEDICATION);
+				
 			} else if (btnReserve.getSelection()) {
 				signature.setMedicationType(EntryType.RESERVE_MEDICATION);
 			} else if (btnFix.getSelection()) {
@@ -366,7 +440,11 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			} else if (btnDispensation.getSelection()) {
 				signature.setDisposalType(EntryType.SELF_DISPENSED);
 			}
+			if (lblCalcEndDate != null && lblCalcEndDate.getData() instanceof TimeTool) {
+				signature.setEndDate((TimeTool) lblCalcEndDate.getData());
+			}
 		}
+		updateMedicationTypeDetails();
 	}
 	
 	public void updateTargetNonDatabinding(){
@@ -421,6 +499,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				btnRadioOnArticle.setSelection(true);
 			}
 		}
+		updateMedicationTypeDetails();
 	}
 	
 	public void safeToDefault(){
