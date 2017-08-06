@@ -233,7 +233,7 @@ public class MedicationViewerHelper {
 		ColumnWeightData mandantColumnWeightData =
 			new ColumnWeightData(0, 50, true);
 		layout.setColumnData(tblclmnMandant, mandantColumnWeightData);
-		tblclmnMandant.setText("Anwender");
+		tblclmnMandant.setText(Messages.MedicationComposite_column_mandant);
 		tblclmnMandant.setToolTipText(Messages.MedicationComposite_column_mandant);
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
