@@ -72,6 +72,7 @@ public class Messages extends NLS {
 	public static String MedicationComposite_column_type;
 	public static String MedicationComposite_column_sortBy;
 	public static String MedicationComposite_column_beginDate;
+	public static String MedicationComposite_column_endDate;
 	public static String MedicationComposite_column_mandant;
 	
 	static {

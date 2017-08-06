@@ -155,6 +155,8 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnComment,
 			new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
 		tblclmnComment.setText(Messages.TherapieplanComposite_tblclmnComment_text);
+		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.TherapieplanComposite_tblclmnComment_text);
 		tblclmnComment
 			.addSelectionListener(getSelectionAdapter(viewer, tblclmnComment, columnIndex));
 		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
@@ -178,6 +180,8 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnStop, stopColumnPixelData);
 		tblclmnStop.setImage(Images.resize(Images.IMG_ARROWSTOP_WO_SHADOW.getImage(),
 			ImageSize._12x12_TableColumnIconSize));
+		tblclmnStop.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.MedicationComposite_column_endDate);
 		tblclmnStop.addSelectionListener(getSelectionAdapter(viewer, tblclmnStop, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
@@ -202,6 +206,8 @@ public class MedicationViewerHelper {
 			new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true);
 		layout.setColumnData(tblclmnReason, reasonColumnWeightData);
 		tblclmnReason.setText(Messages.MedicationComposite_stopReason);
+		tblclmnReason.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.MedicationComposite_stopReason);
 		tblclmnReason.addSelectionListener(getSelectionAdapter(viewer, tblclmnReason, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
