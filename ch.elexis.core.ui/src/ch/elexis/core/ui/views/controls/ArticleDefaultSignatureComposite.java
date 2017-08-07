@@ -216,13 +216,11 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
 		lblCalcEndDate = new Label(compositeMedicationTypeDetail, SWT.NONE);
-		lblCalcEndDate.setText("");
 		gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
-		gd.widthHint = 70;
+		gd.widthHint = 80;
 		lblCalcEndDate.setLayoutData(gd);
-		TimeTool t = new TimeTool();
-		lblCalcEndDate.setText("(" + t.toString(TimeTool.DATE_GER) + ")");
-		lblCalcEndDate.setData(t);
+		lblCalcEndDate.setText("(" + Messages.ArticleDefaultSignatureComposite_date_none + ")");
+		lblCalcEndDate.setData(null);
 		Text txtEnddate = new Text(compositeMedicationTypeDetail, SWT.BORDER | SWT.CENTER);
 		txtEnddate.setText("");
 		gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
@@ -236,25 +234,27 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			
 			@Override
 			public void modifyText(ModifyEvent e){
-				String endDate = txtEnddate.getText();
-				int days = 0;
 				try {
-					int parseDays = Integer.parseInt(endDate);
-					if (parseDays > 0) {
-						days = parseDays;
+					int days = Integer.parseInt(txtEnddate.getText());
+					TimeTool t = new TimeTool();
+					// maximum reached
+					if (days > (365 * 500)) {
+						days = 365 * 500;
 					}
+					// minimum reached
+					if (days < 0) {
+						days = 0;
+					}
+					t.addDays(days);
+					lblCalcEndDate.setText("(" + t.toString(TimeTool.DATE_GER) + ")");
+					lblCalcEndDate.setData(t);
+					return;
 					
 				} catch (NumberFormatException ex) {
-					/** ignore **/
 				}
-				
-				TimeTool t = new TimeTool();
-				if (days > (365 * 500)) {
-					days = 365 * 500;
-				}
-				t.addDays(days);
-				lblCalcEndDate.setText("(" + t.toString(TimeTool.DATE_GER) + ")");
-				lblCalcEndDate.setData(t);
+				lblCalcEndDate
+					.setText("(" + Messages.ArticleDefaultSignatureComposite_date_none + ")");
+				lblCalcEndDate.setData(null);
 			}
 		});
 		
@@ -440,8 +440,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			} else if (btnDispensation.getSelection()) {
 				signature.setDisposalType(EntryType.SELF_DISPENSED);
 			}
-			if (lblCalcEndDate != null && lblCalcEndDate.getData() instanceof TimeTool) {
-				signature.setEndDate((TimeTool) lblCalcEndDate.getData());
+			if (lblCalcEndDate != null) {
+				signature.setEndDate(lblCalcEndDate.getData() instanceof TimeTool
+						? (TimeTool) lblCalcEndDate.getData() : null);
 			}
 		}
 		updateMedicationTypeDetails();
