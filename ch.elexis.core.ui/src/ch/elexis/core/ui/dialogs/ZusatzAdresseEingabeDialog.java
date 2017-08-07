@@ -12,6 +12,10 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -104,7 +108,9 @@ public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
 				return LocalizeUtil.getLocaleText((AddressType) element);
 			}
 		});
-		comboAddressType.setInput(AddressType.values());
+		List<AddressType> comboValues = new ArrayList<>(Arrays.asList(AddressType.values()));
+		comboValues.remove(AddressType.PRINCIPAL_RESIDENCE); //principal residence is defined within patient - contact relation
+		comboAddressType.setInput(comboValues);
 		
 		Label l1 = new Label(com, SWT.NONE);
 		l1.setText(Messages.AnschriftEingabeDialog_street + "1"); //$NON-NLS-1$
