@@ -246,7 +246,18 @@ public class Anwender extends Person {
 
 		// check anwender is valid
 		Anwender anwender = Anwender.load(user.getAssignedContactId());
-		if (anwender == null || !anwender.isValid() || !anwender.istAnwender()) {
+		if (anwender == null) {
+			log.error("anwender is null");
+			return false;
+		}
+		
+		if (!anwender.isValid()) {
+			log.error("anwender is invalid or deleted");
+			return false;
+		}
+		
+		if (!anwender.istAnwender()) {
+			log.error("anwender is not a istAnwender");
 			return false;
 		}
 		
