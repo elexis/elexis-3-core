@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -168,7 +169,10 @@ public class GlobalActions {
 				
 				@Override
 				public void run(){
-					mainWindow.getActivePage().savePerspective();
+					IWorkbenchPage page = mainWindow.getActivePage();
+					if (page != null && page.getPerspective() != null) {
+						page.savePerspectiveAs(page.getPerspective());
+					}
 				}
 			};
 		
