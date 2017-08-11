@@ -662,4 +662,8 @@ public class Kontakt extends PersistentObject {
 	public boolean istOrganisation(){
 		return checkNull(get(FLD_IS_ORGANIZATION)).equals(StringConstants.ONE);
 	}
+	
+	public boolean istAnwender(){
+		return checkNull(get(FLD_IS_USER)).equals(StringConstants.ONE);
+	}
 }

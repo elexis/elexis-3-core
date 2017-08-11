@@ -244,9 +244,15 @@ public class Anwender extends Person {
 			return false;
 		}
 
+		// check anwender is valid
+		Anwender anwender = Anwender.load(user.getAssignedContactId());
+		if (anwender == null || !anwender.isValid() || !anwender.istAnwender()) {
+			return false;
+		}
+		
 		// set user in system
 		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
-		CoreHub.actUser = Anwender.load(user.getAssignedContactId());
+		CoreHub.actUser = anwender;
 		ElexisEventDispatcher.getInstance()
 				.fire(new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 
