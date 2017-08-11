@@ -19,6 +19,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.security.auth.login.LoginException;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -247,17 +249,19 @@ public class Anwender extends Person {
 		// check anwender is valid
 		Anwender anwender = Anwender.load(user.getAssignedContactId());
 		if (anwender == null) {
-			log.error("username: " + username + " anwender: is null");
+			log.error("username: {}", username, new LoginException("anwender is null"));
 			return false;
 		}
 		
 		if (!anwender.isValid()) {
-			log.error("username: " + username + " anwender is invalid or deleted");
+			log.error("username: {}", username,
+				new LoginException("anwender is invalid or deleted"));
 			return false;
 		}
 		
 		if (!anwender.istAnwender()) {
-			log.error("username: " + username + " anwender is not a istAnwender");
+			log.error("username: {}", username,
+				new LoginException("anwender is not a istAnwender"));
 			return false;
 		}
 		
