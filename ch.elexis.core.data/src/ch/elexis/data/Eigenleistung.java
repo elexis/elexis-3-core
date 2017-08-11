@@ -104,7 +104,7 @@ public class Eigenleistung extends VerrechenbarAdapter {
 	}
 	
 	public double getFactor(final TimeTool date, final Fall fall){
-		return getVKMultiplikator(date, fall);
+		return 1.0;
 	}
 	
 	@Override
