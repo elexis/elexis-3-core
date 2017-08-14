@@ -30,6 +30,8 @@ public class MedicationViewerHelper {
 		int columnIndex){
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblclmnStateDisposition = ret.getColumn();
+		tblclmnStateDisposition.setToolTipText(Messages.MedicationComposite_column_sortBy + " " 
+			+ Messages.MedicationComposite_column_type);
 		layout.setColumnData(tblclmnStateDisposition, new ColumnPixelData(20, false, false));
 		tblclmnStateDisposition.addSelectionListener(
 			getSelectionAdapter(viewer, tblclmnStateDisposition, columnIndex));
@@ -53,6 +55,8 @@ public class MedicationViewerHelper {
 		final TableColumn tblclmnArticle = ret.getColumn();
 		layout.setColumnData(tblclmnArticle, new ColumnPixelData(250, true, true));
 		tblclmnArticle.setText(Messages.TherapieplanComposite_tblclmnArticle_text);
+		tblclmnArticle.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.TherapieplanComposite_tblclmnArticle_text);
 		tblclmnArticle
 			.addSelectionListener(getSelectionAdapter(viewer, tblclmnArticle, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
@@ -72,6 +76,13 @@ public class MedicationViewerHelper {
 					String date = pres.getBeginDate();
 					if (date != null && !date.isEmpty()) {
 						label = MessageFormat.format(Messages.MedicationComposite_startedAt, date);
+					}
+					// check if stop date is set
+					String endDate = pres.getEndDate();
+					if (endDate != null && !endDate.isEmpty()) {
+						String reason = pres.getStopReason() == null ? "?" : pres.getStopReason();
+						label += ("\n" + MessageFormat.format(
+							Messages.MedicationComposite_stopDateAndReason, endDate, reason));
 					}
 				} else {
 					IPersistentObject po = pres.getLastDisposed();
@@ -129,6 +140,8 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnEnacted, new ColumnPixelData(60, true, true));
 		tblclmnEnacted.setImage(Images.resize(Images.IMG_NEXT_WO_SHADOW.getImage(),
 			ImageSize._12x12_TableColumnIconSize));
+		tblclmnEnacted.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.MedicationComposite_column_beginDate);
 		tblclmnEnacted
 			.addSelectionListener(getSelectionAdapter(viewer, tblclmnEnacted, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
@@ -149,8 +162,12 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnComment,
 			new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
 		tblclmnComment.setText(Messages.TherapieplanComposite_tblclmnComment_text);
+		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.TherapieplanComposite_tblclmnComment_text);
 		tblclmnComment
 			.addSelectionListener(getSelectionAdapter(viewer, tblclmnComment, columnIndex));
+		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.TherapieplanComposite_tblclmnComment_text);
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			
 			@Override
@@ -170,6 +187,8 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnStop, stopColumnPixelData);
 		tblclmnStop.setImage(Images.resize(Images.IMG_ARROWSTOP_WO_SHADOW.getImage(),
 			ImageSize._12x12_TableColumnIconSize));
+		tblclmnStop.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.MedicationComposite_column_endDate);
 		tblclmnStop.addSelectionListener(getSelectionAdapter(viewer, tblclmnStop, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
@@ -194,6 +213,8 @@ public class MedicationViewerHelper {
 			new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true);
 		layout.setColumnData(tblclmnReason, reasonColumnWeightData);
 		tblclmnReason.setText(Messages.MedicationComposite_stopReason);
+		tblclmnReason.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.MedicationComposite_stopReason);
 		tblclmnReason.addSelectionListener(getSelectionAdapter(viewer, tblclmnReason, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
@@ -219,7 +240,8 @@ public class MedicationViewerHelper {
 		ColumnWeightData mandantColumnWeightData =
 			new ColumnWeightData(0, 50, true);
 		layout.setColumnData(tblclmnMandant, mandantColumnWeightData);
-		tblclmnMandant.setText("Anwender");
+		tblclmnMandant.setText(Messages.MedicationComposite_column_mandant);
+		tblclmnMandant.setToolTipText(Messages.MedicationComposite_column_mandant);
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
 			public String getText(Object element){

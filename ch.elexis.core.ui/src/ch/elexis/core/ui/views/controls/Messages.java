@@ -17,6 +17,7 @@ public class Messages extends NLS {
 	public static String ArticleDefaultSignatureComposite_recipe;
 	public static String ArticleDefaultSignatureComposite_reserve;
 	public static String ArticleDefaultSignatureComposite_sympomatic;
+	public static String ArticleDefaultSignatureComposite_date_none;
 	
 	public static String KontaktSelectionComposite_message;
 	public static String KontaktSelectionComposite_title;
