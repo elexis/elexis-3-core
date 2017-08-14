@@ -623,6 +623,7 @@ public class MedicationComposite extends Composite
 				if (endDate != null && !endDate.isEmpty()) {
 					// create new stopped prescription
 					Prescription newStoppedPrescription = new Prescription(oldPrescription);
+					newStoppedPrescription.setBeginDate(oldPrescription.getBeginTime());
 					TimeTool ttEndDate = new TimeTool(pres.getEndTime());
 					newStoppedPrescription.stop(ttEndDate);
 					newStoppedPrescription
