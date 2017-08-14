@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import at.medevit.elexis.outbox.model.OutboxElementType;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.documents.DocumentStore;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
@@ -68,8 +69,9 @@ public class OutboxHandler extends AbstractHandler implements IHandler {
 			DocumentStoreServiceHolder.getService().getPersistenceObject(document);
 		if (po.isPresent()) {
 			OutboxElementServiceHolder.getService().createOutboxElement(patient, mandant,
-				OutboxElementType.DB.getPrefix() + DocumentStoreServiceHolder.getService()
-					.getPersistenceObject(document).get().storeToString());
+				OutboxElementType.DOC.getPrefix() + document.getId()
+					+ DocumentStore.ID_WITH_STOREID_SPLIT
+					+ document.getStoreId());
 			return true;
 		}
 		return false;

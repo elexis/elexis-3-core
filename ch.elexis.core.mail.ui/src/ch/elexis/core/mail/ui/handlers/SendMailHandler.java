@@ -111,7 +111,7 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 	private List<File> getAttachmentsList(String attachments){
 		List<File> ret = new ArrayList<File>();
 		if (attachments != null && !attachments.isEmpty()) {
-			String[] parts = attachments.split(",");
+			String[] parts = attachments.split(":::");
 			for (String string : parts) {
 				ret.add(new File(string));
 			}
