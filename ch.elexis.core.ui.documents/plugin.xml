@@ -61,6 +61,10 @@
             id="ch.elexis.core.ui.documents.send"
             name="send">
       </command>
+      <command
+            id="ch.elexis.core.ui.documents.OutboxHandler"
+            name="outbox handler">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -155,6 +159,11 @@
                name="ch.elexis.core.ui.documents.separator2"
                visible="true">
          </separator>
+         <command
+               commandId="ch.elexis.core.ui.documents.OutboxHandler"
+               label="in Outbox ablegen"
+               style="push">
+         </command>
          <menu
                icon="icon://IMG_MAIL_SEND"
                label="Versenden">
@@ -240,6 +249,10 @@
       <handler
             class="ch.elexis.core.ui.documents.handler.DocumentSendAsMailHandler"
             commandId="ch.elexis.core.ui.documents.commandSendAsMail">
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.documents.handler.OutboxHandler"
+            commandId="ch.elexis.core.ui.documents.OutboxHandler">
       </handler>
    </extension>
 

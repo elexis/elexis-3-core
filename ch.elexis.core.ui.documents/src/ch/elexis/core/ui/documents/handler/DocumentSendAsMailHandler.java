@@ -20,8 +20,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +73,8 @@ public class DocumentSendAsMailHandler extends AbstractHandler implements IHandl
 					
 					ParameterizedCommand parametrizedCommmand =
 						ParameterizedCommand.generateCommand(sendMailCommand, params);
-					parametrizedCommmand.executeWithChecks(null, null);
+					PlatformUI.getWorkbench().getService(IHandlerService.class)
+						.executeCommand(parametrizedCommmand, null);
 				} catch (Exception ex) {
 					throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex);
 				}
@@ -86,7 +89,8 @@ public class DocumentSendAsMailHandler extends AbstractHandler implements IHandl
 		attachmentsFolder = new File(tmpDir, "_att" + System.currentTimeMillis() + "_");
 		attachmentsFolder.mkdir();
 		File tmpFile =
-			new File(attachmentsFolder, iDocument.getTitle() + "." + iDocument.getExtension());
+			new File(attachmentsFolder, iDocument.getTitle().endsWith(iDocument.getExtension())
+					? iDocument.getTitle() : iDocument.getTitle() + "." + iDocument.getExtension());
 		try (FileOutputStream fout = new FileOutputStream(tmpFile)) {
 			Optional<InputStream> content =
 				DocumentStoreServiceHolder.getService().loadContent(iDocument);
@@ -118,7 +122,7 @@ public class DocumentSendAsMailHandler extends AbstractHandler implements IHandl
 		StringBuilder sb = new StringBuilder();
 		for (File file : attachments) {
 			if (sb.length() > 0) {
-				sb.append(",");
+				sb.append(":::");
 			}
 			sb.append(file.getAbsolutePath());
 		}

@@ -67,55 +67,82 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 			}
 			Display display = Display.getDefault();
 			try {
-				new ProgressMonitorDialog(HandlerUtil.getActiveShell(event)).run(true, false,
-					new IRunnableWithProgress() {
-						
-						@Override
-						public void run(IProgressMonitor monitor)
-							throws InvocationTargetException, InterruptedException{
-							monitor.beginTask("Send Mail ...", IProgressMonitor.UNKNOWN);
-							if (MailClientComponent.getMailClient()
-								.sendMail(sendMailDialog.getAccount(), message)) {
-								// new OutputLog();
-								display.asyncExec(new Runnable() {
-									@Override
-									public void run(){
-										MessageDialog.openInformation(
-											HandlerUtil.getActiveShell(event), "E-Mail versand",
-											"E-Mail erfolgreich versendet.");
-									}
-								});
-							} else {
-								display.asyncExec(new Runnable() {
-									@Override
-									public void run(){
-										String errorMessage =
-											MailClientComponent.getLastErrorMessage();
-										MessageDialog.openError(HandlerUtil.getActiveShell(event),
-											"Fehler", errorMessage);
-									}
-								});
-							}
-							monitor.done();
-						}
-					});
+				MailSendRunnable mailSendRunnable =
+					new MailSendRunnable(display, sendMailDialog, message, event);
+				new ProgressMonitorDialog(HandlerUtil.getActiveShell(event)).run(false, false,
+					mailSendRunnable);
+				
+				return mailSendRunnable.isSuccess();
 			} catch (InvocationTargetException | InterruptedException e) {
 				MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
 					"Versenden konnte nicht gestartet werden.");
 			}
 		}
-		
-		return null;
+		return false;
 	}
 	
 	private List<File> getAttachmentsList(String attachments){
 		List<File> ret = new ArrayList<File>();
 		if (attachments != null && !attachments.isEmpty()) {
-			String[] parts = attachments.split(",");
+			String[] parts = attachments.split(":::");
 			for (String string : parts) {
 				ret.add(new File(string));
 			}
 		}
 		return ret;
+	}
+	
+	class MailSendRunnable implements IRunnableWithProgress {
+		
+		private final Display display;
+		private final SendMailDialog sendMailDialog;
+		private final ExecutionEvent event;
+		private final MailMessage message;
+		private boolean success;
+		
+		public MailSendRunnable(Display display, SendMailDialog sendMailDialog, MailMessage message,
+			ExecutionEvent event){
+			this.display = display;
+			this.sendMailDialog = sendMailDialog;
+			this.event = event;
+			this.message = message;
+			this.success = false;
+		}
+		
+		public boolean isSuccess(){
+			return success;
+		}
+		
+		@Override
+		public void run(IProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException{
+			monitor.beginTask("Send Mail ...", IProgressMonitor.UNKNOWN);
+			if (MailClientComponent.getMailClient().sendMail(sendMailDialog.getAccount(),
+				message)) {
+				success = true;
+				// new OutputLog();
+				display.asyncExec(new Runnable() {
+					@Override
+					public void run(){
+						MessageDialog.openInformation(HandlerUtil.getActiveShell(event),
+							"E-Mail versand", "E-Mail erfolgreich versendet.");
+						
+					}
+				});
+			} else {
+				success = false;
+				display.asyncExec(new Runnable() {
+					
+					@Override
+					public void run(){
+						String errorMessage = MailClientComponent.getLastErrorMessage();
+						MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
+							errorMessage);
+					}
+				});
+			}
+			monitor.done();
+		}
+		
 	}
 }
