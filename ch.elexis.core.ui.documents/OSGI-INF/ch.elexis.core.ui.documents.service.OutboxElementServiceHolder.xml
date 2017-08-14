@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.ui.documents.service.OutboxElementServiceHolder">
-   <reference bind="setOutboxElementService" cardinality="1..1" interface="at.medevit.elexis.outbox.model.IOutboxElementService" name="OutboxElementService" policy="static" unbind="unsetOutboxElementService"/>
-   <implementation class="ch.elexis.core.ui.documents.service.OutboxElementServiceHolder"/>
-</scr:component>
