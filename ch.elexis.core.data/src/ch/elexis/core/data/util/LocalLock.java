@@ -26,13 +26,26 @@ public class LocalLock {
 	private String lockString;
 	private Object lockObject;
 	
+	/**
+	 * Create a new LocalLock, the lock is not written to the DB. Use {@link LocalLock#tryLock()} to
+	 * write the lock to the DB.
+	 * 
+	 * @param object
+	 */
 	public LocalLock(Object object){
 		this.lockObject = object;
 		if (object instanceof IPersistentObject) {
 			lockString = "local_" + ((IPersistentObject) object).storeToString() + "_lock"; //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (object instanceof String) {
+			lockString = "local_" + (String) object + "_lock";
 		}
 	}
 	
+	/**
+	 * Try to write the lock to the DB if there is not already a lock on the object.
+	 * 
+	 * @return true if lock written, false if there is already a lock in the DB.
+	 */
 	public boolean tryLock(){
 		Stm statement = PersistentObject.getDefaultConnection().getStatement();
 		try {
@@ -44,7 +57,9 @@ public class LocalLock {
 				StringBuilder sb = new StringBuilder();
 				sb.append("INSERT INTO CONFIG (param,wert) VALUES (") //$NON-NLS-1$
 					.append(JdbcLink.wrap(lockString)).append(",") //$NON-NLS-1$
-					.append(JdbcLink.wrap("[" + CoreHub.actUser.getLabel() + "]")).append(")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					.append(JdbcLink
+						.wrap("[" + CoreHub.actUser.getLabel() + "]@" + System.currentTimeMillis())) //$NON-NLS-1$//$NON-NLS-2$
+					.append(")"); //$NON-NLS-1$
 				statement.exec(sb.toString());
 				managedLocks.put(lockObject, this);
 				return true;
@@ -54,6 +69,10 @@ public class LocalLock {
 		}
 	}
 	
+	/**
+	 * Delete the lock from the DB. <b>Always</b> deletes the lock, even if another instance created
+	 * the lock. Can be used to remove pending locks.
+	 */
 	public void unlock(){
 		Stm statement = PersistentObject.getDefaultConnection().getStatement();
 		try {
@@ -64,20 +83,58 @@ public class LocalLock {
 		}
 	}
 	
+	/**
+	 * Get the message from the DB. Currently username only.
+	 * 
+	 * @return the username or ? if there is no information
+	 */
 	public String getLockMessage(){
 		Stm statement = PersistentObject.getDefaultConnection().getStatement();
 		try {
 			String existing = statement
 				.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockString)); //$NON-NLS-1$
 			if (existing != null && !existing.isEmpty()) {
-				return existing;
+				String[] parts = existing.split("@");
+				if (parts.length > 0) {
+					return parts[0];
+				}
 			}
 		} finally {
 			PersistentObject.getDefaultConnection().releaseStatement(statement);
 		}
-		return ""; //$NON-NLS-1$
+		return "?"; //$NON-NLS-1$
 	}
 	
+	/**
+	 * Get the value of {@link System#currentTimeMillis()} when the Lock was created.
+	 * 
+	 * @return the value of -1 if there is no information
+	 */
+	public long getLockCurrentMillis(){
+		Stm statement = PersistentObject.getDefaultConnection().getStatement();
+		try {
+			String existing = statement
+				.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockString)); //$NON-NLS-1$
+			if (existing != null && !existing.isEmpty()) {
+				String[] parts = existing.split("@");
+				if (parts.length > 1) {
+					return Long.parseLong(parts[1]);
+				}
+			}
+		} finally {
+			PersistentObject.getDefaultConnection().releaseStatement(statement);
+		}
+		return -1; //$NON-NLS-1$
+	}
+	
+	/**
+	 * Test if there this instance has a lock on the object. Does <b>not</b> query the DB, only a
+	 * lookup in a local {@link HashMap} is performed. If lookup in the DB is needed use
+	 * {@link LocalLock#tryLock()}.
+	 * 
+	 * @param object
+	 * @return
+	 */
 	public static Optional<LocalLock> getManagedLock(Object object){
 		return Optional.ofNullable(managedLocks.get(object));
 	}
