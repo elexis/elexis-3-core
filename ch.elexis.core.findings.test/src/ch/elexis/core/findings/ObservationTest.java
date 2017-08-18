@@ -33,6 +33,7 @@ public class ObservationTest {
 		testObservationText("ABC &copy; &sect; ABC2", 5);
 		testObservationText("!$%&/()=?`´*#'*@€^°\n\n\ta", 6);
 		testObservationText("§", 7); //BUG!!!!
+		testObservationText("<3 & >3", 8);
 	}
 
 	private void testObservationText(String text, int size){
@@ -52,7 +53,8 @@ public class ObservationTest {
 				IObservation.class);
 		assertEquals(size, findings.size());
 		IObservation found = findings.get(size - 1);
-		Assert.assertTrue(found.getText().get().equals(text));
+		Assert.assertTrue("found [" + found.getText().get() + "] not equals [" + text + "]",
+			found.getText().get().equals(text));
 		Assert.assertEquals(ObservationCategory.SOCIALHISTORY, found.getCategory());
 	}
 	
