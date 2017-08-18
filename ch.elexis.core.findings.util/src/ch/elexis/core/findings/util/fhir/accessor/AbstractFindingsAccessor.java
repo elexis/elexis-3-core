@@ -20,7 +20,7 @@ import ch.elexis.core.findings.util.ModelUtil;
 public abstract class AbstractFindingsAccessor {
 	
 	public Optional<String> getText(DomainResource resource){
-		Narrative narrative = resource.getText();
+		Narrative narrative = ((DomainResource) resource).getText();
 		if (narrative != null && narrative.getDivAsString() != null) {
 			return ModelUtil.getNarrativeAsString(narrative);
 		}
@@ -32,9 +32,7 @@ public abstract class AbstractFindingsAccessor {
 		if (narrative == null) {
 			narrative = new Narrative();
 		}
-		String divEncodedText = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-			.replaceAll("&", "&amp;").replaceAll("(\r\n|\r|\n)", "<br />");
-		narrative.setDivAsString(divEncodedText);
+		ModelUtil.setNarrativeFromString(narrative, text);
 		resource.setText(narrative);
 	}
 	

@@ -111,10 +111,31 @@ public class ModelUtil {
 			String divDecodedText = text.replaceAll(
 				"<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>", "");
 			divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n")
-				.replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<");
+				.replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("<", "&lt;")
+				.replaceAll("'&sect;'", "§");
 			return Optional.of(divDecodedText);
 		}
 		return Optional.empty();
+	}
+	
+	public static void setNarrativeFromString(Narrative narrative, String text){
+		text = fixXhtmlContent(text);
+		String divEncodedText =
+			text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("§", "'&sect;'")
+				.replaceAll("&", "&amp;").replaceAll("(\r\n|\r|\n)", "<br />");
+		narrative.setDivAsString(divEncodedText);
+	}
+	
+	/**
+	 * Remove characters which cause problems in xhtml.
+	 * 
+	 * @param content
+	 * @return content without problem characters
+	 */
+	private static String fixXhtmlContent(String content){
+		// replace unicode nbsp with space character
+		content = content.replace((char) 0xa0, ' ');
+		return content;
 	}
 	
 	public static boolean isSameCoding(ICoding left, ICoding right){

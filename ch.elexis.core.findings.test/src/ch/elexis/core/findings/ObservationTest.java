@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,7 +47,6 @@ public class ObservationTest {
 		
 		FindingsServiceComponent.getService().saveFinding(iObservation);
 		
-		// test many
 		List<IObservation> findings = FindingsServiceComponent.getService()
 			.getPatientsFindings(AllTests.PATIENT_ID,
 				IObservation.class);
@@ -54,7 +54,21 @@ public class ObservationTest {
 		IObservation found = findings.get(size - 1);
 		Assert.assertTrue(found.getText().get().equals(text));
 		Assert.assertEquals(ObservationCategory.SOCIALHISTORY, found.getCategory());
-			
-
+	}
+	
+	@Test
+	public void saveObservationsWithInvalidCharacters(){
+		IObservation iObservation =
+			FindingsServiceComponent.getService().create(IObservation.class);
+		assertNotNull(iObservation);
+		// set the properties
+		iObservation.setCategory(ObservationCategory.SOCIALHISTORY);
+		iObservation.setPatientId(AllTests.PATIENT_ID);
+		iObservation.setText("ABCD" + String.valueOf((char) 0xa0) + "EFG");
+		
+		Optional<String> validText = iObservation.getText();
+		assertTrue(validText.isPresent());
+		assertEquals(validText.get().indexOf(0xa0), -1);
+		assertTrue(validText.get().indexOf(' ') != -1);
 	}
 }
