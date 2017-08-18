@@ -111,7 +111,7 @@ public class ModelUtil {
 			String divDecodedText = text.replaceAll(
 				"<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>", "");
 			divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n")
-				.replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("<", "&lt;")
+				.replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<")
 				.replaceAll("'&sect;'", "§");
 			return Optional.of(divDecodedText);
 		}
