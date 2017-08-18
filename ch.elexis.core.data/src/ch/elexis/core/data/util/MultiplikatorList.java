@@ -15,10 +15,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
+import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -178,5 +181,48 @@ public class MultiplikatorList {
 			this.validTo = validTo;
 			this.multiplikator = multiplikator;
 		}
+	}
+	
+	private static String[] getEigenleistungUseMultiSystems(){
+		String systems =
+			CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+		return systems.split("\\|\\|");
+	}
+	
+	public static boolean isEigenleistungUseMulti(String system){
+		String[] systems = getEigenleistungUseMultiSystems();
+		for (String string : systems) {
+			if (system.equals(string)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static void setEigenleistungUseMulti(String system){
+		String systems =
+			CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+		if (!systems.isEmpty()) {
+			systems = systems.concat("||");
+		}
+		systems = systems.concat(system);
+		CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, systems);
+		CoreHub.globalCfg.flush();
+	}
+	
+	public static void removeEigenleistungUseMulti(String system){
+		String[] systems = getEigenleistungUseMultiSystems();
+		StringBuilder sb = new StringBuilder();
+		for (String string : systems) {
+			if (!system.equals(string)) {
+				if (!(sb.length() == 0)) {
+					sb.append("||");
+				}
+				sb.append(string);
+			}
+		}
+		CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS,
+			sb.toString());
+		CoreHub.globalCfg.flush();
 	}
 }
