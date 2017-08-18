@@ -698,6 +698,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		ListDisplay<String> ldRequirements;
 		ListDisplay<String> ldOptional;
 		ListDisplay<String> ldUnused;
+		private Button bUseMultiForEigenleistung;
 		
 		/**
 		 * the constructor,
@@ -801,6 +802,11 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			
 			mke = new MultiplikatorEditor(leftMiddlePart, name);
 			mke.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+			
+			bUseMultiForEigenleistung = new Button(leftMiddlePart, SWT.CHECK);
+			bUseMultiForEigenleistung.setText("Multiplikator bei Eigenleistungen anwenden.");
+			bUseMultiForEigenleistung
+				.setSelection(MultiplikatorList.isEigenleistungUseMulti(tName.getText()));
 			
 			// *** label/editor for case constants
 			new Label(rightMiddlePart, SWT.NONE).setText(Messages.Leistungscodes_caseConstants);
@@ -957,6 +963,15 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				result[5] = StringTool.join(ldUnused.getAll(), DEFINITIONSDELIMITER);
 			}
 			result[6] = (cbDisabled.getSelection() == true) ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+			if (bUseMultiForEigenleistung.getSelection()) {
+				if (!MultiplikatorList.isEigenleistungUseMulti(tName.getText())) {
+					MultiplikatorList.setEigenleistungUseMulti(tName.getText());
+				}
+			} else {
+				if (MultiplikatorList.isEigenleistungUseMulti(tName.getText())) {
+					MultiplikatorList.removeEigenleistungUseMulti(tName.getText());
+				}
+			}
 			super.okPressed();
 		}
 		
