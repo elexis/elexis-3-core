@@ -93,15 +93,7 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 		if (resource.isPresent() && resource.get() instanceof DomainResource) {
 			Narrative narrative = ((DomainResource) resource.get()).getText();
 			if (narrative != null && narrative.getDivAsString() != null) {
-				String text = narrative.getDivAsString();
-				if (text != null) {
-					String divDecodedText = text.replaceAll(
-						"<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>", "");
-					divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n")
-						.replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<")
-						.replaceAll("'&sect;'", "§");
-					return Optional.of(divDecodedText);
-				}
+				return ModelUtil.getNarrativeAsString(narrative);
 			}
 		}
 		return Optional.empty();
@@ -116,11 +108,7 @@ public abstract class AbstractFhirPersistentObject extends PersistentObject impl
 			if (narrative == null) {
 				narrative = new Narrative();
 			}
-			// Bug in FHIR cannot handle char '§' 
-			String divEncodedText =
-				text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("§", "'&sect;'")
-					.replaceAll("&", "&amp;").replaceAll("(\r\n|\r|\n)", "<br />");
-			narrative.setDivAsString(divEncodedText);
+			ModelUtil.setNarrativeFromString(narrative, text);
 			domainResource.setText(narrative);
 			saveResource(domainResource);
 		}
