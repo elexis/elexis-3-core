@@ -6,7 +6,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
@@ -54,21 +53,14 @@ public class LockStatusDialogHandler extends AbstractHandler implements IElement
 	}
 	
 	private void prepareIcons(){
-		ImageDescriptor lockIcon = Images.IMG_LOCK_CLOSED.getImageDescriptor();
-		localIcon = new DecorationOverlayIcon(lockIcon.createImage(), new ImageDescriptor[] {
-			Images.IMG_BULLET_YELLOW.getImageDescriptor()
-		});
-		remoteIcon = new DecorationOverlayIcon(lockIcon.createImage(), new ImageDescriptor[] {
-			Images.IMG_BULLET_GREEN.getImageDescriptor()
-		});
-		standaloneIcon = new DecorationOverlayIcon(lockIcon.createImage(), new ImageDescriptor[] {
-			Images.IMG_BULLET_GREY.getImageDescriptor()
-		});
+		localIcon = Images.IMG_LOCK_CLOSED_YELLOW.getURLImageDescriptor();
+		remoteIcon = Images.IMG_LOCK_CLOSED_GREEN.getURLImageDescriptor();
+		standaloneIcon = Images.IMG_LOCK_CLOSED_GREY.getURLImageDescriptor();
 	}
 	
 	@Override
 	public void updateElement(UIElement element, Map parameters){
-		if (localIcon == null || remoteIcon == null) {
+		if (localIcon == null || remoteIcon == null || standaloneIcon == null) {
 			prepareIcons();
 		}
 		ILocalLockService.Status status = CoreHub.getLocalLockService().getStatus();

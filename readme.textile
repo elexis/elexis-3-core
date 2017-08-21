@@ -1,5 +1,7 @@
 h1. Elexis 3 Core Repository
 
+<a href="https://gitlab.medelexis.ch/elexis/elexis-3-core/commits/master"><img alt="build status" src="https://gitlab.medelexis.ch/elexis/elexis-3-core/badges/master/build.svg" /></a>
+
 *IMPORTANT* Please employ the @3lexisFormatterProfile.xml@ as Eclipse default formatter prior to development and pull requests.
 This accounts for all Elexis 3 related development.
 
@@ -27,8 +29,6 @@ Note: This will fail in MacOSX. Build instructions for Mac:
 @brew install homebrew/versions/maven30@
 @git clone https://github.com/elexis/elexis-3-core@
 @mvn clean install -Pall-archs -Dmaven.test.skip=true@
-
-
 
 If you want a complete development environment, try "Oomph":https://github.com/elexis/elexis-3-core/tree/master/ch.elexis.sdk
 

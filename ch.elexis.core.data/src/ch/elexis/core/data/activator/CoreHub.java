@@ -81,13 +81,14 @@ public class CoreHub implements BundleActivator {
 	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
 	
 	private static String LocalCfgFile = null;
+	private static String elexis_version = null;
 	
 	private BundleContext context;
 	
 	/** Das Singleton-Objekt dieser Klasse */
 	public static CoreHub plugin;
 	
-	private static List<ShutdownJob> shutdownJobs = new LinkedList<ShutdownJob>();
+	private static List<ShutdownJob> shutdownJobs = new LinkedList<>();
 	
 	/** Factory für interne PersistentObjects */
 	public static final PersistentObjectFactory poFactory = new PersistentObjectFactory();
@@ -120,6 +121,7 @@ public class CoreHub implements BundleActivator {
 	 * @deprecated please use {@link ElexisEventDispatcher#getSelectedMandator()} to retrieve
 	 *             current mandator
 	 */
+	@Deprecated
 	public static Mandant actMandant;
 	
 	private static boolean tooManyInstances;
@@ -245,6 +247,7 @@ public class CoreHub implements BundleActivator {
 		if (!ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
 			.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE)))
 			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
 				public void run(){
 					SysSettings localCfg = (SysSettings) CoreHub.localCfg;
 					localCfg.write_xml(LocalCfgFile);
@@ -260,18 +263,19 @@ public class CoreHub implements BundleActivator {
 	 * See http://maven.apache.org /plugins/maven-resources-plugin/examples/filter.html
 	 */
 	public static String readElexisBuildVersion(){
+		if ( elexis_version != null ) { return elexis_version; }
 		Properties prop = new Properties();
-		String elexis_version = "Developer";
-		String url_name = "platform:/plugin/ch.elexis.core.data/version.properties";
+		String url_name = "platform:/plugin/ch.elexis.core.data/rsc/version.properties";
 		try (InputStream inputStream = new URL(url_name).openConnection().getInputStream()) {
 			if (inputStream != null) {
 				prop.load(inputStream);
-				elexis_version = prop.getProperty("elexis.version");
+				elexis_version = prop.getProperty("elexis.version").replace("-SNAPSHOT", "");
 			}
 		} catch (IOException e) {
-			log.warn("Error reading build version information from [{}]", url_name, e);
+			elexis_version = plugin.Version;
+			// log.warn("Error reading build version information from [{}]", url_name, e);
 		}
-		return elexis_version.replace("-SNAPSHOT", "");
+		return elexis_version;
 	}
 	
 	@Override
@@ -345,6 +349,7 @@ public class CoreHub implements BundleActivator {
 				HeartListener lockListener = new HeartListener() {
 					long timeSet;
 					
+					@Override
 					public void heartbeat(){
 						long now = System.currentTimeMillis();
 						if ((now - timeSet) > timeoutSeconds) {
@@ -413,7 +418,7 @@ public class CoreHub implements BundleActivator {
 	 * get a list of all mandators known to this system
 	 */
 	public static List<Mandant> getMandantenList(){
-		Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
+		Query<Mandant> qbe = new Query<>(Mandant.class);
 		return qbe.execute();
 	}
 	
@@ -421,7 +426,7 @@ public class CoreHub implements BundleActivator {
 	 * get a list of all users known to this system
 	 */
 	public static List<Anwender> getUserList(){
-		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
+		Query<Anwender> qbe = new Query<>(Anwender.class);
 		return qbe.execute();
 	}
 	

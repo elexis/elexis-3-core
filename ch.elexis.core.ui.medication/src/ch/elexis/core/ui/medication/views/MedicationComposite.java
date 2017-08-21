@@ -606,7 +606,7 @@ public class MedicationComposite extends Composite
 			@Override
 			public void lockAcquired(){
 				Prescription oldPrescription = pres.getPrescription();
-				
+				String endDate = pres.getEndDate();
 				if (!btnStopMedication.getSelection()) {
 					Prescription newPrescription = new Prescription(oldPrescription);
 					newPrescription.setDosis(getDosisStringFromSignatureTextArray());
@@ -620,12 +620,27 @@ public class MedicationComposite extends Composite
 				} else {
 					oldPrescription.stop(null);
 				}
-				// apply stop reason if set
-				if (txtStopComment.getText() == null || txtStopComment.getText().isEmpty()) {
-					oldPrescription.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
-				} else {
-					oldPrescription.setStopReason(txtStopComment.getText());
+				if (endDate != null && !endDate.isEmpty()) {
+					// create new stopped prescription
+					Prescription newStoppedPrescription = new Prescription(oldPrescription);
+					newStoppedPrescription.setBeginDate(oldPrescription.getBeginTime());
+					TimeTool ttEndDate = new TimeTool(pres.getEndTime());
+					newStoppedPrescription.stop(ttEndDate);
+					newStoppedPrescription
+						.setStopReason("Änderung des Stop Datums von " + endDate);
+					// stop the old prescription with current time
+					oldPrescription.stop(null);
 				}
+				else {
+					// apply stop reason if set
+					if (txtStopComment.getText() == null || txtStopComment.getText().isEmpty()) {
+						oldPrescription
+							.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
+					} else {
+						oldPrescription.setStopReason(txtStopComment.getText());
+					}
+				}
+				
 			}
 		});
 		activateConfirmButton(false);
@@ -633,7 +648,8 @@ public class MedicationComposite extends Composite
 			showMedicationDetailComposite(null);
 
 		ElexisEventDispatcher.getInstance()
-			.fire(new ElexisEvent(null, Prescription.class, ElexisEvent.EVENT_UPDATE));
+			.fire(new ElexisEvent(pres.getPrescription(), Prescription.class,
+				ElexisEvent.EVENT_UPDATE));
 	}
 	
 	/**
@@ -657,10 +673,18 @@ public class MedicationComposite extends Composite
 			} else {
 				stackLayout.topControl = compositeMedicationTextDetails;
 			}
+			txtEvening.setEnabled(!stopped);
+			txtMorning.setEnabled(!stopped);
+			txtNight.setEnabled(!stopped);
+			txtNoon.setEnabled(!stopped);
+			txtIntakeOrder.setEnabled(!stopped);
+			txtDisposalComment.setEnabled(!stopped);
+			txtStopComment.setEnabled(!stopped);
+			txtFreeText.setEnabled(!stopped);
 			dateStopped.setEnabled(false);
 			timeStopped.setEnabled(false);
 			
-			btnStopMedication.setEnabled(!stopped && presc.isFixedMediation());
+			btnStopMedication.setEnabled(presc.isFixedMediation());
 			stackedMedicationDetailComposite.layout();
 			
 			//set default color
@@ -715,6 +739,18 @@ public class MedicationComposite extends Composite
 		} else {
 			lblDailyTherapyCost.setText("");
 		}
+	}
+	
+	@Override
+	public boolean setFocus(){
+		if (medicationTableComposite != null && medicationTableComposite.isVisible()) {
+			medicationTableComposite.setPendingInput();
+		}
+		if (medicationHistoryTableComposite != null && medicationHistoryTableComposite.isVisible()) {
+			medicationHistoryTableComposite.setPendingInput();
+		}
+		
+		return super.setFocus();
 	}
 	
 	private void setValuesForTextSignature(String[] signatureArray){
@@ -778,7 +814,7 @@ public class MedicationComposite extends Composite
 
 		MedicationTableViewerItem pres = (MedicationTableViewerItem) selectedMedication.getValue();
 		if (pres == null || pres.isStopped()) {
-			activate = false;
+			//activate = false;
 		}
 		
 		if (activate) {

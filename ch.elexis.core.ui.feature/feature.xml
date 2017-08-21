@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.ui.feature"
       label="Elexis Core UI Feature"
-      version="3.2.0.qualifier"
+      version="3.3.0.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -76,6 +76,8 @@
 
    <plugin
          id="ch.elexis.core.ui.importer.div.native32"
+         ws="win32"
+         os="win32"
          arch="x86"
          download-size="0"
          install-size="0"
@@ -84,6 +86,8 @@
 
    <plugin
          id="ch.elexis.core.ui.importer.div.native64"
+         ws="win32"
+         os="win32"
          arch="x86_64"
          download-size="0"
          install-size="0"

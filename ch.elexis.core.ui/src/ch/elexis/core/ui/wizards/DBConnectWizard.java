@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.wizards;
 
+import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -20,14 +21,15 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.PlatformUI;
 
+import ch.elexis.core.common.DBConnection;
+import ch.elexis.core.common.DBConnection.DBType;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.util.DBConnection;
-import ch.elexis.core.data.util.DBConnection.DBType;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.PersistentObject.IClassResolver;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
@@ -122,14 +124,14 @@ public class DBConnectWizard extends Wizard {
 		String storage = CoreHub.localCfg.get(Preferences.CFG_STORED_JDBC_CONN, null);
 		if (storage != null) {
 			storedConnectionList =
-				(List<DBConnection>) PersistentObject.foldObject(StringTool.dePrintable(storage));
+				(List<DBConnection>) PersistentObject.foldObject(StringTool.dePrintable(storage), ccResolver);
 		} else {
 			// initialize the current connection (if available)
 			storedConnectionList = new ArrayList<DBConnection>();
 			String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 			if (cnt != null) {
 				Hashtable<Object, Object> hConn =
-					PersistentObject.fold(StringTool.dePrintable(cnt));
+					PersistentObject.fold(StringTool.dePrintable(cnt), ccResolver);
 				if (hConn != null) {
 					String connectionString =
 						PersistentObject.checkNull(hConn
@@ -192,6 +194,23 @@ public class DBConnectWizard extends Wizard {
 		CoreHub.localCfg.flush();
 	}
 	
+	private final IClassResolver ccResolver = new IClassResolver() {
+		// map DBConnection classes due to moving the implementation to ch.elexis.core.common
+		@Override
+		public Class<?> resolveClass(ObjectStreamClass desc)
+			throws ClassNotFoundException{
+			if (desc.getName().equals("ch.elexis.core.data.util.DBConnection")) {
+				return Thread.currentThread().getContextClassLoader()
+					.loadClass("ch.elexis.core.common.DBConnection");
+			} else if (desc.getName()
+				.equals("ch.elexis.core.data.util.DBConnection$DBType")) {
+				return Thread.currentThread().getContextClassLoader()
+					.loadClass("ch.elexis.core.common.DBConnection$DBType");
+			}
+			return null;
+		}
+	};
+	
 	/**
 	 * retrieve the current {@link DBConnection} by parsing the value stored in the local
 	 * configuration with key {@link Preferences#CFG_FOLDED_CONNECTION}
@@ -202,7 +221,8 @@ public class DBConnectWizard extends Wizard {
 	public @Nullable DBConnection getCurrentConnection(){
 		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
-			Hashtable<Object, Object> hConn = PersistentObject.fold(StringTool.dePrintable(cnt));
+			Hashtable<Object, Object> hConn =
+				PersistentObject.fold(StringTool.dePrintable(cnt), ccResolver);
 			if (hConn != null) {
 				String currConnString =
 					PersistentObject.checkNull(hConn

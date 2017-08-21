@@ -16,8 +16,10 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +59,8 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 					
 					ParameterizedCommand parametrizedCommmand =
 						ParameterizedCommand.generateCommand(sendMailCommand, params);
-					parametrizedCommmand.executeWithChecks(null, null);
+					PlatformUI.getWorkbench().getService(IHandlerService.class)
+						.executeCommand(parametrizedCommmand, null);
 				} catch (Exception ex) {
 					throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex);
 				}
@@ -101,7 +104,7 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 		StringBuilder sb = new StringBuilder();
 		for (File file : attachments) {
 			if (sb.length() > 0) {
-				sb.append(",");
+				sb.append(":::");
 			}
 			sb.append(file.getAbsolutePath());
 		}

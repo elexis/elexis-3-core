@@ -5,6 +5,7 @@ import java.util.List;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.rgw.tools.JdbcLink;
+import ch.rgw.tools.TimeTool;
 
 /**
  * Stores the default signature for an ATC code or a specific article
@@ -252,6 +253,8 @@ public class ArticleDefaultSignature extends PersistentObject {
 		private EntryType medicationType;
 		private EntryType disposalType;
 		
+		private TimeTool endDate;
+		
 		public static ArticleSignature fromDefault(ArticleDefaultSignature defaultSignature){
 			ArticleSignature signature =
 				new ArticleSignature(defaultSignature.getArticle(), defaultSignature.getAtcCode());
@@ -436,6 +439,14 @@ public class ArticleDefaultSignature extends PersistentObject {
 			} else {
 				defaultSignature = new ArticleDefaultSignature(article, null);
 			}
+		}
+		
+		public TimeTool getEndDate(){
+			return endDate;
+		}
+		
+		public void setEndDate(TimeTool endDate){
+			this.endDate = endDate;
 		}
 	}
 }

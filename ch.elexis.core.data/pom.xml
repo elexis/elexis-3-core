@@ -7,15 +7,4 @@
   </parent>
   <artifactId>ch.elexis.core.data</artifactId>
   <packaging>eclipse-plugin</packaging>
-  <build>
-    <plugins>
-    </plugins>
-    <resources>
-      <resource>
-        <directory>rsc</directory>
-        <!-- where we have there our version.properties -->
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-  </build>
 </project>

@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/ch.elexis.core.common.feature_3.2.0.qualifier.jar" id="ch.elexis.core.common.feature" version="3.2.0.qualifier">
-      <category name="elexis_3_core"/>
-   </feature>
-   <feature url="features/ch.elexis.core.ui.feature_3.2.0.qualifier.jar" id="ch.elexis.core.ui.feature" version="3.2.0.qualifier">
-      <category name="elexis_3_core"/>
-   </feature>
    <feature url="features/ch.elexis.core.ui.p2.feature_3.2.0.qualifier.jar" id="ch.elexis.core.ui.p2.feature" version="3.2.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
@@ -15,7 +9,13 @@
    <feature url="features/ch.elexis.core.ui.medication.os.feature_3.2.0.qualifier.jar" id="ch.elexis.core.ui.medication.os.feature" version="3.2.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <feature url="features/ch.elexis.core.application.feature_3.2.1.qualifier.jar" id="ch.elexis.core.application.feature" version="3.2.1.qualifier">
+   <feature url="features/ch.elexis.core.ui.feature_3.3.0.qualifier.jar" id="ch.elexis.core.ui.feature" version="3.3.0.qualifier">
+      <category name="elexis_3_core"/>
+   </feature>
+   <feature url="features/ch.elexis.core.application.feature_3.3.0.qualifier.jar" id="ch.elexis.core.application.feature" version="3.3.0.qualifier">
+      <category name="elexis_3_core"/>
+   </feature>
+   <feature url="features/ch.elexis.core.common.feature_3.3.0.qualifier.jar" id="ch.elexis.core.common.feature" version="3.3.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
    <category-def name="elexis_3_core" label="Elexis 3 Kern"/>

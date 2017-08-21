@@ -12,9 +12,9 @@
 package ch.elexis.core.ui.preferences;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -27,9 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
-import ch.elexis.core.ui.preferences.inputs.ComboFieldEditor;
 import ch.elexis.core.logging.LogbackUtils;
+import ch.elexis.core.ui.preferences.inputs.ComboFieldEditor;
 
 /**
  * Einstellungen für den Programmablauf. Logstufen etc.
@@ -44,20 +43,15 @@ public class Ablauf extends FieldEditorPreferencePage implements IWorkbenchPrefe
 		super(GRID);
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.localCfg));
 		String logbackInfo = "";
-		String logbackPlace =
-			System.getProperty(ElexisSystemPropertyConstants.LOGBACK_CONFIG_FILE, null);
+		String logbackPlace  = Platform.getInstallLocation().getURL().getPath() + "logback.xml";
 		Logger logger = LoggerFactory.getLogger(this.getClass().getName());
-		if (logbackPlace == null) {
-			logbackInfo = Messages.LogbackConfigDefault;
+		logger
+			.debug("Checking: " + logbackPlace + " -> " + Paths.get(logbackPlace).toAbsolutePath().toString());//$NON-NLS-1$
+		File f = new File(Paths.get(logbackPlace).toAbsolutePath().toString());
+		if (f.exists() && !f.isDirectory()) {
+			logbackInfo = String.format(Messages.LogbackConfigXmlExists, logbackPlace);
 		} else {
-			logger
-				.debug("Checking: " + logbackPlace + " -> " + Paths.get(logbackPlace).toAbsolutePath().toString());//$NON-NLS-1$
-			File f = new File(Paths.get(logbackPlace).toAbsolutePath().toString());
-			if (f.exists() && !f.isDirectory()) {
-				logbackInfo = String.format(Messages.LogbackConfigXmlExists, logbackPlace);
-			} else {
-				logbackInfo = String.format(Messages.LogbackConfigXmlMissing, logbackPlace);
-			}
+			logbackInfo = String.format(Messages.LogbackConfigXmlMissing, logbackPlace);
 		}
 		String msg = Messages.Ablauf_0 + "\n\n" //$NON-NLS-1$
 			+ Messages.LogbackConfigDetails + "\n" //$NON-NLS-1$
@@ -98,6 +92,7 @@ public class Ablauf extends FieldEditorPreferencePage implements IWorkbenchPrefe
 		
 	}
 	
+	@Override
 	public void init(final IWorkbench workbench){
 		
 	}

@@ -12,6 +12,7 @@ require 'oga'
 require 'open-uri'
 require 'yaml'
 require 'csv'
+require 'fileutils'
 
 ISSUE_URL = 'https://redmine.medelexis.ch/issues'
 CACHE_FILE = File.join(Dir.home, '.cache/redmine_issues.yaml')
@@ -31,7 +32,7 @@ Useage:
 EOS
 
   opt :force_tag,       "Use HEAD and force it as tag_name and use it a to tag", :type => String, :default => nil
-  opt :with_tickets,    "Emit also information from Medelexis Redmine (needs API) "
+  opt :with_tickets,    "Emit also information from Medelexis Redmine (needs API) ",  :default => false
   opt :changelog,       'Name of file to be written', :type => String, :default => 'Changelog'
   opt :from,            'Only a difference from the given tag', :type => String, :default => nil
   opt :to,              'Only a difference to the given tag', :type => String, :default => nil
@@ -252,6 +253,7 @@ end
 
 @ticket_cache = File.exist?(CACHE_FILE) ? YAML.load_file(CACHE_FILE) : {}
 @ticket_cache = {} unless @ticket_cache.is_a?(Hash)
+@nr_loaded ||= 0
 $stdout.sync = true
 puts "Loaded #{@ticket_cache.size} entries from #{CACHE_FILE}"
 at_exit do
@@ -259,8 +261,8 @@ at_exit do
   FileUtils.mv(CACHE_FILE, CACHE_FILE+ '.backup', :verbose => true) if File.exist?(CACHE_FILE) && File.size(CACHE_FILE) > 100
   File.open(CACHE_FILE,'w+') do |h|
     h.write @ticket_cache.to_yaml
-  end unless @ticket_cache.size == 0
-end if  @options[:with_tickets]
+  end if @nr_loaded.size != @ticket_cache.size
+end
 # Order of next calls is necessary!
 @history = []
 get_release_tags

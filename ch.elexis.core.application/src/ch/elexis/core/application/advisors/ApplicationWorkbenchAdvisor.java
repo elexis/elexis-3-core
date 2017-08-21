@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
@@ -78,15 +79,22 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	public void postStartup(){
 		List<Reminder> reminderList = Reminder.findToShowOnStartup(CoreHub.actUser);
 		if (reminderList.size() > 0) {
-			StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder();
 			for (Reminder reminder : reminderList) {
 				sb.append(reminder.getKontakt().getLabel() + ", Id["
 					+ reminder.getKontakt().getPatCode() + "]:\n");
 				sb.append(reminder.getMessage()).append("\n\n"); //$NON-NLS-1$		
 			}
 			
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getShell(), Messages.ReminderView_importantRemindersOnLogin, sb.toString());
+			// must be called inside display thread
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run(){
+					MessageDialog.openInformation(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						Messages.ReminderView_importantRemindersOnLogin, sb.toString());
+				}
+			});
 		}
 	}
 	

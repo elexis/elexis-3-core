@@ -14,6 +14,8 @@ package ch.elexis.core.ui.util.viewers;
 
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -111,6 +113,10 @@ public class ViewerConfigurer {
 		public void startListening();
 		
 		public void stopListening();
+	}
+	
+	public interface IWorker {
+		public IStatus work(IProgressMonitor monitor, HashMap<String, Object> data);
 	}
 	
 	/**

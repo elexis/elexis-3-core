@@ -90,12 +90,13 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 	private Text txtBemerkungen;
 	private ClientCustomTextComposite compClientCustomText;
 	private StickerComposite stickerComposite;
-	private IAction removeZAAction, showZAAction, removeAdditionalAddressAction,
+	private IAction removeZAAction, showZAAction, showBKAction, removeAdditionalAddressAction,
 			showAdditionalAddressAction;
 	private ListDisplay<BezugsKontakt> inpZusatzAdresse;
 	private ListDisplay<ZusatzAdresse> additionalAddresses;
 	private IObservableValue patientObservable = new WritableValue(null, Patient.class);
-
+	private boolean bLocked = true;
+	
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		public void runInUi(ElexisEvent ev) {
 			Patient pat = (Patient) ev.getObject();
@@ -137,6 +138,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 
 	@Override
 	public void setUnlocked(boolean unlocked) {
+		bLocked = !unlocked;
 		txtDiagnosen.setEditable(unlocked);
 		txtAnamnese.setEditable(unlocked);
 		txtFamAnamnese.setEditable(unlocked);
@@ -145,6 +147,9 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 		txtBemerkungen.setEditable(unlocked);
 		dmd.setUnlocked(false); // https://redmine.medelexis.ch/issues/4602
 		inpZusatzAdresse.setUnlocked(unlocked);
+		additionalAddresses.setUnlocked(unlocked);
+		removeAdditionalAddressAction.setEnabled(unlocked);
+		removeZAAction.setEnabled(unlocked);
 	}
 
 	void setPatient(Patient p) {
@@ -278,7 +283,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 			});
 			inpZusatzAdresse.addHyperlinks(Messages.Patientenblatt2_add); // $NON-NLS-1$
 			// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
-			inpZusatzAdresse.setMenu(removeZAAction, showZAAction);
+			inpZusatzAdresse.setMenu(removeZAAction, showZAAction, showBKAction);
 
 			ecZA.setClient(inpZusatzAdresse);
 		}
@@ -536,9 +541,35 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 				Messages.Patientenblatt2_showAddress) {
 			@Override
 			public void doRun() {
-				Kontakt a = Kontakt.load(((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
-				KontaktDetailDialog kdd = new KontaktDetailDialog(scrldfrm.getShell(), a);
-				kdd.open();
+				Kontakt a = Kontakt.load(
+					((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
+				KontaktDetailDialog kdd = new KontaktDetailDialog(scrldfrm.getShell(), a, bLocked);
+				if (kdd.open() == Dialog.OK) {
+					setPatient(ElexisEventDispatcher.getSelectedPatient());
+				}
+			}
+		};
+		
+		showBKAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
+			Messages.Patientenblatt2_showBezugKontaktRelation) {
+			@Override
+			public void doRun(){
+				Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
+				if (actPatient != null && actPatient.exists()) {
+					BezugsKontakt bezugsKontakt = (BezugsKontakt) inpZusatzAdresse.getSelection();
+					if (bezugsKontakt != null) {
+						Kontakt k = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
+						BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(
+							actPatient.getLabel(true), k.istPerson()
+									? Person.load(k.getId()).getLabel(true) : k.getLabel(true),
+							bezugsKontakt, bLocked);
+						if (bezugsKontakt != null && bza.open() == Dialog.OK
+							&& bza.getBezugKonkaktRelation() != null) {
+							bezugsKontakt.updateRelation(bza.getBezugKonkaktRelation());
+							setPatient(actPatient);
+						}
+					}
+				}
 			}
 		};
 	}
@@ -560,7 +591,8 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 				Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 				ZusatzAdresse zusatzAdresse = (ZusatzAdresse) additionalAddresses.getSelection();
 				ZusatzAdresseEingabeDialog aed =
-					new ZusatzAdresseEingabeDialog(scrldfrm.getShell(), actPatient, zusatzAdresse);
+					new ZusatzAdresseEingabeDialog(scrldfrm.getShell(), actPatient, zusatzAdresse,
+						bLocked);
 				if (aed.open() == Dialog.OK) {
 					setPatient(actPatient);
 				}

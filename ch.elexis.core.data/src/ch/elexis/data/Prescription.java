@@ -570,6 +570,9 @@ public class Prescription extends PersistentObject {
 				if (n.endsWith(".")) {
 					n = n.substring(0, n.length() - 1);
 				}
+				if (n.isEmpty()) {
+					return 0.0f;
+				}
 				return Float.parseFloat(n);
 			}
 		} catch (NumberFormatException e) {
@@ -676,8 +679,8 @@ public class Prescription extends PersistentObject {
 			return EntryType.byNumeric(typeNum);
 		}
 		
-		String rezeptId = get(FLD_REZEPT_ID);
-		if (rezeptId != null && !rezeptId.isEmpty()) {
+		String rezeptId = getRaw(FLD_REZEPT_ID);
+		if (rezeptId != null) {
 			// this is necessary due to a past impl. where self dispensed was not set as entry type
 			if (rezeptId.equals(Prescription.FLD_REZEPTID_VAL_DIREKTABGABE)) {
 				setEntryType(EntryType.SELF_DISPENSED);

@@ -20,6 +20,13 @@
           <useUIThread>true</useUIThread>
           <useUIHarness>true</useUIHarness>
           <showEclipseLog>true</showEclipseLog>
+          <bundleStartLevel>
+				<bundle>
+					<id>org.eclipse.equinox.event</id>
+					<level>2</level>
+					<autoStart>true</autoStart>
+				</bundle>
+		  </bundleStartLevel>
         </configuration>
       </plugin>
     </plugins>

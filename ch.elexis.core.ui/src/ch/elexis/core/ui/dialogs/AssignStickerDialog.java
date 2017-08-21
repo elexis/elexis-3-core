@@ -37,6 +37,8 @@ import org.eclipse.swt.widgets.TableItem;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.data.UiSticker;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Sticker;
@@ -165,21 +167,41 @@ public class AssignStickerDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		TableItem[] tableItems = viewer.getTable().getItems();
-		for (TableItem it : tableItems) {
-			Sticker et = (Sticker) it.getData();
-			if (it.getChecked()) {
-				if (!mineEtiketten.contains(et)) {
-					mine.addSticker(et);
-				}
-			} else {
-				if (mineEtiketten.contains(et)) {
-					mine.removeSticker(et);
-				}
+		
+		AcquireLockBlockingUi.aquireAndRun(mine, new ILockHandler() {
+			@Override
+			public void lockFailed(){
+			
 			}
+			
+			@Override
+			public void lockAcquired(){
+				TableItem[] tableItems = viewer.getTable().getItems();
+				for (TableItem it : tableItems) {
+					Sticker et = (Sticker) it.getData();
+					if (it.getChecked()) {
+						if (!mineEtiketten.contains(et)) {
+							mine.addSticker(et);
+						}
+					} else {
+						if (mineEtiketten.contains(et)) {
+							mine.removeSticker(et);
+						}
+					}
+				}
+				ElexisEventDispatcher.update(mine);
+				closeDialog(true);
+			}
+		});
+		
+	}
+	
+	private void closeDialog(boolean withOk){
+		if (withOk) {
+			super.okPressed();
+		} else {
+			super.cancelPressed();
 		}
-		ElexisEventDispatcher.update(mine);
-		super.okPressed();
 	}
 	
 	class StickerViewerComparator extends ViewerComparator {

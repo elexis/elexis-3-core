@@ -353,7 +353,9 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		tBemerkungen.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e){
-				actRn.setBemerkung(tBemerkungen.getText());
+				if (actRn != null) {
+					actRn.setBemerkung(tBemerkungen.getText());
+				}
 			}
 			
 		});

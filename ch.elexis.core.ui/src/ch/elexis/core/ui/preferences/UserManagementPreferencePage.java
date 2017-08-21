@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -226,8 +227,10 @@ public class UserManagementPreferencePage extends PreferencePage
 				}
 			}
 		});
-		
-		Composite compositeLeft = new Composite(container, SWT.NONE);
+		SashForm sash = new SashForm(container, SWT.HORIZONTAL);
+		sash.setLayout(new GridLayout(2, false));
+		sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		Composite compositeLeft = new Composite(sash, SWT.NONE);
 		compositeLeft.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		GridLayout gl_compositeLeft = new GridLayout(1, false);
 		gl_compositeLeft.marginWidth = 0;
@@ -274,7 +277,7 @@ public class UserManagementPreferencePage extends PreferencePage
 		TableColumnLayout tcl_compositeSelectorTable = new TableColumnLayout();
 		compositeSelectorTable.setLayout(tcl_compositeSelectorTable);
 		
-		Composite compositeEdit = new Composite(container, SWT.NONE);
+		Composite compositeEdit = new Composite(sash, SWT.NONE);
 		GridLayout gl_compositeEdit = new GridLayout(2, false);
 		gl_compositeEdit.horizontalSpacing = 0;
 		gl_compositeEdit.verticalSpacing = 0;
@@ -543,6 +546,9 @@ public class UserManagementPreferencePage extends PreferencePage
 		
 		setUnlocked(Status.STANDALONE == CoreHub.getLocalLockService().getStatus());
 		
+		sash.setWeights(new int[] {
+			1, 5
+		});
 		return container;
 	}
 	
@@ -635,21 +641,21 @@ public class UserManagementPreferencePage extends PreferencePage
 		IObservableValue observeSelectionBtnIsAdminObserveWidget =
 			WidgetProperties.selection().observe(btnUserIsAdmin);
 		IObservableValue wvAdminObserveDetailValue =
-			PojoProperties.value(User.class, "administrator", boolean.class).observeDetail(wvUser);
+			PojoProperties.value(User.class, "administrator", Boolean.class).observeDetail(wvUser);
 		bindingContext.bindValue(observeSelectionBtnIsAdminObserveWidget, wvAdminObserveDetailValue,
 			null, null);
 		//
 		IObservableValue observeSelectionBtnIsMandatorObserveWidget =
 			WidgetProperties.selection().observe(btnIsExecutiveDoctor);
 		IObservableValue wvMandatorObserveDetailValue = PojoProperties
-			.value(Anwender.class, "executiveDoctor", boolean.class).observeDetail(wvAnwender);
+			.value(Anwender.class, "executiveDoctor", Boolean.class).observeDetail(wvAnwender);
 		bindingContext.bindValue(observeSelectionBtnIsMandatorObserveWidget,
 			wvMandatorObserveDetailValue, null, null);
 		//
 		IObservableValue observeSelectionBtnIsActiveObserveWidget =
 			WidgetProperties.selection().observe(btnUserIsLocked);
 		IObservableValue wvActiveObserveDetailValue =
-			PojoProperties.value(User.class, "active", boolean.class).observeDetail(wvUser);
+			PojoProperties.value(User.class, "active", Boolean.class).observeDetail(wvUser);
 		bindingContext.bindValue(observeSelectionBtnIsActiveObserveWidget,
 			wvActiveObserveDetailValue,
 			new UpdateValueStrategy().setConverter(new BooleanNotConverter()),

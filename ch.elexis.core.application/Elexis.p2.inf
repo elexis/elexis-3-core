@@ -1,7 +1,6 @@
-# release will be replaced via the com.google.code.maven-replacer-plugin by snapshot (default) or release 
+# All occurrences after the p2 (between /) will be replaced by the current branch name in the gmavenplus-plugin in the ch.elexis.core.p2site/pom.xml to
+# If you make changes here, call git add for this file before running maven, as a git checkout will be called
 instructions.configure=\
-  addRepository(type:0,location:http${#58}//download.elexis.info/elexis/p2/repo_branch/elexis-3-base,name:Elexis 3 Base repo_branch);\
-  addRepository(type:1,location:http${#58}//download.elexis.info/elexis/p2/repo_branch/elexis-3-base,name:Elexis 3 Base repo_branch);\
-  addRepository(type:0,location:http${#58}//download.elexis.info/elexis/p2/repo_branch,name/elexis-3-core:Elexis 3 Core repo_branch);\
-  addRepository(type:1,location:http${#58}//download.elexis.info/elexis/p2/repo_branch,name/elexis-3-core:Elexis 3 Core repo_branch);\
+  addRepository(type:0,location:http${#58}//download.elexis.info/elexis/p2/repo_branch/elexis-3-base,name:Elexis 3 Base aus Zweig repo_branch);\
+  addRepository(type:0,location:http${#58}//download.elexis.info/elexis/p2/repo_branch/elexis-3-core,name:Elexis 3 Core aus Zweig repo_branch);\
   mkdir(path:${installFolder}/dropins);
