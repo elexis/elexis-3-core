@@ -129,7 +129,8 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					} else if (o instanceof Prescription) {
 						List<Prescription> existing =
 							((Patient) ElexisEventDispatcher.getSelected(Patient.class))
-								.getMedication(null);
+								.getMedication(EntryType.FIXED_MEDICATION,
+									EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION);
 						Prescription pre = (Prescription) o;
 						for (Prescription pe : existing) {
 							if (pe.equals(pre)) {
