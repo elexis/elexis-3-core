@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.ui.ElexisConfigurationConstants;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.medication.views.ViewerSortOrder;
@@ -98,10 +97,8 @@ public class PrintTakingsListHandler extends AbstractHandler {
 				return ret;
 			}
 		} else if ("all".equals(medicationType)) {
-			List<Prescription> ret = new ArrayList<Prescription>();
-			ret.addAll(patient.getMedication(EntryType.FIXED_MEDICATION));
-			ret.addAll(patient.getMedication(EntryType.RESERVE_MEDICATION));
-			return ret;
+			return patient.getMedication(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
+				EntryType.SYMPTOMATIC_MEDICATION);
 		} else if ("fix".equals(medicationType)) {
 			return patient.getMedication(EntryType.FIXED_MEDICATION);
 		} else if ("reserve".equals(medicationType)) {

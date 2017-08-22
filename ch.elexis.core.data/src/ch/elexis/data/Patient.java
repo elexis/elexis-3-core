@@ -14,6 +14,8 @@ package ch.elexis.data;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,7 +50,7 @@ import ch.rgw.tools.TimeTool.TimeFormatException;
  * </ul>
  * 
  * @author gerry
- * 		
+ * 
  */
 public class Patient extends Person {
 	
@@ -178,7 +180,7 @@ public class Patient extends Person {
 	 * @param filterType
 	 * @return
 	 */
-	public List<Prescription> getMedication(@Nullable EntryType filterType){
+	public List<Prescription> getMedication(@Nullable EntryType... filterType){
 		// prefetch the values needed for filter operations
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class, null, null,
 			Prescription.TABLENAME, new String[] {
@@ -191,12 +193,14 @@ public class Patient extends Person {
 		TimeTool now = new TimeTool();
 		now.add(TimeTool.SECOND, 5);
 		
-		if (filterType != null) {
-			return prescriptions.parallelStream().filter(p -> !p.isStopped(now) && p.getEntryType() == filterType)
+		if (filterType != null && filterType.length > 0) {
+			EnumSet<EntryType> entryTypes = EnumSet.copyOf(Arrays.asList(filterType));
+			return prescriptions.parallelStream()
+				.filter(p -> entryTypes.contains(p.getEntryType()) && !p.isStopped(now))
 				.collect(Collectors.toList());
 		} else {
 			return prescriptions.parallelStream().filter(p -> !p.isStopped(now))
-					.collect(Collectors.toList());
+				.collect(Collectors.toList());
 		}
 	}
 	

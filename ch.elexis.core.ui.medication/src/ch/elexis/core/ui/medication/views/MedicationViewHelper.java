@@ -100,15 +100,12 @@ public class MedicationViewHelper {
 	}
 	
 	private static List<Prescription> loadNonHistorical(String patId){
-		List<Prescription> tmpPrescs = Patient.load(patId).getMedication(null);
+		List<Prescription> tmpPrescs = Patient.load(patId).getMedication(EntryType.FIXED_MEDICATION,
+			EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION);
 		
 		List<Prescription> result = new ArrayList<Prescription>();
 		for (Prescription p : tmpPrescs) {
 			if (p.getArtikel() != null && p.getArtikel().getATC_code() != null) {
-				if (p.getEntryType() == EntryType.RECIPE
-					|| p.getEntryType() == EntryType.SELF_DISPENSED) {
-					continue;
-				}
 				if (p.getArtikel().getATC_code().toUpperCase().startsWith("J07")) {
 					continue;
 				}
