@@ -25,6 +25,7 @@ deploy_artifacts:
         url: http://download.elexis.info/elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core
     only:
     - master@elexis/elexis-3-core
+    - ^\d*[.]\d*$@elexis/elexis-3-core
 
 trigger_elexis-3-base_build:
     stage: trigger_other_builds
@@ -32,3 +33,4 @@ trigger_elexis-3-base_build:
     - "curl -X POST -F token=$TRIGGER_TOKEN_ELEXIS_3_BASE -F ref=$CI_COMMIT_REF_NAME https://gitlab.medelexis.ch/api/v4/projects/14/trigger/pipeline"
     only:
     - master@elexis/elexis-3-core
+    - ^\d*[.]\d*$@elexis/elexis-3-core
