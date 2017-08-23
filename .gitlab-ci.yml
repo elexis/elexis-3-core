@@ -13,15 +13,16 @@ build:
     - ch.elexis.core.p2site/target/*.zip
     expire_in: 1 day
 
-deploy_master_snapshot:
+deploy_artifacts:
     stage: deploy
     script:
     - mkdir upload; unzip ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip -d upload/
-    - ch.elexis.core.releng/upload-dav.sh upload/ https://download.elexis.info/elexis/p2/ $CI_COMMIT_REF_NAME/elexis-3-core $DEPLOY_USER $DEPLOY_PASSWORD
+    - ch.elexis.core.releng/upload-dav.sh upload/ https://download.elexis.info/elexis/ $CI_COMMIT_REF_NAME/p2/elexis-3-core $DEPLOY_USER $DEPLOY_PASSWORD
     - rm -Rf upload/
+    - ch.elexis.core.releng/upload-dav.sh ch.elexis.core.product/target/products/ https://download.elexis.info/elexis/ $CI_COMMIT_REF_NAME/products $DEPLOY_USER $DEPLOY_PASSWORD
     environment:
         name: elexis-3-core/$CI_COMMIT_REF_NAME
-        url: http://download.elexis.info/elexis/p2/$CI_COMMIT_REF_NAME/elexis-3-core
+        url: http://download.elexis.info/elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core
     only:
     - master
 
