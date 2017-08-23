@@ -613,7 +613,7 @@ if ( System.getProperty("git_branch") == null ) {
 	<repositories>
 		<repository>
 			<id>elexis.3.target.master</id>
-			<url>http://download.elexis.info/elexis/p2/master/target</url>
+			<url>http://download.elexis.info/elexis/3.3/p2/target</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>
