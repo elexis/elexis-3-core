@@ -8,8 +8,6 @@
      1: Marco Descher
      1: Niklaus Giger
 ---------------------------------------------------------------------------
-6151f178851b44637535f61ea1ff32212a2a554c 2017-08-16 17:02:33 +0200             thomashu [6402] make LocalLock thread safe
-1f0e10735db72ef0bd31329ccec0f4b257d5bef1 2017-08-16 16:03:55 +0200             thomashu [6402] added string type, time stamp, and documented LocalLock 
 a338af4418a7ed5e0a603ff71ed135d7d87310c7 2017-08-18 16:27:55 +0200             thomashu [4975] added family anamnese (not finding) to text place holders
 1ce9f0b9c800651a26f6c045aff2cf08651fafe1 2017-08-23 20:25:11 +0200        Niklaus Giger [5507]Update changelog
 adbaa21a721039e2c2bf65de174c02ea8d2d0db9 2017-08-18 15:01:41 +0200             thomashu [6784] added config if factor is be used for billing eigenleistung
