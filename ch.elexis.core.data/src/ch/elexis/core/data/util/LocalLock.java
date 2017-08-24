@@ -47,27 +47,25 @@ public class LocalLock {
 	 * @return true if lock written, false if there is already a lock in the DB.
 	 */
 	public boolean tryLock(){
-		synchronized (LocalLock.class) {
-			Stm statement = PersistentObject.getDefaultConnection().getStatement();
-			try {
-				String existing = statement.queryString(
-					"SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockString)); //$NON-NLS-1$
-				if (existing != null && !existing.isEmpty()) {
-					return false;
-				} else {
-					StringBuilder sb = new StringBuilder();
-					sb.append("INSERT INTO CONFIG (param,wert) VALUES (") //$NON-NLS-1$
-						.append(JdbcLink.wrap(lockString)).append(",") //$NON-NLS-1$
-						.append(JdbcLink.wrap(
-							"[" + CoreHub.actUser.getLabel() + "]@" + System.currentTimeMillis())) //$NON-NLS-1$//$NON-NLS-2$
-						.append(")"); //$NON-NLS-1$
-					statement.exec(sb.toString());
-					managedLocks.put(lockObject, this);
-					return true;
-				}
-			} finally {
-				PersistentObject.getDefaultConnection().releaseStatement(statement);
+		Stm statement = PersistentObject.getDefaultConnection().getStatement();
+		try {
+			String existing = statement
+				.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockString)); //$NON-NLS-1$
+			if (existing != null && !existing.isEmpty()) {
+				return false;
+			} else {
+				StringBuilder sb = new StringBuilder();
+				sb.append("INSERT INTO CONFIG (param,wert) VALUES (") //$NON-NLS-1$
+					.append(JdbcLink.wrap(lockString)).append(",") //$NON-NLS-1$
+					.append(JdbcLink
+						.wrap("[" + CoreHub.actUser.getLabel() + "]@" + System.currentTimeMillis())) //$NON-NLS-1$//$NON-NLS-2$
+					.append(")"); //$NON-NLS-1$
+				statement.exec(sb.toString());
+				managedLocks.put(lockObject, this);
+				return true;
 			}
+		} finally {
+			PersistentObject.getDefaultConnection().releaseStatement(statement);
 		}
 	}
 	
