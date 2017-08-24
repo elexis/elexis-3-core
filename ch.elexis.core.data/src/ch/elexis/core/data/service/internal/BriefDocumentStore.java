@@ -150,7 +150,11 @@ public class BriefDocumentStore implements IDocumentStore {
 	public Optional<InputStream> loadContent(IDocument document){
 		Brief brief = Brief.load(document.getId());
 		if (brief.exists()) {
-			return Optional.of(new ByteArrayInputStream(brief.loadBinary()));
+			byte[] contents = brief.loadBinary();
+			if (contents == null) {
+				contents = new byte[0];
+			}
+			return Optional.of(new ByteArrayInputStream(contents));
 		}
 		return Optional.empty();
 	}
