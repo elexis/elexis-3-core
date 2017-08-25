@@ -659,7 +659,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		if (mode) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_doc_delete,
 				eeli_doc_edit, eeli_doc_create, eeli_doc_reload);
-			refresh();
+			viewer.setInput(ElexisEventDispatcher.getSelectedPatient());
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_doc_delete,
 				eeli_doc_edit, eeli_doc_create, eeli_doc_reload);
