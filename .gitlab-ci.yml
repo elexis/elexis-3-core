@@ -6,28 +6,31 @@ stages:
 
 build:
   stage: build
-  script: xvfb-run mvn clean verify -B -Pall-archs
+  script: xvfb-run mvn clean verify -B -Pall-archs -Dgit.branch=$CI_COMMIT_REF_NAME
   artifacts:
     paths:
     - ch.elexis.core.product/target/products/*.zip
     - ch.elexis.core.p2site/target/*.zip
     expire_in: 1 day
 
-deploy_master_snapshot:
+deploy_artifacts:
     stage: deploy
     script:
     - mkdir upload; unzip ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip -d upload/
-    - ch.elexis.core.releng/upload-dav.sh upload/ https://download.elexis.info/elexis/p2/ $CI_COMMIT_REF_NAME/elexis-3-core $DEPLOY_USER $DEPLOY_PASSWORD
+    - ch.elexis.core.releng/upload-dav.sh upload/ https://download.elexis.info/elexis/ $CI_COMMIT_REF_NAME/p2/elexis-3-core $DEPLOY_USER $DEPLOY_PASSWORD
     - rm -Rf upload/
+    - ch.elexis.core.releng/upload-dav.sh ch.elexis.core.product/target/products/ https://download.elexis.info/elexis/ $CI_COMMIT_REF_NAME/products $DEPLOY_USER $DEPLOY_PASSWORD
     environment:
         name: elexis-3-core/$CI_COMMIT_REF_NAME
-        url: http://download.elexis.info/elexis/p2/$CI_COMMIT_REF_NAME/elexis-3-core
+        url: http://download.elexis.info/elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core
     only:
-    - master
+    - master@elexis/elexis-3-core
+    - /^\d*[.]\d*$/@elexis/elexis-3-core
 
 trigger_elexis-3-base_build:
     stage: trigger_other_builds
     script:
     - "curl -X POST -F token=$TRIGGER_TOKEN_ELEXIS_3_BASE -F ref=$CI_COMMIT_REF_NAME https://gitlab.medelexis.ch/api/v4/projects/14/trigger/pipeline"
     only:
-    - master
+    - master@elexis/elexis-3-core
+    - /^\d*[.]\d*$/@elexis/elexis-3-core

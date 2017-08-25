@@ -219,6 +219,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 							StringBuilder name = new StringBuilder(in.getValue());
 							name.reverse();
 							CoreHub.userCfg.set("makros/" + name, tx); //$NON-NLS-1$
+							CoreHub.userCfg.flush();
 						}
 					}
 					
