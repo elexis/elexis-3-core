@@ -282,6 +282,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-extras.version>${tycho-version}</tycho-extras.version>
 		<repo_name>elexis.3.core</repo_name>
+		<git.branch>master</git.branch>
 		<ROOT>${project.basedir}/compositeRepository</ROOT>
 	</properties>
 	<build>
@@ -612,8 +613,8 @@ if ( System.getProperty("git_branch") == null ) {
 	</build>
 	<repositories>
 		<repository>
-			<id>elexis.3.target.master</id>
-			<url>http://download.elexis.info/elexis/3.3/p2/target</url>
+			<id>elexis.3.target</id>
+			<url>http://download.elexis.info/elexis/${git.branch}/p2/target</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>
