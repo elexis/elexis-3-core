@@ -24,6 +24,7 @@ import java.sql.Statement;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
@@ -61,8 +62,11 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.text.ITextResolver;
 import ch.elexis.core.data.interfaces.text.ReplaceCallback;
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.ScriptUtil;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IPersistentObject;
@@ -341,31 +345,7 @@ public class TextContainer {
 				return "";
 			}
 		}
-		
-		String ret = o.get(q[1]);
-		if ((ret == null) || (ret.startsWith("**"))) { //$NON-NLS-1$
-			
-			if (!(o.map(PersistentObject.FLD_EXTINFO).startsWith("**"))) { //$NON-NLS-1$
-				@SuppressWarnings("rawtypes")
-				Map ext = o.getMap(PersistentObject.FLD_EXTINFO);
-				String an = (String) ext.get(q[1]);
-				if (an != null) {
-					return an;
-				}
-			}
-			log.warn("Nicht erkanntes Feld in " + bl); //$NON-NLS-1$
-			if (showErrors) {
-				return "???" + bl + "???";
-			} else {
-				return "";
-			}
-		}
-		
-		if (ret.startsWith("<?xml")) { //$NON-NLS-1$
-			Samdas samdas = new Samdas(ret);
-			ret = samdas.getRecordText();
-		}
-		return ret;
+		return readFromPo(o, q[1], showErrors);
 	}
 	
 	/**
@@ -419,26 +399,59 @@ public class TextContainer {
 			}
 			current = next;
 		}
-		
-		// resolve value
-		
-		IPersistentObject o = current;
-		
-		String value = o.get(valueToken);
-		if ((value == null) || (value.startsWith("**"))) { //$NON-NLS-1$
-			log.warn("Nicht erkanntes Feld in " + fieldl); //$NON-NLS-1$
+		return readFromPo((PersistentObject) current, valueToken, showErrors);
+	}
+	
+	private String readFromPo(PersistentObject po, String name, boolean showErrors){
+		// read using extension first
+		Optional<String> value = readUsingDataAccessExtension(po, name);
+		if (value.isPresent()) {
+			return value.get();
+		}
+		// read using the default PersistentObject#get method
+		String ret = po.get(name);
+		if ((ret == null) || (ret.startsWith("**"))) { //$NON-NLS-1$
+			
+			if (!(po.map(PersistentObject.FLD_EXTINFO).startsWith("**"))) { //$NON-NLS-1$
+				@SuppressWarnings("rawtypes")
+				Map ext = po.getMap(PersistentObject.FLD_EXTINFO);
+				String an = (String) ext.get(name);
+				if (an != null) {
+					return an;
+				}
+			}
+			log.warn("Nicht erkanntes Feld in " + name); //$NON-NLS-1$
 			if (showErrors) {
-				return WARNING_SIGN + fieldl + WARNING_SIGN;
+				return WARNING_SIGN + name + WARNING_SIGN;
 			} else {
 				return "";
 			}
 		}
 		
-		if (value.startsWith("<?xml")) { //$NON-NLS-1$
-			Samdas samdas = new Samdas(value);
-			value = samdas.getRecordText();
+		if (ret.startsWith("<?xml")) { //$NON-NLS-1$
+			Samdas samdas = new Samdas(ret);
+			ret = samdas.getRecordText();
 		}
-		return value;
+		return ret;
+	}
+	
+	private Optional<String> readUsingDataAccessExtension(Object object, String name){
+		List<IConfigurationElement> placeholderExtensions =
+			Extensions.getExtensions(ExtensionPointConstantsData.DATA_ACCESS, "TextPlaceHolder");
+		for (IConfigurationElement iConfigurationElement : placeholderExtensions) {
+			if (name.equals(iConfigurationElement.getAttribute("name"))
+				&& object.getClass().getName().equals(iConfigurationElement.getAttribute("type"))) {
+				try {
+					ITextResolver resolver =
+						(ITextResolver) iConfigurationElement.createExecutableExtension("resolver");
+					return resolver.resolve(object);
+				} catch (CoreException e) {
+					log.warn(
+						"Error getting resolver for name [" + name + "] object [" + object + "]");
+				}
+			}
+		}
+		return Optional.empty();
 	}
 	
 	private IPersistentObject resolveIndirectObject(IPersistentObject parent, String field){

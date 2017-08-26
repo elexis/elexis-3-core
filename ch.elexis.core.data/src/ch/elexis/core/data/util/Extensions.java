@@ -48,6 +48,19 @@ public class Extensions {
 	 *            Name des Extensionpoints
 	 */
 	public static List<IConfigurationElement> getExtensions(String ext){
+		return getExtensions(ext, null);
+	}
+	
+	/**
+	 * Eine Liste von IConfigurationElements (=komplette Definition) liefern, die an einem
+	 * bestimmten Extensionpoint hängen, und den entsprechenden Elementnamen haben
+	 * 
+	 * @param ext
+	 * @param elementName
+	 * @return
+	 * @since 3.3
+	 */
+	public static List<IConfigurationElement> getExtensions(String ext, String elementName){
 		List<IConfigurationElement> ret = new LinkedList<IConfigurationElement>();
 		IExtensionRegistry exr = Platform.getExtensionRegistry();
 		IExtensionPoint exp = exr.getExtensionPoint(ext);
@@ -56,7 +69,13 @@ public class Extensions {
 			for (IExtension ex : extensions) {
 				IConfigurationElement[] elems = ex.getConfigurationElements();
 				for (IConfigurationElement el : elems) {
-					ret.add(el);
+					if (elementName != null) {
+						if (elementName.equals(el.getName())) {
+							ret.add(el);
+						}
+					} else {
+						ret.add(el);
+					}
 				}
 			}
 			
@@ -119,6 +138,21 @@ public class Extensions {
 	}
 	
 	/**
+	 * Get the class extensions of all elements of an extension point matching the elementName and
+	 * points.
+	 * 
+	 * @param extension
+	 * @param elementName
+	 * @param points
+	 * @return
+	 * 
+	 * @since 3.3
+	 */
+	public static List getClasses(String extension, String elementName, String points){
+		return getClasses(extension, elementName, points, null, null);
+	}
+	
+	/**
 	 * 
 	 * @param extension
 	 * @param points
@@ -128,14 +162,32 @@ public class Extensions {
 	 * @since 3.2
 	 */
 	public static @NonNull List getClasses(String extension, String points, String idParam, String idValue){
-		List<IConfigurationElement> extensions = getExtensions(extension);
+		return getClasses(extension, null, points, idParam, idValue);
+	}
+	
+	/**
+	 * Get the class extensions of all elements of an extension point matching the elementName,
+	 * points and idParam with idValue.
+	 * 
+	 * @param extension
+	 * @param elementName
+	 * @param points
+	 * @param idParam
+	 * @param idValue
+	 * @return
+	 * 
+	 * @since 3.3
+	 */
+	public static @NonNull List getClasses(String extension, String elementName, String points,
+		String idParam, String idValue){
+		List<IConfigurationElement> extensions = getExtensions(extension, elementName);
 		if (idParam != null && idValue != null) {
 			List<IConfigurationElement> filteredExtensions =
 				extensions.stream().filter(p -> idValue.equalsIgnoreCase(p.getAttribute(idParam)))
 					.collect(Collectors.toList());
 			return getClasses(filteredExtensions, points, true);
 		}
-		return getClasses(getExtensions(extension), points, true);
+		return getClasses(extensions, points, true);
 	}
 	
 	/**
