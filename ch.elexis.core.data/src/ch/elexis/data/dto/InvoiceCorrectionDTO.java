@@ -3,7 +3,10 @@ package ch.elexis.data.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
@@ -14,39 +17,47 @@ import ch.rgw.tools.Money;
 public class InvoiceCorrectionDTO {
 	private final String id;
 	private String invoiceNumber;
-	
+	private String bemerkung;
 	private String receiver;
 	private String phoneInsurance;
 	private String causeRejected;
 	private String advisor;
+	private String invoiceStateText;
 	private FallDTO fallDTO;
 	
 	private List<KonsultationDTO> konsultationDTOs = new ArrayList<>();
 	
 	public InvoiceCorrectionDTO(){
 		this.id = null;
-		this.fallDTO = new FallDTO();
+		this.fallDTO = null;
 	}
 	
 	public InvoiceCorrectionDTO(Rechnung rechnung){
 		this.id = rechnung.getId();
 		this.invoiceNumber = rechnung.getNr();
+		this.bemerkung = rechnung.getBemerkung();
 		Fall fall = rechnung.getFall();
-		this.fallDTO = new FallDTO(fall);
+		this.fallDTO = fall.getDTO();
 
 		this.receiver = fall.getPatient().getLabel();
-		this.phoneInsurance = "TODO";
+		this.phoneInsurance = "";
 		
-		if (rechnung.getStatus() == RnStatus.FEHLERHAFT) {
-			
-			List<String> rejects = rechnung.getTrace(Rechnung.REJECTED);
-			StringBuilder rjj = new StringBuilder();
-			for (String r : rejects) {
-				rjj.append(r).append("\n------\n"); //$NON-NLS-1$
+		if (StringUtils.isNotEmpty(rechnung.getNr())) {
+			InvoiceState invoiceState = rechnung.getInvoiceState();
+			if (invoiceState != null) {
+				invoiceStateText = invoiceState.getLocaleText();
 			}
-			this.causeRejected = rjj.toString();
+			
+			if (rechnung.getStatus() == RnStatus.FEHLERHAFT) {
+				
+				List<String> rejects = rechnung.getTrace(Rechnung.REJECTED);
+				StringBuilder rjj = new StringBuilder();
+				for (String r : rejects) {
+					rjj.append(r).append("\n------\n"); //$NON-NLS-1$
+				}
+				this.causeRejected = rjj.toString();
+			}
 		}
-		
 		this.advisor = rechnung.getMandant().getLabel();
 		
 		for (Konsultation konsultation : rechnung.getKonsultationen())
@@ -60,10 +71,10 @@ public class InvoiceCorrectionDTO {
 		return konsultationDTOs;
 	}
 	
-	
 	public String[] getInvoiceDetails(){
 		return new String[] {
-			invoiceNumber, receiver, phoneInsurance, advisor, causeRejected
+			invoiceNumber, invoiceStateText, receiver, phoneInsurance, advisor,
+			causeRejected, bemerkung
 		};
 	}
 	

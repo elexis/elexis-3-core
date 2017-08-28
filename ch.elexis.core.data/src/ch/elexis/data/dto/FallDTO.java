@@ -1,5 +1,6 @@
 package ch.elexis.data.dto;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,36 +9,144 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.TimeTool;
 
 public class FallDTO implements IFall {
-	private final String id;
-	private final IFall iFall;
+	private final IFall iFall; // source
 	
-	public FallDTO(){
-		this.id = null;
-		this.iFall = null;
-	}
+	private String abrechnungsSystem;
+	private String grund;
+	private String beginnDatum;
+	private String endDatum;
+	private TimeTool billingDate;
+	private Kontakt garant;
+	private Map extInfo = new HashMap<>();
+	private boolean copyForPatient;
 	
 	public FallDTO(IFall fall){
-		this.id = fall.getId();
 		iFall = fall;
+		abrechnungsSystem = iFall.getAbrechnungsSystem();
+		grund = iFall.getGrund();
+		beginnDatum = iFall.getBeginnDatum();
+		endDatum = iFall.getEndDatum();
+		billingDate = iFall.getBillingDate();
+		garant = iFall.getGarant();
+		copyForPatient = iFall.getCopyForPatient();
+		
+		extInfo = iFall.getMap(PersistentObject.FLD_EXTINFO);
 	}
 	
-
-	
-	public String getId(){
-		return id;
+	/// editable fields
+	@Override
+	public void setAbrechnungsSystem(String abrechnungsSystem){
+		this.abrechnungsSystem = abrechnungsSystem;
 	}
 	
 	@Override
 	public String getAbrechnungsSystem(){
-		return iFall.getAbrechnungsSystem();
+		return abrechnungsSystem;
+	}
+	
+	@Override
+	public String getGrund(){
+		return grund;
+	}
+	
+	@Override
+	public void setGrund(String grund){
+		this.grund = grund;
+	}
+	
+	@Override
+	public String getBeginnDatum(){
+		return beginnDatum;
+	}
+	
+	@Override
+	public void setBeginnDatum(String beginnDatum){
+		this.beginnDatum = beginnDatum;
+	}
+	
+	@Override
+	public String getEndDatum(){
+		return endDatum;
+	}
+	
+	@Override
+	public void setEndDatum(String endDatum){
+		this.endDatum = endDatum;
+	}
+	
+	@Override
+	public TimeTool getBillingDate(){
+		return billingDate;
+	}
+	
+	@Override
+	public void setBillingDate(TimeTool billingDate){
+		this.billingDate = billingDate;
+	}
+	
+	@Override
+	public void setGarant(Kontakt garant){
+		this.garant = garant;
+	}
+	
+	@Override
+	public Kontakt getGarant(){
+		return garant;
+	}
+	
+	@Override
+	public void setMap(String string, Map<Object, Object> ht){
+		if (PersistentObject.FLD_EXTINFO.equals(string)) {
+			extInfo = ht;
+		}
+	}
+	
+	@Override
+	public Map getMap(String fldExtinfo){
+		return extInfo;
+	}
+	
+	@Override
+	public String getInfoString(String key){
+		Object value = extInfo.get(key);
+		if (value instanceof String) {
+			return (String) value;
+		}
+		return "";
+	}
+	
+	@Override
+	public void setInfoString(String key, String value){
+		extInfo.put(key, value);
+	}
+	
+	@Override
+	public void setCopyForPatient(boolean copyForPatient){
+		this.copyForPatient = copyForPatient;
+	}
+	
+	@Override
+	public boolean getCopyForPatient(){
+		return copyForPatient;
+	}
+
+	/// readonly fields	
+	public String getId(){
+		return iFall.getId();
 	}
 	
 	@Override
 	public IXid getXid(){
 		return iFall.getXid();
+	}
+	
+	@Override
+	public String getBezeichnung(){
+		return iFall.getBezeichnung();
 	}
 	
 	@Override
@@ -54,8 +163,6 @@ public class FallDTO implements IFall {
 	public boolean isValid(){
 		return iFall.isValid();
 	}
-	
-
 	
 	@Override
 	public int state(){
@@ -77,8 +184,6 @@ public class FallDTO implements IFall {
 		return iFall.getXid(domain);
 	}
 	
-	
-
 	@Override
 	public boolean get(String[] fields, String[] values){
 		return iFall.get(fields, values);
@@ -93,12 +198,6 @@ public class FallDTO implements IFall {
 	public String getLabel(){
 		return iFall.getLabel();
 	}
-	
-	@Override
-	public String getInfoString(String kostentraeger){
-		return iFall.getInfoString(kostentraeger);
-	}
-	
 
 	@Override
 	public Patient getPatient(){
@@ -111,44 +210,9 @@ public class FallDTO implements IFall {
 		return iFall.getBehandlungen(b);
 	}
 	
-
 	@Override
-	public String getBezeichnung(){
-		
-		return iFall.getBezeichnung();
-	}
-	
-	@Override
-	public String getGrund(){
-		
-		return iFall.getGrund();
-	}
-	
-	@Override
-	public String getBeginnDatum(){
-		return iFall.getBeginnDatum();
-	}
-	
-	@Override
-	public String getEndDatum(){
-		return iFall.getEndDatum();
-	}
-	
-	@Override
-	public boolean getCopyForPatient(){
-		
-		return iFall.getCopyForPatient();
-	}
-	
-	@Override
-	public Kontakt getGarant(){
-		
-		return iFall.getGarant();
-	}
-	
-	@Override
-	public String getRequirements(){
-		return iFall.getRequirements();
+	public String getRequirementsBySystem(String abrechnungsSystem){
+		return iFall.getRequirementsBySystem(abrechnungsSystem);
 	}
 	
 	@Override
@@ -161,56 +225,12 @@ public class FallDTO implements IFall {
 		return iFall.getUnused();
 	}
 	
-	@Override
-	public Map getMap(String fldExtinfo){
-		return iFall.getMap(fldExtinfo);
-	}
-	
-	@Override
-	public TimeTool getBillingDate(){
-		return iFall.getBillingDate();
-	}
 	
 	@Override
 	public String storeToString(){
 		return iFall.storeToString();
 	}
 	
-	@Override
-	public void setMap(String string, Map<Object, Object> ht){
-		
-	}
-	
-	@Override
-	public void setGrund(String string){
-		
-	}
-	
-	@Override
-	public void setBeginnDatum(String string){
-		
-	}
-	
-	@Override
-	public void setEndDatum(String string){
-		
-	}
-	
-	@Override
-	public void setBillingDate(TimeTool nDate){
-		
-	}
-	
-	@Override
-	public void setCopyForPatient(boolean b){
-		
-	}
-	
-	@Override
-	public void setGarant(Kontakt sel){
-		
-	}
-
 	@Override
 	public boolean set(String field, String value){
 		return false;
@@ -228,19 +248,10 @@ public class FallDTO implements IFall {
 	}
 	
 	@Override
-	public void setInfoString(String rechnungsempfaenger, String string){
-		
-	}
-	
-	@Override
 	public boolean addXid(String domain, String domain_id, boolean updateIfExists){
 		return false;
 	}
 	
-	@Override
-	public void setAbrechnungsSystem(String item){
-		// TODO Auto-generated method stub
-		
-	}
+
 }
 

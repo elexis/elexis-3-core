@@ -12,6 +12,7 @@
 
 package ch.elexis.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -1013,6 +1014,64 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	
 	@Override
 	public void persistDTO(FallDTO dto) throws ElexisException{
-		throw new UnsupportedOperationException();
+		// merge
+		if (getId() != null && exists()) {
+			
+			setGrund(dto.getGrund());
+			setBeginnDatum(dto.getBeginnDatum());
+			setEndDatum(dto.getEndDatum());
+			setBillingDate(dto.getBillingDate());
+			setGarant(dto.getGarant());
+			
+			setMap(FLD_EXTINFO, dto.getMap(FLD_EXTINFO));
+			setCopyForPatient(dto.getCopyForPatient());
+			setAbrechnungsSystem(dto.getAbrechnungsSystem());
+		} else {
+			throw new UnsupportedOperationException(
+				"fall creation of dto is currently not supported!");
+		}
+	}
+	
+	public Fall createCopy(){
+		Patient pat = getPatient();
+		Fall clone = pat.neuerFall(getBezeichnung(), getGrund(), getAbrechnungsSystem());
+		
+		String[] fields = new String[] {
+			Fall.FLD_GARANT_ID, Fall.FLD_FALL_NUMMER, Fall.FLD_RN_PLANUNG, Fall.FLD_RES,
+			Fall.FLD_DATUM_VON, Fall.FLD_EXTINFO, Fall.FLD_XGESETZ
+		};
+		String[] values = new String[] {
+			getGarant().getId(), getFallNummer(), get(Fall.FLD_RN_PLANUNG), get(Fall.FLD_RES),
+			getBeginnDatum(), get(Fall.FLD_EXTINFO), getAbrechnungsSystem()
+		};
+		clone.set(fields, values);
+		List<String> keys = loadFieldKeys(getRequirements());
+		for (String key : keys) {
+			clone.setInfoString(key, getRequiredString(key));
+		}
+		
+		// copy optional fields
+		keys = loadFieldKeys(getOptionals());
+		for (String key : keys) {
+			clone.setInfoString(key, getInfoString(key));
+		}
+		
+		return clone;
+	}
+
+	private List<String> loadFieldKeys(String fieldString){
+		List<String> keys = new ArrayList<String>();
+		String[] fields = fieldString.split(";");
+		for (String field : fields) {
+			String[] nameType = field.split(":");
+			keys.add(nameType[0]);
+		}
+		return keys;
+	}
+	
+	@Override
+	public String getRequirementsBySystem(String abrechnungsSystem){
+		String req = getRequirements(abrechnungsSystem);
+		return req == null ? "" : req;
 	}
 }

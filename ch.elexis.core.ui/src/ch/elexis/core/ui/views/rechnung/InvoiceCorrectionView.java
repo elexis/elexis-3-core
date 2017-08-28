@@ -1,5 +1,9 @@
 package ch.elexis.core.ui.views.rechnung;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -8,18 +12,23 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
@@ -28,17 +37,24 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
+import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
 import ch.elexis.data.Anwender;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.dto.FallDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO.DiagnosesDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO.KonsultationDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO.LeistungDTO;
+import ch.rgw.tools.Result;
+import ch.rgw.tools.Result.SEVERITY;
+import ch.rgw.tools.Result.msg;
 
 public class InvoiceCorrectionView extends ViewPart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView";
@@ -47,6 +63,7 @@ public class InvoiceCorrectionView extends ViewPart {
 	private InvoiceComposite invoiceComposite;
 	
 	private Rechnung actualInvoice;
+	private InvoiceCorrectionDTO invoiceCorrectionDTO;
 	
 	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
 		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE
@@ -79,9 +96,9 @@ public class InvoiceCorrectionView extends ViewPart {
 		};
 	
 	public void reload(Rechnung rechnung){
-		if (invoiceComposite != null) {
-			actualInvoice = rechnung;
-			InvoiceCorrectionDTO invoiceCorrectionDTO = new InvoiceCorrectionDTO(actualInvoice);
+		if (invoiceComposite != null && rechnung != null) {
+			actualInvoice = Rechnung.load(rechnung.getId());
+			invoiceCorrectionDTO = new InvoiceCorrectionDTO(actualInvoice);
 			Composite parent = invoiceComposite.getParent();
 			invoiceComposite.dispose();
 			invoiceComposite = new InvoiceComposite(parent);
@@ -94,7 +111,8 @@ public class InvoiceCorrectionView extends ViewPart {
 	public void createPartControl(Composite parent){
 		parent.setLayout(new GridLayout(1, false));
 		invoiceComposite = new InvoiceComposite(parent);
-		invoiceComposite.createComponents(new InvoiceCorrectionDTO());
+		invoiceCorrectionDTO = new InvoiceCorrectionDTO();
+		invoiceComposite.createComponents(invoiceCorrectionDTO);
 		ElexisEventDispatcher.getInstance().addListeners(eeli_rn, eeli_user);
 		Rechnung selected = (Rechnung) ElexisEventDispatcher.getSelected(Rechnung.class);
 		if (selected != null) {
@@ -102,7 +120,6 @@ public class InvoiceCorrectionView extends ViewPart {
 		}
 	}
 	
-
 	@Override
 	public void dispose(){
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_rn, eeli_user);
@@ -113,7 +130,7 @@ public class InvoiceCorrectionView extends ViewPart {
 	public void setFocus(){
 		
 	}
-
+	
 	class InvoiceComposite extends ScrolledComposite {
 		Composite wrapper;
 		
@@ -157,7 +174,9 @@ public class InvoiceCorrectionView extends ViewPart {
 	class InvoiceHeaderComposite extends Composite {
 		
 		String[] lbls = new String[] {
-			"Rechnung", "Patient", "Telefon Versicherer", "Sachbearbeiter/in", "Rückweisungsgrund"
+			"Rechnung", "Status", "Patient", "Telefon Versicherer", "Sachbearbeiter/in",
+			"Rückweisungsgrund",
+			"Bemerkung"
 		};
 		
 		public InvoiceHeaderComposite(Composite parent){
@@ -181,11 +200,24 @@ public class InvoiceCorrectionView extends ViewPart {
 				for (String lbl : lbls) {
 					String detailText = invoiceDetails[i++];
 					new Label(this, SWT.NONE).setText(lbl);
-					CLabel text = new CLabel(this, SWT.BORDER);
-					text.setBackground(colWhite);
-					text.setLayoutData(
-						i != 5 ? gd : new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
-					text.setText(detailText != null ? detailText : "");
+					
+					if (i == 6 || i == 7) {
+						Text txtMulti = new Text(this,
+							SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.READ_ONLY);
+						GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
+						gd2.heightHint = 50;
+						txtMulti.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+						txtMulti.setLayoutData(gd2);
+						txtMulti.setText(detailText != null ? detailText : "");
+					} else {
+						
+						CLabel text = new CLabel(this, SWT.BORDER);
+						text.setBackground(colWhite);
+						text.setLayoutData(
+							i == 3 ? new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1) : gd);
+						text.setText(detailText != null ? detailText : "");
+					}
+					
 				}
 			} else {
 				logger.error("cannot load invoice header data - values size mismatch [expected: "
@@ -231,8 +263,11 @@ public class InvoiceCorrectionView extends ViewPart {
 			lblTitle.setFont(SWTResourceManager.getFont("Noto Sans", 9, SWT.BOLD));
 			lblTitle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 			
-			FallDetailBlatt2 fallDetailBlatt2 = new FallDetailBlatt2(this, fallDTO, true);
-			fallDetailBlatt2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+			FallDetailBlatt2 fallDetailBlatt2 = new FallDetailBlatt2(this, fallDTO, true,
+				actualInvoice == null || !actualInvoice.isCorrectable());
+			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+			gd.heightHint = 340;
+			fallDetailBlatt2.setLayoutData(gd);
 			/*
 			Label lblLaw = new Label(this, SWT.NONE);
 			lblLaw.setText("Gesetz");
@@ -484,15 +519,157 @@ public class InvoiceCorrectionView extends ViewPart {
 			gd.marginHeight = 2;
 			parent.setLayout(gd);
 			parent.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, true, 1, 1));
-			Button btnImmediateSent = new Button(parent, SWT.CHECK);
-			btnImmediateSent.setText("sofort versenden");
 			
 			Button btnCorrection = new Button(parent, SWT.NONE);
 			btnCorrection.setText("Korrigieren");
+			btnCorrection.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					Result<String> res = doBillCorrection(actualInvoice);
+					reload(actualInvoice);
+					
+					if (res != null) {
+						if (SEVERITY.WARNING.equals(res.getSeverity())) {
+							MessageDialog.openWarning(Display.getDefault().getActiveShell(),
+								"Rechnungskorrektur", res.get());
+						} else if (SEVERITY.OK.equals(res.getSeverity())) {
+							MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+								"Rechnungskorrektur", res.get());
+						} else if (SEVERITY.ERROR.equals(res.getSeverity())) {
+							MessageDialog.openError(Display.getDefault().getActiveShell(),
+								"Rechnungskorrektur", res.get());
+						}
+					}
+					
+				}
+			});
 			
 			Button btnCancel = new Button(parent, SWT.NONE);
 			btnCancel.setText("Zurücksetzen");
+			
+			btnCancel.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					reload(actualInvoice);
+					MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+						"Rechnungskorrektur", "Die Rechnung wurde erfolgreich zurückgesetzt.");
+				}
+			});
+			
+			this.setVisible(actualInvoice != null && actualInvoice.isCorrectable());
 		}
 	}
 	
+	/**
+	 * Copies the actual fall, merge the copied fall with changes, transfer cons, storno the old
+	 * invoice
+	 */
+	private Result<String> doBillCorrection(Rechnung actualInvoice){
+		
+		if (actualInvoice != null && actualInvoice.isCorrectable()) {
+			Fall srcFall = actualInvoice.getFall();
+			if (srcFall != null && invoiceCorrectionDTO != null
+				&& invoiceCorrectionDTO.getFallDTO() != null) {
+				try {
+					
+					StringBuilder warnings = new StringBuilder();
+					Fall copyFall = srcFall.createCopy();
+					copyFall.persistDTO(invoiceCorrectionDTO.getFallDTO());
+					
+					Konsultation[] consultations = srcFall.getBehandlungen(true);
+
+					List<Konsultation> transferedConsultations = new ArrayList<>();
+					if (consultations != null) {
+						for (Konsultation cons : consultations) {
+							Rechnung rechnung = cons.getRechnung();
+							if (rechnung == null
+								|| rechnung.getId().equals(actualInvoice.getId())) {
+								
+								cons.transferToFall(copyFall);
+								transferedConsultations.add(cons);
+								Result<Konsultation> result = BillingUtil.getBillableResult(cons);
+								if (!result.isOK()) {
+									for (msg message : result.getMessages()) {
+										if (message.getSeverity() != SEVERITY.OK) {
+											if (warnings.length() > 0) {
+												warnings.append(" / ");
+											}
+											warnings.append(message.getText());
+										}
+									}
+								}
+							}
+						}
+					}
+					
+					if (warnings.length() > 0) {
+						resetCorrection(srcFall, copyFall, transferedConsultations);
+						String detailText =
+							"Die Rechnungskorrektur konnte nicht durchgeführt werden.\nEs ist ein Fehler bei der Validierung der Rechnung aufgetreten.";
+						return new Result<String>(SEVERITY.WARNING, 1, "warn",
+							detailText + "\n\n" + warnings, false);
+					}
+					
+
+					actualInvoice.storno(true);
+					
+					// try to create a new bill
+					Result<Rechnung> result = Rechnung.build(transferedConsultations);
+					if (!result.isOK()) {
+						String detailText =
+							"Die Rechnungskorrektur konnte nicht vollständig durchgeführt werden.\nEs konnte keine neue Rechnung für den Fall '"
+								+ copyFall.getLabel()
+								+ "' erstellt werden.\nBitte erstellen Sie manuell diese Rechnung neu.";
+						warnings.append(
+							NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase, new Object[] {
+								copyFall.getLabel(), copyFall.getPatient().getLabel()
+							}));
+							
+						return new Result<String>(SEVERITY.WARNING, 1, "warn",
+							detailText + "\n\n" + warnings, false);
+					}
+					
+					Rechnung newBill = result.get();
+					String resText = "Die Rechnung wurde durch "
+						+ ElexisEventDispatcher.getSelectedMandator().getLabel()
+						+ " korrigiert.\nDie neue Rechnungsnummer ist " + newBill.getNr() + ".";
+					
+					StringBuilder bemerkung = new StringBuilder();
+					bemerkung.append(actualInvoice.getBemerkung());
+					
+					if (bemerkung.length() > 0) {
+						bemerkung.append("\n");
+					}
+					bemerkung.append(resText);
+					
+					if (bemerkung.length() > 0) {
+						actualInvoice.setBemerkung(bemerkung.toString());
+					}
+					return new Result<>(resText); // OK
+					
+				} catch (ElexisException e) {
+					LoggerFactory.getLogger(InvoiceCorrectionView.class)
+						.error("invoice correction error [{}]", actualInvoice.getId(), e);
+					
+					return new Result<String>(SEVERITY.ERROR, 2, "error",
+						"Die Rechnungskorrektur konnte nicht durchgeführt werden.\nFür mehr Details, beachten Sie bitte das Log-File.",
+						false);
+				}
+			}
+		} else {
+			return new Result<String>(SEVERITY.WARNING, 1, "warn",
+				"Diese Rechnung befindet sich nicht in einem korrigierbarem Status und kann deswegen nicht korrigiert werden.",
+				false);
+		}
+		return null;
+	}
+	
+	private void resetCorrection(Fall srcFall, Fall copyFall,
+		List<Konsultation> transferedConsultations){
+		// reset
+		for (Konsultation k : transferedConsultations) {
+			k.transferToFall(srcFall);
+		}
+		copyFall.delete();
+	}
 }

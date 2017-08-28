@@ -946,4 +946,54 @@ public class Rechnung extends PersistentObject {
 		return TABLENAME;
 	}
 	
+	/**
+	 * Checks if a bill is correctable by state
+	 * 
+	 * @return
+	 */
+	public boolean isCorrectable(){
+		String rechnungsNr = getNr();
+		if (rechnungsNr != null && rechnungsNr.isEmpty()) {
+			return false;
+		}
+		InvoiceState invoiceState = getInvoiceState();
+		
+		if (invoiceState != null) {
+			switch (invoiceState) {
+			case OWING:
+			case TO_PRINT:
+			case PARTIAL_LOSS:
+			case TOTAL_LOSS:
+			case DEPRECIATED:
+			case CANCELLED:
+				return false;
+			case BILLED:
+			case DEFECTIVE:
+			case DEMAND_NOTE_1:
+			case DEMAND_NOTE_1_PRINTED:
+			case DEMAND_NOTE_2:
+			case DEMAND_NOTE_2_PRINTED:
+			case DEMAND_NOTE_3:
+			case DEMAND_NOTE_3_PRINTED:
+			case EXCESSIVE_PAYMENT:
+			case FROM_TODAY:
+			case IN_EXECUTION:
+			case NOT_BILLED:
+			case NOT_FROM_TODAY:
+			case NOT_FROM_YOU:
+			case ONGOING:
+			case OPEN:
+			case OPEN_AND_PRINTED:
+			case PAID:
+			case PARTIAL_PAYMENT:
+			case REJECTED:
+			case STOP_LEGAL_PROCEEDING:
+			case UNKNOWN:
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 }

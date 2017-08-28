@@ -72,6 +72,7 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
+import ch.elexis.data.dto.FallDTO;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -116,7 +117,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	List<Focusreact> focusreacts = new ArrayList<Focusreact>();
 	boolean lockUpdate = true;
 	
-	boolean readOnlyFall = false;
+	boolean invoiceCorrection = false;
+	boolean readonly = false;
 	
 	@Override
 	public void setUnlocked(boolean unlock) {
@@ -134,12 +136,14 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	}
 	
 	public FallDetailBlatt2(final Composite parent){
-		this(parent, null, false);
+		this(parent, null, false, false);
 	}
 	
-	public FallDetailBlatt2(final Composite parent, IFall fall, boolean readOnlyFall){
+	public FallDetailBlatt2(final Composite parent, IFall fall, boolean invoiceCorrection,
+		boolean readonly){
 		super(parent, SWT.NONE);
-		this.readOnlyFall = readOnlyFall;
+		this.readonly = readonly;
+		this.invoiceCorrection = invoiceCorrection;
 		actFall = fall;
 		
 		tk = UiDesk.getToolkit();
@@ -289,6 +293,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		
 		tk.createLabel(top, LABEL);
 		tBezeichnung = tk.createText(top, StringTool.leer);
+		tBezeichnung.setEnabled(!readonly);
 		tBezeichnung.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(final FocusEvent e){
@@ -326,7 +331,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						new TimeTool(dpVon.getDate().getTime()).toString(TimeTool.DATE_GER));
 				}
 			});
-			
+		dpVon.setEnabled(!readonly);
 		tk.createLabel(top, Messages.FallDetailBlatt2_EndDate); //$NON-NLS-1$
 		dpBis = new EnhancedDatePickerCombo(top, SWT.NONE,
 			new EnhancedDatePickerCombo.ExecuteIfValidInterface() {
@@ -338,7 +343,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					new TimeTool(dpBis.getDate().getTime()).toString(TimeTool.DATE_GER));
 			}
 		});
-
+		dpBis.setEnabled(!readonly);
 		ddc = new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
 			Messages.FallDetailBlatt2_DaysOrAfter, Messages.FallDetailBlatt2_ProposeForBillingNeg,
 			Messages.FallDetailBlatt2_DaysOrAfterNeg);
@@ -353,6 +358,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 			}
 		});
+		ddc.setEnabled(!readonly);
 		tk.adapt(ddc);
 		
 		Composite separatorBar = new Composite(top, SWT.NONE);
@@ -372,6 +378,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				getSelectedFall().setCopyForPatient(b);
 			};
 		});
+		btnCopyForPatient.setEnabled(!readonly);
 		new Label(top, SWT.NONE);
 		
 		hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
@@ -464,10 +471,14 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				String newValue = getValue(control);
 				IFall fall = getSelectedFall();
 				if (fall != null) {
-					if (newValue != null && fall instanceof PersistentObject) {
-						PersistentObject.clearCache();
-						fall.setInfoString(field, newValue);
-						ElexisEventDispatcher.update((PersistentObject) fall);
+					if (newValue != null) {
+						if (fall instanceof PersistentObject) {
+							PersistentObject.clearCache();
+							fall.setInfoString(field, newValue);
+							ElexisEventDispatcher.update((PersistentObject) fall);
+						} else if (fall instanceof FallDTO) {
+							fall.setInfoString(field, newValue);
+						}
 					}
 				}
 			}
@@ -611,7 +622,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		tGarant.setText(f.getGarant().getLabel());
 		
 		// *** adding required fields defined in prefs
-		String reqs = f.getRequirements();
+		String reqs = f.getRequirementsBySystem(f.getAbrechnungsSystem());
 		if ((reqs != null) && (reqs.length() > 0)) {
 			// *** do not display a title bar since this is already displayed
 			// above Rechnungsempfänger!
@@ -629,7 +640,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		// first part fields with definition, second part without definition
 		
 		// *** display all unused field having a display specification
-		String[] reqsArray = f.getRequirements().split(DEFINITIONSDELIMITER);
+		String[] reqsArray =
+			f.getRequirementsBySystem(f.getAbrechnungsSystem()).split(DEFINITIONSDELIMITER);
 		for (int reqI = 0; reqI < reqsArray.length; reqI++) {
 			reqsArray[reqI] = reqsArray[reqI].split(ARGUMENTSSDELIMITER)[0];
 		}
@@ -835,7 +847,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		}
 		
-		boolean enable = (lockEnabled && allowFieldUpdate);
+		boolean enable = !readonly && ((lockEnabled && allowFieldUpdate) || invoiceCorrection);
 		
 		tBezeichnung.setEditable(lockEnabled);
 		
@@ -1360,7 +1372,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	}
 	
 	private IFall getSelectedFall(){
-		if (!readOnlyFall && actFall == null) {
+		if (!invoiceCorrection && actFall == null) {
 			actFall = (IFall) ElexisEventDispatcher.getSelected(Fall.class);
 		}
 		return actFall;

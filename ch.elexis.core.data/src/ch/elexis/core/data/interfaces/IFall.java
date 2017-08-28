@@ -12,7 +12,7 @@ public interface IFall extends IPersistentObject {
 	
 	public String getAbrechnungsSystem();
 	
-	public String getInfoString(String kostentraeger);
+	public String getInfoString(String key);
 	
 	public void setRequiredContact(String kostentraeger, Kontakt k);
 	
@@ -20,7 +20,7 @@ public interface IFall extends IPersistentObject {
 	
 	public Patient getPatient();
 	
-	public void setInfoString(String rechnungsempfaenger, String string);
+	public void setInfoString(String key, String value);
 	
 	public Konsultation[] getBehandlungen(boolean b);
 	
@@ -34,7 +34,7 @@ public interface IFall extends IPersistentObject {
 	
 	public void setBillingDate(TimeTool nDate);
 	
-	public void setCopyForPatient(boolean b);
+	public void setCopyForPatient(boolean copyForPatient);
 	
 	public void setGarant(Kontakt sel);
 	
@@ -50,7 +50,7 @@ public interface IFall extends IPersistentObject {
 	
 	public Kontakt getGarant();
 	
-	public String getRequirements();
+	public String getRequirementsBySystem(String abrechnungsSystem);
 	
 	public String getOptionals();
 	
