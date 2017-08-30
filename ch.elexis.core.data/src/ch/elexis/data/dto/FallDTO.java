@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.model.IXid;
 import ch.elexis.data.Konsultation;
@@ -24,6 +26,8 @@ public class FallDTO implements IFall {
 	private Map extInfo = new HashMap<>();
 	private boolean copyForPatient;
 	
+	private boolean changed;
+	
 	public FallDTO(IFall fall){
 		iFall = fall;
 		abrechnungsSystem = iFall.getAbrechnungsSystem();
@@ -35,12 +39,15 @@ public class FallDTO implements IFall {
 		copyForPatient = iFall.getCopyForPatient();
 		
 		extInfo = iFall.getMap(PersistentObject.FLD_EXTINFO);
+		
+		changed = false;
 	}
 	
 	/// editable fields
 	@Override
 	public void setAbrechnungsSystem(String abrechnungsSystem){
 		this.abrechnungsSystem = abrechnungsSystem;
+		changed = true;
 	}
 	
 	@Override
@@ -55,6 +62,9 @@ public class FallDTO implements IFall {
 	
 	@Override
 	public void setGrund(String grund){
+		if (!StringUtils.equals(this.grund, grund)) {
+			changed = true;
+		}
 		this.grund = grund;
 	}
 	
@@ -65,6 +75,9 @@ public class FallDTO implements IFall {
 	
 	@Override
 	public void setBeginnDatum(String beginnDatum){
+		if (!StringUtils.equals(this.beginnDatum, beginnDatum)) {
+			changed = true;
+		}
 		this.beginnDatum = beginnDatum;
 	}
 	
@@ -76,6 +89,7 @@ public class FallDTO implements IFall {
 	@Override
 	public void setEndDatum(String endDatum){
 		this.endDatum = endDatum;
+		changed = true;
 	}
 	
 	@Override
@@ -86,11 +100,13 @@ public class FallDTO implements IFall {
 	@Override
 	public void setBillingDate(TimeTool billingDate){
 		this.billingDate = billingDate;
+		changed = true;
 	}
 	
 	@Override
 	public void setGarant(Kontakt garant){
 		this.garant = garant;
+		changed = true;
 	}
 	
 	@Override
@@ -102,6 +118,7 @@ public class FallDTO implements IFall {
 	public void setMap(String string, Map<Object, Object> ht){
 		if (PersistentObject.FLD_EXTINFO.equals(string)) {
 			extInfo = ht;
+			changed = true;
 		}
 	}
 	
@@ -122,11 +139,13 @@ public class FallDTO implements IFall {
 	@Override
 	public void setInfoString(String key, String value){
 		extInfo.put(key, value);
+		changed = true;
 	}
 	
 	@Override
 	public void setCopyForPatient(boolean copyForPatient){
 		this.copyForPatient = copyForPatient;
+		changed = true;
 	}
 	
 	@Override
@@ -233,25 +252,30 @@ public class FallDTO implements IFall {
 	
 	@Override
 	public boolean set(String field, String value){
+		changed = true;
 		return false;
 	}
 	
 	@Override
 	public void setRequiredContact(String kostentraeger, Kontakt k){
-		
+		changed = true;
 	}
 	
 	@Override
 	public void setRequiredString(String versicherungsnummer, String vnOld){
-		// TODO Auto-generated method stub
+		changed = true;
 		
 	}
 	
 	@Override
 	public boolean addXid(String domain, String domain_id, boolean updateIfExists){
+		changed = true;
 		return false;
 	}
 	
+	public boolean isChanged(){
+		return changed;
+	}
 
 }
 

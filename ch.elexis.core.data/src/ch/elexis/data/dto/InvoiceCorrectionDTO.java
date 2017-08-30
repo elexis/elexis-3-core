@@ -6,13 +6,16 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
 import ch.elexis.data.Verrechnet;
+import ch.elexis.data.dto.HistoryEntryDTO.OperationType;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.TimeTool;
 
 public class InvoiceCorrectionDTO {
 	private final String id;
@@ -27,12 +30,16 @@ public class InvoiceCorrectionDTO {
 	
 	private List<KonsultationDTO> konsultationDTOs = new ArrayList<>();
 	
+	private List<HistoryEntryDTO> konsultationHistory = new ArrayList<>();
+	
 	public InvoiceCorrectionDTO(){
 		this.id = null;
 		this.fallDTO = null;
+		konsultationHistory.clear();
 	}
 	
 	public InvoiceCorrectionDTO(Rechnung rechnung){
+		konsultationHistory.clear();
 		this.id = rechnung.getId();
 		this.invoiceNumber = rechnung.getNr();
 		this.bemerkung = rechnung.getBemerkung();
@@ -86,17 +93,29 @@ public class InvoiceCorrectionDTO {
 		return fallDTO;
 	}
 	
+	public List<HistoryEntryDTO> getKonsultationHistory(){
+		return konsultationHistory;
+	}
+	
+	public List<HistoryEntryDTO> getHistory(){
+		List<HistoryEntryDTO> changesList = new ArrayList<>();
+		if (fallDTO != null && fallDTO.isChanged())
+		{
+			changesList.add(new HistoryEntryDTO(fallDTO, null, OperationType.UPDATE, null));
+		}
+		changesList.addAll(konsultationHistory);
+		return changesList;
+	}
+
 	public class KonsultationDTO {
 		private final String id;
 		private List<LeistungDTO> leistungDTOs = new ArrayList<>();
 		private List<DiagnosesDTO> diagnosesDTOs = new ArrayList<>();
 		private String date;
-		private String stateText;
 		
 		public KonsultationDTO(Konsultation konsultation){
 			this.id = konsultation.getId();
 			this.date = konsultation.getDatum();
-			this.stateText = konsultation.getStatusText();
 			
 			for (Verrechnet verrechnet : konsultation.getLeistungen()) {
 				leistungDTOs.add(new LeistungDTO(verrechnet));
@@ -126,16 +145,8 @@ public class InvoiceCorrectionDTO {
 			this.date = date;
 		}
 		
-		public void setStateText(String stateText){
-			this.stateText = stateText;
-		}
-		
 		public String getDate(){
 			return date;
-		}
-		
-		public String getStateText(){
-			return stateText;
 		}
 		
 		public String getId(){
@@ -149,6 +160,7 @@ public class InvoiceCorrectionDTO {
 		private String text;
 		private Money bruttoPreis;
 		private int count;
+		private IVerrechenbar iVerrechenbar;
 		
 		public LeistungDTO(Verrechnet verrechnet){
 			this.id = verrechnet.getId();
@@ -156,6 +168,15 @@ public class InvoiceCorrectionDTO {
 			this.text = verrechnet.getText();
 			this.bruttoPreis = verrechnet.getBruttoPreis();
 			this.count = verrechnet.getZahl();
+		}
+		
+		public LeistungDTO(IVerrechenbar iVerrechenbar){
+			this.id = iVerrechenbar.getId();
+			this.code = iVerrechenbar.getCode();
+			this.text = iVerrechenbar.getText();
+			this.bruttoPreis = iVerrechenbar.getKosten(new TimeTool());//TODO PREIS ???
+			this.count = 1;
+			this.iVerrechenbar = iVerrechenbar;
 		}
 		
 		public void setCode(String code){
@@ -193,6 +214,14 @@ public class InvoiceCorrectionDTO {
 		public int getCount(){
 			return count;
 		}
+		
+		public void setiVerrechenbar(IVerrechenbar iVerrechenbar){
+			this.iVerrechenbar = iVerrechenbar;
+		}
+		
+		public IVerrechenbar getIVerrechenbar(){
+			return iVerrechenbar;
+		}
 	}
 	
 	public class DiagnosesDTO {
@@ -215,4 +244,6 @@ public class InvoiceCorrectionDTO {
 			return label;
 		}
 	}
+	
+	
 }
