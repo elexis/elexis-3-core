@@ -48,6 +48,25 @@ public class Preferences {
 	public static final String STATION_IDENT_ID = "station/identId";
 	public static final String STATION_IDENT_TEXT = "station/identText";
 	
+	/**
+	 * Time stamp of the first time an Elexis was connected to the database. Used as identifier of
+	 * the installation.
+	 * 
+	 * @since 3.3
+	 */
+	public static final String INSTALLATION_TIMESTAMP = "installation/timestamp";
+	
+	/**
+	 * OID of the running software. Can be uninitialized.
+	 * 
+	 * @since 3.3
+	 */
+	public static final String SOFTWARE_OID = "software/oid";
+	/**
+	 * OID subdomain that will be used in Elexis for patient master data.
+	 */
+	public static final String OID_SUBDOMAIN_PATIENTMASTERDATA = "100";
+	
 	// Ablauf
 	public static final String ABL_LANGUAGE = "ablauf/sprache"; //$NON-NLS-1$
 	public static final String ABL_LOGFILE = "ablauf/Log-Datei"; //$NON-NLS-1$
