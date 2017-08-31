@@ -1,0 +1,3 @@
+h1. OSGI to slf4j log adapter
+
+This bundle transports incoming OSGI log events to the slf4j log service.
