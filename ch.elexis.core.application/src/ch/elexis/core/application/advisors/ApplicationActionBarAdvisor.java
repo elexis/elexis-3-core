@@ -18,6 +18,9 @@ import static ch.elexis.core.ui.actions.GlobalActions.savePerspectiveAction;
 import static ch.elexis.core.ui.actions.GlobalActions.savePerspectiveAsAction;
 import static ch.elexis.core.ui.actions.GlobalActions.savePerspectiveAsDefaultAction;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -198,11 +201,26 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS, Boolean.toString(true))
 			.equalsIgnoreCase(Boolean.toString(true))) {
 			ToolBarManager tb2 = new ToolBarManager();
-			// ci.getToolBarManager().add(new Separator());
+			
+			List<IAction> l = new ArrayList<>();
 			for (IAction action : openPerspectiveActions) {
 				if (action != null) {
-					tb2.add(action);
+					l.add(action);
 				}
+			}
+			Collections.sort(l, new Comparator<IAction>() {
+				@Override
+				public int compare(IAction o1, IAction o2){
+					if (o1.getToolTipText() != null && o2.getToolTipText() != null) {
+						return o1.getToolTipText().compareTo(o2.getToolTipText());
+					}
+					return o1.getToolTipText() != null ? 1 : -1;
+				}
+			});
+			
+			// ci.getToolBarManager().add(new Separator());
+			for (IAction action : l) {
+				tb2.add(action);
 			}
 			coolBar.add(tb2);
 		}
