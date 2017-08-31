@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_vJi5QGewEeebft6X0Li8Dg">
-  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_v1fZQGewEeebft6X0Li8Dg" featurename="children" parentElementId="org.eclipse.ui.main.toolbar" positionInList="first">
-    <elements xsi:type="menu:ToolControl" xmi:id="_0em5cGewEeebft6X0Li8Dg" elementId="ch.elexis.core.ui.toolcontrol.0" contributionURI="bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.coolbar.MandantSelectionContributionItem"/>
-  </fragments>
-</fragment:ModelFragments>

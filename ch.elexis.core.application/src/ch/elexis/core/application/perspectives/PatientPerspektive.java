@@ -16,6 +16,8 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
+import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.compatibility.ElexisFastViewUtil;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.views.AUF2;
 import ch.elexis.core.ui.views.FaelleView;
@@ -26,6 +28,8 @@ import ch.elexis.core.ui.views.KonsListe;
 import ch.elexis.core.ui.views.PatHeuteView;
 import ch.elexis.core.ui.views.RezepteView;
 import ch.elexis.core.ui.views.TextView;
+import ch.elexis.core.ui.views.codesystems.DiagnosenView;
+import ch.elexis.core.ui.views.codesystems.LeistungenView;
 
 /**
  * Aufbau des initalen Layouts der "Patient"-Seite
@@ -70,6 +74,18 @@ public class PatientPerspektive implements IPerspectiveFactory {
 		layout.addShowViewShortcut(KonsDetailView.ID);
 		layout.addShowViewShortcut(RezepteView.ID);
 		layout.addShowViewShortcut(FallDetailView.ID);
+		
+		UiDesk.asyncExec(new Runnable() {
+			public void run(){
+				
+				ElexisFastViewUtil.addToFastView(UiResourceConstants.PatientPerspektive_ID,
+					LeistungenView.ID);
+				ElexisFastViewUtil.addToFastView(UiResourceConstants.PatientPerspektive_ID,
+					DiagnosenView.ID);
+				
+			}
+		});
+		
 	}
 	
 }

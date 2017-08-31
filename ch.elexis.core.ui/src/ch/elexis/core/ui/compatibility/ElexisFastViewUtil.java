@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.fastview;
+package ch.elexis.core.ui.compatibility;
 
 import java.util.List;
 
@@ -51,9 +51,9 @@ public class ElexisFastViewUtil {
 		MTrimmedWindow window = getCurrentWindow(eModelService, mApplication);
 		
 		if (window != null) {
-			MPerspective mPerspective =
-				(MPerspective) eModelService.find(perspectiveId, mApplication);
-			if (mPerspective != null) {
+			Object obj = eModelService.find(perspectiveId, mApplication);
+			if (obj instanceof MPerspective) {
+				MPerspective mPerspective = (MPerspective) obj;
 				// check if fastview stack exists
 				MPartStack stack =
 					(MPartStack) eModelService.find(ELEXIS_FASTVIEW_STACK, mPerspective);
@@ -61,8 +61,8 @@ public class ElexisFastViewUtil {
 				if (stack == null) {
 					stack = createFastViewStack(window, mPerspective, eModelService, mApplication);
 				}
-				if (stack != null
-					&& !ElexisFastViewUtil.isViewInsideFastview(stack, viewId)) {
+				if (stack != null && !ElexisFastViewUtil.isViewInsideFastview(stack, viewId)
+					&& mApplication.getContext().getActiveChild() != null) {
 					EPartService partService = getService(EPartService.class);
 					MPlaceholder placeholder = partService.createSharedPart(viewId);
 					placeholder.setToBeRendered(true);
@@ -127,6 +127,7 @@ public class ElexisFastViewUtil {
 		}
 	}
 	
+
 	/**
 	 * After the perspective is opened the views will be added to the fastview
 	 * 
@@ -177,9 +178,9 @@ public class ElexisFastViewUtil {
 			mToolControl.setToBeRendered(true);
 			mToolControl.setVisible(true);
 			mToolControl.getTags().add("TrimStack");
-			
+			mToolControl.getPersistedState().put("YSize", "600");
 			MTrimBar mTrimBar = eModelService.getTrim(window, SideValue.BOTTOM);
-			mTrimBar.getChildren().add(mToolControl);
+			mTrimBar.getChildren().add(0, mToolControl);
 			mTrimBar.setVisible(true);
 			mTrimBar.setToBeRendered(true);
 			
