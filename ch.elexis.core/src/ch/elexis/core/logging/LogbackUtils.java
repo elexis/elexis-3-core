@@ -1,14 +1,13 @@
 package ch.elexis.core.logging;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 // See https://gist.github.com/mmdemirbas/5411395
 // http://stackoverflow.com/questions/7967165/how-to-configure-logback-with-java-code-to-set-log-level
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.text.MessageFormat;
 
 /**
  * Contains methods to access and manipulate logback framework dynamically at run-time. Here
@@ -16,6 +15,7 @@ import java.text.MessageFormat;
  * 
  * @author Muhammed Demirbas
  * @since 19 Mar 2013
+ * @since 3.3 moved from ch.elexis.core.ui
  */
 public final class LogbackUtils {
 	public static final String LOGBACK_CLASSIC = "ch.qos.logback.classic";
