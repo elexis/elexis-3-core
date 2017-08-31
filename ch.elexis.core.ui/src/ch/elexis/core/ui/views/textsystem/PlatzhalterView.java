@@ -12,6 +12,7 @@ package ch.elexis.core.ui.views.textsystem;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -262,9 +263,38 @@ public class PlatzhalterView extends ViewPart {
 		PlatzhalterProperties props = new PlatzhalterProperties();
 		root.addChildren(props.getList());
 		
+		// DataAccess TextPlaceHolder implementations
+		List<IConfigurationElement> textPlaceHolderList =
+			Extensions.getExtensions(ExtensionPointConstantsData.DATA_ACCESS, "TextPlaceHolder");//$NON-NLS-1$ //$NON-NLS-2$
+		for (IConfigurationElement iConfigurationElement : textPlaceHolderList) {
+			boolean found = false;
+			String name = iConfigurationElement.getAttribute("name");
+			String type = iConfigurationElement.getAttribute("type");
+			String typeName=type.substring(type.lastIndexOf('.') + 1);
+			if (name != null && type != null) {
+				PlatzhalterTreeData treeData =
+					root.getChild(typeName);
+				if (treeData != null) {
+					PlatzhalterTreeData childData = treeData.getChild(name);
+					if(childData != null) {
+						found = true;
+					}
+				}
+			}
+			if(!found) {
+				PlatzhalterTreeData treeData =
+						root.getChild(typeName);
+				if(treeData == null) {
+					treeData = new PlatzhalterTreeData(typeName, "", "");
+				}
+				treeData
+					.addChild(new PlatzhalterTreeData(name, "[" + typeName + "." + name + "]", ""));
+			}
+		}
+		
 		// IDataAccess Implementations
 		List<IDataAccess> dataAccessList =
-			Extensions.getClasses(ExtensionPointConstantsData.DATA_ACCESS, "class");//$NON-NLS-1$ //$NON-NLS-2$
+			Extensions.getClasses(ExtensionPointConstantsData.DATA_ACCESS, "DataAccess", "class");//$NON-NLS-1$ //$NON-NLS-2$
 		for (IDataAccess dataAccess : dataAccessList) {
 			PlatzhalterTreeData treeData =
 				new PlatzhalterTreeData(dataAccess.getName(), "", dataAccess.getDescription()); //$NON-NLS-1$

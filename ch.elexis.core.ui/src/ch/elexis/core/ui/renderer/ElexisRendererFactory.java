@@ -5,8 +5,9 @@ import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.workbench.renderers.swt.WorkbenchRendererFactory;
 
+@SuppressWarnings("restriction")
 public class ElexisRendererFactory extends WorkbenchRendererFactory {
-	private ElexisRenderer stackRenderer;
+	private ElexisStackRenderer stackRenderer;
 	
 	public ElexisRendererFactory(){
 		super();
@@ -16,7 +17,7 @@ public class ElexisRendererFactory extends WorkbenchRendererFactory {
 	public AbstractPartRenderer getRenderer(MUIElement uiElement, Object parent){
 		if (uiElement instanceof MPartStack) {
 			if (stackRenderer == null) {
-				stackRenderer = new ElexisRenderer();
+				stackRenderer = new ElexisStackRenderer();
 				super.initRenderer(stackRenderer);
 			}
 			return stackRenderer;
