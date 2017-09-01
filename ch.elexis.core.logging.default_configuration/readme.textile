@@ -1,7 +1,9 @@
-This is a small fragment project which allows us to put a default logback.xml into the classpath.
+h1. Elexis logback default configuration
 
-This default can be overridden by adding the following line into the elexis.ini 
--Dlogback.configurationFile=/path/to/my/logback.xml
+This fragment sets a default configuration for the @ch.qos.logback.classic@  bundle.
+
+A complete configuration override can be done setting an alternative logback configuration on startup
+providing the following parameter @-Dlogback.configurationFile=/path/to/my/logback.xml@ to @Elexis.ini@
 
 For a discussion about the various options on howto place a logback.xml into an eclipse RCP have look at
-"http://devblog.virtage.com/2012/07/logback-and-eclipse-attaching-logback-xml/":http://devblog.virtage.com/2012/07/logback-and-eclipse-attaching-logback-xml/
+"http://devblog.virtage.com/2012/07/logback-and-eclipse-attaching-logback-xml/":http://devblog.virtage.com/2012/07/logback-and-eclipse-attaching-logback-xml

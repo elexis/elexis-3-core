@@ -105,6 +105,9 @@ public class Patient extends Person {
 		return get("PersAnamnese");
 	}
 	
+	/**
+	 * @deprecated unused, to be removed
+	 */
 	public String getSystemAnamnese(){
 		return get("Systemanamnese");
 	}

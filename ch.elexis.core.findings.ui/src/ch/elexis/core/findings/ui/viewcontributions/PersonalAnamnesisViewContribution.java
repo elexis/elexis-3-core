@@ -14,8 +14,8 @@ import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IObservation.ObservationCode;
+import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.ui.composites.PersonalAnamnesisComposite;
-import ch.elexis.core.findings.ui.preferences.SettingsConstants;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.data.Patient;
@@ -37,7 +37,7 @@ public class PersonalAnamnesisViewContribution implements IViewContribution {
 	
 	@Override
 	public boolean isAvailable(){
-		return CoreHub.globalCfg.get(SettingsConstants.PERSANAM_SETTINGS_USE_STRUCTURED, false);
+		return CoreHub.globalCfg.get(IMigratorService.PERSANAM_SETTINGS_USE_STRUCTURED, false);
 	}
 	
 	@Override
