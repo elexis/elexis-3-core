@@ -2,11 +2,17 @@ package ch.elexis.core.ui.views.rechnung;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -17,7 +23,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -29,12 +34,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
@@ -43,15 +49,22 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
+import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.dialogs.DateSelectorDialog;
+import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
+import ch.elexis.core.ui.views.rechnung.InvoiceCorrectionWizard.Page2;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.Rechnung;
+import ch.elexis.data.Verrechnet;
 import ch.elexis.data.dto.FallDTO;
 import ch.elexis.data.dto.HistoryEntryDTO;
 import ch.elexis.data.dto.HistoryEntryDTO.OperationType;
@@ -61,8 +74,11 @@ import ch.elexis.data.dto.InvoiceCorrectionDTO.KonsultationDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO.LeistungDTO;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
+import ch.rgw.tools.Result.msg;
+import ch.rgw.tools.TimeTool;
 
 public class InvoiceCorrectionView extends ViewPart {
+	
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView";
 	private static Logger logger = LoggerFactory.getLogger(InvoiceCorrectionView.class);
 	
@@ -181,8 +197,7 @@ public class InvoiceCorrectionView extends ViewPart {
 		
 		String[] lbls = new String[] {
 			"Rechnung", "Status", "Patient", "Telefon Versicherer", "Sachbearbeiter/in",
-			"Rückweisungsgrund",
-			"Bemerkung"
+			"Rückweisungsgrund", "Bemerkung"
 		};
 		
 		public InvoiceHeaderComposite(Composite parent){
@@ -274,61 +289,6 @@ public class InvoiceCorrectionView extends ViewPart {
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 			gd.heightHint = 340;
 			fallDetailBlatt2.setLayoutData(gd);
-			/*
-			Label lblLaw = new Label(this, SWT.NONE);
-			lblLaw.setText("Gesetz");
-			
-			ComboViewer cbLaw = new ComboViewer(this, SWT.BORDER);
-			cbLaw.setContentProvider(ArrayContentProvider.getInstance());
-			cbLaw.setLabelProvider(new LabelProvider() {
-				@Override
-				public String getText(Object element){
-					return String.valueOf(element);
-				}
-			});
-			cbLaw.setInput(new String[] {
-				"UVG", "KVG"
-			});
-			cbLaw.setSelection(new StructuredSelection(fallDTO.getAbrechnungsSystem()));
-			
-			Label lblAccidentDate = new Label(this, SWT.NONE);
-			lblAccidentDate.setText("Unfall Datum");
-			DateTime dateAccident = new DateTime(this, SWT.DATE | SWT.DROP_DOWN);
-			TimeTool doa = new TimeTool(fallDTO.getBeginnDate());
-			dateAccident.setDate(doa.get(Calendar.YEAR), doa.get(Calendar.MONTH),
-				doa.get(Calendar.DAY_OF_MONTH));
-			Label lblAccidentNr = new Label(this, SWT.NONE);
-			lblAccidentNr.setText("Unfall Nummer");	
-			CLabel txtAccidentNr = new CLabel(this, SWT.BORDER);
-			txtAccidentNr.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
-			txtAccidentNr.setText(fallDTO.getNumber());
-			txtAccidentNr.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-			
-			Label lblRecipient = new Label(this, SWT.NONE);
-			lblRecipient.setText("Empfänger");
-			
-			ComboViewer cbRecipient = new ComboViewer(this, SWT.BORDER);
-			cbRecipient.setContentProvider(ArrayContentProvider.getInstance());
-			cbRecipient.setLabelProvider(new LabelProvider() {
-				@Override
-				public String getText(Object element){
-					return String.valueOf(element);
-				}
-			});
-			cbRecipient.setInput(new String[] {
-				"SUVA", "PATIENT"
-			});
-			cbRecipient.setSelection(new StructuredSelection(fallDTO.getReceiver()));
-						
-			Label lblGarant = new Label(this, SWT.NONE);
-			lblGarant.setText("Kostenträger");
-			
-			CLabel text = new CLabel(this, SWT.BORDER);
-			text.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
-			text.setText(fallDTO.getCostReceiver());
-			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
-			
-			*/
 		}
 	}
 	
@@ -345,39 +305,44 @@ public class InvoiceCorrectionView extends ViewPart {
 		
 		public void createComponents(InvoiceCorrectionDTO invoiceCorrectionDTO){
 			for (KonsultationDTO konsultationDTO : invoiceCorrectionDTO.getKonsultationDTOs()) {
-				Group group = new Group(this, SWT.BORDER);
-				group.setText("Konsultation: " + konsultationDTO.getDate());
-				group.setFont(SWTResourceManager.getFont("Noto Sans", 9, SWT.BOLD));
-				GridLayout gd = new GridLayout(1, false);
+				Composite group = new Composite(this, SWT.BORDER);
+				
+				GridLayout gd = new GridLayout(2, false);
 				gd.marginWidth = 0;
 				gd.marginHeight = 0;
 				group.setLayout(gd);
 				group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-				InvoiceContentDiagnosisComposite invoiceContentDiagnosisComposite =
-					new InvoiceContentDiagnosisComposite(group);
-				InvoiceContentKonsultationComposite invoiceContentKonsultationComposite =
-					new InvoiceContentKonsultationComposite(group);
-				invoiceContentDiagnosisComposite.createComponents(konsultationDTO);
-				invoiceContentKonsultationComposite.createComponents(konsultationDTO);
 				
-				MenuManager menuManager = new MenuManager();
-				menuManager.add(new Action() {
+				Label lblKonsTitle = new Label(group, SWT.NONE);
+				lblKonsTitle.setFont(SWTResourceManager.getFont("Noto Sans", 9, SWT.BOLD));
+				updateKonsTitleText(lblKonsTitle, konsultationDTO);
+				
+				ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
+				tbManager.add(new Action("Datum ändern") {
+					
 					@Override
-					public String getText(){
+					public ImageDescriptor getImageDescriptor(){
+						return Images.IMG_CALENDAR.getImageDescriptor();
+					}
+					
+					@Override
+					public String getToolTipText(){
 						return "Datum ändern";
 					}
 					
 					@Override
-					public ImageDescriptor getImageDescriptor(){
-						return null;
-					}
-					
-					@Override
 					public void run(){
-					
+						DateSelectorDialog dlg = new DateSelectorDialog(getShell());
+						if (dlg.open() == Dialog.OK) {
+							TimeTool date = dlg.getSelectedDate();
+							konsultationDTO.setDate(date.toString(TimeTool.DATE_GER));
+							invoiceCorrectionDTO.addToCache(new HistoryEntryDTO(
+								OperationType.KONSULTATION_CHANGE_DATE, konsultationDTO, null));
+							updateKonsTitleText(lblKonsTitle, konsultationDTO);
+						}
 					}
 				});
-				menuManager.add(new Action() {
+				tbManager.add(new Action() {
 					@Override
 					public String getText(){
 						return "Mandant ändern";
@@ -385,24 +350,35 @@ public class InvoiceCorrectionView extends ViewPart {
 					
 					@Override
 					public ImageDescriptor getImageDescriptor(){
-						return null;
+						return Images.IMG_MANN.getImageDescriptor();
 					}
 					
 					@Override
 					public void run(){
-					
+						KontaktSelektor ksl = new KontaktSelektor(
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							Mandant.class, "Mandant auswählen",
+							"Auf wen soll diese Kons verrechnet werden?", new String[] {
+								Mandant.FLD_SHORT_LABEL, Mandant.FLD_NAME1, Mandant.FLD_NAME2
+						});
+						if (ksl.open() == Dialog.OK) {
+							Mandant selectedMandant = (Mandant) ksl.getSelection();
+							konsultationDTO.setMandant(selectedMandant);
+							invoiceCorrectionDTO.addToCache(new HistoryEntryDTO(
+								OperationType.KONSULTATION_CHANGE_MANDANT, konsultationDTO, null));
+							updateKonsTitleText(lblKonsTitle, konsultationDTO);
+						}
 					}
 				});
-				menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				menuManager.add(new Action() {
+				tbManager.add(new Action() {
 					@Override
 					public String getText(){
-						return "Umleiten auf anderen Fall";
+						return "Fallzuordnung ändern";
 					}
 					
 					@Override
 					public ImageDescriptor getImageDescriptor(){
-						return null;
+						return Images.IMG_DOC_SYS.getImageDescriptor();
 					}
 					
 					@Override
@@ -410,9 +386,26 @@ public class InvoiceCorrectionView extends ViewPart {
 					
 					}
 				});
-				group.setMenu(menuManager.createContextMenu(group));
+					
+				ToolBar toolbar = tbManager.createControl(group);
+				// align toolbar right
+				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).grab(true, false)
+					.applyTo(toolbar);
+				InvoiceContentDiagnosisComposite invoiceContentDiagnosisComposite =
+					new InvoiceContentDiagnosisComposite(group);
+				InvoiceContentKonsultationComposite invoiceContentKonsultationComposite =
+					new InvoiceContentKonsultationComposite(group);
+				
+				invoiceContentDiagnosisComposite.createComponents(konsultationDTO);
+				invoiceContentKonsultationComposite.createComponents(konsultationDTO);
 			}
 			
+		}
+		
+		public void updateKonsTitleText(Label lblKonsTitle, KonsultationDTO konsultationDTO){
+			lblKonsTitle.setText("Konsultation: " + konsultationDTO.getDate() + " Mandant: "
+				+ konsultationDTO.getMandant().getLabel());
+			lblKonsTitle.getParent().layout();
 		}
 	}
 	
@@ -426,27 +419,26 @@ public class InvoiceCorrectionView extends ViewPart {
 			gd.marginWidth = 0;
 			gd.marginHeight = 0;
 			setLayout(gd);
-			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 2));
 		}
 		
 		private void createComponents(KonsultationDTO konsultationDTO){
 			Composite tableArea = new Composite(this, SWT.NONE);
-			tableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+			tableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 			tableColumnLayout = new TableColumnLayout();
 			tableArea.setLayout(tableColumnLayout);
 			
 			tableViewer = new TableViewer(tableArea, SWT.BORDER | SWT.FULL_SELECTION);
 			ColumnViewerToolTipSupport.enableFor(tableViewer, ToolTip.NO_RECREATE);
 			Table table = tableViewer.getTable();
-			table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			
-			TableViewerColumn tcSize = createTableViewerColumn("Anzahl", 2, 0);
-			TableViewerColumn tcServiceCode = createTableViewerColumn("Leistungscode", 4, 1);
-			TableViewerColumn tcSericeText = createTableViewerColumn("Leistungstext", 12, 2);
-			TableViewerColumn tcPrice = createTableViewerColumn("Preis", 3, 3);
 			
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
+			
+			TableViewerColumn tcSize = createTableViewerColumn("Anzahl", 1, 0);
+			TableViewerColumn tcServiceCode = createTableViewerColumn("Leistungscode", 4, 1);
+			TableViewerColumn tcSericeText = createTableViewerColumn("Leistungstext", 12, 2);
+			TableViewerColumn tcPrice = createTableViewerColumn("Preis", 3, 3);
 			
 			tableViewer.setContentProvider(new ArrayContentProvider());
 			tableViewer.setInput(konsultationDTO.getLeistungDTOs());
@@ -501,12 +493,10 @@ public class InvoiceCorrectionView extends ViewPart {
 					Artikel artikel = Artikel.load("R215cf77014cf448e049533");
 					LeistungDTO leistungDTO = invoiceCorrectionDTO.new LeistungDTO(artikel);
 					
-					konsultationDTO.getLeistungDTOs()
-						.add(leistungDTO);
-					invoiceCorrectionDTO.getKonsultationHistory().add(
-						new HistoryEntryDTO(konsultationDTO,
-							leistungDTO, OperationType.ADD, null));
-						tableViewer.refresh();
+					konsultationDTO.getLeistungDTOs().add(leistungDTO);
+					invoiceCorrectionDTO.addToCache(new HistoryEntryDTO(OperationType.LEISTUNG_ADD,
+						konsultationDTO, leistungDTO));
+					tableViewer.refresh();
 				}
 			});
 			menuManager.add(new Action() {
@@ -525,14 +515,13 @@ public class InvoiceCorrectionView extends ViewPart {
 					LeistungDTO leistungDTO = getSelection();
 					if (leistungDTO != null) {
 						konsultationDTO.getLeistungDTOs().remove(leistungDTO);
-						invoiceCorrectionDTO.getKonsultationHistory()
-							.add(new HistoryEntryDTO(konsultationDTO, leistungDTO,
-								OperationType.DELETE, null));
+						invoiceCorrectionDTO.addToCache(new HistoryEntryDTO(
+							OperationType.LEISTUNG_REMOVE, konsultationDTO, leistungDTO));
 						tableViewer.refresh();
 					}
 				}
 			});
-				
+			
 			tableViewer.getTable().setMenu(menuManager.createContextMenu(tableViewer.getTable()));
 			
 		}
@@ -599,12 +588,12 @@ public class InvoiceCorrectionView extends ViewPart {
 			gd.marginWidth = 0;
 			gd.marginHeight = 0;
 			setLayout(gd);
-			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		}
 		
 		private void createComponents(KonsultationDTO konsultationDTO){
 			Composite tableArea = new Composite(this, SWT.NONE);
-			tableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+			tableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 			tableColumnLayout = new TableColumnLayout();
 			tableArea.setLayout(tableColumnLayout);
 			
@@ -675,26 +664,18 @@ public class InvoiceCorrectionView extends ViewPart {
 			parent.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, true, 1, 1));
 			
 			Button btnCorrection = new Button(parent, SWT.NONE);
-			btnCorrection.setText("Korrigieren");
+			btnCorrection.setText("Validieren");
 			btnCorrection.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					Result<String> res = doBillCorrection(actualInvoice);
 					if (res != null) {
-						
-						if (SEVERITY.WARNING.equals(res.getSeverity())) {
-							MessageDialog.openWarning(Display.getDefault().getActiveShell(),
-								"Rechnungskorrektur", res.get());
-						} else if (SEVERITY.OK.equals(res.getSeverity())) {
-							MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-								"Rechnungskorrektur", res.get());
-							reload(actualInvoice);
-						} else if (SEVERITY.ERROR.equals(res.getSeverity())) {
+						if (SEVERITY.ERROR.equals(res.getSeverity())) {
 							MessageDialog.openError(Display.getDefault().getActiveShell(),
 								"Rechnungskorrektur", res.get());
 						}
+						reload(actualInvoice);
 					}
-					
 				}
 			});
 			
@@ -721,149 +702,194 @@ public class InvoiceCorrectionView extends ViewPart {
 	private Result<String> doBillCorrection(Rechnung actualInvoice){
 		
 		if (actualInvoice != null && actualInvoice.isCorrectable()) {
-			Fall srcFall = actualInvoice.getFall();
-			if (srcFall != null && invoiceCorrectionDTO != null
+			if (actualInvoice.getFall() != null && invoiceCorrectionDTO != null
 				&& invoiceCorrectionDTO.getFallDTO() != null) {
 				try {
-					List<Konsultation> transferedConsultations = new ArrayList<>();
-					StringBuilder warnings = new StringBuilder();
-					InvoiceCorrectionWizardDialog wizardDialog =
-						new InvoiceCorrectionWizardDialog(getSite().getShell(),
-							invoiceCorrectionDTO);
-					if (wizardDialog.open() == Window.OK) {
-						System.out.println("Ok pressed");
-					} else {
-						System.out.println("Cancel pressed");
-					}
-					/*
-					// storno invoice
-					actualInvoice.storno(true);
+					invoiceCorrectionDTO.updateHistory();
 					
-					// copy fall if changed
-					if (invoiceCorrectionDTO.getFallDTO().isChanged()) {
-						Fall copyFall = srcFall.createCopy();
-						copyFall.persistDTO(invoiceCorrectionDTO.getFallDTO());
+					InvoiceCorrectionWizardDialog wizardDialog = new InvoiceCorrectionWizardDialog(
+						getSite().getShell(), invoiceCorrectionDTO);
+					wizardDialog.addPageChangedListener(new IPageChangedListener() {
 						
-						// transfer cons
-						
-						Konsultation[] consultations = srcFall.getBehandlungen(true);
-					
-					
-						if (consultations != null) {
-							for (Konsultation cons : consultations) {
-								Rechnung rechnung = cons.getRechnung();
-								if (rechnung == null
-									|| rechnung.getId().equals(actualInvoice.getId())) {
+						@Override
+						public void pageChanged(PageChangedEvent event){
+							
+							if (event.getSelectedPage() instanceof Page2) {
+								Page2 page = (Page2) event.getSelectedPage();
+								InvoiceCorrectionDTO invoiceCorrectionDTO =
+									page.getInvoiceCorrectionDTO();
+								
+								// batch change history
+								boolean terminated = false;
+								StringBuilder output = new StringBuilder();
+								Rechnung rechnung = Rechnung.load(invoiceCorrectionDTO.getId());
+								Optional<Fall> srcFall = Optional.empty();
+								Optional<Fall> copyFall = Optional.empty();
+								List<Konsultation> releasedKonsultations = new ArrayList<>();
+								try {
 									
-									// transfer to new fall
-									cons.transferToFall(copyFall);
-									transferedConsultations.add(cons);
-									Result<Konsultation> result =
-										BillingUtil.getBillableResult(cons);
-									if (!result.isOK()) {
-										for (msg message : result.getMessages()) {
-											if (message.getSeverity() != SEVERITY.OK) {
-												if (warnings.length() > 0) {
-													warnings.append(" / ");
+									for (HistoryEntryDTO historyEntryDTO : invoiceCorrectionDTO
+										.getHistory()) {
+										
+										Object base = historyEntryDTO.getBase();
+										Object item = historyEntryDTO.getItem();
+										OperationType operationType =
+											historyEntryDTO.getOperationType();
+										
+										// storno
+										switch (operationType) {
+										case RECHNUNG_STORNO:
+											releasedKonsultations.addAll(rechnung.stornoBill(true));
+											break;
+										case RECHNUNG_NEW:
+											Result<Rechnung> rechnungResult =
+												Rechnung.build(releasedKonsultations);
+											if (!rechnungResult.isOK()) {
+												
+												for (msg message : rechnungResult.getMessages()) {
+													if (message.getSeverity() != SEVERITY.OK) {
+														if (output.length() > 0) {
+															output.append("\n");
+														}
+														output.append(message.getText());
+													}
 												}
-												warnings.append(message.getText());
+												terminated = true;
+											} else {
+												output.append("Die Rechnung " + rechnung.getNr()
+													+ " wurde erfolgreich korrigiert - Neue Rechnungsnummer lautet: "
+													+ rechnungResult.get().getNr());
 											}
+											break;
+										case FALL_COPY:
+											srcFall = Optional.of(rechnung.getFall());
+											copyFall = Optional.of(srcFall.get().createCopy());
+											break;
+										case FALL_CHANGE:
+											copyFall.get()
+												.persistDTO(invoiceCorrectionDTO.getFallDTO());
+											break;
+										case FALL_KONSULTATION_TRANSER:
+											releasedKonsultations.clear();
+											Konsultation[] consultations =
+												srcFall.get().getBehandlungen(true);
+											if (consultations != null) {
+												for (Konsultation openedKons : consultations) {
+													if (openedKons.exists()) {
+														Rechnung bill = openedKons.getRechnung();
+														if (bill == null) {
+															openedKons
+																.transferToFall(copyFall.get());
+															releasedKonsultations.add(openedKons);
+															
+															// if validation of cons is failed the bill correction will be reseted
+															Result<Konsultation> result =
+																BillingUtil
+																	.getBillableResult(openedKons);
+															if (!result.isOK()) {
+																StringBuilder warnings =
+																	new StringBuilder();
+																for (msg message : result
+																	.getMessages()) {
+																	if (message
+																		.getSeverity() != SEVERITY.OK) {
+																		if (output.length() > 0) {
+																			warnings.append(" / ");
+																		}
+																		warnings.append(
+																			message.getText());
+																	}
+																}
+																if (warnings.length() > 0) {
+																	terminated = true;
+																	output.append(
+																		warnings.toString());
+																	resetCorrection(srcFall.get(),
+																		copyFall.get(),
+																		releasedKonsultations);
+																}
+															}
+														}
+													}
+												}
+											}
+											break;
+										case KONSULTATION_CHANGE_DATE:
+											Konsultation.load(((KonsultationDTO) base).getId())
+												.setDatum(((KonsultationDTO) base).getDate(), true);
+											break;
+										case KONSULTATION_CHANGE_MANDANT:
+											Konsultation.load(((KonsultationDTO) base).getId())
+												.setMandant(((KonsultationDTO) base).getMandant());
+											
+											break;
+										case LEISTUNG_ADD:
+											Konsultation.load(((KonsultationDTO) base).getId())
+												.addLeistung(
+													((LeistungDTO) item).getIVerrechenbar());
+											break;
+										case LEISTUNG_REMOVE:
+											Konsultation.load(((KonsultationDTO) base).getId())
+												.removeLeistung(
+													Verrechnet.load(((LeistungDTO) item).getId()));
+											break;
+										case LEISTUNG_CHANGE_COUNT:
+											break;
+										case LEISTUNG_CHANGE_PRICE:
+											
+											break;
+										
+										default:
+											
+											break;
+										}
+										
+										page.getTxtOutput().setText(output.toString());
+										invoiceCorrectionDTO.setOutputText(output.toString());
+										if (terminated) {
+											break;
+										} else {
+											historyEntryDTO.setSuccess(true);
+											page.setChecked(historyEntryDTO, true);
 										}
 									}
+									
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
-							}
-						}
-						
-						if (warnings.length() > 0) {
-							resetCorrection(srcFall, copyFall, transferedConsultations);
-							String detailText =
-								"Die Rechnungskorrektur konnte nicht durchgeführt werden.\nEs ist ein Fehler bei der Validierung der Rechnung aufgetreten.";
-							return new Result<String>(SEVERITY.WARNING, 1, "warn",
-								detailText + "\n\n" + warnings, false);
-						}
-					}
-					
-					// batch change history
-					for (HistoryEntryDTO historyEntryDTO : invoiceCorrectionDTO.getHistory()) {
-						Object ref = historyEntryDTO.getRef();
-						if (ref instanceof KonsultationDTO) {
-							KonsultationDTO konsultationDTO = (KonsultationDTO) ref;
-							
-							Konsultation konsultation = Konsultation.load(konsultationDTO.getId());
-							if (OperationType.DELETE.equals(historyEntryDTO.getOperationType()))
-							{
-								konsultation.removeLeistung(Verrechnet
-									.load(((LeistungDTO) historyEntryDTO.getItem()).getId()));
-							}
-							else if (OperationType.ADD.equals(historyEntryDTO.getOperationType())) {
-								konsultation.addLeistung(
-									((LeistungDTO) historyEntryDTO.getItem()).getIVerrechenbar());
-							}
-							
-							else if (OperationType.UPDATE
-								.equals(historyEntryDTO.getOperationType())) {
-								Object item = historyEntryDTO.getItem();
-								if (item instanceof Mandant) {
-									konsultation.setMandant((Mandant) historyEntryDTO.getItem());
-								}
-								else if (item instanceof String) {
-									konsultation.setDatum((String) historyEntryDTO.getItem(), true);
-								}
-							}
-						}
-						
-					}
-						
-						// try to create a new bill
-						Result<Rechnung> result = Rechnung.build(transferedConsultations);
-						if (!result.isOK()) {
-							String detailText =
-								"Die Rechnungskorrektur konnte nicht vollständig durchgeführt werden.\nEs konnte keine neue Rechnung für den Fall '"
-									+ copyFall.getLabel()
-									+ "' erstellt werden.\n\nBitte die neue Rechnung manuell erstellen.";
-							warnings.append(
-								NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase, new Object[] {
-									copyFall.getLabel(), copyFall.getPatient().getLabel()
-								}));
 								
-							return new Result<String>(SEVERITY.WARNING, 1, "warn",
-								detailText + "\n\n" + warnings, false);
+							}
 						}
+					});
 					
-						
-						Rechnung newBill = result.get();
-						String resText = "Die Rechnung wurde durch "
-							+ ElexisEventDispatcher.getSelectedMandator().getLabel()
-							+ " korrigiert.\n\nDie neue Rechnungsnummer ist " + newBill.getNr() + ".";
-						
-						StringBuilder bemerkung = new StringBuilder();
-						bemerkung.append(actualInvoice.getBemerkung());
-						
-						if (bemerkung.length() > 0) {
-							bemerkung.append("\n");
+					int state = wizardDialog.open();
+					if (invoiceCorrectionDTO.getOutputText() != null) {
+						// set bemerkung text
+						StringBuilder txtBemerkung = new StringBuilder();
+						if (txtBemerkung != null) {
+							txtBemerkung.append(actualInvoice.getBemerkung());
 						}
-						bemerkung.append(resText);
-						
-						if (bemerkung.length() > 0) {
-							actualInvoice.setBemerkung(bemerkung.toString());
+						if (txtBemerkung.length() > 0) {
+							txtBemerkung.append("\n");
 						}
-					//	return new Result<>(resText); // OK
-					 * 
-					 * */
-					
+						txtBemerkung.append(invoiceCorrectionDTO.getOutputText());
+						actualInvoice.setBemerkung(txtBemerkung.toString());
+						
+						// return state
+						if (invoiceCorrectionDTO.isCorrectionSuccess()) {
+							return new Result<String>("ok");
+						}
+						return new Result<String>(SEVERITY.WARNING, 2, "warn", null, false);
+					}
 				} catch (Exception e) {
 					LoggerFactory.getLogger(InvoiceCorrectionView.class)
 						.error("invoice correction error [{}]", actualInvoice.getId(), e);
 					
 					return new Result<String>(SEVERITY.ERROR, 2, "error",
-						"Die Rechnungskorrektur konnte nicht durchgeführt werden.\nFür mehr Details, beachten Sie bitte das Log-File.",
+						"Die Rechnungskorrektur konnte nicht vollständig durchgeführt werden.\nFür mehr Details, beachten Sie bitte das Log-File.",
 						false);
 				}
 			}
-		} else {
-			return new Result<String>(SEVERITY.WARNING, 1, "warn",
-				"Diese Rechnung befindet sich nicht in einem korrigierbarem Status und kann deswegen nicht korrigiert werden.",
-				false);
 		}
 		return null;
 	}

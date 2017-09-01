@@ -2,7 +2,6 @@ package ch.elexis.data.dto;
 
 import java.util.Date;
 
-import ch.elexis.data.Mandant;
 import ch.elexis.data.dto.InvoiceCorrectionDTO.KonsultationDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO.LeistungDTO;
 import ch.rgw.tools.TimeTool;
@@ -10,9 +9,9 @@ import ch.rgw.tools.TimeTool;
 public class HistoryEntryDTO {
 	Object base;
 	Object item;
-	Object ref;
 	OperationType operationType;
 	Date timestamp;
+	boolean success;
 	
 	/**
 	 * 
@@ -21,23 +20,27 @@ public class HistoryEntryDTO {
 	 * @param operationType
 	 * @param item
 	 */
-	public HistoryEntryDTO(Object base, Object ref, OperationType operationType, Object item){
+	public HistoryEntryDTO(OperationType operationType, Object base, Object item){
 		super();
 		this.timestamp = new Date();
 		this.base = base;
-		this.ref = ref;
 		this.item = item;
 		this.operationType = operationType;
+		this.success = false;
+	}
+	
+	public void setSuccess(Boolean success){
+		this.success = success;
+	}
+	
+	public boolean isSuccess(){
+		return success;
 	}
 	
 	public Object getItem(){
-		return this;
+		return item;
 	}
-	
-	public Object getRef(){
-		return ref;
-	}
-	
+
 	public OperationType getOperationType(){
 		return operationType;
 	}
@@ -45,60 +48,137 @@ public class HistoryEntryDTO {
 	public Date getTimestamp(){
 		return timestamp;
 	}
+	
+	public Object getBase(){
+		return base;
+	}
 
 	public enum OperationType {
-			ADD, DELETE, UPDATE
+			LEISTUNG_ADD(true), LEISTUNG_REMOVE(true), LEISTUNG_CHANGE_COUNT, LEISTUNG_CHANGE_PRICE,
+			KONSULTATION_CHANGE_DATE, KONSULTATION_CHANGE_MANDANT, FALL_COPY, FALL_CHANGE,
+			FALL_KONSULTATION_TRANSER, RECHNUNG_STORNO,
+			RECHNUNG_NEW;
+		
+		final boolean multiAllowed;
+		
+		private OperationType(){
+			this.multiAllowed = false;
+		}
+		
+		private OperationType(boolean multiAllowed){
+			this.multiAllowed = multiAllowed;
+		}
+		
+		public boolean isMultiAllowed(){
+			return multiAllowed;
+		}
+	}
+	
+	@Override
+	public int hashCode(){
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((base == null) ? 0 : base.hashCode());
+		result = prime * result + ((operationType == null) ? 0 : operationType.hashCode());
+		result = prime * result + ((item == null) ? 0 : item.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HistoryEntryDTO other = (HistoryEntryDTO) obj;
+		if (base == null) {
+			if (other.base != null)
+				return false;
+		} else if (!base.equals(other.base))
+			return false;
+		if (operationType != other.operationType)
+			return false;
+		if (item == null) {
+			if (other.item != null)
+				return false;
+		} else if (!item.equals(other.item))
+			return false;
+		return true;
 	}
 	
 	public String getText(){
 		StringBuilder builder = new StringBuilder();
+		
 		if (base instanceof KonsultationDTO) {
 			builder.append(new TimeTool(timestamp).toString(TimeTool.TIME_FULL));
 			builder.append(": ");
 			builder.append("Konsultation ");
-			builder.append(((KonsultationDTO) base).getDate());
-			
+			builder.append(((KonsultationDTO) base).getSrcDate());
 			builder.append(" - ");
-
-			if (ref instanceof LeistungDTO) {
-				builder.append("Leistung ");
-				builder.append(((LeistungDTO) ref).getCode());
-				
-				// leistung changes
-				if (item instanceof Integer) {
-					builder.append(" - ");
-					builder.append("Anzahl auf ");
-					builder.append(item);
-				} else if (item instanceof Double) {
-					builder.append(" - ");
-					builder.append("Preis auf ");
-					builder.append(item);
-				}
-				
-			} else {
-				// konsultation changes
-				if (item instanceof Date) {
-					builder.append("Datum auf ");
-					builder.append(new TimeTool((Date) item).toString(TimeTool.DATE_GER));
-				} else if (item instanceof Mandant) {
-					builder.append("Mandant auf ");
-					builder.append(((Mandant) item).getLabel());
-				}
-			}
-			
-		}
-		else if (base instanceof FallDTO) {
+		} else if (base instanceof FallDTO) {
 			builder.append("Fall - ");
 			builder.append(((FallDTO) base).getLabel());
 		}
-		if (OperationType.ADD.equals(operationType)) {
-			builder.append(" hinzugefügt.");
-		}
-		else if (OperationType.UPDATE.equals(operationType)) {
-			builder.append(" geändert.");
-		}
-		if (OperationType.DELETE.equals(operationType)) {
-			builder.append(" entfernt.");
+		
+		switch (operationType) {
+		case RECHNUNG_STORNO:
+			builder.append("Rechnung ");
+			builder.append(((InvoiceCorrectionDTO) base).getInvoiceNumber());
+			builder.append(" - ");
+			builder.append("stornieren.");
+			break;
+		case RECHNUNG_NEW:
+			builder.append("Neue Rechnung erstellen.");
+			break;
+		case FALL_COPY:
+			builder.append(" kopieren.");
+			break;
+		case FALL_CHANGE:
+			builder.append(" Änderungen übernehmen.");
+			break;
+		case FALL_KONSULTATION_TRANSER:
+			builder.append(" freigegebene und offene Konsultationen transferieren.");
+			break;
+		case KONSULTATION_CHANGE_DATE:
+			builder.append("Datum auf ");
+			builder.append(((KonsultationDTO) base).getDate());
+			builder.append(" verändern.");
+			break;
+		case KONSULTATION_CHANGE_MANDANT:
+			builder.append("Mandant auf ");
+			builder.append(((KonsultationDTO) base).getMandant().getLabel());
+			builder.append(" verändern.");
+			break;
+		case LEISTUNG_ADD:
+			builder.append("Leistung ");
+			builder.append(((LeistungDTO) item).getCode());
+			builder.append(" hinzufügen.");
+			break;
+		case LEISTUNG_CHANGE_COUNT:
+			builder.append("Leistung ");
+			builder.append(((LeistungDTO) item).getCode());
+			builder.append(" - ");
+			builder.append("Anzahl auf ");
+			builder.append(((LeistungDTO) item).getCount());
+			builder.append(" verändern.");
+			break;
+		case LEISTUNG_CHANGE_PRICE:
+			builder.append("Leistung ");
+			builder.append(((LeistungDTO) item).getCode());
+			builder.append(" - ");
+			builder.append("Preis auf ");
+			builder.append(((LeistungDTO) item).getBruttoPreis().getAmountAsString());
+			builder.append(" verändern.");
+			break;
+		case LEISTUNG_REMOVE:
+			builder.append("Leistung ");
+			builder.append(((LeistungDTO) item).getCode());
+			builder.append(" entfernen.");
+			break;
+		default:
+			break;
 		}
 		return builder.toString();
 	}

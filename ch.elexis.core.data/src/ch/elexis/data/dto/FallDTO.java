@@ -88,8 +88,10 @@ public class FallDTO implements IFall {
 	
 	@Override
 	public void setEndDatum(String endDatum){
+		if (!StringUtils.equals(this.endDatum, endDatum)) {
+			changed = true;
+		}
 		this.endDatum = endDatum;
-		changed = true;
 	}
 	
 	@Override

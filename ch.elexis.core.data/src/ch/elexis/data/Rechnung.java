@@ -384,31 +384,46 @@ public class Rechnung extends PersistentObject {
 	}
 	
 	/**
+	 * @deprecated use {@link #stornoBill(boolean)} instead
+	 */
+	@Deprecated
+	public void storno(final boolean reopen){
+		storno(reopen);
+	}
+	
+	/**
 	 * Rechnung stornieren. Allenfalls bereits erfolgte Zahlungen für diese Rechnungen bleiben
 	 * verbucht (das Konto weist dann einen Plus-Saldo auf). Der Rechnungsbetrag wird per
-	 * Stornobuchung gutgeschrieben.
+	 * Stornobuchung gutgeschrieben. Sofern konsultationen freigegeben wurden, werden diese
+	 * zurückgegeben.
 	 * 
 	 * @param reopen
 	 *            wenn True werden die in dieser Rechnung enthaltenen Behandlungen wieder
 	 *            freigegeben, andernfalls bleiben sie abgeschlossen.
+	 * @return if reopen is true the released konsultations from the bill will be returned
+	 * @since 3.3
 	 */
-	public void storno(final boolean reopen){
+	public List<Konsultation> stornoBill(final boolean reopen){
 		Money betrag = getBetrag();
 		new Zahlung(this, betrag, "Storno", null);
 		if (reopen == true) {
+			List<Konsultation> kons = new ArrayList<>();
 			Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 			qbe.add(Konsultation.FLD_BILL_ID, Query.EQUALS, getId());
 			for (Konsultation k : qbe.execute()) {
 				k.set(Konsultation.FLD_BILL_ID, null);
+				kons.add(k);
 			}
 			/*
 			 * getConnection().exec( "UPDATE BEHANDLUNGEN SET RECHNUNGSID=NULL WHERE RECHNUNGSID=" +
 			 * getWrappedId());
 			 */
 			setStatus(RnStatus.STORNIERT);
+			return kons;
 		} else {
 			
 			setStatus(RnStatus.ABGESCHRIEBEN);
+			return null;
 		}
 	}
 	

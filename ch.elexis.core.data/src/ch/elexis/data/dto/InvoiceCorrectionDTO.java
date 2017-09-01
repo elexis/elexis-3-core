@@ -10,6 +10,7 @@ import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
 import ch.elexis.data.Verrechnet;
@@ -27,25 +28,31 @@ public class InvoiceCorrectionDTO {
 	private String advisor;
 	private String invoiceStateText;
 	private FallDTO fallDTO;
+	private String outputText;
 	
 	private List<KonsultationDTO> konsultationDTOs = new ArrayList<>();
 	
-	private List<HistoryEntryDTO> konsultationHistory = new ArrayList<>();
+	private List<HistoryEntryDTO> correctionHistory = new ArrayList<>();
+	
+	List<HistoryEntryDTO> cache = new ArrayList<>();
 	
 	public InvoiceCorrectionDTO(){
 		this.id = null;
 		this.fallDTO = null;
-		konsultationHistory.clear();
+		this.outputText = null;
+		cache.clear();
+		correctionHistory.clear();
 	}
 	
 	public InvoiceCorrectionDTO(Rechnung rechnung){
-		konsultationHistory.clear();
+		cache.clear();
+		correctionHistory.clear();
 		this.id = rechnung.getId();
 		this.invoiceNumber = rechnung.getNr();
 		this.bemerkung = rechnung.getBemerkung();
 		Fall fall = rechnung.getFall();
 		this.fallDTO = fall.getDTO();
-
+		this.outputText = null;
 		this.receiver = fall.getPatient().getLabel();
 		this.phoneInsurance = "";
 		
@@ -74,6 +81,10 @@ public class InvoiceCorrectionDTO {
 
 	}
 	
+	public String getInvoiceNumber(){
+		return invoiceNumber;
+	}
+	
 	public List<KonsultationDTO> getKonsultationDTOs(){
 		return konsultationDTOs;
 	}
@@ -93,18 +104,51 @@ public class InvoiceCorrectionDTO {
 		return fallDTO;
 	}
 	
-	public List<HistoryEntryDTO> getKonsultationHistory(){
-		return konsultationHistory;
+	public void setOutputText(String outputText){
+		this.outputText = outputText;
+	}
+	
+	public String getOutputText(){
+		return outputText;
+	}
+	
+	public void addToCache(HistoryEntryDTO historyEntryDTO)
+	{
+		if (!historyEntryDTO.getOperationType().isMultiAllowed()) {
+			cache.remove(historyEntryDTO);
+		}
+		cache.add(historyEntryDTO);
+	}
+	
+	public void updateHistory(){
+		outputText = null;
+		correctionHistory.clear();
+		if (fallDTO != null && fallDTO.isChanged()) {
+			correctionHistory.add(new HistoryEntryDTO(OperationType.FALL_COPY, fallDTO, null));
+			correctionHistory.add(new HistoryEntryDTO(OperationType.FALL_CHANGE, fallDTO, null));
+			correctionHistory.add(
+				new HistoryEntryDTO(OperationType.FALL_KONSULTATION_TRANSER, fallDTO, null));
+		}
+		correctionHistory.addAll(cache);
+		
+		if (!correctionHistory.isEmpty()) {
+			correctionHistory.add(0,
+				new HistoryEntryDTO(OperationType.RECHNUNG_STORNO, this, null));
+			correctionHistory.add(new HistoryEntryDTO(OperationType.RECHNUNG_NEW, this, null));
+		}
 	}
 	
 	public List<HistoryEntryDTO> getHistory(){
-		List<HistoryEntryDTO> changesList = new ArrayList<>();
-		if (fallDTO != null && fallDTO.isChanged())
-		{
-			changesList.add(new HistoryEntryDTO(fallDTO, null, OperationType.UPDATE, null));
+		return correctionHistory;
+	}
+	
+	public boolean isCorrectionSuccess(){
+		for (HistoryEntryDTO historyEntryDTO : correctionHistory) {
+			if (!historyEntryDTO.isSuccess()) {
+				return false;
+			}
 		}
-		changesList.addAll(konsultationHistory);
-		return changesList;
+		return true;
 	}
 
 	public class KonsultationDTO {
@@ -112,11 +156,14 @@ public class InvoiceCorrectionDTO {
 		private List<LeistungDTO> leistungDTOs = new ArrayList<>();
 		private List<DiagnosesDTO> diagnosesDTOs = new ArrayList<>();
 		private String date;
+		private String srcDate;
+		private Mandant mandant;
 		
 		public KonsultationDTO(Konsultation konsultation){
 			this.id = konsultation.getId();
 			this.date = konsultation.getDatum();
-			
+			this.srcDate = new String(konsultation.getDatum());
+			this.mandant = konsultation.getMandant();
 			for (Verrechnet verrechnet : konsultation.getLeistungen()) {
 				leistungDTOs.add(new LeistungDTO(verrechnet));
 			}
@@ -149,8 +196,20 @@ public class InvoiceCorrectionDTO {
 			return date;
 		}
 		
+		public String getSrcDate(){
+			return srcDate;
+		}
+		
 		public String getId(){
 			return id;
+		}
+		
+		public void setMandant(Mandant mandant){
+			this.mandant = mandant;
+		}
+		
+		public Mandant getMandant(){
+			return mandant;
 		}
 	}
 	
@@ -244,6 +303,4 @@ public class InvoiceCorrectionDTO {
 			return label;
 		}
 	}
-	
-	
 }

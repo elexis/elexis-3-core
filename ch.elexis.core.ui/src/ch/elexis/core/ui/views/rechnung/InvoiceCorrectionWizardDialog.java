@@ -30,8 +30,15 @@ public class InvoiceCorrectionWizardDialog extends WizardDialog {
 		cancel.dispose();
 		
 		Button btnCreateInvoice = getButton(IDialogConstants.NEXT_ID);
-		btnCreateInvoice.setText("Rechnung erstellen");
+		btnCreateInvoice.setText("Korrektur durchführen");
 		setButtonLayoutData(btnCreateInvoice);
+		
 	}
 	
+	@Override
+	protected void finishPressed(){
+		// TODO Auto-generated method stub
+		super.finishPressed();
+		super.close();
+	}
 }

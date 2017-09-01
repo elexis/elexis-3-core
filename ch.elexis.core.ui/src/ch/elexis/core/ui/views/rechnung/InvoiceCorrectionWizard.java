@@ -4,7 +4,6 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.Wizard;
@@ -94,6 +93,7 @@ public class InvoiceCorrectionWizard extends Wizard {
 		private Text text1;
 		private Composite container;
 		private InvoiceCorrectionDTO invoiceCorrectionDTO;
+		private CheckboxTableViewer viewer;
 		
 		protected Page2(InvoiceCorrectionDTO invoiceCorrectionDTO){
 			super("Rechnungskorrektur");
@@ -108,7 +108,7 @@ public class InvoiceCorrectionWizard extends Wizard {
 			container = new Composite(parent, SWT.NONE);
 			container.setLayout(new GridLayout(1, false));
 			
-			CheckboxTableViewer viewer =
+			viewer =
 				CheckboxTableViewer.newCheckList(container, SWT.BORDER | SWT.V_SCROLL);
 			viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			viewer.setContentProvider(new ArrayContentProvider());
@@ -120,20 +120,7 @@ public class InvoiceCorrectionWizard extends Wizard {
 					viewer.setChecked(event.getElement(), !event.getChecked());
 				}
 			});
-				
-
-			viewer.setCheckStateProvider(new ICheckStateProvider() {
-				
-				@Override
-				public boolean isGrayed(Object element){
-					return false;
-				}
-				
-				@Override
-				public boolean isChecked(Object element){
-					return true;
-				}
-			});
+			
 			viewer.setLabelProvider(new LabelProvider() {
 				@Override
 				public String getText(Object element){
@@ -156,5 +143,20 @@ public class InvoiceCorrectionWizard extends Wizard {
 			return txtOutput;
 		}
 		
+		public InvoiceCorrectionDTO getInvoiceCorrectionDTO(){
+			return invoiceCorrectionDTO;
+		}
+		
+		public void setChecked(Object element, boolean state){
+			viewer.setChecked(element, state);
+			viewer.refresh(true);
+		}
+		
+	}
+	
+	@Override
+	public boolean canFinish()
+	{
+		return page2.equals(getContainer().getCurrentPage());
 	}
 }
