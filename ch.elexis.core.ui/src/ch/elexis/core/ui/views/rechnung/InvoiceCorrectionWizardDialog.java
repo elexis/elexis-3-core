@@ -31,7 +31,7 @@ public class InvoiceCorrectionWizardDialog extends WizardDialog {
 		cancel.setText("Abbrechen");
 		
 		Button btnCreateInvoice = getButton(IDialogConstants.NEXT_ID);
-		btnCreateInvoice.setText("Korrektur durchführen");
+		btnCreateInvoice.setText("Rechnungskorrektur durchführen");
 		setButtonLayoutData(btnCreateInvoice);
 		
 		cancel.moveBelow(null);

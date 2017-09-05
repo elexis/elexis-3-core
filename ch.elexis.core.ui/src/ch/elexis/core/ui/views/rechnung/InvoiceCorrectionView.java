@@ -802,7 +802,7 @@ public class InvoiceCorrectionView extends ViewPart {
 			
 			btnCorrection = new Button(parent, SWT.NONE);
 			btnCorrection.setEnabled(false);
-			btnCorrection.setText("Korrektur starten..");
+			btnCorrection.setText("Rechnungskorrektur starten..");
 			btnCorrection.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
