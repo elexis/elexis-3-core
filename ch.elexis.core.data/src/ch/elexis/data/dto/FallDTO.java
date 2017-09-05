@@ -29,7 +29,10 @@ public class FallDTO implements IFall {
 	
 	private List<IFallChanged> fallChanges = new ArrayList<>();
 	
+	private boolean changed;
+	
 	public FallDTO(IFall fall){
+		changed = false;
 		iFall = fall;
 		fallChanges.clear();
 		abrechnungsSystem = iFall.getAbrechnungsSystem();
@@ -277,7 +280,7 @@ public class FallDTO implements IFall {
 	}
 	
 	public boolean isChanged(){
-		return !fallChanges.isEmpty();
+		return changed;
 	}
 	
 	public void register(IFallChanged fallChanged){
@@ -289,6 +292,7 @@ public class FallDTO implements IFall {
 			iFallChanged.changed(this, triggersRecalc);
 			
 		}
+		changed = true;
 	}
 	
 	public interface IFallChanged {

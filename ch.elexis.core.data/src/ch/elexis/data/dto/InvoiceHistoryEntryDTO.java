@@ -9,7 +9,7 @@ public class InvoiceHistoryEntryDTO {
 	Object item;
 	OperationType operationType;
 	Date timestamp;
-	boolean success;
+	Boolean success;
 	
 	/**
 	 * 
@@ -24,14 +24,14 @@ public class InvoiceHistoryEntryDTO {
 		this.base = base;
 		this.item = item;
 		this.operationType = operationType;
-		this.success = false;
+		this.success = null;
 	}
 	
 	public void setSuccess(Boolean success){
 		this.success = success;
 	}
 	
-	public boolean isSuccess(){
+	public Boolean isSuccess(){
 		return success;
 	}
 	

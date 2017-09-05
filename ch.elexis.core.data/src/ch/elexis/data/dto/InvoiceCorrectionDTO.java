@@ -36,9 +36,11 @@ public class InvoiceCorrectionDTO {
 		this.outputText = null;
 		cache.clear();
 		correctionHistory.clear();
+		invoiceCorrectionChanges.clear();
 	}
 	
 	public InvoiceCorrectionDTO(Rechnung rechnung){
+		invoiceCorrectionChanges.clear();
 		cache.clear();
 		correctionHistory.clear();
 		this.id = rechnung.getId();
@@ -132,7 +134,7 @@ public class InvoiceCorrectionDTO {
 	
 	public boolean isCorrectionSuccess(){
 		for (InvoiceHistoryEntryDTO historyEntryDTO : correctionHistory) {
-			if (!historyEntryDTO.isSuccess()) {
+			if (!Boolean.TRUE.equals(historyEntryDTO.isSuccess())) {
 				return false;
 			}
 		}

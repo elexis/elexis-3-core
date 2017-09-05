@@ -1,20 +1,26 @@
 package ch.elexis.core.ui.views.rechnung;
 
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.dto.InvoiceCorrectionDTO;
 import ch.elexis.data.dto.InvoiceHistoryEntryDTO;
 
@@ -71,16 +77,25 @@ public class InvoiceCorrectionWizard extends Wizard {
 			
 			TableViewer viewer =
 				new TableViewer(container,
-					SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY);
+					SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL
+						| SWT.READ_ONLY);
 			viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			viewer.setContentProvider(new ArrayContentProvider());
+			viewer.getTable().setLinesVisible(true);
 			viewer.setInput(invoiceCorrectionDTO.getHistory());
 			viewer.setLabelProvider(new LabelProvider() {
 				@Override
 				public String getText(Object element){
-					return ((InvoiceHistoryEntryDTO) element).getText();
+					int i = invoiceCorrectionDTO.getHistory().indexOf(element);
+					return String.valueOf(++i) + ".   "
+						+ ((InvoiceHistoryEntryDTO) element).getText();
 				}
 			});
+			
+			TableColumn singleColumn = new TableColumn(viewer.getTable(), SWT.NONE);
+			TableColumnLayout tableColumnLayout = new TableColumnLayout();
+			tableColumnLayout.setColumnData(singleColumn, new ColumnWeightData(100));
+			container.setLayout(tableColumnLayout);
 			
 			setControl(container);
 			setPageComplete(!invoiceCorrectionDTO.getHistory().isEmpty());
@@ -108,8 +123,11 @@ public class InvoiceCorrectionWizard extends Wizard {
 			container = new Composite(parent, SWT.NONE);
 			container.setLayout(new GridLayout(1, false));
 			
-			viewer =
-				CheckboxTableViewer.newCheckList(container, SWT.BORDER | SWT.V_SCROLL);
+			Composite tableComp = new Composite(container, SWT.NONE);
+			tableComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			viewer = CheckboxTableViewer.newCheckList(tableComp,
+				SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+			viewer.getTable().setLinesVisible(true);
 			viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			viewer.setContentProvider(new ArrayContentProvider());
 			viewer.setInput(invoiceCorrectionDTO.getHistory());
@@ -120,22 +138,22 @@ public class InvoiceCorrectionWizard extends Wizard {
 					viewer.setChecked(event.getElement(), !event.getChecked());
 				}
 			});
+			viewer.setLabelProvider(new WizardLabelProvider());
 			
-			viewer.setLabelProvider(new LabelProvider() {
-				@Override
-				public String getText(Object element){
-					return ((InvoiceHistoryEntryDTO) element).getText();
-				}
-			});
+			TableColumn singleColumn = new TableColumn(viewer.getTable(), SWT.NONE);
+			TableColumnLayout tableColumnLayout = new TableColumnLayout();
+			tableColumnLayout.setColumnData(singleColumn, new ColumnWeightData(100));
+			tableComp.setLayout(tableColumnLayout);
 			
-			setControl(container);
 			
 			Label lblOutput = new Label(container, SWT.NONE);
 			lblOutput.setText("Ausgabe");
-			txtOutput = new Text(container,
+			txtOutput =
+				new Text(container,
 				SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY);
 			txtOutput.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			
+			setControl(container);
 			setPageComplete(!invoiceCorrectionDTO.getHistory().isEmpty());
 		}
 		
@@ -155,8 +173,38 @@ public class InvoiceCorrectionWizard extends Wizard {
 	}
 	
 	@Override
-	public boolean canFinish()
-	{
+	public boolean canFinish(){
 		return page2.equals(getContainer().getCurrentPage());
+	}
+	
+	class WizardLabelProvider extends LabelProvider implements IColorProvider {
+		
+		@Override
+		public Color getForeground(Object element){
+			return UiDesk.getColor(UiDesk.COL_BLACK);
+		}
+		
+		@Override
+		public Color getBackground(Object element){
+			InvoiceHistoryEntryDTO item = (InvoiceHistoryEntryDTO) element;
+			if (item.isSuccess() == null)
+			{
+				return UiDesk.getColor(UiDesk.COL_WHITE);
+			}
+			if (Boolean.TRUE.equals(item.isSuccess())) {
+				return UiDesk.getColorFromRGB("E2FFC3");
+			}
+			return UiDesk.getColorFromRGB("FFDDDD");
+			
+		}
+		
+		@Override
+		public String getText(Object element){
+			if (invoiceCorrectionDTO != null) {
+				int i = invoiceCorrectionDTO.getHistory().indexOf(element);
+				return String.valueOf(++i) + ".   " + ((InvoiceHistoryEntryDTO) element).getText();
+			}
+			return "";
+		}
 	}
 }
