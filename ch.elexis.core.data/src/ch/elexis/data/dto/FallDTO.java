@@ -1,5 +1,6 @@
 package ch.elexis.data.dto;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,12 @@ public class FallDTO implements IFall {
 	
 	private boolean changed;
 	
+	private List<IFallChanged> fallChanges = new ArrayList<>();
+	
+	public void register(IFallChanged fallChanged){
+		fallChanges.add(fallChanged);
+	}
+	
 	public FallDTO(IFall fall){
 		iFall = fall;
 		abrechnungsSystem = iFall.getAbrechnungsSystem();
@@ -46,8 +53,11 @@ public class FallDTO implements IFall {
 	/// editable fields
 	@Override
 	public void setAbrechnungsSystem(String abrechnungsSystem){
-		this.abrechnungsSystem = abrechnungsSystem;
-		changed = true;
+		if (!StringUtils.equals(this.abrechnungsSystem, abrechnungsSystem)) {
+			this.abrechnungsSystem = abrechnungsSystem;
+			changed = true;
+			informChanged();
+		}
 	}
 	
 	@Override
@@ -277,6 +287,17 @@ public class FallDTO implements IFall {
 	
 	public boolean isChanged(){
 		return changed;
+	}
+	
+	private void informChanged(){
+		for (IFallChanged iFallChanged : fallChanges) {
+			iFallChanged.changed(this);
+			
+		}
+	}
+	
+	public interface IFallChanged {
+		public void changed(FallDTO fallDTO);
 	}
 
 }

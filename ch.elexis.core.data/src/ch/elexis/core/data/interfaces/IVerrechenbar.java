@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.ICodeElement;
-import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Verrechnet;
@@ -105,9 +104,9 @@ public interface IVerrechenbar extends ICodeElement {
 	/**
 	 * Betrag dieser Verrechenbar (in TP*100) an einem bestimmten Datum liefern
 	 */
-	public int getTP(TimeTool date, Fall fall);
+	public int getTP(TimeTool date, IFall fall);
 	
-	public double getFactor(TimeTool date, Fall fall);
+	public double getFactor(TimeTool date, IFall fall);
 	
 	/**
 	 * Eigene Kosten für diese Leistung

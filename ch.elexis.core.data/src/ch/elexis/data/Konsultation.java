@@ -657,6 +657,26 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	/**
+	 * Liefert eine Verrechnete Leistung anhand verrechnbar id
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public Verrechnet getVerrechnet(IVerrechenbar iVerrechenbar){
+		if (iVerrechenbar != null && iVerrechenbar.getId() != null) {
+			Query<Verrechnet> qbe = new Query<Verrechnet>(Verrechnet.class);
+			qbe.add(Verrechnet.KONSULTATION, Query.EQUALS, getId());
+			qbe.add(Verrechnet.LEISTG_CODE, Query.EQUALS, iVerrechenbar.getId());
+			
+			List<Verrechnet> verrechnets = qbe.execute();
+			if (verrechnets.size() == 1) {
+				return verrechnets.get(0);
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Eine Verrechenbar aus der Konsultation entfernen
 	 * 
 	 * @param ls

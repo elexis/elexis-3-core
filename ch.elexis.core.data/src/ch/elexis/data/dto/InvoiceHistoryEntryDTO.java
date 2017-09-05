@@ -2,11 +2,9 @@ package ch.elexis.data.dto;
 
 import java.util.Date;
 
-import ch.elexis.data.dto.InvoiceCorrectionDTO.KonsultationDTO;
-import ch.elexis.data.dto.InvoiceCorrectionDTO.LeistungDTO;
 import ch.rgw.tools.TimeTool;
 
-public class HistoryEntryDTO {
+public class InvoiceHistoryEntryDTO {
 	Object base;
 	Object item;
 	OperationType operationType;
@@ -20,7 +18,7 @@ public class HistoryEntryDTO {
 	 * @param operationType
 	 * @param item
 	 */
-	public HistoryEntryDTO(OperationType operationType, Object base, Object item){
+	public InvoiceHistoryEntryDTO(OperationType operationType, Object base, Object item){
 		super();
 		this.timestamp = new Date();
 		this.base = base;
@@ -92,7 +90,7 @@ public class HistoryEntryDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HistoryEntryDTO other = (HistoryEntryDTO) obj;
+		InvoiceHistoryEntryDTO other = (InvoiceHistoryEntryDTO) obj;
 		if (base == null) {
 			if (other.base != null)
 				return false;
@@ -153,12 +151,12 @@ public class HistoryEntryDTO {
 			break;
 		case LEISTUNG_ADD:
 			builder.append("Leistung ");
-			builder.append(((LeistungDTO) item).getCode());
+			builder.append(((LeistungDTO) item).getText());
 			builder.append(" hinzufügen.");
 			break;
 		case LEISTUNG_CHANGE_COUNT:
 			builder.append("Leistung ");
-			builder.append(((LeistungDTO) item).getCode());
+			builder.append(((LeistungDTO) item).getText());
 			builder.append(" - ");
 			builder.append("Anzahl auf ");
 			builder.append(((LeistungDTO) item).getCount());
@@ -166,15 +164,15 @@ public class HistoryEntryDTO {
 			break;
 		case LEISTUNG_CHANGE_PRICE:
 			builder.append("Leistung ");
-			builder.append(((LeistungDTO) item).getCode());
+			builder.append(((LeistungDTO) item).getText());
 			builder.append(" - ");
 			builder.append("Preis auf ");
-			builder.append(((LeistungDTO) item).getBruttoPreis().getAmountAsString());
+			builder.append(((LeistungDTO) item).getPrice().getAmountAsString());
 			builder.append(" verändern.");
 			break;
 		case LEISTUNG_REMOVE:
 			builder.append("Leistung ");
-			builder.append(((LeistungDTO) item).getCode());
+			builder.append(((LeistungDTO) item).getText());
 			builder.append(" entfernen.");
 			break;
 		default:

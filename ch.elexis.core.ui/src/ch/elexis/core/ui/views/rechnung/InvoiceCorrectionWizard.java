@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.data.dto.HistoryEntryDTO;
+import ch.elexis.data.dto.InvoiceHistoryEntryDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO;
 
 public class InvoiceCorrectionWizard extends Wizard {
@@ -78,7 +78,7 @@ public class InvoiceCorrectionWizard extends Wizard {
 			viewer.setLabelProvider(new LabelProvider() {
 				@Override
 				public String getText(Object element){
-					return ((HistoryEntryDTO) element).getText();
+					return ((InvoiceHistoryEntryDTO) element).getText();
 				}
 			});
 			
@@ -124,7 +124,7 @@ public class InvoiceCorrectionWizard extends Wizard {
 			viewer.setLabelProvider(new LabelProvider() {
 				@Override
 				public String getText(Object element){
-					return ((HistoryEntryDTO) element).getText();
+					return ((InvoiceHistoryEntryDTO) element).getText();
 				}
 			});
 			

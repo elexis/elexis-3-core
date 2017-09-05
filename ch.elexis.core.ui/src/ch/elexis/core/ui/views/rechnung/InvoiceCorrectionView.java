@@ -1,15 +1,19 @@
 package ch.elexis.core.ui.views.rechnung;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -22,10 +26,14 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -40,41 +48,53 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
+import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
+import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.core.ui.views.rechnung.InvoiceCorrectionWizard.Page2;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
+import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.Verrechnet;
+import ch.elexis.data.dto.DiagnosesDTO;
 import ch.elexis.data.dto.FallDTO;
-import ch.elexis.data.dto.HistoryEntryDTO;
-import ch.elexis.data.dto.HistoryEntryDTO.OperationType;
+import ch.elexis.data.dto.FallDTO.IFallChanged;
 import ch.elexis.data.dto.InvoiceCorrectionDTO;
-import ch.elexis.data.dto.InvoiceCorrectionDTO.DiagnosesDTO;
-import ch.elexis.data.dto.InvoiceCorrectionDTO.KonsultationDTO;
-import ch.elexis.data.dto.InvoiceCorrectionDTO.LeistungDTO;
+import ch.elexis.data.dto.InvoiceHistoryEntryDTO;
+import ch.elexis.data.dto.InvoiceHistoryEntryDTO.OperationType;
+import ch.elexis.data.dto.KonsultationDTO;
+import ch.elexis.data.dto.LeistungDTO;
+import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.Result.msg;
+import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class InvoiceCorrectionView extends ViewPart {
@@ -336,7 +356,7 @@ public class InvoiceCorrectionView extends ViewPart {
 						if (dlg.open() == Dialog.OK) {
 							TimeTool date = dlg.getSelectedDate();
 							konsultationDTO.setDate(date.toString(TimeTool.DATE_GER));
-							invoiceCorrectionDTO.addToCache(new HistoryEntryDTO(
+							invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
 								OperationType.KONSULTATION_CHANGE_DATE, konsultationDTO, null));
 							updateKonsTitleText(lblKonsTitle, konsultationDTO);
 						}
@@ -364,7 +384,7 @@ public class InvoiceCorrectionView extends ViewPart {
 						if (ksl.open() == Dialog.OK) {
 							Mandant selectedMandant = (Mandant) ksl.getSelection();
 							konsultationDTO.setMandant(selectedMandant);
-							invoiceCorrectionDTO.addToCache(new HistoryEntryDTO(
+							invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
 								OperationType.KONSULTATION_CHANGE_MANDANT, konsultationDTO, null));
 							updateKonsTitleText(lblKonsTitle, konsultationDTO);
 						}
@@ -442,6 +462,49 @@ public class InvoiceCorrectionView extends ViewPart {
 			
 			tableViewer.setContentProvider(new ArrayContentProvider());
 			tableViewer.setInput(konsultationDTO.getLeistungDTOs());
+			tableViewer.setComparator(new ViewerComparator() {
+				@Override
+				public int compare(Viewer viewer, Object e1, Object e2){
+					return ObjectUtils.compare(((LeistungDTO) e1).getLastUpdate(),
+						((LeistungDTO) e2).getLastUpdate());
+				}
+			});
+			
+			invoiceCorrectionDTO.getFallDTO().register(new IFallChanged() {
+				
+				@Override
+				public void changed(FallDTO fallDTO){
+					for (KonsultationDTO konsultationDTO : invoiceCorrectionDTO
+						.getKonsultationDTOs()) {
+						for (LeistungDTO leistungDTO : konsultationDTO.getLeistungDTOs()) {
+							leistungDTO.calcPrice(konsultationDTO, fallDTO);
+						}
+					}
+					tableViewer.refresh();
+				}
+				
+			});
+			
+			PersistentObjectDropTarget.IReceiver dtr = new PersistentObjectDropTarget.IReceiver() {
+				
+				public boolean accept(PersistentObject o){
+					return true;
+				}
+				
+				public void dropped(PersistentObject o, DropTargetEvent ev){
+					if (o instanceof IVerrechenbar) {
+						IVerrechenbar art = (IVerrechenbar) o;
+						LeistungDTO leistungDTO = new LeistungDTO(art);
+						konsultationDTO.getLeistungDTOs().add(leistungDTO);
+						leistungDTO.calcPrice(konsultationDTO, invoiceCorrectionDTO.getFallDTO());
+						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+							OperationType.LEISTUNG_ADD, konsultationDTO, leistungDTO));
+						tableViewer.refresh();
+					}
+				}
+			};
+			PersistentObjectDropTarget dropTarget =
+				new PersistentObjectDropTarget("rechnungskorrektur", this, dtr); //$NON-NLS-1$
 			
 			MenuManager menuManager = new MenuManager();
 			menuManager.add(new Action() {
@@ -457,7 +520,14 @@ public class InvoiceCorrectionView extends ViewPart {
 				
 				@Override
 				public void run(){
-				
+					LeistungDTO leistungDTO = getSelection();
+					if (leistungDTO != null && changeQuantityDialog(leistungDTO)) {
+						leistungDTO.calcPrice(konsultationDTO, invoiceCorrectionDTO.getFallDTO());
+						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+							OperationType.LEISTUNG_CHANGE_COUNT, konsultationDTO, leistungDTO));
+						tableViewer.refresh();
+						
+					}
 				}
 			});
 			menuManager.add(new Action() {
@@ -473,7 +543,12 @@ public class InvoiceCorrectionView extends ViewPart {
 				
 				@Override
 				public void run(){
-				
+					LeistungDTO leistungDTO = getSelection();
+					if (leistungDTO != null && changePriceDialog(leistungDTO)) {
+						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+							OperationType.LEISTUNG_CHANGE_PRICE, konsultationDTO, leistungDTO));
+						tableViewer.refresh();
+					}
 				}
 			});
 			menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -490,13 +565,24 @@ public class InvoiceCorrectionView extends ViewPart {
 				
 				@Override
 				public void run(){
-					Artikel artikel = Artikel.load("R215cf77014cf448e049533");
-					LeistungDTO leistungDTO = invoiceCorrectionDTO.new LeistungDTO(artikel);
 					
-					konsultationDTO.getLeistungDTOs().add(leistungDTO);
-					invoiceCorrectionDTO.addToCache(new HistoryEntryDTO(OperationType.LEISTUNG_ADD,
-						konsultationDTO, leistungDTO));
-					tableViewer.refresh();
+					try {
+						LeistungenView iViewPart =
+							(LeistungenView) getSite().getPage().showView(LeistungenView.ID);
+						CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
+						CTabItem[] tabItems = iViewPart.ctab.getItems();
+						for (CTabItem tab : tabItems) {
+							ICodeElement ics = (ICodeElement) tab.getData();
+							if (ics instanceof Artikel) {
+								iViewPart.ctab.setSelection(tab);
+								break;
+							}
+						}
+						iViewPart.setFocus();
+					} catch (PartInitException e) {
+						LoggerFactory.getLogger(InvoiceCorrectionDTO.class)
+							.error("cannot init leistungen viewpart", e);
+					}
 				}
 			});
 			menuManager.add(new Action() {
@@ -515,7 +601,7 @@ public class InvoiceCorrectionView extends ViewPart {
 					LeistungDTO leistungDTO = getSelection();
 					if (leistungDTO != null) {
 						konsultationDTO.getLeistungDTOs().remove(leistungDTO);
-						invoiceCorrectionDTO.addToCache(new HistoryEntryDTO(
+						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
 							OperationType.LEISTUNG_REMOVE, konsultationDTO, leistungDTO));
 						tableViewer.refresh();
 					}
@@ -567,8 +653,8 @@ public class InvoiceCorrectionView extends ViewPart {
 				case 2:
 					return leistungDTO.getText();
 				case 3:
-					return leistungDTO.getBruttoPreis() != null
-							? leistungDTO.getBruttoPreis().getAmountAsString() : "0";
+					return leistungDTO.getPrice() != null
+							? leistungDTO.getPrice().getAmountAsString() : "0";
 				default:
 					return "";
 				}
@@ -726,9 +812,12 @@ public class InvoiceCorrectionView extends ViewPart {
 								Optional<Fall> srcFall = Optional.empty();
 								Optional<Fall> copyFall = Optional.empty();
 								List<Konsultation> releasedKonsultations = new ArrayList<>();
+								LeistungDTO leistungDTO = null;
+								Konsultation konsultation = null;
+								Verrechnet verrechnet = null;
 								try {
 									
-									for (HistoryEntryDTO historyEntryDTO : invoiceCorrectionDTO
+									for (InvoiceHistoryEntryDTO historyEntryDTO : invoiceCorrectionDTO
 										.getHistory()) {
 										
 										Object base = historyEntryDTO.getBase();
@@ -783,31 +872,14 @@ public class InvoiceCorrectionView extends ViewPart {
 															releasedKonsultations.add(openedKons);
 															
 															// if validation of cons is failed the bill correction will be reseted
-															Result<Konsultation> result =
-																BillingUtil
-																	.getBillableResult(openedKons);
+															Result<?> result = BillingUtil
+																.getBillableResult(openedKons);
 															if (!result.isOK()) {
-																StringBuilder warnings =
-																	new StringBuilder();
-																for (msg message : result
-																	.getMessages()) {
-																	if (message
-																		.getSeverity() != SEVERITY.OK) {
-																		if (output.length() > 0) {
-																			warnings.append(" / ");
-																		}
-																		warnings.append(
-																			message.getText());
-																	}
-																}
-																if (warnings.length() > 0) {
-																	terminated = true;
-																	output.append(
-																		warnings.toString());
-																	resetCorrection(srcFall.get(),
-																		copyFall.get(),
-																		releasedKonsultations);
-																}
+																addToOutput(output, result);
+																terminated = true;
+																resetCorrection(srcFall.get(),
+																	copyFall.get(),
+																	releasedKonsultations);
 															}
 														}
 													}
@@ -824,23 +896,74 @@ public class InvoiceCorrectionView extends ViewPart {
 											
 											break;
 										case LEISTUNG_ADD:
-											Konsultation.load(((KonsultationDTO) base).getId())
-												.addLeistung(
-													((LeistungDTO) item).getIVerrechenbar());
+											konsultation =
+												Konsultation.load(((KonsultationDTO) base).getId());
+											leistungDTO = (LeistungDTO) item;
+											Result<IVerrechenbar> res = konsultation
+												.addLeistung(leistungDTO.getIVerrechenbar());
+											if (res.isOK()) {
+												verrechnet = konsultation
+													.getVerrechnet(leistungDTO.getIVerrechenbar());
+												if (verrechnet != null) {
+													leistungDTO.setVerrechnet(verrechnet);
+												}
+											} else {
+												addToOutput(output, res);
+												verrechnet = null;
+											}
+											if (verrechnet == null) {
+												addToOutput(output,
+													"Die Leistung "
+														+ leistungDTO.getIVerrechenbar().getText()
+														+ " konnte nicht verrechnet werden.");
+												terminated = true;
+											}
+											
 											break;
 										case LEISTUNG_REMOVE:
-											Konsultation.load(((KonsultationDTO) base).getId())
-												.removeLeistung(
-													Verrechnet.load(((LeistungDTO) item).getId()));
+											leistungDTO = (LeistungDTO) item;
+											if (leistungDTO.getVerrechnet() != null) {
+												Result<Verrechnet> resRemove = Konsultation
+													.load(((KonsultationDTO) base).getId())
+													.removeLeistung(leistungDTO.getVerrechnet());
+												
+												if (resRemove.isOK()) {
+													((LeistungDTO) item).setVerrechnet(null);
+												} else {
+													addToOutput(output,
+														"Die Leistung "
+															+ leistungDTO.getVerrechnet().getText()
+															+ " konnte nicht entfernt werden.");
+													terminated = true;
+												}
+											}
 											break;
 										case LEISTUNG_CHANGE_COUNT:
+											leistungDTO = (LeistungDTO) item;
+											verrechnet = leistungDTO.getVerrechnet();
+											if (verrechnet != null) {
+												IStatus ret = verrechnet
+													.changeAnzahlValidated(leistungDTO.getCount());
+												if (ret.isOK()) {
+													verrechnet.setSecondaryScaleFactor(
+														leistungDTO.getPriceSecondaryScaleFactor());
+													verrechnet.setText(leistungDTO.getPriceText());
+												} else {
+													addToOutput(output, ret.getMessage());
+													terminated = true;
+												}
+											}
 											break;
 										case LEISTUNG_CHANGE_PRICE:
-											
+											leistungDTO = (LeistungDTO) item;
+											verrechnet = leistungDTO.getVerrechnet();
+											if (verrechnet != null) {
+												verrechnet.setTP(leistungDTO.getPrice().getCents());
+												verrechnet.setSecondaryScaleFactor(
+													leistungDTO.getPriceSecondaryScaleFactor());
+											}
 											break;
-										
 										default:
-											
 											break;
 										}
 										
@@ -858,6 +981,30 @@ public class InvoiceCorrectionView extends ViewPart {
 									e.printStackTrace();
 								}
 								
+							}
+						}
+						
+						private void addToOutput(StringBuilder output, Result<?> res){
+							StringBuilder warnings = new StringBuilder();
+							for (msg message : res.getMessages()) {
+								if (message.getSeverity() != SEVERITY.OK) {
+									if (output.length() > 0) {
+										warnings.append(" / ");
+									}
+									warnings.append(message.getText());
+								}
+							}
+							if (warnings.length() > 0) {
+								output.append(warnings.toString());
+							}
+						}
+						
+						private void addToOutput(StringBuilder output, String warning){
+							if (output.length() > 0) {
+								output.append("\n");
+							}
+							if (warning.length() > 0) {
+								output.append(warning);
 							}
 						}
 					});
@@ -902,4 +1049,80 @@ public class InvoiceCorrectionView extends ViewPart {
 		}
 		copyFall.delete();
 	}
+	
+	private boolean changePriceDialog(LeistungDTO leistungDTO){
+		Money oldPrice = leistungDTO.getPrice();
+		String p = oldPrice.getAmountAsString();
+		InputDialog dlg = new InputDialog(UiDesk.getTopShell(),
+			Messages.VerrechnungsDisplay_changePriceForService, //$NON-NLS-1$
+			Messages.VerrechnungsDisplay_enterNewPrice, p, //$NON-NLS-1$
+			null);
+		if (dlg.open() == Dialog.OK) {
+			try {
+				String val = dlg.getValue().trim();
+				Money newPrice = new Money(oldPrice);
+				if (val.endsWith("%") && val.length() > 1) { //$NON-NLS-1$
+					val = val.substring(0, val.length() - 1);
+					double percent = Double.parseDouble(val);
+					double factor = 1.0 + (percent / 100.0);
+					leistungDTO.setPriceSecondaryScaleFactor(factor);
+					leistungDTO.setCustomPrice(leistungDTO.getPrice());
+				} else {
+					newPrice = new Money(val);
+					leistungDTO.setCustomPrice(newPrice);
+					leistungDTO.setPriceSecondaryScaleFactor(Double.valueOf(1));
+				}
+				return true;
+			} catch (ParseException ex) {
+				SWTHelper.showError(Messages.VerrechnungsDisplay_badAmountCaption, //$NON-NLS-1$
+					Messages.VerrechnungsDisplay_badAmountBody); //$NON-NLS-1$
+			}
+		}
+		return false;
+	}
+	
+	private boolean changeQuantityDialog(LeistungDTO leistungDTO){
+		String p = Integer.toString(leistungDTO.getCount());
+		InputDialog dlg =
+			new InputDialog(UiDesk.getTopShell(), Messages.VerrechnungsDisplay_changeNumberCaption, //$NON-NLS-1$
+				Messages.VerrechnungsDisplay_changeNumberBody, //$NON-NLS-1$
+				p, null);
+		if (dlg.open() == Dialog.OK) {
+			try {
+				String val = dlg.getValue();
+				if (!StringTool.isNothing(val)) {
+					int changeAnzahl;
+					double secondaryScaleFactor = 1.0;
+					String text = leistungDTO.getIVerrechenbar().getText();
+					
+					if (val.indexOf(StringConstants.SLASH) > 0) {
+						changeAnzahl = 1;
+						String[] frac = val.split(StringConstants.SLASH);
+						secondaryScaleFactor =
+							Double.parseDouble(frac[0]) / Double.parseDouble(frac[1]);
+						text = leistungDTO.getIVerrechenbar().getText() + " (" + val //$NON-NLS-1$
+							+ Messages.VerrechnungsDisplay_Orininalpackungen;
+					} else if (val.indexOf('.') > 0) {
+						changeAnzahl = 1;
+						secondaryScaleFactor = Double.parseDouble(val);
+						text = leistungDTO.getIVerrechenbar().getText() + " ("
+							+ Double.toString(secondaryScaleFactor) + ")";
+					} else {
+						changeAnzahl = Integer.parseInt(dlg.getValue());
+					}
+					
+					leistungDTO.setCount(changeAnzahl);
+					leistungDTO.setPriceSecondaryScaleFactor(secondaryScaleFactor);
+					leistungDTO.setPriceText(text);
+					return true;
+				}
+			} catch (NumberFormatException ne) {
+				SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, //$NON-NLS-1$
+					Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$
+			}
+		}
+		
+		return false;
+	}
+	
 }
