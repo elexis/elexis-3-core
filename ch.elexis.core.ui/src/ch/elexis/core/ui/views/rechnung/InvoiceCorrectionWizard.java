@@ -15,8 +15,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.data.dto.InvoiceHistoryEntryDTO;
 import ch.elexis.data.dto.InvoiceCorrectionDTO;
+import ch.elexis.data.dto.InvoiceHistoryEntryDTO;
 
 public class InvoiceCorrectionWizard extends Wizard {
 	

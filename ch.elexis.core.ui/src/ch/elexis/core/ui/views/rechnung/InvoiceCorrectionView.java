@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -379,13 +380,17 @@ public class InvoiceCorrectionView extends ViewPart {
 					
 					@Override
 					public void run(){
-						DateSelectorDialog dlg = new DateSelectorDialog(getShell());
+						DateSelectorDialog dlg = new DateSelectorDialog(getShell(),
+							new TimeTool(konsultationDTO.getDate()));
 						if (dlg.open() == Dialog.OK) {
 							TimeTool date = dlg.getSelectedDate();
-							konsultationDTO.setDate(date.toString(TimeTool.DATE_GER));
-							invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
-								OperationType.KONSULTATION_CHANGE_DATE, konsultationDTO, null));
-							updateKonsTitleText(lblKonsTitle, konsultationDTO);
+							String newDate = date.toString(TimeTool.DATE_GER);
+							if (!StringUtils.equals(newDate, konsultationDTO.getDate())) {
+								konsultationDTO.setDate(newDate);
+								invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+									OperationType.KONSULTATION_CHANGE_DATE, konsultationDTO, null));
+								updateKonsTitleText(lblKonsTitle, konsultationDTO);
+							}
 						}
 					}
 				});
@@ -777,7 +782,7 @@ public class InvoiceCorrectionView extends ViewPart {
 			parent.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, true, 1, 1));
 			
 			Button btnCorrection = new Button(parent, SWT.NONE);
-			btnCorrection.setText("Validieren");
+			btnCorrection.setText("Korrektur starten..");
 			btnCorrection.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
@@ -819,6 +824,11 @@ public class InvoiceCorrectionView extends ViewPart {
 				&& invoiceCorrectionDTO.getFallDTO() != null) {
 				try {
 					invoiceCorrectionDTO.updateHistory();
+					if (invoiceCorrectionDTO.getHistory().isEmpty()) {
+						MessageDialog.openInformation(getSite().getShell(), "Rechnungskorrektur",
+							"Es sind wurden keine Änderungen an der Rechnung vorgenommen.");
+						return null;
+					}
 					
 					InvoiceCorrectionWizardDialog wizardDialog = new InvoiceCorrectionWizardDialog(
 						getSite().getShell(), invoiceCorrectionDTO);
