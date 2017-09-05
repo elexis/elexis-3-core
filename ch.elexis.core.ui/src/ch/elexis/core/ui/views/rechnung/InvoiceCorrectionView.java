@@ -431,7 +431,7 @@ public class InvoiceCorrectionView extends ViewPart {
 						}
 					}
 				});
-				tbManager.add(new Action() {
+				/*TODO tbManager.add(new Action() {
 					@Override
 					public String getText(){
 						return "Fallzuordnung ändern";
@@ -446,7 +446,7 @@ public class InvoiceCorrectionView extends ViewPart {
 					public void run(){
 					
 					}
-				});
+				});*/
 					
 				ToolBar toolbar = tbManager.createControl(group);
 				// align toolbar right
