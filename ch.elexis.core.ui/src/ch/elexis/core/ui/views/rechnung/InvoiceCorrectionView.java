@@ -1,5 +1,9 @@
 package ch.elexis.core.ui.views.rechnung;
 
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +65,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -73,6 +78,8 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
+import ch.elexis.core.ui.views.contribution.IViewContribution;
+import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.core.ui.views.rechnung.InvoiceCorrectionWizard.Page2;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Artikel;
@@ -106,6 +113,10 @@ public class InvoiceCorrectionView extends ViewPart {
 	
 	private Rechnung actualInvoice;
 	private InvoiceCorrectionDTO invoiceCorrectionDTO;
+	
+	@SuppressWarnings("unchecked")
+	private final List<IViewContribution> detailComposites = Extensions.getClasses(VIEWCONTRIBUTION,
+		VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, RnDetailView.ID);
 	
 	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
 		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE
@@ -216,8 +227,7 @@ public class InvoiceCorrectionView extends ViewPart {
 	class InvoiceHeaderComposite extends Composite {
 		
 		String[] lbls = new String[] {
-			"Rechnung", "Status", "Patient", "Telefon Versicherer", "Sachbearbeiter/in",
-			"Rückweisungsgrund", "Bemerkung"
+			"Rechnung", "Status", "Patient", "Telefon Versicherer", "Sachbearbeiter/in"
 		};
 		
 		public InvoiceHeaderComposite(Composite parent){
@@ -241,30 +251,47 @@ public class InvoiceCorrectionView extends ViewPart {
 				for (String lbl : lbls) {
 					String detailText = invoiceDetails[i++];
 					new Label(this, SWT.NONE).setText(lbl);
-					
-					if (i == 6 || i == 7) {
-						Text txtMulti = new Text(this,
-							SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.READ_ONLY);
-						GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
-						gd2.heightHint = 50;
-						txtMulti.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
-						txtMulti.setLayoutData(gd2);
-						txtMulti.setText(detailText != null ? detailText : "");
-					} else {
-						
 						CLabel text = new CLabel(this, SWT.BORDER);
 						text.setBackground(colWhite);
 						text.setLayoutData(
 							i == 3 ? new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1) : gd);
 						text.setText(detailText != null ? detailText : "");
-					}
-					
 				}
 			} else {
 				logger.error("cannot load invoice header data - values size mismatch [expected: "
 					+ lbls.length + ", current: " + invoiceDetails.length + "]");
 			}
+			
+			new Label(this, SWT.NONE).setText("Bemerkung");
+			Text txtMulti =
+				new Text(this, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.READ_ONLY);
+			GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
+			gd2.heightHint = 50;
+			txtMulti.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+			txtMulti.setLayoutData(gd2);
+			txtMulti.setText(invoiceCorrectionDTO.getBemerkung() != null
+					? invoiceCorrectionDTO.getBemerkung() : "");
+			
+			if (actualInvoice != null && !detailComposites.isEmpty()) {
+				Label separator = new Label(this, SWT.HORIZONTAL | SWT.SEPARATOR);
+				separator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 10, 1));
+				List<IViewContribution> filtered = ViewContributionHelper
+					.getFilteredAndPositionSortedContributions(detailComposites, 0);
+				for (IViewContribution ivc : filtered) {
+					new Label(this, SWT.NONE).setText(ivc.getLocalizedTitle());
+					
+					Composite mainComposite = new Composite(this, SWT.NONE);
+					mainComposite
+						.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+					mainComposite.setLayout(new GridLayout(1, false));
+					ivc.initComposite(mainComposite);
+				}
+				
+				detailComposites.forEach(dc -> dc.setDetailObject(actualInvoice, null));
+			}
 		}
+		
+		
 	}
 	
 	class InvoiceContentComposite extends Composite {
@@ -831,6 +858,11 @@ public class InvoiceCorrectionView extends ViewPart {
 											releasedKonsultations.addAll(rechnung.stornoBill(true));
 											break;
 										case RECHNUNG_NEW:
+											if (copyFall.isPresent() && invoiceCorrectionDTO
+												.getFallDTO().getEndDatum() != null) {
+												copyFall.get().setEndDatum(invoiceCorrectionDTO
+													.getFallDTO().getEndDatum());
+											}
 											Result<Rechnung> rechnungResult =
 												Rechnung.build(releasedKonsultations);
 											if (!rechnungResult.isOK()) {
@@ -857,6 +889,8 @@ public class InvoiceCorrectionView extends ViewPart {
 										case FALL_CHANGE:
 											copyFall.get()
 												.persistDTO(invoiceCorrectionDTO.getFallDTO());
+											// at this point the fall must be opened
+											copyFall.get().setEndDatum(null);
 											break;
 										case FALL_KONSULTATION_TRANSER:
 											releasedKonsultations.clear();

@@ -9,7 +9,6 @@ import ch.elexis.core.model.InvoiceState;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 import ch.elexis.data.dto.InvoiceHistoryEntryDTO.OperationType;
 
 public class InvoiceCorrectionDTO {
@@ -18,7 +17,6 @@ public class InvoiceCorrectionDTO {
 	private String bemerkung;
 	private String receiver;
 	private String phoneInsurance;
-	private String causeRejected;
 	private String advisor;
 	private String invoiceStateText;
 	private FallDTO fallDTO;
@@ -55,16 +53,6 @@ public class InvoiceCorrectionDTO {
 			if (invoiceState != null) {
 				invoiceStateText = invoiceState.getLocaleText();
 			}
-			
-			if (rechnung.getStatus() == RnStatus.FEHLERHAFT) {
-				
-				List<String> rejects = rechnung.getTrace(Rechnung.REJECTED);
-				StringBuilder rjj = new StringBuilder();
-				for (String r : rejects) {
-					rjj.append(r).append("\n------\n"); //$NON-NLS-1$
-				}
-				this.causeRejected = rjj.toString();
-			}
 		}
 		this.advisor = rechnung.getMandant().getLabel();
 		
@@ -85,9 +73,12 @@ public class InvoiceCorrectionDTO {
 	
 	public String[] getInvoiceDetails(){
 		return new String[] {
-			invoiceNumber, invoiceStateText, receiver, phoneInsurance, advisor,
-			causeRejected, bemerkung
+			invoiceNumber, invoiceStateText, receiver, phoneInsurance, advisor
 		};
+	}
+	
+	public String getBemerkung(){
+		return bemerkung;
 	}
 	
 	public String getId(){

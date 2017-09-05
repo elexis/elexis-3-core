@@ -865,7 +865,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 			
 			// keep editable in case it's an optional parameter of accident date/no
-			if (keepEditable.contains(req)) {
+			if (keepEditable.contains(req) && !readonly) {
 				req.setEnabled(lockEnabled);
 			} else {
 				if (req instanceof Text) {

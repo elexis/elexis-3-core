@@ -716,7 +716,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * @return ein Verifier-Resultat.
 	 */
 	public Result<IVerrechenbar> addLeistung(IVerrechenbar l){
-		if (isEditable(false)) {
+		if (isEditable(true)) {
 			// TODO: ch.elexis.data.Konsultation.java: Weitere Leistungestypen
 			// ausser Medikamente_BAG und arzttarif_ch=Tarmed,
 			// TODO: ch.elexis.data.Konsultation.java: beim/nach dem Hinzufügen

@@ -1019,10 +1019,9 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 			
 			setGrund(dto.getGrund());
 			setBeginnDatum(dto.getBeginnDatum());
-			//	setEndDatum(dto.getEndDatum());
+			setEndDatum(dto.getEndDatum());
 			setBillingDate(dto.getBillingDate());
 			setGarant(dto.getGarant());
-			
 			setMap(FLD_EXTINFO, dto.getMap(FLD_EXTINFO));
 			setCopyForPatient(dto.getCopyForPatient());
 			setAbrechnungsSystem(dto.getAbrechnungsSystem());
