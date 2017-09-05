@@ -94,6 +94,7 @@ import ch.elexis.data.dto.DiagnosesDTO;
 import ch.elexis.data.dto.FallDTO;
 import ch.elexis.data.dto.FallDTO.IFallChanged;
 import ch.elexis.data.dto.InvoiceCorrectionDTO;
+import ch.elexis.data.dto.InvoiceCorrectionDTO.IInvoiceCorrectionChanged;
 import ch.elexis.data.dto.InvoiceHistoryEntryDTO;
 import ch.elexis.data.dto.InvoiceHistoryEntryDTO.OperationType;
 import ch.elexis.data.dto.KonsultationDTO;
@@ -113,7 +114,9 @@ public class InvoiceCorrectionView extends ViewPart {
 	private InvoiceComposite invoiceComposite;
 	
 	private Rechnung actualInvoice;
-	private InvoiceCorrectionDTO invoiceCorrectionDTO;
+	private InvoiceCorrectionDTO invoiceCorrectionDTO = new InvoiceCorrectionDTO();
+	
+	private InvoiceBottomComposite invoiceBottomComposite;
 	
 	@SuppressWarnings("unchecked")
 	private final List<IViewContribution> detailComposites = Extensions.getClasses(VIEWCONTRIBUTION,
@@ -165,7 +168,6 @@ public class InvoiceCorrectionView extends ViewPart {
 	public void createPartControl(Composite parent){
 		parent.setLayout(new GridLayout(1, false));
 		invoiceComposite = new InvoiceComposite(parent);
-		invoiceCorrectionDTO = new InvoiceCorrectionDTO();
 		invoiceComposite.createComponents(invoiceCorrectionDTO);
 		ElexisEventDispatcher.getInstance().addListeners(eeli_rn, eeli_user);
 		Rechnung selected = (Rechnung) ElexisEventDispatcher.getSelected(Rechnung.class);
@@ -201,14 +203,23 @@ public class InvoiceCorrectionView extends ViewPart {
 			
 			InvoiceHeaderComposite invoiceHeaderComposite = new InvoiceHeaderComposite(wrapper);
 			InvoiceContentComposite invoiceContentComposite = new InvoiceContentComposite(wrapper);
-			InvoiceBottomComposite invoiceBottomComposite = new InvoiceBottomComposite(wrapper);
+			invoiceBottomComposite = new InvoiceBottomComposite(wrapper);
 			
 			invoiceHeaderComposite.createComponents(invoiceCorrectionDTO);
-			if (invoiceCorrectionDTO != null && invoiceCorrectionDTO.getId() != null) {
-				invoiceContentComposite.createComponents(invoiceCorrectionDTO);
-				invoiceBottomComposite.createComponents();
+			if (invoiceCorrectionDTO != null) {
+				if (invoiceCorrectionDTO.getId() != null) {
+					invoiceContentComposite.createComponents(invoiceCorrectionDTO);
+					invoiceBottomComposite.createComponents();
+				}
+				invoiceCorrectionDTO.register(new IInvoiceCorrectionChanged() {
+					@Override
+					public void changed(InvoiceCorrectionDTO invoiceCorrectionDTO){
+						if (invoiceBottomComposite != null) {
+							invoiceBottomComposite.refresh(true);
+						}
+					}
+				});
 			}
-			
 			this.setContent(wrapper);
 			this.setExpandHorizontal(true);
 			this.setExpandVertical(true);
@@ -505,12 +516,17 @@ public class InvoiceCorrectionView extends ViewPart {
 			invoiceCorrectionDTO.getFallDTO().register(new IFallChanged() {
 				
 				@Override
-				public void changed(FallDTO fallDTO){
-					for (KonsultationDTO konsultationDTO : invoiceCorrectionDTO
-						.getKonsultationDTOs()) {
-						for (LeistungDTO leistungDTO : konsultationDTO.getLeistungDTOs()) {
-							leistungDTO.calcPrice(konsultationDTO, fallDTO);
+				public void changed(FallDTO fallDTO, boolean triggersRecalc){
+					if (triggersRecalc) {
+						for (KonsultationDTO konsultationDTO : invoiceCorrectionDTO
+							.getKonsultationDTOs()) {
+							for (LeistungDTO leistungDTO : konsultationDTO.getLeistungDTOs()) {
+								leistungDTO.calcPrice(konsultationDTO, fallDTO);
+							}
 						}
+					}
+					if (invoiceBottomComposite != null) {
+						invoiceBottomComposite.refresh(true);
 					}
 					tableViewer.refresh();
 				}
@@ -764,6 +780,9 @@ public class InvoiceCorrectionView extends ViewPart {
 	}
 	
 	class InvoiceBottomComposite extends Composite {
+		
+		Button btnCancel;
+		Button btnCorrection;
 		public InvoiceBottomComposite(Composite parent){
 			super(parent, SWT.NONE);
 			GridLayout gd = new GridLayout(1, false);
@@ -781,7 +800,8 @@ public class InvoiceCorrectionView extends ViewPart {
 			parent.setLayout(gd);
 			parent.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, true, 1, 1));
 			
-			Button btnCorrection = new Button(parent, SWT.NONE);
+			btnCorrection = new Button(parent, SWT.NONE);
+			btnCorrection.setEnabled(false);
 			btnCorrection.setText("Korrektur starten..");
 			btnCorrection.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -797,9 +817,9 @@ public class InvoiceCorrectionView extends ViewPart {
 				}
 			});
 			
-			Button btnCancel = new Button(parent, SWT.NONE);
+			btnCancel = new Button(parent, SWT.NONE);
 			btnCancel.setText("Zurücksetzen");
-			
+			btnCancel.setEnabled(false);
 			btnCancel.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
@@ -810,6 +830,17 @@ public class InvoiceCorrectionView extends ViewPart {
 			});
 			
 			this.setVisible(actualInvoice != null && actualInvoice.isCorrectable());
+		}
+		
+		public void refresh(boolean hasChanges){
+			if (invoiceCorrectionDTO != null) {
+				if (btnCancel != null && hasChanges != btnCancel.isEnabled()) {
+					btnCancel.setEnabled(hasChanges);
+				}
+				if (btnCorrection != null && hasChanges != btnCorrection.isEnabled()) {
+					btnCorrection.setEnabled(hasChanges);
+				}
+			}
 		}
 	}
 	
@@ -824,11 +855,6 @@ public class InvoiceCorrectionView extends ViewPart {
 				&& invoiceCorrectionDTO.getFallDTO() != null) {
 				try {
 					invoiceCorrectionDTO.updateHistory();
-					if (invoiceCorrectionDTO.getHistory().isEmpty()) {
-						MessageDialog.openInformation(getSite().getShell(), "Rechnungskorrektur",
-							"Es sind wurden keine Änderungen an der Rechnung vorgenommen.");
-						return null;
-					}
 					
 					InvoiceCorrectionWizardDialog wizardDialog = new InvoiceCorrectionWizardDialog(
 						getSite().getShell(), invoiceCorrectionDTO);

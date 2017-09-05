@@ -28,6 +28,8 @@ public class InvoiceCorrectionDTO {
 	
 	List<InvoiceHistoryEntryDTO> cache = new ArrayList<>();
 	
+	private List<IInvoiceCorrectionChanged> invoiceCorrectionChanges = new ArrayList<>();
+	
 	public InvoiceCorrectionDTO(){
 		this.id = null;
 		this.fallDTO = null;
@@ -102,6 +104,7 @@ public class InvoiceCorrectionDTO {
 		if (!historyEntryDTO.getOperationType().isMultiAllowed()) {
 			cache.remove(historyEntryDTO);
 		}
+		informChanged();
 		cache.add(historyEntryDTO);
 	}
 	
@@ -134,5 +137,19 @@ public class InvoiceCorrectionDTO {
 			}
 		}
 		return true;
+	}
+	
+	public void register(IInvoiceCorrectionChanged invoiceCorrectionChanged){
+		invoiceCorrectionChanges.add(invoiceCorrectionChanged);
+	}
+	
+	private void informChanged(){
+		for (IInvoiceCorrectionChanged invoiceCorrectionChanged : invoiceCorrectionChanges) {
+			invoiceCorrectionChanged.changed(this);
+		}
+	}
+	
+	public interface IInvoiceCorrectionChanged {
+		public void changed(InvoiceCorrectionDTO invoiceCorrectionDTO);
 	}
 }

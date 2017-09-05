@@ -27,16 +27,11 @@ public class FallDTO implements IFall {
 	private Map extInfo = new HashMap<>();
 	private boolean copyForPatient;
 	
-	private boolean changed;
-	
 	private List<IFallChanged> fallChanges = new ArrayList<>();
-	
-	public void register(IFallChanged fallChanged){
-		fallChanges.add(fallChanged);
-	}
 	
 	public FallDTO(IFall fall){
 		iFall = fall;
+		fallChanges.clear();
 		abrechnungsSystem = iFall.getAbrechnungsSystem();
 		grund = iFall.getGrund();
 		beginnDatum = iFall.getBeginnDatum();
@@ -44,10 +39,7 @@ public class FallDTO implements IFall {
 		billingDate = iFall.getBillingDate();
 		garant = iFall.getGarant();
 		copyForPatient = iFall.getCopyForPatient();
-		
 		extInfo = iFall.getMap(PersistentObject.FLD_EXTINFO);
-		
-		changed = false;
 	}
 	
 	/// editable fields
@@ -55,8 +47,7 @@ public class FallDTO implements IFall {
 	public void setAbrechnungsSystem(String abrechnungsSystem){
 		if (!StringUtils.equals(this.abrechnungsSystem, abrechnungsSystem)) {
 			this.abrechnungsSystem = abrechnungsSystem;
-			changed = true;
-			informChanged();
+			informChanged(true);
 		}
 	}
 	
@@ -73,7 +64,7 @@ public class FallDTO implements IFall {
 	@Override
 	public void setGrund(String grund){
 		if (!StringUtils.equals(this.grund, grund)) {
-			changed = true;
+			informChanged(false);
 		}
 		this.grund = grund;
 	}
@@ -86,7 +77,7 @@ public class FallDTO implements IFall {
 	@Override
 	public void setBeginnDatum(String beginnDatum){
 		if (!StringUtils.equals(this.beginnDatum, beginnDatum)) {
-			changed = true;
+			informChanged(false);
 		}
 		this.beginnDatum = beginnDatum;
 	}
@@ -99,7 +90,7 @@ public class FallDTO implements IFall {
 	@Override
 	public void setEndDatum(String endDatum){
 		if (!StringUtils.equals(this.endDatum, endDatum)) {
-			changed = true;
+			informChanged(false);
 		}
 		this.endDatum = endDatum;
 	}
@@ -112,13 +103,13 @@ public class FallDTO implements IFall {
 	@Override
 	public void setBillingDate(TimeTool billingDate){
 		this.billingDate = billingDate;
-		changed = true;
+		informChanged(false);
 	}
 	
 	@Override
 	public void setGarant(Kontakt garant){
 		this.garant = garant;
-		changed = true;
+		informChanged(false);
 	}
 	
 	@Override
@@ -130,7 +121,7 @@ public class FallDTO implements IFall {
 	public void setMap(String string, Map<Object, Object> ht){
 		if (PersistentObject.FLD_EXTINFO.equals(string)) {
 			extInfo = ht;
-			changed = true;
+			informChanged(false);
 		}
 	}
 	
@@ -151,13 +142,13 @@ public class FallDTO implements IFall {
 	@Override
 	public void setInfoString(String key, String value){
 		extInfo.put(key, value);
-		changed = true;
+		informChanged(false);
 	}
 	
 	@Override
 	public void setCopyForPatient(boolean copyForPatient){
 		this.copyForPatient = copyForPatient;
-		changed = true;
+		informChanged(false);
 	}
 	
 	@Override
@@ -264,40 +255,44 @@ public class FallDTO implements IFall {
 	
 	@Override
 	public boolean set(String field, String value){
-		changed = true;
+		informChanged(false);
 		return false;
 	}
 	
 	@Override
 	public void setRequiredContact(String kostentraeger, Kontakt k){
-		changed = true;
+		informChanged(false);
 	}
 	
 	@Override
 	public void setRequiredString(String versicherungsnummer, String vnOld){
-		changed = true;
+		informChanged(false);
 		
 	}
 	
 	@Override
 	public boolean addXid(String domain, String domain_id, boolean updateIfExists){
-		changed = true;
+		informChanged(false);
 		return false;
 	}
 	
 	public boolean isChanged(){
-		return changed;
+		return !fallChanges.isEmpty();
 	}
 	
-	private void informChanged(){
+	public void register(IFallChanged fallChanged){
+		fallChanges.add(fallChanged);
+	}
+	
+	private void informChanged(boolean triggersRecalc){
 		for (IFallChanged iFallChanged : fallChanges) {
-			iFallChanged.changed(this);
+			iFallChanged.changed(this, triggersRecalc);
 			
 		}
 	}
 	
 	public interface IFallChanged {
-		public void changed(FallDTO fallDTO);
+		public void changed(FallDTO fallDTO, boolean triggersRecalc);
 	}
 
 }
