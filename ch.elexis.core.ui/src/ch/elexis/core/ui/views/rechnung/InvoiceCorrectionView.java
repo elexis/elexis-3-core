@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -61,7 +62,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
@@ -114,8 +114,6 @@ import ch.rgw.tools.TimeTool;
 public class InvoiceCorrectionView extends ViewPart {
 	
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView";
-	private static Logger logger = LoggerFactory.getLogger(InvoiceCorrectionView.class);
-	
 	private InvoiceComposite invoiceComposite;
 	
 	private Rechnung actualInvoice;
@@ -128,16 +126,13 @@ public class InvoiceCorrectionView extends ViewPart {
 		VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, RnDetailView.ID);
 	
 	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
-		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE
-			| ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED) {
+		ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE
+			| ElexisEvent.EVENT_SELECTED) {
 		
 		public void runInUi(ElexisEvent ev){
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_UPDATE:
-				reload((Rechnung) ev.getObject());
-				break;
-			case ElexisEvent.EVENT_DESELECTED: // fall thru
-				reload(null);
+				reloadSameInvoice((Rechnung) ev.getObject());
 				break;
 			case ElexisEvent.EVENT_DELETE:
 				reload(null);
@@ -157,10 +152,23 @@ public class InvoiceCorrectionView extends ViewPart {
 			}
 		};
 	
-	public void reload(Rechnung rechnung){
-		if (invoiceComposite != null && rechnung != null) {
-			actualInvoice = Rechnung.load(rechnung.getId());
-			invoiceCorrectionDTO = new InvoiceCorrectionDTO(actualInvoice);
+	private void reloadSameInvoice(Rechnung invoiceToReload){
+		if (actualInvoice != null && invoiceToReload != null
+			&& StringUtils.equals(actualInvoice.getId(), invoiceToReload.getId())) {
+			reload(invoiceToReload);
+		}
+	}
+	
+	private void reload(Rechnung rechnung){
+		if (invoiceComposite != null) {
+			if (rechnung != null) {
+				actualInvoice = Rechnung.load(rechnung.getId());
+				invoiceCorrectionDTO = new InvoiceCorrectionDTO(actualInvoice);
+			}
+			else {
+				actualInvoice = null;
+				invoiceCorrectionDTO = new InvoiceCorrectionDTO();
+			}
 			Composite parent = invoiceComposite.getParent();
 			invoiceComposite.dispose();
 			invoiceComposite = new InvoiceComposite(parent);
@@ -284,25 +292,33 @@ public class InvoiceCorrectionView extends ViewPart {
 			txtMulti.setText(invoiceCorrectionDTO.getBemerkung() != null
 					? invoiceCorrectionDTO.getBemerkung() : "");
 			
-			if (StringUtils.isNotEmpty(invoiceCorrectionDTO.getNewInvoiceNumber())) {
-				new Label(this, SWT.NONE).setText("Korrigierte Rechnung");
-				Button btnNewInvoice = new Button(this, SWT.PUSH);
-				btnNewInvoice
-					.setText("Öffne Rechnung " + invoiceCorrectionDTO.getNewInvoiceNumber());
-				btnNewInvoice.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e){
-						Rechnung r = Rechnung.getFromNr(invoiceCorrectionDTO.getNewInvoiceNumber());
-						if (r != null) {
-							reload(r);
-						} else {
-							MessageDialog.openError(getShell(), "Fehler",
-								"Die Rechnung mit der Nummer: "
-									+ invoiceCorrectionDTO.getNewInvoiceNumber()
-									+ " konnte nicht geöffnet werden.\nBitte versuchen Sie diesn manuell zu öffnen.");
+			if (invoiceCorrectionDTO.getNewInvoiceNumber() != null) {
+				if (invoiceCorrectionDTO.getNewInvoiceNumber().isEmpty()) {
+					//TODO show a text how to handle if an invoice cannot be corrected
+				} else {
+					new Label(this, SWT.NONE).setText("Korrigierte Rechnung");
+					Link btnNewInvoice = new Link(this, SWT.NONE);
+					btnNewInvoice.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+					btnNewInvoice
+						.setText(
+							"<A>Rechnung " + invoiceCorrectionDTO.getNewInvoiceNumber()
+								+ " öffnen</A>");
+					btnNewInvoice.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e){
+							Rechnung r =
+								Rechnung.getFromNr(invoiceCorrectionDTO.getNewInvoiceNumber());
+							if (r != null) {
+								reload(r);
+							} else {
+								MessageDialog.openError(getShell(), "Fehler",
+									"Die Rechnung mit der Nummer: "
+										+ invoiceCorrectionDTO.getNewInvoiceNumber()
+										+ " konnte nicht geöffnet werden.\nBitte versuchen Sie diesn manuell zu öffnen.");
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 			
 			if (actualInvoice != null && !detailComposites.isEmpty()) {
