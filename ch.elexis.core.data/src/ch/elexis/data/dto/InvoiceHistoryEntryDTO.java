@@ -53,7 +53,7 @@ public class InvoiceHistoryEntryDTO {
 
 	public enum OperationType {
 			LEISTUNG_ADD(true), LEISTUNG_REMOVE(true), LEISTUNG_CHANGE_COUNT, LEISTUNG_CHANGE_PRICE,
-			LEISTUNG_TRANSFER_TO_NEW_FALL_KONS(true),
+			LEISTUNG_TRANSFER_TO_NEW_FALL_KONS(true), DIAGNOSE_ADD(true), DIAGNOSE_REMOVE(true),
 			KONSULTATION_CHANGE_DATE, KONSULTATION_CHANGE_MANDANT, FALL_COPY, FALL_CHANGE,
 			FALL_KONSULTATION_TRANSER, RECHNUNG_STORNO,
 			RECHNUNG_NEW;
@@ -180,6 +180,17 @@ public class InvoiceHistoryEntryDTO {
 			builder.append("Leistung ");
 			builder.append(((LeistungDTO) item).getText());
 			builder.append(" auf einen neuen Fall/Konsultation transferieren.");
+			break;
+		case DIAGNOSE_ADD:
+			builder.append("Diagnose ");
+			builder.append(((DiagnosesDTO) item).getLabel());
+			builder.append(" hinzufügen.");
+			break;
+		case DIAGNOSE_REMOVE:
+			builder.append("Diagnose ");
+			builder.append(((DiagnosesDTO) item).getLabel());
+			builder.append(" entfernen.");
+			break;
 		default:
 			break;
 		}

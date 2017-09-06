@@ -148,11 +148,12 @@ public class InvoiceCorrectionWizard extends Wizard {
 			
 			Label lblOutput = new Label(container, SWT.NONE);
 			lblOutput.setText("Ausgabe");
+			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+			gd.heightHint = 100;
 			txtOutput =
 				new Text(container,
 				SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY);
-			txtOutput.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-			
+			txtOutput.setLayoutData(gd);
 			setControl(container);
 			setPageComplete(!invoiceCorrectionDTO.getHistory().isEmpty());
 		}

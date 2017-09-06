@@ -35,7 +35,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -68,10 +67,10 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
@@ -83,12 +82,12 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
 import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.ui.views.codesystems.DiagnosenView;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.core.ui.views.rechnung.InvoiceCorrectionWizard.Page2;
 import ch.elexis.data.Anwender;
-import ch.elexis.data.Artikel;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
@@ -160,8 +159,11 @@ public class InvoiceCorrectionView extends ViewPart {
 	
 	private void reload(Rechnung rechnung){
 		if (invoiceComposite != null) {
-			if (rechnung != null) {
+			if (rechnung != null && rechnung.exists()) {
 				actualInvoice = Rechnung.load(rechnung.getId());
+				invoiceCorrectionDTO = new InvoiceCorrectionDTO(actualInvoice);
+			} else if (actualInvoice != null && actualInvoice.exists()) {
+				actualInvoice = Rechnung.load(actualInvoice.getId());
 				invoiceCorrectionDTO = new InvoiceCorrectionDTO(actualInvoice);
 			} else {
 				actualInvoice = null;
@@ -195,7 +197,9 @@ public class InvoiceCorrectionView extends ViewPart {
 	
 	@Override
 	public void setFocus(){
-		
+		if (invoiceComposite != null) {
+			invoiceComposite.updateScrollBars();
+		}
 	}
 	
 	class InvoiceComposite extends ScrolledComposite {
@@ -485,23 +489,6 @@ public class InvoiceCorrectionView extends ViewPart {
 						}
 					}
 				});
-				/*TODO tbManager.add(new Action() {
-					@Override
-					public String getText(){
-						return "Fallzuordnung ändern";
-					}
-					
-					@Override
-					public ImageDescriptor getImageDescriptor(){
-						return Images.IMG_DOC_SYS.getImageDescriptor();
-					}
-					
-					@Override
-					public void run(){
-					
-					}
-				});*/
-				
 				ToolBar toolbar = tbManager.createControl(group);
 				// align toolbar right
 				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).grab(true, false)
@@ -600,6 +587,7 @@ public class InvoiceCorrectionView extends ViewPart {
 						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
 							OperationType.LEISTUNG_ADD, konsultationDTO, leistungDTO));
 						tableViewer.refresh();
+						invoiceComposite.updateScrollBars();
 					}
 				}
 			};
@@ -672,6 +660,7 @@ public class InvoiceCorrectionView extends ViewPart {
 							OperationType.LEISTUNG_TRANSFER_TO_NEW_FALL_KONS, konsultationDTO,
 							leistungDTO));
 						tableViewer.refresh();
+						invoiceComposite.updateScrollBars();
 					}
 				}
 			});
@@ -694,15 +683,6 @@ public class InvoiceCorrectionView extends ViewPart {
 						LeistungenView iViewPart =
 							(LeistungenView) getSite().getPage().showView(LeistungenView.ID);
 						CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
-						CTabItem[] tabItems = iViewPart.ctab.getItems();
-						for (CTabItem tab : tabItems) {
-							ICodeElement ics = (ICodeElement) tab.getData();
-							if (ics instanceof Artikel) {
-								iViewPart.ctab.setSelection(tab);
-								break;
-							}
-						}
-						iViewPart.setFocus();
 					} catch (PartInitException e) {
 						LoggerFactory.getLogger(InvoiceCorrectionDTO.class)
 							.error("cannot init leistungen viewpart", e);
@@ -728,6 +708,7 @@ public class InvoiceCorrectionView extends ViewPart {
 						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
 							OperationType.LEISTUNG_REMOVE, konsultationDTO, leistungDTO));
 						tableViewer.refresh();
+						invoiceComposite.updateScrollBars();
 					}
 				}
 			});
@@ -807,8 +788,7 @@ public class InvoiceCorrectionView extends ViewPart {
 			tableColumnLayout = new TableColumnLayout();
 			tableArea.setLayout(tableColumnLayout);
 			
-			tableViewer = new TableViewer(tableArea,
-				SWT.BORDER | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
+			tableViewer = new TableViewer(tableArea, SWT.BORDER | SWT.FULL_SELECTION);
 			ColumnViewerToolTipSupport.enableFor(tableViewer, ToolTip.NO_RECREATE);
 			Table table = tableViewer.getTable();
 			table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -819,8 +799,91 @@ public class InvoiceCorrectionView extends ViewPart {
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			
+			PersistentObjectDropTarget.IReceiver dtr = new PersistentObjectDropTarget.IReceiver() {
+				
+				public boolean accept(PersistentObject o){
+					return true;
+				}
+				
+				public void dropped(PersistentObject o, DropTargetEvent ev){
+					if (o instanceof IDiagnose) {
+						IDiagnose art = (IDiagnose) o;
+						DiagnosesDTO dto = new DiagnosesDTO(art);
+						konsultationDTO.getDiagnosesDTOs().add(dto);
+						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+							OperationType.DIAGNOSE_ADD, konsultationDTO, dto));
+						tableViewer.refresh();
+						invoiceComposite.updateScrollBars();
+					}
+				}
+			};
+			PersistentObjectDropTarget dropTarget =
+				new PersistentObjectDropTarget("rechnungskorrekturBehandlungen", this, dtr); //$NON-NLS-1$
+			
+			MenuManager menuManager = new MenuManager();
+			menuManager.add(new Action() {
+				@Override
+				public String getText(){
+					return "Diagnose hinzufügen";
+				}
+				
+				@Override
+				public ImageDescriptor getImageDescriptor(){
+					return null;
+				}
+				
+				@Override
+				public void run(){
+					
+					try {
+						DiagnosenView iViewPart =
+							(DiagnosenView) getSite().getPage().showView(DiagnosenView.ID);
+						CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
+					} catch (PartInitException e) {
+						LoggerFactory.getLogger(InvoiceCorrectionDTO.class)
+							.error("cannot init diagnose viewpart", e);
+					}
+				}
+			});
+			menuManager.add(new Action() {
+				@Override
+				public String getText(){
+					return "Diagnose entfernen";
+				}
+				
+				@Override
+				public ImageDescriptor getImageDescriptor(){
+					return null;
+				}
+				
+				@Override
+				public void run(){
+					DiagnosesDTO dto = getSelection();
+					if (dto != null) {
+						konsultationDTO.getDiagnosesDTOs().remove(dto);
+						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+							OperationType.DIAGNOSE_REMOVE, konsultationDTO, dto));
+						tableViewer.refresh();
+						invoiceComposite.updateScrollBars();
+					}
+				}
+			});
+			
+			tableViewer.getTable().setMenu(menuManager.createContextMenu(tableViewer.getTable()));
+			
 			tableViewer.setContentProvider(new ArrayContentProvider());
 			tableViewer.setInput(konsultationDTO.getDiagnosesDTOs());
+		}
+		
+		public DiagnosesDTO getSelection(){
+			if (tableViewer != null) {
+				StructuredSelection structuredSelection =
+					(StructuredSelection) tableViewer.getSelection();
+				if (!structuredSelection.isEmpty()) {
+					return (DiagnosesDTO) structuredSelection.getFirstElement();
+				}
+			}
+			return null;
 		}
 		
 		private TableViewerColumn createTableViewerColumn(String title, int bound, int colIdx){
@@ -953,6 +1016,7 @@ public class InvoiceCorrectionView extends ViewPart {
 								Optional<Fall> copyFall = Optional.empty();
 								List<Konsultation> releasedKonsultations = new ArrayList<>();
 								LeistungDTO leistungDTO = null;
+								DiagnosesDTO diagnosesDTO = null;
 								Konsultation konsultation = null;
 								Verrechnet verrechnet = null;
 								
@@ -1170,6 +1234,21 @@ public class InvoiceCorrectionView extends ViewPart {
 													verrechnet.setSecondaryScaleFactor(
 														leistungDTO.getPriceSecondaryScaleFactor());
 												}
+												break;
+											case DIAGNOSE_ADD:
+												konsultation = Konsultation
+													.load(((KonsultationDTO) base).getId());
+												diagnosesDTO = (DiagnosesDTO) item;
+												
+												konsultation
+													.addDiagnose(diagnosesDTO.getiDiagnose());
+												break;
+											case DIAGNOSE_REMOVE:
+												konsultation = Konsultation
+													.load(((KonsultationDTO) base).getId());
+												diagnosesDTO = (DiagnosesDTO) item;
+												konsultation
+													.removeDiagnose(diagnosesDTO.getiDiagnose());
 												break;
 											default:
 												break;
