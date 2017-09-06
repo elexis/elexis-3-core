@@ -1028,4 +1028,28 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		}
 		return ret;
 	}
+	
+	public Konsultation createCopy(Fall fall){
+		if (fall != null) {
+			Konsultation clone = fall.neueKonsultation();
+			Mandant m = getMandant();
+			if (m != null) {
+				clone.setMandant(m);
+			}
+			clone.setDatum(getDatum(), true);
+			clone.setEintrag(getEintrag(), true);
+			return clone;
+		}
+		return null;
+	}
+	
+	private List<String> loadFieldKeys(String fieldString){
+		List<String> keys = new ArrayList<String>();
+		String[] fields = fieldString.split(";");
+		for (String field : fields) {
+			String[] nameType = field.split(":");
+			keys.add(nameType[0]);
+		}
+		return keys;
+	}
 }

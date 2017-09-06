@@ -126,8 +126,7 @@ public class InvoiceCorrectionView extends ViewPart {
 		VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, RnDetailView.ID);
 	
 	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
-		ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE
-			| ElexisEvent.EVENT_SELECTED) {
+		ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED) {
 		
 		public void runInUi(ElexisEvent ev){
 			switch (ev.getType()) {
@@ -164,8 +163,7 @@ public class InvoiceCorrectionView extends ViewPart {
 			if (rechnung != null) {
 				actualInvoice = Rechnung.load(rechnung.getId());
 				invoiceCorrectionDTO = new InvoiceCorrectionDTO(actualInvoice);
-			}
-			else {
+			} else {
 				actualInvoice = null;
 				invoiceCorrectionDTO = new InvoiceCorrectionDTO();
 			}
@@ -299,10 +297,8 @@ public class InvoiceCorrectionView extends ViewPart {
 					new Label(this, SWT.NONE).setText("Korrigierte Rechnung");
 					Link btnNewInvoice = new Link(this, SWT.NONE);
 					btnNewInvoice.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
-					btnNewInvoice
-						.setText(
-							"<A>Rechnung " + invoiceCorrectionDTO.getNewInvoiceNumber()
-								+ " öffnen</A>");
+					btnNewInvoice.setText("<A>Rechnung "
+						+ invoiceCorrectionDTO.getNewInvoiceNumber() + " öffnen</A>");
 					btnNewInvoice.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent e){
@@ -659,6 +655,30 @@ public class InvoiceCorrectionView extends ViewPart {
 			menuManager.add(new Action() {
 				@Override
 				public String getText(){
+					return "Leistung auf neuen Fall/Kons transferieren";
+				}
+				
+				@Override
+				public ImageDescriptor getImageDescriptor(){
+					return null;
+				}
+				
+				@Override
+				public void run(){
+					LeistungDTO leistungDTO = getSelection();
+					if (leistungDTO != null) {
+						konsultationDTO.getLeistungDTOs().remove(leistungDTO);
+						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+							OperationType.LEISTUNG_TRANSFER_TO_NEW_FALL_KONS, konsultationDTO,
+							leistungDTO));
+						tableViewer.refresh();
+					}
+				}
+			});
+			menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+			menuManager.add(new Action() {
+				@Override
+				public String getText(){
 					return "Leistung hinzufügen";
 				}
 				
@@ -975,8 +995,7 @@ public class InvoiceCorrectionView extends ViewPart {
 													Rechnung newRechnung = rechnungResult.get();
 													invoiceCorrectionDTO
 														.setNewInvoiceNumber(newRechnung.getNr());
-													output.append("Die Rechnung "
-														+ rechnung.getNr()
+													output.append("Die Rechnung " + rechnung.getNr()
 														+ " wurde erfolgreich korrigiert - Neue Rechnungsnummer lautet: "
 														+ invoiceCorrectionDTO
 															.getNewInvoiceNumber());
@@ -1077,6 +1096,51 @@ public class InvoiceCorrectionView extends ViewPart {
 																+ " konnte nicht entfernt werden.");
 														success = false;
 													}
+												}
+												break;
+											case LEISTUNG_TRANSFER_TO_NEW_FALL_KONS:
+												leistungDTO = (LeistungDTO) item;
+												konsultation = Konsultation
+													.load(((KonsultationDTO) base).getId());
+												if (leistungDTO.getVerrechnet() != null) {
+													
+													Result<Verrechnet> resRemove =
+														konsultation.removeLeistung(
+															leistungDTO.getVerrechnet());
+													
+													if (resRemove.isOK()) {
+														((LeistungDTO) item).setVerrechnet(null);
+														
+													} else {
+														addToOutput(output, "Die Leistung "
+															+ leistungDTO.getVerrechnet().getText()
+															+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Entfernen der Leistung ist fehlgeschlagen.");
+														success = false;
+														break;
+													}
+												}
+												Fall srcF = rechnung.getFall();
+												Fall copyF = srcF.createCopy();
+												Konsultation newKons =
+													konsultation.createCopy(copyF);
+												
+												Result<IVerrechenbar> resAddLeistung = newKons
+													.addLeistung(leistungDTO.getIVerrechenbar());
+												if (resAddLeistung.isOK()) {
+													verrechnet = newKons.getVerrechnet(
+														leistungDTO.getIVerrechenbar());
+													if (verrechnet != null) {
+														leistungDTO.setVerrechnet(verrechnet);
+													}
+												} else {
+													addToOutput(output, resAddLeistung);
+													verrechnet = null;
+												}
+												if (verrechnet == null) {
+													addToOutput(output, "Die Leistung "
+														+ leistungDTO.getIVerrechenbar().getText()
+														+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Hinzufügen der Leistung ist fehlgeschlagen.");
+													success = false;
 												}
 												break;
 											case LEISTUNG_CHANGE_COUNT:
