@@ -62,6 +62,7 @@ public class Rechnung extends PersistentObject {
 	public static final String REJECTED = "Zurückgewiesen";
 	public static final String OUTPUT = "Ausgegeben";
 	public static final String REMARKS = "Bemerkungen";
+	public static final String INVOICE_CORRECTION = "Rechnungskorrektur";
 	
 	static {
 		addMapping(TABLENAME, BILL_NUMBER, CASE_ID, MANDATOR_ID, "RnDatum=S:D:RnDatum", BILL_STATE,

@@ -254,13 +254,13 @@ public class InvoiceCorrectionView extends ViewPart {
 		}
 		
 		public void createComponents(InvoiceCorrectionDTO invoiceCorrectionDTO){
-			
 			Label lblTitle = new Label(this, SWT.NONE);
 			lblTitle.setText("Rechnungsangaben");
 			lblTitle.setFont(SWTResourceManager.getFont("Noto Sans", 9, SWT.BOLD));
 			lblTitle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 10, 1));
 			Color colWhite = UiDesk.getColor(UiDesk.COL_WHITE);
 			this.setBackground(colWhite);
+			
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 			String[] invoiceDetails = invoiceCorrectionDTO.getInvoiceDetails();
 			if (invoiceDetails.length == lbls.length) {
@@ -283,6 +283,27 @@ public class InvoiceCorrectionView extends ViewPart {
 			txtMulti.setLayoutData(gd2);
 			txtMulti.setText(invoiceCorrectionDTO.getBemerkung() != null
 					? invoiceCorrectionDTO.getBemerkung() : "");
+			
+			if (StringUtils.isNotEmpty(invoiceCorrectionDTO.getNewInvoiceNumber())) {
+				new Label(this, SWT.NONE).setText("Korrigierte Rechnung");
+				Button btnNewInvoice = new Button(this, SWT.PUSH);
+				btnNewInvoice
+					.setText("Öffne Rechnung " + invoiceCorrectionDTO.getNewInvoiceNumber());
+				btnNewInvoice.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e){
+						Rechnung r = Rechnung.getFromNr(invoiceCorrectionDTO.getNewInvoiceNumber());
+						if (r != null) {
+							reload(r);
+						} else {
+							MessageDialog.openError(getShell(), "Fehler",
+								"Die Rechnung mit der Nummer: "
+									+ invoiceCorrectionDTO.getNewInvoiceNumber()
+									+ " konnte nicht geöffnet werden.\nBitte versuchen Sie diesn manuell zu öffnen.");
+						}
+					}
+				});
+			}
 			
 			if (actualInvoice != null && !detailComposites.isEmpty()) {
 				Label separator = new Label(this, SWT.HORIZONTAL | SWT.SEPARATOR);
@@ -935,9 +956,14 @@ public class InvoiceCorrectionView extends ViewPart {
 													}
 													success = false;
 												} else {
-													output.append("Die Rechnung " + rechnung.getNr()
+													Rechnung newRechnung = rechnungResult.get();
+													invoiceCorrectionDTO
+														.setNewInvoiceNumber(newRechnung.getNr());
+													output.append("Die Rechnung "
+														+ rechnung.getNr()
 														+ " wurde erfolgreich korrigiert - Neue Rechnungsnummer lautet: "
-														+ rechnungResult.get().getNr());
+														+ invoiceCorrectionDTO
+															.getNewInvoiceNumber());
 												}
 												break;
 											case FALL_COPY:
@@ -1111,7 +1137,9 @@ public class InvoiceCorrectionView extends ViewPart {
 					
 					int state = wizardDialog.open();
 					if (invoiceCorrectionDTO.getOutputText() != null) {
-						// return state
+						
+						setInvoiceCorrectionInfo(actualInvoice);
+						
 						if (invoiceCorrectionDTO.isCorrectionSuccess()) {
 							// set bemerkung text
 							StringBuilder txtBemerkung = new StringBuilder();
@@ -1130,7 +1158,7 @@ public class InvoiceCorrectionView extends ViewPart {
 				} catch (Exception e) {
 					LoggerFactory.getLogger(InvoiceCorrectionView.class)
 						.error("invoice correction error [{}]", actualInvoice.getId(), e);
-					
+					setInvoiceCorrectionInfo(actualInvoice);
 					return new Result<String>(SEVERITY.ERROR, 2, "error",
 						"Die Rechnungskorrektur konnte nicht vollständig durchgeführt werden.\nFür mehr Details, beachten Sie bitte das Log-File.",
 						false);
@@ -1138,6 +1166,14 @@ public class InvoiceCorrectionView extends ViewPart {
 			}
 		}
 		return null;
+	}
+	
+	private void setInvoiceCorrectionInfo(Rechnung actualInvoice){
+		if (actualInvoice != null && invoiceCorrectionDTO != null) {
+			actualInvoice.setExtInfo(Rechnung.INVOICE_CORRECTION,
+				StringUtils.isEmpty(invoiceCorrectionDTO.getNewInvoiceNumber()) ? ""
+						: invoiceCorrectionDTO.getNewInvoiceNumber());
+		}
 	}
 	
 	private void resetCorrection(Fall srcFall, Fall copyFall,
