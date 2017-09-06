@@ -16,11 +16,10 @@ public class InvoiceCorrectionDTO {
 	private String invoiceNumber;
 	private String bemerkung;
 	private String receiver;
-	private String phoneInsurance;
-	private String advisor;
 	private String invoiceStateText;
 	private FallDTO fallDTO;
 	private String outputText;
+	private String betrag;
 	
 	private List<KonsultationDTO> konsultationDTOs = new ArrayList<>();
 	
@@ -50,7 +49,7 @@ public class InvoiceCorrectionDTO {
 		this.fallDTO = fall.getDTO();
 		this.outputText = null;
 		this.receiver = fall.getPatient().getLabel();
-		this.phoneInsurance = "";
+		this.betrag = rechnung.getBetrag().getAmountAsString();
 		
 		if (StringUtils.isNotEmpty(rechnung.getNr())) {
 			InvoiceState invoiceState = rechnung.getInvoiceState();
@@ -58,7 +57,6 @@ public class InvoiceCorrectionDTO {
 				invoiceStateText = invoiceState.getLocaleText();
 			}
 		}
-		this.advisor = rechnung.getMandant().getLabel();
 		
 		for (Konsultation konsultation : rechnung.getKonsultationen())
 		{
@@ -77,7 +75,7 @@ public class InvoiceCorrectionDTO {
 	
 	public String[] getInvoiceDetails(){
 		return new String[] {
-			invoiceNumber, invoiceStateText, receiver, phoneInsurance, advisor
+			invoiceNumber, invoiceStateText, receiver, betrag
 		};
 	}
 	

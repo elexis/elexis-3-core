@@ -35,7 +35,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -55,6 +54,11 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
@@ -76,6 +80,7 @@ import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
@@ -239,7 +244,7 @@ public class InvoiceCorrectionView extends ViewPart {
 	class InvoiceHeaderComposite extends Composite {
 		
 		String[] lbls = new String[] {
-			"Rechnung", "Status", "Patient", "Telefon Versicherer", "Sachbearbeiter/in"
+			"Rechnung", "Status", "Patient", "Rechnungsbetrag"
 		};
 		
 		public InvoiceHeaderComposite(Composite parent){
@@ -263,17 +268,12 @@ public class InvoiceCorrectionView extends ViewPart {
 				for (String lbl : lbls) {
 					String detailText = invoiceDetails[i++];
 					new Label(this, SWT.NONE).setText(lbl);
-					CLabel text = new CLabel(this, SWT.BORDER);
+					Text text = new Text(this, SWT.BORDER | SWT.READ_ONLY);
 					text.setBackground(colWhite);
-					text.setLayoutData(
-						i == 3 ? new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1) : gd);
+					text.setLayoutData(gd);
 					text.setText(detailText != null ? detailText : "");
 				}
-			} else {
-				logger.error("cannot load invoice header data - values size mismatch [expected: "
-					+ lbls.length + ", current: " + invoiceDetails.length + "]");
 			}
-			
 			new Label(this, SWT.NONE).setText("Bemerkung");
 			Text txtMulti =
 				new Text(this, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.READ_ONLY);
@@ -293,6 +293,7 @@ public class InvoiceCorrectionView extends ViewPart {
 					new Label(this, SWT.NONE).setText(ivc.getLocalizedTitle());
 					
 					Composite mainComposite = new Composite(this, SWT.NONE);
+					mainComposite.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 					mainComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
 					mainComposite.setLayout(new GridLayout(1, false));
 					ivc.initComposite(mainComposite);
@@ -311,7 +312,7 @@ public class InvoiceCorrectionView extends ViewPart {
 			gd.marginWidth = 0;
 			gd.marginHeight = 5;
 			setLayout(gd);
-			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		}
 		
 		public void createComponents(InvoiceCorrectionDTO invoiceCorrectionDTO){
@@ -357,22 +358,42 @@ public class InvoiceCorrectionView extends ViewPart {
 			gd.marginWidth = 0;
 			gd.marginHeight = 5;
 			setLayout(gd);
-			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		}
 		
 		public void createComponents(InvoiceCorrectionDTO invoiceCorrectionDTO){
+			
+			FormToolkit tk = UiDesk.getToolkit();
 			for (KonsultationDTO konsultationDTO : invoiceCorrectionDTO.getKonsultationDTOs()) {
-				Composite group = new Composite(this, SWT.BORDER);
+				ScrolledForm form = tk.createScrolledForm(this);
+				form.setBackground(UiDesk.getColor(UiDesk.COL_LIGHTGREY));
+				form.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+				Composite body = form.getBody();
+				GridLayout gd1 = new GridLayout();
+				gd1.marginWidth = 1;
+				gd1.marginHeight = 1;
+				body.setLayout(gd1);
+				ExpandableComposite expandable =
+					WidgetFactory.createExpandableComposite(tk, form, ""); //$NON-NLS-1$
+				expandable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+				expandable.setExpanded(false);
+				expandable.addExpansionListener(new ExpansionAdapter() {
+					
+					@Override
+					public void expansionStateChanged(ExpansionEvent e){
+						
+						invoiceComposite.updateScrollBars();
+					}
+				});
+				Composite group = tk.createComposite(expandable, SWT.NONE);
 				
 				GridLayout gd = new GridLayout(2, false);
 				gd.marginWidth = 0;
 				gd.marginHeight = 0;
 				group.setLayout(gd);
 				group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-				
-				Label lblKonsTitle = new Label(group, SWT.NONE);
-				lblKonsTitle.setFont(SWTResourceManager.getFont("Noto Sans", 9, SWT.BOLD));
-				updateKonsTitleText(lblKonsTitle, konsultationDTO);
+				expandable.setClient(group);
+				updateKonsTitleText(expandable, konsultationDTO);
 				
 				ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
 				tbManager.add(new Action("Datum ändern") {
@@ -398,7 +419,7 @@ public class InvoiceCorrectionView extends ViewPart {
 								konsultationDTO.setDate(newDate);
 								invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
 									OperationType.KONSULTATION_CHANGE_DATE, konsultationDTO, null));
-								updateKonsTitleText(lblKonsTitle, konsultationDTO);
+								updateKonsTitleText(expandable, konsultationDTO);
 							}
 						}
 					}
@@ -427,7 +448,7 @@ public class InvoiceCorrectionView extends ViewPart {
 							konsultationDTO.setMandant(selectedMandant);
 							invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
 								OperationType.KONSULTATION_CHANGE_MANDANT, konsultationDTO, null));
-							updateKonsTitleText(lblKonsTitle, konsultationDTO);
+							updateKonsTitleText(expandable, konsultationDTO);
 						}
 					}
 				});
@@ -447,7 +468,7 @@ public class InvoiceCorrectionView extends ViewPart {
 					
 					}
 				});*/
-					
+				
 				ToolBar toolbar = tbManager.createControl(group);
 				// align toolbar right
 				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).grab(true, false)
@@ -463,10 +484,10 @@ public class InvoiceCorrectionView extends ViewPart {
 			
 		}
 		
-		public void updateKonsTitleText(Label lblKonsTitle, KonsultationDTO konsultationDTO){
-			lblKonsTitle.setText("Konsultation: " + konsultationDTO.getDate() + " Mandant: "
+		public void updateKonsTitleText(ExpandableComposite expandableComposite,
+			KonsultationDTO konsultationDTO){
+			expandableComposite.setText("Konsultation: " + konsultationDTO.getDate() + " Mandant: "
 				+ konsultationDTO.getMandant().getLabel());
-			lblKonsTitle.getParent().layout();
 		}
 	}
 	
@@ -1090,19 +1111,18 @@ public class InvoiceCorrectionView extends ViewPart {
 					
 					int state = wizardDialog.open();
 					if (invoiceCorrectionDTO.getOutputText() != null) {
-						// set bemerkung text
-						StringBuilder txtBemerkung = new StringBuilder();
-						if (txtBemerkung != null) {
-							txtBemerkung.append(actualInvoice.getBemerkung());
-						}
-						if (txtBemerkung.length() > 0) {
-							txtBemerkung.append("\n");
-						}
-						txtBemerkung.append(invoiceCorrectionDTO.getOutputText());
-						actualInvoice.setBemerkung(txtBemerkung.toString());
-						
 						// return state
 						if (invoiceCorrectionDTO.isCorrectionSuccess()) {
+							// set bemerkung text
+							StringBuilder txtBemerkung = new StringBuilder();
+							if (txtBemerkung != null) {
+								txtBemerkung.append(actualInvoice.getBemerkung());
+							}
+							if (txtBemerkung.length() > 0) {
+								txtBemerkung.append("\n");
+							}
+							txtBemerkung.append(invoiceCorrectionDTO.getOutputText());
+							actualInvoice.setBemerkung(txtBemerkung.toString());
 							return new Result<String>("ok");
 						}
 						return new Result<String>(SEVERITY.WARNING, 2, "warn", null, false);
