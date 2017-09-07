@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -849,19 +848,27 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				}
 			}
 			ldConstants.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			Menu menu2 = new Menu(ldConstants);
-			MenuItem del2 = new MenuItem(menu2, SWT.NONE);
-			del2.setText(Messages.Leistungscodes_delText);
-			del2.addSelectionListener(new SelectionAdapter() {
+			
+			Action actionDel = new Action() {
 				@Override
-				public void widgetSelected(final SelectionEvent e){
+				public String getText(){
+					return Messages.Leistungscodes_delText;
+				}
+				
+				@Override
+				public ImageDescriptor getImageDescriptor(){
+					return null;
+				}
+				
+				@Override
+				public void run(){
 					String sel = ldConstants.getSelection();
 					ldConstants.remove(sel);
 					Fall.removeBillingSystemConstant(result[0], sel);
 				}
-				
-			});
-			ldConstants.setMenu(menu2);
+			};
+			
+			ldConstants.setMenu(actionDel);
 			
 			// *** separator
 			Label separator = new Label(middlePartComp, SWT.SEPARATOR | SWT.HORIZONTAL);
