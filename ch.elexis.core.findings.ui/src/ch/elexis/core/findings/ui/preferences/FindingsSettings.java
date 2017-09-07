@@ -58,27 +58,27 @@ public class FindingsSettings extends FieldEditorPreferencePage
 	@Override
 	protected void createFieldEditors(){
 		diagStructFieldEditor =
-			new BooleanFieldEditor(SettingsConstants.DIAGNOSE_SETTINGS_USE_STRUCTURED,
+			new BooleanFieldEditor(IMigratorService.DIAGNOSE_SETTINGS_USE_STRUCTURED,
 				"Diagnosen strukturiert anzeigen", getFieldEditorParent());
 		addField(diagStructFieldEditor);
 		
 		persAnamneseStructFieldEditor =
-			new BooleanFieldEditor(SettingsConstants.PERSANAM_SETTINGS_USE_STRUCTURED,
+			new BooleanFieldEditor(IMigratorService.PERSANAM_SETTINGS_USE_STRUCTURED,
 				"Persönliche Anamnese strukturiert anzeigen", getFieldEditorParent());
 		addField(persAnamneseStructFieldEditor);
 		
 		riskFactorStructFieldEditor =
-			new BooleanFieldEditor(SettingsConstants.RISKFACTOR_SETTINGS_USE_STRUCTURED,
+			new BooleanFieldEditor(IMigratorService.RISKFACTOR_SETTINGS_USE_STRUCTURED,
 				"Risiken strukturiert anzeigen", getFieldEditorParent());
 		addField(riskFactorStructFieldEditor);
 		
 		famAnamneseStructFieldEditor =
-			new BooleanFieldEditor(SettingsConstants.FAMANAM_SETTINGS_USE_STRUCTURED,
+			new BooleanFieldEditor(IMigratorService.FAMANAM_SETTINGS_USE_STRUCTURED,
 				"Familien Anamnese strukturiert anzeigen", getFieldEditorParent());
 		addField(famAnamneseStructFieldEditor);
 		
 		allergyIntoleranceStructFieldEditor =
-			new BooleanFieldEditor(SettingsConstants.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
+			new BooleanFieldEditor(IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
 				"Allergien strukturiert anzeigen", getFieldEditorParent());
 		addField(allergyIntoleranceStructFieldEditor);
 	}
@@ -169,7 +169,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 				}
 			} else {
 				getPreferenceStore()
-					.setValue(SettingsConstants.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
+					.setValue(IMigratorService.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
 					@Override
@@ -186,7 +186,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 					"Bitte starten sie Elexis neu um mit den Text Diagnosen zu arbeiten.");
 			} else {
 				getPreferenceStore()
-					.setValue(SettingsConstants.DIAGNOSE_SETTINGS_USE_STRUCTURED, true);
+					.setValue(IMigratorService.DIAGNOSE_SETTINGS_USE_STRUCTURED, true);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
 					@Override
@@ -270,7 +270,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 				}
 			} else {
 				getPreferenceStore()
-					.setValue(SettingsConstants.PERSANAM_SETTINGS_USE_STRUCTURED, false);
+					.setValue(IMigratorService.PERSANAM_SETTINGS_USE_STRUCTURED, false);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
 					@Override
@@ -287,7 +287,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 					"Bitte starten sie Elexis neu um mit den Text Persönliche Anamnese zu arbeiten.");
 			} else {
 				getPreferenceStore()
-					.setValue(SettingsConstants.PERSANAM_SETTINGS_USE_STRUCTURED,
+					.setValue(IMigratorService.PERSANAM_SETTINGS_USE_STRUCTURED,
 					true);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
@@ -368,7 +368,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 					getLogger().error("Error creating structured risk factors", e);
 				}
 			} else {
-				getPreferenceStore().setValue(SettingsConstants.RISKFACTOR_SETTINGS_USE_STRUCTURED,
+				getPreferenceStore().setValue(IMigratorService.RISKFACTOR_SETTINGS_USE_STRUCTURED,
 					false);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
@@ -385,7 +385,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 				MessageDialog.openInformation(getShell(), "Text Risiken",
 					"Bitte starten sie Elexis neu um mit den Text Risiken zu arbeiten.");
 			} else {
-				getPreferenceStore().setValue(SettingsConstants.RISKFACTOR_SETTINGS_USE_STRUCTURED,
+				getPreferenceStore().setValue(IMigratorService.RISKFACTOR_SETTINGS_USE_STRUCTURED,
 					true);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
@@ -455,7 +455,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 					getLogger().error("Error creating structured anamnesis family", e);
 				}
 			} else {
-				getPreferenceStore().setValue(SettingsConstants.FAMANAM_SETTINGS_USE_STRUCTURED,
+				getPreferenceStore().setValue(IMigratorService.FAMANAM_SETTINGS_USE_STRUCTURED,
 					false);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
@@ -472,7 +472,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 				MessageDialog.openInformation(getShell(), "Text Familien Anamnese",
 					"Bitte starten sie Elexis neu um mit den Text Familien Anamnese zu arbeiten.");
 			} else {
-				getPreferenceStore().setValue(SettingsConstants.FAMANAM_SETTINGS_USE_STRUCTURED,
+				getPreferenceStore().setValue(IMigratorService.FAMANAM_SETTINGS_USE_STRUCTURED,
 					true);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
@@ -543,7 +543,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 				}
 			} else {
 				getPreferenceStore().setValue(
-					SettingsConstants.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
+					IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
 					false);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
@@ -561,7 +561,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 					"Bitte starten sie Elexis neu um mit den Text Allergien zu arbeiten.");
 			} else {
 				getPreferenceStore()
-					.setValue(SettingsConstants.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
+					.setValue(IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
 					true);
 				// refresh later, on immediate refresh wasSelected of FieldEditor gets overwritten
 				getShell().getDisplay().asyncExec(new Runnable() {
