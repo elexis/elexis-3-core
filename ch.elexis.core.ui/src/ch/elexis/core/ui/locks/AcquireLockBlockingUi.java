@@ -49,13 +49,13 @@ public class AcquireLockBlockingUi {
 			LockResponse result = CoreHub.getLocalLockService().acquireLockBlocking(lockPo, 30, monitor);
 			Display display = Display.getDefault();
 			if(result.isOk()) {
-				monitor.beginTask("Lock aquired ...", IProgressMonitor.UNKNOWN);
 				display.syncExec(new Runnable() {
 					@Override
 					public void run(){
 						lockhander.lockAcquired();
 					}
 				});
+				monitor.beginTask("Releasing lock ...", IProgressMonitor.UNKNOWN);
 				CoreHub.getLocalLockService().releaseLock(lockPo);
 				monitor.done();
 			} else {

@@ -98,4 +98,11 @@ public class LockInfo {
 		}
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		return "LockInfo [elementType=" + elementType + ", elementId=" + elementId + ", user=" + user + ", systemUuid="
+				+ systemUuid + ", creationDate=" + creationDate + ", refreshMillis=" + refreshMillis + "]";
+	}
+
 }

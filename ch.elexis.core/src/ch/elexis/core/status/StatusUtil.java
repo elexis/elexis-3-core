@@ -15,7 +15,7 @@ public class StatusUtil {
 		print(log, "", status);
 	}
 
-	private static void print(Logger log, String indent, IStatus status) {
+	public static void print(Logger log, String indent, IStatus status) {
 		if (status.isMultiStatus()) {
 			log.warn(indent + status.getMessage().replace('\n', ' '));
 			String childIndent = indent + "  ";
