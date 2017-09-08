@@ -24,6 +24,7 @@ import ca.uhn.hl7v2.model.v251.datatype.XCN;
 import ca.uhn.hl7v2.model.v251.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v251.group.ORU_R01_PATIENT_RESULT;
 import ca.uhn.hl7v2.model.v251.group.OUL_R22_ORDER;
+import ca.uhn.hl7v2.model.v251.group.OUL_R22_SPECIMEN;
 import ca.uhn.hl7v2.model.v251.message.ORU_R01;
 import ca.uhn.hl7v2.model.v251.message.OUL_R22;
 import ca.uhn.hl7v2.model.v251.segment.MSH;
@@ -458,13 +459,26 @@ public class HL7ReaderV251 extends HL7Reader {
 	@Override
 	public OrcMessage getOrcMessage(){
 		try {
-			ORU_R01 oru = (ORU_R01) message;
-			if (oru != null) {
-				ORU_R01_PATIENT_RESULT pr = oru.getPATIENT_RESULT();
-				if (pr != null) {
-					ORU_R01_ORDER_OBSERVATION oo = pr.getORDER_OBSERVATION();
-					if (oo != null) {
-						return extractOrc(oo.getORC());
+			if (message instanceof ORU_R01) {
+				ORU_R01 oru = (ORU_R01) message;
+				if (oru != null) {
+					ORU_R01_PATIENT_RESULT pr = oru.getPATIENT_RESULT();
+					if (pr != null) {
+						ORU_R01_ORDER_OBSERVATION oo = pr.getORDER_OBSERVATION();
+						if (oo != null) {
+							return extractOrc(oo.getORC());
+						}
+					}
+				}
+			} else if (message instanceof OUL_R22) {
+				OUL_R22 oul = (OUL_R22) message;
+				if (oul != null) {
+					OUL_R22_SPECIMEN specimen = oul.getSPECIMEN();
+					if (specimen != null) {
+						OUL_R22_ORDER oo = specimen.getORDER();
+						if (oo != null) {
+							return extractOrc(oo.getORC());
+						}
 					}
 				}
 			}
