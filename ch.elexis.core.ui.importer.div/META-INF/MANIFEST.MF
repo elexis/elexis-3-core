@@ -26,7 +26,8 @@ Export-Package: ch.elexis.core.ui.importer.div.importers;
    ch.elexis.data,
    org.eclipse.swt.widgets,
    org.eclipse.jface.dialogs",
- ch.elexis.core.ui.importer.div.rs232;uses:="org.eclipse.osgi.util,org.eclipse.swt.widgets"
+ ch.elexis.core.ui.importer.div.rs232;uses:="org.eclipse.osgi.util,org.eclipse.swt.widgets",
+ gnu.io
 Require-Bundle: org.eclipse.ui;bundle-version="3.8.2",
  org.eclipse.core.runtime;bundle-version="3.8.0",
  ch.rgw.utility;bundle-version="3.0.0",
