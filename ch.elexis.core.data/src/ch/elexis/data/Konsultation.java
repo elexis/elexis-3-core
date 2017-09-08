@@ -1030,8 +1030,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	/**
-	 * Makes a simple copy for a {@link Konsultation} of some attributes. This Method should only be
-	 * used for {@link Rechnung} propose.
+	 * Makes a simple copy for a {@link Konsultation} of some attributes. This method should only be
+	 * used for {@link Rechnung} proposes.
 	 * 
 	 * @param fall
 	 * @param invoiceSrc
