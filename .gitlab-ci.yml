@@ -35,7 +35,11 @@ deploy_artifacts:
     only:
     - master@elexis/elexis-3-core
     - /^\d*[.]\d*$/@elexis/elexis-3-core
+<<<<<<< Upstream, based on origin/master
 >>>>>>> a46985b [6143] Remove pom.xml additional repository, just use target
+=======
+    - /^[bf]\d*$/@elexis/elexis-3-core
+>>>>>>> 9778d98 [6143] gitlab pipeline pick up [bf]\d.* branches
 
 trigger_elexis-3-base_build:
     stage: trigger_other_builds
