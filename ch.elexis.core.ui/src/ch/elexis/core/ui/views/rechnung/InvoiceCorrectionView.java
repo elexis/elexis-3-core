@@ -1186,7 +1186,7 @@ public class InvoiceCorrectionView extends ViewPart {
 												Fall srcF = rechnung.getFall();
 												Fall copyF = srcF.createCopy();
 												Konsultation newKons =
-													konsultation.createCopy(copyF);
+													konsultation.createCopy(copyF, rechnung);
 												
 												Result<IVerrechenbar> resAddLeistung = newKons
 													.addLeistung(leistungDTO.getIVerrechenbar());

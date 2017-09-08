@@ -1029,15 +1029,20 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		return ret;
 	}
 	
-	public Konsultation createCopy(Fall fall){
-		if (fall != null) {
+	public Konsultation createCopy(Fall fall, Rechnung invoiceSrc){
+		if (fall != null && invoiceSrc != null) {
 			Konsultation clone = fall.neueKonsultation();
 			Mandant m = getMandant();
 			if (m != null) {
 				clone.setMandant(m);
 			}
 			clone.setDatum(getDatum(), true);
-			clone.setEintrag(getEintrag(), true);
+			VersionedResource vr = clone.getEintrag();
+			vr.update(
+				"Diese Konsultation wurde durch die Korrektur der Rechnung "
+					+ invoiceSrc.getNr() + " erstellt.",
+				"Rechnungskorrektur");
+			clone.setEintrag(vr, true);
 			return clone;
 		}
 		return null;
