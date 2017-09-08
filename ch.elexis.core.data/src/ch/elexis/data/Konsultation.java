@@ -1029,6 +1029,14 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		return ret;
 	}
 	
+	/**
+	 * Makes a simple copy for a {@link Konsultation} of some attributes. This Method should only be
+	 * used for {@link Rechnung} propose.
+	 * 
+	 * @param fall
+	 * @param invoiceSrc
+	 * @return
+	 */
 	public Konsultation createCopy(Fall fall, Rechnung invoiceSrc){
 		if (fall != null && invoiceSrc != null) {
 			Konsultation clone = fall.neueKonsultation();
