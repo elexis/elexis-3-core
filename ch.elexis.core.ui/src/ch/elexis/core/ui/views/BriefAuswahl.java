@@ -447,10 +447,10 @@ public class BriefAuswahl extends ViewPart implements
 				
 				TextView tv = null;
 				try {
-					tv = (TextView) getSite().getPage().showView(TextView.ID);
 					DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(),
 						CoreHub.actMandant, DocumentSelectDialog.TYPE_CREATE_DOC_WITH_TEMPLATE);
 					if (bs.open() == Dialog.OK) {
+						tv = (TextView) getSite().getPage().showView(TextView.ID);
 						// trick: just supply a dummy address for creating the doc
 						Kontakt address = null;
 						if (DocumentSelectDialog
