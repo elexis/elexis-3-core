@@ -23,6 +23,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockResponseHelper;
+import ch.elexis.core.ui.text.EditLocalDocumentUtil;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
@@ -69,6 +70,7 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 			text.getPlugin().print(null, null, true);
 			getSite().getPage().hideView(this);
 		}
+		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 	}
 	
 	private void updateTextLock(){
