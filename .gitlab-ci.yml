@@ -5,7 +5,6 @@ stages:
 
 build:
   stage: build
-<<<<<<< Upstream, based on origin/master
   script: 
   - xvfb-run mvn clean verify -B -Pall-archs
   - jo token="$WEBHOOK_TOKEN" binary=%$(find ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip) destDir=$CI_COMMIT_REF_NAME/p2/elexis-3-core | curl -k -H "Content-Type:application/json" -X POST -d @- $WEBHOOK_URL/deploy-zip
@@ -14,32 +13,6 @@ build:
   - master@elexis/elexis-3-core
   - /^\d*[.]\d*$/@elexis/elexis-3-core
   - /^[bf]\d*$/@elexis/elexis-3-core
-=======
-  script: xvfb-run mvn clean verify -B -Pall-archs
-  artifacts:
-    paths:
-    - ch.elexis.core.product/target/products/*.zip
-    - ch.elexis.core.p2site/target/*.zip
-    expire_in: 1 day
-
-deploy_artifacts:
-    stage: deploy
-    script:
-    - mkdir upload; unzip ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip -d upload/
-    - ch.elexis.core.releng/upload-dav.sh upload/ https://download.elexis.info/elexis/ $CI_COMMIT_REF_NAME/p2/elexis-3-core $DEPLOY_USER $DEPLOY_PASSWORD
-    - rm -Rf upload/
-    - ch.elexis.core.releng/upload-dav.sh ch.elexis.core.product/target/products/ https://download.elexis.info/elexis/ $CI_COMMIT_REF_NAME/products $DEPLOY_USER $DEPLOY_PASSWORD
-    environment:
-        name: elexis-3-core/$CI_COMMIT_REF_NAME
-        url: http://download.elexis.info/elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core
-    only:
-    - master@elexis/elexis-3-core
-    - /^\d*[.]\d*$/@elexis/elexis-3-core
-<<<<<<< Upstream, based on origin/master
->>>>>>> a46985b [6143] Remove pom.xml additional repository, just use target
-=======
-    - /^[bf]\d*$/@elexis/elexis-3-core
->>>>>>> 9778d98 [6143] gitlab pipeline pick up [bf]\d.* branches
 
 trigger_elexis-3-base_build:
     stage: trigger_other_builds
