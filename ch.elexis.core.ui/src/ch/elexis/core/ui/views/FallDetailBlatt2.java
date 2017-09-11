@@ -220,7 +220,6 @@ public class FallDetailBlatt2 extends Composite {
 									Messages.FallDetailBlatt2_DontChangeBillingSystemBody)) { //$NON-NLS-1$
 									fall.setAbrechnungsSystem(cAbrechnung.getItem(i));
 									setFall(fall);
-									ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 									return;
 								}
 							} else {
@@ -233,7 +232,6 @@ public class FallDetailBlatt2 extends Composite {
 						} else {
 							fall.setAbrechnungsSystem(Abrechnungstypen[i]);
 							setFall(fall);
-							ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 							// Falls noch kein Garant gesetzt ist: Garanten des
 							// letzten Falles zum
 							// selben Gesetz nehmen
@@ -275,7 +273,6 @@ public class FallDetailBlatt2 extends Composite {
 				Fall fall = getFall();
 				if (fall != null) {
 					fall.set(LABEL, newval);
-					ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 				}
 				super.focusLost(e);
 			}
@@ -291,7 +288,6 @@ public class FallDetailBlatt2 extends Composite {
 				Fall fall = getFall();
 				if (fall != null) {
 					fall.setGrund(Reasons[i]);
-					ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 				}
 			}
 		});
@@ -305,7 +301,6 @@ public class FallDetailBlatt2 extends Composite {
 					Fall fall = getFall();
 					fall.setBeginnDatum(
 						new TimeTool(dpVon.getDate().getTime()).toString(TimeTool.DATE_GER));
-					ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 				}
 			});
 			
@@ -318,7 +313,6 @@ public class FallDetailBlatt2 extends Composite {
 				Fall fall = getFall();
 				fall.setEndDatum(
 					new TimeTool(dpBis.getDate().getTime()).toString(TimeTool.DATE_GER));
-				ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 			}
 		});
 
@@ -370,7 +364,6 @@ public class FallDetailBlatt2 extends Composite {
 					if (fall != null) {
 						fall.setGarant(sel);
 						setFall(fall);
-						ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 					}
 				}
 			}
@@ -507,7 +500,6 @@ public class FallDetailBlatt2 extends Composite {
 					PersistentObject.clearCache();
 					fall.setInfoString(field, newval);
 					ElexisEventDispatcher.update(fall);
-					ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 				}
 			}
 		}
@@ -998,7 +990,6 @@ public class FallDetailBlatt2 extends Composite {
 										fall.setInfoString(r[0], StringTool.leer);
 									}
 									setFall(fall);
-									ElexisEventDispatcher.fireSelectionEvent(fall.getPatient());
 								}
 							}
 						}
