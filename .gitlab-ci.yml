@@ -7,8 +7,8 @@ build:
   stage: build
   script: 
   - xvfb-run mvn clean verify -B -Pall-archs
-  - jo token="$WEBHOOK_TOKEN" binary=%$(find ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip) destDir=$CI_COMMIT_REF_NAME/p2/elexis-3-core | curl -H "Content-Type:application/json" -X POST -d @- $WEBHOOK_URL/deploy-zip
-  - for file in ch.elexis.core.product/target/products/*.zip; do jo token="$WEBHOOK_TOKEN" destFilename="${file##*/}" binary=%${file} destDir=$CI_COMMIT_REF_NAME/products/ | curl -H "Content-Type:application/json" -X POST -d @- $WEBHOOK_URL/deploy-file; done
+  - jo token="$WEBHOOK_TOKEN" binary=%$(find ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip) destDir=$CI_COMMIT_REF_NAME/p2/elexis-3-core | curl -k -H "Content-Type:application/json" -X POST -d @- $WEBHOOK_URL/deploy-zip
+  - for file in ch.elexis.core.product/target/products/*.zip; do jo token="$WEBHOOK_TOKEN" destFilename="${file##*/}" binary=%${file} destDir=$CI_COMMIT_REF_NAME/products/ | curl -k -H "Content-Type:application/json" -X POST -d @- $WEBHOOK_URL/deploy-file; done
   only:
   - master@elexis/elexis-3-core
   - /^\d*[.]\d*$/@elexis/elexis-3-core
