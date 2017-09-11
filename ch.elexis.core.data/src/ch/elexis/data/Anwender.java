@@ -179,7 +179,11 @@ public class Anwender extends Person {
 	
 	@Override
 	protected void setConstraint(){
-		set(Kontakt.FLD_IS_USER, StringConstants.ONE);
+		set(new String[] {
+			FLD_IS_USER, FLD_IS_PERSON
+		}, new String[] {
+			StringConstants.ONE, StringConstants.ONE
+		});
 	}
 	
 	protected Anwender(){/* leer */
