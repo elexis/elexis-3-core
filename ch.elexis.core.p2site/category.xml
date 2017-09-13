@@ -3,7 +3,7 @@
    <feature url="features/ch.elexis.core.ui.p2.feature_3.1.0.qualifier.jar" id="ch.elexis.core.ui.p2.feature" version="3.1.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <feature url="features/ch.elexis.core.application.feature_3.1.5.qualifier.jar" id="ch.elexis.core.application.feature" version="3.1.5.qualifier">
+   <feature url="features/ch.elexis.core.application.feature_3.1.7.qualifier.jar" id="ch.elexis.core.application.feature" version="3.1.7.qualifier">
       <category name="elexis_3_core"/>
    </feature>
    <feature url="features/ch.elexis.core.common.feature_3.1.0.qualifier.jar" id="ch.elexis.core.common.feature" version="3.1.0.qualifier">
