@@ -27,6 +27,7 @@ import ch.elexis.core.data.interfaces.IOutputter;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.text.EditLocalDocumentUtil;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
@@ -63,6 +64,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		actBrief = brief;
 		text.open(brief);
 		rp.setBrief(actBrief);
+		EditLocalDocumentUtil.startEditLocalDocument(this, brief);
 	}
 	
 	@Override
@@ -108,6 +110,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				getSite().getPage().hideView(this);
 			}
 			text.saveBrief(actBrief, Brief.RP);
+			EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 			return true;
 		}
 		text.saveBrief(actBrief, Brief.RP);
@@ -143,6 +146,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				getSite().getPage().hideView(this);
 			}
 			text.saveBrief(actBrief, Brief.UNKNOWN);
+			EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 			return true;
 		}
 		text.saveBrief(actBrief, Brief.UNKNOWN);

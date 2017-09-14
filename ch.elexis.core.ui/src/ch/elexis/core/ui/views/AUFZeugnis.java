@@ -20,6 +20,7 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.text.EditLocalDocumentUtil;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.AUF;
@@ -61,6 +62,7 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 			text.getPlugin().print(null, null, true);
 			getSite().getPage().hideView(this);
 		}
+		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 	}
 	
 	public TextContainer getTextContainer(){
