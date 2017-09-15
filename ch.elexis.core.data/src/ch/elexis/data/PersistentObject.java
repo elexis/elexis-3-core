@@ -1084,7 +1084,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return Der Inhalt des Felds (kann auch null sein), oder **ERROR**, wenn versucht werden
 	 *         sollte, ein nicht existierendes Feld auszulesen
 	 */
-	public String get(final String field){
+	public @Nullable String get(final String field){
 		if (getId() == null || getId().isEmpty()) {
 			log.error("Get with no ID on object of type [" + this.getClass().getName() + "]");
 		}
