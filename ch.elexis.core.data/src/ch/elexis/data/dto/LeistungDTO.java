@@ -1,6 +1,7 @@
 package ch.elexis.data.dto;
 
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
@@ -19,12 +20,29 @@ public class LeistungDTO {
 	
 	private Money customPrice;
 	
-	public LeistungDTO(Verrechnet verrechnet){
+	public LeistungDTO(Verrechnet verrechnet) throws ElexisException{
+		
+		if (!verrechnet.exists()) {
+			throw new ElexisException(
+				"Verrechnete Leistung wird ignoriert - Keine Leistung vorhanden [ID: "
+					+ verrechnet.getId() + "].",
+				new Exception());
+		}
+		try {
+			if (verrechnet.getLastUpdate() < 0) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			throw new ElexisException(
+				"Die verrechnete Leistung wird ignoriert - Datum der letzten Aktualisierung ist fehlerhaft [ID: "
+					+ verrechnet.getId() + "].",
+				e);
+		}
 		this.lastUpdate = verrechnet.getLastUpdate();
 		this.id = verrechnet.getId();
 		this.code = verrechnet.getCode();
 		this.text = verrechnet.getText();
-		this.price = verrechnet.getStandardPreis();
+		this.price = verrechnet.getNettoPreis();
 		this.count = verrechnet.getZahl();
 		this.iVerrechenbar = verrechnet.getVerrechenbar();
 		this.verrechnet = verrechnet;
@@ -44,22 +62,6 @@ public class LeistungDTO {
 		
 	}
 	
-	private Money getSales(Verrechnet verrechnet){
-		double vk_tp = 0.0;
-		try {
-			vk_tp = Double.parseDouble(verrechnet.get(Verrechnet.SCALE_TP_SELLING));
-		} catch (NumberFormatException ne) {/* just leave 0.0 as value */}
-		double vk_scale = 1.0;
-		try {
-			vk_scale = Double.parseDouble(verrechnet.get(Verrechnet.SCALE_SELLING));
-		} catch (NumberFormatException ne) {/* just leave 1.0 as value */}
-		double scale1 = verrechnet.getPrimaryScaleFactor();
-		double scale2 = verrechnet.getSecondaryScaleFactor();
-		// get sales for the verrechnet including all scales and quantity
-		return new Money(
-			(int) (Math.round(vk_tp * vk_scale) * scale1 * scale2 * verrechnet.getZahl()));
-	}
-	
 	public void calcPrice(KonsultationDTO konsultationDTO, FallDTO fallDTO){
 		int tp = 0;
 		double factor = 1.0;
@@ -67,8 +69,7 @@ public class LeistungDTO {
 		double scale2 = 1.0;
 		if (iVerrechenbar != null) {
 			tp = iVerrechenbar.getTP(new TimeTool(konsultationDTO.getDate()), fallDTO);
-			factor =
-				iVerrechenbar.getFactor(new TimeTool(konsultationDTO.getDate()), fallDTO);
+			factor = iVerrechenbar.getFactor(new TimeTool(konsultationDTO.getDate()), fallDTO);
 		} else if (getVerrechnet() != null) {
 			tp = Verrechnet.checkZero(getVerrechnet().get(Verrechnet.SCALE_TP_SELLING));
 		}

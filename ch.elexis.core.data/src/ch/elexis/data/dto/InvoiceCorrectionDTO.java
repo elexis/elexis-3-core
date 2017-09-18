@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.dto.InvoiceCorrectionDTO.IInvoiceCorrectionChanged;
 import ch.elexis.data.dto.InvoiceHistoryEntryDTO.OperationType;
 
 public class InvoiceCorrectionDTO {
@@ -24,24 +24,25 @@ public class InvoiceCorrectionDTO {
 	private String betrag;
 	
 	private List<KonsultationDTO> konsultationDTOs = new ArrayList<>();
-	
 	private List<InvoiceHistoryEntryDTO> correctionHistory = new ArrayList<>();
-	
-	List<InvoiceHistoryEntryDTO> cache = new ArrayList<>();
-	
+	private List<InvoiceHistoryEntryDTO> cache = new ArrayList<>();
+	private List<ElexisException> errors = new ArrayList<>();
 	private List<IInvoiceCorrectionChanged> invoiceCorrectionChanges = new ArrayList<>();
 	
 	public InvoiceCorrectionDTO(){
 		this.id = null;
 		this.fallDTO = null;
 		this.outputText = null;
+		this.invoiceNumber = null;
 		this.newInvoiceNumber = null;
 		cache.clear();
 		correctionHistory.clear();
 		invoiceCorrectionChanges.clear();
+		errors.clear();
 	}
 	
 	public InvoiceCorrectionDTO(Rechnung rechnung){
+		errors.clear();
 		invoiceCorrectionChanges.clear();
 		cache.clear();
 		correctionHistory.clear();
@@ -63,9 +64,14 @@ public class InvoiceCorrectionDTO {
 		
 		for (Konsultation konsultation : rechnung.getKonsultationen())
 		{
-			this.konsultationDTOs.add(new KonsultationDTO(konsultation));
+			KonsultationDTO konsultationDTO = new KonsultationDTO(konsultation);
+			this.konsultationDTOs.add(konsultationDTO);
+			errors.addAll(konsultationDTO.getErrors());
 		}
-
+	}
+	
+	public List<ElexisException> getErrors(){
+		return errors;
 	}
 	
 	public void setNewInvoiceNumber(String newInvoiceNumber){

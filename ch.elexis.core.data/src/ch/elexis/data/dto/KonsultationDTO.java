@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Verrechnet;
@@ -16,18 +17,29 @@ public class KonsultationDTO {
 	private String srcDate;
 	private Mandant mandant;
 	
+	private List<ElexisException> errors = new ArrayList<>();
+	
 	public KonsultationDTO(Konsultation konsultation){
+		this.errors.clear();
 		this.id = konsultation.getId();
 		this.date = konsultation.getDatum();
 		this.srcDate = new String(konsultation.getDatum());
 		this.mandant = konsultation.getMandant();
 		for (Verrechnet verrechnet : konsultation.getLeistungen()) {
-			leistungDTOs.add(new LeistungDTO(verrechnet));
+			try {
+				leistungDTOs.add(new LeistungDTO(verrechnet));
+			} catch (ElexisException e) {
+				errors.add(e);
+			}
 		}
 		
 		for (IDiagnose iDiagnose : konsultation.getDiagnosen()) {
 			diagnosesDTOs.add(new DiagnosesDTO(iDiagnose));
 		}
+	}
+	
+	public List<ElexisException> getErrors(){
+		return errors;
 	}
 	
 	public void setLeistungDTOs(List<LeistungDTO> leistungDTOs){
