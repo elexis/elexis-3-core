@@ -1045,6 +1045,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				clone.setMandant(m);
 			}
 			clone.setDatum(getDatum(), true);
+			for (IDiagnose diagnose : getDiagnosen()) {
+				clone.addDiagnose(diagnose);
+			}
 			VersionedResource vr = clone.getEintrag();
 			vr.update(
 				"Diese Konsultation wurde durch die Korrektur der Rechnung "
