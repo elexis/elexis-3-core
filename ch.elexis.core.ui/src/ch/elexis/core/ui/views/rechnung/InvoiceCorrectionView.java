@@ -1088,6 +1088,9 @@ public class InvoiceCorrectionView extends ViewPart {
 											case RECHNUNG_STORNO:
 												releasedKonsultations
 													.addAll(rechnung.stornoBill(true));
+												log.debug(
+													"invoice correction: storno invoice with number [{}] ",
+													rechnung.getNr());
 												break;
 											case RECHNUNG_NEW:
 												if (copyFall.isPresent()) {
@@ -1122,11 +1125,18 @@ public class InvoiceCorrectionView extends ViewPart {
 														}
 													}
 													success = false;
+													log.warn(
+														"invoice correction: cannot create new invoice with id "
+															+ (rechnungResult.get() != null
+																	? rechnungResult.get().getId()
+																	: "null"));
 												} else {
-													
 													Rechnung newRechnung = rechnungResult.get();
 													invoiceCorrectionDTO
 														.setNewInvoiceNumber(newRechnung.getNr());
+													log.debug(
+														"invoice correction: create new invoice with number [{}] old invoice number [{}] ",
+														newRechnung.getNr(), rechnung.getNr());
 													output.append("Die Rechnung " + rechnung.getNr()
 														+ " wurde erfolgreich durch "
 														+ rechnung.getMandant().getLabel()
@@ -1138,12 +1148,18 @@ public class InvoiceCorrectionView extends ViewPart {
 											case FALL_COPY:
 												srcFall = Optional.of(rechnung.getFall());
 												copyFall = Optional.of(srcFall.get().createCopy());
+												log.debug(
+													"invoice correction: copied fall from id [{}] to id [{}] ",
+													srcFall.get().getId(), copyFall.get().getId());
 												break;
 											case FALL_CHANGE:
 												copyFall.get()
 													.persistDTO(invoiceCorrectionDTO.getFallDTO());
 												// at this point the fall must be opened
 												copyFall.get().setEndDatum(null);
+												log.debug(
+													"invoice correction: persisted fall changes to id  [{}] ",
+													copyFall.get().getId());
 												break;
 											case FALL_KONSULTATION_TRANSER:
 												releasedKonsultations.clear();
@@ -1157,6 +1173,10 @@ public class InvoiceCorrectionView extends ViewPart {
 															if (bill == null) {
 																openedKons
 																	.transferToFall(copyFall.get());
+																log.debug(
+																	"invoice correction: transfered kons id [{}] to copied fall id  [{}] ",
+																	openedKons.getId(),
+																	copyFall.get().getId());
 																releasedKonsultations
 																	.add(openedKons);
 																
@@ -1169,6 +1189,10 @@ public class InvoiceCorrectionView extends ViewPart {
 																	resetCorrection(srcFall.get(),
 																		copyFall.get(),
 																		releasedKonsultations);
+																	log.warn(
+																		"invoice correction: try reseting correction - transfer kons id [{}] back to src fall id  [{}]",
+																		openedKons.getId(),
+																		srcFall.get().getId());
 																}
 															}
 														}
@@ -1179,12 +1203,17 @@ public class InvoiceCorrectionView extends ViewPart {
 												Konsultation.load(((KonsultationDTO) base).getId())
 													.setDatum(((KonsultationDTO) base).getDate(),
 														true);
+												log.debug(
+													"invoice correction: changed date of kons id [{}]",
+													((KonsultationDTO) base).getId());
 												break;
 											case KONSULTATION_CHANGE_MANDANT:
 												Konsultation.load(((KonsultationDTO) base).getId())
 													.setMandant(
 														((KonsultationDTO) base).getMandant());
-												
+												log.debug(
+													"invoice correction: changed mandant of kons id [{}]",
+													((KonsultationDTO) base).getId());
 												break;
 											case LEISTUNG_ADD:
 												konsultation = Konsultation
@@ -1192,6 +1221,10 @@ public class InvoiceCorrectionView extends ViewPart {
 												leistungDTO = (LeistungDTO) item;
 												Result<IVerrechenbar> res = konsultation
 													.addLeistung(leistungDTO.getIVerrechenbar());
+												log.debug(
+													"invoice correction: added leistung id [{}] to kons id [{}]",
+													leistungDTO.getId(),
+													((KonsultationDTO) base).getId());
 												if (res.isOK()) {
 													verrechnet = konsultation.getVerrechnet(
 														leistungDTO.getIVerrechenbar());
@@ -1209,6 +1242,9 @@ public class InvoiceCorrectionView extends ViewPart {
 																.getText()
 															+ " konnte nicht verrechnet werden.");
 													success = false;
+													log.warn(
+														"invoice correction: cannot add leistung with id [{}] to kons id [{}]",
+														leistungDTO.getId(), konsultation.getId());
 												}
 												
 												break;
@@ -1219,7 +1255,10 @@ public class InvoiceCorrectionView extends ViewPart {
 														.load(((KonsultationDTO) base).getId())
 														.removeLeistung(
 															leistungDTO.getVerrechnet());
-													
+													log.debug(
+														"invoice correction: removed leistung id [{}] from kons id [{}]",
+														leistungDTO.getId(),
+														((KonsultationDTO) base).getId());
 													if (resRemove.isOK()) {
 														((LeistungDTO) item).setVerrechnet(null);
 													} else {
@@ -1229,6 +1268,10 @@ public class InvoiceCorrectionView extends ViewPart {
 																	.getText()
 																+ " konnte nicht entfernt werden.");
 														success = false;
+														log.warn(
+															"invoice correction: cannot remove leistung with id [{}] from kons id [{}]",
+															leistungDTO.getId(),
+															((KonsultationDTO) base).getId());
 													}
 												}
 												break;
@@ -1236,12 +1279,18 @@ public class InvoiceCorrectionView extends ViewPart {
 												leistungDTO = (LeistungDTO) item;
 												konsultation = Konsultation
 													.load(((KonsultationDTO) base).getId());
+												log.debug(
+													"invoice correction: transfer leistung id [{}] from kons id [{}]",
+													leistungDTO.getId(), konsultation.getId());
 												if (leistungDTO.getVerrechnet() != null) {
 													
 													Result<Verrechnet> resRemove =
 														konsultation.removeLeistung(
 															leistungDTO.getVerrechnet());
-													
+													log.debug(
+														"invoice correction: removed leistung id [{}] from kons id [{}]",
+														leistungDTO.getId(),
+														konsultation.getId());
 													if (resRemove.isOK()) {
 														((LeistungDTO) item).setVerrechnet(null);
 														
@@ -1250,16 +1299,28 @@ public class InvoiceCorrectionView extends ViewPart {
 															+ leistungDTO.getVerrechnet().getText()
 															+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Entfernen der Leistung ist fehlgeschlagen.");
 														success = false;
+														log.warn(
+															"invoice correction: cannot transfer/remove leistung with id [{}] from kons id [{}]",
+															leistungDTO.getId(),
+															konsultation.getId());
 														break;
 													}
 												}
 												Fall srcF = rechnung.getFall();
 												Fall copyF = srcF.createCopy();
+												log.debug(
+													"invoice correction: copied fall from id [{}] to id [{}] ",
+													srcF.getId(), copyF.getId());
 												Konsultation newKons =
 													konsultation.createCopy(copyF, rechnung);
-												
+												log.debug(
+													"invoice correction: copied kons from id [{}] to id [{}] ",
+													konsultation.getId(), newKons.getId());
 												Result<IVerrechenbar> resAddLeistung = newKons
 													.addLeistung(leistungDTO.getIVerrechenbar());
+												log.debug(
+													"invoice correction: add leistung id [{}] to kons id [{}]",
+													leistungDTO.getId(), newKons.getId());
 												if (resAddLeistung.isOK()) {
 													verrechnet = newKons.getVerrechnet(
 														leistungDTO.getIVerrechenbar());
@@ -1275,6 +1336,9 @@ public class InvoiceCorrectionView extends ViewPart {
 														+ leistungDTO.getIVerrechenbar().getText()
 														+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Hinzufügen der Leistung ist fehlgeschlagen.");
 													success = false;
+													log.warn(
+														"invoice correction: cannot transfer/add leistung with id [{}] to new kons id [{}]",
+														leistungDTO.getId(), newKons.getId());
 												}
 												break;
 											case LEISTUNG_CHANGE_COUNT:
@@ -1283,15 +1347,22 @@ public class InvoiceCorrectionView extends ViewPart {
 												if (verrechnet != null) {
 													IStatus ret = verrechnet.changeAnzahlValidated(
 														leistungDTO.getCount());
+													log.debug(
+														"invoice correction: changed count from leistung id [{}]",
+														leistungDTO.getId());
 													if (ret.isOK()) {
 														verrechnet
 															.setSecondaryScaleFactor(leistungDTO
 																.getPriceSecondaryScaleFactor());
 														verrechnet
 															.setText(leistungDTO.getPriceText());
+														
 													} else {
 														addToOutput(output, ret.getMessage());
 														success = false;
+														log.warn(
+															"invoice correction: cannot change count from leistung with id [{}]",
+															leistungDTO.getId());
 													}
 												}
 												break;
@@ -1303,16 +1374,25 @@ public class InvoiceCorrectionView extends ViewPart {
 														.setTP(leistungDTO.getPrice().getCents());
 													verrechnet.setSecondaryScaleFactor(
 														leistungDTO.getPriceSecondaryScaleFactor());
-													verrechnet.getBruttoPreis();
+													log.debug(
+														"invoice correction: changed price from leistung id [{}]",
+														leistungDTO.getId());
+												}
+												else {
+													log.warn(
+														"invoice correction: leistung id [{}] no verrechnet exists cannot change price",
+														leistungDTO.getId());
 												}
 												break;
 											case DIAGNOSE_ADD:
 												konsultation = Konsultation
 													.load(((KonsultationDTO) base).getId());
 												diagnosesDTO = (DiagnosesDTO) item;
-												
 												konsultation
 													.addDiagnose(diagnosesDTO.getiDiagnose());
+												log.debug(
+													"invoice correction: added diagnose id [{}] to kons id [{}]",
+													diagnosesDTO.getId(), konsultation.getId());
 												break;
 											case DIAGNOSE_REMOVE:
 												konsultation = Konsultation
@@ -1320,6 +1400,9 @@ public class InvoiceCorrectionView extends ViewPart {
 												diagnosesDTO = (DiagnosesDTO) item;
 												konsultation
 													.removeDiagnose(diagnosesDTO.getiDiagnose());
+												log.debug(
+													"invoice correction: removed diagnose id [{}] from kons id [{}]",
+													diagnosesDTO.getId(), konsultation.getId());
 												break;
 											default:
 												break;
