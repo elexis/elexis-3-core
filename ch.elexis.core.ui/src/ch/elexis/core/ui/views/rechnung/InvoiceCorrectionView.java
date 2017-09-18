@@ -504,8 +504,7 @@ public class InvoiceCorrectionView extends ViewPart {
 							if (selectedMandant != null) {
 								Rechnungssteller dstRechnungsteller =
 									selectedMandant.getRechnungssteller();
-								if (srcMandant != null)
-								{
+								if (srcMandant != null) {
 									Rechnungssteller srcRechnungsteller =
 										srcMandant.getRechnungssteller();
 									if (!StringUtils.equals(srcRechnungsteller.getId(),
@@ -520,9 +519,9 @@ public class InvoiceCorrectionView extends ViewPart {
 												+ ".\n\nWollen Sie trotzdem den Mandanten "
 												+ selectedMandant.getLabel() + " auswählen ?")) {
 											return;
-										
+											
 										}
-									
+										
 									}
 								}
 								konsultationDTO.setMandant(selectedMandant);
@@ -530,8 +529,7 @@ public class InvoiceCorrectionView extends ViewPart {
 									OperationType.KONSULTATION_CHANGE_MANDANT, konsultationDTO,
 									null));
 								updateKonsTitleText(expandable, konsultationDTO);
-							}
-							else {
+							} else {
 								MessageDialog.openWarning(getShell(), "Rechnungskorrektur",
 									"Mandantenauswahl fehlerhaft. Der Mandant konnte nicht geändert werden.");
 							}
@@ -1095,8 +1093,9 @@ public class InvoiceCorrectionView extends ViewPart {
 												if (copyFall.isPresent()) {
 													if (invoiceCorrectionDTO.getFallDTO()
 														.getEndDatum() != null) {
-													copyFall.get().setEndDatum(invoiceCorrectionDTO
-														.getFallDTO().getEndDatum());
+														copyFall.get()
+															.setEndDatum(invoiceCorrectionDTO
+																.getFallDTO().getEndDatum());
 													}
 													
 													// close fall if no kons exists
@@ -1104,7 +1103,7 @@ public class InvoiceCorrectionView extends ViewPart {
 														|| new TimeTool(srcFall.get().getEndDatum())
 															.after(new TimeTool()))
 														&& srcFall.get()
-														.getBehandlungen(true).length == 0) {
+															.getBehandlungen(true).length == 0) {
 														srcFall.get().setEndDatum(new TimeTool()
 															.toString(TimeTool.DATE_GER));
 													}
@@ -1330,9 +1329,7 @@ public class InvoiceCorrectionView extends ViewPart {
 											invoiceCorrectionDTO.setOutputText(output.toString());
 										}
 									} catch (Exception e) {
-										log.error(
-											"invoice correction: unexpected error",
-											e);
+										log.error("invoice correction: unexpected error", e);
 										success = false;
 									} finally {
 										log.debug("invoice correction: processing [{}] ",
