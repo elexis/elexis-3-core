@@ -50,7 +50,6 @@ import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListHeaderComposite;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.views.InvoiceBillState;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
 
@@ -62,10 +61,6 @@ public class InvoiceListView extends ViewPart {
 	private InvoiceListHeaderComposite invoiceListHeaderComposite;
 	private InvoiceListBottomComposite invoiceListBottomComposite;
 	private InvoiceListContentProvider invoiceListContentProvider;
-	
-	static {
-		InvoiceBillState.initializeSqlViewIfRequired();
-	}
 	
 	/**
 	 * @param rnStellerSettings
