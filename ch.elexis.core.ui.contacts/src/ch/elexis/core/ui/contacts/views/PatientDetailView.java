@@ -90,7 +90,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 	private Text txtBemerkungen;
 	private ClientCustomTextComposite compClientCustomText;
 	private StickerComposite stickerComposite;
-	private IAction removeZAAction, showZAAction, removeAdditionalAddressAction,
+	private IAction removeZAAction, showZAAction, showBKAction, removeAdditionalAddressAction,
 			showAdditionalAddressAction;
 	private ListDisplay<BezugsKontakt> inpZusatzAdresse;
 	private ListDisplay<ZusatzAdresse> additionalAddresses;
@@ -283,7 +283,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 			});
 			inpZusatzAdresse.addHyperlinks(Messages.Patientenblatt2_add); // $NON-NLS-1$
 			// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
-			inpZusatzAdresse.setMenu(removeZAAction, showZAAction);
+			inpZusatzAdresse.setMenu(removeZAAction, showZAAction, showBKAction);
 
 			ecZA.setClient(inpZusatzAdresse);
 		}
@@ -546,6 +546,29 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 				KontaktDetailDialog kdd = new KontaktDetailDialog(scrldfrm.getShell(), a, bLocked);
 				if (kdd.open() == Dialog.OK) {
 					setPatient(ElexisEventDispatcher.getSelectedPatient());
+				}
+			}
+		};
+		
+		showBKAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
+			Messages.Patientenblatt2_showBezugKontaktRelation) {
+			@Override
+			public void doRun(){
+				Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
+				if (actPatient != null && actPatient.exists()) {
+					BezugsKontakt bezugsKontakt = (BezugsKontakt) inpZusatzAdresse.getSelection();
+					if (bezugsKontakt != null) {
+						Kontakt k = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
+						BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(
+							actPatient.getLabel(true), k.istPerson()
+									? Person.load(k.getId()).getLabel(true) : k.getLabel(true),
+							bezugsKontakt, bLocked);
+						if (bezugsKontakt != null && bza.open() == Dialog.OK
+							&& bza.getBezugKonkaktRelation() != null) {
+							bezugsKontakt.updateRelation(bza.getBezugKonkaktRelation());
+							setPatient(actPatient);
+						}
+					}
 				}
 			}
 		};

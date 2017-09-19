@@ -472,7 +472,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		IObservableValue observeEnabledTxtRoleNameObserveWidget =
 			WidgetProperties.enabled().observe(txtRoleName);
 		IObservableValue wvSystemRoleObserveDetailValue =
-			PojoProperties.value(Role.class, "systemRole", boolean.class).observeDetail(wv);
+			PojoProperties.value(Role.class, "systemRole", Boolean.class).observeDetail(wv);
 		UpdateValueStrategy strategy = new UpdateValueStrategy();
 		strategy.setConverter(new BooleanNotConverter());
 		bindingContext.bindValue(observeEnabledTxtRoleNameObserveWidget,

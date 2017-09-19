@@ -298,20 +298,23 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:ch.elexis.Konsdetail">
-         <command
-               commandId="ch.elexis.core.ui.command.openLocalDocuments"
-               icon="icon://IMG_EDIT"
-               label="Offene lokale Dokumente"
-               style="push"
-               tooltip="Offene lokale Dokumente">
-            <visibleWhen
-                  checkEnabled="false">
-               <test
-                     property="ch.elexis.core.ui.property.documenteditlocal">
-               </test>
-            </visibleWhen>
-         </command>
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="ch.elexis.toolbar1">
+            <command
+                  commandId="ch.elexis.core.ui.command.openLocalDocuments"
+                  icon="icon://IMG_EDIT"
+                  label="Offene lokale Dokumente"
+                  style="push"
+                  tooltip="Offene lokale Dokumente">
+               <visibleWhen
+                     checkEnabled="false">
+                  <test
+                        property="ch.elexis.core.ui.property.documenteditlocal">
+                  </test>
+               </visibleWhen>
+            </command>
+         </toolbar>
       </menuContribution>
    </extension>
       <extension
@@ -881,10 +884,6 @@
       <extension
 	         id="ch.elexis.core.ui.fragment"
 	         point="org.eclipse.e4.workbench.model">
-	      <fragment
-             apply="always"
-             uri="fragment.e4xmi">
-	      </fragment>
        <processor
              apply="always"
              beforefragment="false"

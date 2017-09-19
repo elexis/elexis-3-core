@@ -98,6 +98,12 @@ public class CreatePrescriptionHelper {
 			@Override
 			public void lockAcquired(){
 				prescription.setEntryType(signature.getMedicationType());
+				// a new symptomatic medication can have a stop date
+				if (EntryType.SYMPTOMATIC_MEDICATION.equals(signature.getMedicationType())
+					&& signature.getEndDate() != null) {
+					prescription.stop(signature.getEndDate());
+					prescription.setStopReason("Stop geplant");
+				}
 			}
 		});
 		// create dispensation entry

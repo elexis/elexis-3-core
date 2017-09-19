@@ -85,6 +85,7 @@ Patient.Diagnosen=Diagnosen wie auf dem Titelblatt genannt
 Patient.Stammarzt=Hausarzt des Patienten
 Patient:mw:Er/Sie='Er' oder 'Sie' je nach Geschlecht
 Patient:mw:Herr/Frau='Herr' oder 'Frau' je nach Geschlecht
+Patient.FamilienAnamnese=Familienanamnese wie auf dem Titelblatt
 
 Rechnung.RnDatumBis
 Rechnung.RnDatumVon=Nur für den Rechnungsdruck. Funktioniert nicht in allgemeinen Briefen.

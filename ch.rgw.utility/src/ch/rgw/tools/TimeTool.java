@@ -736,8 +736,21 @@ public class TimeTool extends GregorianCalendar {
 	 * @return
 	 */
 	public String getDurationToNowString(){
+		return getDurationToTimeAsString(LocalDateTime.now());
+	}
+	
+	/**
+	 * Get a String representation of the duration of the date compared to the given time. Returns
+	 * an internationalized String.<br />
+	 * Examples: 2 weeks ago, in 1 week, 1 year ago, in 2 years
+	 * 
+	 * @since 3.2
+	 * 
+	 * @return
+	 */
+	public String getDurationToTimeAsString(LocalDateTime localDateTime){
 		LocalDateTime date = toLocalDateTime();
-		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime now = localDateTime;
 		
 		int years = (int) now.until(date, ChronoUnit.YEARS);
 		int weeks = (int) now.until(date, ChronoUnit.WEEKS);

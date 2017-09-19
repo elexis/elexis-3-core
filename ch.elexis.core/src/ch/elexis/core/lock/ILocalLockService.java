@@ -29,6 +29,13 @@ public interface ILocalLockService extends ILockService {
 	
 	public boolean isLocked(IPersistentObject po);
 	
+	/**
+	 * 
+	 * @param po
+	 * @return
+	 * @deprecated instead use isLocked method
+	 */
+	@Deprecated
 	public boolean isLockedLocal(IPersistentObject po);
 	
 	public LockResponse releaseAllLocks();

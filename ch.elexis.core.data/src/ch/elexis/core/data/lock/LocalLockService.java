@@ -330,6 +330,7 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	@Override
+	@Deprecated
 	public boolean isLockedLocal(IPersistentObject po){
 		if (po == null) {
 			return false;

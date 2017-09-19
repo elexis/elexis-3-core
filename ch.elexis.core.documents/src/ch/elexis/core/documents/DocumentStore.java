@@ -37,6 +37,7 @@ import ch.elexis.core.utils.FileUtil;
 public class DocumentStore {
 	
 	private static final String DEFAULT_STORE_ID = "ch.elexis.data.store.omnivore";
+	public static final String ID_WITH_STOREID_SPLIT = ":-:-:";
 	
 	final ConcurrentMap<String, IDocumentStore> services = new ConcurrentHashMap<>();
 	

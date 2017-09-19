@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -35,6 +36,7 @@ import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.Messages;
+import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.BezugsKontaktRelation;
 import ch.rgw.tools.StringTool;
 
@@ -50,16 +52,33 @@ public class BezugsKontaktAuswahl extends Dialog {
 	
 	Composite dynComposite;
 	
+	BezugsKontakt bezugsKontakt;
+	
+	private boolean locked = false;
+	
 	public BezugsKontaktAuswahl(String destLabel, String srcLabel){
 		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		this.srcLabel = srcLabel;
 		this.destLabel = destLabel;
 	}
 	
+	public BezugsKontaktAuswahl(String destLabel, String srcLabel, BezugsKontakt bezugsKontakt,
+		boolean locked){
+		this(destLabel, srcLabel);
+		this.bezugsKontakt = bezugsKontakt;
+		this.locked = locked;
+	}
+	
 	@Override
 	public void create(){
 		super.create();
 		getShell().setText(Messages.Patientenblatt2_kindOfRelation); //$NON-NLS-1$
+		if (locked) {
+			Button btnOk = getButton(IDialogConstants.OK_ID);
+			if (btnOk != null) {
+				btnOk.setEnabled(false);
+			}
+		}
 	}
 	
 	@Override
@@ -82,6 +101,13 @@ public class BezugsKontaktAuswahl extends Dialog {
 				reCalc(true);
 			}
 		});
+		
+		cbBezugSrc.setEnabled(!locked);
+		if (bezugsKontakt != null && bezugsKontakt.exists()) {
+			cbBezugSrc.setText(bezugsKontakt.getBezug());
+			mapBezugKonktatRelation.put(bezugsKontakt.getBezug(),
+				new BezugsKontaktRelation(bezugsKontakt));
+		}
 		
 		final GridData data = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
 		
@@ -115,13 +141,13 @@ public class BezugsKontaktAuswahl extends Dialog {
 		
 		new Label(dynComposite, SWT.NONE).setText(Messages.Bezugskontakt_RelationFrom + " "); //$NON-NLS-1$
 		cbTypeDest = new Combo(dynComposite, SWT.READ_ONLY);
-		cbTypeDest.setEnabled(true);
+		cbTypeDest.setEnabled(!locked);
 		cbTypeDest.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		cbTypeDest.setItems(bezugKontaktTypes);
 		
 		new Label(dynComposite, SWT.NONE).setText(Messages.Bezugskontakt_RelationTo + " "); //$NON-NLS-1$
 		cbTypeSrc = new Combo(dynComposite, SWT.READ_ONLY);
-		cbTypeSrc.setEnabled(true);
+		cbTypeSrc.setEnabled(!locked);
 		cbTypeSrc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		cbTypeSrc.setItems(bezugKontaktTypes);
 		reCalc(true);

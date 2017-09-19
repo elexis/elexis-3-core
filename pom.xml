@@ -237,7 +237,7 @@
 		<module>ch.elexis.core.eigendiagnosen</module>
 		<module>ch.elexis.core.logging.feature</module>
 		<module>ch.elexis.core.logging.default_configuration</module>
-		<module>ch.elexis.core.logging</module>
+		<module>ch.elexis.core.logging.osgi</module>
 		<module>ch.elexis.core.scripting.beanshell</module>
 		<module>ch.elexis.core.mail</module>
 		<module>ch.elexis.core.mail.ui</module>
@@ -610,11 +610,4 @@ if ( System.getProperty("git_branch") == null ) {
 			</plugins>
 		</pluginManagement>
 	</build>
-	<repositories>
-		<repository>
-			<id>elexis.3.target.master</id>
-			<url>http://download.elexis.info/elexis/p2/master/target</url>
-			<layout>p2</layout>
-		</repository>
-	</repositories>
 </project>

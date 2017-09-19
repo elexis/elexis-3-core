@@ -11,8 +11,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.ui.composites.DiagnoseListComposite;
-import ch.elexis.core.findings.ui.preferences.SettingsConstants;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.data.Patient;
@@ -34,7 +34,7 @@ public class PatientDetailViewContribution implements IViewContribution {
 	
 	@Override
 	public boolean isAvailable(){
-		return CoreHub.globalCfg.get(SettingsConstants.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
+		return CoreHub.globalCfg.get(IMigratorService.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
 	}
 	
 	@Override

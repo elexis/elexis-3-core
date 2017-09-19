@@ -523,7 +523,7 @@
        </property>
        <property
         name="rendererFactoryUri"
-        value="platform:/plugin/ch.elexis.core.ui/ch.elexis.core.ui.renderer.ElexisRendererFactory">
+        value="bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.renderer.ElexisRendererFactory">
       </property>
        <property
              name="applicationCSS"

@@ -75,9 +75,9 @@ public class Mandant extends Anwender {
 	@Override
 	protected void setConstraint(){
 		set(new String[] {
-			FLD_IS_MANDATOR, FLD_IS_USER
+			FLD_IS_MANDATOR, FLD_IS_USER, FLD_IS_PERSON
 		}, new String[] {
-			StringConstants.ONE, StringConstants.ONE
+			StringConstants.ONE, StringConstants.ONE, StringConstants.ONE
 		});
 	}
 	

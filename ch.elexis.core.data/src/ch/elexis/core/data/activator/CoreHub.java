@@ -81,6 +81,7 @@ public class CoreHub implements BundleActivator {
 	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
 	
 	private static String LocalCfgFile = null;
+	private static String elexis_version = null;
 	
 	private BundleContext context;
 	
@@ -262,18 +263,19 @@ public class CoreHub implements BundleActivator {
 	 * See http://maven.apache.org /plugins/maven-resources-plugin/examples/filter.html
 	 */
 	public static String readElexisBuildVersion(){
+		if ( elexis_version != null ) { return elexis_version; }
 		Properties prop = new Properties();
-		String elexis_version = "Developer";
 		String url_name = "platform:/plugin/ch.elexis.core.data/rsc/version.properties";
 		try (InputStream inputStream = new URL(url_name).openConnection().getInputStream()) {
 			if (inputStream != null) {
 				prop.load(inputStream);
-				elexis_version = prop.getProperty("elexis.version");
+				elexis_version = prop.getProperty("elexis.version").replace("-SNAPSHOT", "");
 			}
 		} catch (IOException e) {
-			log.warn("Error reading build version information from [{}]", url_name, e);
+			elexis_version = plugin.Version;
+			// log.warn("Error reading build version information from [{}]", url_name, e);
 		}
-		return elexis_version.replace("-SNAPSHOT", "");
+		return elexis_version;
 	}
 	
 	@Override
