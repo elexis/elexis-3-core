@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="ch.elexis.textKategorie"
+            class="ch.elexis.core.findings.templates.ui.views.FindingsTemplateView"
+            id="ch.elexis.core.findings.templates.ui.views.FindingsTemplateView"
+            name="Befunde Vorlagen">
+      </view>
+      <view
+            category="ch.elexis.textKategorie"
+            class="ch.elexis.core.findings.templates.ui.views.FindingsView"
+            id="ch.elexis.core.findings.templates.ui.views.FindingsView"
+            name="Befunde">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.findings.templates.ui.views.FindingsTemplateView">
+         <command
+               commandId="ch.elexis.core.findings.templates.ui.command.template.create"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/new.png"
+               label="Neue Vorlage anlegen"
+               style="push">
+         </command>
+         <command
+               commandId="ch.elexis.core.findings.templates.ui.command.template.import"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/import.gif"
+               label="Vorlagen Importieren"
+               style="push">
+         </command>
+         <command
+               commandId="ch.elexis.core.findings.templates.ui.command.template.export"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/export.ico"
+               label="Vorlagen Exportieren"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.findings.templates.ui.views.FindingsView">
+         <command
+               commandId="ch.elexis.core.findings.templates.ui.command.finding.create"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/new.png"
+               label="Neuen Befund anlegen"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="ch.elexis.core.findings.templates.ui.command.template.create"
+            name="Create Template">
+      </command>
+      <command
+            id="ch.elexis.core.findings.templates.ui.command.template.export"
+            name="Export Template">
+      </command>
+      <command
+            id="ch.elexis.core.findings.templates.ui.command.template.import"
+            name="Import Template">
+      </command>
+      <command
+            id="ch.elexis.core.findings.templates.ui.command.finding.create"
+            name="Create Finding">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="ch.elexis.core.findings.templates.ui.handler.FindingsTemplateCreateHandler"
+            commandId="ch.elexis.core.findings.templates.ui.command.template.create">
+         <activeWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <instanceof
+                     value="ch.elexis.core.findings.templates.model.FindingsTemplates">
+               </instanceof>
+            </iterate>
+          </activeWhen> 
+      </handler>
+      <handler
+            class="ch.elexis.core.findings.templates.ui.handler.FindingsTemplateImportHandler"
+            commandId="ch.elexis.core.findings.templates.ui.command.template.import">
+      </handler>
+      <handler
+            class="ch.elexis.core.findings.templates.ui.handler.FindingsTemplateExportHandler"
+            commandId="ch.elexis.core.findings.templates.ui.command.template.export">
+      </handler>
+      <handler
+            class="ch.elexis.core.findings.templates.ui.handler.FindingsCreateHandler"
+            commandId="ch.elexis.core.findings.templates.ui.command.finding.create">
+      </handler>
+   </extension>
+
+</plugin>

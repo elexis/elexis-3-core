@@ -1,6 +1,8 @@
 package ch.elexis.core.findings.fhir.po.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -11,8 +13,10 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IObservation;
+import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.util.fhir.accessor.ObservationAccessor;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
 import ch.rgw.tools.VersionInfo;
 
 public class Observation extends AbstractFhirPersistentObject implements IObservation {
@@ -104,27 +108,54 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	}
 	
 	@Override
-	public List<IObservation> getSourceObservations(){
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public void addSourceObservation(IObservation source){
-		// TODO Auto-generated method stub
+	public List<IObservation> getSourceObservations(ObservationLinkType type){
+		Query<ObservationLink> qbe = new Query<>(ObservationLink.class);
+		qbe.add(ObservationLink.FLD_TARGETID, Query.EQUALS, getId());
+		qbe.add(ObservationLink.FLD_TYPE, Query.EQUALS, type.name());
 		
+		List<ObservationLink> observationLinks = qbe.execute();
+		List<IObservation> iObservations = new ArrayList<>();
+		for (ObservationLink link : observationLinks)
+		{
+			String id = link.get(ObservationLink.FLD_SOURCEID);
+			iObservations.add(Observation.load(id));
+		}
+		return iObservations;
 	}
 	
 	@Override
-	public List<IObservation> getTargetObseravtions(){
-		// TODO Auto-generated method stub
-		return null;
+	public void addSourceObservation(IObservation source, ObservationLinkType type){
+		if (source != null && source.getId() != null && getId() != null) {
+			ObservationLink observationLink = new ObservationLink();
+			observationLink.set(ObservationLink.FLD_TARGETID, getId());
+			observationLink.set(ObservationLink.FLD_SOURCEID, source.getId());
+			observationLink.set(ObservationLink.FLD_TYPE, type.name());
+		}
 	}
 	
 	@Override
-	public void addTargetObservation(IObservation source){
-		// TODO Auto-generated method stub
+	public List<IObservation> getTargetObseravtions(ObservationLinkType type){
+		Query<ObservationLink> qbe = new Query<>(ObservationLink.class);
+		qbe.add(ObservationLink.FLD_SOURCEID, Query.EQUALS, getId());
+		qbe.add(ObservationLink.FLD_TYPE, Query.EQUALS, type.name());
 		
+		List<ObservationLink> observationLinks = qbe.execute();
+		List<IObservation> iObservations = new ArrayList<>();
+		for (ObservationLink link : observationLinks) {
+			String id = link.get(ObservationLink.FLD_TARGETID);
+			iObservations.add(Observation.load(id));
+		}
+		return iObservations;
+	}
+	
+	@Override
+	public void addTargetObservation(IObservation target, ObservationLinkType type){
+		if (target != null && target.getId() != null && getId() != null) {
+			ObservationLink observationLink = new ObservationLink();
+			observationLink.set(ObservationLink.FLD_TARGETID, target.getId());
+			observationLink.set(ObservationLink.FLD_SOURCEID, getId());
+			observationLink.set(ObservationLink.FLD_TYPE, type.name());
+		}
 	}
 	
 	@Override
@@ -179,5 +210,33 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 			accessor.setCoding((DomainResource) resource.get(), coding);
 			saveResource(resource.get());
 		}
+	}
+	
+	
+	@Override
+	public void setNumericValue(BigDecimal bigDecimal, String unit){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setNumericValue((DomainResource) resource.get(), bigDecimal, unit);
+			saveResource(resource.get());
+		}
+	}
+	
+	@Override
+	public Optional<BigDecimal> getNumericValue(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getNumericValue((DomainResource) resource.get());
+		}
+		return Optional.empty();
+	}
+	
+	@Override
+	public Optional<String> getNumericValueUnit(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getNumericValueUnit((DomainResource) resource.get());
+		}
+		return Optional.empty();
 	}
 }
