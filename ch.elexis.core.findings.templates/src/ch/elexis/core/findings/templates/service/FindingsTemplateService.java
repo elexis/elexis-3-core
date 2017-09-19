@@ -3,6 +3,7 @@ package ch.elexis.core.findings.templates.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -155,6 +156,7 @@ public class FindingsTemplateService {
 	
 	private IFinding createObservation(Patient patient, FindingsTemplate findingsTemplate){
 		IObservation iObservation = create(IObservation.class);
+		iObservation.setEffectiveTime(LocalDateTime.now());
 		switch (findingsTemplate.getType()) {
 		case OBSERVATION_OBJECTIVE:
 			iObservation.setCategory(ObservationCategory.SOAP_OBJECTIVE);
