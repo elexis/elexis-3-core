@@ -51,7 +51,7 @@
    </plugins>
 
    <features>
-   	  <feature id="ch.elexis.core.application.feature installMode="root""/>
+   	  <feature id="ch.elexis.core.application.feature" installMode="root"/>
       <feature id="ch.elexis.core.common.feature" installMode="root"/>
       <feature id="ch.elexis.core.logging.feature" installMode="root"/>
       <feature id="ch.elexis.core.ui.feature" installMode="root"/>
