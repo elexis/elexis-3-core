@@ -102,6 +102,7 @@ public class Desk implements IApplication {
 		}
 		
 		// care for log-in
+		context.applicationRunning();
 		cod.performLogin(UiDesk.getDisplay().getActiveShell());
 		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
 			// no valid user, exit (don't consider this as an error)
