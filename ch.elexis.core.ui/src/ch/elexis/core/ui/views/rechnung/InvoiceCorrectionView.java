@@ -657,7 +657,6 @@ public class InvoiceCorrectionView extends ViewPart {
 				public void run(){
 					LeistungDTO leistungDTO = getSelection();
 					if (leistungDTO != null && changeQuantityDialog(leistungDTO)) {
-						leistungDTO.calcPrice(konsultationDTO, invoiceCorrectionDTO.getFallDTO());
 						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
 							OperationType.LEISTUNG_CHANGE_COUNT, konsultationDTO, leistungDTO));
 						tableViewer.refresh();
@@ -1289,8 +1288,7 @@ public class InvoiceCorrectionView extends ViewPart {
 															leistungDTO.getVerrechnet());
 													log.debug(
 														"invoice correction: removed leistung id [{}] from kons id [{}]",
-														leistungDTO.getId(),
-														konsultation.getId());
+														leistungDTO.getId(), konsultation.getId());
 													if (resRemove.isOK()) {
 														((LeistungDTO) item).setVerrechnet(null);
 														
@@ -1351,9 +1349,8 @@ public class InvoiceCorrectionView extends ViewPart {
 														"invoice correction: changed count from leistung id [{}]",
 														leistungDTO.getId());
 													if (ret.isOK()) {
-														verrechnet
-															.setSecondaryScaleFactor(leistungDTO
-																.getPriceSecondaryScaleFactor());
+														verrechnet.setSecondaryScaleFactor(
+															leistungDTO.getScale2());
 														verrechnet
 															.setText(leistungDTO.getPriceText());
 														
@@ -1370,15 +1367,21 @@ public class InvoiceCorrectionView extends ViewPart {
 												leistungDTO = (LeistungDTO) item;
 												verrechnet = leistungDTO.getVerrechnet();
 												if (verrechnet != null) {
-													verrechnet
-														.setTP(leistungDTO.getPrice().getCents());
+													int tp = leistungDTO.getTp();
+													int tpOld = Verrechnet.checkZero(verrechnet
+														.get(Verrechnet.SCALE_TP_SELLING));
 													verrechnet.setSecondaryScaleFactor(
-														leistungDTO.getPriceSecondaryScaleFactor());
-													log.debug(
-														"invoice correction: changed price from leistung id [{}]",
-														leistungDTO.getId());
-												}
-												else {
+														leistungDTO.getScale2());
+													if (tpOld != tp) {
+														verrechnet.setTP(tp);
+														verrechnet.setPreis(leistungDTO.getPrice());
+														log.debug(
+															"invoice correction: price changed to [{}] for leistung id [{}]",
+															leistungDTO.getPrice()
+																.getAmountAsString(),
+															leistungDTO.getId());
+													}
+												} else {
 													log.warn(
 														"invoice correction: leistung id [{}] no verrechnet exists cannot change price",
 														leistungDTO.getId());
@@ -1505,6 +1508,8 @@ public class InvoiceCorrectionView extends ViewPart {
 	private boolean changePriceDialog(LeistungDTO leistungDTO){
 		Money oldPrice = leistungDTO.getPrice();
 		String p = oldPrice.getAmountAsString();
+		Money customPrice;
+		double factor = 1.0;
 		InputDialog dlg = new InputDialog(UiDesk.getTopShell(),
 			Messages.VerrechnungsDisplay_changePriceForService, //$NON-NLS-1$
 			Messages.VerrechnungsDisplay_enterNewPrice, p, //$NON-NLS-1$
@@ -1516,13 +1521,15 @@ public class InvoiceCorrectionView extends ViewPart {
 				if (val.endsWith("%") && val.length() > 1) { //$NON-NLS-1$
 					val = val.substring(0, val.length() - 1);
 					double percent = Double.parseDouble(val);
-					double factor = 1.0 + (percent / 100.0);
-					leistungDTO.setPriceSecondaryScaleFactor(factor);
-					leistungDTO.setCustomPrice(leistungDTO.getPrice());
+					double scaleFactor = 1.0 + (percent / 100.0);
+					leistungDTO.setScale2(scaleFactor);
+					customPrice = leistungDTO.getPrice();
 				} else {
-					newPrice = new Money(val);
-					leistungDTO.setCustomPrice(newPrice);
-					leistungDTO.setPriceSecondaryScaleFactor(Double.valueOf(1));
+					customPrice = new Money(val);
+					leistungDTO.setScale2(Double.valueOf(1));
+				}
+				if (customPrice != null) {
+					leistungDTO.setTp(customPrice.getCents());
 				}
 				return true;
 			} catch (ParseException ex) {
@@ -1564,7 +1571,7 @@ public class InvoiceCorrectionView extends ViewPart {
 					}
 					
 					leistungDTO.setCount(changeAnzahl);
-					leistungDTO.setPriceSecondaryScaleFactor(secondaryScaleFactor);
+					leistungDTO.setScale2(secondaryScaleFactor);
 					leistungDTO.setPriceText(text);
 					return true;
 				}
