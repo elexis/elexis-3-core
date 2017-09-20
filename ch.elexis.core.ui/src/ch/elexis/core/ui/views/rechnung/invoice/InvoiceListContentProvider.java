@@ -41,7 +41,6 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.views.InvoiceBillState;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
@@ -130,7 +129,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			int countPatientsWoLimit = 0;
 			
 			QueryBuilder queryBuilder = performPreparedStatementReplacements(
-				InvoiceBillState.getSqlCountStats(true), false, false);
+				InvoiceListSqlQuery.getSqlCountStats(true), false, false);
 			PreparedStatement ps = queryBuilder.createPreparedStatement(dbConnection);
 			try (ResultSet res = ps.executeQuery()) {
 				while (res.next()) {
@@ -160,7 +159,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			}
 			
 			queryBuilder =
-				performPreparedStatementReplacements(InvoiceBillState.getSqlFetch(), true, true);
+				performPreparedStatementReplacements(InvoiceListSqlQuery.getSqlFetch(), true, true);
 			ps = queryBuilder.createPreparedStatement(dbConnection);
 			
 			int openAmounts = 0;
@@ -311,7 +310,6 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		
 		String totalAmount = invoiceListHeaderComposite.getSelectedTotalAmount();
 		if (StringUtils.isNotBlank(totalAmount)) {
-			String prefix = "=";
 			String boundaryAmount = null;
 			
 			try {
@@ -373,13 +371,13 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	
 	public void setSortOrderAndDirection(Object data, int sortDirection){
 		String sortDirectionString = (SWT.UP == sortDirection) ? "ASC" : "DESC";
-		if (InvoiceBillState.VIEW_FLD_INVOICENO.equals(data)) {
-			orderBy = "ORDER BY LENGTH(" + InvoiceBillState.VIEW_FLD_INVOICENO + ") "
-				+ sortDirectionString + "," + InvoiceBillState.VIEW_FLD_INVOICENO + " "
+		if (InvoiceListSqlQuery.VIEW_FLD_INVOICENO.equals(data)) {
+			orderBy = "ORDER BY LENGTH(" + InvoiceListSqlQuery.VIEW_FLD_INVOICENO + ") "
+				+ sortDirectionString + "," + InvoiceListSqlQuery.VIEW_FLD_INVOICENO + " "
 				+ sortDirectionString;
 		} else if (Rechnung.BILL_DATE_FROM.equals(data)
-			|| InvoiceBillState.VIEW_FLD_INVOICETOTAL.equals(data)
-			|| InvoiceBillState.VIEW_FLD_OPENAMOUNT.equals(data)) {
+			|| InvoiceListSqlQuery.VIEW_FLD_INVOICETOTAL.equals(data)
+			|| InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT.equals(data)) {
 			orderBy = "ORDER BY " + data + " " + sortDirectionString;
 		} else if (Kontakt.FLD_NAME1.equals(data)) {
 			orderBy =
@@ -660,11 +658,11 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 					}
 					if (sb.length() > 0) {
 						return mainQuery.replace(
-							InvoiceBillState.REPLACEMENT_INVOICE_INNER_CONDITION,
+							InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION,
 							" AND " + sb.toString());
 					} else {
 						return mainQuery
-							.replace(InvoiceBillState.REPLACEMENT_INVOICE_INNER_CONDITION, "");
+							.replace(InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION, "");
 					}
 				}
 				return "";

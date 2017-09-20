@@ -10,9 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
-import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICENO;
-import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICETOTAL;
-import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_OPENAMOUNT;
+import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_INVOICENO;
+import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_INVOICETOTAL;
+import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -298,6 +298,7 @@ public class InvoiceListView extends ViewPart {
 		menuManager.add(invoiceActions.addExpenseAction);
 		menuManager.add(invoiceActions.increaseLevelAction);
 		menuManager.add(new Separator());
+		menuManager.add(invoiceActions.changeStatusAction);
 		menuManager.add(invoiceActions.stornoAction);
 		
 		Menu contextMenu = menuManager.createContextMenu(tableViewerInvoiceList.getTable());

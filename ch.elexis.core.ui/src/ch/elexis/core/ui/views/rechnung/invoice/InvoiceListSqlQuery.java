@@ -8,7 +8,7 @@
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
-package ch.elexis.data.views;
+package ch.elexis.core.ui.views.rechnung.invoice;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -23,12 +23,7 @@ import ch.elexis.data.DBConnection;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
 
-/**
- * Aggregates the information of all Invoices, payments and states in a single SQL view. Used by
- * InvoiceListView in core.ui.
- *
- */
-public class InvoiceBillState {
+public class InvoiceListSqlQuery {
 	
 	public static final String VIEW_FLD_INVOICENO = "InvoiceNo";
 	public static final String VIEW_FLD_INVOICETOTAL = "InvoiceTotal";
@@ -42,7 +37,7 @@ public class InvoiceBillState {
 	
 	public static String getSqlCountStats(boolean withConditions){
 		return "SELECT COUNT(InvoiceId), COUNT(DISTINCT (patientid)), SUM(invoiceTotal), SUM(openAmount) FROM "
-			+ InvoiceBillState.getSqlInvoice(withConditions);
+			+ InvoiceListSqlQuery.getSqlInvoice(withConditions);
 	}
 	
 	public static String getSqlInvoice(boolean withConditions)
@@ -52,17 +47,17 @@ public class InvoiceBillState {
 		if (dbConnection != null && "postgresql".equalsIgnoreCase(dbConnection.getDBFlavor())) {
 			query =
 				"( SELECT rz.id AS InvoiceId, rz.RnNummer AS InvoiceNo, rz.rndatum, rz.rndatumvon, rz.rndatumbis, rz.statusdatum, rz.InvoiceState, rz.InvoiceTotal, rz.MandantId, f.patientid AS PatientId, k.bezeichnung1 AS PatName1, k.bezeichnung2 AS PatName2, k.geschlecht AS PatSex, k.geburtsdatum AS PatDob, f.id AS FallId, f.gesetz AS FallGesetz, f.garantID AS FallGarantId, f.KostentrID AS FallKostentrID, rz.paymentCount, rz.paidAmount, rz.openAmount FROM (SELECT r.id, r.rnnummer, r.rndatum, r.rndatumvon, r.rndatumbis, r.statusdatum, r.fallid, r.MandantId, CAST(r.rnstatus AS NUMERIC) AS InvoiceState, CAST(r.betrag AS NUMERIC) AS InvoiceTotal, COUNT(z.id) AS paymentCount, CASE WHEN COUNT(z.id) = '0' THEN 0 ELSE SUM(CAST(z.betrag AS NUMERIC)) END paidAmount, CASE WHEN COUNT(z.id) = '0' THEN CAST(r.betrag AS NUMERIC) ELSE (CAST(r.betrag AS NUMERIC) - SUM(CAST(z.betrag AS NUMERIC))) END openAmount FROM RECHNUNGEN r LEFT JOIN zahlungen z ON z.rechnungsID = r.id AND z.deleted = '0' WHERE r.deleted = '0'"
-				+ " " + InvoiceBillState.REPLACEMENT_INVOICE_INNER_CONDITION
+				+ " " + InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION
 					+ " GROUP BY r.id) rz LEFT JOIN faelle f ON rz.FallID = f.ID LEFT JOIN kontakt k ON f.PatientID = k.id)x ";
 		}
 		else
 		{
 			query = "( SELECT rz.id AS InvoiceId, rz.RnNummer AS InvoiceNo, rz.rndatum, rz.rndatumvon, rz.rndatumbis, rz.statusdatum, rz.InvoiceState, rz.InvoiceTotal, rz.MandantId, f.patientid AS PatientId, k.bezeichnung1 AS PatName1, k.bezeichnung2 AS PatName2, k.geschlecht AS PatSex, k.geburtsdatum AS PatDob, f.id AS FallId, f.gesetz AS FallGesetz, f.garantID AS FallGarantId, f.KostentrID AS FallKostentrID, rz.paymentCount, rz.paidAmount, rz.openAmount FROM (SELECT r.id, r.rnnummer, r.rndatum, r.rndatumvon, r.rndatumbis, r.statusdatum, r.fallid, r.MandantId, CAST(r.rnstatus AS SIGNED) AS InvoiceState, CAST(r.betrag AS SIGNED) AS InvoiceTotal, COUNT(z.id) AS paymentCount, CASE WHEN COUNT(z.id) = 0 THEN 0 ELSE SUM(CAST(z.betrag AS SIGNED)) END paidAmount, CASE WHEN COUNT(z.id) = 0 THEN CAST(r.betrag AS SIGNED) ELSE (CAST(r.betrag AS SIGNED) - SUM(CAST(z.betrag AS SIGNED))) END openAmount FROM RECHNUNGEN r LEFT JOIN zahlungen z ON z.rechnungsID = r.id AND z.deleted = 0 WHERE r.deleted = 0"
-			+ " " + InvoiceBillState.REPLACEMENT_INVOICE_INNER_CONDITION
+			+ " " + InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION
 					+ " GROUP BY r.id) rz LEFT JOIN faelle f ON rz.FallID = f.ID LEFT JOIN kontakt k ON f.PatientID = k.id )x ";
 		}
 		if (!withConditions && query != null) {
-			query = query.replaceAll(InvoiceBillState.REPLACEMENT_INVOICE_INNER_CONDITION, "");
+			query = query.replaceAll(InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION, "");
 		}
 		return query;
 	}
@@ -71,11 +66,11 @@ public class InvoiceBillState {
 	{ //@formatter:off
 		 return 	" SELECT " + 
 					"    InvoiceId," + 
-					InvoiceBillState.VIEW_FLD_INVOICENO+"," + 
+					InvoiceListSqlQuery.VIEW_FLD_INVOICENO+"," + 
 					"    rndatumvon," + 
 					"    rndatumbis," + 
-					InvoiceBillState.VIEW_FLD_INVOICESTATE+"," + 
-					InvoiceBillState.VIEW_FLD_INVOICETOTAL+"," + 
+					InvoiceListSqlQuery.VIEW_FLD_INVOICESTATE+"," + 
+					InvoiceListSqlQuery.VIEW_FLD_INVOICETOTAL+"," + 
 					"    PatientId," + 
 					"    PatName1," + 
 					"    PatName2," + 
@@ -87,7 +82,7 @@ public class InvoiceBillState {
 					"    FallKostentrID," + 
 					"    paymentCount," + 
 					"    paidAmount," + 
-					InvoiceBillState.VIEW_FLD_OPENAMOUNT + 
+					InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT + 
 					" FROM" + 
 					" " +getSqlInvoice(true)+ 
 					"REPLACE_WITH_ORDER " + 
