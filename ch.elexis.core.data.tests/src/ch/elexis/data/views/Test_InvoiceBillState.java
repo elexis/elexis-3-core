@@ -38,9 +38,6 @@ public class Test_InvoiceBillState extends AbstractPersistentObjectTest {
 		Rechnung rechnung = new Rechnung("1", mandant, fall, kons.getDatum(), kons.getDatum(),
 			new Money(10000), RnStatus.OFFEN);
 		
-		// initialize table
-		InvoiceBillState.initializeSqlViewIfRequired();
-		
 		AtomicInteger countPatients = new AtomicInteger(0);
 		AtomicInteger countInvoices = new AtomicInteger(0);
 		InvoiceBillState.fetchNumberOfPatientsAndInvoices(countPatients, countInvoices);
