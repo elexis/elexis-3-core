@@ -126,7 +126,7 @@ public class LeistungDTO {
 	}
 	
 	public Money getPrice(){
-		return new Money((int) (Math.round(tp * tpw) * scale1 * scale2 * count));
+		return new Money((int) (Math.round(tp  tpw)  scale1  scale2  count));
 	}
 	
 	public void setCount(int count){
