@@ -103,7 +103,14 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	/** Die Konsultation einem Fall zuordnen */
 	public void setFall(Fall f){
 		if (isEditable(true)) {
-			transferToFall(f);
+			Fall alt = getFall();
+			set(FLD_CASE_ID, f.getId());
+			if (alt != null) {
+				List<Verrechnet> vv = getLeistungen();
+				for (Verrechnet v : vv) {
+					v.setStandardPreis();
+				}
+			}
 		}
 	}
 	
@@ -113,7 +120,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (alt != null) {
 			List<Verrechnet> vv = getLeistungen();
 			for (Verrechnet v : vv) {
-				v.setStandardPreis();
+				v.updateOnlyPriceAndScaleSelling();
 			}
 		}
 	}

@@ -305,6 +305,23 @@ public class Verrechnet extends PersistentObject {
 		}, Double.toString(factor), Integer.toString(tp), Long.toString(preis));
 	}
 	
+
+	/**
+	 * Updates the price and scale selling without tp update. Used for invoice corrections
+	 */
+	public void updateOnlyPriceAndScaleSelling(){
+		IVerrechenbar v = getVerrechenbar();
+		Konsultation k = getKons();
+		Fall fall = k.getFall();
+		TimeTool date = new TimeTool(k.getDatum());
+		double factor = v.getFactor(date, fall);
+		int tp = checkZero(get(SCALE_TP_SELLING));
+		long preis = Math.round(tp * factor);
+		set(new String[] {
+			SCALE_SELLING, PRICE_SELLING
+		}, Double.toString(factor), Long.toString(preis));
+	}
+	
 	public Konsultation getKons(){
 		return Konsultation.load(get(KONSULTATION));
 	}

@@ -11,12 +11,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.ui.IViewSite;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.Handler;
 import ch.elexis.core.ui.commands.MahnlaufCommand;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.AllOrNoneLockRequestingRestrictedAction;
 import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.rechnung.Messages;
@@ -34,8 +36,8 @@ import ch.rgw.tools.Money;
 public class InvoiceActions {
 	
 	public Action addPaymentAction, rnExportAction, increaseLevelAction, addExpenseAction,
-			stornoAction, addAccountExcessAction, printListeAction,
-			mahnWizardAction;
+			stornoAction, addAccountExcessAction, printListeAction, mahnWizardAction,
+			changeStatusAction;
 	
 	private final StructuredViewer viewer;
 	private final IViewSite iViewSite;
@@ -238,6 +240,38 @@ public class InvoiceActions {
 					return;
 				}
 				Handler.execute(iViewSite, MahnlaufCommand.ID, null);
+			}
+		};
+		
+		changeStatusAction = new AllOrNoneLockRequestingRestrictedAction<Rechnung>(
+			AccessControlDefaults.ADMIN_CHANGE_BILLSTATUS_MANUALLY,
+			Messages.RnActions_changeStateAction) {
+			{
+				setToolTipText(Messages.RnActions_changeStateTooltip);
+				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
+			}
+			
+			@Override
+			public List<Rechnung> getTargetedObjects(){
+				return getInvoiceSelections(viewer);
+			}
+			
+			@Override
+			public void doRun(List<Rechnung> list){
+				if (list.size() == 1) {
+					Rechnung actRn = list.get(0);
+					if (new RnDialogs.StatusAendernDialog(viewer.getControl().getShell(), actRn)
+						.open() == Dialog.OK) {
+						ElexisEventDispatcher.update(actRn);
+					}
+				} else {
+					if (new RnDialogs.MultiStatusAendernDialog(viewer.getControl().getShell(), list)
+						.open() == Dialog.OK) {
+						for (Rechnung rn : list) {
+							ElexisEventDispatcher.update(rn);
+						}
+					}
+				}
 			}
 		};
 	}

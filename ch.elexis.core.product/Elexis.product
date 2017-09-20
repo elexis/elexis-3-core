@@ -16,8 +16,6 @@
    <launcherArgs>
       <vmArgs>-Dosgi.console.enable.builtin=true -Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8
       </vmArgs>
-      <vmArgsLin>-DSWT_GTK3=0
-      </vmArgsLin>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8
       </vmArgsMac>
    </launcherArgs>
@@ -51,12 +49,12 @@
    </plugins>
 
    <features>
-      <feature id="ch.elexis.core.common.feature"/>
-      <feature id="ch.elexis.core.logging.feature"/>
-      <feature id="ch.elexis.core.ui.feature"/>
-      <feature id="ch.elexis.core.application.feature"/>
-      <feature id="ch.elexis.core.ui.p2.feature"/>
-      <feature id="ch.elexis.core.ui.medication.os.feature"/>
+   	  <feature id="ch.elexis.core.application.feature" installMode="root"/>
+      <feature id="ch.elexis.core.common.feature" installMode="root"/>
+      <feature id="ch.elexis.core.logging.feature" installMode="root"/>
+      <feature id="ch.elexis.core.ui.feature" installMode="root"/>
+      <feature id="ch.elexis.core.ui.p2.feature" installMode="root"/>
+      <feature id="ch.elexis.core.ui.medication.os.feature" installMode="root"/>
    </features>
 
    <configurations>

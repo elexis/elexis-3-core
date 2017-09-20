@@ -10,15 +10,16 @@ public class LeistungDTO {
 	private final String id;
 	private String code;
 	private String text;
-	private Money price;
 	private String priceText;
-	private Double priceSecondaryScaleFactor;
 	private int count;
 	private IVerrechenbar iVerrechenbar;
 	private long lastUpdate;
 	private Verrechnet verrechnet;
 	
-	private Money customPrice;
+	private int tp = 0;
+	private double tpw = 1.0;
+	private double scale1 = 1.0;
+	private double scale2 = 1.0;
 	
 	public LeistungDTO(Verrechnet verrechnet) throws ElexisException{
 		
@@ -38,15 +39,15 @@ public class LeistungDTO {
 					+ verrechnet.getId() + "].",
 				e);
 		}
+		this.verrechnet = verrechnet;
 		this.lastUpdate = verrechnet.getLastUpdate();
 		this.id = verrechnet.getId();
 		this.code = verrechnet.getCode();
 		this.text = verrechnet.getText();
-		this.price = verrechnet.getNettoPreis();
+		this.tp = Verrechnet.checkZero(verrechnet.get(Verrechnet.SCALE_TP_SELLING));
+		this.tpw = verrechnet.getTPW();
 		this.count = verrechnet.getZahl();
 		this.iVerrechenbar = verrechnet.getVerrechenbar();
-		this.verrechnet = verrechnet;
-		this.customPrice = null;
 	}
 	
 	public LeistungDTO(IVerrechenbar iVerrechenbar){
@@ -54,42 +55,38 @@ public class LeistungDTO {
 		this.id = iVerrechenbar.getId();
 		this.code = iVerrechenbar.getCode();
 		this.text = iVerrechenbar.getText();
-		
-		this.price = new Money();
+		this.tp = 0;
+		this.tpw = 1.0;
+		this.scale1 = 1.0;
+		this.scale2 = 1.0;
 		this.count = 1;
 		this.iVerrechenbar = iVerrechenbar;
-		this.customPrice = null;
-		
 	}
 	
 	public void calcPrice(KonsultationDTO konsultationDTO, FallDTO fallDTO){
-		int tp = 0;
-		double factor = 1.0;
-		double scale1 = 1.0;
-		double scale2 = 1.0;
-		if (iVerrechenbar != null) {
-			tp = iVerrechenbar.getTP(new TimeTool(konsultationDTO.getDate()), fallDTO);
-			factor = iVerrechenbar.getFactor(new TimeTool(konsultationDTO.getDate()), fallDTO);
-		} else if (getVerrechnet() != null) {
-			tp = Verrechnet.checkZero(getVerrechnet().get(Verrechnet.SCALE_TP_SELLING));
+		if (getVerrechnet() != null) {
+			tpw = getVerrechnet().getVerrechenbar()
+				.getFactor(new TimeTool(konsultationDTO.getDate()), fallDTO);
 		}
-		
+		else if (iVerrechenbar != null) {
+			tpw = iVerrechenbar.getFactor(new TimeTool(konsultationDTO.getDate()), fallDTO);
+		}
 		if (verrechnet != null) {
 			scale1 = verrechnet.getPrimaryScaleFactor();
 			scale2 = verrechnet.getSecondaryScaleFactor();
 		}
-		if (priceSecondaryScaleFactor != null) {
-			scale2 = priceSecondaryScaleFactor.doubleValue();
-		}
-		this.price = new Money((int) (Math.round(tp * factor) * scale1 * scale2 * count));
 	}
 	
-	public void setPriceSecondaryScaleFactor(Double priceSecondaryScaleFactor){
-		this.priceSecondaryScaleFactor = priceSecondaryScaleFactor;
+	public void setTp(int tp){
+		this.tp = tp;
 	}
 	
-	public Double getPriceSecondaryScaleFactor(){
-		return priceSecondaryScaleFactor;
+	public void setScale2(double scale2){
+		this.scale2 = scale2;
+	}
+	
+	public double getScale2(){
+		return scale2;
 	}
 	
 	public void setPriceText(String priceText){
@@ -129,22 +126,7 @@ public class LeistungDTO {
 	}
 	
 	public Money getPrice(){
-		if (getCustomPrice() == null) {
-			return price;
-		}
-		return getCustomPrice();
-	}
-	
-	public void setPrice(Money price){
-		this.price = price;
-	}
-	
-	public void setCustomPrice(Money customPrice){
-		this.customPrice = customPrice;
-	}
-	
-	private Money getCustomPrice(){
-		return customPrice;
+		return new Money((int) (Math.round(tp  tpw)  scale1  scale2  count));
 	}
 	
 	public void setCount(int count){
@@ -165,5 +147,13 @@ public class LeistungDTO {
 	
 	public long getLastUpdate(){
 		return lastUpdate;
+	}
+	
+	public int getTp(){
+		return tp;
+	}
+	
+	public double getTpw(){
+		return tpw;
 	}
 }
