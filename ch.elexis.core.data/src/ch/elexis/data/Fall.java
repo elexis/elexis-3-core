@@ -13,6 +13,7 @@
 package ch.elexis.data;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -1044,17 +1045,14 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 			getBeginnDatum(), get(Fall.FLD_EXTINFO), getAbrechnungsSystem()
 		};
 		clone.set(fields, values);
+		
+		// not a full copy of ext info - works as the copy function from fall view
+		clone.setMap(FLD_EXTINFO, new Hashtable<>());
+		
 		List<String> keys = loadFieldKeys(getRequirements());
 		for (String key : keys) {
 			clone.setInfoString(key, getRequiredString(key));
 		}
-		
-		// copy optional fields
-		keys = loadFieldKeys(getOptionals());
-		for (String key : keys) {
-			clone.setInfoString(key, getInfoString(key));
-		}
-		
 		return clone;
 	}
 
