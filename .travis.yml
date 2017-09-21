@@ -1,7 +1,7 @@
 ---
 language: java
-script: 
-  - mvn --quiet -V clean verify -Dall-archs=true
+
+script: mvn  -V --quiet clean verify -Dall-archs=true && find . -name "*.zip"
   
 notifications:
   email:
