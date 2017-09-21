@@ -13,8 +13,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="#//InputData"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="code" eType="#//Coding"
-        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="DataType">
     <eLiterals name="NUMERIC" value="1"/>
@@ -50,13 +48,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InputDataGroupComponent" eSuperTypes="#//InputData">
     <eStructuralFeatures xsi:type="ecore:EReference" name="findingsTemplates" upperBound="-1"
-        eType="#//FindingsTemplate" containment="true"/>
+        eType="#//FindingsTemplate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
         changeable="false" defaultValueLiteral="GROUP_COMPONENT"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Coding">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="system" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

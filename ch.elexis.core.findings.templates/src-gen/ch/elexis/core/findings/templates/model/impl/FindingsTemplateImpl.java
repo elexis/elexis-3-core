@@ -2,7 +2,6 @@
  */
 package ch.elexis.core.findings.templates.model.impl;
 
-import ch.elexis.core.findings.templates.model.Coding;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.InputData;
 import ch.elexis.core.findings.templates.model.ModelPackage;
@@ -28,7 +27,6 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getType <em>Type</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getTitle <em>Title</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getInputData <em>Input Data</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getCode <em>Code</em>}</li>
  * </ul>
  *
  * @generated
@@ -85,16 +83,6 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected InputData inputData;
 
 	/**
-	 * The cached value of the '{@link #getCode() <em>Code</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCode()
-	 * @generated
-	 * @ordered
-	 */
-	protected Coding code;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -132,49 +120,6 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 		type = newType == null ? TYPE_EDEFAULT : newType;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__TYPE, oldType, type));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Coding getCode() {
-		return code;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetCode(Coding newCode, NotificationChain msgs) {
-		Coding oldCode = code;
-		code = newCode;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__CODE, oldCode, newCode);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setCode(Coding newCode) {
-		if (newCode != code) {
-			NotificationChain msgs = null;
-			if (code != null)
-				msgs = ((InternalEObject)code).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__CODE, null, msgs);
-			if (newCode != null)
-				msgs = ((InternalEObject)newCode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__CODE, null, msgs);
-			msgs = basicSetCode(newCode, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__CODE, newCode, newCode));
 	}
 
 	/**
@@ -251,8 +196,6 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 		switch (featureID) {
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
 				return basicSetInputData(null, msgs);
-			case ModelPackage.FINDINGS_TEMPLATE__CODE:
-				return basicSetCode(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -271,8 +214,6 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 				return getTitle();
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
 				return getInputData();
-			case ModelPackage.FINDINGS_TEMPLATE__CODE:
-				return getCode();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -293,9 +234,6 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 				return;
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
 				setInputData((InputData)newValue);
-				return;
-			case ModelPackage.FINDINGS_TEMPLATE__CODE:
-				setCode((Coding)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -318,9 +256,6 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
 				setInputData((InputData)null);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATE__CODE:
-				setCode((Coding)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -339,8 +274,6 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 				return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
 				return inputData != null;
-			case ModelPackage.FINDINGS_TEMPLATE__CODE:
-				return code != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -1,7 +1,9 @@
 package ch.elexis.core.findings.templates.ui.views;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -22,6 +24,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.service.component.annotations.Component;
@@ -136,6 +139,17 @@ public class FindingsView extends ViewPart implements IActivationListener {
 				
 			}
 		});
+		
+		MenuManager menuManager = new MenuManager();
+		Menu menu = menuManager.createContextMenu(viewer.getTable());
+		// set the menu on the SWT widget
+		viewer.getTable().setMenu(menu);
+		// register the menu with the framework
+		getSite().registerContextMenu(menuManager, viewer);
+		
+		// make the viewer selection available
+		getSite().setSelectionProvider(viewer);
+		
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_find);
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
@@ -178,6 +192,15 @@ public class FindingsView extends ViewPart implements IActivationListener {
 			}
 		};
 		return selectionAdapter;
+	}
+	
+	public void removeFromTable(IFinding iFinding){
+		if (viewer.getInput() instanceof List<?>)
+		{
+			List<?> items = (List<?>) viewer.getInput();
+			items.remove(iFinding);
+		}
+		viewer.refresh();
 	}
 	
 	class FindingsLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {

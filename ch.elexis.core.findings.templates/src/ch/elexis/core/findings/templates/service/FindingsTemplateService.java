@@ -18,8 +18,11 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IClinicalImpression;
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IFinding;
@@ -28,6 +31,8 @@ import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
+import ch.elexis.core.findings.codes.CodingSystem;
+import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputData;
@@ -45,6 +50,7 @@ public class FindingsTemplateService {
 	private static final String FINDINGS_TEMPLATE_ID = "Findings_Template_1";
 	
 	private IFindingsService findingsService;
+	private ICodingService codingService;
 	
 	public FindingsTemplateService(){
 		
@@ -53,6 +59,11 @@ public class FindingsTemplateService {
 	@Reference(unbind = "-")
 	public synchronized void setFindingsService(IFindingsService findingsServcie){
 		this.findingsService = findingsServcie;
+	}
+	
+	@Reference(unbind = "-")
+	public synchronized void setCodingService(ICodingService codingService){
+		this.codingService = codingService;
 	}
 	
 	public FindingsTemplates getFindingsTemplates(){
@@ -101,8 +112,7 @@ public class FindingsTemplateService {
 			os.close();
 			return aString;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LoggerFactory.getLogger(FindingsTemplateService.class).error("", e);
 		}
 		return null;
 	}
@@ -113,48 +123,108 @@ public class FindingsTemplateService {
 			if (result != null) {
 				NamedBlob namedBlob = NamedBlob.load(findingsTemplates.get().getId());
 				namedBlob.putString(result);
-			}
-			else {
+			} else {
 				//cannot save
+				LoggerFactory.getLogger(FindingsTemplateService.class)
+					.warn("cannot save template - xmi string is null");
 			}
 		}
 		
 	}
 	
-	public IFinding createFinding(Patient patient, FindingsTemplate findingsTemplate){
+	public IFinding createFinding(Patient patient, FindingsTemplate findingsTemplate)
+		throws ElexisException{
 		IFinding iFinding = null;
 		if (patient != null && patient.exists()) {
 			Type type = findingsTemplate.getType();
+			
+			// finding title is the code
+			String code = findingsTemplate.getTitle();
+			
+			// if code is not present create a new local code
+			codingService.addLocalCoding(new ICoding() {
+				
+				@Override
+				public String getSystem(){
+					return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
+				}
+				
+				@Override
+				public String getDisplay(){
+					return code;
+				}
+				
+				@Override
+				public String getCode(){
+					return code;
+				}
+			});
+			
 			switch (type) {
 			case CONDITION:
 				ICondition iCondition = create(ICondition.class);
 				iCondition.setCategory(ConditionCategory.PROBLEMLISTITEM);
 				iFinding = iCondition;
+				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
 				break;
 			case EVALUATION:
 				iFinding = create(IClinicalImpression.class);
+				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
 				break;
 			case OBSERVATION:
 			case OBSERVATION_OBJECTIVE:
 			case OBSERVATION_SUBJECTIVE:
 			case OBSERVATION_VITAL:
 				iFinding = createObservation(patient, findingsTemplate);
+				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
 				break;
 			case PROCEDURE:
 				iFinding = create(IProcedureRequest.class);
+				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
 				break;
 			default:
 				break;
 			}
-			if (iFinding != null) {
-				iFinding.setPatientId(patient.getId());
-				iFinding.setText(findingsTemplate.getTitle());
-			}
+		}
+		else {
+			throw new ElexisException("Kein Patient ausgewählt.");
 		}
 		return iFinding;
 	}
 	
-	private IFinding createObservation(Patient patient, FindingsTemplate findingsTemplate){
+	public void updateOberservationText(IObservation iObservation){
+		StringBuilder builder = new StringBuilder();
+		builder = getOberservationText(iObservation, builder);
+		iObservation.setText(builder.toString());
+	}
+	
+	private StringBuilder getOberservationText(IObservation iObservation, StringBuilder builder){
+		List<IObservation> refChildrens =
+			iObservation.getTargetObseravtions(ObservationLinkType.REF);
+		List<IObservation> compChildrens =
+			iObservation.getTargetObseravtions(ObservationLinkType.COMP);
+		builder.append(iObservation.getText().orElse(""));
+		
+		for (IObservation child : refChildrens) {
+			builder.append(", ");
+			getOberservationText(child, builder);
+		}
+		for (IObservation child : compChildrens) {
+			builder.append(", ");
+			getOberservationText(child, builder);
+		}
+		return builder;
+	}
+	
+	private void setFindingsAttributes(IFinding iFinding, Patient patient, String text){
+		if (iFinding != null) {
+			iFinding.setPatientId(patient.getId());
+			iFinding.setText(text);
+		}
+	}
+	
+	private IFinding createObservation(Patient patient, FindingsTemplate findingsTemplate)
+		throws ElexisException{
 		IObservation iObservation = create(IObservation.class);
 		iObservation.setEffectiveTime(LocalDateTime.now());
 		switch (findingsTemplate.getType()) {
@@ -191,8 +261,7 @@ public class FindingsTemplateService {
 					iObservation.addTargetObservation(target, ObservationLinkType.COMP);
 				}
 			}
-		}
-		else if (inputData instanceof InputDataNumeric) {
+		} else if (inputData instanceof InputDataNumeric) {
 			InputDataNumeric inputDataNumeric = (InputDataNumeric) inputData;
 			BigDecimal bigDecimal = new BigDecimal(0);
 			bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
@@ -300,5 +369,4 @@ public class FindingsTemplateService {
 		}
 		return "";
 	}
-	
 }

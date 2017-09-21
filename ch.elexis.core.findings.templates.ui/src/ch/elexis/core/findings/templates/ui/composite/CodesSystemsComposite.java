@@ -67,7 +67,7 @@ public class CodesSystemsComposite extends Composite {
 			@Override
 			public String getText(Object element){
 				ICoding iCoding = (ICoding) element;
-				return iCoding != null ? iCoding.getCode() : "";
+				return iCoding != null ? iCoding.getDisplay() : "";
 			}
 		});
 		
@@ -92,10 +92,10 @@ public class CodesSystemsComposite extends Composite {
 		viewer.getControl().setMenu(menu);
 	}
 	
-	private void loadTable(){
+	public void loadTable(){
 		List<ICoding> codings = FindingsTemplateView.codingService
 			.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
-		codings.sort((a, b) -> ObjectUtils.compare(a.getCode(), b.getCode()));
+		codings.sort((a, b) -> ObjectUtils.compare(a.getDisplay(), b.getDisplay()));
 		tableViewer.setInput(codings);
 	}
 	

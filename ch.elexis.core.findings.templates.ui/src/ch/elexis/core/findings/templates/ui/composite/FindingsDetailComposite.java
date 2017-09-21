@@ -2,7 +2,6 @@ package ch.elexis.core.findings.templates.ui.composite;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -42,7 +41,6 @@ import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
-import ch.elexis.core.findings.templates.ui.dlg.CodeSystemsDialog;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
 
 @SuppressWarnings("unchecked")
@@ -54,7 +52,6 @@ public class FindingsDetailComposite extends Composite {
 	private Text txtComma;
 	private ComboViewer comboType;
 	private ComboViewer comboInputData;
-	private Label txtCodes;
 	FindingsTemplate selection;
 	private Composite compositeType;
 	private Composite compositeInputData;
@@ -100,35 +97,6 @@ public class FindingsDetailComposite extends Composite {
 				Type type = (Type) ((StructuredSelection) event.getSelection()).getFirstElement();
 				selection.setType(type);
 				compositeType.setVisible(type.getValue() < 100);
-			}
-		});
-		
-		Label lblCodes = new Label(this, SWT.NONE);
-		lblCodes.setText("Codes");
-		
-		Composite compCodes = new Composite(this, SWT.NONE);
-		compCodes.setLayout(new GridLayout(2, false));
-		
-		txtCodes = new Label(compCodes, SWT.NONE);
-		txtCodes.setText("Nicht definiert");
-		
-		Button button = new Button(compCodes, SWT.PUSH);
-		button.setText("ändern..");
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				CodeSystemsDialog codeSystemsDialog =
-					new CodeSystemsDialog(getShell(), selection.getCode() != null
-							? Optional.of(selection.getCode()) : Optional.empty());
-				int ret = codeSystemsDialog.open();
-				if (ret == MessageDialog.OK) {
-					codeSystemsDialog.getSelectedCode()
-						.ifPresent(code -> {
-							selection.setCode(code);
-							setSelection(model, selection);
-					});
-				}
-				
 			}
 		});
 		
@@ -246,7 +214,7 @@ public class FindingsDetailComposite extends Composite {
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
 						inputDataGroupComponent.getFindingsTemplates().clear();
 						inputDataGroupComponent.getFindingsTemplates()
-							.addAll(findingsSelectionDialog.getSelection(true));
+							.addAll(findingsSelectionDialog.getSelection(false));
 						lblGroupComponentlist
 							.setText(getInputDataGroupText(inputDataGroupComponent));
 						selection.setInputData(inputDataGroupComponent);
@@ -348,11 +316,6 @@ public class FindingsDetailComposite extends Composite {
 		
 		if (selection != null) {
 			item.setValue(selection);
-			txtCodes.setText(
-				selection.getCode() == null ? "Nicht definiert"
-						: "[" + selection.getCode().getCode() + "] "
-							+ selection.getCode().getDisplay());
-			
 			comboType.setSelection(new StructuredSelection(selection.getType()));
 			if (selection.getInputData() instanceof InputDataNumeric) {
 				comboInputData.setSelection(new StructuredSelection(DataType.NUMERIC));

@@ -112,6 +112,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		Query<ObservationLink> qbe = new Query<>(ObservationLink.class);
 		qbe.add(ObservationLink.FLD_TARGETID, Query.EQUALS, getId());
 		qbe.add(ObservationLink.FLD_TYPE, Query.EQUALS, type.name());
+		qbe.orderBy(true, ObservationLink.FLD_LASTUPDATE);
 		
 		List<ObservationLink> observationLinks = qbe.execute();
 		List<IObservation> iObservations = new ArrayList<>();
@@ -138,6 +139,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		Query<ObservationLink> qbe = new Query<>(ObservationLink.class);
 		qbe.add(ObservationLink.FLD_SOURCEID, Query.EQUALS, getId());
 		qbe.add(ObservationLink.FLD_TYPE, Query.EQUALS, type.name());
+		qbe.orderBy(true, ObservationLink.FLD_LASTUPDATE);
 		
 		List<ObservationLink> observationLinks = qbe.execute();
 		List<IObservation> iObservations = new ArrayList<>();

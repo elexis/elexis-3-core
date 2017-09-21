@@ -42,6 +42,10 @@ public class ElexisException extends Exception {
 		super(errmsg, throwable);
 	}
 	
+	public ElexisException(String errmsg){
+		super(errmsg);
+	}
+	
 	public Class<?> getThrowingClass(){
 		return clazz;
 	}
