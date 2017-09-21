@@ -347,10 +347,10 @@
     println "git checkout ${p2_inf_name}".execute().text
     p2_inf_content = new File(p2_inf_name).text
     elexis_p2_inf_file = new File(p2_inf_name)
-    old = p2_inf_content =~ /p2\/(.+)\//
+    old = p2_inf_content =~ /([^\/]+)\/p2\//
     old_branch_name = old[0][1]
     changed_content = p2_inf_content.replaceAll(old_branch_name, branch)
-    println("Changed p2_inf_content ${p2_inf_name} old ${old_branch_name} => ${branch} creating #{p2_out_file_name}")
+    println("Changed p2_inf_content ${p2_inf_name} old ${old_branch_name} => ${branch} creating ${p2_out_file_name}")
     elexis_p2_inf_file = new File(p2_out_file_name)
     elexis_p2_inf_file.write(changed_content)
     elexis_p2_inf_file.append(HINT_LAST_CHANGED)
