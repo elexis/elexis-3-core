@@ -16,10 +16,21 @@ Start the Elexis3 application.
 
 h2. Building
 
-You need Java 1.8+. Maven >= 3.0. Then you should be able to generate the application and p2 update site using the following calls:
+h3. Maven based build
+
+You need Java 1.8+. Maven >= 3.3. Then you should be able to generate the application and p2 update site using the following calls:
 
 @git clone https://github.com/elexis/elexis-3-core@
-@mvn clean installr@
+@mvn -V clean verify  -Dtycho.localArtifacts=ignore -Dmaven.test.skip=true -P all-archs@
+
+Explanation of the used options
+* -V: emits version of Java, Maven, GUI-Toolkit, Architecture. Handy when you ask a problem
+* clean: Build everything from scratch
+* verify: Compile, test and build a P2-site including products. But does NOT install maven artefacts
+* -Dtycho.localArtifacts=ignore: Do not use any locally built maven artefacts
+* -Dmaven.test.skip=true: Skip unit tests (Use it only if you want to speed up the build)
+* -P all-archs: This a work-around for bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=491951. We will get rid of around April 2018 when its fix will be in the next Oxygen Release
+* --quiet: Used for travis builds to generate Quiet output - only show errors. Without it the log would bee too long and make the travis-build fail.
 
 It will be built for your OS/Window-System/Architecture combination. You will find the executables under @ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp/*/*/*@ 
 
@@ -29,6 +40,14 @@ Note: This will fail in MacOSX. Build instructions for Mac:
 @brew install homebrew/versions/maven30@
 @git clone https://github.com/elexis/elexis-3-core@
 @mvn clean install -Pall-archs -Dmaven.test.skip=true@
+
+h3. Continuos Intergration builds
+
+We use Travis-CI to ensure that our build system works using a well documented environment. The status for the different branches can be founde under "Travis-CI elexis-3-core":https://travis-ci.org/elexis/elexis-3-core/branches
+
+The downloads found under "http://download.elexis.info/elexis/":http://download.elexis.info/elexis/ are produced by jobs running via the "Medelexis GitLab":https://gitlab.medelexis.ch/elexis/elexis-3-core/-/jobs/
+
+h3. Building via Eclipse IDE
 
 If you want a complete development environment, try "Oomph":https://github.com/elexis/elexis-3-core/tree/master/ch.elexis.sdk
 
