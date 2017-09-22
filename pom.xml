@@ -321,9 +321,16 @@
 
   // Returns the current branchName
   public String createVersionProperties(String filename) {
-      branch="git rev-parse --abbrev-ref HEAD".execute().text.replaceAll("\n", '')
+      branch =  System.getenv()['CI_COMMIT_REF_NAME']
+      if (branch != null ) {
+        println "branch name set to ${branch} because of CI_COMMIT_REF_NAME environment variable"
+      } else {
+        branch="git rev-parse --abbrev-ref HEAD".execute().text.replaceAll("\n", '')
+        println "NO CI_COMMIT_REF_NAME environment branch is now ${branch}"
+      }
+      commit_id="git rev-parse HEAD".execute().text.replaceAll("\n", '')
       elexis_version = "${project.version}".replace("-SNAPSHOT", ".") + new SimpleDateFormat("yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
-      tags =  "git tag --contains ".execute().text.split("\n")
+      tags =  "git tag --contains ${commit_id}".execute().text.split("\n")
       for ( i in tags ) {
           if (i ==~/release\/(.*)/ ) {
               elexis_version = (i=~ /release\//).replaceFirst("")
@@ -338,7 +345,7 @@
       repo_version_file = new File(filename)
       repo_version_file.write(HINT_GENERATED)
       repo_version_file.append("elexis.version=${elexis_version}\n")
-      println("Created ${repo_version_file}")
+      println("Created ${repo_version_file} with elexis_version ${elexis_version} from commit_id ${commit_id}")
       return branch;
   }
 
