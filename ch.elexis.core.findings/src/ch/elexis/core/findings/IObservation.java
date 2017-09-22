@@ -83,6 +83,27 @@ public interface IObservation extends IFinding {
 	public void addTargetObservation(IObservation source, ObservationLinkType type);
 	
 	/**
+	 * Adds a component to the fhir object
+	 * 
+	 * @param component
+	 */
+	public void addComponent(BackboneComponent component);
+	
+	/**
+	 * Updates a component of the fhir object
+	 * 
+	 * @param component
+	 */
+	public void updateComponent(BackboneComponent component);
+	
+	/**
+	 * Returns all components from the fhir object
+	 * 
+	 * @return
+	 */
+	public List<BackboneComponent> getComponents();
+	
+	/**
 	 * Get the {@link IEncounter} referenced.
 	 * 
 	 * @return

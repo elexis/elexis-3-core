@@ -60,16 +60,18 @@ public class CodesSystemsComposite extends Composite {
 			}
 		});
 		
-		tableViewer = new TableViewer(this);
+		tableViewer = new TableViewer(this,
+			SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
 				ICoding iCoding = (ICoding) element;
-				return iCoding != null ? iCoding.getDisplay() : "";
+				return iCoding != null ? iCoding.getDisplay() + " (" + iCoding.getCode() + ")" : "";
 			}
 		});
+		tableViewer.getTable().setLinesVisible(false);
 		
 		loadTable();
 		createContextMenu(tableViewer);

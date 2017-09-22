@@ -27,14 +27,9 @@ public class ObservationDeleteCommand implements IFindingCommand {
 		List<IObservation> list){
 		List<IObservation> refChildrens =
 			iObservation.getTargetObseravtions(ObservationLinkType.REF);
-		List<IObservation> compChildrens =
-			iObservation.getTargetObseravtions(ObservationLinkType.COMP);
 		list.add(iObservation);
 		
 		for (IObservation child : refChildrens) {
-			getOberservationChildrens(child, list);
-		}
-		for (IObservation child : compChildrens) {
 			getOberservationChildrens(child, list);
 		}
 		return list;

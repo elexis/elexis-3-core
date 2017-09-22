@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
@@ -132,33 +133,32 @@ public class FindingsTemplateService {
 		
 	}
 	
+	public void addComponent(IFinding iFinding, FindingsTemplate findingsTemplate){
+		if (iFinding instanceof IObservation) {
+			IObservation iObservation = (IObservation) iFinding;
+			ch.elexis.core.findings.BackboneComponent component =
+				new ch.elexis.core.findings.BackboneComponent(UUID.randomUUID().toString());
+			getOrCreateCode(findingsTemplate.getTitle())
+				.ifPresent(code -> component.getCoding().add(code));
+			
+			if (findingsTemplate.getInputData() instanceof InputDataNumeric) {
+				InputDataNumeric inputDataNumeric =
+					(InputDataNumeric) findingsTemplate.getInputData();
+				BigDecimal bigDecimal = new BigDecimal(0);
+				bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
+				component.setNumericValue(Optional.of(bigDecimal));
+				component.setNumericValueUnit(Optional.of(inputDataNumeric.getUnit()));
+			}
+			//TODO TEXT ?
+			iObservation.addComponent(component);
+		}
+	}
+	
 	public IFinding createFinding(Patient patient, FindingsTemplate findingsTemplate)
 		throws ElexisException{
 		IFinding iFinding = null;
 		if (patient != null && patient.exists()) {
 			Type type = findingsTemplate.getType();
-			
-			// finding title is the code
-			String code = findingsTemplate.getTitle();
-			
-			// if code is not present create a new local code
-			codingService.addLocalCoding(new ICoding() {
-				
-				@Override
-				public String getSystem(){
-					return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
-				}
-				
-				@Override
-				public String getDisplay(){
-					return code;
-				}
-				
-				@Override
-				public String getCode(){
-					return code;
-				}
-			});
 			
 			switch (type) {
 			case CONDITION:
@@ -185,41 +185,93 @@ public class FindingsTemplateService {
 			default:
 				break;
 			}
-		}
-		else {
+		} else {
 			throw new ElexisException("Kein Patient ausgewählt.");
 		}
 		return iFinding;
 	}
 	
+	private Optional<ICoding> getOrCreateCode(String code){
+		// if code is not present create a new local code
+		codingService.addLocalCoding(new ICoding() {
+			
+			@Override
+			public String getSystem(){
+				return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
+			}
+			
+			@Override
+			public String getDisplay(){
+				return code;
+			}
+			
+			@Override
+			public String getCode(){
+				return code;
+			}
+		});
+		return codingService.getCode(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem(), code);
+	}
+	
 	public void updateOberservationText(IObservation iObservation){
 		StringBuilder builder = new StringBuilder();
-		builder = getOberservationText(iObservation, builder);
+		builder = getOberservationText(iObservation);
 		iObservation.setText(builder.toString());
 	}
 	
-	private StringBuilder getOberservationText(IObservation iObservation, StringBuilder builder){
+	private StringBuilder getOberservationText(IObservation iObservation){
+		StringBuilder builder = new StringBuilder();
+		List<ch.elexis.core.findings.BackboneComponent> compChildrens =
+			iObservation.getComponents();
+		
+		addCodingToText(builder, iObservation.getCoding());
+		
+		for (ch.elexis.core.findings.BackboneComponent component : compChildrens) {
+			builder.append(", ");
+			addCodingToText(builder, component.getCoding());
+		}
+		return getObservationTextChildrens(iObservation, builder);
+	}
+	
+	public Optional<ICoding> findOneCode(List<ICoding> coding, CodingSystem codingSystem){
+		for (ICoding iCoding : coding) {
+			if (codingSystem.getSystem().equals(iCoding.getSystem())) {
+				return Optional.of(iCoding);
+			}
+		}
+		return Optional.empty();
+	}
+	
+	private StringBuilder getObservationTextChildrens(IObservation iObservation,
+		StringBuilder builder){
 		List<IObservation> refChildrens =
 			iObservation.getTargetObseravtions(ObservationLinkType.REF);
-		List<IObservation> compChildrens =
-			iObservation.getTargetObseravtions(ObservationLinkType.COMP);
-		builder.append(iObservation.getText().orElse(""));
-		
 		for (IObservation child : refChildrens) {
 			builder.append(", ");
-			getOberservationText(child, builder);
-		}
-		for (IObservation child : compChildrens) {
-			builder.append(", ");
-			getOberservationText(child, builder);
+			addCodingToText(builder, child.getCoding());
+			getObservationTextChildrens(child, builder);
 		}
 		return builder;
+	}
+	
+	private void addCodingToText(StringBuilder builder, List<ICoding> codings){
+		ICoding coding =
+			findOneCode(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM).orElse(null);
+		builder.append(coding != null ? coding.getDisplay() : "");
 	}
 	
 	private void setFindingsAttributes(IFinding iFinding, Patient patient, String text){
 		if (iFinding != null) {
 			iFinding.setPatientId(patient.getId());
-			iFinding.setText(text);
+			
+			if (iFinding instanceof IObservation) {
+				IObservation iObservation = (IObservation) iFinding;
+				List<ICoding> codings = iObservation.getCoding();
+				getOrCreateCode(text).ifPresent(code -> codings.add(code));
+				iObservation.setCoding(codings);
+			} else {
+				iFinding.setText(text);
+			}
 		}
 	}
 	
@@ -255,11 +307,7 @@ public class FindingsTemplateService {
 		} else if (inputData instanceof InputDataGroupComponent) {
 			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
 			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
-				IFinding iFinding = createFinding(patient, findingsTemplates);
-				if (iFinding instanceof IObservation) {
-					IObservation target = (IObservation) iFinding;
-					iObservation.addTargetObservation(target, ObservationLinkType.COMP);
-				}
+				addComponent(iObservation, findingsTemplates);
 			}
 		} else if (inputData instanceof InputDataNumeric) {
 			InputDataNumeric inputDataNumeric = (InputDataNumeric) inputData;
@@ -294,8 +342,7 @@ public class FindingsTemplateService {
 					|| category == ObservationCategory.SOAP_SUBJECTIVE
 					|| category == ObservationCategory.SOAP_OBJECTIVE) {
 					
-					return item.getSourceObservations(ObservationLinkType.COMP).isEmpty()
-						&& item.getSourceObservations(ObservationLinkType.REF).isEmpty(); // has no parents
+					return item.getSourceObservations(ObservationLinkType.REF).isEmpty(); // has no parents
 				}
 				return false;
 			}).collect(Collectors.toList());
