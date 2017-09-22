@@ -85,9 +85,9 @@ public class FindingsView extends ViewPart implements IActivationListener {
 	@Override
 	public void createPartControl(Composite parent){
 		Composite c = new Composite(parent, SWT.NONE);
-		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		TableColumnLayout tableColumnLayout = new TableColumnLayout();
 		c.setLayout(tableColumnLayout);
+		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		viewer = new TableViewer(c,
 			SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -96,6 +96,7 @@ public class FindingsView extends ViewPart implements IActivationListener {
 		viewer.getTable().setLinesVisible(true);
 		comparator = new FindingsComparator();
 		viewer.setComparator(comparator);
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		
 		TableViewerColumn tableViewerColumnDateTime = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblcCol = tableViewerColumnDateTime.getColumn();

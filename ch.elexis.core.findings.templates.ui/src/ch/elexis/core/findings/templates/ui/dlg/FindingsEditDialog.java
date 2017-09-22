@@ -130,10 +130,11 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed(){
 		if (iCompositeSaveable != null) {
-			iCompositeSaveable.saveContents();
+			Optional<String> text = iCompositeSaveable.saveContents().getText();
 			if (iFinding instanceof IObservation) {
 				((IObservation) iFinding).setEffectiveTime(LocalDateTime.now());
 			}
+			iFinding.setText(text.orElse(""));
 		}
 		super.okPressed();
 	}
@@ -205,13 +206,15 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		}
 		
 		@Override
-		public void saveContents(){
+		public IFinding saveContents(){
+			StringBuilder stringBuilder = new StringBuilder();
+			
 			if (iFinding.getId() == null) {
 				iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
 			}
 			if (lblUnit != null && lbl != null) {
 				IObservation iObservation = (IObservation) iFinding;
-				
+				stringBuilder.append(lbl.getText());
 				try {
 					if (backboneComponent != null) {
 						String text = fieldText.getText();
@@ -220,11 +223,24 @@ public class FindingsEditDialog extends TitleAreaDialog {
 							NumberUtils.isDigits(text) ? new BigDecimal(text) : BigDecimal.ZERO;
 						backboneComponent.setNumericValue(Optional.of(number));
 						iObservation.updateComponent(backboneComponent);
+						
+						stringBuilder.append("[");
+						stringBuilder
+							.append(backboneComponent.getNumericValue().get().toPlainString());
+						stringBuilder.append(" ");
+						stringBuilder.append(backboneComponent.getNumericValueUnit().get());
+						stringBuilder.append("]");
 					} else {
 						String text = fieldText.getText();
 						BigDecimal number =
 							NumberUtils.isDigits(text) ? new BigDecimal(text) : BigDecimal.ZERO;
 						iObservation.setNumericValue(number, lblUnit.getText());
+						
+						stringBuilder.append("[");
+						stringBuilder.append(iObservation.getNumericValue().get().toPlainString());
+						stringBuilder.append(" ");
+						stringBuilder.append(iObservation.getNumericValueUnit().get());
+						stringBuilder.append("]");
 					}
 					
 				} catch (NumberFormatException e) {
@@ -233,8 +249,10 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				}
 				
 			} else {
-				iFinding.setText(fieldText.getText());
+				stringBuilder.append(fieldText.getText());
 			}
+			iFinding.setText(stringBuilder.toString());
+			return iFinding;
 		}
 		
 		@Override
@@ -302,17 +320,29 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		}
 		
 		@Override
-		public void saveContents(){
+		public IFinding saveContents(){
 			if (iFinding.getId() == null) {
-				// TODO NEEDED in which cases finding has no id ?
 				iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
 				if (iFinding instanceof IObservation) {
 					((IObservation) iFinding).setEffectiveTime(LocalDateTime.now());
 				}
 			}
-			for (ICompositeSaveable iCompositeSaveable : getChildComposites()) {
-				iCompositeSaveable.saveContents();
+			StringBuilder builder = new StringBuilder();
+			StringBuilder builderInner = new StringBuilder();
+			if (lbl != null) {
+				builder.append(lbl.getText() + ": ");
 			}
+			
+			for (ICompositeSaveable iCompositeSaveable : getChildComposites()) {
+				if (builderInner.length() > 0) {
+					builderInner.append(", ");
+				}
+				builderInner.append(iCompositeSaveable.saveContents().getText().orElse(""));
+			}
+			builder.append(builderInner);
+			builder.append(" ");
+			iFinding.setText(builder.toString());
+			return iFinding;
 		}
 		
 		@Override
@@ -330,7 +360,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	}
 	
 	interface ICompositeSaveable {
-		public void saveContents();
+		public IFinding saveContents();
 		
 		public List<ICompositeSaveable> getChildComposites();
 		
