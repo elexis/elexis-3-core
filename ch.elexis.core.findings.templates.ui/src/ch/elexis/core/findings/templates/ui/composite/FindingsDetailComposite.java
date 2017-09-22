@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
@@ -42,6 +43,7 @@ import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
+import ch.elexis.core.findings.templates.ui.views.FindingsTemplateView;
 
 @SuppressWarnings("unchecked")
 public class FindingsDetailComposite extends Composite {
@@ -96,7 +98,13 @@ public class FindingsDetailComposite extends Composite {
 			public void selectionChanged(SelectionChangedEvent event){
 				Type type = (Type) ((StructuredSelection) event.getSelection()).getFirstElement();
 				selection.setType(type);
-				compositeType.setVisible(type.getValue() < 100);
+				
+				if (type.getValue() < 100) {
+					compositeType.setVisible(true);
+				} else {
+					compositeType.setVisible(false);
+					selection.setInputData(null);
+				}
 			}
 		});
 		
@@ -174,13 +182,25 @@ public class FindingsDetailComposite extends Composite {
 				public void widgetSelected(SelectionEvent e){
 					FindingsSelectionDialog findingsSelectionDialog =
 						new FindingsSelectionDialog(getShell(),
-							model, inputDataGroup.getFindingsTemplates(), true);
+							model, inputDataGroup.getFindingsTemplates(), true, selection);
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
 						inputDataGroup.getFindingsTemplates().clear();
-						inputDataGroup.getFindingsTemplates()
-							.addAll(findingsSelectionDialog.getSelection(false));
-						lblGrouplist.setText(getInputDataGroupText(inputDataGroup));
+						
+						for (FindingsTemplate findingsTemplate : findingsSelectionDialog
+							.getSelection(false)) {
+							inputDataGroup.getFindingsTemplates().add(findingsTemplate);
+							try {
+								FindingsTemplateView.findingsTemplateService.validateCycleDetection(
+									selection, 0, 100, findingsTemplate.getTitle(), true);
+							} catch (ElexisException e1) {
+								inputDataGroup.getFindingsTemplates().remove(findingsTemplate);
+								MessageDialog.openError(getShell(), "Befunde Vorlagen",
+									e1.getMessage());
+							}
+						}
 						selection.setInputData(inputDataGroup);
+						
+						lblGrouplist.setText(getInputDataGroupText(inputDataGroup));
 						compositeInputData.layout(true, true);
 					}
 				}
@@ -210,7 +230,8 @@ public class FindingsDetailComposite extends Composite {
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					FindingsSelectionDialog findingsSelectionDialog = new FindingsSelectionDialog(
-						getShell(), model, inputDataGroupComponent.getFindingsTemplates(), true);
+						getShell(), model, inputDataGroupComponent.getFindingsTemplates(), true,
+						selection);
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
 						inputDataGroupComponent.getFindingsTemplates().clear();
 						inputDataGroupComponent.getFindingsTemplates()

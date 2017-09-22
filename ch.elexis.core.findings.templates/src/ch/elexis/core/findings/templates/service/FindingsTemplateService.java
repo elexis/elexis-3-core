@@ -149,7 +149,6 @@ public class FindingsTemplateService {
 				component.setNumericValue(Optional.of(bigDecimal));
 				component.setNumericValueUnit(Optional.of(inputDataNumeric.getUnit()));
 			}
-			//TODO TEXT ?
 			iObservation.addComponent(component);
 		}
 	}
@@ -158,6 +157,8 @@ public class FindingsTemplateService {
 		throws ElexisException{
 		IFinding iFinding = null;
 		if (patient != null && patient.exists()) {
+			validateCycleDetection(findingsTemplate, 0, 100, findingsTemplate.getTitle(), false);
+			
 			Type type = findingsTemplate.getType();
 			
 			switch (type) {
@@ -271,6 +272,45 @@ public class FindingsTemplateService {
 				iObservation.setCoding(codings);
 			} else {
 				iFinding.setText(text);
+			}
+		}
+	}
+	
+	public void validateCycleDetection(FindingsTemplate findingsTemplate,
+		int depth, int maxDepth, String mainTemplateTitle, boolean autoRemoveCycle)
+		throws ElexisException{
+		if (++depth > maxDepth) {
+			StringBuilder builder = new StringBuilder();
+			if (autoRemoveCycle) {
+				builder.append("Das Hinzufügen der Vorlage '");
+				builder.append(mainTemplateTitle);
+				builder.append(
+					"' ist nicht möglich.\n\nEin Zyklus wurde gefunden, oder die maximal erlaubte Komplexität von ");
+				builder.append(maxDepth);
+				builder.append(" wurde überschritten.");
+			}
+			else {
+				builder.append("Es trat ein Fehler in der Vorlage auf.\n");
+				builder.append("Die maximale Komplexität von ");
+				builder.append(maxDepth);
+				builder.append(" wurde überschritten.");
+				builder.append("\n\n");
+				builder.append("Bitte überprüfen Sie ihre Vorlage '");
+				builder.append(mainTemplateTitle);
+				builder.append("' auf Zyklen, oder verringern Sie die Komplexität.");
+			}
+			throw new ElexisException(builder.toString());
+		}
+		InputData inputData = findingsTemplate.getInputData();
+		if (inputData instanceof InputDataGroup) {
+			InputDataGroup group = (InputDataGroup) inputData;
+			for (FindingsTemplate item : group.getFindingsTemplates()) {
+				validateCycleDetection(item, depth, maxDepth, mainTemplateTitle, autoRemoveCycle);
+			}
+		} else if (inputData instanceof InputDataGroupComponent) {
+			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
+			for (FindingsTemplate item : group.getFindingsTemplates()) {
+				validateCycleDetection(item, depth, maxDepth, mainTemplateTitle, autoRemoveCycle);
 			}
 		}
 	}

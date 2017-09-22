@@ -25,7 +25,7 @@ public class FindingCreateHandler extends AbstractHandler implements IHandler {
 		FindingsSelectionDialog findingsSelectionDialog =
 			new FindingsSelectionDialog(Display.getDefault().getActiveShell(),
 				FindingsView.findingsTemplateService.getFindingsTemplates(),
-				Collections.emptyList(), false);
+				Collections.emptyList(), false, null);
 		if (findingsSelectionDialog.open() == MessageDialog.OK) {
 			FindingsTemplate selection = findingsSelectionDialog.getSingleSelection(false);
 			if (selection != null) {
