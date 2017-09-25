@@ -1,10 +1,5 @@
 package ch.elexis.core.ui.views.rechnung.invoice;
 
-import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICENO;
-import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICESTATE;
-import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICETOTAL;
-import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_OPENAMOUNT;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,15 +34,13 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.rechnung.Messages;
 import ch.elexis.core.ui.views.rechnung.RnFilterDialog;
+import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.InvoiceEntry.QueryBuilder;
 import ch.elexis.data.DBConnection;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.views.InvoiceBillState;
-import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
@@ -77,39 +70,22 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		currentContent = null;
 	}
 	
-	//@formatter:off
-	private static final String FETCH_PS_MYSQL =
-		" SELECT " + 
-		"    InvoiceId," + 
-		VIEW_FLD_INVOICENO+"," + 
-		"    rndatumvon," + 
-		"    rndatumbis," + 
-		VIEW_FLD_INVOICESTATE+"," + 
-		VIEW_FLD_INVOICETOTAL+"," + 
-		"    PatientId," + 
-		"    PatName1," + 
-		"    PatName2," + 
-		"    PatSex," + 
-		"    PatDob," + 
-		"    FallId," + 
-		"    FallGesetz," + 
-		"    FallGarantId," + 
-		"    FallKostentrID," + 
-		"    paymentCount," + 
-		"    paidAmount," + 
-		VIEW_FLD_OPENAMOUNT + 
-		" FROM" + 
-		" " +InvoiceBillState.VIEW_NAME+ 
-		"REPLACE_WITH_CONDITIONALS " + 
-		"REPLACE_WITH_ORDER " + 
-		"REPLACE_WITH_LIMIT";
+	private static final String SQL_CONDITION_INVOICE_FALL_PATIENT =
+		"r.fallid IN (SELECT fa.id FROM faelle fa WHERE  fa.PatientID = ?)";
+	private static final String SQL_CONDITION_INVOICE_NUMBER = "r.RnNummer = ?";
+	private static final String SQL_CONDITION_INVOICE_MANDANT = "r.MandantId = ?";
+	private static final String SQL_CONDITION_INVOICE_DATE_SINCE = "r.RnDatum >= ?";
+	private static final String SQL_CONDITION_INVOICE_DATE_UNTIL =
+		"r.RnDatum >= ? AND r.RnDatum <= ?";
+	private static final String SQL_CONDITION_INVOICE_STATEDATE_SINCE = "r.StatusDatum >= ?";
+	private static final String SQL_CONDITION_INVOICE_STATEDATE_UNTIL =
+		"r.StatusDatum >= ? AND r.StatusDatum <= ?";
+	private static final String SQL_CONDITION_INVOICE_STATE_IN = "r.RnStatus IN ( ? )";
+	private static final String SQL_CONDITION_INVOICE_AMOUNT_UNTIL =
+		"r.betrag >= ? AND r.betrag <= ?";
+	private static final String SQL_CONDITION_INVOICE_AMOUNT_GREATER = "r.betrag >= ?";
+	private static final String SQL_CONDITION_INVOICE_AMOUNT_LESSER = "r.betrag <= ?";
 	
-	private static final String COUNT_STATS_MYSQL = "SELECT " + 
-		"    COUNT(InvoiceId)," + 
-		"    COUNT(DISTINCT (patientid))" + 
-		" FROM" + 
-		" "+InvoiceBillState.VIEW_NAME + 
-		"REPLACE_WITH_CONDITIONALS";
 	//@formatter:on
 	
 	public static String orderBy = "";
@@ -152,8 +128,9 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			int countInvoicesWoLimit = 0;
 			int countPatientsWoLimit = 0;
 			
-			String statement = performPreparedStatementReplacements(COUNT_STATS_MYSQL, false, false);
-			PreparedStatement ps = dbConnection.getPreparedStatement(statement);
+			QueryBuilder queryBuilder = performPreparedStatementReplacements(
+				InvoiceListSqlQuery.getSqlCountStats(true), false, false);
+			PreparedStatement ps = queryBuilder.createPreparedStatement(dbConnection);
 			try (ResultSet res = ps.executeQuery()) {
 				while (res.next()) {
 					countInvoicesWoLimit = res.getInt(1);
@@ -181,8 +158,9 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				structuredViewer.getTable().setItemCount(countInvoicesWoLimit);
 			}
 			
-			String preparedStatement = performPreparedStatementReplacements(FETCH_PS_MYSQL, true, true);
-			ps = dbConnection.getPreparedStatement(preparedStatement);
+			queryBuilder =
+				performPreparedStatementReplacements(InvoiceListSqlQuery.getSqlFetch(), true, true);
+			ps = queryBuilder.createPreparedStatement(dbConnection);
 			
 			int openAmounts = 0;
 			int owingAmounts = 0;
@@ -245,118 +223,131 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		BusyIndicator.showWhile(UiDesk.getDisplay(), reloadRunnable);
 	}
 	
-	private String performPreparedStatementReplacements(String original, boolean includeLimitReplacement,
-		boolean includeOrderReplacement){
-		String conditionals = determinePreparedStatementConditionals();
-		String preparedStatement = original.replace("REPLACE_WITH_CONDITIONALS", conditionals);
+	private QueryBuilder performPreparedStatementReplacements(String preparedStatement,
+		boolean includeLimitReplacement, boolean includeOrderReplacement){
+		QueryBuilder queryBuilder = determinePreparedStatementConditionals();
 		
 		if (includeOrderReplacement) {
 			preparedStatement = preparedStatement.replaceAll("REPLACE_WITH_ORDER", orderBy);
 		}
 		
-		if(includeLimitReplacement) {
+		if (includeLimitReplacement) {
 			if (queryLimit > 0) {
-				return preparedStatement.replaceAll("REPLACE_WITH_LIMIT",
-					" LIMIT 0," + Integer.toString(queryLimit));
+				queryBuilder.setMainQuery(preparedStatement.replaceAll("REPLACE_WITH_LIMIT",
+					" LIMIT 0," + Integer.toString(queryLimit)));
 			} else {
-				return preparedStatement.replaceAll("REPLACE_WITH_LIMIT", "");
+				queryBuilder.setMainQuery(preparedStatement.replaceAll("REPLACE_WITH_LIMIT", ""));
 			}
 		} else {
-			return preparedStatement;
+			queryBuilder.setMainQuery(preparedStatement);
 		}
+		return queryBuilder;
 	}
 	
-	private String determinePreparedStatementConditionals(){
-		List<String> conditionalTokens = new ArrayList<>();
-		
+	private QueryBuilder determinePreparedStatementConditionals(){
+		QueryBuilder queryBuilder = QueryBuilder.create();
 		if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
 			Mandant selectedMandator = ElexisEventDispatcher.getSelectedMandator();
 			if (selectedMandator != null) {
-				conditionalTokens
-					.add(Rechnung.MANDATOR_ID + Query.EQUALS + JdbcLink.wrap(selectedMandator.getId()));
+				queryBuilder.build(SQL_CONDITION_INVOICE_MANDANT, selectedMandator.getId());
 			}
 		}
 		
 		if (invoiceDateFrom != null) {
 			if (invoiceDateTo != null) {
-				conditionalTokens.add("( " + InvoiceBillState.VIEW_FLD_INVOICEDATE + ">="
-					+ invoiceDateFrom.toString(TimeTool.DATE_COMPACT) + " AND "
-					+ InvoiceBillState.VIEW_FLD_INVOICEDATE + "<="
-					+ invoiceDateTo.toString(TimeTool.DATE_COMPACT) + ")");
+				queryBuilder.build(SQL_CONDITION_INVOICE_DATE_UNTIL,
+					invoiceDateFrom.toString(TimeTool.DATE_COMPACT),
+					invoiceDateTo.toString(TimeTool.DATE_COMPACT));
 			} else {
-				conditionalTokens.add(InvoiceBillState.VIEW_FLD_INVOICEDATE + " >="
-					+ invoiceDateFrom.toString(TimeTool.DATE_COMPACT));
+				queryBuilder.build(SQL_CONDITION_INVOICE_DATE_SINCE,
+					invoiceDateFrom.toString(TimeTool.DATE_COMPACT));
 			}
 		}
 		
 		if (invoiceStateDateFrom != null) {
 			if (invoiceStateDateTo != null) {
-				conditionalTokens.add("( " + InvoiceBillState.VIEW_FLD_INVOICESTATEDATE + ">="
-					+ invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT) + " AND "
-					+ InvoiceBillState.VIEW_FLD_INVOICESTATEDATE + "<="
-					+ invoiceStateDateTo.toString(TimeTool.DATE_COMPACT) + ")");
+				queryBuilder.build(SQL_CONDITION_INVOICE_STATEDATE_UNTIL,
+					invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT),
+					invoiceStateDateTo.toString(TimeTool.DATE_COMPACT));
 			} else {
-				conditionalTokens.add(InvoiceBillState.VIEW_FLD_INVOICESTATEDATE + " >="
-					+ invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT));
+				queryBuilder.build(SQL_CONDITION_INVOICE_STATEDATE_SINCE,
+					invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT));
 			}
 		}
 		
 		Integer invoiceStateNo = invoiceListHeaderComposite.getSelectedInvoiceStateNo();
 		if (invoiceStateNo != null) {
 			if (InvoiceState.OWING.numericValue() == invoiceStateNo) {
+				queryBuilder.build(SQL_CONDITION_INVOICE_STATEDATE_UNTIL,
+					invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT),
+					invoiceStateDateTo.toString(TimeTool.DATE_COMPACT));
+				
 				String conditional = Arrays.asList(InvoiceState.owingStates()).stream()
-					.map(is -> Integer.toString(is.numericValue()))
-					.reduce((u, t) -> u + " OR InvoiceState = " + t).get();
-				conditionalTokens.add("( InvoiceState = " + conditional + ")");
+					.map(is -> Integer.toString(is.numericValue())).reduce((u, t) -> u + " ," + t)
+					.get();
+				queryBuilder.build(SQL_CONDITION_INVOICE_STATE_IN, conditional);
+				
 			} else if (InvoiceState.TO_PRINT.numericValue() == invoiceStateNo) {
 				String conditional = Arrays.asList(InvoiceState.toPrintStates()).stream()
-					.map(is -> Integer.toString(is.numericValue()))
-					.reduce((u, t) -> u + " OR InvoiceState = " + t).get();
-				conditionalTokens.add("( InvoiceState = " + conditional + ")");
+					.map(is -> Integer.toString(is.numericValue())).reduce((u, t) -> u + " ," + t)
+					.get();
+				queryBuilder.build(SQL_CONDITION_INVOICE_STATE_IN, conditional);
 			} else {
-				conditionalTokens
-					.add(VIEW_FLD_INVOICESTATE + Query.EQUALS + Integer.toString(invoiceStateNo));
+				queryBuilder.build(SQL_CONDITION_INVOICE_STATE_IN,
+					Integer.toString(invoiceStateNo));
 			}
 		}
 		
 		String invoiceId = invoiceListHeaderComposite.getSelectedInvoiceId();
 		if (StringUtils.isNumeric(invoiceId)) {
-			conditionalTokens.add("InvoiceNo LIKE '" + invoiceId + "%'");
+			queryBuilder.build(SQL_CONDITION_INVOICE_NUMBER, invoiceId);
 		}
 		
 		String patientId = invoiceListHeaderComposite.getSelectedPatientId();
 		if (patientId != null) {
-			conditionalTokens.add(Fall.PATIENT_ID + Query.EQUALS + JdbcLink.wrap(patientId));
+			queryBuilder.build(SQL_CONDITION_INVOICE_FALL_PATIENT, patientId);
 		}
 		
 		String totalAmount = invoiceListHeaderComposite.getSelectedTotalAmount();
 		if (StringUtils.isNotBlank(totalAmount)) {
-			String prefix = "=";
 			String boundaryAmount = null;
 			
-			if (totalAmount.startsWith(">") || totalAmount.startsWith("<")) {
-				prefix = Character.toString(totalAmount.charAt(0)) + "=";
-				totalAmount = totalAmount.substring(1, totalAmount.length());
-			}
-			if (totalAmount.contains("-")) {
-				String[] split = totalAmount.split("-");
-				if (split.length > 0) {
-					totalAmount = split[0];
-				}
-				if (split.length > 1) {
-					boundaryAmount = split[1];
-				}
-			}
-			
 			try {
-				Money totalMoney = new Money(totalAmount);
-				if (boundaryAmount == null) {
-					conditionalTokens.add(VIEW_FLD_INVOICETOTAL + prefix + totalMoney.getCents());
-				} else {
-					Money boundaryMoney = new Money(boundaryAmount);
-					conditionalTokens
-						.add("(" + VIEW_FLD_INVOICETOTAL + " >=" + totalMoney.getCents() + " AND "
-							+ VIEW_FLD_INVOICETOTAL + " <=" + boundaryMoney.getCents() + ")");
+				if (totalAmount.startsWith(">")) {
+					// greater
+					totalAmount = totalAmount.substring(1, totalAmount.length());
+					Money totalMoney = new Money(totalAmount);
+					queryBuilder.build(SQL_CONDITION_INVOICE_AMOUNT_GREATER,
+						totalMoney.getCents());
+				}
+				else if (totalAmount.startsWith("<")) {
+					// lesser
+					totalAmount = totalAmount.substring(1, totalAmount.length());
+					Money totalMoney = new Money(totalAmount);
+					queryBuilder.build(SQL_CONDITION_INVOICE_AMOUNT_LESSER,
+						totalMoney.getCents());
+				}
+				else if (totalAmount.contains("-")) {
+					String[] split = totalAmount.split("-");
+					Money totalMoney = null;
+					
+					if (split.length > 0) {
+						totalAmount = split[0];
+						totalMoney = new Money(totalAmount);
+					}
+					if (totalMoney != null && split.length > 1) {
+						boundaryAmount = split[1];
+						// until
+						Money boundaryMoney = new Money(boundaryAmount);
+						queryBuilder.build(SQL_CONDITION_INVOICE_AMOUNT_UNTIL,
+							totalMoney.getCents(), boundaryMoney.getCents());
+					}
+				}
+				else {
+					// equal
+					Money totalMoney = new Money(totalAmount);
+					queryBuilder.build(SQL_CONDITION_INVOICE_AMOUNT_UNTIL,
+						totalMoney.getCents(), totalMoney.getCents());
 				}
 			} catch (ParseException e) {
 				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
@@ -364,12 +355,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
 			}
 		}
-		
-		if (conditionalTokens.size() == 0) {
-			return "";
-		}
-		
-		return " WHERE " + conditionalTokens.stream().reduce((u, t) -> u + " AND " + t).get();
+		return queryBuilder;
 	}
 	
 	@Override
@@ -385,11 +371,13 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	
 	public void setSortOrderAndDirection(Object data, int sortDirection){
 		String sortDirectionString = (SWT.UP == sortDirection) ? "ASC" : "DESC";
-		if (VIEW_FLD_INVOICENO.equals(data)) {
-			orderBy = "ORDER BY LENGTH(" + VIEW_FLD_INVOICENO + ") " + sortDirectionString + ","
-				+ VIEW_FLD_INVOICENO + " " + sortDirectionString;
-		} else if (Rechnung.BILL_DATE_FROM.equals(data) || VIEW_FLD_INVOICETOTAL.equals(data)
-			|| VIEW_FLD_OPENAMOUNT.equals(data)) {
+		if (InvoiceListSqlQuery.VIEW_FLD_INVOICENO.equals(data)) {
+			orderBy = "ORDER BY LENGTH(" + InvoiceListSqlQuery.VIEW_FLD_INVOICENO + ") "
+				+ sortDirectionString + "," + InvoiceListSqlQuery.VIEW_FLD_INVOICENO + " "
+				+ sortDirectionString;
+		} else if (Rechnung.BILL_DATE_FROM.equals(data)
+			|| InvoiceListSqlQuery.VIEW_FLD_INVOICETOTAL.equals(data)
+			|| InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT.equals(data)) {
 			orderBy = "ORDER BY " + data + " " + sortDirectionString;
 		} else if (Kontakt.FLD_NAME1.equals(data)) {
 			orderBy =
@@ -619,6 +607,97 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 						}
 					});
 				}
+			}
+		}
+		
+		static class QueryBuilder {
+			private String mainQuery;
+			private String condition;
+			private Object[] values;
+			private List<QueryBuilder> queryBuilders;
+			
+			public static QueryBuilder create(){
+				return new QueryBuilder();
+			}
+			
+			private QueryBuilder(){
+				queryBuilders = new ArrayList<>();
+			}
+			
+			private QueryBuilder(String condition, Object... values){
+				this.condition = condition;
+				this.values = values;
+			}
+			
+			public void build(String query, Object... values){
+				if (queryBuilders != null) {
+					queryBuilders.add(new QueryBuilder(query, values));
+				}
+			}
+			
+			private Object[] getValue(){
+				return values;
+			}
+			
+			private String getCondition(){
+				return condition;
+			}
+			
+			public void setMainQuery(String mainQuery){
+				this.mainQuery = mainQuery;
+			}
+			
+			public String getQuery(){
+				if (queryBuilders != null && mainQuery != null) {
+					StringBuilder sb = new StringBuilder();
+					for (QueryBuilder builder : queryBuilders) {
+						if (sb.length() > 0) {
+							sb.append(" AND ");
+						}
+						sb.append(builder.getCondition());
+					}
+					if (sb.length() > 0) {
+						return mainQuery.replace(
+							InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION,
+							" AND " + sb.toString());
+					} else {
+						return mainQuery
+							.replace(InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION, "");
+					}
+				}
+				return "";
+			}
+			
+			/**
+			 * Creates a prepared statement and set all values as string with the query builder
+			 * 
+			 * @param dbConnection
+			 * @return
+			 */
+			public PreparedStatement createPreparedStatement(DBConnection dbConnection){
+				if (queryBuilders != null) {
+					PreparedStatement ps = dbConnection.getPreparedStatement(getQuery());
+					int i = 1;
+					for (QueryBuilder qb : queryBuilders) {
+						for (Object s : qb.getValue()) {
+							try {
+								if (s instanceof String) {
+									ps.setString(i++, (String) s);
+								} else if (s instanceof Long) {
+									ps.setLong(i++, (Long) s);
+								} else if (s instanceof Integer) {
+									ps.setInt(i++, (Integer) s);
+								} else if (s instanceof Double) {
+									ps.setDouble(i++, (Double) s);
+								}
+							} catch (SQLException e) {
+								/** ignore **/
+							}
+						}
+					}
+					return ps;
+				}
+				return null;
 			}
 		}
 	}

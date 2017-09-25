@@ -461,7 +461,7 @@ public class Rechnung extends PersistentObject {
 				String message =
 					"Der errechnete Rechnungsbetrag (" + betrag.getAmountAsString()
 						+ ") weicht vom Rechnungsbetrag (" + old.getAmountAsString()
-						+ ") ab. Trotzdem weriterfahren?";
+						+ ") ab. Trotzdem weiterfahren?";
 				if (!cod.openQuestion("Differenz bei der Rechnung " + nr, message)) {
 					return false;
 				}
