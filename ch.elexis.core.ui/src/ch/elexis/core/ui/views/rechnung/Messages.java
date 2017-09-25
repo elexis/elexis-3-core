@@ -289,6 +289,7 @@ public class Messages extends NLS {
 	public static String StatusAendernDialog_btnStatusTemporrndern_text;
 	public static String StatusAendernDialog_btnCheckButton_text;
 	public static String InvoiceListHeaderComposite_txtAmount_toolTipText;
+	public static String InvoiceListHeaderComposite_txtRgTotal;
 	
 	static {
 		// load message values from bundle file

@@ -137,7 +137,7 @@ public class InvoiceListHeaderComposite extends Composite {
 		
 		Label lblAmount = new Label(this, SWT.NONE);
 		lblAmount.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		lblAmount.setText(Messages.RnControlFieldProvider_amount);
+		lblAmount.setText(Messages.InvoiceListHeaderComposite_txtRgTotal);
 		lblAmount.setToolTipText(Messages.InvoiceListHeaderComposite_txtAmount_toolTipText);
 		
 		lblLimitWarn = new Label(this, SWT.NONE);
