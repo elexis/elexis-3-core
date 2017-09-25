@@ -7,5 +7,5 @@
   </parent>
   <artifactId>ch.elexis.core.findings.templates</artifactId>
   <packaging> eclipse-plugin </packaging>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
 </project>
