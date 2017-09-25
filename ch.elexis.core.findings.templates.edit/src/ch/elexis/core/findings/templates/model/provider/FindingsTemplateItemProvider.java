@@ -90,17 +90,6 @@ public class FindingsTemplateItemProvider
 	}
 
 	/**
-	 * This returns FindingsTemplate.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/FindingsTemplate"));
-	}
-
-	/**
 	 * This adds a property descriptor for the Title feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

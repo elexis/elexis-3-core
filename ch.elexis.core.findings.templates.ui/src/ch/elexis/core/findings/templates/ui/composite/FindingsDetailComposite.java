@@ -89,8 +89,11 @@ public class FindingsDetailComposite extends Composite {
 				.observeDetail(contentProvider.getKnownElements())));
 		
 		comboType.setContentProvider(ArrayContentProvider.getInstance());
-		comboType.setLabelProvider(new LabelProvider());
-		comboType.setInput(Type.VALUES);
+		comboType.setLabelProvider(new ComboTypeLabelProvider());
+		comboType.setInput(new Type[] {
+			Type.OBSERVATION, Type.OBSERVATION_OBJECTIVE, Type.OBSERVATION_SUBJECTIVE,
+			Type.OBSERVATION_VITAL
+		});
 		
 		comboType.addSelectionChangedListener(new ISelectionChangedListener() {
 			
@@ -136,7 +139,7 @@ public class FindingsDetailComposite extends Composite {
 				.observeDetail(contentProvider.getKnownElements())));
 		
 		comboInputData.setContentProvider(ArrayContentProvider.getInstance());
-		comboInputData.setLabelProvider(new LabelProvider());
+		comboInputData.setLabelProvider(new ComboInputDataTypeLabelProvider());
 		comboInputData.setInput(DataType.VALUES);
 		
 		compositeInputData = new Composite(compositeType, SWT.NONE);
@@ -361,6 +364,21 @@ public class FindingsDetailComposite extends Composite {
 	
 	public FindingsTemplate getSelection(){
 		return selection;
+	}
+	
+	class ComboInputDataTypeLabelProvider extends LabelProvider {
+		@Override
+		public String getText(Object element){
+			return FindingsTemplateView.findingsTemplateService
+				.getDataTypeAsText((DataType) element);
+		}
+	}
+	
+	class ComboTypeLabelProvider extends LabelProvider {
+		@Override
+		public String getText(Object element){
+			return FindingsTemplateView.findingsTemplateService.getTypeAsText((Type) element);
+		}
 	}
 	
 }

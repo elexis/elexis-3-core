@@ -34,6 +34,7 @@ import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.codes.ICodingService;
+import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputData;
@@ -327,8 +328,10 @@ public class FindingsTemplateService {
 			iObservation.setCategory(ObservationCategory.SOAP_SUBJECTIVE);
 			break;
 		case OBSERVATION_VITAL:
-		case OBSERVATION:
 			iObservation.setCategory(ObservationCategory.VITALSIGNS);
+			break;
+		case OBSERVATION:
+			iObservation.setCategory(ObservationCategory.VITALSIGNS); //TODO which category 
 			break;
 		default:
 			break;
@@ -366,9 +369,11 @@ public class FindingsTemplateService {
 		if (patient != null && patient.exists()) {
 			String patientId = patient.getId();
 			List<IFinding> items = getObservations(patientId);
-			items.addAll(getConditions(patientId));
-			items.addAll(getClinicalImpressions(patientId));
-			items.addAll(getPrecedureRequest(patientId));
+			/*	TODO currently only observations needed
+			 * items.addAll(getConditions(patientId));
+				items.addAll(getClinicalImpressions(patientId));
+				items.addAll(getPrecedureRequest(patientId));
+				*/
 			return items;
 		}
 		return Collections.emptyList();
@@ -431,8 +436,7 @@ public class FindingsTemplateService {
 		return null;
 	}
 	
-	public String getTypeAsText(IFinding iFinding){
-		Type type = getType(iFinding);
+	public String getTypeAsText(Type type){
 		if (type != null) {
 			switch (type) {
 			case CONDITION:
@@ -440,13 +444,13 @@ public class FindingsTemplateService {
 			case EVALUATION:
 				return "Beurteilung";
 			case OBSERVATION:
-				break;
+				return "Beobachtung";
 			case OBSERVATION_OBJECTIVE:
-				return "Objektiv";
+				return "Beobachtung Objektiv";
 			case OBSERVATION_SUBJECTIVE:
-				return "Subjektiv";
+				return "Beobachtung Subjektiv";
 			case OBSERVATION_VITAL:
-				return "Vitalzeichen";
+				return "Beobachtung Vitalzeichen";
 			case PROCEDURE:
 				return "Prozedere";
 			default:
@@ -455,5 +459,21 @@ public class FindingsTemplateService {
 			}
 		}
 		return "";
+	}
+	
+	public String getDataTypeAsText(DataType dataType){
+		switch (dataType) {
+		case GROUP:
+			return "Gruppe";
+		case GROUP_COMPONENT:
+			return "Komponent";
+		case NUMERIC:
+			return "Numerisch";
+		case TEXT:
+			return "Text";
+		default:
+			return "";
+		
+		}
 	}
 }

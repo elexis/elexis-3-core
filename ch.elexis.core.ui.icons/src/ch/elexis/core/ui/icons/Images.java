@@ -202,6 +202,12 @@ public enum Images {
 		IMG_PERSPECTIVE_ORDERS,
 		/** a document of type text */
 		IMG_DOCUMENT_TEXT,
+		/** a multi document with clip */
+		IMG_DOCUMENT_STAND_UP,
+		/** a multi document of type text */
+		IMG_DOCUMENT_STACK,
+		/** a default document */
+		IMG_DOCUMENT,
 		/** add document */
 		IMG_DOCUMENT_ADD,
 		/** write document */

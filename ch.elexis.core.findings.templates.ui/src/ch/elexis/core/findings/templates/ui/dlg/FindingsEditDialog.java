@@ -47,7 +47,8 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent){
-		String title = FindingsView.findingsTemplateService.getTypeAsText(iFinding);
+		String title = FindingsView.findingsTemplateService
+			.getTypeAsText(FindingsView.findingsTemplateService.getType(iFinding));
 		setTitle(title + " editieren");
 		
 		iCompositeSaveable = new CompositeGroup(parent, iFinding, false);
@@ -224,23 +225,23 @@ public class FindingsEditDialog extends TitleAreaDialog {
 						backboneComponent.setNumericValue(Optional.of(number));
 						iObservation.updateComponent(backboneComponent);
 						
-						stringBuilder.append("[");
+						stringBuilder.append(" ");
 						stringBuilder
 							.append(backboneComponent.getNumericValue().get().toPlainString());
 						stringBuilder.append(" ");
 						stringBuilder.append(backboneComponent.getNumericValueUnit().get());
-						stringBuilder.append("]");
+						stringBuilder.append(" ");
 					} else {
 						String text = fieldText.getText();
 						BigDecimal number =
 							NumberUtils.isDigits(text) ? new BigDecimal(text) : BigDecimal.ZERO;
 						iObservation.setNumericValue(number, lblUnit.getText());
 						
-						stringBuilder.append("[");
+						stringBuilder.append(" ");
 						stringBuilder.append(iObservation.getNumericValue().get().toPlainString());
 						stringBuilder.append(" ");
 						stringBuilder.append(iObservation.getNumericValueUnit().get());
-						stringBuilder.append("]");
+						stringBuilder.append(" ");
 					}
 					
 				} catch (NumberFormatException e) {

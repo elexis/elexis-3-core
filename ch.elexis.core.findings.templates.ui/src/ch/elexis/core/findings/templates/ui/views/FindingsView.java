@@ -227,7 +227,7 @@ public class FindingsView extends ViewPart implements IActivationListener {
 				
 			}
 			case 1: {
-				return findingsTemplateService.getTypeAsText(item);
+				return findingsTemplateService.getTypeAsText(findingsTemplateService.getType(item));
 			}
 			case 2: {
 				return item.getText().isPresent() ? item.getText().get() : "";
@@ -283,8 +283,9 @@ public class FindingsView extends ViewPart implements IActivationListener {
 				rc = t1.compareTo(t2);
 				break;
 			case 2:
-				rc = findingsTemplateService.getTypeAsText(p1).toLowerCase()
-					.compareTo(findingsTemplateService.getTypeAsText(p2).toLowerCase());
+				rc = findingsTemplateService.getTypeAsText(findingsTemplateService.getType(p1))
+					.toLowerCase().compareTo(findingsTemplateService
+						.getTypeAsText(findingsTemplateService.getType(p2)).toLowerCase());
 				break;
 			case 3:
 				String txt1 = p1.getText().orElse("");
