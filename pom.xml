@@ -263,6 +263,9 @@
 		<module>ch.elexis.core.findings.util</module>
 		<module>ch.elexis.core.findings.fhir.po</module>
 		<module>ch.elexis.core.findings.ui</module>
+		<module>ch.elexis.core.findings.templates</module>
+		<module>ch.elexis.core.findings.templates.ui</module>
+		<module>ch.elexis.core.findings.templates.edit</module>
 		<module>ch.elexis.core.documents</module>
 		<module>ch.elexis.core.ui.documents</module>
 		<module>org.iatrix.help.wiki</module>
