@@ -76,8 +76,8 @@
 
    <plugin
          id="ch.elexis.core.ui.importer.div.native32"
-         ws="win32"
          os="win32"
+         ws="win32"
          arch="x86"
          download-size="0"
          install-size="0"
@@ -86,8 +86,8 @@
 
    <plugin
          id="ch.elexis.core.ui.importer.div.native64"
-         ws="win32"
          os="win32"
+         ws="win32"
          arch="x86_64"
          download-size="0"
          install-size="0"
@@ -131,6 +131,20 @@
 
    <plugin
          id="org.eclipse.nebula.widgets.nattable.extension.glazedlists"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.findings.templates.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.findings.templates.edit"
          download-size="0"
          install-size="0"
          version="0.0.0"
