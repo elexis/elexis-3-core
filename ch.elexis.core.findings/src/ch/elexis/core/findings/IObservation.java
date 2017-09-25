@@ -175,6 +175,20 @@ public interface IObservation extends IFinding {
 	public Optional<BigDecimal> getNumericValue();
 	
 	/**
+	 * Set the stringValue of the observation.
+	 * 
+	 * @return
+	 */
+	public void setStringValue(String value);
+	
+	/**
+	 * Get the stringValue
+	 * 
+	 * @return
+	 */
+	public Optional<String> getStringValue();
+	
+	/**
 	 * Get the Unit
 	 * 
 	 * @return

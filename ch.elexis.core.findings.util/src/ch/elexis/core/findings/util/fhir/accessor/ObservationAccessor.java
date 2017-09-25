@@ -17,6 +17,7 @@ import org.hl7.fhir.dstu3.model.Observation.ObservationComponentComponent;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Quantity;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.dstu3.model.Type;
 
 import ca.uhn.fhir.model.primitive.IdDt;
@@ -152,12 +153,20 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		ModelUtil.setCodingsToConcept(codeableConcept, iComponent.getCoding());
 		observationComponentComponent.setCode(codeableConcept);
 		
-		Quantity quantity = new Quantity();
-		iComponent.getNumericValue()
-			.ifPresent(item -> quantity.setValue(iComponent.getNumericValue().get()));
-		iComponent.getNumericValueUnit()
-			.ifPresent(item -> quantity.setUnit(iComponent.getNumericValueUnit().get()));
-		observationComponentComponent.setValue(quantity);
+		if (iComponent.getStringValue().isPresent())
+		{
+			StringType stringType = new StringType();
+			stringType.setValue(iComponent.getStringValue().get());
+			observationComponentComponent.setValue(stringType);
+		}
+		else if (iComponent.getNumericValue().isPresent())
+		{
+			Quantity quantity = new Quantity();
+			quantity.setValue(iComponent.getNumericValue().get());
+			iComponent.getNumericValueUnit()
+				.ifPresent(item -> quantity.setUnit(iComponent.getNumericValueUnit().get()));
+			observationComponentComponent.setValue(quantity);
+		}
 		
 		fhirObservation.addComponent(observationComponentComponent);
 	}
@@ -177,6 +186,10 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 					component.setNumericValue(Optional.of(quantity.getValue()));
 					component.setNumericValueUnit(Optional.of(quantity.getUnit()));
 				}
+				else if (o.hasValueStringType()) {
+					StringType stringType = (StringType) o.getValue();
+					component.setStringValue(Optional.of(stringType.getValue()));
+				}
 			}
 			components.add(component);
 		}
@@ -193,10 +206,36 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 					Quantity quantity = (Quantity) o.getValue();
 					quantity.setValue(component.getNumericValue().get());
 				}
+				else if (component.getStringValue().isPresent() && o.hasValueStringType()) {
+					StringType stringType = (StringType) o.getValue();
+					stringType.setValue(component.getStringValue().get());
+				}
 			}
 		}
 	}
 	
+
+	public void setStringValue(DomainResource resource, String value){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		StringType q = new StringType();
+		q.setValue(value);
+		fhirObservation.setValue(q);
+	}
+	
+	public Optional<String> getStringValue(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		if (fhirObservation.hasValueStringType()) {
+			StringType value = (StringType) fhirObservation.getValue();
+			if (value.getValue() != null) {
+				return Optional.of(value.getValue());
+			}
+		}
+		return Optional.empty();
+	}
+	
+
 	public void setNumericValue(DomainResource resource, BigDecimal value, String unit){
 		org.hl7.fhir.dstu3.model.Observation fhirObservation =
 			(org.hl7.fhir.dstu3.model.Observation) resource;

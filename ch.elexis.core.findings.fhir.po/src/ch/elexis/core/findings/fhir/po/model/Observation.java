@@ -271,4 +271,23 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		}
 		
 	}
+	
+	@Override
+	public void setStringValue(String value){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setStringValue((DomainResource) resource.get(), value);
+			saveResource(resource.get());
+		}
+		
+	}
+	
+	@Override
+	public Optional<String> getStringValue(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getStringValue((DomainResource) resource.get());
+		}
+		return Optional.empty();
+	}
 }

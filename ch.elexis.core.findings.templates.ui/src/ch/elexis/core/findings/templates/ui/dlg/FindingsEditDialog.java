@@ -146,6 +146,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		private BackboneComponent backboneComponent;
 		private Label lblUnit;
 		private Label lbl;
+		private boolean plainText;
 		
 		public CompositeTextUnit(Composite parent, IFinding iFinding,
 			BackboneComponent backboneComponent){
@@ -154,24 +155,36 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			this.backboneComponent = backboneComponent;
 			setLayout(new GridLayout(3, false));
 			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-			
+			plainText = false;
 			String unit = null;
 			BigDecimal numeric = null;
 			List<ICoding> codings = null;
 			String title = null;
 			
 			if (backboneComponent != null) {
-				unit = backboneComponent.getNumericValueUnit().orElse(null);
-				numeric = backboneComponent.getNumericValue().orElse(null);
+				if (backboneComponent.getStringValue().isPresent()) {
+					title = backboneComponent.getStringValue().get();
+					plainText = true;
+				}
+				else {
+					unit = backboneComponent.getNumericValueUnit().orElse(null);
+					numeric = backboneComponent.getNumericValue().orElse(null);
+				}
+				
 				codings = backboneComponent.getCoding();
 			} else if (iFinding instanceof IObservation) {
 				IObservation iObservation = (IObservation) iFinding;
-				unit = iObservation.getNumericValueUnit().orElse(null);
-				numeric = iObservation.getNumericValue().orElse(null);
+				if (iObservation.getStringValue().isPresent()) {
+					title = iObservation.getStringValue().get();
+					plainText = true;
+				} else {
+					unit = iObservation.getNumericValueUnit().orElse(null);
+					numeric = iObservation.getNumericValue().orElse(null);
+				}
 				codings = iObservation.getCoding();
 			}
 			
-			if (codings != null) {
+			if (title == null && codings != null) {
 				Optional<ICoding> coding = FindingsView.findingsTemplateService.findOneCode(codings,
 					CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 				title = coding.isPresent() ? coding.get().getDisplay() : "";
@@ -213,7 +226,23 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			if (iFinding.getId() == null) {
 				iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
 			}
-			if (lblUnit != null && lbl != null) {
+			if (plainText) {
+				IObservation iObservation = (IObservation) iFinding;
+				String text = fieldText.getText();
+				if (backboneComponent != null) {
+					backboneComponent.setStringValue(Optional.of(text));
+					
+					iObservation.updateComponent(backboneComponent);
+					stringBuilder.append(" ");
+					stringBuilder.append(backboneComponent.getStringValue().get());
+					stringBuilder.append(" ");
+				} else {
+					iObservation.setStringValue(text);
+					stringBuilder.append(" ");
+					stringBuilder.append(iObservation.getStringValue().get());
+					stringBuilder.append(" ");
+				}
+			} else if (lblUnit != null && lbl != null) {
 				IObservation iObservation = (IObservation) iFinding;
 				stringBuilder.append(lbl.getText());
 				try {

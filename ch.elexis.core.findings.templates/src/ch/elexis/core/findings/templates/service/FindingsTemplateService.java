@@ -41,6 +41,7 @@ import ch.elexis.core.findings.templates.model.InputData;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.InputDataNumeric;
+import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.data.NamedBlob;
@@ -149,6 +150,9 @@ public class FindingsTemplateService {
 				bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
 				component.setNumericValue(Optional.of(bigDecimal));
 				component.setNumericValueUnit(Optional.of(inputDataNumeric.getUnit()));
+			}
+			if (findingsTemplate.getInputData() instanceof InputDataText) {
+				component.setStringValue(Optional.of("TEXT"));
 			}
 			iObservation.addComponent(component);
 		}
@@ -357,6 +361,10 @@ public class FindingsTemplateService {
 			BigDecimal bigDecimal = new BigDecimal(0);
 			bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
 			iObservation.setNumericValue(bigDecimal, inputDataNumeric.getUnit());
+		}
+		else if (inputData instanceof InputDataText) {
+			InputDataText inputDataText = (InputDataText) inputData;
+			iObservation.setStringValue("TEXT");
 		}
 		return iObservation;
 	}

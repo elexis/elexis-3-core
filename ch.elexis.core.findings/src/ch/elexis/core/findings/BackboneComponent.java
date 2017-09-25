@@ -10,6 +10,7 @@ public class BackboneComponent {
 	private List<ICoding> coding = new ArrayList<>();
 	private Optional<BigDecimal> numericValue = Optional.empty();
 	private Optional<String> numericValueUnit = Optional.empty();
+	private Optional<String> stringValue = Optional.empty();
 	private final String id;
 	
 	public BackboneComponent(String id){
@@ -41,5 +42,13 @@ public class BackboneComponent {
 	
 	public void setNumericValueUnit(Optional<String> numericValueUnit){
 		this.numericValueUnit = numericValueUnit;
+	}
+	
+	public void setStringValue(Optional<String> stringValue){
+		this.stringValue = stringValue;
+	}
+	
+	public Optional<String> getStringValue(){
+		return stringValue;
 	}
 }
