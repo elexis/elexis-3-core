@@ -63,7 +63,6 @@ public class FindingsTemplateItemProvider
 
 			addTypePropertyDescriptor(object);
 			addTitlePropertyDescriptor(object);
-			addCodePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -88,39 +87,6 @@ public class FindingsTemplateItemProvider
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				 null,
 				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Code feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addCodePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_FindingsTemplate_code_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_FindingsTemplate_code_feature", "_UI_FindingsTemplate_type"),
-				 ModelPackage.Literals.FINDINGS_TEMPLATE__CODE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This returns FindingsTemplate.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/FindingsTemplate"));
 	}
 
 	/**
@@ -174,7 +140,6 @@ public class FindingsTemplateItemProvider
 			case ModelPackage.FINDINGS_TEMPLATE__TYPE:
 			case ModelPackage.FINDINGS_TEMPLATE__TITLE:
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
-			case ModelPackage.FINDINGS_TEMPLATE__CODE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

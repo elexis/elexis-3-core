@@ -2,6 +2,7 @@ package ch.elexis.core.findings.templates.ui.composite;
 
 import java.util.Optional;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -19,6 +20,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -27,6 +29,11 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
+import ch.elexis.core.findings.templates.model.InputDataGroup;
+import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
+import ch.elexis.core.findings.templates.model.InputDataNumeric;
+import ch.elexis.core.findings.templates.model.InputDataText;
+import ch.elexis.core.ui.icons.Images;
 
 public class FindingsComposite extends Composite {
 	
@@ -49,7 +56,7 @@ public class FindingsComposite extends Composite {
 			new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		
 		viewer.setContentProvider(new AdapterFactoryContentProvider(composedAdapterFactory));
-		viewer.setLabelProvider(new AdapterFactoryLabelProvider(composedAdapterFactory));
+		viewer.setLabelProvider(new FindingsTemplateLabelProvider(composedAdapterFactory));
 		
 		Resource r = new ResourceImpl();
 		r.getContents().add(model);
@@ -65,8 +72,8 @@ public class FindingsComposite extends Composite {
 					StructuredSelection s = (StructuredSelection) event.getSelection();
 					Object element = s.getFirstElement();
 					findingsDetailComposite.setSelection(model.get(),
-						element instanceof FindingsTemplate
-							? (FindingsTemplate) s.getFirstElement() : null);
+						element instanceof FindingsTemplate ? (FindingsTemplate) s.getFirstElement()
+								: null);
 				}
 			}
 		});
@@ -82,8 +89,7 @@ public class FindingsComposite extends Composite {
 	
 	public Optional<FindingsTemplates> getModel(){
 		Resource r = (Resource) viewer.getInput();
-		if (r != null && !r.getContents().isEmpty())
-		{
+		if (r != null && !r.getContents().isEmpty()) {
 			return Optional.of((FindingsTemplates) r.getContents().get(0));
 		}
 		return Optional.empty();
@@ -123,5 +129,31 @@ public class FindingsComposite extends Composite {
 				getModel().ifPresent(item -> item.getFindingsTemplates().remove(findingsTemplate));
 			}
 		});
+	}
+	
+	class FindingsTemplateLabelProvider extends AdapterFactoryLabelProvider {
+		
+		public FindingsTemplateLabelProvider(AdapterFactory adapterFactory){
+			super(adapterFactory);
+		}
+		
+		@Override
+		public Image getImage(Object object){
+			if (object instanceof FindingsTemplate) {
+				FindingsTemplate findingsTemplate = (FindingsTemplate) object;
+				if (findingsTemplate.getInputData() instanceof InputDataGroup) {
+					return Images.IMG_DOCUMENT_STACK.getImage();
+				} else if (findingsTemplate.getInputData() instanceof InputDataGroupComponent) {
+					return Images.IMG_DOCUMENT_STAND_UP.getImage();
+				} else if (findingsTemplate.getInputData() instanceof InputDataNumeric) {
+					return Images.IMG_DOCUMENT.getImage();
+				} else if (findingsTemplate.getInputData() instanceof InputDataText) {
+					return Images.IMG_DOCUMENT.getImage();
+				}
+			} else if (object instanceof FindingsTemplates) {
+				return Images.IMG_FOLDER.getImage();
+			}
+			return super.getImage(object);
+		}
 	}
 }

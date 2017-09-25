@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
+import ch.elexis.core.findings.BackboneComponent;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IObservation;
@@ -112,6 +113,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		Query<ObservationLink> qbe = new Query<>(ObservationLink.class);
 		qbe.add(ObservationLink.FLD_TARGETID, Query.EQUALS, getId());
 		qbe.add(ObservationLink.FLD_TYPE, Query.EQUALS, type.name());
+		qbe.orderBy(true, ObservationLink.FLD_LASTUPDATE);
 		
 		List<ObservationLink> observationLinks = qbe.execute();
 		List<IObservation> iObservations = new ArrayList<>();
@@ -138,6 +140,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		Query<ObservationLink> qbe = new Query<>(ObservationLink.class);
 		qbe.add(ObservationLink.FLD_SOURCEID, Query.EQUALS, getId());
 		qbe.add(ObservationLink.FLD_TYPE, Query.EQUALS, type.name());
+		qbe.orderBy(true, ObservationLink.FLD_LASTUPDATE);
 		
 		List<ObservationLink> observationLinks = qbe.execute();
 		List<IObservation> iObservations = new ArrayList<>();
@@ -236,6 +239,54 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			return accessor.getNumericValueUnit((DomainResource) resource.get());
+		}
+		return Optional.empty();
+	}
+	
+
+	@Override
+	public List<BackboneComponent> getComponents(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getComponents((DomainResource) resource.get());
+		}
+		return Collections.emptyList();
+	}
+	
+	@Override
+	public void addComponent(BackboneComponent component){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.addComponent((DomainResource) resource.get(), component);
+			saveResource(resource.get());
+		}
+	}
+	
+	@Override
+	public void updateComponent(BackboneComponent component){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.updateComponent((DomainResource) resource.get(), component);
+			saveResource(resource.get());
+		}
+		
+	}
+	
+	@Override
+	public void setStringValue(String value){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setStringValue((DomainResource) resource.get(), value);
+			saveResource(resource.get());
+		}
+		
+	}
+	
+	@Override
+	public Optional<String> getStringValue(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getStringValue((DomainResource) resource.get());
 		}
 		return Optional.empty();
 	}

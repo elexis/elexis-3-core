@@ -1,12 +1,15 @@
 package ch.elexis.core.findings.templates.ui.dlg;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -17,10 +20,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.findings.BackboneComponent;
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
+import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.templates.ui.views.FindingsView;
 
 public class FindingsEditDialog extends TitleAreaDialog {
@@ -40,10 +47,11 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent){
-		String title = FindingsView.findingsTemplateService.getTypeAsText(iFinding);
+		String title = FindingsView.findingsTemplateService
+			.getTypeAsText(FindingsView.findingsTemplateService.getType(iFinding));
 		setTitle(title + " editieren");
 		
-		iCompositeSaveable = new CompositeGroup(parent, iFinding, "");
+		iCompositeSaveable = new CompositeGroup(parent, iFinding, false);
 		iCompositeSaveable.getChildComposites()
 			.add(createDynamicContent(iFinding, iCompositeSaveable));
 		return (Control) iCompositeSaveable;
@@ -54,26 +62,26 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		if (iFinding instanceof IObservation) {
 			IObservation item = (IObservation) iFinding;
 			List<IObservation> refChildrens = item.getTargetObseravtions(ObservationLinkType.REF);
-			List<IObservation> compChildrens = item.getTargetObseravtions(ObservationLinkType.COMP);
+			List<BackboneComponent> compChildrens = item.getComponents();
 			if (refChildrens.isEmpty() && compChildrens.isEmpty()) {
-				current = new CompositeTextUnit((Composite) current, item);
+				current = new CompositeTextUnit((Composite) current, item, null);
 			} else {
-				current = new CompositeGroup((Composite) current, item, iFinding.getText().get());
+				current = new CompositeGroup((Composite) current, item, true);
 				for (IObservation child : refChildrens) {
 					ICompositeSaveable childComposite = createDynamicContent(child, current);
 					current.getChildComposites().add(childComposite);
 				}
-				if (!compChildrens.isEmpty())
-				{
+				if (!compChildrens.isEmpty()) {
 					// show as component
 					current.changeLayout(new GridLayout(compChildrens.size() + 1, false));
 				}
 				
 				boolean allUnitsSame = checkIfAllUnitsSame(compChildrens);
 				int i = 0;
-				for (IObservation child : compChildrens) {
+				for (BackboneComponent child : compChildrens) {
 					i++;
-					ICompositeSaveable childComposite = createDynamicContent(child, current);
+					ICompositeSaveable childComposite =
+						new CompositeTextUnit((Composite) current, iFinding, child);
 					current.getChildComposites().add(childComposite);
 					if (allUnitsSame) {
 						if (childComposite instanceof CompositeTextUnit) {
@@ -84,7 +92,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				}
 			}
 		} else {
-			current = new CompositeTextUnit((Composite) current, iFinding);
+			current = new CompositeTextUnit((Composite) current, iFinding, null);
 		}
 		
 		return current;
@@ -96,9 +104,9 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	 * @param iObservations
 	 * @return
 	 */
-	private boolean checkIfAllUnitsSame(List<IObservation> iObservations){
+	private boolean checkIfAllUnitsSame(List<BackboneComponent> iObservations){
 		Set<String> units = new HashSet<>();
-		for (IObservation child : iObservations) {
+		for (BackboneComponent child : iObservations) {
 			child.getNumericValueUnit().ifPresent(item -> units.add(item));
 		}
 		return units.size() == 1;
@@ -123,7 +131,11 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed(){
 		if (iCompositeSaveable != null) {
-			iCompositeSaveable.saveContents();
+			Optional<String> text = iCompositeSaveable.saveContents().getText();
+			if (iFinding instanceof IObservation) {
+				((IObservation) iFinding).setEffectiveTime(LocalDateTime.now());
+			}
+			iFinding.setText(text.orElse(""));
 		}
 		super.okPressed();
 	}
@@ -131,66 +143,146 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	class CompositeTextUnit extends Composite implements ICompositeSaveable {
 		private Text fieldText;
 		private IFinding iFinding;
+		private BackboneComponent backboneComponent;
 		private Label lblUnit;
 		private Label lbl;
+		private boolean plainText;
 		
-		public CompositeTextUnit(Composite parent, IFinding iFinding){
+		public CompositeTextUnit(Composite parent, IFinding iFinding,
+			BackboneComponent backboneComponent){
 			super((Composite) parent, SWT.NONE);
-			
 			this.iFinding = iFinding;
-			
+			this.backboneComponent = backboneComponent;
 			setLayout(new GridLayout(3, false));
 			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
+			plainText = false;
 			String unit = null;
 			BigDecimal numeric = null;
+			List<ICoding> codings = null;
+			String title = null;
 			
-			if (iFinding instanceof IObservation) {
-				IObservation iObservation = (IObservation) iFinding;
-				unit = iObservation.getNumericValueUnit().orElse(null);
-				numeric = iObservation.getNumericValue().orElse(null);
-				
-				if (numeric != null && unit != null) {
-					lbl = new Label(this, SWT.NONE);
-					lbl.setText(iFinding.getText().get());
-					
-					GridData minGD = new GridData(SWT.FILL, SWT.CENTER, false, false);
-					minGD.widthHint = 90;
-					lbl.setLayoutData(minGD);
-					
-					fieldText = new Text(this, SWT.BORDER);
-					fieldText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
-					fieldText.setText(numeric.toPlainString());
-					lblUnit = new Label(this, SWT.NONE);
-					lblUnit.setText(unit);
+			if (backboneComponent != null) {
+				if (backboneComponent.getStringValue().isPresent()) {
+					title = backboneComponent.getStringValue().get();
+					plainText = true;
 				}
+				else {
+					unit = backboneComponent.getNumericValueUnit().orElse(null);
+					numeric = backboneComponent.getNumericValue().orElse(null);
+				}
+				
+				codings = backboneComponent.getCoding();
+			} else if (iFinding instanceof IObservation) {
+				IObservation iObservation = (IObservation) iFinding;
+				if (iObservation.getStringValue().isPresent()) {
+					title = iObservation.getStringValue().get();
+					plainText = true;
+				} else {
+					unit = iObservation.getNumericValueUnit().orElse(null);
+					numeric = iObservation.getNumericValue().orElse(null);
+				}
+				codings = iObservation.getCoding();
+			}
+			
+			if (title == null && codings != null) {
+				Optional<ICoding> coding = FindingsView.findingsTemplateService.findOneCode(codings,
+					CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+				title = coding.isPresent() ? coding.get().getDisplay() : "";
+			}
+			if (title == null) {
+				title = iFinding.getText().orElse("");
+			}
+			
+			createContents(title, unit, numeric);
+		}
+		
+		private void createContents(String text, String unit, BigDecimal numeric){
+			if (numeric != null && unit != null) {
+				lbl = new Label(this, SWT.NONE);
+				lbl.setText(text);
+				
+				GridData minGD = new GridData(SWT.FILL, SWT.CENTER, false, false);
+				minGD.widthHint = 90;
+				lbl.setLayoutData(minGD);
+				
+				fieldText = new Text(this, SWT.BORDER);
+				fieldText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+				fieldText.setText(numeric.toPlainString());
+				lblUnit = new Label(this, SWT.NONE);
+				lblUnit.setText(unit);
 			}
 			
 			if (fieldText == null) {
 				fieldText = new Text(this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 				fieldText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-				fieldText.setText(iFinding.getText().get());
+				fieldText.setText(text);
 			}
 		}
 		
 		@Override
-		public void saveContents(){
+		public IFinding saveContents(){
+			StringBuilder stringBuilder = new StringBuilder();
+			
 			if (iFinding.getId() == null) {
 				iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
 			}
-			if (lblUnit != null && lbl != null) {
+			if (plainText) {
 				IObservation iObservation = (IObservation) iFinding;
-				
+				String text = fieldText.getText();
+				if (backboneComponent != null) {
+					backboneComponent.setStringValue(Optional.of(text));
+					
+					iObservation.updateComponent(backboneComponent);
+					stringBuilder.append(" ");
+					stringBuilder.append(backboneComponent.getStringValue().get());
+					stringBuilder.append(" ");
+				} else {
+					iObservation.setStringValue(text);
+					stringBuilder.append(" ");
+					stringBuilder.append(iObservation.getStringValue().get());
+					stringBuilder.append(" ");
+				}
+			} else if (lblUnit != null && lbl != null) {
+				IObservation iObservation = (IObservation) iFinding;
+				stringBuilder.append(lbl.getText());
 				try {
-					BigDecimal number = new BigDecimal(fieldText.getText());
-					iObservation.setNumericValue(number, lblUnit.getText());
+					if (backboneComponent != null) {
+						String text = fieldText.getText();
+						
+						BigDecimal number =
+							NumberUtils.isDigits(text) ? new BigDecimal(text) : BigDecimal.ZERO;
+						backboneComponent.setNumericValue(Optional.of(number));
+						iObservation.updateComponent(backboneComponent);
+						
+						stringBuilder.append(" ");
+						stringBuilder
+							.append(backboneComponent.getNumericValue().get().toPlainString());
+						stringBuilder.append(" ");
+						stringBuilder.append(backboneComponent.getNumericValueUnit().get());
+						stringBuilder.append(" ");
+					} else {
+						String text = fieldText.getText();
+						BigDecimal number =
+							NumberUtils.isDigits(text) ? new BigDecimal(text) : BigDecimal.ZERO;
+						iObservation.setNumericValue(number, lblUnit.getText());
+						
+						stringBuilder.append(" ");
+						stringBuilder.append(iObservation.getNumericValue().get().toPlainString());
+						stringBuilder.append(" ");
+						stringBuilder.append(iObservation.getNumericValueUnit().get());
+						stringBuilder.append(" ");
+					}
+					
 				} catch (NumberFormatException e) {
-					e.printStackTrace();
+					LoggerFactory.getLogger(FindingsEditDialog.class)
+						.warn("cannot save number illegal format", e);
 				}
 				
 			} else {
-				iFinding.setText(fieldText.getText());
+				stringBuilder.append(fieldText.getText());
 			}
+			iFinding.setText(stringBuilder.toString());
+			return iFinding;
 		}
 		
 		@Override
@@ -225,20 +317,30 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		
 		private List<ICompositeSaveable> childComposites = new ArrayList<>();
 		
-		public CompositeGroup(Composite parent, IFinding iFinding, String label){
+		public CompositeGroup(Composite parent, IFinding iFinding, boolean showTitle){
 			super((Composite) parent, SWT.NONE);
 			this.iFinding = iFinding;
 			
 			setLayout(new GridLayout(1, false));
 			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			
-			if (!label.isEmpty()) {
-				lbl = new Label(this, SWT.NONE);
-				lbl.setText(label);
-				GridData minGD = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-				minGD.widthHint = 80;
-				lbl.setLayoutData(minGD);
-				
+			if (showTitle) {
+				String txt = null;
+				if (iFinding instanceof IObservation) {
+					Optional<ICoding> coding = FindingsView.findingsTemplateService.findOneCode(
+						((IObservation) iFinding).getCoding(),
+						CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+					txt = coding.isPresent() ? coding.get().getDisplay() : "";
+				} else {
+					txt = iFinding.getText().orElse(null);
+				}
+				if (txt != null) {
+					lbl = new Label(this, SWT.NONE);
+					lbl.setText(txt);
+					GridData minGD = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+					minGD.widthHint = 80;
+					lbl.setLayoutData(minGD);
+				}
 			}
 		}
 		
@@ -246,15 +348,31 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		public List<ICompositeSaveable> getChildComposites(){
 			return childComposites;
 		}
+		
 		@Override
-		public void saveContents(){
+		public IFinding saveContents(){
 			if (iFinding.getId() == null) {
 				iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
+				if (iFinding instanceof IObservation) {
+					((IObservation) iFinding).setEffectiveTime(LocalDateTime.now());
+				}
+			}
+			StringBuilder builder = new StringBuilder();
+			StringBuilder builderInner = new StringBuilder();
+			if (lbl != null) {
+				builder.append(lbl.getText() + ": ");
 			}
 			
 			for (ICompositeSaveable iCompositeSaveable : getChildComposites()) {
-				iCompositeSaveable.saveContents();
+				if (builderInner.length() > 0) {
+					builderInner.append(", ");
+				}
+				builderInner.append(iCompositeSaveable.saveContents().getText().orElse(""));
 			}
+			builder.append(builderInner);
+			builder.append(" ");
+			iFinding.setText(builder.toString());
+			return iFinding;
 		}
 		
 		@Override
@@ -272,7 +390,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	}
 	
 	interface ICompositeSaveable {
-		public void saveContents();
+		public IFinding saveContents();
 		
 		public List<ICompositeSaveable> getChildComposites();
 		

@@ -50,6 +50,16 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.core.findings.templates.ui.views.FindingsView">
+         <command
+               commandId="ch.elexis.core.findings.templates.ui.commandDelete"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/delete.gif"
+               label="Löschen"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -68,6 +78,11 @@
       <command
             id="ch.elexis.core.findings.templates.ui.command.finding.create"
             name="Create Finding">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.findings.templates.ui.handler.FindingDeleteHandler"
+            id="ch.elexis.core.findings.templates.ui.commandDelete"
+            name="Delete Finding">
       </command>
    </extension>
    <extension
@@ -94,7 +109,7 @@
             commandId="ch.elexis.core.findings.templates.ui.command.template.export">
       </handler>
       <handler
-            class="ch.elexis.core.findings.templates.ui.handler.FindingsCreateHandler"
+            class="ch.elexis.core.findings.templates.ui.handler.FindingCreateHandler"
             commandId="ch.elexis.core.findings.templates.ui.command.finding.create">
       </handler>
    </extension>

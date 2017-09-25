@@ -20,6 +20,7 @@ package ch.elexis.core.findings.templates.model;
  * @generated
  */
 public interface InputDataText extends InputData {
+
 	/**
 	 * Returns the value of the '<em><b>Data Type</b></em>' attribute.
 	 * The default value is <code>"TEXT"</code>.

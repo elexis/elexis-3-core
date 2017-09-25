@@ -3,6 +3,7 @@
    <service>
       <provide interface="ch.elexis.core.findings.templates.service.FindingsTemplateService"/>
    </service>
+   <reference bind="setCodingService" cardinality="1..1" interface="ch.elexis.core.findings.codes.ICodingService" name="CodingService" policy="static"/>
    <reference bind="setFindingsService" cardinality="1..1" interface="ch.elexis.core.findings.IFindingsService" name="FindingsService" policy="static"/>
    <implementation class="ch.elexis.core.findings.templates.service.FindingsTemplateService"/>
 </scr:component>

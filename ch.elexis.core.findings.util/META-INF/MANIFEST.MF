@@ -9,9 +9,13 @@ Require-Bundle: ch.elexis.core.findings;bundle-version="1.0.0",
  hapi-fhir-osgi-core;bundle-version="2.4.0",
  org.springframework.spring-web
 Export-Package: ch.elexis.core.findings.util,
+ ch.elexis.core.findings.util.commands,
  ch.elexis.core.findings.util.fhir.accessor,
  ch.elexis.core.findings.util.model
 Import-Package: com.google.gson,
  com.google.gson.internal,
  org.osgi.framework;version="1.7.0",
+ org.osgi.service.component.annotations;version="1.2.0",
  org.slf4j
+Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/ch.elexis.core.findings.util.FindingsServiceHolder.xml

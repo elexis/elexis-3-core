@@ -3,10 +3,12 @@ package ch.elexis.core.findings.templates.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
@@ -17,8 +19,11 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IClinicalImpression;
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IFinding;
@@ -27,12 +32,16 @@ import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
+import ch.elexis.core.findings.codes.CodingSystem;
+import ch.elexis.core.findings.codes.ICodingService;
+import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputData;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.InputDataNumeric;
+import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.data.NamedBlob;
@@ -44,6 +53,7 @@ public class FindingsTemplateService {
 	private static final String FINDINGS_TEMPLATE_ID = "Findings_Template_1";
 	
 	private IFindingsService findingsService;
+	private ICodingService codingService;
 	
 	public FindingsTemplateService(){
 		
@@ -52,6 +62,11 @@ public class FindingsTemplateService {
 	@Reference(unbind = "-")
 	public synchronized void setFindingsService(IFindingsService findingsServcie){
 		this.findingsService = findingsServcie;
+	}
+	
+	@Reference(unbind = "-")
+	public synchronized void setCodingService(ICodingService codingService){
+		this.codingService = codingService;
 	}
 	
 	public FindingsTemplates getFindingsTemplates(){
@@ -100,8 +115,7 @@ public class FindingsTemplateService {
 			os.close();
 			return aString;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LoggerFactory.getLogger(FindingsTemplateService.class).error("", e);
 		}
 		return null;
 	}
@@ -112,49 +126,204 @@ public class FindingsTemplateService {
 			if (result != null) {
 				NamedBlob namedBlob = NamedBlob.load(findingsTemplates.get().getId());
 				namedBlob.putString(result);
-			}
-			else {
+			} else {
 				//cannot save
+				LoggerFactory.getLogger(FindingsTemplateService.class)
+					.warn("cannot save template - xmi string is null");
 			}
 		}
 		
 	}
 	
-	public IFinding createFinding(Patient patient, FindingsTemplate findingsTemplate){
+	public void addComponent(IFinding iFinding, FindingsTemplate findingsTemplate){
+		if (iFinding instanceof IObservation) {
+			IObservation iObservation = (IObservation) iFinding;
+			ch.elexis.core.findings.BackboneComponent component =
+				new ch.elexis.core.findings.BackboneComponent(UUID.randomUUID().toString());
+			getOrCreateCode(findingsTemplate.getTitle())
+				.ifPresent(code -> component.getCoding().add(code));
+			
+			if (findingsTemplate.getInputData() instanceof InputDataNumeric) {
+				InputDataNumeric inputDataNumeric =
+					(InputDataNumeric) findingsTemplate.getInputData();
+				BigDecimal bigDecimal = new BigDecimal(0);
+				bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
+				component.setNumericValue(Optional.of(bigDecimal));
+				component.setNumericValueUnit(Optional.of(inputDataNumeric.getUnit()));
+			}
+			if (findingsTemplate.getInputData() instanceof InputDataText) {
+				component.setStringValue(Optional.of("TEXT"));
+			}
+			iObservation.addComponent(component);
+		}
+	}
+	
+	public IFinding createFinding(Patient patient, FindingsTemplate findingsTemplate)
+		throws ElexisException{
 		IFinding iFinding = null;
 		if (patient != null && patient.exists()) {
+			validateCycleDetection(findingsTemplate, 0, 100, findingsTemplate.getTitle(), false);
+			
 			Type type = findingsTemplate.getType();
+			
 			switch (type) {
 			case CONDITION:
 				ICondition iCondition = create(ICondition.class);
 				iCondition.setCategory(ConditionCategory.PROBLEMLISTITEM);
 				iFinding = iCondition;
+				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
 				break;
 			case EVALUATION:
 				iFinding = create(IClinicalImpression.class);
+				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
 				break;
 			case OBSERVATION:
 			case OBSERVATION_OBJECTIVE:
 			case OBSERVATION_SUBJECTIVE:
 			case OBSERVATION_VITAL:
 				iFinding = createObservation(patient, findingsTemplate);
+				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
 				break;
 			case PROCEDURE:
 				iFinding = create(IProcedureRequest.class);
+				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
 				break;
 			default:
 				break;
 			}
-			if (iFinding != null) {
-				iFinding.setPatientId(patient.getId());
-				iFinding.setText(findingsTemplate.getTitle());
-			}
+		} else {
+			throw new ElexisException("Kein Patient ausgewählt.");
 		}
 		return iFinding;
 	}
 	
-	private IFinding createObservation(Patient patient, FindingsTemplate findingsTemplate){
+	private Optional<ICoding> getOrCreateCode(String code){
+		// if code is not present create a new local code
+		codingService.addLocalCoding(new ICoding() {
+			
+			@Override
+			public String getSystem(){
+				return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
+			}
+			
+			@Override
+			public String getDisplay(){
+				return code;
+			}
+			
+			@Override
+			public String getCode(){
+				return code;
+			}
+		});
+		return codingService.getCode(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem(), code);
+	}
+	
+	public void updateOberservationText(IObservation iObservation){
+		StringBuilder builder = new StringBuilder();
+		builder = getOberservationText(iObservation);
+		iObservation.setText(builder.toString());
+	}
+	
+	private StringBuilder getOberservationText(IObservation iObservation){
+		StringBuilder builder = new StringBuilder();
+		List<ch.elexis.core.findings.BackboneComponent> compChildrens =
+			iObservation.getComponents();
+		
+		addCodingToText(builder, iObservation.getCoding());
+		
+		for (ch.elexis.core.findings.BackboneComponent component : compChildrens) {
+			builder.append(", ");
+			addCodingToText(builder, component.getCoding());
+		}
+		return getObservationTextChildrens(iObservation, builder);
+	}
+	
+	public Optional<ICoding> findOneCode(List<ICoding> coding, CodingSystem codingSystem){
+		for (ICoding iCoding : coding) {
+			if (codingSystem.getSystem().equals(iCoding.getSystem())) {
+				return Optional.of(iCoding);
+			}
+		}
+		return Optional.empty();
+	}
+	
+	private StringBuilder getObservationTextChildrens(IObservation iObservation,
+		StringBuilder builder){
+		List<IObservation> refChildrens =
+			iObservation.getTargetObseravtions(ObservationLinkType.REF);
+		for (IObservation child : refChildrens) {
+			builder.append(", ");
+			addCodingToText(builder, child.getCoding());
+			getObservationTextChildrens(child, builder);
+		}
+		return builder;
+	}
+	
+	private void addCodingToText(StringBuilder builder, List<ICoding> codings){
+		ICoding coding =
+			findOneCode(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM).orElse(null);
+		builder.append(coding != null ? coding.getDisplay() : "");
+	}
+	
+	private void setFindingsAttributes(IFinding iFinding, Patient patient, String text){
+		if (iFinding != null) {
+			iFinding.setPatientId(patient.getId());
+			
+			if (iFinding instanceof IObservation) {
+				IObservation iObservation = (IObservation) iFinding;
+				List<ICoding> codings = iObservation.getCoding();
+				getOrCreateCode(text).ifPresent(code -> codings.add(code));
+				iObservation.setCoding(codings);
+			} else {
+				iFinding.setText(text);
+			}
+		}
+	}
+	
+	public void validateCycleDetection(FindingsTemplate findingsTemplate,
+		int depth, int maxDepth, String mainTemplateTitle, boolean autoRemoveCycle)
+		throws ElexisException{
+		if (++depth > maxDepth) {
+			StringBuilder builder = new StringBuilder();
+			if (autoRemoveCycle) {
+				builder.append("Das Hinzufügen der Vorlage '");
+				builder.append(mainTemplateTitle);
+				builder.append(
+					"' ist nicht möglich.\n\nEin Zyklus wurde gefunden, oder die maximal erlaubte Komplexität von ");
+				builder.append(maxDepth);
+				builder.append(" wurde überschritten.");
+			}
+			else {
+				builder.append("Es trat ein Fehler in der Vorlage auf.\n");
+				builder.append("Die maximale Komplexität von ");
+				builder.append(maxDepth);
+				builder.append(" wurde überschritten.");
+				builder.append("\n\n");
+				builder.append("Bitte überprüfen Sie ihre Vorlage '");
+				builder.append(mainTemplateTitle);
+				builder.append("' auf Zyklen, oder verringern Sie die Komplexität.");
+			}
+			throw new ElexisException(builder.toString());
+		}
+		InputData inputData = findingsTemplate.getInputData();
+		if (inputData instanceof InputDataGroup) {
+			InputDataGroup group = (InputDataGroup) inputData;
+			for (FindingsTemplate item : group.getFindingsTemplates()) {
+				validateCycleDetection(item, depth, maxDepth, mainTemplateTitle, autoRemoveCycle);
+			}
+		} else if (inputData instanceof InputDataGroupComponent) {
+			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
+			for (FindingsTemplate item : group.getFindingsTemplates()) {
+				validateCycleDetection(item, depth, maxDepth, mainTemplateTitle, autoRemoveCycle);
+			}
+		}
+	}
+	
+	private IFinding createObservation(Patient patient, FindingsTemplate findingsTemplate)
+		throws ElexisException{
 		IObservation iObservation = create(IObservation.class);
+		iObservation.setEffectiveTime(LocalDateTime.now());
 		switch (findingsTemplate.getType()) {
 		case OBSERVATION_OBJECTIVE:
 			iObservation.setCategory(ObservationCategory.SOAP_OBJECTIVE);
@@ -163,8 +332,10 @@ public class FindingsTemplateService {
 			iObservation.setCategory(ObservationCategory.SOAP_SUBJECTIVE);
 			break;
 		case OBSERVATION_VITAL:
-		case OBSERVATION:
 			iObservation.setCategory(ObservationCategory.VITALSIGNS);
+			break;
+		case OBSERVATION:
+			iObservation.setCategory(ObservationCategory.VITALSIGNS); //TODO which category 
 			break;
 		default:
 			break;
@@ -183,18 +354,17 @@ public class FindingsTemplateService {
 		} else if (inputData instanceof InputDataGroupComponent) {
 			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
 			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
-				IFinding iFinding = createFinding(patient, findingsTemplates);
-				if (iFinding instanceof IObservation) {
-					IObservation target = (IObservation) iFinding;
-					iObservation.addTargetObservation(target, ObservationLinkType.COMP);
-				}
+				addComponent(iObservation, findingsTemplates);
 			}
-		}
-		else if (inputData instanceof InputDataNumeric) {
+		} else if (inputData instanceof InputDataNumeric) {
 			InputDataNumeric inputDataNumeric = (InputDataNumeric) inputData;
 			BigDecimal bigDecimal = new BigDecimal(0);
 			bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
 			iObservation.setNumericValue(bigDecimal, inputDataNumeric.getUnit());
+		}
+		else if (inputData instanceof InputDataText) {
+			InputDataText inputDataText = (InputDataText) inputData;
+			iObservation.setStringValue("TEXT");
 		}
 		return iObservation;
 	}
@@ -207,9 +377,11 @@ public class FindingsTemplateService {
 		if (patient != null && patient.exists()) {
 			String patientId = patient.getId();
 			List<IFinding> items = getObservations(patientId);
-			items.addAll(getConditions(patientId));
-			items.addAll(getClinicalImpressions(patientId));
-			items.addAll(getPrecedureRequest(patientId));
+			/*	TODO currently only observations needed
+			 * items.addAll(getConditions(patientId));
+				items.addAll(getClinicalImpressions(patientId));
+				items.addAll(getPrecedureRequest(patientId));
+				*/
 			return items;
 		}
 		return Collections.emptyList();
@@ -223,8 +395,7 @@ public class FindingsTemplateService {
 					|| category == ObservationCategory.SOAP_SUBJECTIVE
 					|| category == ObservationCategory.SOAP_OBJECTIVE) {
 					
-					return item.getSourceObservations(ObservationLinkType.COMP).isEmpty()
-						&& item.getSourceObservations(ObservationLinkType.REF).isEmpty(); // has no parents
+					return item.getSourceObservations(ObservationLinkType.REF).isEmpty(); // has no parents
 				}
 				return false;
 			}).collect(Collectors.toList());
@@ -273,8 +444,7 @@ public class FindingsTemplateService {
 		return null;
 	}
 	
-	public String getTypeAsText(IFinding iFinding){
-		Type type = getType(iFinding);
+	public String getTypeAsText(Type type){
 		if (type != null) {
 			switch (type) {
 			case CONDITION:
@@ -282,13 +452,13 @@ public class FindingsTemplateService {
 			case EVALUATION:
 				return "Beurteilung";
 			case OBSERVATION:
-				break;
+				return "Beobachtung";
 			case OBSERVATION_OBJECTIVE:
-				return "Objektiv";
+				return "Beobachtung Objektiv";
 			case OBSERVATION_SUBJECTIVE:
-				return "Subjektiv";
+				return "Beobachtung Subjektiv";
 			case OBSERVATION_VITAL:
-				return "Vitalzeichen";
+				return "Beobachtung Vitalzeichen";
 			case PROCEDURE:
 				return "Prozedere";
 			default:
@@ -299,4 +469,19 @@ public class FindingsTemplateService {
 		return "";
 	}
 	
+	public String getDataTypeAsText(DataType dataType){
+		switch (dataType) {
+		case GROUP:
+			return "Gruppe";
+		case GROUP_COMPONENT:
+			return "Komponent";
+		case NUMERIC:
+			return "Numerisch";
+		case TEXT:
+			return "Text";
+		default:
+			return "";
+		
+		}
+	}
 }

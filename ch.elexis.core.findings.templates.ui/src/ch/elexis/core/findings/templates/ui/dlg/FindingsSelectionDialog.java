@@ -3,6 +3,7 @@ package ch.elexis.core.findings.templates.ui.dlg;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -22,18 +23,22 @@ import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
+import ch.elexis.core.findings.templates.model.InputDataGroup;
+import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 
 public class FindingsSelectionDialog extends TitleAreaDialog {
 	private final FindingsTemplates model;
-	private List<FindingsTemplate> selection;
+	private List<FindingsTemplate> selections;
 	private TableViewer viewer;
 	private boolean multiSelection;
+	private FindingsTemplate current;
 	
 	public FindingsSelectionDialog(Shell parentShell, FindingsTemplates model,
-		List<FindingsTemplate> selection, boolean multiSelection){
+		List<FindingsTemplate> selections, boolean multiSelection, FindingsTemplate current){
 		super(parentShell);
 		this.model = model;
-		this.selection = selection;
+		this.current = current;
+		this.selections = selections;
 		this.multiSelection = multiSelection;
 	}
 	
@@ -58,7 +63,6 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		viewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
-				// TODO Auto-generated method stub
 				if (element instanceof FindingsTemplate) {
 					return ((FindingsTemplate) element).getTitle();
 				}
@@ -87,9 +91,29 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 				return false;
 			}
 		});
-		
-		viewer.setInput(model.getFindingsTemplates());
-		viewer.setSelection(new StructuredSelection(selection));
+		List<FindingsTemplate> templates = null;
+		if (current != null) {
+			if (current.getInputData() instanceof InputDataGroupComponent)
+			{
+				// remove component selections
+				templates = model.getFindingsTemplates().stream()
+					.filter(item -> !(item.getInputData() instanceof InputDataGroup
+						|| item.getInputData() instanceof InputDataGroupComponent))
+					.collect(Collectors.toList());
+			}
+			else {
+				// remove self selection
+				templates = model.getFindingsTemplates().stream()
+					.filter(item -> !item.equals(current))
+					.collect(Collectors.toList());
+			}
+			
+		}
+		else {
+			templates = model.getFindingsTemplates();
+		}
+		viewer.setInput(templates);
+		viewer.setSelection(new StructuredSelection(selections));
 		return composite;
 
 
@@ -113,11 +137,11 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		selection = new ArrayList<>();
+		selections = new ArrayList<>();
 		StructuredSelection structuredSelection = (StructuredSelection) viewer.getSelection();
 		for (Object o : structuredSelection.toArray()) {
 			if (o instanceof FindingsTemplate) {
-				selection.add((FindingsTemplate) o);
+				selections.add((FindingsTemplate) o);
 			}
 		}
 		
@@ -125,17 +149,17 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 	}
 	
 	public List<FindingsTemplate> getSelection(boolean asCopy){
-		if (selection == null) {
-			selection = Collections.emptyList();
+		if (selections == null) {
+			selections = Collections.emptyList();
 		}
 		if (asCopy) {
 			List<FindingsTemplate> findingsTemplates = new ArrayList<>();
-			for (FindingsTemplate findingsTemplate : selection) {
+			for (FindingsTemplate findingsTemplate : selections) {
 				findingsTemplates.add(EcoreUtil.copy(findingsTemplate));
 			}
 			return findingsTemplates;
 		}
-		return selection;
+		return selections;
 	}
 	
 	public FindingsTemplate getSingleSelection(boolean asCopy){

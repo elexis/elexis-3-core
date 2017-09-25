@@ -3,6 +3,7 @@ package ch.elexis.core.findings.templates.ui.views;
 import java.util.Optional;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -59,7 +60,7 @@ public class FindingsTemplateView extends ViewPart implements IActivationListene
 		tabTemplates.setText("Vorlagen");
 		TabItem tabCodeSystems = new TabItem(tabFolder, SWT.NONE, 1);
 		tabCodeSystems.setText("Codesysteme");
-		
+		tabCodeSystems.setData("tabCodeSystems");
 		FindingsTemplates model = findingsTemplateService.getFindingsTemplates();
 		findingsComposite = new FindingsComposite(compositeTemplates, model);
 		FindingsDetailComposite findingsDetailComposite =
@@ -76,6 +77,15 @@ public class FindingsTemplateView extends ViewPart implements IActivationListene
 		codesSystemsComposite.createContens();
 		tabTemplates.setControl(compositeTemplates);
 		tabCodeSystems.setControl(codesSystemsComposite);
+		
+		tabFolder.addSelectionListener(new SelectionAdapter() {
+			  public void widgetSelected(org.eclipse.swt.events.SelectionEvent event) {
+				TabItem t = tabFolder.getSelection()[0];
+				if ("tabCodeSystems".equals(t.getData())) {
+					codesSystemsComposite.loadTable();
+				}
+			}
+		});
 		
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}

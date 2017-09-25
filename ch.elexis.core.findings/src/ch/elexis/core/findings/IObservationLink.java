@@ -12,6 +12,6 @@ package ch.elexis.core.findings;
 
 public interface IObservationLink {
 	public enum ObservationLinkType {
-			REF, COMP
+			REF
 	}
 }

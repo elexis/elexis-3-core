@@ -60,16 +60,18 @@ public class CodesSystemsComposite extends Composite {
 			}
 		});
 		
-		tableViewer = new TableViewer(this);
+		tableViewer = new TableViewer(this,
+			SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
 				ICoding iCoding = (ICoding) element;
-				return iCoding != null ? iCoding.getCode() : "";
+				return iCoding != null ? iCoding.getDisplay() + " (" + iCoding.getCode() + ")" : "";
 			}
 		});
+		tableViewer.getTable().setLinesVisible(false);
 		
 		loadTable();
 		createContextMenu(tableViewer);
@@ -92,10 +94,10 @@ public class CodesSystemsComposite extends Composite {
 		viewer.getControl().setMenu(menu);
 	}
 	
-	private void loadTable(){
+	public void loadTable(){
 		List<ICoding> codings = FindingsTemplateView.codingService
 			.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
-		codings.sort((a, b) -> ObjectUtils.compare(a.getCode(), b.getCode()));
+		codings.sort((a, b) -> ObjectUtils.compare(a.getDisplay(), b.getDisplay()));
 		tableViewer.setInput(codings);
 	}
 	

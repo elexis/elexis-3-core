@@ -2,7 +2,6 @@ package ch.elexis.core.findings.templates.ui.composite;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -31,6 +30,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
@@ -42,8 +42,8 @@ import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
-import ch.elexis.core.findings.templates.ui.dlg.CodeSystemsDialog;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
+import ch.elexis.core.findings.templates.ui.views.FindingsTemplateView;
 
 @SuppressWarnings("unchecked")
 public class FindingsDetailComposite extends Composite {
@@ -54,7 +54,6 @@ public class FindingsDetailComposite extends Composite {
 	private Text txtComma;
 	private ComboViewer comboType;
 	private ComboViewer comboInputData;
-	private Label txtCodes;
 	FindingsTemplate selection;
 	private Composite compositeType;
 	private Composite compositeInputData;
@@ -90,8 +89,11 @@ public class FindingsDetailComposite extends Composite {
 				.observeDetail(contentProvider.getKnownElements())));
 		
 		comboType.setContentProvider(ArrayContentProvider.getInstance());
-		comboType.setLabelProvider(new LabelProvider());
-		comboType.setInput(Type.VALUES);
+		comboType.setLabelProvider(new ComboTypeLabelProvider());
+		comboType.setInput(new Type[] {
+			Type.OBSERVATION, Type.OBSERVATION_OBJECTIVE, Type.OBSERVATION_SUBJECTIVE,
+			Type.OBSERVATION_VITAL
+		});
 		
 		comboType.addSelectionChangedListener(new ISelectionChangedListener() {
 			
@@ -99,36 +101,13 @@ public class FindingsDetailComposite extends Composite {
 			public void selectionChanged(SelectionChangedEvent event){
 				Type type = (Type) ((StructuredSelection) event.getSelection()).getFirstElement();
 				selection.setType(type);
-				compositeType.setVisible(type.getValue() < 100);
-			}
-		});
-		
-		Label lblCodes = new Label(this, SWT.NONE);
-		lblCodes.setText("Codes");
-		
-		Composite compCodes = new Composite(this, SWT.NONE);
-		compCodes.setLayout(new GridLayout(2, false));
-		
-		txtCodes = new Label(compCodes, SWT.NONE);
-		txtCodes.setText("Nicht definiert");
-		
-		Button button = new Button(compCodes, SWT.PUSH);
-		button.setText("ändern..");
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				CodeSystemsDialog codeSystemsDialog =
-					new CodeSystemsDialog(getShell(), selection.getCode() != null
-							? Optional.of(selection.getCode()) : Optional.empty());
-				int ret = codeSystemsDialog.open();
-				if (ret == MessageDialog.OK) {
-					codeSystemsDialog.getSelectedCode()
-						.ifPresent(code -> {
-							selection.setCode(code);
-							setSelection(model, selection);
-					});
-				}
 				
+				if (type.getValue() < 100) {
+					compositeType.setVisible(true);
+				} else {
+					compositeType.setVisible(false);
+					selection.setInputData(null);
+				}
 			}
 		});
 		
@@ -160,7 +139,7 @@ public class FindingsDetailComposite extends Composite {
 				.observeDetail(contentProvider.getKnownElements())));
 		
 		comboInputData.setContentProvider(ArrayContentProvider.getInstance());
-		comboInputData.setLabelProvider(new LabelProvider());
+		comboInputData.setLabelProvider(new ComboInputDataTypeLabelProvider());
 		comboInputData.setInput(DataType.VALUES);
 		
 		compositeInputData = new Composite(compositeType, SWT.NONE);
@@ -206,13 +185,25 @@ public class FindingsDetailComposite extends Composite {
 				public void widgetSelected(SelectionEvent e){
 					FindingsSelectionDialog findingsSelectionDialog =
 						new FindingsSelectionDialog(getShell(),
-							model, inputDataGroup.getFindingsTemplates(), true);
+							model, inputDataGroup.getFindingsTemplates(), true, selection);
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
 						inputDataGroup.getFindingsTemplates().clear();
-						inputDataGroup.getFindingsTemplates()
-							.addAll(findingsSelectionDialog.getSelection(false));
-						lblGrouplist.setText(getInputDataGroupText(inputDataGroup));
+						
+						for (FindingsTemplate findingsTemplate : findingsSelectionDialog
+							.getSelection(false)) {
+							inputDataGroup.getFindingsTemplates().add(findingsTemplate);
+							try {
+								FindingsTemplateView.findingsTemplateService.validateCycleDetection(
+									selection, 0, 100, findingsTemplate.getTitle(), true);
+							} catch (ElexisException e1) {
+								inputDataGroup.getFindingsTemplates().remove(findingsTemplate);
+								MessageDialog.openError(getShell(), "Befunde Vorlagen",
+									e1.getMessage());
+							}
+						}
 						selection.setInputData(inputDataGroup);
+						
+						lblGrouplist.setText(getInputDataGroupText(inputDataGroup));
 						compositeInputData.layout(true, true);
 					}
 				}
@@ -242,11 +233,12 @@ public class FindingsDetailComposite extends Composite {
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					FindingsSelectionDialog findingsSelectionDialog = new FindingsSelectionDialog(
-						getShell(), model, inputDataGroupComponent.getFindingsTemplates(), true);
+						getShell(), model, inputDataGroupComponent.getFindingsTemplates(), true,
+						selection);
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
 						inputDataGroupComponent.getFindingsTemplates().clear();
 						inputDataGroupComponent.getFindingsTemplates()
-							.addAll(findingsSelectionDialog.getSelection(true));
+							.addAll(findingsSelectionDialog.getSelection(false));
 						lblGroupComponentlist
 							.setText(getInputDataGroupText(inputDataGroupComponent));
 						selection.setInputData(inputDataGroupComponent);
@@ -348,11 +340,6 @@ public class FindingsDetailComposite extends Composite {
 		
 		if (selection != null) {
 			item.setValue(selection);
-			txtCodes.setText(
-				selection.getCode() == null ? "Nicht definiert"
-						: "[" + selection.getCode().getCode() + "] "
-							+ selection.getCode().getDisplay());
-			
 			comboType.setSelection(new StructuredSelection(selection.getType()));
 			if (selection.getInputData() instanceof InputDataNumeric) {
 				comboInputData.setSelection(new StructuredSelection(DataType.NUMERIC));
@@ -377,6 +364,21 @@ public class FindingsDetailComposite extends Composite {
 	
 	public FindingsTemplate getSelection(){
 		return selection;
+	}
+	
+	class ComboInputDataTypeLabelProvider extends LabelProvider {
+		@Override
+		public String getText(Object element){
+			return FindingsTemplateView.findingsTemplateService
+				.getDataTypeAsText((DataType) element);
+		}
+	}
+	
+	class ComboTypeLabelProvider extends LabelProvider {
+		@Override
+		public String getText(Object element){
+			return FindingsTemplateView.findingsTemplateService.getTypeAsText((Type) element);
+		}
 	}
 	
 }

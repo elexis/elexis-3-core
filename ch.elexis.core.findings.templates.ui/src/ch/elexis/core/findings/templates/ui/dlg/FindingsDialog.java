@@ -29,7 +29,7 @@ public class FindingsDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent){
-		setMessage("Neue Befund Vorlage anlgen");
+		setMessage("Neue Befundvorlage anlegen");
 		setTitle("Befund Vorlage");
 		
 		findingsDetailComposite = new FindingsDetailComposite(parent, model);
