@@ -1,5 +1,6 @@
 package ch.elexis.data.dto;
 
+import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.data.Verrechnet;
@@ -50,12 +51,12 @@ public class LeistungDTO {
 		this.iVerrechenbar = verrechnet.getVerrechenbar();
 	}
 	
-	public LeistungDTO(IVerrechenbar iVerrechenbar){
+	public LeistungDTO(IVerrechenbar iVerrechenbar, IFall fall){
 		this.lastUpdate = System.currentTimeMillis();
 		this.id = iVerrechenbar.getId();
 		this.code = iVerrechenbar.getCode();
 		this.text = iVerrechenbar.getText();
-		this.tp = 0;
+		this.tp = iVerrechenbar.getTP(new TimeTool(), fall);
 		this.tpw = 1.0;
 		this.scale1 = 1.0;
 		this.scale2 = 1.0;

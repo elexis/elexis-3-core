@@ -23,29 +23,14 @@ import ch.elexis.core.ui.views.FallDetailBlatt2;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
 
-public class NeuerFallDialog extends TitleAreaDialog {
+public class FallEditDialog extends TitleAreaDialog {
 	Fall fall;
 	Patient pat;
 	private FallDetailBlatt2 fdb;
-	private final boolean deleteOnCancel;
 	
-	public NeuerFallDialog(Shell shell, Fall f){
+	public FallEditDialog(Shell shell, Fall f){
 		super(shell);
 		fall = f;
-		if (fall == null) {
-			pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-			fall = pat.neuerFall(Messages.NeuerFallDialog_0, Messages.NeuerFallDialog_1,
-				Messages.NeuerFallDialog_2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
-		deleteOnCancel = true;
-	}
-	
-	public NeuerFallDialog(Shell shell, Patient pat, boolean deleteOnCancel){
-		super(shell);
-		this.pat = pat;
-		this.fall = pat.neuerFall(Messages.NeuerFallDialog_0, Messages.NeuerFallDialog_1,
-			Messages.NeuerFallDialog_2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		this.deleteOnCancel = deleteOnCancel;
 	}
 	
 	@Override
@@ -60,9 +45,9 @@ public class NeuerFallDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setMessage(Messages.NeuerFallDialog_enterCaseData); //$NON-NLS-1$
-		setTitle(Messages.NeuerFallDialog_createNewCase); //$NON-NLS-1$
-		getShell().setText(Messages.NeuerFallDialog_newCase); //$NON-NLS-1$
+		setMessage(Messages.FallEditDialog_enterCaseData); //$NON-NLS-1$
+		setTitle(Messages.FallEditDialog_editCase); //$NON-NLS-1$
+		getShell().setText(Messages.FallEditDialog_editCase); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -77,10 +62,6 @@ public class NeuerFallDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void cancelPressed(){
-		if (deleteOnCancel) {
-			fall.delete();
-		}
-		ElexisEventDispatcher.reload(Fall.class);
 		super.cancelPressed();
 	}
 	

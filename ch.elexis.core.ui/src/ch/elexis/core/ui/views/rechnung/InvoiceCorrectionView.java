@@ -7,12 +7,10 @@ import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBU
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -70,13 +68,16 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.data.util.BillingUtil.BillCallback;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
+import ch.elexis.core.ui.dialogs.FallSelectionDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
@@ -91,13 +92,11 @@ import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.core.ui.views.rechnung.InvoiceCorrectionWizard.Page2;
 import ch.elexis.data.Anwender;
-import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.Rechnungssteller;
-import ch.elexis.data.Verrechnet;
 import ch.elexis.data.dto.DiagnosesDTO;
 import ch.elexis.data.dto.FallDTO;
 import ch.elexis.data.dto.FallDTO.IFallChanged;
@@ -110,7 +109,6 @@ import ch.elexis.data.dto.LeistungDTO;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
-import ch.rgw.tools.Result.msg;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -386,22 +384,48 @@ public class InvoiceCorrectionView extends ViewPart {
 	class InvoiceContentHeaderComposite extends Composite {
 		public InvoiceContentHeaderComposite(Composite parent){
 			super(parent, SWT.BORDER);
-			setLayout(new GridLayout(1, false));
-			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+			GridLayout gd = new GridLayout(1, false);
+			gd.marginWidth = 0;
+			gd.marginHeight = 0;
+			setLayout(gd);
+			setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		}
 		
 		public void createComponents(FallDTO fallDTO){
 			this.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
-			Label lblTitle = new Label(this, SWT.NONE);
-			lblTitle.setText("Fallangaben");
-			lblTitle.setFont(SWTResourceManager.getFont("Noto Sans", 9, SWT.BOLD));
-			lblTitle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+			FormToolkit tk = UiDesk.getToolkit();
+			ScrolledForm form = tk.createScrolledForm(this);
+			form.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+			form.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			Composite body = form.getBody();
+			GridLayout gd1 = new GridLayout();
+			gd1.marginWidth = 0;
+			gd1.marginHeight = 0;
+			body.setLayout(gd1);
+			ExpandableComposite expandable = WidgetFactory.createExpandableComposite(tk, form, ""); //$NON-NLS-1$
+			expandable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			expandable.setExpanded(false);
+			expandable.setText("Fallangaben");
+			expandable.addExpansionListener(new ExpansionAdapter() {
+				
+				@Override
+				public void expansionStateChanged(ExpansionEvent e){
+					invoiceComposite.updateScrollBars();
+				}
+			});
+			Composite group = tk.createComposite(expandable, SWT.NONE);
+			GridLayout gd = new GridLayout(2, false);
+			gd.marginWidth = 0;
+			gd.marginHeight = 0;
+			group.setLayout(gd);
+			group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			expandable.setClient(group);
 			
-			FallDetailBlatt2 fallDetailBlatt2 = new FallDetailBlatt2(this, fallDTO, true,
+			FallDetailBlatt2 fallDetailBlatt2 = new FallDetailBlatt2(group, fallDTO, true,
 				actualInvoice == null || !actualInvoice.isCorrectable());
-			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-			gd.heightHint = 340;
-			fallDetailBlatt2.setLayoutData(gd);
+			GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+			gd2.heightHint = 340;
+			fallDetailBlatt2.setLayoutData(gd2);
 		}
 	}
 	
@@ -439,7 +463,7 @@ public class InvoiceCorrectionView extends ViewPart {
 						
 						invoiceComposite.updateScrollBars();
 						
-						if((boolean) e.data) {
+						if ((boolean) e.data) {
 							Konsultation originKons = Konsultation.load(konsultationDTO.getId());
 							ElexisEventDispatcher.fireSelectionEvent(originKons);
 						} else {
@@ -635,7 +659,8 @@ public class InvoiceCorrectionView extends ViewPart {
 				public void dropped(PersistentObject o, DropTargetEvent ev){
 					if (o instanceof IVerrechenbar) {
 						IVerrechenbar art = (IVerrechenbar) o;
-						LeistungDTO leistungDTO = new LeistungDTO(art);
+						LeistungDTO leistungDTO =
+							new LeistungDTO(art, invoiceCorrectionDTO.getFallDTO());
 						konsultationDTO.getLeistungDTOs().add(leistungDTO);
 						leistungDTO.calcPrice(konsultationDTO, invoiceCorrectionDTO.getFallDTO());
 						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
@@ -708,12 +733,36 @@ public class InvoiceCorrectionView extends ViewPart {
 				public void run(){
 					LeistungDTO leistungDTO = getSelection();
 					if (leistungDTO != null) {
-						konsultationDTO.getLeistungDTOs().remove(leistungDTO);
-						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
-							OperationType.LEISTUNG_TRANSFER_TO_NEW_FALL_KONS, konsultationDTO,
-							leistungDTO));
-						tableViewer.refresh();
-						invoiceComposite.updateScrollBars();
+						FallSelectionDialog fallSelectionDialog =
+							new FallSelectionDialog(getShell(),
+								"Bitte wählen Sie einen Fall aus, auf das die u.a. Leistung transferiert werden soll.\n"
+									+ leistungDTO.getText(),
+								invoiceCorrectionDTO.getFallDTO());
+						if (fallSelectionDialog.open() == MessageDialog.OK) {
+							if (fallSelectionDialog.getSelectedFall().isPresent()) {
+								konsultationDTO.getLeistungDTOs().remove(leistungDTO);
+								IFall iFall = fallSelectionDialog.getSelectedFall().get();
+								InvoiceHistoryEntryDTO existingEntry = invoiceCorrectionDTO
+									.getHistoryEntryForLeistungTransferFromCache(iFall);
+								
+								if (existingEntry != null
+									&& existingEntry.getItem() instanceof List<?>) {
+									List<LeistungDTO> leistungen =
+										(List<LeistungDTO>) existingEntry.getItem();
+									leistungen.add(leistungDTO);
+								} else {
+									List<LeistungDTO> leistungen = new ArrayList<>();
+									leistungen.add(leistungDTO);
+									invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+										OperationType.LEISTUNG_TRANSFER_TO_FALL_KONS,
+										konsultationDTO, leistungen, iFall));
+									
+								}
+								tableViewer.refresh();
+								invoiceComposite.updateScrollBars();
+							}
+							
+						}
 					}
 				}
 			});
@@ -1067,396 +1116,33 @@ public class InvoiceCorrectionView extends ViewPart {
 								InvoiceCorrectionDTO invoiceCorrectionDTO =
 									page.getInvoiceCorrectionDTO();
 								
-								// batch change history
-								boolean success = true;
-								StringBuilder output = new StringBuilder();
-								Rechnung rechnung = Rechnung.load(invoiceCorrectionDTO.getId());
-								Optional<Fall> srcFall = Optional.empty();
-								Optional<Fall> copyFall = Optional.empty();
-								List<Konsultation> releasedKonsultations = new ArrayList<>();
-								LeistungDTO leistungDTO = null;
-								DiagnosesDTO diagnosesDTO = null;
-								Konsultation konsultation = null;
-								Verrechnet verrechnet = null;
-								
-								for (InvoiceHistoryEntryDTO historyEntryDTO : invoiceCorrectionDTO
-									.getHistory()) {
-									try {
-										if (success) {
-											Object base = historyEntryDTO.getBase();
-											Object item = historyEntryDTO.getItem();
-											OperationType operationType =
-												historyEntryDTO.getOperationType();
-											log.debug("invoice correction: processing [{}] start ",
-												operationType);
-											// storno
-											switch (operationType) {
-											case RECHNUNG_STORNO:
-												releasedKonsultations
-													.addAll(rechnung.stornoBill(true));
-												log.debug(
-													"invoice correction: storno invoice with number [{}] ",
-													rechnung.getNr());
-												break;
-											case RECHNUNG_NEW:
-												if (copyFall.isPresent()) {
-													if (invoiceCorrectionDTO.getFallDTO()
-														.getEndDatum() != null) {
-														copyFall.get()
-															.setEndDatum(invoiceCorrectionDTO
-																.getFallDTO().getEndDatum());
-													}
-													
-													// close fall if no kons exists
-													if ((srcFall.get().isOpen()
-														|| new TimeTool(srcFall.get().getEndDatum())
-															.after(new TimeTool()))
-														&& srcFall.get()
-															.getBehandlungen(true).length == 0) {
-														srcFall.get().setEndDatum(new TimeTool()
-															.toString(TimeTool.DATE_GER));
-													}
-												}
-												Result<Rechnung> rechnungResult =
-													Rechnung.build(releasedKonsultations);
-												if (!rechnungResult.isOK()) {
-													
-													for (msg message : rechnungResult
-														.getMessages()) {
-														if (message.getSeverity() != SEVERITY.OK) {
-															if (output.length() > 0) {
-																output.append("\n");
-															}
-															output.append(message.getText());
-														}
-													}
-													success = false;
-													log.warn(
-														"invoice correction: cannot create new invoice with id "
-															+ (rechnungResult.get() != null
-																	? rechnungResult.get().getId()
-																	: "null"));
-												} else {
-													Rechnung newRechnung = rechnungResult.get();
-													invoiceCorrectionDTO
-														.setNewInvoiceNumber(newRechnung.getNr());
-													log.debug(
-														"invoice correction: create new invoice with number [{}] old invoice number [{}] ",
-														newRechnung.getNr(), rechnung.getNr());
-													output.append("Die Rechnung " + rechnung.getNr()
-														+ " wurde erfolgreich durch "
-														+ rechnung.getMandant().getLabel()
-														+ " korrigiert - Neue Rechnungsnummer lautet: "
-														+ invoiceCorrectionDTO
-															.getNewInvoiceNumber());
-												}
-												break;
-											case FALL_COPY:
-												srcFall = Optional.of(rechnung.getFall());
-												copyFall = Optional.of(srcFall.get().createCopy());
-												log.debug(
-													"invoice correction: copied fall from id [{}] to id [{}] ",
-													srcFall.get().getId(), copyFall.get().getId());
-												break;
-											case FALL_CHANGE:
-												copyFall.get()
-													.persistDTO(invoiceCorrectionDTO.getFallDTO());
-												// at this point the fall must be opened
-												copyFall.get().setEndDatum(null);
-												log.debug(
-													"invoice correction: persisted fall changes to id  [{}] ",
-													copyFall.get().getId());
-												break;
-											case FALL_KONSULTATION_TRANSER:
-												releasedKonsultations.clear();
-												Konsultation[] consultations =
-													srcFall.get().getBehandlungen(true);
-												if (consultations != null) {
-													for (Konsultation openedKons : consultations) {
-														if (openedKons.exists()) {
-															Rechnung bill =
-																openedKons.getRechnung();
-															if (bill == null) {
-																openedKons
-																	.transferToFall(copyFall.get());
-																log.debug(
-																	"invoice correction: transfered kons id [{}] to copied fall id  [{}] ",
-																	openedKons.getId(),
-																	copyFall.get().getId());
-																releasedKonsultations
-																	.add(openedKons);
-																
-																// if validation of cons is failed the bill correction will be reseted
-																Result<?> result = BillingUtil
-																	.getBillableResult(openedKons);
-																if (!result.isOK()) {
-																	addToOutput(output, result);
-																	success = false;
-																	resetCorrection(srcFall.get(),
-																		copyFall.get(),
-																		releasedKonsultations);
-																	log.warn(
-																		"invoice correction: try reseting correction - transfer kons id [{}] back to src fall id  [{}]",
-																		openedKons.getId(),
-																		srcFall.get().getId());
-																}
-															}
-														}
-													}
-												}
-												break;
-											case KONSULTATION_CHANGE_DATE:
-												Konsultation.load(((KonsultationDTO) base).getId())
-													.setDatum(((KonsultationDTO) base).getDate(),
-														true);
-												log.debug(
-													"invoice correction: changed date of kons id [{}]",
-													((KonsultationDTO) base).getId());
-												break;
-											case KONSULTATION_CHANGE_MANDANT:
-												Konsultation.load(((KonsultationDTO) base).getId())
-													.setMandant(
-														((KonsultationDTO) base).getMandant());
-												log.debug(
-													"invoice correction: changed mandant of kons id [{}]",
-													((KonsultationDTO) base).getId());
-												break;
-											case LEISTUNG_ADD:
-												konsultation = Konsultation
-													.load(((KonsultationDTO) base).getId());
-												leistungDTO = (LeistungDTO) item;
-												Result<IVerrechenbar> res = konsultation
-													.addLeistung(leistungDTO.getIVerrechenbar());
-												log.debug(
-													"invoice correction: added leistung id [{}] to kons id [{}]",
-													leistungDTO.getId(),
-													((KonsultationDTO) base).getId());
-												if (res.isOK()) {
-													verrechnet = konsultation.getVerrechnet(
-														leistungDTO.getIVerrechenbar());
-													if (verrechnet != null) {
-														leistungDTO.setVerrechnet(verrechnet);
-													}
-												} else {
-													addToOutput(output, res);
-													verrechnet = null;
-												}
-												if (verrechnet == null) {
-													addToOutput(output,
-														"Die Leistung "
-															+ leistungDTO.getIVerrechenbar()
-																.getText()
-															+ " konnte nicht verrechnet werden.");
-													success = false;
-													log.warn(
-														"invoice correction: cannot add leistung with id [{}] to kons id [{}]",
-														leistungDTO.getId(), konsultation.getId());
-												}
-												
-												break;
-											case LEISTUNG_REMOVE:
-												leistungDTO = (LeistungDTO) item;
-												if (leistungDTO.getVerrechnet() != null) {
-													Result<Verrechnet> resRemove = Konsultation
-														.load(((KonsultationDTO) base).getId())
-														.removeLeistung(
-															leistungDTO.getVerrechnet());
-													log.debug(
-														"invoice correction: removed leistung id [{}] from kons id [{}]",
-														leistungDTO.getId(),
-														((KonsultationDTO) base).getId());
-													if (resRemove.isOK()) {
-														((LeistungDTO) item).setVerrechnet(null);
-													} else {
-														addToOutput(output,
-															"Die Leistung "
-																+ leistungDTO.getVerrechnet()
-																	.getText()
-																+ " konnte nicht entfernt werden.");
-														success = false;
-														log.warn(
-															"invoice correction: cannot remove leistung with id [{}] from kons id [{}]",
-															leistungDTO.getId(),
-															((KonsultationDTO) base).getId());
-													}
-												}
-												break;
-											case LEISTUNG_TRANSFER_TO_NEW_FALL_KONS:
-												leistungDTO = (LeistungDTO) item;
-												konsultation = Konsultation
-													.load(((KonsultationDTO) base).getId());
-												log.debug(
-													"invoice correction: transfer leistung id [{}] from kons id [{}]",
-													leistungDTO.getId(), konsultation.getId());
-												if (leistungDTO.getVerrechnet() != null) {
-													
-													Result<Verrechnet> resRemove =
-														konsultation.removeLeistung(
-															leistungDTO.getVerrechnet());
-													log.debug(
-														"invoice correction: removed leistung id [{}] from kons id [{}]",
-														leistungDTO.getId(), konsultation.getId());
-													if (resRemove.isOK()) {
-														((LeistungDTO) item).setVerrechnet(null);
-														
-													} else {
-														addToOutput(output, "Die Leistung "
-															+ leistungDTO.getVerrechnet().getText()
-															+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Entfernen der Leistung ist fehlgeschlagen.");
-														success = false;
-														log.warn(
-															"invoice correction: cannot transfer/remove leistung with id [{}] from kons id [{}]",
-															leistungDTO.getId(),
-															konsultation.getId());
-														break;
-													}
-												}
-												Fall srcF = rechnung.getFall();
-												Fall copyF = srcF.createCopy();
-												log.debug(
-													"invoice correction: copied fall from id [{}] to id [{}] ",
-													srcF.getId(), copyF.getId());
-												Konsultation newKons =
-													konsultation.createCopy(copyF, rechnung);
-												log.debug(
-													"invoice correction: copied kons from id [{}] to id [{}] ",
-													konsultation.getId(), newKons.getId());
-												Result<IVerrechenbar> resAddLeistung = newKons
-													.addLeistung(leistungDTO.getIVerrechenbar());
-												log.debug(
-													"invoice correction: add leistung id [{}] to kons id [{}]",
-													leistungDTO.getId(), newKons.getId());
-												if (resAddLeistung.isOK()) {
-													verrechnet = newKons.getVerrechnet(
-														leistungDTO.getIVerrechenbar());
-													if (verrechnet != null) {
-														leistungDTO.setVerrechnet(verrechnet);
-													}
-												} else {
-													addToOutput(output, resAddLeistung);
-													verrechnet = null;
-												}
-												if (verrechnet == null) {
-													addToOutput(output, "Die Leistung "
-														+ leistungDTO.getIVerrechenbar().getText()
-														+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Hinzufügen der Leistung ist fehlgeschlagen.");
-													success = false;
-													log.warn(
-														"invoice correction: cannot transfer/add leistung with id [{}] to new kons id [{}]",
-														leistungDTO.getId(), newKons.getId());
-												}
-												break;
-											case LEISTUNG_CHANGE_COUNT:
-												leistungDTO = (LeistungDTO) item;
-												verrechnet = leistungDTO.getVerrechnet();
-												if (verrechnet != null) {
-													IStatus ret = verrechnet.changeAnzahlValidated(
-														leistungDTO.getCount());
-													log.debug(
-														"invoice correction: changed count from leistung id [{}]",
-														leistungDTO.getId());
-													if (ret.isOK()) {
-														verrechnet.setSecondaryScaleFactor(
-															leistungDTO.getScale2());
-														verrechnet
-															.setText(leistungDTO.getPriceText());
-														
-													} else {
-														addToOutput(output, ret.getMessage());
-														success = false;
-														log.warn(
-															"invoice correction: cannot change count from leistung with id [{}]",
-															leistungDTO.getId());
-													}
-												}
-												break;
-											case LEISTUNG_CHANGE_PRICE:
-												leistungDTO = (LeistungDTO) item;
-												verrechnet = leistungDTO.getVerrechnet();
-												if (verrechnet != null) {
-													int tp = leistungDTO.getTp();
-													int tpOld = Verrechnet.checkZero(verrechnet
-														.get(Verrechnet.SCALE_TP_SELLING));
-													verrechnet.setSecondaryScaleFactor(
-														leistungDTO.getScale2());
-													if (tpOld != tp) {
-														verrechnet.setTP(tp);
-														verrechnet.setPreis(leistungDTO.getPrice());
-														log.debug(
-															"invoice correction: price changed to [{}] for leistung id [{}]",
-															leistungDTO.getPrice()
-																.getAmountAsString(),
-															leistungDTO.getId());
-													}
-												} else {
-													log.warn(
-														"invoice correction: leistung id [{}] no verrechnet exists cannot change price",
-														leistungDTO.getId());
-												}
-												break;
-											case DIAGNOSE_ADD:
-												konsultation = Konsultation
-													.load(((KonsultationDTO) base).getId());
-												diagnosesDTO = (DiagnosesDTO) item;
-												konsultation
-													.addDiagnose(diagnosesDTO.getiDiagnose());
-												log.debug(
-													"invoice correction: added diagnose id [{}] to kons id [{}]",
-													diagnosesDTO.getId(), konsultation.getId());
-												break;
-											case DIAGNOSE_REMOVE:
-												konsultation = Konsultation
-													.load(((KonsultationDTO) base).getId());
-												diagnosesDTO = (DiagnosesDTO) item;
-												konsultation
-													.removeDiagnose(diagnosesDTO.getiDiagnose());
-												log.debug(
-													"invoice correction: removed diagnose id [{}] from kons id [{}]",
-													diagnosesDTO.getId(), konsultation.getId());
-												break;
-											default:
-												break;
+								BillingUtil.doBillCorrection(invoiceCorrectionDTO,
+									new BillCallback() {
+										
+										@Override
+										public List<Konsultation> storno(Rechnung rechnung){
+											RnDialogs.StornoDialog stronoDlg =
+												new RnDialogs.StornoDialog(
+													UiDesk.getDisplay().getActiveShell(), rechnung,
+													true);
+											if (stronoDlg.open() == Dialog.OK) {
+												return stronoDlg.getKonsultations();
+											} else {
+												page.getTxtOutput().setText(
+													"Die Rechnungskorrektur wurde durch den Benutzer abgebrochen.");
+												return null;
 											}
-											
-											page.getTxtOutput().setText(output.toString());
-											invoiceCorrectionDTO.setOutputText(output.toString());
 										}
-									} catch (Exception e) {
-										log.error("invoice correction: unexpected error", e);
-										success = false;
-									} finally {
-										log.debug("invoice correction: processing [{}] ",
-											success ? "success" : "failed");
-										historyEntryDTO.setSuccess(success);
-										page.setChecked(historyEntryDTO, success);
-									}
+									});
+									
+								page.updateProcess();
+								if (invoiceCorrectionDTO.getOutputText() != null) {
+									page.getTxtOutput()
+										.setText(invoiceCorrectionDTO.getOutputText());
 								}
 							}
 						}
 						
-						private void addToOutput(StringBuilder output, Result<?> res){
-							StringBuilder warnings = new StringBuilder();
-							for (msg message : res.getMessages()) {
-								if (message.getSeverity() != SEVERITY.OK) {
-									if (output.length() > 0) {
-										warnings.append(" / ");
-									}
-									warnings.append(message.getText());
-								}
-							}
-							if (warnings.length() > 0) {
-								output.append(warnings.toString());
-							}
-						}
-						
-						private void addToOutput(StringBuilder output, String warning){
-							if (output.length() > 0) {
-								output.append("\n");
-							}
-							if (warning.length() > 0) {
-								output.append(warning);
-							}
-						}
 					});
 					
 					int state = wizardDialog.open();
@@ -1501,15 +1187,6 @@ public class InvoiceCorrectionView extends ViewPart {
 				StringUtils.isEmpty(invoiceCorrectionDTO.getNewInvoiceNumber()) ? ""
 						: invoiceCorrectionDTO.getNewInvoiceNumber());
 		}
-	}
-	
-	private void resetCorrection(Fall srcFall, Fall copyFall,
-		List<Konsultation> transferedConsultations){
-		// reset
-		for (Konsultation k : transferedConsultations) {
-			k.transferToFall(srcFall);
-		}
-		copyFall.delete();
 	}
 	
 	private boolean changePriceDialog(LeistungDTO leistungDTO){

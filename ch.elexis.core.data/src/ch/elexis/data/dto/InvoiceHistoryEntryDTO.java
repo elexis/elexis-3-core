@@ -1,7 +1,10 @@
 package ch.elexis.data.dto;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import ch.elexis.core.data.interfaces.IFall;
 import ch.rgw.tools.TimeTool;
 
 public class InvoiceHistoryEntryDTO {
@@ -10,6 +13,7 @@ public class InvoiceHistoryEntryDTO {
 	OperationType operationType;
 	Date timestamp;
 	Boolean success;
+	Object additional;
 	
 	/**
 	 * 
@@ -25,6 +29,12 @@ public class InvoiceHistoryEntryDTO {
 		this.item = item;
 		this.operationType = operationType;
 		this.success = null;
+	}
+	
+	public InvoiceHistoryEntryDTO(OperationType operationType, Object base, Object item,
+		Object additional){
+		this(operationType, base, item);
+		this.additional = additional;
 	}
 	
 	public void setSuccess(Boolean success){
@@ -50,10 +60,14 @@ public class InvoiceHistoryEntryDTO {
 	public Object getBase(){
 		return base;
 	}
+	
+	public Object getAdditional(){
+		return additional;
+	}
 
 	public enum OperationType {
 			LEISTUNG_ADD(true), LEISTUNG_REMOVE(true), LEISTUNG_CHANGE_COUNT, LEISTUNG_CHANGE_PRICE,
-			LEISTUNG_TRANSFER_TO_NEW_FALL_KONS(true), DIAGNOSE_ADD(true), DIAGNOSE_REMOVE(true),
+			LEISTUNG_TRANSFER_TO_FALL_KONS(true), DIAGNOSE_ADD(true), DIAGNOSE_REMOVE(true),
 			KONSULTATION_CHANGE_DATE, KONSULTATION_CHANGE_MANDANT, FALL_COPY, FALL_CHANGE,
 			FALL_KONSULTATION_TRANSER, RECHNUNG_STORNO,
 			RECHNUNG_NEW;
@@ -73,13 +87,15 @@ public class InvoiceHistoryEntryDTO {
 		}
 	}
 	
+
 	@Override
 	public int hashCode(){
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((additional == null) ? 0 : additional.hashCode());
 		result = prime * result + ((base == null) ? 0 : base.hashCode());
-		result = prime * result + ((operationType == null) ? 0 : operationType.hashCode());
 		result = prime * result + ((item == null) ? 0 : item.hashCode());
+		result = prime * result + ((operationType == null) ? 0 : operationType.hashCode());
 		return result;
 	}
 	
@@ -92,17 +108,22 @@ public class InvoiceHistoryEntryDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		InvoiceHistoryEntryDTO other = (InvoiceHistoryEntryDTO) obj;
+		if (additional == null) {
+			if (other.additional != null)
+				return false;
+		} else if (!additional.equals(other.additional))
+			return false;
 		if (base == null) {
 			if (other.base != null)
 				return false;
 		} else if (!base.equals(other.base))
 			return false;
-		if (operationType != other.operationType)
-			return false;
 		if (item == null) {
 			if (other.item != null)
 				return false;
 		} else if (!item.equals(other.item))
+			return false;
+		if (operationType != other.operationType)
 			return false;
 		return true;
 	}
@@ -176,10 +197,12 @@ public class InvoiceHistoryEntryDTO {
 			builder.append(((LeistungDTO) item).getText());
 			builder.append(" entfernen.");
 			break;
-		case LEISTUNG_TRANSFER_TO_NEW_FALL_KONS:
+		case LEISTUNG_TRANSFER_TO_FALL_KONS:
 			builder.append("Leistung ");
-			builder.append(((LeistungDTO) item).getText());
-			builder.append(" auf einen neuen Fall/Konsultation transferieren.");
+			builder.append(getListToString((List<LeistungDTO>) item));
+			builder.append(" auf Fall ");
+			builder.append(((IFall) additional).getBezeichnung());
+			builder.append(" transferieren.");
 			break;
 		case DIAGNOSE_ADD:
 			builder.append("Diagnose ");
@@ -195,5 +218,13 @@ public class InvoiceHistoryEntryDTO {
 			break;
 		}
 		return builder.toString();
+	}
+	
+	private String getListToString(List<LeistungDTO> leistungDTOs){
+		if (leistungDTOs != null) {
+			return leistungDTOs.stream().map(item -> item.getText())
+				.collect(Collectors.joining(", "));
+		}
+		return "";
 	}
 }
