@@ -438,6 +438,13 @@ public class InvoiceCorrectionView extends ViewPart {
 					public void expansionStateChanged(ExpansionEvent e){
 						
 						invoiceComposite.updateScrollBars();
+						
+						if((boolean) e.data) {
+							Konsultation originKons = Konsultation.load(konsultationDTO.getId());
+							ElexisEventDispatcher.fireSelectionEvent(originKons);
+						} else {
+							ElexisEventDispatcher.clearSelection(Konsultation.class);
+						}
 					}
 				});
 				Composite group = tk.createComposite(expandable, SWT.NONE);
