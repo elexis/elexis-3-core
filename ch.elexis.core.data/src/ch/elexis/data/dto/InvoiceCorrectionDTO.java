@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.data.Fall;
@@ -114,6 +115,22 @@ public class InvoiceCorrectionDTO {
 	
 	public String getOutputText(){
 		return outputText;
+	}
+	
+	public InvoiceHistoryEntryDTO getHistoryEntryForLeistungTransferFromCache(IFall fall){
+		if (fall != null && fall.getId() != null) {
+			for (InvoiceHistoryEntryDTO invoiceHistoryEntryDTO : cache) {
+				if (invoiceHistoryEntryDTO.getOperationType()
+					.equals(OperationType.LEISTUNG_TRANSFER_TO_FALL_KONS)) {
+					if (invoiceHistoryEntryDTO.getAdditional() instanceof IFall
+						&& ((IFall) invoiceHistoryEntryDTO.getAdditional()).getId()
+							.equals(fall.getId())) {
+						return invoiceHistoryEntryDTO;
+					}
+				}
+			}
+		}
+		return null;
 	}
 	
 	public void addToCache(InvoiceHistoryEntryDTO historyEntryDTO)

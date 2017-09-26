@@ -1065,14 +1065,4 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		}
 		return null;
 	}
-	
-	private List<String> loadFieldKeys(String fieldString){
-		List<String> keys = new ArrayList<String>();
-		String[] fields = fieldString.split(";");
-		for (String field : fields) {
-			String[] nameType = field.split(":");
-			keys.add(nameType[0]);
-		}
-		return keys;
-	}
 }
