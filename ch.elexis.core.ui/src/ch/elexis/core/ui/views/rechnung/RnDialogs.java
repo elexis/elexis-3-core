@@ -52,6 +52,7 @@ import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.AccountTransaction;
 import ch.elexis.data.AccountTransaction.Account;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
 import ch.elexis.data.Zahlung;
@@ -439,10 +440,19 @@ public class RnDialogs {
 		Button bReactivate;
 		List<Button> exporters = new ArrayList<Button>();
 		private List<IRnOutputter> lo;
+		private boolean alwaysReactive = false;
+		private List<Konsultation> konsultations;
 		
 		public StornoDialog(Shell shell, Rechnung r){
 			super(shell);
 			rn = r;
+			this.alwaysReactive = false;
+		}
+		
+		public StornoDialog(Shell shell, Rechnung r, boolean alwaysReactive){
+			super(shell);
+			rn = r;
+			this.alwaysReactive = alwaysReactive;
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -474,10 +484,16 @@ public class RnDialogs {
 			}
 			new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(
 				1, false, 1, false));
+			
 			bReactivate = new Button(ret, SWT.CHECK);
 			bReactivate.setText(Messages.RnDialogs_reactivateConsultations); //$NON-NLS-1$
 			bReactivate.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			bReactivate.setSelection(true);
+			
+			if (alwaysReactive) {
+				bReactivate.setVisible(false);
+			}
+			
 			/*
 			 * bYes=new Button(ret,SWT.RADIO); bNo=new Button(ret,SWT.RADIO);
 			 * bYes.setText(Messages.getString("RnDialogs.yes")); //$NON-NLS-1$
@@ -507,7 +523,7 @@ public class RnDialogs {
 		
 		@Override
 		protected void okPressed(){
-			rn.storno(bReactivate.getSelection());
+			konsultations = rn.stornoBill(bReactivate.getSelection() || alwaysReactive);
 			for (Button exporter : exporters) {
 				if (exporter.getSelection()) {
 					IRnOutputter iro = (IRnOutputter) exporter.getData();
@@ -521,5 +537,8 @@ public class RnDialogs {
 			super.okPressed();
 		}
 		
+		public List<Konsultation> getKonsultations(){
+			return konsultations;
+		}
 	}
 }
