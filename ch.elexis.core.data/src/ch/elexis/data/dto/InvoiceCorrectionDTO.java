@@ -117,6 +117,10 @@ public class InvoiceCorrectionDTO {
 		return outputText;
 	}
 	
+	public boolean hasChanges(){
+		return !cache.isEmpty();
+	}
+	
 	public InvoiceHistoryEntryDTO getHistoryEntryForLeistungTransferFromCache(IFall fall){
 		if (fall != null && fall.getId() != null) {
 			for (InvoiceHistoryEntryDTO invoiceHistoryEntryDTO : cache) {

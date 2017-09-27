@@ -65,4 +65,7 @@ public class FallEditDialog extends TitleAreaDialog {
 		super.cancelPressed();
 	}
 	
+	public Fall getFall(){
+		return fall;
+	}
 }

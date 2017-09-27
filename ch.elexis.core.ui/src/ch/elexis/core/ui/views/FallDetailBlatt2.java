@@ -118,7 +118,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	boolean lockUpdate = true;
 	
 	boolean invoiceCorrection = false;
-	boolean readonly = false;
 	
 	@Override
 	public void setUnlocked(boolean unlock) {
@@ -136,13 +135,12 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	}
 	
 	public FallDetailBlatt2(final Composite parent){
-		this(parent, null, false, false);
+		this(parent, null, false);
 	}
 	
-	public FallDetailBlatt2(final Composite parent, IFall fall, boolean invoiceCorrection,
-		boolean readonly){
+	public FallDetailBlatt2(final Composite parent, IFall fall, boolean invoiceCorrection){
 		super(parent, SWT.NONE);
-		this.readonly = readonly;
+		
 		this.invoiceCorrection = invoiceCorrection;
 		actFall = fall;
 		
@@ -293,7 +291,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		
 		tk.createLabel(top, LABEL);
 		tBezeichnung = tk.createText(top, StringTool.leer);
-		tBezeichnung.setEnabled(!readonly);
 		tBezeichnung.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(final FocusEvent e){
@@ -331,7 +328,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						new TimeTool(dpVon.getDate().getTime()).toString(TimeTool.DATE_GER));
 				}
 			});
-		dpVon.setEnabled(!readonly);
+		
 		tk.createLabel(top, Messages.FallDetailBlatt2_EndDate); //$NON-NLS-1$
 		dpBis = new EnhancedDatePickerCombo(top, SWT.NONE,
 			new EnhancedDatePickerCombo.ExecuteIfValidInterface() {
@@ -343,7 +340,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					new TimeTool(dpBis.getDate().getTime()).toString(TimeTool.DATE_GER));
 			}
 		});
-		dpBis.setEnabled(!readonly);
+		
 		ddc = new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
 			Messages.FallDetailBlatt2_DaysOrAfter, Messages.FallDetailBlatt2_ProposeForBillingNeg,
 			Messages.FallDetailBlatt2_DaysOrAfterNeg);
@@ -358,7 +355,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 			}
 		});
-		ddc.setEnabled(!readonly);
+		
 		tk.adapt(ddc);
 		
 		Composite separatorBar = new Composite(top, SWT.NONE);
@@ -378,7 +375,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				getSelectedFall().setCopyForPatient(b);
 			};
 		});
-		btnCopyForPatient.setEnabled(!readonly);
+		
 		new Label(top, SWT.NONE);
 		
 		hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
@@ -847,7 +844,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		}
 		
-		boolean enable = !readonly && ((lockEnabled && allowFieldUpdate) || invoiceCorrection);
+		boolean enable = lockEnabled && (allowFieldUpdate || invoiceCorrection);
 		
 		tBezeichnung.setEditable(lockEnabled);
 		
@@ -865,7 +862,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 			
 			// keep editable in case it's an optional parameter of accident date/no
-			if (keepEditable.contains(req) && !readonly) {
+			if (keepEditable.contains(req)) {
 				req.setEnabled(lockEnabled);
 			} else {
 				if (req instanceof Text) {

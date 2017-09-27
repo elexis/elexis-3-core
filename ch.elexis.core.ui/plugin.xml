@@ -729,6 +729,11 @@
             id="ch.elexis.core.ui.command.startEditLocalDocument"
             name="Start edit local document">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentInvoiceLockHandler"
+            id="ch.elexis.core.ui.command.ToggleCurrentInvoiceLockCommand"
+            name="Toggle current invoice lock">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">

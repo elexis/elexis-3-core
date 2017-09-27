@@ -504,6 +504,15 @@
              style="toggle">
        </command>
     </menuContribution>
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView">
+       <command
+             commandId="ch.elexis.core.ui.command.ToggleCurrentInvoiceLockCommand"
+             icon="icon://IMG_LOCK_CLOSED"
+             style="toggle">
+       </command>
+    </menuContribution>
  </extension>
  <extension
        id="product"
