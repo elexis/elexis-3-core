@@ -12,8 +12,6 @@
 
 package ch.elexis.data;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -25,14 +23,10 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
-import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.interfaces.ITransferable;
 import ch.elexis.core.model.FallConstants;
-import ch.elexis.data.dto.FallDTO;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -44,7 +38,7 @@ import ch.rgw.tools.TimeTool;
  * @author Gerry
  * 
  */
-public class Fall extends PersistentObject implements IFall, ITransferable<FallDTO> {
+public class Fall extends PersistentObject {
 	
 	public static final String VVG_NAME = Messages.Fall_VVG_Name;
 	public static final String PRIVATE_NAME = Messages.Fall_Private_Name; //$NON-NLS-1$
@@ -1006,69 +1000,5 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		// TODO
 		
 		return null;
-	}
-	
-	@Override
-	public FallDTO getDTO(){
-		return new FallDTO(this);
-	}
-	
-	@Override
-	public void persistDTO(FallDTO dto) throws ElexisException{
-		// merge
-		if (getId() != null && exists()) {
-			
-			setGrund(dto.getGrund());
-			setBeginnDatum(dto.getBeginnDatum());
-			setEndDatum(dto.getEndDatum());
-			setBillingDate(dto.getBillingDate());
-			setGarant(dto.getGarant());
-			setMap(FLD_EXTINFO, dto.getMap(FLD_EXTINFO));
-			setCopyForPatient(dto.getCopyForPatient());
-			setAbrechnungsSystem(dto.getAbrechnungsSystem());
-		} else {
-			throw new UnsupportedOperationException(
-				"fall creation of dto is currently not supported!");
-		}
-	}
-	
-	public Fall createCopy(){
-		Patient pat = getPatient();
-		Fall clone = pat.neuerFall(getBezeichnung(), getGrund(), getAbrechnungsSystem());
-		
-		String[] fields = new String[] {
-			Fall.FLD_GARANT_ID, Fall.FLD_FALL_NUMMER, Fall.FLD_RN_PLANUNG, Fall.FLD_RES,
-			Fall.FLD_DATUM_VON, Fall.FLD_EXTINFO, Fall.FLD_XGESETZ
-		};
-		String[] values = new String[] {
-			getGarant().getId(), getFallNummer(), get(Fall.FLD_RN_PLANUNG), get(Fall.FLD_RES),
-			getBeginnDatum(), get(Fall.FLD_EXTINFO), getAbrechnungsSystem()
-		};
-		clone.set(fields, values);
-		
-		// not a full copy of ext info - works as the copy function from fall view
-		clone.setMap(FLD_EXTINFO, new Hashtable<>());
-		
-		List<String> keys = loadFieldKeys(getRequirements());
-		for (String key : keys) {
-			clone.setInfoString(key, getRequiredString(key));
-		}
-		return clone;
-	}
-
-	private List<String> loadFieldKeys(String fieldString){
-		List<String> keys = new ArrayList<String>();
-		String[] fields = fieldString.split(";");
-		for (String field : fields) {
-			String[] nameType = field.split(":");
-			keys.add(nameType[0]);
-		}
-		return keys;
-	}
-	
-	@Override
-	public String getRequirementsBySystem(String abrechnungsSystem){
-		String req = getRequirements(abrechnungsSystem);
-		return req == null ? "" : req;
 	}
 }

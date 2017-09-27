@@ -27,25 +27,16 @@ public class NeuerFallDialog extends TitleAreaDialog {
 	Fall fall;
 	Patient pat;
 	private FallDetailBlatt2 fdb;
-	private final boolean deleteOnCancel;
 	
 	public NeuerFallDialog(Shell shell, Fall f){
 		super(shell);
 		fall = f;
 		if (fall == null) {
 			pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-			fall = pat.neuerFall(Messages.NeuerFallDialog_0, Messages.NeuerFallDialog_1,
-				Messages.NeuerFallDialog_2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			fall =
+				pat.neuerFall(Messages.NeuerFallDialog_0, Messages.NeuerFallDialog_1,
+					Messages.NeuerFallDialog_2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
-		deleteOnCancel = true;
-	}
-	
-	public NeuerFallDialog(Shell shell, Patient pat, boolean deleteOnCancel){
-		super(shell);
-		this.pat = pat;
-		this.fall = pat.neuerFall(Messages.NeuerFallDialog_0, Messages.NeuerFallDialog_1,
-			Messages.NeuerFallDialog_2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		this.deleteOnCancel = deleteOnCancel;
 	}
 	
 	@Override
@@ -77,9 +68,7 @@ public class NeuerFallDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void cancelPressed(){
-		if (deleteOnCancel) {
-			fall.delete();
-		}
+		fall.delete();
 		ElexisEventDispatcher.reload(Fall.class);
 		super.cancelPressed();
 	}

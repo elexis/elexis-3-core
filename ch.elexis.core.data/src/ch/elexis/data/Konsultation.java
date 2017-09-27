@@ -114,17 +114,6 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		}
 	}
 	
-	public void transferToFall(Fall f){
-		Fall alt = getFall();
-		set(FLD_CASE_ID, f.getId());
-		if (alt != null) {
-			List<Verrechnet> vv = getLeistungen();
-			for (Verrechnet v : vv) {
-				v.updateOnlyPriceAndScaleSelling();
-			}
-		}
-	}
-	
 	/** Eine neue Konsultation zu einem Fall erstellen */
 	public Konsultation(Fall fall){
 		if (fall == null) {
@@ -664,26 +653,6 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	/**
-	 * Liefert eine Verrechnete Leistung anhand verrechnbar id
-	 * 
-	 * @param code
-	 * @return
-	 */
-	public Verrechnet getVerrechnet(IVerrechenbar iVerrechenbar){
-		if (iVerrechenbar != null && iVerrechenbar.getId() != null) {
-			Query<Verrechnet> qbe = new Query<Verrechnet>(Verrechnet.class);
-			qbe.add(Verrechnet.KONSULTATION, Query.EQUALS, getId());
-			qbe.add(Verrechnet.LEISTG_CODE, Query.EQUALS, iVerrechenbar.getId());
-			
-			List<Verrechnet> verrechnets = qbe.execute();
-			if (verrechnets.size() == 1) {
-				return verrechnets.get(0);
-			}
-		}
-		return null;
-	}
-	
-	/**
 	 * Eine Verrechenbar aus der Konsultation entfernen
 	 * 
 	 * @param ls
@@ -723,7 +692,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * @return ein Verifier-Resultat.
 	 */
 	public Result<IVerrechenbar> addLeistung(IVerrechenbar l){
-		if (isEditable(true)) {
+		if (isEditable(false)) {
 			// TODO: ch.elexis.data.Konsultation.java: Weitere Leistungestypen
 			// ausser Medikamente_BAG und arzttarif_ch=Tarmed,
 			// TODO: ch.elexis.data.Konsultation.java: beim/nach dem Hinzufügen
@@ -1034,35 +1003,5 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			ret = (IDiagnose) CoreHub.poFactory.createFromString(diagnoseId);
 		}
 		return ret;
-	}
-	
-	/**
-	 * Makes a simple copy for a {@link Konsultation} of some attributes. This method should only be
-	 * used for {@link Rechnung} proposes.
-	 * 
-	 * @param fall
-	 * @param invoiceSrc
-	 * @return
-	 */
-	public Konsultation createCopy(Fall fall, Rechnung invoiceSrc){
-		if (fall != null && invoiceSrc != null) {
-			Konsultation clone = fall.neueKonsultation();
-			Mandant m = getMandant();
-			if (m != null) {
-				clone.setMandant(m);
-			}
-			clone.setDatum(getDatum(), true);
-			for (IDiagnose diagnose : getDiagnosen()) {
-				clone.addDiagnose(diagnose);
-			}
-			VersionedResource vr = clone.getEintrag();
-			vr.update(
-				"Diese Konsultation wurde durch die Korrektur der Rechnung "
-					+ invoiceSrc.getNr() + " erstellt.",
-				"Rechnungskorrektur");
-			clone.setEintrag(vr, true);
-			return clone;
-		}
-		return null;
 	}
 }
