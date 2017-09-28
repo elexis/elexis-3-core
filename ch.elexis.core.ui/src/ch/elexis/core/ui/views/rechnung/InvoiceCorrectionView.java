@@ -154,9 +154,10 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				if (actualInvoice != null) {
 					releaseAndRefreshLock(actualInvoice,
 						ToggleCurrentInvoiceLockHandler.COMMAND_ID);
+					CoreHub.getLocalLockService().releaseLock(actualInvoice.getFall());
 				}
 				reload((Rechnung) ev.getObject());
-				setUnlocked(false);
+				setUnlocked(CoreHub.getLocalLockService().isLocked(actualInvoice));
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
@@ -171,7 +172,6 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 								"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
 						}
 					} else {
-						CoreHub.getLocalLockService().releaseLock(actualInvoice.getFall());
 						setUnlocked(false);
 					}
 				}
@@ -1398,7 +1398,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	}
 	
 	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
-		if (object != null && CoreHub.getLocalLockService().isLockedLocal(object)) {
+		if (object != null && CoreHub.getLocalLockService().isLocked(object)) {
 			CoreHub.getLocalLockService().releaseLock(object);
 		}
 		ICommandService commandService =
@@ -1412,7 +1412,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		this.unlocked = unlocked && actualInvoice != null && actualInvoice.isCorrectable();
 		
 		if (invoiceComposite != null) {
-			invoiceComposite.setUnlocked(unlocked);
+			invoiceComposite.setUnlocked(this.unlocked);
 		}
 	}
 	
