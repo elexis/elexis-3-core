@@ -101,30 +101,40 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	/** Die Konsultation einem Fall zuordnen */
+	@Deprecated
 	public void setFall(Fall f){
-		if (isEditable(true)) {
+		transferToFall(f, false, true);
+	}
+	
+	/**
+	 * Transfers a {@link Konsultation} to a {@link Fall}
+	 * 
+	 * @param f
+	 *            transfered fall
+	 * @param ignoreEditable
+	 *            ignores konsultations editable
+	 * @param setToStandartPreis
+	 *            sets to the standard price
+	 * @since 3.3
+	 */
+	public void transferToFall(Fall f, boolean ignoreEditable, boolean setToStandartPreis){
+		if (ignoreEditable || isEditable(true)) {
 			Fall alt = getFall();
 			set(FLD_CASE_ID, f.getId());
 			if (alt != null) {
 				List<Verrechnet> vv = getLeistungen();
-				for (Verrechnet v : vv) {
-					v.setStandardPreis();
+				for (Verrechnet verrechnet : vv) {
+					if (setToStandartPreis) {
+						verrechnet.setStandardPreis();
+					} else {
+						IVerrechenbar v = verrechnet.getVerrechenbar();
+						TimeTool date = new TimeTool(verrechnet.getKons().getDatum());
+						double factor = v.getFactor(date, f);
+						verrechnet.set(Verrechnet.SCALE_SELLING, Double.toString(factor));
+					}
 				}
 			}
-		}
-	}
-	
-	public void transferToFall(Fall f){
-		Fall alt = getFall();
-		set(FLD_CASE_ID, f.getId());
-		if (alt != null) {
-			List<Verrechnet> vv = getLeistungen();
-			for (Verrechnet verrechnet : vv) {
-				IVerrechenbar v = verrechnet.getVerrechenbar();
-				TimeTool date = new TimeTool(verrechnet.getKons().getDatum());
-				double factor = v.getFactor(date, f);
-				verrechnet.set(Verrechnet.SCALE_SELLING, Double.toString(factor));
-			}
+			refreshLastUpdateAndSendUpdateEvent(FLD_CASE_ID);
 		}
 	}
 	
