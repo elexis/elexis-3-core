@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -94,6 +95,9 @@ public class FallSelectionDialog extends TitleAreaDialog {
 						if (neuerFall != null && neuerFall.exists()) {
 							if (CoreHub.getLocalLockService().acquireLock(neuerFallDialog.getFall())
 								.isOk()) {
+								refresh();
+								
+								tableViewer.setSelection(new StructuredSelection(neuerFall));
 								CoreHub.getLocalLockService()
 									.releaseLock(neuerFallDialog.getFall());
 							} else {
@@ -102,7 +106,7 @@ public class FallSelectionDialog extends TitleAreaDialog {
 							}
 						}
 					}
-					refresh();
+					
 				}
 			});
 			ToolBar toolbar = tbManager.createControl(ret);

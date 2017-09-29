@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2017 MEDEVIT <office@medevit.at>.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     MEDEVIT <office@medevit.at> - initial API and implementation
+ ******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
@@ -369,9 +379,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					? invoiceCorrectionDTO.getBemerkung() : "");
 			
 			if (invoiceCorrectionDTO.getNewInvoiceNumber() != null) {
-				if (invoiceCorrectionDTO.getNewInvoiceNumber().isEmpty()) {
-					//TODO show a text how to handle if an invoice cannot be corrected
-				} else {
+				if (!invoiceCorrectionDTO.getNewInvoiceNumber().isEmpty()) {
 					new Label(this, SWT.NONE).setText("Korrigierte Rechnung");
 					Link btnNewInvoice = new Link(this, SWT.NONE);
 					btnNewInvoice.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
@@ -723,10 +731,10 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			
-			TableViewerColumn tcSize = createTableViewerColumn("Anzahl", 1, 0);
-			TableViewerColumn tcServiceCode = createTableViewerColumn("Leistungscode", 4, 1);
-			TableViewerColumn tcSericeText = createTableViewerColumn("Leistungstext", 12, 2);
-			TableViewerColumn tcPrice = createTableViewerColumn("Preis", 3, 3);
+			createTableViewerColumn("Anzahl", 1, 0);
+			createTableViewerColumn("Leistungscode", 4, 1);
+			createTableViewerColumn("Leistungstext", 12, 2);
+			createTableViewerColumn("Preis", 3, 3);
 			
 			tableViewer.setContentProvider(new ArrayContentProvider());
 			tableViewer.setInput(konsultationDTO.getLeistungDTOs());
@@ -856,6 +864,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 								
 								if (existingEntry != null
 									&& existingEntry.getItem() instanceof List<?>) {
+									@SuppressWarnings("unchecked")
 									List<LeistungDTO> leistungen =
 										(List<LeistungDTO>) existingEntry.getItem();
 									leistungen.add(leistungDTO);
@@ -891,8 +900,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				public void run(){
 					
 					try {
-						LeistungenView iViewPart =
-							(LeistungenView) getSite().getPage().showView(LeistungenView.ID);
+						getSite().getPage().showView(LeistungenView.ID);
 						CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 					} catch (PartInitException e) {
 						LoggerFactory.getLogger(InvoiceCorrectionDTO.class)
@@ -1011,8 +1019,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			Table table = tableViewer.getTable();
 			table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			
-			TableViewerColumn tcDiagnosisText =
-				createTableViewerColumn("Behandlungsdiagnose", 1, 0);
+			createTableViewerColumn("Behandlungsdiagnose", 1, 0);
 			
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
@@ -1054,8 +1061,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				public void run(){
 					
 					try {
-						DiagnosenView iViewPart =
-							(DiagnosenView) getSite().getPage().showView(DiagnosenView.ID);
+						getSite().getPage().showView(DiagnosenView.ID);
 						CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 					} catch (PartInitException e) {
 						LoggerFactory.getLogger(InvoiceCorrectionDTO.class)
@@ -1274,7 +1280,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 						
 					});
 					
-					int state = wizardDialog.open();
+					wizardDialog.open();
 					if (invoiceCorrectionDTO.getOutputText() != null) {
 						
 						setInvoiceCorrectionInfo(actualInvoice);
@@ -1322,7 +1328,6 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		Money oldPrice = leistungDTO.getPrice();
 		String p = oldPrice.getAmountAsString();
 		Money customPrice;
-		double factor = 1.0;
 		InputDialog dlg = new InputDialog(UiDesk.getTopShell(),
 			Messages.VerrechnungsDisplay_changePriceForService, //$NON-NLS-1$
 			Messages.VerrechnungsDisplay_enterNewPrice, p, //$NON-NLS-1$
@@ -1330,7 +1335,6 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		if (dlg.open() == Dialog.OK) {
 			try {
 				String val = dlg.getValue().trim();
-				Money newPrice = new Money(oldPrice);
 				if (val.endsWith("%") && val.length() > 1) { //$NON-NLS-1$
 					val = val.substring(0, val.length() - 1);
 					double percent = Double.parseDouble(val);
@@ -1346,6 +1350,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				}
 				return true;
 			} catch (ParseException ex) {
+				log.error("price changing", ex);
 				SWTHelper.showError(Messages.VerrechnungsDisplay_badAmountCaption, //$NON-NLS-1$
 					Messages.VerrechnungsDisplay_badAmountBody); //$NON-NLS-1$
 			}
@@ -1385,10 +1390,10 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					
 					leistungDTO.setCount(changeAnzahl);
 					leistungDTO.setScale2(secondaryScaleFactor);
-					leistungDTO.setPriceText(text);
 					return true;
 				}
 			} catch (NumberFormatException ne) {
+				log.error("quantity changing", ne);
 				SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, //$NON-NLS-1$
 					Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$
 			}

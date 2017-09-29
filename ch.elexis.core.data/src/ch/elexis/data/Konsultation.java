@@ -119,8 +119,11 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		set(FLD_CASE_ID, f.getId());
 		if (alt != null) {
 			List<Verrechnet> vv = getLeistungen();
-			for (Verrechnet v : vv) {
-				v.updateOnlyPriceAndScaleSelling();
+			for (Verrechnet verrechnet : vv) {
+				IVerrechenbar v = verrechnet.getVerrechenbar();
+				TimeTool date = new TimeTool(verrechnet.getKons().getDatum());
+				double factor = v.getFactor(date, f);
+				verrechnet.set(Verrechnet.SCALE_SELLING, Double.toString(factor));
 			}
 		}
 	}
