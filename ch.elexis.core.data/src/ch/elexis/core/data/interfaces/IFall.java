@@ -38,6 +38,8 @@ public interface IFall extends IPersistentObject {
 	
 	public void setGarant(Kontakt sel);
 	
+	public void setBezeichnung(String bezeichnung);
+	
 	public String getBezeichnung();
 	
 	public String getGrund();

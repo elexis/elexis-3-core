@@ -766,6 +766,7 @@ public class BillingUtil {
 				if (invoiceCorrectionDTO.getFallDTO().getEndDatum() != null) {
 					copyFall.get().setEndDatum(
 						invoiceCorrectionDTO.getFallDTO().getEndDatum());
+					acquireLock(locks, copyFall.get(), false);
 				}
 				
 				// close fall if no kons exists
@@ -773,6 +774,7 @@ public class BillingUtil {
 					|| new TimeTool(srcFall.get().getEndDatum())
 						.after(new TimeTool()))
 					&& srcFall.get().getBehandlungen(true).length == 0) {
+					acquireLock(locks, srcFall.get(), false);
 					srcFall.get()
 						.setEndDatum(new TimeTool().toString(TimeTool.DATE_GER));
 				}
