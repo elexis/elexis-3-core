@@ -7,5 +7,5 @@
   </parent>
   <artifactId> ch.elexis.core.application.feature </artifactId>
   <packaging> eclipse-feature </packaging>
-  <version>3.1.7-SNAPSHOT</version>
+  <version>3.1.8-SNAPSHOT</version>
 </project>
