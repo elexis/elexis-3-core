@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.model.IXid;
+import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
@@ -267,6 +268,10 @@ public class FallDTO implements IFall {
 	
 	@Override
 	public boolean set(String field, String value){
+		// the view fallDetailBlatt sets this field with the set method
+		if (StringUtils.equals(field, Fall.FLD_BEZEICHNUNG)) {
+			setBezeichnung(value);
+		}
 		informChanged(false);
 		return false;
 	}

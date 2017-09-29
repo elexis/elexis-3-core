@@ -884,7 +884,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			String newValue = tBezeichnung.getText();
 			if (newValue != null && !newValue.isEmpty()
 				&& !newValue.equals(Messages.FallDetailBlatt2_29)) {
-				actFall.setBezeichnung(newValue);
+				actFall.set(LABEL, newValue);
 			}
 			
 			// save reacts
