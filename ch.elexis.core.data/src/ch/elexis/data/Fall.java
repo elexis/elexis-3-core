@@ -1026,6 +1026,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 			setMap(FLD_EXTINFO, dto.getMap(FLD_EXTINFO));
 			setCopyForPatient(dto.getCopyForPatient());
 			setAbrechnungsSystem(dto.getAbrechnungsSystem());
+			setBezeichnung(dto.getBezeichnung());
 		} else {
 			throw new UnsupportedOperationException(
 				"fall creation of dto is currently not supported!");

@@ -26,6 +26,7 @@ public class FallDTO implements IFall {
 	private Kontakt garant;
 	private Map extInfo = new HashMap<>();
 	private boolean copyForPatient;
+	private String bezeichnung;
 	
 	private List<IFallChanged> fallChanges = new ArrayList<>();
 	
@@ -43,6 +44,7 @@ public class FallDTO implements IFall {
 		garant = iFall.getGarant();
 		copyForPatient = iFall.getCopyForPatient();
 		extInfo = iFall.getMap(PersistentObject.FLD_EXTINFO);
+		bezeichnung = iFall.getBezeichnung();
 	}
 	
 	/// editable fields
@@ -154,6 +156,18 @@ public class FallDTO implements IFall {
 		informChanged(false);
 	}
 	
+	public void setBezeichnung(String bezeichnung){
+		if (!StringUtils.equals(this.bezeichnung, bezeichnung)) {
+			informChanged(false);
+		}
+		this.bezeichnung = bezeichnung;
+	}
+	
+	@Override
+	public String getBezeichnung(){
+		return bezeichnung;
+	}
+	
 	@Override
 	public boolean getCopyForPatient(){
 		return copyForPatient;
@@ -167,11 +181,6 @@ public class FallDTO implements IFall {
 	@Override
 	public IXid getXid(){
 		return iFall.getXid();
-	}
-	
-	@Override
-	public String getBezeichnung(){
-		return iFall.getBezeichnung();
 	}
 	
 	@Override
