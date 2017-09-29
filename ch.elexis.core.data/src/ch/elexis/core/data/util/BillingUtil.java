@@ -721,7 +721,7 @@ public class BillingUtil {
 					if (openedKons.exists()) {
 						Rechnung bill = openedKons.getRechnung();
 						if (bill == null) {
-							openedKons.transferToFall(copyFall.get());
+							openedKons.transferToFall(copyFall.get(), true, false);
 							log.debug(
 								"invoice correction: transfered kons id [{}] to copied fall id  [{}] ",
 								openedKons.getId(), copyFall.get().getId());
@@ -848,7 +848,7 @@ public class BillingUtil {
 			List<Konsultation> transferedConsultations){
 			// reset
 			for (Konsultation k : transferedConsultations) {
-				k.transferToFall(srcFall);
+				k.transferToFall(srcFall, true, false);
 			}
 			copyFall.delete();
 		}
