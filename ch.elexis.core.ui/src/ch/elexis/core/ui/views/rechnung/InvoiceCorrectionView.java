@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2017 MEDEVIT <office@medevit.at>.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     MEDEVIT <office@medevit.at> - initial API and implementation
+ ******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
@@ -12,6 +22,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -53,6 +64,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -64,6 +76,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
@@ -74,6 +87,7 @@ import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.BillingUtil.BillCallback;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
@@ -81,6 +95,8 @@ import ch.elexis.core.ui.dialogs.FallSelectionDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.IUnlockable;
+import ch.elexis.core.ui.locks.ToggleCurrentInvoiceLockHandler;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
@@ -112,7 +128,7 @@ import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
-public class InvoiceCorrectionView extends ViewPart {
+public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView";
 	private InvoiceComposite invoiceComposite;
@@ -124,12 +140,16 @@ public class InvoiceCorrectionView extends ViewPart {
 	
 	private static final Logger log = LoggerFactory.getLogger(InvoiceCorrectionView.class);
 	
+	private boolean unlocked;
+	
 	@SuppressWarnings("unchecked")
 	private final List<IViewContribution> detailComposites = Extensions.getClasses(VIEWCONTRIBUTION,
 		VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, RnDetailView.ID);
 	
 	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
-		ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED) {
+		ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED
+			| ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_LOCK_AQUIRED
+			| ElexisEvent.EVENT_LOCK_RELEASED) {
 		
 		public void runInUi(ElexisEvent ev){
 			switch (ev.getType()) {
@@ -139,8 +159,32 @@ public class InvoiceCorrectionView extends ViewPart {
 			case ElexisEvent.EVENT_DELETE:
 				reload(null);
 				break;
+			case ElexisEvent.EVENT_RELOAD:
 			case ElexisEvent.EVENT_SELECTED:
+				if (actualInvoice != null) {
+					releaseAndRefreshLock(actualInvoice,
+						ToggleCurrentInvoiceLockHandler.COMMAND_ID);
+					CoreHub.getLocalLockService().releaseLock(actualInvoice.getFall());
+				}
 				reload((Rechnung) ev.getObject());
+				setUnlocked(CoreHub.getLocalLockService().isLocked(actualInvoice));
+				break;
+			case ElexisEvent.EVENT_LOCK_AQUIRED:
+			case ElexisEvent.EVENT_LOCK_RELEASED:
+				if (actualInvoice != null && actualInvoice.equals((Rechnung) ev.getObject())) {
+					if (ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED) {
+						if (CoreHub.getLocalLockService().acquireLock(actualInvoice.getFall())
+							.isOk()) {
+							setUnlocked(true);
+						} else {
+							MessageDialog.openWarning(UiDesk.getDisplay().getActiveShell(),
+								"Lock nicht erhalten",
+								"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
+						}
+					} else {
+						setUnlocked(false);
+					}
+				}
 				break;
 			}
 		}
@@ -150,7 +194,12 @@ public class InvoiceCorrectionView extends ViewPart {
 		new ElexisUiEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
 			
 			public void runInUi(ElexisEvent ev){
-				reload(actualInvoice);
+				if (actualInvoice != null) {
+					ElexisEventDispatcher.getInstance().fire(new ElexisEvent(actualInvoice,
+						actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
+				} else {
+					reload(null);
+				}
 			}
 		};
 	
@@ -207,6 +256,10 @@ public class InvoiceCorrectionView extends ViewPart {
 	
 	@Override
 	public void dispose(){
+		if (actualInvoice != null && isUnlocked()) {
+			releaseAndRefreshLock(actualInvoice, ToggleCurrentInvoiceLockHandler.COMMAND_ID);
+			CoreHub.getLocalLockService().releaseLock(actualInvoice.getFall());
+		}
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_rn, eeli_user);
 		super.dispose();
 	}
@@ -218,8 +271,10 @@ public class InvoiceCorrectionView extends ViewPart {
 		}
 	}
 	
-	class InvoiceComposite extends ScrolledComposite {
+	class InvoiceComposite extends ScrolledComposite implements IUnlockable {
 		Composite wrapper;
+		InvoiceHeaderComposite invoiceHeaderComposite;
+		InvoiceContentComposite invoiceContentComposite;
 		
 		public InvoiceComposite(Composite parent){
 			super(parent, SWT.H_SCROLL | SWT.V_SCROLL);
@@ -232,8 +287,8 @@ public class InvoiceCorrectionView extends ViewPart {
 			wrapper.setLayout(new GridLayout(1, false));
 			wrapper.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			
-			InvoiceHeaderComposite invoiceHeaderComposite = new InvoiceHeaderComposite(wrapper);
-			InvoiceContentComposite invoiceContentComposite = new InvoiceContentComposite(wrapper);
+			invoiceHeaderComposite = new InvoiceHeaderComposite(wrapper);
+			invoiceContentComposite = new InvoiceContentComposite(wrapper);
 			invoiceBottomComposite = new InvoiceBottomComposite(wrapper);
 			
 			invoiceHeaderComposite.createComponents(invoiceCorrectionDTO);
@@ -265,9 +320,22 @@ public class InvoiceCorrectionView extends ViewPart {
 			
 		}
 		
+		@Override
+		public void setUnlocked(boolean unlocked){
+			if (invoiceHeaderComposite != null) {
+				invoiceHeaderComposite.setUnlocked(unlocked);
+			}
+			if (invoiceContentComposite != null) {
+				invoiceContentComposite.setUnlocked(unlocked);
+			}
+			if (invoiceBottomComposite != null) {
+				invoiceBottomComposite.setUnlocked(unlocked);
+			}
+		}
+		
 	}
 	
-	class InvoiceHeaderComposite extends Composite {
+	class InvoiceHeaderComposite extends Composite implements IUnlockable {
 		
 		String[] lbls = new String[] {
 			"Rechnung", "Status", "Patient", "Rechnungsbetrag"
@@ -311,9 +379,7 @@ public class InvoiceCorrectionView extends ViewPart {
 					? invoiceCorrectionDTO.getBemerkung() : "");
 			
 			if (invoiceCorrectionDTO.getNewInvoiceNumber() != null) {
-				if (invoiceCorrectionDTO.getNewInvoiceNumber().isEmpty()) {
-					//TODO show a text how to handle if an invoice cannot be corrected
-				} else {
+				if (!invoiceCorrectionDTO.getNewInvoiceNumber().isEmpty()) {
 					new Label(this, SWT.NONE).setText("Korrigierte Rechnung");
 					Link btnNewInvoice = new Link(this, SWT.NONE);
 					btnNewInvoice.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
@@ -325,7 +391,7 @@ public class InvoiceCorrectionView extends ViewPart {
 							Rechnung r =
 								Rechnung.getFromNr(invoiceCorrectionDTO.getNewInvoiceNumber());
 							if (r != null) {
-								reload(r);
+								ElexisEventDispatcher.fireSelectionEvent(r);
 							} else {
 								MessageDialog.openError(getShell(), "Fehler",
 									"Die Rechnung mit der Nummer: "
@@ -356,9 +422,18 @@ public class InvoiceCorrectionView extends ViewPart {
 			}
 		}
 		
+		@Override
+		public void setUnlocked(boolean unlocked){
+			// nothing todo all fields are readonly
+		}
+		
 	}
 	
-	class InvoiceContentComposite extends Composite {
+	class InvoiceContentComposite extends Composite implements IUnlockable {
+		
+		InvoiceContentHeaderComposite invoiceContentHeaderComposite;
+		InvoiceContentMiddleComposite invoiceContentMiddleComposite;
+		
 		public InvoiceContentComposite(Composite parent){
 			super(parent, SWT.NONE);
 			GridLayout gd = new GridLayout(1, false);
@@ -370,18 +445,30 @@ public class InvoiceCorrectionView extends ViewPart {
 		
 		public void createComponents(InvoiceCorrectionDTO invoiceCorrectionDTO){
 			if (invoiceCorrectionDTO.getFallDTO() != null) {
-				InvoiceContentHeaderComposite invoiceContentHeaderComposite =
-					new InvoiceContentHeaderComposite(this);
+				invoiceContentHeaderComposite = new InvoiceContentHeaderComposite(this);
 				invoiceContentHeaderComposite.createComponents(invoiceCorrectionDTO.getFallDTO());
 			}
 			
-			InvoiceContentMiddleComposite invoiceContentMiddleComposite =
-				new InvoiceContentMiddleComposite(this);
+			invoiceContentMiddleComposite = new InvoiceContentMiddleComposite(this);
 			invoiceContentMiddleComposite.createComponents(invoiceCorrectionDTO);
+		}
+		
+		@Override
+		public void setUnlocked(boolean unlocked){
+			if (invoiceContentHeaderComposite != null) {
+				invoiceContentHeaderComposite.setUnlocked(unlocked);
+			}
+			if (invoiceContentMiddleComposite != null) {
+				invoiceContentMiddleComposite.setUnlocked(unlocked);
+			}
+			
 		}
 	}
 	
-	class InvoiceContentHeaderComposite extends Composite {
+	class InvoiceContentHeaderComposite extends Composite implements IUnlockable {
+		
+		FallDetailBlatt2 fallDetailBlatt2;
+		
 		public InvoiceContentHeaderComposite(Composite parent){
 			super(parent, SWT.BORDER);
 			GridLayout gd = new GridLayout(1, false);
@@ -421,15 +508,24 @@ public class InvoiceCorrectionView extends ViewPart {
 			group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 			expandable.setClient(group);
 			
-			FallDetailBlatt2 fallDetailBlatt2 = new FallDetailBlatt2(group, fallDTO, true,
-				actualInvoice == null || !actualInvoice.isCorrectable());
+			fallDetailBlatt2 = new FallDetailBlatt2(group, fallDTO, true);
 			GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 			gd2.heightHint = 340;
 			fallDetailBlatt2.setLayoutData(gd2);
 		}
+		
+		@Override
+		public void setUnlocked(boolean unlocked){
+			if (fallDetailBlatt2 != null) {
+				fallDetailBlatt2.setUnlocked(unlocked);
+			}
+		}
 	}
 	
-	class InvoiceContentMiddleComposite extends Composite {
+	class InvoiceContentMiddleComposite extends Composite implements IUnlockable {
+		
+		private List<IUnlockable> unlockables = new ArrayList<>();
+		private List<IAction> actions = new ArrayList<>();
 		
 		public InvoiceContentMiddleComposite(Composite parent){
 			super(parent, SWT.NONE);
@@ -438,10 +534,11 @@ public class InvoiceCorrectionView extends ViewPart {
 			gd.marginHeight = 5;
 			setLayout(gd);
 			setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+			unlockables.clear();
+			actions.clear();
 		}
 		
 		public void createComponents(InvoiceCorrectionDTO invoiceCorrectionDTO){
-			
 			FormToolkit tk = UiDesk.getToolkit();
 			for (KonsultationDTO konsultationDTO : invoiceCorrectionDTO.getKonsultationDTOs()) {
 				ScrolledForm form = tk.createScrolledForm(this);
@@ -482,7 +579,7 @@ public class InvoiceCorrectionView extends ViewPart {
 				updateKonsTitleText(expandable, konsultationDTO);
 				
 				ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
-				tbManager.add(new Action("Datum ändern") {
+				IAction actionDateChange = new Action("Datum ändern") {
 					
 					@Override
 					public ImageDescriptor getImageDescriptor(){
@@ -509,8 +606,8 @@ public class InvoiceCorrectionView extends ViewPart {
 							}
 						}
 					}
-				});
-				tbManager.add(new Action() {
+				};
+				IAction actionMandantChange = new Action() {
 					@Override
 					public String getText(){
 						return "Mandant ändern";
@@ -566,7 +663,12 @@ public class InvoiceCorrectionView extends ViewPart {
 							}
 						}
 					}
-				});
+				};
+				tbManager.add(actionDateChange);
+				tbManager.add(actionMandantChange);
+				
+				actions.add(actionDateChange);
+				actions.add(actionMandantChange);
 				ToolBar toolbar = tbManager.createControl(group);
 				// align toolbar right
 				GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).grab(true, false)
@@ -578,6 +680,9 @@ public class InvoiceCorrectionView extends ViewPart {
 				
 				invoiceContentDiagnosisComposite.createComponents(konsultationDTO);
 				invoiceContentKonsultationComposite.createComponents(konsultationDTO);
+				
+				unlockables.add(invoiceContentDiagnosisComposite);
+				unlockables.add(invoiceContentKonsultationComposite);
 			}
 			
 		}
@@ -587,9 +692,20 @@ public class InvoiceCorrectionView extends ViewPart {
 			expandableComposite.setText("Konsultation: " + konsultationDTO.getDate() + " Mandant: "
 				+ konsultationDTO.getMandant().getLabel());
 		}
+		
+		@Override
+		public void setUnlocked(boolean unlocked){
+			for (IUnlockable iUnlockable : unlockables) {
+				iUnlockable.setUnlocked(unlocked);
+			}
+			for (IAction action : actions) {
+				action.setEnabled(unlocked);
+			}
+			
+		}
 	}
 	
-	class InvoiceContentKonsultationComposite extends Composite {
+	class InvoiceContentKonsultationComposite extends Composite implements IUnlockable {
 		TableViewer tableViewer;
 		TableColumnLayout tableColumnLayout;
 		
@@ -615,10 +731,10 @@ public class InvoiceCorrectionView extends ViewPart {
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			
-			TableViewerColumn tcSize = createTableViewerColumn("Anzahl", 1, 0);
-			TableViewerColumn tcServiceCode = createTableViewerColumn("Leistungscode", 4, 1);
-			TableViewerColumn tcSericeText = createTableViewerColumn("Leistungstext", 12, 2);
-			TableViewerColumn tcPrice = createTableViewerColumn("Preis", 3, 3);
+			createTableViewerColumn("Anzahl", 1, 0);
+			createTableViewerColumn("Leistungscode", 4, 1);
+			createTableViewerColumn("Leistungstext", 12, 2);
+			createTableViewerColumn("Preis", 3, 3);
 			
 			tableViewer.setContentProvider(new ArrayContentProvider());
 			tableViewer.setInput(konsultationDTO.getLeistungDTOs());
@@ -674,6 +790,7 @@ public class InvoiceCorrectionView extends ViewPart {
 				new PersistentObjectDropTarget("rechnungskorrektur", this, dtr); //$NON-NLS-1$
 			
 			MenuManager menuManager = new MenuManager();
+			
 			menuManager.add(new Action() {
 				@Override
 				public String getText(){
@@ -747,6 +864,7 @@ public class InvoiceCorrectionView extends ViewPart {
 								
 								if (existingEntry != null
 									&& existingEntry.getItem() instanceof List<?>) {
+									@SuppressWarnings("unchecked")
 									List<LeistungDTO> leistungen =
 										(List<LeistungDTO>) existingEntry.getItem();
 									leistungen.add(leistungDTO);
@@ -782,8 +900,7 @@ public class InvoiceCorrectionView extends ViewPart {
 				public void run(){
 					
 					try {
-						LeistungenView iViewPart =
-							(LeistungenView) getSite().getPage().showView(LeistungenView.ID);
+						getSite().getPage().showView(LeistungenView.ID);
 						CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 					} catch (PartInitException e) {
 						LoggerFactory.getLogger(InvoiceCorrectionDTO.class)
@@ -868,9 +985,16 @@ public class InvoiceCorrectionView extends ViewPart {
 				
 			}
 		}
+		
+		@Override
+		public void setUnlocked(boolean unlocked){
+			if (tableViewer != null) {
+				tableViewer.getTable().setEnabled(unlocked);
+			}
+		}
 	}
 	
-	class InvoiceContentDiagnosisComposite extends Composite {
+	class InvoiceContentDiagnosisComposite extends Composite implements IUnlockable {
 		
 		TableViewer tableViewer;
 		TableColumnLayout tableColumnLayout;
@@ -895,8 +1019,7 @@ public class InvoiceCorrectionView extends ViewPart {
 			Table table = tableViewer.getTable();
 			table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			
-			TableViewerColumn tcDiagnosisText =
-				createTableViewerColumn("Behandlungsdiagnose", 1, 0);
+			createTableViewerColumn("Behandlungsdiagnose", 1, 0);
 			
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
@@ -938,8 +1061,7 @@ public class InvoiceCorrectionView extends ViewPart {
 				public void run(){
 					
 					try {
-						DiagnosenView iViewPart =
-							(DiagnosenView) getSite().getPage().showView(DiagnosenView.ID);
+						getSite().getPage().showView(DiagnosenView.ID);
 						CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 					} catch (PartInitException e) {
 						LoggerFactory.getLogger(InvoiceCorrectionDTO.class)
@@ -1018,9 +1140,16 @@ public class InvoiceCorrectionView extends ViewPart {
 				}
 			}
 		}
+		
+		@Override
+		public void setUnlocked(boolean unlocked){
+			if (tableViewer != null) {
+				tableViewer.getTable().setEnabled(unlocked);
+			}
+		}
 	}
 	
-	class InvoiceBottomComposite extends Composite {
+	class InvoiceBottomComposite extends Composite implements IUnlockable {
 		
 		Button btnCancel;
 		Button btnCorrection;
@@ -1054,7 +1183,8 @@ public class InvoiceCorrectionView extends ViewPart {
 							MessageDialog.openError(Display.getDefault().getActiveShell(),
 								"Rechnungskorrektur", res.get());
 						}
-						reload(actualInvoice);
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(actualInvoice,
+							actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
 					}
 				}
 			});
@@ -1077,13 +1207,18 @@ public class InvoiceCorrectionView extends ViewPart {
 		
 		public void refresh(boolean hasChanges){
 			if (invoiceCorrectionDTO != null) {
-				if (btnCancel != null && hasChanges != btnCancel.isEnabled()) {
-					btnCancel.setEnabled(hasChanges);
+				if (btnCancel != null) {
+					btnCancel.setEnabled(hasChanges && isUnlocked());
 				}
-				if (btnCorrection != null && hasChanges != btnCorrection.isEnabled()) {
-					btnCorrection.setEnabled(hasChanges);
+				if (btnCorrection != null) {
+					btnCorrection.setEnabled(hasChanges && isUnlocked());
 				}
 			}
+		}
+		
+		@Override
+		public void setUnlocked(boolean unlocked){
+			refresh(invoiceCorrectionDTO.hasChanges());
 		}
 	}
 	
@@ -1145,7 +1280,7 @@ public class InvoiceCorrectionView extends ViewPart {
 						
 					});
 					
-					int state = wizardDialog.open();
+					wizardDialog.open();
 					if (invoiceCorrectionDTO.getOutputText() != null) {
 						
 						setInvoiceCorrectionInfo(actualInvoice);
@@ -1193,7 +1328,6 @@ public class InvoiceCorrectionView extends ViewPart {
 		Money oldPrice = leistungDTO.getPrice();
 		String p = oldPrice.getAmountAsString();
 		Money customPrice;
-		double factor = 1.0;
 		InputDialog dlg = new InputDialog(UiDesk.getTopShell(),
 			Messages.VerrechnungsDisplay_changePriceForService, //$NON-NLS-1$
 			Messages.VerrechnungsDisplay_enterNewPrice, p, //$NON-NLS-1$
@@ -1201,7 +1335,6 @@ public class InvoiceCorrectionView extends ViewPart {
 		if (dlg.open() == Dialog.OK) {
 			try {
 				String val = dlg.getValue().trim();
-				Money newPrice = new Money(oldPrice);
 				if (val.endsWith("%") && val.length() > 1) { //$NON-NLS-1$
 					val = val.substring(0, val.length() - 1);
 					double percent = Double.parseDouble(val);
@@ -1217,6 +1350,7 @@ public class InvoiceCorrectionView extends ViewPart {
 				}
 				return true;
 			} catch (ParseException ex) {
+				log.error("price changing", ex);
 				SWTHelper.showError(Messages.VerrechnungsDisplay_badAmountCaption, //$NON-NLS-1$
 					Messages.VerrechnungsDisplay_badAmountBody); //$NON-NLS-1$
 			}
@@ -1256,10 +1390,10 @@ public class InvoiceCorrectionView extends ViewPart {
 					
 					leistungDTO.setCount(changeAnzahl);
 					leistungDTO.setScale2(secondaryScaleFactor);
-					leistungDTO.setPriceText(text);
 					return true;
 				}
 			} catch (NumberFormatException ne) {
+				log.error("quantity changing", ne);
 				SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, //$NON-NLS-1$
 					Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$
 			}
@@ -1268,4 +1402,26 @@ public class InvoiceCorrectionView extends ViewPart {
 		return false;
 	}
 	
+	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
+		if (object != null && CoreHub.getLocalLockService().isLocked(object)) {
+			CoreHub.getLocalLockService().releaseLock(object);
+		}
+		ICommandService commandService =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		commandService.refreshElements(commandId, null);
+	}
+	
+	@Override
+	public void setUnlocked(boolean unlocked){
+		
+		this.unlocked = unlocked && actualInvoice != null && actualInvoice.isCorrectable();
+		
+		if (invoiceComposite != null) {
+			invoiceComposite.setUnlocked(this.unlocked);
+		}
+	}
+	
+	public boolean isUnlocked(){
+		return unlocked;
+	}
 }

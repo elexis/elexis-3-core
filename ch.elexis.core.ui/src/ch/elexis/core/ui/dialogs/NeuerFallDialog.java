@@ -84,4 +84,8 @@ public class NeuerFallDialog extends TitleAreaDialog {
 		super.cancelPressed();
 	}
 	
+	public Fall getFall(){
+		return fall;
+	}
+	
 }

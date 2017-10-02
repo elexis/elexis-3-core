@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -16,6 +17,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -68,7 +71,7 @@ public class FallSelectionDialog extends TitleAreaDialog {
 		} else {
 			Text txtPatient = new Text(ret, SWT.READ_ONLY);
 			txtPatient.setText("Patient: " + currentFall.getPatient().getLabel());
-
+			
 			ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
 			tbManager.add(new Action("Neuer Fall") {
 				
@@ -86,8 +89,24 @@ public class FallSelectionDialog extends TitleAreaDialog {
 				public void run(){
 					NeuerFallDialog neuerFallDialog =
 						new NeuerFallDialog(getShell(), currentFall.getPatient(), true);
-					neuerFallDialog.open();
-					refresh();
+					
+					if (neuerFallDialog.open() == MessageDialog.OK) {
+						Fall neuerFall = neuerFallDialog.getFall();
+						if (neuerFall != null && neuerFall.exists()) {
+							if (CoreHub.getLocalLockService().acquireLock(neuerFallDialog.getFall())
+								.isOk()) {
+								refresh();
+								
+								tableViewer.setSelection(new StructuredSelection(neuerFall));
+								CoreHub.getLocalLockService()
+									.releaseLock(neuerFallDialog.getFall());
+							} else {
+								MessageDialog.openWarning(getShell(), "Lock nicht erhalten",
+									"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
+							}
+						}
+					}
+					
 				}
 			});
 			ToolBar toolbar = tbManager.createControl(ret);
@@ -98,9 +117,7 @@ public class FallSelectionDialog extends TitleAreaDialog {
 			GridData gdTable = SWTHelper.getFillGridData(1, true, 1, true);
 			gdTable.heightHint = 200;
 			tableComposite.setLayoutData(gdTable);
-			tableViewer =
-				new TableViewer(tableComposite,
-					SWT.BORDER | SWT.FULL_SELECTION);
+			tableViewer = new TableViewer(tableComposite, SWT.BORDER | SWT.FULL_SELECTION);
 			tableViewer.setContentProvider(new ArrayContentProvider());
 			tableViewer.getTable().setHeaderVisible(true);
 			tableViewer.getTable().setLinesVisible(true);
@@ -118,15 +135,23 @@ public class FallSelectionDialog extends TitleAreaDialog {
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 					Object firstElement = selection.getFirstElement();
 					if (firstElement instanceof Fall) {
-						FallEditDialog neuerFallDialog =
-							new FallEditDialog(getShell(), (Fall) firstElement);
-						neuerFallDialog.open();
+						if (CoreHub.getLocalLockService().acquireLock((Fall) firstElement).isOk()) {
+							FallEditDialog fallEditDialog =
+								new FallEditDialog(getShell(), (Fall) firstElement);
+							fallEditDialog.open();
+							if (fallEditDialog.getFall() != null) {
+								CoreHub.getLocalLockService().releaseLock(fallEditDialog.getFall());
+							}
+						} else {
+							MessageDialog.openWarning(getShell(), "Lock nicht erhalten",
+								"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
+						}
+						
 						refresh();
 					}
 				}
 			});
 			
-
 			TableColumn singleColumn = new TableColumn(tableViewer.getTable(), SWT.NONE);
 			singleColumn.setText("Fälle");
 			TableColumnLayout tableColumnLayout = new TableColumnLayout();
@@ -136,7 +161,7 @@ public class FallSelectionDialog extends TitleAreaDialog {
 			refresh();
 			ret.pack();
 		}
-
+		
 		return ret;
 	}
 	

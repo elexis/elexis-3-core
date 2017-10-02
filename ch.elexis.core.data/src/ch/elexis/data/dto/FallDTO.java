@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.model.IXid;
+import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
@@ -26,6 +27,7 @@ public class FallDTO implements IFall {
 	private Kontakt garant;
 	private Map extInfo = new HashMap<>();
 	private boolean copyForPatient;
+	private String bezeichnung;
 	
 	private List<IFallChanged> fallChanges = new ArrayList<>();
 	
@@ -43,6 +45,7 @@ public class FallDTO implements IFall {
 		garant = iFall.getGarant();
 		copyForPatient = iFall.getCopyForPatient();
 		extInfo = iFall.getMap(PersistentObject.FLD_EXTINFO);
+		bezeichnung = iFall.getBezeichnung();
 	}
 	
 	/// editable fields
@@ -154,6 +157,18 @@ public class FallDTO implements IFall {
 		informChanged(false);
 	}
 	
+	public void setBezeichnung(String bezeichnung){
+		if (!StringUtils.equals(this.bezeichnung, bezeichnung)) {
+			informChanged(false);
+		}
+		this.bezeichnung = bezeichnung;
+	}
+	
+	@Override
+	public String getBezeichnung(){
+		return bezeichnung;
+	}
+	
 	@Override
 	public boolean getCopyForPatient(){
 		return copyForPatient;
@@ -167,11 +182,6 @@ public class FallDTO implements IFall {
 	@Override
 	public IXid getXid(){
 		return iFall.getXid();
-	}
-	
-	@Override
-	public String getBezeichnung(){
-		return iFall.getBezeichnung();
 	}
 	
 	@Override
@@ -258,6 +268,10 @@ public class FallDTO implements IFall {
 	
 	@Override
 	public boolean set(String field, String value){
+		// the view fallDetailBlatt sets this field with the set method
+		if (StringUtils.equals(field, Fall.FLD_BEZEICHNUNG)) {
+			setBezeichnung(value);
+		}
 		informChanged(false);
 		return false;
 	}

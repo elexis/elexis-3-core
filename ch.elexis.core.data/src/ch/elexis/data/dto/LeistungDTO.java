@@ -10,8 +10,7 @@ import ch.rgw.tools.TimeTool;
 public class LeistungDTO {
 	private final String id;
 	private String code;
-	private String text;
-	private String priceText;
+	private final String text;
 	private int count;
 	private IVerrechenbar iVerrechenbar;
 	private long lastUpdate;
@@ -90,24 +89,12 @@ public class LeistungDTO {
 		return scale2;
 	}
 	
-	public void setPriceText(String priceText){
-		this.priceText = priceText;
-	}
-	
-	public String getPriceText(){
-		return priceText;
-	}
-	
 	public Verrechnet getVerrechnet(){
 		return verrechnet;
 	}
 	
 	public void setCode(String code){
 		this.code = code;
-	}
-	
-	public void setText(String text){
-		this.text = text;
 	}
 	
 	public String getCode(){
