@@ -731,13 +731,11 @@ public class BillingUtil {
 							Result<?> result =
 								BillingUtil.getBillableResult(openedKons);
 							if (!result.isOK()) {
-								addToOutput(output, result);
-								success = false;
-								resetCorrection(srcFall.get(), copyFall.get(),
-									releasedKonsultations);
+								StringBuilder preValidatioWarnings = new StringBuilder();
+								addToOutput(preValidatioWarnings, result);
 								log.warn(
-									"invoice correction: try reseting correction - transfer kons id [{}] back to src fall id  [{}]",
-									openedKons.getId(), srcFall.get().getId());
+									"invoice correction: konsultation prevalidation failed - the invoice correction will be continued - because the current correction could fix it. Message: [{}]",
+									preValidatioWarnings.toString());
 							}
 						}
 					}
@@ -792,9 +790,10 @@ public class BillingUtil {
 					}
 				}
 				success = false;
-				log.warn("invoice correction: cannot create new invoice with id "
+				log.error("invoice correction: error cannot create new invoice with id "
 					+ (rechnungResult.get() != null ? rechnungResult.get().getId()
 							: "null"));
+				log.error("invoice correction: error details: " + output.toString());
 			} else {
 				Rechnung newRechnung = rechnungResult.get();
 				invoiceCorrectionDTO.setNewInvoiceNumber(newRechnung.getNr());
@@ -844,15 +843,6 @@ public class BillingUtil {
 			if (warning.length() > 0) {
 				output.append(warning);
 			}
-		}
-		
-		private void resetCorrection(Fall srcFall, Fall copyFall,
-			List<Konsultation> transferedConsultations){
-			// reset
-			for (Konsultation k : transferedConsultations) {
-				k.transferToFall(srcFall, true, false);
-			}
-			copyFall.delete();
 		}
 		
 		private boolean acquireLock(List<IPersistentObject> currentLocks,
