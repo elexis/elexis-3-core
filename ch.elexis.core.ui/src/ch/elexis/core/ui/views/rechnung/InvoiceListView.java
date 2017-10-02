@@ -10,9 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
-import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICENO;
-import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_INVOICETOTAL;
-import static ch.elexis.data.views.InvoiceBillState.VIEW_FLD_OPENAMOUNT;
+import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_INVOICENO;
+import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_INVOICETOTAL;
+import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -50,7 +50,6 @@ import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListHeaderComposite;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.views.InvoiceBillState;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
 
@@ -62,10 +61,6 @@ public class InvoiceListView extends ViewPart {
 	private InvoiceListHeaderComposite invoiceListHeaderComposite;
 	private InvoiceListBottomComposite invoiceListBottomComposite;
 	private InvoiceListContentProvider invoiceListContentProvider;
-	
-	static {
-		InvoiceBillState.initializeSqlViewIfRequired();
-	}
 	
 	/**
 	 * @param rnStellerSettings
@@ -303,6 +298,7 @@ public class InvoiceListView extends ViewPart {
 		menuManager.add(invoiceActions.addExpenseAction);
 		menuManager.add(invoiceActions.increaseLevelAction);
 		menuManager.add(new Separator());
+		menuManager.add(invoiceActions.changeStatusAction);
 		menuManager.add(invoiceActions.stornoAction);
 		
 		Menu contextMenu = menuManager.createContextMenu(tableViewerInvoiceList.getTable());
