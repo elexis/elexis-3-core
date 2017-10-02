@@ -45,7 +45,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InputDataGroupComponent" eSuperTypes="#//InputData">
     <eStructuralFeatures xsi:type="ecore:EReference" name="findingsTemplates" upperBound="-1"
-        eType="#//FindingsTemplate"/>
+        eType="#//FindingsTemplate" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
         changeable="false" defaultValueLiteral="GROUP_COMPONENT"/>
   </eClassifiers>

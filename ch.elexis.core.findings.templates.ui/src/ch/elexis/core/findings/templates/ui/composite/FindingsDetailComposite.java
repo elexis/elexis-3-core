@@ -237,7 +237,7 @@ public class FindingsDetailComposite extends Composite {
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
 						inputDataGroupComponent.getFindingsTemplates().clear();
 						inputDataGroupComponent.getFindingsTemplates()
-							.addAll(findingsSelectionDialog.getSelection(false));
+							.addAll(findingsSelectionDialog.getSelection(true));
 						lblGroupComponentlist
 							.setText(getInputDataGroupText(inputDataGroupComponent));
 						selection.setInputData(inputDataGroupComponent);

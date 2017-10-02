@@ -2,9 +2,11 @@ package ch.elexis.core.findings.templates.ui.dlg;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -15,6 +17,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -25,6 +28,7 @@ import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
+import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
 
 public class FindingsSelectionDialog extends TitleAreaDialog {
 	private final FindingsTemplates model;
@@ -68,6 +72,12 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 				}
 				return "";
 			}
+			
+			@Override
+			public Image getImage(Object object){
+				Image img = FindingsTemplateUtil.getImage(object);
+				return img != null ? img : super.getImage(object);
+			}
 		});
 		
 		viewer.setComparer(new IElementComparer() {
@@ -100,6 +110,13 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 					.filter(item -> !(item.getInputData() instanceof InputDataGroup
 						|| item.getInputData() instanceof InputDataGroupComponent))
 					.collect(Collectors.toList());
+				
+				for (FindingsTemplate findingsTemplate : ((InputDataGroupComponent) current
+					.getInputData()).getFindingsTemplates()) {
+					if (!templates.contains(findingsTemplate)) {
+						templates.add(findingsTemplate);
+					}
+				}
 			}
 			else {
 				// remove self selection
@@ -111,6 +128,30 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		}
 		else {
 			templates = model.getFindingsTemplates();
+		}
+		
+		if (templates != null) {
+			Collections.sort(templates, new Comparator<FindingsTemplate>() {
+				
+				@Override
+				public int compare(FindingsTemplate o1, FindingsTemplate o2){
+					if (o1 == null || o2 == null) {
+						return o1 != null ? 1 : -1;
+					}
+					else if (o1.getInputData() instanceof InputDataGroupComponent) {
+						return -1;
+					}
+					else if (o2.getInputData() instanceof InputDataGroupComponent) {
+						return 1;
+					}
+					else if (o1.getInputData() instanceof InputDataGroup) {
+						return -1;
+					} else if (o2.getInputData() instanceof InputDataGroup) {
+						return 1;
+					}
+					return ObjectUtils.compare(o1.getTitle(), o2.getTitle());
+				}
+			});
 		}
 		viewer.setInput(templates);
 		viewer.setSelection(new StructuredSelection(selections));
@@ -148,14 +189,15 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
-	public List<FindingsTemplate> getSelection(boolean asCopy){
+	public List<FindingsTemplate> getSelection(boolean move){
 		if (selections == null) {
 			selections = Collections.emptyList();
 		}
-		if (asCopy) {
+		if (move) {
 			List<FindingsTemplate> findingsTemplates = new ArrayList<>();
 			for (FindingsTemplate findingsTemplate : selections) {
-				findingsTemplates.add(EcoreUtil.copy(findingsTemplate));
+				EcoreUtil.remove(findingsTemplate);
+				findingsTemplates.add(findingsTemplate);
 			}
 			return findingsTemplates;
 		}

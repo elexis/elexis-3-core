@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.templates.ui.composite;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -29,11 +30,8 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
-import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
-import ch.elexis.core.findings.templates.model.InputDataNumeric;
-import ch.elexis.core.findings.templates.model.InputDataText;
-import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
 
 public class FindingsComposite extends Composite {
 	
@@ -55,7 +53,7 @@ public class FindingsComposite extends Composite {
 		ComposedAdapterFactory composedAdapterFactory =
 			new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		
-		viewer.setContentProvider(new AdapterFactoryContentProvider(composedAdapterFactory));
+		viewer.setContentProvider(new FindingsTemplateContentProvider(composedAdapterFactory));
 		viewer.setLabelProvider(new FindingsTemplateLabelProvider(composedAdapterFactory));
 		
 		Resource r = new ResourceImpl();
@@ -126,7 +124,19 @@ public class FindingsComposite extends Composite {
 		contextMenu.add(new Action("entfernen") {
 			@Override
 			public void run(){
-				getModel().ifPresent(item -> item.getFindingsTemplates().remove(findingsTemplate));
+				if (getModel().isPresent())
+				{
+					if (findingsTemplate.eContainer() instanceof FindingsTemplates) {
+						((FindingsTemplates) findingsTemplate.eContainer()).getFindingsTemplates()
+							.remove(findingsTemplate);
+					}
+					else if (findingsTemplate.eContainer() instanceof InputDataGroupComponent) {
+						((InputDataGroupComponent) findingsTemplate.eContainer())
+							.getFindingsTemplates().remove(findingsTemplate);
+						
+					}
+					getViewer().refresh();
+				}
 			}
 		});
 	}
@@ -139,21 +149,47 @@ public class FindingsComposite extends Composite {
 		
 		@Override
 		public Image getImage(Object object){
-			if (object instanceof FindingsTemplate) {
-				FindingsTemplate findingsTemplate = (FindingsTemplate) object;
-				if (findingsTemplate.getInputData() instanceof InputDataGroup) {
-					return Images.IMG_DOCUMENT_STACK.getImage();
-				} else if (findingsTemplate.getInputData() instanceof InputDataGroupComponent) {
-					return Images.IMG_DOCUMENT_STAND_UP.getImage();
-				} else if (findingsTemplate.getInputData() instanceof InputDataNumeric) {
-					return Images.IMG_DOCUMENT.getImage();
-				} else if (findingsTemplate.getInputData() instanceof InputDataText) {
-					return Images.IMG_DOCUMENT.getImage();
-				}
-			} else if (object instanceof FindingsTemplates) {
-				return Images.IMG_FOLDER.getImage();
-			}
-			return super.getImage(object);
+			Image img = FindingsTemplateUtil.getImage(object);
+			return img != null ? img : super.getImage(object);
 		}
+	}
+	
+	class FindingsTemplateContentProvider extends AdapterFactoryContentProvider {
+		
+		public FindingsTemplateContentProvider(AdapterFactory adapterFactory){
+			super(adapterFactory);
+		}
+		
+		@Override
+		public boolean hasChildren(Object object){
+			if (object instanceof FindingsTemplates) {
+				return super.hasChildren(object);
+			}
+			else if (object instanceof FindingsTemplate) {
+				FindingsTemplate findingsTemplate = (FindingsTemplate) object;
+				if (findingsTemplate.getInputData() instanceof InputDataGroupComponent) {
+					InputDataGroupComponent inputDataGroupComponent =
+						(InputDataGroupComponent) findingsTemplate.getInputData();
+					return !inputDataGroupComponent.getFindingsTemplates().isEmpty();
+				}
+			}
+			return false;
+		}
+		
+		@Override
+		public Object[] getChildren(Object object){
+			if (object instanceof FindingsTemplates) {
+				return super.getChildren(object);
+			} else if (object instanceof FindingsTemplate) {
+				FindingsTemplate findingsTemplate = (FindingsTemplate) object;
+				if (findingsTemplate.getInputData() instanceof InputDataGroupComponent) {
+					InputDataGroupComponent inputDataGroupComponent =
+						(InputDataGroupComponent) findingsTemplate.getInputData();
+					return inputDataGroupComponent.getFindingsTemplates().toArray();
+				}
+			}
+			return Collections.EMPTY_LIST.toArray();
+		}
+		
 	}
 }

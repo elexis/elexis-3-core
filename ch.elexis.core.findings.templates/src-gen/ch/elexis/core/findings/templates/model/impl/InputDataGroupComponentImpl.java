@@ -8,11 +8,14 @@ import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 
 import java.util.Collection;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,7 +33,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  */
 public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container implements InputDataGroupComponent {
 	/**
-	 * The cached value of the '{@link #getFindingsTemplates() <em>Findings Templates</em>}' reference list.
+	 * The cached value of the '{@link #getFindingsTemplates() <em>Findings Templates</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getFindingsTemplates()
@@ -85,7 +88,7 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	 */
 	public EList<FindingsTemplate> getFindingsTemplates() {
 		if (findingsTemplates == null) {
-			findingsTemplates = new EObjectResolvingEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
+			findingsTemplates = new EObjectContainmentEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
 		}
 		return findingsTemplates;
 	}
@@ -97,6 +100,20 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	 */
 	public DataType getDataType() {
 		return dataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
+				return ((InternalEList<?>)getFindingsTemplates()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

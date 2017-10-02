@@ -23,7 +23,7 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface InputDataGroupComponent extends InputData {
 	/**
-	 * Returns the value of the '<em><b>Findings Templates</b></em>' reference list.
+	 * Returns the value of the '<em><b>Findings Templates</b></em>' containment reference list.
 	 * The list contents are of type {@link ch.elexis.core.findings.templates.model.FindingsTemplate}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -31,9 +31,9 @@ public interface InputDataGroupComponent extends InputData {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Findings Templates</em>' reference list.
+	 * @return the value of the '<em>Findings Templates</em>' containment reference list.
 	 * @see ch.elexis.core.findings.templates.model.ModelPackage#getInputDataGroupComponent_FindingsTemplates()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<FindingsTemplate> getFindingsTemplates();

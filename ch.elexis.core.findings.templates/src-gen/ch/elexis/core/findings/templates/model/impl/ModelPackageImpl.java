@@ -480,7 +480,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getInputDataGroup_DataType(), this.getDataType(), "dataType", "GROUP", 0, 1, InputDataGroup.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(inputDataGroupComponentEClass, InputDataGroupComponent.class, "InputDataGroupComponent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getInputDataGroupComponent_FindingsTemplates(), this.getFindingsTemplate(), null, "findingsTemplates", null, 0, -1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getInputDataGroupComponent_FindingsTemplates(), this.getFindingsTemplate(), null, "findingsTemplates", null, 0, -1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getInputDataGroupComponent_DataType(), this.getDataType(), "dataType", "GROUP_COMPONENT", 0, 1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
