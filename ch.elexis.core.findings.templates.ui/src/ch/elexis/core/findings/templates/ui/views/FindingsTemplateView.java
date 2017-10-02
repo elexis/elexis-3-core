@@ -61,7 +61,7 @@ public class FindingsTemplateView extends ViewPart implements IActivationListene
 		TabItem tabCodeSystems = new TabItem(tabFolder, SWT.NONE, 1);
 		tabCodeSystems.setText("Codesysteme");
 		tabCodeSystems.setData("tabCodeSystems");
-		FindingsTemplates model = findingsTemplateService.getFindingsTemplates();
+		FindingsTemplates model = findingsTemplateService.getFindingsTemplates("Standard Vorlagen");
 		findingsComposite = new FindingsComposite(compositeTemplates, model);
 		FindingsDetailComposite findingsDetailComposite =
 			new FindingsDetailComposite(compositeTemplates, model);
@@ -93,7 +93,7 @@ public class FindingsTemplateView extends ViewPart implements IActivationListene
 	@Override
 	public void setFocus(){
 		resetTab();
-		FindingsTemplates model = findingsTemplateService.getFindingsTemplates();
+		FindingsTemplates model = findingsTemplateService.getFindingsTemplates("Standard Vorlagen");
 		findingsComposite.setModel(model);
 	}
 	

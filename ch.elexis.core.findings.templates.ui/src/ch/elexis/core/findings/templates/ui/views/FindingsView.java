@@ -96,24 +96,18 @@ public class FindingsView extends ViewPart implements IActivationListener {
 		viewer.getTable().setLinesVisible(true);
 		comparator = new FindingsComparator();
 		viewer.setComparator(comparator);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		
 		TableViewerColumn tableViewerColumnDateTime = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblcCol = tableViewerColumnDateTime.getColumn();
 		tblcCol.setText("Datum");
 		tableColumnLayout.setColumnData(tblcCol, new ColumnWeightData(10, true));
 		tblcCol.addSelectionListener(getSelectionAdapter(tblcCol, 1));
-		
-		tableViewerColumnDateTime = new TableViewerColumn(viewer, SWT.NONE);
-		tblcCol = tableViewerColumnDateTime.getColumn();
-		tblcCol.setText("Typ");
-		tableColumnLayout.setColumnData(tblcCol, new ColumnWeightData(10, true));
-		tblcCol.addSelectionListener(getSelectionAdapter(tblcCol, 2));
+
 		
 		tableViewerColumnDateTime = new TableViewerColumn(viewer, SWT.NONE);
 		tblcCol = tableViewerColumnDateTime.getColumn();
 		tblcCol.setText("Befund");
-		tableColumnLayout.setColumnData(tblcCol, new ColumnWeightData(40, true));
+		tableColumnLayout.setColumnData(tblcCol, new ColumnWeightData(90, true));
 		tblcCol.addSelectionListener(getSelectionAdapter(tblcCol, 3));
 		
 		viewer.setContentProvider(new ArrayContentProvider());
@@ -227,9 +221,6 @@ public class FindingsView extends ViewPart implements IActivationListener {
 				
 			}
 			case 1: {
-				return findingsTemplateService.getTypeAsText(findingsTemplateService.getType(item));
-			}
-			case 2: {
 				return item.getText().isPresent() ? item.getText().get() : "";
 			}
 			default:
@@ -283,11 +274,6 @@ public class FindingsView extends ViewPart implements IActivationListener {
 				rc = t1.compareTo(t2);
 				break;
 			case 2:
-				rc = findingsTemplateService.getTypeAsText(findingsTemplateService.getType(p1))
-					.toLowerCase().compareTo(findingsTemplateService
-						.getTypeAsText(findingsTemplateService.getType(p2)).toLowerCase());
-				break;
-			case 3:
 				String txt1 = p1.getText().orElse("");
 				String txt2 = p2.getText().orElse("");
 				rc = txt1.toLowerCase().compareTo(txt2.toLowerCase());

@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -50,7 +51,7 @@ import ch.elexis.data.Patient;
 @Component(service = FindingsTemplateService.class)
 public class FindingsTemplateService {
 	
-	private static final String FINDINGS_TEMPLATE_ID = "Findings_Template_1";
+	private static final String FINDINGS_TEMPLATE_ID_PREFIX = "Findings_Template_";
 	
 	private IFindingsService findingsService;
 	private ICodingService codingService;
@@ -69,9 +70,10 @@ public class FindingsTemplateService {
 		this.codingService = codingService;
 	}
 	
-	public FindingsTemplates getFindingsTemplates(){
-		
-		NamedBlob namedBlob = NamedBlob.load(FINDINGS_TEMPLATE_ID);
+	public FindingsTemplates getFindingsTemplates(String templateId){
+		Assert.isNotNull(templateId);
+		templateId = templateId.replaceAll(" ", "_");
+		NamedBlob namedBlob = NamedBlob.load(FINDINGS_TEMPLATE_ID_PREFIX + templateId);
 		if (namedBlob.exists() && namedBlob.getString() != null
 			&& !namedBlob.getString().isEmpty()) {
 			try {
@@ -94,8 +96,8 @@ public class FindingsTemplateService {
 		
 		ModelFactory factory = ModelFactory.eINSTANCE;
 		FindingsTemplates findingsTemplates = factory.createFindingsTemplates();
-		findingsTemplates.setId(FINDINGS_TEMPLATE_ID);
-		findingsTemplates.setTitle("Vorlagen");
+		findingsTemplates.setId(FINDINGS_TEMPLATE_ID_PREFIX + templateId);
+		findingsTemplates.setTitle("Standard Vorlagen");
 		return findingsTemplates;
 	}
 	
@@ -395,7 +397,7 @@ public class FindingsTemplateService {
 					|| category == ObservationCategory.SOAP_SUBJECTIVE
 					|| category == ObservationCategory.SOAP_OBJECTIVE) {
 					
-					return item.getSourceObservations(ObservationLinkType.REF).isEmpty(); // has no parents
+					return item.getSourceObservations(ObservationLinkType.REF).isEmpty(); // has no parents //TODO performance problem if a lot of observations exists!!!
 				}
 				return false;
 			}).collect(Collectors.toList());

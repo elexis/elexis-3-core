@@ -35,7 +35,7 @@ public class FindingsDialog extends TitleAreaDialog {
 		findingsDetailComposite = new FindingsDetailComposite(parent, model);
 		findingsDetailComposite.createContents();
 		FindingsTemplate findingsTemplate = ModelFactory.eINSTANCE.createFindingsTemplate();
-		findingsTemplate.setTitle("Neue Vorlage");
+		findingsTemplate.setTitle("");
 		findingsTemplate.setType(Type.OBSERVATION);
 		findingsTemplate.setInputData(ModelFactory.eINSTANCE.createInputDataNumeric());
 		findingsDetailComposite.setSelection(model, findingsTemplate);
