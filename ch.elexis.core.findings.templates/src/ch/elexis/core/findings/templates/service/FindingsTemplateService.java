@@ -179,9 +179,6 @@ public class FindingsTemplateService {
 				iFinding = create(IClinicalImpression.class);
 				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
 				break;
-			case OBSERVATION:
-			case OBSERVATION_OBJECTIVE:
-			case OBSERVATION_SUBJECTIVE:
 			case OBSERVATION_VITAL:
 				iFinding = createObservation(patient, findingsTemplate);
 				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
@@ -327,17 +324,8 @@ public class FindingsTemplateService {
 		IObservation iObservation = create(IObservation.class);
 		iObservation.setEffectiveTime(LocalDateTime.now());
 		switch (findingsTemplate.getType()) {
-		case OBSERVATION_OBJECTIVE:
-			iObservation.setCategory(ObservationCategory.SOAP_OBJECTIVE);
-			break;
-		case OBSERVATION_SUBJECTIVE:
-			iObservation.setCategory(ObservationCategory.SOAP_SUBJECTIVE);
-			break;
 		case OBSERVATION_VITAL:
 			iObservation.setCategory(ObservationCategory.VITALSIGNS);
-			break;
-		case OBSERVATION:
-			iObservation.setCategory(ObservationCategory.VITALSIGNS); //TODO which category 
 			break;
 		default:
 			break;
@@ -427,10 +415,10 @@ public class FindingsTemplateService {
 	public Type getType(IFinding iFinding){
 		if (iFinding instanceof IObservation) {
 			if (((IObservation) iFinding).getCategory() == ObservationCategory.SOAP_SUBJECTIVE) {
-				return Type.OBSERVATION_SUBJECTIVE;
+				return Type.OBSERVATION_VITAL;
 			} else if (((IObservation) iFinding)
 				.getCategory() == ObservationCategory.SOAP_OBJECTIVE) {
-				return Type.OBSERVATION_OBJECTIVE;
+				return Type.OBSERVATION_VITAL;
 			} else if (((IObservation) iFinding).getCategory() == ObservationCategory.VITALSIGNS) {
 				return Type.OBSERVATION_VITAL;
 			}
@@ -453,12 +441,6 @@ public class FindingsTemplateService {
 				return "Problem";
 			case EVALUATION:
 				return "Beurteilung";
-			case OBSERVATION:
-				return "Beobachtung";
-			case OBSERVATION_OBJECTIVE:
-				return "Beobachtung Objektiv";
-			case OBSERVATION_SUBJECTIVE:
-				return "Beobachtung Subjektiv";
 			case OBSERVATION_VITAL:
 				return "Beobachtung Vitalzeichen";
 			case PROCEDURE:

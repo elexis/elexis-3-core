@@ -19,32 +19,6 @@ import org.eclipse.emf.common.util.Enumerator;
  */
 public enum Type implements Enumerator {
 	/**
-	 * The '<em><b>OBSERVATION</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #OBSERVATION_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	OBSERVATION(1, "OBSERVATION", "OBSERVATION"),
-
-	/**
-	 * The '<em><b>OBSERVATION OBJECTIVE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #OBSERVATION_OBJECTIVE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	OBSERVATION_OBJECTIVE(2, "OBSERVATION_OBJECTIVE", "OBSERVATION_OBJECTIVE"), /**
-	 * The '<em><b>OBSERVATION SUBJECTIVE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #OBSERVATION_SUBJECTIVE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	OBSERVATION_SUBJECTIVE(3, "OBSERVATION_SUBJECTIVE", "OBSERVATION_SUBJECTIVE"), /**
 	 * The '<em><b>OBSERVATION VITAL</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -52,7 +26,7 @@ public enum Type implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	OBSERVATION_VITAL(4, "OBSERVATION_VITAL", "OBSERVATION_VITAL"), /**
+	OBSERVATION_VITAL(1, "OBSERVATION_VITAL", "OBSERVATION_VITAL"), /**
 	 * The '<em><b>PROCEDURE</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -83,51 +57,6 @@ public enum Type implements Enumerator {
 	EVALUATION(300, "EVALUATION", "EVALUATION");
 
 	/**
-	 * The '<em><b>OBSERVATION</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>OBSERVATION</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #OBSERVATION
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int OBSERVATION_VALUE = 1;
-
-	/**
-	 * The '<em><b>OBSERVATION OBJECTIVE</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>OBSERVATION OBJECTIVE</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #OBSERVATION_OBJECTIVE
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int OBSERVATION_OBJECTIVE_VALUE = 2;
-
-	/**
-	 * The '<em><b>OBSERVATION SUBJECTIVE</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>OBSERVATION SUBJECTIVE</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #OBSERVATION_SUBJECTIVE
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int OBSERVATION_SUBJECTIVE_VALUE = 3;
-
-	/**
 	 * The '<em><b>OBSERVATION VITAL</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -140,7 +69,7 @@ public enum Type implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int OBSERVATION_VITAL_VALUE = 4;
+	public static final int OBSERVATION_VITAL_VALUE = 1;
 
 	/**
 	 * The '<em><b>PROCEDURE</b></em>' literal value.
@@ -195,9 +124,6 @@ public enum Type implements Enumerator {
 	 */
 	private static final Type[] VALUES_ARRAY =
 		new Type[] {
-			OBSERVATION,
-			OBSERVATION_OBJECTIVE,
-			OBSERVATION_SUBJECTIVE,
 			OBSERVATION_VITAL,
 			PROCEDURE,
 			CONDITION,
@@ -258,9 +184,6 @@ public enum Type implements Enumerator {
 	 */
 	public static Type get(int value) {
 		switch (value) {
-			case OBSERVATION_VALUE: return OBSERVATION;
-			case OBSERVATION_OBJECTIVE_VALUE: return OBSERVATION_OBJECTIVE;
-			case OBSERVATION_SUBJECTIVE_VALUE: return OBSERVATION_SUBJECTIVE;
 			case OBSERVATION_VITAL_VALUE: return OBSERVATION_VITAL;
 			case PROCEDURE_VALUE: return PROCEDURE;
 			case CONDITION_VALUE: return CONDITION;

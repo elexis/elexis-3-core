@@ -21,10 +21,7 @@
     <eLiterals name="GROUP_COMPONENT" value="300" literal="GROUP_COMPONENT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Type">
-    <eLiterals name="OBSERVATION" value="1"/>
-    <eLiterals name="OBSERVATION_OBJECTIVE" value="2"/>
-    <eLiterals name="OBSERVATION_SUBJECTIVE" value="3" literal="OBSERVATION_SUBJECTIVE"/>
-    <eLiterals name="OBSERVATION_VITAL" value="4" literal="OBSERVATION_VITAL"/>
+    <eLiterals name="OBSERVATION_VITAL" value="1" literal="OBSERVATION_VITAL"/>
     <eLiterals name="PROCEDURE" value="100"/>
     <eLiterals name="CONDITION" value="200" literal="CONDITION"/>
     <eLiterals name="EVALUATION" value="300"/>

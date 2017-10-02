@@ -491,9 +491,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEEnumLiteral(dataTypeEEnum, DataType.GROUP_COMPONENT);
 
 		initEEnum(typeEEnum, Type.class, "Type");
-		addEEnumLiteral(typeEEnum, Type.OBSERVATION);
-		addEEnumLiteral(typeEEnum, Type.OBSERVATION_OBJECTIVE);
-		addEEnumLiteral(typeEEnum, Type.OBSERVATION_SUBJECTIVE);
 		addEEnumLiteral(typeEEnum, Type.OBSERVATION_VITAL);
 		addEEnumLiteral(typeEEnum, Type.PROCEDURE);
 		addEEnumLiteral(typeEEnum, Type.CONDITION);
