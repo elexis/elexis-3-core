@@ -14,6 +14,7 @@ package ch.elexis.data;
 
 import java.util.List;
 
+import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.util.MultiplikatorList;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
@@ -69,7 +70,7 @@ public class Eigenleistung extends VerrechenbarAdapter {
 		return new Money(checkZero(get(EK_PREIS)));
 	}
 	
-	public Money getPreis(final TimeTool dat, final Fall fall){
+	public Money getPreis(final TimeTool dat, final IFall fall){
 		return new Money(checkZero(get(VK_PREIS)));
 	}
 	
@@ -100,11 +101,11 @@ public class Eigenleistung extends VerrechenbarAdapter {
 		return "999";
 	}
 	
-	public int getTP(final TimeTool date, final Fall fall){
+	public int getTP(final TimeTool date, final IFall fall){
 		return getPreis(date, fall).getCents();
 	}
 	
-	public double getFactor(final TimeTool date, final Fall fall){
+	public double getFactor(final TimeTool date, final IFall fall){
 		if (MultiplikatorList.isEigenleistungUseMulti(fall.getAbrechnungsSystem())) {
 			return getVKMultiplikator(date, fall);
 		}
