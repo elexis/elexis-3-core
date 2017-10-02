@@ -1,31 +1,21 @@
 # Build script used by gitlab.medelexis.ch
+variables:
+   ORIGIN_BRANCH: 3.3 
+
 stages:
     - build
-    - deploy
     - trigger_other_builds
 
 build:
   stage: build
-  script: xvfb-run mvn clean verify -B -Pall-archs -Dgit.branch=$CI_COMMIT_REF_NAME
-  artifacts:
-    paths:
-    - ch.elexis.core.product/target/products/*.zip
-    - ch.elexis.core.p2site/target/*.zip
-    expire_in: 1 day
-
-deploy_artifacts:
-    stage: deploy
-    script:
-    - mkdir upload; unzip ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip -d upload/
-    - ch.elexis.core.releng/upload-dav.sh upload/ https://download.elexis.info/elexis/ $CI_COMMIT_REF_NAME/p2/elexis-3-core $DEPLOY_USER $DEPLOY_PASSWORD
-    - rm -Rf upload/
-    - ch.elexis.core.releng/upload-dav.sh ch.elexis.core.product/target/products/ https://download.elexis.info/elexis/ $CI_COMMIT_REF_NAME/products $DEPLOY_USER $DEPLOY_PASSWORD
-    environment:
-        name: elexis-3-core/$CI_COMMIT_REF_NAME
-        url: http://download.elexis.info/elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core
-    only:
-    - master@elexis/elexis-3-core
-    - /^\d*[.]\d*$/@elexis/elexis-3-core
+  script: 
+  - xvfb-run mvn clean verify -B -Pall-archs
+  - jo token="$WEBHOOK_TOKEN" info="elexis-3-core $CI_JOB_ID $ORIGIN_BRANCH $CI_COMMIT_REF_NAME $CI_COMMIT_SHA" binary=%$(find ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip) destDir=elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core | curl -k -H "Content-Type:application/json" -X POST -d @- $WEBHOOK_URL/deploy-zip
+  - for file in ch.elexis.core.product/target/products/*.zip; do jo token="$WEBHOOK_TOKEN" destFilename="${file##*/}" binary=%${file} destDir=elexis/$CI_COMMIT_REF_NAME/products/ | curl -k -H "Content-Type:application/json" -X POST -d @- $WEBHOOK_URL/deploy-file; done
+  only:
+  - master@elexis/elexis-3-core
+  - /^\d*[.]\d*$/@elexis/elexis-3-core
+  - /^[bf]\d*$/@elexis/elexis-3-core
 
 trigger_elexis-3-base_build:
     stage: trigger_other_builds
@@ -34,3 +24,4 @@ trigger_elexis-3-base_build:
     only:
     - master@elexis/elexis-3-core
     - /^\d*[.]\d*$/@elexis/elexis-3-core
+    - /^[bf]\d*$/@elexis/elexis-3-core
