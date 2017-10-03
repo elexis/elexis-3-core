@@ -87,7 +87,7 @@ public class InvoiceListHeaderComposite extends Composite {
 					actPatient = (Patient) ksl.getSelection();
 					if (actPatient != null) {
 						lblPatientname.setText(actPatient.getLabel());
-						comboViewerStatus.setSelection(new StructuredSelection(ALL_PATIENTS_LABEL));
+						comboViewerStatus.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
 					} else {
 						lblPatientname.setText(ALL_PATIENTS_LABEL);
 						comboViewerStatus.setSelection(new StructuredSelection(InvoiceState.OPEN));
