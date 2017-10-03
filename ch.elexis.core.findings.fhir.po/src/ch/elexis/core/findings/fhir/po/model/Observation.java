@@ -10,7 +10,7 @@ import java.util.Optional;
 import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
-import ch.elexis.core.findings.BackboneComponent;
+import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IObservation;
@@ -255,7 +255,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	
 
 	@Override
-	public List<BackboneComponent> getComponents(){
+	public List<ObservationComponent> getComponents(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			return accessor.getComponents((DomainResource) resource.get());
@@ -264,7 +264,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	}
 	
 	@Override
-	public void addComponent(BackboneComponent component){
+	public void addComponent(ObservationComponent component){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			accessor.addComponent((DomainResource) resource.get(), component);
@@ -273,7 +273,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	}
 	
 	@Override
-	public void updateComponent(BackboneComponent component){
+	public void updateComponent(ObservationComponent component){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			accessor.updateComponent((DomainResource) resource.get(), component);

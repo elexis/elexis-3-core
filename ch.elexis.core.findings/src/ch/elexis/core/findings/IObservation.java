@@ -91,21 +91,21 @@ public interface IObservation extends IFinding {
 	 * 
 	 * @param component
 	 */
-	public void addComponent(BackboneComponent component);
+	public void addComponent(ObservationComponent component);
 	
 	/**
 	 * Updates a component of the fhir object
 	 * 
 	 * @param component
 	 */
-	public void updateComponent(BackboneComponent component);
+	public void updateComponent(ObservationComponent component);
 	
 	/**
 	 * Returns all components from the fhir object
 	 * 
 	 * @return
 	 */
-	public List<BackboneComponent> getComponents();
+	public List<ObservationComponent> getComponents();
 	
 	/**
 	 * Get the {@link IEncounter} referenced.

@@ -2,7 +2,6 @@ package ch.elexis.core.findings.templates.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +22,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
@@ -141,21 +141,23 @@ public class FindingsTemplateService {
 	public void addComponent(IFinding iFinding, FindingsTemplate findingsTemplate){
 		if (iFinding instanceof IObservation) {
 			IObservation iObservation = (IObservation) iFinding;
-			ch.elexis.core.findings.BackboneComponent component =
-				new ch.elexis.core.findings.BackboneComponent(UUID.randomUUID().toString());
+			ch.elexis.core.findings.ObservationComponent component =
+				new ch.elexis.core.findings.ObservationComponent(UUID.randomUUID().toString());
 			getOrCreateCode(findingsTemplate.getTitle())
 				.ifPresent(code -> component.getCoding().add(code));
 			
 			if (findingsTemplate.getInputData() instanceof InputDataNumeric) {
 				InputDataNumeric inputDataNumeric =
 					(InputDataNumeric) findingsTemplate.getInputData();
-				BigDecimal bigDecimal = new BigDecimal(0);
-				bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
-				component.setNumericValue(Optional.of(bigDecimal));
+				
+				component.setNumericValue(Optional.empty());
 				component.setNumericValueUnit(Optional.of(inputDataNumeric.getUnit()));
+				component.getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
+					ObservationType.NUMERIC.name());
 			}
 			if (findingsTemplate.getInputData() instanceof InputDataText) {
-				component.setStringValue(Optional.of("TEXT"));
+				component.getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
+					ObservationType.TEXT.name());
 			}
 			iObservation.addComponent(component);
 		}
@@ -227,12 +229,12 @@ public class FindingsTemplateService {
 	
 	private StringBuilder getOberservationText(IObservation iObservation){
 		StringBuilder builder = new StringBuilder();
-		List<ch.elexis.core.findings.BackboneComponent> compChildrens =
+		List<ch.elexis.core.findings.ObservationComponent> compChildrens =
 			iObservation.getComponents();
 		
 		addCodingToText(builder, iObservation.getCoding());
 		
-		for (ch.elexis.core.findings.BackboneComponent component : compChildrens) {
+		for (ch.elexis.core.findings.ObservationComponent component : compChildrens) {
 			builder.append(", ");
 			addCodingToText(builder, component.getCoding());
 		}
@@ -353,13 +355,10 @@ public class FindingsTemplateService {
 		} else if (inputData instanceof InputDataNumeric) {
 			iObservation.setObservationType(ObservationType.NUMERIC);
 			InputDataNumeric inputDataNumeric = (InputDataNumeric) inputData;
-			BigDecimal bigDecimal = new BigDecimal(0);
-			bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
-			iObservation.setNumericValue(bigDecimal, inputDataNumeric.getUnit());
+			iObservation.setNumericValue(null, inputDataNumeric.getUnit());
 		}
 		else if (inputData instanceof InputDataText) {
 			iObservation.setObservationType(ObservationType.TEXT);
-			iObservation.setStringValue("TEXT");
 		}
 		return iObservation;
 	}

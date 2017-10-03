@@ -6,13 +6,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.DomainResource;
+import org.hl7.fhir.dstu3.model.Element;
+import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.Observation.ObservationComponentComponent;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Quantity;
@@ -21,7 +25,7 @@ import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.dstu3.model.Type;
 
 import ca.uhn.fhir.model.primitive.IdDt;
-import ch.elexis.core.findings.BackboneComponent;
+import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IdentifierSystem;
@@ -140,7 +144,7 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		fhirObservation.setSubject(new Reference(new IdDt("Patient", patientId)));
 	}
 	
-	public void addComponent(DomainResource resource, BackboneComponent iComponent){
+	public void addComponent(DomainResource resource, ObservationComponent iComponent){
 		org.hl7.fhir.dstu3.model.Observation fhirObservation =
 			(org.hl7.fhir.dstu3.model.Observation) resource;
 		ObservationComponentComponent observationComponentComponent =
@@ -153,16 +157,20 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		ModelUtil.setCodingsToConcept(codeableConcept, iComponent.getCoding());
 		observationComponentComponent.setCode(codeableConcept);
 		
+		setExtensions(iComponent, observationComponentComponent);
+		
 		if (iComponent.getStringValue().isPresent())
 		{
 			StringType stringType = new StringType();
 			stringType.setValue(iComponent.getStringValue().get());
 			observationComponentComponent.setValue(stringType);
 		}
-		else if (iComponent.getNumericValue().isPresent())
+		else if (iComponent.getNumericValue().isPresent()
+			|| iComponent.getNumericValueUnit().isPresent())
 		{
 			Quantity quantity = new Quantity();
-			quantity.setValue(iComponent.getNumericValue().get());
+			quantity.setValue(iComponent.getNumericValue().isPresent()
+					? iComponent.getNumericValue().get() : null);
 			iComponent.getNumericValueUnit()
 				.ifPresent(item -> quantity.setUnit(iComponent.getNumericValueUnit().get()));
 			observationComponentComponent.setValue(quantity);
@@ -171,19 +179,38 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		fhirObservation.addComponent(observationComponentComponent);
 	}
 	
-	public List<BackboneComponent> getComponents(DomainResource resource){
+	private void setExtensions(ObservationComponent iComponent,
+		Element observationComponentComponent){
+		for (String url : iComponent.getExtensions().keySet()) {
+			Extension extension = new Extension(url);
+			extension.setValue(new StringType().setValue(iComponent.getExtensions().get(url)));
+			observationComponentComponent.addExtension(extension);
+		}
+	}
+	
+	private Map<String, String> getExtensions(Element observationComponentComponent){
+		List<Extension> extensions = observationComponentComponent.getExtension();
+		return extensions.stream().filter(extension -> extension.getValue() instanceof StringType)
+			.collect(Collectors.toMap(extension -> extension.getUrl(),
+				extension -> ((StringType) extension.getValue()).getValueAsString()));
+	}
+	
+	public List<ObservationComponent> getComponents(DomainResource resource){
 		org.hl7.fhir.dstu3.model.Observation fhirObservation =
 			(org.hl7.fhir.dstu3.model.Observation) resource;
-		List<BackboneComponent> components = new ArrayList<>();
+		List<ObservationComponent> components = new ArrayList<>();
 		
 		for (ObservationComponentComponent o : fhirObservation.getComponent()) {
-			BackboneComponent component = new BackboneComponent(o.getId());
+			ObservationComponent component = new ObservationComponent(o.getId());
 			CodeableConcept codeableConcept = o.getCode();
 			if (codeableConcept != null) {
 				component.setCoding(ModelUtil.getCodingsFromConcept(codeableConcept));
+				component.setExtensions(getExtensions(o));
+				
 				if (o.hasValueQuantity()) {
 					Quantity quantity = (Quantity) o.getValue();
-					component.setNumericValue(Optional.of(quantity.getValue()));
+					component.setNumericValue(quantity.getValue() != null
+							? Optional.of(quantity.getValue()) : Optional.empty());
 					component.setNumericValueUnit(Optional.of(quantity.getUnit()));
 				}
 				else if (o.hasValueStringType()) {
@@ -196,15 +223,16 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		return components;
 	}
 	
-	public void updateComponent(DomainResource resource, BackboneComponent component){
+	public void updateComponent(DomainResource resource, ObservationComponent component){
 		org.hl7.fhir.dstu3.model.Observation fhirObservation =
 			(org.hl7.fhir.dstu3.model.Observation) resource;
 		
 		for (ObservationComponentComponent o : fhirObservation.getComponent()) {
 			if (component.getId().equals(o.getId())) {
-				if (component.getNumericValue().isPresent() && o.hasValueQuantity()) {
+				if (o.hasValueQuantity()) {
 					Quantity quantity = (Quantity) o.getValue();
-					quantity.setValue(component.getNumericValue().get());
+					quantity.setValue(component.getNumericValue().isPresent()
+							? component.getNumericValue().get() : null);
 				}
 				else if (component.getStringValue().isPresent() && o.hasValueStringType()) {
 					StringType stringType = (StringType) o.getValue();
