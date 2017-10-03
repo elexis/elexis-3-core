@@ -31,6 +31,7 @@ import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
+import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.codes.CodingSystem;
@@ -333,27 +334,31 @@ public class FindingsTemplateService {
 		
 		InputData inputData = findingsTemplate.getInputData();
 		if (inputData instanceof InputDataGroup) {
+			iObservation.setObservationType(ObservationType.REF);
 			InputDataGroup group = (InputDataGroup) inputData;
 			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
 				IFinding iFinding = createFinding(patient, findingsTemplates);
 				if (iFinding instanceof IObservation) {
 					IObservation target = (IObservation) iFinding;
+					target.setReferenced(true);
 					iObservation.addTargetObservation(target, ObservationLinkType.REF);
 				}
 			}
 		} else if (inputData instanceof InputDataGroupComponent) {
+			iObservation.setObservationType(ObservationType.COMP);
 			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
 			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
 				addComponent(iObservation, findingsTemplates);
 			}
 		} else if (inputData instanceof InputDataNumeric) {
+			iObservation.setObservationType(ObservationType.NUMERIC);
 			InputDataNumeric inputDataNumeric = (InputDataNumeric) inputData;
 			BigDecimal bigDecimal = new BigDecimal(0);
 			bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
 			iObservation.setNumericValue(bigDecimal, inputDataNumeric.getUnit());
 		}
 		else if (inputData instanceof InputDataText) {
-			InputDataText inputDataText = (InputDataText) inputData;
+			iObservation.setObservationType(ObservationType.TEXT);
 			iObservation.setStringValue("TEXT");
 		}
 		return iObservation;
@@ -380,17 +385,19 @@ public class FindingsTemplateService {
 	private List<IFinding> getObservations(String patientId){
 		return findingsService.getPatientsFindings(patientId, IObservation.class).stream()
 			.filter(item -> {
-				ObservationCategory category = ((IObservation) item).getCategory();
+				IObservation iObservation = (IObservation) item;
+				ObservationCategory category = iObservation.getCategory();
 				if (category == ObservationCategory.VITALSIGNS
 					|| category == ObservationCategory.SOAP_SUBJECTIVE
 					|| category == ObservationCategory.SOAP_OBJECTIVE) {
 					
-					return item.getSourceObservations(ObservationLinkType.REF).isEmpty(); // has no parents //TODO performance problem if a lot of observations exists!!!
+					return !iObservation.isReferenced();
 				}
 				return false;
 			}).collect(Collectors.toList());
 	};
 	
+	/* TODO currently not needed
 	private List<IFinding> getConditions(String patientId){
 		return findingsService.getPatientsFindings(patientId, ICondition.class).stream()
 			.filter(item -> {
@@ -411,7 +418,7 @@ public class FindingsTemplateService {
 		return findingsService.getPatientsFindings(patientId, IProcedureRequest.class).stream()
 			.collect(Collectors.toList());
 	};
-	
+	*/
 	public Type getType(IFinding iFinding){
 		if (iFinding instanceof IObservation) {
 			if (((IObservation) iFinding).getCategory() == ObservationCategory.SOAP_SUBJECTIVE) {

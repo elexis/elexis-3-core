@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.emf.common.util.ECollections;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -101,37 +103,41 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 				return false;
 			}
 		});
-		List<FindingsTemplate> templates = null;
+		EList<FindingsTemplate> eTemplates = ECollections.newBasicEList();
+		List<FindingsTemplate> templatesTemp = null;
 		if (current != null) {
 			if (current.getInputData() instanceof InputDataGroupComponent)
 			{
 				// remove component selections
-				templates = model.getFindingsTemplates().stream()
+				templatesTemp = model.getFindingsTemplates().stream()
 					.filter(item -> !(item.getInputData() instanceof InputDataGroup
 						|| item.getInputData() instanceof InputDataGroupComponent))
 					.collect(Collectors.toList());
 				
 				for (FindingsTemplate findingsTemplate : ((InputDataGroupComponent) current
 					.getInputData()).getFindingsTemplates()) {
-					if (!templates.contains(findingsTemplate)) {
-						templates.add(findingsTemplate);
+					if (!templatesTemp.contains(findingsTemplate)) {
+						templatesTemp.add(findingsTemplate);
 					}
 				}
 			}
 			else {
 				// remove self selection
-				templates = model.getFindingsTemplates().stream()
+				templatesTemp = model.getFindingsTemplates().stream()
 					.filter(item -> !item.equals(current))
 					.collect(Collectors.toList());
 			}
 			
 		}
 		else {
-			templates = model.getFindingsTemplates();
+			templatesTemp = model.getFindingsTemplates();
 		}
 		
-		if (templates != null) {
-			Collections.sort(templates, new Comparator<FindingsTemplate>() {
+		if (templatesTemp != null) {
+			
+			eTemplates.addAll(templatesTemp);
+			// sort
+			ECollections.sort(eTemplates, new Comparator<FindingsTemplate>() {
 				
 				@Override
 				public int compare(FindingsTemplate o1, FindingsTemplate o2){
@@ -153,7 +159,7 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 				}
 			});
 		}
-		viewer.setInput(templates);
+		viewer.setInput(eTemplates);
 		viewer.setSelection(new StructuredSelection(selections));
 		return composite;
 

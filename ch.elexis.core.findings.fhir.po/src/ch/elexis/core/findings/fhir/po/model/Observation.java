@@ -23,11 +23,13 @@ import ch.rgw.tools.VersionInfo;
 public class Observation extends AbstractFhirPersistentObject implements IObservation {
 	
 	protected static final String TABLENAME = "CH_ELEXIS_CORE_FINDINGS_OBSERVATION";
-	protected static final String VERSION = "1.0.0";
+	protected static final String VERSION = "1.0.1";
 	
 	public static final String FLD_PATIENTID = "patientid"; //$NON-NLS-1$
 	public static final String FLD_ENCOUNTERID = "encounterid"; //$NON-NLS-1$
 	public static final String FLD_PERFORMERID = "performerid"; //$NON-NLS-1$
+	public static final String FLD_TYPE = "type";
+	public static final String FLD_REFERENCED = "referenced";
 	
 	private ObservationAccessor accessor = new ObservationAccessor();
 	
@@ -37,6 +39,8 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	"ID					VARCHAR(25) PRIMARY KEY," +
 	"lastupdate 		BIGINT," +
 	"deleted			CHAR(1) default '0'," + 
+	"type				CHAR(8), " +
+	"referenced			CHAR(1) default '0'," +		
 	"patientid	        VARCHAR(80)," +
 	"encounterid	    VARCHAR(80)," +
 	"performerid	    VARCHAR(80)," +
@@ -47,7 +51,8 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	//@formatter:on
 	
 	static {
-		addMapping(TABLENAME, FLD_PATIENTID, FLD_ENCOUNTERID, FLD_PERFORMERID, FLD_CONTENT);
+		addMapping(TABLENAME, FLD_PATIENTID, FLD_ENCOUNTERID, FLD_PERFORMERID, FLD_CONTENT,
+			FLD_TYPE, FLD_REFERENCED);
 		
 		Observation version = load("VERSION");
 		if (version.state() < PersistentObject.DELETED) {
@@ -57,6 +62,11 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 			if (vi.isOlder(VERSION)) {
 				// we should update eg. with createOrModifyTable(update.sql);
 				// And then set the new version
+				createOrModifyTable(
+					"ALTER TABLE " + TABLENAME + " ADD " + FLD_TYPE + " CHAR(8);");
+				createOrModifyTable(
+					"ALTER TABLE " + TABLENAME + " ADD " + FLD_REFERENCED
+						+ " CHAR(1) default '0';");
 				version.set(FLD_PATIENTID, VERSION);
 			}
 		}
@@ -289,5 +299,28 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 			return accessor.getStringValue((DomainResource) resource.get());
 		}
 		return Optional.empty();
+	}
+	
+	@Override
+	public void setObservationType(ObservationType observationType){
+		if (observationType != null) {
+			set(FLD_TYPE, observationType.name());
+		}
+	}
+	
+	@Override
+	public ObservationType getObservationType(){
+		String type = get(FLD_TYPE);
+		return type != null ? ObservationType.valueOf(type) : null;
+	}
+	
+	@Override
+	public boolean isReferenced(){
+		return "1".equals(get(FLD_REFERENCED));
+	}
+	
+	@Override
+	public void setReferenced(boolean referenced){
+		set(FLD_REFERENCED, referenced ? "1" : "0");
 	}
 }

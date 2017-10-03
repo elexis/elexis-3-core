@@ -47,6 +47,10 @@ public interface IObservation extends IFinding {
 		}
 	}
 	
+	public enum ObservationType {
+			COMP, REF, NUMERIC, TEXT
+	}
+	
 	public enum ObservationCode {
 			ANAM_PERSONAL(IdentifierSystem.ELEXIS_ANAMNESE, "personal"),
 			ANAM_RISK(IdentifierSystem.ELEXIS_ANAMNESE, "risk");
@@ -194,4 +198,32 @@ public interface IObservation extends IFinding {
 	 * @return
 	 */
 	public Optional<String> getNumericValueUnit();
+	
+	/**
+	 * Sets a custom type for a observation
+	 * 
+	 * @param observationType
+	 */
+	public void setObservationType(ObservationType observationType);
+	
+	/**
+	 * Returns the type for this observation
+	 * 
+	 * @return
+	 */
+	public ObservationType getObservationType();
+	
+	/**
+	 * Checks if this observation is inside a reference
+	 * 
+	 * @return
+	 */
+	public boolean isReferenced();
+	
+	/**
+	 * Marks this observation with a referenced flag
+	 * 
+	 * @param referenced
+	 */
+	public void setReferenced(boolean referenced);
 }
