@@ -282,7 +282,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-extras.version>${tycho-version}</tycho-extras.version>
 		<repo_name>elexis.3.core</repo_name>
-		<git.branch>master</git.branch>
 		<ROOT>${project.basedir}/compositeRepository</ROOT>
 	</properties>
 	<build>
@@ -322,9 +321,16 @@
 
   // Returns the current branchName
   public String createVersionProperties(String filename) {
-      branch="git rev-parse --abbrev-ref HEAD".execute().text.replaceAll("\n", '')
+      branch =  System.getenv()['CI_COMMIT_REF_NAME']
+      if (branch != null ) {
+        println "branch name set to ${branch} because of CI_COMMIT_REF_NAME environment variable"
+      } else {
+        branch="git rev-parse --abbrev-ref HEAD".execute().text.replaceAll("\n", '')
+        println "NO CI_COMMIT_REF_NAME environment branch is now ${branch}"
+      }
+      commit_id="git rev-parse HEAD".execute().text.replaceAll("\n", '')
       elexis_version = "${project.version}".replace("-SNAPSHOT", ".") + new SimpleDateFormat("yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
-      tags =  "git tag --contains ".execute().text.split("\n")
+      tags =  "git tag --contains ${commit_id}".execute().text.split("\n")
       for ( i in tags ) {
           if (i ==~/release\/(.*)/ ) {
               elexis_version = (i=~ /release\//).replaceFirst("")
@@ -339,7 +345,7 @@
       repo_version_file = new File(filename)
       repo_version_file.write(HINT_GENERATED)
       repo_version_file.append("elexis.version=${elexis_version}\n")
-      println("Created ${repo_version_file}")
+      println("Created ${repo_version_file} with elexis_version ${elexis_version} from commit_id ${commit_id}")
       return branch;
   }
 
@@ -348,10 +354,10 @@
     println "git checkout ${p2_inf_name}".execute().text
     p2_inf_content = new File(p2_inf_name).text
     elexis_p2_inf_file = new File(p2_inf_name)
-    old = p2_inf_content =~ /p2\/(.+)\//
+    old = p2_inf_content =~ /([^\/]+)\/p2\//
     old_branch_name = old[0][1]
     changed_content = p2_inf_content.replaceAll(old_branch_name, branch)
-    println("Changed p2_inf_content ${p2_inf_name} old ${old_branch_name} => ${branch} creating #{p2_out_file_name}")
+    println("Changed p2_inf_content ${p2_inf_name} old ${old_branch_name} => ${branch} creating ${p2_out_file_name}")
     elexis_p2_inf_file = new File(p2_out_file_name)
     elexis_p2_inf_file.write(changed_content)
     elexis_p2_inf_file.append(HINT_LAST_CHANGED)
@@ -611,11 +617,4 @@ if ( System.getProperty("git_branch") == null ) {
 			</plugins>
 		</pluginManagement>
 	</build>
-	<repositories>
-		<repository>
-			<id>elexis.3.target</id>
-			<url>http://download.elexis.info/elexis/${git.branch}/p2/target</url>
-			<layout>p2</layout>
-		</repository>
-	</repositories>
 </project>
