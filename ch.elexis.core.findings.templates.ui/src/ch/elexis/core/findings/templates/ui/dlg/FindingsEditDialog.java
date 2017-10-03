@@ -14,6 +14,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyEvent;
@@ -63,7 +64,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			.getTypeAsText(FindingsView.findingsTemplateService.getType(iFinding));
 		setTitle(title + " editieren");
 		this.hasFocus = false;
-		iCompositeSaveable = new CompositeGroup(parent, iFinding, false, false, 10, 0);
+		iCompositeSaveable = new CompositeGroup(parent, iFinding, false, false, 10, 10, 0);
 		iCompositeSaveable.getChildComposites()
 			.add(createDynamicContent(iFinding, iCompositeSaveable, 1));
 		return (Control) iCompositeSaveable;
@@ -81,7 +82,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			} else {
 				if (!refChildrens.isEmpty()) {
 					current =
-						new CompositeGroup((Composite) current, item, true, false, 0, depth);
+						new CompositeGroup((Composite) current, item, true, false, 0, 10, depth);
 					for (IObservation child : refChildrens) {
 						ICompositeSaveable childComposite =
 							createDynamicContent(child, current, ++depth);
@@ -91,18 +92,31 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				if (!compChildrens.isEmpty()) {
 					// show as component
 					current =
-						new CompositeGroup((Composite) current, item, false, false, 0, depth);
+						new CompositeGroup((Composite) current, item, false, false, 0, 5, depth);
 					
 					Group group = new Group((Composite) current, SWT.NONE);
-					group.setText(current.getText());
+					group.setText("");
 					
 					GridLayout gd = new GridLayout(2, false);
 					gd.marginHeight = 0;
 					gd.marginBottom = 10;
 					gd.verticalSpacing = 0;
+					gd.marginTop = 0;
 					group.setLayout(gd);
-					group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-					addToolbar(group, 2);
+					group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+					Composite groupComposite = new Composite(group, SWT.NONE);
+					GridLayout gd2 = new GridLayout(2, false);
+					gd2.marginHeight = 0;
+					gd2.marginBottom = 5;
+					gd2.verticalSpacing = 0;
+					gd2.marginTop = 0;
+					groupComposite.setLayout(gd2);
+					groupComposite
+						.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+					Label lblTitle = new Label(groupComposite, SWT.NONE);
+					lblTitle.setText(current.getText());
+					lblTitle.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1));
+					addToolbar(groupComposite, iFinding, 1);
 					
 					boolean allUnitsSame = checkIfAllUnitsSame(compChildrens);
 					int i = 0;
@@ -258,7 +272,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			
 			if (numeric != null && unit != null) {
 				if (!componentChild) {
-					addToolbar(c, 1);
+					addToolbar(c, iFinding, 1);
 				}
 				fieldText = new Text(this, SWT.BORDER);
 				fieldText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
@@ -416,13 +430,13 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		private String txt;
 		
 		public CompositeGroup(Composite parent, IFinding iFinding, boolean showTitle,
-			boolean showBorder, int marginWidth, int depthIndex){
+			boolean showBorder, int marginWidth, int marginTop, int depthIndex){
 			super((Composite) parent, showBorder || depthIndex == 1 ? SWT.BORDER : SWT.NONE);
 			this.iFinding = iFinding;
 			
 			GridLayout gridLayout = new GridLayout(1, false);
 			gridLayout.marginWidth = marginWidth;
-			gridLayout.marginTop = 10;
+			gridLayout.marginTop = marginTop;
 			gridLayout.marginBottom = 10;
 			gridLayout.marginHeight = 0;
 			gridLayout.verticalSpacing = 0;
@@ -444,9 +458,9 @@ public class FindingsEditDialog extends TitleAreaDialog {
 						UiDesk.getFont(fontData.getName(), fontData.getHeight() + 3, SWT.BOLD));
 				} else if (depthIndex > 1) {
 					gridLayout.marginTop = 15;
+					gridLayout.marginBottom = 0;
 					lbl.setFont(
 						UiDesk.getFont(fontData.getName(), fontData.getHeight() + 1, SWT.BOLD));
-					
 				}
 				
 				lbl.setText(txt);
@@ -520,7 +534,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		public String getText();
 	}
 	
-	public void addToolbar(Composite c, int horizontalGrap){
+	public void addToolbar(Composite c, IFinding iFinding, int horizontalGrap){
 		ToolBarManager menuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
 		menuManager.add(new Action("", Action.AS_PUSH_BUTTON) {
 			{
@@ -530,10 +544,15 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			
 			@Override
 			public void run(){
+				
+				String txt = "aa";
+				InputDialog inputDialog = new InputDialog(getShell(), "Kommentar Eingeben",
+					"Alternativ können Sie einen Kommentar eingeben", txt, null);
+				inputDialog.open();
 				super.run();
 			}
 		});
 		menuManager.createControl(c)
-			.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false, horizontalGrap, 1));
+			.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, horizontalGrap, 1));
 	}
 }
