@@ -234,7 +234,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		if (includeLimitReplacement) {
 			if (queryLimit > 0) {
 				queryBuilder.setMainQuery(preparedStatement.replaceAll("REPLACE_WITH_LIMIT",
-					" LIMIT 0," + Integer.toString(queryLimit)));
+					" LIMIT " + Integer.toString(queryLimit)));
 			} else {
 				queryBuilder.setMainQuery(preparedStatement.replaceAll("REPLACE_WITH_LIMIT", ""));
 			}
