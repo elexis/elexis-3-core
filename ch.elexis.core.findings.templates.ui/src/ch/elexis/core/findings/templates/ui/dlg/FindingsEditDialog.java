@@ -44,6 +44,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CommentAction;
 import ch.elexis.core.ui.dialogs.DateTimeSelectorDialog;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.TimeTool;
 
 public class FindingsEditDialog extends TitleAreaDialog {
@@ -67,24 +68,13 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	protected Control createDialogArea(Composite parent){
 		String title = FindingsView.findingsTemplateService
 			.getTypeAsText(FindingsView.findingsTemplateService.getType(iFinding));
-		setTitle(title + " editieren");
+		setTitle("Befund");
+		setMessage(title);
 		this.hasFocus = false;
-		iCompositeSaveable = new CompositeGroup(parent, iFinding, false, false, 10, 10, 0);
-		if (iFinding instanceof IObservation) {
-			Composite c = new Composite((Composite) iCompositeSaveable, SWT.BORDER);
-			c.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, false, 1, 1));
-			GridLayout gd = new GridLayout(2, false);
-			gd.marginHeight = 0;
-			gd.marginBottom = 0;
-			gd.verticalSpacing = 0;
-			gd.marginTop = 0;
-			
-			c.setLayout(gd);
-			iCompositeSaveable
-				.setToolbarActions(createToolbarMainComponent(c, (IObservation) iFinding, 1));
-		}
+		int depth = 0;
+		iCompositeSaveable = new CompositeGroup(parent, iFinding, false, false, 10, 10, depth++);
 		iCompositeSaveable.getChildComposites()
-			.add(createDynamicContent(iFinding, iCompositeSaveable, 1));
+			.add(createDynamicContent(iFinding, iCompositeSaveable, depth));
 		return (Control) iCompositeSaveable;
 	}
 	
@@ -221,14 +211,18 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	private List<Action> createToolbarMainComponent(Composite c, IObservation iObservation,
 		int horizontalGrap){
 		
+		Composite toolbarComposite = new Composite(c, SWT.NONE);
+		toolbarComposite.setLayout(SWTHelper.createGridLayout(true, 2));
+		toolbarComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, false));
+		
 		List<Action> actions = new ArrayList<>();
 		LocalDateTime currentDate = iObservation.getEffectiveTime().orElse(LocalDateTime.now());
 		
 		ToolBarManager menuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
 		
-		Action action = new DateAction(getShell(), currentDate, c);
+		Action action = new DateAction(getShell(), currentDate, toolbarComposite);
 		menuManager.add(action);
-		menuManager.createControl(c)
+		menuManager.createControl(toolbarComposite)
 			.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, horizontalGrap, 1));
 		actions.add(action);
 		
@@ -368,13 +362,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		private void createContents(String title, String textValue, String unit, String numeric,
 			boolean componentChild){
 			Composite c = new Composite(this, SWT.NONE);
-			GridLayout gd = new GridLayout(2, false);
-			gd.marginTop = 0;
-			gd.marginBottom = 0;
-			gd.horizontalSpacing = 0;
-			gd.verticalSpacing = 0;
-			gd.marginHeight = 0;
-			c.setLayout(gd);
+			c.setLayout(SWTHelper.createGridLayout(true, 2));
 			c.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
 			
 			lbl = new Label(c, SWT.NONE);
@@ -553,6 +541,12 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		}
 	}
 	
+	/**
+	 * There exists a main group with depth index of 0 all childrens have a depth index > 0
+	 * 
+	 * @author med1
+	 *
+	 */
 	private class CompositeGroup extends Composite implements ICompositeSaveable {
 		private IFinding iFinding;
 		private Label lbl;
@@ -562,7 +556,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		
 		public CompositeGroup(Composite parent, IFinding iFinding, boolean showTitle,
 			boolean showBorder, int marginWidth, int marginTop, int depthIndex){
-			super((Composite) parent, showBorder || depthIndex == 1 ? SWT.BORDER : SWT.NONE);
+			super((Composite) parent, showBorder || depthIndex == 0 ? SWT.BORDER : SWT.NONE);
 			this.iFinding = iFinding;
 			
 			GridLayout gridLayout = new GridLayout(1, false);
@@ -572,38 +566,50 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			gridLayout.marginHeight = 0;
 			gridLayout.verticalSpacing = 0;
 			
-			if (iFinding instanceof IObservation) {
-				Optional<ICoding> coding = FindingsView.findingsTemplateService.findOneCode(
-					((IObservation) iFinding).getCoding(), CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
-				txt = coding.isPresent() ? coding.get().getDisplay() : "";
-			} else {
-				txt = iFinding.getText().orElse(null);
+			if (depthIndex == 0) {
+				Composite titleComposite = new Composite(this, SWT.NONE);
+				titleComposite.setLayout(SWTHelper.createGridLayout(true, 1));
+				titleComposite.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
+				// add main toolbar
+				this.setToolbarActions(
+					createToolbarMainComponent(titleComposite, (IObservation) iFinding, 1));
 			}
-			if (showTitle && txt != null) {
-				lbl = new Label(this, SWT.NONE);
-				FontData fontData = lbl.getFont().getFontData()[0];
-				if (depthIndex == 1) {
-					gridLayout.marginRight = 10;
-					gridLayout.marginLeft = 10;
-					lbl.setFont(
-						UiDesk.getFont(fontData.getName(), fontData.getHeight() + 3, SWT.BOLD));
-				} else if (depthIndex > 1) {
-					gridLayout.marginTop = 15;
-					gridLayout.marginBottom = 0;
-					lbl.setFont(
-						UiDesk.getFont(fontData.getName(), fontData.getHeight() + 1, SWT.BOLD));
+			else {
+				if (iFinding instanceof IObservation) {
+					Optional<ICoding> coding = FindingsView.findingsTemplateService.findOneCode(
+						((IObservation) iFinding).getCoding(),
+						CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+					txt = coding.isPresent() ? coding.get().getDisplay() : "";
+				} else {
+					txt = iFinding.getText().orElse(null);
+				}
+				if (showTitle && txt != null) {
+					GridData gdLbl = new GridData(SWT.CENTER, SWT.BOTTOM, true, false);
+					lbl = new Label(this, SWT.NONE);
+					FontData fontData = lbl.getFont().getFontData()[0];
+					
+					if (depthIndex == 1) {
+						gdLbl.horizontalIndent = -40;
+						gridLayout.marginRight = 10;
+						gridLayout.marginLeft = 10;
+						lbl.setFont(
+							UiDesk.getFont(fontData.getName(), fontData.getHeight() + 3, SWT.BOLD));
+					} else if (depthIndex > 1) {
+						gridLayout.marginTop = 15;
+						gridLayout.marginBottom = 0;
+						gdLbl.horizontalIndent = -40;
+						lbl.setFont(
+							UiDesk.getFont(fontData.getName(), fontData.getHeight() + 1, SWT.BOLD));
+					}
+					lbl.setText(txt);
+					lbl.setLayoutData(gdLbl);
 				}
 				
-				lbl.setText(txt);
-				GridData minGD = new GridData(SWT.CENTER, SWT.CENTER, false, false);
-				minGD.horizontalIndent = -50;
-				lbl.setLayoutData(minGD);
+				if (depthIndex > 0) {
+					((Composite) iCompositeSaveable)
+						.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+				}
 			}
-			
-			if (depthIndex > 0) {
-				((Composite) iCompositeSaveable).setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
-			}
-			
 			setLayout(gridLayout);
 			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			
@@ -684,7 +690,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		@Override
 		public void run(){
 			DateTimeSelectorDialog inputDialog =
-				new DateTimeSelectorDialog(shell, new TimeTool(localDateTime));
+				new DateTimeSelectorDialog(shell, new TimeTool(localDateTime), true);
 			if (inputDialog.open() == MessageDialog.OK) {
 				TimeTool timeTool = inputDialog.getSelectedDate();
 				if (timeTool != null) {
