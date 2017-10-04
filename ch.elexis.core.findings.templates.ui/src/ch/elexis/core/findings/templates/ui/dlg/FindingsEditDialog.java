@@ -14,7 +14,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyEvent;
@@ -39,7 +38,7 @@ import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.templates.ui.views.FindingsView;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.actions.CommentAction;
 
 public class FindingsEditDialog extends TitleAreaDialog {
 	
@@ -116,7 +115,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 					Label lblTitle = new Label(groupComposite, SWT.NONE);
 					lblTitle.setText(current.getText());
 					lblTitle.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1));
-					addToolbar(groupComposite, iFinding, 1);
+					current.setToolbarActions(createToolbar(groupComposite, item, 1));
 					
 					boolean allUnitsSame = checkIfAllUnitsSame(compChildrens);
 					int i = 0;
@@ -192,6 +191,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		private Label lblUnit;
 		private Label lbl;
 		private boolean plainText;
+		private List<Action> toolbarActions;
 		
 		public CompositeTextUnit(Composite parent, IFinding iFinding,
 			ObservationComponent backboneComponent){
@@ -271,8 +271,8 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			lbl.setLayoutData(minGD);
 			
 			if (numeric != null && unit != null) {
-				if (!componentChild) {
-					addToolbar(c, iFinding, 1);
+				if (!componentChild && iFinding instanceof IObservation) {
+					toolbarActions = createToolbar(c, (IObservation) iFinding, 1);
 				}
 				fieldText = new Text(this, SWT.BORDER);
 				fieldText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
@@ -334,6 +334,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
 			}
 			if (plainText) {
+				// text fields inside component
 				IObservation iObservation = (IObservation) iFinding;
 				String text = fieldText.getText();
 				if (backboneComponent != null) {
@@ -350,10 +351,12 @@ public class FindingsEditDialog extends TitleAreaDialog {
 					stringBuilder.append(" ");
 				}
 			} else if (lblUnit != null && lbl != null) {
+				
 				IObservation iObservation = (IObservation) iFinding;
 				stringBuilder.append(lbl.getText());
 				try {
 					if (backboneComponent != null) {
+						// numeric fields inside component
 						String text = fieldText.getText();
 						
 						BigDecimal number =
@@ -369,6 +372,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 						stringBuilder.append(backboneComponent.getNumericValueUnit().get());
 						stringBuilder.append(" ");
 					} else {
+						// numeric fields
 						String text = fieldText.getText();
 						BigDecimal number =
 							NumberUtils.isNumber(text) ? new BigDecimal(text) : null;
@@ -388,9 +392,11 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				}
 				
 			} else {
+				// text fields
 				stringBuilder.append(fieldText.getText());
 			}
 			iFinding.setText(stringBuilder.toString());
+			saveToolbarActionsResult(iFinding, toolbarActions);
 			return iFinding;
 		}
 		
@@ -421,6 +427,17 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		public String getText(){
 			return null;
 		}
+		
+		@Override
+		public void setToolbarActions(List<Action> toolbarActions){
+			this.toolbarActions = toolbarActions;
+			
+		}
+		
+		@Override
+		public List<Action> getToolbarActions(){
+			return toolbarActions;
+		}
 	}
 	
 	class CompositeGroup extends Composite implements ICompositeSaveable {
@@ -428,6 +445,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		private Label lbl;
 		private List<ICompositeSaveable> childComposites = new ArrayList<>();
 		private String txt;
+		private List<Action> toolbarActions;
 		
 		public CompositeGroup(Composite parent, IFinding iFinding, boolean showTitle,
 			boolean showBorder, int marginWidth, int marginTop, int depthIndex){
@@ -512,6 +530,9 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			builder.append(builderInner);
 			builder.append(" ");
 			iFinding.setText(builder.toString());
+			
+			saveToolbarActionsResult(iFinding, toolbarActions);
+			
 			return iFinding;
 		}
 		
@@ -520,6 +541,16 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			if (lbl != null) {
 				lbl.setText("");
 			}
+		}
+		
+		@Override
+		public void setToolbarActions(List<Action> toolbarActions){
+			this.toolbarActions = toolbarActions;
+		}
+		
+		@Override
+		public List<Action> getToolbarActions(){
+			return toolbarActions;
 		}
 		
 	}
@@ -532,27 +563,46 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		public void hideLabel(boolean all);
 		
 		public String getText();
+		
+		public void setToolbarActions(List<Action> toolbarActions);
+		
+		public List<Action> getToolbarActions();
 	}
 	
-	public void addToolbar(Composite c, IFinding iFinding, int horizontalGrap){
+
+	/**
+	 * Returns all actions from the toolbar
+	 * 
+	 * @param c
+	 * @param iObservation
+	 * @param horizontalGrap
+	 * @return
+	 */
+	public List<Action> createToolbar(Composite c, IObservation iObservation, int horizontalGrap){
+		
+		List<Action> actions = new ArrayList<>();
+		String comment = iObservation.getComment().orElse("");
+		
 		ToolBarManager menuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
-		menuManager.add(new Action("", Action.AS_PUSH_BUTTON) {
-			{
-				setImageDescriptor(Images.IMG_VIEW_CONSULTATION_DETAIL.getImageDescriptor());
-				setToolTipText("TEST COMMENT");
-			}
-			
-			@Override
-			public void run(){
-				
-				String txt = "aa";
-				InputDialog inputDialog = new InputDialog(getShell(), "Kommentar Eingeben",
-					"Alternativ können Sie einen Kommentar eingeben", txt, null);
-				inputDialog.open();
-				super.run();
-			}
-		});
+		Action commentableAction = new CommentAction(getShell(), comment);
+		menuManager.add(commentableAction);
 		menuManager.createControl(c)
 			.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, horizontalGrap, 1));
+		actions.add(commentableAction);
+		
+		return actions;
+		
+	}
+	
+	private void saveToolbarActionsResult(IFinding iFinding, List<Action> toolbarActions){
+		// save comments for observations
+		if (iFinding instanceof IObservation && toolbarActions != null) {
+			for (Action a : toolbarActions) {
+				if (a instanceof CommentAction) {
+					String comment = ((CommentAction) a).getComment();
+					((IObservation) iFinding).setComment(comment);
+				}
+			}
+		}
 	}
 }

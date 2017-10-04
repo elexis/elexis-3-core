@@ -25,10 +25,10 @@ import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.dstu3.model.Type;
 
 import ca.uhn.fhir.model.primitive.IdDt;
-import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IdentifierSystem;
+import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.util.ModelUtil;
 
 public class ObservationAccessor extends AbstractFindingsAccessor {
@@ -293,6 +293,21 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 			if (quantity.getUnit() != null) {
 				return Optional.of(quantity.getUnit());
 			}
+		}
+		return Optional.empty();
+	}
+	
+	public void setComment(DomainResource resource, String comment){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		fhirObservation.setComment(comment);
+	}
+	
+	public Optional<String> getComment(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		if (fhirObservation.hasComment()) {
+			return Optional.of(fhirObservation.getComment());
 		}
 		return Optional.empty();
 	}

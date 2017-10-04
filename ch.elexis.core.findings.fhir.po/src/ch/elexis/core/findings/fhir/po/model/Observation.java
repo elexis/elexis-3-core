@@ -10,11 +10,11 @@ import java.util.Optional;
 import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
-import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
+import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.util.fhir.accessor.ObservationAccessor;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -322,5 +322,24 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	@Override
 	public void setReferenced(boolean referenced){
 		set(FLD_REFERENCED, referenced ? "1" : "0");
+	}
+	
+	@Override
+	public void setComment(String comment){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setComment((DomainResource) resource.get(), comment);
+			saveResource(resource.get());
+		}
+		
+	}
+	
+	@Override
+	public Optional<String> getComment(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getComment((DomainResource) resource.get());
+		}
+		return Optional.empty();
 	}
 }

@@ -226,4 +226,18 @@ public interface IObservation extends IFinding {
 	 * @param referenced
 	 */
 	public void setReferenced(boolean referenced);
+	
+	/**
+	 * Sets comments about the result
+	 * 
+	 * @param comment
+	 */
+	public void setComment(String comment);
+	
+	/**
+	 * Returns the comment of this observation
+	 * 
+	 * @return
+	 */
+	public Optional<String> getComment();
 }
