@@ -1,10 +1,12 @@
 package ch.elexis.core.findings.templates.ui.views;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -23,12 +25,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -37,7 +41,7 @@ import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.templates.service.FindingsTemplateService;
-import ch.elexis.core.findings.templates.ui.dlg.FindingsEditDialog;
+import ch.elexis.core.findings.templates.ui.handler.FindingEditHandler;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
@@ -59,14 +63,14 @@ public class FindingsView extends ViewPart implements IActivationListener {
 			
 			@Override
 			public void runInUi(ElexisEvent ev){
-				setInput();
+				refresh();
 			}
 			
 		};
 	
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		public void runInUi(ElexisEvent ev){
-			setInput();
+			refresh();
 		}
 	};
 	
@@ -112,7 +116,7 @@ public class FindingsView extends ViewPart implements IActivationListener {
 		
 		viewer.setContentProvider(new ArrayContentProvider());
 		viewer.setLabelProvider(new FindingsLabelProvider());
-		setInput();
+		refresh();
 		
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			
@@ -123,11 +127,20 @@ public class FindingsView extends ViewPart implements IActivationListener {
 				if (!structuredSelection.isEmpty()) {
 					Object o = structuredSelection.getFirstElement();
 					if (o instanceof IFinding) {
-						IFinding selection = (IFinding) o;
-						FindingsEditDialog findingsEditDialog = new FindingsEditDialog(
-							Display.getDefault().getActiveShell(), selection);
-						if (findingsEditDialog.open() == MessageDialog.OK) {
-							setInput();
+						try {
+							ICommandService commandService = (ICommandService) PlatformUI
+								.getWorkbench().getService(ICommandService.class);
+							if (commandService != null) {
+								Command cmd =
+									commandService.getCommand(FindingEditHandler.COMMAND_ID);
+								ExecutionEvent ee =
+									new ExecutionEvent(cmd, new HashMap<>(), null, null);
+								cmd.executeWithChecks(ee);
+							}
+							
+						} catch (Exception ex) {
+							LoggerFactory.getLogger(FindingsView.class)
+								.error("Cannot open edit finding", ex);
 						}
 					}
 				}
@@ -149,7 +162,7 @@ public class FindingsView extends ViewPart implements IActivationListener {
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 	
-	private void setInput(){
+	public void refresh(){
 		viewer.setInput(
 			findingsTemplateService.getFindings(ElexisEventDispatcher.getSelectedPatient()));
 	}
