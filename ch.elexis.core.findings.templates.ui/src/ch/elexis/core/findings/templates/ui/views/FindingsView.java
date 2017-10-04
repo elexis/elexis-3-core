@@ -103,15 +103,15 @@ public class FindingsView extends ViewPart implements IActivationListener {
 		
 		TableViewerColumn tableViewerColumnDateTime = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblcCol = tableViewerColumnDateTime.getColumn();
-		tblcCol.setText("Datum");
-		tableColumnLayout.setColumnData(tblcCol, new ColumnWeightData(10, true));
+		tblcCol.setText("Erfassungsdatum");
+		tableColumnLayout.setColumnData(tblcCol, new ColumnWeightData(20, true));
 		tblcCol.addSelectionListener(getSelectionAdapter(tblcCol, 1));
 
 		
 		tableViewerColumnDateTime = new TableViewerColumn(viewer, SWT.NONE);
 		tblcCol = tableViewerColumnDateTime.getColumn();
 		tblcCol.setText("Befund");
-		tableColumnLayout.setColumnData(tblcCol, new ColumnWeightData(90, true));
+		tableColumnLayout.setColumnData(tblcCol, new ColumnWeightData(80, true));
 		tblcCol.addSelectionListener(getSelectionAdapter(tblcCol, 3));
 		
 		viewer.setContentProvider(new ArrayContentProvider());
