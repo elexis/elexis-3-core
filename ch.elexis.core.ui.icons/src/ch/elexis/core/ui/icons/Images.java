@@ -67,6 +67,8 @@ public enum Images {
 		IMG_MAIL_SEND,
 		/** a web icon */
 		IMG_WEB,
+		/** new comment */
+		IMG_COMMENT_ADD,
 		/** a contact detail icon */
 		IMG_CONTACT_DETAIL,
 		/** deleting items */

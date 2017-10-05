@@ -2,7 +2,6 @@ package ch.elexis.core.findings.templates.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -22,6 +22,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
@@ -30,6 +31,7 @@ import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
+import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.codes.CodingSystem;
@@ -50,7 +52,7 @@ import ch.elexis.data.Patient;
 @Component(service = FindingsTemplateService.class)
 public class FindingsTemplateService {
 	
-	private static final String FINDINGS_TEMPLATE_ID = "Findings_Template_1";
+	private static final String FINDINGS_TEMPLATE_ID_PREFIX = "Findings_Template_";
 	
 	private IFindingsService findingsService;
 	private ICodingService codingService;
@@ -69,9 +71,10 @@ public class FindingsTemplateService {
 		this.codingService = codingService;
 	}
 	
-	public FindingsTemplates getFindingsTemplates(){
-		
-		NamedBlob namedBlob = NamedBlob.load(FINDINGS_TEMPLATE_ID);
+	public FindingsTemplates getFindingsTemplates(String templateId){
+		Assert.isNotNull(templateId);
+		templateId = templateId.replaceAll(" ", "_");
+		NamedBlob namedBlob = NamedBlob.load(FINDINGS_TEMPLATE_ID_PREFIX + templateId);
 		if (namedBlob.exists() && namedBlob.getString() != null
 			&& !namedBlob.getString().isEmpty()) {
 			try {
@@ -94,8 +97,8 @@ public class FindingsTemplateService {
 		
 		ModelFactory factory = ModelFactory.eINSTANCE;
 		FindingsTemplates findingsTemplates = factory.createFindingsTemplates();
-		findingsTemplates.setId(FINDINGS_TEMPLATE_ID);
-		findingsTemplates.setTitle("Vorlagen");
+		findingsTemplates.setId(FINDINGS_TEMPLATE_ID_PREFIX + templateId);
+		findingsTemplates.setTitle("Standard Vorlagen");
 		return findingsTemplates;
 	}
 	
@@ -138,21 +141,23 @@ public class FindingsTemplateService {
 	public void addComponent(IFinding iFinding, FindingsTemplate findingsTemplate){
 		if (iFinding instanceof IObservation) {
 			IObservation iObservation = (IObservation) iFinding;
-			ch.elexis.core.findings.BackboneComponent component =
-				new ch.elexis.core.findings.BackboneComponent(UUID.randomUUID().toString());
+			ch.elexis.core.findings.ObservationComponent component =
+				new ch.elexis.core.findings.ObservationComponent(UUID.randomUUID().toString());
 			getOrCreateCode(findingsTemplate.getTitle())
 				.ifPresent(code -> component.getCoding().add(code));
 			
 			if (findingsTemplate.getInputData() instanceof InputDataNumeric) {
 				InputDataNumeric inputDataNumeric =
 					(InputDataNumeric) findingsTemplate.getInputData();
-				BigDecimal bigDecimal = new BigDecimal(0);
-				bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
-				component.setNumericValue(Optional.of(bigDecimal));
+				
+				component.setNumericValue(Optional.empty());
 				component.setNumericValueUnit(Optional.of(inputDataNumeric.getUnit()));
+				component.getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
+					ObservationType.NUMERIC.name());
 			}
 			if (findingsTemplate.getInputData() instanceof InputDataText) {
-				component.setStringValue(Optional.of("TEXT"));
+				component.getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
+					ObservationType.TEXT.name());
 			}
 			iObservation.addComponent(component);
 		}
@@ -177,9 +182,6 @@ public class FindingsTemplateService {
 				iFinding = create(IClinicalImpression.class);
 				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
 				break;
-			case OBSERVATION:
-			case OBSERVATION_OBJECTIVE:
-			case OBSERVATION_SUBJECTIVE:
 			case OBSERVATION_VITAL:
 				iFinding = createObservation(patient, findingsTemplate);
 				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
@@ -227,12 +229,12 @@ public class FindingsTemplateService {
 	
 	private StringBuilder getOberservationText(IObservation iObservation){
 		StringBuilder builder = new StringBuilder();
-		List<ch.elexis.core.findings.BackboneComponent> compChildrens =
+		List<ch.elexis.core.findings.ObservationComponent> compChildrens =
 			iObservation.getComponents();
 		
 		addCodingToText(builder, iObservation.getCoding());
 		
-		for (ch.elexis.core.findings.BackboneComponent component : compChildrens) {
+		for (ch.elexis.core.findings.ObservationComponent component : compChildrens) {
 			builder.append(", ");
 			addCodingToText(builder, component.getCoding());
 		}
@@ -325,17 +327,8 @@ public class FindingsTemplateService {
 		IObservation iObservation = create(IObservation.class);
 		iObservation.setEffectiveTime(LocalDateTime.now());
 		switch (findingsTemplate.getType()) {
-		case OBSERVATION_OBJECTIVE:
-			iObservation.setCategory(ObservationCategory.SOAP_OBJECTIVE);
-			break;
-		case OBSERVATION_SUBJECTIVE:
-			iObservation.setCategory(ObservationCategory.SOAP_SUBJECTIVE);
-			break;
 		case OBSERVATION_VITAL:
 			iObservation.setCategory(ObservationCategory.VITALSIGNS);
-			break;
-		case OBSERVATION:
-			iObservation.setCategory(ObservationCategory.VITALSIGNS); //TODO which category 
 			break;
 		default:
 			break;
@@ -343,28 +336,29 @@ public class FindingsTemplateService {
 		
 		InputData inputData = findingsTemplate.getInputData();
 		if (inputData instanceof InputDataGroup) {
+			iObservation.setObservationType(ObservationType.REF);
 			InputDataGroup group = (InputDataGroup) inputData;
 			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
 				IFinding iFinding = createFinding(patient, findingsTemplates);
 				if (iFinding instanceof IObservation) {
 					IObservation target = (IObservation) iFinding;
+					target.setReferenced(true);
 					iObservation.addTargetObservation(target, ObservationLinkType.REF);
 				}
 			}
 		} else if (inputData instanceof InputDataGroupComponent) {
+			iObservation.setObservationType(ObservationType.COMP);
 			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
 			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
 				addComponent(iObservation, findingsTemplates);
 			}
 		} else if (inputData instanceof InputDataNumeric) {
+			iObservation.setObservationType(ObservationType.NUMERIC);
 			InputDataNumeric inputDataNumeric = (InputDataNumeric) inputData;
-			BigDecimal bigDecimal = new BigDecimal(0);
-			bigDecimal.setScale(inputDataNumeric.getDecimalPlace());
-			iObservation.setNumericValue(bigDecimal, inputDataNumeric.getUnit());
+			iObservation.setNumericValue(null, inputDataNumeric.getUnit());
 		}
 		else if (inputData instanceof InputDataText) {
-			InputDataText inputDataText = (InputDataText) inputData;
-			iObservation.setStringValue("TEXT");
+			iObservation.setObservationType(ObservationType.TEXT);
 		}
 		return iObservation;
 	}
@@ -390,17 +384,19 @@ public class FindingsTemplateService {
 	private List<IFinding> getObservations(String patientId){
 		return findingsService.getPatientsFindings(patientId, IObservation.class).stream()
 			.filter(item -> {
-				ObservationCategory category = ((IObservation) item).getCategory();
+				IObservation iObservation = (IObservation) item;
+				ObservationCategory category = iObservation.getCategory();
 				if (category == ObservationCategory.VITALSIGNS
 					|| category == ObservationCategory.SOAP_SUBJECTIVE
 					|| category == ObservationCategory.SOAP_OBJECTIVE) {
 					
-					return item.getSourceObservations(ObservationLinkType.REF).isEmpty(); // has no parents
+					return !iObservation.isReferenced();
 				}
 				return false;
 			}).collect(Collectors.toList());
 	};
 	
+	/* TODO currently not needed
 	private List<IFinding> getConditions(String patientId){
 		return findingsService.getPatientsFindings(patientId, ICondition.class).stream()
 			.filter(item -> {
@@ -421,14 +417,14 @@ public class FindingsTemplateService {
 		return findingsService.getPatientsFindings(patientId, IProcedureRequest.class).stream()
 			.collect(Collectors.toList());
 	};
-	
+	*/
 	public Type getType(IFinding iFinding){
 		if (iFinding instanceof IObservation) {
 			if (((IObservation) iFinding).getCategory() == ObservationCategory.SOAP_SUBJECTIVE) {
-				return Type.OBSERVATION_SUBJECTIVE;
+				return Type.OBSERVATION_VITAL;
 			} else if (((IObservation) iFinding)
 				.getCategory() == ObservationCategory.SOAP_OBJECTIVE) {
-				return Type.OBSERVATION_OBJECTIVE;
+				return Type.OBSERVATION_VITAL;
 			} else if (((IObservation) iFinding).getCategory() == ObservationCategory.VITALSIGNS) {
 				return Type.OBSERVATION_VITAL;
 			}
@@ -451,12 +447,6 @@ public class FindingsTemplateService {
 				return "Problem";
 			case EVALUATION:
 				return "Beurteilung";
-			case OBSERVATION:
-				return "Beobachtung";
-			case OBSERVATION_OBJECTIVE:
-				return "Beobachtung Objektiv";
-			case OBSERVATION_SUBJECTIVE:
-				return "Beobachtung Subjektiv";
 			case OBSERVATION_VITAL:
 				return "Beobachtung Vitalzeichen";
 			case PROCEDURE:

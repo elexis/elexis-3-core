@@ -47,6 +47,10 @@ public interface IObservation extends IFinding {
 		}
 	}
 	
+	public enum ObservationType {
+			COMP, REF, NUMERIC, TEXT
+	}
+	
 	public enum ObservationCode {
 			ANAM_PERSONAL(IdentifierSystem.ELEXIS_ANAMNESE, "personal"),
 			ANAM_RISK(IdentifierSystem.ELEXIS_ANAMNESE, "risk");
@@ -87,21 +91,21 @@ public interface IObservation extends IFinding {
 	 * 
 	 * @param component
 	 */
-	public void addComponent(BackboneComponent component);
+	public void addComponent(ObservationComponent component);
 	
 	/**
 	 * Updates a component of the fhir object
 	 * 
 	 * @param component
 	 */
-	public void updateComponent(BackboneComponent component);
+	public void updateComponent(ObservationComponent component);
 	
 	/**
 	 * Returns all components from the fhir object
 	 * 
 	 * @return
 	 */
-	public List<BackboneComponent> getComponents();
+	public List<ObservationComponent> getComponents();
 	
 	/**
 	 * Get the {@link IEncounter} referenced.
@@ -194,4 +198,46 @@ public interface IObservation extends IFinding {
 	 * @return
 	 */
 	public Optional<String> getNumericValueUnit();
+	
+	/**
+	 * Sets a custom type for a observation
+	 * 
+	 * @param observationType
+	 */
+	public void setObservationType(ObservationType observationType);
+	
+	/**
+	 * Returns the type for this observation
+	 * 
+	 * @return
+	 */
+	public ObservationType getObservationType();
+	
+	/**
+	 * Checks if this observation is inside a reference
+	 * 
+	 * @return
+	 */
+	public boolean isReferenced();
+	
+	/**
+	 * Marks this observation with a referenced flag
+	 * 
+	 * @param referenced
+	 */
+	public void setReferenced(boolean referenced);
+	
+	/**
+	 * Sets comments about the result
+	 * 
+	 * @param comment
+	 */
+	public void setComment(String comment);
+	
+	/**
+	 * Returns the comment of this observation
+	 * 
+	 * @return
+	 */
+	public Optional<String> getComment();
 }

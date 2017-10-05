@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.core.runtime,
  ch.elexis.core.findings.templates,
  ch.elexis.core.findings.templates.edit,
  ch.elexis.core.data,
- org.eclipse.ui.views;bundle-version="3.8.102"
+ org.eclipse.ui.views;bundle-version="3.8.102",
+ ch.elexis.core.ui;bundle-version="3.2.0"
 Bundle-Vendor: medevit.at
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.findings,
@@ -19,8 +20,6 @@ Import-Package: ch.elexis.core.findings,
  ch.elexis.core.findings.ui.composites,
  ch.elexis.core.findings.util.commands,
  ch.elexis.core.findings.util.model,
- ch.elexis.core.ui.actions,
- ch.elexis.core.ui.events,
  ch.elexis.core.ui.icons,
  ch.rgw.tools,
  org.apache.commons.lang3;version="3.1.0",

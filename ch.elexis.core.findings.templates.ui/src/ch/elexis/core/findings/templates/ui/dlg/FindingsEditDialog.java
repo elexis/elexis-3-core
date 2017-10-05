@@ -9,31 +9,50 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.findings.BackboneComponent;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
+import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
+import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.templates.ui.views.FindingsView;
+import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.actions.CommentAction;
+import ch.elexis.core.ui.dialogs.DateTimeSelectorDialog;
+import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.SWTHelper;
+import ch.rgw.tools.TimeTool;
 
 public class FindingsEditDialog extends TitleAreaDialog {
 	
 	private final IFinding iFinding;
 	private ICompositeSaveable iCompositeSaveable;
+	
+	private boolean hasFocus;
 	
 	public FindingsEditDialog(Shell parentShell, IFinding iFinding){
 		super(parentShell);
@@ -49,44 +68,78 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	protected Control createDialogArea(Composite parent){
 		String title = FindingsView.findingsTemplateService
 			.getTypeAsText(FindingsView.findingsTemplateService.getType(iFinding));
-		setTitle(title + " editieren");
-		
-		iCompositeSaveable = new CompositeGroup(parent, iFinding, false);
+		setTitle("Befund");
+		setMessage(title);
+		this.hasFocus = false;
+		int depth = 0;
+		iCompositeSaveable = new CompositeGroup(parent, iFinding, false, false, 10, 10, depth++);
 		iCompositeSaveable.getChildComposites()
-			.add(createDynamicContent(iFinding, iCompositeSaveable));
+			.add(createDynamicContent(iFinding, iCompositeSaveable, depth));
 		return (Control) iCompositeSaveable;
 	}
 	
-	private ICompositeSaveable createDynamicContent(IFinding iFinding, ICompositeSaveable current){
+	private ICompositeSaveable createDynamicContent(IFinding iFinding, ICompositeSaveable current,
+		int depth){
 		
 		if (iFinding instanceof IObservation) {
 			IObservation item = (IObservation) iFinding;
 			List<IObservation> refChildrens = item.getTargetObseravtions(ObservationLinkType.REF);
-			List<BackboneComponent> compChildrens = item.getComponents();
+			List<ObservationComponent> compChildrens = item.getComponents();
 			if (refChildrens.isEmpty() && compChildrens.isEmpty()) {
 				current = new CompositeTextUnit((Composite) current, item, null);
 			} else {
-				current = new CompositeGroup((Composite) current, item, true);
-				for (IObservation child : refChildrens) {
-					ICompositeSaveable childComposite = createDynamicContent(child, current);
-					current.getChildComposites().add(childComposite);
+				if (!refChildrens.isEmpty()) {
+					current =
+						new CompositeGroup((Composite) current, item, true, false, 0, 10, depth);
+					for (IObservation child : refChildrens) {
+						ICompositeSaveable childComposite =
+							createDynamicContent(child, current, ++depth);
+						current.getChildComposites().add(childComposite);
+					}
 				}
 				if (!compChildrens.isEmpty()) {
 					// show as component
-					current.changeLayout(new GridLayout(compChildrens.size() + 1, false));
-				}
-				
-				boolean allUnitsSame = checkIfAllUnitsSame(compChildrens);
-				int i = 0;
-				for (BackboneComponent child : compChildrens) {
-					i++;
-					ICompositeSaveable childComposite =
-						new CompositeTextUnit((Composite) current, iFinding, child);
-					current.getChildComposites().add(childComposite);
-					if (allUnitsSame) {
-						if (childComposite instanceof CompositeTextUnit) {
-							childComposite.hideLabel(i < compChildrens.size());
+					current =
+						new CompositeGroup((Composite) current, item, false, false, 0, 5, depth);
+					
+					Group group = new Group((Composite) current, SWT.NONE);
+					group.setText("");
+					
+					GridLayout gd = new GridLayout(2, false);
+					gd.marginHeight = 0;
+					gd.marginBottom = 10;
+					gd.verticalSpacing = 0;
+					gd.marginTop = 0;
+					group.setLayout(gd);
+					group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+					Composite groupComposite = new Composite(group, SWT.NONE);
+					GridLayout gd2 = new GridLayout(2, false);
+					gd2.marginHeight = 0;
+					gd2.marginBottom = 5;
+					gd2.verticalSpacing = 0;
+					gd2.marginTop = 0;
+					groupComposite.setLayout(gd2);
+					groupComposite
+						.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+					Label lblTitle = new Label(groupComposite, SWT.NONE);
+					lblTitle.setText(current.getText());
+					lblTitle.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1));
+					current.setToolbarActions(createToolbarSubComponents(groupComposite, item, 1));
+					
+					boolean allUnitsSame = checkIfAllUnitsSame(compChildrens);
+					int i = 0;
+					
+					for (ObservationComponent child : compChildrens) {
+						i++;
+						ICompositeSaveable childComposite =
+							new CompositeTextUnit(group, iFinding, child);
+						current.getChildComposites().add(childComposite);
+						if (allUnitsSame) {
+							if (childComposite instanceof CompositeTextUnit) {
+								childComposite.hideLabel(i < compChildrens.size());
+							}
 						}
+						
 					}
 					
 				}
@@ -104,9 +157,9 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	 * @param iObservations
 	 * @return
 	 */
-	private boolean checkIfAllUnitsSame(List<BackboneComponent> iObservations){
+	private boolean checkIfAllUnitsSame(List<ObservationComponent> iObservations){
 		Set<String> units = new HashSet<>();
-		for (BackboneComponent child : iObservations) {
+		for (ObservationComponent child : iObservations) {
 			child.getNumericValueUnit().ifPresent(item -> units.add(item));
 		}
 		return units.size() == 1;
@@ -131,55 +184,165 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed(){
 		if (iCompositeSaveable != null) {
-			Optional<String> text = iCompositeSaveable.saveContents().getText();
-			if (iFinding instanceof IObservation) {
-				((IObservation) iFinding).setEffectiveTime(LocalDateTime.now());
+			LocalDateTime localDateTime = LocalDateTime.now();
+			List<Action> actions = iCompositeSaveable.getToolbarActions();
+			if (actions != null) {
+				for (Action action : actions) {
+					if (action instanceof DateAction) {
+						localDateTime = ((DateAction) action).getLocalDateTime();
+					}
+				}
 			}
+			
+			Optional<String> text = iCompositeSaveable.saveContents(localDateTime).getText();
 			iFinding.setText(text.orElse(""));
 		}
 		super.okPressed();
 	}
 	
-	class CompositeTextUnit extends Composite implements ICompositeSaveable {
+	/**
+	 * Returns all actions from the main toolbar
+	 * 
+	 * @param c
+	 * @param iObservation
+	 * @param horizontalGrap
+	 * @return
+	 */
+	private List<Action> createToolbarMainComponent(Composite c, IObservation iObservation,
+		int horizontalGrap){
+		
+		Composite toolbarComposite = new Composite(c, SWT.NONE);
+		toolbarComposite.setLayout(SWTHelper.createGridLayout(true, 2));
+		toolbarComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, false));
+		
+		List<Action> actions = new ArrayList<>();
+		LocalDateTime currentDate = iObservation.getEffectiveTime().orElse(LocalDateTime.now());
+		
+		ToolBarManager menuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
+		
+		Action action = new DateAction(getShell(), currentDate, toolbarComposite);
+		menuManager.add(action);
+		menuManager.createControl(toolbarComposite)
+			.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, horizontalGrap, 1));
+		actions.add(action);
+		
+		return actions;
+		
+	}
+	
+	/**
+	 * Returns all actions from the sub toolbar
+	 * 
+	 * @param c
+	 * @param iObservation
+	 * @param horizontalGrap
+	 * @return
+	 */
+	private List<Action> createToolbarSubComponents(Composite c, IObservation iObservation,
+		int horizontalGrap){
+		
+		List<Action> actions = new ArrayList<>();
+		String comment = iObservation.getComment().orElse("");
+		
+		ToolBarManager menuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
+		Action commentableAction = new CommentAction(getShell(), comment);
+		menuManager.add(commentableAction);
+		menuManager.createControl(c)
+			.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, horizontalGrap, 1));
+		actions.add(commentableAction);
+		
+		return actions;
+		
+	}
+	
+	private void saveToolbarActionsResult(IFinding iFinding, List<Action> toolbarActions){
+		// save comments for observations
+		if (iFinding instanceof IObservation && toolbarActions != null) {
+			for (Action a : toolbarActions) {
+				if (a instanceof CommentAction) {
+					String comment = ((CommentAction) a).getComment();
+					((IObservation) iFinding).setComment(comment);
+				}
+			}
+		}
+	}
+	
+	private void saveSimpleResult(IFinding iFinding, String text, LocalDateTime localDateTime){
+		// save text
+		iFinding.setText(text);
+		
+		// save effective time
+		if (iFinding instanceof IObservation) {
+			((IObservation) iFinding).setEffectiveTime(localDateTime);
+		}
+	}
+	
+	private interface ICompositeSaveable {
+		public IFinding saveContents(LocalDateTime localDateTime);
+		
+		public List<ICompositeSaveable> getChildComposites();
+		
+		public void hideLabel(boolean all);
+		
+		public String getText();
+		
+		public void setToolbarActions(List<Action> toolbarActions);
+		
+		public List<Action> getToolbarActions();
+	}
+	
+	private class CompositeTextUnit extends Composite implements ICompositeSaveable {
 		private Text fieldText;
 		private IFinding iFinding;
-		private BackboneComponent backboneComponent;
+		private ObservationComponent backboneComponent;
 		private Label lblUnit;
 		private Label lbl;
 		private boolean plainText;
+		private List<Action> toolbarActions;
 		
 		public CompositeTextUnit(Composite parent, IFinding iFinding,
-			BackboneComponent backboneComponent){
+			ObservationComponent backboneComponent){
 			super((Composite) parent, SWT.NONE);
 			this.iFinding = iFinding;
 			this.backboneComponent = backboneComponent;
-			setLayout(new GridLayout(3, false));
+			GridLayout gd = new GridLayout(2, false);
+			gd.marginTop = 5;
+			gd.marginBottom = 0;
+			gd.marginHeight = 0;
+			gd.verticalSpacing = 0;
+			
+			setLayout(gd);
 			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			plainText = false;
 			String unit = null;
-			BigDecimal numeric = null;
+			String numeric = null;
 			List<ICoding> codings = null;
 			String title = null;
+			String textValue = null;
 			
 			if (backboneComponent != null) {
-				if (backboneComponent.getStringValue().isPresent()) {
-					title = backboneComponent.getStringValue().get();
-					plainText = true;
-				}
-				else {
-					unit = backboneComponent.getNumericValueUnit().orElse(null);
-					numeric = backboneComponent.getNumericValue().orElse(null);
-				}
 				
+				ObservationType observationType =
+					backboneComponent.getTypeFromExtension(ObservationType.class);
+				
+				if (ObservationType.TEXT.equals(observationType)) {
+					textValue = backboneComponent.getStringValue().orElse("");
+					plainText = true;
+				} else if (ObservationType.NUMERIC.equals(observationType)) {
+					unit = backboneComponent.getNumericValueUnit().orElse("");
+					numeric = backboneComponent.getNumericValue().isPresent()
+							? backboneComponent.getNumericValue().get().toPlainString() : "";
+				}
 				codings = backboneComponent.getCoding();
 			} else if (iFinding instanceof IObservation) {
 				IObservation iObservation = (IObservation) iFinding;
-				if (iObservation.getStringValue().isPresent()) {
-					title = iObservation.getStringValue().get();
+				if (ObservationType.TEXT.equals(iObservation.getObservationType())) {
+					textValue = iObservation.getStringValue().orElse("");
 					plainText = true;
-				} else {
-					unit = iObservation.getNumericValueUnit().orElse(null);
-					numeric = iObservation.getNumericValue().orElse(null);
+				} else if (ObservationType.NUMERIC.equals(iObservation.getObservationType())) {
+					unit = iObservation.getNumericValueUnit().orElse("");
+					numeric = iObservation.getNumericValue().isPresent()
+							? iObservation.getNumericValue().get().toPlainString() : "";
 				}
 				codings = iObservation.getCoding();
 			}
@@ -193,40 +356,86 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				title = iFinding.getText().orElse("");
 			}
 			
-			createContents(title, unit, numeric);
+			createContents(title, textValue, unit, numeric, backboneComponent != null);
 		}
 		
-		private void createContents(String text, String unit, BigDecimal numeric){
+		private void createContents(String title, String textValue, String unit, String numeric,
+			boolean componentChild){
+			Composite c = new Composite(this, SWT.NONE);
+			c.setLayout(SWTHelper.createGridLayout(true, 2));
+			c.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
+			
+			lbl = new Label(c, SWT.NONE);
+			lbl.setText(title);
+			
+			GridData minGD = new GridData(SWT.LEFT, SWT.BOTTOM, true, false, 1, 1);
+			lbl.setLayoutData(minGD);
+			
 			if (numeric != null && unit != null) {
-				lbl = new Label(this, SWT.NONE);
-				lbl.setText(text);
-				
-				GridData minGD = new GridData(SWT.FILL, SWT.CENTER, false, false);
-				minGD.widthHint = 90;
-				lbl.setLayoutData(minGD);
-				
+				if (!componentChild && iFinding instanceof IObservation) {
+					toolbarActions = createToolbarSubComponents(c, (IObservation) iFinding, 1);
+				}
 				fieldText = new Text(this, SWT.BORDER);
-				fieldText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
-				fieldText.setText(numeric.toPlainString());
+				fieldText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+				fieldText.setText(numeric);
+				
+				fieldText.addVerifyListener(new VerifyListener() {
+					@Override
+					public void verifyText(VerifyEvent e){
+						String txt = e.text;
+						if (!txt.isEmpty()) {
+							if (NumberUtils.isDigits(txt) || txt.equals(".")) {
+								if (txt.equals(".")) {
+									// check if the whole text contains max one "."
+									String input = ((Text) e.widget).getText();
+									if (StringUtils.countMatches(input, ".") == 1) {
+										e.doit = false;
+									}
+								}
+							} else {
+								e.doit = false;
+							}
+						}
+						
+					}
+				});
 				lblUnit = new Label(this, SWT.NONE);
+				GridData gdUnit = new GridData(SWT.FILL, SWT.TOP, false, false);
+				gdUnit.widthHint = 40;
+				lblUnit.setLayoutData(gdUnit);
+				lblUnit.setAlignment(SWT.CENTER);
 				lblUnit.setText(unit);
 			}
 			
 			if (fieldText == null) {
 				fieldText = new Text(this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-				fieldText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-				fieldText.setText(text);
+				GridData gdFieldText = new GridData(SWT.FILL, SWT.TOP, true, false);
+				gdFieldText.heightHint = 40;
+				fieldText.setLayoutData(gdFieldText);
+				fieldText.setText(textValue != null ? textValue : "");
+				
+				Label lblTmp = new Label(this, SWT.NONE);
+				lblTmp.setText("");
+				GridData gdUnit = new GridData(SWT.FILL, SWT.TOP, false, false);
+				gdUnit.widthHint = 40;
+				lblTmp.setLayoutData(gdUnit);
+			}
+			
+			if (!hasFocus) {
+				hasFocus = true;
+				fieldText.forceFocus();
 			}
 		}
 		
 		@Override
-		public IFinding saveContents(){
+		public IFinding saveContents(LocalDateTime localDateTime){
 			StringBuilder stringBuilder = new StringBuilder();
 			
 			if (iFinding.getId() == null) {
 				iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
 			}
 			if (plainText) {
+				// text fields inside component
 				IObservation iObservation = (IObservation) iFinding;
 				String text = fieldText.getText();
 				if (backboneComponent != null) {
@@ -239,35 +448,40 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				} else {
 					iObservation.setStringValue(text);
 					stringBuilder.append(" ");
-					stringBuilder.append(iObservation.getStringValue().get());
+					stringBuilder.append(iObservation.getStringValue().orElse(""));
 					stringBuilder.append(" ");
 				}
 			} else if (lblUnit != null && lbl != null) {
+				
 				IObservation iObservation = (IObservation) iFinding;
 				stringBuilder.append(lbl.getText());
 				try {
 					if (backboneComponent != null) {
+						// numeric fields inside component
 						String text = fieldText.getText();
 						
 						BigDecimal number =
-							NumberUtils.isDigits(text) ? new BigDecimal(text) : BigDecimal.ZERO;
-						backboneComponent.setNumericValue(Optional.of(number));
+							NumberUtils.isNumber(text) ? new BigDecimal(text) : null;
+						backboneComponent.setNumericValue(
+							number != null ? Optional.of(number) : Optional.empty());
 						iObservation.updateComponent(backboneComponent);
 						
 						stringBuilder.append(" ");
-						stringBuilder
-							.append(backboneComponent.getNumericValue().get().toPlainString());
+						stringBuilder.append(backboneComponent.getNumericValue().isPresent()
+								? backboneComponent.getNumericValue().get().toPlainString() : "");
 						stringBuilder.append(" ");
 						stringBuilder.append(backboneComponent.getNumericValueUnit().get());
 						stringBuilder.append(" ");
 					} else {
+						// numeric fields
 						String text = fieldText.getText();
 						BigDecimal number =
-							NumberUtils.isDigits(text) ? new BigDecimal(text) : BigDecimal.ZERO;
+							NumberUtils.isNumber(text) ? new BigDecimal(text) : null;
 						iObservation.setNumericValue(number, lblUnit.getText());
 						
 						stringBuilder.append(" ");
-						stringBuilder.append(iObservation.getNumericValue().get().toPlainString());
+						stringBuilder.append(iObservation.getNumericValue().isPresent()
+								? iObservation.getNumericValue().get().toPlainString() : "");
 						stringBuilder.append(" ");
 						stringBuilder.append(iObservation.getNumericValueUnit().get());
 						stringBuilder.append(" ");
@@ -279,9 +493,11 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				}
 				
 			} else {
+				// text fields
 				stringBuilder.append(fieldText.getText());
 			}
-			iFinding.setText(stringBuilder.toString());
+			saveSimpleResult(iFinding, stringBuilder.toString(), localDateTime);
+			saveToolbarActionsResult(iFinding, toolbarActions);
 			return iFinding;
 		}
 		
@@ -294,38 +510,71 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		public void hideLabel(boolean all){
 			if (lblUnit != null && all) {
 				lblUnit.setVisible(false);
-				GridData minGD = new GridData(SWT.FILL, SWT.CENTER, false, false);
+				GridData minGD = new GridData(SWT.FILL, SWT.TOP, false, false);
 				minGD.widthHint = 0;
+				minGD.heightHint = 0;
 				lblUnit.setLayoutData(minGD);
 			}
 			if (lbl != null) {
 				fieldText.setToolTipText(lbl.getText());
+				fieldText.setMessage(lbl.getText());
 				lbl.setVisible(false);
 				((GridData) lbl.getLayoutData()).widthHint = 0;
+				((GridData) lbl.getLayoutData()).heightHint = 0;
 			}
 		}
 		
 		@Override
-		public void changeLayout(GridLayout gridLayout){
-			setLayout(gridLayout);
+		public String getText(){
+			return null;
+		}
+		
+		@Override
+		public void setToolbarActions(List<Action> toolbarActions){
+			this.toolbarActions = toolbarActions;
+			
+		}
+		
+		@Override
+		public List<Action> getToolbarActions(){
+			return toolbarActions;
 		}
 	}
 	
-	class CompositeGroup extends Composite implements ICompositeSaveable {
+	/**
+	 * There exists a main group with depth index of 0 all childrens have a depth index > 0
+	 * 
+	 * @author med1
+	 *
+	 */
+	private class CompositeGroup extends Composite implements ICompositeSaveable {
 		private IFinding iFinding;
 		private Label lbl;
-		
 		private List<ICompositeSaveable> childComposites = new ArrayList<>();
+		private String txt;
+		private List<Action> toolbarActions;
 		
-		public CompositeGroup(Composite parent, IFinding iFinding, boolean showTitle){
-			super((Composite) parent, SWT.NONE);
+		public CompositeGroup(Composite parent, IFinding iFinding, boolean showTitle,
+			boolean showBorder, int marginWidth, int marginTop, int depthIndex){
+			super((Composite) parent, showBorder || depthIndex == 0 ? SWT.BORDER : SWT.NONE);
 			this.iFinding = iFinding;
 			
-			setLayout(new GridLayout(1, false));
-			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			GridLayout gridLayout = new GridLayout(1, false);
+			gridLayout.marginWidth = marginWidth;
+			gridLayout.marginTop = marginTop;
+			gridLayout.marginBottom = 10;
+			gridLayout.marginHeight = 0;
+			gridLayout.verticalSpacing = 0;
 			
-			if (showTitle) {
-				String txt = null;
+			if (depthIndex == 0) {
+				Composite titleComposite = new Composite(this, SWT.NONE);
+				titleComposite.setLayout(SWTHelper.createGridLayout(true, 1));
+				titleComposite.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
+				// add main toolbar
+				this.setToolbarActions(
+					createToolbarMainComponent(titleComposite, (IObservation) iFinding, 1));
+			}
+			else {
 				if (iFinding instanceof IObservation) {
 					Optional<ICoding> coding = FindingsView.findingsTemplateService.findOneCode(
 						((IObservation) iFinding).getCoding(),
@@ -334,14 +583,41 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				} else {
 					txt = iFinding.getText().orElse(null);
 				}
-				if (txt != null) {
+				if (showTitle && txt != null) {
+					GridData gdLbl = new GridData(SWT.CENTER, SWT.BOTTOM, true, false);
 					lbl = new Label(this, SWT.NONE);
+					FontData fontData = lbl.getFont().getFontData()[0];
+					
+					if (depthIndex == 1) {
+						gdLbl.horizontalIndent = -40;
+						gridLayout.marginRight = 10;
+						gridLayout.marginLeft = 10;
+						lbl.setFont(
+							UiDesk.getFont(fontData.getName(), fontData.getHeight() + 3, SWT.BOLD));
+					} else if (depthIndex > 1) {
+						gridLayout.marginTop = 15;
+						gridLayout.marginBottom = 0;
+						gdLbl.horizontalIndent = -40;
+						lbl.setFont(
+							UiDesk.getFont(fontData.getName(), fontData.getHeight() + 1, SWT.BOLD));
+					}
 					lbl.setText(txt);
-					GridData minGD = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-					minGD.widthHint = 80;
-					lbl.setLayoutData(minGD);
+					lbl.setLayoutData(gdLbl);
+				}
+				
+				if (depthIndex > 0) {
+					((Composite) iCompositeSaveable)
+						.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 				}
 			}
+			setLayout(gridLayout);
+			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			
+		}
+		
+		@Override
+		public String getText(){
+			return txt;
 		}
 		
 		@Override
@@ -350,12 +626,9 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		}
 		
 		@Override
-		public IFinding saveContents(){
+		public IFinding saveContents(LocalDateTime localDateTime){
 			if (iFinding.getId() == null) {
 				iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
-				if (iFinding instanceof IObservation) {
-					((IObservation) iFinding).setEffectiveTime(LocalDateTime.now());
-				}
 			}
 			StringBuilder builder = new StringBuilder();
 			StringBuilder builderInner = new StringBuilder();
@@ -367,11 +640,15 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				if (builderInner.length() > 0) {
 					builderInner.append(", ");
 				}
-				builderInner.append(iCompositeSaveable.saveContents().getText().orElse(""));
+				builderInner
+					.append(iCompositeSaveable.saveContents(localDateTime).getText().orElse(""));
 			}
 			builder.append(builderInner);
 			builder.append(" ");
-			iFinding.setText(builder.toString());
+			
+			saveSimpleResult(iFinding, builder.toString(), localDateTime);
+			saveToolbarActionsResult(iFinding, toolbarActions);
+			
 			return iFinding;
 		}
 		
@@ -383,19 +660,65 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		}
 		
 		@Override
-		public void changeLayout(GridLayout gridLayout){
-			setLayout(gridLayout);
+		public void setToolbarActions(List<Action> toolbarActions){
+			this.toolbarActions = toolbarActions;
+		}
+		
+		@Override
+		public List<Action> getToolbarActions(){
+			return toolbarActions;
 		}
 		
 	}
 	
-	interface ICompositeSaveable {
-		public IFinding saveContents();
+	private class DateAction extends Action {
+		private LocalDateTime localDateTime;
+		private final Shell shell;
+		private Label lblDateText;
 		
-		public List<ICompositeSaveable> getChildComposites();
+		public DateAction(Shell shell, LocalDateTime localDateTime, Composite composite){
+			super("", Action.AS_PUSH_BUTTON);
+			Assert.isNotNull(shell);
+			this.shell = shell;
+			this.localDateTime = localDateTime == null ? LocalDateTime.now() : localDateTime;
+			this.lblDateText = new Label(composite, SWT.NONE);
+			this.lblDateText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+			
+			init();
+		}
 		
-		public void hideLabel(boolean all);
+		@Override
+		public void run(){
+			DateTimeSelectorDialog inputDialog =
+				new DateTimeSelectorDialog(shell, new TimeTool(localDateTime), true);
+			if (inputDialog.open() == MessageDialog.OK) {
+				TimeTool timeTool = inputDialog.getSelectedDate();
+				if (timeTool != null) {
+					this.localDateTime = timeTool.toLocalDateTime();
+					init();
+				}
+			}
+			super.run();
+		}
 		
-		public void changeLayout(GridLayout gridLayout);
+		@Override
+		public String getToolTipText(){
+			return "Datum ändern";
+		}
+		
+		private void init(){
+			if (lblDateText != null) {
+				lblDateText.setText(new TimeTool(localDateTime).toString(TimeTool.FULL_GER));
+			}
+		}
+		
+		@Override
+		public ImageDescriptor getImageDescriptor(){
+			return Images.IMG_CALENDAR.getImageDescriptor();
+		}
+		
+		public LocalDateTime getLocalDateTime(){
+			return localDateTime;
+		}
 	}
 }

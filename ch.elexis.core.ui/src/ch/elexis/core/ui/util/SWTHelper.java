@@ -591,4 +591,22 @@ public class SWTHelper {
 			StatusManager.getManager().handle(status, StatusManager.SHOW);
 		}
 	}
+	
+	/**
+	 * Creates a new GridLayout and can set all spaces and gaps to zero
+	 * 
+	 * @param noSpace
+	 * @param numColumns
+	 * @return
+	 */
+	public static GridLayout createGridLayout(boolean noGaps, int numColumns){
+		GridLayout gd = new GridLayout(numColumns, false);
+		if (noGaps) {
+			gd.horizontalSpacing = 0;
+			gd.verticalSpacing = 0;
+			gd.marginHeight = 0;
+			gd.marginWidth = 0;
+		}
+		return gd;
+	}
 }

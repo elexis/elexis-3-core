@@ -344,7 +344,7 @@ public interface ModelPackage extends EPackage {
 	int INPUT_DATA_GROUP_COMPONENT = 6;
 
 	/**
-	 * The feature id for the '<em><b>Findings Templates</b></em>' reference list.
+	 * The feature id for the '<em><b>Findings Templates</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -592,10 +592,10 @@ public interface ModelPackage extends EPackage {
 	EClass getInputDataGroupComponent();
 
 	/**
-	 * Returns the meta object for the reference list '{@link ch.elexis.core.findings.templates.model.InputDataGroupComponent#getFindingsTemplates <em>Findings Templates</em>}'.
+	 * Returns the meta object for the containment reference list '{@link ch.elexis.core.findings.templates.model.InputDataGroupComponent#getFindingsTemplates <em>Findings Templates</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Findings Templates</em>'.
+	 * @return the meta object for the containment reference list '<em>Findings Templates</em>'.
 	 * @see ch.elexis.core.findings.templates.model.InputDataGroupComponent#getFindingsTemplates()
 	 * @see #getInputDataGroupComponent()
 	 * @generated
@@ -823,7 +823,7 @@ public interface ModelPackage extends EPackage {
 		EClass INPUT_DATA_GROUP_COMPONENT = eINSTANCE.getInputDataGroupComponent();
 
 		/**
-		 * The meta object literal for the '<em><b>Findings Templates</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Findings Templates</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

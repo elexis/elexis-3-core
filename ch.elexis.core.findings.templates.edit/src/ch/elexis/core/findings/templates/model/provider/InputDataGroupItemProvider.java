@@ -140,6 +140,7 @@ public class InputDataGroupItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(InputDataGroup.class)) {
+			case ModelPackage.INPUT_DATA_GROUP__FINDINGS_TEMPLATES:
 			case ModelPackage.INPUT_DATA_GROUP__DATA_TYPE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;

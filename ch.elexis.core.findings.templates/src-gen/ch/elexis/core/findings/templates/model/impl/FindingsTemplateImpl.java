@@ -40,7 +40,7 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Type TYPE_EDEFAULT = Type.OBSERVATION;
+	protected static final Type TYPE_EDEFAULT = Type.OBSERVATION_VITAL;
 
 	/**
 	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.

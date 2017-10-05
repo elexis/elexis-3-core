@@ -81,7 +81,7 @@ public class FindingsDetailComposite extends Composite {
 		Label lblType = new Label(this, SWT.NONE);
 		lblType.setText("Typ");
 		
-		comboType = new ComboViewer(this, SWT.BORDER);
+		comboType = new ComboViewer(this, SWT.BORDER | SWT.READ_ONLY);
 		ObservableListContentProvider contentProvider = new ObservableListContentProvider();
 		comboType.setContentProvider(contentProvider);
 		comboType.setLabelProvider(new ObservableMapLabelProvider(
@@ -91,7 +91,6 @@ public class FindingsDetailComposite extends Composite {
 		comboType.setContentProvider(ArrayContentProvider.getInstance());
 		comboType.setLabelProvider(new ComboTypeLabelProvider());
 		comboType.setInput(new Type[] {
-			Type.OBSERVATION, Type.OBSERVATION_OBJECTIVE, Type.OBSERVATION_SUBJECTIVE,
 			Type.OBSERVATION_VITAL
 		});
 		
@@ -131,7 +130,7 @@ public class FindingsDetailComposite extends Composite {
 		Label lblType = new Label(compositeType, SWT.NONE);
 		lblType.setText("Datentyp");
 		lblType.setLayoutData(minGd);
-		comboInputData = new ComboViewer(compositeType, SWT.BORDER);
+		comboInputData = new ComboViewer(compositeType, SWT.BORDER | SWT.READ_ONLY);
 		ObservableListContentProvider contentProvider = new ObservableListContentProvider();
 		comboInputData.setContentProvider(contentProvider);
 		comboInputData.setLabelProvider(new ObservableMapLabelProvider(
@@ -238,7 +237,7 @@ public class FindingsDetailComposite extends Composite {
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
 						inputDataGroupComponent.getFindingsTemplates().clear();
 						inputDataGroupComponent.getFindingsTemplates()
-							.addAll(findingsSelectionDialog.getSelection(false));
+							.addAll(findingsSelectionDialog.getSelection(true));
 						lblGroupComponentlist
 							.setText(getInputDataGroupText(inputDataGroupComponent));
 						selection.setInputData(inputDataGroupComponent);
