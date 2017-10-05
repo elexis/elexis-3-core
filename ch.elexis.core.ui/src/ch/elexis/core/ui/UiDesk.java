@@ -225,7 +225,9 @@ public class UiDesk {
 	 */
 	public static void asyncExec(Runnable runnable){
 		Display disp = getDisplay();
-		disp.asyncExec(runnable);
+		if (!disp.isDisposed()) {
+			disp.asyncExec(runnable);
+		}
 	}
 	
 	/**

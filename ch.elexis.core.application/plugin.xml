@@ -366,6 +366,12 @@
             id="ch.elexis.core.ui.views.rechnung.InvoiceListView"
             name="Rechnungsliste (beta)">
       </view>
+      <view
+            class="ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_copy.png"
+            id="ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView"
+            name="Rechnungskorrektur (beta)">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
@@ -494,6 +500,15 @@
           locationURI="toolbar:ch.elexis.FallDetailView">
        <command
              commandId="ch.elexis.core.ui.command.ToggleCurrentCaseLockCommand"
+             icon="icon://IMG_LOCK_CLOSED"
+             style="toggle">
+       </command>
+    </menuContribution>
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView">
+       <command
+             commandId="ch.elexis.core.ui.command.ToggleCurrentInvoiceLockCommand"
              icon="icon://IMG_LOCK_CLOSED"
              style="toggle">
        </command>

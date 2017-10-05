@@ -134,10 +134,12 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 	}
 	
 	private void highlight(boolean bOn){
-		if (bOn) {
-			mine.setBackground(highlightColor);
-		} else {
-			mine.setBackground(normalColor);
+		if (!mine.isDisposed()) {
+			if (bOn) {
+				mine.setBackground(highlightColor);
+			} else {
+				mine.setBackground(normalColor);
+			}
 		}
 	}
 	

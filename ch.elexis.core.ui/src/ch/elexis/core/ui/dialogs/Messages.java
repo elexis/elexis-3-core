@@ -225,6 +225,8 @@ public class Messages extends NLS {
 	public static String NeuerFallDialog_createNewCase;
 	public static String NeuerFallDialog_enterCaseData;
 	public static String NeuerFallDialog_newCase;
+	public static String FallEditDialog_editCase;
+	public static String FallEditDialog_enterCaseData;
 	public static String PatientErfassenDialog_Name;
 	public static String PatientErfassenDialog_birthDate;
 	public static String PatientErfassenDialog_city;

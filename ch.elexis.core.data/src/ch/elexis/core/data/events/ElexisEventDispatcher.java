@@ -408,7 +408,12 @@ public final class ElexisEventDispatcher extends Job {
 				List<ElexisEventListener> listenersCopy = new ArrayList<>(listeners);
 				for (final ElexisEventListener l : listenersCopy) {
 					if (ee.matches(l.getElexisEventFilter())) {
-						l.catchElexisEvent(ee);
+						try {
+							l.catchElexisEvent(ee);
+						} catch (Exception e) {
+							log.error(ee.toString(), e);
+							throw e;
+						}
 					}
 				}
 			}
