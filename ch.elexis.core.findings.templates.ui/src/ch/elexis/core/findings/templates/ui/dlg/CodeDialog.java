@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.CodingSystem;
-import ch.elexis.core.findings.templates.ui.views.FindingsTemplateView;
+import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
 
 public class CodeDialog extends TitleAreaDialog {
 	
@@ -81,7 +81,7 @@ public class CodeDialog extends TitleAreaDialog {
 			MessageDialog.openError(getShell(), "Error", "Bitte korriegen Sie Ihre Eingaben.");
 		}
 		else {
-			FindingsTemplateView.codingService.addLocalCoding(new ICoding() {
+			FindingsServiceHolder.codingService.addLocalCoding(new ICoding() {
 				
 				@Override
 				public String getSystem(){

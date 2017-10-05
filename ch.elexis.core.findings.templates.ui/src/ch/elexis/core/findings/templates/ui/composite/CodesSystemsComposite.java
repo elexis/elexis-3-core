@@ -9,6 +9,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -28,7 +29,8 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.templates.ui.dlg.CodeDialog;
-import ch.elexis.core.findings.templates.ui.views.FindingsTemplateView;
+import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
+import ch.elexis.core.ui.icons.Images;
 
 public class CodesSystemsComposite extends Composite {
 	
@@ -95,7 +97,7 @@ public class CodesSystemsComposite extends Composite {
 	}
 	
 	public void loadTable(){
-		List<ICoding> codings = FindingsTemplateView.codingService
+		List<ICoding> codings = FindingsServiceHolder.codingService
 			.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
 		codings.sort((a, b) -> ObjectUtils.compare(a.getDisplay(), b.getDisplay()));
 		tableViewer.setInput(codings);
@@ -103,13 +105,19 @@ public class CodesSystemsComposite extends Composite {
 	
 	private void fillContextMenu(IMenuManager contextMenu, Object[] objects){
 		contextMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-		contextMenu.add(new Action("entfernen") {
+		contextMenu.add(new Action("Entfernen") {
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_DELETE.getImageDescriptor();
+			}
+			
 			@Override
 			public void run(){
 				if (objects != null) {
 					for (Object o : objects) {
 						if (o instanceof ICoding) {
-							FindingsTemplateView.codingService.removeLocalCoding((ICoding) o);
+							FindingsServiceHolder.codingService.removeLocalCoding((ICoding) o);
 						}
 					}
 					loadTable();

@@ -43,7 +43,7 @@ import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
-import ch.elexis.core.findings.templates.ui.views.FindingsTemplateView;
+import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
 
 @SuppressWarnings("unchecked")
 public class FindingsDetailComposite extends Composite {
@@ -62,7 +62,7 @@ public class FindingsDetailComposite extends Composite {
 
 	
 	public FindingsDetailComposite(Composite parent, FindingsTemplates model){
-		super(parent, SWT.BORDER);
+		super(parent, SWT.NONE);
 		this.setLayout(new GridLayout(2, false));
 		this.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		this.model = model;
@@ -192,7 +192,8 @@ public class FindingsDetailComposite extends Composite {
 							.getSelection(false)) {
 							inputDataGroup.getFindingsTemplates().add(findingsTemplate);
 							try {
-								FindingsTemplateView.findingsTemplateService.validateCycleDetection(
+								FindingsServiceHolder.findingsTemplateService
+									.validateCycleDetection(
 									selection, 0, 100, findingsTemplate.getTitle(), true);
 							} catch (ElexisException e1) {
 								inputDataGroup.getFindingsTemplates().remove(findingsTemplate);
@@ -368,7 +369,7 @@ public class FindingsDetailComposite extends Composite {
 	class ComboInputDataTypeLabelProvider extends LabelProvider {
 		@Override
 		public String getText(Object element){
-			return FindingsTemplateView.findingsTemplateService
+			return FindingsServiceHolder.findingsTemplateService
 				.getDataTypeAsText((DataType) element);
 		}
 	}
@@ -376,7 +377,7 @@ public class FindingsDetailComposite extends Composite {
 	class ComboTypeLabelProvider extends LabelProvider {
 		@Override
 		public String getText(Object element){
-			return FindingsTemplateView.findingsTemplateService.getTypeAsText((Type) element);
+			return FindingsServiceHolder.findingsTemplateService.getTypeAsText((Type) element);
 		}
 	}
 	
