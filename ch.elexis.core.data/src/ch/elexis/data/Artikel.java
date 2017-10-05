@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.article.IArticle;
@@ -456,7 +457,7 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public int getPreis(final TimeTool dat, final Fall fall){
+	public int getPreis(final TimeTool dat, final IFall fall){
 		double vkt = checkZeroDouble(get(FLD_VK_PREIS));
 		Map ext = getMap(FLD_EXTINFO);
 		double vpe = checkZeroDouble((String) ext.get(VERPACKUNGSEINHEIT));
@@ -482,11 +483,11 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		}
 	}
 	
-	public int getTP(final TimeTool date, final Fall fall){
+	public int getTP(final TimeTool date, final IFall fall){
 		return getPreis(date, fall);
 	}
 	
-	public double getFactor(final TimeTool date, final Fall fall){
+	public double getFactor(final TimeTool date, final IFall fall){
 		return 1.0;
 	}
 	

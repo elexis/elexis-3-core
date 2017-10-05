@@ -62,6 +62,7 @@ public class Rechnung extends PersistentObject {
 	public static final String REJECTED = "Zurückgewiesen";
 	public static final String OUTPUT = "Ausgegeben";
 	public static final String REMARKS = "Bemerkungen";
+	public static final String INVOICE_CORRECTION = "Rechnungskorrektur";
 	
 	static {
 		addMapping(TABLENAME, BILL_NUMBER, CASE_ID, MANDATOR_ID, "RnDatum=S:D:RnDatum", BILL_STATE,
@@ -384,31 +385,46 @@ public class Rechnung extends PersistentObject {
 	}
 	
 	/**
+	 * @deprecated use {@link #stornoBill(boolean)} instead
+	 */
+	@Deprecated
+	public void storno(final boolean reopen){
+		stornoBill(reopen);
+	}
+	
+	/**
 	 * Rechnung stornieren. Allenfalls bereits erfolgte Zahlungen für diese Rechnungen bleiben
 	 * verbucht (das Konto weist dann einen Plus-Saldo auf). Der Rechnungsbetrag wird per
-	 * Stornobuchung gutgeschrieben.
+	 * Stornobuchung gutgeschrieben. Sofern konsultationen freigegeben wurden, werden diese
+	 * zurückgegeben.
 	 * 
 	 * @param reopen
 	 *            wenn True werden die in dieser Rechnung enthaltenen Behandlungen wieder
 	 *            freigegeben, andernfalls bleiben sie abgeschlossen.
+	 * @return if reopen is true the released konsultations from the bill will be returned
+	 * @since 3.3
 	 */
-	public void storno(final boolean reopen){
+	public List<Konsultation> stornoBill(final boolean reopen){
 		Money betrag = getBetrag();
 		new Zahlung(this, betrag, "Storno", null);
 		if (reopen == true) {
+			List<Konsultation> kons = new ArrayList<>();
 			Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 			qbe.add(Konsultation.FLD_BILL_ID, Query.EQUALS, getId());
 			for (Konsultation k : qbe.execute()) {
 				k.set(Konsultation.FLD_BILL_ID, null);
+				kons.add(k);
 			}
 			/*
 			 * getConnection().exec( "UPDATE BEHANDLUNGEN SET RECHNUNGSID=NULL WHERE RECHNUNGSID=" +
 			 * getWrappedId());
 			 */
 			setStatus(RnStatus.STORNIERT);
+			return kons;
 		} else {
 			
 			setStatus(RnStatus.ABGESCHRIEBEN);
+			return null;
 		}
 	}
 	
@@ -946,4 +962,54 @@ public class Rechnung extends PersistentObject {
 		return TABLENAME;
 	}
 	
+	/**
+	 * Checks if a bill is correctable by state
+	 * 
+	 * @return
+	 */
+	public boolean isCorrectable(){
+		String rechnungsNr = getNr();
+		if (rechnungsNr != null && rechnungsNr.isEmpty()) {
+			return false;
+		}
+		InvoiceState invoiceState = getInvoiceState();
+		
+		if (invoiceState != null) {
+			switch (invoiceState) {
+			case OWING:
+			case TO_PRINT:
+			case PARTIAL_LOSS:
+			case TOTAL_LOSS:
+			case DEPRECIATED:
+			case CANCELLED:
+				return false;
+			case BILLED:
+			case DEFECTIVE:
+			case DEMAND_NOTE_1:
+			case DEMAND_NOTE_1_PRINTED:
+			case DEMAND_NOTE_2:
+			case DEMAND_NOTE_2_PRINTED:
+			case DEMAND_NOTE_3:
+			case DEMAND_NOTE_3_PRINTED:
+			case EXCESSIVE_PAYMENT:
+			case FROM_TODAY:
+			case IN_EXECUTION:
+			case NOT_BILLED:
+			case NOT_FROM_TODAY:
+			case NOT_FROM_YOU:
+			case ONGOING:
+			case OPEN:
+			case OPEN_AND_PRINTED:
+			case PAID:
+			case PARTIAL_PAYMENT:
+			case REJECTED:
+			case STOP_LEGAL_PROCEEDING:
+			case UNKNOWN:
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 }

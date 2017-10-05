@@ -13,12 +13,11 @@
 package ch.elexis.data;
 
 import java.util.Comparator;
-import java.util.List;
 
+import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.MultiplikatorList;
-import ch.elexis.data.VerrechenbarFavorites.Favorite;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -88,11 +87,11 @@ public abstract class VerrechenbarAdapter extends PersistentObject implements IV
 		return getMultiplikator(date, "VK_PREISE", typ);
 	}
 	
-	public double getVKMultiplikator(final TimeTool date, final Fall fall){
+	public double getVKMultiplikator(final TimeTool date, final IFall fall){
 		return getMultiplikator(date, "VK_PREISE", fall.getAbrechnungsSystem());
 	}
 	
-	public double getEKMultiplikator(final TimeTool date, final Fall fall){
+	public double getEKMultiplikator(final TimeTool date, final IFall fall){
 		return getMultiplikator(date, "EK_PREISE", fall.getAbrechnungsSystem());
 	}
 	
