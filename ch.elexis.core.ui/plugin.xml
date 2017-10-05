@@ -665,6 +665,11 @@
             name="Toggle current consultation lock">
       </command>
       <command
+            defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentInvoiceLockHandler"
+            id="ch.elexis.core.ui.command.ToggleCurrentInvoiceLockCommand"
+            name="Toggle current invoice lock">
+      </command>
+      <command
             defaultHandler="ch.elexis.core.ui.locks.LockStatusDialogHandler"
             id="ch.elexis.core.ui.locks.LockStatusDialog"
             name="Show overall lock status">
