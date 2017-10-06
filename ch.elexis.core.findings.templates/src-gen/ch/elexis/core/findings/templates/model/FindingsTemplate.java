@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getType <em>Type</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getTitle <em>Title</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getInputData <em>Input Data</em>}</li>
+ *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getCodeElement <em>Code Element</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.findings.templates.model.ModelPackage#getFindingsTemplate()
@@ -103,5 +104,31 @@ public interface FindingsTemplate extends EObject {
 	 * @generated
 	 */
 	void setInputData(InputData value);
+
+	/**
+	 * Returns the value of the '<em><b>Code Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Code Element</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Code Element</em>' containment reference.
+	 * @see #setCodeElement(CodeElement)
+	 * @see ch.elexis.core.findings.templates.model.ModelPackage#getFindingsTemplate_CodeElement()
+	 * @model containment="true"
+	 * @generated
+	 */
+	CodeElement getCodeElement();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getCodeElement <em>Code Element</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Code Element</em>' containment reference.
+	 * @see #getCodeElement()
+	 * @generated
+	 */
+	void setCodeElement(CodeElement value);
 
 } // FindingsTemplate

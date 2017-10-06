@@ -28,6 +28,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//FindingsTemplate/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//FindingsTemplate/title"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//FindingsTemplate/inputData"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//FindingsTemplate/codeElement"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//InputData"/>
     <genClasses image="false" ecoreClass="model.ecore#//InputDataNumeric">
@@ -45,6 +46,11 @@
     <genClasses image="false" ecoreClass="model.ecore#//InputDataGroupComponent">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//InputDataGroupComponent/findingsTemplates"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//InputDataGroupComponent/dataType"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//CodeElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//CodeElement/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//CodeElement/system"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//CodeElement/display"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

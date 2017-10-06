@@ -28,7 +28,8 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.CodingSystem;
-import ch.elexis.core.findings.templates.ui.dlg.CodeDialog;
+import ch.elexis.core.findings.fhir.po.codes.LocalCoding;
+import ch.elexis.core.findings.templates.ui.dlg.CodeCreateDialog;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 
@@ -55,7 +56,7 @@ public class CodesSystemsComposite extends Composite {
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				CodeDialog codeDialog = new CodeDialog(getShell());
+				CodeCreateDialog codeDialog = new CodeCreateDialog(getShell());
 				if (codeDialog.open() == MessageDialog.OK) {
 					loadTable();
 				}
@@ -69,8 +70,22 @@ public class CodesSystemsComposite extends Composite {
 		tableViewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
-				ICoding iCoding = (ICoding) element;
-				return iCoding != null ? iCoding.getDisplay() + " (" + iCoding.getCode() + ")" : "";
+				LocalCoding iCoding = (LocalCoding) element;
+				StringBuilder stringBuilder = new StringBuilder();
+				for (ICoding mappedCoding : iCoding.getMappedCodes()) {
+					
+						if (stringBuilder.length() > 0) {
+							stringBuilder.append(", ");
+						}
+						stringBuilder.append(mappedCoding.getSystem());
+						stringBuilder.append(": ");
+						stringBuilder.append(mappedCoding.getCode());
+					
+				}
+				
+				return iCoding != null ? iCoding.getDisplay() + " (" + iCoding.getCode() + ")"
+					+ (stringBuilder.length() > 0 ? (" [" + stringBuilder.toString() + "]") : "")
+						: "";
 			}
 		});
 		tableViewer.getTable().setLinesVisible(false);
@@ -124,26 +139,5 @@ public class CodesSystemsComposite extends Composite {
 				}
 			}
 		});
-		
-		contextMenu.add(new Action("Verlinke mit LIONC") {
-			
-			@Override
-			public ImageDescriptor getImageDescriptor(){
-				return Images.IMG_LINK.getImageDescriptor();
-			}
-			
-			@Override
-			public void run(){
-				if (objects != null) {
-					for (Object o : objects) {
-						if (o instanceof ICoding) {
-							FindingsServiceHolder.codingService.removeLocalCoding((ICoding) o);
-						}
-					}
-					loadTable();
-				}
-			}
-		});
-		
 	}
 }

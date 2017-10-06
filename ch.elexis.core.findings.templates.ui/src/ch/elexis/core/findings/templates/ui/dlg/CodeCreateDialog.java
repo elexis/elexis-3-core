@@ -17,12 +17,12 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
 
-public class CodeDialog extends TitleAreaDialog {
+public class CodeCreateDialog extends TitleAreaDialog {
 	
 	private Text txtDisplay;
 	private Text txtCode;
 	
-	public CodeDialog(Shell parentShell){
+	public CodeCreateDialog(Shell parentShell){
 		super(parentShell);
 	}
 	

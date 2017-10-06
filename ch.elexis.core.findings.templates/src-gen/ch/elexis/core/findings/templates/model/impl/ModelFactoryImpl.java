@@ -63,6 +63,7 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 			case ModelPackage.INPUT_DATA_TEXT: return createInputDataText();
 			case ModelPackage.INPUT_DATA_GROUP: return createInputDataGroup();
 			case ModelPackage.INPUT_DATA_GROUP_COMPONENT: return createInputDataGroupComponent();
+			case ModelPackage.CODE_ELEMENT: return createCodeElement();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -160,6 +161,16 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	public InputDataGroupComponent createInputDataGroupComponent() {
 		InputDataGroupComponentImpl inputDataGroupComponent = new InputDataGroupComponentImpl();
 		return inputDataGroupComponent;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CodeElement createCodeElement() {
+		CodeElementImpl codeElement = new CodeElementImpl();
+		return codeElement;
 	}
 
 	/**

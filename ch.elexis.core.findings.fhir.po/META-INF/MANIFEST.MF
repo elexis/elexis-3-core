@@ -29,3 +29,4 @@ Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.po.service.FindingsServ
 Bundle-ClassPath: lib/httpcore-4.4.4.jar,
  lib/httpclient-4.5.1.jar,
  .
+Export-Package: ch.elexis.core.findings.fhir.po.codes

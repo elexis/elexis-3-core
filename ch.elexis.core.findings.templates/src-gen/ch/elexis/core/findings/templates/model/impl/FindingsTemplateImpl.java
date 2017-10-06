@@ -2,14 +2,13 @@
  */
 package ch.elexis.core.findings.templates.model.impl;
 
+import ch.elexis.core.findings.templates.model.CodeElement;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.InputData;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -27,6 +26,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getType <em>Type</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getTitle <em>Title</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getInputData <em>Input Data</em>}</li>
+ *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getCodeElement <em>Code Element</em>}</li>
  * </ul>
  *
  * @generated
@@ -81,6 +81,16 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * @ordered
 	 */
 	protected InputData inputData;
+
+	/**
+	 * The cached value of the '{@link #getCodeElement() <em>Code Element</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCodeElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected CodeElement codeElement;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -191,11 +201,56 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public CodeElement getCodeElement() {
+		return codeElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetCodeElement(CodeElement newCodeElement, NotificationChain msgs) {
+		CodeElement oldCodeElement = codeElement;
+		codeElement = newCodeElement;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, oldCodeElement, newCodeElement);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setCodeElement(CodeElement newCodeElement) {
+		if (newCodeElement != codeElement) {
+			NotificationChain msgs = null;
+			if (codeElement != null)
+				msgs = ((InternalEObject)codeElement).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, null, msgs);
+			if (newCodeElement != null)
+				msgs = ((InternalEObject)newCodeElement).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, null, msgs);
+			msgs = basicSetCodeElement(newCodeElement, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, newCodeElement, newCodeElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
 				return basicSetInputData(null, msgs);
+			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
+				return basicSetCodeElement(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -214,6 +269,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 				return getTitle();
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
 				return getInputData();
+			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
+				return getCodeElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -223,6 +280,7 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -234,6 +292,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 				return;
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
 				setInputData((InputData)newValue);
+				return;
+			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
+				setCodeElement((CodeElement)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -256,6 +317,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
 				setInputData((InputData)null);
 				return;
+			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
+				setCodeElement((CodeElement)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -274,6 +338,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 				return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
 			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
 				return inputData != null;
+			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
+				return codeElement != null;
 		}
 		return super.eIsSet(featureID);
 	}

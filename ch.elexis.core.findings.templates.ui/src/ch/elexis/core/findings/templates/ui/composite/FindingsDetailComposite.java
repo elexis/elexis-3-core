@@ -2,6 +2,7 @@ package ch.elexis.core.findings.templates.ui.composite;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -29,8 +30,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.SelectionDialog;
 
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.findings.templates.model.CodeElement;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
@@ -44,6 +47,10 @@ import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.util.WidgetFactory;
+import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 
 @SuppressWarnings("unchecked")
 public class FindingsDetailComposite extends Composite {
@@ -59,6 +66,7 @@ public class FindingsDetailComposite extends Composite {
 	private Composite compositeInputData;
 	private GridData minGd;
 	private FindingsTemplates model;
+	private Text loincCode;
 
 	
 	public FindingsDetailComposite(Composite parent, FindingsTemplates model){
@@ -111,11 +119,39 @@ public class FindingsDetailComposite extends Composite {
 		});
 		
 		compositeType = new Composite(this, SWT.NONE);
-		compositeType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		compositeType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		GridLayout gl = new GridLayout(2, false);
 		gl.marginHeight = 0;
 		gl.marginWidth = 0;
 		compositeType.setLayout(gl);
+		
+		WidgetFactory.createLabel(this, "LOINC"); //$NON-NLS-1$
+		
+		Composite codesComposite = new Composite(this, SWT.NONE);
+		codesComposite.setLayout(SWTHelper.createGridLayout(true, 2));
+		codesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		
+		loincCode = new Text(codesComposite, SWT.BORDER | SWT.READ_ONLY);
+		loincCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		loincCode.setTextLimit(80);
+		Button loincCodeSelection = new Button(codesComposite, SWT.PUSH);
+		loincCodeSelection.setText("..."); //$NON-NLS-1$
+		loincCodeSelection.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				SelectionDialog dialog =
+					CodeSelectorFactory.getSelectionDialog("LOINC", getShell(), //$NON-NLS-1$
+						"ignoreErrors");
+				if (dialog.open() == SelectionDialog.OK) {
+					if (dialog.getResult() != null && dialog.getResult().length > 0) {
+						selectCode(Optional.of((ICodeElement) dialog.getResult()[0]));
+					}
+					else {
+						selectCode(Optional.empty());
+					}
+				}
+			}
+		});
 		
 		createObservationComposite();
 		
@@ -124,6 +160,34 @@ public class FindingsDetailComposite extends Composite {
 		IObservableValue<?> observeValueTextTitle =
 			EMFProperties.value(ModelPackage.Literals.FINDINGS_TEMPLATE__TITLE).observeDetail(item);
 		bindingContext.bindValue(observeTextTitle, observeValueTextTitle);
+	}
+	
+	private void selectCode(Optional<ICodeElement> optionalCodeElement)
+	{
+		loincCode.setText("");
+		loincCode.setToolTipText("");
+		if (selection != null)
+		{
+			if (optionalCodeElement != null) {
+				if (optionalCodeElement.isPresent()) {
+					CodeElement codeElement = ModelFactory.eINSTANCE.createCodeElement();
+					codeElement.setCode(optionalCodeElement.get().getCode());
+					codeElement.setDisplay(optionalCodeElement.get().getText());
+					codeElement.setSystem(optionalCodeElement.get().getCodeSystemName());
+					selection.setCodeElement(codeElement);
+					
+				} else {
+					selection.setCodeElement(null);
+				}
+			}
+			
+			if (selection.getCodeElement() != null) {
+				loincCode.setText(
+					selection.getCodeElement().getCode() + ": "
+						+ selection.getCodeElement().getDisplay());
+				loincCode.setToolTipText(selection.getCodeElement().getDisplay());
+			}
+		}
 	}
 	
 	public void createObservationComposite(){
@@ -355,6 +419,9 @@ public class FindingsDetailComposite extends Composite {
 				comboInputData.setSelection(new StructuredSelection(
 					((InputDataGroupComponent) selection.getInputData()).getDataType()));
 			}
+			
+			selectCode(null);
+			
 			this.setVisible(true);
 		} else {
 			this.setVisible(false);
