@@ -27,6 +27,7 @@ import org.hl7.fhir.dstu3.model.Type;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
+import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.IdentifierSystem;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.util.ModelUtil;
@@ -159,15 +160,12 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		
 		setExtensions(iComponent, observationComponentComponent);
 		
-		if (iComponent.getStringValue().isPresent())
-		{
+		if (iComponent.getStringValue().isPresent()) {
 			StringType stringType = new StringType();
 			stringType.setValue(iComponent.getStringValue().get());
 			observationComponentComponent.setValue(stringType);
-		}
-		else if (iComponent.getNumericValue().isPresent()
-			|| iComponent.getNumericValueUnit().isPresent())
-		{
+		} else if (iComponent.getNumericValue().isPresent()
+			|| iComponent.getNumericValueUnit().isPresent()) {
 			Quantity quantity = new Quantity();
 			quantity.setValue(iComponent.getNumericValue().isPresent()
 					? iComponent.getNumericValue().get() : null);
@@ -211,9 +209,9 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 					Quantity quantity = (Quantity) o.getValue();
 					component.setNumericValue(quantity.getValue() != null
 							? Optional.of(quantity.getValue()) : Optional.empty());
-					component.setNumericValueUnit(Optional.of(quantity.getUnit()));
-				}
-				else if (o.hasValueStringType()) {
+					component.setNumericValueUnit(quantity.getUnit() != null
+							? Optional.of(quantity.getUnit()) : Optional.empty());
+				} else if (o.hasValueStringType()) {
 					StringType stringType = (StringType) o.getValue();
 					component.setStringValue(Optional.of(stringType.getValue()));
 				}
@@ -229,20 +227,35 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		
 		for (ObservationComponentComponent o : fhirObservation.getComponent()) {
 			if (component.getId().equals(o.getId())) {
-				if (o.hasValueQuantity()) {
-					Quantity quantity = (Quantity) o.getValue();
-					quantity.setValue(component.getNumericValue().isPresent()
-							? component.getNumericValue().get() : null);
-				}
-				else if (component.getStringValue().isPresent() && o.hasValueStringType()) {
-					StringType stringType = (StringType) o.getValue();
-					stringType.setValue(component.getStringValue().get());
+				// make tmp ObervationComponent for reading the extensions of fhir component
+				ObservationComponent tmpObservationComponent = new ObservationComponent(null);
+				tmpObservationComponent.setExtensions(getExtensions(o));
+				
+				ObservationType observationType =
+					tmpObservationComponent.getTypeFromExtension(ObservationType.class);
+				
+				if (ObservationType.NUMERIC.equals(observationType)) {
+					Quantity q = new Quantity();
+					if (o.hasValueQuantity()) {
+						q = (Quantity) o.getValue();
+					}
+					
+					q.setUnit(component.getNumericValueUnit().orElse(""));
+					q.setValue(component.getNumericValue().orElse(null));
+					o.setValue(q);
+				} else if (ObservationType.TEXT.equals(observationType)) {
+					StringType stringType = new StringType();
+					if (o.hasValueStringType()) {
+						stringType = (StringType) o.getValue();
+						
+					}
+					stringType.setValue(component.getStringValue().orElse(""));
+					o.setValue(stringType);
 				}
 			}
 		}
 	}
 	
-
 	public void setStringValue(DomainResource resource, String value){
 		org.hl7.fhir.dstu3.model.Observation fhirObservation =
 			(org.hl7.fhir.dstu3.model.Observation) resource;
@@ -263,7 +276,6 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		return Optional.empty();
 	}
 	
-
 	public void setNumericValue(DomainResource resource, BigDecimal value, String unit){
 		org.hl7.fhir.dstu3.model.Observation fhirObservation =
 			(org.hl7.fhir.dstu3.model.Observation) resource;

@@ -40,7 +40,16 @@ public class LocalCodingContribution implements ICodingContribution, ILocalCodin
 	private Optional<ICoding> getCodingByCode(String code){
 		Query<LocalCoding> query = new Query<>(LocalCoding.class);
 		query.add(LocalCoding.FLD_ID, Query.NOT_EQUAL, LocalCoding.VERSION);
-		query.add(LocalCoding.FLD_CODE, Query.EQUALS, code);
+		if (code != null && code.isEmpty()) {
+			query.startGroup();
+			query.add(LocalCoding.FLD_CODE, Query.EQUALS, code);
+			query.or();
+			query.add(LocalCoding.FLD_CODE, Query.EQUALS, null);
+			query.endGroup();
+		}
+		else {
+			query.add(LocalCoding.FLD_CODE, Query.EQUALS, code);
+		}
 		List<LocalCoding> existing = query.execute();
 		if (!existing.isEmpty()) {
 			return Optional.of(existing.get(0));

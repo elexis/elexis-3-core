@@ -22,7 +22,6 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
@@ -34,6 +33,7 @@ import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
+import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.templates.model.DataType;
@@ -151,7 +151,8 @@ public class FindingsTemplateService {
 					(InputDataNumeric) findingsTemplate.getInputData();
 				
 				component.setNumericValue(Optional.empty());
-				component.setNumericValueUnit(Optional.of(inputDataNumeric.getUnit()));
+				component.setNumericValueUnit(Optional
+					.of(inputDataNumeric.getUnit() != null ? inputDataNumeric.getUnit() : ""));
 				component.getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
 					ObservationType.NUMERIC.name());
 			}

@@ -63,7 +63,7 @@ public class CodesSystemsComposite extends Composite {
 		});
 		
 		tableViewer = new TableViewer(this,
-			SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+			SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new LabelProvider() {
@@ -124,5 +124,26 @@ public class CodesSystemsComposite extends Composite {
 				}
 			}
 		});
+		
+		contextMenu.add(new Action("Verlinke mit LIONC") {
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_LINK.getImageDescriptor();
+			}
+			
+			@Override
+			public void run(){
+				if (objects != null) {
+					for (Object o : objects) {
+						if (o instanceof ICoding) {
+							FindingsServiceHolder.codingService.removeLocalCoding((ICoding) o);
+						}
+					}
+					loadTable();
+				}
+			}
+		});
+		
 	}
 }
