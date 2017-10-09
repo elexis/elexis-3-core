@@ -38,6 +38,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -250,14 +252,17 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 						cell.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
 					} else {
 						cell.setText("x");
+						cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 					}
 					
 					break;
 				case 2:
-					cell.setText("v");
+					cell.setText("...");
+					cell.setForeground(UiDesk.getColor(UiDesk.COL_LIGHTGREY));
 					break;
 				case 1:
 					cell.setText("x");
+					cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 					break;
 				default:
 					cell.setText("");
@@ -291,14 +296,41 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 						public void run(){
 							Role role = (Role) tc.getData("role");
 							ACE ace = (ACE) element;
-							
-							if (isChecked(ace, role)) {
-								CoreHub.acl.revoke(role, ace);
-							} else {
-								CoreHub.acl.grant(role, ace);
+							if (ace != null) {
+								boolean hasChildren = !ace.getChildren(false).isEmpty();
+								boolean selfChecked = CoreHub.acl.request(role, ace);
+								
+								if (selfChecked) {
+									CoreHub.acl.revoke(role, ace);
+								} else {
+									CoreHub.acl.grant(role, ace);
+								}
+								
+								// update check status of all childrens
+								if (hasChildren) {
+									boolean checked = CoreHub.acl.request(role, ace);
+									List<ACE> aces = ace.getChildren(true);
+									for (ACE permission : aces) {
+										if (checked) {
+											CoreHub.acl.grant(role, permission);
+										} else {
+											CoreHub.acl.revoke(role, permission);
+										}
+										getViewer().update(permission, null);
+									}
+								}
+								getViewer().update(element, null);
+								
+								// refresh parent states
+								int maxDepth = 100; // max depth
+								ACE parent = ace.getParent();
+								while (parent != null && --maxDepth > 0) {
+									getViewer().refresh(parent);
+									parent = parent.getParent();
+								}
 							}
-							getViewer().update(element, null);
 						}
+						
 					});
 				}
 				
@@ -328,10 +360,19 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		});
 		
 		Composite compositeBottom = new Composite(container, SWT.NONE);
-		compositeBottom.setLayout(new GridLayout(1, false));
+		compositeBottom.setLayout(new GridLayout(2, false));
 		compositeBottom.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false, 1, 1));
 		
+		Group g = new Group(compositeBottom, SWT.NONE);
+		g.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
+		g.setLayout(new GridLayout(1, false));
+		
+		new Label(g, SWT.NONE).setText("A  Alle Kindelemente sind ausgewählt.");
+		new Label(g, SWT.NONE).setText("...  Zumindest ein Kindelement ist ausgewählt.");
+		new Label(g, SWT.NONE).setText("x  Das Element ist ausgewählt.");
+		
 		Link linkResetDefaults = new Link(compositeBottom, 0);
+		linkResetDefaults.setLayoutData(new GridData(SWT.TOP, SWT.FILL, true, false, 1, 1));
 		linkResetDefaults.setText("<a>Standard-Rechte wiederherstellen</a>");
 		linkResetDefaults.setBounds(0, 0, 43, 15);
 		linkResetDefaults.addSelectionListener(new SelectionAdapter() {
@@ -351,6 +392,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		treeViewer.setInput(ACE.getAllDefinedRootACElements());
 		
 		tableViewerRoles.setInput(roles);
+		
 		
 		return container;
 	}
