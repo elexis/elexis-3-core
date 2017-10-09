@@ -147,12 +147,13 @@ public class LocalCoding extends PersistentObject implements ICoding {
 			for (String string : codeStrings) {
 				getCodingFromString(string).ifPresent(c -> ret.add(c));
 			}
+			return ret;
 		}
 		return Collections.emptyList();
 	}
 	
 	private Optional<ICoding> getCodingFromString(String encoded){
-		String[] codingParts = encoded.split(MAPPED_FIELD_SEPARATOR);
+		String[] codingParts = encoded.split("\\" + MAPPED_FIELD_SEPARATOR);
 		if (codingParts != null && codingParts.length > 1) {
 			if (codingParts.length == 2) {
 				return Optional.of(new TransientCoding(codingParts[0], codingParts[1], ""));

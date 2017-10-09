@@ -76,6 +76,15 @@ public interface ModelFactory extends EFactory {
 	InputDataGroupComponent createInputDataGroupComponent();
 
 	/**
+	 * Returns a new object of class '<em>Code Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Code Element</em>'.
+	 * @generated
+	 */
+	CodeElement createCodeElement();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

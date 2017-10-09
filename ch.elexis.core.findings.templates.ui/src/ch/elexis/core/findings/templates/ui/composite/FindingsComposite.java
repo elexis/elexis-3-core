@@ -14,6 +14,8 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -25,13 +27,16 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
+import ch.elexis.core.findings.templates.ui.dlg.FindingsDialog;
 import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
+import ch.elexis.core.ui.icons.Images;
 
 public class FindingsComposite extends Composite {
 	
@@ -93,13 +98,17 @@ public class FindingsComposite extends Composite {
 		return Optional.empty();
 	}
 	
+	public void selectFirstTreeElement(){
+		if (model != null && !model.getFindingsTemplates().isEmpty()) {
+			viewer.setSelection(new StructuredSelection(model.getFindingsTemplates().get(0)));
+		}
+	}
+	
 	public void setModel(FindingsTemplates model){
 		Resource r = new ResourceImpl();
 		r.getContents().add(model);
 		viewer.setInput(r);
-		if (!model.getFindingsTemplates().isEmpty()) {
-			viewer.setSelection(new StructuredSelection(model.getFindingsTemplates().get(0)));
-		}
+		selectFirstTreeElement();
 	}
 	
 	private void createContextMenu(Viewer viewer){
@@ -112,6 +121,9 @@ public class FindingsComposite extends Composite {
 				if (selection.getFirstElement() instanceof FindingsTemplate) {
 					fillContextMenu(mgr, (FindingsTemplate) selection.getFirstElement());
 				}
+				else if (selection.getFirstElement() instanceof FindingsTemplates) {
+					fillContextMenu(mgr, (FindingsTemplates) selection.getFirstElement());
+				}
 			}
 		});
 		
@@ -121,7 +133,12 @@ public class FindingsComposite extends Composite {
 	
 	private void fillContextMenu(IMenuManager contextMenu, FindingsTemplate findingsTemplate){
 		contextMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-		contextMenu.add(new Action("entfernen") {
+		contextMenu.add(new Action("Entfernen") {
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_DELETE.getImageDescriptor();
+			}
 			@Override
 			public void run(){
 				if (getModel().isPresent())
@@ -137,6 +154,66 @@ public class FindingsComposite extends Composite {
 					}
 					getViewer().refresh();
 				}
+			}
+		});
+	}
+	
+	private void fillContextMenu(IMenuManager contextMenu, FindingsTemplates findingsTemplates){
+		contextMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		contextMenu.add(new Action("Neue Vorlage") {
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_NEW.getImageDescriptor();
+			}
+			@Override
+			public void run(){
+				FindingsDialog findingsDialog = new FindingsDialog(
+					Display.getDefault().getActiveShell(), findingsTemplates);
+				findingsDialog.open();
+			}
+		});
+		contextMenu.add(new Action("Vorlage Entfernen") {
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_DELETE.getImageDescriptor();
+			}
+			
+			@Override
+			public void run(){
+				if (findingsTemplates instanceof FindingsTemplates) {
+					if (MessageDialog.openQuestion(getShell(), "Vorlagen Löschen",
+						"Wollen Sie wirklich diese Vorlage und alle untergeordneten Vorlagen löschen ?")) {
+						findingsTemplates.eResource().getContents().remove(findingsTemplates);
+					}
+				}
+				
+			}
+		});
+		contextMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		contextMenu.add(new Action("Vorlagen Importieren") {
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_IMPORT.getImageDescriptor();
+			}
+			
+			@Override
+			public void run(){
+			
+			}
+		});
+		contextMenu.add(new Action("Vorlagen Exportieren") {
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_EXPORT.getImageDescriptor();
+			}
+			
+			@Override
+			public void run(){
+			
 			}
 		});
 	}

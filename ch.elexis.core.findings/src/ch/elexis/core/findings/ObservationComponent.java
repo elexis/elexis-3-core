@@ -67,6 +67,12 @@ public class ObservationComponent {
 		return extensions;
 	}
 	
+	/**
+	 * Returns the type of the observation component element
+	 * 
+	 * @param clazz
+	 * @return
+	 */
 	public <T> T getTypeFromExtension(Class<T> clazz){
 		String type = null;
 		if (clazz.equals(ObservationType.class)) {

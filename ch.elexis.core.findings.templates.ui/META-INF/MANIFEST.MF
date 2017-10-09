@@ -17,6 +17,7 @@ Bundle-Vendor: medevit.at
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.findings,
  ch.elexis.core.findings.codes,
+ ch.elexis.core.findings.fhir.po.codes,
  ch.elexis.core.findings.ui.composites,
  ch.elexis.core.findings.util.commands,
  ch.elexis.core.findings.util.model,
@@ -32,11 +33,12 @@ Import-Package: ch.elexis.core.findings,
  org.eclipse.core.databinding.observable.value,
  org.eclipse.core.databinding.property.list,
  org.eclipse.core.databinding.property.value,
+ org.eclipse.e4.core.contexts,
  org.eclipse.emf.databinding,
  org.eclipse.emf.edit.ui.provider,
  org.eclipse.equinox.internal.ds,
  org.eclipse.jface.databinding.swt,
  org.eclipse.jface.databinding.viewers,
  org.osgi.service.component.annotations;version="1.2.0"
-Service-Component: OSGI-INF/ch.elexis.core.findings.templates.ui.views.FindingsTemplateView.xml,
- OSGI-INF/ch.elexis.core.findings.templates.ui.views.FindingsView.xml
+Service-Component: OSGI-INF/ch.elexis.core.findings.templates.ui.views.FindingsView.xml,
+ OSGI-INF/ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder.xml

@@ -11,7 +11,8 @@ public enum CodingSystem {
 															"www.elexis.info/encounter/type"), ICD_DE_CODESYSTEM(
 																	"http://hl7.org/fhir/sid/icd-10-de"), ICPC2_CODESYSTEM(
 																			"http://hl7.org/fhir/sid/icpc-2"), ELEXIS_TARMED_CODESYSTEM(
-																					"www.elexis.info/billing/tarmed");
+																					"www.elexis.info/billing/tarmed"), LOINC_CODESYSTEM(
+																							"http://loinc.org");
 
 	private String system;
 

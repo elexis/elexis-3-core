@@ -3,6 +3,7 @@ package ch.elexis.core.findings.templates.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,6 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
@@ -34,8 +34,11 @@ import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
+import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.codes.ICodingService;
+import ch.elexis.core.findings.fhir.po.codes.LocalCoding;
+import ch.elexis.core.findings.templates.model.CodeElement;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
@@ -143,15 +146,16 @@ public class FindingsTemplateService {
 			IObservation iObservation = (IObservation) iFinding;
 			ch.elexis.core.findings.ObservationComponent component =
 				new ch.elexis.core.findings.ObservationComponent(UUID.randomUUID().toString());
-			getOrCreateCode(findingsTemplate.getTitle())
-				.ifPresent(code -> component.getCoding().add(code));
+			
+			component.setCoding(initCodings(component.getCoding(), findingsTemplate));
 			
 			if (findingsTemplate.getInputData() instanceof InputDataNumeric) {
 				InputDataNumeric inputDataNumeric =
 					(InputDataNumeric) findingsTemplate.getInputData();
 				
 				component.setNumericValue(Optional.empty());
-				component.setNumericValueUnit(Optional.of(inputDataNumeric.getUnit()));
+				component.setNumericValueUnit(Optional
+					.of(inputDataNumeric.getUnit() != null ? inputDataNumeric.getUnit() : ""));
 				component.getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
 					ObservationType.NUMERIC.name());
 			}
@@ -176,19 +180,19 @@ public class FindingsTemplateService {
 				ICondition iCondition = create(ICondition.class);
 				iCondition.setCategory(ConditionCategory.PROBLEMLISTITEM);
 				iFinding = iCondition;
-				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
+				setFindingsAttributes(iFinding, patient, findingsTemplate);
 				break;
 			case EVALUATION:
 				iFinding = create(IClinicalImpression.class);
-				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
+				setFindingsAttributes(iFinding, patient, findingsTemplate);
 				break;
 			case OBSERVATION_VITAL:
 				iFinding = createObservation(patient, findingsTemplate);
-				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
+				setFindingsAttributes(iFinding, patient, findingsTemplate);
 				break;
 			case PROCEDURE:
 				iFinding = create(IProcedureRequest.class);
-				setFindingsAttributes(iFinding, patient, findingsTemplate.getTitle());
+				setFindingsAttributes(iFinding, patient, findingsTemplate);
 				break;
 			default:
 				break;
@@ -199,26 +203,59 @@ public class FindingsTemplateService {
 		return iFinding;
 	}
 	
-	private Optional<ICoding> getOrCreateCode(String code){
-		// if code is not present create a new local code
-		codingService.addLocalCoding(new ICoding() {
+	private List<ICoding> initCodings(List<ICoding> codes, FindingsTemplate findingsTemplate){
+		String localCode = findingsTemplate.getTitle();
+		Optional<ICoding> iLocalCoding =
+			getOrCreateCode(localCode, CodingSystem.ELEXIS_LOCAL_CODESYSTEM, true);
+		
+		if (iLocalCoding.isPresent()) {
 			
-			@Override
-			public String getSystem(){
-				return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
+			// add loinc code
+			if (findingsTemplate.getCodeElement() != null) {
+				CodeElement codeElement = findingsTemplate.getCodeElement();
+				Optional<ICoding> loincCode =
+					getOrCreateCode(codeElement.getCode(), CodingSystem.LOINC_CODESYSTEM, false);
+				if (loincCode.isPresent()) {
+					codes.add(loincCode.get());
+					
+					// map loinc to local coding
+					if (iLocalCoding.get() instanceof LocalCoding) {
+						LocalCoding localCoding = (LocalCoding) iLocalCoding.get();
+						List<ICoding> mappedCodes = new ArrayList<>();
+						mappedCodes.add(loincCode.get());
+						localCoding.setMappedCodes(mappedCodes);
+					}
+				}
 			}
-			
-			@Override
-			public String getDisplay(){
-				return code;
-			}
-			
-			@Override
-			public String getCode(){
-				return code;
-			}
-		});
-		return codingService.getCode(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem(), code);
+			codes.add(iLocalCoding.get());
+		}
+		return codes;
+	}
+	
+	private Optional<ICoding> getOrCreateCode(String code, CodingSystem codingSystem,
+		boolean createCodeIfNotExists){
+		if (createCodeIfNotExists) {
+			// if code is not present create a new local code
+			codingService.addLocalCoding(new ICoding() {
+				
+				@Override
+				public String getSystem(){
+					return codingSystem.getSystem();
+				}
+				
+				@Override
+				public String getDisplay(){
+					return code;
+				}
+				
+				@Override
+				public String getCode(){
+					return code;
+				}
+			});
+		}
+		
+		return codingService.getCode(codingSystem.getSystem(), code);
 	}
 	
 	public void updateOberservationText(IObservation iObservation){
@@ -268,15 +305,17 @@ public class FindingsTemplateService {
 		builder.append(coding != null ? coding.getDisplay() : "");
 	}
 	
-	private void setFindingsAttributes(IFinding iFinding, Patient patient, String text){
+	private void setFindingsAttributes(IFinding iFinding, Patient patient,
+		FindingsTemplate findingsTemplate){
 		if (iFinding != null) {
 			iFinding.setPatientId(patient.getId());
+			String text = findingsTemplate.getTitle();
 			
 			if (iFinding instanceof IObservation) {
 				IObservation iObservation = (IObservation) iFinding;
 				List<ICoding> codings = iObservation.getCoding();
-				getOrCreateCode(text).ifPresent(code -> codings.add(code));
-				iObservation.setCoding(codings);
+				
+				iObservation.setCoding(initCodings(codings, findingsTemplate));
 			} else {
 				iFinding.setText(text);
 			}

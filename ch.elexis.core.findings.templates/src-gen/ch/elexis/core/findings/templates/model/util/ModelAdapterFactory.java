@@ -96,6 +96,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createInputDataGroupComponentAdapter();
 			}
 			@Override
+			public Adapter caseCodeElement(CodeElement object) {
+				return createCodeElementAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -196,6 +200,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createInputDataGroupComponentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.findings.templates.model.CodeElement <em>Code Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.findings.templates.model.CodeElement
+	 * @generated
+	 */
+	public Adapter createCodeElementAdapter() {
 		return null;
 	}
 

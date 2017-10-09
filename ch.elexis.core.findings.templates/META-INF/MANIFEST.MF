@@ -16,6 +16,7 @@ Require-Bundle: org.eclipse.core.runtime,
  ch.elexis.core.data;bundle-version="3.3.0",
  ch.elexis.core.findings;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.emf.ecore.xmi.impl,
+Import-Package: ch.elexis.core.findings.fhir.po.codes,
+ org.eclipse.emf.ecore.xmi.impl,
  org.osgi.service.component.annotations;version="1.2.0"
 Service-Component: OSGI-INF/ch.elexis.core.findings.templates.service.FindingsTemplateService.xml

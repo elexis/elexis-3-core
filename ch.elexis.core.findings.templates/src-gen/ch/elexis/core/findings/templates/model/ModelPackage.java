@@ -150,13 +150,22 @@ public interface ModelPackage extends EPackage {
 	int FINDINGS_TEMPLATE__INPUT_DATA = 2;
 
 	/**
+	 * The feature id for the '<em><b>Code Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINDINGS_TEMPLATE__CODE_ELEMENT = 3;
+
+	/**
 	 * The number of structural features of the '<em>Findings Template</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FINDINGS_TEMPLATE_FEATURE_COUNT = 3;
+	int FINDINGS_TEMPLATE_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Findings Template</em>' class.
@@ -380,6 +389,61 @@ public interface ModelPackage extends EPackage {
 	int INPUT_DATA_GROUP_COMPONENT_OPERATION_COUNT = INPUT_DATA_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.impl.CodeElementImpl <em>Code Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.findings.templates.model.impl.CodeElementImpl
+	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getCodeElement()
+	 * @generated
+	 */
+	int CODE_ELEMENT = 7;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODE_ELEMENT__CODE = 0;
+
+	/**
+	 * The feature id for the '<em><b>System</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODE_ELEMENT__SYSTEM = 1;
+
+	/**
+	 * The feature id for the '<em><b>Display</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODE_ELEMENT__DISPLAY = 2;
+
+	/**
+	 * The number of structural features of the '<em>Code Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODE_ELEMENT_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Code Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODE_ELEMENT_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.DataType <em>Data Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -387,7 +451,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getDataType()
 	 * @generated
 	 */
-	int DATA_TYPE = 7;
+	int DATA_TYPE = 8;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.Type <em>Type</em>}' enum.
@@ -397,7 +461,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getType()
 	 * @generated
 	 */
-	int TYPE = 8;
+	int TYPE = 9;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.FindingsTemplates <em>Findings Templates</em>}'.
@@ -484,6 +548,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getFindingsTemplate_InputData();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getCodeElement <em>Code Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Code Element</em>'.
+	 * @see ch.elexis.core.findings.templates.model.FindingsTemplate#getCodeElement()
+	 * @see #getFindingsTemplate()
+	 * @generated
+	 */
+	EReference getFindingsTemplate_CodeElement();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.InputDataNumeric <em>Input Data Numeric</em>}'.
@@ -614,6 +689,49 @@ public interface ModelPackage extends EPackage {
 	EAttribute getInputDataGroupComponent_DataType();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.CodeElement <em>Code Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Code Element</em>'.
+	 * @see ch.elexis.core.findings.templates.model.CodeElement
+	 * @generated
+	 */
+	EClass getCodeElement();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.CodeElement#getCode <em>Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Code</em>'.
+	 * @see ch.elexis.core.findings.templates.model.CodeElement#getCode()
+	 * @see #getCodeElement()
+	 * @generated
+	 */
+	EAttribute getCodeElement_Code();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.CodeElement#getSystem <em>System</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>System</em>'.
+	 * @see ch.elexis.core.findings.templates.model.CodeElement#getSystem()
+	 * @see #getCodeElement()
+	 * @generated
+	 */
+	EAttribute getCodeElement_System();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.CodeElement#getDisplay <em>Display</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Display</em>'.
+	 * @see ch.elexis.core.findings.templates.model.CodeElement#getDisplay()
+	 * @see #getCodeElement()
+	 * @generated
+	 */
+	EAttribute getCodeElement_Display();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.InputData <em>Input Data</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -735,6 +853,14 @@ public interface ModelPackage extends EPackage {
 		EReference FINDINGS_TEMPLATE__INPUT_DATA = eINSTANCE.getFindingsTemplate_InputData();
 
 		/**
+		 * The meta object literal for the '<em><b>Code Element</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FINDINGS_TEMPLATE__CODE_ELEMENT = eINSTANCE.getFindingsTemplate_CodeElement();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl <em>Input Data Numeric</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -837,6 +963,40 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute INPUT_DATA_GROUP_COMPONENT__DATA_TYPE = eINSTANCE.getInputDataGroupComponent_DataType();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.impl.CodeElementImpl <em>Code Element</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.findings.templates.model.impl.CodeElementImpl
+		 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getCodeElement()
+		 * @generated
+		 */
+		EClass CODE_ELEMENT = eINSTANCE.getCodeElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CODE_ELEMENT__CODE = eINSTANCE.getCodeElement_Code();
+
+		/**
+		 * The meta object literal for the '<em><b>System</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CODE_ELEMENT__SYSTEM = eINSTANCE.getCodeElement_System();
+
+		/**
+		 * The meta object literal for the '<em><b>Display</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CODE_ELEMENT__DISPLAY = eINSTANCE.getCodeElement_Display();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.InputData <em>Input Data</em>}' class.

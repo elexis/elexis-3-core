@@ -9,6 +9,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -27,8 +28,10 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.CodingSystem;
-import ch.elexis.core.findings.templates.ui.dlg.CodeDialog;
-import ch.elexis.core.findings.templates.ui.views.FindingsTemplateView;
+import ch.elexis.core.findings.fhir.po.codes.LocalCoding;
+import ch.elexis.core.findings.templates.ui.dlg.CodeCreateDialog;
+import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
+import ch.elexis.core.ui.icons.Images;
 
 public class CodesSystemsComposite extends Composite {
 	
@@ -53,7 +56,7 @@ public class CodesSystemsComposite extends Composite {
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				CodeDialog codeDialog = new CodeDialog(getShell());
+				CodeCreateDialog codeDialog = new CodeCreateDialog(getShell());
 				if (codeDialog.open() == MessageDialog.OK) {
 					loadTable();
 				}
@@ -61,14 +64,28 @@ public class CodesSystemsComposite extends Composite {
 		});
 		
 		tableViewer = new TableViewer(this,
-			SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+			SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
-				ICoding iCoding = (ICoding) element;
-				return iCoding != null ? iCoding.getDisplay() + " (" + iCoding.getCode() + ")" : "";
+				LocalCoding iCoding = (LocalCoding) element;
+				StringBuilder stringBuilder = new StringBuilder();
+				for (ICoding mappedCoding : iCoding.getMappedCodes()) {
+					
+						if (stringBuilder.length() > 0) {
+							stringBuilder.append(", ");
+						}
+						stringBuilder.append(mappedCoding.getSystem());
+						stringBuilder.append(": ");
+						stringBuilder.append(mappedCoding.getCode());
+					
+				}
+				
+				return iCoding != null ? iCoding.getDisplay() + " (" + iCoding.getCode() + ")"
+					+ (stringBuilder.length() > 0 ? (" [" + stringBuilder.toString() + "]") : "")
+						: "";
 			}
 		});
 		tableViewer.getTable().setLinesVisible(false);
@@ -95,7 +112,7 @@ public class CodesSystemsComposite extends Composite {
 	}
 	
 	public void loadTable(){
-		List<ICoding> codings = FindingsTemplateView.codingService
+		List<ICoding> codings = FindingsServiceHolder.codingService
 			.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
 		codings.sort((a, b) -> ObjectUtils.compare(a.getDisplay(), b.getDisplay()));
 		tableViewer.setInput(codings);
@@ -103,13 +120,19 @@ public class CodesSystemsComposite extends Composite {
 	
 	private void fillContextMenu(IMenuManager contextMenu, Object[] objects){
 		contextMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-		contextMenu.add(new Action("entfernen") {
+		contextMenu.add(new Action("Entfernen") {
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_DELETE.getImageDescriptor();
+			}
+			
 			@Override
 			public void run(){
 				if (objects != null) {
 					for (Object o : objects) {
 						if (o instanceof ICoding) {
-							FindingsTemplateView.codingService.removeLocalCoding((ICoding) o);
+							FindingsServiceHolder.codingService.removeLocalCoding((ICoding) o);
 						}
 					}
 					loadTable();

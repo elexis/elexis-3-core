@@ -470,7 +470,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 						stringBuilder.append(backboneComponent.getNumericValue().isPresent()
 								? backboneComponent.getNumericValue().get().toPlainString() : "");
 						stringBuilder.append(" ");
-						stringBuilder.append(backboneComponent.getNumericValueUnit().get());
+						stringBuilder.append(backboneComponent.getNumericValueUnit().orElse(""));
 						stringBuilder.append(" ");
 					} else {
 						// numeric fields
@@ -483,7 +483,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 						stringBuilder.append(iObservation.getNumericValue().isPresent()
 								? iObservation.getNumericValue().get().toPlainString() : "");
 						stringBuilder.append(" ");
-						stringBuilder.append(iObservation.getNumericValueUnit().get());
+						stringBuilder.append(iObservation.getNumericValueUnit().orElse(""));
 						stringBuilder.append(" ");
 					}
 					

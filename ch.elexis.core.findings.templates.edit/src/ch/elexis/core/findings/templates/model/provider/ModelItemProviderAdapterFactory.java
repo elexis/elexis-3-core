@@ -212,6 +212,29 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory impleme
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link ch.elexis.core.findings.templates.model.CodeElement} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected CodeElementItemProvider codeElementItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link ch.elexis.core.findings.templates.model.CodeElement}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createCodeElementAdapter() {
+		if (codeElementItemProvider == null) {
+			codeElementItemProvider = new CodeElementItemProvider(this);
+		}
+
+		return codeElementItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -316,6 +339,7 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory impleme
 		if (inputDataTextItemProvider != null) inputDataTextItemProvider.dispose();
 		if (inputDataGroupItemProvider != null) inputDataGroupItemProvider.dispose();
 		if (inputDataGroupComponentItemProvider != null) inputDataGroupComponentItemProvider.dispose();
+		if (codeElementItemProvider != null) codeElementItemProvider.dispose();
 	}
 
 }
