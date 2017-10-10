@@ -264,15 +264,20 @@ public class FindingsTemplateService {
 		iObservation.setText(builder.toString());
 	}
 	
-	private StringBuilder getOberservationText(IObservation iObservation){
+	public StringBuilder getOberservationText(IObservation iObservation){
 		StringBuilder builder = new StringBuilder();
 		List<ch.elexis.core.findings.ObservationComponent> compChildrens =
 			iObservation.getComponents();
 		
 		addCodingToText(builder, iObservation.getCoding());
 		
+		String format = iObservation.getFormat("textSeperator");
+		if (format.isEmpty()) {
+			format = ", ";
+		}
+		
 		for (ch.elexis.core.findings.ObservationComponent component : compChildrens) {
-			builder.append(", ");
+			builder.append(format);
 			addCodingToText(builder, component.getCoding());
 		}
 		return getObservationTextChildrens(iObservation, builder);
@@ -300,8 +305,7 @@ public class FindingsTemplateService {
 	}
 	
 	private void addCodingToText(StringBuilder builder, List<ICoding> codings){
-		ICoding coding =
-			findOneCode(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM).orElse(null);
+		ICoding coding = findOneCode(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM).orElse(null);
 		builder.append(coding != null ? coding.getDisplay() : "");
 	}
 	
@@ -388,6 +392,8 @@ public class FindingsTemplateService {
 		} else if (inputData instanceof InputDataGroupComponent) {
 			iObservation.setObservationType(ObservationType.COMP);
 			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
+			
+			iObservation.addFormat("textSeparator", group.getTextSeparator());
 			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
 				addComponent(iObservation, findingsTemplates);
 			}

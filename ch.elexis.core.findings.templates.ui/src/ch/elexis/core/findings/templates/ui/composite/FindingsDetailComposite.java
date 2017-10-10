@@ -318,7 +318,7 @@ public class FindingsDetailComposite extends Composite {
 			Text txtSeparator = new Text(compositeInputData, SWT.BORDER);
 			txtSeparator.setText("Trenntext");
 			GridData gdTxtSeparator = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-			gdTxtSeparator.widthHint = 80;
+			gdTxtSeparator.widthHint = 60;
 			txtSeparator.setLayoutData(gdTxtSeparator);
 			
 			DataBindingContext dataBindingContext = new DataBindingContext();
