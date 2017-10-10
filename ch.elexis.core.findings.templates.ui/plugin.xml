@@ -4,10 +4,11 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            category="ch.elexis.textKategorie"
+            category="ch.elexis.messungenKategorie"
             class="ch.elexis.core.findings.templates.ui.views.FindingsView"
+            icon="icons/chart_curve.png"
             id="ch.elexis.core.findings.templates.ui.views.FindingsView"
-            name="Befunde">
+            name="Befunde 1.0">
       </view>
    </extension>
    <extension

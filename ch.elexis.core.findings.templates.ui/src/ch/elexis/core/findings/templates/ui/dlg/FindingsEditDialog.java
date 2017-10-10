@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
@@ -244,7 +243,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		List<Action> actions = new ArrayList<>();
 		String comment = iObservation.getComment().orElse("");
 		
-		ToolBarManager menuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
+		ToolBarManager menuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.NO_FOCUS);
 		Action commentableAction = new CommentAction(getShell(), comment);
 		menuManager.add(commentableAction);
 		menuManager.createControl(c)
@@ -382,17 +381,16 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				fieldText.addVerifyListener(new VerifyListener() {
 					@Override
 					public void verifyText(VerifyEvent e){
+						// checks if a numeric text is inserted
 						String txt = e.text;
 						if (!txt.isEmpty()) {
-							if (NumberUtils.isDigits(txt) || txt.equals(".")) {
-								if (txt.equals(".")) {
-									// check if the whole text contains max one "."
-									String input = ((Text) e.widget).getText();
-									if (StringUtils.countMatches(input, ".") == 1) {
-										e.doit = false;
-									}
-								}
+							StringBuilder builder = new StringBuilder(((Text) e.widget).getText());
+							if (e.start == e.end) {
+								builder.insert(e.start, txt);
 							} else {
+								builder.replace(e.start, e.end, txt);
+							}
+							if (!builder.toString().matches("-?(\\d+\\.)?\\d*$")) {
 								e.doit = false;
 							}
 						}

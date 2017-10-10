@@ -311,6 +311,23 @@ public class FindingsDetailComposite extends Composite {
 					
 				}
 			});
+			
+			Label lblSeparator = new Label(compositeInputData, SWT.NONE);
+			lblSeparator.setText("Trenntext");
+			
+			Text txtSeparator = new Text(compositeInputData, SWT.BORDER);
+			txtSeparator.setText("Trenntext");
+			GridData gdTxtSeparator = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+			gdTxtSeparator.widthHint = 80;
+			txtSeparator.setLayoutData(gdTxtSeparator);
+			
+			DataBindingContext dataBindingContext = new DataBindingContext();
+			IObservableValue<?> wTextUnit = WidgetProperties.text(SWT.Modify).observe(txtSeparator);
+			IObservableValue<?> mTextUnit =
+				EMFProperties
+					.value(ModelPackage.Literals.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR)
+					.observe(inputDataGroupComponent);
+			dataBindingContext.bindValue(wTextUnit, mTextUnit);
 				
 			selection.setInputData(inputDataGroupComponent);
 			compositeInputData.layout();

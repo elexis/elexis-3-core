@@ -355,6 +355,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getInputDataGroupComponent_TextSeparator() {
+		return (EAttribute)inputDataGroupComponentEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getCodeElement() {
 		return codeElementEClass;
 	}
@@ -469,6 +478,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		inputDataGroupComponentEClass = createEClass(INPUT_DATA_GROUP_COMPONENT);
 		createEReference(inputDataGroupComponentEClass, INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
 		createEAttribute(inputDataGroupComponentEClass, INPUT_DATA_GROUP_COMPONENT__DATA_TYPE);
+		createEAttribute(inputDataGroupComponentEClass, INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR);
 
 		codeElementEClass = createEClass(CODE_ELEMENT);
 		createEAttribute(codeElementEClass, CODE_ELEMENT__CODE);
@@ -542,6 +552,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(inputDataGroupComponentEClass, InputDataGroupComponent.class, "InputDataGroupComponent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getInputDataGroupComponent_FindingsTemplates(), this.getFindingsTemplate(), null, "findingsTemplates", null, 0, -1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getInputDataGroupComponent_DataType(), this.getDataType(), "dataType", "GROUP_COMPONENT", 0, 1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getInputDataGroupComponent_TextSeparator(), ecorePackage.getEString(), "textSeparator", " ", 0, 1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(codeElementEClass, CodeElement.class, "CodeElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCodeElement_Code(), ecorePackage.getEString(), "code", null, 0, 1, CodeElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -50,7 +50,10 @@ public class FindingsTemplateSettings extends FieldEditorPreferencePage
 	public boolean performOk(){
 		Optional<FindingsTemplates> model = findingsComposite.getModel();
 		FindingsServiceHolder.findingsTemplateService.saveFindingsTemplates(model);
-		return super.performOk();
+		if (model.isPresent()) {
+			findingsComposite.setModel(model.get(), false);
+		}
+		return true;
 	}
 	
 }

@@ -50,6 +50,8 @@
         eType="#//FindingsTemplate" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
         changeable="false" defaultValueLiteral="GROUP_COMPONENT"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="textSeparator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=" "/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

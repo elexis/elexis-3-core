@@ -67,6 +67,7 @@ public class InputDataGroupComponentItemProvider
 			super.getPropertyDescriptors(object);
 
 			addDataTypePropertyDescriptor(object);
+			addTextSeparatorPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -86,6 +87,28 @@ public class InputDataGroupComponentItemProvider
 				 getString("_UI_PropertyDescriptor_description", "_UI_InputDataGroupComponent_dataType_feature", "_UI_InputDataGroupComponent_type"),
 				 ModelPackage.Literals.INPUT_DATA_GROUP_COMPONENT__DATA_TYPE,
 				 false,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Text Separator feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addTextSeparatorPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_InputDataGroupComponent_textSeparator_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_InputDataGroupComponent_textSeparator_feature", "_UI_InputDataGroupComponent_type"),
+				 ModelPackage.Literals.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR,
+				 true,
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
@@ -152,6 +175,7 @@ public class InputDataGroupComponentItemProvider
 
 		switch (notification.getFeatureID(InputDataGroupComponent.class)) {
 			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__DATA_TYPE:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:

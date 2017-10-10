@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -161,6 +163,23 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		}
 		viewer.setInput(eTemplates);
 		viewer.setSelection(new StructuredSelection(selections));
+		
+		
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event){
+				StructuredSelection selection = (StructuredSelection) viewer.getSelection();
+				if (!selection.isEmpty()) {
+					Object selectedObj = selection.getFirstElement();
+					if (selectedObj instanceof FindingsTemplate) {
+						selections = new ArrayList<>();
+						selections.add((FindingsTemplate) selectedObj);
+						close();
+					}
+				}
+			}
+		});
+		
 		return composite;
 
 

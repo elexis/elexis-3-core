@@ -104,11 +104,13 @@ public class FindingsComposite extends Composite {
 		}
 	}
 	
-	public void setModel(FindingsTemplates model){
+	public void setModel(FindingsTemplates model, boolean selectFirst){
 		Resource r = new ResourceImpl();
 		r.getContents().add(model);
 		viewer.setInput(r);
-		selectFirstTreeElement();
+		if (selectFirst) {
+			selectFirstTreeElement();
+		}
 	}
 	
 	private void createContextMenu(Viewer viewer){
