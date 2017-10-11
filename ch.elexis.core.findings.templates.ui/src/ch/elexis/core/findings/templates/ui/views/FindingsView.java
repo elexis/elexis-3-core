@@ -19,7 +19,10 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -27,6 +30,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
@@ -45,6 +49,7 @@ import ch.elexis.core.findings.templates.ui.handler.FindingEditHandler;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
@@ -57,6 +62,8 @@ public class FindingsView extends ViewPart implements IActivationListener {
 	private TableViewer viewer;
 	
 	private FindingsComparator comparator;
+	
+	private String searchTitle;
 	
 	private final ElexisUiEventListenerImpl eeli_find =
 		new ElexisUiEventListenerImpl(IFinding.class, ElexisEvent.EVENT_CREATE) {
@@ -88,7 +95,22 @@ public class FindingsView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void createPartControl(Composite parent){
-		Composite c = new Composite(parent, SWT.NONE);
+		Composite main = new Composite(parent, SWT.NONE);
+		main.setLayout(SWTHelper.createGridLayout(true, 1));
+		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		final Text tSearch = new Text(main, SWT.BORDER);
+		tSearch.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		tSearch.setMessage("Suche");
+		// Add search listener
+		ModifyListener searchListener = new ModifyListener() {
+			public void modifyText(ModifyEvent e){
+				searchTitle = tSearch.getText();
+				refresh();
+			}
+		};
+		tSearch.addModifyListener(searchListener);
+		
+		Composite c = new Composite(main, SWT.NONE);
 		TableColumnLayout tableColumnLayout = new TableColumnLayout();
 		c.setLayout(tableColumnLayout);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -100,6 +122,8 @@ public class FindingsView extends ViewPart implements IActivationListener {
 		viewer.getTable().setLinesVisible(true);
 		comparator = new FindingsComparator();
 		viewer.setComparator(comparator);
+		
+		viewer.addFilter(new ViewFilterProvider());
 		
 		TableViewerColumn tableViewerColumnDateTime = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblcCol = tableViewerColumnDateTime.getColumn();
@@ -299,6 +323,28 @@ public class FindingsView extends ViewPart implements IActivationListener {
 				rc = -rc;
 			}
 			return rc;
+		}
+		
+	}
+	
+	class ViewFilterProvider extends ViewerFilter {
+		
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element){
+			
+			if (searchTitle != null && !searchTitle.isEmpty()) {
+				String searchText = searchTitle.toLowerCase();
+				
+				if (element instanceof IFinding) {
+					IFinding iFinding = (IFinding) element;
+					String text = iFinding.getText().orElse("");
+					if (text.toLowerCase().contains(searchText)) {
+						return true;
+					}
+				}
+				return false;
+			}
+			return true;
 		}
 		
 	}
