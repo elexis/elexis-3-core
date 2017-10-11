@@ -146,15 +146,15 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 					if (o1 == null || o2 == null) {
 						return o1 != null ? 1 : -1;
 					}
+					else if (o1.getInputData() instanceof InputDataGroup) {
+						return -1;
+					} else if (o2.getInputData() instanceof InputDataGroup) {
+						return 1;
+					}
 					else if (o1.getInputData() instanceof InputDataGroupComponent) {
 						return -1;
 					}
 					else if (o2.getInputData() instanceof InputDataGroupComponent) {
-						return 1;
-					}
-					else if (o1.getInputData() instanceof InputDataGroup) {
-						return -1;
-					} else if (o2.getInputData() instanceof InputDataGroup) {
 						return 1;
 					}
 					return ObjectUtils.compare(o1.getTitle(), o2.getTitle());
