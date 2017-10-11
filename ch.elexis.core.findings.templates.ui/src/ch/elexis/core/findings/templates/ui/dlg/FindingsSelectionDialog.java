@@ -10,7 +10,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -44,6 +43,7 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 	public FindingsSelectionDialog(Shell parentShell, FindingsTemplates model,
 		List<FindingsTemplate> selections, boolean multiSelection, FindingsTemplate current){
 		super(parentShell);
+		setShellStyle(SWT.RESIZE);
 		this.model = model;
 		this.current = current;
 		this.selections = selections;
@@ -214,23 +214,15 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
-	public List<FindingsTemplate> getSelection(boolean move){
+	public List<FindingsTemplate> getSelection(){
 		if (selections == null) {
 			selections = Collections.emptyList();
-		}
-		if (move) {
-			List<FindingsTemplate> findingsTemplates = new ArrayList<>();
-			for (FindingsTemplate findingsTemplate : selections) {
-				EcoreUtil.remove(findingsTemplate);
-				findingsTemplates.add(findingsTemplate);
-			}
-			return findingsTemplates;
 		}
 		return selections;
 	}
 	
-	public FindingsTemplate getSingleSelection(boolean asCopy){
-		List<FindingsTemplate> findingsTemplates = getSelection(asCopy);
+	public FindingsTemplate getSingleSelection(){
+		List<FindingsTemplate> findingsTemplates = getSelection();
 		if (findingsTemplates.size() > 0) {
 			return findingsTemplates.get(0);
 		}
