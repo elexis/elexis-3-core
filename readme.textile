@@ -7,12 +7,15 @@ This accounts for all Elexis 3 related development.
 
 h2. Install latest build
 
-Go to "Jenkins-CI Builds":https://srv.elexis.info/jenkins/view/3.0/job/Elexis-3.0-Core/lastSuccessfulBuild/artifact/ch.elexis.core.p2site/target/products/. Download and unzip the zip file for your machine.
+Go to "Jenkins-CI Builds":https://download.elexis.info/elexis/master/products.
+
+Download and unzip the zip file for your machine.
 
 Install Oracle java 1.8 from "http://www.java.com/de/download/manual.jsp":http://www.java.com/de/download/manual.jsp
 
 Start the Elexis3 application.
 
+Use Help..Install New Software to add the desired features from the elexis-3-base P2 repository.
 
 h2. Building
 
