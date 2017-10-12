@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -22,9 +23,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationType;
+import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
@@ -35,6 +39,8 @@ import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.findings.templates.ui.actions.DateAction;
 import ch.elexis.core.findings.templates.ui.composite.ICompositeSaveable;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsEditDialog;
+import ch.elexis.core.findings.util.commands.FindingDeleteCommand;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.actions.CommentAction;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -98,7 +104,7 @@ public class FindingsTemplateUtil {
 		for (Action a : iCompositeSaveable.getToolbarActions()) {
 			if (a instanceof CommentAction) {
 				String comment = ((CommentAction) a).getComment();
-				if (comment != null && (emptyAllowed || !comment.isEmpty())) {
+				if (comment != null && (emptyAllowed || !StringUtils.isBlank(comment))) {
 					if (wrap) {
 						return Optional.of("[" + comment + "]");
 					}
@@ -111,22 +117,16 @@ public class FindingsTemplateUtil {
 	
 	public static IFinding saveObservation(IObservation iObservation,
 		ICompositeSaveable iCompositeSaveable, LocalDateTime localDateTime){
-		// save text
+		
 		getComment(iCompositeSaveable, false, true)
 			.ifPresent(item -> iObservation.setComment(item));
-
-		for (ICompositeSaveable child : iCompositeSaveable.getChildReferences()) {
-			child.saveContents(localDateTime);
-		}
 		
-		// special handling for component childs
-		for (ICompositeSaveable child : iCompositeSaveable.getChildComponents()) {
+		for (ICompositeSaveable child : iCompositeSaveable.getChildReferences()) {
 			child.saveContents(localDateTime);
 		}
 		
 		iObservation.setText(iCompositeSaveable.getText());
 		iObservation.setEffectiveTime(localDateTime);
-		
 		return iObservation;
 	}
 	
@@ -186,8 +186,7 @@ public class FindingsTemplateUtil {
 		}
 		builder.append(" ");
 		builder.append(builderInner);
-		builder.append(" ");
-		getComment(iCompositeSaveable, true, false).ifPresent(item -> builder.append(item));
+		getComment(iCompositeSaveable, true, false).ifPresent(item -> builder.append(" " + item));
 		
 		return builder.toString();
 	}
@@ -259,9 +258,8 @@ public class FindingsTemplateUtil {
 								? iObservation.getNumericValue().get().toPlainString() : "");
 						stringBuilder.append(" ");
 						stringBuilder.append(iObservation.getNumericValueUnit().orElse(""));
-						stringBuilder.append(" ");
 						getComment(iCompositeSaveable, true, false)
-							.ifPresent(item -> stringBuilder.append(item));
+							.ifPresent(item -> stringBuilder.append(" " + item));
 						stringBuilder.append(" ");
 					}
 					
@@ -333,5 +331,38 @@ public class FindingsTemplateUtil {
 		
 		return actions;
 		
+	}
+	
+	public static List<IObservation> getOberservationChildrens(IObservation iObservation,
+		List<IObservation> list, int maxDepth){
+		if (maxDepth > 0) {
+			List<IObservation> refChildrens =
+				iObservation.getTargetObseravtions(ObservationLinkType.REF);
+			list.add(iObservation);
+			
+			for (IObservation child : refChildrens) {
+				getOberservationChildrens(child, list, --maxDepth);
+			}
+		}
+		return list;
+	}
+	
+	public static void deleteObservation(IFinding iFinding) throws ElexisException{
+		List<IObservation> observationChildrens = FindingsTemplateUtil
+			.getOberservationChildrens((IObservation) iFinding, new ArrayList<>(), 100);
+		
+		List<IFinding> lockedChildrens = new ArrayList<>();
+		for (IObservation iObservation : observationChildrens) {
+			if (!CoreHub.getLocalLockService().acquireLock((IPersistentObject) iObservation)
+				.isOk()) {
+				throw new ElexisException("Das Löschen ist nicht möglich, kein Lock erhalten.");
+			}
+			lockedChildrens.add(iObservation);
+		}
+		
+		for (IFinding f : lockedChildrens) {
+			new FindingDeleteCommand(f).execute();
+			CoreHub.getLocalLockService().releaseLock((IPersistentObject) f);
+		}
 	}
 }

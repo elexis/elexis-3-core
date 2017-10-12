@@ -123,7 +123,6 @@ public class CompositeGroup extends Composite implements ICompositeSaveable {
 		if (iFinding.getId() == null) {
 			iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
 		}
-		
 		return FindingsTemplateUtil.saveObservation((IObservation) iFinding, this, localDateTime);
 	}
 	

@@ -1,11 +1,13 @@
 package ch.elexis.core.findings.templates.ui.dlg;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -16,6 +18,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
@@ -26,15 +30,19 @@ import ch.elexis.core.findings.templates.ui.composite.CompositeTextUnit;
 import ch.elexis.core.findings.templates.ui.composite.ICompositeSaveable;
 import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
 import ch.elexis.core.findings.templates.ui.views.FindingsView;
+import ch.elexis.core.model.IPersistentObject;
 
 public class FindingsEditDialog extends TitleAreaDialog {
 	
 	private final IFinding iFinding;
 	private ICompositeSaveable iCompositeSaveable;
 	
+	private List<IFinding> lockedFindings = new ArrayList<>();
+	
 	public FindingsEditDialog(Shell parentShell, IFinding iFinding){
 		super(parentShell);
 		this.iFinding = iFinding;
+		lockedFindings.clear();
 	}
 	
 	/**
@@ -50,14 +58,22 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		setMessage(title);
 		int depth = 0;
 		iCompositeSaveable = new CompositeGroup(parent, iFinding, false, false, 10, 10, depth++);
-		iCompositeSaveable.getChildReferences()
-			.add(createDynamicContent(iFinding, iCompositeSaveable, depth));
+		try {
+			iCompositeSaveable.getChildReferences()
+				.add(createDynamicContent(iFinding, iCompositeSaveable, depth));
+		} catch (ElexisException e) {
+			MessageDialog.openError(getShell(), "Fehler", e.getMessage());
+			cancelPressed();
+		}
 		return (Control) iCompositeSaveable;
 	}
 	
 	private ICompositeSaveable createDynamicContent(IFinding iFinding, ICompositeSaveable current,
-		int depth){
-		
+		int depth) throws ElexisException{
+		if (!CoreHub.getLocalLockService().acquireLock((IPersistentObject) iFinding).isOk()) {
+			throw new ElexisException("Die Editierung ist nicht möglich, kein Lock erhalten.");
+		}
+		lockedFindings.add(iFinding);
 		if (iFinding instanceof IObservation) {
 			IObservation item = (IObservation) iFinding;
 			List<IObservation> refChildrens = item.getTargetObseravtions(ObservationLinkType.REF);
@@ -164,5 +180,15 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			iFinding.setText(text.orElse(""));
 		}
 		super.okPressed();
+	}
+	
+	public void releaseAllLocks(){
+		for (IFinding iFinding : lockedFindings) {
+			CoreHub.getLocalLockService().releaseLock((IPersistentObject) iFinding);
+		}
+	}
+	
+	public List<IFinding> getLockedFindings(){
+		return lockedFindings;
 	}
 }

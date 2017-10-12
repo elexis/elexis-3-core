@@ -2,7 +2,6 @@ package ch.elexis.core.findings.templates.ui.views;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -66,7 +65,8 @@ public class FindingsView extends ViewPart implements IActivationListener {
 	private String searchTitle;
 	
 	private final ElexisUiEventListenerImpl eeli_find =
-		new ElexisUiEventListenerImpl(IFinding.class, ElexisEvent.EVENT_CREATE) {
+		new ElexisUiEventListenerImpl(IFinding.class,
+			ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
 			
 			@Override
 			public void runInUi(ElexisEvent ev){
@@ -225,15 +225,7 @@ public class FindingsView extends ViewPart implements IActivationListener {
 		};
 		return selectionAdapter;
 	}
-	
-	public void removeFromTable(IFinding iFinding){
-		if (viewer.getInput() instanceof List<?>)
-		{
-			List<?> items = (List<?>) viewer.getInput();
-			items.remove(iFinding);
-		}
-		viewer.refresh();
-	}
+
 	
 	class FindingsLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
 		

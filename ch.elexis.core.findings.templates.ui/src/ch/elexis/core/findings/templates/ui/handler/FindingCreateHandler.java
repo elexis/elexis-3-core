@@ -17,9 +17,12 @@ import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsEditDialog;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
+import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
 import ch.elexis.core.findings.templates.ui.views.FindingsView;
-import ch.elexis.core.findings.util.commands.FindingDeleteCommand;
-import ch.elexis.core.findings.util.commands.ObservationDeleteCommand;
+import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 
 public class FindingCreateHandler extends AbstractHandler implements IHandler {
 	
@@ -37,20 +40,37 @@ public class FindingCreateHandler extends AbstractHandler implements IHandler {
 					iFinding = FindingsView.findingsTemplateService
 						.createFinding(ElexisEventDispatcher.getSelectedPatient(), selection);
 					
-					if (iFinding instanceof IObservation) {
-						FindingsView.findingsTemplateService
-							.updateOberservationText((IObservation) iFinding);
-					}
-					
-					if (MessageDialog.OK != new FindingsEditDialog(
-						Display.getDefault().getActiveShell(), iFinding).open()) {
-						// if cancel delete the created finding
-						if (iFinding instanceof IObservation) {
-							new ObservationDeleteCommand((IObservation) iFinding).execute();
-						} else {
-							new FindingDeleteCommand(iFinding).execute();
-						}
-					}
+					AcquireLockBlockingUi.aquireAndRun((IPersistentObject) iFinding,
+						new ILockHandler() {
+							@Override
+							public void lockFailed(){
+								// do nothing
+							}
+							
+							@Override
+							public void lockAcquired(){
+								if (iFinding instanceof IObservation) {
+									FindingsView.findingsTemplateService
+										.updateOberservationText((IObservation) iFinding);
+								}
+								
+								FindingsEditDialog findingsEditDialog = new FindingsEditDialog(
+									Display.getDefault().getActiveShell(), iFinding);
+								int ret = findingsEditDialog.open();
+								
+								findingsEditDialog.releaseAllLocks();
+								if (MessageDialog.OK != ret) {
+									// if cancel delete the created finding
+									try {
+										FindingsTemplateUtil.deleteObservation(iFinding);
+									} catch (ElexisException e) {
+										MessageDialog.openError(
+											UiDesk.getDisplay().getActiveShell(), "Fehler",
+											e.getMessage());
+									}
+								}
+							}
+						});
 					
 					ElexisEventDispatcher.getInstance().fire(new ElexisEvent(iFinding,
 						IFinding.class, ElexisEvent.EVENT_CREATE, ElexisEvent.PRIORITY_NORMAL));
