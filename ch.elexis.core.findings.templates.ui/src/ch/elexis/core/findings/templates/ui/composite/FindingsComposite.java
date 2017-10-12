@@ -220,7 +220,8 @@ public class FindingsComposite extends Composite {
 							FindingsServiceHolder.findingsTemplateService
 								.importTemplateFromFile(path);
 						if (findingsTemplates != null) {
-							setModel(findingsTemplates, true);
+							model = findingsTemplates;
+							setModel(model, true);
 						}
 					} catch (IOException e) {
 						LoggerFactory.getLogger(FindingsComposite.class)
@@ -256,7 +257,7 @@ public class FindingsComposite extends Composite {
 						FindingsServiceHolder.findingsTemplateService.exportTemplateToFile(model,
 							path);
 						
-						FindingsServiceHolder.findingsTemplateService
+						model = FindingsServiceHolder.findingsTemplateService
 							.getFindingsTemplates("Standard Vorlagen");
 						setModel(model, true);
 					} catch (IOException e) {
