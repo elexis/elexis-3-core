@@ -160,12 +160,14 @@ public class FindingsDetailComposite extends Composite {
 		});
 		
 		createObservationComposite();
-		
+
 		DataBindingContext bindingContext = new DataBindingContext();
 		IObservableValue<?> observeTextTitle = WidgetProperties.text(SWT.Modify).observe(textTitle);
 		IObservableValue<?> observeValueTextTitle =
 			EMFProperties.value(ModelPackage.Literals.FINDINGS_TEMPLATE__TITLE).observeDetail(item);
 		bindingContext.bindValue(observeTextTitle, observeValueTextTitle);
+		
+		setVisible(false);
 	}
 	
 	private void selectCode(Optional<ICodeElement> optionalCodeElement)
