@@ -3,6 +3,7 @@ package ch.elexis.core.findings.templates.ui.util;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.templates.service.FindingsTemplateService;
 
@@ -11,6 +12,7 @@ public class FindingsServiceHolder {
 	
 	public static FindingsTemplateService findingsTemplateService;
 	public static ICodingService codingService;
+	public static IFindingsService findingsService;
 	
 	@Reference(unbind = "-")
 	public synchronized void setFindingsTemplateService(FindingsTemplateService service){
@@ -20,6 +22,11 @@ public class FindingsServiceHolder {
 	@Reference(unbind = "-")
 	public synchronized void setCodingService(ICodingService service){
 		codingService = service;
+	}
+	
+	@Reference(unbind = "-")
+	public synchronized void setFindingsService(IFindingsService service){
+		findingsService = service;
 	}
 	
 }

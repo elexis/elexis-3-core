@@ -4,10 +4,11 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            category="ch.elexis.textKategorie"
+            category="ch.elexis.messungenKategorie"
             class="ch.elexis.core.findings.templates.ui.views.FindingsView"
+            icon="icons/chart_curve.png"
             id="ch.elexis.core.findings.templates.ui.views.FindingsView"
-            name="Befunde">
+            name="Befunde Neu">
       </view>
    </extension>
    <extension
@@ -77,6 +78,13 @@
             id="ch.elexis.core.findings.templates.ui.perferences.CodeSystemSettings"
             name="Codesysteme">
       </page>
+   </extension>
+   <extension
+         point="ch.elexis.core.data.DataAccess">
+      <DataAccess
+            class="ch.elexis.core.findings.templates.ui.dataaccess.FindingDataAccessor"
+            name="Befunde-Neu">
+      </DataAccess>
    </extension>
 
 </plugin>

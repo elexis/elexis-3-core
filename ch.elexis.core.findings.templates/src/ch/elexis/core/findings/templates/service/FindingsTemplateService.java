@@ -1,6 +1,7 @@
 package ch.elexis.core.findings.templates.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -93,7 +95,8 @@ public class FindingsTemplateService {
 				resource.load(new URIConverter.ReadableInputStream(namedBlob.getString()), null);
 				return (FindingsTemplates) resource.getContents().get(0);
 			} catch (IOException e) {
-				e.printStackTrace();
+				LoggerFactory.getLogger(FindingsTemplateService.class)
+					.error("read findings templates error", e);
 			}
 			
 		}
@@ -105,7 +108,7 @@ public class FindingsTemplateService {
 		return findingsTemplates;
 	}
 	
-	public String createXMI(FindingsTemplates findingsTemplates){
+	private String createXMI(FindingsTemplates findingsTemplates){
 		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		Map<String, Object> m = reg.getExtensionToFactoryMap();
 		m.put("xmi", new XMIResourceFactoryImpl());
@@ -126,19 +129,51 @@ public class FindingsTemplateService {
 		return null;
 	}
 	
-	public void saveFindingsTemplates(Optional<FindingsTemplates> findingsTemplates){
+	public String saveFindingsTemplates(Optional<FindingsTemplates> findingsTemplates){
 		if (findingsTemplates.isPresent()) {
-			String result = createXMI(findingsTemplates.get());
-			if (result != null) {
-				NamedBlob namedBlob = NamedBlob.load(findingsTemplates.get().getId());
-				namedBlob.putString(result);
-			} else {
-				//cannot save
-				LoggerFactory.getLogger(FindingsTemplateService.class)
-					.warn("cannot save template - xmi string is null");
+			String xmi = createXMI(findingsTemplates.get());
+			String id = findingsTemplates.get().getId();
+			if (saveXmiToNamedBlob(xmi, id)) {
+				return xmi;
 			}
 		}
-		
+		return null;
+	}
+	
+	private boolean saveXmiToNamedBlob(String xmi, String blobId){
+		if (xmi != null && blobId != null) {
+			NamedBlob namedBlob = NamedBlob.load(blobId);
+			namedBlob.putString(xmi);
+			return true;
+		} else {
+			//cannot save
+			LoggerFactory.getLogger(FindingsTemplateService.class)
+				.warn("cannot save template - xmi string is null");
+			return false;
+		}
+	}
+	
+	public void exportTemplateToFile(FindingsTemplates findingsTemplates, String path)
+		throws IOException{
+		if (findingsTemplates != null) {
+			File toExport = new File(path);
+			String content = saveFindingsTemplates(Optional.of(findingsTemplates));
+			if (content != null) {
+				FileUtils.writeStringToFile(toExport, content);
+			}
+		}
+	}
+	
+	public FindingsTemplates importTemplateFromFile(String path) throws IOException{
+		if (path != null) {
+			File toImport = new File(path);
+			String xmi = FileUtils.readFileToString(toImport);
+			if (saveXmiToNamedBlob(xmi,
+				FINDINGS_TEMPLATE_ID_PREFIX + "Standard Vorlagen".replaceAll(" ", "_"))) {
+				return getFindingsTemplates("Standard Vorlagen");
+			}
+		}
+		return null;
 	}
 	
 	public void addComponent(IFinding iFinding, FindingsTemplate findingsTemplate){
@@ -264,15 +299,20 @@ public class FindingsTemplateService {
 		iObservation.setText(builder.toString());
 	}
 	
-	private StringBuilder getOberservationText(IObservation iObservation){
+	public StringBuilder getOberservationText(IObservation iObservation){
 		StringBuilder builder = new StringBuilder();
 		List<ch.elexis.core.findings.ObservationComponent> compChildrens =
 			iObservation.getComponents();
 		
 		addCodingToText(builder, iObservation.getCoding());
 		
+		String format = iObservation.getFormat("textSeperator");
+		if (format.isEmpty()) {
+			format = ", ";
+		}
+		
 		for (ch.elexis.core.findings.ObservationComponent component : compChildrens) {
-			builder.append(", ");
+			builder.append(format);
 			addCodingToText(builder, component.getCoding());
 		}
 		return getObservationTextChildrens(iObservation, builder);
@@ -300,8 +340,7 @@ public class FindingsTemplateService {
 	}
 	
 	private void addCodingToText(StringBuilder builder, List<ICoding> codings){
-		ICoding coding =
-			findOneCode(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM).orElse(null);
+		ICoding coding = findOneCode(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM).orElse(null);
 		builder.append(coding != null ? coding.getDisplay() : "");
 	}
 	
@@ -322,9 +361,8 @@ public class FindingsTemplateService {
 		}
 	}
 	
-	public void validateCycleDetection(FindingsTemplate findingsTemplate,
-		int depth, int maxDepth, String mainTemplateTitle, boolean autoRemoveCycle)
-		throws ElexisException{
+	public void validateCycleDetection(FindingsTemplate findingsTemplate, int depth, int maxDepth,
+		String mainTemplateTitle, boolean autoRemoveCycle) throws ElexisException{
 		if (++depth > maxDepth) {
 			StringBuilder builder = new StringBuilder();
 			if (autoRemoveCycle) {
@@ -334,8 +372,7 @@ public class FindingsTemplateService {
 					"' ist nicht möglich.\n\nEin Zyklus wurde gefunden, oder die maximal erlaubte Komplexität von ");
 				builder.append(maxDepth);
 				builder.append(" wurde überschritten.");
-			}
-			else {
+			} else {
 				builder.append("Es trat ein Fehler in der Vorlage auf.\n");
 				builder.append("Die maximale Komplexität von ");
 				builder.append(maxDepth);
@@ -388,6 +425,8 @@ public class FindingsTemplateService {
 		} else if (inputData instanceof InputDataGroupComponent) {
 			iObservation.setObservationType(ObservationType.COMP);
 			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
+			
+			iObservation.addFormat("textSeparator", group.getTextSeparator());
 			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
 				addComponent(iObservation, findingsTemplates);
 			}
@@ -395,8 +434,7 @@ public class FindingsTemplateService {
 			iObservation.setObservationType(ObservationType.NUMERIC);
 			InputDataNumeric inputDataNumeric = (InputDataNumeric) inputData;
 			iObservation.setNumericValue(null, inputDataNumeric.getUnit());
-		}
-		else if (inputData instanceof InputDataText) {
+		} else if (inputData instanceof InputDataText) {
 			iObservation.setObservationType(ObservationType.TEXT);
 		}
 		return iObservation;

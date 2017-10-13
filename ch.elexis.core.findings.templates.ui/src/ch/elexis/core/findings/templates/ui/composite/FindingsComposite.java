@@ -1,11 +1,13 @@
 package ch.elexis.core.findings.templates.ui.composite;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -28,13 +30,17 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsDialog;
+import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
 import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
 import ch.elexis.core.ui.icons.Images;
 
@@ -104,11 +110,14 @@ public class FindingsComposite extends Composite {
 		}
 	}
 	
-	public void setModel(FindingsTemplates model){
+	public void setModel(FindingsTemplates model, boolean selectFirst){
 		Resource r = new ResourceImpl();
 		r.getContents().add(model);
 		viewer.setInput(r);
-		selectFirstTreeElement();
+		viewer.expandToLevel(2);
+		if (selectFirst) {
+			selectFirstTreeElement();
+		}
 	}
 	
 	private void createContextMenu(Viewer viewer){
@@ -120,8 +129,7 @@ public class FindingsComposite extends Composite {
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				if (selection.getFirstElement() instanceof FindingsTemplate) {
 					fillContextMenu(mgr, (FindingsTemplate) selection.getFirstElement());
-				}
-				else if (selection.getFirstElement() instanceof FindingsTemplates) {
+				} else if (selection.getFirstElement() instanceof FindingsTemplates) {
 					fillContextMenu(mgr, (FindingsTemplates) selection.getFirstElement());
 				}
 			}
@@ -139,19 +147,12 @@ public class FindingsComposite extends Composite {
 			public ImageDescriptor getImageDescriptor(){
 				return Images.IMG_DELETE.getImageDescriptor();
 			}
+			
 			@Override
 			public void run(){
-				if (getModel().isPresent())
-				{
-					if (findingsTemplate.eContainer() instanceof FindingsTemplates) {
-						((FindingsTemplates) findingsTemplate.eContainer()).getFindingsTemplates()
-							.remove(findingsTemplate);
-					}
-					else if (findingsTemplate.eContainer() instanceof InputDataGroupComponent) {
-						((InputDataGroupComponent) findingsTemplate.eContainer())
-							.getFindingsTemplates().remove(findingsTemplate);
-						
-					}
+				if (getModel().isPresent()) {
+					
+					EcoreUtil.delete(findingsTemplate);
 					getViewer().refresh();
 				}
 			}
@@ -166,11 +167,14 @@ public class FindingsComposite extends Composite {
 			public ImageDescriptor getImageDescriptor(){
 				return Images.IMG_NEW.getImageDescriptor();
 			}
+			
 			@Override
 			public void run(){
-				FindingsDialog findingsDialog = new FindingsDialog(
-					Display.getDefault().getActiveShell(), findingsTemplates);
-				findingsDialog.open();
+				FindingsDialog findingsDialog =
+					new FindingsDialog(Display.getDefault().getActiveShell(), findingsTemplates);
+				if (findingsDialog.open() == MessageDialog.OK) {
+					viewer.expandToLevel(2);
+				}
 			}
 		});
 		contextMenu.add(new Action("Vorlage Entfernen") {
@@ -185,7 +189,7 @@ public class FindingsComposite extends Composite {
 				if (findingsTemplates instanceof FindingsTemplates) {
 					if (MessageDialog.openQuestion(getShell(), "Vorlagen Löschen",
 						"Wollen Sie wirklich diese Vorlage und alle untergeordneten Vorlagen löschen ?")) {
-						findingsTemplates.eResource().getContents().remove(findingsTemplates);
+						findingsTemplates.getFindingsTemplates().clear();
 					}
 				}
 				
@@ -201,7 +205,31 @@ public class FindingsComposite extends Composite {
 			
 			@Override
 			public void run(){
-			
+				FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
+				dialog.setFilterNames(new String[] {
+					"xml"
+				});
+				dialog.setFilterExtensions(new String[] {
+					"*.xml"
+				});
+				dialog.setFilterPath(CoreHub.getWritableUserDir().getAbsolutePath()); // Windows path
+				String path = dialog.open();
+				if (path != null) {
+					try {
+						FindingsTemplates findingsTemplates =
+							FindingsServiceHolder.findingsTemplateService
+								.importTemplateFromFile(path);
+						if (findingsTemplates != null) {
+							model = findingsTemplates;
+							setModel(model, true);
+						}
+					} catch (IOException e) {
+						LoggerFactory.getLogger(FindingsComposite.class)
+							.error("findings template import error", e);
+						MessageDialog.openError(getShell(), "Fehler",
+							"Vorlagen Import nicht möglich. [" + e.getMessage() + "]");
+					}
+				}
 			}
 		});
 		contextMenu.add(new Action("Vorlagen Exportieren") {
@@ -213,7 +241,32 @@ public class FindingsComposite extends Composite {
 			
 			@Override
 			public void run(){
-			
+				FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
+				dialog.setFilterNames(new String[] {
+					"xml"
+				});
+				dialog.setFilterExtensions(new String[] {
+					"*.xml"
+				});
+				dialog.setOverwrite(true);
+				dialog.setFilterPath(CoreHub.getWritableUserDir().getAbsolutePath()); // Windows path
+				dialog.setFileName("befundvorlage_" + System.currentTimeMillis() + ".xml");
+				String path = dialog.open();
+				if (path != null) {
+					try {
+						FindingsServiceHolder.findingsTemplateService.exportTemplateToFile(model,
+							path);
+						
+						model = FindingsServiceHolder.findingsTemplateService
+							.getFindingsTemplates("Standard Vorlagen");
+						setModel(model, true);
+					} catch (IOException e) {
+						LoggerFactory.getLogger(FindingsComposite.class)
+							.error("findings template export error", e);
+						MessageDialog.openError(getShell(), "Fehler",
+							"Vorlagen Export nicht möglich. [" + e.getMessage() + "]");
+					}
+				}
 			}
 		});
 	}
@@ -241,8 +294,7 @@ public class FindingsComposite extends Composite {
 		public boolean hasChildren(Object object){
 			if (object instanceof FindingsTemplates) {
 				return super.hasChildren(object);
-			}
-			else if (object instanceof FindingsTemplate) {
+			} else if (object instanceof FindingsTemplate) {
 				FindingsTemplate findingsTemplate = (FindingsTemplate) object;
 				if (findingsTemplate.getInputData() instanceof InputDataGroupComponent) {
 					InputDataGroupComponent inputDataGroupComponent =

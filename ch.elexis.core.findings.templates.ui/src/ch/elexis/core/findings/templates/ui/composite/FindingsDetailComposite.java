@@ -1,6 +1,6 @@
 package ch.elexis.core.findings.templates.ui.composite;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +10,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.databinding.EMFUpdateValueStrategy;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
@@ -67,13 +68,18 @@ public class FindingsDetailComposite extends Composite {
 	private GridData minGd;
 	private FindingsTemplates model;
 	private Text loincCode;
+	private boolean openedFromDialog;
 
+	private List<FindingsTemplate> findingTemplatesToMove = new ArrayList<>();
 	
-	public FindingsDetailComposite(Composite parent, FindingsTemplates model){
+	public FindingsDetailComposite(Composite parent, FindingsTemplates model,
+		boolean openedFromDialog){
 		super(parent, SWT.NONE);
 		this.setLayout(new GridLayout(2, false));
 		this.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		this.model = model;
+		this.openedFromDialog = openedFromDialog;
+		findingTemplatesToMove.clear();
 	}
 	
 	public void createContents(){
@@ -129,7 +135,7 @@ public class FindingsDetailComposite extends Composite {
 		
 		Composite codesComposite = new Composite(this, SWT.NONE);
 		codesComposite.setLayout(SWTHelper.createGridLayout(true, 2));
-		codesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		codesComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		loincCode = new Text(codesComposite, SWT.BORDER | SWT.READ_ONLY);
 		loincCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -154,12 +160,14 @@ public class FindingsDetailComposite extends Composite {
 		});
 		
 		createObservationComposite();
-		
+
 		DataBindingContext bindingContext = new DataBindingContext();
 		IObservableValue<?> observeTextTitle = WidgetProperties.text(SWT.Modify).observe(textTitle);
 		IObservableValue<?> observeValueTextTitle =
 			EMFProperties.value(ModelPackage.Literals.FINDINGS_TEMPLATE__TITLE).observeDetail(item);
 		bindingContext.bindValue(observeTextTitle, observeValueTextTitle);
+		
+		setVisible(false);
 	}
 	
 	private void selectCode(Optional<ICodeElement> optionalCodeElement)
@@ -217,14 +225,21 @@ public class FindingsDetailComposite extends Composite {
 			public void selectionChanged(SelectionChangedEvent event){
 				updateInputData(
 					(DataType) ((StructuredSelection) event.getSelection()).getFirstElement());
+				updateSize();
 			}
 		});
+	}
+	
+	private void updateSize(){
+		
+		layout(true, true);
 	}
 
 	private void updateInputData(DataType dataType){
 		for (Control c : compositeInputData.getChildren()) {
 			c.dispose();
 		}
+		layout(true, true);
 		switch (dataType) {
 		case GROUP:
 			InputDataGroup inputDataGroup = selection.getInputData() instanceof InputDataGroup
@@ -253,7 +268,7 @@ public class FindingsDetailComposite extends Composite {
 						inputDataGroup.getFindingsTemplates().clear();
 						
 						for (FindingsTemplate findingsTemplate : findingsSelectionDialog
-							.getSelection(false)) {
+							.getSelection()) {
 							inputDataGroup.getFindingsTemplates().add(findingsTemplate);
 							try {
 								FindingsServiceHolder.findingsTemplateService
@@ -269,6 +284,7 @@ public class FindingsDetailComposite extends Composite {
 						
 						lblGrouplist.setText(getInputDataGroupText(inputDataGroup));
 						compositeInputData.layout(true, true);
+						updateSize();
 					}
 				}
 			});
@@ -297,20 +313,46 @@ public class FindingsDetailComposite extends Composite {
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					FindingsSelectionDialog findingsSelectionDialog = new FindingsSelectionDialog(
-						getShell(), model, inputDataGroupComponent.getFindingsTemplates(), true,
+						getShell(), model, openedFromDialog ? findingTemplatesToMove
+								: inputDataGroupComponent.getFindingsTemplates(),
+						true,
 						selection);
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
-						inputDataGroupComponent.getFindingsTemplates().clear();
-						inputDataGroupComponent.getFindingsTemplates()
-							.addAll(findingsSelectionDialog.getSelection(true));
+						findingTemplatesToMove.clear();
+						
+						for (FindingsTemplate findingsTemplate : findingsSelectionDialog
+							.getSelection()) {
+							// for moving a findingstemplate  first we make a copy of the selected findingstemplate and then we remove the findingstemplate later
+							findingTemplatesToMove.add(findingsTemplate);
+						}
+						if (!openedFromDialog) {
+							moveCachedFindingsTemplates();
+						}
 						lblGroupComponentlist
 							.setText(getInputDataGroupText(inputDataGroupComponent));
 						selection.setInputData(inputDataGroupComponent);
 						compositeInputData.layout(true, true);
+						updateSize();
 					}
 					
 				}
 			});
+			
+			Label lblSeparator = new Label(compositeInputData, SWT.NONE);
+			lblSeparator.setText("Trenntext");
+			
+			Text txtSeparator = new Text(compositeInputData, SWT.BORDER);
+			GridData gdTxtSeparator = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+			gdTxtSeparator.widthHint = 60;
+			txtSeparator.setLayoutData(gdTxtSeparator);
+			
+			DataBindingContext dataBindingContext = new DataBindingContext();
+			IObservableValue<?> wTextUnit = WidgetProperties.text(SWT.Modify).observe(txtSeparator);
+			IObservableValue<?> mTextUnit =
+				EMFProperties
+					.value(ModelPackage.Literals.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR)
+					.observe(inputDataGroupComponent);
+			dataBindingContext.bindValue(wTextUnit, mTextUnit);
 				
 			selection.setInputData(inputDataGroupComponent);
 			compositeInputData.layout();
@@ -380,12 +422,16 @@ public class FindingsDetailComposite extends Composite {
 	
 	private String getInputDataGroupText(InputData inputData){
 		
-		List<FindingsTemplate> findingsTemplates = Collections.emptyList();
+		List<FindingsTemplate> findingsTemplates = new ArrayList<>();
 		if (inputData instanceof InputDataGroup) {
 			findingsTemplates = ((InputDataGroup) inputData).getFindingsTemplates();
 		}
 		else if (inputData instanceof InputDataGroupComponent) {
-			findingsTemplates = ((InputDataGroupComponent) inputData).getFindingsTemplates();
+			if (openedFromDialog) {
+				findingsTemplates.addAll(findingTemplatesToMove);
+			} else {
+				findingsTemplates = ((InputDataGroupComponent) inputData).getFindingsTemplates();
+			}
 		}
 		
 		StringBuffer buf = new StringBuffer();
@@ -429,7 +475,45 @@ public class FindingsDetailComposite extends Composite {
 		layout();
 	}
 	
-	public FindingsTemplate getSelection(){
+	public void moveCachedFindingsTemplates()
+	{
+		if (selection.getInputData() instanceof InputDataGroupComponent) {
+			
+			List<FindingsTemplate> findingsToMoveToRoot = new ArrayList<>();
+			
+			if (!openedFromDialog) {
+				// moves the findingstemplate back to root
+				for (FindingsTemplate findingsTemplate : ((InputDataGroupComponent) selection
+					.getInputData()).getFindingsTemplates()) {
+					if (!findingTemplatesToMove.contains(findingsTemplate)) {
+						findingsToMoveToRoot.add(findingsTemplate);
+					}
+				}
+			}
+			
+			// move to component
+			((InputDataGroupComponent) selection.getInputData()).getFindingsTemplates().clear();
+			for (FindingsTemplate findingsTemplate : findingTemplatesToMove) {
+				EcoreUtil.remove(findingsTemplate);
+				
+				((InputDataGroupComponent) selection.getInputData()).getFindingsTemplates()
+					.add(findingsTemplate);
+				
+			}
+			
+			// move back to root
+			for (FindingsTemplate findingsTemplate : findingsToMoveToRoot) {
+				EcoreUtil.remove(findingsTemplate);
+				model.getFindingsTemplates().add(findingsTemplate);
+			}
+		}
+		findingTemplatesToMove.clear();
+	}
+	
+	public FindingsTemplate getResult(){
+		if (openedFromDialog) {
+			moveCachedFindingsTemplates();
+		}
 		return selection;
 	}
 	

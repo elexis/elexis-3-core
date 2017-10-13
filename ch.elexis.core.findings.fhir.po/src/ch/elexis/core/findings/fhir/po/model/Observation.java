@@ -23,13 +23,17 @@ import ch.rgw.tools.VersionInfo;
 public class Observation extends AbstractFhirPersistentObject implements IObservation {
 	
 	protected static final String TABLENAME = "CH_ELEXIS_CORE_FINDINGS_OBSERVATION";
-	protected static final String VERSION = "1.0.1";
+	protected static final String VERSION = "1.0.2";
 	
 	public static final String FLD_PATIENTID = "patientid"; //$NON-NLS-1$
 	public static final String FLD_ENCOUNTERID = "encounterid"; //$NON-NLS-1$
 	public static final String FLD_PERFORMERID = "performerid"; //$NON-NLS-1$
 	public static final String FLD_TYPE = "type";
 	public static final String FLD_REFERENCED = "referenced";
+	public static final String FLD_FORMAT = "format";
+	
+	private static final String FORMAT_KEY_VALUE_SPLITTER = ":-:";
+	private static final String FORMAT_SPLITTER = ":split:";
 	
 	private ObservationAccessor accessor = new ObservationAccessor();
 	
@@ -44,6 +48,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	"patientid	        VARCHAR(80)," +
 	"encounterid	    VARCHAR(80)," +
 	"performerid	    VARCHAR(80)," +
+	"format 			TEXT," +
 	"content      		TEXT" + ");" + 
 	"CREATE INDEX CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX1 ON " + TABLENAME + " (patientid);" +
 	"CREATE INDEX CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX2 ON " + TABLENAME + " (encounterid);" +
@@ -52,21 +57,25 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	
 	static {
 		addMapping(TABLENAME, FLD_PATIENTID, FLD_ENCOUNTERID, FLD_PERFORMERID, FLD_CONTENT,
-			FLD_TYPE, FLD_REFERENCED);
+			FLD_TYPE, FLD_REFERENCED, FLD_FORMAT);
 		
 		Observation version = load("VERSION");
 		if (version.state() < PersistentObject.DELETED) {
 			createOrModifyTable(createDB);
 		} else {
 			VersionInfo vi = new VersionInfo(version.get(FLD_PATIENTID));
+			if (vi.isOlder("1.0.1")) {
+				// we should update eg. with createOrModifyTable(update.sql);
+				// And then set the new version
+				createOrModifyTable("ALTER TABLE " + TABLENAME + " ADD " + FLD_TYPE + " CHAR(8);");
+				createOrModifyTable("ALTER TABLE " + TABLENAME + " ADD " + FLD_REFERENCED
+					+ " CHAR(1) default '0';");
+				version.set(FLD_PATIENTID, "1.0.1");
+			}
 			if (vi.isOlder(VERSION)) {
 				// we should update eg. with createOrModifyTable(update.sql);
 				// And then set the new version
-				createOrModifyTable(
-					"ALTER TABLE " + TABLENAME + " ADD " + FLD_TYPE + " CHAR(8);");
-				createOrModifyTable(
-					"ALTER TABLE " + TABLENAME + " ADD " + FLD_REFERENCED
-						+ " CHAR(1) default '0';");
+				createOrModifyTable("ALTER TABLE " + TABLENAME + " ADD " + FLD_FORMAT + " TEXT;");
 				version.set(FLD_PATIENTID, VERSION);
 			}
 		}
@@ -127,8 +136,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		
 		List<ObservationLink> observationLinks = qbe.execute();
 		List<IObservation> iObservations = new ArrayList<>();
-		for (ObservationLink link : observationLinks)
-		{
+		for (ObservationLink link : observationLinks) {
 			String id = link.get(ObservationLink.FLD_SOURCEID);
 			iObservations.add(Observation.load(id));
 		}
@@ -225,7 +233,6 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		}
 	}
 	
-	
 	@Override
 	public void setNumericValue(BigDecimal bigDecimal, String unit){
 		Optional<IBaseResource> resource = loadResource();
@@ -253,7 +260,6 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		return Optional.empty();
 	}
 	
-
 	@Override
 	public List<ObservationComponent> getComponents(){
 		Optional<IBaseResource> resource = loadResource();
@@ -341,5 +347,35 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 			return accessor.getComment((DomainResource) resource.get());
 		}
 		return Optional.empty();
+	}
+	
+	@Override
+	public void addFormat(String key, String value){
+		StringBuilder builder = new StringBuilder(get(FLD_FORMAT));
+		String dbValue = getFormat(key);
+		String dbKeyValue = key + FORMAT_KEY_VALUE_SPLITTER + dbValue;
+		
+		int idx = builder.indexOf(dbKeyValue);
+		if (idx == -1) {
+			if (builder.length() > 0) {
+				builder.append(FORMAT_SPLITTER);
+			}
+			builder.append(key + FORMAT_KEY_VALUE_SPLITTER + value);
+		} else {
+			builder.replace(idx, idx + dbKeyValue.length(), value);
+		}
+		set(FLD_FORMAT, builder.toString());
+	}
+	
+	@Override
+	public String getFormat(String key){
+		String format = checkNull(get(FLD_FORMAT));
+		if (format.contains(key + FORMAT_KEY_VALUE_SPLITTER)) {
+			String[] splits = format.split(key + FORMAT_KEY_VALUE_SPLITTER);
+			if (splits.length > 1) {
+				return splits[1].split(FORMAT_SPLITTER)[0];
+			}
+		}
+		return "";
 	}
 }

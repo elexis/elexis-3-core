@@ -29,7 +29,7 @@ public class CommentAction extends Action {
 	public void init(){
 		if (comment != null && !comment.isEmpty()) {
 			setToolTipText(comment);
-			setImageDescriptor(Images.IMG_VIEW_CONSULTATION_DETAIL.getImageDescriptor());
+			setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
 		} else {
 			setToolTipText("Kommentar erfassen");
 			setImageDescriptor(Images.IMG_COMMENT_ADD.getImageDescriptor());

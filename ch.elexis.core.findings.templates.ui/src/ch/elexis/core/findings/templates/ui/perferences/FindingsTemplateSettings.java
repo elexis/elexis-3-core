@@ -38,7 +38,7 @@ public class FindingsTemplateSettings extends FieldEditorPreferencePage
 			FindingsServiceHolder.findingsTemplateService.getFindingsTemplates("Standard Vorlagen");
 		findingsComposite = new FindingsComposite(getFieldEditorParent(), model);
 		FindingsDetailComposite findingsDetailComposite =
-			new FindingsDetailComposite(getFieldEditorParent(), model);
+			new FindingsDetailComposite(getFieldEditorParent(), model, false);
 		findingsComposite.setFindingsDetailComposite(findingsDetailComposite);
 		
 		findingsComposite.createContents();
@@ -50,7 +50,10 @@ public class FindingsTemplateSettings extends FieldEditorPreferencePage
 	public boolean performOk(){
 		Optional<FindingsTemplates> model = findingsComposite.getModel();
 		FindingsServiceHolder.findingsTemplateService.saveFindingsTemplates(model);
-		return super.performOk();
+		if (model.isPresent()) {
+			findingsComposite.setModel(model.get(), false);
+		}
+		return true;
 	}
 	
 }

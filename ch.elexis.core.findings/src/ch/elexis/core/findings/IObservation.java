@@ -240,4 +240,20 @@ public interface IObservation extends IFinding {
 	 * @return
 	 */
 	public Optional<String> getComment();
+	
+	/**
+	 * Adds or updates a format by key
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void addFormat(String key, String value);
+	
+	/**
+	 * Returns the format by key
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public String getFormat(String key);
 }

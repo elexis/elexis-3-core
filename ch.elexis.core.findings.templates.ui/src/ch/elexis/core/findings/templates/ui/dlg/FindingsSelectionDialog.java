@@ -10,10 +10,11 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -42,6 +43,7 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 	public FindingsSelectionDialog(Shell parentShell, FindingsTemplates model,
 		List<FindingsTemplate> selections, boolean multiSelection, FindingsTemplate current){
 		super(parentShell);
+		setShellStyle(SWT.RESIZE);
 		this.model = model;
 		this.current = current;
 		this.selections = selections;
@@ -144,15 +146,15 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 					if (o1 == null || o2 == null) {
 						return o1 != null ? 1 : -1;
 					}
+					else if (o1.getInputData() instanceof InputDataGroup) {
+						return -1;
+					} else if (o2.getInputData() instanceof InputDataGroup) {
+						return 1;
+					}
 					else if (o1.getInputData() instanceof InputDataGroupComponent) {
 						return -1;
 					}
 					else if (o2.getInputData() instanceof InputDataGroupComponent) {
-						return 1;
-					}
-					else if (o1.getInputData() instanceof InputDataGroup) {
-						return -1;
-					} else if (o2.getInputData() instanceof InputDataGroup) {
 						return 1;
 					}
 					return ObjectUtils.compare(o1.getTitle(), o2.getTitle());
@@ -161,6 +163,23 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		}
 		viewer.setInput(eTemplates);
 		viewer.setSelection(new StructuredSelection(selections));
+		
+		
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event){
+				StructuredSelection selection = (StructuredSelection) viewer.getSelection();
+				if (!selection.isEmpty()) {
+					Object selectedObj = selection.getFirstElement();
+					if (selectedObj instanceof FindingsTemplate) {
+						selections = new ArrayList<>();
+						selections.add((FindingsTemplate) selectedObj);
+						close();
+					}
+				}
+			}
+		});
+		
 		return composite;
 
 
@@ -195,23 +214,15 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
-	public List<FindingsTemplate> getSelection(boolean move){
+	public List<FindingsTemplate> getSelection(){
 		if (selections == null) {
 			selections = Collections.emptyList();
-		}
-		if (move) {
-			List<FindingsTemplate> findingsTemplates = new ArrayList<>();
-			for (FindingsTemplate findingsTemplate : selections) {
-				EcoreUtil.remove(findingsTemplate);
-				findingsTemplates.add(findingsTemplate);
-			}
-			return findingsTemplates;
 		}
 		return selections;
 	}
 	
-	public FindingsTemplate getSingleSelection(boolean asCopy){
-		List<FindingsTemplate> findingsTemplates = getSelection(asCopy);
+	public FindingsTemplate getSingleSelection(){
+		List<FindingsTemplate> findingsTemplates = getSelection();
 		if (findingsTemplates.size() > 0) {
 			return findingsTemplates.get(0);
 		}

@@ -371,13 +371,22 @@ public interface ModelPackage extends EPackage {
 	int INPUT_DATA_GROUP_COMPONENT__DATA_TYPE = INPUT_DATA_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Text Separator</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR = INPUT_DATA_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Input Data Group Component</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INPUT_DATA_GROUP_COMPONENT_FEATURE_COUNT = INPUT_DATA_FEATURE_COUNT + 2;
+	int INPUT_DATA_GROUP_COMPONENT_FEATURE_COUNT = INPUT_DATA_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Input Data Group Component</em>' class.
@@ -689,6 +698,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getInputDataGroupComponent_DataType();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.InputDataGroupComponent#getTextSeparator <em>Text Separator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Text Separator</em>'.
+	 * @see ch.elexis.core.findings.templates.model.InputDataGroupComponent#getTextSeparator()
+	 * @see #getInputDataGroupComponent()
+	 * @generated
+	 */
+	EAttribute getInputDataGroupComponent_TextSeparator();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.CodeElement <em>Code Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -963,6 +983,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute INPUT_DATA_GROUP_COMPONENT__DATA_TYPE = eINSTANCE.getInputDataGroupComponent_DataType();
+
+		/**
+		 * The meta object literal for the '<em><b>Text Separator</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR = eINSTANCE.getInputDataGroupComponent_TextSeparator();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.impl.CodeElementImpl <em>Code Element</em>}' class.

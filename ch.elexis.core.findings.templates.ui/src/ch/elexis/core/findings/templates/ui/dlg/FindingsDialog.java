@@ -2,6 +2,7 @@ package ch.elexis.core.findings.templates.ui.dlg;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -19,6 +20,7 @@ public class FindingsDialog extends TitleAreaDialog {
 
 	public FindingsDialog(Shell parentShell, FindingsTemplates model){
 		super(parentShell);
+		setShellStyle(SWT.RESIZE);
 		this.model = model;
 	}
 	
@@ -32,7 +34,7 @@ public class FindingsDialog extends TitleAreaDialog {
 		setMessage("Neue Befundvorlage anlegen");
 		setTitle("Befund Vorlage");
 		
-		findingsDetailComposite = new FindingsDetailComposite(parent, model);
+		findingsDetailComposite = new FindingsDetailComposite(parent, model, true);
 		findingsDetailComposite.createContents();
 		FindingsTemplate findingsTemplate = ModelFactory.eINSTANCE.createFindingsTemplate();
 		findingsTemplate.setTitle("");
@@ -62,7 +64,7 @@ public class FindingsDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed(){
 		
-		FindingsTemplate findingsTemplate = findingsDetailComposite.getSelection();
+		FindingsTemplate findingsTemplate = findingsDetailComposite.getResult();
 		if (findingsTemplate != null) {
 			model.getFindingsTemplates().add(findingsTemplate);
 			super.okPressed();

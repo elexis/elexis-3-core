@@ -203,10 +203,12 @@ public class FindingsService implements IFindingsService {
 		if (clazz.isAssignableFrom(ICondition.class)) {
 			loadedObj = Condition.load(id);
 		}
+		else if (clazz.isAssignableFrom(IObservation.class)) {
+			loadedObj = Observation.load(id);
+		}
 		if (loadedObj != null && ((IPersistentObject) loadedObj).exists()) {
 			return Optional.of(clazz.cast(loadedObj));
 		}
-		IObservation observation = create(IObservation.class);
 		return Optional.empty();
 	}
 	
