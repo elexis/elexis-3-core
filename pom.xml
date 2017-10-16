@@ -271,6 +271,7 @@
 		<module>ch.elexis.core.data.tests</module>
 		<module>ch.elexis.core.ui.importer.div.tests</module>
 		<module>ch.elexis.core.hl7.v2x.tests</module>
+		<module>ch.elexis.core.perspective.ui</module>
 		<!-- the ch.elexis.core.p2site creates an zipped installable application 
 			and a p2 update site -->
 		<module>ch.elexis.core.p2site</module>

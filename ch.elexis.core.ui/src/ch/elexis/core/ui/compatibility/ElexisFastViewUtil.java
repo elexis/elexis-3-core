@@ -59,23 +59,38 @@ public class ElexisFastViewUtil {
 					(MPartStack) eModelService.find(ELEXIS_FASTVIEW_STACK, mPerspective);
 				
 				if (stack == null) {
-					stack = createFastViewStack(window, mPerspective, eModelService, mApplication);
+					stack = createFastViewStack(window, mPerspective, eModelService);
 				}
-				if (stack != null && !ElexisFastViewUtil.isViewInsideFastview(stack, viewId)
-					&& mApplication.getContext().getActiveChild() != null) {
-					EPartService partService = getService(EPartService.class);
-					MPlaceholder placeholder = partService.createSharedPart(viewId);
-					placeholder.setToBeRendered(true);
-					placeholder.setElementId(ELEXIS_PLACEHOLDER_PREFIX + viewId);
-					placeholder.setCloseable(true);
-					placeholder.getTags().add(EPartService.REMOVE_ON_HIDE_TAG);
-					((MPart) placeholder.getRef()).setToBeRendered(true);
-					stack.getChildren().add(placeholder); // Add part to stack
+				if (stack != null) {
+					// check if toolcontrol exists
+					MToolControl toolControl = (MToolControl) eModelService
+						.find(getToolControlId(window, mPerspective), mApplication);
+					
+					if (toolControl == null) {
+						MTrimBar mTrimBar = eModelService.getTrim(window, SideValue.BOTTOM);
+						if (toolControl == null) {
+							toolControl = createFastViewToolControl(window, mPerspective,
+								eModelService, mTrimBar);
+						}
+					}
+					if (toolControl != null
+						&& !ElexisFastViewUtil.isViewInsideFastview(stack, viewId)
+						&& mApplication.getContext().getActiveChild() != null) {
+						EPartService partService = getService(EPartService.class);
+						MPlaceholder placeholder = partService.createSharedPart(viewId);
+						placeholder.setToBeRendered(true);
+						placeholder.setElementId(ELEXIS_PLACEHOLDER_PREFIX + viewId);
+						placeholder.setCloseable(true);
+						placeholder.getTags().add(EPartService.REMOVE_ON_HIDE_TAG);
+						((MPart) placeholder.getRef()).setToBeRendered(true);
+						stack.getChildren().add(placeholder); // Add part to stack
+					}
+					
 				}
 			}
 		}
 	}
-
+	
 	private static MTrimmedWindow getCurrentWindow(EModelService eModelService,
 		MApplication mApplication){
 		MTrimmedWindow window = (MTrimmedWindow) eModelService.find("IDEWindow", mApplication);
@@ -127,7 +142,6 @@ public class ElexisFastViewUtil {
 		}
 	}
 	
-
 	/**
 	 * After the perspective is opened the views will be added to the fastview
 	 * 
@@ -158,7 +172,7 @@ public class ElexisFastViewUtil {
 	}
 	
 	private static MPartStack createFastViewStack(MTrimmedWindow window, MPerspective mPerspective,
-		EModelService eModelService, MApplication mApplication){
+		EModelService eModelService){
 		
 		if (window != null && mPerspective != null) {
 			MPartStack mPartStack = eModelService.createModelElement(MPartStack.class);
@@ -170,7 +184,14 @@ public class ElexisFastViewUtil {
 			mPartStack.getTags().add("NoAutoCollapse");
 			mPartStack.getTags().add("active");
 			mPerspective.getChildren().add(0, mPartStack);
-			
+			return mPartStack;
+		}
+		return null;
+	}
+	
+	private static MToolControl createFastViewToolControl(MTrimmedWindow window,
+		MPerspective mPerspective, EModelService eModelService, MTrimBar mTrimBar){
+		if (mTrimBar != null) {
 			MToolControl mToolControl = eModelService.createModelElement(MToolControl.class);
 			mToolControl.setElementId(getToolControlId(window, mPerspective));
 			mToolControl.setContributionURI(
@@ -179,12 +200,11 @@ public class ElexisFastViewUtil {
 			mToolControl.setVisible(true);
 			mToolControl.getTags().add("TrimStack");
 			mToolControl.getPersistedState().put("YSize", "600");
-			MTrimBar mTrimBar = eModelService.getTrim(window, SideValue.BOTTOM);
 			mTrimBar.getChildren().add(0, mToolControl);
 			mTrimBar.setVisible(true);
 			mTrimBar.setToBeRendered(true);
 			
-			return mPartStack;
+			return mToolControl;
 		}
 		return null;
 	}
