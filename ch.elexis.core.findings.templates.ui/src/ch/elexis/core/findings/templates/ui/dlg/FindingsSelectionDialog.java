@@ -16,16 +16,25 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IElementComparer;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
 
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
@@ -39,15 +48,18 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 	private TableViewer viewer;
 	private boolean multiSelection;
 	private FindingsTemplate current;
+	private boolean dndReordering;
 	
 	public FindingsSelectionDialog(Shell parentShell, FindingsTemplates model,
-		List<FindingsTemplate> selections, boolean multiSelection, FindingsTemplate current){
+		List<FindingsTemplate> selections, boolean multiSelection, FindingsTemplate current,
+		boolean dndReordering){
 		super(parentShell);
 		setShellStyle(SWT.RESIZE);
 		this.model = model;
 		this.current = current;
 		this.selections = selections;
 		this.multiSelection = multiSelection;
+		this.dndReordering = dndReordering;
 	}
 	
 	/**
@@ -57,12 +69,23 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent){
-		setMessage(multiSelection ? "Wählen Sie Vorlagen aus" : "Wählen Sie eine Vorlage aus");
+		StringBuilder message = new StringBuilder();
+		if (multiSelection) {
+			message.append("Wählen Sie Vorlagen aus");
+		} else {
+			message.append("Wählen Sie eine Vorlage aus");
+		}
+		if (dndReordering) {
+			message.append("\nDie Reihenfolge des Auswahls kann per Drag & Drop geändert werden.");
+		}
+		setMessage(message.toString());
 		setTitle("Befund Vorlage");
 		
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		EList<FindingsTemplate> eTemplates = ECollections.newBasicEList();
 		
 		viewer = new TableViewer(composite,
 			SWT.FULL_SELECTION | SWT.BORDER | (multiSelection ? SWT.MULTI : SWT.SINGLE));
@@ -105,7 +128,53 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 				return false;
 			}
 		});
-		EList<FindingsTemplate> eTemplates = ECollections.newBasicEList();
+		if (dndReordering) {
+			final Transfer[] dragTransferTypes = new Transfer[] {
+				TextTransfer.getInstance()
+			};
+			viewer.addDragSupport(DND.DROP_MOVE, dragTransferTypes, new DragSourceAdapter() {
+				@Override
+				public void dragSetData(DragSourceEvent event){
+					IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+					if (selection != null && !selection.isEmpty()) {
+						Object item = selection.getFirstElement();
+						if (item instanceof FindingsTemplate) {
+							FindingsTemplate findingsTemplate =
+								(FindingsTemplate) selection.getFirstElement();
+							event.data = findingsTemplate.getTitle();
+						}
+					}
+				}
+			});
+			viewer.addDropSupport(DND.DROP_MOVE, dragTransferTypes, new DropTargetAdapter() {
+				
+				@Override
+				public void dragEnter(DropTargetEvent event){
+					event.detail = DND.DROP_MOVE;
+				}
+				
+				@Override
+				public void drop(DropTargetEvent event){
+					IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+					TableItem tableItem = (TableItem) event.item;
+					if (tableItem != null) {
+						int idx = viewer.getTable().indexOf(tableItem);
+						if (selection != null && !selection.isEmpty()) {
+							FindingsTemplate findingsTemplate =
+								(FindingsTemplate) selection.getFirstElement();
+							if (findingsTemplate != null) {
+								if (eTemplates.remove(findingsTemplate)) {
+									eTemplates.add(idx, findingsTemplate);
+									viewer.refresh();
+								}
+							}
+						}
+					}
+				}
+			});
+		}
+		
+		
 		List<FindingsTemplate> templatesTemp = null;
 		if (current != null) {
 			if (current.getInputData() instanceof InputDataGroupComponent)

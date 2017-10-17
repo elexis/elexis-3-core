@@ -62,17 +62,17 @@ public class FindingEditHandler extends AbstractHandler implements IHandler {
 		return ret;
 	}
 	
-	private ISelection getSelection(ExecutionEvent event){
-		// try e3 style first, then e4 workaround style
-		ISelection ret = HandlerUtil.getCurrentSelection(event);
-		if (ret == null || ret.isEmpty()) {
+	private ISelection getSelection(ExecutionEvent executionEvent){
+		ISelection selection = null;
+		if (executionEvent.getTrigger() != null) {
+			// try e3 style if the event is called from plugin.xml and not called manually
+			selection = HandlerUtil.getCurrentSelection(executionEvent);
+		} else {
 			IEclipseContext iEclipseContext =
 				PlatformUI.getWorkbench().getService(IEclipseContext.class);
-			StructuredSelection selection =
-				(StructuredSelection) iEclipseContext.get(COMMAND_ID.concat(".selection"));
+			selection = (StructuredSelection) iEclipseContext.get(COMMAND_ID.concat(".selection"));
 			iEclipseContext.remove(COMMAND_ID.concat(".selection"));
-			ret = selection;
 		}
-		return ret;
+		return selection;
 	}
 }

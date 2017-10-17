@@ -2,12 +2,9 @@ package ch.elexis.core.findings.ui.views;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -39,10 +36,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -51,6 +45,7 @@ import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
@@ -143,21 +138,8 @@ public class FindingsView extends ViewPart implements IActivationListener {
 				if (!structuredSelection.isEmpty()) {
 					Object o = structuredSelection.getFirstElement();
 					if (o instanceof IFinding) {
-						try {
-							ICommandService commandService = (ICommandService) PlatformUI
-								.getWorkbench().getService(ICommandService.class);
-							if (commandService != null) {
-								Command cmd = commandService
-									.getCommand("ch.elexis.core.findings.ui.commandEdit");
-								ExecutionEvent ee =
-									new ExecutionEvent(cmd, new HashMap<>(), null, null);
-								cmd.executeWithChecks(ee);
-							}
-							
-						} catch (Exception ex) {
-							LoggerFactory.getLogger(FindingsView.class)
-								.error("Cannot open edit finding", ex);
-						}
+						FindingsUiUtil.executeCommand("ch.elexis.core.findings.ui.commandEdit",
+							(IFinding) o);
 					}
 				}
 				
