@@ -2,59 +2,10 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.views">
-      <view
-            category="ch.elexis.messungenKategorie"
-            class="ch.elexis.core.findings.templates.ui.views.FindingsView"
-            icon="icons/chart_curve.png"
-            id="ch.elexis.core.findings.templates.ui.views.FindingsView"
-            name="Befunde Neu">
-      </view>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:ch.elexis.core.findings.templates.ui.views.FindingsView">
-         <command
-               commandId="ch.elexis.core.findings.templates.ui.command.finding.create"
-               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/new.png"
-               label="Neuen Befund anlegen"
-               style="push">
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:ch.elexis.core.findings.templates.ui.views.FindingsView">
-         <command
-               commandId="ch.elexis.core.findings.templates.ui.commandDelete"
-               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/delete.gif"
-               label="Löschen"
-               style="push">
-         </command>
-         <command
-               commandId="ch.elexis.core.findings.templates.ui.commandEdit"
-               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit.png"
-               label="Bearbeiten"
-               style="push">
-         </command>
-      </menuContribution>
-   </extension>
-   <extension
          point="org.eclipse.ui.commands">
       <command
             id="ch.elexis.core.findings.templates.ui.command.finding.create"
             name="Create Finding">
-      </command>
-      <command
-            defaultHandler="ch.elexis.core.findings.templates.ui.handler.FindingDeleteHandler"
-            id="ch.elexis.core.findings.templates.ui.commandDelete"
-            name="Delete Finding">
-      </command>
-      <command
-            defaultHandler="ch.elexis.core.findings.templates.ui.handler.FindingEditHandler"
-            id="ch.elexis.core.findings.templates.ui.commandEdit"
-            name="Edit Finding">
       </command>
    </extension>
    <extension
@@ -64,6 +15,19 @@
             commandId="ch.elexis.core.findings.templates.ui.command.finding.create">
       </handler>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.findings.ui.views.FindingsView">
+         <command
+               commandId="ch.elexis.core.findings.templates.ui.command.finding.create"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/new.png"
+               label="Neuen Befund anlegen"
+               style="push">
+         </command>
+      </menuContribution>
+    </extension> 
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
@@ -86,5 +50,4 @@
             name="Befunde-Neu">
       </DataAccess>
    </extension>
-
 </plugin>

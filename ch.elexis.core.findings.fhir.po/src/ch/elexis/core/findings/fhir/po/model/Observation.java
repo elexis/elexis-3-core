@@ -362,7 +362,8 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 			}
 			builder.append(key + FORMAT_KEY_VALUE_SPLITTER + value);
 		} else {
-			builder.replace(idx, idx + dbKeyValue.length(), value);
+			builder.replace(idx, idx + dbKeyValue.length(),
+				key + FORMAT_KEY_VALUE_SPLITTER + value);
 		}
 		set(FLD_FORMAT, builder.toString());
 	}

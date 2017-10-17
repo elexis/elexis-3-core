@@ -1,4 +1,4 @@
-package ch.elexis.core.findings.templates.ui.composite;
+package ch.elexis.core.findings.ui.composites;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,8 +19,8 @@ import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
-import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
-import ch.elexis.core.findings.templates.ui.views.FindingsView;
+import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.SWTHelper;
 
@@ -61,11 +61,11 @@ public class CompositeGroup extends Composite implements ICompositeSaveable {
 			titleComposite.setLayout(SWTHelper.createGridLayout(true, 1));
 			titleComposite.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
 			// add main toolbar
-			this.setToolbarActions(FindingsTemplateUtil.
+			this.setToolbarActions(FindingsUiUtil.
 				createToolbarMainComponent(titleComposite, (IObservation) iFinding, 1));
 		} else {
 			if (iFinding instanceof IObservation) {
-				Optional<ICoding> coding = FindingsView.findingsTemplateService.findOneCode(
+				Optional<ICoding> coding = FindingsUiUtil.findOneCode(
 					((IObservation) iFinding).getCoding(), CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 				txt = coding.isPresent() ? coding.get().getDisplay() : "";
 			} else {
@@ -100,7 +100,7 @@ public class CompositeGroup extends Composite implements ICompositeSaveable {
 	
 	@Override
 	public String getText(){
-		return FindingsTemplateUtil.getGroupText(this);
+		return FindingsUiUtil.getGroupText(this);
 	}
 	
 	@Override
@@ -121,9 +121,9 @@ public class CompositeGroup extends Composite implements ICompositeSaveable {
 	@Override
 	public IFinding saveContents(LocalDateTime localDateTime){
 		if (iFinding.getId() == null) {
-			iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
+			iFinding = FindingsServiceComponent.getService().create(iFinding.getClass());
 		}
-		return FindingsTemplateUtil.saveObservation((IObservation) iFinding, this, localDateTime);
+		return FindingsUiUtil.saveObservation((IObservation) iFinding, this, localDateTime);
 	}
 	
 	@Override

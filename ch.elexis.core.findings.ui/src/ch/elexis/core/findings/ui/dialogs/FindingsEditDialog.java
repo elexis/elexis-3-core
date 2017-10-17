@@ -1,4 +1,4 @@
-package ch.elexis.core.findings.templates.ui.dlg;
+package ch.elexis.core.findings.ui.dialogs;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,12 +24,11 @@ import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.ObservationComponent;
-import ch.elexis.core.findings.templates.ui.actions.DateAction;
-import ch.elexis.core.findings.templates.ui.composite.CompositeGroup;
-import ch.elexis.core.findings.templates.ui.composite.CompositeTextUnit;
-import ch.elexis.core.findings.templates.ui.composite.ICompositeSaveable;
-import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
-import ch.elexis.core.findings.templates.ui.views.FindingsView;
+import ch.elexis.core.findings.ui.action.DateAction;
+import ch.elexis.core.findings.ui.composites.CompositeGroup;
+import ch.elexis.core.findings.ui.composites.CompositeTextUnit;
+import ch.elexis.core.findings.ui.composites.ICompositeSaveable;
+import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.model.IPersistentObject;
 
 public class FindingsEditDialog extends TitleAreaDialog {
@@ -52,8 +51,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent){
-		String title = FindingsView.findingsTemplateService
-			.getTypeAsText(FindingsView.findingsTemplateService.getType(iFinding));
+		String title = FindingsUiUtil.getTypeAsText(iFinding);
 		setTitle("Befund");
 		setMessage(title);
 		int depth = 0;
@@ -118,10 +116,10 @@ public class FindingsEditDialog extends TitleAreaDialog {
 					lblTitle.setText(current.getTitle());
 					lblTitle.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1));
 					current.setToolbarActions(
-						FindingsTemplateUtil.createToolbarSubComponents(groupComposite, item, 1));
+						FindingsUiUtil.createToolbarSubComponents(groupComposite, item, 1));
 					
 					boolean allUnitsSame =
-						FindingsTemplateUtil.getExactUnitOfComponent(compChildrens) != null;
+						FindingsUiUtil.getExactUnitOfComponent(compChildrens) != null;
 					int i = 0;
 					
 					for (ObservationComponent child : compChildrens) {

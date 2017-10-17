@@ -1,4 +1,4 @@
-package ch.elexis.core.findings.templates.ui.composite;
+package ch.elexis.core.findings.ui.composites;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,8 +22,8 @@ import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
-import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
-import ch.elexis.core.findings.templates.ui.views.FindingsView;
+import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class CompositeTextUnit extends Composite implements ICompositeSaveable {
@@ -83,8 +83,8 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 		}
 		
 		if (title == null && codings != null) {
-			Optional<ICoding> coding = FindingsView.findingsTemplateService.findOneCode(codings,
-				CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+			Optional<ICoding> coding =
+				FindingsUiUtil.findOneCode(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 			title = coding.isPresent() ? coding.get().getDisplay() : "";
 		}
 		if (title == null) {
@@ -109,7 +109,7 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 		if (numeric != null && unit != null) {
 			if (!componentChild && iFinding instanceof IObservation) {
 				toolbarActions.addAll(
-					FindingsTemplateUtil.createToolbarSubComponents(c, (IObservation) iFinding, 1));
+					FindingsUiUtil.createToolbarSubComponents(c, (IObservation) iFinding, 1));
 			}
 			fieldText = new Text(this, SWT.BORDER);
 			fieldText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
@@ -160,9 +160,9 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 	@Override
 	public IFinding saveContents(LocalDateTime localDateTime){
 		if (iFinding.getId() == null) {
-			iFinding = FindingsView.findingsTemplateService.create(iFinding.getClass());
+			iFinding = FindingsServiceComponent.getService().create(iFinding.getClass());
 		}
-		return FindingsTemplateUtil.saveObservation((IObservation) iFinding, this, localDateTime);
+		return FindingsUiUtil.saveObservation((IObservation) iFinding, this, localDateTime);
 	}
 	
 	@Override
@@ -185,7 +185,7 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 	
 	@Override
 	public String getText(){
-		return FindingsTemplateUtil.getSimpleText(this, false);
+		return FindingsUiUtil.getSimpleText(this, false);
 	}
 	
 	@Override

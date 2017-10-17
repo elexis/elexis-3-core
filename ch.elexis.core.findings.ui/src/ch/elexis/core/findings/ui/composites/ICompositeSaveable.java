@@ -1,4 +1,4 @@
-package ch.elexis.core.findings.templates.ui.composite;
+package ch.elexis.core.findings.ui.composites;
 
 import java.time.LocalDateTime;
 import java.util.List;

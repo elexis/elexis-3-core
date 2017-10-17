@@ -1,7 +1,10 @@
-package ch.elexis.core.findings.templates.ui.views;
+package ch.elexis.core.findings.ui.views;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -12,6 +15,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -20,6 +24,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -33,8 +42,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEvent;
@@ -42,21 +49,17 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
-import ch.elexis.core.findings.codes.ICodingService;
-import ch.elexis.core.findings.templates.service.FindingsTemplateService;
-import ch.elexis.core.findings.templates.ui.handler.FindingEditHandler;
+import ch.elexis.core.findings.IObservation.ObservationCategory;
+import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.TimeTool;
 
-@Component(service = {})
 public class FindingsView extends ViewPart implements IActivationListener {
-	
-	public static FindingsTemplateService findingsTemplateService;
-	public static ICodingService codingService;
 	
 	private TableViewer viewer;
 	
@@ -82,16 +85,6 @@ public class FindingsView extends ViewPart implements IActivationListener {
 	};
 	
 	public FindingsView(){}
-	
-	@Reference(unbind = "-")
-	public synchronized void setFindingsTemplateService(FindingsTemplateService service){
-		findingsTemplateService = service;
-	}
-	
-	@Reference(unbind = "-")
-	public synchronized void setCodingService(ICodingService service){
-		codingService = service;
-	}
 	
 	@Override
 	public void createPartControl(Composite parent){
@@ -130,7 +123,6 @@ public class FindingsView extends ViewPart implements IActivationListener {
 		tblcCol.setText("Erfassungsdatum");
 		tableColumnLayout.setColumnData(tblcCol, new ColumnWeightData(20, true));
 		tblcCol.addSelectionListener(getSelectionAdapter(tblcCol, 1));
-
 		
 		tableViewerColumnDateTime = new TableViewerColumn(viewer, SWT.NONE);
 		tblcCol = tableViewerColumnDateTime.getColumn();
@@ -155,8 +147,8 @@ public class FindingsView extends ViewPart implements IActivationListener {
 							ICommandService commandService = (ICommandService) PlatformUI
 								.getWorkbench().getService(ICommandService.class);
 							if (commandService != null) {
-								Command cmd =
-									commandService.getCommand(FindingEditHandler.COMMAND_ID);
+								Command cmd = commandService
+									.getCommand("ch.elexis.core.findings.ui.commandEdit");
 								ExecutionEvent ee =
 									new ExecutionEvent(cmd, new HashMap<>(), null, null);
 								cmd.executeWithChecks(ee);
@@ -169,6 +161,23 @@ public class FindingsView extends ViewPart implements IActivationListener {
 					}
 				}
 				
+			}
+		});
+		
+		final Transfer[] dragTransferTypes = new Transfer[] {
+			TextTransfer.getInstance()
+		};
+		
+		viewer.addDragSupport(DND.DROP_COPY, dragTransferTypes, new DragSourceAdapter() {
+			@Override
+			public void dragSetData(DragSourceEvent event){
+				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+				StringBuilder sb = new StringBuilder();
+				if (selection != null && !selection.isEmpty()) {
+					IObservation observation = (IObservation) selection.getFirstElement();
+					sb.append(((PersistentObject) observation).storeToString()).append(","); //$NON-NLS-1$
+				}
+				event.data = sb.toString().replace(",$", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
 		
@@ -187,9 +196,37 @@ public class FindingsView extends ViewPart implements IActivationListener {
 	}
 	
 	public void refresh(){
-		viewer.setInput(
-			findingsTemplateService.getFindings(ElexisEventDispatcher.getSelectedPatient()));
+		viewer.setInput(getFindings(ElexisEventDispatcher.getSelectedPatient()));
 	}
+	
+	public List<IFinding> getFindings(Patient patient){
+		if (patient != null && patient.exists()) {
+			String patientId = patient.getId();
+			List<IFinding> items = getObservations(patientId);
+			/*	TODO currently only observations needed
+			 * items.addAll(getConditions(patientId));
+				items.addAll(getClinicalImpressions(patientId));
+				items.addAll(getPrecedureRequest(patientId));
+				*/
+			return items;
+		}
+		return Collections.emptyList();
+	}
+	
+	private List<IFinding> getObservations(String patientId){
+		return FindingsServiceComponent.getService()
+			.getPatientsFindings(patientId, IObservation.class).stream().filter(item -> {
+				IObservation iObservation = (IObservation) item;
+				ObservationCategory category = iObservation.getCategory();
+				if (category == ObservationCategory.VITALSIGNS
+					|| category == ObservationCategory.SOAP_SUBJECTIVE
+					|| category == ObservationCategory.SOAP_OBJECTIVE) {
+					
+					return !iObservation.isReferenced();
+				}
+				return false;
+			}).collect(Collectors.toList());
+	};
 	
 	@Override
 	public void setFocus(){
@@ -225,7 +262,6 @@ public class FindingsView extends ViewPart implements IActivationListener {
 		};
 		return selectionAdapter;
 	}
-
 	
 	class FindingsLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
 		

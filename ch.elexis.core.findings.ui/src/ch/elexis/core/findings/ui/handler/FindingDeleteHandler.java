@@ -1,4 +1,4 @@
-package ch.elexis.core.findings.templates.ui.handler;
+package ch.elexis.core.findings.ui.handler;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,7 +13,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IFinding;
-import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
+import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
@@ -41,7 +41,7 @@ public class FindingDeleteHandler extends AbstractHandler implements IHandler {
 						public void lockAcquired(){
 							
 							try {
-								FindingsTemplateUtil.deleteObservation(iFinding);
+								FindingsUiUtil.deleteObservation(iFinding);
 							} catch (ElexisException e) {
 								MessageDialog.openError(UiDesk.getDisplay().getActiveShell(),
 									"Fehler", e.getMessage());
