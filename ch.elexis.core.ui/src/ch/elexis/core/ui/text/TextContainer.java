@@ -826,7 +826,7 @@ public class TextContainer {
 	private void addBriefToKons(final Brief brief, final Konsultation kons){
 		if (kons != null) {
 			if (CoreHub.getLocalLockService().acquireLock(kons).isOk()) {
-				String label = "\n[ " + brief.getLabel() + " ]"; //$NON-NLS-1$ //$NON-NLS-2$
+				String label = "[ " + brief.getLabel() + " ]"; //$NON-NLS-1$ //$NON-NLS-2$
 				kons.addXRef(XRefExtensionConstants.providerID, brief.getId(), -1, label);
 				CoreHub.getLocalLockService().releaseLock(kons);
 			}

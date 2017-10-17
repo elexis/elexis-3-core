@@ -29,6 +29,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ExtendedModifyEvent;
 import org.eclipse.swt.custom.ExtendedModifyListener;
@@ -43,6 +44,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
@@ -61,6 +63,7 @@ import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.UserTextPref;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
@@ -102,6 +105,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	private IMenuListener globalMenuListener;
 	private final ElexisEventListener eeli_user = new UserChangeListener();
 	private List<IKonsMakro> externalMakros;
+	private RangeTracker rangeTracker;
 	
 	public void setExternalMakros(List<IKonsMakro> makros){
 		externalMakros = makros;
@@ -249,25 +253,44 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 							
 							@Override
 							public void run(){
-								List<Samdas.XRef> xrefs = record.getXrefs();
-								Samdas.XRef eRemove = null;
-								for (Samdas.XRef xref : xrefs) {
-									if ((xref.getProvider().equals(actRef.getProvider()))
-										&& (xref.getID().equals(actRef.getID()))) {
-										IKonsExtension ex = hXrefs.get(actRef.getProvider());
-										if (ex != null) {
-											eRemove = xref;
-											text.replaceTextRange(actRef.getPos(),
-												actRef.getLength(), StringTool.leer);
-											ex.removeXRef(actRef.getProvider(), actRef.getID());
-										}
+								IKonsExtension ex = hXrefs.get(actRef.getProvider());
+								if (ex != null) {
+									int length = actRef.getLength();
+									String remText = text.getTextRange(actRef.getPos(), length);
+									while (remText.endsWith("\r")) {
+										remText = text.getTextRange(actRef.getPos(), length);
 									}
-									
+									text.replaceTextRange(actRef.getPos(), length, StringTool.leer);
+									ex.removeXRef(actRef.getProvider(), actRef.getID());
 								}
-								record.remove(eRemove);
+								links.remove(actRef);
+								record.remove(actRef);
 								doFormat(getContentsAsXML());
 							}
 							
+						});
+						manager.add(new Action("Referenz aktualisieren") {
+							Samdas.XRef actRef = null;
+							{
+								setEnabled(false);
+								int cp = text.getCaretOffset();
+								actRef = findLinkRef(cp);
+								if (actRef != null) {
+									setEnabled(true);
+								}
+							}
+							
+							@Override
+							public ImageDescriptor getImageDescriptor(){
+								return Images.IMG_REFRESH.getImageDescriptor();
+							}
+							
+							@Override
+							public void run(){
+								if (actRef != null) {
+									updateXRef(actRef);
+								}
+							}
 						});
 					}
 				}
@@ -292,8 +315,11 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 							if (lr != null) {
 								IKonsExtension xr = hXrefs.get(lr.getProvider());
 								xr.doXRef(lr.getProvider(), lr.getID());
+								updateXRef(lr);
+								
+								// cancel selection
+								text.notifyListeners(SWT.MouseUp, new Event());
 							}
-							
 						} catch (IllegalArgumentException iax) {
 							/* Klick ausserhalb des Textbereichs: egal */
 						}
@@ -301,7 +327,8 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 				}
 			}
 		});
-		text.addExtendedModifyListener(new RangeTracker());
+		rangeTracker = new RangeTracker();
+		text.addExtendedModifyListener(rangeTracker);
 		new PersistentObjectDropTarget(text, dropper);
 		
 		dirty = false;
@@ -461,6 +488,28 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		doFormat(getContentsAsXML());
 	}
 	
+	public void updateXRef(Samdas.XRef xref){
+		IKonsExtension xr = hXrefs.get(xref.getProvider());
+		String updatedText = xr.updateXRef(xref.getProvider(), xref.getID());
+		if (updatedText != null) {
+			rangeTracker.setUpdateXRefMode(true);
+			int start = ((xref.getPos() >= text.getContent().getCharCount())
+					? text.getContent().getCharCount() : xref.getPos());
+			int end = ((xref.getPos() + xref.getLength() >= text.getContent().getCharCount())
+					? text.getContent().getCharCount() : xref.getPos() + xref.getLength());
+			System.out.println(start + "-" + end);
+			text.setSelection(start, end);
+			text.insert(updatedText);
+			
+			xref.setLength(updatedText.length());
+			
+			record.setText(text.getText());
+			setDirty(true);
+			doFormat(getContentsAsXML());
+			rangeTracker.setUpdateXRefMode(false);
+		}
+	}
+	
 	/**
 	 * Markup erstellen
 	 * 
@@ -527,7 +576,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 					start += 1;
 					String makro = s.reverse().toString();
 					StringBuilder replace = new StringBuilder();
-					if ( externalMakros!= null) {
+					if (externalMakros != null) {
 						for (IKonsMakro extMakro : externalMakros) {
 							if (isMakroEnabled(extMakro)) {
 								replace.append(extMakro.executeMakro(makro));
@@ -589,8 +638,8 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		
 		private boolean isMakroEnabled(IKonsMakro extMakro){
 			UserTextPref.setMakroEnabledDefaults();
-			return CoreHub.userCfg.get(EnhancedTextField.MACRO_ENABLED + "/"
-				+ extMakro.getClass().getName(), false);
+			return CoreHub.userCfg
+				.get(EnhancedTextField.MACRO_ENABLED + "/" + extMakro.getClass().getName(), false);
 		}
 		
 	}
@@ -602,6 +651,15 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	
 	public void putCaretToEnd(){
 		text.setCaretOffset(text.getCharCount());
+		text.setFocus();
+	}
+	
+	public int getCaretOffset(){
+		return text.getCaretOffset();
+	}
+	
+	public void setCaretOffset(int offset){
+		text.setCaretOffset(offset);
 		text.setFocus();
 	}
 	
@@ -661,7 +719,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		return StringTool.getWordAtIndex(text.getText(), text.getCaretOffset());
 	}
 	
-	Samdas.XRef findLinkRef(int cp){
+	public Samdas.XRef findLinkRef(int cp){
 		Samdas.XRef ret = null;
 		if (links != null) {
 			for (Samdas.XRef lr : links) {
@@ -692,6 +750,8 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	 * 
 	 */
 	class RangeTracker implements ExtendedModifyListener {
+
+		private boolean updateXRefMode;
 		
 		@Override
 		public void modifyText(ExtendedModifyEvent event){
@@ -702,13 +762,22 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 				int diff = len - text.length();
 				for (Samdas.Range r : ranges) {
 					int spos = r.getPos();
-					if (spos >= pos) {
-						r.setPos(spos + diff);
+					if (updateXRefMode) {
+						if (spos > pos) {
+							r.setPos(spos + diff);
+						}
+					} else {
+						if (spos >= pos) {
+							r.setPos(spos + diff);
+						}
 					}
 				}
 			}
 		}
 		
+		public void setUpdateXRefMode(boolean mode){
+			updateXRefMode = mode;
+		}
 	}
 	
 	private void makeActions(){
@@ -774,21 +843,21 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	public void setEditable(boolean unlocked){
 		text.setEditable(unlocked);
 		IContributionItem[] items = menuMgr.getItems();
 		for (IContributionItem iContributionItem : items) {
-			if(iContributionItem instanceof ActionContributionItem) {
+			if (iContributionItem instanceof ActionContributionItem) {
 				IAction action = ((ActionContributionItem) iContributionItem).getAction();
-				if(action instanceof RestrictedAction) {
+				if (action instanceof RestrictedAction) {
 					((RestrictedAction) action).reflectRight();
 				} else {
 					action.setEnabled(unlocked);
 				}
 			}
 		}
-		if(unlocked) {
+		if (unlocked) {
 			text.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 		} else {
 			text.setForeground(UiDesk.getColor(UiDesk.COL_DARKGREY));

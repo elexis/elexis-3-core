@@ -56,7 +56,7 @@ public class ETFDropReceiver implements IReceiver {
 		if (mapped.y < maxOffset.y) {
 			pos = etf.text.getOffsetAtLocation(new Point(0, mapped.y));
 		}
-		IKonsExtension rec = targets.get(o.getClass());
+		IKonsExtension rec = getTargetForObject(o);
 		if (rec != null) {
 			rec.insert(o, pos);
 		} else {
@@ -71,4 +71,20 @@ public class ETFDropReceiver implements IReceiver {
 		
 	}
 	
+	private IKonsExtension getTargetForObject(PersistentObject o){
+		IKonsExtension ret = targets.get(o.getClass());
+		if (ret == null) {
+			// check the interfaces
+			Class<?>[] interfaces = o.getClass().getInterfaces();
+			if (interfaces != null && interfaces.length > 0) {
+				for (Class<?> inter : interfaces) {
+					ret = targets.get(inter);
+					if (ret != null) {
+						break;
+					}
+				}
+			}
+		}
+		return ret;
+	}
 }
