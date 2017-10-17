@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Perspective
-Bundle-SymbolicName: ch.elexis.core.perspective.ui;singleton:=true
+Bundle-SymbolicName: ch.elexis.core.ui.perspective;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: ch.elexis.core.data.activator,

@@ -5,7 +5,7 @@
     <artifactId> elexis-3-core </artifactId>
     <version>3.3.0-SNAPSHOT</version>
   </parent>
-  <artifactId>ch.elexis.core.perspective.ui</artifactId>
+  <artifactId>ch.elexis.core.ui.perspective</artifactId>
   <packaging> eclipse-plugin </packaging>
   <version>1.0.0-SNAPSHOT</version>
 </project>

@@ -1,4 +1,4 @@
-package ch.elexis.core.perspective.ui.handler;
+package ch.elexis.core.ui.perspective.handler;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

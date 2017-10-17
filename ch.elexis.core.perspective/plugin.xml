@@ -7,12 +7,12 @@
             allPopups="false"
             locationURI="menu:window">
          <command
-               commandId="ch.elexis.core.perspective.ui.handler.import"
+               commandId="ch.elexis.core.ui.perspective.handler.import"
                label="Perspektive Import..."
                style="push">
          </command>
          <command
-               commandId="ch.elexis.core.perspective.ui.handler.export"
+               commandId="ch.elexis.core.ui.perspective.handler.export"
                label="Perspektive Export..."
                style="push">
          </command>
@@ -21,13 +21,13 @@
    <extension
          point="org.eclipse.ui.commands">
        <command
-            defaultHandler="ch.elexis.core.perspective.ui.handler.PerspektiveImportHandler"
-            id="ch.elexis.core.perspective.ui.handler.import"
+            defaultHandler="ch.elexis.core.ui.perspective.handler.PerspektiveImportHandler"
+            id="ch.elexis.core.ui.perspective.handler.import"
             name="Perspektive Import">
       </command>
       <command
-            defaultHandler="ch.elexis.core.perspective.ui.handler.PerspektiveExportHandler"
-            id="ch.elexis.core.perspective.ui.handler.export"
+            defaultHandler="ch.elexis.core.ui.perspective.handler.PerspektiveExportHandler"
+            id="ch.elexis.core.ui.perspective.handler.export"
             name="Perspektive Export">
       </command>
    </extension>
