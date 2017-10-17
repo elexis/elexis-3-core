@@ -14,6 +14,7 @@ public class InvoiceHistoryEntryDTO {
 	Date timestamp;
 	Boolean success;
 	Object additional;
+	boolean ignored;
 	
 	/**
 	 * 
@@ -41,6 +42,14 @@ public class InvoiceHistoryEntryDTO {
 		this.success = success;
 	}
 	
+	public void setIgnored(boolean ignored){
+		this.ignored = ignored;
+	}
+	
+	public boolean isIgnored(){
+		return ignored;
+	}
+	
 	public Boolean isSuccess(){
 		return success;
 	}
@@ -65,12 +74,19 @@ public class InvoiceHistoryEntryDTO {
 		return additional;
 	}
 
+	/**
+	 * The default operation type has the multiAllowed flat with value false, that mean it can only
+	 * be executed once.
+	 * 
+	 * @author med1
+	 *
+	 */
 	public enum OperationType {
 			LEISTUNG_ADD(true), LEISTUNG_REMOVE(true), LEISTUNG_CHANGE_COUNT, LEISTUNG_CHANGE_PRICE,
 			LEISTUNG_TRANSFER_TO_FALL_KONS(true), DIAGNOSE_ADD(true), DIAGNOSE_REMOVE(true),
 			KONSULTATION_CHANGE_DATE, KONSULTATION_CHANGE_MANDANT, FALL_COPY, FALL_CHANGE,
 			FALL_KONSULTATION_TRANSER, RECHNUNG_STORNO,
-			RECHNUNG_NEW;
+			RECHNUNG_NEW, KONSULTATION_TRANSFER_TO_FALL;
 		
 		final boolean multiAllowed;
 		
@@ -170,6 +186,12 @@ public class InvoiceHistoryEntryDTO {
 			builder.append("Mandant auf ");
 			builder.append(((KonsultationDTO) base).getMandant().getLabel());
 			builder.append(" verändern.");
+			break;
+		case KONSULTATION_TRANSFER_TO_FALL:
+			builder.append("Konsultation ");
+			builder.append(" auf Fall ");
+			builder.append(((IFall) item).getBezeichnung());
+			builder.append(" transferieren.");
 			break;
 		case LEISTUNG_ADD:
 			builder.append("Leistung ");
