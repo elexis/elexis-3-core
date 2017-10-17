@@ -263,7 +263,7 @@ public class FindingsDetailComposite extends Composite {
 				public void widgetSelected(SelectionEvent e){
 					FindingsSelectionDialog findingsSelectionDialog =
 						new FindingsSelectionDialog(getShell(),
-							model, inputDataGroup.getFindingsTemplates(), true, selection);
+							model, inputDataGroup.getFindingsTemplates(), true, selection, true);
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
 						inputDataGroup.getFindingsTemplates().clear();
 						
@@ -316,7 +316,7 @@ public class FindingsDetailComposite extends Composite {
 						getShell(), model, openedFromDialog ? findingTemplatesToMove
 								: inputDataGroupComponent.getFindingsTemplates(),
 						true,
-						selection);
+						selection, true);
 					if (findingsSelectionDialog.open() == MessageDialog.OK) {
 						findingTemplatesToMove.clear();
 						
