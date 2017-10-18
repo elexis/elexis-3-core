@@ -12,6 +12,7 @@ package ch.elexis.core.data.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -432,7 +433,7 @@ public class BillingUtil {
 							}
 							break;
 						case RECHNUNG_NEW:
-							createBill();
+							createBill(historyEntryDTO);
 							break;
 						case FALL_COPY:
 							copyFall();
@@ -448,6 +449,9 @@ public class BillingUtil {
 							break;
 						case KONSULTATION_CHANGE_MANDANT:
 							changeMandantKonsultation(base);
+							break;
+						case KONSULTATION_TRANSFER_TO_FALL:
+							transferKonsultation(base, item);
 							break;
 						case LEISTUNG_ADD:
 							addLeistung(base, item);
@@ -479,8 +483,9 @@ public class BillingUtil {
 					log.error("invoice correction: unexpected error", e);
 					success = false;
 				} finally {
-					log.debug("invoice correction: processing [{}] ",
-						success ? "success" : "failed");
+					log.debug("invoice correction: processing [{}] [{}] ",
+						historyEntryDTO.getOperationType(),
+						historyEntryDTO.isIgnored() ? "ignored" : (success ? "success" : "failed"));
 					historyEntryDTO.setSuccess(success);
 				}
 			}
@@ -550,6 +555,39 @@ public class BillingUtil {
 						leistungDTO.getId());
 				}
 			}
+		}
+		
+		public void transferKonsultation(Object base, Object item){
+			KonsultationDTO konsultationDTO = (KonsultationDTO) base;
+			Fall fallToTransfer = Fall.load(((IFall) item).getId());
+			
+			log.debug("invoice correction: transfer kons with id [{}] to fall id [{}]",
+				konsultationDTO.getId(), fallToTransfer.getId());
+			
+			Konsultation konsultation = Konsultation.load(konsultationDTO.getId());
+			
+			Fall oldFall = konsultation.getFall();
+			
+			acquireLock(locks, oldFall, false);
+			acquireLock(locks, fallToTransfer, false);
+			acquireLock(locks, konsultation, false);
+			
+			konsultation.transferToFall(fallToTransfer, true, false);
+			
+			Iterator<Konsultation> it = releasedKonsultations.iterator();
+			while (it.hasNext()) {
+				Konsultation k = it.next();
+				if (konsultation.getId().equals(k.getId())) {
+					it.remove();
+					log.debug(
+						"invoice correction: removed transfered kons with id [{}] from released konsultations",
+						k.getId());
+				}
+			}
+			
+			log.debug(
+				"invoice correction: transfered kons id [{}] from fall id [{}] to fall id  [{}]",
+				konsultation.getId(), oldFall.getId(), fallToTransfer.getId());
 		}
 
 		private void transferLeistungen(Object base, Object item, Object additional){
@@ -759,7 +797,7 @@ public class BillingUtil {
 				srcFall.get().getId(), copyFall.get().getId());
 		}
 
-		private void createBill(){
+		private void createBill(InvoiceHistoryEntryDTO historyEntryDTO){
 			if (copyFall.isPresent()) {
 				if (invoiceCorrectionDTO.getFallDTO().getEndDatum() != null) {
 					copyFall.get().setEndDatum(
@@ -777,33 +815,43 @@ public class BillingUtil {
 						.setEndDatum(new TimeTool().toString(TimeTool.DATE_GER));
 				}
 			}
-			Result<Rechnung> rechnungResult = Rechnung.build(releasedKonsultations);
-			if (!rechnungResult.isOK()) {
-				
-				for (@SuppressWarnings("rawtypes")
-				msg message : rechnungResult.getMessages()) {
-					if (message.getSeverity() != SEVERITY.OK) {
-						if (output.length() > 0) {
-							output.append("\n");
-						}
-						output.append(message.getText());
-					}
-				}
-				success = false;
-				log.error("invoice correction: error cannot create new invoice with id "
-					+ (rechnungResult.get() != null ? rechnungResult.get().getId()
-							: "null"));
-				log.error("invoice correction: error details: " + output.toString());
-			} else {
-				Rechnung newRechnung = rechnungResult.get();
-				invoiceCorrectionDTO.setNewInvoiceNumber(newRechnung.getNr());
+			if (releasedKonsultations.isEmpty()) {
 				log.debug(
-					"invoice correction: create new invoice with number [{}] old invoice number [{}] ",
-					newRechnung.getNr(), rechnung.getNr());
-				output.append("Die Rechnung " + rechnung.getNr()
-					+ " wurde erfolgreich durch " + CoreHub.actUser.getLabel()
-					+ " korrigiert - Neue Rechnungsnummer lautet: "
-					+ invoiceCorrectionDTO.getNewInvoiceNumber());
+					"invoice correction: no konsultations exists for invoice id [{}]- a new invoice will not be created.",
+					rechnung.getNr());
+				output.append("Die Rechnung " + rechnung.getNr() + " wurde erfolgreich durch "
+					+ CoreHub.actUser.getLabel()
+					+ " korrigiert.\nEs wurde keine neue Rechnung erstellt.");
+				historyEntryDTO.setIgnored(true);
+			}
+			else {
+			
+				Result<Rechnung> rechnungResult = Rechnung.build(releasedKonsultations);
+				if (!rechnungResult.isOK()) {
+					
+					for (@SuppressWarnings("rawtypes")
+					msg message : rechnungResult.getMessages()) {
+						if (message.getSeverity() != SEVERITY.OK) {
+							if (output.length() > 0) {
+								output.append("\n");
+							}
+							output.append(message.getText());
+						}
+					}
+					success = false;
+					log.error("invoice correction: error cannot create new invoice with id "
+						+ (rechnungResult.get() != null ? rechnungResult.get().getId() : "null"));
+					log.error("invoice correction: error details: " + output.toString());
+				} else {
+					Rechnung newRechnung = rechnungResult.get();
+					invoiceCorrectionDTO.setNewInvoiceNumber(newRechnung.getNr());
+					log.debug(
+						"invoice correction: create new invoice with number [{}] old invoice number [{}] ",
+						newRechnung.getNr(), rechnung.getNr());
+					output.append("Die Rechnung " + rechnung.getNr() + " wurde erfolgreich durch "
+						+ CoreHub.actUser.getLabel() + " korrigiert.\nNeue Rechnungsnummer lautet: "
+						+ invoiceCorrectionDTO.getNewInvoiceNumber());
+				}
 			}
 		}
 

@@ -20,8 +20,11 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -72,6 +75,18 @@ public class FallSelectionDialog extends TitleAreaDialog {
 			Text txtPatient = new Text(ret, SWT.READ_ONLY);
 			txtPatient.setText("Patient: " + currentFall.getPatient().getLabel());
 			
+			Composite part = new Composite(ret, SWT.NONE);
+			part.setLayout(new GridLayout(2, false));
+			part.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			Button btnCheck = new Button(part, SWT.CHECK);
+			btnCheck.setText("Geschlossene Fälle auch anzeigen");
+			btnCheck.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					refresh(btnCheck.getSelection());
+				}
+			});
+			
 			ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
 			tbManager.add(new Action("Neuer Fall") {
 				
@@ -95,7 +110,7 @@ public class FallSelectionDialog extends TitleAreaDialog {
 						if (neuerFall != null && neuerFall.exists()) {
 							if (CoreHub.getLocalLockService().acquireLock(neuerFallDialog.getFall())
 								.isOk()) {
-								refresh();
+								refresh(btnCheck.getSelection());
 								
 								tableViewer.setSelection(new StructuredSelection(neuerFall));
 								CoreHub.getLocalLockService()
@@ -109,7 +124,7 @@ public class FallSelectionDialog extends TitleAreaDialog {
 					
 				}
 			});
-			ToolBar toolbar = tbManager.createControl(ret);
+			ToolBar toolbar = tbManager.createControl(part);
 			// align toolbar right
 			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).grab(true, false)
 				.applyTo(toolbar);
@@ -147,7 +162,7 @@ public class FallSelectionDialog extends TitleAreaDialog {
 								"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
 						}
 						
-						refresh();
+						refresh(btnCheck.getSelection());
 					}
 				}
 			});
@@ -158,20 +173,20 @@ public class FallSelectionDialog extends TitleAreaDialog {
 			tableColumnLayout.setColumnData(singleColumn, new ColumnWeightData(100));
 			tableComposite.setLayout(tableColumnLayout);
 			
-			refresh();
+			refresh(btnCheck.getSelection());
 			ret.pack();
 		}
 		
 		return ret;
 	}
 	
-	private void refresh(){
+	private void refresh(boolean showClosed){
 		if (tableViewer != null && ret != null) {
 			Patient patient = currentFall.getPatient();
 			if (patient != null && patient.exists()) {
 				List<Fall> faelle = new ArrayList<>();
 				for (Fall f : patient.getFaelle()) {
-					if (!f.getId().equals(currentFall.getId())) {
+					if (!f.getId().equals(currentFall.getId()) && (showClosed || f.isOpen())) {
 						faelle.add(f);
 					}
 				}
