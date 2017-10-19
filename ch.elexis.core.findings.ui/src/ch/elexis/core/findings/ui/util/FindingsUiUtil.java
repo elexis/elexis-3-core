@@ -4,10 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -35,6 +33,7 @@ import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.ui.action.DateAction;
+import ch.elexis.core.findings.ui.composites.CompositeGroup;
 import ch.elexis.core.findings.ui.composites.ICompositeSaveable;
 import ch.elexis.core.findings.util.commands.FindingDeleteCommand;
 import ch.elexis.core.model.IPersistentObject;
@@ -43,71 +42,26 @@ import ch.elexis.core.ui.util.SWTHelper;
 
 public class FindingsUiUtil {
 	
-	public static String getGroupText(ICompositeSaveable iCompositeSaveable){
-		
-		StringBuilder builder = new StringBuilder();
-		StringBuilder builderInner = new StringBuilder();
-		String title = iCompositeSaveable.getTitle();
-		
-		if (title != null) {
-			builder.append(iCompositeSaveable.getTitle());
-		}
-		
-		String textSplitter = ", ";
-		if (iCompositeSaveable.getFinding() instanceof IObservation) {
-			String dbTextSplitter =
-				((IObservation) iCompositeSaveable.getFinding()).getFormat("textSeparator");
-			if (!dbTextSplitter.isEmpty()) {
-				textSplitter = dbTextSplitter;
-			}
-		}
-		
-		List<ObservationComponent> observationComponents = new ArrayList<>();
-		for (ICompositeSaveable child : iCompositeSaveable.getChildComponents()) {
-			observationComponents.add(child.getObservationComponent());
-		}
-		
-		String exactUnit = getExactUnitOfComponent(observationComponents);
-		
-		for (ICompositeSaveable child : iCompositeSaveable.getChildComponents()) {
-			if (builderInner.length() > 0) {
-				builderInner.append(textSplitter);
-			}
-			
-			if (ObservationType.NUMERIC.equals(child.getObservationType())
-				|| ObservationType.TEXT.equals(child.getObservationType())) {
-				builderInner.append(getSimpleText(child, exactUnit != null));
-			}
-		}
-		
-		if (!observationComponents.isEmpty() && exactUnit != null) {
-			builderInner.append(" ");
-			builderInner.append(exactUnit);
-		}
-		
+	public static void saveGroup(ICompositeSaveable iCompositeSaveable){
 		for (ICompositeSaveable child : iCompositeSaveable.getChildReferences()) {
-			if (builderInner.length() > 0) {
-				builderInner.append(", ");
-			}
-			
-			if (ObservationType.NUMERIC.equals(child.getObservationType())
-				|| ObservationType.TEXT.equals(child.getObservationType())) {
-				builderInner.append(getSimpleText(child, false));
+			if (child instanceof CompositeGroup) {
+				saveGroup(child);
 			} else {
-				builderInner.append(getGroupText(child));
+				save(child);
 			}
 		}
-		builder.append(" ");
-		builder.append(builderInner);
-		getComment(iCompositeSaveable, true, false).ifPresent(item -> builder.append(" " + item));
 		
-		return builder.toString();
+		for (ICompositeSaveable child : iCompositeSaveable.getChildComponents()) {
+			if (child instanceof CompositeGroup) {
+				saveGroup(child);
+			} else {
+				save(child);
+			}
+		}
 	}
 	
-	public static String getSimpleText(ICompositeSaveable iCompositeSaveable,
-		boolean hideLabelInsideComponent){
+	public static void save(ICompositeSaveable iCompositeSaveable){
 		
-		StringBuilder stringBuilder = new StringBuilder();
 		String text = iCompositeSaveable.getFieldTextValue();
 		IFinding iFinding = iCompositeSaveable.getFinding();
 		
@@ -120,16 +74,8 @@ public class FindingsUiUtil {
 				// text fields inside component
 				if (obsComponent != null) {
 					obsComponent.setStringValue(Optional.of(text));
-					
-					iObservation.updateComponent(obsComponent);
-					stringBuilder.append(" ");
-					stringBuilder.append(obsComponent.getStringValue().get());
-					stringBuilder.append(" ");
 				} else {
 					iObservation.setStringValue(text);
-					stringBuilder.append(" ");
-					stringBuilder.append(iObservation.getStringValue().orElse(""));
-					stringBuilder.append(" ");
 				}
 			} else if (ObservationType.NUMERIC.equals(observationType)) {
 				try {
@@ -140,37 +86,12 @@ public class FindingsUiUtil {
 						obsComponent.setNumericValue(
 							number != null ? Optional.of(number) : Optional.empty());
 						iObservation.updateComponent(obsComponent);
-						String numericValue = obsComponent.getNumericValue().isPresent()
-								? obsComponent.getNumericValue().get().toPlainString() : "";
-						
-						if (hideLabelInsideComponent) {
-							stringBuilder.append(numericValue);
-						} else {
-							stringBuilder.append(iCompositeSaveable.getTitle());
-							stringBuilder.append(" ");
-							stringBuilder.append(numericValue);
-							
-							stringBuilder.append(" ");
-							stringBuilder
-								.append(obsComponent.getNumericValueUnit().orElse(""));
-							stringBuilder.append(" ");
-						}
 					} else {
-						stringBuilder.append(iCompositeSaveable.getTitle());
 						// numeric fields
 						BigDecimal number =
 							NumberUtils.isNumber(text) ? new BigDecimal(text) : null;
 						iObservation.setNumericValue(number,
 							iObservation.getNumericValueUnit().orElse(""));
-						
-						stringBuilder.append(" ");
-						stringBuilder.append(iObservation.getNumericValue().isPresent()
-								? iObservation.getNumericValue().get().toPlainString() : "");
-						stringBuilder.append(" ");
-						stringBuilder.append(iObservation.getNumericValueUnit().orElse(""));
-						getComment(iCompositeSaveable, true, false)
-							.ifPresent(item -> stringBuilder.append(" " + item));
-						stringBuilder.append(" ");
 					}
 					
 				} catch (NumberFormatException e) {
@@ -178,32 +99,7 @@ public class FindingsUiUtil {
 						.warn("cannot save number illegal format", e);
 				}
 			}
-			
-		} else {
-			// text fields
-			stringBuilder.append(text);
 		}
-		
-		return stringBuilder.toString();
-	}
-	
-	/**
-	 * Checks if all units the same
-	 * 
-	 * @param iObservations
-	 * @return
-	 */
-	public static String getExactUnitOfComponent(List<ObservationComponent> observationComponents){
-		Set<String> units = new HashSet<>();
-		for (ObservationComponent child : observationComponents) {
-			Optional<String> valueUnit = child.getNumericValueUnit();
-			if (valueUnit.isPresent()) {
-				units.add(valueUnit.get());
-			} else {
-				return null;
-			}
-		}
-		return units.size() == 1 ? units.iterator().next() : null;
 	}
 	
 	private static Optional<String> getComment(ICompositeSaveable iCompositeSaveable, boolean wrap,

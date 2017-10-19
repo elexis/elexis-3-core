@@ -1,8 +1,10 @@
 package ch.elexis.core.findings.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
@@ -16,6 +18,7 @@ import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.model.CodingWrapper;
 
@@ -161,5 +164,24 @@ public class ModelUtil {
 			}
 		}
 		coding.add(iCoding);
+	}
+	
+	/**
+	 * Checks if all units the same
+	 * 
+	 * @param iObservations
+	 * @return
+	 */
+	public static String getExactUnitOfComponent(List<ObservationComponent> observationComponents){
+		Set<String> units = new HashSet<>();
+		for (ObservationComponent child : observationComponents) {
+			Optional<String> valueUnit = child.getNumericValueUnit();
+			if (valueUnit.isPresent()) {
+				units.add(valueUnit.get());
+			} else {
+				return null;
+			}
+		}
+		return units.size() == 1 ? units.iterator().next() : null;
 	}
 }

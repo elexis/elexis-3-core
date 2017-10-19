@@ -2,6 +2,7 @@ package ch.elexis.core.findings.ui.dialogs;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,7 @@ import ch.elexis.core.findings.ui.composites.CompositeGroup;
 import ch.elexis.core.findings.ui.composites.CompositeTextUnit;
 import ch.elexis.core.findings.ui.composites.ICompositeSaveable;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.model.IPersistentObject;
 
 public class FindingsEditDialog extends TitleAreaDialog {
@@ -75,6 +77,8 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		if (iFinding instanceof IObservation) {
 			IObservation item = (IObservation) iFinding;
 			List<IObservation> refChildrens = item.getTargetObseravtions(ObservationLinkType.REF);
+			// use reverse order for references to create ui components
+			Collections.reverse(refChildrens);
 			List<ObservationComponent> compChildrens = item.getComponents();
 			if (refChildrens.isEmpty() && compChildrens.isEmpty()) {
 				current = new CompositeTextUnit((Composite) current, item, null);
@@ -119,7 +123,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 						FindingsUiUtil.createToolbarSubComponents(groupComposite, item, 1));
 					
 					boolean allUnitsSame =
-						FindingsUiUtil.getExactUnitOfComponent(compChildrens) != null;
+						ModelUtil.getExactUnitOfComponent(compChildrens) != null;
 					int i = 0;
 					
 					for (ObservationComponent child : compChildrens) {
@@ -173,6 +177,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 					}
 				}
 			}
+			FindingsUiUtil.saveGroup(iCompositeSaveable);
 			Optional<String> text = iCompositeSaveable.saveContents(localDateTime).getText();
 			iFinding.setText(text.orElse(""));
 		}

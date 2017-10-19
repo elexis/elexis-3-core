@@ -318,9 +318,6 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	public Optional<String> getStringValue(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			if (FindingsScriptingUtil.hasScript(this)) {
-				FindingsScriptingUtil.evaluate(this);
-			}
 			return accessor.getStringValue((DomainResource) resource.get());
 		}
 		return Optional.empty();
