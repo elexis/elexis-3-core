@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getUnit <em>Unit</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getDecimalPlace <em>Decimal Place</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getDataType <em>Data Type</em>}</li>
+ *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getScript <em>Script</em>}</li>
  * </ul>
  *
  * @generated
@@ -88,6 +89,26 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	 * @ordered
 	 */
 	protected DataType dataType = DATA_TYPE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getScript() <em>Script</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getScript()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String SCRIPT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getScript() <em>Script</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getScript()
+	 * @generated
+	 * @ordered
+	 */
+	protected String script = SCRIPT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -164,6 +185,27 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getScript() {
+		return script;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setScript(String newScript) {
+		String oldScript = script;
+		script = newScript;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.INPUT_DATA_NUMERIC__SCRIPT, oldScript, script));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -173,6 +215,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 				return getDecimalPlace();
 			case ModelPackage.INPUT_DATA_NUMERIC__DATA_TYPE:
 				return getDataType();
+			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT:
+				return getScript();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -190,6 +234,9 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 				return;
 			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE:
 				setDecimalPlace((Integer)newValue);
+				return;
+			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT:
+				setScript((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -209,6 +256,9 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE:
 				setDecimalPlace(DECIMAL_PLACE_EDEFAULT);
 				return;
+			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT:
+				setScript(SCRIPT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -227,6 +277,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 				return decimalPlace != DECIMAL_PLACE_EDEFAULT;
 			case ModelPackage.INPUT_DATA_NUMERIC__DATA_TYPE:
 				return dataType != DATA_TYPE_EDEFAULT;
+			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT:
+				return SCRIPT_EDEFAULT == null ? script != null : !SCRIPT_EDEFAULT.equals(script);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -247,6 +299,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 		result.append(decimalPlace);
 		result.append(", dataType: ");
 		result.append(dataType);
+		result.append(", script: ");
+		result.append(script);
 		result.append(')');
 		return result.toString();
 	}

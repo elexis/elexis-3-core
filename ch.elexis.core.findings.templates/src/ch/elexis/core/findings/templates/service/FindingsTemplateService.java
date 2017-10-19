@@ -62,10 +62,6 @@ public class FindingsTemplateService {
 	private IFindingsService findingsService;
 	private ICodingService codingService;
 	
-	public FindingsTemplateService(){
-		
-	}
-	
 	@Reference(unbind = "-")
 	public synchronized void setFindingsService(IFindingsService findingsServcie){
 		this.findingsService = findingsServcie;
@@ -293,31 +289,6 @@ public class FindingsTemplateService {
 		return codingService.getCode(codingSystem.getSystem(), code);
 	}
 	
-	public void updateOberservationText(IObservation iObservation){
-		StringBuilder builder = new StringBuilder();
-		builder = getOberservationText(iObservation);
-		iObservation.setText(builder.toString());
-	}
-	
-	public StringBuilder getOberservationText(IObservation iObservation){
-		StringBuilder builder = new StringBuilder();
-		List<ch.elexis.core.findings.ObservationComponent> compChildrens =
-			iObservation.getComponents();
-		
-		addCodingToText(builder, iObservation.getCoding());
-		
-		String format = iObservation.getFormat("textSeperator");
-		if (format.isEmpty()) {
-			format = ", ";
-		}
-		
-		for (ch.elexis.core.findings.ObservationComponent component : compChildrens) {
-			builder.append(format);
-			addCodingToText(builder, component.getCoding());
-		}
-		return getObservationTextChildrens(iObservation, builder);
-	}
-	
 	public Optional<ICoding> findOneCode(List<ICoding> coding, CodingSystem codingSystem){
 		for (ICoding iCoding : coding) {
 			if (codingSystem.getSystem().equals(iCoding.getSystem())) {
@@ -325,23 +296,6 @@ public class FindingsTemplateService {
 			}
 		}
 		return Optional.empty();
-	}
-	
-	private StringBuilder getObservationTextChildrens(IObservation iObservation,
-		StringBuilder builder){
-		List<IObservation> refChildrens =
-			iObservation.getTargetObseravtions(ObservationLinkType.REF);
-		for (IObservation child : refChildrens) {
-			builder.append(", ");
-			addCodingToText(builder, child.getCoding());
-			getObservationTextChildrens(child, builder);
-		}
-		return builder;
-	}
-	
-	private void addCodingToText(StringBuilder builder, List<ICoding> codings){
-		ICoding coding = findOneCode(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM).orElse(null);
-		builder.append(coding != null ? coding.getDisplay() : "");
 	}
 	
 	private void setFindingsAttributes(IFinding iFinding, Patient patient,
@@ -434,6 +388,11 @@ public class FindingsTemplateService {
 			iObservation.setObservationType(ObservationType.NUMERIC);
 			InputDataNumeric inputDataNumeric = (InputDataNumeric) inputData;
 			iObservation.setNumericValue(null, inputDataNumeric.getUnit());
+			iObservation.setDecimalPlace(inputDataNumeric.getDecimalPlace());
+			String script = ((InputDataNumeric) inputData).getScript();
+			if (script != null && !script.isEmpty()) {
+				iObservation.setScript(script);
+			}
 		} else if (inputData instanceof InputDataText) {
 			iObservation.setObservationType(ObservationType.TEXT);
 		}

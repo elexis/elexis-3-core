@@ -256,4 +256,31 @@ public interface IObservation extends IFinding {
 	 * @return
 	 */
 	public String getFormat(String key);
+	
+	/**
+	 * Get the script string. The script can be evaluated to a new value.
+	 * 
+	 * @return
+	 */
+	public Optional<String> getScript();
+	
+	/**
+	 * Set the script string. The script will be evaluated to a new value.
+	 * 
+	 */
+	public void setScript(String script);
+	
+	/**
+	 * Get the decimal place that should be used to display the numeric value.
+	 * 
+	 * @return -1 if not set
+	 */
+	public int getDecimalPlace();
+	
+	/**
+	 * Set the decimal place that should be used to display the numeric value.
+	 * 
+	 * @param value
+	 */
+	public void setDecimalPlace(int value);
 }

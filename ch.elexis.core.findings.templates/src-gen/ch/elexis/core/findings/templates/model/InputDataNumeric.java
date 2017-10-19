@@ -15,6 +15,7 @@ package ch.elexis.core.findings.templates.model;
  *   <li>{@link ch.elexis.core.findings.templates.model.InputDataNumeric#getUnit <em>Unit</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.InputDataNumeric#getDecimalPlace <em>Decimal Place</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.InputDataNumeric#getDataType <em>Data Type</em>}</li>
+ *   <li>{@link ch.elexis.core.findings.templates.model.InputDataNumeric#getScript <em>Script</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.findings.templates.model.ModelPackage#getInputDataNumeric()
@@ -91,5 +92,31 @@ public interface InputDataNumeric extends InputData {
 	 * @generated
 	 */
 	DataType getDataType();
+
+	/**
+	 * Returns the value of the '<em><b>Script</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Script</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Script</em>' attribute.
+	 * @see #setScript(String)
+	 * @see ch.elexis.core.findings.templates.model.ModelPackage#getInputDataNumeric_Script()
+	 * @model
+	 * @generated
+	 */
+	String getScript();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.findings.templates.model.InputDataNumeric#getScript <em>Script</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Script</em>' attribute.
+	 * @see #getScript()
+	 * @generated
+	 */
+	void setScript(String value);
 
 } // InputDataNumeric

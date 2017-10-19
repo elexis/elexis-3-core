@@ -204,6 +204,26 @@ public class Script extends NamedBlob2 {
 	 */
 	public static Object execute(Interpreter scripter, String script, String params,
 		PersistentObject... objects) throws ElexisException{
+		return execute(scripter, script, params, true, objects);
+	}
+	
+	/**
+	 * execute a script entered as string with the given interpreter
+	 * 
+	 * @param scripter
+	 * @param script
+	 * @param params
+	 *            optional parameters. These can be of the form <i>name=value</i> or <i>value</i>.
+	 *            if no name is given, the variables will be inserted for $1, $2 ... in the script.
+	 *            If a name is given, $names in the script will be replaced with the respective
+	 * @param showErrors
+	 * @param objects
+	 *            optional Objects to replace in Variables like [Fall.Grund] in the script
+	 * @return The result of the script interpreter
+	 * @throws ElexisException
+	 */
+	public static Object execute(Interpreter scripter, String script, String params,
+		boolean showErrors, PersistentObject... objects) throws ElexisException{
 		if (!StringTool.isNothing(script)) {
 			if (params != null) {
 				String var = "\\$";
@@ -226,7 +246,7 @@ public class Script extends NamedBlob2 {
 			scripter.setValue("actUser", CoreHub.actUser);
 			
 			scripter.setValue("Elexis", CoreHub.plugin);
-			return scripter.run(parsed, true);
+			return scripter.run(parsed, showErrors);
 		}
 		return null;
 	}

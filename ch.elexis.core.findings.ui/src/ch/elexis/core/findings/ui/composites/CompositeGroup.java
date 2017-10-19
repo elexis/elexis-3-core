@@ -21,6 +21,7 @@ import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.SWTHelper;
 
@@ -65,7 +66,7 @@ public class CompositeGroup extends Composite implements ICompositeSaveable {
 				createToolbarMainComponent(titleComposite, (IObservation) iFinding, 1));
 		} else {
 			if (iFinding instanceof IObservation) {
-				Optional<ICoding> coding = FindingsUiUtil.findOneCode(
+				Optional<ICoding> coding = ModelUtil.getCodeBySystem(
 					((IObservation) iFinding).getCoding(), CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 				txt = coding.isPresent() ? coding.get().getDisplay() : "";
 			} else {

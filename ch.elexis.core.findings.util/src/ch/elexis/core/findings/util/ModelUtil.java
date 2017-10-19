@@ -16,6 +16,7 @@ import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.model.CodingWrapper;
 
 public class ModelUtil {
@@ -105,6 +106,16 @@ public class ModelUtil {
 		return false;
 	}
 
+	public static Optional<ICoding> getCodeBySystem(List<ICoding> coding,
+		CodingSystem codingSystem){
+		for (ICoding iCoding : coding) {
+			if (codingSystem.getSystem().equals(iCoding.getSystem())) {
+				return Optional.of(iCoding);
+			}
+		}
+		return Optional.empty();
+	}
+	
 	public static Optional<String> getNarrativeAsString(Narrative narrative) {
 		String text = narrative.getDivAsString();
 		if (text != null) {

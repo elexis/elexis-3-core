@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IClinicalImpression;
-import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
@@ -35,7 +34,6 @@ import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.ObservationComponent;
-import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.ui.action.DateAction;
 import ch.elexis.core.findings.ui.composites.ICompositeSaveable;
 import ch.elexis.core.findings.util.commands.FindingDeleteCommand;
@@ -115,17 +113,17 @@ public class FindingsUiUtil {
 		
 		if (iFinding instanceof IObservation) {
 			IObservation iObservation = (IObservation) iCompositeSaveable.getFinding();
-			ObservationComponent backboneComponent = iCompositeSaveable.getObservationComponent();
+			ObservationComponent obsComponent = iCompositeSaveable.getObservationComponent();
 			ObservationType observationType = iCompositeSaveable.getObservationType();
 			
 			if (ObservationType.TEXT.equals(observationType)) {
 				// text fields inside component
-				if (backboneComponent != null) {
-					backboneComponent.setStringValue(Optional.of(text));
+				if (obsComponent != null) {
+					obsComponent.setStringValue(Optional.of(text));
 					
-					iObservation.updateComponent(backboneComponent);
+					iObservation.updateComponent(obsComponent);
 					stringBuilder.append(" ");
-					stringBuilder.append(backboneComponent.getStringValue().get());
+					stringBuilder.append(obsComponent.getStringValue().get());
 					stringBuilder.append(" ");
 				} else {
 					iObservation.setStringValue(text);
@@ -134,18 +132,16 @@ public class FindingsUiUtil {
 					stringBuilder.append(" ");
 				}
 			} else if (ObservationType.NUMERIC.equals(observationType)) {
-				
 				try {
-					if (backboneComponent != null) {
+					if (obsComponent != null) {
 						// numeric fields inside component
-						
 						BigDecimal number =
 							NumberUtils.isNumber(text) ? new BigDecimal(text) : null;
-						backboneComponent.setNumericValue(
+						obsComponent.setNumericValue(
 							number != null ? Optional.of(number) : Optional.empty());
-						iObservation.updateComponent(backboneComponent);
-						String numericValue = backboneComponent.getNumericValue().isPresent()
-								? backboneComponent.getNumericValue().get().toPlainString() : "";
+						iObservation.updateComponent(obsComponent);
+						String numericValue = obsComponent.getNumericValue().isPresent()
+								? obsComponent.getNumericValue().get().toPlainString() : "";
 						
 						if (hideLabelInsideComponent) {
 							stringBuilder.append(numericValue);
@@ -156,11 +152,10 @@ public class FindingsUiUtil {
 							
 							stringBuilder.append(" ");
 							stringBuilder
-								.append(backboneComponent.getNumericValueUnit().orElse(""));
+								.append(obsComponent.getNumericValueUnit().orElse(""));
 							stringBuilder.append(" ");
 						}
 					} else {
-						
 						stringBuilder.append(iCompositeSaveable.getTitle());
 						// numeric fields
 						BigDecimal number =
@@ -341,15 +336,6 @@ public class FindingsUiUtil {
 			return "Prozedere";
 		}
 		return "";
-	}
-	
-	public static Optional<ICoding> findOneCode(List<ICoding> coding, CodingSystem codingSystem){
-		for (ICoding iCoding : coding) {
-			if (codingSystem.getSystem().equals(iCoding.getSystem())) {
-				return Optional.of(iCoding);
-			}
-		}
-		return Optional.empty();
 	}
 	
 	public static Object executeCommand(String commandId, IFinding selection){

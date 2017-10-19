@@ -283,6 +283,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getInputDataNumeric_Script() {
+		return (EAttribute)inputDataNumericEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getInputDataText() {
 		return inputDataTextEClass;
 	}
@@ -467,6 +476,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(inputDataNumericEClass, INPUT_DATA_NUMERIC__UNIT);
 		createEAttribute(inputDataNumericEClass, INPUT_DATA_NUMERIC__DECIMAL_PLACE);
 		createEAttribute(inputDataNumericEClass, INPUT_DATA_NUMERIC__DATA_TYPE);
+		createEAttribute(inputDataNumericEClass, INPUT_DATA_NUMERIC__SCRIPT);
 
 		inputDataTextEClass = createEClass(INPUT_DATA_TEXT);
 		createEAttribute(inputDataTextEClass, INPUT_DATA_TEXT__DATA_TYPE);
@@ -541,6 +551,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getInputDataNumeric_Unit(), ecorePackage.getEString(), "unit", null, 0, 1, InputDataNumeric.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getInputDataNumeric_DecimalPlace(), ecorePackage.getEInt(), "decimalPlace", null, 0, 1, InputDataNumeric.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getInputDataNumeric_DataType(), this.getDataType(), "dataType", "NUMERIC", 0, 1, InputDataNumeric.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getInputDataNumeric_Script(), ecorePackage.getEString(), "script", null, 0, 1, InputDataNumeric.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(inputDataTextEClass, InputDataText.class, "InputDataText", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getInputDataText_DataType(), this.getDataType(), "dataType", "TEXT", 0, 1, InputDataText.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

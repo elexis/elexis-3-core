@@ -65,6 +65,7 @@ public class InputDataNumericItemProvider
 			addUnitPropertyDescriptor(object);
 			addDecimalPlacePropertyDescriptor(object);
 			addDataTypePropertyDescriptor(object);
+			addScriptPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -136,6 +137,28 @@ public class InputDataNumericItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Script feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addScriptPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_InputDataNumeric_script_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_InputDataNumeric_script_feature", "_UI_InputDataNumeric_type"),
+				 ModelPackage.Literals.INPUT_DATA_NUMERIC__SCRIPT,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -165,6 +188,7 @@ public class InputDataNumericItemProvider
 			case ModelPackage.INPUT_DATA_NUMERIC__UNIT:
 			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE:
 			case ModelPackage.INPUT_DATA_NUMERIC__DATA_TYPE:
+			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

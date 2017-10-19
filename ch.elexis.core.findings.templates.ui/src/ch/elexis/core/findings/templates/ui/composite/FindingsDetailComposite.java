@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
@@ -49,6 +50,7 @@ import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
@@ -405,6 +407,44 @@ public class FindingsDetailComposite extends Composite {
 			modelValue = EMFProperties.value(ModelPackage.Literals.INPUT_DATA_NUMERIC__UNIT)
 				.observe(inputDataNumeric);
 			ctx.bindValue(widgetValue, modelValue);
+			
+			Label lblScript = new Label(compositeInputData, SWT.NONE);
+			lblScript.setText("Script");
+			
+			Button btnScript = new Button(compositeInputData, SWT.PUSH);
+			widgetValue = WidgetProperties.text().observe(btnScript);
+			modelValue = EMFProperties.value(ModelPackage.Literals.INPUT_DATA_NUMERIC__SCRIPT)
+				.observe(inputDataNumeric);
+			
+			modelToTarget = new EMFUpdateValueStrategy();
+			modelToTarget.setConverter(new Converter(String.class, String.class) {
+				@Override
+				public Object convert(Object fromObject){
+					if (fromObject instanceof String) {
+						if (!((String) fromObject).isEmpty()) {
+							return "Script editieren";
+						}
+					}
+					return "Script anlegen";
+				}
+			});
+			targetToModel = new EMFUpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER);
+			ctx.bindValue(widgetValue, modelValue, targetToModel, modelToTarget);
+			btnScript.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			btnScript.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					InputDialog inputDialog = new InputDialog(getShell(), "Script editieren",
+						"Bitte geben Sie das Script ein", inputDataNumeric.getScript(), null,
+						SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+					if (inputDialog.open() == MessageDialog.OK) {
+						String newScript = inputDialog.getValue();
+						if (newScript != null) {
+							inputDataNumeric.setScript(newScript);
+						}
+					}
+				}
+			});
 			
 			selection.setInputData(inputDataNumeric);
 			compositeInputData.layout();

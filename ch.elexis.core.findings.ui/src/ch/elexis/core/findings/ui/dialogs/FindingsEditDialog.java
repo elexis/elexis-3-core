@@ -173,7 +173,6 @@ public class FindingsEditDialog extends TitleAreaDialog {
 					}
 				}
 			}
-			
 			Optional<String> text = iCompositeSaveable.saveContents(localDateTime).getText();
 			iFinding.setText(text.orElse(""));
 		}

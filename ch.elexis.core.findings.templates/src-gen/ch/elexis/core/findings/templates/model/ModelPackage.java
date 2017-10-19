@@ -242,13 +242,22 @@ public interface ModelPackage extends EPackage {
 	int INPUT_DATA_NUMERIC__DATA_TYPE = INPUT_DATA_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Script</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_NUMERIC__SCRIPT = INPUT_DATA_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Input Data Numeric</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INPUT_DATA_NUMERIC_FEATURE_COUNT = INPUT_DATA_FEATURE_COUNT + 3;
+	int INPUT_DATA_NUMERIC_FEATURE_COUNT = INPUT_DATA_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>Input Data Numeric</em>' class.
@@ -613,6 +622,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getInputDataNumeric_DataType();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.InputDataNumeric#getScript <em>Script</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Script</em>'.
+	 * @see ch.elexis.core.findings.templates.model.InputDataNumeric#getScript()
+	 * @see #getInputDataNumeric()
+	 * @generated
+	 */
+	EAttribute getInputDataNumeric_Script();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.InputDataText <em>Input Data Text</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -913,6 +933,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute INPUT_DATA_NUMERIC__DATA_TYPE = eINSTANCE.getInputDataNumeric_DataType();
+
+		/**
+		 * The meta object literal for the '<em><b>Script</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INPUT_DATA_NUMERIC__SCRIPT = eINSTANCE.getInputDataNumeric_Script();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.impl.InputDataTextImpl <em>Input Data Text</em>}' class.

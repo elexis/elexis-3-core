@@ -24,6 +24,7 @@ import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class CompositeTextUnit extends Composite implements ICompositeSaveable {
@@ -84,7 +85,7 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 		
 		if (title == null && codings != null) {
 			Optional<ICoding> coding =
-				FindingsUiUtil.findOneCode(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+				ModelUtil.getCodeBySystem(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 			title = coding.isPresent() ? coding.get().getDisplay() : "";
 		}
 		if (title == null) {
@@ -161,6 +162,9 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 	public IFinding saveContents(LocalDateTime localDateTime){
 		if (iFinding.getId() == null) {
 			iFinding = FindingsServiceComponent.getService().create(iFinding.getClass());
+		}
+		if (iFinding instanceof IObservation) {
+			
 		}
 		return FindingsUiUtil.saveObservation((IObservation) iFinding, this, localDateTime);
 	}
