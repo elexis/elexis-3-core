@@ -87,8 +87,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private IWorkbenchPage page;
 	private final Hyperlink hVer;
 	private final PersistentObjectDropTarget dropTarget;
-	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction,
+	private IAction applyMedicationAction, chPriceAction, chCountAction,
+			chTextAction, removeAction,
 			removeAllAction;
+	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
 	private static final String CHCOUNT = Messages.VerrechnungsDisplay_changeNumber;
@@ -147,13 +149,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				TableItem[] selection = tVerr.getSelection();
 				Verrechnet verrechnet = (Verrechnet) selection[0].getData();
 				ElexisEventDispatcher.fireSelectionEvent(verrechnet);
-				
-				applyMedicationAction.setEnabled(false);
-				
-				IVerrechenbar verrechenbar = verrechnet.getVerrechenbar();
-				if (verrechenbar != null && (verrechenbar instanceof Artikel)) {
-					applyMedicationAction.setEnabled(true);
-				}
 			}
 		});
 		tVerr.addKeyListener(new KeyListener() {
@@ -305,7 +300,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					if (sel != -1) {
 						TableItem ti = tVerr.getItem(sel);
 						Verrechnet v = (Verrechnet) ti.getData();
-						manager.add(applyMedicationAction);
+						IVerrechenbar verrechenbar = v.getVerrechenbar();
+						
 						manager.add(chPriceAction);
 						manager.add(chCountAction);
 						IVerrechenbar vbar = v.getVerrechenbar();
@@ -323,6 +319,41 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						manager.add(removeAction);
 						manager.add(new Separator());
 						manager.add(removeAllAction);
+						if (verrechenbar instanceof Artikel) {
+							manager.add(new Separator());
+							manager.add(applyMedicationAction);
+							// #8796
+							manager.add(new Action(INDICATED_MEDICATION, Action.AS_CHECK_BOX) {
+								@Override
+								public void run(){
+									Verrechnet v = loadSelectedVerrechnet();
+									AcquireLockUi.aquireAndRun(v,
+										new LockDeniedNoActionLockHandler() {
+											
+											@Override
+											public void lockAcquired(){
+												if (isIndicated()) {
+													v.setDetail(Verrechnet.INDICATED, "false");
+												} else {
+													v.setDetail(Verrechnet.INDICATED, "true");
+												}
+											}
+										});
+									
+								}
+								
+								private boolean isIndicated(){
+									Verrechnet v = loadSelectedVerrechnet();
+									String value = v.getDetail(Verrechnet.INDICATED);
+									return "true".equalsIgnoreCase(value);
+								}
+								
+								@Override
+								public boolean isChecked(){
+									return isIndicated();
+								}
+							});
+						}
 					}
 				}
 			}

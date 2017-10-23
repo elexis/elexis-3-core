@@ -63,6 +63,7 @@ public class Verrechnet extends PersistentObject {
 	public static final String USERID = "userID";
 	public static final String TABLENAME = "LEISTUNGEN";
 	
+	public static final String INDICATED = Constants.FLD_EXT_INDICATED;
 	public static final String VATSCALE = Constants.VAT_SCALE;
 	public static final String FLD_EXT_PRESC_ID = Constants.FLD_EXT_PRESC_ID;
 	
