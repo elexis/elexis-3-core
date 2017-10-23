@@ -472,7 +472,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					return "  - " + amount + " " + vc.getLabel() + " (" + price.toString() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						+ ")"; //$NON-NLS-1$
 				} else if (element instanceof Konsultation) {
-					return ((Konsultation) element).getLabel();
+					return "Konsultation " + ((Konsultation) element).getDatum();
 				} else {
 					return element.toString();
 				}
@@ -581,6 +581,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					rjj.append(r).append("\n------\n"); //$NON-NLS-1$
 				}
 				tRejects.setText(rjj.toString());
+			} else {
+				tRejects.setText("");
 			}
 			List<String> outputs = actRn.getTrace(Rechnung.OUTPUT);
 			for (String o : outputs) {
