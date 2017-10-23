@@ -57,12 +57,13 @@ public class Verrechnet extends PersistentObject {
 	public static final String USERID = "userID";
 	public static final String TABLENAME = "LEISTUNGEN";
 	
+	public static final String INDICATED ="indicated";
 	public static final String VATSCALE = "vat_scale";
 	/** the prescription ID of this if it is an article*/
 	public static final String FLD_EXT_PRESC_ID = "prescriptionId";
 	
 	// keep a list of all ch.elexis.VerrechnetAdjuster extensions
-	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<IVerrechnetAdjuster>();
+	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<>();
 	
 	static {
 		addMapping(TABLENAME, KONSULTATION+"=Behandlung", LEISTG_TXT, LEISTG_CODE, CLASS, COUNT,
@@ -159,7 +160,7 @@ public class Verrechnet extends PersistentObject {
 		if (sca == 0) {
 			return 1.0;
 		}
-		return ((double) sca) / 100.0;
+		return (sca) / 100.0;
 	}
 	
 	/**
@@ -185,7 +186,7 @@ public class Verrechnet extends PersistentObject {
 		if (sca == 0) {
 			return 1.0;
 		}
-		return ((double) sca) / 100.0;
+		return (sca) / 100.0;
 	}
 	
 	/**
