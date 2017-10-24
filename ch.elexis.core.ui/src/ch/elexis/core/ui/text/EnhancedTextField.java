@@ -102,6 +102,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	private IMenuListener globalMenuListener;
 	private final ElexisEventListener eeli_user = new UserChangeListener();
 	private List<IKonsMakro> externalMakros;
+	private int lastCurserPosition = 0;
 	
 	public void setExternalMakros(List<IKonsMakro> makros){
 		externalMakros = makros;
@@ -128,6 +129,11 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	 */
 	
 	public void setKons(Konsultation k){
+		if (actKons != null && (actKons.equals(k))) {
+			// updated triggered
+			text.setCaretOffset(lastCurserPosition);
+			
+		}
 		actKons = k;
 	}
 	
@@ -526,20 +532,28 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 				} else { // Nein -> aufruf externer makros
 					start += 1;
 					String makro = s.reverse().toString();
+					boolean makroFound = false;
 					StringBuilder replace = new StringBuilder();
 					if ( externalMakros!= null) {
 						for (IKonsMakro extMakro : externalMakros) {
 							if (isMakroEnabled(extMakro)) {
-								replace.append(extMakro.executeMakro(makro));
+								String makroValue = extMakro.executeMakro(makro);
+								if (makroValue != null) {
+									replace.append(makroValue);
+									makroFound = true;
+								}
 							}
 						}
 					}
 					
-					text.replaceTextRange(start, (e.end - start), replace.toString());
-					e.doit = false;
-					doFormat(getContentsAsXML());
-					text.setCaretOffset(start + replace.toString().length());
-					ElexisEventDispatcher.update(actKons);
+					if (makroFound) {
+						text.replaceTextRange(start, (e.end - start), replace.toString());
+						e.doit = false;
+						doFormat(getContentsAsXML());
+						text.setCaretOffset(start + replace.toString().length());
+						ElexisEventDispatcher.update(actKons);
+					}
+					
 				}
 				// Wenn ein : gedrückt wurde, prüfen, ob es ein Wort am
 				// Zeilenanfang ist und ggf.
@@ -596,6 +610,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	}
 	
 	public void setText(String ntext){
+		lastCurserPosition = text.getCaretOffset();
 		doFormat(ntext);
 		setDirty(false);
 	}
