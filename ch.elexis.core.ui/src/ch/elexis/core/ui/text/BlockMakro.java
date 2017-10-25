@@ -23,8 +23,10 @@ public class BlockMakro implements IKonsMakro {
 		if ((macros != null) && (macros.size() > 0) && (actKons != null)) {
 			Leistungsblock lb = macros.get(0);
 			addBlock(actKons, lb);
+			
+			return StringConstants.EMPTY;
 		}
-		return StringConstants.EMPTY;
+		return null;
 	}
 	
 	public void addBlock(Konsultation kons, Leistungsblock block){

@@ -7,10 +7,11 @@ package ch.elexis.core.ui.util;
 public interface IKonsMakro {
 	
 	/**
-	 * execute the macro with name makro
+	 * Execute the macro with name makro. If no makro is found null should be returned.
 	 * 
 	 * @param makro
-	 * @return the value to replace the content in the consultation with
+	 * @return the value to replace the content in the consultation with or null if no makro is
+	 *         found
 	 */
 	public String executeMakro(String makro);
 }

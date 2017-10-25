@@ -24,13 +24,16 @@ public class FavoritenKonsMakro implements IKonsMakro {
 				if (!res.isOK()) {
 					MessageEvent.fireError("Error", res.toString());
 				}
+				else {
+					return StringConstants.EMPTY;
+				}
 			} else if (fav.getPersistentObject() instanceof Leistungsblock) {
 				BlockMakro blockMacro = new BlockMakro();
 				blockMacro.addBlock(actKons, (Leistungsblock) fav.getPersistentObject());
+				return StringConstants.EMPTY;
 			}
 		}
-		
-		return StringConstants.EMPTY;
+		return null;
 	}
 	
 }
