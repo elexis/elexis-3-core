@@ -17,6 +17,7 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,7 +103,7 @@ public class Desk implements IApplication {
 		}
 		
 		// care for log-in
-		context.applicationRunning();
+		WorkbenchPlugin.unsetSplashShell(UiDesk.getDisplay());
 		cod.performLogin(UiDesk.getDisplay().getActiveShell());
 		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
 			// no valid user, exit (don't consider this as an error)
