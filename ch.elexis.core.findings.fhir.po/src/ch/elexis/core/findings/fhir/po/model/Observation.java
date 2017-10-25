@@ -34,6 +34,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	public static final String FLD_FORMAT = "format";
 	public static final String FLD_SCRIPT = "script";
 	public static final String FLD_DECIMALPLACE = "decimalplace";
+	public static final String FLD_ORIGINURI = "originuri";
 	
 	private static final String FORMAT_KEY_VALUE_SPLITTER = ":-:";
 	private static final String FORMAT_SPLITTER = ":split:";
@@ -51,18 +52,20 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	"patientid	        VARCHAR(80)," +
 	"encounterid	    VARCHAR(80)," +
 	"performerid	    VARCHAR(80)," +
+	"originuri			VARCHAR(255)," +
 	"decimalplace	    VARCHAR(8)," +
 	"format 			TEXT," +
 	"script 			TEXT," +
 	"content      		TEXT" + ");" + 
 	"CREATE INDEX CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX1 ON " + TABLENAME + " (patientid);" +
 	"CREATE INDEX CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX2 ON " + TABLENAME + " (encounterid);" +
+	"CREATE INDEX CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX3 ON " + TABLENAME + " (originuri);" +
 	"INSERT INTO " + TABLENAME + " (ID, " + FLD_PATIENTID + ") VALUES ('VERSION','" + VERSION + "');";
 	//@formatter:on
 	
 	static {
 		addMapping(TABLENAME, FLD_PATIENTID, FLD_ENCOUNTERID, FLD_PERFORMERID, FLD_CONTENT,
-			FLD_TYPE, FLD_REFERENCED, FLD_FORMAT, FLD_SCRIPT, FLD_DECIMALPLACE);
+			FLD_TYPE, FLD_REFERENCED, FLD_FORMAT, FLD_SCRIPT, FLD_DECIMALPLACE, FLD_ORIGINURI);
 		
 		Observation version = load("VERSION");
 		if (version.state() < PersistentObject.DELETED) {
@@ -89,6 +92,10 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 				createOrModifyTable(
 					"ALTER TABLE " + TABLENAME + " ADD " + FLD_DECIMALPLACE + " VARCHAR(8);");
 				createOrModifyTable("ALTER TABLE " + TABLENAME + " ADD " + FLD_SCRIPT + " TEXT;");
+				createOrModifyTable(
+					"ALTER TABLE " + TABLENAME + " ADD " + FLD_ORIGINURI + " VARCHAR(255);");
+				createOrModifyTable("CREATE INDEX CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX3 ON "
+					+ TABLENAME + " (originuri);");
 				version.set(FLD_PATIENTID, VERSION);
 			}
 		}
@@ -422,5 +429,19 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	@Override
 	public void setDecimalPlace(int value){
 		set(FLD_DECIMALPLACE, Integer.toString(value));
+	}
+	
+	@Override
+	public Optional<String> getOriginUri(){
+		String value = get(FLD_ORIGINURI);
+		if (value != null && !value.isEmpty()) {
+			return Optional.of(value);
+		}
+		return Optional.empty();
+	}
+	
+	@Override
+	public void setOriginUri(String uri){
+		set(FLD_ORIGINURI, uri);
 	}
 }

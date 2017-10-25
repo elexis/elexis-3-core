@@ -283,4 +283,20 @@ public interface IObservation extends IFinding {
 	 * @param value
 	 */
 	public void setDecimalPlace(int value);
+	
+	/**
+	 * Get an URI String describing the origin of the {@link IObservation}. Use {@link UriType} to
+	 * determine the type.
+	 * 
+	 * @return
+	 */
+	public Optional<String> getOriginUri();
+	
+	/**
+	 * Set an URI String describing the origin of the {@link IObservation}. Use {@link UriType} to
+	 * determine the type. Max length are 255 characters.
+	 * 
+	 * @param uri
+	 */
+	public void setOriginUri(String uri);
 }

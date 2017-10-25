@@ -56,7 +56,7 @@ public class FindingsTextUtil {
 		return stringBuilder.toString();
 	}
 	
-	public static String getComponentText(ObservationComponent component, boolean includeUnit){
+	private static String getComponentText(ObservationComponent component, boolean includeUnit){
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		ObservationType observationType = component.getTypeFromExtension(ObservationType.class);

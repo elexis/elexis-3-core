@@ -8,6 +8,12 @@
             id="ch.elexis.core.findings.ui"
             name="Befunde">
       </page>
+      <page
+            category="ch.elexis.core.findings.ui"
+            class="ch.elexis.core.findings.ui.preferences.MesswertMigrationSettings"
+            id="ch.elexis.core.findings.ui.migration.messwert"
+            name="Migration Messwerte">
+      </page>
    </extension>
    <extension
          point="ch.elexis.core.ui.ViewContribution">

@@ -31,6 +31,7 @@ import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFindingsService;
+import ch.elexis.core.findings.ILocalCoding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IObservation.ObservationType;
@@ -39,7 +40,6 @@ import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.codes.ICodingService;
-import ch.elexis.core.findings.fhir.po.codes.LocalCoding;
 import ch.elexis.core.findings.templates.model.CodeElement;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
@@ -250,8 +250,8 @@ public class FindingsTemplateService {
 					codes.add(loincCode.get());
 					
 					// map loinc to local coding
-					if (iLocalCoding.get() instanceof LocalCoding) {
-						LocalCoding localCoding = (LocalCoding) iLocalCoding.get();
+					if (iLocalCoding.get() instanceof ILocalCoding) {
+						ILocalCoding localCoding = (ILocalCoding) iLocalCoding.get();
 						List<ICoding> mappedCodes = new ArrayList<>();
 						mappedCodes.add(loincCode.get());
 						localCoding.setMappedCodes(mappedCodes);

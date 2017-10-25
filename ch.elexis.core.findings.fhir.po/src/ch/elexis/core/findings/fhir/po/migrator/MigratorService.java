@@ -38,6 +38,8 @@ public class MigratorService implements IMigratorService {
 	
 	private FindingsService findingsService;
 	
+	private MesswertMigrator messwertMigrator;
+	
 	public MigratorService(){
 		findingsService = new FindingsService();
 	}
@@ -54,11 +56,19 @@ public class MigratorService implements IMigratorService {
 			}
 			
 			if (filter.isAssignableFrom(IObservation.class)) {
-				if (ObservationCode.ANAM_PERSONAL.isSame(coding)) {
-					migratePatientPersAnamnese(patientId);
-				}
-				else if (ObservationCode.ANAM_RISK.isSame(coding)) {
-					migratePatientRiskfactors(patientId);
+				if (coding != null) {
+					if (ObservationCode.ANAM_PERSONAL.isSame(coding)) {
+						migratePatientPersAnamnese(patientId);
+					} else if (ObservationCode.ANAM_RISK.isSame(coding)) {
+						migratePatientRiskfactors(patientId);
+					}
+				} else if (MesswertMigrator.isMesswertAvailable()) {
+					if (messwertMigrator == null) {
+						messwertMigrator = new MesswertMigrator();
+					}
+					if (messwertMigrator.initialized()) {
+						messwertMigrator.migratePatientMesswerte(patientId);
+					}
 				}
 			}
 			if (filter.isAssignableFrom(IFamilyMemberHistory.class)) {
