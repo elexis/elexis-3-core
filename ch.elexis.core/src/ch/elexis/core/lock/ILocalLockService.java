@@ -30,12 +30,12 @@ public interface ILocalLockService extends ILockService {
 	public boolean isLocked(IPersistentObject po);
 	
 	/**
+	 * Use this only for performance optimization, it is not guaranteed that the server has the same
+	 * locks as the client
 	 * 
 	 * @param po
 	 * @return
-	 * @deprecated instead use isLocked method
 	 */
-	@Deprecated
 	public boolean isLockedLocal(IPersistentObject po);
 	
 	public LockResponse releaseAllLocks();
