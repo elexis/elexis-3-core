@@ -72,6 +72,27 @@ public class LocalLock {
 	}
 	
 	/**
+	 * Checks if the user has the lock
+	 * 
+	 * @return true if the user has the lock otherwise return false
+	 */
+	public boolean hasLock(String userName){
+		synchronized (LocalLock.class) {
+			Stm statement = PersistentObject.getDefaultConnection().getStatement();
+			try {
+				String existing = statement.queryString(
+					"SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockString)); //$NON-NLS-1$
+				if (existing != null && !existing.isEmpty()) {
+					return existing.startsWith("[" + userName + "]@");
+				}
+				return false;
+			} finally {
+				PersistentObject.getDefaultConnection().releaseStatement(statement);
+			}
+		}
+	}
+	
+	/**
 	 * Delete the lock from the DB. <b>Always</b> deletes the lock, even if another instance created
 	 * the lock. Can be used to remove pending locks.
 	 */
