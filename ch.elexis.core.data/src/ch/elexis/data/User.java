@@ -34,13 +34,14 @@ public class User extends PersistentObject {
 	public static final String FLD_HASHED_PASSWORD = "HASHED_PASSWORD";
 	public static final String FLD_SALT = "SALT";
 	public static final String FLD_KEYSTORE = "KEYSTORE";
+	public static final String FLD_APIKEY = "APIKEY";
 	public static final String FLD_JOINT_ROLES = "Roles";
 	
 	private static PasswordEncryptionService pes = new PasswordEncryptionService();
 	
 	static {
 		addMapping(TABLENAME, FLD_ID, FLD_IS_ACTIVE, FLD_IS_ADMINISTRATOR, FLD_ASSOC_CONTACT,
-			FLD_HASHED_PASSWORD, FLD_SALT, FLD_KEYSTORE,
+			FLD_HASHED_PASSWORD, FLD_SALT, FLD_KEYSTORE, FLD_APIKEY,
 			FLD_JOINT_ROLES + "=LIST:USER_ID:USER_ROLE_JOINT");
 			
 		initTables();

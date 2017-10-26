@@ -18,7 +18,6 @@ import ch.elexis.data.po.OtherListPersistentObject;
 import ch.elexis.data.po.PersistentObjectImpl;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
-import ch.rgw.tools.JdbcLinkSyntaxException;
 
 public class Test_PersistentObject extends AbstractPersistentObjectTest {
 	
@@ -210,17 +209,6 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		// SQL can be case sensitive !!
 		// assertEquals(false, PersistentObject.tableExists("kontakt"));
 		assertEquals(false, PersistentObject.tableExists("THIS_TABLE_SHOULD_NOT_EXISTS"));
-	}
-	
-	@Ignore
-	public void testCaseSensitiveIdLoad(){
-		//#5514
-		Anwender anw = new Anwender("Username", "Uservorname", "16.1.1973", "w");
-		new User(anw, "user", "pass");
-		
-		assertFalse(User.load("USER").exists());
-		assertFalse(User.load("User").exists());
-		assertTrue(User.load("user").exists());
 	}
 	
 	@Test
