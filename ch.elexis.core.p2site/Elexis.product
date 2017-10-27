@@ -23,7 +23,7 @@
    <windowImages i16="rsc/elexis2_16.gif" i32="rsc/elexis32_2.gif" i48="rsc/elexis48.gif"/>
 
    <splash
-      location="ch.elexis.core.application" />
+      location="ch.elexis.core.product" />
    <launcher name="Elexis3">
       <linux icon="rsc/elexis48.xpm"/>
       <macosx icon="rsc/elexis-mac.icns"/>

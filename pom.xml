@@ -379,7 +379,7 @@
 if ( System.getProperty("git_branch") == null ) {
   branch = createVersionProperties('ch.elexis.core.data/rsc/version.properties')
   createRepoProperties('ch.elexis.core.p2site/repo.properties', branch)
-  patchP2infFile('ch.elexis.core.application/Elexis.p2.inf', branch, 'ch.elexis.core.product/Elexis.p2.inf')
+  patchP2infFile('ch.elexis.core.application/Elexis.p2.inf', branch, 'ch.elexis.core.p2site/Elexis.p2.inf')
 }
 ]]></script>
 							</scripts>

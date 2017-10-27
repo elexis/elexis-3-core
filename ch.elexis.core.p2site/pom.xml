@@ -36,6 +36,18 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<products>
+						<product>
+							<id>ch.elexis.core.application.ElexisApp</id>
+							<rootFolder />
+							<rootFolders>
+								<macosx>Elexis3.app</macosx>
+								<win32 />
+							</rootFolders>
+						</product>
+					</products>
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>

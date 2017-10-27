@@ -8,7 +8,7 @@
 rm -rf work
 mkdir work
 cd work
-unzip ../ch.elexis.core.product/target/products/ch.elexis.core.application.ElexisApp-linux.gtk.x86_64.zip
+unzip ../ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp-linux.gtk.x86_64.zip
 cd plugins
 unzip /opt/jubula_8.3.0.122/development/rcp-support.zip
 cd ../..
