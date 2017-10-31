@@ -14,6 +14,7 @@ Export-Package: ch.elexis.core.findings.scripting,
  ch.elexis.core.findings.util.fhir.accessor,
  ch.elexis.core.findings.util.model
 Import-Package: ch.elexis.core.exceptions,
+ ch.elexis.core.lock.types,
  ch.elexis.core.services,
  com.google.gson,
  com.google.gson.internal,

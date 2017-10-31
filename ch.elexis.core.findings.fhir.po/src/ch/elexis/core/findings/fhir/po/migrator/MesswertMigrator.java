@@ -139,11 +139,9 @@ public class MesswertMigrator {
 						observations.add(observation.get());
 						ObservationType observationType = observation.get().getObservationType();
 						if (observationType == ObservationType.REF) {
-							observation.get()
-								.setText(FindingsTextUtil.getGroupText(observation.get()));
+							FindingsTextUtil.getGroupText(observation.get(), true);
 						} else {
-							observation.get()
-								.setText(FindingsTextUtil.getObservationText(observation.get()));
+							FindingsTextUtil.getObservationText(observation.get(), true);
 						}
 					}
 				} else {

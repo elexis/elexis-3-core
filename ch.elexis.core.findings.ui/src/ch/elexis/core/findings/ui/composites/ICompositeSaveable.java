@@ -18,8 +18,6 @@ public interface ICompositeSaveable {
 	
 	public void hideLabel(boolean all);
 	
-	public String getText();
-	
 	public String getFieldTextValue();
 	
 	public String getTitle();

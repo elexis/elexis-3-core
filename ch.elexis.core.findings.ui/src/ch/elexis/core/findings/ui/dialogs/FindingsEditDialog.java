@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -31,7 +30,9 @@ import ch.elexis.core.findings.ui.composites.CompositeTextUnit;
 import ch.elexis.core.findings.ui.composites.ICompositeSaveable;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.findings.util.ModelUtil;
+import ch.elexis.core.findings.util.commands.UpdateFindingTextCommand;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.data.PersistentObject;
 
 public class FindingsEditDialog extends TitleAreaDialog {
 	
@@ -77,6 +78,10 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		if (iFinding instanceof IObservation) {
 			IObservation item = (IObservation) iFinding;
 			List<IObservation> refChildrens = item.getTargetObseravtions(ObservationLinkType.REF);
+			StringBuilder sb = new StringBuilder();
+			refChildrens.stream().forEach(o -> sb.append(o.getCoding().get(0).getDisplay())
+				.append(((PersistentObject) o).isDeleted()).append(","));
+			System.out.println("children -> " + sb.toString());
 			// use reverse order for references to create ui components
 			Collections.reverse(refChildrens);
 			List<ObservationComponent> compChildrens = item.getComponents();
@@ -177,9 +182,16 @@ public class FindingsEditDialog extends TitleAreaDialog {
 					}
 				}
 			}
+			// set the values
 			FindingsUiUtil.saveGroup(iCompositeSaveable);
-			Optional<String> text = iCompositeSaveable.saveContents(localDateTime).getText();
-			iFinding.setText(text.orElse(""));
+			// set time and comment, including all sub components
+			iCompositeSaveable.saveContents(localDateTime);
+			try {
+				new UpdateFindingTextCommand(iFinding).execute();
+			} catch (ElexisException e) {
+				MessageDialog.openError(getShell(), "Fehler",
+					"Fehler bei der Generierung des Texts der Beobachtung.");
+			}
 		}
 		super.okPressed();
 	}

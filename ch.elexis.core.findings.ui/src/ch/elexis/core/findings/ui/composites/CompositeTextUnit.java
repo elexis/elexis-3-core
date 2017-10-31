@@ -24,7 +24,6 @@ import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
-import ch.elexis.core.findings.util.FindingsTextUtil;
 import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 
@@ -183,11 +182,6 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 			((GridData) lbl.getLayoutData()).widthHint = 0;
 			((GridData) lbl.getLayoutData()).heightHint = 0;
 		}
-	}
-	
-	@Override
-	public String getText(){
-		return FindingsTextUtil.getObservationText((IObservation) iFinding);
 	}
 	
 	@Override

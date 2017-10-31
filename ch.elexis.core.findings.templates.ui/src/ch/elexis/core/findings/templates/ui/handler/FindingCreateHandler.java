@@ -46,7 +46,7 @@ public class FindingCreateHandler extends AbstractHandler implements IHandler {
 					} else {
 						// if cancel delete the created finding
 						try {
-							FindingsUiUtil.deleteObservation(iFinding);
+							FindingsUiUtil.deleteFinding(iFinding);
 						} catch (ElexisException e) {
 							MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Fehler",
 								e.getMessage());

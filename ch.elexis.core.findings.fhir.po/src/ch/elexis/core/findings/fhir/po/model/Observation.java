@@ -174,6 +174,19 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	}
 	
 	@Override
+	public void removeSourceObservation(IObservation source, ObservationLinkType type){
+		Query<ObservationLink> qbe = new Query<>(ObservationLink.class);
+		qbe.add(ObservationLink.FLD_TARGETID, Query.EQUALS, getId());
+		qbe.add(ObservationLink.FLD_SOURCEID, Query.EQUALS, source.getId());
+		qbe.add(ObservationLink.FLD_TYPE, Query.EQUALS, type.name());
+		
+		List<ObservationLink> observationLinks = qbe.execute();
+		for (ObservationLink link : observationLinks) {
+			link.delete();
+		}
+	}
+	
+	@Override
 	public List<IObservation> getTargetObseravtions(ObservationLinkType type){
 		Query<ObservationLink> qbe = new Query<>(ObservationLink.class);
 		qbe.add(ObservationLink.FLD_SOURCEID, Query.EQUALS, getId());
@@ -196,6 +209,19 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 			observationLink.set(ObservationLink.FLD_TARGETID, target.getId());
 			observationLink.set(ObservationLink.FLD_SOURCEID, getId());
 			observationLink.set(ObservationLink.FLD_TYPE, type.name());
+		}
+	}
+	
+	@Override
+	public void removeTargetObservation(IObservation target, ObservationLinkType type){
+		Query<ObservationLink> qbe = new Query<>(ObservationLink.class);
+		qbe.add(ObservationLink.FLD_SOURCEID, Query.EQUALS, getId());
+		qbe.add(ObservationLink.FLD_TARGETID, Query.EQUALS, target.getId());
+		qbe.add(ObservationLink.FLD_TYPE, Query.EQUALS, type.name());
+		
+		List<ObservationLink> observationLinks = qbe.execute();
+		for (ObservationLink link : observationLinks) {
+			link.delete();
 		}
 	}
 	
@@ -268,6 +294,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 		if (resource.isPresent()) {
 			if (FindingsScriptingUtil.hasScript(this)) {
 				FindingsScriptingUtil.evaluate(this);
+				resource = loadResource();
 			}
 			return accessor.getNumericValue((DomainResource) resource.get());
 		}

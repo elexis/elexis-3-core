@@ -21,7 +21,6 @@ import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
-import ch.elexis.core.findings.util.FindingsTextUtil;
 import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -98,11 +97,6 @@ public class CompositeGroup extends Composite implements ICompositeSaveable {
 		setLayout(gridLayout);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-	}
-	
-	@Override
-	public String getText(){
-		return FindingsTextUtil.getGroupText((IObservation) iFinding);
 	}
 	
 	@Override

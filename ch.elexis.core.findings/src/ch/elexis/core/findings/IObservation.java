@@ -78,13 +78,53 @@ public interface IObservation extends IFinding {
 		}
 	}
 	
+	/**
+	 * Get all {@link IObservation}s which have this {@link IObservation} as target.
+	 * 
+	 * @param type
+	 * @return
+	 */
 	public List<IObservation> getSourceObservations(ObservationLinkType type);
 	
+	/**
+	 * Add a {@link IObservationLink} to the source {@link IObservation}.
+	 * 
+	 * @param source
+	 * @param type
+	 */
 	public void addSourceObservation(IObservation source, ObservationLinkType type);
 	
+	/**
+	 * Remove the {@link IObservationLink} to the source {@link IObservation}.
+	 * 
+	 * @param source
+	 * @param type
+	 */
+	public void removeSourceObservation(IObservation source, ObservationLinkType type);
+	
+	/**
+	 * Get all {@link IObservation}s which have this {@link IObservation} as source.
+	 * 
+	 * @param type
+	 * @return
+	 */
 	public List<IObservation> getTargetObseravtions(ObservationLinkType type);
 	
-	public void addTargetObservation(IObservation source, ObservationLinkType type);
+	/**
+	 * Add a {@link IObservationLink} to the target {@link IObservation}.
+	 * 
+	 * @param target
+	 * @param type
+	 */
+	public void addTargetObservation(IObservation target, ObservationLinkType type);
+	
+	/**
+	 * Remove the {@link IObservationLink} to the target {@link IObservation}.
+	 * 
+	 * @param target
+	 * @param type
+	 */
+	public void removeTargetObservation(IObservation target, ObservationLinkType type);
 	
 	/**
 	 * Adds a component to the fhir object

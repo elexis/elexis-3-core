@@ -15,7 +15,14 @@ import ch.elexis.core.findings.codes.CodingSystem;
 
 public class FindingsTextUtil {
 	
-	public static String getGroupText(IObservation observation){
+	/**
+	 * Generate the text of the observation, and set the text property if shouldSet is true.
+	 * 
+	 * @param shouldSet
+	 * @param observation
+	 * @return
+	 */
+	public static String getGroupText(IObservation observation, boolean shouldSet){
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		if (ObservationType.REF.equals(observation.getObservationType())) {
@@ -34,13 +41,13 @@ public class FindingsTextUtil {
 				
 				IObservation iObservation = children.get(i);
 				if (ObservationType.REF.equals(iObservation.getObservationType())) {
-					stringBuilder.append(getGroupText(iObservation));
+					stringBuilder.append(getGroupText(iObservation, shouldSet));
 				} else if (ObservationType.COMP.equals(iObservation.getObservationType())) {
-					stringBuilder.append(getObservationText(iObservation));
+					stringBuilder.append(getObservationText(iObservation, shouldSet));
 				} else if (ObservationType.TEXT.equals(iObservation.getObservationType())) {
-					stringBuilder.append(getObservationText(iObservation));
+					stringBuilder.append(getObservationText(iObservation, shouldSet));
 				} else if (ObservationType.NUMERIC.equals(iObservation.getObservationType())) {
-					stringBuilder.append(getObservationText(iObservation));
+					stringBuilder.append(getObservationText(iObservation, shouldSet));
 				} else {
 					LoggerFactory.getLogger(FindingsTextUtil.class)
 						.warn("Unknown ObservationType " + iObservation.getObservationType());
@@ -51,7 +58,10 @@ public class FindingsTextUtil {
 				stringBuilder.append(" " + observation.getComment().get());
 			}
 		} else {
-			stringBuilder.append(getObservationText(observation));
+			stringBuilder.append(getObservationText(observation, shouldSet));
+		}
+		if (shouldSet) {
+			observation.setText(stringBuilder.toString());
 		}
 		return stringBuilder.toString();
 	}
@@ -79,7 +89,7 @@ public class FindingsTextUtil {
 		return stringBuilder.toString();
 	}
 	
-	public static String getObservationText(IObservation observation){
+	public static String getObservationText(IObservation observation, boolean shouldSet){
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		Optional<ICoding> coding = ModelUtil.getCodeBySystem(observation.getCoding(),
@@ -90,7 +100,7 @@ public class FindingsTextUtil {
 			stringBuilder.append(" ");
 			stringBuilder.append(observation.getStringValue().orElse(""));
 			if (observation.getComment().isPresent()) {
-				stringBuilder.append(" " + observation.getComment().get());
+				stringBuilder.append(" [" + observation.getComment().get() + "]");
 			}
 			
 		} else if (ObservationType.NUMERIC.equals(observation.getObservationType())) {
@@ -103,7 +113,7 @@ public class FindingsTextUtil {
 					stringBuilder.append(" " + observation.getNumericValueUnit().orElse(""));
 				}
 				if (observation.getComment().isPresent()) {
-					stringBuilder.append(" " + observation.getComment().get());
+					stringBuilder.append(" [" + observation.getComment().get() + "]");
 				}
 			} catch (NumberFormatException e) {
 				LoggerFactory.getLogger(FindingsTextUtil.class).warn("number illegal format", e);
@@ -130,8 +140,11 @@ public class FindingsTextUtil {
 				stringBuilder.append(" ").append(exactUnit);
 			}
 			if (observation.getComment().isPresent()) {
-				stringBuilder.append(" " + observation.getComment().get());
+				stringBuilder.append(" [" + observation.getComment().get() + "]");
 			}
+		}
+		if (shouldSet) {
+			observation.setText(stringBuilder.toString());
 		}
 		return stringBuilder.toString();
 	}

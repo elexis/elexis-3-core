@@ -57,12 +57,17 @@
             id="ch.elexis.core.findings.ui.commandEdit"
             name="Edit Finding">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.findings.ui.handler.SelectVisibleCodesHandler"
+            id="ch.elexis.core.findings.ui.command.codes.visible"
+            name="Select visible codes">
+      </command>
    </extension>
       <extension
          point="org.eclipse.ui.views">
       <view
             category="ch.elexis.messungenKategorie"
-            class="ch.elexis.core.findings.ui.views.FindingsView"
+            class="ch.elexis.core.findings.ui.views.FindingsViewDynamic"
             icon="icons/chart_curve.png"
             id="ch.elexis.core.findings.ui.views.FindingsView"
             name="Befunde Neu">
@@ -83,6 +88,16 @@
                commandId="ch.elexis.core.findings.ui.commandEdit"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit.png"
                label="Bearbeiten"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.findings.ui.views.FindingsView">
+         <command
+               commandId="ch.elexis.core.findings.ui.command.codes.visible"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/filter.gif"
+               label="Codes Sichtbarkeit"
                style="push">
          </command>
       </menuContribution>
