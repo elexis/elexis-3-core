@@ -12,6 +12,7 @@
 package ch.elexis.core.ui.views;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;	
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -68,6 +69,7 @@ import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.EnhancedTextField;
+import ch.elexis.core.ui.util.FallComparator;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.Log;
@@ -359,6 +361,7 @@ public class KonsDetailView extends ViewPart implements IActivationListener, ISa
 		Patient pat = ElexisEventDispatcher.getSelectedPatient();
 		if (pat != null && comboViewerFall != null) {
 			Fall[] faelle = pat.getFaelle();
+			Arrays.sort(faelle, new FallComparator());
 			comboViewerFall.setInput(faelle);
 			if (actKons != null) {
 				comboFallSelectionListener.ignoreSelectionEventOnce();
