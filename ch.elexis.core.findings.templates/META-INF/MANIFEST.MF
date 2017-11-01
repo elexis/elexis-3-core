@@ -19,4 +19,3 @@ Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.commons.io;version="2.4.0",
  org.eclipse.emf.ecore.xmi.impl,
  org.osgi.service.component.annotations;version="1.2.0"
-Service-Component: OSGI-INF/ch.elexis.core.findings.templates.service.FindingsTemplateService.xml

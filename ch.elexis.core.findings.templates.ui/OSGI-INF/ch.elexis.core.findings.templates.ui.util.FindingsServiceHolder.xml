@@ -2,6 +2,6 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder">
    <reference bind="setCodingService" cardinality="1..1" interface="ch.elexis.core.findings.codes.ICodingService" name="CodingService" policy="static"/>
    <reference bind="setFindingsService" cardinality="1..1" interface="ch.elexis.core.findings.IFindingsService" name="FindingsService" policy="static"/>
-   <reference bind="setFindingsTemplateService" cardinality="1..1" interface="ch.elexis.core.findings.templates.service.FindingsTemplateService" name="FindingsTemplateService" policy="static"/>
+   <reference bind="setFindingsTemplateService" cardinality="1..1" interface="ch.elexis.core.findings.templates.service.IFindingsTemplateService" name="FindingsTemplateService" policy="static"/>
    <implementation class="ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder"/>
 </scr:component>

@@ -66,12 +66,28 @@ public interface IFindingsService {
 	public <T extends IFinding> T create(Class<T> type);
 	
 	/**
-	 * Try to load an {@link IFinding} instance by its id, using a specific IFinding class for
-	 * better performance than {@link IFindingsService#findById(String)}.
+	 * Try to load an {@link IFinding} instance by its id, using a specific IFinding class. Equals
+	 * {@link IFindingsService#findById(String, Class, boolean)} with skipChecks false. If checks
+	 * can be skipped use {@link IFindingsService#findById(String, Class, boolean)} for better
+	 * performance.
 	 * 
 	 * @param id
 	 * @param clazz
 	 * @return
 	 */
-	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz);
+	public default <T extends IFinding> Optional<T> findById(String id, Class<T> clazz){
+		return findById(id, clazz, false);
+	}
+	
+	/**
+	 * Try to load an {@link IFinding} instance by its id, using a specific IFinding class. Skipping
+	 * test can be used, if the id is already verified (e.g. by a SQL query), for better
+	 * performance.
+	 * 
+	 * @param id
+	 * @param clazz
+	 * @param skipChecks
+	 * @return
+	 */
+	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz, boolean skipChecks);
 }

@@ -198,7 +198,7 @@ public class FindingsService implements IFindingsService {
 	}
 	
 	@Override
-	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz){
+	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz, boolean skipChecks){
 		IFinding loadedObj = null;
 		if (clazz.isAssignableFrom(ICondition.class)) {
 			loadedObj = Condition.load(id);
@@ -206,8 +206,14 @@ public class FindingsService implements IFindingsService {
 		else if (clazz.isAssignableFrom(IObservation.class)) {
 			loadedObj = Observation.load(id);
 		}
-		if (loadedObj != null && ((IPersistentObject) loadedObj).exists()) {
-			return Optional.of(clazz.cast(loadedObj));
+		if (loadedObj != null) {
+			if (!skipChecks) {
+				if (((IPersistentObject) loadedObj).exists()) {
+					return Optional.of(clazz.cast(loadedObj));
+				}
+			} else {
+				return Optional.of(clazz.cast(loadedObj));
+			}
 		}
 		return Optional.empty();
 	}

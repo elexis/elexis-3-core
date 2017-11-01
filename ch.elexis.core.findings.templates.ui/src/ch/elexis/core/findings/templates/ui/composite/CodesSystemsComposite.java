@@ -27,8 +27,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 
 import ch.elexis.core.findings.ICoding;
+import ch.elexis.core.findings.ILocalCoding;
 import ch.elexis.core.findings.codes.CodingSystem;
-import ch.elexis.core.findings.fhir.po.codes.LocalCoding;
 import ch.elexis.core.findings.templates.ui.dlg.CodeCreateDialog;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
 import ch.elexis.core.ui.icons.Images;
@@ -70,7 +70,7 @@ public class CodesSystemsComposite extends Composite {
 		tableViewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
-				LocalCoding iCoding = (LocalCoding) element;
+				ILocalCoding iCoding = (ILocalCoding) element;
 				StringBuilder stringBuilder = new StringBuilder();
 				for (ICoding mappedCoding : iCoding.getMappedCodes()) {
 					

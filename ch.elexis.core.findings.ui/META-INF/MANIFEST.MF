@@ -27,8 +27,7 @@ Service-Component: OSGI-INF/ch.elexis.core.findings.ui.services.FindingsServiceC
  OSGI-INF/ch.elexis.core.findings.ui.services.CodingServiceComponent.xml,
  OSGI-INF/ch.elexis.core.findings.ui.services.MigratorServiceComponent.xml,
  OSGI-INF/ch.elexis.core.findings.ui.services.FindingsTemplateServiceComponent.xml
-Import-Package: ch.elexis.befunde;resolution:=optional,
- ch.rgw.io,
+Import-Package: ch.rgw.io,
  ch.rgw.tools,
  org.apache.commons.lang3;version="3.1.0",
  org.apache.commons.lang3.math;version="3.1.0",

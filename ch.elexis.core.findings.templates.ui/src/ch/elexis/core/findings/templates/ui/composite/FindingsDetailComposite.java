@@ -274,8 +274,7 @@ public class FindingsDetailComposite extends Composite {
 							inputDataGroup.getFindingsTemplates().add(findingsTemplate);
 							try {
 								FindingsServiceHolder.findingsTemplateService
-									.validateCycleDetection(
-									selection, 0, 100, findingsTemplate.getTitle(), true);
+									.validateCycleDetection(selection, 0, 100);
 							} catch (ElexisException e1) {
 								inputDataGroup.getFindingsTemplates().remove(findingsTemplate);
 								MessageDialog.openError(getShell(), "Befunde Vorlagen",

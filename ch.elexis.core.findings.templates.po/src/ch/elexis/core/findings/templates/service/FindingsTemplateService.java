@@ -54,8 +54,8 @@ import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.data.NamedBlob;
 import ch.elexis.data.Patient;
 
-@Component(service = FindingsTemplateService.class)
-public class FindingsTemplateService {
+@Component()
+public class FindingsTemplateService implements IFindingsTemplateService {
 	
 	private static final String FINDINGS_TEMPLATE_ID_PREFIX = "Findings_Template_";
 	
@@ -202,7 +202,7 @@ public class FindingsTemplateService {
 		throws ElexisException{
 		IFinding iFinding = null;
 		if (patient != null && patient.exists()) {
-			validateCycleDetection(findingsTemplate, 0, 100, findingsTemplate.getTitle(), false);
+			validateCycleDetection(findingsTemplate, 0, 100);
 			
 			Type type = findingsTemplate.getType();
 			
@@ -315,39 +315,30 @@ public class FindingsTemplateService {
 		}
 	}
 	
-	public void validateCycleDetection(FindingsTemplate findingsTemplate, int depth, int maxDepth,
-		String mainTemplateTitle, boolean autoRemoveCycle) throws ElexisException{
+	public void validateCycleDetection(FindingsTemplate findingsTemplate, int depth, int maxDepth)
+		throws ElexisException{
 		if (++depth > maxDepth) {
 			StringBuilder builder = new StringBuilder();
-			if (autoRemoveCycle) {
-				builder.append("Das Hinzufügen der Vorlage '");
-				builder.append(mainTemplateTitle);
-				builder.append(
-					"' ist nicht möglich.\n\nEin Zyklus wurde gefunden, oder die maximal erlaubte Komplexität von ");
-				builder.append(maxDepth);
-				builder.append(" wurde überschritten.");
-			} else {
-				builder.append("Es trat ein Fehler in der Vorlage auf.\n");
-				builder.append("Die maximale Komplexität von ");
-				builder.append(maxDepth);
-				builder.append(" wurde überschritten.");
-				builder.append("\n\n");
-				builder.append("Bitte überprüfen Sie ihre Vorlage '");
-				builder.append(mainTemplateTitle);
-				builder.append("' auf Zyklen, oder verringern Sie die Komplexität.");
-			}
+			builder.append("Es trat ein Fehler in der Vorlage auf.\n");
+			builder.append("Die maximale Komplexität von ");
+			builder.append(maxDepth);
+			builder.append(" wurde überschritten.");
+			builder.append("\n\n");
+			builder.append("Bitte überprüfen Sie ihre Vorlage '");
+			builder.append(findingsTemplate.getTitle());
+			builder.append("' auf Zyklen, oder verringern Sie die Komplexität.");
 			throw new ElexisException(builder.toString());
 		}
 		InputData inputData = findingsTemplate.getInputData();
 		if (inputData instanceof InputDataGroup) {
 			InputDataGroup group = (InputDataGroup) inputData;
 			for (FindingsTemplate item : group.getFindingsTemplates()) {
-				validateCycleDetection(item, depth, maxDepth, mainTemplateTitle, autoRemoveCycle);
+				validateCycleDetection(item, depth, maxDepth);
 			}
 		} else if (inputData instanceof InputDataGroupComponent) {
 			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
 			for (FindingsTemplate item : group.getFindingsTemplates()) {
-				validateCycleDetection(item, depth, maxDepth, mainTemplateTitle, autoRemoveCycle);
+				validateCycleDetection(item, depth, maxDepth);
 			}
 		}
 	}

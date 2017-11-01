@@ -5,17 +5,17 @@ import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.codes.ICodingService;
-import ch.elexis.core.findings.templates.service.FindingsTemplateService;
+import ch.elexis.core.findings.templates.service.IFindingsTemplateService;
 
 @Component(service = {})
 public class FindingsServiceHolder {
 	
-	public static FindingsTemplateService findingsTemplateService;
+	public static IFindingsTemplateService findingsTemplateService;
 	public static ICodingService codingService;
 	public static IFindingsService findingsService;
 	
 	@Reference(unbind = "-")
-	public synchronized void setFindingsTemplateService(FindingsTemplateService service){
+	public synchronized void setFindingsTemplateService(IFindingsTemplateService service){
 		findingsTemplateService = service;
 	}
 	
