@@ -1,7 +1,11 @@
 package ch.elexis.core.findings.ui.views.nattable;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
+
+import ch.elexis.core.findings.IFinding;
 
 public class LabelDataProvider implements IDataProvider {
 	
@@ -18,11 +22,20 @@ public class LabelDataProvider implements IDataProvider {
 		return dataProvider.getColumnCount();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getDataValue(int columnIndex, int rowIndex){
 		Object data = dataProvider.getDataValue(columnIndex, rowIndex);
-		if (data != null) {
-			return labelProvider.getText(data);
+		if (data instanceof List) {
+			StringBuilder sb = new StringBuilder();
+			List<IFinding> findings = (List<IFinding>) data;
+			for (IFinding iFinding : findings) {
+				if (sb.length() > 0) {
+					sb.append(", ");
+				}
+				sb.append(labelProvider.getText(iFinding));
+			}
+			return sb.toString();
 		}
 		return "";
 	}

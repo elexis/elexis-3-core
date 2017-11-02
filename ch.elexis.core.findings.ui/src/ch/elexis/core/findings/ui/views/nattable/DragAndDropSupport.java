@@ -17,7 +17,7 @@ import ch.elexis.data.PersistentObjectFactory;
 
 public class DragAndDropSupport implements DragSourceListener, DropTargetListener {
 	
-	private static final String DATA_SEPARATOR = "|";
+	private static final String DATA_SEPARATOR = ",";
 	
 	private final NatTableWrapper tableWrapper;
 	

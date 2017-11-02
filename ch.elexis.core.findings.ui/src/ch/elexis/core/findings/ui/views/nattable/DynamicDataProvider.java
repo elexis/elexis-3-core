@@ -20,7 +20,7 @@ public class DynamicDataProvider implements IDataProvider {
 	
 	private List<ICoding> shownCodings;
 	private List<LocalDateTime> shownDates;
-	private HashMap<LocalDateTime, IFinding[]> shownFindings;
+	private HashMap<LocalDateTime, List<IFinding>[]> shownFindings;
 	
 	public DynamicDataProvider(){
 		currentFindings = new ArrayList<>();
@@ -32,7 +32,7 @@ public class DynamicDataProvider implements IDataProvider {
 	@Override
 	public Object getDataValue(int columnIndex, int rowIndex){
 		if (rowIndex >= 0 && rowIndex < shownDates.size()) {
-			IFinding[] findings = shownFindings.get(shownDates.get(rowIndex));
+			List<IFinding>[] findings = shownFindings.get(shownDates.get(rowIndex));
 			if (findings != null && columnIndex < findings.length) {
 				if (findings[columnIndex] != null) {
 					return findings[columnIndex];
@@ -90,6 +90,7 @@ public class DynamicDataProvider implements IDataProvider {
 		updateShownFindings();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void updateShownFindings(){
 		shownFindings.clear();
 		shownDates.clear();
@@ -100,12 +101,15 @@ public class DynamicDataProvider implements IDataProvider {
 				int index = getCodingIndex(iObservation);
 				if (index != -1) {
 					LocalDateTime time = iObservation.getEffectiveTime().orElse(LocalDateTime.MIN);
-					IFinding[] findings = shownFindings.get(time);
+					List<IFinding>[] findings = shownFindings.get(time);
 					if (findings == null) {
-						findings = new IFinding[shownCodings.size()];
+						findings = (List<IFinding>[]) new List[shownCodings.size()];
 						shownDates.add(time);
 					}
-					findings[index] = iObservation;
+					if (findings[index] == null) {
+						findings[index] = new ArrayList<>();
+					}
+					findings[index].add(iObservation);
 					shownFindings.put(time, findings);
 				}
 			}

@@ -80,6 +80,7 @@ public class NatTableWrapper implements ISelectionProvider {
 	
 	public void configure(){
 		natTable.addLayerListener(new ILayerListener() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void handleLayerEvent(ILayerEvent event){
 				if (event instanceof CellSelectionEvent) {
@@ -89,8 +90,8 @@ public class NatTableWrapper implements ISelectionProvider {
 					for (ILayerCell iLayerCell : cells) {
 						Object selectedObj = dataProvider.getDataValue(iLayerCell.getColumnIndex(),
 							iLayerCell.getRowIndex());
-						if (selectedObj != null) {
-							currentSelection.add(selectedObj);
+						if (selectedObj instanceof List) {
+							currentSelection.addAll((List) selectedObj);
 						}
 					}
 					// call listeners
@@ -115,7 +116,7 @@ public class NatTableWrapper implements ISelectionProvider {
 			class DblClickMouseAction implements IMouseAction {
 				@Override
 				public void run(NatTable natTable, MouseEvent event){
-					if (currentSelection != null && currentSelection.size() == 1) {
+					if (currentSelection != null) {
 						Object[] listeners = doubleClickListeners.getListeners();
 						for (Object object : listeners) {
 							((IDoubleClickListener) object).doubleClick(NatTableWrapper.this,

@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
@@ -25,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -39,6 +41,7 @@ import ch.elexis.core.findings.ui.views.nattable.DragAndDropSupport;
 import ch.elexis.core.findings.ui.views.nattable.DynamicDataProvider;
 import ch.elexis.core.findings.ui.views.nattable.DynamicHeaderDataProvider;
 import ch.elexis.core.findings.ui.views.nattable.DynamicRowDataProvider;
+import ch.elexis.core.findings.ui.views.nattable.FindingsNatTableTooltip;
 import ch.elexis.core.findings.ui.views.nattable.LabelDataProvider;
 import ch.elexis.core.findings.ui.views.nattable.NatTableWrapper;
 import ch.elexis.core.findings.ui.views.nattable.NatTableWrapper.IDoubleClickListener;
@@ -166,13 +169,13 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 			public void doubleClick(NatTableWrapper source, ISelection selection){
 				StructuredSelection structuredSelection = (StructuredSelection) selection;
 				if (!structuredSelection.isEmpty()) {
-					Object o = structuredSelection.getFirstElement();
-					if (o instanceof IFinding) {
-						FindingsUiUtil.executeCommand("ch.elexis.core.findings.ui.commandEdit",
-							(IFinding) o);
+					for (Object o : structuredSelection.toList()) {
+						if (o instanceof IFinding) {
+							FindingsUiUtil.executeCommand("ch.elexis.core.findings.ui.commandEdit",
+								(IFinding) o);
+						}
 					}
 				}
-				
 			}
 		});
 		
@@ -183,8 +186,17 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		};
 		natTable.addDragSupport(DND.DROP_COPY, transfer, dndSupport);
 		
+		atachTooltip();
+		
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_find, eeli_code);
 		GlobalEventDispatcher.addActivationListener(this, this);
+	}
+	
+	private void atachTooltip(){
+		DefaultToolTip toolTip = new FindingsNatTableTooltip(natTable, dataProvider);
+		toolTip.setPopupDelay(250);
+		toolTip.activate();
+		toolTip.setShift(new Point(10, 10));
 	}
 	
 	private void updateCodingsSelection(StructuredSelection selection){

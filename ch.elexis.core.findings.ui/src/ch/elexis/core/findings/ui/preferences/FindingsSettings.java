@@ -53,6 +53,8 @@ public class FindingsSettings extends FieldEditorPreferencePage
 	public void init(IWorkbench workbench){
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
 		setMessage("Globale Befunde Einstellungen");
+		// initialize the model
+		FindingsServiceComponent.getService().findById("", IObservation.class);
 	}
 	
 	@Override
