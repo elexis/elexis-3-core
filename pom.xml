@@ -264,6 +264,7 @@
 		<module>ch.elexis.core.findings.fhir.po</module>
 		<module>ch.elexis.core.findings.ui</module>
 		<module>ch.elexis.core.findings.templates</module>
+		<module>ch.elexis.core.findings.templates.po</module>
 		<module>ch.elexis.core.findings.templates.ui</module>
 		<module>ch.elexis.core.findings.templates.edit</module>
 		<module>ch.elexis.core.documents</module>
