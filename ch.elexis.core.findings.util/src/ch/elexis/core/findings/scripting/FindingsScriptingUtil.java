@@ -36,7 +36,7 @@ public class FindingsScriptingUtil {
 	public static void evaluate(IObservation iObservation){
 		Optional<String> script = iObservation.getScript();
 		
-		if (script.isPresent()) {
+		if (ScriptingServiceHolder.getService() != null && script.isPresent()) {
 			String preparedScript = prepareScript(script.get(), iObservation);
 			try {
 				Object result = ScriptingServiceHolder.getService().execute(preparedScript);
