@@ -14,7 +14,6 @@ import ch.elexis.core.findings.ui.action.AddFindingAction;
 import ch.elexis.core.findings.ui.handler.FindingEditHandler;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
-import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.XRef;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.text.EnhancedTextField;
@@ -103,24 +102,4 @@ public class KonsExtension implements IKonsExtension {
 	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName,
 		Object data) throws CoreException{}
-	
-	public int getCaretOffset(){
-		if (mine instanceof EnhancedTextField) {
-			return ((EnhancedTextField) mine).getCaretOffset();
-		}
-		return -1;
-	}
-	
-	public void setCaretOffset(int offset){
-		if (mine instanceof EnhancedTextField) {
-			((EnhancedTextField) mine).setCaretOffset(offset);
-		}
-	}
-	
-	public Samdas.XRef getSelectedXRef(){
-		if (mine instanceof EnhancedTextField) {
-			return ((EnhancedTextField) mine).findLinkRef(getCaretOffset());
-		}
-		return null;
-	}
 }

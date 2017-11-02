@@ -20,8 +20,8 @@ public class AbstractPersistentObjectTest {
 	protected String testUserName;
 	protected final String PASSWORD = "password";
 	
-	@Parameters
-	public static Collection<Object[]> data() throws IOException{
+	@Parameters(name = "{0}")
+	public static Collection<JdbcLink[]> data() throws IOException{
 		return AllDataTests.getConnections();
 	}
 	

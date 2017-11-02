@@ -38,5 +38,6 @@ public class ElexisCloudPolicy extends Policy {
 			setVisibleAvailableIUQuery(QueryUtil.ALL_UNITS);
 		else
 			setVisibleAvailableIUQuery(new UserVisibleRootQuery());
+		setContactAllSites(false);
 	}
 }

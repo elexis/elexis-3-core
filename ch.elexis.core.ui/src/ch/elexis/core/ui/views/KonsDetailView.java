@@ -13,6 +13,7 @@ package ch.elexis.core.ui.views;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -83,6 +84,7 @@ import ch.elexis.core.ui.locks.LockedAction;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
 import ch.elexis.core.ui.locks.ToggleCurrentKonsultationLockHandler;
 import ch.elexis.core.ui.text.EnhancedTextField;
+import ch.elexis.core.ui.util.FallComparator;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -450,6 +452,7 @@ public class KonsDetailView extends ViewPart
 		Patient pat = ElexisEventDispatcher.getSelectedPatient();
 		if (pat != null && comboViewerFall != null) {
 			Fall[] faelle = pat.getFaelle();
+			Arrays.sort(faelle, new FallComparator());
 			comboViewerFall.setInput(faelle);
 			if (actKons != null) {
 				comboFallSelectionListener.ignoreSelectionEventOnce();

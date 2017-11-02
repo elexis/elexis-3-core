@@ -76,7 +76,7 @@ public class CoreHub implements BundleActivator {
 	public static String Version = "3.3.0.qualifier"; //$NON-NLS-1$
 	public static final String APPLICATION_NAME = "Elexis Core"; //$NON-NLS-1$
 	static final String neededJRE = "1.8.0"; //$NON-NLS-1$
-	public static final String DBVersion = "3.2.7"; //$NON-NLS-1$
+	public static final String DBVersion = "3.4.0"; //$NON-NLS-1$
 	
 	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
 	

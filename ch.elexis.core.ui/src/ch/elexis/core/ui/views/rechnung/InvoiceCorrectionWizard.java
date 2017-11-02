@@ -174,8 +174,13 @@ public class InvoiceCorrectionWizard extends Wizard {
 		public void updateProcess(){
 			for (InvoiceHistoryEntryDTO invoiceHistoryEntryDTO : invoiceCorrectionDTO
 				.getHistory()) {
-				setChecked(invoiceHistoryEntryDTO,
-					Boolean.TRUE.equals(invoiceHistoryEntryDTO.isSuccess()));
+				if (!invoiceHistoryEntryDTO.isIgnored()) {
+					setChecked(invoiceHistoryEntryDTO,
+						Boolean.TRUE.equals(invoiceHistoryEntryDTO.isSuccess()));
+				} else {
+					viewer.remove(invoiceHistoryEntryDTO);
+				}
+				
 			}
 		}
 		

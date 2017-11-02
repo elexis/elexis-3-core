@@ -8,7 +8,7 @@
             class="ch.elexis.core.ui.documents.views.DocumentsView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/dokument.gif"
             id="ch.elexis.core.ui.documents.views.DocumentsView"
-            name="Dokumente">
+            name="%view.name">
       </view>
    </extension>
    <extension
@@ -16,50 +16,50 @@
       <command
             defaultHandler="ch.elexis.core.ui.documents.handler.DocumentCrudHandler"
             id="ch.elexis.core.ui.documents.commandUpdate"
-            name="Update Document">
+            name="%command.name">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.documents.handler.DocumentCrudHandler"
             id="ch.elexis.core.ui.documents.commandDelete"
-            name="Delete Document">
+            name="%command.name.0">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.documents.handler.DocumentCrudHandler"
             id="ch.elexis.core.ui.documents.commandCreate"
-            name="Create Dokument">
+            name="%command.name.1">
       </command>
       <command
             id="ch.elexis.core.ui.documents.commandExport"
-            name="Export Dokument">
+            name="%command.name.2">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.documents.handler.DocumentLocalEditHandler"
             id="ch.elexis.core.ui.documents.commandLocalEditStart"
-            name="Local Edit Dokument Start">
+            name="%command.name.3">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.documents.handler.DocumentLocalEditHandler"
             id="ch.elexis.core.ui.documents.commandLocalEditAbort"
-            name="Local Edit Abort Dokument">
+            name="%command.name.4">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.documents.handler.DocumentLocalEditHandler"
             id="ch.elexis.core.ui.documents.commandLocalEditDone"
-            name="Local Edit Done Dokument">
+            name="%command.name.5">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.documents.handler.DocumentLocalEditHandler"
             id="ch.elexis.core.ui.documents.commandLocalEditOverview"
-            name="Local Edit Overview Dokument">
+            name="%command.name.6">
       </command>
       <command
             id="ch.elexis.core.ui.documents.commandSendAsMail"
-            name="Send As Mail">
+            name="%command.name.7">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.documents.handler.DefaultDocumentSendHandler"
             id="ch.elexis.core.ui.documents.send"
-            name="send">
+            name="%command.name.8">
       </command>
    </extension>
    <extension
@@ -70,7 +70,7 @@
          <command
                commandId="ch.elexis.core.ui.documents.commandUpdate"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit.png"
-               label="Bearbeiten"
+               label="%command.label"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -86,7 +86,7 @@
          <command
                commandId="ch.elexis.core.ui.documents.commandDelete"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/delete.gif"
-               label="Löschen"
+               label="%command.label.0"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -106,7 +106,7 @@
          <command
                commandId="ch.elexis.core.ui.documents.commandLocalEditStart"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit.png"
-               label="Start edit local document"
+               label="%command.label.1"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -122,7 +122,7 @@
          <command
                commandId="ch.elexis.core.ui.documents.commandLocalEditDone"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit_done.png"
-               label="End local document"
+               label="%command.label.2"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -138,7 +138,7 @@
          <command
                commandId="ch.elexis.core.ui.documents.commandLocalEditAbort"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit_abort.png"
-               label="Abort local document"
+               label="%command.label.3"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -157,10 +157,10 @@
          </separator>
          <menu
                icon="icon://IMG_MAIL_SEND"
-               label="Versenden">
+               label="%menu.label">
             <command
                   commandId="ch.elexis.core.ui.documents.commandSendAsMail"
-                  label="als E-Mail"
+                  label="%command.label.4"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
@@ -177,21 +177,21 @@
          <command
                commandId="ch.elexis.core.ui.documents.commandCreate"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/import.gif"
-               label="Externes Dokument importieren"
+               label="%command.label.5"
                style="push">
          </command>
          <command
                commandId="ch.elexis.core.ui.documents.commandExport"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/export.ico"
-               label="Das Dokument in eine Datei exportieren"
+               label="%command.label.6"
                style="push">
          </command>
          <command
                commandId="ch.elexis.core.ui.documents.commandLocalEditOverview"
                icon="icon://IMG_EDIT"
-               label="Offene lokale Dokumente"
+               label="%command.label.7"
                style="push"
-               tooltip="Offene lokale Dokumente">
+               tooltip="%command.tooltip">
             <visibleWhen
                   checkEnabled="false">
                <test
@@ -202,7 +202,7 @@
          <command
                commandId="ch.elexis.core.ui.documents.send"
                icon="icon://IMG_MAIL_SEND"
-               label="Versenden"
+               label="%command.label.8"
                style="pulldown">
          </command>
       </menuContribution>
@@ -211,7 +211,7 @@
             locationURI="menu:ch.elexis.core.ui.documents.send">
          <command
                commandId="ch.elexis.core.ui.documents.commandSendAsMail"
-               label="als E-Mail"
+               label="%command.label.9"
                style="push">
             <visibleWhen
                   checkEnabled="false">

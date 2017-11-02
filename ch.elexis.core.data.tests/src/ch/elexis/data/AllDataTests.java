@@ -23,11 +23,11 @@ import ch.rgw.tools.JdbcLinkException;
 	Test_Patient.class, Test_LabItem.class, Test_DBImage.class, Test_Query.class,
 	Test_Verrechnet.class, Test_Reminder.class, Test_StockService.class, Test_OrderService.class,
 	Test_Konsultation.class, RoleBasedAccessControlTest.class, Test_VkPreise.class,
-	Test_ZusatzAdresse.class, BriefDocumentStoreTest.class, Test_Rechnung.class
+	Test_ZusatzAdresse.class, BriefDocumentStoreTest.class, Test_Rechnung.class, Test_User.class
 })
 public class AllDataTests {
 	
-	private static Collection<Object[]> connections = new ArrayList<Object[]>();
+	private static Collection<JdbcLink[]> connections = new ArrayList<JdbcLink[]>();
 	
 	public static final boolean PERFORM_UPDATE_TESTS = false;
 	
@@ -38,21 +38,21 @@ public class AllDataTests {
 		JdbcLink pgJdbcLink = TestInitializer.initTestDBConnection(TestInitializer.FLAVOR_POSTGRES);
 		
 		assertNotNull(h2JdbcLink);
-		AllDataTests.connections.add(new Object[] {
+		AllDataTests.connections.add(new JdbcLink[] {
 			h2JdbcLink
 		});
 		if (h2DemoDbJdbcLink != null) {
-			AllDataTests.connections.add(new Object[] {
+			AllDataTests.connections.add(new JdbcLink[] {
 				h2DemoDbJdbcLink
 			});
 		}
 		if (mySQLJdbcLink != null) {
-			AllDataTests.connections.add(new Object[] {
+			AllDataTests.connections.add(new JdbcLink[] {
 				mySQLJdbcLink
 			});
 		}
 		if (pgJdbcLink != null) {
-			AllDataTests.connections.add(new Object[] {
+			AllDataTests.connections.add(new JdbcLink[] {
 				pgJdbcLink
 			});
 		}
@@ -75,7 +75,7 @@ public class AllDataTests {
 		}
 	}
 	
-	public static Collection<Object[]> getConnections() throws IOException{
+	public static Collection<JdbcLink[]> getConnections() throws IOException{
 		assertTrue(connections.size() > 0);
 		return connections;
 	}

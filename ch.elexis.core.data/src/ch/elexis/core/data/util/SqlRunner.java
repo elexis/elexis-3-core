@@ -126,6 +126,10 @@ public class SqlRunner {
 					} catch (JdbcLinkException e) {
 						setStatus(SqlStatus.FAIL);
 						log.error("Error " + e.getMessage() + " during db update", e);
+						// added for JUnit debugging ---
+						System.out.println("Error " + e.getMessage() + " during db update");
+						e.printStackTrace();
+						// --
 						try {
 							ElexisStatus status =
 								new ElexisStatus(ElexisStatus.ERROR, pluginId,

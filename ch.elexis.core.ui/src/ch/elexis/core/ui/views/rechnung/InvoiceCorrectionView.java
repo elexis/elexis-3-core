@@ -664,8 +664,46 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 						}
 					}
 				};
+				IAction transferKons = new Action("Konsultation Transfer") {
+					
+					@Override
+					public ImageDescriptor getImageDescriptor(){
+						return Images.IMG_MOVETOLOWERLIST.getImageDescriptor();
+					}
+					
+					@Override
+					public String getToolTipText(){
+						return "Konsultation auf anderen Fall verschieben";
+					}
+					
+					@Override
+					public void run(){
+						
+						FallSelectionDialog fallSelectionDialog =
+							new FallSelectionDialog(getShell(),
+								"Bitte wählen Sie einen Fall aus, auf das die u.a. Konsultation transferiert werden soll.\n"
+									+ "Konsultation: " + konsultationDTO.getDate(),
+								invoiceCorrectionDTO.getFallDTO());
+						if (fallSelectionDialog.open() == MessageDialog.OK) {
+							if (fallSelectionDialog.getSelectedFall().isPresent()) {
+								if (invoiceCorrectionDTO.getKonsultationDTOs()
+									.remove(konsultationDTO)) {
+									IFall iFall = fallSelectionDialog.getSelectedFall().get();
+									invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+										OperationType.KONSULTATION_TRANSFER_TO_FALL,
+										konsultationDTO, iFall));
+									form.dispose();
+									layout(true, true);
+									invoiceComposite.updateScrollBars();
+								}
+							}
+							
+						}
+					}
+				};
 				tbManager.add(actionDateChange);
 				tbManager.add(actionMandantChange);
+				tbManager.add(transferKons);
 				
 				actions.add(actionDateChange);
 				actions.add(actionMandantChange);
@@ -761,7 +799,9 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					if (invoiceBottomComposite != null) {
 						invoiceBottomComposite.refresh(true);
 					}
-					tableViewer.refresh();
+					if (!isDisposed()) {
+						tableViewer.refresh();
+					}
 				}
 				
 			});

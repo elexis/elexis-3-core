@@ -23,17 +23,15 @@
    <windowImages i16="rsc/elexis2_16.gif" i32="rsc/elexis32_2.gif" i48="rsc/elexis48.gif"/>
 
    <splash
-      location="ch.elexis.core.application" />
+      location="ch.elexis.core.product" />
    <launcher name="Elexis3">
       <linux icon="rsc/elexis48.xpm"/>
       <macosx icon="rsc/elexis-mac.icns"/>
-      <solaris/>
       <win useIco="true">
          <ico path="rsc/elexis.ico"/>
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
@@ -49,7 +47,7 @@
    </plugins>
 
    <features>
-   	  <feature id="ch.elexis.core.application.feature" installMode="root"/>
+      <feature id="ch.elexis.core.application.feature" installMode="root"/>
       <feature id="ch.elexis.core.common.feature" installMode="root"/>
       <feature id="ch.elexis.core.logging.feature" installMode="root"/>
       <feature id="ch.elexis.core.ui.feature" installMode="root"/>
@@ -59,6 +57,7 @@
 
    <configurations>
       <plugin id="ch.elexis.core.logging" autoStart="true" startLevel="2" />
+      <plugin id="ch.elexis.core.ui.p2" autoStart="true" startLevel="4" />
       <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="2" />
       <plugin id="ch.qos.logback.core" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
