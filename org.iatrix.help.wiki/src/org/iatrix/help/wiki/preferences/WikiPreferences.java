@@ -30,6 +30,7 @@ public class WikiPreferences extends FieldEditorPreferencePage implements IWorkb
 		setPreferenceStore(prefs);
 		prefs.setDefault(Constants.CFG_BASE_URL, Constants.DEFAULT_BASE_URL);
 		prefs.setDefault(Constants.CFG_START_PAGE, Constants.DEFAULT_START_PAGE);
+		prefs.setDefault(Constants.CFG_HANDBOOK, Constants.DEFAULT_HANDBOOK);
 	}
 	
 	@Override
@@ -37,6 +38,7 @@ public class WikiPreferences extends FieldEditorPreferencePage implements IWorkb
 		addField(new StringFieldEditor(Constants.CFG_BASE_URL, "Basis-URL", getFieldEditorParent()));
 		addField(new StringFieldEditor(Constants.CFG_START_PAGE, "Start-Seite",
 			getFieldEditorParent()));
+		addField(new StringFieldEditor(Constants.CFG_HANDBOOK, "Handbuch", getFieldEditorParent()));
 	}
 	
 	public void init(IWorkbench workbench){
