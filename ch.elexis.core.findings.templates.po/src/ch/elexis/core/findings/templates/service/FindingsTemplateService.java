@@ -37,7 +37,6 @@ import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.IProcedureRequest;
-import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.templates.model.CodeElement;
@@ -183,15 +182,11 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 			if (findingsTemplate.getInputData() instanceof InputDataNumeric) {
 				InputDataNumeric inputDataNumeric =
 					(InputDataNumeric) findingsTemplate.getInputData();
-				
 				component.setNumericValue(null);
 				component.setNumericValueUnit(inputDataNumeric.getUnit());
-				component.getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
-					ObservationType.NUMERIC.name());
 			}
 			if (findingsTemplate.getInputData() instanceof InputDataText) {
-				component.getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
-					ObservationType.TEXT.name());
+				component.setStringValue(null);
 			}
 			iObservation.addComponent(component);
 		}

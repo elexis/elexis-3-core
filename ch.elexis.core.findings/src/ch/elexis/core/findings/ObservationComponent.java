@@ -39,8 +39,15 @@ public class ObservationComponent {
 		return Optional.ofNullable(numericValue);
 	}
 	
+	/**
+	 * Set the numeric value of the component. Also updates the type extension.
+	 * 
+	 * @param numericValue
+	 */
 	public void setNumericValue(BigDecimal numericValue) {
 		this.numericValue = numericValue;
+		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
+			ObservationType.NUMERIC.name());
 	}
 	
 	public Optional<String> getNumericValueUnit(){
@@ -51,8 +58,15 @@ public class ObservationComponent {
 		this.numericValueUnit = numericValueUnit;
 	}
 	
+	/**
+	 * Set the string value of the component. Also updates the type extension.
+	 * 
+	 * @param stringValue
+	 */
 	public void setStringValue(String stringValue) {
 		this.stringValue = stringValue;
+		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
+			ObservationType.TEXT.name());
 	}
 	
 	public Optional<String> getStringValue(){
