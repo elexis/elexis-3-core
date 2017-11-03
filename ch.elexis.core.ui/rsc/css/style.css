@@ -1,3 +1,25 @@
 .MPartStack {
-    swt-simple: true;
+  swt-tab-renderer: null;
+  swt-selected-tabs-background: #D0DFEF #FFFFFF 100%;
+  swt-simple: true;
+  swt-mru-visible: false;
 }
+
+.MPartStack.active {
+  swt-selected-tabs-background: #D0DFEF #D0DFEF 100%;
+}
+
+.MTrimBar#org-eclipse-ui-main-toolbar {
+	background-color: #D0DFEF;
+}
+
+
+.MTrimBar {
+	background-color: #D0DFEF;
+}
+
+
+.MTrimmedWindow {
+	background-color: #FFFFFF;
+}
+
