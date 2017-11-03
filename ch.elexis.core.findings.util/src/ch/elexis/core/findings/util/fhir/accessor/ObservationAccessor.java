@@ -207,13 +207,11 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 				
 				if (o.hasValueQuantity()) {
 					Quantity quantity = (Quantity) o.getValue();
-					component.setNumericValue(quantity.getValue() != null
-							? Optional.of(quantity.getValue()) : Optional.empty());
-					component.setNumericValueUnit(quantity.getUnit() != null
-							? Optional.of(quantity.getUnit()) : Optional.empty());
+					component.setNumericValue(quantity.getValue());
+					component.setNumericValueUnit(quantity.getUnit());
 				} else if (o.hasValueStringType()) {
 					StringType stringType = (StringType) o.getValue();
-					component.setStringValue(Optional.of(stringType.getValue()));
+					component.setStringValue(stringType.getValue());
 				}
 			}
 			components.add(component);

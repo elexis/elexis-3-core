@@ -12,9 +12,9 @@ import ch.elexis.core.findings.IObservation.ObservationType;
 public class ObservationComponent {
 	
 	private List<ICoding> coding = new ArrayList<>();
-	private Optional<BigDecimal> numericValue = Optional.empty();
-	private Optional<String> numericValueUnit = Optional.empty();
-	private Optional<String> stringValue = Optional.empty();
+	private BigDecimal numericValue;
+	private String numericValueUnit;
+	private String stringValue;
 	private final String id;
 	private Map<String, String> extensions = new HashMap<>();
 	
@@ -36,27 +36,27 @@ public class ObservationComponent {
 	}
 	
 	public Optional<BigDecimal> getNumericValue(){
-		return numericValue;
+		return Optional.ofNullable(numericValue);
 	}
 	
-	public void setNumericValue(Optional<BigDecimal> numericValue){
+	public void setNumericValue(BigDecimal numericValue) {
 		this.numericValue = numericValue;
 	}
 	
 	public Optional<String> getNumericValueUnit(){
-		return numericValueUnit;
+		return Optional.ofNullable(numericValueUnit);
 	}
 	
-	public void setNumericValueUnit(Optional<String> numericValueUnit){
+	public void setNumericValueUnit(String numericValueUnit) {
 		this.numericValueUnit = numericValueUnit;
 	}
 	
-	public void setStringValue(Optional<String> stringValue){
+	public void setStringValue(String stringValue) {
 		this.stringValue = stringValue;
 	}
 	
 	public Optional<String> getStringValue(){
-		return stringValue;
+		return Optional.ofNullable(stringValue);
 	}
 	
 	public void setExtensions(Map<String, String> extensions){

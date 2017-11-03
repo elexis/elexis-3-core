@@ -157,7 +157,7 @@ public class FindingsUiUtil {
 			if (ObservationType.TEXT.equals(observationType)) {
 				// text fields inside component
 				if (obsComponent != null) {
-					obsComponent.setStringValue(Optional.of(text));
+					obsComponent.setStringValue(text);
 				} else {
 					iObservation.setStringValue(text);
 				}
@@ -167,8 +167,7 @@ public class FindingsUiUtil {
 						// numeric fields inside component
 						BigDecimal number =
 							NumberUtils.isNumber(text) ? new BigDecimal(text) : null;
-						obsComponent.setNumericValue(
-							number != null ? Optional.of(number) : Optional.empty());
+						obsComponent.setNumericValue(number);
 						iObservation.updateComponent(obsComponent);
 					} else {
 						// numeric fields

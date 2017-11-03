@@ -184,9 +184,8 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 				InputDataNumeric inputDataNumeric =
 					(InputDataNumeric) findingsTemplate.getInputData();
 				
-				component.setNumericValue(Optional.empty());
-				component.setNumericValueUnit(Optional
-					.of(inputDataNumeric.getUnit() != null ? inputDataNumeric.getUnit() : ""));
+				component.setNumericValue(null);
+				component.setNumericValueUnit(inputDataNumeric.getUnit());
 				component.getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
 					ObservationType.NUMERIC.name());
 			}
