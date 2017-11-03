@@ -1,6 +1,7 @@
 package ch.elexis.core.findings;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -12,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.findings.IObservation.ObservationCategory;
+import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.test.AllTests;
 
 public class ObservationTest {
@@ -22,6 +24,20 @@ public class ObservationTest {
 		List<IFinding> findings = FindingsServiceComponent.getService().getPatientsFindings(AllTests.PATIENT_ID,
 				IFinding.class);
 		assertTrue(findings.isEmpty());
+	}
+
+	@Test
+	public void testObservationCreation() {
+		IObservation iObservation = FindingsServiceComponent.getService().create(IObservation.class);
+		assertNotNull(iObservation);
+		IObservation iSubObservation = FindingsServiceComponent.getService().create(IObservation.class);
+		assertNotNull(iSubObservation);
+		// add sub as target
+		iObservation.addTargetObservation(iSubObservation, ObservationLinkType.REF);
+		List<IObservation> targets = iObservation.getTargetObseravtions(ObservationLinkType.REF);
+		assertNotNull(targets);
+		assertFalse(targets.isEmpty());
+		assertEquals(iSubObservation.getId(), targets.get(0).getId());
 	}
 	
 	@Test
