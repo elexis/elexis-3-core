@@ -193,18 +193,17 @@ public class GlobalActions {
 					{
 						try 
 						{
-							desktop.browse(new java.net.URI(url)); // Open default browser on system
-							logger.info("opening default browser." + url); // Added by Txomin
+							desktop.browse(new java.net.URI(url)); 
 						}
 						catch (Exception e)
 						{
-							logger.info("failed to open default browser :" + e);
+							logger.warn("failed to open default browser :" + e);
 							ExHandler.handle(e);
 						}
 							
 					} else {
 						
-						logger.info("default browser not found.");
+						logger.warn("default browser not found. Desktop was null.");
 					}
 				}
 			};
