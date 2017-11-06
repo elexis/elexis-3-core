@@ -413,16 +413,17 @@ public class LocalLockService implements ILocalLockService {
 				final String restUrl = System
 					.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
 				if (restUrl != null && !restUrl.isEmpty()) {
+					final String testRestUrl = restUrl + "/elexis/lockservice/lockInfo";
 					// if service is available but we are not using it -> use it
 					// if service not available but we are using it -> dont use it
-					if (testRestUrl(restUrl) && ils instanceof DenyAllLockService
+					if (testRestUrl(testRestUrl) && ils instanceof DenyAllLockService
 						&& restService != null) {
 						ils = restService;
 						iis = ConsumerFactory.createConsumer(restUrl, IInstanceService.class);
 						// publish change
 						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null,
 							ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
-					} else if (!testRestUrl(restUrl) && !(ils instanceof DenyAllLockService)) {
+					} else if (!testRestUrl(testRestUrl) && !(ils instanceof DenyAllLockService)) {
 						restService = ils;
 						iis = null;
 						ils = new DenyAllLockService();
@@ -470,7 +471,7 @@ public class LocalLockService implements ILocalLockService {
 				HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
 				urlConn.connect();
 				
-				return HttpURLConnection.HTTP_OK == urlConn.getResponseCode();
+				return (urlConn.getResponseCode() >= 200 && urlConn.getResponseCode() < 300);
 			} catch (IOException e) {
 				return false;
 			}
