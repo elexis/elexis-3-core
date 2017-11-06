@@ -200,7 +200,6 @@ public class GlobalActions {
 							logger.warn("failed to open default browser :" + e);
 							ExHandler.handle(e);
 						}
-							
 					} else {
 						
 						logger.warn("default browser not found. Desktop was null.");
