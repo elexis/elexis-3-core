@@ -571,6 +571,7 @@ public class Messages extends NLS {
 	public static String VerrechnungsDisplay_indicatedMedication;
 	public static String VerrechnungsDisplay_fixMedication;
 	public static String BriefAuswahlNotAllowedToRunStresstess;
+	public static String ReminderView_txtSearch_message;
 	
 	static {
 		// load message values from bundle file

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006-2009, G. Weirich and Elexis
+ * Copyright (c) 2006-2017, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,17 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    M. Descher - Declarative access to the contextMenu
+ *    M. Descher - Declarative access to the contextMenu, IContributionItem
  *    
  *******************************************************************************/
 
 package ch.elexis.core.ui.util;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -33,7 +38,7 @@ import ch.elexis.core.ui.actions.RestrictedAction;
  * This class simplifies the handling of menus and toolbars.
  * 
  * @author gerry
- * 
+ * @since 3.4 support methods with {@link IContributionItem}
  */
 public class ViewMenus {
 	IViewSite site;
@@ -52,29 +57,25 @@ public class ViewMenus {
 	 *            a collection of actions and null-values (that represent separators)
 	 */
 	public void createMenu(IAction... actions){
-		IMenuManager mgr = site.getActionBars().getMenuManager();
-		mgr.addMenuListener(new IMenuListener() {
+		List<IContributionItem> contributionItems = convertActionsToContributionItems(actions);
+		createMenu(contributionItems);
+	}
+	
+	/**
+	 * 
+	 * @param contributionItems
+	 * @since 3.4
+	 */
+	public void createMenu(final List<IContributionItem> contributionItems){
+		IMenuManager menuMgr = site.getActionBars().getMenuManager();
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager){
-				for (IAction iAction : actions) {
-					if(iAction instanceof RestrictedAction) {
-						((RestrictedAction) iAction).reflectRight();
-					}
-				}
-				// update the UI
-				IContributionItem[] items = manager.getItems();
-				for (IContributionItem iContributionItem : items) {
-					iContributionItem.update();
-				}
+				fillContextMenu(menuMgr, contributionItems);
 			}
 		});
-		for (IAction ac : actions) {
-			if (ac == null) {
-				mgr.add(new Separator());
-			} else {
-				mgr.add(ac);
-			}
-		}
+		menuMgr.add(new Separator()); // for the entry to appear
 	}
 	
 	/**
@@ -95,6 +96,27 @@ public class ViewMenus {
 	}
 	
 	/**
+	 * 
+	 * @param viewer
+	 * @param contributionItems
+	 * @since 3.4
+	 */
+	public void createViewerContextMenu(StructuredViewer viewer,
+		final List<IContributionItem> contributionItems){
+		MenuManager menuMgr = new MenuManager();
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager){
+				fillContextMenu(manager, contributionItems);
+			}
+		});
+		Menu menu = menuMgr.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+		
+		site.registerContextMenu(menuMgr, viewer);
+	}
+	
+	/**
 	 * Attach a context menu to a org.eclipse.jface.StructuredViewer
 	 * 
 	 * @param viewer
@@ -103,17 +125,8 @@ public class ViewMenus {
 	 *            the actions to use
 	 */
 	public void createViewerContextMenu(StructuredViewer viewer, final IAction... actions){
-		MenuManager menuMgr = new MenuManager();
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager){
-				fillContextMenu(manager, actions);
-			}
-		});
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		viewer.getControl().setMenu(menu);
-		
-		site.registerContextMenu(menuMgr, viewer);
+		List<IContributionItem> contributionItems = convertActionsToContributionItems(actions);
+		createViewerContextMenu(viewer, contributionItems);
 	}
 	
 	/**
@@ -125,16 +138,17 @@ public class ViewMenus {
 	 *            the actions to be shown in the menu
 	 */
 	public void createControlContextMenu(Control control, final IAction... actions){
+		List<IContributionItem> contributionItems = convertActionsToContributionItems(actions);
 		contextMenu = new MenuManager();
 		contextMenu.setRemoveAllWhenShown(true);
 		contextMenu.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager){
 				for (IAction iAction : actions) {
-					if(iAction instanceof RestrictedAction) {
+					if (iAction instanceof RestrictedAction) {
 						((RestrictedAction) iAction).reflectRight();
 					}
 				}
-				fillContextMenu(manager, actions);
+				fillContextMenu(manager, contributionItems);
 			}
 		});
 		Menu menu = contextMenu.createContextMenu(control);
@@ -163,6 +177,9 @@ public class ViewMenus {
 					if (ac == null) {
 						contextMenu.add(new Separator());
 					} else {
+						if (ac instanceof RestrictedAction) {
+							((RestrictedAction) ac).reflectRight();
+						}
 						contextMenu.add(ac);
 					}
 				}
@@ -172,17 +189,26 @@ public class ViewMenus {
 		control.setMenu(menu);
 	}
 	
-	protected void fillContextMenu(IMenuManager manager, IAction... actions){
+	public static List<IContributionItem> convertActionsToContributionItems(IAction[] actions){
+		return Arrays.asList(actions).stream()
+			.map(s -> (s != null) ? new ActionContributionItem(s) : new Separator())
+			.collect(Collectors.toList());
+	}
+	
+	private void fillContextMenu(IMenuManager manager, List<IContributionItem> contributionItems){
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-		for (IAction ac : actions) {
-			if (ac == null) {
+		for (IContributionItem contributionItem : contributionItems) {
+			if (contributionItem == null) {
 				manager.add(new Separator());
-			} else {
-				if (ac instanceof RestrictedAction) {
-					((RestrictedAction) ac).reflectRight();
+				continue;
+			} else if (contributionItem instanceof ActionContributionItem) {
+				ActionContributionItem ac = (ActionContributionItem) contributionItem;
+				if (ac.getAction() instanceof RestrictedAction) {
+					((RestrictedAction) ac.getAction()).reflectRight();
 				}
-				manager.add(ac);
 			}
+			contributionItem.update();
+			manager.add(contributionItem);
 		}
 	}
 	

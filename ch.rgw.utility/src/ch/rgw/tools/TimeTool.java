@@ -57,7 +57,7 @@ public class TimeTool extends GregorianCalendar {
 				Messages.getString("TimeTool.sa")),
 			SUNDAY(Calendar.SUNDAY, Messages.getString("TimeTool.sunday"),
 				Messages.getString("TimeTool.su"));
-				
+		
 		public int numericDayValue;
 		public String fullName;
 		public String abbreviatedName;
@@ -184,7 +184,7 @@ public class TimeTool extends GregorianCalendar {
 	private static final SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMddHHmmss");
 	private static final SimpleDateFormat datetime_xml =
 		new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		
+	
 	private static SimpleDateFormat pref_full = full_ger;
 	private static SimpleDateFormat pref_small = date_ger;
 	private static boolean wrap = true;
@@ -911,7 +911,7 @@ public class TimeTool extends GregorianCalendar {
 	/**
 	 * @since 3.2
 	 */
-	public LocalDateTime toLocalDateTime() {
+	public LocalDateTime toLocalDateTime(){
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(getTimeInMillis());
 		return gc.toZonedDateTime().toLocalDateTime();
@@ -1001,5 +1001,26 @@ public class TimeTool extends GregorianCalendar {
 			return 1;
 		}
 		return 0;
+	}
+	
+	/**
+	 * Null-safe static compare method, null is always in the max past, thus being lower
+	 * 
+	 * @param dateDue may be <code>null</code>
+	 * @param dateDue2 may be <code>null</code>
+	 * @return 0 if equal, -1 if dd is greater, 1 if dd2 is greater
+	 * @since 3.4
+	 */
+	public static int compare(TimeTool dd,  TimeTool dd2){
+		if (dd == null || dd2 == null) {
+			if (dd != null) {
+				return -1;
+			}
+			if (dd2 != null) {
+				return 1;
+			}
+			return 0;
+		}
+		return dd2.compareTo(dd);
 	}
 }

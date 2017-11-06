@@ -388,11 +388,12 @@ CREATE TABLE REMINDERS(
 );
 
 CREATE TABLE REMINDERS_RESPONSIBLE_LINK(
-	ID				VARCHAR(25) primary key,
+	ID				VARCHAR(25),
 	lastupdate      BIGINT,
 	deleted			CHAR(1) default '0',
 	ReminderID		VARCHAR(25),                  # foreign key from REMINDERS
-	ResponsibleID	VARCHAR(25)                   # foreign key from KONTAKT
+	ResponsibleID	VARCHAR(25),               # foreign key from KONTAKT
+	PRIMARY KEY (ReminderID, ResponsibleID)
 );
 
 CREATE INDEX rrl1 on REMINDERS_RESPONSIBLE_LINK (ReminderID);

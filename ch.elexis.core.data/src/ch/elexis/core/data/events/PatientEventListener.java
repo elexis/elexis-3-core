@@ -32,13 +32,18 @@ public class PatientEventListener extends ElexisEventListenerImpl {
 	@Override
 	public void run(final ElexisEvent ev){
 		if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
+			/**
+			 * ch.elexis.core.ui.views.ReminderView#eeli_pat will be called on opposite
+			 * Preferences.USR_SHOWPATCHGREMINDER condition.
+			 */
 			if (CoreHub.userCfg.get(Preferences.USR_SHOWPATCHGREMINDER, false)) {
-				List<Reminder> list =
-					Reminder.findRemindersDueFor((Patient) ev.getObject(), CoreHub.actUser, true);
+				List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser,
+					false, (Patient) ev.getObject(), true);
 				if (list.size() != 0) {
 					StringBuilder sb = new StringBuilder();
 					for (Reminder r : list) {
-						sb.append(r.getMessage()).append("\n\n"); //$NON-NLS-1$
+						sb.append(r.getSubject()+"\n");
+						sb.append(r.getMessage()+"\n\n");
 					}
 					MessageEvent.fireInformation(Messages.PatientEventListener_0,
 						sb.toString());

@@ -27,7 +27,6 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
@@ -48,8 +47,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	private Logger log = LoggerFactory.getLogger(ApplicationWorkbenchAdvisor.class.getName());
 	
-	protected static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
-		.getCoreOperationAdvisor();
+	protected static AbstractCoreOperationAdvisor cod =
+		CoreOperationExtensionPoint.getCoreOperationAdvisor();
 	
 	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
@@ -83,7 +82,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 			for (Reminder reminder : reminderList) {
 				sb.append(reminder.getKontakt().getLabel() + ", Id["
 					+ reminder.getKontakt().getPatCode() + "]:\n");
-				sb.append(reminder.getMessage()).append("\n\n"); //$NON-NLS-1$		
+				sb.append(reminder.getSubject() + "\n" + reminder.getMessage()).append("\n\n");	
 			}
 			
 			// must be called inside display thread
