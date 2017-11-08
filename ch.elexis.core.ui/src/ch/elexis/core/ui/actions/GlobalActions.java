@@ -180,21 +180,15 @@ public class GlobalActions {
 				public void run(){
 					Desktop desktop = Desktop.getDesktop();
 					String url = "https://wiki.elexis.info";
-					
-					if(desktop != null)
-					{
-						try 
-						{
-							desktop.browse(new java.net.URI(url)); 
-						}
-						catch (Exception e)
-						{
-							logger.warn("failed to open default browser :" + e);
-							ExHandler.handle(e);
+					if(desktop != null) {
+					  try {
+						  desktop.browse(new java.net.URI(url)); 
+						} catch (Exception e) {
+						  logger.warn("failed to open default browser :" + e);
+						  ExHandler.handle(e);
 						}
 					} else {
-						
-						logger.warn("default browser not found. Desktop was null.");
+						  logger.warn("default browser not found. Desktop was null.");
 					}
 				}
 			};
