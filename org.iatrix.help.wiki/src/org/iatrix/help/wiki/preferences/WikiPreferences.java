@@ -1,4 +1,4 @@
-/*******************************************************************************
+,/*******************************************************************************
  * Copyright (c) 2008, D. Lutz and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -36,8 +36,7 @@ public class WikiPreferences extends FieldEditorPreferencePage implements IWorkb
 	@Override
 	protected void createFieldEditors(){
 		addField(new StringFieldEditor(Constants.CFG_BASE_URL, "Basis-URL", getFieldEditorParent()));
-		addField(new StringFieldEditor(Constants.CFG_START_PAGE, "Start-Seite",
-			getFieldEditorParent()));
+		addField(new StringFieldEditor(Constants.CFG_START_PAGE, "Start-Seite", getFieldEditorParent()));
 		addField(new StringFieldEditor(Constants.CFG_HANDBOOK, "Handbuch", getFieldEditorParent()));
 	}
 	
