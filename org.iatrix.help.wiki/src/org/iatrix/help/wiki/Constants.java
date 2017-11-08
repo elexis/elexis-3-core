@@ -21,6 +21,5 @@ public interface Constants {
 	
 	public static final String DEFAULT_BASE_URL = "http://wiki.elexis.info/";
 	public static final String DEFAULT_START_PAGE = "Hauptseite";
-	
 	public static final String DEFAULT_HANDBOOK = "Deutsches_Handbuch_3.1.pdf";
 }
