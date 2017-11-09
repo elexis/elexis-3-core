@@ -112,10 +112,6 @@ public abstract class VerrechenbarAdapter extends PersistentObject implements IV
 		super(id);
 	}
 	
-	public String getCodeSystemCode(){
-		return "999";
-	}
-	
 	protected VerrechenbarAdapter(){}
 	
 	@Override

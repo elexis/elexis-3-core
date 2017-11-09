@@ -10,14 +10,11 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import java.util.List;
-
 import ch.elexis.core.data.interfaces.IDiagnose;
-import ch.elexis.data.PersistentObject;
+import ch.elexis.core.eigendiagnosen.Messages;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.VersionInfo;
-import ch.elexis.core.eigendiagnosen.Messages;
 
 public class Eigendiagnose extends PersistentObject implements IDiagnose {
 	static final String VERSION = "0.1.1";//$NON-NLS-1$
@@ -97,11 +94,6 @@ public class Eigendiagnose extends PersistentObject implements IDiagnose {
 	}
 	
 	protected Eigendiagnose(){}
-	
-	@Override
-	public List<Object> getActions(Object context){
-		return null;
-	}
 	
 	public String getCode(){
 		return getId();

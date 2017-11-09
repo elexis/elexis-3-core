@@ -255,19 +255,9 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		return "Block"; //$NON-NLS-1$
 	}
 	
-	public String getCodeSystemCode(){
-		return "999"; //$NON-NLS-1$
-	}
-	
 	@Override
 	public boolean isDragOK(){
 		return true;
-	}
-	
-	@Override
-	public List<Object> getActions(Object kontext){
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	/**

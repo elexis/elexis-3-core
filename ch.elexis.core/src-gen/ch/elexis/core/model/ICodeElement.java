@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2017 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,14 +30,14 @@ public interface ICodeElement {
 	 * @generated
 	 */
 	String getCodeSystemName();
-
+	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation"
-	 * @generated
+	 * @return the code system code (e.g. used as code for billing against tarmed)
+	 * @since 3.4 extracted from VerrechenbarAdapter as default value
 	 */
-	String getCodeSystemCode();
+	default String getCodeSystemCode() {
+		return "999";
+	}
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -64,11 +64,13 @@ public interface ICodeElement {
 	String getText();
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
+	 * Contribute actions to the user interface
+	 * @param context
+	 * @return 
+	 * @since 3.4 set interface default method returning <code>null</code>
 	 */
-	List<Object> getActions(Object context);
+	default List<Object> getActions(Object context) {
+		return null;
+	}
 
 } // ICodeElement
