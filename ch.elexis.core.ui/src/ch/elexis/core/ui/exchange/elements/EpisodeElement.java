@@ -14,7 +14,7 @@ package ch.elexis.core.ui.exchange.elements;
 
 import org.jdom.Element;
 
-import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Konsultation;
 import ch.rgw.tools.StringTool;

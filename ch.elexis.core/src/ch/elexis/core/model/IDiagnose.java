@@ -10,9 +10,7 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.core.data.interfaces;
-
-import ch.elexis.core.model.ICodeElement;
+package ch.elexis.core.model;
 
 /**
  * Diagnosen sind ebensop wie Leistungen "Pluggable" definiert, damit neue Codesysteme leicht

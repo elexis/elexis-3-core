@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.jdom.Element;
 
-import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
