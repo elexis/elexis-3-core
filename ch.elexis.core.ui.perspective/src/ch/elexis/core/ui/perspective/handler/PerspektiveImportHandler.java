@@ -91,7 +91,6 @@ public class PerspektiveImportHandler extends AbstractHandler {
 						XMLMemento memento = XMLMemento.createReadRoot(reader);
 						MPerspective mPerspective =
 							modelService.createModelElement(MPerspective.class);
-						// special handling for fastviews for legacy imports
 						List<String> fastViewIds = createPerspective(memento, mPerspective);
 						IPerspectiveDescriptor pd = savePerspectiveToRegistry(mPerspective);
 						switchToPerspective(mPerspective, fastViewIds);
@@ -108,11 +107,11 @@ public class PerspektiveImportHandler extends AbstractHandler {
 							MPerspective loadedPerspective =
 								(MPerspective) resource.getContents().get(0);
 							
-							// e4 models dont need a special handling for fastviews
-							importPerspective(loadedPerspective, mApplication);
+							List<String> fastViewIds =
+								importPerspective(loadedPerspective, mApplication);
 							IPerspectiveDescriptor pd =
 								savePerspectiveToRegistry(loadedPerspective);
-							switchToPerspective(loadedPerspective, new ArrayList<>());
+							switchToPerspective(loadedPerspective, fastViewIds);
 							WorkbenchPage wp = (WorkbenchPage) PlatformUI.getWorkbench()
 								.getActiveWorkbenchWindow().getActivePage();
 							wp.savePerspectiveAs(pd);
@@ -260,7 +259,14 @@ public class PerspektiveImportHandler extends AbstractHandler {
 		List<MPlaceholder> placeholderClones = modelService.findElements(perspective, null,
 			MPlaceholder.class, null, EModelService.IN_ANY_PERSPECTIVE);
 		for (MPlaceholder placeholder : placeholderClones) {
+			MUIElement parent = placeholder.getParent();
 			String id = placeholder.getElementId();
+			if (parent != null && "fastview.elexis".equals(parent.getElementId())) {
+				// fastview hack
+				if (!fastViewIds.contains(id)) {
+					fastViewIds.add(id);
+				}
+			}
 			List<MPart> findElements =
 				modelService.findElements(application, id, MPart.class, null);
 			
