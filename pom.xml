@@ -346,7 +346,6 @@
       // But it is used to invoke the modification only once per run
       System.setProperty("git_branch",  branch)
       System.setProperty("elexis_version",  elexis_version)
-      println "git_branch set to ${branch} in ${project.name} basedir is ${project.basedir}"
       repo_version_file = new File(filename)
       repo_version_file.write(HINT_GENERATED)
       repo_version_file.append("elexis.version=${elexis_version}\n")
