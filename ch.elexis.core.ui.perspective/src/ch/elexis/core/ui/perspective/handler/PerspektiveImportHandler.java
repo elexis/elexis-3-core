@@ -91,6 +91,7 @@ public class PerspektiveImportHandler extends AbstractHandler {
 						XMLMemento memento = XMLMemento.createReadRoot(reader);
 						MPerspective mPerspective =
 							modelService.createModelElement(MPerspective.class);
+						// special handling for fastviews for legacy imports
 						List<String> fastViewIds = createPerspective(memento, mPerspective);
 						IPerspectiveDescriptor pd = savePerspectiveToRegistry(mPerspective);
 						switchToPerspective(mPerspective, fastViewIds);
@@ -107,11 +108,11 @@ public class PerspektiveImportHandler extends AbstractHandler {
 							MPerspective loadedPerspective =
 								(MPerspective) resource.getContents().get(0);
 							
-							List<String> fastViewIds =
-								importPerspective(loadedPerspective, mApplication);
+							// e4 models dont need a special handling for fastviews
+							importPerspective(loadedPerspective, mApplication);
 							IPerspectiveDescriptor pd =
 								savePerspectiveToRegistry(loadedPerspective);
-							switchToPerspective(loadedPerspective, fastViewIds);
+							switchToPerspective(loadedPerspective, new ArrayList<>());
 							WorkbenchPage wp = (WorkbenchPage) PlatformUI.getWorkbench()
 								.getActiveWorkbenchWindow().getActivePage();
 							wp.savePerspectiveAs(pd);
@@ -260,13 +261,6 @@ public class PerspektiveImportHandler extends AbstractHandler {
 			MPlaceholder.class, null, EModelService.IN_ANY_PERSPECTIVE);
 		for (MPlaceholder placeholder : placeholderClones) {
 			String id = placeholder.getElementId();
-			if (id.startsWith("placeh_")) {
-				// fastview hack
-				id = placeholder.getElementId().replaceFirst("placeh_", "");
-				if (!fastViewIds.contains(id)) {
-					fastViewIds.add(id);
-				}
-			}
 			List<MPart> findElements =
 				modelService.findElements(application, id, MPart.class, null);
 			
@@ -305,46 +299,4 @@ public class PerspektiveImportHandler extends AbstractHandler {
 		
 		return fastViewIds;
 	}
-	
-	/*
-	public static void createFastViewBottomTrimBarIfNotExists(MTrimmedWindow window,
-		MPerspective mPerspective,
-		EModelService eModelService){
-		
-		MTrimBar mTrimBar = eModelService.getTrim(window, SideValue.BOTTOM);
-		
-		String id = getToolControlId(window, mPerspective);
-		MToolControl current = null;
-		for (MTrimElement trimElement : mTrimBar.getChildren()) {
-			if (trimElement.getElementId().equals(id)) {
-				if (trimElement instanceof MToolControl) {
-					current = (MToolControl) trimElement;
-					break;
-				}
-			}
-		}
-		if (current != null) {
-			current.setToBeRendered(true);
-			current.setVisible(true);
-		//	mTrimBar.getChildren().remove(current);
-		}
-		else {
-			MToolControl mToolControl = eModelService.createModelElement(MToolControl.class);
-			mToolControl.setElementId(getToolControlId(window, mPerspective));
-			mToolControl.setContributionURI(
-				"bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.TrimStack");
-			mToolControl.setToBeRendered(true);
-			mToolControl.setVisible(true);
-			mToolControl.getTags().add("TrimStack");
-			mToolControl.getPersistedState().put("YSize", "600");
-			
-			mTrimBar.getChildren().add(0, mToolControl);
-		}
-		
-	
-		mTrimBar.setVisible(true);
-		mTrimBar.setToBeRendered(true);
-		
-	
-	}*/
 }
