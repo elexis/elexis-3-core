@@ -5,6 +5,7 @@
 		<artifactId>elexis-3-core</artifactId>
 		<version>3.3.0-SNAPSHOT</version>
 	</parent>
+	<version>3.4.0-SNAPSHOT</version>
 	<artifactId>ch.elexis.core.p2site</artifactId>
 	<packaging>eclipse-repository</packaging>
 	<build>
