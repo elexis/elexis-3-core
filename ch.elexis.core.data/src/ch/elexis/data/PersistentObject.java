@@ -899,7 +899,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @return a List of Sticker objects
 	 */
-	private static String queryStickersString =
+	private final String queryStickersString =
 		"SELECT etikette FROM " + Sticker.FLD_LINKTABLE + " WHERE obj=?";
 	
 	/**
@@ -910,9 +910,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	@SuppressWarnings("unchecked")
 	public List<ISticker> getStickers(){
 		DBConnection dbConnection = getDBConnection();
-		String ID = new StringBuilder().append("ETK").append(getId()).toString();
-		ArrayList<ISticker> ret =
-			(ArrayList<ISticker>) dbConnection.getCache().get(ID, getCacheTime());
+		final String ID = "ETK" + getId();
+		List<ISticker> ret = (ArrayList<ISticker>) dbConnection.getCache().get(ID, getCacheTime());
 		if (ret != null) {
 			return ret;
 		}
@@ -920,15 +919,15 @@ public abstract class PersistentObject implements IPersistentObject {
 		PreparedStatement queryStickers = dbConnection.getPreparedStatement(queryStickersString);
 		try {
 			queryStickers.setString(1, id);
-			ResultSet res = queryStickers.executeQuery();
-			while (res.next()) {
-				Sticker et = Sticker.load(res.getString(1));
-				et.setDBConnection(dbConnection);
-				if (et != null && et.exists()) {
-					ret.add(et);
+			try (ResultSet res = queryStickers.executeQuery()) {
+				while (res.next()) {
+					Sticker et = Sticker.load(res.getString(1));
+					et.setDBConnection(dbConnection);
+					if (et != null && et.exists()) {
+						ret.add(et);
+					}
 				}
 			}
-			res.close();
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return ret;
@@ -950,20 +949,22 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @param et
 	 *            the Sticker to remove
+	 * @since 3.4 sends update event
 	 */
-	@SuppressWarnings("unchecked")
 	public void removeSticker(ISticker et){
-		DBConnection dbConnection = getDBConnection();
-		String ID = new StringBuilder().append("ETK").append(getId()).toString();
-		ArrayList<Sticker> ret =
-			(ArrayList<Sticker>) dbConnection.getCache().get(ID, getCacheTime());
-		if (ret != null) {
-			ret.remove(et);
+		List<ISticker> ret = getStickers();
+		if (ret.contains(et)) {
+			DBConnection dbConnection = getDBConnection();
+			String remove = "DELETE FROM " + Sticker.FLD_LINKTABLE + " WHERE obj=" + getWrappedId()
+				+ " AND etikette=" + JdbcLink.wrap(et.getId());
+			int exec = dbConnection.exec(remove);
+			if (exec > 0) {
+				ret.remove(et);
+				Collections.sort(ret);
+				
+				refreshLastUpdateAndSendUpdateEvent(Sticker.FLD_LINKTABLE);
+			}
 		}
-		StringBuilder sb = new StringBuilder();
-		sb.append("DELETE FROM ").append(Sticker.FLD_LINKTABLE).append(" WHERE obj=")
-			.append(getWrappedId()).append(" AND etikette=").append(JdbcLink.wrap(et.getId()));
-		dbConnection.exec(sb.toString());
 	}
 	
 	/**
@@ -971,23 +972,22 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @param st
 	 *            the Sticker to add
+	 * @since 3.4 sends update event
 	 */
-	@SuppressWarnings("unchecked")
 	public void addSticker(ISticker st){
-		DBConnection dbConnection = getDBConnection();
-		String ID = new StringBuilder().append("STK").append(getId()).toString();
-		List<ISticker> ret = (List<ISticker>) dbConnection.getCache().get(ID, getCacheTime());
-		if (ret == null) {
-			ret = getStickers();
-		}
+		List<ISticker> ret = getStickers();
 		if (!ret.contains(st)) {
-			ret.add(st);
-			Collections.sort(ret);
-			StringBuilder sb = new StringBuilder();
-			sb.append("INSERT INTO ").append(Sticker.FLD_LINKTABLE)
-				.append("(obj,etikette) VALUES (").append(getWrappedId()).append(",")
-				.append(JdbcLink.wrap(st.getId())).append(");");
-			dbConnection.exec(sb.toString());
+			DBConnection dbConnection = getDBConnection();
+			String update = "INSERT INTO " + Sticker.FLD_LINKTABLE
+				+ " (obj,etikette,lastupdate) VALUES (" + getWrappedId() + ","
+				+ JdbcLink.wrap(st.getId()) + "," + Long.toString(System.currentTimeMillis()) + ")";
+			int exec = dbConnection.exec(update);
+			if (exec == 1) {
+				ret.add(st);
+				Collections.sort(ret);
+				
+				refreshLastUpdateAndSendUpdateEvent(Sticker.FLD_LINKTABLE);
+			}
 		}
 	}
 	

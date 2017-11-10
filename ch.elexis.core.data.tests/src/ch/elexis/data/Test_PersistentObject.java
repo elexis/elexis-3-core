@@ -238,4 +238,29 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		statement.exec("INSERT INTO Dummy (ID, BoreFactor) VALUES ('TEST', '1234567890');");
 		getLink().releaseStatement(statement);
 	}
+	
+	@Test
+	public void testAddRemoveSticker(){
+		Sticker sticker = new Sticker("TestSticker", "fg", "bg");
+		sticker.setClassForSticker(PersistentObject.class);
+		sticker.setWert(100);
+		
+		Sticker sticker200 = new Sticker("TestSticker200", "fg", "bg");
+		sticker200.setClassForSticker(PersistentObject.class);
+		sticker200.setWert(200);
+		
+		PersistentObjectImpl impl = new PersistentObjectImpl();
+		
+		impl.addSticker(sticker200);
+		impl.addSticker(sticker);
+		impl.addSticker(sticker);
+		assertTrue(impl.getStickers().contains(sticker));
+		
+		assertEquals(200, impl.getStickers().get(0).getWert());
+		assertEquals(100, impl.getStickers().get(1).getWert());
+		
+		impl.removeSticker(sticker);
+		assertFalse(impl.getStickers().contains(sticker));
+		
+	}
 }

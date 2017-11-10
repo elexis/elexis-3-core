@@ -321,7 +321,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 */
 	public static String getDontAskForAddresseeStickerID(){
 		Query<Sticker> qry = new Query<Sticker>(Sticker.class);
-		qry.add(Sticker.NAME, Query.EQUALS, DONTASKFORADDRESSEE_STICKER);
+		qry.add(Sticker.FLD_NAME, Query.EQUALS, DONTASKFORADDRESSEE_STICKER);
 		List<Sticker> stickerList = qry.execute();
 		if (stickerList.size() > 0)
 			return stickerList.get(0).getId();
@@ -337,7 +337,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 */
 	public static Sticker getDontAskForAddresseeSticker(){
 		Query<Sticker> qry = new Query<Sticker>(Sticker.class);
-		qry.add(Sticker.NAME, Query.EQUALS, DONTASKFORADDRESSEE_STICKER);
+		qry.add(Sticker.FLD_NAME, Query.EQUALS, DONTASKFORADDRESSEE_STICKER);
 		List<Sticker> stickerList = qry.execute();
 		if (stickerList.size() > 0)
 			return stickerList.get(0);

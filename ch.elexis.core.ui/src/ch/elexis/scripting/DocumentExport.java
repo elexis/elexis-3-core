@@ -39,7 +39,7 @@ public class DocumentExport {
 	public String doExport(String destination, String stickerName){
 		if (stickerName != null) {
 			List<Sticker> ls =
-				new Query<Sticker>(Sticker.class, Sticker.NAME, stickerName).execute();
+				new Query<Sticker>(Sticker.class, Sticker.FLD_NAME, stickerName).execute();
 			if (ls != null && ls.size() > 0) {
 				sticker = ls.get(0);
 			} else {
