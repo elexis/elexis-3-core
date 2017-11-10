@@ -14,13 +14,13 @@ package ch.elexis.core.data.events;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.slf4j.Logger;
@@ -54,11 +54,12 @@ import ch.elexis.data.PersistentObject;
  * such filter is given, it will be informed about all events.
  * 
  * @since 3.0.0 major changes, switch to {@link ElexisContext}
+ * @since 3.4 switched listeners to {@link ListenerList}
  */
 public final class ElexisEventDispatcher extends Job {
 	private static Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
 	
-	private final List<ElexisEventListener> listeners;
+	private final ListenerList<ElexisEventListener> listeners;
 	private static ElexisEventDispatcher theInstance;
 	private final Map<Class<?>, IElexisEventDispatcher> dispatchers;
 	private final PriorityQueue<ElexisEvent> eventQueue;
@@ -82,7 +83,7 @@ public final class ElexisEventDispatcher extends Job {
 		setSystem(true);
 		setUser(false);
 		setPriority(Job.SHORT);
-		listeners = new LinkedList<ElexisEventListener>();
+		listeners = new ListenerList<ElexisEventListener>();
 		dispatchers = new HashMap<Class<?>, IElexisEventDispatcher>();
 		eventQueue = new PriorityQueue<ElexisEvent>(50);
 		eventCopy = new ArrayList<ElexisEvent>(50);
@@ -404,16 +405,13 @@ public final class ElexisEventDispatcher extends Job {
 	
 	private void doDispatch(final ElexisEvent ee){
 		if (ee != null) {
-			synchronized (listeners) {
-				List<ElexisEventListener> listenersCopy = new ArrayList<>(listeners);
-				for (final ElexisEventListener l : listenersCopy) {
-					if (ee.matches(l.getElexisEventFilter())) {
-						try {
-							l.catchElexisEvent(ee);
-						} catch (Exception e) {
-							log.error(ee.toString(), e);
-							throw e;
-						}
+			for (ElexisEventListener l : listeners) {
+				if (ee.matches(l.getElexisEventFilter())) {
+					try {
+						l.catchElexisEvent(ee);
+					} catch (Exception e) {
+						log.error(ee.toString(), e);
+						throw e;
 					}
 				}
 			}
