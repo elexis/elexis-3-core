@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.logging.feature"
       label="Elexis OpenSource Common Logging Feature"
-      version="3.2.0.qualifier"
+      version="3.4.0.qualifier"
       provider-name="elexis.info">
 
    <description>

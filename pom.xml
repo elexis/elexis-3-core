@@ -5,12 +5,9 @@
 	<modelVersion>4.0.0 </modelVersion>
 	<groupId>ch.elexis</groupId>
 	<artifactId>elexis-3-core</artifactId>
-	<version>3.3.0-SNAPSHOT</version>
+	<version>3.4.0-SNAPSHOT</version>
 	<name>Elexis 3 Core for ${project.version}</name>
 	<packaging>pom</packaging>
-	<prerequisites>
-		<maven>3.0.5</maven>
-	</prerequisites>
 	<profiles>
 		<profile>
 			<id>windows-x86</id>
@@ -321,7 +318,7 @@
 							<scripts>
 								<script><![CDATA[
   import java.text.SimpleDateFormat;
-  HINT_GENERATED    = "# Generated from pom.xml groovy shell using gmavenplus-plugin\n"
+  HINT_GENERATED    = "#  ${project.name}: Generated from pom.xml groovy shell using gmavenplus-plugin at ${new Date()}\n"
   HINT_LAST_CHANGED = "# Last changed from pom.xml groovy shell by gmavenplus-plugin in pom.xml at ${new Date()}\n"
 
   // Returns the current branchName
@@ -349,7 +346,7 @@
       repo_version_file = new File(filename)
       repo_version_file.write(HINT_GENERATED)
       repo_version_file.append("elexis.version=${elexis_version}\n")
-      println("Created ${repo_version_file} with elexis_version ${elexis_version} from commit_id ${commit_id}")
+      println("${project.name}: Created ${repo_version_file} with elexis_version ${elexis_version} from commit_id ${commit_id}")
       return branch;
   }
 
@@ -380,7 +377,7 @@
     println("Created ${repo_properties_name}")
   }
 
-if ( System.getProperty("git_branch") == null ) {
+if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core.data') {
   branch = createVersionProperties('ch.elexis.core.data/rsc/version.properties')
   createRepoProperties('ch.elexis.core.p2site/repo.properties', branch)
   patchP2infFile('ch.elexis.core.application/Elexis.p2.inf', branch, 'ch.elexis.core.p2site/Elexis.p2.inf')
