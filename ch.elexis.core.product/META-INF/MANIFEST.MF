@@ -3,5 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Product
 Bundle-SymbolicName: ch.elexis.core.product;singleton:=true
 Bundle-Version: 3.4.0.qualifier
+Bundle-Vendor: elexis.info
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Eclipse-BundleShape: dir
