@@ -188,7 +188,7 @@ public class GlobalActions {
 				public void run(){
 					Desktop desktop = Desktop.getDesktop();
 					String url = "https://wiki.elexis.info";
-					if(desktop != null) {
+					if(Desktop.isDesktopSupported()) {
 					  try {
 						  desktop.browse(new java.net.URI(url)); 
 						} catch (Exception e) {
@@ -196,7 +196,7 @@ public class GlobalActions {
 						  ExHandler.handle(e);
 						}
 					} else {
-						  logger.warn("default browser not found. Desktop was null.");
+						  logger.warn("isDesktopSupported was false.");
 					}
 				}
 			};
