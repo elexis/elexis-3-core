@@ -80,7 +80,8 @@ public class PerspektiveImportHandler extends AbstractHandler {
 				
 				if (createdPd != null) {
 					MessageDialog.openInformation(UiDesk.getDisplay().getActiveShell(), "Import",
-						"Die " + createdPd.getId() + " Perspektive wurde erfolgreich importiert.");
+						"Die Perspektive '" + createdPd.getLabel()
+							+ "' wurde erfolgreich importiert.");
 				}
 			}
 		} catch (Exception e) {
