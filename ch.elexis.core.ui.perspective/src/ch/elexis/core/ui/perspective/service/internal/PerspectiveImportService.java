@@ -48,7 +48,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 
 	@SuppressWarnings("restriction")
 	@Override
-	public void importPerspective(String uri,
+	public IPerspectiveDescriptor importPerspective(String uri,
 		IStateCallback iStateHandle, boolean openPerspectiveIfAdded){
 		
 		IPerspectiveRegistry iPerspectiveRegistry =
@@ -57,7 +57,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		if (uri != null && !uri.toLowerCase().startsWith("http")) {
 			if (uri.toLowerCase().endsWith("xmi")) {
 				File f = new File(uri);
-				
+				IPerspectiveDescriptor createdPd = null;
 				MPerspective mPerspective = loadPerspectiveFromFile(f);
 				if (mPerspective != null) {
 					String id = mPerspective.getElementId();
@@ -69,28 +69,29 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 					if (existingPerspectiveDescriptor == null
 						|| iStateHandle == null || iStateHandle.state(State.OVERRIDE)) {
 						
-						IPerspectiveDescriptor activePerspectiveDescriptor =
+						IPerspectiveDescriptor activePd =
 							iPerspectiveRegistry.findPerspectiveWithId(activePerspectiveId);
 						
 						int idx = deletePerspective(id);
 						
 						((PerspectiveRegistry) iPerspectiveRegistry).addPerspective(mPerspective);
-						IPerspectiveDescriptor pd = iPerspectiveRegistry.findPerspectiveWithId(id);
-						if (pd != null) {
-							((PerspectiveDescriptor) pd).setHasCustomDefinition(false); //not sure
+						createdPd = iPerspectiveRegistry.findPerspectiveWithId(id);
+						if (createdPd != null) {
+							((PerspectiveDescriptor) createdPd).setHasCustomDefinition(false); //not sure
 							
 						}
 						if (idx > -1 || openPerspectiveIfAdded) {
-							openPerspective(pd);
+							openPerspective(createdPd);
 							
 							// there was already an opened perspective switch back to it
-							openPerspective(activePerspectiveDescriptor);
+							openPerspective(activePd);
 						}
 					}
 				}
-				
+				return createdPd;
 			}
 		}
+		return null;
 	}
 	
 	@Override

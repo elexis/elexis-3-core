@@ -61,24 +61,27 @@ public class PerspektiveImportHandler extends AbstractHandler {
 			
 			String path = dialog.open();
 			if (path != null) {
+				IPerspectiveDescriptor createdPd = null;
 				if (path.toLowerCase().endsWith("xml")) {
 					// legacy
 					MPerspective mPerspective = modelService.createModelElement(MPerspective.class);
 					List<String> fastViewIds =
 						perspectiveImportService.createLegacyPerspective(path, mPerspective);
-					IPerspectiveDescriptor pd = savePerspectiveToRegistryLegacy(mPerspective);
+					createdPd = savePerspectiveToRegistryLegacy(mPerspective);
 					switchToPerspectiveLegacy(mPerspective, fastViewIds);
 					IWorkbenchPage wp = (IWorkbenchPage) PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getActivePage();
-					wp.savePerspectiveAs(pd);
+					wp.savePerspectiveAs(createdPd);
 					
 				} else {
-					perspectiveImportService.importPerspective(path, null, true);
+					createdPd = perspectiveImportService.importPerspective(path, null, true);
 					
 				}
 				
-				MessageDialog.openInformation(UiDesk.getDisplay().getActiveShell(), "Import",
-					"Die Perspektive wurde erfolgreich importiert.");
+				if (createdPd != null) {
+					MessageDialog.openInformation(UiDesk.getDisplay().getActiveShell(), "Import",
+						"Die " + createdPd.getId() + " Perspektive wurde erfolgreich importiert.");
+				}
 			}
 		} catch (Exception e) {
 			MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Import",

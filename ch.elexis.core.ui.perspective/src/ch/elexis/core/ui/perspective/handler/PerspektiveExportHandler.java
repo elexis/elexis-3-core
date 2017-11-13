@@ -44,10 +44,10 @@ public class PerspektiveExportHandler extends AbstractHandler {
 			try {
 				perspectiveExportService.exportPerspective(path);
 				MessageDialog.openInformation(UiDesk.getDisplay().getActiveShell(), "Export",
-					"Diese Perspektive wurde erfolgreich exportiert.");
+					"Die aktuelle Perspektive wurde erfolgreich exportiert.");
 			} catch (IOException e) {
 				MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Export",
-					"Diese Perspektive kann nicht exportiert werden.");
+					"Die aktuelle Perspektive kann nicht exportiert werden.");
 				LoggerFactory.getLogger(PerspektiveExportHandler.class).error("export error", e);
 			}
 		}

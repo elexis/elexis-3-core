@@ -16,8 +16,9 @@ public interface IPerspectiveImportService {
 	 * @param uri
 	 * @param iStateHandle
 	 * @param openPerspectiveIfAdded
+	 * @return IPerspectiveDescriptor
 	 */
-	public void importPerspective(String uri, IStateCallback iStateHandle,
+	public IPerspectiveDescriptor importPerspective(String uri, IStateCallback iStateHandle,
 		boolean openPerspectiveIfAdded);
 	
 	public List<String> createLegacyPerspective(String path, MPerspective mPerspective)
