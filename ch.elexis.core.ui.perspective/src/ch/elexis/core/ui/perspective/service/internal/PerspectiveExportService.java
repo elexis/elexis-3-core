@@ -60,7 +60,8 @@ public class PerspectiveExportService implements IPerspectiveExportService {
 	
 	@SuppressWarnings("restriction")
 	@Override
-	public void exportPerspective(String pathToExport) throws IOException{
+	public void exportPerspective(String pathToExport, String newCode, String newLabel)
+		throws IOException{
 		
 		try (OutputStream outputStream = new FileOutputStream(pathToExport)) {
 			EModelService modelService = getService(EModelService.class);
@@ -83,6 +84,15 @@ public class PerspectiveExportService implements IPerspectiveExportService {
 			
 			//clone the perspective and replace the placeholder ref with element ids of their content
 			MPerspective clone = clonePerspectiveWithWorkaround(modelService, activePerspective);
+			
+			if (newLabel != null) {
+				clone.setLabel(newLabel);
+			}
+			
+			if (newCode != null) {
+				clone.setElementId(newCode);
+			}
+			
 			List<MPlaceholder> placeholderClones = modelService.findElements(clone, null,
 				MPlaceholder.class, null, EModelService.IN_ANY_PERSPECTIVE);
 			for (MPlaceholder placeholder : placeholderClones) {

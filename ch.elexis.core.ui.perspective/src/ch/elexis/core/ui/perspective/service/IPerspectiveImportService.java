@@ -45,4 +45,27 @@ public interface IPerspectiveImportService {
 	 * @return
 	 */
 	public MPerspective loadPerspectiveFromFile(File f);
+	
+	/**
+	 * Deletes a perspective by perspective id
+	 * 
+	 * @param perspectiveId
+	 * @return
+	 */
+	public int deletePerspective(String perspectiveId);
+	
+	/**
+	 * Saves the perspective by id with the given name
+	 * 
+	 * @param perspectiveId
+	 * @param newName
+	 */
+	public void savePerspectiveAs(String perspectiveId, String newName);
+	
+	/**
+	 * Closes a perspective with the given descriptor
+	 * 
+	 * @param existingPerspectiveDescriptor
+	 */
+	public void closePerspective(IPerspectiveDescriptor existingPerspectiveDescriptor);
 }

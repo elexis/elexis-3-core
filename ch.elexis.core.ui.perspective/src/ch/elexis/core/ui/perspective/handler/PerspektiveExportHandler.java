@@ -42,7 +42,7 @@ public class PerspektiveExportHandler extends AbstractHandler {
 		String path = dialog.open();
 		if (path != null) {
 			try {
-				perspectiveExportService.exportPerspective(path);
+				perspectiveExportService.exportPerspective(path, null, null);
 				MessageDialog.openInformation(UiDesk.getDisplay().getActiveShell(), "Export",
 					"Die aktuelle Perspektive wurde erfolgreich exportiert.");
 			} catch (IOException e) {

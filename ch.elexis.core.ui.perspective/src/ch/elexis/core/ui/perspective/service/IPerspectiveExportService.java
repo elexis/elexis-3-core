@@ -10,6 +10,7 @@ public interface IPerspectiveExportService {
 	 * @param pathToExport
 	 * @throws IOException
 	 */
-	public void exportPerspective(String pathToExport) throws IOException;
+	public void exportPerspective(String pathToExport, String code, String newLabel)
+		throws IOException;
 	
 }

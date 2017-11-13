@@ -25,7 +25,6 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.XMLMemento;
@@ -100,39 +99,33 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 			.setPerspective(iPerspectiveDescriptor);
 	}
 	
+	public void closePerspective(IPerspectiveDescriptor iPerspectiveDescriptor){
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+			.closePerspective(iPerspectiveDescriptor, true, false);
+	}
+	
 	/**
 	 * Deletes a perspective
 	 * 
 	 * @param existingPerspectiveDescriptor
 	 * @return the prespective idx inside stack
 	 */
-	private int deletePerspective(String perspectiveId){
+	@Override
+	public int deletePerspective(String perspectiveId){
 		IPerspectiveRegistry iPerspectiveRegistry =
 			PlatformUI.getWorkbench().getPerspectiveRegistry();
 		MApplication mApplication = getService(MApplication.class);
 		IPerspectiveDescriptor existingPerspectiveDescriptor =
 			iPerspectiveRegistry.findPerspectiveWithId(perspectiveId);
-		List<MPerspective> perspectivesInStack;
-		IWorkbenchPage iWorkbenchPage;
+		
 		int idx = -1;
 		
 		if (existingPerspectiveDescriptor != null) {
 			
-			MPerspectiveStack mPerspectiveStack = getPerspectiveStack();
-			perspectivesInStack = mPerspectiveStack.getChildren();
-			
-			for (MPerspective perspectiveInStack : perspectivesInStack) {
-				if (existingPerspectiveDescriptor.getId()
-					.equals(perspectiveInStack.getElementId())) {
-					idx++;
-					break;
-				}
-			}
+			idx = isPerspectiveInsideStack(existingPerspectiveDescriptor);
 			
 			if (idx > -1) {
-				iWorkbenchPage =
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				iWorkbenchPage.closePerspective(existingPerspectiveDescriptor, true, false);
+				closePerspective(existingPerspectiveDescriptor);
 			}
 			//NOT WORKING IF PERSPECTIVE IS PREDEFINED - workaround with generics
 			iPerspectiveRegistry.deletePerspective(existingPerspectiveDescriptor);
@@ -140,6 +133,22 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 				MSnippetContainer.class, String.class, mApplication,
 				existingPerspectiveDescriptor.getId());
 			
+		}
+		return idx;
+	}
+
+	private int isPerspectiveInsideStack(IPerspectiveDescriptor pd){
+		int idx = -1;
+		List<MPerspective> perspectivesInStack;
+		MPerspectiveStack mPerspectiveStack = getPerspectiveStack();
+		perspectivesInStack = mPerspectiveStack.getChildren();
+		
+		for (MPerspective perspectiveInStack : perspectivesInStack) {
+			if (pd.getId()
+				.equals(perspectiveInStack.getElementId())) {
+				idx++;
+				break;
+			}
 		}
 		return idx;
 	}
@@ -338,5 +347,47 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 	
 	private static <T> T getService(final Class<T> clazz){
 		return PlatformUI.getWorkbench().getService(clazz);
+	}
+	
+
+	@Override
+	public void savePerspectiveAs(String perspectiveId, String newName){
+		EModelService modelService = getService(EModelService.class);
+		MApplication mApplication = getService(MApplication.class);
+		PerspectiveRegistry perspectiveRegistry =
+			(PerspectiveRegistry) PlatformUI.getWorkbench().getPerspectiveRegistry();
+		PerspectiveDescriptor existingPerspectiveDescriptor =
+			(PerspectiveDescriptor) perspectiveRegistry.findPerspectiveWithId(perspectiveId);
+		if (existingPerspectiveDescriptor != null) {
+			
+			int idx = isPerspectiveInsideStack(existingPerspectiveDescriptor);
+			
+			// loads the mapplication from the orginal descriptor
+			openPerspective(existingPerspectiveDescriptor);
+			
+			// the model must be loaded
+			List<MPerspective> modelPerspective = modelService.findElements(mApplication,
+				existingPerspectiveDescriptor.getId(), MPerspective.class, null);
+			
+			// check if the model is loaded
+			if (!modelPerspective.isEmpty()) {
+				// create a new pd
+				PerspectiveDescriptor newPd =
+					perspectiveRegistry.createPerspective(newName, existingPerspectiveDescriptor);
+				
+				// saves an opens the new perspective
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.savePerspectiveAs(newPd);
+				
+				// close the new created one
+				closePerspective(newPd);
+				
+				if (idx > -1) {
+					// opens the original descriptor if it was already opened
+					openPerspective(existingPerspectiveDescriptor);
+				}
+			}
+			
+		}
 	}
 }
