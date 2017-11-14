@@ -14,9 +14,6 @@ package ch.elexis.core.application.advisors;
 
 import static ch.elexis.core.ui.actions.GlobalActions.perspectiveMenu;
 import static ch.elexis.core.ui.actions.GlobalActions.resetPerspectiveAction;
-import static ch.elexis.core.ui.actions.GlobalActions.savePerspectiveAction;
-import static ch.elexis.core.ui.actions.GlobalActions.savePerspectiveAsAction;
-import static ch.elexis.core.ui.actions.GlobalActions.savePerspectiveAsDefaultAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -155,18 +152,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		editMenu.add(GlobalActions.cutAction);
 		editMenu.add(GlobalActions.pasteAction);
 		
-		windowMenu.add(GlobalActions.fixLayoutAction);
 		GlobalActions.perspectiveMenu =
 			new MenuManager(Messages.ApplicationActionBarAdvisor_7, "openPerspective"); //$NON-NLS-1$
-		GlobalActions.perspectiveList =
-			ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
-		GlobalActions.perspectiveMenu.add(savePerspectiveAction);
-		GlobalActions.perspectiveMenu.add(savePerspectiveAsAction);
 		perspectiveMenu.add(resetPerspectiveAction);
-		perspectiveMenu.add(savePerspectiveAsDefaultAction);
-		perspectiveMenu.add(new Separator());
-		GlobalActions.perspectiveMenu.add(GlobalActions.perspectiveList);
-		windowMenu.add(GlobalActions.perspectiveMenu);
+		windowMenu.add(perspectiveMenu);
 		
 		GlobalActions.viewMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_9);
 		GlobalActions.viewList = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
