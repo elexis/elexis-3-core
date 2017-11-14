@@ -66,6 +66,7 @@ public interface IPerspectiveImportService {
 	 * Closes a perspective with the given descriptor
 	 * 
 	 * @param existingPerspectiveDescriptor
+	 * @return
 	 */
-	public void closePerspective(IPerspectiveDescriptor existingPerspectiveDescriptor);
+	public int closePerspective(IPerspectiveDescriptor existingPerspectiveDescriptor);
 }

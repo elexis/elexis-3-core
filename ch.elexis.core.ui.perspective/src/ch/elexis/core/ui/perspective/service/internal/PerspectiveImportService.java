@@ -25,6 +25,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.XMLMemento;
@@ -95,13 +96,22 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 	
 	@Override
 	public void openPerspective(IPerspectiveDescriptor iPerspectiveDescriptor){
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-			.setPerspective(iPerspectiveDescriptor);
+		try {
+			IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			PlatformUI.getWorkbench().showPerspective(iPerspectiveDescriptor.getId(), win);
+		} catch (WorkbenchException e) {
+			LoggerFactory.getLogger(PerspectiveImportService.class)
+				.error("cannot open perspective [{}]", iPerspectiveDescriptor.getId(), e);
+		}
 	}
 	
-	public void closePerspective(IPerspectiveDescriptor iPerspectiveDescriptor){
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+	public int closePerspective(IPerspectiveDescriptor iPerspectiveDescriptor){
+		int idx = isPerspectiveInsideStack(iPerspectiveDescriptor);
+		if (idx > -1) {
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 			.closePerspective(iPerspectiveDescriptor, true, false);
+		}
+		return idx;
 	}
 	
 	/**
@@ -122,11 +132,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		
 		if (existingPerspectiveDescriptor != null) {
 			
-			idx = isPerspectiveInsideStack(existingPerspectiveDescriptor);
-			
-			if (idx > -1) {
-				closePerspective(existingPerspectiveDescriptor);
-			}
+			idx = closePerspective(existingPerspectiveDescriptor);
 			//NOT WORKING IF PERSPECTIVE IS PREDEFINED - workaround with generics
 			iPerspectiveRegistry.deletePerspective(existingPerspectiveDescriptor);
 			PerspectiveImportService.genericInvokMethod(iPerspectiveRegistry, "removeSnippet",
