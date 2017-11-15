@@ -21,7 +21,16 @@ public interface IPerspectiveImportService {
 	public IPerspectiveDescriptor importPerspective(String uri, IStateCallback iStateHandle,
 		boolean openPerspectiveIfAdded);
 	
-	public List<String> createLegacyPerspective(String path, MPerspective mPerspective)
+	/**
+	 * Creates a legacy perspective from a given {@link MPerspective} Returns a list of fastview
+	 * view ids.
+	 * 
+	 * @param path
+	 * @param mPerspective
+	 * @return
+	 * @throws IOException
+	 */
+	public List<String> createPerspectiveFromLegacy(String path, MPerspective mPerspective)
 		throws IOException;
 	
 	/**

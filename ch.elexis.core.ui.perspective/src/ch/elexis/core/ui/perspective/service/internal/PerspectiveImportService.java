@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,65 +48,75 @@ import ch.elexis.core.ui.perspective.service.IStateCallback.State;
 @Component
 public class PerspectiveImportService implements IPerspectiveImportService {
 	
-	@SuppressWarnings("restriction")
 	@Override
 	public IPerspectiveDescriptor importPerspective(String uri, IStateCallback iStateHandle,
 		boolean openPerspectiveIfAdded){
 		
-		IPerspectiveRegistry iPerspectiveRegistry =
-			PlatformUI.getWorkbench().getPerspectiveRegistry();
-		
-		if (uri != null && !uri.toLowerCase().startsWith("http")) {
-			if (uri.toLowerCase().endsWith("xmi")) {
-				File f = new File(uri);
-				IPerspectiveDescriptor createdPd = null;
-				
-				if (f != null && f.exists()) {
-					String path = f.getAbsolutePath();
-					if (path.toLowerCase().endsWith("xmi")) {
-						try {
-							InputStream in = FileUtils.openInputStream(f);
-							MPerspective mPerspective = loadPerspectiveFromStream(in);
-							if (mPerspective != null) {
-								String id = mPerspective.getElementId();
-								IPerspectiveDescriptor existingPerspectiveDescriptor =
-									iPerspectiveRegistry.findPerspectiveWithId(id);
-								
-								String activePerspectiveId = getActivePerspectiveId();
-								
-								if (existingPerspectiveDescriptor == null || iStateHandle == null
-									|| iStateHandle.state(State.OVERRIDE)) {
-									
-									IPerspectiveDescriptor activePd = iPerspectiveRegistry
-										.findPerspectiveWithId(activePerspectiveId);
-									
-									int idx = deletePerspective(id);
-									
-									((PerspectiveRegistry) iPerspectiveRegistry)
-										.addPerspective(mPerspective);
-									createdPd = iPerspectiveRegistry.findPerspectiveWithId(id);
-									if (createdPd != null) {
-										((PerspectiveDescriptor) createdPd)
-											.setHasCustomDefinition(false); //not sure
-										
-									}
-									if (idx > -1 || openPerspectiveIfAdded) {
-										openPerspective(createdPd);
-										
-										// there was already an opened perspective switch back to it
-										openPerspective(activePd);
-									}
-								}
-							}
-						} catch (IOException e) {
-							LoggerFactory.getLogger(PerspectiveImportService.class)
-								.error("cannot import perspective at: " + uri, e);
-						}
+		try {
+			if (uri != null) {
+				if (uri.toLowerCase().startsWith("http")) {
+					// import from web
+					InputStream in = new URL(uri).openStream();
+					return importPerspectiveFromStream(in, iStateHandle, openPerspectiveIfAdded);
+				} else if (uri.toLowerCase().endsWith("xmi")) {
+					// import from file
+					File f = new File(uri);
+					if (f != null && f.exists()) {
+						InputStream in = FileUtils.openInputStream(f);
+						return importPerspectiveFromStream(in, iStateHandle,
+							openPerspectiveIfAdded);
 					}
-					return createdPd;
 				}
 				
 			}
+		} catch (IOException e) {
+			LoggerFactory.getLogger(PerspectiveImportService.class)
+				.error("cannot import perspective at: " + uri, e);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("restriction")
+	private IPerspectiveDescriptor importPerspectiveFromStream(InputStream in, IStateCallback iStateHandle,
+		boolean openPerspectiveIfAdded) throws IOException{
+		MPerspective mPerspective = loadPerspectiveFromStream(in);
+		if (mPerspective != null) {
+			IPerspectiveRegistry iPerspectiveRegistry =
+				PlatformUI.getWorkbench().getPerspectiveRegistry();
+			
+			// the perspective id to import
+			String id = mPerspective.getElementId();
+			IPerspectiveDescriptor existingPerspectiveDescriptor =
+				iPerspectiveRegistry.findPerspectiveWithId(id);
+			
+			// the active perspective id
+			String activePerspectiveId = getActivePerspectiveId();
+			
+			// check if the import should be done
+			if (existingPerspectiveDescriptor == null || iStateHandle == null
+				|| iStateHandle.state(State.OVERRIDE)) {
+				
+				IPerspectiveDescriptor activePd =
+					iPerspectiveRegistry.findPerspectiveWithId(activePerspectiveId);
+				
+				// delete if a perspective with the id already exists
+				int idx = deletePerspective(id);
+				
+				// add the new perspective to the registry
+				((PerspectiveRegistry) iPerspectiveRegistry).addPerspective(mPerspective);
+				IPerspectiveDescriptor createdPd = iPerspectiveRegistry.findPerspectiveWithId(id);
+				if (createdPd != null) {
+					((PerspectiveDescriptor) createdPd).setHasCustomDefinition(false); //no original descriptor should exists 
+				}
+				// check if the new perspective should be opened
+				if (idx > -1 || openPerspectiveIfAdded) {
+					openPerspective(createdPd);
+					// there was already an opened active perspective switch back to it
+					openPerspective(activePd);
+				}
+				return createdPd;
+			}
+			
 		}
 		return null;
 	}
@@ -130,12 +141,6 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		return idx;
 	}
 	
-	/**
-	 * Deletes a perspective
-	 * 
-	 * @param existingPerspectiveDescriptor
-	 * @return the prespective idx inside stack
-	 */
 	@Override
 	public int deletePerspective(String perspectiveId){
 		IPerspectiveRegistry iPerspectiveRegistry =
@@ -249,7 +254,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 	
 	@SuppressWarnings("restriction")
 	@Override
-	public List<String> createLegacyPerspective(String path, MPerspective mPerspective)
+	public List<String> createPerspectiveFromLegacy(String path, MPerspective mPerspective)
 		throws IOException{
 		List<String> fastViewIds = new ArrayList<>();
 		
@@ -368,6 +373,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		return PlatformUI.getWorkbench().getService(clazz);
 	}
 	
+	@SuppressWarnings("restriction")
 	@Override
 	public void savePerspectiveAs(String perspectiveId, String newName){
 		EModelService modelService = getService(EModelService.class);

@@ -66,7 +66,7 @@ public class PerspektiveImportHandler extends AbstractHandler {
 					// legacy
 					MPerspective mPerspective = modelService.createModelElement(MPerspective.class);
 					List<String> fastViewIds =
-						perspectiveImportService.createLegacyPerspective(path, mPerspective);
+						perspectiveImportService.createPerspectiveFromLegacy(path, mPerspective);
 					createdPd = savePerspectiveToRegistryLegacy(mPerspective);
 					switchToPerspectiveLegacy(mPerspective, fastViewIds);
 					IWorkbenchPage wp = (IWorkbenchPage) PlatformUI.getWorkbench()
