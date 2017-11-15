@@ -64,10 +64,14 @@ public class PerspektiveImportHandler extends AbstractHandler {
 				IPerspectiveDescriptor createdPd = null;
 				if (path.toLowerCase().endsWith("xml")) {
 					// legacy
+					
 					MPerspective mPerspective = modelService.createModelElement(MPerspective.class);
+					// the workbench window must be on top - otherwise the exception 'Application does not have an active window' occurs
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().open();
 					List<String> fastViewIds =
 						perspectiveImportService.createPerspectiveFromLegacy(path, mPerspective);
 					createdPd = savePerspectiveToRegistryLegacy(mPerspective);
+					perspectiveImportService.openPerspective(createdPd);
 					switchToPerspectiveLegacy(mPerspective, fastViewIds);
 					IWorkbenchPage wp = (IWorkbenchPage) PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getActivePage();
@@ -113,6 +117,7 @@ public class PerspektiveImportHandler extends AbstractHandler {
 	
 	private void switchToPerspectiveLegacy(MPerspective loadedPerspective,
 		List<String> preLoadedFastViewIds){
+		
 		EModelService modelService = getService(EModelService.class);
 		EPartService partService = getService(EPartService.class);
 		MApplication mApplication = getService(MApplication.class);
@@ -142,6 +147,9 @@ public class PerspektiveImportHandler extends AbstractHandler {
 		for (String fastViewId : fastViewIds) {
 			ElexisFastViewUtil.addToFastView(loadedPerspective.getElementId(), fastViewId);
 		}
+		// the workbench window must be on top - otherwise the exception 'Application does not have an active window' occurs
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().open();
+		
 		partService.switchPerspective(loadedPerspective);
 	}
 	

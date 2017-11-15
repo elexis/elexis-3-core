@@ -36,6 +36,7 @@ import org.eclipse.ui.internal.PerspectiveExtensionReader;
 import org.eclipse.ui.internal.PerspectiveTagger;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.e4.compatibility.ModeledPageLayout;
+import org.eclipse.ui.internal.menus.MenuHelper;
 import org.eclipse.ui.internal.registry.PerspectiveDescriptor;
 import org.eclipse.ui.internal.registry.PerspectiveRegistry;
 import org.osgi.service.component.annotations.Component;
@@ -257,17 +258,31 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 	public List<String> createPerspectiveFromLegacy(String path, MPerspective mPerspective)
 		throws IOException{
 		List<String> fastViewIds = new ArrayList<>();
+		IPerspectiveRegistry iPerspectiveRegistry =
+			PlatformUI.getWorkbench().getPerspectiveRegistry();
 		
 		try (FileReader reader = new FileReader(new File(path))) {
 			XMLMemento memento = XMLMemento.createReadRoot(reader);
 			
 			String label = memento.getChild("descriptor").getString("label");
 			String id = memento.getChild("descriptor").getString("id");
+			String descriptorId = memento.getChild("descriptor").getString("descriptor");
 			PerspectiveDescriptor pd = new PerspectiveDescriptor(id, label, null);
 			
+			// sets the icon of the org descriptor to the new descriptor
+			if (descriptorId != null) {
+				IPerspectiveDescriptor orgPd =
+					iPerspectiveRegistry.findPerspectiveWithId(descriptorId);
+				if (orgPd != null) {
+					pd.setImageDescriptor(orgPd.getImageDescriptor());
+					mPerspective.setIconURI(
+						MenuHelper.getImageUrl(orgPd.getImageDescriptor()));
+				}
+			}
 			mPerspective.setLabel(label);
 			mPerspective.setElementId(id);
 			
+
 			IMemento layout = memento.getChild(IWorkbenchConstants.TAG_LAYOUT);
 			
 			EPartService partService = getService(EPartService.class);
