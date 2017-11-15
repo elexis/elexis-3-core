@@ -1,7 +1,7 @@
 package ch.elexis.core.ui.perspective.service;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
@@ -39,12 +39,12 @@ public interface IPerspectiveImportService {
 	public void openPerspective(IPerspectiveDescriptor existingPerspectiveDescriptor);
 	
 	/**
-	 * Loads a perspective from file
+	 * Loads a perspective from {@link InputStream}, the stream will be closed afterwards.
 	 * 
 	 * @param f
 	 * @return
 	 */
-	public MPerspective loadPerspectiveFromFile(File f);
+	public MPerspective loadPerspectiveFromStream(InputStream in) throws IOException;
 	
 	/**
 	 * Deletes a perspective by perspective id
@@ -69,4 +69,13 @@ public interface IPerspectiveImportService {
 	 * @return
 	 */
 	public int closePerspective(IPerspectiveDescriptor existingPerspectiveDescriptor);
+	
+	/**
+	 * Returns the position of the perspective inside the stack of opened perspectives.
+	 * 
+	 * @param perspectiveId
+	 * @return returns -1 if the perspective with the given id is not found, or the perspective is
+	 *         not inside the stack.
+	 */
+	public int isPerspectiveInStack(String perspectiveId);
 }

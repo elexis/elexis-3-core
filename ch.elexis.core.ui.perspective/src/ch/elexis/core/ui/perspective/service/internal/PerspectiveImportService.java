@@ -1,7 +1,6 @@
 package ch.elexis.core.ui.perspective.service.internal;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +8,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.e4.ui.internal.workbench.E4XMIResourceFactory;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MSnippetContainer;
@@ -45,11 +46,11 @@ import ch.elexis.core.ui.perspective.service.IStateCallback.State;
 
 @Component
 public class PerspectiveImportService implements IPerspectiveImportService {
-
+	
 	@SuppressWarnings("restriction")
 	@Override
-	public IPerspectiveDescriptor importPerspective(String uri,
-		IStateCallback iStateHandle, boolean openPerspectiveIfAdded){
+	public IPerspectiveDescriptor importPerspective(String uri, IStateCallback iStateHandle,
+		boolean openPerspectiveIfAdded){
 		
 		IPerspectiveRegistry iPerspectiveRegistry =
 			PlatformUI.getWorkbench().getPerspectiveRegistry();
@@ -58,37 +59,52 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 			if (uri.toLowerCase().endsWith("xmi")) {
 				File f = new File(uri);
 				IPerspectiveDescriptor createdPd = null;
-				MPerspective mPerspective = loadPerspectiveFromFile(f);
-				if (mPerspective != null) {
-					String id = mPerspective.getElementId();
-					IPerspectiveDescriptor existingPerspectiveDescriptor =
-						iPerspectiveRegistry.findPerspectiveWithId(id);
-					
-					String activePerspectiveId = getActivePerspectiveId();
-					
-					if (existingPerspectiveDescriptor == null
-						|| iStateHandle == null || iStateHandle.state(State.OVERRIDE)) {
-						
-						IPerspectiveDescriptor activePd =
-							iPerspectiveRegistry.findPerspectiveWithId(activePerspectiveId);
-						
-						int idx = deletePerspective(id);
-						
-						((PerspectiveRegistry) iPerspectiveRegistry).addPerspective(mPerspective);
-						createdPd = iPerspectiveRegistry.findPerspectiveWithId(id);
-						if (createdPd != null) {
-							((PerspectiveDescriptor) createdPd).setHasCustomDefinition(false); //not sure
-							
-						}
-						if (idx > -1 || openPerspectiveIfAdded) {
-							openPerspective(createdPd);
-							
-							// there was already an opened perspective switch back to it
-							openPerspective(activePd);
+				
+				if (f != null && f.exists()) {
+					String path = f.getAbsolutePath();
+					if (path.toLowerCase().endsWith("xmi")) {
+						try {
+							InputStream in = FileUtils.openInputStream(f);
+							MPerspective mPerspective = loadPerspectiveFromStream(in);
+							if (mPerspective != null) {
+								String id = mPerspective.getElementId();
+								IPerspectiveDescriptor existingPerspectiveDescriptor =
+									iPerspectiveRegistry.findPerspectiveWithId(id);
+								
+								String activePerspectiveId = getActivePerspectiveId();
+								
+								if (existingPerspectiveDescriptor == null || iStateHandle == null
+									|| iStateHandle.state(State.OVERRIDE)) {
+									
+									IPerspectiveDescriptor activePd = iPerspectiveRegistry
+										.findPerspectiveWithId(activePerspectiveId);
+									
+									int idx = deletePerspective(id);
+									
+									((PerspectiveRegistry) iPerspectiveRegistry)
+										.addPerspective(mPerspective);
+									createdPd = iPerspectiveRegistry.findPerspectiveWithId(id);
+									if (createdPd != null) {
+										((PerspectiveDescriptor) createdPd)
+											.setHasCustomDefinition(false); //not sure
+										
+									}
+									if (idx > -1 || openPerspectiveIfAdded) {
+										openPerspective(createdPd);
+										
+										// there was already an opened perspective switch back to it
+										openPerspective(activePd);
+									}
+								}
+							}
+						} catch (IOException e) {
+							LoggerFactory.getLogger(PerspectiveImportService.class)
+								.error("cannot import perspective at: " + uri, e);
 						}
 					}
+					return createdPd;
 				}
-				return createdPd;
+				
 			}
 		}
 		return null;
@@ -109,7 +125,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		int idx = isPerspectiveInsideStack(iPerspectiveDescriptor);
 		if (idx > -1) {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-			.closePerspective(iPerspectiveDescriptor, true, false);
+				.closePerspective(iPerspectiveDescriptor, true, false);
 		}
 		return idx;
 	}
@@ -142,47 +158,45 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		}
 		return idx;
 	}
-
+	
+	public int isPerspectiveInStack(String perspectiveId){
+		IPerspectiveRegistry iPerspectiveRegistry =
+			PlatformUI.getWorkbench().getPerspectiveRegistry();
+		return isPerspectiveInsideStack(iPerspectiveRegistry.findPerspectiveWithId(perspectiveId));
+	}
+	
 	private int isPerspectiveInsideStack(IPerspectiveDescriptor pd){
 		int idx = -1;
-		List<MPerspective> perspectivesInStack;
-		MPerspectiveStack mPerspectiveStack = getPerspectiveStack();
-		perspectivesInStack = mPerspectiveStack.getChildren();
-		
-		for (MPerspective perspectiveInStack : perspectivesInStack) {
-			if (pd.getId()
-				.equals(perspectiveInStack.getElementId())) {
-				idx++;
-				break;
+		if (pd != null) {
+			List<MPerspective> perspectivesInStack;
+			MPerspectiveStack mPerspectiveStack = getPerspectiveStack();
+			perspectivesInStack = mPerspectiveStack.getChildren();
+			
+			for (MPerspective perspectiveInStack : perspectivesInStack) {
+				if (pd.getId().equals(perspectiveInStack.getElementId())) {
+					idx++;
+					break;
+				}
 			}
 		}
 		return idx;
 	}
 	
-	
 	@SuppressWarnings("restriction")
 	@Override
-	public MPerspective loadPerspectiveFromFile(File f){
-		if (f != null && f.exists()) {
-			String path = f.getAbsolutePath();
-			if (path.toLowerCase().endsWith("xmi")) {
-				Resource resource = new E4XMIResourceFactory().createResource(null);
-				try (InputStream inputStream = new FileInputStream(f)) {
-					resource.load(inputStream, null);
-					if (!resource.getContents().isEmpty()) {
-						MPerspective loadedPerspective =
-							(MPerspective) resource.getContents().get(0);
-						return loadedPerspective;
-					}
-				} catch (IOException e) {
-					LoggerFactory.getLogger(PerspectiveImportService.class)
-						.error("cannot load perspective [{}]", f.getAbsolutePath(), e);
-				}
+	public MPerspective loadPerspectiveFromStream(InputStream in) throws IOException{
+		try {
+			Resource resource = new E4XMIResourceFactory().createResource(null);
+			resource.load(in, null);
+			if (!resource.getContents().isEmpty()) {
+				MPerspective loadedPerspective = (MPerspective) resource.getContents().get(0);
+				return loadedPerspective;
 			}
+			return null;
+		} finally {
+			IOUtils.closeQuietly(in);
 		}
-		return null;
 	}
-	
 	
 	private MPerspective getActivePerspective(){
 		EModelService modelService = getService(EModelService.class);
@@ -321,8 +335,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 			PerspectiveExtensionReader extReader = new PerspectiveExtensionReader();
 			extReader.extendLayout(workbenchPage.getExtensionTracker(), id, modelLayout);
 			
-		}
-		catch (WorkbenchException e) {
+		} catch (WorkbenchException e) {
 			throw new IOException(e);
 		}
 		return fastViewIds;
@@ -355,7 +368,6 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		return PlatformUI.getWorkbench().getService(clazz);
 	}
 	
-
 	@Override
 	public void savePerspectiveAs(String perspectiveId, String newName){
 		EModelService modelService = getService(EModelService.class);
