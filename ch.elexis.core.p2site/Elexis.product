@@ -14,7 +14,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Djava.awt.headless=false -Dosgi.console.enable.builtin=true -Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8
+      <vmArgs>-Dosgi.console.enable.builtin=true -Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8
       </vmArgsMac>
