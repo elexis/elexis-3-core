@@ -93,6 +93,10 @@ public class WikiView extends ViewPart implements ISaveablePart2 {
 		return CoreHub.globalCfg.get(Constants.CFG_START_PAGE, Constants.DEFAULT_START_PAGE);
 	}
 	
+	private String getHandbookUri(){
+		return CoreHub.globalCfg.get(Constants.CFG_HANDBOOK, Constants.DEFAULT_HANDBOOK);
+	}
+	
 	/**
 	 * Sets the initial url
 	 */

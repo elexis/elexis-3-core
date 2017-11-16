@@ -28,6 +28,7 @@ import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PATIENT_LABEL;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PATIENT_LABEL_ORDER;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_XRAY;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -185,23 +186,17 @@ public class GlobalActions {
 				
 				@Override
 				public void run(){
-					File book =
-						new File(Platform.getInstallLocation().getURL().getPath() + "elexis.pdf"); //$NON-NLS-1$
-					Program proggie = Program.findProgram(".pdf"); //$NON-NLS-1$
-					if (proggie != null) {
-						logger
-							.info("will open handbook: " + book.toString() + " using: " + proggie);
-						proggie.execute(book.toString());
-					} else {
-						logger.info("will launch handbook: " + book.toString());
-						if (Program.launch(book.toString()) == false) {
-							try {
-								logger.info("will exec handbook: " + book.toString());
-								Runtime.getRuntime().exec(book.toString());
-							} catch (Exception e) {
-								ExHandler.handle(e);
-							}
+					Desktop desktop = Desktop.getDesktop();
+					String url = "https://wiki.elexis.info";
+					if(Desktop.isDesktopSupported()) {
+					  try {
+						  desktop.browse(new java.net.URI(url)); 
+						} catch (Exception e) {
+						  logger.warn("failed to open default browser :" + e);
+						  ExHandler.handle(e);
 						}
+					} else {
+						  logger.warn("isDesktopSupported was false.");
 					}
 				}
 			};
