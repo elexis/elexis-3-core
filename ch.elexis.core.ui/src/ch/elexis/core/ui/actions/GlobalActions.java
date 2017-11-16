@@ -55,7 +55,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -167,14 +166,11 @@ public class GlobalActions {
 				// setActionDefinitionId(Hub.COMMAND_PREFIX+"savePerspektive"); //$NON-NLS-1$
 				setToolTipText(Messages.GlobalActions_SavePerspectiveToolTip); //$NON-NLS-1$
 				setImageDescriptor(Images.IMG_DISK.getImageDescriptor()); //$NON-NLS-1$
-			}
+				}
 			
 			@Override
 			public void run(){
-				IWorkbenchPage page = mainWindow.getActivePage();
-				if (page != null && page.getPerspective() != null) {
-					page.savePerspectiveAs(page.getPerspective());
-				}
+				mainWindow.getActivePage().savePerspective();
 				}
 		};
 		
@@ -237,20 +233,20 @@ public class GlobalActions {
 				} catch (Exception ex) {
 					ExHandler.handle(ex);
 				}
-				}
+			}
 		};
 		savePerspectiveAsDefaultAction = new Action(Messages.GlobalActions_saveasstartperspective) { //$NON-NLS-1$
 			{
 				setId("start"); //$NON-NLS-1$
 				// setActionDefinitionId(Hub.COMMAND_PREFIX+"startPerspective");
-			}
+				}
 			
 			@Override
 			public void run(){
 				IPerspectiveDescriptor p = mainWindow.getActivePage().getPerspective();
 				CoreHub.localCfg.set(CoreHub.actUser + DEFAULTPERSPECTIVECFG, p.getId());
 				// CoreHub.actUser.setInfoElement("StartPerspektive",p.getId());
-			}
+				}
 			
 		};
 		loginAction = new Action(Messages.GlobalActions_Login) { //$NON-NLS-1$
@@ -268,7 +264,7 @@ public class GlobalActions {
 						if (!w.equals(win)) {
 							w.close();
 						}
-					}
+						}
 					CoreHub.logoffAnwender();
 					
 					LoginDialog dlg = new LoginDialog(win.getShell());
@@ -350,7 +346,7 @@ public class GlobalActions {
 					SWTHelper.showInfo("Kein Kontakt ausgewählt",
 						"Bitte wählen Sie vor dem Drucken einen Kontakt!");
 					return;
-				}
+					}
 				EtiketteDruckenDialog dlg =
 					new EtiketteDruckenDialog(mainWindow.getShell(), kontakt, TT_ADDRESS_LABEL);
 				dlg.setTitle(Messages.GlobalActions_PrintContactLabel);
@@ -384,7 +380,7 @@ public class GlobalActions {
 					SWTHelper.showInfo("Kein Patient ausgewählt",
 						"Bitte wählen Sie vor dem Drucken einen Patient!");
 					return;
-				}
+					}
 				
 				EtiketteDruckenDialog dlg =
 					new EtiketteDruckenDialog(mainWindow.getShell(), actPatient, TT_ADDRESS_LABEL);
@@ -419,7 +415,7 @@ public class GlobalActions {
 					SWTHelper.showInfo("Kein Patient ausgewählt",
 						"Bitte wählen Sie vor dem Drucken einen Patient!");
 					return;
-				}
+					}
 				EtiketteDruckenDialog dlg = new EtiketteDruckenDialog(mainWindow.getShell(),
 					actPatient, TT_PATIENT_LABEL_ORDER);
 				dlg.setTitle(Messages.GlobalActions_PrintVersionedLabel);
@@ -453,7 +449,7 @@ public class GlobalActions {
 					SWTHelper.showInfo("Kein Patient ausgewählt",
 						"Bitte wählen Sie vor dem Drucken einen Patient!");
 					return;
-				}
+					}
 				EtiketteDruckenDialog dlg =
 					new EtiketteDruckenDialog(mainWindow.getShell(), actPatient, TT_PATIENT_LABEL);
 				dlg.setTitle(Messages.GlobalActions_PrintLabel);
