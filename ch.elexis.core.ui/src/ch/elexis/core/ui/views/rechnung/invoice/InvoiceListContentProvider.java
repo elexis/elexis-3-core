@@ -188,9 +188,11 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 					openAmounts += openAmount;
 					owingAmounts += (totalAmount - openAmount);
 					
+					String invoiceStateDate = res.getString(19);
+					
 					InvoiceEntry ie = new InvoiceEntry(structuredViewer, invoiceId, patientId,
 						garantId, invoiceNumber, invoiceStatus, dateFrom, dateTo, totalAmount,
-						openAmount, patientName);
+						openAmount, patientName, invoiceStateDate);
 					currentContent.add(ie);
 				}
 			} catch (SQLException e) {
@@ -382,6 +384,8 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		} else if (Kontakt.FLD_NAME1.equals(data)) {
 			orderBy =
 				"ORDER BY PatName1 " + sortDirectionString + ", PatName2 " + sortDirectionString;
+		} else if (InvoiceListSqlQuery.VIEW_FLD_INVOICESTATEDATE.equals(data)) {
+			orderBy = "ORDER BY " + data + " " + sortDirectionString;
 		} else {
 			orderBy = "";
 		}
@@ -417,10 +421,11 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		private String payerType; // req resolv
 		private String law; // req resolv
 		private String garantLabel; // req resolv
+		private int invoiceStateSinceDays;
 		
 		public InvoiceEntry(StructuredViewer viewer, String invoiceId, String patientId,
 			String garantId, String invoiceNumber, int invoiceStatus, String dateFrom,
-			String dateTo, int totalAmount, int openAmount, String patientName){
+			String dateTo, int totalAmount, int openAmount, String patientName, String stateDate){
 			this.viewer = viewer;
 			
 			this.invoiceId = invoiceId;
@@ -441,6 +446,9 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			}
 			if (StringUtils.isNumeric(dateTo)) {
 				this.dateTo = new TimeTool(dateTo);
+			}
+			if (StringUtils.isNumeric(stateDate)) {
+				this.invoiceStateSinceDays = new TimeTool(stateDate).daysTo(new TimeTool());
 			}
 		}
 		
@@ -534,6 +542,10 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		
 		public String getInvoiceId(){
 			return invoiceId;
+		}
+		
+		public int getInvoiceStateSinceDays(){
+			return invoiceStateSinceDays;
 		}
 		
 		private class ResolveLazyFieldsRunnable implements Runnable {
