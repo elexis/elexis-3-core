@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Neon for Elexis 3.3" sequenceNumber="1499153567">
+<target name="Neon for Elexis 3.3" sequenceNumber="1510844678">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.17.0.v20170601-1400"/>
@@ -39,9 +39,9 @@
       <repository location="http://download.eclipse.org/releases/neon"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.0.0.201706221838"/>
-      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.0.0.201706221838"/>
-      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.0.0.201706221838"/>
+      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.0.0.201711021145"/>
+      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.1.0.201711021145"/>
+      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.1.0.201711021145"/>
       <repository location="http://download.eclipse.org/nebula/releases/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -96,6 +96,7 @@
       <unit id="ognl" version="3.1.10"/>
       <unit id="org.attoparser" version="2.0.1.RELEASE"/>
       <unit id="org.unbescape" version="1.1.4.RELEASE"/>
+      <unit id="com.healthmarketscience.jackcess" version="2.1.9"/>
       <repository location="http://download.elexis.info/elexis-server/elexis-server-dependencies"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -171,8 +172,6 @@
       <unit id="com.google.gdata.contacts-3.0.source" version="1.41.5"/>
       <unit id="com.google.gdata.core-1.0" version="1.41.5"/>
       <unit id="com.google.gdata.core-1.0.source" version="1.41.5"/>
-      <unit id="com.healthmarketscience.jackcess" version="1.2.13"/>
-      <unit id="com.healthmarketscience.jackcess.source" version="1.2.13"/>
       <unit id="com.ibm.icu.4j" version="3.4.4"/>
       <unit id="com.lowagie.itext" version="2.0.8"/>
       <unit id="com.lowagie.itext.source" version="2.0.8"/>

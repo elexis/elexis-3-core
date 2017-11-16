@@ -94,6 +94,7 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	ognl
 	org.attoparser
 	org.unbescape
+	com.healthmarketscience.jackcess
 }
 
 location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {
@@ -169,8 +170,6 @@ location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {
 	com.google.gdata.contacts-3.0.source 1.41.5
 	com.google.gdata.core-1.0 1.41.5
 	com.google.gdata.core-1.0.source 1.41.5
-	com.healthmarketscience.jackcess 1.2.13
-	com.healthmarketscience.jackcess.source 1.2.13
 	com.ibm.icu.4j 2.6.1
 	com.lowagie.itext 2.0.8
 	com.lowagie.itext.source 2.0.8
