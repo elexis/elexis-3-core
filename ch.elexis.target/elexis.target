@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Elexis" sequenceNumber="1503652142">
+<target name="Elexis" sequenceNumber="1510846809">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.300.v20161122-1740"/>
@@ -24,9 +24,9 @@
       <unit id="org.eclipse.nebula.widgets.nattable.core" version="1.4.0.201606011907"/>
       <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="1.4.0.201606011907"/>
       <unit id="ca.odell.glazedlists" version="1.9.0.v201303080712"/>
-      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.0.0.201706221838"/>
-      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.0.0.201706221838"/>
-      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.0.0.201706221838"/>
+      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.0.0.201711021145"/>
+      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.1.0.201711021145"/>
+      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.1.0.201711021145"/>
       <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.201602281253"/>
       <unit id="com.eclipsesource.jaxrs.jersey-min" version="2.22.2"/>
       <unit id="org.apache.httpcomponents.httpcore" version="4.4.6.v20170210-0925"/>
@@ -69,6 +69,7 @@
       <unit id="ognl" version="3.1.10"/>
       <unit id="org.attoparser" version="2.0.1.RELEASE"/>
       <unit id="org.unbescape" version="1.1.4.RELEASE"/>
+      <unit id="com.healthmarketscience.jackcess" version="2.1.9"/>
       <unit id="ag.ion.bion.workbench.office.editor.activation" version="2.0.14"/>
       <unit id="ag.ion.bion.workbench.office.editor.activation.nl1" version="2.0.14"/>
       <unit id="ag.ion.bion.workbench.office.editor.core" version="2.0.14"/>
@@ -141,8 +142,6 @@
       <unit id="com.google.gdata.contacts-3.0.source" version="1.41.5"/>
       <unit id="com.google.gdata.core-1.0" version="1.41.5"/>
       <unit id="com.google.gdata.core-1.0.source" version="1.41.5"/>
-      <unit id="com.healthmarketscience.jackcess" version="1.2.13"/>
-      <unit id="com.healthmarketscience.jackcess.source" version="1.2.13"/>
       <unit id="com.ibm.icu.4j" version="3.4.4"/>
       <unit id="com.lowagie.itext" version="2.0.8"/>
       <unit id="com.lowagie.itext.source" version="2.0.8"/>
