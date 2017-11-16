@@ -104,3 +104,17 @@ It uses the rules defined in @ch.elexis.core.releng/checkstyle.xml@ to generate 
 
 If you want to add even more checks, look at ch.elexis.core.releng/checkstyle_full.xml. Adding new checks should be discussed on the developers mailing list.
 
+
+h2. Updating all versions for a newer ID
+
+We do this for all new major version, eg. 3.3 -> 3.4. See also http://www.mojohaus.org/versions-maven-plugin/usage.html
+
+Steps to follow are:
+
+* Update the version in master pom.xml
+* Run @mvn -N versions:update-child-modules@
+* Update the version in the following files
+** ch.elexis.core.p2site/category.xml
+** ch.elexis.core.application/META-INF/MANIFEST.MF
+** ch.elexis.core.console.application/META-INF/MANIFEST.MF
+** other manifests if build fails
