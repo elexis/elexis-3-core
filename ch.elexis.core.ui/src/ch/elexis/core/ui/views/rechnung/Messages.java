@@ -280,6 +280,7 @@ public class Messages extends NLS {
 	public static String InvoiceListView_tblclmnTreatmentperiod_text;
 	public static String InvoiceListView_tblclmnOpenAmount_text;
 	public static String InvoiceListView_tblclmnTotalAmount_text;
+	public static String InvoiceListView_tblclmnInvoiceStateDateSince_text;
 	public static String InvoiceListHeaderComposite_lblType_text;
 	public static String InvoiceListHeaderComposite_lblNewLabel_text;
 	public static String InvoiceListHeaderComposite_btnClear_text;

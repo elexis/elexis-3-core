@@ -47,6 +47,7 @@ import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.InvoiceEntry;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListHeaderComposite;
+import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Rechnung;
@@ -159,6 +160,25 @@ public class InvoiceListView extends ViewPart {
 				return super.getText(element);
 			}
 		});
+		
+		TableViewerColumn tvcInvoiceStateDateSince =
+			new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
+		TableColumn tblclmnInvoiceStateDateSince = tvcInvoiceStateDateSince.getColumn();
+		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceStateDateSince,
+			new ColumnPixelData(50, true, true));
+		tblclmnInvoiceStateDateSince
+			.setText(Messages.InvoiceListView_tblclmnInvoiceStateDateSince_text);
+		tvcInvoiceStateDateSince.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				if (element instanceof InvoiceEntry) {
+					return ((InvoiceEntry) element).getInvoiceStateSinceDays() + "d";
+				}
+				return super.getText(element);
+			}
+		});
+		tblclmnInvoiceStateDateSince.setData(InvoiceListSqlQuery.VIEW_FLD_INVOICESTATEDATE);
+		tblclmnInvoiceStateDateSince.addSelectionListener(sortAdapter);
 		
 		TableViewerColumn tvcPatient = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnPatient = tvcPatient.getColumn();

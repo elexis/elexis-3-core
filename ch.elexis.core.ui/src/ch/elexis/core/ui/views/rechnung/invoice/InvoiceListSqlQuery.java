@@ -82,7 +82,8 @@ public class InvoiceListSqlQuery {
 					"    FallKostentrID," + 
 					"    paymentCount," + 
 					"    paidAmount," + 
-					InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT + 
+					InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT + "," +
+					InvoiceListSqlQuery.VIEW_FLD_INVOICESTATEDATE +
 					" FROM" + 
 					" " +getSqlInvoice(true)+ 
 					"REPLACE_WITH_ORDER " + 
