@@ -614,6 +614,40 @@ public class StringTool {
 		return s.toString();
 	}
 	
+	/**
+	 * Compares two numeric strings
+	 * 
+	 * @param first
+	 * @param seconds
+	 * @return
+	 */
+	public static int compareNumericStrings(String first, String seconds){
+		int i1 = 0;
+		int i2 = 0;
+		boolean a1 = isNumeric(first);
+		boolean a2 = isNumeric(seconds);
+		
+		if (a1 && a2) {
+			i1 = Integer.parseInt(first);
+			i2 = Integer.parseInt(seconds);
+			return Integer.compare(i1, i2);
+		}
+		return Boolean.compare(a1, a2);
+	}
+	
+	/**
+	 * Checks if a string is numeric
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static boolean isNumeric(String str){
+		if (str != null) {
+			return str.matches("-?\\d+");
+		}
+		return false;
+	}
+	
 	public static String RectangleToString(int x, int y, int w, int h){
 		StringBuilder sb = new StringBuilder();
 		sb.append(x).append(",").append(y).append(",").append(w).append(",").append(h);
