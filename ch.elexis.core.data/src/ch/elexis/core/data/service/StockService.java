@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -89,6 +90,18 @@ public class StockService implements IStockService {
 		}
 		
 		if (se.getStock().isCommissioningSystem()) {
+			int sellingUnit = article.getSellingUnit();
+			boolean isPartialUnitOutput =
+				(sellingUnit > 0 && sellingUnit < article.getPackageUnit());
+			if (isPartialUnitOutput) {
+					boolean performPartialOutlay =
+						CoreHub.globalCfg.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+							Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
+					if (!performPartialOutlay) {
+						return Status.OK_STATUS;
+					}
+			}
+			
 			return CoreHub.getStockCommissioningSystemService().performArticleOutlay(se, count,
 				null);
 		} else {

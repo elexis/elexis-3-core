@@ -14,7 +14,6 @@ package ch.elexis.core.ui.views;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Collections;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -59,7 +58,6 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.services.IStockCommissioningSystemService;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -505,11 +503,8 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		
 		public void run(){
 			StockEntry stockEntry = fetchSelection();
-			IStatus status =
-				CoreHub.getStockCommissioningSystemService().performArticleOutlay(stockEntry, 1,
-					Collections.singletonMap(
-						IStockCommissioningSystemService.MAP_KEY_FORCE_OUTLAY_ON_PARTIAL_PACKAGE,
-						true));
+			IStatus status = CoreHub.getStockCommissioningSystemService()
+				.performArticleOutlay(stockEntry, 1, null);
 			if (!status.isOK()) {
 				ElexisStatus elStatus = new ElexisStatus(status);
 				StatusManager.getManager().handle(elStatus, StatusManager.SHOW);
