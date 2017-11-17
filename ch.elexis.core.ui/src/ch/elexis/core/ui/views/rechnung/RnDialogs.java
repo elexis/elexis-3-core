@@ -51,11 +51,11 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.AccountTransaction;
-import ch.elexis.data.AccountTransaction.Account;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
 import ch.elexis.data.Zahlung;
+import ch.elexis.data.AccountTransaction.Account;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
@@ -456,6 +456,19 @@ public class RnDialogs {
 		}
 		
 		@SuppressWarnings("unchecked")
+		private List<IRnOutputter> getOutputters(){
+			List<IRnOutputter> outputters = new ArrayList<>();
+			List<IRnOutputter> los =
+				Extensions.getClasses(ExtensionPointConstantsData.RECHNUNGS_MANAGER, "outputter"); //$NON-NLS-1$ //$NON-NLS-2$
+			for (IRnOutputter rno : los) {
+				if (rno.canStorno(null) && hasTrace(rno.getDescription())) {
+					outputters.add(rno);
+				}
+			}
+			return outputters;
+		}
+		
+		@SuppressWarnings("unchecked")
 		@Override
 		protected Control createDialogArea(Composite parent){
 			lo = Extensions.getClasses(ExtensionPointConstantsData.RECHNUNGS_MANAGER, "outputter"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -539,6 +552,24 @@ public class RnDialogs {
 		
 		public List<Konsultation> getKonsultations(){
 			return konsultations;
+		}
+		
+		/**
+		 * Opens a dialog and closes it with OK if no rnoutputters are registered. Otherwise the
+		 * dialog will stay opened.
+		 * 
+		 * @param closeWithOKIfNoExporterExists
+		 * @return
+		 */
+		public int openDialog(){
+			List<IRnOutputter> rnOutputters = getOutputters();
+			if (rnOutputters != null && rnOutputters.isEmpty()) {
+				super.setBlockOnOpen(false);
+				super.open();
+				okPressed();
+				return getReturnCode();
+			}
+			return super.open();
 		}
 	}
 }

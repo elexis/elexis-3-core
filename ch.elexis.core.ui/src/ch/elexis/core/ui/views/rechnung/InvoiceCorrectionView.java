@@ -388,16 +388,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					btnNewInvoice.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent e){
-							Rechnung r =
-								Rechnung.getFromNr(invoiceCorrectionDTO.getNewInvoiceNumber());
-							if (r != null) {
-								ElexisEventDispatcher.fireSelectionEvent(r);
-							} else {
-								MessageDialog.openError(getShell(), "Fehler",
-									"Die Rechnung mit der Nummer: "
-										+ invoiceCorrectionDTO.getNewInvoiceNumber()
-										+ " konnte nicht geöffnet werden.\nBitte versuchen Sie diesn manuell zu öffnen.");
-							}
+							openInvoiceNr(invoiceCorrectionDTO.getNewInvoiceNumber());
 						}
 					});
 				}
@@ -427,6 +418,18 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			// nothing todo all fields are readonly
 		}
 		
+	}
+	
+	private void openInvoiceNr(String invoiceNr){
+		Rechnung r = Rechnung.getFromNr(invoiceNr);
+		if (r != null) {
+			ElexisEventDispatcher.fireSelectionEvent(r);
+		} else {
+			MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Fehler",
+				"Die Rechnung mit der Nummer: "
+					+ invoiceNr
+				+ " konnte nicht geöffnet werden.\nBitte versuchen Sie diesn manuell zu öffnen.");
+		}
 	}
 	
 	class InvoiceContentComposite extends Composite implements IUnlockable {
@@ -1223,8 +1226,16 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 							MessageDialog.openError(Display.getDefault().getActiveShell(),
 								"Rechnungskorrektur", res.get());
 						}
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(actualInvoice,
-							actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
+						
+						// auto open new invoice nr
+						if (invoiceCorrectionDTO.getNewInvoiceNumber() != null
+							&& invoiceCorrectionDTO.isOpenNewInvoice()) {
+							openInvoiceNr(invoiceCorrectionDTO.getNewInvoiceNumber());
+						} else {
+							// reloads the current invoice nr
+							ElexisEventDispatcher.getInstance().fire(new ElexisEvent(actualInvoice,
+								actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
+						}
 					}
 				}
 			});
@@ -1300,7 +1311,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 												new RnDialogs.StornoDialog(
 													UiDesk.getDisplay().getActiveShell(), rechnung,
 													true);
-											if (stronoDlg.open() == Dialog.OK) {
+											if (stronoDlg.openDialog() == Dialog.OK) {
 												return stronoDlg.getKonsultations();
 											} else {
 												page.getTxtOutput().setText(

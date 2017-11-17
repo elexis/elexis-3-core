@@ -9,9 +9,11 @@ import org.eclipse.swt.widgets.Shell;
 import ch.elexis.data.dto.InvoiceCorrectionDTO;
 
 public class InvoiceCorrectionWizardDialog extends WizardDialog {
+	private InvoiceCorrectionDTO invoiceCorrectionDTO;
 	
 	public InvoiceCorrectionWizardDialog(Shell shell, InvoiceCorrectionDTO invoiceCorrectionDTO){
 		super(shell, new InvoiceCorrectionWizard(invoiceCorrectionDTO));
+		this.invoiceCorrectionDTO = invoiceCorrectionDTO;
 	}
 	
 	@Override
@@ -52,7 +54,19 @@ public class InvoiceCorrectionWizardDialog extends WizardDialog {
 		super.buttonPressed(buttonId);
 		
 		if (IDialogConstants.NEXT_ID == buttonId) {
-			getButton(IDialogConstants.NEXT_ID).setEnabled(false);
+			Button nextBtn = getButton(IDialogConstants.NEXT_ID);
+			
+			// the text of the button will be changed
+			if ("Korrigierte Rechnung öffnen".equals(nextBtn.getText())) {
+				if (invoiceCorrectionDTO != null) {
+					invoiceCorrectionDTO.setOpenNewInvoice(true);
+					finishPressed();
+					return;
+				}
+			} else if (invoiceCorrectionDTO != null && invoiceCorrectionDTO.isCorrectionSuccess()) {
+				nextBtn.setEnabled(true);
+				nextBtn.setText("Korrigierte Rechnung öffnen");
+			}
 			getButton(IDialogConstants.CANCEL_ID).setEnabled(false);
 			getButton(IDialogConstants.FINISH_ID).setVisible(true);
 			
