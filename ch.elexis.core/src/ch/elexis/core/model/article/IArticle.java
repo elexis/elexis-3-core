@@ -1,9 +1,12 @@
 package ch.elexis.core.model.article;
 
+import ch.elexis.core.model.Identifiable;
+
 /**
  * @since 3.2
+ * @since 3.4 extends {@link Identifiable}
  */
-public interface IArticle {
+public interface IArticle extends Identifiable {
 	
 	/**
 	 * @return the number of dispensable items available within a package, or 0 if unknown

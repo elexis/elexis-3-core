@@ -9,7 +9,6 @@ import org.eclipse.core.runtime.Status;
 
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.internal.StockCommissioningSystemDriverFactories;
 import ch.elexis.core.model.IStock;
@@ -47,28 +46,7 @@ public class StockCommissioningSystemService implements IStockCommissioningSyste
 		if (se == null) {
 			return new Status(Status.ERROR, CoreHub.PLUGIN_ID, "stock entry is null");
 		}
-		
-		int sellingUnit = stockEntry.getArticle().getSellingUnit();
-		boolean isPartialUnitOutput =
-			(sellingUnit > 0 && sellingUnit < stockEntry.getArticle().getPackageUnit());
-		if (isPartialUnitOutput) {
-			boolean forceOutlay = false;
-			if (data != null) {
-				Object object = data.get(MAP_KEY_FORCE_OUTLAY_ON_PARTIAL_PACKAGE);
-				if (object instanceof Boolean) {
-					forceOutlay = (Boolean) object;
-				}
-			}
-			if (!forceOutlay) {
-				boolean performPartialOutly =
-					CoreHub.globalCfg.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
-						Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
-				if (!performPartialOutly) {
-					return Status.OK_STATUS;
-				}
-			}
-		}
-		
+				
 		ElexisEvent performOutlayEvent = new ElexisEvent();
 		performOutlayEvent.setTopic(ElexisEventTopics.STOCK_COMMISSIONING_OUTLAY);
 		performOutlayEvent.getProperties()
