@@ -29,6 +29,7 @@ public class UiStartupHandler implements EventHandler {
 			UiDesk.asyncExec(new Runnable() {
 				public void run(){
 					addMandantSelectionItem(application, modelService);
+					ElexisFastViewUtil.registerPerspectiveListener();
 				}
 			});
 			

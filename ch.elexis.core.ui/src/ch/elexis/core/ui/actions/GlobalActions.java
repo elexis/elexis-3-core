@@ -20,7 +20,6 @@ import static ch.elexis.admin.AccessControlDefaults.AC_IMORT;
 import static ch.elexis.admin.AccessControlDefaults.AC_LOGIN;
 import static ch.elexis.admin.AccessControlDefaults.AC_NEWWINDOW;
 import static ch.elexis.admin.AccessControlDefaults.AC_PREFS;
-import static ch.elexis.admin.AccessControlDefaults.AC_SHOWPERSPECTIVE;
 import static ch.elexis.admin.AccessControlDefaults.AC_SHOWVIEW;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_ADDRESS_LABEL;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_KG_COVER_SHEET;
@@ -131,7 +130,7 @@ public class GlobalActions {
 	public static IAction neuerFallAction;
 	
 	public static MenuManager perspectiveMenu, viewMenu;
-	public static IContributionItem perspectiveList, viewList;
+	public static IContributionItem viewList;
 	public IWorkbenchWindow mainWindow;
 	public static Action printKontaktEtikette;
 	private static IWorkbenchHelpSystem help;
@@ -888,11 +887,6 @@ public class GlobalActions {
 		setMenuForUser(AC_CHANGEMANDANT, changeMandantAction);
 		// setMenuForUser("importTarmedAction",importTarmedAction);
 		setMenuForUser(AC_CONNECT, connectWizardAction);
-		if (CoreHub.acl.request(AC_SHOWPERSPECTIVE) == true) {
-			perspectiveList.setVisible(true);
-		} else {
-			perspectiveList.setVisible(false);
-		}
 		if (CoreHub.acl.request(AC_SHOWVIEW) == true) {
 			viewList.setVisible(true);
 		} else {

@@ -8,17 +8,29 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: ch.elexis.core.data.activator,
  ch.elexis.core.ui,
  ch.elexis.core.ui.compatibility,
+ org.apache.commons.io;version="2.4.0",
+ org.apache.commons.io.filefilter;version="2.4.0",
  org.eclipse.core.commands,
  org.eclipse.core.runtime;version="3.5.0",
+ org.eclipse.e4.core.contexts,
  org.eclipse.e4.ui.internal.workbench,
  org.eclipse.e4.ui.model.application,
  org.eclipse.e4.ui.model.application.ui,
  org.eclipse.e4.ui.model.application.ui.advanced,
  org.eclipse.e4.ui.model.application.ui.basic,
+ org.eclipse.e4.ui.workbench,
  org.eclipse.e4.ui.workbench.modeling,
  org.eclipse.emf.common.util,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.resource,
- org.eclipse.emf.ecore.xmi.impl
+ org.eclipse.emf.ecore.xmi.impl,
+ org.osgi.service.component.annotations;version="1.2.0",
+ org.slf4j;version="1.7.2"
 Require-Bundle: org.eclipse.ui.workbench;bundle-version="3.108.3",
  org.eclipse.ui;bundle-version="3.108.1"
+Service-Component: OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveImportHandler.xml,
+ OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveExportHandler.xml,
+ OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveExportService.xml,
+ OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveImportService.xml
+Bundle-ActivationPolicy: lazy
+Export-Package: ch.elexis.core.ui.perspective.service

@@ -3,6 +3,7 @@ package ch.elexis.core.ui.compatibility;
 import java.util.List;
 
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.SideValue;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
@@ -26,6 +27,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.PlatformUI;
 
+import ch.elexis.core.ui.UiDesk;
+
 /**
  * since e4 doesnt support fastviews thats we need our own fastview implementation
  * 
@@ -35,7 +38,6 @@ import org.eclipse.ui.PlatformUI;
 public class ElexisFastViewUtil {
 	
 	private static final String ELEXIS_FASTVIEW_STACK = "fastview.elexis";
-	private static final String ELEXIS_PLACEHOLDER_PREFIX = "placeh_";
 	
 	/**
 	 * Adds a view to the fastview, if {@link MPartStack} not exists it will be created and the view
@@ -79,7 +81,7 @@ public class ElexisFastViewUtil {
 						EPartService partService = getService(EPartService.class);
 						MPlaceholder placeholder = partService.createSharedPart(viewId);
 						placeholder.setToBeRendered(true);
-						placeholder.setElementId(ELEXIS_PLACEHOLDER_PREFIX + viewId);
+						placeholder.setElementId(viewId);
 						placeholder.setCloseable(true);
 						placeholder.getTags().add(EPartService.REMOVE_ON_HIDE_TAG);
 						((MPart) placeholder.getRef()).setToBeRendered(true);
@@ -111,7 +113,6 @@ public class ElexisFastViewUtil {
 	 */
 	public static void createFastViewMenuItem(final Menu menu, MPart part){
 		EModelService eModelService = ElexisFastViewUtil.getService(EModelService.class);
-		MApplication mApplication = ElexisFastViewUtil.getService(MApplication.class);
 		EPartService ePartService = ElexisFastViewUtil.getService(EPartService.class);
 		
 		MPerspective mPerspective = eModelService.getPerspectiveFor(part);
@@ -210,8 +211,12 @@ public class ElexisFastViewUtil {
 	}
 	
 	private static String getToolControlId(MTrimmedWindow window, MPerspective mPerspective){
+		return getToolControlId(window, mPerspective.getElementId());
+	}
+	
+	private static String getToolControlId(MUIElement window, String perspectiveId){
 		return ELEXIS_FASTVIEW_STACK + "(" + window.getElementId() + ").("
-			+ mPerspective.getElementId() + ")";
+			+ perspectiveId + ")";
 	}
 	
 	private static <T> T getService(final Class<T> clazz){
@@ -221,11 +226,106 @@ public class ElexisFastViewUtil {
 	private static boolean isViewInsideFastview(MPartStack stack, String placeholderId){
 		if (stack != null) {
 			for (MStackElement stackElement : stack.getChildren()) {
-				if (stackElement.getElementId().equals(ELEXIS_PLACEHOLDER_PREFIX + placeholderId)) {
+				if (stackElement.getElementId().equals(placeholderId)) {
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Registers a perspective listener
+	 */
+	public static void registerPerspectiveListener(){
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (workbenchWindow != null) {
+			workbenchWindow.addPerspectiveListener(new PerspectiveAdapter() {
+				
+				@Override
+				public void perspectiveActivated(IWorkbenchPage page,
+					IPerspectiveDescriptor perspective){
+					UiDesk.asyncExec(new Runnable() {
+						
+						@Override
+						public void run(){
+							changeFastViewBarFromLeftToBottom();
+						}
+					});
+					
+				}
+			});
+		}
+	}
+	
+	private static MToolControl findFastViewToolControl(EModelService eModelService,
+		MTrimmedWindow workbenchWindow, String perspectiveId, SideValue sideValue){
+		if (workbenchWindow != null) {
+			MTrimBar trimbar = findTrimBar(eModelService, workbenchWindow, sideValue);
+			if (trimbar != null) {
+				MToolControl toolControl = (MToolControl) eModelService
+					.find(getToolControlId(workbenchWindow, perspectiveId), trimbar);
+				return toolControl;
+			}
+		}
+		return null;
+	}
+	
+	private static MTrimBar findTrimBar(EModelService eModelService, MTrimmedWindow workbenchWindow,
+		SideValue sideValue){
+		if (workbenchWindow != null) {
+			MTrimBar trimbar = eModelService.getTrim(workbenchWindow, sideValue);
+			return trimbar;
+		}
+		return null;
+	}
+	
+	/**
+	 * Changes the fastviews position from left trimbar to bottom trimbar
+	 */
+	public static void changeFastViewBarFromLeftToBottom(){
+		EModelService eModelService = getService(EModelService.class);
+		MApplication mApplication = getService(MApplication.class);
+		MTrimmedWindow mWindow = getCurrentWindow(eModelService, mApplication);
+		if (mWindow != null) {
+			MPerspective mPerspective = eModelService.getActivePerspective(mWindow);
+			
+			if (mPerspective != null) {
+				String perspectiveId = mPerspective.getElementId();
+				
+				MToolControl mToolControl =
+					findFastViewToolControl(eModelService, mWindow, perspectiveId,
+						SideValue.BOTTOM);
+				if (mToolControl == null) {
+					mToolControl = findFastViewToolControl(eModelService, mWindow, perspectiveId,
+						SideValue.LEFT);
+					if (mToolControl != null) {
+						MTrimBar trimBarBottom =
+							findTrimBar(eModelService, mWindow, SideValue.BOTTOM);
+						if (trimBarBottom != null) {
+							MToolControl copyToolcontrol =
+								eModelService.createModelElement(MToolControl.class);
+							copyToolcontrol.setElementId(mToolControl.getElementId());
+							copyToolcontrol.setContributionURI(
+								"bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.TrimStack");
+							copyToolcontrol.setToBeRendered(true);
+							copyToolcontrol.setVisible(true);
+							copyToolcontrol.getTags().add("TrimStack");
+							
+							copyToolcontrol.getPersistedState().put("YSize", "600");
+							trimBarBottom.getChildren().add(0, copyToolcontrol);
+							
+							mToolControl.setToBeRendered(false);
+							mToolControl.setVisible(false);
+							mToolControl.getParent().getChildren().remove(mToolControl);
+							mToolControl.setParent(null);
+							trimBarBottom.setVisible(true);
+							trimBarBottom.setToBeRendered(true);
+						}
+						
+					}
+				}
+			}
+		}
 	}
 }

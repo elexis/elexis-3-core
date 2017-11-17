@@ -5,7 +5,7 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="menu:window">
+            locationURI="menu:openPerspective">
          <command
                commandId="ch.elexis.core.ui.perspective.handler.import"
                label="Perspektive Import..."
