@@ -620,6 +620,7 @@ public class StringTool {
 	 * @param first
 	 * @param seconds
 	 * @return
+	 * @since 3.4
 	 */
 	public static int compareNumericStrings(String first, String seconds){
 		int i1 = 0;
@@ -640,6 +641,7 @@ public class StringTool {
 	 * 
 	 * @param str
 	 * @return
+	 * @since 3.4
 	 */
 	public static boolean isNumeric(String str){
 		if (str != null) {
