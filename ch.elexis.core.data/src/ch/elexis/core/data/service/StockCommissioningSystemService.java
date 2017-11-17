@@ -1,6 +1,7 @@
 package ch.elexis.core.data.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.eclipse.core.runtime.IStatus;
@@ -8,6 +9,7 @@ import org.eclipse.core.runtime.Status;
 
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.internal.StockCommissioningSystemDriverFactories;
 import ch.elexis.core.model.IStock;
@@ -39,18 +41,40 @@ public class StockCommissioningSystemService implements IStockCommissioningSyste
 	}
 	
 	@Override
-	public IStatus performArticleOutlay(IStockEntry stockEntry, int quantity, Object data){
+	public IStatus performArticleOutlay(IStockEntry stockEntry, int quantity,
+		Map<String, Object> data){
 		StockEntry se = (StockEntry) stockEntry;
 		if (se == null) {
 			return new Status(Status.ERROR, CoreHub.PLUGIN_ID, "stock entry is null");
 		}
+		
+		int sellingUnit = stockEntry.getArticle().getSellingUnit();
+		boolean isPartialUnitOutput =
+			(sellingUnit > 0 && sellingUnit < stockEntry.getArticle().getPackageUnit());
+		if (isPartialUnitOutput) {
+			boolean forceOutlay = false;
+			if (data != null) {
+				Object object = data.get(MAP_KEY_FORCE_OUTLAY_ON_PARTIAL_PACKAGE);
+				if (object instanceof Boolean) {
+					forceOutlay = (Boolean) object;
+				}
+			}
+			if (!forceOutlay) {
+				boolean performPartialOutly =
+					CoreHub.globalCfg.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+						Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
+				if (!performPartialOutly) {
+					return Status.OK_STATUS;
+				}
+			}
+		}
+		
 		ElexisEvent performOutlayEvent = new ElexisEvent();
 		performOutlayEvent.setTopic(ElexisEventTopics.STOCK_COMMISSIONING_OUTLAY);
 		performOutlayEvent.getProperties()
 			.put(ElexisEventTopics.STOCK_COMMISSIONING_PROPKEY_STOCKENTRY_ID, se.getId());
 		performOutlayEvent.getProperties().put(
-			ElexisEventTopics.STOCK_COMMISSIONING_PROPKEY_QUANTITY,
-			Integer.toString(quantity));
+			ElexisEventTopics.STOCK_COMMISSIONING_PROPKEY_QUANTITY, Integer.toString(quantity));
 		return CoreHub.getElexisServerEventService().postEvent(performOutlayEvent);
 	}
 	
@@ -60,11 +84,12 @@ public class StockCommissioningSystemService implements IStockCommissioningSyste
 	}
 	
 	@Override
-	public IStatus synchronizeInventory(IStock stock, List<String> articleIds, Object data){
+	public IStatus synchronizeInventory(IStock stock, List<String> articleIds,
+		Map<String, Object> data){
 		ElexisEvent synchronizeEvent = new ElexisEvent();
 		synchronizeEvent.setTopic(ElexisEventTopics.STOCK_COMMISSIONING_SYNC_STOCK);
-		synchronizeEvent.getProperties()
-			.put(ElexisEventTopics.STOCK_COMMISSIONING_PROPKEY_STOCK_ID, stock.getId());
+		synchronizeEvent.getProperties().put(ElexisEventTopics.STOCK_COMMISSIONING_PROPKEY_STOCK_ID,
+			stock.getId());
 		// TODO enable transfer of list
 		return CoreHub.getElexisServerEventService().postEvent(synchronizeEvent);
 	}

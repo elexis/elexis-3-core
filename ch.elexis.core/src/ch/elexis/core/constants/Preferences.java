@@ -165,6 +165,8 @@ public class Preferences {
 	public static final String INVENTORY_CHECK_ILLEGAL_VALUES = "inventory/check_values"; //$NON-NLS-1$
 	public static final boolean INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT = true;
 	public static final String INVENTORY_DEFAULT_ARTICLE_PROVIDER = "inventory/defaultArticleProvider"; //$NON-NLS-1$
+	public static final String INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES = "inventory/machineOutlayPartialPackages"; //$NON-NLS-1$
+	public static final boolean INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT = false;
 	
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$

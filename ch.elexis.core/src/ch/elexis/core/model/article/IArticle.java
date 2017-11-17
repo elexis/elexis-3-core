@@ -5,8 +5,15 @@ package ch.elexis.core.model.article;
  */
 public interface IArticle {
 	
+	/**
+	 * @return the number of dispensable items available within a package, or 0 if unknown
+	 */
 	public int getPackageUnit();
 	
+	/**
+	 * @return the number of dispensable items to be dispensed during a default selling process, if
+	 *         0 the whole package is dispensed
+	 */
 	public int getSellingUnit();
 	
 	public String getName();

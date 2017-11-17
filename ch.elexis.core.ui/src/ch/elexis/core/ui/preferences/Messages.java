@@ -369,6 +369,7 @@ public class Messages extends NLS {
 	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_toolTipText;
 	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_text;
 	public static String StockManagementPreferencePage_btnCheckButton_text;
+	public static String StockManagementPreferencePage_btnMachineOutlayPartialPackages_text;
 	public static String StockManagementPreferencePage_lblNewLabel_1_text;
 	public static String StockManagementPreferencePage_btnRadioButton_text;
 	public static String StockManagementPreferencePage_btnRadioButton_1_text;

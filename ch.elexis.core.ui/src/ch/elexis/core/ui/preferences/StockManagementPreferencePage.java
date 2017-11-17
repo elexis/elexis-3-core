@@ -76,6 +76,7 @@ public class StockManagementPreferencePage extends PreferencePage
 	private Label lblMachineuuid;
 	
 	private Label lblDefaultArticleProvider;
+	private Button btnMachineOutlayPartialPackages;
 	
 	/**
 	 * Create the preference page.
@@ -385,6 +386,16 @@ public class StockManagementPreferencePage extends PreferencePage
 		txtMachineConfig = new Text(compositeDetail, SWT.BORDER);
 		txtMachineConfig.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
+		btnMachineOutlayPartialPackages = new Button(compositeDetail, SWT.CHECK);
+		btnMachineOutlayPartialPackages
+			.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
+		btnMachineOutlayPartialPackages
+			.setText(Messages.StockManagementPreferencePage_btnMachineOutlayPartialPackages_text);
+		boolean outlayPartialPackages =
+			CoreHub.globalCfg.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
+		btnMachineOutlayPartialPackages.setSelection(outlayPartialPackages);
+		
 		btnChkStoreInvalidNumbers = new Button(container, SWT.CHECK);
 		btnChkStoreInvalidNumbers.setText(Messages.LagerverwaltungPrefs_checkForInvalid);
 		
@@ -491,6 +502,8 @@ public class StockManagementPreferencePage extends PreferencePage
 	public boolean performOk(){
 		getPreferenceStore().setValue(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES,
 			btnChkStoreInvalidNumbers.getSelection());
+		getPreferenceStore().setValue(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+			btnMachineOutlayPartialPackages.getSelection());
 		
 		((SettingsPreferenceStore) getPreferenceStore()).flush();
 		
