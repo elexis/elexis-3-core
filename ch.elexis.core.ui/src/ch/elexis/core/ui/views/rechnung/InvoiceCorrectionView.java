@@ -71,7 +71,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -343,15 +342,47 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		
 		public InvoiceHeaderComposite(Composite parent){
 			super(parent, SWT.BORDER);
-			setLayout(new GridLayout(4, false));
-			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1));
+			
+			GridLayout gd = new GridLayout(1, false);
+			gd.marginWidth = 0;
+			gd.marginHeight = 0;
+			setLayout(gd);
+			
+			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		}
 		
 		public void createComponents(InvoiceCorrectionDTO invoiceCorrectionDTO){
-			Label lblTitle = new Label(this, SWT.NONE);
-			lblTitle.setText("Rechnungsangaben");
-			lblTitle.setFont(SWTResourceManager.getFont("Noto Sans", 9, SWT.BOLD));
-			lblTitle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 10, 1));
+			
+			FormToolkit tk = UiDesk.getToolkit();
+			ScrolledForm form = tk.createScrolledForm(this);
+			form.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+			form.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			Composite body = form.getBody();
+			GridLayout gd1 = new GridLayout();
+			gd1.marginWidth = 0;
+			gd1.marginHeight = 0;
+			body.setLayout(gd1);
+			
+			ExpandableComposite expandable = WidgetFactory.createExpandableComposite(tk, form, ""); //$NON-NLS-1$
+			expandable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			expandable.setExpanded(false);
+			expandable.setText("Rechnungsangaben");
+			expandable.addExpansionListener(new ExpansionAdapter() {
+				
+				@Override
+				public void expansionStateChanged(ExpansionEvent e){
+					invoiceComposite.updateScrollBars();
+				}
+			});
+			expandable.setExpanded(true);
+			Composite group = tk.createComposite(expandable, SWT.NONE);
+			GridLayout gd3 = new GridLayout(2, false);
+			gd3.marginWidth = 5;
+			gd3.marginHeight = 5;
+			group.setLayout(gd3);
+			group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			expandable.setClient(group);
+			
 			Color colWhite = UiDesk.getColor(UiDesk.COL_WHITE);
 			this.setBackground(colWhite);
 			
@@ -361,17 +392,17 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				int i = 0;
 				for (String lbl : lbls) {
 					String detailText = invoiceDetails[i++];
-					new Label(this, SWT.NONE).setText(lbl);
-					Text text = new Text(this, SWT.BORDER | SWT.READ_ONLY);
+					new Label(group, SWT.NONE).setText(lbl);
+					Text text = new Text(group, SWT.BORDER | SWT.READ_ONLY);
 					text.setBackground(colWhite);
 					text.setLayoutData(gd);
 					text.setText(detailText != null ? detailText : "");
 				}
 			}
-			new Label(this, SWT.NONE).setText("Bemerkung");
+			new Label(group, SWT.NONE).setText("Bemerkung");
 			Text txtMulti =
-				new Text(this, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.READ_ONLY);
-			GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
+				new Text(group, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.READ_ONLY);
+			GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 			gd2.heightHint = 50;
 			txtMulti.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 			txtMulti.setLayoutData(gd2);
@@ -380,40 +411,31 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			
 			if (invoiceCorrectionDTO.getNewInvoiceNumber() != null) {
 				if (!invoiceCorrectionDTO.getNewInvoiceNumber().isEmpty()) {
-					new Label(this, SWT.NONE).setText("Korrigierte Rechnung");
-					Link btnNewInvoice = new Link(this, SWT.NONE);
+					new Label(group, SWT.NONE).setText("Korrigierte Rechnung");
+					Link btnNewInvoice = new Link(group, SWT.NONE);
 					btnNewInvoice.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 					btnNewInvoice.setText("<A>Rechnung "
 						+ invoiceCorrectionDTO.getNewInvoiceNumber() + " öffnen</A>");
 					btnNewInvoice.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent e){
-							Rechnung r =
-								Rechnung.getFromNr(invoiceCorrectionDTO.getNewInvoiceNumber());
-							if (r != null) {
-								ElexisEventDispatcher.fireSelectionEvent(r);
-							} else {
-								MessageDialog.openError(getShell(), "Fehler",
-									"Die Rechnung mit der Nummer: "
-										+ invoiceCorrectionDTO.getNewInvoiceNumber()
-										+ " konnte nicht geöffnet werden.\nBitte versuchen Sie diesn manuell zu öffnen.");
-							}
+							openInvoiceNr(invoiceCorrectionDTO.getNewInvoiceNumber());
 						}
 					});
 				}
 			}
 			
 			if (actualInvoice != null && !detailComposites.isEmpty()) {
-				Label separator = new Label(this, SWT.HORIZONTAL | SWT.SEPARATOR);
+				Label separator = new Label(group, SWT.HORIZONTAL | SWT.SEPARATOR);
 				separator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 10, 1));
 				List<IViewContribution> filtered = ViewContributionHelper
 					.getFilteredAndPositionSortedContributions(detailComposites, 0);
 				for (IViewContribution ivc : filtered) {
-					new Label(this, SWT.NONE).setText(ivc.getLocalizedTitle());
+					new Label(group, SWT.NONE).setText(ivc.getLocalizedTitle());
 					
-					Composite mainComposite = new Composite(this, SWT.NONE);
+					Composite mainComposite = new Composite(group, SWT.NONE);
 					mainComposite.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
-					mainComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+					mainComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 					mainComposite.setLayout(new GridLayout(1, false));
 					ivc.initComposite(mainComposite);
 				}
@@ -427,6 +449,18 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			// nothing todo all fields are readonly
 		}
 		
+	}
+	
+	private void openInvoiceNr(String invoiceNr){
+		Rechnung r = Rechnung.getFromNr(invoiceNr);
+		if (r != null) {
+			ElexisEventDispatcher.fireSelectionEvent(r);
+		} else {
+			MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Fehler",
+				"Die Rechnung mit der Nummer: "
+					+ invoiceNr
+				+ " konnte nicht geöffnet werden.\nBitte versuchen Sie diesn manuell zu öffnen.");
+		}
 	}
 	
 	class InvoiceContentComposite extends Composite implements IUnlockable {
@@ -1223,8 +1257,16 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 							MessageDialog.openError(Display.getDefault().getActiveShell(),
 								"Rechnungskorrektur", res.get());
 						}
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(actualInvoice,
-							actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
+						
+						// auto open new invoice nr
+						if (invoiceCorrectionDTO.getNewInvoiceNumber() != null
+							&& invoiceCorrectionDTO.isOpenNewInvoice()) {
+							openInvoiceNr(invoiceCorrectionDTO.getNewInvoiceNumber());
+						} else {
+							// reloads the current invoice nr
+							ElexisEventDispatcher.getInstance().fire(new ElexisEvent(actualInvoice,
+								actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
+						}
 					}
 				}
 			});
@@ -1300,7 +1342,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 												new RnDialogs.StornoDialog(
 													UiDesk.getDisplay().getActiveShell(), rechnung,
 													true);
-											if (stronoDlg.open() == Dialog.OK) {
+											if (stronoDlg.openDialog() == Dialog.OK) {
 												return stronoDlg.getKonsultations();
 											} else {
 												page.getTxtOutput().setText(

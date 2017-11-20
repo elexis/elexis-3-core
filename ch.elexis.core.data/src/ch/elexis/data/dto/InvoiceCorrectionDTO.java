@@ -30,12 +30,15 @@ public class InvoiceCorrectionDTO {
 	private List<ElexisException> errors = new ArrayList<>();
 	private List<IInvoiceCorrectionChanged> invoiceCorrectionChanges = new ArrayList<>();
 	
+	private boolean openNewInvoice = false;
+	
 	public InvoiceCorrectionDTO(){
 		this.id = null;
 		this.fallDTO = null;
 		this.outputText = null;
 		this.invoiceNumber = null;
 		this.newInvoiceNumber = null;
+		this.openNewInvoice = false;
 		cache.clear();
 		correctionHistory.clear();
 		invoiceCorrectionChanges.clear();
@@ -56,6 +59,7 @@ public class InvoiceCorrectionDTO {
 		this.receiver = fall.getPatient().getLabel();
 		this.betrag = rechnung.getBetrag().getAmountAsString();
 		this.newInvoiceNumber = rechnung.getExtInfo(Rechnung.INVOICE_CORRECTION);
+		this.openNewInvoice = false;
 		if (StringUtils.isNotEmpty(rechnung.getNr())) {
 			InvoiceState invoiceState = rechnung.getInvoiceState();
 			if (invoiceState != null) {
@@ -189,5 +193,13 @@ public class InvoiceCorrectionDTO {
 	
 	public interface IInvoiceCorrectionChanged {
 		public void changed(InvoiceCorrectionDTO invoiceCorrectionDTO);
+	}
+	
+	public void setOpenNewInvoice(boolean openNewInvoice){
+		this.openNewInvoice = openNewInvoice;
+	}
+	
+	public boolean isOpenNewInvoice(){
+		return openNewInvoice;
 	}
 }
