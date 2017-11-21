@@ -13,6 +13,7 @@ package ch.elexis.core.ui.commands;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
@@ -23,14 +24,17 @@ import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.rechnung.Messages;
@@ -38,6 +42,7 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Result;
+import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.Tree;
 
 /**
@@ -73,11 +78,26 @@ public class ErstelleRnnCommand extends AbstractHandler {
 					}
 				}
 				Collection<Tree> lt = tFall.getChildren();
-				ArrayList<Konsultation> lb = new ArrayList<Konsultation>(lt.size() + 1);
+				
+				List<Konsultation> lb = new ArrayList<Konsultation>(lt.size() + 1);
 				for (Tree t : lt) {
 					lb.add((Konsultation) t.contents);
 				}
-				res = Rechnung.build(lb);
+				
+				List<Konsultation> toBill = BillingUtil.getKonsultationsFromSameYear(lb);
+				if (toBill.size() > 0 && toBill.size() != lb.size()) {
+					if (!MessageDialog.openQuestion(HandlerUtil.getActiveShell(eev),
+						"Rechnung Validierung",
+						"Eine Rechnung kann nur Leistungen innerhalb eines Jahres beinhalten.\n\nWollen Sie mit der Erstellung der Rechnung für das Jahr "
+							+ new TimeTool(toBill.get(0).getDatum()).get(TimeTool.YEAR)
+							+ " fortsetzen ?")) {
+						LoggerFactory.getLogger(ErstelleRnnCommand.class)
+							.warn("Invoice creation canceled by user");
+						return null;
+					}
+				}
+				
+				res = Rechnung.build(toBill);
 				if (monitor != null) {
 					monitor.worked(1);
 				}

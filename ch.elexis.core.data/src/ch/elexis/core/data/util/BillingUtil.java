@@ -373,6 +373,27 @@ public class BillingUtil {
 	}
 	
 	/**
+	 * Returns only Konsultations from the same year
+	 * 
+	 * @param konsultations
+	 * @return
+	 */
+	public static List<Konsultation> getKonsultationsFromSameYear(List<Konsultation> konsultations){
+		List<Konsultation> items = new ArrayList<>();
+		// only kons from the same year can be inside in a same bill
+		int year = 0;
+		for (Konsultation b : konsultations) {
+			if (year == 0) {
+				year = new TimeTool(b.getDatum()).get(TimeTool.YEAR);
+			}
+			if (year == new TimeTool(b.getDatum()).get(TimeTool.YEAR)) {
+				items.add(b);
+			}
+		}
+		return items;
+	}
+	
+	/**
 	 * Copies the actual fall, merge the copied fall with changes, transfer cons, storno the old
 	 * invoice
 	 */

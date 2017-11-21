@@ -28,10 +28,12 @@ import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PATIENT_LABEL_OR
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_XRAY;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -48,6 +50,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.printing.PrintDialog;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -71,6 +74,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.Hub;
@@ -528,24 +532,16 @@ public class GlobalActions {
 					if (actFall != null && mnd != null) {
 						String rsId = mnd.getRechnungssteller().getId();
 						Konsultation[] bhdl = actFall.getBehandlungen(false);
-						ArrayList<Konsultation> lBehdl = new ArrayList<Konsultation>(bhdl.length);
-					
-						int year = 0;
+						List<Konsultation> lBehdl = new ArrayList<Konsultation>(bhdl.length);
 						for (Konsultation b : bhdl) {
 							Rechnung rn = b.getRechnung();
 							if (rn == null) {
 								if (b.getMandant().getRechnungssteller().getId().equals(rsId)) {
-									
-									if (year == 0) {
-										year = new TimeTool(b.getDatum()).get(TimeTool.YEAR);
-									}
-									// only kons from the same year can be inside in a same bill
-									if (year == new TimeTool(b.getDatum()).get(TimeTool.YEAR)) {
-										lBehdl.add(b);
-									}
+									lBehdl.add(b);
 								}
 							}
 						}
+						lBehdl = BillingUtil.getKonsultationsFromSameYear(lBehdl);
 						Result<Rechnung> res = Rechnung.build(lBehdl);
 						if (!res.isOK()) {
 							ErrorDialog.openError(mainWindow.getShell(),
