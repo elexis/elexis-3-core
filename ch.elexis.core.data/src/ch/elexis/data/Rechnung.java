@@ -557,19 +557,15 @@ public class Rechnung extends PersistentObject {
 			// state date is in the future, hence we have a temporary state change
 			// fetch current state from history
 			
-			if (getExtInfoStoredObjectByKey(STATUS_CHANGED) instanceof List) {
-				@SuppressWarnings("unchecked")
-				List<String> stateChanges =
-					(List<String>) getExtInfoStoredObjectByKey(STATUS_CHANGED);
-				String lastElement = stateChanges.get(stateChanges.size() - 1);
-				String[] split = lastElement.split(": ");
-				try {
-					stateNumeric = Integer.parseInt(split[1]);
-				} catch (NumberFormatException nfe) {
-					log.error(
-						"Error resolving invoice state [{}] in element [{}], returning UNKNOWN.",
-						split[1], lastElement);
-				}
+			@SuppressWarnings("unchecked")
+			List<String> stateChanges = (List<String>) getExtInfoStoredObjectByKey(STATUS_CHANGED);
+			String lastElement = stateChanges.get(stateChanges.size() - 1);
+			String[] split = lastElement.split(": ");
+			try {
+				stateNumeric = Integer.parseInt(split[1]);
+			} catch (NumberFormatException nfe) {
+				log.error("Error resolving invoice state [{}] in element [{}], returning UNKNOWN.",
+					split[1], lastElement);
 			}
 		} else {
 			try {
