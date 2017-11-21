@@ -28,12 +28,10 @@ import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PATIENT_LABEL_OR
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_XRAY;
 
 import java.awt.Desktop;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -50,7 +48,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.printing.PrintDialog;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -532,11 +529,20 @@ public class GlobalActions {
 						String rsId = mnd.getRechnungssteller().getId();
 						Konsultation[] bhdl = actFall.getBehandlungen(false);
 						ArrayList<Konsultation> lBehdl = new ArrayList<Konsultation>(bhdl.length);
+					
+						int year = 0;
 						for (Konsultation b : bhdl) {
 							Rechnung rn = b.getRechnung();
 							if (rn == null) {
 								if (b.getMandant().getRechnungssteller().getId().equals(rsId)) {
-									lBehdl.add(b);
+									
+									if (year == 0) {
+										year = new TimeTool(b.getDatum()).get(TimeTool.YEAR);
+									}
+									// only kons from the same year can be inside in a same bill
+									if (year == new TimeTool(b.getDatum()).get(TimeTool.YEAR)) {
+										lBehdl.add(b);
+									}
 								}
 							}
 						}
