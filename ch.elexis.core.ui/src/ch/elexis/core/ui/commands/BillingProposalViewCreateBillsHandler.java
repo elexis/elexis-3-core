@@ -41,12 +41,27 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.Rechnungssteller;
 import ch.rgw.tools.Result;
+import ch.rgw.tools.TimeTool;
 
 public class BillingProposalViewCreateBillsHandler extends AbstractHandler implements IHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		final List<Konsultation> toBill = getToBill(event);
+		List<Konsultation> kons = getToBill(event);
+		final List<Konsultation> toBill =
+			BillingUtil.getKonsultationsFromSameYear(kons);
+		if (toBill.size() > 0 && toBill.size() != kons.size()) {
+			if (!MessageDialog.openQuestion(HandlerUtil.getActiveShell(event),
+				"Rechnung Validierung",
+				"Eine Rechnung kann nur Leistungen innerhalb eines Jahres beinhalten.\n\nWollen Sie mit der Erstellung der Rechnung für das Jahr "
+					+ new TimeTool(toBill.get(0).getDatum()).get(TimeTool.YEAR)
+					+ " fortsetzen ?")) {
+				LoggerFactory.getLogger(BillingProposalViewCreateBillsHandler.class)
+					.warn("Invoice creation canceled by user");
+				return null;
+			}
+		}
+		
 		ProgressMonitorDialog dialog = new ProgressMonitorDialog(HandlerUtil.getActiveShell(event));
 		try {
 			dialog.run(true, false, new IRunnableWithProgress() {

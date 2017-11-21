@@ -74,6 +74,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.Hub;
@@ -531,7 +532,7 @@ public class GlobalActions {
 					if (actFall != null && mnd != null) {
 						String rsId = mnd.getRechnungssteller().getId();
 						Konsultation[] bhdl = actFall.getBehandlungen(false);
-						ArrayList<Konsultation> lBehdl = new ArrayList<Konsultation>(bhdl.length);
+						List<Konsultation> lBehdl = new ArrayList<Konsultation>(bhdl.length);
 						for (Konsultation b : bhdl) {
 							Rechnung rn = b.getRechnung();
 							if (rn == null) {
@@ -540,6 +541,7 @@ public class GlobalActions {
 								}
 							}
 						}
+						lBehdl = BillingUtil.getKonsultationsFromSameYear(lBehdl);
 						Result<Rechnung> res = Rechnung.build(lBehdl);
 						if (!res.isOK()) {
 							ErrorDialog.openError(mainWindow.getShell(),
