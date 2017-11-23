@@ -25,6 +25,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -56,6 +57,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.Hub;
@@ -189,6 +191,28 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	public void addPersistentObject(PersistentObject o){
 		Konsultation actKons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 		if (actKons != null) {
+			if (o instanceof Leistungsblock) {
+				Leistungsblock block = (Leistungsblock) o;
+				List<ICodeElement> elements = block.getElements();
+				for (ICodeElement element : elements) {
+					if (element instanceof PersistentObject) {
+						addPersistentObject((PersistentObject) element);
+					}
+				}
+				List<ICodeElement> diff = block.getDiffToReferences(elements);
+				if (!diff.isEmpty()) {
+					StringBuilder sb = new StringBuilder();
+					diff.forEach(r -> {
+						if (sb.length() > 0) {
+							sb.append("\n");
+						}
+						sb.append(r);
+					});
+					MessageDialog.openWarning(getShell(), "Warnung",
+						"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
+							+ sb.toString());
+				}
+			}
 			if (o instanceof Prescription) {
 				Prescription presc = (Prescription) o;
 				o = presc.getArtikel();

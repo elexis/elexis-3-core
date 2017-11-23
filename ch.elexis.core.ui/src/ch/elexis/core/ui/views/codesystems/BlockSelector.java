@@ -12,8 +12,8 @@
 
 package ch.elexis.core.ui.views.codesystems;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.Action;
@@ -22,45 +22,47 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
-import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.commands.ExportiereBloeckeCommand;
+import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
-import ch.elexis.core.ui.selectors.SelectorPanel;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.data.Leistungsblock;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
-import ch.rgw.tools.IFilter;
-import ch.rgw.tools.Tree;
 
 public class BlockSelector extends CodeSelectorFactory {
-	private IAction deleteAction, createAction, exportAction;
+	private IAction deleteAction, createAction, exportAction, copyAction;
 	private CommonViewer cv;
 	private MenuManager mgr;
 	static SelectorPanelProvider slp;
@@ -89,6 +91,8 @@ public class BlockSelector extends CodeSelectorFactory {
 			public void menuAboutToShow(IMenuManager manager){
 				manager.add(tvfa);
 				manager.add(deleteAction);
+				manager.add(copyAction);
+				addPopupCommandContributions(manager, cv.getSelection());
 			}
 		});
 
@@ -179,8 +183,38 @@ public class BlockSelector extends CodeSelectorFactory {
 				try {
 					new ExportiereBloeckeCommand().execute(null);
 				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					LoggerFactory.getLogger(getClass()).error("Error exporting block", e);
+				}
+			}
+		};
+		copyAction = new Action("Block kopieren") {
+			{
+				setImageDescriptor(Images.IMG_COPY.getImageDescriptor());
+				setToolTipText("Den Block umbenennen und kopieren");
+			}
+			
+			@Override
+			public void run(){
+				Object o = cv.getSelection()[0];
+				if (o instanceof Leistungsblock) {
+					Leistungsblock sourceBlock = (Leistungsblock) o;
+					InputDialog inputDlg = new InputDialog(Display.getDefault().getActiveShell(),
+						"Block kopieren", "Bitte den Namen der Kopie eingeben bzw. bestätigen",
+						sourceBlock.getName() + " Kopie", new IInputValidator() {
+							
+							@Override
+							public String isValid(String newText){
+								return (newText != null && !newText.isEmpty()) ? null
+										: "Fehler, kein Name.";
+							}
+						}, SWT.BORDER);
+					if (inputDlg.open() == Window.OK) {
+						String newName = inputDlg.getValue();
+						Leistungsblock newBlock = new Leistungsblock(newName,
+							Mandant.load(sourceBlock.get(Leistungsblock.FLD_MANDANT_ID)));
+						sourceBlock.getElements().forEach(e -> newBlock.addElement(e));
+						cv.notify(CommonViewer.Message.update);
+					}
 				}
 			}
 		};
@@ -189,7 +223,9 @@ public class BlockSelector extends CodeSelectorFactory {
 	public static class BlockContentProvider implements
 			ViewerConfigurer.ICommonViewerContentProvider, ITreeContentProvider {
 		CommonViewer cv;
-		ViewerFilter filter;
+		
+		private String queryFilter;
+		
 		private final ElexisEventListenerImpl eeli_lb = new ElexisEventListenerImpl(
 			Leistungsblock.class) {
 			
@@ -215,9 +251,15 @@ public class BlockSelector extends CodeSelectorFactory {
 		
 		public Object[] getElements(Object inputElement){
 			Query<Leistungsblock> qbe = new Query<Leistungsblock>(Leistungsblock.class);
-			qbe.orderBy(false, new String[] {
-				"Name"
-			});
+			qbe.add(Leistungsblock.FLD_ID, Query.NOT_EQUAL, Leistungsblock.VERSION_ID);
+			if ((queryFilter != null && queryFilter.length() > 2)) {
+				qbe.startGroup();
+				qbe.add(Leistungsblock.FLD_NAME, Query.EQUALS, queryFilter);
+				qbe.or();
+				qbe.add(Leistungsblock.FLD_CODEELEMENTS, Query.LIKE, "%" + queryFilter + "%");
+				qbe.endGroup();
+			}
+			qbe.orderBy(false, Leistungsblock.FLD_NAME);
 			return qbe.execute().toArray();
 		}
 		
@@ -229,21 +271,28 @@ public class BlockSelector extends CodeSelectorFactory {
 		
 		/** Vom ControlFieldProvider */
 		public void changed(HashMap<String, String> vals){
-			TreeViewer tv = (TreeViewer) cv.getViewerWidget();
-			if (filter != null) {
-				tv.removeFilter(filter);
-				filter = null;
-			}
-			cv.notify(CommonViewer.Message.update);
-			if (cv.getConfigurer().getControlFieldProvider().isEmpty()) {
-				cv.notify(CommonViewer.Message.empty);
-			} else {
-				cv.notify(CommonViewer.Message.notempty);
-				filter = new BlockFilter(slp.getPanel());
-				tv.addFilter(filter);
-				
-			}
-			
+			queryFilter = vals.get("Name");
+			refreshViewer();
+		}
+		
+		private void refreshViewer(){
+			cv.getViewerWidget().getControl().getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run(){
+					StructuredViewer viewer = cv.getViewerWidget();
+					viewer.setSelection(new StructuredSelection());
+					viewer.getControl().setRedraw(false);
+					viewer.refresh();
+					if ((queryFilter != null && queryFilter.length() > 2)) {
+						if (viewer instanceof TreeViewer) {
+							((TreeViewer) viewer).expandAll();
+						}
+					} else {
+						((TreeViewer) viewer).collapseAll();
+					}
+					viewer.getControl().setRedraw(true);
+				}
+			});
 		}
 		
 		/** Vom ControlFieldProvider */
@@ -260,9 +309,8 @@ public class BlockSelector extends CodeSelectorFactory {
 			if (parentElement instanceof Leistungsblock) {
 				Leistungsblock lb = (Leistungsblock) parentElement;
 				return lb.getElements().toArray();
-				
 			}
-			return new Object[0];
+			return Collections.emptyList().toArray();
 		}
 		
 		public Object getParent(Object element){
@@ -283,53 +331,6 @@ public class BlockSelector extends CodeSelectorFactory {
 		}
 		
 	};
-	
-	static class BlockFilter extends ViewerFilter implements IFilter {
-		SelectorPanel slp;
-		
-		public BlockFilter(SelectorPanel panel){
-			slp = panel;
-		}
-		
-		@Override
-		public boolean select(Viewer viewer, Object parentElement, Object element){
-			return select(element);
-		}
-		
-		public boolean select(Object element){
-			PersistentObject po = null;
-			if (element instanceof Tree) {
-				po = (PersistentObject) ((Tree) element).contents;
-			} else if (element instanceof PersistentObject) {
-				po = (PersistentObject) element;
-			} else {
-				return false;
-			}
-			HashMap<String, String> vals = slp.getValues();
-			if (po.isMatching(vals, PersistentObject.MATCH_START, true)) {
-				return true;
-			} else {
-				if (element instanceof Tree) {
-					Tree p = ((Tree) element).getParent();
-					if (p == null) {
-						return false;
-					}
-					return select(p);
-				} else if (element instanceof Leistungsblock) {
-					Leistungsblock lb = (Leistungsblock) element;
-					List<ICodeElement> elements = lb.getElements();
-					String value = vals.get("Name");
-					for (ICodeElement ice : elements) {
-						if (ice.getText().startsWith(value)) {
-							return true;
-						}
-					}
-					return false;
-				}
-			}
-			return false;
-		}
-	}
 	
 	@Override
 	public String getCodeSystemName(){

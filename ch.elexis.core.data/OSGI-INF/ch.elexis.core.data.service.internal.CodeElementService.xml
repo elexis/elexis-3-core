@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" name="ch.elexis.core.data.service.internal.CodeElementService">
+   <service>
+      <provide interface="ch.elexis.core.services.ICodeElementService"/>
+   </service>
+   <reference bind="setCodeElementServiceContribution" cardinality="0..n" interface="ch.elexis.core.services.ICodeElementServiceContribution" name="CodeElementServiceContribution" policy="dynamic" policy-option="greedy" unbind="unsetCodeElementServiceContribution"/>
+   <implementation class="ch.elexis.core.data.service.internal.CodeElementService"/>
+</scr:component>

@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.jdom.Element;
 
+import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.exchange.XChangeContainer;
@@ -39,7 +40,7 @@ public class ServiceElement extends XChangeElement {
 		setAttribute(ATTR_CONTRACT_NAME, iv.getCodeSystemName());
 		setAttribute(ATTR_MINUTES, Integer.toString(iv.getMinutes()));
 		setAttribute(ATTR_COST, iv.getKosten(new TimeTool()).getCentsAsString());
-		setAttribute(ATTR_PRICE, Integer.toString(iv.getTP(new TimeTool(), null)));
+		setAttribute(ATTR_PRICE, Integer.toString(iv.getTP(new TimeTool(), (IFall) null)));
 		add(new XidElement().asExporter(p, iv));
 		return this;
 	}

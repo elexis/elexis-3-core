@@ -18,6 +18,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
@@ -102,9 +104,32 @@ public interface IVerrechenbar extends ICodeElement {
 	public IFilter getFilter(Mandant m);
 	
 	/**
-	 * Betrag dieser Verrechenbar (in TP*100) an einem bestimmten Datum liefern
+	 * Get the (T)ax (P)oint value of the {@link IVerrechenbar}. Parameters are provided as context
+	 * to determine the correct value.
+	 * 
+	 * @param date
+	 * @param fall
+	 * @return
 	 */
-	public int getTP(TimeTool date, IFall fall);
+	public int getTP(@NonNull TimeTool date, @Nullable IFall fall);
+	
+	/**
+	 * Get the (T)ax (P)oint value of the {@link IVerrechenbar}. Parameters are provided as context
+	 * to determine the correct value. This method was introduced because a context with
+	 * {@link Konsultation} was needed, as context with {@link IFall} was not specific enough. </br>
+	 * </br>
+	 * If parameter kons is null, value of {@link IVerrechenbar#getTP(TimeTool, IFall)} is returned.
+	 * 
+	 * @param date
+	 * @param kons
+	 * @return
+	 */
+	public default int getTP(@NonNull TimeTool date, @Nullable Konsultation kons){
+		if (kons != null) {
+			return getTP(date, kons.getFall());
+		}
+		return getTP(date, (IFall) null);
+	}
 	
 	public double getFactor(TimeTool date, IFall fall);
 	

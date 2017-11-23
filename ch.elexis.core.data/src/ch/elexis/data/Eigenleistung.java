@@ -44,7 +44,11 @@ public class Eigenleistung extends VerrechenbarAdapter {
 	
 	@Override
 	public String getCode(){
-		return get(CODE);
+		String ret = get(CODE);
+		if (ret == null || ret.isEmpty()) {
+			ret = getId();
+		}
+		return ret;
 	}
 	
 	@Override

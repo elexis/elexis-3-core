@@ -96,7 +96,7 @@ public class Verrechnet extends PersistentObject {
 	public Verrechnet(final IVerrechenbar iv, final Konsultation kons, final int zahl){
 		TimeTool dat = new TimeTool(kons.getDatum());
 		Fall fall = kons.getFall();
-		int tp = iv.getTP(dat, fall);
+		int tp = iv.getTP(dat, kons);
 		double factor = iv.getFactor(dat, fall);
 		long preis = Math.round(tp * factor);
 		String[] fields = new String[] {

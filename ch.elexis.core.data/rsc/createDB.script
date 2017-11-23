@@ -227,22 +227,6 @@ CREATE TABLE LEISTUNGEN(
 CREATE INDEX lst1 on LEISTUNGEN(BEHANDLUNG);
 CREATE INDEX lst2 on LEISTUNGEN(KlASSE,LEISTG_CODE);
 
-# Ein Leistungsblock ist eine benannte Kombination beliebig vieler Leistungen
-CREATE TABLE LEISTUNGSBLOCK(
-	ID				VARCHAR(25) primary key,
-	lastupdate      BIGINT,
-	deleted			CHAR(1) default '0',
-	MandantID		VARCHAR(25),
-	Name			VARCHAR(30),
-	Macro			VARCHAR(30),
-	Leistungen		BLOB
-);
-
-CREATE INDEX block1 on LEISTUNGSBLOCK(Name);
-CREATE INDEX block2 on LEISTUNGSBLOCK(MandantID);
-CREATE INDEX block3 on LEISTUNGSBLOCK(Macro);
-
-
 CREATE TABLE EK_PREISE(
 	TYP				VARCHAR(80),
 	ID				VARCHAR(25),

@@ -54,7 +54,6 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.ui.Hub;
@@ -167,7 +166,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				if (lb == null) {
 					return new Object[0];
 				}
-				List<ICodeElement> lst = lb.getElements();
+				List<ICodeElement> lst = lb.getElementReferences();
 				if (lst == null) {
 					return new Object[0];
 				}
@@ -278,9 +277,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		ViewMenus menus = new ViewMenus(site);
 		menus.createControlContextMenu(lLst.getControl(), new ViewMenus.IMenuPopulator() {
 			public IAction[] fillMenu(){
-				IVerrechenbar iv =
-					(IVerrechenbar) ((IStructuredSelection) lLst.getSelection()).getFirstElement();
-				if (iv instanceof Eigenleistung) {
+				ICodeElement element =
+					(ICodeElement) ((IStructuredSelection) lLst.getSelection()).getFirstElement();
+				if (element instanceof Eigenleistung) {
 					return new IAction[] {
 						moveUpAction, moveDownAction, null, removeLeistung, editAction
 					};

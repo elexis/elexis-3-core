@@ -23,6 +23,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -94,8 +95,8 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	
 	public CodeSelectorFactory(){}
 	
-	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
-		throws CoreException{
+	public void setInitializationData(IConfigurationElement config, String propertyName,
+		Object data) throws CoreException{
 		
 	}
 	
@@ -111,14 +112,48 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		return "999"; //$NON-NLS-1$
 	}
 	
+	/**
+	 * This method queries the <i>org.eclipse.ui.menus</i> extensions, and looks for menu
+	 * contributions with a locationURI <i>popup:classname</i>. Found contributions are added to the
+	 * {@link IMenuManager}.
+	 * 
+	 * @param manager
+	 * @param objects
+	 */
+	protected void addPopupCommandContributions(IMenuManager manager, Object[] selection){
+		java.util.List<IConfigurationElement> contributions =
+			Extensions.getExtensions("org.eclipse.ui.menus");
+		for (IConfigurationElement contributionElement : contributions) {
+			String locationUri = contributionElement.getAttribute("locationURI");
+			String[] parts = locationUri.split(":");
+			if (parts.length == 2) {
+				if (parts[0].equals("popup") && parts[1].equals(getClass().getName())) {
+					IConfigurationElement[] command = contributionElement.getChildren("command");
+					if (command.length > 0) {
+						addMenuContribution(command[0], manager, selection);
+					}
+				}
+			}
+		}
+	}
+	
+	protected void addMenuContribution(IConfigurationElement commandElement, IMenuManager manager,
+		Object[] selection){
+		ContributionAction action = new ContributionAction(commandElement);
+		if (action.isValid()) {
+			action.setSelection(selection);
+			manager.add(action);
+		}
+	}
+	
 	public PersistentObject findElement(String code){
 		String s = getElementClass().getName() + StringConstants.DOUBLECOLON + code;
 		return CoreHub.poFactory.createFromString(s);
 	}
 	
 	public SelectionDialog getSelectionDialog(Shell parent, Object data){
-		throw new UnsupportedOperationException("SelectionDialog for code system "
-			+ getCodeSystemName() + " not implemented");
+		throw new UnsupportedOperationException(
+			"SelectionDialog for code system " + getCodeSystemName() + " not implemented");
 	}
 	
 	public static SelectionDialog getSelectionDialog(String codeSystemName, Shell parent,
@@ -131,12 +166,12 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		if (list != null) {
 			for (IConfigurationElement ic : list) {
 				try {
-					PersistentObjectFactory po =
-						(PersistentObjectFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
-					CodeSelectorFactory codeSelectorFactory =
-						(CodeSelectorFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+					PersistentObjectFactory po = (PersistentObjectFactory) ic
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
+					CodeSelectorFactory codeSelectorFactory = (CodeSelectorFactory) ic
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 					if (codeSelectorFactory == null) {
-						String error = "CodeSelectorFactory is null: "+ic.getClass().getName();
+						String error = "CodeSelectorFactory is null: " + ic.getClass().getName();
 						SWTHelper.alert(CAPTION_ERROR, error); //$NON-NLS-1$
 						log.error(error);
 						continue;
@@ -144,8 +179,8 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 					ICodeElement codeElement =
 						(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
 					if (codeElement == null) {
-						String error = "CodeElement is null: "+po.getClass().getName(); //$NON-NLS-1$
-						SWTHelper.alert(CAPTION_ERROR, error); 
+						String error = "CodeElement is null: " + po.getClass().getName(); //$NON-NLS-1$
+						SWTHelper.alert(CAPTION_ERROR, error);
 						log.error(error);
 						continue;
 					}
@@ -207,7 +242,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 					CodeSelectorFactory codeSelectorFactory = (CodeSelectorFactory) ic
 						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 					if (codeSelectorFactory == null) {
-						String error = "CodeSelectorFactory is null: "+ic.getClass().getName(); //$NON-NLS-1$
+						String error = "CodeSelectorFactory is null: " + ic.getClass().getName(); //$NON-NLS-1$
 						SWTHelper.alert(CAPTION_ERROR, error);
 						log.error(error);
 						continue;
@@ -215,8 +250,8 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 					ICodeElement codeElement =
 						(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
 					if (codeElement == null) {
-						String message =
-							"null code element for " + codeSelectorFactory.getElementClass() + " in " + po.getClass(); //$NON-NLS-1$
+						String message = "null code element for " //$NON-NLS-1$
+							+ codeSelectorFactory.getElementClass() + " in " + po.getClass();
 						SWTHelper.alert(CAPTION_ERROR, message); //$NON-NLS-1$
 						log.error(message);
 						continue;
@@ -256,8 +291,8 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		
 		for (IConfigurationElement ic : list) {
 			try {
-				IDetailDisplay d =
-					(IDetailDisplay) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
+				IDetailDisplay d = (IDetailDisplay) ic
+					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 				
 				for (int i = 0; i < userSettings.length; i++) {
 					if (userSettings[i].equals(d.getTitle().trim())) {
@@ -273,21 +308,21 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		for (Integer key : icMap.keySet()) {
 			try {
 				IConfigurationElement ic = icMap.get(key);
-				PersistentObjectFactory po =
-					(PersistentObjectFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
-				CodeSelectorFactory codeSelectorFactory =
-					(CodeSelectorFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+				PersistentObjectFactory po = (PersistentObjectFactory) ic
+					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
+				CodeSelectorFactory codeSelectorFactory = (CodeSelectorFactory) ic
+					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 				if (codeSelectorFactory == null) {
-					String error = "CodeSelectorFactory is null: "+ic.getClass().getName(); //$NON-NLS-1$
-					SWTHelper.alert(CAPTION_ERROR, error); 
+					String error = "CodeSelectorFactory is null: " + ic.getClass().getName(); //$NON-NLS-1$
+					SWTHelper.alert(CAPTION_ERROR, error);
 					log.error(error);
 					continue;
 				}
 				ICodeElement codeElement =
 					(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
 				if (codeElement == null) {
-					String message =
-						"null code element for " + codeSelectorFactory.getElementClass() + " in " + po.getClass(); //$NON-NLS-1$
+					String message = "null code element for " //$NON-NLS-1$
+						+ codeSelectorFactory.getElementClass() + " in " + po.getClass();
 					SWTHelper.alert(CAPTION_ERROR, message); //$NON-NLS-1$
 					log.error(message);
 					continue;
@@ -362,24 +397,23 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		ResizeListener resizeListener;
 		
 		private final ElexisEventListenerImpl eeli_user =
-			new ElexisUiEventListenerImpl(
-			Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
-			
-			public void runInUi(ElexisEvent ev){
-				if (lbPatientMFU != null && (!lbPatientMFU.isDisposed())) {
-					lbPatientMFU.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+			new ElexisUiEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
+				
+				public void runInUi(ElexisEvent ev){
+					if (lbPatientMFU != null && (!lbPatientMFU.isDisposed())) {
+						lbPatientMFU.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+					}
+					if (lbUserMFU != null && (!lbUserMFU.isDisposed())) {
+						lbUserMFU.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+					}
+					if (cv != null && cv.getViewerWidget() != null
+						&& (!cv.getViewerWidget().getControl().isDisposed())) {
+						cv.getViewerWidget().getControl()
+							.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+					}
+					refresh();
 				}
-				if (lbUserMFU != null && (!lbUserMFU.isDisposed())) {
-					lbUserMFU.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-				}
-				if (cv != null && cv.getViewerWidget() != null
-					&& (!cv.getViewerWidget().getControl().isDisposed())) {
-					cv.getViewerWidget().getControl()
-						.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-				}
-				refresh();
-			}
-		};
+			};
 		
 		protected cPage(CTabFolder ctab){
 			super(ctab, SWT.NONE);
@@ -458,6 +492,19 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 									PersistentObject po = (PersistentObject) codeElement;
 									target.codeSelected(po);
 								}
+							}
+							java.util.List<ICodeElement> diff = block.getDiffToReferences(elements);
+							if (!diff.isEmpty()) {
+								StringBuilder sb = new StringBuilder();
+								diff.forEach(r -> {
+									if (sb.length() > 0) {
+										sb.append("\n");
+									}
+									sb.append(r);
+								});
+								MessageDialog.openWarning(getShell(), "Warnung",
+									"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
+										+ sb.toString());
 							}
 						} else {
 							target.codeSelected(obj);
@@ -595,7 +642,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					Patient patient = ElexisEventDispatcher.getSelectedPatient();
-					if(patient==null) {
+					if (patient == null) {
 						return;
 					}
 					

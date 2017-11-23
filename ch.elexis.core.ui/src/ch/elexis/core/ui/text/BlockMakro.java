@@ -2,6 +2,9 @@ package ch.elexis.core.ui.text;
 
 import java.util.List;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
@@ -30,7 +33,8 @@ public class BlockMakro implements IKonsMakro {
 	}
 	
 	public void addBlock(Konsultation kons, Leistungsblock block){
-		for (ICodeElement ice : block.getElements()) {
+		List<ICodeElement> elements = block.getElements();
+		for (ICodeElement ice : elements) {
 			if (ice instanceof IVerrechenbar) {
 				Result<IVerrechenbar> res = kons.addLeistung((IVerrechenbar) ice);
 				if (!res.isOK()) {
@@ -39,6 +43,19 @@ public class BlockMakro implements IKonsMakro {
 			} else if (ice instanceof IDiagnose) {
 				kons.addDiagnose((IDiagnose) ice);
 			}
+		}
+		java.util.List<ICodeElement> diff = block.getDiffToReferences(elements);
+		if (!diff.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			diff.forEach(r -> {
+				if (sb.length() > 0) {
+					sb.append("\n");
+				}
+				sb.append(r);
+			});
+			MessageDialog.openWarning(Display.getDefault().getActiveShell(), "Warnung",
+				"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
+					+ sb.toString());
 		}
 	}
 }

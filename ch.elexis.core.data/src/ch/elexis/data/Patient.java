@@ -18,6 +18,8 @@ import static ch.elexis.core.model.PatientConstants.FLD_EXTINFO_STAMMARZT;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -648,14 +650,7 @@ public class Patient extends Person {
 	 * @return Das Alter in ganzen Jahren als String
 	 */
 	public String getAlter(){
-		TimeTool now = new TimeTool();
-		TimeTool bd = new TimeTool(getGeburtsdatum());
-		int jahre = now.get(TimeTool.YEAR) - bd.get(TimeTool.YEAR);
-		bd.set(TimeTool.YEAR, now.get(TimeTool.YEAR));
-		if (bd.isAfter(now)) {
-			jahre -= 1;
-		}
-		return Integer.toString(jahre);
+		return Long.toString(getAgeAt(LocalDateTime.now(), ChronoUnit.YEARS));
 	}
 	
 	/**
@@ -776,5 +771,10 @@ public class Patient extends Person {
 		Map h = getMap(FLD_EXTINFO);
 		h.remove(key);
 		setMap(FLD_EXTINFO, h);
+	}
+	
+	public long getAgeAt(LocalDateTime dateTime, ChronoUnit chronoUnit){
+		LocalDateTime birthDateTime = new TimeTool(getGeburtsdatum()).toLocalDateTime();
+		return chronoUnit.between(birthDateTime, dateTime);
 	}
 }

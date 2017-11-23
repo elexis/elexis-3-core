@@ -10,10 +10,13 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -147,6 +150,24 @@ public class MultiplikatorList {
 		} finally {
 			PersistentObject.getConnection().releaseStatement(statement);
 		}
+	}
+	
+	public void removeMultiplikator(TimeTool dateFrom, String value){
+		PreparedStatement statement = PersistentObject.getDefaultConnection().getPreparedStatement(getPreparedStatementSql());
+		try {
+			statement.setString(1, value);
+			statement.setString(2, dateFrom.toString(TimeTool.DATE_COMPACT));
+			statement.setString(3, typ);
+			statement.execute();
+		} catch (SQLException e) {
+			LoggerFactory.getLogger(getClass()).error("Could not delete multiplikator", e);
+		} finally {
+			PersistentObject.getDefaultConnection().releasePreparedStatement(statement);
+		}
+	}
+	
+	private String getPreparedStatementSql(){
+		return "DELETE FROM " + table + " WHERE MULTIPLIKATOR=? AND DATUM_VON=? AND TYP=?";
 	}
 	
 	public synchronized double getMultiplikator(TimeTool date){
