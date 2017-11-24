@@ -3,4 +3,5 @@
 instructions.configure=\
   addRepository(type:0,location:http${#58}//download.elexis.info/elexis/repo_branch/p2/elexis-3-base,name:Elexis 3 Base aus Zweig repo_branch);\
   addRepository(type:0,location:http${#58}//download.elexis.info/elexis/repo_branch/p2/elexis-3-core,name:Elexis 3 Core aus Zweig repo_branch);\
+  addRepository(type:0,location:http${#58}//download.elexis.info/elexis/repo_branch/p2/elexis.3.gpl,name:Elexis GPL features aus Zweig repo_branch);\
   mkdir(path:${installFolder}/dropins);
