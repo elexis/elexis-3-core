@@ -67,7 +67,7 @@ public interface ModelPackage extends EPackage {
 	int STATISTICS = 0;
 
 	/**
-	 * The feature id for the '<em><b>Statistics</b></em>' reference.
+	 * The feature id for the '<em><b>Statistics</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -122,13 +122,31 @@ public interface ModelPackage extends EPackage {
 	int ISTATISTIC__VALUE = 1;
 
 	/**
+	 * The feature id for the '<em><b>Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTATISTIC__TIME = 2;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTATISTIC__TYPE = 3;
+
+	/**
 	 * The number of structural features of the '<em>IStatistic</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ISTATISTIC_FEATURE_COUNT = 2;
+	int ISTATISTIC_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>IStatistic</em>' class.
@@ -168,6 +186,24 @@ public interface ModelPackage extends EPackage {
 	int SIMPLE_STATISTIC__VALUE = ISTATISTIC__VALUE;
 
 	/**
+	 * The feature id for the '<em><b>Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_STATISTIC__TIME = ISTATISTIC__TIME;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_STATISTIC__TYPE = ISTATISTIC__TYPE;
+
+	/**
 	 * The number of structural features of the '<em>Simple Statistic</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -186,71 +222,6 @@ public interface ModelPackage extends EPackage {
 	int SIMPLE_STATISTIC_OPERATION_COUNT = ISTATISTIC_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.ui.usage.model.impl.RelationalStatisticImpl <em>Relational Statistic</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.ui.usage.model.impl.RelationalStatisticImpl
-	 * @see ch.elexis.core.ui.usage.model.impl.ModelPackageImpl#getRelationalStatistic()
-	 * @generated
-	 */
-	int RELATIONAL_STATISTIC = 3;
-
-	/**
-	 * The feature id for the '<em><b>Title</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RELATIONAL_STATISTIC__TITLE = ISTATISTIC__TITLE;
-
-	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RELATIONAL_STATISTIC__VALUE = ISTATISTIC__VALUE;
-
-	/**
-	 * The feature id for the '<em><b>From</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RELATIONAL_STATISTIC__FROM = ISTATISTIC_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>To</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RELATIONAL_STATISTIC__TO = ISTATISTIC_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Relational Statistic</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RELATIONAL_STATISTIC_FEATURE_COUNT = ISTATISTIC_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of operations of the '<em>Relational Statistic</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RELATIONAL_STATISTIC_OPERATION_COUNT = ISTATISTIC_OPERATION_COUNT + 0;
-
-
-	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.ui.usage.model.Statistics <em>Statistics</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -261,10 +232,10 @@ public interface ModelPackage extends EPackage {
 	EClass getStatistics();
 
 	/**
-	 * Returns the meta object for the reference '{@link ch.elexis.core.ui.usage.model.Statistics#getStatistics <em>Statistics</em>}'.
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.ui.usage.model.Statistics#getStatistics <em>Statistics</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Statistics</em>'.
+	 * @return the meta object for the reference list '<em>Statistics</em>'.
 	 * @see ch.elexis.core.ui.usage.model.Statistics#getStatistics()
 	 * @see #getStatistics()
 	 * @generated
@@ -304,6 +275,28 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIStatistic_Value();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.IStatistic#getTime <em>Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Time</em>'.
+	 * @see ch.elexis.core.ui.usage.model.IStatistic#getTime()
+	 * @see #getIStatistic()
+	 * @generated
+	 */
+	EAttribute getIStatistic_Time();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.IStatistic#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see ch.elexis.core.ui.usage.model.IStatistic#getType()
+	 * @see #getIStatistic()
+	 * @generated
+	 */
+	EAttribute getIStatistic_Type();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.ui.usage.model.SimpleStatistic <em>Simple Statistic</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -312,38 +305,6 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getSimpleStatistic();
-
-	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.ui.usage.model.RelationalStatistic <em>Relational Statistic</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Relational Statistic</em>'.
-	 * @see ch.elexis.core.ui.usage.model.RelationalStatistic
-	 * @generated
-	 */
-	EClass getRelationalStatistic();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.RelationalStatistic#getFrom <em>From</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>From</em>'.
-	 * @see ch.elexis.core.ui.usage.model.RelationalStatistic#getFrom()
-	 * @see #getRelationalStatistic()
-	 * @generated
-	 */
-	EAttribute getRelationalStatistic_From();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.RelationalStatistic#getTo <em>To</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>To</em>'.
-	 * @see ch.elexis.core.ui.usage.model.RelationalStatistic#getTo()
-	 * @see #getRelationalStatistic()
-	 * @generated
-	 */
-	EAttribute getRelationalStatistic_To();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -379,7 +340,7 @@ public interface ModelPackage extends EPackage {
 		EClass STATISTICS = eINSTANCE.getStatistics();
 
 		/**
-		 * The meta object literal for the '<em><b>Statistics</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Statistics</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -413,6 +374,22 @@ public interface ModelPackage extends EPackage {
 		EAttribute ISTATISTIC__VALUE = eINSTANCE.getIStatistic_Value();
 
 		/**
+		 * The meta object literal for the '<em><b>Time</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTATISTIC__TIME = eINSTANCE.getIStatistic_Time();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTATISTIC__TYPE = eINSTANCE.getIStatistic_Type();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl <em>Simple Statistic</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -421,32 +398,6 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass SIMPLE_STATISTIC = eINSTANCE.getSimpleStatistic();
-
-		/**
-		 * The meta object literal for the '{@link ch.elexis.core.ui.usage.model.impl.RelationalStatisticImpl <em>Relational Statistic</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.ui.usage.model.impl.RelationalStatisticImpl
-		 * @see ch.elexis.core.ui.usage.model.impl.ModelPackageImpl#getRelationalStatistic()
-		 * @generated
-		 */
-		EClass RELATIONAL_STATISTIC = eINSTANCE.getRelationalStatistic();
-
-		/**
-		 * The meta object literal for the '<em><b>From</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RELATIONAL_STATISTIC__FROM = eINSTANCE.getRelationalStatistic_From();
-
-		/**
-		 * The meta object literal for the '<em><b>To</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RELATIONAL_STATISTIC__TO = eINSTANCE.getRelationalStatistic_To();
 
 	}
 

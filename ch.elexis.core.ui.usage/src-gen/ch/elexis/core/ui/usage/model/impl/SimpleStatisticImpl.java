@@ -5,6 +5,7 @@ package ch.elexis.core.ui.usage.model.impl;
 import ch.elexis.core.ui.usage.model.ModelPackage;
 import ch.elexis.core.ui.usage.model.SimpleStatistic;
 
+import java.util.Date;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
@@ -22,6 +23,8 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <ul>
  *   <li>{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl#getTitle <em>Title</em>}</li>
  *   <li>{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl#getTime <em>Time</em>}</li>
+ *   <li>{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl#getType <em>Type</em>}</li>
  * </ul>
  *
  * @generated
@@ -66,6 +69,46 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	 * @ordered
 	 */
 	protected int value = VALUE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getTime() <em>Time</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTime()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Date TIME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getTime() <em>Time</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTime()
+	 * @generated
+	 * @ordered
+	 */
+	protected Date time = TIME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TYPE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected String type = TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -133,6 +176,48 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Date getTime() {
+		return time;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setTime(Date newTime) {
+		Date oldTime = time;
+		time = newTime;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.SIMPLE_STATISTIC__TIME, oldTime, time));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setType(String newType) {
+		String oldType = type;
+		type = newType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.SIMPLE_STATISTIC__TYPE, oldType, type));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -140,6 +225,10 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 				return getTitle();
 			case ModelPackage.SIMPLE_STATISTIC__VALUE:
 				return getValue();
+			case ModelPackage.SIMPLE_STATISTIC__TIME:
+				return getTime();
+			case ModelPackage.SIMPLE_STATISTIC__TYPE:
+				return getType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -157,6 +246,12 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 				return;
 			case ModelPackage.SIMPLE_STATISTIC__VALUE:
 				setValue((Integer)newValue);
+				return;
+			case ModelPackage.SIMPLE_STATISTIC__TIME:
+				setTime((Date)newValue);
+				return;
+			case ModelPackage.SIMPLE_STATISTIC__TYPE:
+				setType((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -176,6 +271,12 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 			case ModelPackage.SIMPLE_STATISTIC__VALUE:
 				setValue(VALUE_EDEFAULT);
 				return;
+			case ModelPackage.SIMPLE_STATISTIC__TIME:
+				setTime(TIME_EDEFAULT);
+				return;
+			case ModelPackage.SIMPLE_STATISTIC__TYPE:
+				setType(TYPE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -192,6 +293,10 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 				return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
 			case ModelPackage.SIMPLE_STATISTIC__VALUE:
 				return value != VALUE_EDEFAULT;
+			case ModelPackage.SIMPLE_STATISTIC__TIME:
+				return TIME_EDEFAULT == null ? time != null : !TIME_EDEFAULT.equals(time);
+			case ModelPackage.SIMPLE_STATISTIC__TYPE:
+				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -210,6 +315,10 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 		result.append(title);
 		result.append(", value: ");
 		result.append(value);
+		result.append(", time: ");
+		result.append(time);
+		result.append(", type: ");
+		result.append(type);
 		result.append(')');
 		return result.toString();
 	}

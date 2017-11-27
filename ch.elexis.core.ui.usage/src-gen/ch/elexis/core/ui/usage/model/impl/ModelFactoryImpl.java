@@ -58,7 +58,6 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 		switch (eClass.getClassifierID()) {
 			case ModelPackage.STATISTICS: return createStatistics();
 			case ModelPackage.SIMPLE_STATISTIC: return createSimpleStatistic();
-			case ModelPackage.RELATIONAL_STATISTIC: return createRelationalStatistic();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -82,16 +81,6 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	public SimpleStatistic createSimpleStatistic() {
 		SimpleStatisticImpl simpleStatistic = new SimpleStatisticImpl();
 		return simpleStatistic;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RelationalStatistic createRelationalStatistic() {
-		RelationalStatisticImpl relationalStatistic = new RelationalStatisticImpl();
-		return relationalStatistic;
 	}
 
 	/**

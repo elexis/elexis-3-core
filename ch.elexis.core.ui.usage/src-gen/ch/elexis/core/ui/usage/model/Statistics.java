@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.ui.usage.model;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -22,29 +23,19 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Statistics extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Statistics</b></em>' reference.
+	 * Returns the value of the '<em><b>Statistics</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.ui.usage.model.IStatistic}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Statistics</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Statistics</em>' reference.
-	 * @see #setStatistics(IStatistic)
+	 * @return the value of the '<em>Statistics</em>' reference list.
 	 * @see ch.elexis.core.ui.usage.model.ModelPackage#getStatistics_Statistics()
 	 * @model
 	 * @generated
 	 */
-	IStatistic getStatistics();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.ui.usage.model.Statistics#getStatistics <em>Statistics</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Statistics</em>' reference.
-	 * @see #getStatistics()
-	 * @generated
-	 */
-	void setStatistics(IStatistic value);
+	EList<IStatistic> getStatistics();
 
 } // Statistics

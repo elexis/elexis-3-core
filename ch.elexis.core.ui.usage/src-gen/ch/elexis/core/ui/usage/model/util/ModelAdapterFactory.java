@@ -80,10 +80,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createSimpleStatisticAdapter();
 			}
 			@Override
-			public Adapter caseRelationalStatistic(RelationalStatistic object) {
-				return createRelationalStatisticAdapter();
-			}
-			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -142,20 +138,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createSimpleStatisticAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.ui.usage.model.RelationalStatistic <em>Relational Statistic</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.ui.usage.model.RelationalStatistic
-	 * @generated
-	 */
-	public Adapter createRelationalStatisticAdapter() {
 		return null;
 	}
 

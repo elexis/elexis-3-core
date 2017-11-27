@@ -5,7 +5,6 @@ package ch.elexis.core.ui.usage.model.impl;
 import ch.elexis.core.ui.usage.model.IStatistic;
 import ch.elexis.core.ui.usage.model.ModelFactory;
 import ch.elexis.core.ui.usage.model.ModelPackage;
-import ch.elexis.core.ui.usage.model.RelationalStatistic;
 import ch.elexis.core.ui.usage.model.SimpleStatistic;
 import ch.elexis.core.ui.usage.model.Statistics;
 
@@ -43,13 +42,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass simpleStatisticEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass relationalStatisticEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -162,35 +154,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIStatistic_Time() {
+		return (EAttribute)iStatisticEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIStatistic_Type() {
+		return (EAttribute)iStatisticEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getSimpleStatistic() {
 		return simpleStatisticEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRelationalStatistic() {
-		return relationalStatisticEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRelationalStatistic_From() {
-		return (EAttribute)relationalStatisticEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRelationalStatistic_To() {
-		return (EAttribute)relationalStatisticEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -227,12 +210,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iStatisticEClass = createEClass(ISTATISTIC);
 		createEAttribute(iStatisticEClass, ISTATISTIC__TITLE);
 		createEAttribute(iStatisticEClass, ISTATISTIC__VALUE);
+		createEAttribute(iStatisticEClass, ISTATISTIC__TIME);
+		createEAttribute(iStatisticEClass, ISTATISTIC__TYPE);
 
 		simpleStatisticEClass = createEClass(SIMPLE_STATISTIC);
-
-		relationalStatisticEClass = createEClass(RELATIONAL_STATISTIC);
-		createEAttribute(relationalStatisticEClass, RELATIONAL_STATISTIC__FROM);
-		createEAttribute(relationalStatisticEClass, RELATIONAL_STATISTIC__TO);
 	}
 
 	/**
@@ -264,21 +245,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		// Add supertypes to classes
 		simpleStatisticEClass.getESuperTypes().add(this.getIStatistic());
-		relationalStatisticEClass.getESuperTypes().add(this.getIStatistic());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(statisticsEClass, Statistics.class, "Statistics", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getStatistics_Statistics(), this.getIStatistic(), null, "statistics", null, 0, 1, Statistics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getStatistics_Statistics(), this.getIStatistic(), null, "statistics", null, 0, -1, Statistics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iStatisticEClass, IStatistic.class, "IStatistic", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIStatistic_Title(), ecorePackage.getEString(), "title", null, 0, 1, IStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIStatistic_Value(), ecorePackage.getEInt(), "value", null, 0, 1, IStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIStatistic_Time(), ecorePackage.getEDate(), "time", null, 0, 1, IStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIStatistic_Type(), ecorePackage.getEString(), "type", null, 0, 1, IStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(simpleStatisticEClass, SimpleStatistic.class, "SimpleStatistic", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(relationalStatisticEClass, RelationalStatistic.class, "RelationalStatistic", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getRelationalStatistic_From(), ecorePackage.getEString(), "from", null, 0, 1, RelationalStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRelationalStatistic_To(), ecorePackage.getEString(), "to", null, 0, 1, RelationalStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

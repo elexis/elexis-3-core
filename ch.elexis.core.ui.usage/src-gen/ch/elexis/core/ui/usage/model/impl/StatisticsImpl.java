@@ -2,15 +2,15 @@
  */
 package ch.elexis.core.ui.usage.model.impl;
 
-import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import ch.elexis.core.ui.usage.model.IStatistic;
 import ch.elexis.core.ui.usage.model.ModelPackage;
 import ch.elexis.core.ui.usage.model.Statistics;
+import java.util.Collection;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,14 +27,14 @@ import ch.elexis.core.ui.usage.model.Statistics;
  */
 public class StatisticsImpl extends MinimalEObjectImpl.Container implements Statistics {
 	/**
-	 * The cached value of the '{@link #getStatistics() <em>Statistics</em>}' reference.
+	 * The cached value of the '{@link #getStatistics() <em>Statistics</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getStatistics()
 	 * @generated
 	 * @ordered
 	 */
-	protected IStatistic statistics;
+	protected EList<IStatistic> statistics;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -60,37 +60,11 @@ public class StatisticsImpl extends MinimalEObjectImpl.Container implements Stat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public IStatistic getStatistics() {
-		if (statistics != null && statistics.eIsProxy()) {
-			InternalEObject oldStatistics = (InternalEObject)statistics;
-			statistics = (IStatistic)eResolveProxy(oldStatistics);
-			if (statistics != oldStatistics) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ModelPackage.STATISTICS__STATISTICS, oldStatistics, statistics));
-			}
+	public EList<IStatistic> getStatistics() {
+		if (statistics == null) {
+			statistics = new EObjectResolvingEList<IStatistic>(IStatistic.class, this, ModelPackage.STATISTICS__STATISTICS);
 		}
 		return statistics;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public IStatistic basicGetStatistics() {
-		return statistics;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setStatistics(IStatistic newStatistics) {
-		IStatistic oldStatistics = statistics;
-		statistics = newStatistics;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.STATISTICS__STATISTICS, oldStatistics, statistics));
 	}
 
 	/**
@@ -102,8 +76,7 @@ public class StatisticsImpl extends MinimalEObjectImpl.Container implements Stat
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ModelPackage.STATISTICS__STATISTICS:
-				if (resolve) return getStatistics();
-				return basicGetStatistics();
+				return getStatistics();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -113,11 +86,13 @@ public class StatisticsImpl extends MinimalEObjectImpl.Container implements Stat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ModelPackage.STATISTICS__STATISTICS:
-				setStatistics((IStatistic)newValue);
+				getStatistics().clear();
+				getStatistics().addAll((Collection<? extends IStatistic>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -132,7 +107,7 @@ public class StatisticsImpl extends MinimalEObjectImpl.Container implements Stat
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ModelPackage.STATISTICS__STATISTICS:
-				setStatistics((IStatistic)null);
+				getStatistics().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -147,7 +122,7 @@ public class StatisticsImpl extends MinimalEObjectImpl.Container implements Stat
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ModelPackage.STATISTICS__STATISTICS:
-				return statistics != null;
+				return statistics != null && !statistics.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

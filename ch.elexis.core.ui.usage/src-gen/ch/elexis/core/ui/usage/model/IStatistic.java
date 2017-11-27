@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.ui.usage.model;
 
+import java.util.Date;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -15,6 +16,8 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link ch.elexis.core.ui.usage.model.IStatistic#getTitle <em>Title</em>}</li>
  *   <li>{@link ch.elexis.core.ui.usage.model.IStatistic#getValue <em>Value</em>}</li>
+ *   <li>{@link ch.elexis.core.ui.usage.model.IStatistic#getTime <em>Time</em>}</li>
+ *   <li>{@link ch.elexis.core.ui.usage.model.IStatistic#getType <em>Type</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.ui.usage.model.ModelPackage#getIStatistic()
@@ -73,5 +76,57 @@ public interface IStatistic extends EObject {
 	 * @generated
 	 */
 	void setValue(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Time</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Time</em>' attribute.
+	 * @see #setTime(Date)
+	 * @see ch.elexis.core.ui.usage.model.ModelPackage#getIStatistic_Time()
+	 * @model
+	 * @generated
+	 */
+	Date getTime();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.ui.usage.model.IStatistic#getTime <em>Time</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Time</em>' attribute.
+	 * @see #getTime()
+	 * @generated
+	 */
+	void setTime(Date value);
+
+	/**
+	 * Returns the value of the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Type</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Type</em>' attribute.
+	 * @see #setType(String)
+	 * @see ch.elexis.core.ui.usage.model.ModelPackage#getIStatistic_Type()
+	 * @model
+	 * @generated
+	 */
+	String getType();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.ui.usage.model.IStatistic#getType <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Type</em>' attribute.
+	 * @see #getType()
+	 * @generated
+	 */
+	void setType(String value);
 
 } // IStatistic
