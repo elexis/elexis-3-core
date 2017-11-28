@@ -21,34 +21,34 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl#getTitle <em>Title</em>}</li>
+ *   <li>{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl#getAction <em>Action</em>}</li>
  *   <li>{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl#getValue <em>Value</em>}</li>
  *   <li>{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl#getTime <em>Time</em>}</li>
- *   <li>{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl#getType <em>Type</em>}</li>
+ *   <li>{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl#getActionType <em>Action Type</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements SimpleStatistic {
 	/**
-	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute.
+	 * The default value of the '{@link #getAction() <em>Action</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTitle()
+	 * @see #getAction()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TITLE_EDEFAULT = null;
+	protected static final String ACTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute.
+	 * The cached value of the '{@link #getAction() <em>Action</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTitle()
+	 * @see #getAction()
 	 * @generated
 	 * @ordered
 	 */
-	protected String title = TITLE_EDEFAULT;
+	protected String action = ACTION_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
@@ -91,24 +91,24 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	protected Date time = TIME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * The default value of the '{@link #getActionType() <em>Action Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getType()
+	 * @see #getActionType()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TYPE_EDEFAULT = null;
+	protected static final String ACTION_TYPE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * The cached value of the '{@link #getActionType() <em>Action Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getType()
+	 * @see #getActionType()
 	 * @generated
 	 * @ordered
 	 */
-	protected String type = TYPE_EDEFAULT;
+	protected String actionType = ACTION_TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -134,8 +134,8 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getTitle() {
-		return title;
+	public String getAction() {
+		return action;
 	}
 
 	/**
@@ -143,11 +143,11 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setTitle(String newTitle) {
-		String oldTitle = title;
-		title = newTitle;
+	public void setAction(String newAction) {
+		String oldAction = action;
+		action = newAction;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.SIMPLE_STATISTIC__TITLE, oldTitle, title));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.SIMPLE_STATISTIC__ACTION, oldAction, action));
 	}
 
 	/**
@@ -197,8 +197,8 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getType() {
-		return type;
+	public String getActionType() {
+		return actionType;
 	}
 
 	/**
@@ -206,11 +206,11 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setType(String newType) {
-		String oldType = type;
-		type = newType;
+	public void setActionType(String newActionType) {
+		String oldActionType = actionType;
+		actionType = newActionType;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.SIMPLE_STATISTIC__TYPE, oldType, type));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.SIMPLE_STATISTIC__ACTION_TYPE, oldActionType, actionType));
 	}
 
 	/**
@@ -221,14 +221,14 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ModelPackage.SIMPLE_STATISTIC__TITLE:
-				return getTitle();
+			case ModelPackage.SIMPLE_STATISTIC__ACTION:
+				return getAction();
 			case ModelPackage.SIMPLE_STATISTIC__VALUE:
 				return getValue();
 			case ModelPackage.SIMPLE_STATISTIC__TIME:
 				return getTime();
-			case ModelPackage.SIMPLE_STATISTIC__TYPE:
-				return getType();
+			case ModelPackage.SIMPLE_STATISTIC__ACTION_TYPE:
+				return getActionType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -241,8 +241,8 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ModelPackage.SIMPLE_STATISTIC__TITLE:
-				setTitle((String)newValue);
+			case ModelPackage.SIMPLE_STATISTIC__ACTION:
+				setAction((String)newValue);
 				return;
 			case ModelPackage.SIMPLE_STATISTIC__VALUE:
 				setValue((Integer)newValue);
@@ -250,8 +250,8 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 			case ModelPackage.SIMPLE_STATISTIC__TIME:
 				setTime((Date)newValue);
 				return;
-			case ModelPackage.SIMPLE_STATISTIC__TYPE:
-				setType((String)newValue);
+			case ModelPackage.SIMPLE_STATISTIC__ACTION_TYPE:
+				setActionType((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -265,8 +265,8 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ModelPackage.SIMPLE_STATISTIC__TITLE:
-				setTitle(TITLE_EDEFAULT);
+			case ModelPackage.SIMPLE_STATISTIC__ACTION:
+				setAction(ACTION_EDEFAULT);
 				return;
 			case ModelPackage.SIMPLE_STATISTIC__VALUE:
 				setValue(VALUE_EDEFAULT);
@@ -274,8 +274,8 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 			case ModelPackage.SIMPLE_STATISTIC__TIME:
 				setTime(TIME_EDEFAULT);
 				return;
-			case ModelPackage.SIMPLE_STATISTIC__TYPE:
-				setType(TYPE_EDEFAULT);
+			case ModelPackage.SIMPLE_STATISTIC__ACTION_TYPE:
+				setActionType(ACTION_TYPE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -289,14 +289,14 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ModelPackage.SIMPLE_STATISTIC__TITLE:
-				return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
+			case ModelPackage.SIMPLE_STATISTIC__ACTION:
+				return ACTION_EDEFAULT == null ? action != null : !ACTION_EDEFAULT.equals(action);
 			case ModelPackage.SIMPLE_STATISTIC__VALUE:
 				return value != VALUE_EDEFAULT;
 			case ModelPackage.SIMPLE_STATISTIC__TIME:
 				return TIME_EDEFAULT == null ? time != null : !TIME_EDEFAULT.equals(time);
-			case ModelPackage.SIMPLE_STATISTIC__TYPE:
-				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
+			case ModelPackage.SIMPLE_STATISTIC__ACTION_TYPE:
+				return ACTION_TYPE_EDEFAULT == null ? actionType != null : !ACTION_TYPE_EDEFAULT.equals(actionType);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -311,14 +311,14 @@ public class SimpleStatisticImpl extends MinimalEObjectImpl.Container implements
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (title: ");
-		result.append(title);
+		result.append(" (action: ");
+		result.append(action);
 		result.append(", value: ");
 		result.append(value);
 		result.append(", time: ");
 		result.append(time);
-		result.append(", type: ");
-		result.append(type);
+		result.append(", actionType: ");
+		result.append(actionType);
 		result.append(')');
 		return result.toString();
 	}

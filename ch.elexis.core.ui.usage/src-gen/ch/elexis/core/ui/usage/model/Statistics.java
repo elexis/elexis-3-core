@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Statistics extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Statistics</b></em>' reference list.
+	 * Returns the value of the '<em><b>Statistics</b></em>' containment reference list.
 	 * The list contents are of type {@link ch.elexis.core.ui.usage.model.IStatistic}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -31,9 +31,9 @@ public interface Statistics extends EObject {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Statistics</em>' reference list.
+	 * @return the value of the '<em>Statistics</em>' containment reference list.
 	 * @see ch.elexis.core.ui.usage.model.ModelPackage#getStatistics_Statistics()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<IStatistic> getStatistics();

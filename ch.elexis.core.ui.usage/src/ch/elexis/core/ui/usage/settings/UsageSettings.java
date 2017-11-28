@@ -1,31 +1,41 @@
 package ch.elexis.core.ui.usage.settings;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.Comparator;
 
-import org.eclipse.core.databinding.observable.map.IObservableMap;
+import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.databinding.EMFProperties;
-import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableMapCellLabelProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.ui.usage.model.ModelFactory;
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.usage.model.IStatistic;
 import ch.elexis.core.ui.usage.model.ModelPackage;
-import ch.elexis.core.ui.usage.model.SimpleStatistic;
-import ch.elexis.core.ui.usage.model.Statistics;
+import ch.elexis.core.ui.usage.util.StatisticsManager;
+import ch.rgw.tools.TimeTool;
 
 public class UsageSettings extends PreferencePage implements IWorkbenchPreferencePage {
 	
+
 	@Override
 	public void init(IWorkbench workbench){
 	}
@@ -36,10 +46,7 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(1, false));
 		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
 
-		
-		//Extract from text code
 		TableViewer viewer =
 			new TableViewer(main, SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE);
 		viewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -48,61 +55,122 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 		// create a content provider
 		ObservableListContentProvider cp = new ObservableListContentProvider();
 		
-		// put all attributes (from class Person) that are going to be shown
-		// into a map
-		// and associate the column title
-		HashMap<EAttribute, String> attributeMap = new HashMap<EAttribute, String>();
-		attributeMap.put(ModelPackage.Literals.ISTATISTIC__TIME, "Zeitpunkt");
-		attributeMap.put(ModelPackage.Literals.ISTATISTIC__TITLE, "Titel");
-		attributeMap.put(ModelPackage.Literals.ISTATISTIC__TYPE, "Typ");
-		attributeMap.put(ModelPackage.Literals.ISTATISTIC__VALUE, "Wert");
+		// create a new columns
+		TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.LEFT);
+		tvc.getColumn().setText("Zeitpunkt");
+		tvc.getColumn().setWidth(80);
+		tvc.setLabelProvider(new ObservableMapCellLabelProvider(EMFProperties
+			.value(ModelPackage.Literals.ISTATISTIC__TIME).observeDetail(cp.getKnownElements())) {
+			@Override
+			public void update(ViewerCell cell){
+				IStatistic iStatistic = (IStatistic) cell.getElement();
+				if (iStatistic.getTime() != null) {
+					TimeTool t = new TimeTool(iStatistic.getTime());
+					cell.setText(t.toString(TimeTool.TIME_FULL));
+				} else {
+					super.update(cell);
+				}
+			}
+		});
 		
-		// create a column for each attribute & setup the databinding
-		for (EAttribute attribute : attributeMap.keySet()) {
-			// create a new column
-			TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.LEFT);
-			// determine the attribute that should be observed
-			IObservableMap map =
-				EMFProperties.value(attribute).observeDetail(cp.getKnownElements());
-			tvc.setLabelProvider(new ObservableMapCellLabelProvider(map));
-			// set the column title & set the size
-			tvc.getColumn().setText(attributeMap.get(attribute));
-			tvc.getColumn().setWidth(150);
-		}
+		tvc = new TableViewerColumn(viewer, SWT.LEFT);
+		tvc.getColumn().setText("Typ");
+		tvc.getColumn().setWidth(120);
+		tvc.setLabelProvider(new ObservableMapCellLabelProvider(EMFProperties
+			.value(ModelPackage.Literals.ISTATISTIC__ACTION_TYPE)
+			.observeDetail(cp.getKnownElements())));
 		
-		// set the content provider
+		tvc = new TableViewerColumn(viewer, SWT.LEFT);
+		tvc.getColumn().setText("Aktion");
+		tvc.getColumn().setWidth(300);
+		tvc.setLabelProvider(new ObservableMapCellLabelProvider(EMFProperties
+			.value(ModelPackage.Literals.ISTATISTIC__ACTION).observeDetail(cp.getKnownElements())));
+		
+		tvc = new TableViewerColumn(viewer, SWT.LEFT);
+		tvc.getColumn().setText("Wert");
+		tvc.getColumn().setWidth(50);
+		tvc.setLabelProvider(new ObservableMapCellLabelProvider(EMFProperties
+			.value(ModelPackage.Literals.ISTATISTIC__VALUE).observeDetail(cp.getKnownElements())));
+		
+
 		viewer.setContentProvider(cp);
-		// set the model (which is a list of persons)
 		
-		Statistics s = ModelFactory.eINSTANCE.createStatistics();
-		SimpleStatistic simpleStatistic1 = ModelFactory.eINSTANCE.createSimpleStatistic();
-		SimpleStatistic simpleStatistic2 = ModelFactory.eINSTANCE.createSimpleStatistic();
-		SimpleStatistic simpleStatistic3 = ModelFactory.eINSTANCE.createSimpleStatistic();
-		
-		simpleStatistic1.setTime(new Date(System.currentTimeMillis()));
-		simpleStatistic1.setTitle("Test Simple1");
-		simpleStatistic1.setValue(20);
-		simpleStatistic1.setType("Aufruf");
-		simpleStatistic2.setTitle("Test Simple2");
-		simpleStatistic2.setValue(30);
-		simpleStatistic2.setType("Aufruf");
-		simpleStatistic2.setTime(new Date(System.currentTimeMillis()));
-		
-		simpleStatistic3.setTitle("Test Relational");
-		simpleStatistic3.setType("PatientenView -> DiagnoseView");
-		simpleStatistic3.setValue(10);
-		simpleStatistic3.setTime(new Date(System.currentTimeMillis()));
-		
-		s.getStatistics().add(simpleStatistic1);
-		s.getStatistics().add(simpleStatistic2);
-		s.getStatistics().add(simpleStatistic3);
-
-		
+		ECollections.sort(StatisticsManager.getInstance().getStatistics().getStatistics(),
+			new Comparator<IStatistic>() {
+				public int compare(IStatistic o1, IStatistic o2){
+					int i = o2.getTime().compareTo(o1.getTime());
+					// in some cases the time is equal then we sort by action
+					if (i == 0) {
+						return o1.getActionType().compareTo(o2.getActionType());
+					}
+					return i;
+				}
+			});
 		viewer.setInput(
-			EMFProperties.list(ModelPackage.Literals.STATISTICS__STATISTICS).observe(s));
+			EMFProperties.list(ModelPackage.Literals.STATISTICS__STATISTICS)
+				.observe(StatisticsManager.getInstance().getStatistics()));
 
-		
+		addContextMenuSupport(viewer, createMenu(viewer));
 		return main;
+	}
+	
+	public void addContextMenuSupport(TableViewer tableViewer, MenuManager menuManager){
+		Table table = tableViewer.getTable();
+		Menu menu = menuManager.createContextMenu(table);
+		table.setMenu(menu);
+	}
+	
+	private MenuManager createMenu(TableViewer tableViewer){
+		MenuManager menuManager = new MenuManager();
+		
+		Action clearAction = new Action("Leeren") { //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
+				setToolTipText("Statistik Leeren"); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				StatisticsManager.getInstance().getStatistics().getStatistics().clear();
+				tableViewer.refresh();
+			}
+		};
+			
+		Action exportAction = new Action("Exportieren") { //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_EXPORT.getImageDescriptor());
+				setToolTipText("Statistik Exportieren"); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
+				dialog.setFilterNames(new String[] {
+					"xml"
+				});
+				dialog.setFilterExtensions(new String[] {
+					"*.xml"
+				});
+				dialog.setOverwrite(true);
+				dialog.setFilterPath(CoreHub.getWritableUserDir().getAbsolutePath()); // Windows path
+				dialog.setFileName("statistics_export.xml");
+				String path = dialog.open();
+				if (path != null) {
+					try {
+						StatisticsManager.getInstance().exportStatisticsToFile(path);
+					} catch (IOException e) {
+						LoggerFactory.getLogger(UsageSettings.class)
+							.error("statistics export error", e);
+						MessageDialog.openError(getShell(), "Fehler",
+							"Statistik Export nicht möglich. [" + e.getMessage() + "]");
+					}
+				}
+			}
+		};
+			
+		menuManager.add(clearAction);
+		menuManager.add(exportAction);
+		return menuManager;
 	}
 	
 }

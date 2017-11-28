@@ -10,7 +10,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
-import org.slf4j.LoggerFactory;
+
+import ch.elexis.core.ui.usage.util.StatisticsManager;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class StartupHandler implements EventHandler {
@@ -32,7 +33,7 @@ public class StartupHandler implements EventHandler {
 				if (part instanceof MPart) {
 					MPart mPart = (MPart) part;
 					if (mPart.isToBeRendered()) {
-						handleEventtt("-->-ACTIVE--", event, mPart.getElementId());
+						StatisticsManager.getInstance().addCallingStatistic(mPart.getElementId());
 					}
 					
 				}
@@ -46,7 +47,8 @@ public class StartupHandler implements EventHandler {
 				if (placeholder instanceof MPlaceholder) {
 					MPlaceholder mPlaceholder = (MPlaceholder) placeholder;
 					if (!mPlaceholder.isToBeRendered()) {
-						handleEventtt("-->-CLOSED--", event, mPlaceholder.getElementId());
+						StatisticsManager.getInstance()
+							.addClosingStatistic(mPlaceholder.getElementId());
 					}
 					
 				}
@@ -56,7 +58,7 @@ public class StartupHandler implements EventHandler {
 		b.subscribe(UIEvents.UILifeCycle.APP_SHUTDOWN_STARTED, new EventHandler() {
 			@Override
 			public void handleEvent(Event event){
-				handleEventtt("-->SHUTDOWN", event, event.getProperty("org.eclipse.e4.data"));
+				//handleEventtt("-->SHUTDOWN", event, event.getProperty("org.eclipse.e4.data"));
 				
 			}
 		});
@@ -65,15 +67,11 @@ public class StartupHandler implements EventHandler {
 		b.subscribe(UIEvents.UILifeCycle.PERSPECTIVE_OPENED, new EventHandler() {
 			@Override
 			public void handleEvent(Event event){
-				handleEventtt("-->PERSPECTIVEOPENED", event,
-					event.getProperty("org.eclipse.e4.data"));
+				StatisticsManager.getInstance()
+					.addCallingStatistic(event.getProperty("org.eclipse.e4.data").toString());
 				
 			}
 		});
 		
-	}
-	
-	private void handleEventtt(String prefix, Event event, Object data){
-		LoggerFactory.getLogger(StartupHandler.class).debug(prefix + ":" + data);
 	}
 }

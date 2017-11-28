@@ -67,7 +67,7 @@ public interface ModelPackage extends EPackage {
 	int STATISTICS = 0;
 
 	/**
-	 * The feature id for the '<em><b>Statistics</b></em>' reference list.
+	 * The feature id for the '<em><b>Statistics</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -104,13 +104,13 @@ public interface ModelPackage extends EPackage {
 	int ISTATISTIC = 1;
 
 	/**
-	 * The feature id for the '<em><b>Title</b></em>' attribute.
+	 * The feature id for the '<em><b>Action</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ISTATISTIC__TITLE = 0;
+	int ISTATISTIC__ACTION = 0;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -131,13 +131,13 @@ public interface ModelPackage extends EPackage {
 	int ISTATISTIC__TIME = 2;
 
 	/**
-	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * The feature id for the '<em><b>Action Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ISTATISTIC__TYPE = 3;
+	int ISTATISTIC__ACTION_TYPE = 3;
 
 	/**
 	 * The number of structural features of the '<em>IStatistic</em>' class.
@@ -168,13 +168,13 @@ public interface ModelPackage extends EPackage {
 	int SIMPLE_STATISTIC = 2;
 
 	/**
-	 * The feature id for the '<em><b>Title</b></em>' attribute.
+	 * The feature id for the '<em><b>Action</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_STATISTIC__TITLE = ISTATISTIC__TITLE;
+	int SIMPLE_STATISTIC__ACTION = ISTATISTIC__ACTION;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -195,13 +195,13 @@ public interface ModelPackage extends EPackage {
 	int SIMPLE_STATISTIC__TIME = ISTATISTIC__TIME;
 
 	/**
-	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * The feature id for the '<em><b>Action Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_STATISTIC__TYPE = ISTATISTIC__TYPE;
+	int SIMPLE_STATISTIC__ACTION_TYPE = ISTATISTIC__ACTION_TYPE;
 
 	/**
 	 * The number of structural features of the '<em>Simple Statistic</em>' class.
@@ -232,10 +232,10 @@ public interface ModelPackage extends EPackage {
 	EClass getStatistics();
 
 	/**
-	 * Returns the meta object for the reference list '{@link ch.elexis.core.ui.usage.model.Statistics#getStatistics <em>Statistics</em>}'.
+	 * Returns the meta object for the containment reference list '{@link ch.elexis.core.ui.usage.model.Statistics#getStatistics <em>Statistics</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Statistics</em>'.
+	 * @return the meta object for the containment reference list '<em>Statistics</em>'.
 	 * @see ch.elexis.core.ui.usage.model.Statistics#getStatistics()
 	 * @see #getStatistics()
 	 * @generated
@@ -253,15 +253,15 @@ public interface ModelPackage extends EPackage {
 	EClass getIStatistic();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.IStatistic#getTitle <em>Title</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.IStatistic#getAction <em>Action</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Title</em>'.
-	 * @see ch.elexis.core.ui.usage.model.IStatistic#getTitle()
+	 * @return the meta object for the attribute '<em>Action</em>'.
+	 * @see ch.elexis.core.ui.usage.model.IStatistic#getAction()
 	 * @see #getIStatistic()
 	 * @generated
 	 */
-	EAttribute getIStatistic_Title();
+	EAttribute getIStatistic_Action();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.IStatistic#getValue <em>Value</em>}'.
@@ -286,15 +286,15 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIStatistic_Time();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.IStatistic#getType <em>Type</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.IStatistic#getActionType <em>Action Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Type</em>'.
-	 * @see ch.elexis.core.ui.usage.model.IStatistic#getType()
+	 * @return the meta object for the attribute '<em>Action Type</em>'.
+	 * @see ch.elexis.core.ui.usage.model.IStatistic#getActionType()
 	 * @see #getIStatistic()
 	 * @generated
 	 */
-	EAttribute getIStatistic_Type();
+	EAttribute getIStatistic_ActionType();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.ui.usage.model.SimpleStatistic <em>Simple Statistic</em>}'.
@@ -340,7 +340,7 @@ public interface ModelPackage extends EPackage {
 		EClass STATISTICS = eINSTANCE.getStatistics();
 
 		/**
-		 * The meta object literal for the '<em><b>Statistics</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Statistics</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -358,12 +358,12 @@ public interface ModelPackage extends EPackage {
 		EClass ISTATISTIC = eINSTANCE.getIStatistic();
 
 		/**
-		 * The meta object literal for the '<em><b>Title</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Action</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ISTATISTIC__TITLE = eINSTANCE.getIStatistic_Title();
+		EAttribute ISTATISTIC__ACTION = eINSTANCE.getIStatistic_Action();
 
 		/**
 		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
@@ -382,12 +382,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute ISTATISTIC__TIME = eINSTANCE.getIStatistic_Time();
 
 		/**
-		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Action Type</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ISTATISTIC__TYPE = eINSTANCE.getIStatistic_Type();
+		EAttribute ISTATISTIC__ACTION_TYPE = eINSTANCE.getIStatistic_ActionType();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.ui.usage.model.impl.SimpleStatisticImpl <em>Simple Statistic</em>}' class.

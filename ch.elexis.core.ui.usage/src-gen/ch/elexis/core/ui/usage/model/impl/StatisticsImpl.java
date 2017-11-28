@@ -4,13 +4,16 @@ package ch.elexis.core.ui.usage.model.impl;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import ch.elexis.core.ui.usage.model.IStatistic;
 import ch.elexis.core.ui.usage.model.ModelPackage;
 import ch.elexis.core.ui.usage.model.Statistics;
 import java.util.Collection;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,7 +30,7 @@ import java.util.Collection;
  */
 public class StatisticsImpl extends MinimalEObjectImpl.Container implements Statistics {
 	/**
-	 * The cached value of the '{@link #getStatistics() <em>Statistics</em>}' reference list.
+	 * The cached value of the '{@link #getStatistics() <em>Statistics</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getStatistics()
@@ -62,9 +65,23 @@ public class StatisticsImpl extends MinimalEObjectImpl.Container implements Stat
 	 */
 	public EList<IStatistic> getStatistics() {
 		if (statistics == null) {
-			statistics = new EObjectResolvingEList<IStatistic>(IStatistic.class, this, ModelPackage.STATISTICS__STATISTICS);
+			statistics = new EObjectContainmentEList<IStatistic>(IStatistic.class, this, ModelPackage.STATISTICS__STATISTICS);
 		}
 		return statistics;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ModelPackage.STATISTICS__STATISTICS:
+				return ((InternalEList<?>)getStatistics()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

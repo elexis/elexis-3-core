@@ -17,13 +17,18 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.core.services,
  org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.jface.databinding
-Import-Package: org.eclipse.core.databinding.observable.map,
+ org.eclipse.jface.databinding,
+ ch.rgw.utility,
+ ch.elexis.core.data
+Import-Package: ch.elexis.core.ui.icons,
+ org.apache.commons.io;version="2.4.0",
+ org.eclipse.core.databinding.observable.map,
  org.eclipse.core.databinding.property,
  org.eclipse.core.databinding.property.list,
  org.eclipse.core.databinding.property.value,
  org.eclipse.core.runtime;version="3.5.0",
  org.eclipse.emf.databinding,
+ org.eclipse.emf.ecore.xmi.impl,
  org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.ui.usage.StartupHandler.xml
 Bundle-ActivationPolicy: lazy
