@@ -685,6 +685,15 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		return qbe.execute();
 	}
 	
+	/** Die zu dieser Konsultation gehörenden Leistungen holen */
+	public List<Verrechnet> getLeistungen(String[] prefetch){
+		Query<Verrechnet> qbe =
+			new Query<Verrechnet>(Verrechnet.class, Verrechnet.KONSULTATION, getId(),
+				Verrechnet.TABLENAME, prefetch);
+		qbe.orderBy(false, Verrechnet.CLASS, Verrechnet.LEISTG_CODE);
+		return qbe.execute();
+	}
+	
 	/**
 	 * Liefert eine Verrechnete Leistung anhand verrechnbar id
 	 * 
