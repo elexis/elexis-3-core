@@ -138,10 +138,13 @@ public interface IStockService {
 	 *            the current amount of packages
 	 * @param min
 	 *            the minimum amount of packages to be on stock
+	 * @param isBelow
+	 *            checks if the current stock is below or equal and below
 	 * @return
 	 */
-	public static Availability determineAvailability(int current, int min) {
-		if (current <= 0) {
+	public static Availability determineAvailability(int current, int min, boolean isBelow){
+		
+		if ((isBelow && current < 0) || (!isBelow && current <= 0)) {
 			return Availability.OUT_OF_STOCK;
 		}
 
@@ -150,5 +153,19 @@ public interface IStockService {
 		}
 
 		return Availability.CRITICAL_STOCK;
+	}
+	
+	/**
+	 * Determine the availability "level".
+	 * 
+	 * @param current
+	 *            the current amount of packages
+	 * @param min
+	 *            the minimum amount of packages to be on stock
+	 * @return
+	 */
+	public static Availability determineAvailability(int current, int min){
+		
+		return determineAvailability(current, min, false);
 	}
 }

@@ -204,7 +204,7 @@ public class StockService implements IStockService {
 		return new Status(Status.WARNING, CoreHub.PLUGIN_ID, "Could not acquire lock");
 	}
 	
-	private boolean isTriggerStockAvailabilityOnBelow(){
+	private static boolean isTriggerStockAvailabilityOnBelow(){
 		int trigger =
 			CoreHub.globalCfg.get(ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
 				ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
@@ -254,7 +254,8 @@ public class StockService implements IStockService {
 		int min = Integer.valueOf(values[0]);
 		int current = Integer.valueOf(values[1]);
 		
-		return IStockService.determineAvailability(current, min);
+		return IStockService.determineAvailability(current, min,
+			isTriggerStockAvailabilityOnBelow());
 	}
 	
 	public List<StockEntry> getAllStockEntries(){
@@ -306,7 +307,8 @@ public class StockService implements IStockService {
 	
 	public Availability getArticleAvailabilityForStock(IStock stock, String article){
 		IStockEntry se = findStockEntryForArticleInStock(stock, article);
-		return IStockService.determineAvailability(se.getCurrentStock(), se.getMinimumStock());
+		return IStockService.determineAvailability(se.getCurrentStock(), se.getMinimumStock(),
+			isTriggerStockAvailabilityOnBelow());
 	}
 	
 	@Override
