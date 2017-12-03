@@ -41,6 +41,8 @@ public class StockService implements IStockService {
 	
 	private static final String PS_AVAIL_CURRENT =
 		"SELECT MAX(CASE WHEN CURRENT <= 0 THEN 0 WHEN (ABS(MIN)-CURRENT) >=0 THEN 1 ELSE 2 END) FROM STOCK_ENTRY WHERE ARTICLE_ID = ? AND ARTICLE_TYPE = ? AND DELETED = '0'";
+	private static final String PS_AVAIL_CURRENT_BELOW =
+		"SELECT MAX(CASE WHEN CURRENT <= 0 THEN 0 WHEN (ABS(MIN)-CURRENT) >0 THEN 1 ELSE 2 END) FROM STOCK_ENTRY WHERE ARTICLE_ID = ? AND ARTICLE_TYPE = ? AND DELETED = '0'";
 	
 	@Override
 	public Integer getCumulatedStockForArticle(IArticle article){
@@ -202,11 +204,22 @@ public class StockService implements IStockService {
 		return new Status(Status.WARNING, CoreHub.PLUGIN_ID, "Could not acquire lock");
 	}
 	
+	private boolean isTriggerStockAvailabilityOnBelow(){
+		int trigger =
+			CoreHub.globalCfg.get(ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
+				ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
+		return trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
+	}
+	
 	@Override
 	public Availability getCumulatedAvailabilityForArticle(IArticle article){
 		Artikel art = (Artikel) article;
+		
 		DBConnection dbConnection = PersistentObject.getDefaultConnection();
-		PreparedStatement ps = dbConnection.getPreparedStatement(PS_AVAIL_CURRENT);
+		
+		PreparedStatement ps = dbConnection
+			.getPreparedStatement(
+				isTriggerStockAvailabilityOnBelow() ? PS_AVAIL_CURRENT_BELOW : PS_AVAIL_CURRENT);
 		try {
 			ps.setString(1, art.getId());
 			ps.setString(2, art.getClass().getName());
