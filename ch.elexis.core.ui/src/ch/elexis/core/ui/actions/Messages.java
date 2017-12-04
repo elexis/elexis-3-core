@@ -40,7 +40,7 @@ public class Messages extends NLS {
 	public static String GlobalActions_ImportDlgMessage;
 	public static String GlobalActions_ImportDlgShelltext;
 	public static String GlobalActions_ImportDlgTitle;
-	public static String GlobalActions_IatrixPreferences_URL;
+	public static String GlobalActions_IatrixHandbook_URL;
 	public static String GlobalActions_LockPerspectives;
 	public static String GlobalActions_LockPerspectivesToolTip;
 	public static String GlobalActions_Login;
