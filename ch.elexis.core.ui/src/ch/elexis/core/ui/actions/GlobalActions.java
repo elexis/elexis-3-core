@@ -196,7 +196,7 @@ public class GlobalActions {
 					} catch (Exception e) {
 						logger.warn("failed to open default browser :" + e);
 						MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_Error,
-								Messages.GlobalActions_IatrixHandbook_URL);
+								Messages.GlobalActions_PreferencesHandbook_URL);
 						ExHandler.handle(e);
 					}
 				} else {

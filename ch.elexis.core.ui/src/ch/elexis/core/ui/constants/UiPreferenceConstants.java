@@ -17,7 +17,6 @@ package ch.elexis.core.ui.constants;
  * @since 3.0.0
  */
 public class UiPreferenceConstants {
-
 	public static final String USERSETTINGS2_EXPANDABLE_COMPOSITES_BASE = "view/expandableComposites";
 	public static final String USERSETTINGS2_EXPANDABLE_COMPOSITES = USERSETTINGS2_EXPANDABLE_COMPOSITES_BASE
 			+ "/setting";
