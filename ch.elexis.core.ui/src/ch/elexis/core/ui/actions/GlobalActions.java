@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*******************************************************************************
  * Copyright (c) 2005-2011, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
@@ -1922,4 +1921,3 @@ public class GlobalActions {
 
 	};
 }
->>>>>>> 53090162... [9096] Added user setting to change Handbook url in Help > Manual
