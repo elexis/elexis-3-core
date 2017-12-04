@@ -360,11 +360,18 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					setBestellung(new Bestellung(Messages.BestellView_Automatic, CoreHub.actUser));
 				}
 				
+				int trigger = CoreHub.globalCfg.get(
+					ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
+					ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
+				boolean isInventoryBelow =
+					trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
+				
 				Query<StockEntry> qbe = new Query<StockEntry>(StockEntry.class, null, null,
 					StockEntry.TABLENAME, new String[] {
 						StockEntry.FLD_CURRENT, StockEntry.FLD_MAX
 				});
-				qbe.add(StockEntry.FLD_CURRENT, Query.LESS, StockEntry.FLD_MIN);
+				qbe.add(StockEntry.FLD_CURRENT, isInventoryBelow ? Query.LESS : Query.LESS_OR_EQUAL,
+					StockEntry.FLD_MIN);
 				List<StockEntry> stockEntries = qbe.execute();
 				for (StockEntry se : stockEntries) {
 					CoreHub.getOrderService().addRefillForStockEntryToOrder(se, actBestellung);
