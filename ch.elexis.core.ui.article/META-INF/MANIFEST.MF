@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Article
+Bundle-SymbolicName: ch.elexis.core.ui.article;singleton:=true
+Bundle-Version: 3.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.jface,
+ org.eclipse.osgi.services,
+ ch.elexis.core,
+ ch.elexis.core.ui,
+ ch.elexis.core.ui.icons,
+ org.eclipse.ui
+Service-Component: OSGI-INF/ch.elexis.core.ui.article.service.internal.ArticleServiceStore.xml,
+ OSGI-INF/ch.elexis.core.ui.article.service.ArticleServiceHolder.xml
+Bundle-ActivationPolicy: lazy
+Import-Package: ch.elexis.core.importer.div.importers
