@@ -80,6 +80,7 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.constants.UiPreferenceConstants;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
 import ch.elexis.core.ui.dialogs.EtiketteDruckenDialog;
@@ -129,7 +130,7 @@ public class GlobalActions {
 	public static IAction printRoeBlatt;
 	public static IAction openFallaction, filterAction, makeBillAction, planeRechnungAction;
 	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction, neueKonsAction;
-	public static LockedAction moveBehandlungAction, redateAction;
+	public static LockedAction<Konsultation> moveBehandlungAction, redateAction;
 	public static IAction neuerFallAction;
 	
 	public static MenuManager perspectiveMenu, viewMenu;
@@ -158,8 +159,6 @@ public class GlobalActions {
 		pasteAction.setText(Messages.GlobalActions_Paste); //$NON-NLS-1$
 		aboutAction = ActionFactory.ABOUT.create(window);
 		aboutAction.setText(Messages.GlobalActions_MenuAbout); //$NON-NLS-1$
-		// helpAction=ActionFactory.HELP_CONTENTS.create(window);
-		// helpAction.setText(Messages.getString("GlobalActions.HelpIndex")); //$NON-NLS-1$
 		prefsAction = ActionFactory.PREFERENCES.create(window);
 		prefsAction.setText(Messages.GlobalActions_Preferences); //$NON-NLS-1$
 		savePerspectiveAction = new Action(Messages.GlobalActions_SavePerspective) { //$NON-NLS-1$
@@ -189,12 +188,15 @@ public class GlobalActions {
 			@Override
 			public void run(){
 				Desktop desktop = Desktop.getDesktop();
-				String url = "https://wiki.elexis.info";
+				String url = CoreHub.globalCfg.get(UiPreferenceConstants.CFG_HANDBOOK,
+					UiPreferenceConstants.DEFAULT_HANDBOOK);
 				if (Desktop.isDesktopSupported()) {
 					try {
 						desktop.browse(new java.net.URI(url));
 					} catch (Exception e) {
 						logger.warn("failed to open default browser :" + e);
+						MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_Error,
+							Messages.GlobalActions_PreferencesHandbook_URL);
 						ExHandler.handle(e);
 					}
 				} else {
@@ -616,9 +618,9 @@ public class GlobalActions {
 			@Override
 			public void doRun(Konsultation element){
 				if (element.delete(false) == false) {
-					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteKons, // $NON-NLS-1$
-						Messages.GlobalActions_CouldntDeleteKonsExplanation + // $NON-NLS-1$
-					Messages.GlobalActions_97); // $NON-NLS-1$
+					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteKons, //$NON-NLS-1$
+						Messages.GlobalActions_CouldntDeleteKonsExplanation + //$NON-NLS-1$
+					Messages.GlobalActions_97); //$NON-NLS-1$
 				}
 				ElexisEventDispatcher.clearSelection(Konsultation.class);
 				ElexisEventDispatcher.fireSelectionEvent(element.getFall());
@@ -797,7 +799,9 @@ public class GlobalActions {
 		// 25.01.2010 patch tschaller: there was always the printer selection
 		// dialog. With printEtikette it wasn't so I copied the hardcoded string
 		// from there
-		//PrinterData pd = getPrinterData(Messages.getString("GlobalActions.printersticker")); //$NON-NLS-1$
+		// PrinterData pd =
+		// getPrinterData(Messages.getString("GlobalActions.printersticker"));
+		// //$NON-NLS-1$
 		PrinterData pd = getPrinterData("Etiketten"); //$NON-NLS-1$
 		if (pd != null) {
 			// 25.01.2010 patch tschaller: page orientation of printer driver is
@@ -928,8 +932,7 @@ public class GlobalActions {
 	public static void registerActionHandler(final ViewPart part, final IAction action){
 		String commandId = action.getActionDefinitionId();
 		if (!StringTool.isNothing(commandId)) {
-			IHandlerService handlerService =
-				(IHandlerService) part.getSite().getService(IHandlerService.class);
+			IHandlerService handlerService = part.getSite().getService(IHandlerService.class);
 			IHandler handler = new ActionHandler(action);
 			handlerService.activateHandler(commandId, handler);
 		}
