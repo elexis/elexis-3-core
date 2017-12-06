@@ -92,11 +92,9 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 					throws InvocationTargetException, InterruptedException{
 					log.debug("Migrating stock information");
 					qbe.startGroup();
-					qbe.add(MINBESTAND, Query.NOT_EQUAL, null);
+					qbe.add(ISTBESTAND, Query.GREATER, "0");
 					qbe.or();
-					qbe.add(ISTBESTAND, Query.NOT_EQUAL, null);
-					qbe.add(MAXBESTAND, Query.NOT_EQUAL, null);
-					qbe.add(LIEFERANT_ID, Query.NOT_EQUAL, null);
+					qbe.add(MAXBESTAND, Query.GREATER, "0");
 					qbe.endGroup();
 					List<? extends Artikel> stockArticles = qbe.execute();
 					monitor.beginTask(
