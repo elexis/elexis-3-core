@@ -11,11 +11,14 @@
  *******************************************************************************/
 package ch.elexis.core.ui.article.dialogs;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Optional;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -39,20 +42,29 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
+import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.article.IArticle;
+import ch.elexis.core.ui.article.service.ArticleServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Artikel;
 import ch.elexis.data.Query;
 import ch.elexis.data.Stock;
+import ch.rgw.tools.TimeTool;
 
 public class ImportArticleDialog extends TitleAreaDialog {
-
+	
 	private ComboViewer comboStockType;
 	private Text tFilePath;
+	private StringBuffer reportBuilder = null;
+	private Link reportLink;
 	
 	public ImportArticleDialog(Shell parentShell){
 		super(parentShell);
@@ -60,6 +72,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent){
+		reportBuilder = null;
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(3, false));
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -104,13 +117,43 @@ public class ImportArticleDialog extends TitleAreaDialog {
 			public void widgetSelected(SelectionEvent e){
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
 				fd.setFilterExtensions(new String[] {
-					"*.xlsx", "*.*"
+					"*.xls"
 				});
 				String selected = fd.open();
 				tFilePath.setText(selected);
 			}
 		});
 		btnBrowse.setText("auswählen..");
+		
+		reportLink = new Link(ret, SWT.NONE);
+		reportLink.setText("");
+		reportLink.setVisible(false);
+		reportLink.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, true, 3, 1));
+		// Event handling when users click on links.
+		reportLink.addSelectionListener(new SelectionAdapter() {
+		 
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+				FileDialog fd = new FileDialog(getShell(), SWT.SAVE);
+				fd.setFilterExtensions(new String[] {
+					"*.csv"
+				});
+				fd.setFileName("report.csv");
+				String path = fd.open();
+				if (path != null) {
+					try {
+						FileUtils.writeStringToFile(new File(path), reportBuilder.toString(),
+							"UTF-8");
+					} catch (IOException e1) {
+						MessageDialog.openError(getShell(), "Report Error",
+							"Report konnte nicht gespeichert werden.\n\n" + e1.getMessage());
+						LoggerFactory.getLogger(ImportArticleDialog.class)
+							.error("report save error", e1);
+					}
+				}
+		    }
+		     
+		});
 		
 		return ret;
 	}
@@ -126,45 +169,167 @@ public class ImportArticleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		String path = tFilePath.getText();
-		if (path != null && !path.isEmpty()) {
-			try (FileInputStream is = new FileInputStream(tFilePath.getText())) {
-				ExcelWrapper xl = new ExcelWrapper();
-				if (xl.load(is, 0)) {
-					ProgressMonitorDialog progress = new ProgressMonitorDialog(getShell());
-					try {
-						progress.run(true, true, new IRunnableWithProgress() {
-							public void run(IProgressMonitor monitor){
-								monitor.beginTask("Artikel in Lager Import", 100);
-								
-								for (int i = xl.getFirstRow(); i <= xl.getLastRow(); i++) {
-									List<String> row = xl.getRow(i);
-									System.out.println(row.toArray(new String[0]));
-									monitor.worked(1);
-									if (monitor.isCanceled()) {
-										break;
-									}
-									//Excelwrapper verwendet POI 3.0.2-> POIFSFileSystem only for 2003 --->Apache POI XSLX support ab >= 3.5 ->   Workbook workbook = new XSSFWorkbook(excelFile);
-								}
-							}
-							
-						});
-					} catch (InvocationTargetException | InterruptedException e) {
+		reportLink.setVisible(false);
+		reportBuilder = new StringBuffer();
+		doImport();
+		if (reportBuilder.length() > 0) {
+			reportLink.setText(" <a href=\"\">Import Report vom "
+				+ new TimeTool().toString(TimeTool.FULL_GER) + "</a>");
+			reportLink.setVisible(true);
+		}
+	}
+
+	private void doImport(){
+		
+		StringBuffer buf = new StringBuffer();
+		
+		// check for store availability
+		final List<String> storeIds = ArticleServiceHolder.getStoreIds();
+		if (storeIds.isEmpty()) {
+			buf.append(
+				"Es ist kein Artikelservice registriert. Vergewissern Sie sich, dass zumindest ein Artikel Plugin installiert ist.");
+		}
+		else {
+			// check for stock availability
+			StructuredSelection iSelection = (StructuredSelection) comboStockType.getSelection();
+			if (iSelection.isEmpty()) {
+				buf.append("Bitte wählen Sie ein Lager aus.");
+			} else {
+				final Stock stock = (Stock) iSelection.getFirstElement();
+				
+				// check src file
+				String path = tFilePath.getText();
+				if (path != null && !path.isEmpty() && path.toLowerCase().endsWith("xls")) {
+					
+					try (FileInputStream is = new FileInputStream(tFilePath.getText())) {
+						ExcelWrapper xl = new ExcelWrapper();
+						if (xl.load(is, 0)) {
+							xl.setFieldTypes(new Class[] {
+								Integer.class, String.class, String.class, String.class,
+								String.class, String.class, Integer.class, String.class,
+								String.class
+							});
+							runImport(buf, storeIds, stock, xl);
+						}
+					} catch (IOException e) {
+						MessageDialog.openError(getShell(), "Import error",
+							"Import fehlgeschlagen.\nDatei nicht importierbar: " + path);
 						LoggerFactory.getLogger(ImportArticleDialog.class)
-							.warn("Exception during article to lager import.", e);
+							.error("cannot import file at " + path, e);
 					}
+				} else {
+					buf.append(
+						"Die Quelldatei ist ungültig. Bitte überprüfen Sie diese Datei.\n"
+						+ path);
 				}
-			} catch (IOException e) {
-				MessageDialog.openError(getShell(), "Import error",
-					"Import fehlgeschlagen.\nDatei nicht lesbar: " + path);
-				LoggerFactory.getLogger(ImportArticleDialog.class)
-					.error("cannot import file at " + path,
-					e);
 			}
 		}
-		
-		MessageDialog.openInformation(getShell(), "Import Ergebnis",
-			"0 Einträge wurden importiert.\n0 Fehler");
+		if (buf.length() > 0) {
+			MessageDialog.openInformation(getShell(), "Import Ergebnis", buf.toString());
+		} else {
+			MessageDialog.openWarning(getShell(), "Import Ergebnis",
+				"Import nicht möglich.\nÜberprüfen Sie das Log-File.");
+		}
+	}
+
+	private void runImport(StringBuffer buf, final List<String> storeIds, final Stock stock,
+		ExcelWrapper xl){
+		ProgressMonitorDialog progress = new ProgressMonitorDialog(getShell());
+		try {
+			progress.run(true, true, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor){
+					
+					int importCount = 0;
+					int articleNotFoundByGtin = 0;
+					int articleNotFoundInStock = 0;
+					int lastRow = xl.getLastRow();
+					int firstRow = xl.getFirstRow() + 1; //header offset
+					monitor.beginTask("Artikel in Lager Import", 100);
+					
+					for (int i = firstRow; i <= lastRow; i++) {
+						Optional<? extends IArticle> opArticle =
+							Optional.empty();
+						List<String> row = xl.getRow(i);
+						String articleName = row.get(1);
+						String gtin = row.get(6);
+						
+						// search for article
+						for (String storeId : storeIds) {
+							opArticle = ArticleServiceHolder.getService(storeId)
+								.get().findAnyByGTIN(gtin);
+						}
+						
+						if (opArticle.isPresent()) {
+							// check if article is present in stock
+							IStockEntry stockEntry = CoreHub.getStockService()
+								.findStockEntryForArticleInStock(stock,
+									((Artikel) opArticle.get())
+										.storeToString());
+							if (stockEntry != null) {
+								importCount++;
+							}
+							else
+							{
+								addToReport("Not in Stock '" + stock.getLabel() + "'",
+									articleName,
+									gtin);
+								articleNotFoundInStock++;
+							}
+						} else {
+							articleNotFoundByGtin++;
+							addToReport("Not found by GTIN",
+								articleName, gtin);
+						}
+						
+						monitor.worked(1);
+						if (monitor.isCanceled()) {
+							buf.append(
+								"Der Import wurde durch den Benutzer abgebrochen.");
+							break;
+						}
+					}
+					
+					buf.append(lastRow);
+					buf.append(" Artikel gelesen.");
+					buf.append("\n");
+					buf.append("\n");
+					buf.append(importCount);
+					buf.append(" Artikel erfolgreich nach Lager '");
+					buf.append(stock.getLabel());
+					buf.append("' importiert.");
+					buf.append("\n");
+					if (articleNotFoundInStock > 0) {
+						buf.append("\n");
+						buf.append(articleNotFoundInStock);
+						buf.append(" Artikel nicht im Lager '");
+						buf.append(stock.getLabel());
+						buf.append("'.");
+					}
+					
+					if (articleNotFoundByGtin > 0) {
+						buf.append("\n");
+						buf.append(articleNotFoundByGtin);
+						buf.append(" Artikel nicht im System.");
+					}
+				}
+				
+
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			LoggerFactory.getLogger(ImportArticleDialog.class)
+				.warn("Exception during article to lager import.", e);
+		}
+	}
+	
+	private void addToReport(String col1, String col2, String col3){
+		if (reportBuilder != null) {
+			reportBuilder.append(col1);
+			reportBuilder.append(";");
+			reportBuilder.append(col2);
+			reportBuilder.append(";");
+			reportBuilder.append(col3);
+			reportBuilder.append("\n");
+		}
 	}
 	
 	@Override
