@@ -42,8 +42,8 @@ public class HistoryLoader extends BackgroundJob {
 	List<Konsultation> lKons;
 	KonsFilter filter;
 	IFilter globalFilter;
-	private final int idxKonsFrom;
-	private final int idxKonsTo;
+	private final int currentPage;
+	private final int pageSize;
 	boolean multiline = false;
 	
 	public void setFilter(final KonsFilter kf){
@@ -63,15 +63,15 @@ public class HistoryLoader extends BackgroundJob {
 	}
 	
 	public HistoryLoader(final StringBuilder sb, final List<Konsultation> lKons,
-		final boolean multiline, final int idxKonsFrom, final int idxKonsTo){
+		final boolean multiline, final int currentPage, final int pageSize){
 		super(Messages.HistoryLoader_LoadKonsMessage); //$NON-NLS-1$
 		this.sb = sb;
 		this.lKons = new ArrayList<Konsultation>(lKons);
 		this.multiline = multiline;
 		this.setPriority(Job.DECORATE);
 		this.setUser(false);
-		this.idxKonsFrom = idxKonsFrom;
-		this.idxKonsTo = idxKonsTo;
+		this.currentPage = currentPage;
+		this.pageSize = pageSize;
 	}
 	@Override
 	public IStatus execute(final IProgressMonitor monitor){
@@ -103,10 +103,23 @@ public class HistoryLoader extends BackgroundJob {
 			});
 			
 			List<Konsultation> konsList = null;
-			if (idxKonsFrom < idxKonsTo)
+			if (currentPage > 0 && pageSize > 0)
 			{
-				// lazy loading
-				konsList = new ArrayList<Konsultation>(lKons.subList(idxKonsFrom, idxKonsTo));
+				// lazy loading via pagination
+				int fromIdx = (currentPage - 1) * pageSize;
+				int toIdx = currentPage * pageSize;
+				
+				// upper limit corrections
+				if (toIdx > lKons.size()) {
+					toIdx = lKons.size();
+					fromIdx = toIdx - pageSize;
+				}
+				// lower limit corrections
+				if (fromIdx < 0) {
+					fromIdx = 0;
+				}
+				konsList = new ArrayList<Konsultation>(
+					fromIdx < toIdx ? lKons.subList(fromIdx, toIdx) : lKons);
 			} else {
 				konsList = new ArrayList<Konsultation>(lKons);
 			}

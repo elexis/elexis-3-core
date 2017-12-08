@@ -18,10 +18,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -58,14 +55,11 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	HistoryDisplay self = this;
 	
 	boolean multiline = false;
+	private int currentPage;
 	
-	private int idxKonsFrom;
-	private int idxKonsTo;
 	private volatile boolean isLazyLoadingBusy;
 	
-	private StringBuilder stringBuilder = new StringBuilder();
-	
-	private static final int LAZY_LOADING_FETCHSIZE = 100;
+	private static final int LAZY_LOADING_FETCHSIZE = 20;
 	
 	public HistoryDisplay(Composite parent, final IViewSite site){
 		this(parent, site, false);
@@ -73,7 +67,7 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	
 	public HistoryDisplay(Composite parent, final IViewSite site, boolean multiline){
 		super(parent, SWT.V_SCROLL | SWT.BORDER);
-		idxKonsFrom = 0;
+		currentPage = 0;
 		this.multiline = multiline;
 		lKons = new ArrayList<Konsultation>(20);
 		text = UiDesk.getToolkit().createFormText(this, false);
@@ -87,8 +81,15 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 			@Override
 			public void linkActivated(HyperlinkEvent e){
 				String id = (String) e.getHref();
-				Konsultation k = Konsultation.load(id);
-				ElexisEventDispatcher.fireSelectionEvent(k);
+				if ("linkprevious".equals(id)) {
+					doLazyLoading(currentPage - 1);
+				} else if ("linknext".equals(id)) {
+					doLazyLoading(currentPage + 1);
+				}
+				else {
+					Konsultation k = Konsultation.load(id);
+					ElexisEventDispatcher.fireSelectionEvent(k);
+				}
 			}
 			
 		});
@@ -100,44 +101,22 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 			}
 			
 		});
-		
-		ScrollBar vScroll = getVerticalBar();
-		vScroll.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				
-				// scrolled to bottom
-				if (vScroll.getMaximum() <= vScroll.getSelection() + vScroll.getThumb()) {
-					doLazyLoading();
-				}
-			}
-
-			private void doLazyLoading(){
-				if (!isLazyLoadingBusy) {
-					isLazyLoadingBusy = true;
-					// check if lazy loading is activated
-					if (idxKonsTo > 0 && idxKonsFrom < idxKonsTo) {
-						// switch to next page of lazy loading
-						idxKonsFrom = idxKonsTo;
-						if (idxKonsTo < lKons.size()) {
-							idxKonsTo += LAZY_LOADING_FETCHSIZE;
-							if (idxKonsTo >= lKons.size()) {
-								idxKonsTo = lKons.size();
-							}
-							start();
-						}
-					}
-				}
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e){
-				// TODO Auto-generated method stub
-				
-			}
-		});
 		ElexisEventDispatcher.getInstance().addListeners(this);
+	}
+	
+	/**
+	 * If page is greater then 0 lazy loading is activated
+	 * 
+	 * @param page
+	 */
+	private void doLazyLoading(int page){
+		if (!isLazyLoadingBusy) {
+			if (page > 0 && page <= getMaxPageSize()) {
+				isLazyLoadingBusy = true;
+				currentPage = page;
+				start();
+			}
+		}
 	}
 	
 	@Override
@@ -157,8 +136,14 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	
 	public void start(KonsFilter f){
 		stop();
-		loader = new HistoryLoader(new StringBuilder(),
-			lKons, multiline, idxKonsFrom, idxKonsTo);
+		if (f == null) {
+			loader = new HistoryLoader(new StringBuilder(), lKons, multiline, currentPage,
+				LAZY_LOADING_FETCHSIZE);
+		} else {
+			// filter is set - no lazy loading
+			currentPage = 0;
+			loader = new HistoryLoader(new StringBuilder(), lKons, multiline);
+		}
 		loader.setFilter(f);
 		loader.addListener(this);
 		loader.schedule();
@@ -185,9 +170,7 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	
 	public void load(Patient pat){
 		// lazy loading konsultations
-		idxKonsFrom = 0;
-		idxKonsTo = 0;
-		stringBuilder = new StringBuilder();
+		currentPage = 0;
 		isLazyLoadingBusy = false;
 		
 		if (pat != null) {
@@ -199,7 +182,7 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 			
 			// activate lazy loading
 			if (lKons.size() > LAZY_LOADING_FETCHSIZE) {
-				idxKonsTo = LAZY_LOADING_FETCHSIZE;
+				currentPage = 1;
 			}
 		}
 		
@@ -230,21 +213,10 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 						int idxTo = s.indexOf("</form>");
 						if (idxFrom != -1 && idxTo != -1) {
 							s = s.substring(idxFrom + 6, s.indexOf("</form>"));
-							stringBuilder.append(s);
-							text.setImage("tip", Images.IMG_EDIT.getImage());
-							text.setText(
-								"<form>" + stringBuilder.toString()
-									+ (idxKonsTo > 0
-											? "<p>-----------" + idxKonsTo
-												+ "/"
-												+ lKons.size()
-												+ "-----------</p><p></p>"
-											: "")
-									+ "</form>",
-								true,
+							text.setImage("previous", Images.IMG_PREVIOUS.getImage());
+							text.setImage("next", Images.IMG_NEXT.getImage());
+							text.setText("<form>" + getPaginationField() + s + "</form>", true,
 								true);
-
-							
 						}
 					} else {
 						text.setText(ElexisEventDispatcher.getSelectedPatient() != null ? ""
@@ -256,7 +228,24 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 				}
 				isLazyLoadingBusy = false;
 			}
+
+			private String getPaginationField(){
+				return currentPage > 0
+						? "<p><a href=\"linkprevious\"><img href=\"previous\"></img></a> ("
+							+ currentPage + "/"
+							+ getMaxPageSize()
+							+ ") <a href=\"linknext\"><img href=\"next\"></img></a></p>"
+						: "";
+			}
+
 		});
+	}
+	
+	private int getMaxPageSize(){
+		if (lKons != null) {
+			return (int) Math.ceil((double) lKons.size() / LAZY_LOADING_FETCHSIZE);
+		}
+		return 0;
 	}
 	
 	public void catchElexisEvent(ElexisEvent ev){
