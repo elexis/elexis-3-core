@@ -189,7 +189,6 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 		idxKonsTo = 0;
 		stringBuilder = new StringBuilder();
 		isLazyLoadingBusy = false;
-		setOrigin(0, 0);
 		
 		if (pat != null) {
 			lKons.clear();
@@ -202,11 +201,20 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 			if (lKons.size() > LAZY_LOADING_FETCHSIZE) {
 				idxKonsTo = LAZY_LOADING_FETCHSIZE;
 			}
-			if (lKons.size() > 0) {
-				text.setText("wird geladen...", false, false);
-				text.setSize(text.computeSize(self.getSize().x - 10, SWT.DEFAULT));
-			}
 		}
+		
+		UiDesk.getDisplay().asyncExec(new Runnable() {
+			public void run(){
+				if (!isDisposed()) {
+					setOrigin(0, 0);
+					if (lKons.size() > 0) {
+						text.setText("wird geladen...", false, false);
+						text.setSize(text.computeSize(self.getSize().x - 10, SWT.DEFAULT));
+					}
+				}
+			}
+		});
+		
 	}
 	
 	public void jobFinished(BackgroundJob j){
@@ -239,10 +247,12 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 							
 						}
 					} else {
-						text.setText("", false, false);
+						text.setText(ElexisEventDispatcher.getSelectedPatient() != null ? ""
+								: Messages.HistoryDisplay_NoPatientSelected,
+							false, false);
 					}
 					
-					text.setSize(text.computeSize(self.getSize().x - 10, SWT.DEFAULT));
+					text.setSize(text.computeSize(self.getSize().x - 10, SWT.DEFAULT));	
 				}
 				isLazyLoadingBusy = false;
 			}
