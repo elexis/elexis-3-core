@@ -54,10 +54,9 @@
 
 	<modules>
 		<module>ch.elexis.target</module>
-		<module>ch.elexis.core.product</module>
 		<module>bundles</module>
-		<module>tests</module>
 		<module>features</module>
+		<module>tests</module>
 		<module>ch.elexis.core.p2site</module>
 	</modules>
 	<profiles>
