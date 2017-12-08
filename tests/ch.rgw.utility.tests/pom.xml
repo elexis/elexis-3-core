@@ -7,8 +7,7 @@
   </parent>
   <artifactId>ch.rgw.utility.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
-  <!-- comment out to enable headless tests and add additional dependencies if needed
-    -->
+
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>

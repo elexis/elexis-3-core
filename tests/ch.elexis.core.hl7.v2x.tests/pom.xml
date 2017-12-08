@@ -18,7 +18,7 @@
         <configuration>
           <application>ch.elexis.core.application.ElexisApp</application>
           <product>org.eclipse.platform.id</product>
-          <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
+          <argLine>${elexis.ui.test.vmargs}</argLine>
           <useUIThread>true</useUIThread>
           <useUIHarness>true</useUIHarness>
           <showEclipseLog>true</showEclipseLog>
