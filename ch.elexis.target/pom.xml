@@ -4,11 +4,11 @@
   <packaging>eclipse-target-definition</packaging>
   <name>Target Definition for Elexis</name>
   <parent>
-    <groupId>ch.elexis</groupId>
+    <groupId>ch.elexis.core</groupId>
     <artifactId>elexis-3-core</artifactId>
     <version>3.5.0-SNAPSHOT</version>
   </parent>
-  <version>3.3.0-SNAPSHOT</version>
+  <version>3.5.0-SNAPSHOT</version>
   <build>
 		<plugins>
 			<plugin>

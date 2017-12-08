@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>ch.elexis.core.bundles</artifactId>
+  <name>Elexis-Core bundles</name>
+  <packaging>pom</packaging>
+
+  <parent>
+    <groupId>ch.elexis.core</groupId>
+    <artifactId>elexis-3-core</artifactId>
+    <version>3.5.0-SNAPSHOT</version>
+  </parent>
+
+  <modules>
+    <module>ch.elexis.core.application</module>
+    <module>ch.elexis.core.console.application</module>
+    <module>ch.elexis.core.data</module>
+    <module>ch.elexis.core.documents</module>
+    <module>ch.elexis.core.eigenartikel</module>
+    <module>ch.elexis.core.eigendiagnosen</module>
+    <module>ch.elexis.core.findings.fhir.po</module>
+    <module>ch.elexis.core.findings.templates.edit</module>
+    <module>ch.elexis.core.findings.templates.po</module>
+    <module>ch.elexis.core.findings.templates.ui</module>
+    <module>ch.elexis.core.findings.templates</module>
+    <module>ch.elexis.core.findings.ui</module>
+    <module>ch.elexis.core.findings.util</module>
+    <module>ch.elexis.core.findings</module>
+    <module>ch.elexis.core.hl7.v2x</module>
+    <module>ch.elexis.core.importer.div</module>
+    <module>ch.elexis.core.logging.default_configuration</module>
+    <module>ch.elexis.core.logging.osgi</module>
+    <module>ch.elexis.core.mail.ui</module>
+    <module>ch.elexis.core.mail</module>
+    <module>ch.elexis.core.scheduler</module>
+    <module>ch.elexis.core.scripting.beanshell</module>
+    <module>ch.elexis.core.ui.contacts</module>
+    <module>ch.elexis.core.ui.documents</module>
+    <module>ch.elexis.core.ui.eigenartikel</module>
+    <module>ch.elexis.core.ui.eigendiagnosen</module>
+    <module>ch.elexis.core.ui.icons</module>
+    <module>ch.elexis.core.ui.importer.div.native32</module>
+    <module>ch.elexis.core.ui.importer.div.native64</module>
+    <module>ch.elexis.core.ui.importer.div</module>
+    <module>ch.elexis.core.ui.laboratory</module>
+    <module>ch.elexis.core.ui.medication.os</module>
+    <module>ch.elexis.core.ui.medication</module>
+    <module>ch.elexis.core.ui.p2</module>
+    <module>ch.elexis.core.ui.perspective</module>
+    <module>ch.elexis.core.ui</module>
+    <module>ch.elexis.core</module>
+    <module>ch.rgw.utility</module>
+    <module>org.iatrix.help.wiki</module>
+  </modules>
+</project>
