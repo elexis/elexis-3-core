@@ -69,6 +69,8 @@ We recommend (and if you want to submit patches, you have to respect) the follow
 ** Do NOT select: Format source code
 ** Select: Organize imports
 ** Do NOT select: Additional actions
+* Maven..Errors/Warning
+** Set "Plugin execution not covered by lifecycle configuration" to "Ignore"
 
 h3. Submitting patches
 
