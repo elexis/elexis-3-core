@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>ch.elexis.core</groupId>
+    <artifactId>ch.elexis.core.tests</artifactId>
+    <version>3.5.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>ch.elexis.core.ui.importer.div.tests</artifactId>
+  <packaging>eclipse-test-plugin</packaging>
+  
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <configuration>
+          <application>ch.elexis.core.application.ElexisApp</application>
+          <argLine>${elexis.ui.test.vmargs}</argLine>
+          <useUIThread>true</useUIThread>
+          <useUIHarness>true</useUIHarness>
+          <showEclipseLog>true</showEclipseLog>
+          <bundleStartLevel>
+				<bundle>
+					<id>org.eclipse.equinox.event</id>
+					<level>2</level>
+					<autoStart>true</autoStart>
+				</bundle>
+		  </bundleStartLevel>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+<version>3.2.0-SNAPSHOT</version>
+</project>
