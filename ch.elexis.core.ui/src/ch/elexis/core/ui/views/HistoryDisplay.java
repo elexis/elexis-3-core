@@ -33,6 +33,7 @@ import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.HistoryLoader;
 import ch.elexis.core.ui.actions.KonsFilter;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
@@ -54,6 +55,11 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	HistoryDisplay self = this;
 	
 	boolean multiline = false;
+	private int currentPage;
+	
+	private volatile boolean isLazyLoadingBusy;
+	
+	private static final int LAZY_LOADING_FETCHSIZE = 20;
 	
 	public HistoryDisplay(Composite parent, final IViewSite site){
 		this(parent, site, false);
@@ -61,6 +67,7 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	
 	public HistoryDisplay(Composite parent, final IViewSite site, boolean multiline){
 		super(parent, SWT.V_SCROLL | SWT.BORDER);
+		currentPage = 0;
 		this.multiline = multiline;
 		lKons = new ArrayList<Konsultation>(20);
 		text = UiDesk.getToolkit().createFormText(this, false);
@@ -74,8 +81,15 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 			@Override
 			public void linkActivated(HyperlinkEvent e){
 				String id = (String) e.getHref();
-				Konsultation k = Konsultation.load(id);
-				ElexisEventDispatcher.fireSelectionEvent(k);
+				if ("linkprevious".equals(id)) {
+					doLazyLoading(currentPage - 1);
+				} else if ("linknext".equals(id)) {
+					doLazyLoading(currentPage + 1);
+				}
+				else {
+					Konsultation k = Konsultation.load(id);
+					ElexisEventDispatcher.fireSelectionEvent(k);
+				}
 			}
 			
 		});
@@ -88,6 +102,21 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 			
 		});
 		ElexisEventDispatcher.getInstance().addListeners(this);
+	}
+	
+	/**
+	 * If page is greater then 0 lazy loading is activated
+	 * 
+	 * @param page
+	 */
+	private void doLazyLoading(int page){
+		if (!isLazyLoadingBusy) {
+			if (page > 0 && page <= getMaxPageSize()) {
+				isLazyLoadingBusy = true;
+				currentPage = page;
+				start();
+			}
+		}
 	}
 	
 	@Override
@@ -107,7 +136,14 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	
 	public void start(KonsFilter f){
 		stop();
-		loader = new HistoryLoader(new StringBuilder(), lKons, multiline);
+		if (f == null) {
+			loader = new HistoryLoader(new StringBuilder(), lKons, multiline, currentPage,
+				LAZY_LOADING_FETCHSIZE);
+		} else {
+			// filter is set - no lazy loading
+			currentPage = 0;
+			loader = new HistoryLoader(new StringBuilder(), lKons, multiline);
+		}
 		loader.setFilter(f);
 		loader.addListener(this);
 		loader.schedule();
@@ -133,13 +169,35 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	}
 	
 	public void load(Patient pat){
+		// lazy loading konsultations
+		currentPage = 0;
+		isLazyLoadingBusy = false;
+		
 		if (pat != null) {
 			lKons.clear();
 			Fall[] faelle = pat.getFaelle();
 			for (Fall f : faelle) {
 				load(f, false);
 			}
+			
+			// activate lazy loading
+			if (lKons.size() > LAZY_LOADING_FETCHSIZE) {
+				currentPage = 1;
+			}
 		}
+		
+		UiDesk.getDisplay().asyncExec(new Runnable() {
+			public void run(){
+				if (!isDisposed()) {
+					setOrigin(0, 0);
+					if (lKons.size() > 0) {
+						text.setText("wird geladen...", false, false);
+						text.setSize(text.computeSize(self.getSize().x - 10, SWT.DEFAULT));
+					}
+				}
+			}
+		});
+		
 	}
 	
 	public void jobFinished(BackgroundJob j){
@@ -149,12 +207,45 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 				
 				// check if widget is valid
 				if (!isDisposed()) {
-					text.setText(s, true, true);
-					text.setSize(text.computeSize(self.getSize().x - 10, SWT.DEFAULT));
+					
+					if (s != null) {
+						int idxFrom = s.indexOf("<form>");
+						int idxTo = s.indexOf("</form>");
+						if (idxFrom != -1 && idxTo != -1) {
+							s = s.substring(idxFrom + 6, s.indexOf("</form>"));
+							text.setImage("previous", Images.IMG_PREVIOUS.getImage());
+							text.setImage("next", Images.IMG_NEXT.getImage());
+							text.setText("<form>" + getPaginationField() + s + "</form>", true,
+								true);
+						}
+					} else {
+						text.setText(ElexisEventDispatcher.getSelectedPatient() != null ? ""
+								: Messages.HistoryDisplay_NoPatientSelected,
+							false, false);
+					}
+					
+					text.setSize(text.computeSize(self.getSize().x - 10, SWT.DEFAULT));	
 				}
-				
+				isLazyLoadingBusy = false;
 			}
+
+			private String getPaginationField(){
+				return currentPage > 0
+						? "<p><a href=\"linkprevious\"><img href=\"previous\"></img></a> ("
+							+ currentPage + "/"
+							+ getMaxPageSize()
+							+ ") <a href=\"linknext\"><img href=\"next\"></img></a></p>"
+						: "";
+			}
+
 		});
+	}
+	
+	private int getMaxPageSize(){
+		if (lKons != null) {
+			return (int) Math.ceil((double) lKons.size() / LAZY_LOADING_FETCHSIZE);
+		}
+		return 0;
 	}
 	
 	public void catchElexisEvent(ElexisEvent ev){
