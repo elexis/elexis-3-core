@@ -42,7 +42,8 @@ public class HistoryLoader extends BackgroundJob {
 	List<Konsultation> lKons;
 	KonsFilter filter;
 	IFilter globalFilter;
-	
+	private final int currentPage;
+	private final int pageSize;
 	boolean multiline = false;
 	
 	public void setFilter(final KonsFilter kf){
@@ -52,20 +53,26 @@ public class HistoryLoader extends BackgroundJob {
 	/*
 	 * multine == true: show Konsultation text with newlines
 	 */
-	public HistoryLoader(final StringBuilder sb, final ArrayList<Konsultation> lKons){
+	public HistoryLoader(final StringBuilder sb, final List<Konsultation> lKons){
 		this(sb, lKons, false);
 	}
 	
-	public HistoryLoader(final StringBuilder sb, final ArrayList<Konsultation> lKons,
+	public HistoryLoader(final StringBuilder sb, final List<Konsultation> lKons,
 		final boolean multiline){
+		this(sb, lKons, multiline, 0, 0);
+	}
+	
+	public HistoryLoader(final StringBuilder sb, final List<Konsultation> lKons,
+		final boolean multiline, final int currentPage, final int pageSize){
 		super(Messages.HistoryLoader_LoadKonsMessage); //$NON-NLS-1$
 		this.sb = sb;
 		this.lKons = new ArrayList<Konsultation>(lKons);
 		this.multiline = multiline;
 		this.setPriority(Job.DECORATE);
 		this.setUser(false);
+		this.currentPage = currentPage;
+		this.pageSize = pageSize;
 	}
-	
 	@Override
 	public IStatus execute(final IProgressMonitor monitor){
 		synchronized (lKons) {
@@ -94,7 +101,28 @@ public class HistoryLoader extends BackgroundJob {
 					return 0;
 				}
 			});
-			List<Konsultation> konsList = new ArrayList<Konsultation>(lKons);
+			
+			List<Konsultation> konsList = null;
+			if (currentPage > 0 && pageSize > 0)
+			{
+				// lazy loading via pagination
+				int fromIdx = (currentPage - 1) * pageSize;
+				int toIdx = currentPage * pageSize;
+				
+				// upper limit corrections
+				if (toIdx > lKons.size()) {
+					toIdx = lKons.size();
+					fromIdx = toIdx - pageSize;
+				}
+				// lower limit corrections
+				if (fromIdx < 0) {
+					fromIdx = 0;
+				}
+				konsList = new ArrayList<Konsultation>(
+					fromIdx < toIdx ? lKons.subList(fromIdx, toIdx) : lKons);
+			} else {
+				konsList = new ArrayList<Konsultation>(lKons);
+			}
 			monitor.worked(50);
 			
 			Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
