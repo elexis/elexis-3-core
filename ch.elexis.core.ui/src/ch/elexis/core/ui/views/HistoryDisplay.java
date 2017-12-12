@@ -18,7 +18,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -33,6 +36,7 @@ import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.HistoryLoader;
 import ch.elexis.core.ui.actions.KonsFilter;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
@@ -55,12 +59,21 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	
 	boolean multiline = false;
 	
+	private int idxKonsFrom;
+	private int idxKonsTo;
+	private volatile boolean isLazyLoadingBusy;
+	
+	private StringBuilder stringBuilder = new StringBuilder();
+	
+	private static final int LAZY_LOADING_FETCHSIZE = 100;
+	
 	public HistoryDisplay(Composite parent, final IViewSite site){
 		this(parent, site, false);
 	}
 	
 	public HistoryDisplay(Composite parent, final IViewSite site, boolean multiline){
 		super(parent, SWT.V_SCROLL | SWT.BORDER);
+		idxKonsFrom = 0;
 		this.multiline = multiline;
 		lKons = new ArrayList<Konsultation>(20);
 		text = UiDesk.getToolkit().createFormText(this, false);
@@ -87,6 +100,43 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 			}
 			
 		});
+		
+		ScrollBar vScroll = getVerticalBar();
+		vScroll.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				
+				// scrolled to bottom
+				if (vScroll.getMaximum() <= vScroll.getSelection() + vScroll.getThumb()) {
+					doLazyLoading();
+				}
+			}
+
+			private void doLazyLoading(){
+				if (!isLazyLoadingBusy) {
+					isLazyLoadingBusy = true;
+					// check if lazy loading is activated
+					if (idxKonsTo > 0 && idxKonsFrom < idxKonsTo) {
+						// switch to next page of lazy loading
+						idxKonsFrom = idxKonsTo;
+						if (idxKonsTo < lKons.size()) {
+							idxKonsTo += LAZY_LOADING_FETCHSIZE;
+							if (idxKonsTo >= lKons.size()) {
+								idxKonsTo = lKons.size();
+							}
+							start();
+						}
+					}
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e){
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		ElexisEventDispatcher.getInstance().addListeners(this);
 	}
 	
@@ -107,7 +157,8 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	
 	public void start(KonsFilter f){
 		stop();
-		loader = new HistoryLoader(new StringBuilder(), lKons, multiline);
+		loader = new HistoryLoader(new StringBuilder(),
+			lKons, multiline, idxKonsFrom, idxKonsTo);
 		loader.setFilter(f);
 		loader.addListener(this);
 		loader.schedule();
@@ -133,11 +184,27 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	}
 	
 	public void load(Patient pat){
+		// lazy loading konsultations
+		idxKonsFrom = 0;
+		idxKonsTo = 0;
+		stringBuilder = new StringBuilder();
+		isLazyLoadingBusy = false;
+		setOrigin(0, 0);
+		
 		if (pat != null) {
 			lKons.clear();
 			Fall[] faelle = pat.getFaelle();
 			for (Fall f : faelle) {
 				load(f, false);
+			}
+			
+			// activate lazy loading
+			if (lKons.size() > LAZY_LOADING_FETCHSIZE) {
+				idxKonsTo = LAZY_LOADING_FETCHSIZE;
+			}
+			if (lKons.size() > 0) {
+				text.setText("wird geladen...", false, false);
+				text.setSize(text.computeSize(self.getSize().x - 10, SWT.DEFAULT));
 			}
 		}
 	}
@@ -149,10 +216,35 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 				
 				// check if widget is valid
 				if (!isDisposed()) {
-					text.setText(s, true, true);
+					
+					if (s != null) {
+						int idxFrom = s.indexOf("<form>");
+						int idxTo = s.indexOf("</form>");
+						if (idxFrom != -1 && idxTo != -1) {
+							s = s.substring(idxFrom + 6, s.indexOf("</form>"));
+							stringBuilder.append(s);
+							text.setImage("tip", Images.IMG_EDIT.getImage());
+							text.setText(
+								"<form>" + stringBuilder.toString()
+									+ (idxKonsTo > 0
+											? "<p>-----------" + idxKonsTo
+												+ "/"
+												+ lKons.size()
+												+ "-----------</p><p></p>"
+											: "")
+									+ "</form>",
+								true,
+								true);
+
+							
+						}
+					} else {
+						text.setText("", false, false);
+					}
+					
 					text.setSize(text.computeSize(self.getSize().x - 10, SWT.DEFAULT));
 				}
-				
+				isLazyLoadingBusy = false;
 			}
 		});
 	}

@@ -42,7 +42,8 @@ public class HistoryLoader extends BackgroundJob {
 	List<Konsultation> lKons;
 	KonsFilter filter;
 	IFilter globalFilter;
-	
+	private final int idxKonsFrom;
+	private final int idxKonsTo;
 	boolean multiline = false;
 	
 	public void setFilter(final KonsFilter kf){
@@ -52,20 +53,26 @@ public class HistoryLoader extends BackgroundJob {
 	/*
 	 * multine == true: show Konsultation text with newlines
 	 */
-	public HistoryLoader(final StringBuilder sb, final ArrayList<Konsultation> lKons){
+	public HistoryLoader(final StringBuilder sb, final List<Konsultation> lKons){
 		this(sb, lKons, false);
 	}
 	
-	public HistoryLoader(final StringBuilder sb, final ArrayList<Konsultation> lKons,
+	public HistoryLoader(final StringBuilder sb, final List<Konsultation> lKons,
 		final boolean multiline){
+		this(sb, lKons, multiline, 0, 0);
+	}
+	
+	public HistoryLoader(final StringBuilder sb, final List<Konsultation> lKons,
+		final boolean multiline, final int idxKonsFrom, final int idxKonsTo){
 		super(Messages.HistoryLoader_LoadKonsMessage); //$NON-NLS-1$
 		this.sb = sb;
 		this.lKons = new ArrayList<Konsultation>(lKons);
 		this.multiline = multiline;
 		this.setPriority(Job.DECORATE);
 		this.setUser(false);
+		this.idxKonsFrom = idxKonsFrom;
+		this.idxKonsTo = idxKonsTo;
 	}
-	
 	@Override
 	public IStatus execute(final IProgressMonitor monitor){
 		synchronized (lKons) {
@@ -94,7 +101,15 @@ public class HistoryLoader extends BackgroundJob {
 					return 0;
 				}
 			});
-			List<Konsultation> konsList = new ArrayList<Konsultation>(lKons);
+			
+			List<Konsultation> konsList = null;
+			if (idxKonsFrom < idxKonsTo)
+			{
+				// lazy loading
+				konsList = new ArrayList<Konsultation>(lKons.subList(idxKonsFrom, idxKonsTo));
+			} else {
+				konsList = new ArrayList<Konsultation>(lKons);
+			}
 			monitor.worked(50);
 			
 			Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
