@@ -26,8 +26,8 @@ Import-Package: ch.elexis.core.data.activator,
  org.eclipse.emf.ecore.xmi.impl,
  org.osgi.service.component.annotations;version="1.2.0",
  org.slf4j;version="1.7.2"
-Require-Bundle: org.eclipse.ui.workbench;bundle-version="3.108.3",
- org.eclipse.ui;bundle-version="3.108.1"
+Require-Bundle: org.eclipse.ui.workbench,
+ org.eclipse.ui
 Service-Component: OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveImportHandler.xml,
  OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveExportHandler.xml,
  OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveExportService.xml,
