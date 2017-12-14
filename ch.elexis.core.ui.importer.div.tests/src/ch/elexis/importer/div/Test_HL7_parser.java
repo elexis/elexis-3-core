@@ -347,4 +347,37 @@ public class Test_HL7_parser {
 		List<Patient> pqrr = pqr.execute();
 		assertEquals(1, pqrr.size());
 	}
+	
+	/**
+	 * Test method Analytica HL7 (Details), check if the names of the imported {@link LabItem} are
+	 * correct.
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void testAnalyticaHL7LabItemName() throws IOException{
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		parseOneHL7file(new File(workDir.toString(), "Analytica/Influenza_Labresultat.hl7"), false,
+			true);
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
+		List<LabResult> qrr = qr.execute();
+		int j = 0;
+		Query<LabItem> query = new Query<LabItem>(LabItem.class);
+		query.orderBy(false, LabItem.SHORTNAME);
+		List<LabItem> items = query.execute();
+		LabItem[] itemArray = new LabItem[items.size()];
+		j = 0;
+		if (items != null) {
+			for (LabItem item : items) {
+				itemArray[j] = item;
+				j++;
+			}
+		}
+		assertEquals(3, qrr.size());
+		assertTrue(itemArray[0].getLabel().contains("INFA, Influenza A Virus"));
+		assertTrue(itemArray[1].getLabel().contains("INFB, Influenza B Virus"));
+		assertTrue(itemArray[2].getLabel().contains("MAT, MATERIAL"));
+	}
 }
