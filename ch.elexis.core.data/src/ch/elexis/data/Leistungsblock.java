@@ -286,10 +286,18 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	}
 	
 	private int getIndexOf(List<ICodeElement> elements, ICodeElement element){
-		for (int i = 0; i < elements.size(); i++) {
-			if (element.getCodeSystemName().equals(elements.get(i).getCodeSystemName())
-				&& element.getCode().equals(elements.get(i).getCode())) {
-				return i;
+		if (element != null && elements != null) {
+			for (int i = 0; i < elements.size(); i++) {
+				String eCodeSystemName = element.getCodeSystemName();
+				String esCodeSystemName = elements.get(i).getCodeSystemName();
+				String eCode = element.getCode();
+				String esCode = elements.get(i).getCode();
+				if (eCodeSystemName != null && esCodeSystemName != null && eCode != null
+					&& esCode != null) {
+					if (eCodeSystemName.equals(esCodeSystemName) && eCode.equals(esCode)) {
+						return i;
+					}
+				}
 			}
 		}
 		return -1;
