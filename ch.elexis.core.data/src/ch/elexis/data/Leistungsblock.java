@@ -312,7 +312,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 */
 	public void addElement(ICodeElement element){
 		if (element != null) {
-			List<ICodeElement> elements = getElements();
+			List<ICodeElement> elements = getElementReferences();
 			int index = getIndexOf(elements, element);
 			if (index != -1) {
 				elements.add(index, element);
@@ -344,7 +344,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 */
 	public void removeElement(ICodeElement element){
 		if (element != null) {
-			List<ICodeElement> elements = getElements();
+			List<ICodeElement> elements = getElementReferences();
 			int index = getIndexOf(elements, element);
 			if (index != -1) {
 				elements.remove(index);
@@ -363,7 +363,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 */
 	public void moveElement(ICodeElement element, int offset){
 		if (element != null) {
-			List<ICodeElement> elements = getElements();
+			List<ICodeElement> elements = getElementReferences();
 			int index = getIndexOf(elements, element);
 			if (index != -1) {
 				int npos = index + offset;
