@@ -215,7 +215,7 @@ public class ElexisFastViewUtil {
 	}
 	
 	private static String getToolControlId(MUIElement window, String perspectiveId){
-		return ELEXIS_FASTVIEW_STACK + "(" + window.getElementId() + ").("
+		return ELEXIS_FASTVIEW_STACK + "("
 			+ perspectiveId + ")";
 	}
 	
@@ -324,6 +324,9 @@ public class ElexisFastViewUtil {
 						}
 						
 					}
+				}
+				else {
+					mToolControl.setToBeRendered(true);
 				}
 			}
 		}
