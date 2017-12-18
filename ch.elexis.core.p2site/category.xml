@@ -18,5 +18,5 @@
    <feature url="features/ch.elexis.core.common.feature_3.5.0.qualifier.jar" id="ch.elexis.core.common.feature" version="3.5.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <category-def name="elexis_3_core" label="Elexis 3.5 Kern"/>
+   <category-def name="elexis_3_core" label="Elexis 3 Kern"/>
 </site>
