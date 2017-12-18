@@ -227,6 +227,9 @@ public class LabImportUtil implements ILabImportUtil {
 						transientLabResult.overwriteExisting(labResult);
 						CoreHub.getLocalLockService().releaseLock((LabResult) labResult);
 						continue;
+					} else {
+						logger.info("Will not overwrite labResult [" + labResult.getId()
+							+ "] due to user decision.");
 					}
 				}
 			}
