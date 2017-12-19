@@ -152,20 +152,10 @@ public class ElexisFastViewUtil {
 	public static void addToFastViewAfterPerspectiveOpened(String perspectiveId, String... viewIds){
 		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (workbenchWindow != null) {
-			workbenchWindow.addPerspectiveListener(new PerspectiveAdapter() {
-				
-				@Override
-				public void perspectiveOpened(IWorkbenchPage page,
-					IPerspectiveDescriptor perspective){
-					super.perspectiveOpened(page, perspective);
-					if (perspectiveId.equals(perspective.getId())) {
-						
-						for (String viewId : viewIds) {
-							ElexisFastViewUtil.addToFastView(perspectiveId, viewId);
-						}
-						// the work is done so remove this listener
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.removePerspectiveListener(this);
+			UiDesk.asyncExec(new Runnable() {
+				public void run(){
+					for (String viewId : viewIds) {
+						ElexisFastViewUtil.addToFastView(perspectiveId, viewId);
 					}
 				}
 			});
@@ -243,6 +233,21 @@ public class ElexisFastViewUtil {
 			workbenchWindow.addPerspectiveListener(new PerspectiveAdapter() {
 				
 				@Override
+				public void perspectiveChanged(IWorkbenchPage page,
+					IPerspectiveDescriptor perspective, String changeId){
+					super.perspectiveChanged(page, perspective, changeId);
+					// if perspective reset is complete
+					if (IWorkbenchPage.CHANGE_RESET_COMPLETE.equals(changeId)) {
+						UiDesk.asyncExec(new Runnable() {
+							@Override
+							public void run(){
+								changeFastViewBarFromLeftToBottom();
+							}
+						});
+					}
+				}
+				
+				@Override
 				public void perspectiveActivated(IWorkbenchPage page,
 					IPerspectiveDescriptor perspective){
 					UiDesk.asyncExec(new Runnable() {
@@ -265,6 +270,14 @@ public class ElexisFastViewUtil {
 			if (trimbar != null) {
 				MToolControl toolControl = (MToolControl) eModelService
 					.find(getToolControlId(workbenchWindow, perspectiveId), trimbar);
+				if (toolControl == null && workbenchWindow.getElementId() != null) {
+					// it also can be that the main view id is also a part of the stack
+					toolControl = (MToolControl) eModelService.find(ELEXIS_FASTVIEW_STACK + "("
+						+ workbenchWindow.getElementId() + ").(" + perspectiveId + ")", trimbar);
+					if (toolControl != null) {
+						toolControl.setElementId(getToolControlId(workbenchWindow, perspectiveId));
+					}
+				}
 				return toolControl;
 			}
 		}
