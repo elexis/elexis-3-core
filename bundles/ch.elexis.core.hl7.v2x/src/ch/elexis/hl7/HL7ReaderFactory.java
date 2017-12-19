@@ -62,7 +62,7 @@ public enum HL7ReaderFactory {
 	private List<HL7Reader> load(File file) throws IOException{
 		if (!file.canRead()) {
 			throw new IOException(MessageFormat
-				.format(Messages.getString("HL7Reader_CannotReadFile"), file.getAbsolutePath()));
+				.format(Messages.HL7Reader_CannotReadFile, file.getAbsolutePath()));
 		}
 		
 		List<HL7Reader> ret = new ArrayList<HL7Reader>();

@@ -332,8 +332,8 @@ public class DocumentStore {
 			return iDocumentStore;
 		}
 		
-		MessageEvent.fireError(Messages.getString("DocumentStore.storeError"),
-			Messages.getString("DocumentStore.storeErrorText") + " " + storeId);
+		MessageEvent.fireError(Messages.DocumentStore_storeError,
+			Messages.DocumentStore_storeErrorText + " " + storeId);
 		return new EmptyDocumentStore();
 	}
 	

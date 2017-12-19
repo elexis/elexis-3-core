@@ -371,6 +371,7 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
   end
 
   def gen_csv
+    @main_dir ||= ARGV.first
     unless @main_dir
       puts"Skipping gen_csv as no @main_dir given"
       return
@@ -662,7 +663,7 @@ Useage: #{File.basename(__FILE__)} [-options] [directory1 directory]
     and SqLite3 database #{Sqlite3File}
 EOS
   opt :gen_trema,         "Create Trema files from content of database", :default => false, :short => '-t'
-  opt :gen_csv  ,         "Create CSV files from content of database", :default => false, :short => '-c'
+  opt :gen_csv  ,         "Create statistics CSV files from content of database in each project", :default => false, :short => '-c'
   opt :gen_duplicates,    "Create list of duplicated entries from content of database", :default => false, :short => '-u'
   opt :parse_messsage,    "Parse all messages files and import their content to the database", :default => false, :short => '-p'
   opt :overview,          "Printe some statistics regardings projects, messages files, translation present in the database", :default => false, :short => '-o'

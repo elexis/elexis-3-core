@@ -9,11 +9,7 @@
  **********************************************************************/
 package ch.elexis.admin;
 
-import org.eclipse.osgi.util.NLS;
-
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.admin.messages";//$NON-NLS-1$
-	
+public class Messages {
 	public static String AccessControl_GroupAll;
 	public static String AccessControlDefaults_about;
 	public static String AccessControlDefaults_absolute;
@@ -89,9 +85,4 @@ public class Messages extends NLS {
 	public static String AccessControlDefaults_viewAll;
 	public static String ACE_implicit;
 	public static String ACE_root;
-	
-	static {
-		// load message values from bundle file
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
 }

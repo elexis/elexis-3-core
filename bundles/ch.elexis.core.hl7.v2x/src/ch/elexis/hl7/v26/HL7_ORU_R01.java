@@ -99,7 +99,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 			return (ORU_R01) hl7Msg;
 		} else {
 			addError(MessageFormat.format(
-				Messages.getString("HL7_ORU_R01.Error_WrongMsgType"), hl7Msg.getName())); //$NON-NLS-1$
+				Messages.HL7_ORU_R01_Error_WrongMsgType, hl7Msg.getName())); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -224,7 +224,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 							obx.getObx3_ObservationIdentifier().getCwe1_Identifier().getValue();
 						if (!"DOCUMENT".equals(observationId)) { //$NON-NLS-1$
 							addWarning(MessageFormat.format(
-								Messages.getString("HL7_ORU_R01.Error_WrongObsIdentifier"), //$NON-NLS-1$
+								Messages.HL7_ORU_R01_Error_WrongObsIdentifier,
 								observationId));
 						}
 						ED ed = (ED) obx.getObx5_ObservationValue(0).getData();
@@ -551,11 +551,11 @@ public class HL7_ORU_R01 extends HL7Writer {
 		} else if (laborItem.getTyp().equals(Typ.ABSOLUTE)) {
 			obx.getObx2_ValueType().setValue(HL7Constants.OBX_VALUE_TYPE_CWE);
 			CWE codedEntryType = new CWE(null);
-			String labResult = Messages.getString("HL7_ORU_R01.LabResult_Abs_Neg"); //$NON-NLS-1$
+			String labResult = Messages.HL7_ORU_R01_LabResult_Abs_Neg;
 			if (laborWert.getResultat() != null) {
 				String trimLowercaseResult = laborWert.getResultat().trim().toLowerCase();
 				if (trimLowercaseResult.startsWith("pos") || trimLowercaseResult.startsWith("+")) { //$NON-NLS-1$ //$NON-NLS-2$
-					labResult = Messages.getString("HL7_ORU_R01.LabResult_Abs_Pos"); //$NON-NLS-1$
+					labResult = Messages.HL7_ORU_R01_LabResult_Abs_Pos;
 				}
 			}
 			codedEntryType.getCwe1_Identifier().setValue(labResult);

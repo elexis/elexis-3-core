@@ -121,7 +121,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 			return (ORU_R01) hl7Msg;
 		} else {
 			addError(MessageFormat.format(
-				Messages.getString("HL7_ORU_R01.Error_WrongMsgType"), hl7Msg.getName())); //$NON-NLS-1$
+				Messages.HL7_ORU_R01_Error_WrongMsgType, hl7Msg.getName())); 
 		}
 		return null;
 	}
@@ -274,7 +274,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 								obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
 							if (!"DOCUMENT".equals(observationId)) { //$NON-NLS-1$
 								addWarning(MessageFormat.format(
-									Messages.getString("HL7_ORU_R01.Error_WrongObsIdentifier"), //$NON-NLS-1$
+									Messages.HL7_ORU_R01_Error_WrongObsIdentifier,
 									observationId));
 							}
 							ED ed = (ED) obx.getObx5_ObservationValue().getData();
