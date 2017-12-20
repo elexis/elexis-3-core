@@ -52,8 +52,6 @@ public class DauerMediView extends ViewPart implements IActivationListener, Elex
 		getSite().registerContextMenu(FixMediDisplay.ID, dmd.getMenuManager(), selDisplay);
 		getSite().setSelectionProvider(selDisplay);
 		
-		dmd.setUnlocked(false); // https://redmine.medelexis.ch/issues/4602
-		
 		makeActions();
 		getViewSite().getActionBars().getToolBarManager().add(toClipBoardAction);
 		GlobalEventDispatcher.addActivationListener(this, this);
