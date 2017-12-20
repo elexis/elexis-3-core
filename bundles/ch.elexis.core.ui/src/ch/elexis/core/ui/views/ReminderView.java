@@ -98,8 +98,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	public static final String ID = "ch.elexis.reminderview"; //$NON-NLS-1$
 	
 	private IAction newReminderAction, deleteReminderAction, showOnlyOwnDueReminderToggleAction,
-			showSelfCreatedReminderAction, toggleAutoSelectPatientAction, reloadAction;
-	private IAction sortByDueDate;
+			showSelfCreatedReminderAction, toggleAutoSelectPatientAction, reloadAction,
+			showOnlyFromCurrentPatientReminderAction, sortByDueDate;
 	private RestrictedAction showOthersRemindersAction;
 	private RestrictedAction selectPatientAction;
 	private boolean bVisible;
@@ -317,7 +317,9 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			new ActionContributionItem(showOnlyOwnDueReminderToggleAction), typeFilterSubMenu, null,
 			new ActionContributionItem(labelResponsibility),
 			new ActionContributionItem(showSelfCreatedReminderAction),
-			new ActionContributionItem(showOthersRemindersAction), null);
+			new ActionContributionItem(showOthersRemindersAction),
+			new ActionContributionItem(showOnlyFromCurrentPatientReminderAction),
+			null);
 	}
 	
 	private void refreshUserConfiguration(){
@@ -327,10 +329,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROWN, false));
 		toggleAutoSelectPatientAction
 			.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false));
-		
+
 		// get state from user's configuration
 		showOthersRemindersAction
 			.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false));
+		showOnlyFromCurrentPatientReminderAction.setChecked(
+					CoreHub.userCfg.get(Preferences.USR_REMINDERS_SHOW_ONLY_FROM_CURRENT_PATIENT, false));
 		
 		// update action's access rights
 		showOthersRemindersAction.reflectRight();
@@ -497,7 +501,21 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					cv.notify(CommonViewer.Message.update_keeplabels);
 				}
 			};
-		
+
+			showOnlyFromCurrentPatientReminderAction =
+				new Action(Messages.ReminderView_overrideShowOnlyFromCurrentPatientReminderAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
+					{
+						setToolTipText(Messages.ReminderView_overrideShowOnlyFromCurrentPatientReminderToolTip); //$NON-NLS-1$
+					}
+
+					@Override
+					public void run(){
+						boolean bChecked = showOnlyFromCurrentPatientReminderAction.isChecked();
+						CoreHub.userCfg.set(Preferences.USR_REMINDERS_SHOW_ONLY_FROM_CURRENT_PATIENT, bChecked);
+						cv.notify(CommonViewer.Message.update_keeplabels);
+					}
+				};
+
 		selectPatientAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
 			Messages.ReminderView_activatePatientAction, Action.AS_UNSPECIFIED) {
 			{
@@ -719,7 +737,11 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					}
 				}
 				Patient act = ElexisEventDispatcher.getSelectedPatient();
-				String patientId = (act != null) ? act.getId() : "INVALID_ID";
+				String patientId = (act != null) ? act.getId() : "INVALID_ID"; //$NON-NLS-1$
+				patientId = (act != null) ? act.getId() : "INVALID_ID"; //$NON-NLS-1$
+				if (!check.get("IdentID").equals(patientId) && showOnlyFromCurrentPatientReminderAction.isChecked()) { //$NON-NLS-1$
+					return false;
+				}
 				String[] vals = check.get(true, Reminder.FLD_SUBJECT, Reminder.FLD_MESSAGE,
 					Reminder.FLD_KONTAKT_ID, Reminder.FLD_VISIBILITY);
 				if (!vals[2].equals(patientId)) {

@@ -454,6 +454,8 @@ public class Messages {
 	public static String ReminderView_myRemindersToolTip = ch.elexis.core.l10n.Messages.ReminderView_myRemindersToolTip;
 	public static String ReminderView_newReminderAction = ch.elexis.core.l10n.Messages.ReminderView_newReminderAction;
 	public static String ReminderView_newReminderToolTip = ch.elexis.core.l10n.Messages.ReminderView_newReminderToolTip;
+	public static String ReminderView_overrideShowOnlyFromCurrentPatientReminderAction  = ch.elexis.core.l10n.Messages.ReminderView_overrideShowOnlyFromCurrentPatientReminderAction;
+	public static String ReminderView_overrideShowOnlyFromCurrentPatientReminderToolTip  = ch.elexis.core.l10n.Messages.ReminderView_overrideShowOnlyFromCurrentPatientReminderToolTip;
 	public static String ReminderView_onlyDueAction = ch.elexis.core.l10n.Messages.ReminderView_onlyDueAction;
 	public static String ReminderView_onlyDueToolTip = ch.elexis.core.l10n.Messages.ReminderView_onlyDueToolTip;
 	public static String ReminderView_onePatOnly = ch.elexis.core.l10n.Messages.ReminderView_onePatOnly;

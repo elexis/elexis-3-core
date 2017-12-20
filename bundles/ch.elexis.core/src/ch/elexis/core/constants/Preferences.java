@@ -134,6 +134,7 @@ public class Preferences {
 	public static final String USR_REMINDERSOPEN = "reminder/onlyopen"; //$NON-NLS-1$
 	public static final String USR_REMINDEROWN = "reminder/originator"; //$NON-NLS-1$
 	public static final String USR_REMINDEROTHERS = "reminder/others"; //$NON-NLS-1$
+	public static final String USR_REMINDERS_SHOW_ONLY_FROM_CURRENT_PATIENT = "reminder/overrideShowOnlyFromCurrentPatientReminderAction"; //$NON-NLS-1$
 	public static final String USR_SHOWPATCHGREMINDER = "reminder/showPatientChangeReminder"; //$NON-NLS-1$
 	public static final String USR_REMINDER_PAT_LABEL_CHOOSEN = "reminder/patientlabel/choosen";
 	public static final String USR_REMINDER_PAT_LABEL_AVAILABLE = "reminder/patientlabel/available";
