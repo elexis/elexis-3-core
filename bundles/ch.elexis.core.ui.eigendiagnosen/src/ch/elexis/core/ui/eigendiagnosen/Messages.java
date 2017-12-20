@@ -11,24 +11,16 @@
 
 package ch.elexis.core.ui.eigendiagnosen;
 
-import org.eclipse.osgi.util.NLS;
+public class Messages {
+	public static String Eigendiagnosen_CodeSystemName = ch.elexis.core.l10n.Messages.Eigendiagnosen_CodeSystemName;
+	public static String Eigendiagnosen_allFilesDescription = ch.elexis.core.l10n.Messages.Eigendiagnosen_allFilesDescription;
+	public static String Eigendiagnosen_BadFileFormat = ch.elexis.core.l10n.Messages.Eigendiagnosen_BadFileFormat;
+	public static String Eigendiagnosen_CantRead = ch.elexis.core.l10n.Messages.Eigendiagnosen_CantRead;
+	public static String Eigendiagnosen_csvDescription = ch.elexis.core.l10n.Messages.Eigendiagnosen_csvDescription;
+	public static String Eigendiagnosen_ImportFromCsvAndExcel = ch.elexis.core.l10n.Messages.Eigendiagnosen_ImportFromCsvAndExcel;
+	public static String Eigendiagnosen_msExcelDescription = ch.elexis.core.l10n.Messages.Eigendiagnosen_msExcelDescription;
+	public static String Eigendiagnosen_UnsupportedFileFormat = ch.elexis.core.l10n.Messages.Eigendiagnosen_UnsupportedFileFormat;
+	public static String EigendiagnoseSelector_Shortcut_Label = ch.elexis.core.l10n.Messages.EigendiagnoseSelector_Shortcut_Label;
+	public static String EigendiagnoseSelector_Text_Label = ch.elexis.core.l10n.Messages.EigendiagnoseSelector_Text_Label;
 
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.core.ui.eigendiagnosen.messages"; //$NON-NLS-1$
-	public static String Eigendiagnosen_CodeSystemName;
-	public static String Eigendiagnosen_allFilesDescription;
-	public static String Eigendiagnosen_BadFileFormat;
-	public static String Eigendiagnosen_CantRead;
-	public static String Eigendiagnosen_csvDescription;
-	public static String Eigendiagnosen_ImportFromCsvAndExcel;
-	public static String Eigendiagnosen_msExcelDescription;
-	public static String Eigendiagnosen_UnsupportedFileFormat;
-	public static String EigendiagnoseSelector_Shortcut_Label;
-	public static String EigendiagnoseSelector_Text_Label;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
-	
-	private Messages(){}
 }

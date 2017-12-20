@@ -11,18 +11,8 @@
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.importers.dialog;
 
-import org.eclipse.osgi.util.NLS;
-
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME =
-		"ch.elexis.core.ui.importer.div.importers.dialog.messages"; //$NON-NLS-1$
-	public static String QueryOverwriteDialog_NO;
-	public static String QueryOverwriteDialog_YES;
-	public static String QueryOverwriteDialog_YESTOALL;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
-	
-	private Messages(){}
+public class Messages {
+	public static String QueryOverwriteDialog_NO = ch.elexis.core.l10n.Messages.QueryOverwriteDialog_NO;
+	public static String QueryOverwriteDialog_YES = ch.elexis.core.l10n.Messages.QueryOverwriteDialog_YES;
+	public static String QueryOverwriteDialog_YESTOALL = ch.elexis.core.l10n.Messages.QueryOverwriteDialog_YESTOALL;
 }

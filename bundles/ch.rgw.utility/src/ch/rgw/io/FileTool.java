@@ -285,7 +285,7 @@ public class FileTool {
 	 */
 	public static boolean copyFile(File src, File dest, int if_exists){
 		if (src.canRead() == false) {
-			log.log(MessageFormat.format(Messages.getString("FileTool.cantReadSource"), //$NON-NLS-1$
+			log.log(MessageFormat.format(Messages.FileTool_cantReadSource, //$NON-NLS-1$
 				src.getAbsolutePath()), Log.ERRORS);
 			return false;
 		}
@@ -297,7 +297,7 @@ public class FileTool {
 			switch (if_exists) {
 			case REPLACE_IF_EXISTS:
 				if (dest.delete() == false) {
-					log.log(MessageFormat.format(Messages.getString("FileTool.cantDeleteTarget"), //$NON-NLS-1$
+					log.log(MessageFormat.format(Messages.FileTool_cantDeleteTarget, //$NON-NLS-1$
 						dest.getAbsolutePath()), Log.ERRORS);
 					return false;
 				}
@@ -306,24 +306,24 @@ public class FileTool {
 				File bak = new File(pname + ".bak");
 				if (bak.exists() == true) {
 					if (bak.delete() == false) {
-						log.log(MessageFormat.format(Messages.getString("FileTool.backupExists"), //$NON-NLS-1$
+						log.log(MessageFormat.format(Messages.FileTool_backupExists, //$NON-NLS-1$
 							bak.getAbsolutePath()), Log.ERRORS);
 						return false;
 					}
 				}
 				if (dest.renameTo(bak) == false) {
-					log.log(MessageFormat.format(Messages.getString("FileTool.cantRenameTarget"), //$NON-NLS-1$
+					log.log(MessageFormat.format(Messages.FileTool_cantRenameTarget, //$NON-NLS-1$
 						bak.getAbsolutePath()), Log.ERRORS);
 					return false;
 				}
 				dest = new File(pname);
 				break;
 			case FAIL_IF_EXISTS:
-				log.log(MessageFormat.format(Messages.getString("FileTool.targetExists"), //$NON-NLS-1$
+				log.log(MessageFormat.format(Messages.FileTool_targetExists, //$NON-NLS-1$
 					dest.getAbsolutePath()), Log.ERRORS);
 				return false;
 			default:
-				log.log(MessageFormat.format(Messages.getString("FileTool.badCopyMode"), //$NON-NLS-1$
+				log.log(MessageFormat.format(Messages.FileTool_badCopyMode, //$NON-NLS-1$
 					src.getAbsolutePath(), if_exists), Log.ERRORS);
 				return false;
 			}
@@ -334,12 +334,12 @@ public class FileTool {
 		BufferedInputStream bis = null;
 		try {
 			if (dest.createNewFile() == false) {
-				log.log(MessageFormat.format(Messages.getString("FileTool.couldnotcreate"), //$NON-NLS-1$
+				log.log(MessageFormat.format(Messages.FileTool_couldnotcreate, //$NON-NLS-1$
 					dest.getAbsolutePath()), Log.ERRORS);
 				return false;
 			}
 			if (dest.canWrite() == false) {
-				log.log(MessageFormat.format(Messages.getString("FileTool.cantWriteTarget"), //$NON-NLS-1$
+				log.log(MessageFormat.format(Messages.FileTool_cantWriteTarget, //$NON-NLS-1$
 					dest.getAbsolutePath()), Log.ERRORS);
 				return false;
 			}
@@ -356,7 +356,7 @@ public class FileTool {
 			}
 		} catch (IOException ex) {
 			ExHandler.handle(ex);
-			log.log(MessageFormat.format(Messages.getString("FileTool.cantCopy"), //$NON-NLS-1$
+			log.log(MessageFormat.format(Messages.FileTool_cantCopy, //$NON-NLS-1$
 				dest.getAbsolutePath(), ex.getMessage()), Log.ERRORS);
 			return false;
 		} finally {

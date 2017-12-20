@@ -56,7 +56,7 @@ public class ExHandler {
 				}
 				out = new PrintStream(new FileOutputStream(f, true));
 			} catch (Exception ex) {
-				System.err.println(Messages.getString("ExHandler.cantRedirectOutput")); //$NON-NLS-1$
+				System.err.println(Messages.ExHandler_cantRedirectOutput);
 			}
 		}
 	}

@@ -43,20 +43,20 @@ public class TimeTool extends GregorianCalendar {
 	
 	/** formally enumerated days **/
 	public enum DAYS {
-			MONDAY(Calendar.MONDAY, Messages.getString("TimeTool.monday"),
-				Messages.getString("TimeTool.mo")),
-			TUESDAY(Calendar.TUESDAY, Messages.getString("TimeTool.tuesday"),
-				Messages.getString("TimeTool.tu")),
-			WEDNESDAY(Calendar.WEDNESDAY, Messages.getString("TimeTool.wednesday"),
-				Messages.getString("TimeTool.we")),
-			THURSDAY(Calendar.THURSDAY, Messages.getString("TimeTool.thursday"),
-				Messages.getString("TimeTool.th")),
-			FRIDAY(Calendar.FRIDAY, Messages.getString("TimeTool.friday"),
-				Messages.getString("TimeTool.fr")),
-			SATURDAY(Calendar.SATURDAY, Messages.getString("TimeTool.saturday"),
-				Messages.getString("TimeTool.sa")),
-			SUNDAY(Calendar.SUNDAY, Messages.getString("TimeTool.sunday"),
-				Messages.getString("TimeTool.su"));
+			MONDAY(Calendar.MONDAY, Messages.TimeTool_monday,
+				Messages.TimeTool_mo),
+			TUESDAY(Calendar.TUESDAY, Messages.TimeTool_tuesday,
+				Messages.TimeTool_tu),
+			WEDNESDAY(Calendar.WEDNESDAY, Messages.TimeTool_wednesday,
+				Messages.TimeTool_we),
+			THURSDAY(Calendar.THURSDAY, Messages.TimeTool_thursday,
+				Messages.TimeTool_th),
+			FRIDAY(Calendar.FRIDAY, Messages.TimeTool_friday,
+				Messages.TimeTool_fr),
+			SATURDAY(Calendar.SATURDAY, Messages.TimeTool_saturday,
+				Messages.TimeTool_sa),
+			SUNDAY(Calendar.SUNDAY, Messages.TimeTool_sunday,
+				Messages.TimeTool_su);
 		
 		public int numericDayValue;
 		public String fullName;
@@ -98,22 +98,22 @@ public class TimeTool extends GregorianCalendar {
 	
 	/** Month names as full words */
 	public final static String[] Monate = {
-		Messages.getString("TimeTool.january"), Messages.getString("TimeTool.february"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.march"), Messages.getString("TimeTool.april"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.may"), Messages.getString("TimeTool.june"), //$NON-NLS-1$ //$NON-NLS-2$
-		Messages.getString("TimeTool.july"), Messages.getString("TimeTool.august"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.september"), Messages.getString("TimeTool.october"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.november"), Messages.getString("TimeTool.december") //$NON-NLS-1$//$NON-NLS-2$
+		Messages.TimeTool_january, Messages.TimeTool_february,
+		Messages.TimeTool_march, Messages.TimeTool_april,
+		Messages.TimeTool_may, Messages.TimeTool_june,
+		Messages.TimeTool_july, Messages.TimeTool_august,
+		Messages.TimeTool_september, Messages.TimeTool_october,
+		Messages.TimeTool_november, Messages.TimeTool_december
 	};
 	
 	/** Month names as three-letter-abbreviations */
 	public final static String[] Mon = {
-		Messages.getString("TimeTool.jan"), Messages.getString("TimeTool.feb"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.mar"), Messages.getString("TimeTool.apr"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.may"), Messages.getString("TimeTool.jun"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.jul"), Messages.getString("TimeTool.aug"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.sep"), Messages.getString("TimeTool.oct"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.nov"), Messages.getString("TimeTool.dec") //$NON-NLS-1$//$NON-NLS-2$
+		Messages.TimeTool_jan, Messages.TimeTool_feb,
+		Messages.TimeTool_mar, Messages.TimeTool_apr,
+		Messages.TimeTool_may, Messages.TimeTool_jun,
+		Messages.TimeTool_jul, Messages.TimeTool_aug,
+		Messages.TimeTool_sep, Messages.TimeTool_oct,
+		Messages.TimeTool_nov, Messages.TimeTool_dec
 	};
 	public final static String[] month_eng = {
 		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -121,17 +121,17 @@ public class TimeTool extends GregorianCalendar {
 	
 	/** Weekdays as abbreviations */
 	public final static String[] wdays = {
-		Messages.getString("TimeTool.su"), Messages.getString("TimeTool.mo"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.tu"), Messages.getString("TimeTool.we"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.th"), Messages.getString("TimeTool.fr"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.sa") //$NON-NLS-1$
+		Messages.TimeTool_su, Messages.TimeTool_mo,
+		Messages.TimeTool_tu, Messages.TimeTool_we,
+		Messages.TimeTool_th, Messages.TimeTool_fr,
+		Messages.TimeTool_sa //$NON-NLS-1$
 	};
 	/** weekdays as full words */
 	public final static String[] Wochentage = {
-		Messages.getString("TimeTool.sunday"), Messages.getString("TimeTool.monday"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.tuesday"), Messages.getString("TimeTool.wednesday"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.thursday"), Messages.getString("TimeTool.friday"), //$NON-NLS-1$//$NON-NLS-2$
-		Messages.getString("TimeTool.saturday") //$NON-NLS-1$
+		Messages.TimeTool_sunday, Messages.TimeTool_monday,
+		Messages.TimeTool_tuesday, Messages.TimeTool_wednesday,
+		Messages.TimeTool_thursday, Messages.TimeTool_friday,
+		Messages.TimeTool_saturday //$NON-NLS-1$
 	};
 	
 	/** Constant indicating a full date/time format in german notation (dd.MM.yyyyy hh:mm:ss) */
@@ -778,63 +778,63 @@ public class TimeTool extends GregorianCalendar {
 			String format = getDaysFormat(days);
 			return String.format(format, Math.abs(days));
 		} else {
-			return Messages.getString("TimeTool.today");
+			return Messages.TimeTool_today;
 		}
 	}
 	
 	protected String getYearsFormat(int years){
 		if (years < 0) {
 			if (years < -1) {
-				return Messages.getString("TimeTool.yearsAgoFormat");
+				return Messages.TimeTool_yearsAgoFormat;
 			}
-			return Messages.getString("TimeTool.yearAgoFormat");
+			return Messages.TimeTool_yearAgoFormat;
 		} else {
 			if (years > 1) {
-				return Messages.getString("TimeTool.yearsToFormat");
+				return Messages.TimeTool_yearsToFormat;
 			}
-			return Messages.getString("TimeTool.yearToFormat");
+			return Messages.TimeTool_yearToFormat;
 		}
 	}
 	
 	protected String getMonthsFormat(int months){
 		if (months < 0) {
 			if (months < -1) {
-				return Messages.getString("TimeTool.monthsAgoFormat");
+				return Messages.TimeTool_monthsAgoFormat;
 			}
-			return Messages.getString("TimeTool.monthAgoFormat");
+			return Messages.TimeTool_monthAgoFormat;
 		} else {
 			if (months > 1) {
-				return Messages.getString("TimeTool.monthsToFormat");
+				return Messages.TimeTool_monthsToFormat;
 			}
-			return Messages.getString("TimeTool.monthToFormat");
+			return Messages.TimeTool_monthToFormat;
 		}
 	}
 	
 	protected String getWeeksFormat(int weeks){
 		if (weeks < 0) {
 			if (weeks < -1) {
-				return Messages.getString("TimeTool.weeksAgoFormat");
+				return Messages.TimeTool_weeksAgoFormat;
 			}
-			return Messages.getString("TimeTool.weekAgoFormat");
+			return Messages.TimeTool_weekAgoFormat;
 		} else {
 			if (weeks > 1) {
-				return Messages.getString("TimeTool.weeksToFormat");
+				return Messages.TimeTool_weeksToFormat;
 			}
-			return Messages.getString("TimeTool.weekToFormat");
+			return Messages.TimeTool_weekToFormat;
 		}
 	}
 	
 	protected String getDaysFormat(int days){
 		if (days < 0) {
 			if (days < -1) {
-				return Messages.getString("TimeTool.daysAgoFormat");
+				return Messages.TimeTool_daysAgoFormat;
 			}
-			return Messages.getString("TimeTool.dayAgoFormat");
+			return Messages.TimeTool_dayAgoFormat;
 		} else {
 			if (days > 1) {
-				return Messages.getString("TimeTool.daysToFormat");
+				return Messages.TimeTool_daysToFormat;
 			}
-			return Messages.getString("TimeTool.dayToFormat");
+			return Messages.TimeTool_dayToFormat;
 		}
 	}
 	

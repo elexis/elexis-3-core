@@ -13,7 +13,8 @@ Require-Bundle: ch.elexis.core;bundle-version="3.0.0",
  ch.elexis.core.ui.importer.div,
  org.eclipse.ui.forms,
  ch.rgw.utility,
- ch.elexis.core.eigendiagnosen;bundle-version="3.0.0"
+ ch.elexis.core.eigendiagnosen;bundle-version="3.0.0",
+ ch.elexis.core.l10n;bundle-version="3.5.0"
 Created-By: Buildr
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 
