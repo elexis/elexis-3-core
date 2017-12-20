@@ -244,7 +244,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 								.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
 							CoreHub.getLocalLockService().releaseLock(newPrescription);
 							ElexisEventDispatcher.getInstance().fire(new ElexisEvent(
-								newPrescription, Prescription.class, ElexisEvent.EVENT_CREATE));
+								newPrescription, Prescription.class, ElexisEvent.EVENT_UPDATE));
 						}
 						
 					} else {
