@@ -76,8 +76,6 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 				start();
 			}
 		};
-		pagingComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, false));
-		
 		scrolledComposite = new ScrolledComposite(this, SWT.V_SCROLL | SWT.BORDER);
 		scrolledComposite.setLayout(SWTHelper.createGridLayout(true, 1));
 		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -89,6 +87,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		text.setWhitespaceNormalized(true);
 		text.setColor(UiDesk.COL_BLUE, UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
 		text.setColor(UiDesk.COL_GREEN, UiDesk.getColorRegistry().get(UiDesk.COL_LIGHTGREY));
+		text.setColor(UiDesk.COL_DARKGREY, UiDesk.getColorRegistry().get(UiDesk.COL_DARKGREY));
 		text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 		scrolledComposite.setContent(text);
 		text.addHyperlinkListener(new HyperlinkAdapter() {
@@ -204,7 +203,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 						if (idxFrom != -1 && idxTo != -1) {
 							s = s.substring(idxFrom + 6, s.indexOf("</form>"));
 							text.setText(
-								"<form>" + getDateFromToText(s)
+								"<form>" + getDateFromToText()
 								+ s + "</form>", true,
 								true);
 						}
@@ -218,13 +217,15 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 				}
 			}
 			
-			public String getDateFromToText(String s){
+			public String getDateFromToText(){
 				if (loader.getlKons() != null && loader.getlKons().size() > 0) {
 					Konsultation firstKons = loader.getlKons().get(loader.getlKons().size() - 1);
 					Konsultation lastKons = loader.getlKons().get(0);
 					String fromDate = firstKons != null ? firstKons.getDatum() : "-";
 					String toDate = lastKons != null ? lastKons.getDatum() : "-";
-					return "<p>von " + fromDate + " bis " + toDate + "</p>";
+					return "<p><span color=\"" + UiDesk.COL_DARKGREY + "\">von " + fromDate
+						+ " bis " + toDate
+						+ "</span></p>";
 				}
 				return "";
 				

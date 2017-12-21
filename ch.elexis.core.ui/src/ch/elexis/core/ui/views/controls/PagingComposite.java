@@ -11,53 +11,69 @@
 package ch.elexis.core.ui.views.controls;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 
-public abstract class PagingComposite extends Composite implements MouseListener {
-	
-	private Label pageInfo;
+public abstract class PagingComposite extends Composite {
 	private int currentPage;
 	private volatile boolean isLazyLoadingBusy;
 	private int maxPage;
 	private int fetchSize;
+	private static final int DEFAULT_PAGESTEP = 1;
+	private ToolItem textToolItem;
+	private int elementsCount;
+	
+	private GridData gd;
 	
 	public PagingComposite(Composite parent, int style){
-		super(parent, style);
+		super(parent, SWT.BORDER);
 		createContent();
 	}
 	
 	private void createContent(){
 		setLayout(SWTHelper.createGridLayout(true, 1));
+		gd = new GridData(SWT.FILL, SWT.TOP, true, false);
+		setLayoutData(gd);
 		
-		Composite pageControl = new Composite(this, SWT.NONE);
-		pageControl.setLayout(SWTHelper.createGridLayout(true, 3));
+		Composite main = new Composite(this, SWT.NONE);
+		main.setLayout(SWTHelper.createGridLayout(true, 1));
+		main.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, false));
 		
-		Label buttonPrev = new Label(pageControl, SWT.CURSOR_HAND | SWT.RIGHT);
-		buttonPrev.setImage(Images.IMG_PREVIOUS.getImage());
-		buttonPrev.setData("pageStep", -1);
-		buttonPrev.addMouseListener(this);
+		ToolBar toolBar = new ToolBar(main, SWT.RIGHT | SWT.FLAT);
+		ToolItem prevToolItem = new ToolItem(toolBar, SWT.PUSH);
+		prevToolItem.setToolTipText("");
+		prevToolItem.setImage(Images.IMG_PREVIOUS.getImage());
+		prevToolItem.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				mouseClicked(DEFAULT_PAGESTEP * -1);
+			}
+		});
 		
-		pageInfo = new Label(pageControl, SWT.NONE);
-		pageInfo.setText("");
+		textToolItem = new ToolItem(toolBar, SWT.PUSH | SWT.CENTER);
+		textToolItem.setToolTipText("");
+		textToolItem.setText("");
 		
-		GridData gd = new GridData(SWT.CENTER, SWT.TOP, true, false);
-		gd.horizontalIndent = 5;
-		pageInfo.setLayoutData(gd);
-		
-		Label buttonNext = new Label(pageControl, SWT.CURSOR_HAND | SWT.LEFT);
-		GridData gd2 = new GridData(SWT.LEFT, SWT.TOP, true, false);
-		gd2.horizontalIndent = 5;
-		buttonNext.setImage(Images.IMG_NEXT.getImage());
-		buttonNext.addMouseListener(this);
-		buttonNext.setData("pageStep", 1);
+		ToolItem nextToolItem = new ToolItem(toolBar, SWT.PUSH);
+		nextToolItem.setToolTipText("");
+		nextToolItem.setImage(Images.IMG_NEXT.getImage());
+		nextToolItem.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				mouseClicked(DEFAULT_PAGESTEP);
+			}
+		});
 		setVisible(false);
+		gd.exclude = true;
 	}
 	
 	public void reset(){
@@ -66,7 +82,7 @@ public abstract class PagingComposite extends Composite implements MouseListener
 	
 	public void setup(int currentPage, int elementsCount, int fetchSize){
 		isLazyLoadingBusy = false;
-		
+		this.elementsCount = elementsCount;
 		if (currentPage > 0 && elementsCount > fetchSize) {
 			// activate pagination
 			this.currentPage = currentPage;
@@ -83,10 +99,16 @@ public abstract class PagingComposite extends Composite implements MouseListener
 	}
 	
 	private void refresh(){
-		setVisible(currentPage > 0);
-		pageInfo.setText(currentPage + "/" + maxPage);
-		
-		layout(true, true);
+		if (!isDisposed()) {
+			setVisible(currentPage > 0);
+			if (textToolItem != null) {
+				textToolItem.setText(currentPage + "/" + maxPage);
+				textToolItem.setToolTipText("Gesamtanzahl: " + elementsCount);
+			}
+			
+			gd.exclude = !isVisible();
+			getParent().layout(true, true);
+		}
 	}
 	
 	public int getCurrentPage(){
@@ -116,30 +138,12 @@ public abstract class PagingComposite extends Composite implements MouseListener
 		return fetchSize;
 	}
 	
-	@Override
-	public void mouseDoubleClick(MouseEvent e){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void mouseDown(MouseEvent e){
-		Object source = e.getSource();
-		if (source instanceof Label) {
-			Object pageStep = ((Label) source).getData("pageStep");
-			if (pageStep instanceof Integer) {
-				if (doPaging(currentPage + (1 * ((int) pageStep)))) {
-					run(false);
-					refresh();
-					isLazyLoadingBusy = false;
-				}
-			}
+	public void mouseClicked(int pageStep){
+		if (doPaging(currentPage + (1 * pageStep))) {
+			run(false);
+			refresh();
+			isLazyLoadingBusy = false;
 		}
 	}
 	
-	@Override
-	public void mouseUp(MouseEvent e){
-		// TODO Auto-generated method stub
-		
-	}
 }
