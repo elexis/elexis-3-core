@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 
@@ -95,7 +96,12 @@ public abstract class PagingComposite extends Composite {
 			this.fetchSize = 0;
 			this.maxPage = 0;
 		}
-		refresh();
+		
+		UiDesk.getDisplay().asyncExec(new Runnable() {
+			public void run(){
+				refresh();
+			}
+		});
 	}
 	
 	private void refresh(){
@@ -119,7 +125,7 @@ public abstract class PagingComposite extends Composite {
 	 * Use this for a callback after Paging
 	 * 
 	 */
-	public abstract void run();
+	public abstract void runPaging();
 		
 	
 	private boolean doPaging(int newPage){
@@ -138,11 +144,14 @@ public abstract class PagingComposite extends Composite {
 	}
 	
 	public void mouseClicked(int pageStep){
-		if (doPaging(currentPage + pageStep)) {
-			run();
-			refresh();
-			isLazyLoadingBusy = false;
-		}
+		UiDesk.getDisplay().asyncExec(new Runnable() {
+			public void run(){
+				if (doPaging(currentPage + pageStep)) {
+					runPaging();
+					refresh();
+					isLazyLoadingBusy = false;
+				}
+			}
+		});
 	}
-	
 }
