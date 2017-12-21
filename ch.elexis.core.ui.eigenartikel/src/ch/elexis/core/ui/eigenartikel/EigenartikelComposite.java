@@ -25,6 +25,7 @@ import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.views.controls.StockDetailComposite;
+import ch.elexis.data.PersistentObject;
 
 public class EigenartikelComposite extends Composite implements IUnlockable {
 	
@@ -219,7 +220,8 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 					if (drugPackageEigenartikel.getValue() != null) {
 						if (event.diff.getOldValue() != null
 							&& !event.diff.getOldValue().toString().isEmpty()) {
-							ElexisEventDispatcher.reload(Eigenartikel.class);
+							ElexisEventDispatcher
+								.update((PersistentObject) drugPackageEigenartikel.getValue());
 						}
 					}
 				}
@@ -256,7 +258,8 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 					if (drugPackageEigenartikel.getValue() != null) {
 						if (event.diff.getOldValue() != null
 							&& !event.diff.getOldValue().toString().isEmpty()) {
-							ElexisEventDispatcher.reload(Eigenartikel.class);
+							ElexisEventDispatcher
+								.update((PersistentObject) drugPackageEigenartikel.getValue());
 						}
 					}
 				}

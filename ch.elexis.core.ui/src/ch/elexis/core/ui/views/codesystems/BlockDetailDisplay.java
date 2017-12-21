@@ -61,9 +61,11 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.CreateEigenleistungUi;
 import ch.elexis.core.ui.commands.EditEigenleistungUi;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.IDetailDisplay;
+import ch.elexis.data.Artikel;
 import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.Mandant;
@@ -181,6 +183,13 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		};
 		lLst.addDropSupport(DND.DROP_COPY, types, new DropTargetListener() {
 			public void dragEnter(final DropTargetEvent event){
+				PersistentObject dropped = PersistentObjectDragSource.getDraggedObject();
+				if (dropped instanceof Artikel) {
+					if (((Artikel) dropped).isProduct()) {
+						event.detail = event.detail = DND.DROP_NONE;
+						return;
+					}
+				}
 				event.detail = DND.DROP_COPY;
 			}
 			
@@ -210,7 +219,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 			
 			public void dropAccept(final DropTargetEvent event){
-				// TODO Automatisch erstellter Methoden-Stub
+			
 			}
 			
 		});
