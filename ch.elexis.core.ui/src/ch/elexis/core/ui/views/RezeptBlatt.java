@@ -61,13 +61,15 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	}
 	
 	private void updateTextLock(){
-		// test lock and set read only before opening the Brief
-		LockResponse result = CoreHub.getLocalLockService().acquireLock(actBrief);
-		if (result.isOk()) {
-			text.getPlugin().setParameter(null);
-		} else {
-			LockResponseHelper.showInfo(result, actBrief, null);
-			text.getPlugin().setParameter(Parameter.READ_ONLY);
+		if (actBrief != null) {
+			// test lock and set read only before opening the Brief
+			LockResponse result = CoreHub.getLocalLockService().acquireLock(actBrief);
+			if (result.isOk()) {
+				text.getPlugin().setParameter(null);
+			} else {
+				LockResponseHelper.showInfo(result, actBrief, null);
+				text.getPlugin().setParameter(Parameter.READ_ONLY);
+			}
 		}
 	}
 	
