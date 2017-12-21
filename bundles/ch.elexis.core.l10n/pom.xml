@@ -26,6 +26,10 @@
               <goal>exportProperties</goal>
             </goals>
             <configuration>
+              <!-- if you uncomment the following line, each elemnt will be shown
+              with the ID before it
+              <filter>addkeytovalue</filter>
+              -->
               <tremaFile>${project.basedir}/rsc/texts.trm</tremaFile>
               <basename>${project.basedir}/src/ch/elexis/core/l10n/messages</basename>
             </configuration>

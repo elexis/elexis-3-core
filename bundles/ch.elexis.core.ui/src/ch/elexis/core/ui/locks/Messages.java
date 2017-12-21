@@ -9,18 +9,9 @@
  **********************************************************************/
 package ch.elexis.core.ui.locks;
 
-import org.eclipse.osgi.util.NLS;
-
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.core.ui.locks.messages";//$NON-NLS-1$
-	
-	public static String DenyLockPermanent_Title;
-	public static String DenyLockPermanent_Message;
-	public static String DenyLock_Message;
-	public static String DenyLock_Title;
-	
-	static {
-		// load message values from bundle file
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
+public class Messages {
+	public static String DenyLockPermanent_Title = ch.elexis.core.l10n.Messages.DenyLockPermanent_Title;
+	public static String DenyLockPermanent_Message = ch.elexis.core.l10n.Messages.DenyLockPermanent_Message;
+	public static String DenyLock_Message = ch.elexis.core.l10n.Messages.DenyLock_Message;
+	public static String DenyLock_Title = ch.elexis.core.l10n.Messages.DenyLock_Title;
 }
