@@ -98,7 +98,7 @@ public class HistoryLoader extends BackgroundJob {
 					if (t1.isAfter(t2)) {
 						return -1;
 					}
-					return 0;
+					return Long.compare(o1.getLastUpdate(), o2.getLastUpdate());
 				}
 			});
 			
