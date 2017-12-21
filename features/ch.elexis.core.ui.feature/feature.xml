@@ -19,6 +19,13 @@
    </license>
 
    <plugin
+         id="ch.elexis.core.l10n"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="ch.elexis.core.ui"
          download-size="0"
          install-size="0"
@@ -152,13 +159,6 @@
 
    <plugin
          id="ch.elexis.core.findings.templates.edit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="ch.elexis.core.l10n"
          download-size="0"
          install-size="0"
          version="0.0.0"

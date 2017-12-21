@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import org.eclipse.emf.common.util.Enumerator;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
+import ch.elexis.core.model.MaritalStatus;
 
 public class LocalizeUtil {
 	/**
@@ -17,8 +18,8 @@ public class LocalizeUtil {
 	public static String getLocaleText(Enumerator enumerator){
 		if (enumerator != null) {
 			try {
-				return ResourceBundle.getBundle("ch.elexis.core.types.messages")
-					.getString(enumerator.getClass().getSimpleName() + "." + enumerator.getName());
+				return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
+					.getString(enumerator.getClass().getSimpleName() + "_" + enumerator.getName());
 			} catch (Exception e) {
 				return enumerator.getName();
 			}

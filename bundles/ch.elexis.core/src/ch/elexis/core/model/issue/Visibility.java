@@ -4,6 +4,7 @@ import java.util.ResourceBundle;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.interfaces.INumericEnum;
+import ch.elexis.core.model.MaritalStatus;
 
 public enum Visibility implements INumericEnum, ILocalizedEnum {
 	ON_PATIENT_SELECTION(0), 
@@ -23,8 +24,8 @@ public enum Visibility implements INumericEnum, ILocalizedEnum {
 
 	public String getLocaleText() {
 		try {
-			return ResourceBundle.getBundle("ch.elexis.core.model.issue.messages")
-					.getString(Visibility.class.getSimpleName() + "." + this.name());
+			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
+					.getString(Visibility.class.getSimpleName() + "_" + this.name());
 		} catch (Exception e) {
 			return this.name();
 		}

@@ -4,7 +4,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 
-	private static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
+	public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
 	public static String ArticleDefaultSignatureComposite_applicationInstruction;
 	public static String ArticleDefaultSignatureComposite_dispensation;
 	public static String ArticleDefaultSignatureComposite_dosage;

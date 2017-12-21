@@ -31,9 +31,10 @@ public enum MaritalStatus implements INumericEnum, ILocalizedEnum {
 	@Override
 	public String getLocaleText(){
 		try {
-			return ResourceBundle.getBundle("ch.elexis.core.model.messages")
-				.getString(MaritalStatus.class.getSimpleName() + "." + this.name());
+			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
+					.getString(MaritalStatus.class.getSimpleName() + "_" + this.name());
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return this.name();
 		}
 	}
