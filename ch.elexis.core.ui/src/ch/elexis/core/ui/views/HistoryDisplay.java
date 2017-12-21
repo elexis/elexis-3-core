@@ -72,7 +72,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true));
 		pagingComposite = new PagingComposite(this, SWT.NONE) {
 			@Override
-			public void run(boolean isNext){
+			public void run(){
 				start();
 			}
 		};

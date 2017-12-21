@@ -118,9 +118,8 @@ public abstract class PagingComposite extends Composite {
 	/**
 	 * Use this for a callback after Paging
 	 * 
-	 * @param isNext
 	 */
-	public abstract void run(boolean isNext);
+	public abstract void run();
 		
 	
 	private boolean doPaging(int newPage){
@@ -139,8 +138,8 @@ public abstract class PagingComposite extends Composite {
 	}
 	
 	public void mouseClicked(int pageStep){
-		if (doPaging(currentPage + (1 * pageStep))) {
-			run(false);
+		if (doPaging(currentPage + pageStep)) {
+			run();
 			refresh();
 			isLazyLoadingBusy = false;
 		}
