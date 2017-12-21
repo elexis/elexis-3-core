@@ -289,6 +289,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		btnSymtomatic.setSelection(false);
 		btnReserve.setSelection(false);
 		medicationType.getParent().layout();
+		updateMedicationTypeDetails();
 	}
 	
 	public DataBindingContext initDataBindings(DataBindingContext dbc){
