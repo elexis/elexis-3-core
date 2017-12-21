@@ -3,6 +3,8 @@ package ch.elexis.core.ui.eigenartikel;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.swt.SWT;
@@ -18,6 +20,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
@@ -209,6 +212,19 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtPackageSizeIntObserveWidget,
 			drugPackageEigenartikelPackungsGroesseObserveDetailValue, null, null);
+		observeTextTxtPackageSizeIntObserveWidget
+			.addValueChangeListener(new IValueChangeListener() {
+				@Override
+				public void handleValueChange(ValueChangeEvent event){
+					if (drugPackageEigenartikel.getValue() != null) {
+						if (event.diff.getOldValue() != null
+							&& !event.diff.getOldValue().toString().isEmpty()) {
+							ElexisEventDispatcher.reload(Eigenartikel.class);
+						}
+					}
+				}
+			});
+		
 		//
 		IObservableValue observeTextTxtExfPriceObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtExfPrice);
@@ -233,6 +249,19 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtMeasurementUnitObserveWidget,
 			drugPackageEigenartikelMeasurementUnitObserveDetailValue, null, null);
+		observeTextTxtMeasurementUnitObserveWidget
+			.addValueChangeListener(new IValueChangeListener() {
+				@Override
+				public void handleValueChange(ValueChangeEvent event){
+					if (drugPackageEigenartikel.getValue() != null) {
+						if (event.diff.getOldValue() != null
+							&& !event.diff.getOldValue().toString().isEmpty()) {
+							ElexisEventDispatcher.reload(Eigenartikel.class);
+						}
+					}
+				}
+			});
+		
 		//
 		IObservableValue observeTextTxtPharmacodeObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtPharmacode);
