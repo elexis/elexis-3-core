@@ -32,7 +32,7 @@ public class EditLocalDocumentUtil {
 	 * @return returns true if edit local is started and view is hidden
 	 */
 	public static boolean startEditLocalDocument(IViewPart view, Brief brief){
-		if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
+		if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false) && brief != null) {
 			// open for editing
 			ICommandService commandService =
 				(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
