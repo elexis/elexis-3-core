@@ -1,11 +1,11 @@
-package ch.elexis.core.ui.article.handler;
+package ch.elexis.core.ui.stock.handler;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.article.dialogs.ImportArticleDialog;
+import ch.elexis.core.ui.stock.dialogs.ImportArticleDialog;
 
 public class ArticleImportHandler extends AbstractHandler {
 	

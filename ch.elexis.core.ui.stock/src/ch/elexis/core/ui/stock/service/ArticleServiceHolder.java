@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.article.service;
+package ch.elexis.core.ui.stock.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.services.IArticleService;
-import ch.elexis.core.ui.article.service.internal.ArticleServiceStore;
+import ch.elexis.core.ui.stock.service.internal.ArticleServiceStore;
 
 @Component(service = {})
 public class ArticleServiceHolder {

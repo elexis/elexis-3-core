@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  *    
  *******************************************************************************/
-package ch.elexis.core.ui.article.dialogs;
+package ch.elexis.core.ui.stock.dialogs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,8 +51,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.article.IArticle;
-import ch.elexis.core.ui.article.service.ArticleServiceHolder;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.stock.service.ArticleServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Query;

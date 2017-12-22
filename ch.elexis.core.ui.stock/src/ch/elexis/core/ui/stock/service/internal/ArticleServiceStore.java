@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.article.service.internal;
+package ch.elexis.core.ui.stock.service.internal;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
