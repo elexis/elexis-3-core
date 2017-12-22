@@ -57,6 +57,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Query;
 import ch.elexis.data.Stock;
+import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class ImportArticleDialog extends TitleAreaDialog {
@@ -250,8 +251,17 @@ public class ImportArticleDialog extends TitleAreaDialog {
 						Optional<? extends IArticle> opArticle =
 							Optional.empty();
 						List<String> row = xl.getRow(i);
+						String stockCount = row.get(0);
 						String articleName = row.get(1);
 						String gtin = row.get(6);
+						String stockMin = null;
+						String stockMax = null;
+						if (row.size() > 8) {
+							stockMin = row.get(8);
+						}
+						if (row.size() > 9) {
+							stockMax = row.get(9);
+						}
 						
 						// search for article
 						for (String storeId : storeIds) {
@@ -266,7 +276,18 @@ public class ImportArticleDialog extends TitleAreaDialog {
 									((Artikel) opArticle.get())
 										.storeToString());
 							if (stockEntry != null) {
+								// do import
+								stockEntry.setCurrentStock(StringTool.parseSafeInt(stockCount)
+									+ stockEntry.getCurrentStock());
+								if (stockMin != null) {
+									stockEntry.setMinimumStock(StringTool.parseSafeInt(stockMin));
+								}
+								if (stockMax != null) {
+									stockEntry.setMaximumStock(StringTool.parseSafeInt(stockMax));
+								}
 								importCount++;
+								addToReport("SUCCESS '" + stock.getLabel() + "'", articleName,
+									gtin);
 							}
 							else
 							{
@@ -303,13 +324,13 @@ public class ImportArticleDialog extends TitleAreaDialog {
 						buf.append(articleNotFoundInStock);
 						buf.append(" Artikel nicht im Lager '");
 						buf.append(stock.getLabel());
-						buf.append("'.");
+						buf.append("' vorhanden.");
 					}
 					
 					if (articleNotFoundByGtin > 0) {
 						buf.append("\n");
 						buf.append(articleNotFoundByGtin);
-						buf.append(" Artikel nicht im System.");
+						buf.append(" Artikel nicht in der Datenbank gefunden.");
 					}
 				}
 				
