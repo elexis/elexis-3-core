@@ -50,7 +50,7 @@ public class KonsListe extends ViewPart implements IActivationListener, ISaveabl
 				if ((actPatient == null)
 					|| (!actPatient.getId().equals(((Patient) ev.getObject()).getId()))) {
 					actPatient = (Patient) ev.getObject();
-					restart();
+					restart(ev);
 				}
 			} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
 				liste.stop();
@@ -69,7 +69,7 @@ public class KonsListe extends ViewPart implements IActivationListener, ISaveabl
 			} else {
 				actPatient = null;
 			}
-			restart();
+			restart(ev);
 		}
 	};
 	
@@ -83,7 +83,7 @@ public class KonsListe extends ViewPart implements IActivationListener, ISaveabl
 		}
 		
 		public void catchElexisEvent(ElexisEvent ev){
-			restart();
+			restart(ev);
 		}
 	};
 	
@@ -110,9 +110,9 @@ public class KonsListe extends ViewPart implements IActivationListener, ISaveabl
 		
 	}
 	
-	private void restart(){
+	private void restart(ElexisEvent ev){
 		liste.stop();
-		liste.load(actPatient);
+		liste.load(actPatient, ev);
 		liste.start(filter);
 	}
 	
@@ -151,7 +151,7 @@ public class KonsListe extends ViewPart implements IActivationListener, ISaveabl
 							setChecked(false);
 						}
 					}
-					restart();
+				restart(null);
 				}
 			};
 	}
@@ -184,9 +184,16 @@ public class KonsListe extends ViewPart implements IActivationListener, ISaveabl
 		return true;
 	}
 	
+	/**
+	 * Not used
+	 * 
+	 * @deprecated @since 3.2
+	 * @param clazz
+	 */
+	@Deprecated
 	public void reloadContents(final Class clazz){
 		if (clazz.equals(Konsultation.class)) {
-			restart();
+			restart(null);
 		}
 		
 	}
