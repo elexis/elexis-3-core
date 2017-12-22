@@ -649,6 +649,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						} else {
 							tx.setText(""); //$NON-NLS-1$
 						}
+					} else {
+						if (actPatient != null) {
+							Text tx = (Text) src.getClient();
+							if (tx.getText() != null) {
+								actPatient.set((String) src.getData(KEY_DBFIELD), tx.getText());
+							}
+						}
 					}
 					UserSettings.saveExpandedState(KEY_PATIENTENBLATT + src.getText(),
 						e.getState());
