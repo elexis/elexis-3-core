@@ -21,7 +21,7 @@ include REXML  # so that we don't have to prefix everything with REXML::...
 require 'ostruct'
 require 'pp'
 require 'uri'
-require 'pry'
+require 'pry-byebug'
 require 'csv'
 require 'net/http'
 require 'json'
@@ -99,6 +99,7 @@ class GoogleTranslation
 end
 
 class I18nInfo
+  attr_accessor :main_dir, :start_dir
   @@all_msgs      ||= {}
   @@all_projects  ||= {}
   @@msg_files_read = []
@@ -110,19 +111,25 @@ class I18nInfo
             'it' => 'italian',
             'en' => 'english',
             }
+
+  MainLanguage = 'Java'
+  Trema_Default_Language = 'de'
+  Translations = Struct.new(:lang, :values)
+
+  CSV_KEYS = LanguageViews.keys + [MainLanguage]
+  CSV_NAME = 'translations.csv'
+  CSV_HEADER_START = ['project', 'translation_key']
+  REGEX_TRAILING_LANG = /\.plugin$|\.[a-z]{2}$/
   def self.all_msgs
     @@all_msgs
   end
   def initialize(directories)
     @@directories = []
+    @gen_csv = false
     directories ||= [ ARGV && ARGV[0] ]
     directories.each{ |dir| @@directories << File.expand_path(dir) }
     puts "Initialized for #{@@directories.size} directories"
   end
-
-  MainLanguage = 'Java'
-  Trema_Default_Language = 'de'
-  Translations = Struct.new(:lang, :values)
 
   # DB = Sequel.sqlite # memory database, requires sqlite3
   # http://sequel.jeremyevans.net/rdoc/classes/Sequel/Database.html
@@ -244,13 +251,13 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
   # select * from db_texts where translation like '%\\%';
   def convert_to_real_utf(string)
     string = string.gsub(EscapeBackslash, '\\')
-    return string unless  /\\u00/.match(string)
+    return string unless  /\\u00|/.match(string)
     strings = []
     begin
       string.split('"').each do |part|
         idx = 0
         while idx <= 5 && /\\u00/.match(part)
-          part = eval(String.new('"'+part+'"'))
+          part = eval(String.new('"'+part.chomp('\\')+'"'))
           idx += 1
         end
         strings << part
@@ -262,7 +269,8 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
     res += '"' if  /"$/.match(string)
     res
   end
-  def analyse_one_message_line(project, language1, filename, line_nr, line)
+  
+  def get_key_value(line)
     begin
       return false if /^#/.match(line)
       return false if line.length <= 1
@@ -276,6 +284,11 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
     # * with Messages.getString(key) it was possible that a key contained a '.', but for as a constant_name we replace it by '_'
     key = m[1].sub(/\s+$/,'').gsub('.', '_')
     value = m[2].sub(/ \[#{key}\]/,'')
+    [key, value]
+  end
+
+  def analyse_one_message_line(project, language1, filename, line_nr, line)
+    key, value = get_key_value(line)
     translation = convert_to_real_utf(value)
     project_name = project[:name]
     project_name += '.plugin' if /plugin.*properties/.match(File.basename(filename))
@@ -293,7 +306,7 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
       @@nr_inserted += 1
       puts "Inserted #{@@nr_inserted}. In project #{project_name}" if @@nr_inserted % 100 == 0 && $VERBOSE
       $stdout.write '.' if @@nr_inserted % 100 == 0
-    end
+    end unless @gen_csv
     @@all_msgs[key] ||= {}
     @@all_msgs[key] [language1] ||= {}
     # if key.eql?('Ablauf_cachelifetime') && language1.eql?('de')
@@ -370,13 +383,12 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
     @@all_projects.each{|name, project| info += project_info(name)}
   end
 
-  def gen_csv
-    @main_dir ||= ARGV.first
-    unless @main_dir
-      puts"Skipping gen_csv as no @main_dir given"
+  def gen_csv(filename: nil)
+    unless filename
+      puts"Skipping gen_csv as no filename given"
       return
     end
-    filename = File.expand_path(File.join(@main_dir, File.basename(@main_dir) + '_i18n.csv'))
+    puts "gen_csv #{filename}"
     CSV.open(filename, "wb") do |csv|
       csv << ['project_name', 'directory', 'nr_java_files', 'msg_files', 'nr_msgs', 'nr_duplicates']
       @@all_projects.each do |name, info|
@@ -419,7 +431,8 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
     filename
   end
 
-  def parse
+  def parse(gen_csv: false)
+    start_dir = Dir.pwd
     @@directories.each do |directory|
       @main_dir = File.expand_path(directory)
       Dir.chdir(@main_dir)
@@ -432,7 +445,6 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
         project_xml = Document.new(File.new(File.join(project_dir, ".project")))
         project_name  = project_xml.elements['projectDescription'].elements['name'].text
         next if /test.*$|feature/i.match(project_name)
-        puts "project_dir #{project_dir}"
         @@all_projects[project_name] = my_project = OpenStruct.new
         my_project
         my_project[:msg_files]      = {}
@@ -443,12 +455,23 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
         my_project[:name]           = my_project_name
         msg_files = Dir.glob(File.join(project_dir, 'src', '**/messages*.properties')) + Dir.glob(File.join(project_dir, 'plugin*.properties'))
         my_project[:msg_files]        = msg_files.compact
-        puts "msg_files are #{messages}" if $VERBOSE
-        DB.transaction do
-          msg_files.each{|msg_file| analyse_one_message_file(project_name, msg_file) }
+        puts "msg_files are #{msg_files}" if $VERBOSE
+        if gen_csv
+          if msg_files.size == 0
+            puts "Skipping #{Dir.pwd}" if $VERBOSE
+          else
+            puts "#{Dir.pwd} found #{msg_files.size} messages files"
+            msg_files.each{|msg_file| analyse_one_message_file(project_name, msg_file) }
+            next
+          end
+        else
+          DB.transaction do
+            msg_files.each{|msg_file| analyse_one_message_file(project_name, msg_file) }
+          end
         end
       end
     end
+    gen_languages_csv(File.join(start_dir, CSV_NAME)) if gen_csv
   end
 
   def calculate_repository_origin(directory = Dir.pwd)
@@ -642,6 +665,94 @@ public class Messages extends NLS {
     end
   end
 
+  def gen_languages_csv(filename)
+    CSV.open(filename, "wb") do |csv|
+      csv <<  (CSV_HEADER_START + CSV_KEYS)
+      @@all_msgs.each do |key, info|
+        # shorten l10n.de -> l0n.de 
+        project_name = info.values.first.project.sub(REGEX_TRAILING_LANG, '')
+        texts = [project_name, key ]
+        CSV_KEYS.each do |lang|
+          entry = info[lang] ? convert_to_real_utf(info[lang].translation) : ''
+          entry = entry.gsub("\n", '\\n')  # Add multiline to csv
+          texts << entry
+        end
+        csv << texts
+      end
+    end
+    puts "gen_languages_csv created #{filename}"
+    filename
+  end
+
+  def to_csv
+    @@directories = [main_dir]
+    @gen_csv = true
+    parse(gen_csv: true)
+  end
+
+  def to_properties
+    Dir.chdir(main_dir)
+    @@all_msgs = {}
+    index = 0
+    languages = []
+    CSV.foreach(File.join(start_dir, CSV_NAME), :force_quotes => true) do |cells|
+      index += 1 
+      if index == 1
+        raise("invalid header #{cells}") unless cells[0..1] == CSV_HEADER_START
+        languages = cells[2..-1]
+        next
+      end
+      key = cells[0..1]
+      @@all_msgs[key] ||= {}
+      languages.each_with_index do |lang, index|
+        @@all_msgs[key][lang] = "#{cells[index + CSV_HEADER_START.size]}"
+      end
+    end
+    Dir.glob("#{main_dir}/**/.project").each do |project|
+      Dir.chdir(File.dirname(project))
+      project_name = Dir.pwd.split('/').last.sub(REGEX_TRAILING_LANG, '')
+      puts "project_name is #{project_name}" if $VERBOSE
+      files = Dir.glob('**/plugin*.properties') +  Dir.glob('**/messages*.properties')
+      files.each do |filename|
+        keys = []
+        puts "Generating #{File.expand_path(filename)}"
+        m =  /_(..)\.properties/.match(filename)
+        lang = m ?  m[1] : 'en'
+        if /messages/.match(File.basename(filename))
+          full =File.join(Dir.pwd.sub(REGEX_TRAILING_LANG, ''), 'src', project_name.split('.'), 'Messages.java')
+          if File.exist?(full)
+            keys = File.readlines(full).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name, m[1]] if m }.compact
+          else
+            puts "Skipping #{full}" if $VERBOSE
+            next
+          end
+        else
+          File.open(filename, 'r:ISO-8859-1').readlines.each do |line|
+            key, value  = get_key_value(line)
+            keys << [project_name, key]
+          end
+        end
+
+        File.open(filename, 'w:ISO-8859-1') do |file|
+          keys.each do |key|
+            next unless key
+            unless @@all_msgs[key]
+              puts "Missing key #{key}"
+              next
+            end              
+            value =  @@all_msgs[key][lang]
+            value = @@all_msgs[key][MainLanguage] if value.empty?
+            if value.empty?
+              puts "no #{lang} value found for #{key}"
+              next
+            end
+            file.puts "#{key.last}=#{value}".encode('ISO-8859-1')
+          end
+        end
+      end
+    end
+  end
+
 TremaEncoding = 'UTF-8'
 Header = %(<?xml version="1.0" encoding="#{TremaEncoding}"?>
 <!-- generated by #{File.basename(__FILE__)} -->
@@ -662,12 +773,14 @@ Useage: #{File.basename(__FILE__)} [-options] [directory1 directory]
   using Cachefile        #{GoogleTranslation::CacheFileYaml}
     and SqLite3 database #{Sqlite3File}
 EOS
-  opt :gen_trema,         "Create Trema files from content of database", :default => false, :short => '-t'
-  opt :gen_csv  ,         "Create statistics CSV files from content of database in each project", :default => false, :short => '-c'
-  opt :gen_duplicates,    "Create list of duplicated entries from content of database", :default => false, :short => '-u'
-  opt :parse_messsage,    "Parse all messages files and import their content to the database", :default => false, :short => '-p'
-  opt :overview,          "Printe some statistics regardings projects, messages files, translation present in the database", :default => false, :short => '-o'
-  opt :add_missing,       "Add missing translations via Googe Translator", :default => nil, :short => '-a', :type => String
+  opt :to_csv   ,         "Create #{I18nInfo::CSV_NAME}.csv for all languages with entries for all [manifests|plugin]*.properties ", :default => false, :short => '-c'
+  opt :add_missing,       "Add missing translations via Googe Translator using $HOME/google_translation_cache.csv", :default => nil, :short => '-a', :type => String
+  opt :to_properties,     "Create [manifests|plugin]*.properties for all languages from #{I18nInfo::CSV_NAME}\n\n ", :default => false, :short => '-t'
+  opt :gen_trema,         "obsolete: Create Trema files from content of database", :default => false, :short => '-g'
+  opt :gen_csv  ,         "obsolete: Create statistics CSV files from content of database in each project", :default => false
+  opt :gen_duplicates,    "obsolete: Create list of duplicated entries from content of database", :default => false, :short => '-u'
+  opt :parse_messsage,    "obsolete: Parse all messages files and import their content to the database", :default => false, :short => '-p'
+  opt :overview,          "obsolete: Print some statistics regardings projects, messages files, translation present in the database", :default => false, :short => '-o'
 end
 
 Options = Trollop::with_standard_exception_handling parser do
@@ -679,9 +792,19 @@ end
 # GoogleTranslation.translate_text('elektronische Krankengeschichte')
 
 i18n = I18nInfo.new(ARGV)
+i18n.main_dir ||= File.expand_path(ARGV.first)
+i18n.start_dir = Dir.pwd
+if Options[:to_csv]
+  i18n.to_csv
+  exit
+end
+if Options[:to_properties]
+  i18n.to_properties
+  exit
+end
 i18n.parse if Options[:parse_messsage]
 i18n.gen_trema if Options[:gen_trema]
-i18n.gen_csv if Options[:gen_csv]
+i18n.gen_csv(File.expand_path(File.join(i18n.main_dir, File.basename(i18n.main_dir) + '_i18n.csv'))) if Options[:gen_csv]
 i18n.gen_duplicates if Options[:gen_duplicates]
 i18n.add_missing(Options[:add_missing]) if Options[:add_missing]
 i18n.overview if Options[:overview]
