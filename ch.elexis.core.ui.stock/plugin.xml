@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.views.StockView">
+         <command
+               commandId="ch.elexis.core.ui.stock.actions.openImport"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/pill.png"
+               label="Artikel Import Dialog"
+               style="push"
+               tooltip="Artikel in Lager importieren">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="ch.elexis.core.ui.stock.handler.ArticleImportHandler"
+            id="ch.elexis.core.ui.stock.actions.openImport"
+            name="Artikel import">
+      </command>
+   </extension>
+
+</plugin>
