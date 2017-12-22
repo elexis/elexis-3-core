@@ -293,7 +293,7 @@
     println("Created ${repo_properties_name}")
   }
 
-if ( System.getProperty("git_branch") == null ) {
+if ( System.getProperty("git_branch") == null &&  "${project.name}" == "Elexis-Core" ) {
   branch = getBranchVersion()
   createRepoProperties('ch.elexis.core.p2site/repo.properties', branch)
 }

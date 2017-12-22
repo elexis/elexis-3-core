@@ -15,6 +15,10 @@
   </parent>
   <modules>
     <module>ch.elexis.core.l10n</module>
+    <module>ch.elexis.core.l10n.de</module>
+    <module>ch.elexis.core.l10n.en</module>
+    <module>ch.elexis.core.l10n.fr</module>
+    <module>ch.elexis.core.l10n.it</module>
     <module>ch.elexis.core.application</module>
     <module>ch.elexis.core.console.application</module>
     <module>ch.elexis.core.data</module>
