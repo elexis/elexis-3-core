@@ -57,6 +57,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Query;
 import ch.elexis.data.Stock;
+import ch.elexis.data.StockEntry;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -210,7 +211,15 @@ public class ImportArticleDialog extends TitleAreaDialog {
 								String.class, String.class, Integer.class, String.class,
 								String.class
 							});
-							runImport(buf, storeIds, stock, xl);
+							MessageDialog dialog = new MessageDialog(getShell(), "Datenimport",
+								null, "Wie sollen die Datenbestände importiert werden ?",
+								MessageDialog.QUESTION, 0, "Datenbestand 'exakt' importieren",
+								"Datenbestand 'aufaddieren'");
+							int ret = dialog.open();
+							if (ret >= 0) {
+								runImport(buf, storeIds, stock, xl, ret == 0);
+							}
+							return;
 						}
 					} catch (IOException e) {
 						MessageDialog.openError(getShell(), "Import error",
@@ -234,7 +243,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 	}
 
 	private void runImport(StringBuffer buf, final List<String> storeIds, final Stock stock,
-		ExcelWrapper xl){
+		ExcelWrapper xl, boolean overrideStockEntries){
 		ProgressMonitorDialog progress = new ProgressMonitorDialog(getShell());
 		try {
 			progress.run(true, true, new IRunnableWithProgress() {
@@ -243,6 +252,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 					int importCount = 0;
 					int articleNotFoundByGtin = 0;
 					int articleNotFoundInStock = 0;
+					int unexpectedErrors = 0;
 					int lastRow = xl.getLastRow();
 					int firstRow = xl.getFirstRow() + 1; //header offset
 					monitor.beginTask("Artikel in Lager Import", 100);
@@ -275,19 +285,34 @@ public class ImportArticleDialog extends TitleAreaDialog {
 								.findStockEntryForArticleInStock(stock,
 									((Artikel) opArticle.get())
 										.storeToString());
-							if (stockEntry != null) {
-								// do import
-								stockEntry.setCurrentStock(StringTool.parseSafeInt(stockCount)
-									+ stockEntry.getCurrentStock());
-								if (stockMin != null) {
-									stockEntry.setMinimumStock(StringTool.parseSafeInt(stockMin));
+							if (stockEntry instanceof StockEntry) {
+								StockEntry poStockEntry = (StockEntry) stockEntry;
+								if (CoreHub.getLocalLockService().acquireLock(poStockEntry)
+									.isOk()) {
+									// do import
+									stockEntry.setCurrentStock(
+										overrideStockEntries ? StringTool.parseSafeInt(stockCount)
+												: (StringTool.parseSafeInt(stockCount)
+													+ stockEntry.getCurrentStock()));
+									if (stockMin != null) {
+										stockEntry
+											.setMinimumStock(StringTool.parseSafeInt(stockMin));
+									}
+									if (stockMax != null) {
+										stockEntry
+											.setMaximumStock(StringTool.parseSafeInt(stockMax));
+									}
+									importCount++;
+									addToReport("SUCCESS '" + stock.getLabel() + "'", articleName,
+										gtin);
+									CoreHub.getLocalLockService().releaseLock(poStockEntry);
 								}
-								if (stockMax != null) {
-									stockEntry.setMaximumStock(StringTool.parseSafeInt(stockMax));
+								else {
+									addToReport("NO LOCK",
+										articleName,
+										gtin);
+									unexpectedErrors++;
 								}
-								importCount++;
-								addToReport("SUCCESS '" + stock.getLabel() + "'", articleName,
-									gtin);
 							}
 							else
 							{
@@ -331,6 +356,11 @@ public class ImportArticleDialog extends TitleAreaDialog {
 						buf.append("\n");
 						buf.append(articleNotFoundByGtin);
 						buf.append(" Artikel nicht in der Datenbank gefunden.");
+					}
+					if (unexpectedErrors > 0) {
+						buf.append("\n");
+						buf.append(unexpectedErrors);
+						buf.append(" Artikel konnten nicht verarbeitet werden.");
 					}
 				}
 				
