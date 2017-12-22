@@ -17,6 +17,16 @@
         <version>${tycho.version}</version>
         <configuration>
           <useUIHarness>false</useUIHarness>
+          <useUIThread>true</useUIThread>
+          <appArgLine>-nl es_AR</appArgLine> <!-- es_AR: unsupported language, forces fallback.
+          This is important, as the de translations moved to a different fragment bundle -->
+          <dependencies>
+            <dependency>
+              <type>eclipse-plugin</type>
+			    <groupId>ch.elexis.core</groupId>
+              <artifactId>ch.elexis.core.l10n</artifactId>
+            </dependency>
+          </dependencies>
         </configuration>
       </plugin>
     </plugins>
