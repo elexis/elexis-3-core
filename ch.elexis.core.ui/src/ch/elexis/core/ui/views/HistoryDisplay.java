@@ -29,6 +29,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
@@ -161,7 +162,14 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		}
 	}
 	
-	public void load(Patient pat){
+	/**
+	 * Loads all {@link Konsultation} for a {@link Patient}. If the {@link ElexisEvent} is null or
+	 * the event is triggered by a {@link Patient}, all {@link Konsultation} will loaded instantly.
+	 * 
+	 * @param pat
+	 * @param ev
+	 */
+	public void load(Patient pat, @Nullable ElexisEvent ev){
 		// lazy loading konsultations		
 		if (pat != null) {
 			lKons.clear();
@@ -169,24 +177,23 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 			for (Fall f : faelle) {
 				load(f, false);
 			}
-			
-			// activate lazy loading
 			pagingComposite.setup(1, lKons.size(), PAGING_FETCHSIZE);
 		}
 		
-		UiDesk.getDisplay().asyncExec(new Runnable() {
-			public void run(){
-				if (!isDisposed()) {
-					scrolledComposite.setOrigin(0, 0);
-					if (lKons.size() > 0) {
-						text.setText("wird geladen...", false, false);
-						text.setSize(
-							text.computeSize(scrolledComposite.getSize().x - 10, SWT.DEFAULT));
+		if (ev == null || ev.getObject() instanceof Patient) {
+			UiDesk.getDisplay().asyncExec(new Runnable() {
+				public void run(){
+					if (!isDisposed()) {
+						scrolledComposite.setOrigin(0, 0);
+						if (lKons.size() > 0) {
+							text.setText("wird geladen...", false, false);
+							text.setSize(
+								text.computeSize(scrolledComposite.getSize().x - 10, SWT.DEFAULT));
+						}
 					}
 				}
-			}
-		});
-		
+			});
+		}
 	}
 	
 	public void jobFinished(BackgroundJob j){
