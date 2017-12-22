@@ -54,6 +54,37 @@ h3. Building via Eclipse IDE
 
 If you want a complete development environment, try "Oomph":https://github.com/elexis/elexis-3-core/tree/master/ch.elexis.sdk
 
+h3. Eclipse IDE-Preferences
+
+We recommend (and if you want to submit patches, you have to respect) the following settings in the Eclipse IDE, reachabel via Window..Preferences:
+
+* General..Workspace
+** Select UTF-8 as "Textfile encoding"
+** Select UNIX as "New text file line delimiter"
+* Java..Code Style..Formatter
+** Click on "Import.." and select the 3lexisFormatterProfile.xml from the root directory of the elexis-3-core checkout
+** Select "3lexis Formatter" as "Active Formater"
+* Java..Editor..Save Action
+** Select: Perform the selected actions on save
+** Do NOT select: Format source code
+** Select: Organize imports
+** Do NOT select: Additional actions
+* Maven..Errors/Warning
+** Set "Plugin execution not covered by lifecycle configuration" to "Ignore"
+
+h3. Submitting patches
+
+To submit patches you have to
+
+* Fork our github repository to your personal account
+* Clone this repository on your devevelopment machine
+* Create a new branch (eg. @git checkout -b my_branch@)
+* Commit your change (eg. @git commmit -m "My cool changes")
+* Push it to your account (eg. @git push --set-upstream origin my_branch@)
+* Go to your github repository and create a pull requests by clicking on the greeen button "Compare & pull request"
+* Review your changes. There should be only the lines that contribute to the problem. If you have too many changes look at the remarks about Eclipse IDE-Preferences
+
+
 h2. Developer Overview
 
 This repository hosts the core Elexis 3. It consists of the following plug-ins and features:

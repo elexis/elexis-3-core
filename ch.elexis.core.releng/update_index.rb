@@ -16,22 +16,25 @@ else
 end
 
 root_dir = Dir.pwd
-a_files = {}
+v5_files = {}
+v4_files = {}
 p_files = {}
 n_files = {}
 
 Versions =  { # 'v1' => 'Für Versuche mit Elexis 2.1.7',
-              'v2' => 'Elexis 3.0',
-              'v3' => 'Elexis 3.1',
-#              'v4' => 'Elexis 3.2',
+              'v2' => '(nicht mehr unterstütz) Elexis 3.0',
+              'v3' => '(nicht mehr unterstütz) Elexis 3.1',
+              'v5' => '(v3 und v5) Dateien direkt aus oddb2xml generiert',
               }
 Versions.keys.each do |version|
-  a_files[version] = Dir.glob(root_dir+"/#{version}/*/artikelstamm_??????.xml")
+  v4_files[version] = Dir.glob(root_dir+"/#{version}/*/artikelstamm_??????.xml")
+  v5_files[version] = Dir.glob(root_dir+"/#{version}/*/artikelstamm_*_v5.xml")
   p_files[version] = Dir.glob(root_dir+"/#{version}/*/artikelstamm_P_*.xml")
-  n_files[version] = Dir.glob(root_dir+"/#{version}/*/artikelstamm_P_*.xml")
+  n_files[version] = Dir.glob(root_dir+"/#{version}/*/artikelstamm_N_*.xml")
   p_files[version].sort!{ |x,y| File.basename(y) <=> File.basename(x) }
   n_files[version].sort!{ |x,y| File.basename(y) <=> File.basename(x) }
-  a_files[version].sort!{ |x,y| File.basename(y) <=> File.basename(x) }
+  v4_files[version].sort!{ |x,y| File.basename(y) <=> File.basename(x) }
+  v5_files[version].sort!{ |x,y| File.basename(y) <=> File.basename(x) }
 end
 
 
@@ -60,14 +63,18 @@ Besten Dank an unsere Sponsoren,
 <li><A HREF="http://www.zurrose.ch/">Apotheke Zur Rose (Daten zu nicht Pharma-Artikel)</A></li>
 </ul>
 welche uns ermöglichen, jeden Monat die aktuellsten Medikamentedaten zu beziehen!
+<br>
+<p> Seit Ende 2017 werden die Dateien direkt mit Hilfe <A HREF="https://github.com/ngiger/oddb2xml/blob/artikelstamm_v5/README.md">oddb2ml</A> erstellt. Alle Ursprungsdateien sind öffentlich zugänglich und der gesamte Quellcode untersteht der GPL-v3.0 oder später.
 <p>
-Elexis 3.1 OpenSource Anwender müssen jeweils die richtige Version 3 des Artikelsstamm aus den unten angebenen Link herunterladen und importieren.
+OpenSource Anwender mit Elexis 3.1 oder höher müssen jeweils die richtige Version 3 des Artikelsstamm aus den unten angebenen Link herunterladen und importieren.
 </p>
+Um die grossen (>10MB) Dateien runterzuladen, lohnt es sich, den Link nicht zu öffnen, sondern über das Kontext-Menü "Ziel speichern unter .." anzuwählen.
 <ul>
 )
 footer = %(
 </ul>
 <p>
+Die Artikelstamm Versionen 4 (für Elexis 3.4 Versionen) wurden nur für einige wenige Praxen verwendet.
 Die Artikelstamm Versionen 2 (für frühe Elexis 3.0 Versionen) und 1 (für Test-Versionen basieren auf Elexis 2.1.7) werden nicht mehr mit aktuellen Daten beliefert.
 </p>
 </HTML>
@@ -76,13 +83,14 @@ ausgabe=File.open(OUTPUTFILE, 'w+')
 ausgabe.puts header
 # require 'pry'; binding.pry
 
-def emit_line_item(ausgabe, version, file, explanation)
+def emit_line_item(ausgabe, version, short, file, explanation)
   ausgabe.puts '<li>'
   relative =  Pathname.new(file).relative_path_from Pathname.new(Dir.pwd)
-  latest = "latest_n_#{version}.xml"
+  latest = "latest_#{short}_#{version}.xml"
+  latest = latest.sub('_v5', '_v3') unless short.eql?('all')
   FileUtils.rm_f(latest, :verbose => true) if File.exist?(latest)
   FileUtils.ln_s relative, latest, :verbose => true
-  ausgabe.puts "<a href=\"#{relative}\"/> latest_n_#{version}.xml</a> #{explanation}"
+  ausgabe.puts "<a href=\"#{relative}\"/> #{latest}</a> #{explanation}"
   ausgabe.puts '</li>'
 end
 
@@ -90,16 +98,16 @@ Versions.sort.reverse.each do |version, explanation|
 
   ausgabe.puts "<li><b><a href=\"#{version}\"> #{version}</a>: Zu verwenden mit #{explanation}</b><ul>"
   if p_files[version]
-    newest =  p_files[version].first
-    emit_line_item(ausgabe, version, newest, 'Nur Pharma Artikel') if newest
+    newest =  p_files[version].first.sub('_v5', '_v3')
+    emit_line_item(ausgabe, version, 'n', newest, 'Nur Pharma Artikel') if newest
   end
   if n_files[version]
-    newest =  n_files[version].first
-    emit_line_item(ausgabe, version, newest, 'Pharma und Non-Pharma Artikel') if newest
+    newest =  n_files[version].first.sub('_v5', '_v3')
+    emit_line_item(ausgabe, version, 'p', newest, 'Nur Non-Pharma Artikel') if newest
   end
-  if a_files[version]
-    newest =  a_files[version].first
-    emit_line_item(ausgabe, version, newest, 'Vereinheitlichter Artikelstamm') if newest
+  if v5_files[version]
+    newest =  v5_files[version].first
+    emit_line_item(ausgabe, version, 'all', newest, 'Vereinheitlichter Artikelstamm') if newest
   end
   ausgabe.puts '</ul></li>'
 end

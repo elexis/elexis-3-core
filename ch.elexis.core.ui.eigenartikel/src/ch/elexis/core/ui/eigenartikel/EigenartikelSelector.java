@@ -124,6 +124,8 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 			if (!viewer.getViewerWidget().getControl().isDisposed()) {
 				if (ElexisEvent.EVENT_RELOAD == ev.getType()) {
 					viewer.getViewerWidget().refresh(true);
+				} else if (ElexisEvent.EVENT_UPDATE == ev.getType() && ev.getObject() != null) {
+					viewer.getViewerWidget().refresh(ev.getObject(), true);
 				}
 			}
 			if (ElexisEvent.EVENT_SELECTED == ev.getType()) {

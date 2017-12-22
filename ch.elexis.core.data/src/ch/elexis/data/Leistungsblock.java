@@ -286,10 +286,18 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	}
 	
 	private int getIndexOf(List<ICodeElement> elements, ICodeElement element){
-		for (int i = 0; i < elements.size(); i++) {
-			if (element.getCodeSystemName().equals(elements.get(i).getCodeSystemName())
-				&& element.getCode().equals(elements.get(i).getCode())) {
-				return i;
+		if (element != null && elements != null) {
+			for (int i = 0; i < elements.size(); i++) {
+				String eCodeSystemName = element.getCodeSystemName();
+				String esCodeSystemName = elements.get(i).getCodeSystemName();
+				String eCode = element.getCode();
+				String esCode = elements.get(i).getCode();
+				if (eCodeSystemName != null && esCodeSystemName != null && eCode != null
+					&& esCode != null) {
+					if (eCodeSystemName.equals(esCodeSystemName) && eCode.equals(esCode)) {
+						return i;
+					}
+				}
 			}
 		}
 		return -1;
@@ -304,7 +312,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 */
 	public void addElement(ICodeElement element){
 		if (element != null) {
-			List<ICodeElement> elements = getElements();
+			List<ICodeElement> elements = getElementReferences();
 			int index = getIndexOf(elements, element);
 			if (index != -1) {
 				elements.add(index, element);
@@ -336,7 +344,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 */
 	public void removeElement(ICodeElement element){
 		if (element != null) {
-			List<ICodeElement> elements = getElements();
+			List<ICodeElement> elements = getElementReferences();
 			int index = getIndexOf(elements, element);
 			if (index != -1) {
 				elements.remove(index);
@@ -355,7 +363,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 */
 	public void moveElement(ICodeElement element, int offset){
 		if (element != null) {
-			List<ICodeElement> elements = getElements();
+			List<ICodeElement> elements = getElementReferences();
 			int index = getIndexOf(elements, element);
 			if (index != -1) {
 				int npos = index + offset;

@@ -28,6 +28,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
@@ -48,12 +51,27 @@ public class MediDetailDialog extends TitleAreaDialog {
 	
 	private String executedFrom;
 	
+	private boolean createPrescriptionHistoryEntry;
+	
 	/**
 	 * @wbp.parser.constructor
 	 */
 	public MediDetailDialog(Shell shell, Prescription prescription){
+		this(shell, prescription, false);
+	}
+	
+	/**
+	 * Creates optional also a history entry for a prescription if it changed
+	 * 
+	 * @param shell
+	 * @param prescription
+	 * @param createPrescriptionHistoryEntry
+	 */
+	public MediDetailDialog(Shell shell, Prescription prescription,
+		boolean createPrescriptionHistoryEntry){
 		super(shell);
 		this.prescription = prescription;
+		this.createPrescriptionHistoryEntry = createPrescriptionHistoryEntry;
 	}
 	
 	@Override
@@ -213,11 +231,30 @@ public class MediDetailDialog extends TitleAreaDialog {
 			AcquireLockBlockingUi.aquireAndRun(prescription, new ILockHandler() {
 				@Override
 				public void lockAcquired(){
-					prescription.setDosis(dosis);
-					prescription.setBemerkung(intakeOrder);
-					prescription.setDisposalComment(disposalComment);
-					if (btnReserveMedication.getSelection()) {
-						prescription.setEntryType(EntryType.RESERVE_MEDICATION);
+					if (createPrescriptionHistoryEntry) {
+						// creates a history entry for a prescription, stops the old one with current date
+						Prescription oldPrescription = prescription;
+						Prescription newPrescription = new Prescription(oldPrescription);
+						if (CoreHub.getLocalLockService().acquireLock(newPrescription).isOk()) {
+							newPrescription.setDosis(dosis);
+							newPrescription.setBemerkung(intakeOrder);
+							newPrescription.setDisposalComment(disposalComment);
+							oldPrescription.stop(null);
+							oldPrescription
+								.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
+							CoreHub.getLocalLockService().releaseLock(newPrescription);
+							ElexisEventDispatcher.getInstance().fire(new ElexisEvent(
+								newPrescription, Prescription.class, ElexisEvent.EVENT_UPDATE));
+						}
+						
+					} else {
+						// no history entry for example recipe
+						prescription.setDosis(dosis);
+						prescription.setBemerkung(intakeOrder);
+						prescription.setDisposalComment(disposalComment);
+						if (btnReserveMedication.getSelection()) {
+							prescription.setEntryType(EntryType.RESERVE_MEDICATION);
+						}
 					}
 				}
 				

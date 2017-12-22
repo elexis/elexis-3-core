@@ -48,6 +48,7 @@ import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.InvoiceEntry;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListHeaderComposite;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery;
+import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Rechnung;
@@ -114,6 +115,10 @@ public class InvoiceListView extends ViewPart {
 				InvoiceEntry firstElement = (InvoiceEntry) ss.getFirstElement();
 				Rechnung load = Rechnung.load(firstElement.getInvoiceId());
 				ElexisEventDispatcher.fireSelectionEvent(load);
+				Fall f = load.getFall();
+				if (f != null) {
+					ElexisEventDispatcher.fireSelectionEvent(f);
+				}
 			}
 		});
 		Table tableInvoiceList = tableViewerInvoiceList.getTable();

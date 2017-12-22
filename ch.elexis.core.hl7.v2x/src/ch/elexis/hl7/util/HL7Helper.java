@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class HL7Helper {
 	private static final String DTM_DATE_TIME_PATTERN = "yyyyMMddHHmmss"; //$NON-NLS-1$
@@ -54,5 +55,29 @@ public class HL7Helper {
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 		return sdf.format(cal.getTime());
+	}
+	
+	public static String determineName(List<String> possibleNames){
+		String ret = "";
+		for (String possibleName : possibleNames) {
+			if (possibleName != null) {
+				int possibleNonDigitCount = getNonDigitCharacters(possibleName);
+				int retNonDigitCount = getNonDigitCharacters(ret);
+				if (possibleNonDigitCount > retNonDigitCount) {
+					ret = possibleName;
+				}
+			}
+		}
+		return ret;
+	}
+	
+	private static int getNonDigitCharacters(String possibleName){
+		int ret = possibleName.length();
+		for (int i = 0, len = possibleName.length(); i < len; i++) {
+			if (Character.isDigit(possibleName.charAt(i))) {
+				ret--;
+			}
+		}
+		return ret;
 	}
 }

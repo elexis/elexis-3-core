@@ -44,6 +44,7 @@ import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
 import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.model.TextData;
+import ch.elexis.hl7.util.HL7Helper;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
 import ch.elexis.hl7.v26.Messages;
@@ -323,13 +324,7 @@ public class HL7ReaderV26 extends HL7Reader {
 			observation.add(new EncapsulatedData(filename, encoding, data, observationTime,
 				commentNTE, group, sequence));
 		} else if (isTextOrNumeric(valueType)) {
-			name = obx.getObx4_ObservationSubID().getValue();
-			if (name == null) {
-				name = obx.getObx3_ObservationIdentifier().getCwe2_Text().getValue();
-				if (name == null) {
-					name = obx.getObx3_ObservationIdentifier().getCwe1_Identifier().getValue();
-				}
-			}
+			name = determineName(obx);
 			String value = "";
 			Object tmp = obx.getObx5_ObservationValue(0).getData();
 			
@@ -377,6 +372,13 @@ public class HL7ReaderV26 extends HL7Reader {
 		}
 	}
 	
+	private String determineName(OBX obx){
+		List<String> possibleNames = new ArrayList<>();
+		possibleNames.add(obx.getObx4_ObservationSubID().getValue());
+		possibleNames.add(obx.getObx3_ObservationIdentifier().getCwe2_Text().getValue());
+		possibleNames.add(obx.getObx3_ObservationIdentifier().getCwe1_Identifier().getValue());
+		return HL7Helper.determineName(possibleNames);
+	}
 
 	@Override
 	public OrcMessage getOrcMessage(){
