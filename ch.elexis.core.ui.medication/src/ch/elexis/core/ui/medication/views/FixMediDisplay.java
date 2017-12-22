@@ -31,6 +31,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.services.IEvaluationService;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -194,15 +195,17 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 	}
 	
 	public void reload(){
-		clear();
-		Patient act = ElexisEventDispatcher.getSelectedPatient();
-		if (act != null) {
-			List<Prescription> fix = act.getMedication(EntryType.FIXED_MEDICATION);
-			fix.stream().forEach(p -> add(p));
-			
-			lCost.setText(MedicationViewHelper.calculateDailyCostAsString(fix));
+		if (!isDisposed()) {
+			clear();
+			Patient act = ElexisEventDispatcher.getSelectedPatient();
+			if (act != null) {
+				List<Prescription> fix = act.getMedication(EntryType.FIXED_MEDICATION);
+				fix.stream().forEach(p -> add(p));
+				
+				lCost.setText(MedicationViewHelper.calculateDailyCostAsString(fix));
+			}
+			sortList();
 		}
-		sortList();
 	}
 	
 	class DauerMediListener implements LDListener {
@@ -263,7 +266,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				public void doRun(){
 					Prescription pr = getSelection();
 					if (pr != null) {
-						MediDetailDialog md = new MediDetailDialog(getShell(), pr);
+						MediDetailDialog md = new MediDetailDialog(getShell(), pr, true);
 						md.setExecutedFrom(FixMediDisplay.class.getSimpleName());
 						md.open();
 						ElexisEventDispatcher.getInstance().fire(
@@ -292,7 +295,10 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 							
 							@Override
 							public void lockAcquired(){
-								pr.delete(); // this does not delete but stop the Medication. Sorry for that
+								if (pr.delete()) {
+									pr.setStopReason(
+										"Geändert durch " + CoreHub.actUser.getLabel());
+								}
 							}
 						});
 						ElexisEventDispatcher.getInstance().fire(

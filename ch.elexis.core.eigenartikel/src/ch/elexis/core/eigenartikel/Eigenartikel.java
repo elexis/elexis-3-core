@@ -13,9 +13,10 @@
 
 package ch.elexis.core.eigenartikel;
 
+import static ch.elexis.core.model.article.Constants.FLD_EXT_SELL_UNIT;
 import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_HI_COST_ABSORPTION;
 import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_MEASUREMENT_UNIT;
-import static ch.elexis.core.model.eigenartikel.Constants.*;
+import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_PACKAGE_SIZE_STRING;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -97,7 +98,11 @@ public class Eigenartikel extends Artikel {
 	
 	@Override
 	public String getCode(){
-		return get(Artikel.FLD_SUB_ID);
+		String ret = get(Artikel.FLD_SUB_ID);
+		if (ret == null || ret.isEmpty()) {
+			ret = getId();
+		}
+		return ret;
 	}
 	
 	public String getGroup(){
@@ -269,7 +274,7 @@ public class Eigenartikel extends Artikel {
 	}
 	
 	public String getMeasurementUnit(){
-		return (String) getExtInfoStoredObjectByKey(FLD_EXT_MEASUREMENT_UNIT);
+		return (String) checkNull(getExtInfoStoredObjectByKey(FLD_EXT_MEASUREMENT_UNIT));
 	}
 	
 	public String getExfPrice(){

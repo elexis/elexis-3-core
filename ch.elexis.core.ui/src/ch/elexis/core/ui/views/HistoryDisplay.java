@@ -18,6 +18,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -33,6 +34,8 @@ import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.HistoryLoader;
 import ch.elexis.core.ui.actions.KonsFilter;
+import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.views.controls.PagingComposite;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
@@ -45,30 +48,48 @@ import ch.elexis.data.Patient;
  * @author Gerry
  * 
  */
-public class HistoryDisplay extends ScrolledComposite implements BackgroundJobListener,
+public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		ElexisEventListener {
 	FormText text;
 	ArrayList<Konsultation> lKons;
 	private HistoryLoader loader;
-	private boolean bLock;
-	HistoryDisplay self = this;
+	
+	private final ScrolledComposite scrolledComposite;
 	
 	boolean multiline = false;
+	
+	private static final int PAGING_FETCHSIZE = 20;
+	
+	private PagingComposite pagingComposite;
 	
 	public HistoryDisplay(Composite parent, final IViewSite site){
 		this(parent, site, false);
 	}
 	
 	public HistoryDisplay(Composite parent, final IViewSite site, boolean multiline){
-		super(parent, SWT.V_SCROLL | SWT.BORDER);
+		super(parent, SWT.NONE);
+		setLayout(SWTHelper.createGridLayout(true, 1));
+		setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true));
+		pagingComposite = new PagingComposite(this, SWT.NONE) {
+			@Override
+			public void runPaging(){
+				start();
+			}
+		};
+		scrolledComposite = new ScrolledComposite(this, SWT.V_SCROLL | SWT.BORDER);
+		scrolledComposite.setLayout(SWTHelper.createGridLayout(true, 1));
+		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
 		this.multiline = multiline;
 		lKons = new ArrayList<Konsultation>(20);
-		text = UiDesk.getToolkit().createFormText(this, false);
+		
+		text = UiDesk.getToolkit().createFormText(scrolledComposite, false);
 		text.setWhitespaceNormalized(true);
 		text.setColor(UiDesk.COL_BLUE, UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
 		text.setColor(UiDesk.COL_GREEN, UiDesk.getColorRegistry().get(UiDesk.COL_LIGHTGREY));
+		text.setColor(UiDesk.COL_DARKGREY, UiDesk.getColorRegistry().get(UiDesk.COL_DARKGREY));
 		text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-		setContent(text);
+		scrolledComposite.setContent(text);
 		text.addHyperlinkListener(new HyperlinkAdapter() {
 			
 			@Override
@@ -83,17 +104,18 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 		addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e){
-				text.setSize(text.computeSize(self.getSize().x - 15, SWT.DEFAULT));
+				text.setSize(text.computeSize(scrolledComposite.getSize().x - 15, SWT.DEFAULT));
 			}
 			
 		});
 		ElexisEventDispatcher.getInstance().addListeners(this);
 	}
 	
+	
 	@Override
 	public void dispose(){
 		ElexisEventDispatcher.getInstance().removeListeners(this);
-		super.dispose();
+		scrolledComposite.dispose();
 	}
 	
 	public void setFilter(KonsFilter f){
@@ -107,7 +129,14 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	
 	public void start(KonsFilter f){
 		stop();
-		loader = new HistoryLoader(new StringBuilder(), lKons, multiline);
+		if (f == null) {
+			loader = new HistoryLoader(new StringBuilder(), lKons, multiline,
+				pagingComposite.getCurrentPage(), pagingComposite.getFetchSize());
+		} else {
+			// filter is set - no lazy loading
+			pagingComposite.reset();
+			loader = new HistoryLoader(new StringBuilder(), lKons, multiline);
+		}
 		loader.setFilter(f);
 		loader.addListener(this);
 		loader.schedule();
@@ -133,13 +162,31 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 	}
 	
 	public void load(Patient pat){
+		// lazy loading konsultations		
 		if (pat != null) {
 			lKons.clear();
 			Fall[] faelle = pat.getFaelle();
 			for (Fall f : faelle) {
 				load(f, false);
 			}
+			
+			// activate lazy loading
+			pagingComposite.setup(1, lKons.size(), PAGING_FETCHSIZE);
 		}
+		
+		UiDesk.getDisplay().asyncExec(new Runnable() {
+			public void run(){
+				if (!isDisposed()) {
+					scrolledComposite.setOrigin(0, 0);
+					if (lKons.size() > 0) {
+						text.setText("wird geladen...", false, false);
+						text.setSize(
+							text.computeSize(scrolledComposite.getSize().x - 10, SWT.DEFAULT));
+					}
+				}
+			}
+		});
+		
 	}
 	
 	public void jobFinished(BackgroundJob j){
@@ -149,14 +196,45 @@ public class HistoryDisplay extends ScrolledComposite implements BackgroundJobLi
 				
 				// check if widget is valid
 				if (!isDisposed()) {
-					text.setText(s, true, true);
-					text.setSize(text.computeSize(self.getSize().x - 10, SWT.DEFAULT));
+					
+					if (s != null) {
+						int idxFrom = s.indexOf("<form>");
+						int idxTo = s.indexOf("</form>");
+						if (idxFrom != -1 && idxTo != -1) {
+							s = s.substring(idxFrom + 6, s.indexOf("</form>"));
+							text.setText(
+								"<form>" + getDateFromToText()
+								+ s + "</form>", true,
+								true);
+						}
+					} else {
+						text.setText(ElexisEventDispatcher.getSelectedPatient() != null ? ""
+								: Messages.HistoryDisplay_NoPatientSelected,
+							false, false);
+					}
+					
+					text.setSize(text.computeSize(scrolledComposite.getSize().x - 10, SWT.DEFAULT));
 				}
+			}
+			
+			public String getDateFromToText(){
+				if (loader.getlKons() != null && loader.getlKons().size() > 0) {
+					Konsultation firstKons = loader.getlKons().get(loader.getlKons().size() - 1);
+					Konsultation lastKons = loader.getlKons().get(0);
+					String fromDate = firstKons != null ? firstKons.getDatum() : "-";
+					String toDate = lastKons != null ? lastKons.getDatum() : "-";
+					return "<p><span color=\"" + UiDesk.COL_DARKGREY + "\">von " + fromDate
+						+ " bis " + toDate
+						+ "</span></p>";
+				}
+				return "";
 				
 			}
 		});
 	}
 	
+	
+
 	public void catchElexisEvent(ElexisEvent ev){
 		UiDesk.asyncExec(new Runnable() {
 			

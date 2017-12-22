@@ -77,13 +77,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.ecore"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.jdom"
          download-size="0"
          install-size="0"
@@ -134,13 +127,6 @@
 
    <plugin
          id="org.eclipse.equinox.app"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.common"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -302,13 +288,6 @@
 
    <plugin
          id="org.eclipse.ui.forms"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.workbench"
          download-size="0"
          install-size="0"
          version="0.0.0"

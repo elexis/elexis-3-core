@@ -6,6 +6,8 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
@@ -34,6 +36,7 @@ import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.PersistentObject;
 
 public class EigenartikelProductComposite extends Composite implements IUnlockable {
 	
@@ -221,6 +224,18 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 			.value(Eigenartikel.class, "name", String.class).observeDetail(productEigenartikel);
 		bindingContext.bindValue(observeTextTxtProductNameObserveWidget,
 			productEigenartikelNameObserveDetailValue, strategyUpdateProductChilds, null);
+		observeTextTxtProductNameObserveWidget.addValueChangeListener(new IValueChangeListener() {
+			@Override
+			public void handleValueChange(ValueChangeEvent event){
+				if (productEigenartikel.getValue() != null) {
+					if (event.diff.getOldValue() != null
+						&& !event.diff.getOldValue().toString().isEmpty()) {
+						ElexisEventDispatcher
+							.update((PersistentObject) productEigenartikel.getValue());
+					}
+				}
+			}
+		});
 		
 		//
 		IObservableValue observeSingleSelectionComboViewerProductType =

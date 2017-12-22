@@ -15,6 +15,7 @@ import java.io.File;
 import org.osgi.framework.Bundle;
 
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.rgw.io.Settings;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -84,6 +85,22 @@ public class CoreHubHelper {
 			}
 		}
 		return CoreHub.userDir;
+	}
+	
+	/**
+	 * Workaround for bug https://redmine.medelexis.ch/issues/9501. Migrates old key values to new
+	 * key values. Only lokal and global settings are supported.
+	 * 
+	 * @param oldKey
+	 * @param newKey
+	 * @param isGlobal
+	 */
+	public static void transformConfigKey(String oldKey, String newKey,
+		boolean isGlobal){
+		Settings settings = isGlobal ? CoreHub.globalCfg : CoreHub.localCfg;
+		if (settings.get(oldKey, null) != null && settings.get(newKey, null) == null) {
+			settings.set(newKey, settings.get(oldKey, null));
+		}
 	}
 	
 }

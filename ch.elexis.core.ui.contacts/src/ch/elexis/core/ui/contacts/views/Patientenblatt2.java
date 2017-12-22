@@ -649,6 +649,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						} else {
 							tx.setText(""); //$NON-NLS-1$
 						}
+					} else {
+						if (actPatient != null) {
+							Text tx = (Text) src.getClient();
+							if (tx.getText() != null) {
+								actPatient.set((String) src.getData(KEY_DBFIELD), tx.getText());
+							}
+						}
 					}
 					UserSettings.saveExpandedState(KEY_PATIENTENBLATT + src.getText(),
 						e.getState());
@@ -1375,7 +1382,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		removeZAAction.setEnabled(unlocked);
 		removeAdditionalAddressAction.setEnabled(unlocked);
 		additionalAddresses.setUnlocked(unlocked);
-		dmd.setUnlocked(false); // https://redmine.medelexis.ch/issues/4602
+		dmd.setUnlocked(unlocked);
 		if (unlocked) {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
 		} else {
