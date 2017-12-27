@@ -10,15 +10,20 @@
 package ch.elexis.core.ui.exchange.elements;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.jdom.Element;
 
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.service.CodeElementServiceHolder;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Eigenleistung;
+import ch.elexis.data.dto.CodeElementDTO;
 import ch.rgw.tools.TimeTool;
 
 public class ServiceElement extends XChangeElement {
@@ -45,6 +50,28 @@ public class ServiceElement extends XChangeElement {
 		return this;
 	}
 	
+	public ServiceElement asExporter(XChangeExporter sender, CodeElementDTO ic){
+		asExporter(sender);
+		setAttribute(ATTR_NAME, ic.getText());
+		setAttribute(ATTR_CONTRACT_CODE, ic.getCode());
+		setAttribute(ATTR_CONTRACT_NAME, ic.getCodeSystemName());
+		// optional fields for IVerrechenbar
+		ICodeElementService service = CodeElementServiceHolder.getService();
+		if (service != null) {
+			Optional<ICodeElement> element =
+				service.createFromString(ic.getCodeSystemName(), ic.getCode(),
+					CodeElementServiceHolder.emtpyContext());
+			if (element.isPresent() && element.get() instanceof IVerrechenbar) {
+				IVerrechenbar iv = (IVerrechenbar) element.get();
+				setAttribute(ATTR_MINUTES, Integer.toString(iv.getMinutes()));
+				setAttribute(ATTR_COST, iv.getKosten(new TimeTool()).getCentsAsString());
+				setAttribute(ATTR_PRICE, Integer.toString(iv.getTP(new TimeTool(), (IFall) null)));
+				add(new XidElement().asExporter(sender, iv));
+			}
+		}
+		return this;
+	}
+	
 	public IVerrechenbar createObject(XChangeContainer home, Element el){
 		XidElement xide = (XidElement) getChild(XidElement.XMLNAME, XidElement.class);
 		List<IPersistentObject> objs = xide.findObject();
@@ -64,5 +91,4 @@ public class ServiceElement extends XChangeElement {
 	public String getXMLName(){
 		return XMLNAME;
 	}
-	
 }
