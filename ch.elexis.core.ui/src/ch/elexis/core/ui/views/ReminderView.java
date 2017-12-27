@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -137,6 +138,9 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				return;
 			}
 			actPatient = (Patient) ev.getObject();
+			// clear selection before update
+			cv.getViewerWidget().setSelection(StructuredSelection.EMPTY);
+			
 			if (bVisible) {
 				cv.notify(CommonViewer.Message.update);
 			}
