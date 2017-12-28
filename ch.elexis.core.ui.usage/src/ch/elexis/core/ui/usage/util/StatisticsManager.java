@@ -3,6 +3,7 @@ package ch.elexis.core.ui.usage.util;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.AgeFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang.time.DateUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -18,13 +22,17 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.usage.model.IStatistic;
 import ch.elexis.core.ui.usage.model.ModelFactory;
 import ch.elexis.core.ui.usage.model.Statistics;
+import ch.rgw.tools.TimeTool;
 
 public class StatisticsManager {
 	
 	private Statistics statistics = ModelFactory.eINSTANCE.createStatistics();
+	
+	private boolean disableAutoExport = false;
 	
 	// Initialization-on-demand holder idiom
 	private static class SingletonHolder {
@@ -41,12 +49,13 @@ public class StatisticsManager {
 	 * @param action
 	 * @param type
 	 */
-	public void addCallingStatistic(String action){
-		String type = "View Auswahl";
+	public void addCallingStatistic(String action, boolean isPerspective){
+		String type = isPerspective ? "call: perspective" : "call: view";
 		IStatistic lastItem = findLastElementOfType(action, type);
 		
 		if (lastItem != null) {
-			updateStastic(lastItem.getAction() + " -> " + action, "View Wechsel");
+			updateStastic(lastItem.getAction() + " -> " + action,
+				isPerspective ? "switch: perspective" : "switch: view");
 		}
 		
 		updateStastic(action, type);
@@ -59,8 +68,8 @@ public class StatisticsManager {
 	 * @param action
 	 * @param type
 	 */
-	public void addClosingStatistic(String action){
-		updateStastic(action, "View Schließen");
+	public void addClosingStatistic(String action, boolean isPerpsective){
+		updateStastic(action, isPerpsective ? "close: perspective" : "close: view");
 	}
 	
 	private void updateStastic(String action, String type){
@@ -73,12 +82,13 @@ public class StatisticsManager {
 		} else {
 			// create new entry
 			IStatistic iStatistic = ModelFactory.eINSTANCE.createSimpleStatistic();
-			iStatistic.setTime(new Date(System.currentTimeMillis()));
+			iStatistic.setTime(new Date());
 			iStatistic.setAction(action);
 			iStatistic.setActionType(type);
 			iStatistic.setValue(1);
 			statistics.getStatistics().add(iStatistic);
 		}
+		statistics.setTo(new Date());
 	}
 	
 	private IStatistic findLastElementOfType(String action, String type){
@@ -94,6 +104,39 @@ public class StatisticsManager {
 	
 	public Statistics getStatistics(){
 		return statistics;
+	}
+	
+	/**
+	 * Automatically exports the usage statistics to a file. All files older then 30 days from the
+	 * statistics directory will be deleted. This method can only be executed once.
+	 * 
+	 * @throws IOException
+	 */
+	public void autoExportStatistics()
+		throws IOException{
+		TimeTool t = new TimeTool(System.currentTimeMillis());
+		String dir = CoreHub.getWritableUserDir().getAbsolutePath() + File.separator + "statistics";
+		String fileName = "usage" + t.toString(TimeTool.TIMESTAMP) + ".xml";
+		if (!disableAutoExport) {
+			try {
+				File directory = new File(dir);
+				if (directory.isDirectory()) {
+					Collection<File> filesToDelete = FileUtils.listFiles(directory,
+						new AgeFileFilter(DateUtils.addDays(new Date(), -30)), TrueFileFilter.TRUE);
+					for (File file : filesToDelete) {
+						boolean success = FileUtils.deleteQuietly(file);
+						if (!success) {
+							LoggerFactory.getLogger(getClass())
+								.warn("Cannot delete old file at: " + file.getAbsolutePath());
+						}
+					}
+				}
+			} catch (Exception e) {
+				LoggerFactory.getLogger(getClass()).warn("Cannot delete old files.", e);
+			}
+			exportStatisticsToFile(dir + File.separator + fileName);
+			disableAutoExport = true;
+		}
 	}
 	
 	public void exportStatisticsToFile(String path) throws IOException{

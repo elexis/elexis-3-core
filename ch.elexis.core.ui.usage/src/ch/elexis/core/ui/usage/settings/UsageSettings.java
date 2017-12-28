@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
@@ -36,6 +37,9 @@ import ch.rgw.tools.TimeTool;
 public class UsageSettings extends PreferencePage implements IWorkbenchPreferencePage {
 	
 
+	public static final String CONFIG_USAGE_STATISTICS = "statistics/usage/sentUsageStatistics";
+	private Button checkSentStatistics;
+	
 	@Override
 	public void init(IWorkbench workbench){
 	}
@@ -111,6 +115,13 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 				.observe(StatisticsManager.getInstance().getStatistics()));
 
 		addContextMenuSupport(viewer, createMenu(viewer));
+		
+		checkSentStatistics = new Button(main, SWT.CHECK);
+		checkSentStatistics
+			.setText(
+				"Nutzungsstatistik aktivieren und beim Beenden übermitteln (Neustart erforderlich)");
+		checkSentStatistics.setSelection(CoreHub.globalCfg.get(CONFIG_USAGE_STATISTICS, false));
+		
 		return main;
 	}
 	
@@ -173,4 +184,15 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 		return menuManager;
 	}
 	
+	@Override
+	protected void performApply(){
+		CoreHub.globalCfg.set(CONFIG_USAGE_STATISTICS, checkSentStatistics.getSelection());
+	}
+	
+
+	@Override
+	public boolean performOk(){
+		performApply();
+		return super.performOk();
+	}
 }

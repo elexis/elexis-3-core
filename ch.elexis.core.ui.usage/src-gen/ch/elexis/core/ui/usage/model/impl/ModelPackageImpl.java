@@ -126,6 +126,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getStatistics_From() {
+		return (EAttribute)statisticsEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStatistics_To() {
+		return (EAttribute)statisticsEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIStatistic() {
 		return iStatisticEClass;
 	}
@@ -205,6 +223,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		// Create classes and their features
 		statisticsEClass = createEClass(STATISTICS);
 		createEReference(statisticsEClass, STATISTICS__STATISTICS);
+		createEAttribute(statisticsEClass, STATISTICS__FROM);
+		createEAttribute(statisticsEClass, STATISTICS__TO);
 
 		iStatisticEClass = createEClass(ISTATISTIC);
 		createEAttribute(iStatisticEClass, ISTATISTIC__ACTION);
@@ -248,6 +268,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		// Initialize classes, features, and operations; add parameters
 		initEClass(statisticsEClass, Statistics.class, "Statistics", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getStatistics_Statistics(), this.getIStatistic(), null, "statistics", null, 0, -1, Statistics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStatistics_From(), ecorePackage.getEDate(), "from", null, 0, 1, Statistics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStatistics_To(), ecorePackage.getEDate(), "to", null, 0, 1, Statistics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iStatisticEClass, IStatistic.class, "IStatistic", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIStatistic_Action(), ecorePackage.getEString(), "action", null, 0, 1, IStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

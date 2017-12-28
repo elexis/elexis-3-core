@@ -76,13 +76,31 @@ public interface ModelPackage extends EPackage {
 	int STATISTICS__STATISTICS = 0;
 
 	/**
+	 * The feature id for the '<em><b>From</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATISTICS__FROM = 1;
+
+	/**
+	 * The feature id for the '<em><b>To</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATISTICS__TO = 2;
+
+	/**
 	 * The number of structural features of the '<em>Statistics</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STATISTICS_FEATURE_COUNT = 1;
+	int STATISTICS_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Statistics</em>' class.
@@ -243,6 +261,28 @@ public interface ModelPackage extends EPackage {
 	EReference getStatistics_Statistics();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.Statistics#getFrom <em>From</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>From</em>'.
+	 * @see ch.elexis.core.ui.usage.model.Statistics#getFrom()
+	 * @see #getStatistics()
+	 * @generated
+	 */
+	EAttribute getStatistics_From();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.Statistics#getTo <em>To</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>To</em>'.
+	 * @see ch.elexis.core.ui.usage.model.Statistics#getTo()
+	 * @see #getStatistics()
+	 * @generated
+	 */
+	EAttribute getStatistics_To();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.ui.usage.model.IStatistic <em>IStatistic</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -346,6 +386,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference STATISTICS__STATISTICS = eINSTANCE.getStatistics_Statistics();
+
+		/**
+		 * The meta object literal for the '<em><b>From</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STATISTICS__FROM = eINSTANCE.getStatistics_From();
+
+		/**
+		 * The meta object literal for the '<em><b>To</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STATISTICS__TO = eINSTANCE.getStatistics_To();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.ui.usage.model.IStatistic <em>IStatistic</em>}' class.
