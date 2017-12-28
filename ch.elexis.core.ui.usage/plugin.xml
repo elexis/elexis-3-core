@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="ch.elexis.core.ui.usage.settings.UsageSettings"
+            id="ch.elexis.core.ui.usage.settings"
+            name="Nutzungsstatistik">
+      </page>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated model -->
+      <package
+            uri="http://ch.elexis.core.ui.usage"
+            class="ch.elexis.core.ui.usage.model.ModelPackage"
+            genModel="model/model.genmodel"/>
+   </extension>
+
+</plugin>
