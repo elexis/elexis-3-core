@@ -34,6 +34,7 @@ Sqlite3File = File.join(Dir.home, 'elexis-translation.db')
 
 class GoogleTranslation
   @@updated_cache = false
+  CacheFileCSV = File.join(Dir.home, 'google_translation_cache.csv')
   BaseLanguageURL='https://translate.googleapis.com/translate_a/single?client=gtx&sl='
   Translate = Google::Apis::TranslateV2::TranslateService.new
   Translate.key = ENV['TRANSLATE_API_KEY']
@@ -42,6 +43,9 @@ class GoogleTranslation
     # response = Net::HTTP.get(uri)
     # JSON.parse(response)
 
+  def self.translationCache
+  	@@translationCache
+  end
   def self.translate_text(what, target_language='it', source_language='de')
     key = [what, target_language, source_language]
     unless @@translationCache[key]
@@ -53,21 +57,17 @@ class GoogleTranslation
       rescue => error
         puts error
         puts "translate_text failed. Is environment variable TRANSLATE_API_KEY not specified?"
+        binding.pry
         exit
       end
     end
-    @@translationCache[key]
+    value = @@translationCache[key]
+    value = value.first if value.is_a?(Array)
   end
-
-  @@use_yaml = false
-  CacheFileYaml = File.join(Dir.home, 'google_translation_cache.yaml')
-  CacheFileCSV = File.join(Dir.home, 'google_translation_cache.csv')
 
   def self.load_cache
     @@translationCache = {}
-    if @@use_yaml || (!File.exist?(CacheFileCSV) && File.exist?(CacheFileYaml))
-      @@translationCache = File.exist?(CacheFileYaml) ? YAML.load_file(CacheFileYaml) : {}
-    elsif File.exist?(CacheFileCSV)
+    if File.exist?(CacheFileCSV)
       CSV.foreach(CacheFileCSV, :force_quotes => true) do |cells|
         next if cells[0].eql?('src')
         key = [cells[0], cells[1], cells[2]]
@@ -79,10 +79,7 @@ class GoogleTranslation
 
   def self.save_cache
     return unless @@updated_cache
-    puts "Saving #{@@translationCache.size} entries to #{CacheFileYaml}"
-    File.open(CacheFileYaml,'w+') do |h|
-      h.write @@translationCache.to_yaml
-    end if false
+    puts "Saving #{@@translationCache.size} entries to #{CacheFileCSV}"
     CSV.open(CacheFileCSV, "wb", :force_quotes => true) do |csv|
       csv << ['src', 'dst', 'what', 'translated']
       @@translationCache.each do |key, value|
@@ -98,28 +95,81 @@ class GoogleTranslation
   at_exit do GoogleTranslation.save_cache end
 end
 
-class I18nInfo
-  attr_accessor :main_dir, :start_dir
-  @@all_msgs      ||= {}
-  @@all_projects  ||= {}
-  @@msg_files_read = []
-  @@nr_duplicates  = 0
-  @@nr_skipped     = 0
-  @@nr_inserted    = 0
+class L10N_Cache
+  CSV_HEADER_START = ['translation_key']
+  CSV_HEADER_SIZE  = L10N_Cache::CSV_HEADER_START.size
+  JavaLanguage = 'Java'
   LanguageViews = { 'de' => 'german',
             'fr' => 'french',
             'it' => 'italian',
             'en' => 'english',
             }
 
-  MainLanguage = 'Java'
-  Trema_Default_Language = 'de'
+  CSV_KEYS = LanguageViews.keys + [JavaLanguage]
+  TRANSLATIONS_CSV_NAME = 'translations.csv'
+  Translations = Struct.new(:lang, :values)
+  REGEX_TRAILING_LANG = /\.plugin$|\.(#{LanguageViews.keys.join('|')}) $/
+
+  @@cacheCsvFile = File.join(Dir.home, 'l10n.csv')
+
+  def self.get_translation(key, lang)
+    @@l10nCache[key] ? @@l10nCache[key][lang] : ''
+  end
+  def self.set_translation(key, lang, value)
+    @@l10nCache[key] ||= {}
+    @@l10nCache[key][lang] = value
+  end
+
+  def self.load_cache(cachefile = File.join(Dir.pwd,TRANSLATIONS_CSV_NAME))
+    @@cacheCsvFile = cachefile
+    @@l10nCache = {}
+    if File.exist?(@@cacheCsvFile)
+      index = 0
+      CSV.foreach(@@cacheCsvFile, :force_quotes => true) do |cells|
+        index += 1
+        if index == 1
+          raise "Unexpected header #{cells.join(',')}" unless cells.eql?(CSV_HEADER_START + CSV_KEYS)
+          next
+        end
+        CSV_KEYS.each_with_index { |lang, index| self.set_translation(cells[0], lang, cells[index+1]) }
+      end
+    end
+  end
+
+  def self.save_cache(csv_file = @@cacheCsvFile)
+    puts "Saving #{@@l10nCache.size} entries to #{csv_file}"
+    CSV.open(csv_file, "wb:UTF-8", :force_quotes => true) do |csv|
+      csv <<  (CSV_HEADER_START + CSV_KEYS)
+      index = 0
+      @@l10nCache.each do |key, info|
+        index += 1
+        next unless info.is_a?(Hash)
+        CSV_KEYS.each{|lang| info[lang] ||= ''}
+        info[L10N_Cache::JavaLanguage] = info['en'] if info['en'] && info[L10N_Cache::JavaLanguage].empty?
+        info[L10N_Cache::JavaLanguage] = info['de'] if info['de'] && info[L10N_Cache::JavaLanguage].empty?
+        translations = []
+        CSV_KEYS.each{|lang| translations << info[lang] }
+        csv << ([key]  + translations).flatten
+      end
+    end
+  end
+  # Initialization
+  L10N_Cache.load_cache
+end
+
+class I18nInfo
+  attr_accessor :main_dir, :start_dir
+  @@all_msgs      ||= {}
+  @@all_projects  ||= {}
+  @@msg_files_read = []
+  LanguageViews = { 'de' => 'german',
+            'fr' => 'french',
+            'it' => 'italian',
+            'en' => 'english',
+            }
+
   Translations = Struct.new(:lang, :values)
 
-  CSV_KEYS = LanguageViews.keys + [MainLanguage]
-  CSV_NAME = 'translations.csv'
-  CSV_HEADER_START = ['project', 'translation_key']
-  REGEX_TRAILING_LANG = /\.plugin$|\.[a-z]{2}$/
   def self.all_msgs
     @@all_msgs
   end
@@ -131,110 +181,6 @@ class I18nInfo
     puts "Initialized for #{@@directories.size} directories"
   end
 
-  # DB = Sequel.sqlite # memory database, requires sqlite3
-  # http://sequel.jeremyevans.net/rdoc/classes/Sequel/Database.html
-  # DB.create_view(:checked_items, DB[:items].where(:foo), :check=>true)
-  DB = Sequel.sqlite(Sqlite3File)
-  # DB.loggers << Logger.new($stdout)
-  DB.create_table? :db_texts do
-    primary_key :id
-    String :key
-    String :language, :default => 'de'
-    String :project # eg. ch.elexis.core.ui or ch.elexis.core.ui_plugin
-    String :repository, :default => 'elexis-3-core' # eg elexis-3-core
-    String :translation
-    String :status, :default => 'initial'
-    String :filename
-    String :line_nr
-    String :google_translation, :default => nil
-    index [ :key, :language, :project, :repository, :translation], :unique => true
-  end
-  DB.create_table? :duplicates do
-    primary_key :id
-    String :key
-    String :language
-    index [ :key, :language], :unique => true
-  end
-  some_util_sql_commands = %(
-select key, count(translation) german_duplicates from german group by key having german_duplicates > 1;
-
-select key, language, translation, filename, line_nr from db_texts where key in \
-    (select key from german group by key having count(translation)  > 1) \
-    order by key, language, translation;
-
-select german.key, german.translation, db_texts.project, db_texts.filename from german, italian, db_texts
-  where german.key = italian.key and and german.translation = italian.translation and
-    german.key = db_texts.key and and german.translation = db_texts.translation and
-  ;
-
-# same translation for italian as german
-select german.key, italian.translation as italian, db_texts.project, db_texts.filename from german, italian, db_texts
-  where german.key = italian.key and german.translation = italian.translation and
-    german.key = db_texts.key and german.translation = db_texts.translation ;
-
-# same translation for french as german
-select db_texts.project, german.key, french.translation as french, db_texts.filename from german, french, db_texts
-  where german.key = french.key and german.translation = french.translation and
-    german.key = db_texts.key and german.translation = db_texts.translation
-  order by db_texts.project, french.key;
-
-# same translation for english as german
-select db_texts.project, german.key, english.translation as english, db_texts.filename from german, english, db_texts
-  where german.key = english.key and german.translation = english.translation and
-    german.key = db_texts.key and german.translation = db_texts.translation
-  order by db_texts.project, english.key;
-
-)
-  LanguageViews.each do |key, name|
-    DB.create_or_replace_view(name.to_sym, "select distinct key, translation, google_translation from db_texts where language = '#{key}'")
-  end
-  DB.create_or_replace_view(:all_languages, %(select distinct
-                              german.translation as 'Deutsch',
-                              french.translation as 'Français',
-                              english.translation as 'Englisch'
-                            from german, french, english
-                           where french.key = german.key and english.key = german.key))
-  DB.create_or_replace_view(:same_de_fr_en, %(select german.key,
-                            german.translation as 'Deutsch',
-                            french.translation as 'Français',
-                           english.translation as 'Englisch'
-                           from german, french, english
-                           where french.key = german.key and english.key = german.key and
-                            german.translation = french.translation and german.translation = english.translation))
-
-  # DB = Sequel.sqlite # memory database, requires sqlite3
-  @@db_texts = DB[:db_texts] # Create a dataset
-  @@duplicates = DB[:duplicates] # Create a dataset
-
-  def self.all_msgs
-    @@all_msgs
-  end
-  all_msgs_info = %(
-    key => [languages] [filename, line, translated]
-  )
-
-  def insert_translation(key, language3, project, filename, line_nr, translation)
-    begin
-      @@db_texts.insert(key: key,
-                      language: language3,
-                      repository: @repository,
-                      project: project,
-                      filename:  get_git_path(filename),
-                      line_nr: line_nr,
-                      translation: translation)
-    rescue => error
-      #  UNIQUE constraint failed: db_texts.key, db_texts.language, db_texts.project, db_texts.repository, db_texts.translation
-      # puts "error #{error}" # Happens if same key exists twice in the same file
-      # condition = {:key => key, :language => language3, repository: @repository, project: project,                        filename:  get_git_path(filename)}
-      condition = {:key => key, :language => language3, repository: @repository, project: project, translation: translation}
-      duplicates = @@db_texts.where(condition)
-      puts "duplicate? #{key} #{language3} #{@repository} #{project} #{} #{get_git_path(filename)}. Update line_nr #{duplicates.first[:line_nr]}->  #{line_nr}" if duplicates.first
-      begin
-        @@duplicates.insert(key: key, language: language3)
-      end
-    end
-  end
-
   def get_git_path(filename)
     `git ls-tree --full-name --name-only HEAD #{filename}`.chomp
   end
@@ -242,6 +188,7 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
     found = @@db_texts.where(:key => key.to_s, :language => language, repository: @repository, project: project, filename:  get_git_path(filename), line_nr: line_nr).all.first
     found ? found[:translation] : nil
   end
+
   EscapeBackslash = /\\([\\]+)/
   LineSplitter = /\s*=\s*/ # ResourceBundleEditor uses ' = ' as separator, other use '='
   #
@@ -270,61 +217,75 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
     res
   end
   
-  def get_key_value(line)
+  # replace_dots_by_underscore is necessary when converting old style uses of Messages.java using the getString method
+  def get_key_value(line, replace_dots_by_underscore: true)
     begin
       return false if /^#/.match(line)
       return false if line.length <= 1
-      line = URI.decode line.encode("utf-8", replace: nil)
+      line = line.encode("utf-8", replace: nil)
     rescue => e
       line
     end
+    begin
     m = /([^=]*)\s*=\s*(.*)/.match(line.chomp)
+    return unless m
+    rescue => error
+      # Happens with french translat of DataImporter
+      line = '%Da' + line[1..-1]
+      begin
+      m = /([^=]*)\s*=\s*(.*)/.match(line.chomp)
+      rescue => error
+      	binding.pry
+  	   end
+    end
     # key has two special thing:
     # * fix some odd occurrences like "BBS_View20\t\t\t "
     # * with Messages.getString(key) it was possible that a key contained a '.', but for as a constant_name we replace it by '_'
-    key = m[1].sub(/\s+$/,'').gsub('.', '_')
+    begin
+    key = m[1].sub(/\s+$/,'')
+    key = key.gsub('.', '_') if replace_dots_by_underscore
     value = m[2].sub(/ \[#{key}\]/,'')
     [key, value]
-  end
-
-  def analyse_one_message_line(project, language1, filename, line_nr, line)
-    key, value = get_key_value(line)
-    translation = convert_to_real_utf(value)
-    project_name = project[:name]
-    project_name += '.plugin' if /plugin.*properties/.match(File.basename(filename))
-    this_msg =  OpenStruct.new ( { :language => language1.clone,
-                                   :project => project_name,
-                          :filename =>  get_git_path(filename),
-                          :line_nr => line_nr,
-                          :translation => translation })
-    if (existing = find_translation(key, language1, project_name, filename, line_nr))
-      @@nr_skipped += 1
-      puts "Already skipped #{@@nr_skipped}. In project #{project_name}" if @@nr_skipped % 100 == 0 && $VERBOSE
-      $stdout.write '.' if @@nr_skipped % 100 == 0
-    else
-      insert_translation(key, language1, project_name, filename, line_nr, translation)
-      @@nr_inserted += 1
-      puts "Inserted #{@@nr_inserted}. In project #{project_name}" if @@nr_inserted % 100 == 0 && $VERBOSE
-      $stdout.write '.' if @@nr_inserted % 100 == 0
-    end unless @gen_csv
-    @@all_msgs[key] ||= {}
-    @@all_msgs[key] [language1] ||= {}
-    # if key.eql?('Ablauf_cachelifetime') && language1.eql?('de')
-    if @@all_msgs[key][language1] && @@all_msgs[key][language1][:translation]
-      puts "#{project_name} #{project[:nr_duplicates]}: duplicate key #{language1} #{key} in #{filename} #{line_nr}" if $VERBOSE
-      project[:nr_duplicates] += 1
-      @@nr_duplicates += 1
-      @@all_msgs[key][language1][:duplicates] ||= []
-      @@all_msgs[key][language1][:duplicates] << this_msg
-    else
-      @@all_msgs[key][language1] = this_msg
+    rescue => error
+      binding.pry
     end
-    return true
-  rescue => error
   end
 
-  def update_project_info(project)
-    project[:nr_java_files] = Dir.glob(File.join(project[:directory], '**/*.java')).size
+  def analyse_one_message_line(project_name, lang, filename, line_nr, line)
+    key, value = get_key_value(line.chomp)
+    return unless key
+    key = "#{project_name}_#{key}" unless /^messages/i.match(File.basename(filename))
+    translation = value ? convert_to_real_utf(value) : ''
+    L10N_Cache.set_translation(key, lang, value)
+  end
+  
+  def parse_plug_properties(project_name, lang, propfile)
+    File.open(propfile, 'r:ISO-8859-1').readlines.each do |line|
+      key, value = get_key_value(line.chomp, replace_dots_by_underscore: false)
+      next unless key
+      next if /false/.match(key)
+      key = "#{project_name}_#{key}"
+      L10N_Cache.set_translation(key, lang, value)
+    end
+  end
+  def parse_plugin_xml(project_name, filename)
+    return unless File.exist?(filename)
+    keys = {}
+    IO.readlines(filename) do |line|
+      if m = /name="%(\w+)"/i.match(line)
+        key = [project_name, m[1] ].join('_')
+        keys [key] = ''
+      end
+    end
+    LanguageViews.keys.each do |lang|
+      if L10N_Cache::JavaLanguage.eql?(lang)
+        propfile = filename.sub('.xml', '.properties')
+      else
+        propfile = filename.sub('.xml', "_#{lang}.properties")
+      end
+      next unless File.exist?(propfile)
+      parse_plug_properties(project_name, lang, propfile)
+    end
   end
 
   def analyse_one_message_file(project_name, filename)
@@ -334,104 +295,21 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
     else
       @@msg_files_read << fullname
     end
-    project = @@all_projects[project_name]
-    info = OpenStruct.new
-    info[:filename] = filename
-    # info[:nr_msgs] = IO.readlines(filename).size
     line_nr = 0
     if m = /_(\w\w)\.properties/.match(File.basename(filename))
       language2 = m[1].to_s
     else
-      language2 = MainLanguage
+      language2 = L10N_Cache::JavaLanguage
     end
     File.open(filename, 'r:ISO-8859-1').readlines.each do |line|
       line_nr += 1
-      if analyse_one_message_line(project, language2, filename, line_nr, line) && language2.eql?(MainLanguage)
-        project[:nr_msgs]  += 1
+      if analyse_one_message_line(project_name, language2, filename, line_nr, line) && language2.eql?(L10N_Cache::JavaLanguage)
       end
     end
-    update_project_info(project)
     puts "#{project_name} added #{filename} info #{info}" if $VERBOSE
   end
 
-  def project_info(projectname)
-    project = @@all_projects[projectname]
-    info = []
-    info << "Project #{projectname} in #{project[:directory]}"
-    info << "  has #{project[:nr_java_files]} java files"
-    info << "  has #{project[:msg_files].size} message files with #{project[:nr_msgs]} messages"
-    info
-  end
-
-  def overview
-    nr_java = 0
-    @@all_projects.values.collect{ |x| x[:nr_java_files]}.compact.each{|x| nr_java += x}
-    nr_msg_files = @@all_projects.values.collect{ |x| x[:msg_files]}.flatten.compact.size
-    info = []
-    info << "Overview of Elexis internationalization in #{@main_dir}"
-    info << ''
-    info << "  has #{@@all_projects.keys.size} projects with #{nr_java} Java and #{nr_msg_files} message files"
-    info << "  has languages: #{@@all_msgs.values.collect{|v,k| v.keys}.flatten.uniq.sort.join(', ')}"
-    info << "  has #{@@all_msgs.keys.size} messages and #{@@nr_duplicates} duplicates"
-    info << ''
-    info
-  end
-
-  def info_per_project
-    info << 'Info per project'
-    info << ''
-    @@all_projects.each{|name, project| info += project_info(name)}
-  end
-
-  def gen_csv(filename: nil)
-    unless filename
-      puts"Skipping gen_csv as no filename given"
-      return
-    end
-    puts "gen_csv #{filename}"
-    CSV.open(filename, "wb") do |csv|
-      csv << ['project_name', 'directory', 'nr_java_files', 'msg_files', 'nr_msgs', 'nr_duplicates']
-      @@all_projects.each do |name, info|
-        csv << [name, info[:directory],
-                info[:nr_java_files] ? info[:nr_java_files] : 0,
-                info[:msg_files].size,
-                info[:nr_msgs],
-                info[:nr_duplicates]]
-      end
-    end
-    filename
-  end
-
-  def show_dupl(origin, a_duplicate)
-    origin = "#{origin[:language]}"
-
-# => #<OpenStruct language="fr", project="ch.elexis.core.ui", filename="/opt/elexis-3.1/elexis-3-core/ch.elexis.core.ui/src/ch/elexis/core/ui/wizards/messages_fr.properties", line_nr=1, translation="">
-  end
-  def gen_duplicates
-    filename = File.expand_path(File.join(@main_dir, File.basename(@main_dir) + '_duplicates.csv'))
-    CSV.open(filename, "wb") do |csv|
-      csv << ['file', 'line_nr', 'language', 'translation', 'translation2', 'file2', 'line_nr2']
-      @@all_msgs.sort.each do |key, messages|
-        next if messages.values.collect{|v| v[:duplicates]}.compact.size == 0
-        messages.each do |language, info|
-          next unless info && info[:duplicates] && info[:duplicates].size > 0
-          info[:duplicates].each do |a_duplicate|
-            csv << [info[:filename],
-                    info[:line_nr],
-                    language,
-                    info[:translation],
-                    a_duplicate[:translation],
-                    a_duplicate[:filename],
-                    a_duplicate[:line_nr],
-                  ]
-          end
-        end
-      end
-    end
-    filename
-  end
-
-  def parse(gen_csv: false)
+  def parse_plugin_and_messages
     start_dir = Dir.pwd
     @@directories.each do |directory|
       @main_dir = File.expand_path(directory)
@@ -445,33 +323,20 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
         project_xml = Document.new(File.new(File.join(project_dir, ".project")))
         project_name  = project_xml.elements['projectDescription'].elements['name'].text
         next if /test.*$|feature/i.match(project_name)
-        @@all_projects[project_name] = my_project = OpenStruct.new
-        my_project
-        my_project[:msg_files]      = {}
-        my_project[:nr_msgs]        = 0
-        my_project[:nr_duplicates]  = 0
-        my_project_name             = project_name
-        my_project[:directory]      = project_dir
-        my_project[:name]           = my_project_name
-        msg_files = Dir.glob(File.join(project_dir, 'src', '**/messages*.properties')) + Dir.glob(File.join(project_dir, 'plugin*.properties'))
-        my_project[:msg_files]        = msg_files.compact
+        msg_files = Dir.glob(File.join(project_dir, 'src', '**/messages*.properties'))
+        if plugin_xml = File.join(project_dir, 'plugin.xml')
+          parse_plugin_xml(project_name, plugin_xml)
+        end
         puts "msg_files are #{msg_files}" if $VERBOSE
-        if gen_csv
-          if msg_files.size == 0
-            puts "Skipping #{Dir.pwd}" if $VERBOSE
-          else
-            puts "#{Dir.pwd} found #{msg_files.size} messages files"
-            msg_files.each{|msg_file| analyse_one_message_file(project_name, msg_file) }
-            next
-          end
+        if msg_files.size == 0
+          puts "Skipping #{Dir.pwd}" if $VERBOSE
         else
-          DB.transaction do
-            msg_files.each{|msg_file| analyse_one_message_file(project_name, msg_file) }
-          end
+          puts "#{Dir.pwd} found #{msg_files.size} messages files"
+          msg_files.each{|msg_file| analyse_one_message_file(project_name, msg_file) }
+          next
         end
       end
     end
-    gen_languages_csv(File.join(start_dir, CSV_NAME)) if gen_csv
   end
 
   def calculate_repository_origin(directory = Dir.pwd)
@@ -483,284 +348,215 @@ select db_texts.project, german.key, english.translation as english, db_texts.fi
     end
   end
 
-  MESSAGES_GET_STRING_REGEXP = /Messages.getString\("([^"]*)"\)/
-  def fix_messages_get_string(a_java_file)
-    inhalt = IO.read(a_java_file)
-    while m = MESSAGES_GET_STRING_REGEXP.match(inhalt)
-      inhalt.sub!(m[0], 'Messages.'+m[1].sub('.','_'))
-    end
-    File.open(a_java_file, 'w') {|f| f.write inhalt}
-    puts "Fixed Messages.getString #{a_java_file}"
+  def start_with_lang_in_parenthesis(line, lang)
+  	/^\(#{lang}/.match(line)
   end
 
-  TRANSLATE_REGEXP = /(%\w*)[.]/
-  def fix_plugin_messages_id(plugin_file)
-    return unless File.exist?(plugin_file)
-    inhalt = IO.read(plugin_file)
-    needs_update = false
-    while m = TRANSLATE_REGEXP.match(inhalt)
-      needs_update = true
-      inhalt.sub!(m[0], m[1] +'_')
+  def add_google_translation(source_lang, string2translate, lang)
+    unless string2translate
+      puts "Skipping #{project_id} #{string2translate} as no source found"      
+      return
     end
-    return unless needs_update
-    File.open(plugin_file, 'w') {|f| f.write inhalt}
-    puts "Fixed #{plugin_file}"
+    # translate_text(what, target_language='it', source_language='de')
+    CGI.unescapeHTML(GoogleTranslation.translate_text(string2translate, lang, source_lang))
   end
 
-  def gen_messages_java(filename, project_name)
-    # select * from db_texts where key like '%.%';
-    condition = {repository: @repository, project: project_name}
-    translations = @@db_texts.where(condition)
-    return if translations.all.size == 0 # nothing to do
-    all_java_files = Dir.glob('**/*.java')
-    if res = system("grep Messages.getString #{all_java_files.join(' ')} 2>&1>/dev/null")
-      all_java_files.each do |a_java_file|
-        if system("grep Messages.getString #{a_java_file} 2>&1>/dev/null")
-          fix_messages_get_string(a_java_file)
+  def add_csv_to_db_texts(csv_file)
+    puts "Adding missing entries for  #{csv_file}"
+    msgs_to_add = read_translation_csv(ARGV.first)
+    inserts = {}
+    msgs_to_add.each do |tag_name, value|
+      german_translation = L10N_Cache.get_translation(tag_name, 'de')
+      L10N_Cache::CSV_KEYS.each do |lang|
+        next if lang.eql?(L10N_Cache::JavaLanguage)
+        next if lang.eql?('de')
+        current_translation = L10N_Cache.get_translation(tag_name, lang)
+        if current_translation.size <= 1
+          translated = add_google_translation('de', german_translation, lang)
+          puts "Adding #{translated} missing translation for #{lang} #{tag_name}" if $VERBOSE
+          L10N_Cache.set_translation(tag_name, lang, translated)
+          inserts[[tag_name, lang]] =   translated
+          next
         end
       end
     end
-    java_file = File.expand_path(filename)
-    FileUtils.makedirs(File.dirname(java_file))
-    uses_rb = system("grep java.util.ResourceBundle #{java_file} 2>/dev/null")
-    if !File.exist?(java_file) || uses_rb
-      File.open(java_file, 'w') do |java|
-        java.puts %(/**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others. All rights reserved.   This
- * program and the accompanying materials are made available under the terms of
- * the Eclipse Public License v1.0 which accompanies this distribution, and is
- * available at http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- * IBM - Initial API and implementation
- **********************************************************************/
-package #{project_name};
-
-import org.eclipse.osgi.util.NLS;
-
-public class Messages extends NLS {
-  private static final String BUNDLE_NAME = "#{project_name}.messages";
-)
-      translations.all.collect{|x| x[:key]}.uniq.sort.each do |key|
-        unless key.index('.')
-          java.puts "    public static String #{key};"
-        end
-      end
-         java.puts %(
-    static { // load message values from bundle file
-    NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-  }
-})
-      end
-      puts "Generated #{java_file}"
-    end
+    puts "Inserted #{inserts.size} missing entries of #{msgs_to_add.size}"
+    msgs_to_add
   end
-  def gen_trema_for_project(filename, project_name = nil)
-    # trema_xml = Document.new(File.new(File.join(project_dir, "texts.trm")))
-    texts_file = File.expand_path(filename)
-    texts = Document.new Header, { :compress_whitespace => %w{value} }
-    if project_name
-      condition = {repository: @repository, project: project_name}
-      translations = @@db_texts.where(condition)
-      if /\.plugin/.match(project_name)
-        fix_plugin_messages_id(File.join(File.dirname(filename), 'plugin.xml'))
-      else
-        java_name = File.join(File.dirname(filename), 'src', project_name.gsub('.', '/'), 'Messages.java')
-        gen_messages_java(java_name, project_name)
-      end
-    else
-      translations = @@db_texts
-    end
-    lang_trans = {}
-    nr_msgs = 0
-    translations.order(:key).each do |db_text|
-      lang_trans[db_text[:key]] ||= {}
-      if db_text[:language].eql?(MainLanguage)
-        # set default values
-        LanguageViews.keys.each do |lang|
-          lang_trans[db_text[:key]] [lang] ||= db_text[:translation]
-        end
-      else
-        lang_trans[db_text[:key]] [db_text[:language]] = db_text[:translation]
-      end
-    end
-    emittedkeys = []
-    lang_trans.each do |key, messages|
-      text = Element.new "text"
-      text.attributes['key']= key.strip
-      next if emittedkeys.index(key.strip)
-      emittedkeys << key.strip
-      text.add Element.new "context"
-      messages.each do |language, translated_msg|
-        translation = Element.new 'value'
-        translation.attributes['lang'] = language.eql?(MainLanguage) ? Trema_Default_Language : language
-        translation.attributes['status'] = "initial"
-        translation.text = translated_msg.force_encoding(TremaEncoding)
-        text.add translation
-        nr_msgs += 1
-      end
-      texts.root.elements << text
-    end
-    if nr_msgs > 0
-      begin
-        File.open(texts_file, "w:#{TremaEncoding}") { |out| texts.write( out, 0, true) } # XML pretty print, transitive to avoid adding new line in text
-        puts "Generated #{texts_file} with #{nr_msgs} nr_msgs"
-      rescue => error
-        puts "Failed to write #{texts_file} error: #{error}"
-        binding.pry
-      end
-    end
-  end
-  def gen_trema
-    gen_trema_for_project(File.join(Dir.home, 'trema.trm'))
-    @@directories.each do |directory|
-      Dir.chdir(directory)
-      projects = (Dir.glob("**/.project") + Dir.glob('.project')).uniq.compact
-      puts "Generating trema files for #{projects.size} projects"
-      projects.each do |project|
-        @repository = calculate_repository_origin
-        nr_msgs = 0
-        project_dir = File.expand_path(File.dirname(project))
-        # next unless project_dir.eql?('ch.elexis.core.ui')
-        project_xml = Document.new(File.new(File.join(project_dir, ".project")))
-        project_name  = project_xml.elements['projectDescription'].elements['name'].text
-        next if /test|feature/.match(project_name)
-        plugin_name  = project_name + '.plugin'
-        # trema_xml = Document.new(File.new(File.join(project_dir, "texts.trm")))
-        gen_trema_for_project(File.expand_path(File.join(project_dir, 'texts.trm')), project_name)
-        gen_trema_for_project(File.expand_path(File.join(project_dir, 'plugin.trm')), plugin_name)
-      end
-    end
-  end
-  def add_missing(language)
+ def add_missing
     main_language = 'de'
-    DB.transaction do
-      to_translate = DB[:db_texts].where(:language => main_language)
-      puts "We want to translate #{to_translate.all.size} items for #{main_language}"
-      to_translate.each do |elem|
-        german =  elem[:translation]
-        gt = GoogleTranslation.translate_text(german, language, main_language)
-        result = []; gt.each{|x| result << CGI.unescapeHTML(x)}
-        gt_translations = result.join(',')
-        new_filename = elem[:filename].sub("_#{main_language}","_#{language}")
-        x = find_translation(elem[:key], language,  elem[:project], new_filename, elem[:line_nr])
-        alread_present = {:key => elem[:key], :language => language,  project: elem[:project], repository: elem[:repository]}
-        puts "Translating #{german} found #{@@db_texts.where(alread_present).all.size} was #{german}" #  if $VERBOSE
-        if @@db_texts.where(alread_present).all.size == 0
-          @@db_texts.insert(key: elem[:key],
-                          language: language,
-                          repository: elem[:repository],
-                          project: elem[:project],
-                          filename:  new_filename,
-                          line_nr: elem[:line_nr],
-                          translation: result,
-                          google_translation: gt_translations)
-        elsif  @@db_texts.where(alread_present).all.size == 1
-          @@db_texts.where(alread_present).update(:google_translation => gt_translations)
-        else
-          puts "Translating #{german} found #{@@db_texts.where(alread_present).all.size}"
-          # select * from db_texts where language = 'it';
-        end
-      end
-    end
+    raise "You must specify a CSV to add" unless ARGV.size == 1
+    csv_file = ARGV.first
+    raise "You must specify a file not a directory?" if File.directory?(csv_file)
+    messages = add_csv_to_db_texts(csv_file)
+    L10N_Cache::save_cache(csv_file)
   end
 
-  def gen_languages_csv(filename)
-    CSV.open(filename, "wb") do |csv|
-      csv <<  (CSV_HEADER_START + CSV_KEYS)
-      @@all_msgs.each do |key, info|
-        # shorten l10n.de -> l0n.de 
-        project_name = info.values.first.project.sub(REGEX_TRAILING_LANG, '')
-        texts = [project_name, key ]
-        CSV_KEYS.each do |lang|
-          entry = info[lang] ? convert_to_real_utf(info[lang].translation) : ''
-          entry = entry.gsub("\n", '\\n')  # Add multiline to csv
-          texts << entry
-        end
-        csv << texts
-      end
-    end
-    puts "gen_languages_csv created #{filename}"
+  def gen_languages_csv(filename, msgs)
+    L10N_Cache::save_cache(filename)
     filename
   end
 
   def to_csv
     @@directories = [main_dir]
     @gen_csv = true
-    parse(gen_csv: true)
+    parse_plugin_and_messages
+    L10N_Cache.save_cache
+    # gen_languages_csv(File.join(start_dir, L10N_Cache::TRANSLATIONS_CSV_NAME), @@all_msgs) if gen_csv
   end
 
-  def to_properties
-    Dir.chdir(main_dir)
-    @@all_msgs = {}
-    index = 0
-    languages = []
-    CSV.foreach(File.join(start_dir, CSV_NAME), :force_quotes => true) do |cells|
+
+  def read_translation_csv(csv_file)
+  all_msgs = {}
+  return all_msgs unless File.exist?(csv_file)
+  index = 0
+  @languages = []
+    CSV.foreach(csv_file, :force_quotes => true) do |cells|
       index += 1 
       if index == 1
-        raise("invalid header #{cells}") unless cells[0..1] == CSV_HEADER_START
-        languages = cells[2..-1]
+        raise("#{csv_file} has invalid header #{cells}") unless cells[0..L10N_Cache::CSV_HEADER_START.size-1] == L10N_Cache::CSV_HEADER_START
+        @languages = cells[L10N_Cache::CSV_HEADER_SIZE..-1]
         next
       end
-      key = cells[0..1]
-      @@all_msgs[key] ||= {}
-      languages.each_with_index do |lang, index|
-        @@all_msgs[key][lang] = "#{cells[index + CSV_HEADER_START.size]}"
+      key = cells[0..L10N_Cache::CSV_HEADER_START.size-1]
+      key = key.first if  L10N_Cache::CSV_HEADER_SIZE == 1
+      all_msgs[key] ||= {}
+      @languages.each_with_index do |lang, index|
+        all_msgs[key][lang] = "#{cells[index + L10N_Cache::CSV_HEADER_SIZE]}"
       end
     end
+    all_msgs
+  end
+
+  def generate_messages_properties(filename)
+      full =File.join(Dir.pwd.sub(L10N_Cache::REGEX_TRAILING_LANG, ''), 'src', project_name.split('.'), 'Messages.java')
+      if File.exist?(full)
+        keys = File.readlines(full).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name, m[1]] if m }.compact
+        if keys.size == 0
+          puts "Skipping #{full} which contains no keys"
+          return
+        end
+      else
+        puts "Skipping #{full}" if $VERBOSE
+        return
+      end
+  end
+
+  def generate_plugin_properties(project_name, filename)
+    puts "Generating plugin properties for #{File.expand_path(filename)}"
+    keys = []
+    File.open(filename, 'r:ISO-8859-1').readlines.each do |line|
+      key, value = get_key_value(line.chomp, replace_dots_by_underscore: false)
+      keys << [project_name, key].join('_')
+    end
+    LanguageViews.keys.each do |lang|
+      lang_file = filename.sub('.properties', (lang.eql?('Java') ? '' : '_' + lang) + '.properties')
+      File.open(lang_file, 'w:ISO-8859-1') do |file|
+        keys.each do |tag_name|
+          next if /_false$/.match(tag_name)
+          translations =   @@all_msgs[tag_name]        
+          unless translations
+            puts "Missing translation #{lang} for #{tag_name}"
+            file.puts("#{tag_name}=")
+            next
+          end
+          value =translations[ lang ]
+          lang_value = translations[lang]
+          lang_value = translations[L10N_Cache::JavaLanguage] if !lang_value || lang_value.empty?
+          tag2write = tag_name.sub(project_name+'_','')
+          next if tag2write.eql?('false')
+          if !lang_value || lang_value.empty?
+            puts "no #{lang} value found for #{tag2write}"
+            next
+          end
+          file.puts "#{tag2write}=#{lang_value}".encode('ISO-8859-1')
+        end
+      end
+    end
+  end
+
+  # TODO: Generate properties files for all languages by default, but do correct stuff in l10n.{lang}
+  def to_properties
+    Dir.chdir(main_dir)
+    index = 0
+    languages = []
+    @@all_msgs  = read_translation_csv(File.join(start_dir, L10N_Cache::TRANSLATIONS_CSV_NAME))
+    all_keys = @@all_msgs.keys.collect{|x| x }.uniq
+    l10n_key =  all_keys.find{|x| /l10n$/.match(x)}
+    # raise("Could not find the main l10n project among #{all_keys}") unless l10n_key
     Dir.glob("#{main_dir}/**/.project").each do |project|
       Dir.chdir(File.dirname(project))
-      project_name = Dir.pwd.split('/').last.sub(REGEX_TRAILING_LANG, '')
+      project_name = Dir.pwd.split('/').last.sub(L10N_Cache::REGEX_TRAILING_LANG, '')
       puts "project_name is #{project_name}" if $VERBOSE
-      files = Dir.glob('**/plugin*.properties') +  Dir.glob('**/messages*.properties')
+      files = Dir.glob(File.join(Dir.pwd, 'plugin.properties')) 
+      files.each do |filename|
+        puts "Fixing plugin for #{filename}"
+        next if filename.split('.').index('target')
+        generate_plugin_properties(project_name, filename) 
+      end
+      files = Dir.glob(File.join(Dir.pwd, '**/messages*.properties'))
       files.each do |filename|
         keys = []
-        puts "Generating #{File.expand_path(filename)}"
+        next if filename.split('.').index('target')
+        next if filename.split('/').index('target')
         m =  /_(..)\.properties/.match(filename)
         lang = m ?  m[1] : 'en'
-        if /messages/.match(File.basename(filename))
-          full =File.join(Dir.pwd.sub(REGEX_TRAILING_LANG, ''), 'src', project_name.split('.'), 'Messages.java')
-          if File.exist?(full)
-            keys = File.readlines(full).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name, m[1]] if m }.compact
-          else
-            puts "Skipping #{full}" if $VERBOSE
+        puts "Generating #{lang} for #{filename}"
+        saved_content = File.open(filename, 'r:ISO-8859-1').readlines
+        msg_java =filename.sub(/\.(de|fr|it|en)/, '').sub('messages.properties', 'Messages.java')
+        unless File.exist?(msg_java)
+          msg_java =File.join(Dir.pwd.sub(L10N_Cache::REGEX_TRAILING_LANG, ''), 'src', project_name.split('.'), 'Messages.java')
+        end
+        if File.exist?(msg_java)
+          keys = File.readlines(msg_java).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name, m[1]] if m }.compact
+          if keys.size == 0
+            puts "Skipping #{msg_java} which contains no keys"
             next
           end
         else
-          File.open(filename, 'r:ISO-8859-1').readlines.each do |line|
-            key, value  = get_key_value(line)
-            keys << [project_name, key]
-          end
+          puts "Skipping #{msg_java}" if $VERBOSE
+          next
         end
 
         File.open(filename, 'w:ISO-8859-1') do |file|
-          keys.each do |key|
-            next unless key
-            unless @@all_msgs[key]
-              puts "Missing key #{key}"
-              next
-            end              
-            value =  @@all_msgs[key][lang]
-            value = @@all_msgs[key][MainLanguage] if value.empty?
-            if value.empty?
-              puts "no #{lang} value found for #{key}"
+          keys.each do |full_key|
+            next unless full_key[1]
+            project_id = full_key[0]
+            tag_name, dummy =  get_key_value("#{full_key[1]}= 'dummy")
+            tag_name = "#{project_name}_#{tag_name}" unless /^messages/i.match(File.basename(filename))
+
+            if @@all_msgs[full_key]
+              value =  @@all_msgs[full_key]
+            else
+              # search some variant
+              value = @@all_msgs[  tag_name ]
+              value ||= @@all_msgs[ [tag_name.sub(/./,'') ] ]
+              value ||= @@all_msgs[ [tag_name.sub(/%/,'') ] ]
+              unless value
+                puts "Missing #{lang} translation for #{full_key.last}"
+                file.puts("#{full_key.last}=")
+                next
+              end
+            end
+            lang_value = value[lang]
+            lang_value = value[L10N_Cache::JavaLanguage] if !lang_value || lang_value.empty?
+            if tag_name && (!lang_value || lang_value.empty?)
+            lang_value ||= @@all_msgs[l10n_key, tag_name]
+          end
+            if !lang_value || lang_value.empty?
+              puts "no #{lang} value found for #{full_key}"
               next
             end
-            file.puts "#{key.last}=#{value}".encode('ISO-8859-1')
+            begin
+              file.puts "#{tag_name}=#{lang_value}".encode('ISO-8859-1',  {invalid: :replace, undef: :replace, replace: ''})
+            rescue => error
+              binding.pry
+            end
           end
         end
       end
     end
   end
-
-TremaEncoding = 'UTF-8'
-Header = %(<?xml version="1.0" encoding="#{TremaEncoding}"?>
-<!-- generated by #{File.basename(__FILE__)} -->
-<trema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-masterLang="de"
-xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/netceteragroup/trema-core/master/src/main/resources/trema-1.0.xsd">
-</trema>
-)
 end
 
 parser = Trollop::Parser.new do
@@ -770,17 +566,12 @@ parser = Trollop::Parser.new do
 License: Eclipse Public License 1.0 (EPL)
 Useage: #{File.basename(__FILE__)} [-options] [directory1 directory]
   help manipulating files needed for translations
-  using Cachefile        #{GoogleTranslation::CacheFileYaml}
+  using Cachefile        #{GoogleTranslation::CacheFileCSV} (UTF-8)
     and SqLite3 database #{Sqlite3File}
 EOS
-  opt :to_csv   ,         "Create #{I18nInfo::CSV_NAME}.csv for all languages with entries for all [manifests|plugin]*.properties ", :default => false, :short => '-c'
-  opt :add_missing,       "Add missing translations via Googe Translator using $HOME/google_translation_cache.csv", :default => nil, :short => '-a', :type => String
-  opt :to_properties,     "Create [manifests|plugin]*.properties for all languages from #{I18nInfo::CSV_NAME}\n\n ", :default => false, :short => '-t'
-  opt :gen_trema,         "obsolete: Create Trema files from content of database", :default => false, :short => '-g'
-  opt :gen_csv  ,         "obsolete: Create statistics CSV files from content of database in each project", :default => false
-  opt :gen_duplicates,    "obsolete: Create list of duplicated entries from content of database", :default => false, :short => '-u'
-  opt :parse_messsage,    "obsolete: Parse all messages files and import their content to the database", :default => false, :short => '-p'
-  opt :overview,          "obsolete: Print some statistics regardings projects, messages files, translation present in the database", :default => false, :short => '-o'
+  opt :to_csv   ,         "Create #{L10N_Cache::TRANSLATIONS_CSV_NAME}.csv for all languages with entries for all [manifests|plugin]*.properties ", :default => false, :short => '-c'
+  opt :add_missing,       "Add missing translations for a given csv file via Googe Translator using $HOME/google_translation_cache.csv", :default => false, :short => '-a'
+  opt :to_properties,     "Create [manifests|plugin]*.properties for all languages from #{L10N_Cache::TRANSLATIONS_CSV_NAME}\n\n ", :default => false, :short => '-t'
 end
 
 Options = Trollop::with_standard_exception_handling parser do
@@ -792,20 +583,10 @@ end
 # GoogleTranslation.translate_text('elektronische Krankengeschichte')
 
 i18n = I18nInfo.new(ARGV)
-i18n.main_dir ||= File.expand_path(ARGV.first)
 i18n.start_dir = Dir.pwd
-if Options[:to_csv]
-  i18n.to_csv
-  exit
-end
-if Options[:to_properties]
-  i18n.to_properties
-  exit
-end
-i18n.parse if Options[:parse_messsage]
-i18n.gen_trema if Options[:gen_trema]
-i18n.gen_csv(File.expand_path(File.join(i18n.main_dir, File.basename(i18n.main_dir) + '_i18n.csv'))) if Options[:gen_csv]
-i18n.gen_duplicates if Options[:gen_duplicates]
-i18n.add_missing(Options[:add_missing]) if Options[:add_missing]
-i18n.overview if Options[:overview]
+i18n.main_dir ||= File.expand_path(ARGV.first) if ARGV.size > 0
+i18n.main_dir ||= Dir.pwd 
+i18n.to_csv if Options[:to_csv]
+i18n.to_properties if Options[:to_properties]
+i18n.add_missing if Options[:add_missing]
 

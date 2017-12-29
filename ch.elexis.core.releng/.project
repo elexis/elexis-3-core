@@ -4,14 +4,19 @@
 	<comment></comment>
 	<projects>
 	</projects>
-  <buildSpec>
-    <buildCommand>
-      <name>org.eclipse.dltk.core.scriptbuilder</name>
-      <arguments>
-      </arguments>
-    </buildCommand>
-  </buildSpec>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/org.eclipse.dltk.core.scriptbuilder (1).launch</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
 	<natures>
-    <nature>org.eclipse.dltk.ruby.core.nature</nature>
+		<nature>org.eclipse.dltk.ruby.core.nature</nature>
 	</natures>
 </projectDescription>
