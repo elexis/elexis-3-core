@@ -72,6 +72,7 @@ import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.data.Artikel;
+import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
@@ -275,7 +276,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			int z = lst.getZahl();
 			Money preis = lst.getNettoPreis().multiply(z);
 			sum.addMoney(preis);
-			sdg.append(z).append(" ").append(lst.getCode()).append(" ").append(lst.getText()) //$NON-NLS-1$ //$NON-NLS-2$
+			sdg.append(z).append(" ").append(getServiceCode(lst)).append(" ").append(lst.getText()) //$NON-NLS-1$ //$NON-NLS-2$
 				.append(" (").append(preis.getAmountAsString()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 			TableItem ti = new TableItem(tVerr, SWT.WRAP);
 			ti.setText(sdg.toString());
@@ -309,6 +310,24 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		sdg.setLength(0);
 		sdg.append(Messages.VerrechnungsDisplay_billed).append(sum.getAmountAsString()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 		hVer.setText(sdg.toString());
+	}
+	
+	/**
+	 * Filter codes of {@link Verrechnet} where ID is used as code. This is relevant for {@link Eigenleistung} and Eigenartikel.
+	 * 
+	 * @param lst
+	 * @return
+	 */
+	private String getServiceCode(Verrechnet verrechnet){
+		String ret = verrechnet.getCode();
+		IVerrechenbar verrechenbar = verrechnet.getVerrechenbar();
+		if (verrechenbar instanceof Eigenleistung || (verrechenbar instanceof Artikel
+			&& ((Artikel) verrechenbar).get(Artikel.FLD_TYP).equals("Eigenartikel"))) {
+			if (verrechenbar != null && verrechenbar.getId().equals(ret)) {
+				ret = "";
+			}
+		}
+		return ret;
 	}
 	
 	private Menu createVerrMenu(){
