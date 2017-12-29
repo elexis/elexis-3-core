@@ -69,7 +69,6 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.lock.ILocalLockService;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
@@ -705,7 +704,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		tk.paintBordersFor(form.getBody());
 	}
 	
-	private void save(){
+	protected void save(){
 		if (actPatient != null) {
 			if (ipp != null) {
 				ipp.save();
@@ -767,11 +766,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	
 	@SuppressWarnings("unchecked")
 	public void setPatient(final Patient p){
-		// save does not happen via locking in standalone mode
-		if (CoreHub.getLocalLockService().getStatus() == ILocalLockService.Status.STANDALONE) {
-			save();
-		}
 		actPatient = p;
+		
+		refreshUi();
+		
+		setUnlocked(CoreHub.getLocalLockService().isLockedLocal(p));
+	}
+	
+	public void refreshUi(){
 		ipp.getAutoForm().reload(actPatient);
 		
 		detailComposites.forEach(dc -> dc.setDetailObject(actPatient, null));
@@ -784,29 +786,27 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			return;
 		}
 		
-		form.setText(StringTool.unNull(p.getName()) + StringConstants.SPACE
-			+ StringTool.unNull(p.getVorname()) + " (" //$NON-NLS-1$
-			+ p.getPatCode() + ")"); //$NON-NLS-1$
-		inpAdresse.setText(p.getPostAnschrift(false), false, false);
+		form.setText(StringTool.unNull(actPatient.getName()) + StringConstants.SPACE
+			+ StringTool.unNull(actPatient.getVorname()) + " (" //$NON-NLS-1$
+			+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
+		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
 		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
 		inpZusatzAdresse.clear();
-		for (BezugsKontakt za : p.getBezugsKontakte()) {
+		for (BezugsKontakt za : actPatient.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);
 		}
 		
 		additionalAddresses.clear();
-		for (ZusatzAdresse zusatzAdresse : p.getZusatzAdressen()) {
+		for (ZusatzAdresse zusatzAdresse : actPatient.getZusatzAdressen()) {
 			additionalAddresses.add(zusatzAdresse);
 		}
 		
 		for (int i = 0; i < dfExpandable.size(); i++) {
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + ec.get(i).getText());
-			txExpandable.get(i).setText(StringTool.unNull(p.get(dfExpandable.get(i))));
+			txExpandable.get(i).setText(StringTool.unNull(actPatient.get(dfExpandable.get(i))));
 		}
 		dmd.reload();
-		form.reflow(true);
-		
-		setUnlocked(CoreHub.getLocalLockService().isLockedLocal(p));
+		refresh();
 	}
 	
 	public void refresh(){

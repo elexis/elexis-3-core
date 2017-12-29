@@ -72,46 +72,56 @@ public class Bestellung extends PersistentObject implements IOrder {
 					Stock defStock = Stock.load(Stock.DEFAULT_STOCK_ID);
 					
 					List<Bestellung> orders = new Query<Bestellung>(Bestellung.class).execute();
+					orders.sort(new BestellungDateComparator());
+					
+					int migrateCount = 0;
 					for (Bestellung order : orders) {
-						String[] it =
-							checkNull(order.get(FLD_ITEMS)).split(StringConstants.SEMICOLON);
-						for (String i : it) {
-							String[] fld = i.split(StringConstants.COMMA);
-							if (fld.length == 2) {
-								Artikel art = Artikel.load(fld[0]);
-								if (art == null || !art.exists()) {
-									PersistentObject poFromString =
-										CoreHub.poFactory.createFromString(fld[0]);
-									if (poFromString != null) {
-										art = (Artikel) poFromString;
-									}
-								}
-								if (art != null && art.exists()) {
-									int count = 1;
-									try {
-										count = Integer.parseInt(fld[1]);
-									} catch (NumberFormatException nfe) {}
-									
-									String providerId = art.get(Artikel.LIEFERANT_ID);
-									Kontakt provider = null;
-									if (providerId != null && providerId.length() > 0) {
-										Kontakt load = Kontakt.load(providerId);
-										if (load.exists()) {
-											provider = load;
-										}
-									}
-									new BestellungEntry(order, art, defStock, provider, count);
-								} else {
-									log.warn(
-										"Article for 'Bestellung' not found via [" + fld[0] + "]");
-								}
-							}
+						if (migrateCount <= 30) {
+							migrate(order, defStock);
+							migrateCount++;
+						} else {
+							order.delete();
 						}
-						order.set(FLD_ITEMS, null);
 					}
 					
 					CoreHub.globalCfg.set("OrdersMigratedTo32", true);
 					CoreHub.globalCfg.flush();
+				}
+				
+				private void migrate(Bestellung order, Stock defStock){
+					String[] it = checkNull(order.get(FLD_ITEMS)).split(StringConstants.SEMICOLON);
+					for (String i : it) {
+						String[] fld = i.split(StringConstants.COMMA);
+						if (fld.length == 2) {
+							Artikel art = Artikel.load(fld[0]);
+							if (art == null || !art.exists()) {
+								PersistentObject poFromString =
+									CoreHub.poFactory.createFromString(fld[0]);
+								if (poFromString != null) {
+									art = (Artikel) poFromString;
+								}
+							}
+							if (art != null && art.exists()) {
+								int count = 1;
+								try {
+									count = Integer.parseInt(fld[1]);
+								} catch (NumberFormatException nfe) {}
+								
+								String providerId = art.get(Artikel.LIEFERANT_ID);
+								Kontakt provider = null;
+								if (providerId != null && providerId.length() > 0) {
+									Kontakt load = Kontakt.load(providerId);
+									if (load.exists()) {
+										provider = load;
+									}
+								}
+								new BestellungEntry(order, art, defStock, provider, count);
+							} else {
+								log.warn("Article for 'Bestellung' not found via [" + fld[0] + "]");
+							}
+						}
+					}
+					order.set(FLD_ITEMS, null);
 				}
 			};
 			PersistentObject.cod.showProgress(irwp);

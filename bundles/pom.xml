@@ -50,6 +50,8 @@
     <module>ch.elexis.core.ui.medication.os</module>
     <module>ch.elexis.core.ui.medication</module>
     <module>ch.elexis.core.ui.p2</module>
+    <module>ch.elexis.core.ui.stock</module>
+    <module>ch.elexis.core.ui.usage</module>
     <module>ch.elexis.core.ui.perspective</module>
     <module>ch.elexis.core.ui</module>
     <module>ch.elexis.core</module>
