@@ -2552,10 +2552,13 @@ public abstract class PersistentObject implements IPersistentObject {
 		String result = getDBConnection().queryString(
 			"SELECT LASTUPDATE FROM " + getTableName() + " WHERE ID=" + getWrappedId());
 		if (result != null) {
-			return Long.parseLong(result);
-		} else {
-			return 0L;
+			try {
+				return Long.parseLong(result);
+			} catch (NumberFormatException e) {
+				// ignore and return 0L
+			}
 		}
+		return 0L;
 	}
 	
 	/**
