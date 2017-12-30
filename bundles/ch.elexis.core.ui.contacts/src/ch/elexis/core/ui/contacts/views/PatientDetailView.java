@@ -49,6 +49,8 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.actions.GlobalEventDispatcher;
+import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
@@ -71,7 +73,7 @@ import ch.elexis.data.Person;
 import ch.elexis.data.ZusatzAdresse;
 import ch.rgw.tools.StringTool;
 
-public class PatientDetailView extends ViewPart implements IUnlockable {
+public class PatientDetailView extends ViewPart implements IUnlockable, IActivationListener {
 
 	public static final String ID = "at.medevit.elexis.contacts.views.PatientDetail"; //$NON-NLS-1$
 
@@ -130,6 +132,8 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 	
 	private FixMediDisplay dmd;
 
+	private DataBindingContext bindingContext;
+	
 	public PatientDetailView() {
 		toolkit.setBorderStyle(SWT.NULL); // Deactivate borders for the widgets
 		makeActions();
@@ -446,6 +450,8 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 				GlobalActions.printRoeBlatt);
 
 		initDataBindings();
+		
+		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 
 	public void dispose() {
@@ -509,8 +515,12 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 		}
 	}
 
+	private void refreshUi(){
+		bindingContext.updateTargets();
+	}
+	
 	protected void initDataBindings() {
-		DataBindingContext bindingContext = new DataBindingContext();
+		bindingContext = new DataBindingContext();
 
 		Text[] control = { txtAllergien, txtAnamnese, txtBemerkungen, txtDiagnosen, txtRisiken, txtFamAnamnese };
 		String[] property = { "allergies", "personalAnamnese", "comment", "diagnosen", "risk", "familyAnamnese" };
@@ -600,4 +610,17 @@ public class PatientDetailView extends ViewPart implements IUnlockable {
 		};
 	}
 
+	@Override
+	public void activation(boolean mode){
+		if (mode) {
+			refreshUi();
+		}
+	}
+	
+	@Override
+	public void visible(boolean mode){
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

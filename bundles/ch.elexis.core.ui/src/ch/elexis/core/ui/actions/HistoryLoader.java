@@ -98,11 +98,11 @@ public class HistoryLoader extends BackgroundJob {
 					if (t1.isAfter(t2)) {
 						return -1;
 					}
-					return 0;
+					return Long.compare(o2.getLastUpdate(), o1.getLastUpdate());
 				}
 			});
 			
-			List<Konsultation> konsList = null;
+
 			if (currentPage > 0 && pageSize > 0)
 			{
 				// lazy loading via pagination
@@ -118,15 +118,15 @@ public class HistoryLoader extends BackgroundJob {
 				if (fromIdx < 0) {
 					fromIdx = 0;
 				}
-				konsList = new ArrayList<Konsultation>(
+				lKons = new ArrayList<Konsultation>(
 					fromIdx < toIdx ? lKons.subList(fromIdx, toIdx) : lKons);
 			} else {
-				konsList = new ArrayList<Konsultation>(lKons);
+				lKons = new ArrayList<Konsultation>(lKons);
 			}
 			monitor.worked(50);
 			
 			Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-			Iterator<Konsultation> it = konsList.iterator();
+			Iterator<Konsultation> it = lKons.iterator();
 			sb.append("<form>"); //$NON-NLS-1$
 			globalFilter = ObjectFilterRegistry.getInstance().getFilterFor(Konsultation.class);
 			while (!monitor.isCanceled()) {
@@ -204,6 +204,10 @@ public class HistoryLoader extends BackgroundJob {
 	@Override
 	public int getSize(){
 		return lKons.size();
+	}
+	
+	public List<Konsultation> getlKons(){
+		return lKons;
 	}
 	
 }
