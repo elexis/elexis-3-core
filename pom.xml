@@ -261,12 +261,21 @@
 							<scripts>
 								<script><![CDATA[
   import java.text.SimpleDateFormat;
-  HINT_GENERATED    = "# Generated from pom.xml groovy shell using gmavenplus-plugin\n"
+  HINT_GENERATED    = "#  ${project.name}: Generated from pom.xml groovy shell using gmavenplus-plugin at ${new Date()}\n"
+  HINT_LAST_CHANGED = "# Last changed from pom.xml groovy shell by gmavenplus-plugin in pom.xml at ${new Date()}\n"
+
   // Returns the current branchName
-  public String getBranchVersion() {
-      branch="git rev-parse --abbrev-ref HEAD".execute().text.replaceAll("\n", '')
+  public String createVersionProperties(String filename) {
+      branch =  System.getenv()['CI_COMMIT_REF_NAME']
+      if (branch != null ) {
+        println "branch name set to ${branch} because of CI_COMMIT_REF_NAME environment variable"
+      } else {
+        branch="git rev-parse --abbrev-ref HEAD".execute().text.replaceAll("\n", '')
+        println "NO CI_COMMIT_REF_NAME environment branch is now ${branch}"
+      }
+      commit_id="git rev-parse HEAD".execute().text.replaceAll("\n", '')
       elexis_version = "${project.version}".replace("-SNAPSHOT", ".") + new SimpleDateFormat("yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
-      tags =  "git tag --contains ".execute().text.split("\n")
+      tags =  "git tag --contains ${commit_id}".execute().text.split("\n")
       for ( i in tags ) {
           if (i ==~/release\/(.*)/ ) {
               elexis_version = (i=~ /release\//).replaceFirst("")
@@ -277,7 +286,25 @@
       // But it is used to invoke the modification only once per run
       System.setProperty("git_branch",  branch)
       System.setProperty("elexis_version",  elexis_version)
+      repo_version_file = new File(filename)
+      repo_version_file.write(HINT_GENERATED)
+      repo_version_file.append("elexis.version=${elexis_version}\n")
+      println("${project.name}: Created ${repo_version_file} with elexis_version ${elexis_version} from commit_id ${commit_id}")
       return branch;
+  }
+
+  // Write a modified p2.inf
+  public void patchP2infFile(String p2_inf_name, String branch_name, String p2_out_file_name) {
+    println "git checkout ${p2_inf_name}".execute().text
+    p2_inf_content = new File(p2_inf_name).text
+    elexis_p2_inf_file = new File(p2_inf_name)
+    old = p2_inf_content =~ /([^\/]+)\/p2\//
+    old_branch_name = old[0][1]
+    changed_content = p2_inf_content.replaceAll(old_branch_name, branch)
+    println("Changed p2_inf_content ${p2_inf_name} old ${old_branch_name} => ${branch} creating ${p2_out_file_name}")
+    elexis_p2_inf_file = new File(p2_out_file_name)
+    elexis_p2_inf_file.write(changed_content)
+    elexis_p2_inf_file.append(HINT_LAST_CHANGED)
   }
 
   // Write a repo.properties file
@@ -293,9 +320,10 @@
     println("Created ${repo_properties_name}")
   }
 
-if ( System.getProperty("git_branch") == null &&  "${project.name}" == "Elexis-Core" ) {
-  branch = getBranchVersion()
+if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core.data') {
+  branch = createVersionProperties('bundles/ch.elexis.core.data/rsc/version.properties')
   createRepoProperties('ch.elexis.core.p2site/repo.properties', branch)
+  patchP2infFile('bundles/ch.elexis.core.application/Elexis.p2.inf', branch, 'ch.elexis.core.p2site/Elexis.p2.inf')
 }
 ]]></script>
 							</scripts>
