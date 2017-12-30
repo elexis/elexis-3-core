@@ -428,20 +428,6 @@ class I18nInfo
     all_msgs
   end
 
-  def generate_messages_properties(filename)
-      full =File.join(Dir.pwd.sub(L10N_Cache::REGEX_TRAILING_LANG, ''), 'src', project_name.split('.'), 'Messages.java')
-      if File.exist?(full)
-        keys = File.readlines(full).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name, m[1]] if m }.compact
-        if keys.size == 0
-          puts "Skipping #{full} which contains no keys"
-          return
-        end
-      else
-        puts "Skipping #{full}" if $VERBOSE
-        return
-      end
-  end
-
   def generate_plugin_properties(project_name, filename)
     puts "Generating plugin properties for #{File.expand_path(filename)}"
     keys = []
@@ -479,7 +465,6 @@ class I18nInfo
   def to_properties
     Dir.chdir(main_dir)
     index = 0
-    languages = []
     @@all_msgs  = read_translation_csv(File.join(start_dir, L10N_Cache::TRANSLATIONS_CSV_NAME))
     all_keys = @@all_msgs.keys.collect{|x| x }.uniq
     l10n_key =  all_keys.find{|x| /l10n$/.match(x)}
