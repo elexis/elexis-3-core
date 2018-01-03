@@ -37,6 +37,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Menu;
@@ -479,39 +480,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			vc.getContentProvider().startListening();
 			
 			// add double click listener for CodeSelectorTarget
-			cv.addDoubleClickListener(new DoubleClickListener() {
-				public void doubleClicked(PersistentObject obj, CommonViewer cv){
-					ICodeSelectorTarget target =
-						CodeSelectorHandler.getInstance().getCodeSelectorTarget();
-					if (target != null) {
-						if (obj instanceof Leistungsblock) {
-							Leistungsblock block = (Leistungsblock) obj;
-							java.util.List<ICodeElement> elements = block.getElements();
-							for (ICodeElement codeElement : elements) {
-								if (codeElement instanceof PersistentObject) {
-									PersistentObject po = (PersistentObject) codeElement;
-									target.codeSelected(po);
-								}
-							}
-							java.util.List<ICodeElement> diff = block.getDiffToReferences(elements);
-							if (!diff.isEmpty()) {
-								StringBuilder sb = new StringBuilder();
-								diff.forEach(r -> {
-									if (sb.length() > 0) {
-										sb.append("\n");
-									}
-									sb.append(r);
-								});
-								MessageDialog.openWarning(getShell(), "Warnung",
-									"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
-										+ sb.toString());
-							}
-						} else {
-							target.codeSelected(obj);
-						}
-					}
-				}
-			});
+			cv.addDoubleClickListener(codeSelectorFactory.getDoubleClickListener());
 			
 			doubleClickEnable(lbUserMFU);
 			doubleClickEnable(lbPatientMFU);
@@ -756,5 +725,53 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			site.registerContextMenu(viewId + "." + getCodeSystemName(), getMenuManager(),
 				selectionProvider);
 		}
+	}
+	
+	/**
+	 * Returns the {@link DoubleClickListener} used on the Viewer of this
+	 * {@link CodeSelectorFactory}. Default implementation passes the selected
+	 * {@link PersistentObject} directly to the code selector target (manage via
+	 * {@link CodeSelectorHandler}). If a {@link Leistungsblock} is selected it will pass its
+	 * contained elements to the code selector target. </br>
+	 * </br>
+	 * Should be overridden by subclasses for special behaviour.
+	 * 
+	 * @return
+	 */
+	protected DoubleClickListener getDoubleClickListener() {
+		return new DoubleClickListener() {
+			public void doubleClicked(PersistentObject obj, CommonViewer cv){
+				ICodeSelectorTarget target =
+					CodeSelectorHandler.getInstance().getCodeSelectorTarget();
+				if (target != null) {
+					if (obj instanceof Leistungsblock) {
+						Leistungsblock block = (Leistungsblock) obj;
+						java.util.List<ICodeElement> elements = block.getElements();
+						for (ICodeElement codeElement : elements) {
+							if (codeElement instanceof PersistentObject) {
+								PersistentObject po = (PersistentObject) codeElement;
+								target.codeSelected(po);
+							}
+						}
+						java.util.List<ICodeElement> diff = block.getDiffToReferences(elements);
+						if (!diff.isEmpty()) {
+							StringBuilder sb = new StringBuilder();
+							diff.forEach(r -> {
+								if (sb.length() > 0) {
+									sb.append("\n");
+								}
+								sb.append(r);
+							});
+							MessageDialog.openWarning(Display.getDefault().getActiveShell(),
+								"Warnung",
+								"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
+									+ sb.toString());
+						}
+					} else {
+						target.codeSelected(obj);
+					}
+				}
+			}
+		};
 	}
 }

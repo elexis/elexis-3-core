@@ -11,6 +11,8 @@
  *******************************************************************************/
 package ch.elexis.core.ui.eigenartikel;
 
+import java.util.List;
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -30,11 +32,14 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.ui.actions.CodeSelectorHandler;
+import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
+import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
@@ -108,6 +113,29 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 	@Override
 	public String getCodeSystemName(){
 		return Eigenartikel.TYPNAME;
+	}
+	
+	@Override
+	protected DoubleClickListener getDoubleClickListener(){
+		return new DoubleClickListener() {
+			public void doubleClicked(PersistentObject obj, CommonViewer cv){
+				ICodeSelectorTarget target =
+					CodeSelectorHandler.getInstance().getCodeSelectorTarget();
+				if (target != null) {
+					if (obj instanceof Eigenartikel) {
+						Eigenartikel article = (Eigenartikel) obj;
+						// translate to first package if product selected
+						if (article.isProduct()) {
+							List<Eigenartikel> packages = article.getPackages();
+							if (!packages.isEmpty()) {
+								article = packages.get(0);
+							}
+						}
+						target.codeSelected(article);
+					}
+				}
+			}
+		};
 	}
 	
 	private class UpdateEventListener extends ElexisUiEventListenerImpl {
