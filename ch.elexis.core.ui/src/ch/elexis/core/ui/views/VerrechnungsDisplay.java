@@ -239,7 +239,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
 	private final class DropReceiver implements PersistentObjectDropTarget.IReceiver {
 		public void dropped(PersistentObject o, DropTargetEvent ev){
-			addPersistentObject(o);
+			if (accept(o)) {
+				addPersistentObject(o);
+			}
 		}
 		
 		public boolean accept(PersistentObject o){
