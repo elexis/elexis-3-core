@@ -351,21 +351,6 @@
       println("${project.name}: Created ${repo_version_file} with elexis_version ${elexis_version} from commit_id ${commit_id}")
       return branch;
   }
-
-  // Write a modified p2.inf
-  public void patchP2infFile(String p2_inf_name, String branch_name, String p2_out_file_name) {
-    println "git checkout ${p2_inf_name}".execute().text
-    p2_inf_content = new File(p2_inf_name).text
-    elexis_p2_inf_file = new File(p2_inf_name)
-    old = p2_inf_content =~ /([^\/]+)\/p2\//
-    old_branch_name = old[0][1]
-    changed_content = p2_inf_content.replaceAll(old_branch_name, branch)
-    println("Changed p2_inf_content ${p2_inf_name} old ${old_branch_name} => ${branch} creating ${p2_out_file_name}")
-    elexis_p2_inf_file = new File(p2_out_file_name)
-    elexis_p2_inf_file.write(changed_content)
-    elexis_p2_inf_file.append(HINT_LAST_CHANGED)
-  }
-
   // Write a repo.properties file
   public void createRepoProperties(String repo_properties_name, String branch) {
     // Now we are have the info to crate teh repo.properties
@@ -382,7 +367,6 @@
 if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core.data') {
   branch = createVersionProperties('ch.elexis.core.data/rsc/version.properties')
   createRepoProperties('ch.elexis.core.p2site/repo.properties', branch)
-  patchP2infFile('ch.elexis.core.application/Elexis.p2.inf', branch, 'ch.elexis.core.p2site/Elexis.p2.inf')
 }
 ]]></script>
 							</scripts>
