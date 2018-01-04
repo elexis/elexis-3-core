@@ -1,7 +1,0 @@
-# All occurrences before the p2 (between /) will be replaced by the current branch name in the gmavenplus-plugin in the ch.elexis.core.p2site/pom.xml to
-# If you make changes here, call git add for this file before running maven, as a git checkout will be called
-instructions.configure=\
-  addRepository(type:0,location:http${#58}//download.elexis.info/elexis/repo_branch/p2/elexis-3-base,name:Elexis 3 Base aus Zweig repo_branch);\
-  addRepository(type:0,location:http${#58}//download.elexis.info/elexis/repo_branch/p2/elexis-3-core,name:Elexis 3 Core aus Zweig repo_branch);\
-  addRepository(type:0,location:http${#58}//download.elexis.info/elexis/repo_branch/p2/elexis.3.gpl,name:Elexis GPL features aus Zweig repo_branch);\
-  mkdir(path:${installFolder}/dropins);
