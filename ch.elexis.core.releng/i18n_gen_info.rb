@@ -260,6 +260,7 @@ class I18nInfo
   end
   
   def parse_plug_properties(project_name, lang, propfile)
+    return unless File.exist?(propfile)
     File.open(propfile, 'r:ISO-8859-1').readlines.each do |line|
       key, value = get_key_value(line.chomp, replace_dots_by_underscore: false)
       next unless key
@@ -271,18 +272,15 @@ class I18nInfo
   def parse_plugin_xml(project_name, filename)
     return unless File.exist?(filename)
     keys = {}
-    IO.readlines(filename) do |line|
-      if m = /name="%(\w+)"/i.match(line)
+    IO.readlines(filename).each do |line|
+      if (m = /name="%([\.\w]+)/i.match(line.chomp))
         key = [project_name, m[1] ].join('_')
-        keys [key] = ''
+        keys[key] = ''
       end
-    end
+    end;
+    parse_plug_properties(project_name, L10N_Cache::JavaLanguage, filename.sub('.xml', '.properties'))
     LanguageViews.keys.each do |lang|
-      if L10N_Cache::JavaLanguage.eql?(lang)
-        propfile = filename.sub('.xml', '.properties')
-      else
-        propfile = filename.sub('.xml', "_#{lang}.properties")
-      end
+      propfile = filename.sub('.xml', "_#{lang}.properties")
       next unless File.exist?(propfile)
       parse_plug_properties(project_name, lang, propfile)
     end
@@ -327,7 +325,7 @@ class I18nInfo
         if plugin_xml = File.join(project_dir, 'plugin.xml')
           parse_plugin_xml(project_name, plugin_xml)
         end
-        puts "msg_files are #{msg_files}" if $VERBOSE
+        puts "#{directory}: msg_files are #{msg_files}" if $VERBOSE
         if msg_files.size == 0
           puts "Skipping #{Dir.pwd}" if $VERBOSE
         else
@@ -369,10 +367,15 @@ class I18nInfo
       german_translation = L10N_Cache.get_translation(tag_name, 'de')
       L10N_Cache::CSV_KEYS.each do |lang|
         next if lang.eql?(L10N_Cache::JavaLanguage)
-        next if lang.eql?('de')
         current_translation = L10N_Cache.get_translation(tag_name, lang)
-        if current_translation.size <= 1
-          translated = add_google_translation('de', german_translation, lang)
+        if current_translation.size == 0
+          if german_translation.size == 0
+            next if lang.eql?('en')
+            java_translation = L10N_Cache.get_translation(tag_name, L10N_Cache::JavaLanguage)
+            translated = add_google_translation('en', java_translation, lang)
+          else
+            translated = add_google_translation('de', german_translation, lang)
+          end
           puts "Adding #{translated} missing translation for #{lang} #{tag_name}" if $VERBOSE
           L10N_Cache.set_translation(tag_name, lang, translated)
           inserts[[tag_name, lang]] =   translated
@@ -455,7 +458,11 @@ class I18nInfo
             puts "no #{lang} value found for #{tag2write}"
             next
           end
-          file.puts "#{tag2write}=#{lang_value}".encode('ISO-8859-1')
+          begin
+            file.puts "#{tag2write}=#{lang_value}".encode('ISO-8859-1', {invalid: :replace, undef: :replace, replace: ''})
+          rescue => error
+            puts "Could not write #{lang_file}: #{tag2write} for #{lang} #{lang_value}"
+          end
         end
       end
     end
