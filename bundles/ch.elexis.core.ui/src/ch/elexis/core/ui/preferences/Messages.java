@@ -352,25 +352,14 @@ public class Messages {
 	public static String StockManagementPreferencePage_tblclmnNewColumn_text_3 = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_tblclmnNewColumn_text_3;
 	public static String StockManagementPreferencePage_group_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_group_text;
 	public static String StockManagementPreferencePage_lblCode_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblCode_text;
-	public static String StockManagementPreferencePage_text_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_text_text;
 	public static String StockManagementPreferencePage_lblDescription_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblDescription_text;
-	public static String StockManagementPreferencePage_text_1_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_text_1_text;
 	public static String StockManagementPreferencePage_lblLocation_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblLocation_text;
-	public static String StockManagementPreferencePage_lblMachine_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblMachine_text;
 	public static String StockManagementPreferencePage_lblMachineuuid_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblMachineuuid_text;
 	public static String StockManagementPreferencePage_txtOwner_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_txtOwner_text;
 	public static String StockManagementPreferencePage_lblOwner_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblOwner_text;
-	public static String StockManagementPreferencePage_lblNewLabel_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblNewLabel_text;
 	public static String StockManagementPreferencePage_lblResonsible_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblResonsible_text;
-	public static String StockManagementPreferencePage_lblNewLabel_text_1 = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblNewLabel_text_1;
-	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_btnPreferMandatorOwnedStocks_toolTipText;
 	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_btnPreferMandatorOwnedStocks_text;
-	public static String StockManagementPreferencePage_btnCheckButton_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_btnCheckButton_text;
 	public static String StockManagementPreferencePage_btnMachineOutlayPartialPackages_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_btnMachineOutlayPartialPackages_text;
-	public static String StockManagementPreferencePage_lblNewLabel_1_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblNewLabel_1_text;
-	public static String StockManagementPreferencePage_btnRadioButton_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_btnRadioButton_text;
-	public static String StockManagementPreferencePage_btnRadioButton_1_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_btnRadioButton_1_text;
-	public static String StockManagementPreferencePage_btnCheckButton_1_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_btnCheckButton_1_text;
 	public static String StockManagementPreferencePage_lblOwner_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblOwner_toolTipText;
 	public static String StockManagementPreferencePage_lblResponsible_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblResponsible_toolTipText;
 	public static String StockManagementPreferencePage_lblMachine_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblMachine_toolTipText;
@@ -382,8 +371,8 @@ public class Messages {
 	public static String StockManagementPreferencePage_lblMachineConfig_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblMachineConfig_text;
 	public static String SystemPreferencePage_editor_labelText = ch.elexis.core.l10n.Messages.SystemPreferencePage_editor_labelText;
 	public static String SystemPreferencePage_editor_labelText_1 = ch.elexis.core.l10n.Messages.SystemPreferencePage_editor_labelText_1;
-	public static String StockManagementPreferencePage_lblNewLabel_1_text_1 = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblNewLabel_1_text_1;
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_linkDefaultArticleProvider_text;
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText;
-
+	public static String StockManagementPreferencePage_lblNewLabel_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblNewLabel_text;
+	public static String StockManagementPreferencePage_lblMachine_text  = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblMachine_text;
 }

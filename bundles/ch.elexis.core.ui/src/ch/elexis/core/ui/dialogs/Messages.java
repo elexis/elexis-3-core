@@ -299,9 +299,7 @@ public class Messages {
 	public static String ReminderDetailDialog_btnOnHold_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_btnOnHold_text;
 	public static String ReminderDetailDialog_btnDue_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_btnDue_text;
 	public static String ReminderDetailDialog_btnOverdue_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_btnOverdue_text;
-	public static String ReminderDetailDialog_labelAction_toolTipText = ch.elexis.core.l10n.Messages.ReminderDetailDialog_labelAction_toolTipText;
 	public static String ReminderDetailDialog_labelAction_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_labelAction_text;
-	public static String DailyOrderDialog_text_text = ch.elexis.core.l10n.Messages.DailyOrderDialog_text_text;
 	public static String ReminderDetailDialog_txtDescription_message = ch.elexis.core.l10n.Messages.ReminderDetailDialog_txtDescription_message;
 	
 }

@@ -53,7 +53,28 @@ public class Presets {
 		Xid.localRegisterXIDDomainIfNotExists(KONTAKTID, Messages.Presets_PreviousID,
 			Xid.ASSIGNMENT_LOCAL);
 	}
-	
+
+	/* 
+	0 	A 	ID
+	1 	B 	IstPerson 	Natürliche Person oder Organisation
+	2 	C 	IstPatient
+	3 	D 	Titel
+	4 	E 	Bezeichnung1
+	5 	F 	Bezeichnung2
+	6 	G 	Zusatz
+	7 	H 	Geburtsdatum
+	8 	I 	Geschlecht 	m oder M → männlich, sonst weiblich
+	9 	J 	E-Mail
+	10 	K 	Website
+	11 	L 	Telefon 1
+	12 	M 	Telefon 2
+	13 	N 	Mobil
+	14 	O 	Strasse
+	15 	P 	Plz
+	16 	Q 	Ort
+	17 	R 	Postadresse
+	18 	S 	EAN 
+	*/
 	public static final boolean importUniversal(final ExcelWrapper exw, final boolean bKeepID,
 		final IProgressMonitor moni){
 		exw.setFieldTypes(new Class[] {
