@@ -108,7 +108,7 @@ class L10N_Cache
   CSV_KEYS = LanguageViews.keys + [JavaLanguage]
   TRANSLATIONS_CSV_NAME = 'translations.csv'
   Translations = Struct.new(:lang, :values)
-  REGEX_TRAILING_LANG = /\.plugin$|\.(#{LanguageViews.keys.join('|')}) $/
+  REGEX_TRAILING_LANG = /\.plugin$|\.(#{LanguageViews.keys.join('|')})$/
 
   @@cacheCsvFile = File.join(Dir.home, 'l10n.csv')
 
@@ -138,6 +138,10 @@ class L10N_Cache
 
   def self.save_cache(csv_file = @@cacheCsvFile)
     puts "Saving #{@@l10nCache.size} entries to #{csv_file}"
+    missing_name = csv_file.sub('.csv', '_missing.csv')
+    missing = CSV.open(missing_name, "wb:UTF-8", :force_quotes => true)
+    missing << (CSV_HEADER_START + CSV_KEYS)
+    nr_missing = 0
     CSV.open(csv_file, "wb:UTF-8", :force_quotes => true) do |csv|
       csv <<  (CSV_HEADER_START + CSV_KEYS)
       index = 0
@@ -149,9 +153,16 @@ class L10N_Cache
         info[L10N_Cache::JavaLanguage] = info['de'] if info['de'] && info[L10N_Cache::JavaLanguage].empty?
         translations = []
         CSV_KEYS.each{|lang| translations << info[lang] }
-        csv << ([key]  + translations).flatten
+        if translations.uniq.size == 1 && translations.first.eql?('')
+          puts "No translation for #{key} present"
+          missing << ([key]  + translations).flatten
+          nr_missing += 1
+        else
+          csv << ([key]  + translations).flatten
+        end
       end
     end
+    puts "Wrote #{nr_missing} entries into #{missing_name}" if nr_missing > 0
   end
   # Initialization
   L10N_Cache.load_cache
@@ -284,6 +295,7 @@ class I18nInfo
       next unless File.exist?(propfile)
       parse_plug_properties(project_name, lang, propfile)
     end
+    keys
   end
 
   def analyse_one_message_file(project_name, filename)
@@ -307,6 +319,11 @@ class I18nInfo
     puts "#{project_name} added #{filename} info #{info}" if $VERBOSE
   end
 
+  def get_project_name(project_dir)
+    project_xml = Document.new(File.new(File.join(project_dir, ".project")))
+    project_name  = project_xml.elements['projectDescription'].elements['name'].text
+  end
+
   def parse_plugin_and_messages
     start_dir = Dir.pwd
     @@directories.each do |directory|
@@ -318,8 +335,7 @@ class I18nInfo
         project_dir = File.expand_path(File.dirname(project))
         Dir.chdir(project_dir)
         @repository = calculate_repository_origin(project_dir)
-        project_xml = Document.new(File.new(File.join(project_dir, ".project")))
-        project_name  = project_xml.elements['projectDescription'].elements['name'].text
+        project_name  = get_project_name(project_dir)
         next if /test.*$|feature/i.match(project_name)
         msg_files = Dir.glob(File.join(project_dir, 'src', '**/messages*.properties'))
         if plugin_xml = File.join(project_dir, 'plugin.xml')
@@ -364,10 +380,12 @@ class I18nInfo
     msgs_to_add = read_translation_csv(ARGV.first)
     inserts = {}
     msgs_to_add.each do |tag_name, value|
+      next unless tag_name
       german_translation = L10N_Cache.get_translation(tag_name, 'de')
       L10N_Cache::CSV_KEYS.each do |lang|
         next if lang.eql?(L10N_Cache::JavaLanguage)
         current_translation = L10N_Cache.get_translation(tag_name, lang)
+        binding.pry unless current_translation
         if current_translation.size == 0
           if german_translation.size == 0
             next if lang.eql?('en')
@@ -438,6 +456,8 @@ class I18nInfo
       key, value = get_key_value(line.chomp, replace_dots_by_underscore: false)
       keys << [project_name, key].join('_')
     end
+    plugin_key_hash = parse_plugin_xml(project_name, File.join(File.dirname(filename), 'plugin.xml'))
+    keys += plugin_key_hash.keys
     LanguageViews.keys.each do |lang|
       lang_file = filename.sub('.properties', (lang.eql?('Java') ? '' : '_' + lang) + '.properties')
       File.open(lang_file, 'w:ISO-8859-1') do |file|
@@ -478,7 +498,7 @@ class I18nInfo
     # raise("Could not find the main l10n project among #{all_keys}") unless l10n_key
     Dir.glob("#{main_dir}/**/.project").each do |project|
       Dir.chdir(File.dirname(project))
-      project_name = Dir.pwd.split('/').last.sub(L10N_Cache::REGEX_TRAILING_LANG, '')
+      project_name  = get_project_name(File.dirname(project))
       puts "project_name is #{project_name}" if $VERBOSE
       files = Dir.glob(File.join(Dir.pwd, 'plugin.properties')) 
       files.each do |filename|
@@ -497,7 +517,7 @@ class I18nInfo
         saved_content = File.open(filename, 'r:ISO-8859-1').readlines
         msg_java =filename.sub(/\.(de|fr|it|en)/, '').sub('messages.properties', 'Messages.java')
         unless File.exist?(msg_java)
-          msg_java =File.join(Dir.pwd.sub(L10N_Cache::REGEX_TRAILING_LANG, ''), 'src', project_name.split('.'), 'Messages.java')
+          msg_java =File.join(Dir.pwd.sub(L10N_Cache::REGEX_TRAILING_LANG, ''), 'src', project_name.split('.'), 'Messages.java').sub('/'+lang, '')
         end
         if File.exist?(msg_java)
           keys = File.readlines(msg_java).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name, m[1]] if m }.compact
