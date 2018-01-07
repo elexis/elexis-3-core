@@ -507,6 +507,9 @@ class I18nInfo
         generate_plugin_properties(project_name, filename) 
       end
       files = Dir.glob(File.join(Dir.pwd, '**/messages*.properties'))
+      if Dir.pwd.index(/l10n\.[a-zA-Z]{2}$/) && files.size == 0
+        raise "You must place a correct messages.propertis into #{Dir.pwd}"
+      end
       files.each do |filename|
         keys = []
         next if filename.split('.').index('target')
@@ -517,7 +520,7 @@ class I18nInfo
         saved_content = File.open(filename, 'r:ISO-8859-1').readlines
         msg_java =filename.sub(/\.(de|fr|it|en)/, '').sub('messages.properties', 'Messages.java')
         unless File.exist?(msg_java)
-          msg_java =File.join(Dir.pwd.sub(L10N_Cache::REGEX_TRAILING_LANG, ''), 'src', project_name.split('.'), 'Messages.java').sub('/'+lang, '')
+          msg_java =File.join(Dir.pwd.sub(L10N_Cache::REGEX_TRAILING_LANG, ''), 'src', project_name.split('.'), 'Messages.java').gsub("/#{lang}/", '/')
         end
         if File.exist?(msg_java)
           keys = File.readlines(msg_java).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name, m[1]] if m }.compact
