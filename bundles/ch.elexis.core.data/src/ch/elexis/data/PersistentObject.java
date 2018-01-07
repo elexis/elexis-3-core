@@ -1625,6 +1625,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			// ElexisEvent(this,this.getClass(),ElexisEvent.EVENT_UPDATE));
 			return true;
 		} catch (Exception ex) {
+			log.error(ex.getLocalizedMessage() + " " + cmd);
 			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID,
 				ElexisStatus.CODE_NONE, "Fehler bei: " + cmd + "(" + field + "=" + value + ")", ex,
 				ElexisStatus.LOG_ERRORS);
