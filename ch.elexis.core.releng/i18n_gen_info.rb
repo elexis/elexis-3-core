@@ -524,6 +524,7 @@ class I18nInfo
         end
         if File.exist?(msg_java)
           keys = File.readlines(msg_java).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name, m[1]] if m }.compact
+          keys += File.readlines(msg_java).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name.sub(/\.#{lang}$/, ''), m[1]] if m }.compact
           if keys.size == 0
             puts "Skipping #{msg_java} which contains no keys"
             next
