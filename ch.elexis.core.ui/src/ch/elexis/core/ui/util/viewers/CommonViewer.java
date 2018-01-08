@@ -269,7 +269,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	 *            leer. notempty: Die Auswahl ist nicht (mehr) leer.
 	 */
 	public void notify(final Message m){
-		if (viewer.getControl().isDisposed()) {
+		if (viewer == null || viewer.getControl() == null || viewer.getControl().isDisposed()) {
 			return;
 		}
 		UiDesk.getDisplay().asyncExec(new Runnable() {

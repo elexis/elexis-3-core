@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 
 import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -20,37 +19,20 @@ public class EigenartikelTreeContentProvider
 	private CommonViewer commonViewer;
 	private String filter = null;
 	
+	private boolean showProducts;
+	
 	public EigenartikelTreeContentProvider(CommonViewer cv){
 		this.commonViewer = cv;
 	}
 	
 	@Override
-	public void dispose(){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
+	public void reorder(String field){}
 	
 	@Override
-	public void reorder(String field){
-		// TODO Auto-generated method stub
-		
-	}
+	public void selected(){}
 	
 	@Override
-	public void selected(){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void init(){
-		// TODO Auto-generated method stub
-		
-	}
+	public void init(){}
 	
 	@Override
 	public void startListening(){
@@ -69,15 +51,27 @@ public class EigenartikelTreeContentProvider
 		if (filter != null) {
 			qre.add(Eigenartikel.FLD_NAME, Query.LIKE, "%" + filter + "%");
 		}
+		if (!showProducts) {
+			qre.add(Eigenartikel.FLD_EXTID, Query.NOT_EQUAL, null);
+		}
 		qre.orderBy(false, Eigenartikel.FLD_NAME, Eigenartikel.FLD_EXTID);
 		List<Eigenartikel> execute = qre.execute();
-		List<Eigenartikel> collect =
-			execute.stream().filter(p -> !p.isValidPackage()).collect(Collectors.toList());
+		List<Eigenartikel> collect;
+		if (showProducts) {
+			collect =
+				execute.stream().filter(p -> !p.isValidPackage()).collect(Collectors.toList());
+		} else {
+			collect = execute;
+		}
+		
 		return collect.toArray();
 	}
 	
 	@Override
 	public Object[] getChildren(Object parentElement){
+		if (!showProducts) {
+			return null;
+		}
 		if (parentElement != null && parentElement instanceof Eigenartikel) {
 			Eigenartikel ea = (Eigenartikel) parentElement;
 			if (ea.isProduct()) {
@@ -89,17 +83,14 @@ public class EigenartikelTreeContentProvider
 	
 	@Override
 	public Object getParent(Object element){
-		//		Eigenartikel ea = (Eigenartikel) element;
-		//		if(ea.isProduct()) {
-		//			return null;
-		//		} else {
-		//			return Eigenartikel.load(ea.get(Eigenartikel.FLD_EXTID));
-		//		}
 		return null;
 	}
 	
 	@Override
 	public boolean hasChildren(Object element){
+		if (!showProducts) {
+			return false;
+		}
 		Eigenartikel ea = (Eigenartikel) element;
 		return ea.isProduct() && ea.getPackages().size() > 0;
 	}
@@ -112,6 +103,11 @@ public class EigenartikelTreeContentProvider
 		} else {
 			filter = null;
 		}
+		commonViewer.notify(CommonViewer.Message.update);
+	}
+	
+	public void setShowProducts(boolean checked){
+		this.showProducts = checked;
 		commonViewer.notify(CommonViewer.Message.update);
 	}
 	
