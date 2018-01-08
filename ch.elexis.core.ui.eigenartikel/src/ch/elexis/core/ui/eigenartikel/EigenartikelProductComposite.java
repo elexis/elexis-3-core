@@ -10,7 +10,9 @@ import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -40,8 +42,9 @@ import ch.elexis.data.PersistentObject;
 
 public class EigenartikelProductComposite extends Composite implements IUnlockable {
 	
-	private WritableValue productEigenartikel = new WritableValue(null, Eigenartikel.class);
-
+	private WritableValue<Eigenartikel> productEigenartikel =
+		new WritableValue<>(null, Eigenartikel.class);
+	
 	private Text txtProductName;
 	private Text txtAtcCode;
 	private ComboViewer comboViewerProductType;
@@ -49,6 +52,7 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 	private Button btnAddDrugPackage;
 	private ScrolledComposite scrolledComposite;
 	private Composite compositeArticleItems;
+	
 	/**
 	 * Create the composite.
 	 * 
@@ -105,10 +109,10 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		txtAtcCode.setLayoutData(gd_txtAtcCode);
 		txtAtcCode.setTextLimit(8);
 		new Label(compAtcCode, SWT.NONE);
-
+		
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
-
+		
 		btnAddDrugPackage = new Button(this, SWT.FLAT);
 		btnAddDrugPackage.setText(Messages.EigenartikelComposite_newArticle_text);
 		btnAddDrugPackage.setImage(Images.IMG_NEW.getImage());
@@ -148,13 +152,14 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 					Eigenartikel.copyProductAttributesToArticleSetAsChild(product, articleNew);
 					createEigenartikelComposite(articleNew);
 					scrolledComposite.setVisible(true);
-					scrolledComposite.setMinSize(compositeArticleItems.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					scrolledComposite
+						.setMinSize(compositeArticleItems.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					scrolledComposite.layout(true, true);
 					ElexisEventDispatcher.reload(Eigenartikel.class);
 				}
 			}
 		});
-
+		
 		setUnlocked(false);
 		
 		initDataBindings();
@@ -168,14 +173,14 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 	
 	@Override
 	public void setUnlocked(boolean unlocked){
-			txtProductName.setEditable(unlocked);
-			txtAtcCode.setEditable(unlocked);
-			comboViewerProductType.getCombo().setEnabled(unlocked);
-			btnAddDrugPackage.setEnabled(unlocked);
-			for (Control c : compositeArticleItems.getChildren()) {
-				IUnlockable ul = (IUnlockable) c;
-				ul.setUnlocked(unlocked);
-			}
+		txtProductName.setEditable(unlocked);
+		txtAtcCode.setEditable(unlocked);
+		comboViewerProductType.getCombo().setEnabled(unlocked);
+		btnAddDrugPackage.setEnabled(unlocked);
+		for (Control c : compositeArticleItems.getChildren()) {
+			IUnlockable ul = (IUnlockable) c;
+			ul.setUnlocked(unlocked);
+		}
 	}
 	
 	public Eigenartikel getProductArtikel(){
@@ -203,8 +208,8 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		scrolledComposite.layout(true, true);
 	}
 	
-	public void initDataBindings()
-	{
+	@SuppressWarnings("unchecked")
+	public void initDataBindings(){
 		DataBindingContext bindingContext = new DataBindingContext();
 		
 		UpdateValueStrategy strategyUpdateProductChilds = new UpdateValueStrategy() {
@@ -218,9 +223,9 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		};
 		
 		//
-		IObservableValue observeTextTxtProductNameObserveWidget =
+		ISWTObservableValue observeTextTxtProductNameObserveWidget =
 			WidgetProperties.text(SWT.Modify).observeDelayed(300, txtProductName);
-		IObservableValue productEigenartikelNameObserveDetailValue = PojoProperties
+		IObservableValue<String> productEigenartikelNameObserveDetailValue = PojoProperties
 			.value(Eigenartikel.class, "name", String.class).observeDetail(productEigenartikel);
 		bindingContext.bindValue(observeTextTxtProductNameObserveWidget,
 			productEigenartikelNameObserveDetailValue, strategyUpdateProductChilds, null);
@@ -238,23 +243,23 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		});
 		
 		//
-		IObservableValue observeSingleSelectionComboViewerProductType =
+		IViewerObservableValue observeSingleSelectionComboViewerProductType =
 			ViewerProperties.singleSelection().observe(comboViewerProductType);
-		IObservableValue productEigenartikelTypObserveDetailValue =
+		IObservableValue<Eigenartikel> productEigenartikelTypObserveDetailValue =
 			PojoProperties.value(Eigenartikel.class, "typ", EigenartikelTyp.class)
 				.observeDetail(productEigenartikel);
 		bindingContext.bindValue(observeSingleSelectionComboViewerProductType,
 			productEigenartikelTypObserveDetailValue, null, null);
 		
 		//
-		IObservableValue observeTextTxtAtcCodeObserveWidget =
+		ISWTObservableValue observeTextTxtAtcCodeObserveWidget =
 			WidgetProperties.text(SWT.Modify).observeDelayed(300, txtAtcCode);
-		IObservableValue productEigenartikelATC_codeObserveDetailValue = PojoProperties
+		IObservableValue<String> productEigenartikelATC_codeObserveDetailValue = PojoProperties
 			.value(Eigenartikel.class, "ATC_code", String.class).observeDetail(productEigenartikel);
 		bindingContext.bindValue(observeTextTxtAtcCodeObserveWidget,
 			productEigenartikelATC_codeObserveDetailValue, strategyUpdateProductChilds, null);
 	}
-
+	
 	private void createEigenartikelComposite(Eigenartikel articleNew){
 		EigenartikelComposite ec =
 			new EigenartikelComposite(compositeArticleItems, SWT.NONE, articleNew);

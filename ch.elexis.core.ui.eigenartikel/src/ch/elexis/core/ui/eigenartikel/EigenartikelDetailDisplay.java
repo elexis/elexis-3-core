@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -31,9 +32,14 @@ import ch.elexis.data.PersistentObject;
 public class EigenartikelDetailDisplay implements IDetailDisplay {
 	private IViewSite site;
 	
-	private EigenartikelProductComposite ec;
+	private EigenartikelProductComposite epc;
+	private EigenartikelComposite ec;
 	private Eigenartikel selectedObject;
 	private Eigenartikel currentLock;
+	private StackLayout layout;
+	private Composite container;
+	private Composite compProduct;
+	private Composite compArticle;
 	
 	private RestrictedAction createAction = new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY,
 		ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_newAction) {
@@ -111,8 +117,8 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 						act.getName()))) {
 					act.delete();
 					
-					if (ec != null) {
-						ec.setProductEigenartikel(null);
+					if (epc != null) {
+						epc.setProductEigenartikel(null);
 					}
 				}
 				ElexisEventDispatcher.reload(Eigenartikel.class);
@@ -128,9 +134,9 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 				if (egArtikel != null && selectedObject != null
 					&& egArtikel.getId().equals(selectedObject.getId())
 					&& ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED) {
-					ec.setUnlocked(true);
+					epc.setUnlocked(true);
 				} else {
-					ec.setUnlocked(false);
+					epc.setUnlocked(false);
 				}
 				break;
 			default:
@@ -146,10 +152,15 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	public Composite createDisplay(Composite parent, IViewSite site){
 		this.site = site;
 		
-		Composite comp = new Composite(parent, SWT.None);
-		comp.setLayout(new GridLayout(1, false));
+		container = new Composite(parent, SWT.NONE);
+ 		parent.setLayoutData(new GridData(GridData.FILL_BOTH));
+ 		layout = new StackLayout();
+ 		container.setLayout(layout);
 		
-		ToolBar toolBar = new ToolBar(comp, SWT.BORDER | SWT.FLAT | SWT.RIGHT);
+		compProduct = new Composite(container, SWT.None);		
+		compProduct.setLayout(new GridLayout(1, false));
+		
+		ToolBar toolBar = new ToolBar(compProduct, SWT.BORDER | SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		final ToolBarManager manager = new ToolBarManager(toolBar);
 		manager.add(createAction);
@@ -160,15 +171,25 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		manager.update(true);
 		toolBar.pack();
 		
-		ec = new EigenartikelProductComposite(comp, SWT.None);
-		ec.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		ec.setUnlocked(CoreHub.getLocalLockService().getStatus() == Status.STANDALONE);
+		epc = new EigenartikelProductComposite(compProduct, SWT.None);
+		epc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		epc.setUnlocked(CoreHub.getLocalLockService().getStatus() == Status.STANDALONE);
 		
 		if (CoreHub.getLocalLockService().getStatus() != Status.STANDALONE) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_egartikel);
 		}
 		
-		return comp;
+		compArticle = new Composite(container, SWT.None);		
+		compArticle.setLayout(new GridLayout(1, false));
+		
+		ec = new EigenartikelComposite(compArticle, SWT.None, false, null);
+		ec.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		ec.setUnlocked(false);
+		
+		layout.topControl = compProduct;
+		container.layout();
+		
+		return container;
 	}
 	
 	@Override
@@ -191,11 +212,24 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 			}
 			Eigenartikel ea = (Eigenartikel) obj;
 			toggleLockAction.setEnabled(ea.isProduct());
+			
+			if(ea.isProduct()) {
+				layout.topControl = compProduct;
+				epc.setProductEigenartikel(ea);
+			} else {
+				layout.topControl = compArticle;
+				ec.setEigenartikel(ea);
+			}
+			
 		} else {
 			selectedObject = null;
 			toggleLockAction.setEnabled(false);
+			epc.setProductEigenartikel(null);
+			ec.setEigenartikel(null);
+			layout.topControl = compProduct;
 		}
-		ec.setProductEigenartikel(selectedObject);
+		
+		container.layout();
 	}
 	
 	@Override

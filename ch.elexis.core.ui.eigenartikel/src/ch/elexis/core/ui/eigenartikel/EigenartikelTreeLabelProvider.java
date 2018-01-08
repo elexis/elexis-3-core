@@ -11,6 +11,7 @@ public class EigenartikelTreeLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object element){
 		Eigenartikel ea = (Eigenartikel) element;
+		String name = ea.getName();
 		if (!ea.isProduct()) {
 			String label = "";
 			String packageSizeString = ea.getPackageSizeString();
@@ -24,9 +25,9 @@ public class EigenartikelTreeLabelProvider extends LabelProvider {
 			if (availability != null) {
 				label += " (" + availability.toString() + ")";
 			}
-			return label;
+			return name +" " +label;
 		}
 		
-		return ea.getName();
+		return name;
 	}
 }
