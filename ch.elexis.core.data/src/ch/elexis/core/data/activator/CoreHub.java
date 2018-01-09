@@ -107,7 +107,10 @@ public class CoreHub implements BundleActivator {
 	/** Globale Einstellungen (Werden in der Datenbank gespeichert) */
 	public static Settings globalCfg;
 	
-	/** Lokale Einstellungen (Werden in der Registry bzw. ~/.java gespeichert) */
+	/**
+	 * Lokale Einstellungen (Werden in userhome/localCfg_xxx.xml gespeichert) </br>
+	 * <b>WARNING: can not handle more than one / in config name!</b>
+	 */
 	public static Settings localCfg;
 	
 	/** Anwenderspezifische Einstellungen (Werden in der Datenbank gespeichert) */
