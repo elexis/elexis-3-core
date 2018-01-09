@@ -580,14 +580,16 @@ public abstract class PersistentObject implements IPersistentObject {
 				long timestamp = System.currentTimeMillis();
 				// Gibt es das angeforderte Lock schon?
 				String oldlock = stm
-					.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+					.queryString("SELECT wert FROM CONFIG WHERE param="
+						+ getConnection().wrapFlavored(lockname));
 				if (!StringTool.isNothing(oldlock)) {
 					// Ja, wie alt ist es?
 					String[] def = oldlock.split("#");
 					long locktime = Long.parseLong(def[1]);
 					long age = timestamp - locktime;
 					if (age > 2000L) { // Älter als zwei Sekunden -> Löschen
-						stm.exec("DELETE FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+						stm.exec("DELETE FROM CONFIG WHERE param="
+							+ getConnection().wrapFlavored(lockname));
 					} else {
 						if (wait == false) {
 							return null;
@@ -606,7 +608,8 @@ public abstract class PersistentObject implements IPersistentObject {
 				// Prüfen, ob wir es wirklich haben, oder ob doch jemand anders
 				// schneller war.
 				String check = stm
-					.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+					.queryString("SELECT wert FROM CONFIG WHERE param="
+						+ getConnection().wrapFlavored(lockname));
 				if (check.equals(lockstring)) {
 					break;
 				}
@@ -629,13 +632,15 @@ public abstract class PersistentObject implements IPersistentObject {
 	public static synchronized boolean unlock(final String name, final String id){
 		String lockname = "lock" + name;
 		String lock = getConnection()
-			.queryString("SELECT wert from CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+			.queryString("SELECT wert from CONFIG WHERE param="
+				+ getConnection().wrapFlavored(lockname));
 		if (StringTool.isNothing(lock)) {
 			return false;
 		}
 		String[] res = lock.split("#");
 		if (res[0].equals(id)) {
-			getConnection().exec("DELETE FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+			getConnection().exec("DELETE FROM CONFIG WHERE param="
+				+ getConnection().wrapFlavored(lockname));
 			return true;
 		}
 		return false;
@@ -694,7 +699,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * Die ID in einen datenbankgeeigneten Wrapper verpackt (je nach Datenbank; meist Hochkommata).
 	 */
 	public String getWrappedId(){
-		return JdbcLink.wrap(id);
+		return getDBConnection().getJdbcLink().wrapFlavored(id);
 	}
 	
 	/** Der Konstruktor erstellt die ID */
@@ -956,7 +961,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (ret.contains(et)) {
 			DBConnection dbConnection = getDBConnection();
 			String remove = "DELETE FROM " + Sticker.FLD_LINKTABLE + " WHERE obj=" + getWrappedId()
-				+ " AND etikette=" + JdbcLink.wrap(et.getId());
+				+ " AND etikette=" + getDBConnection().getJdbcLink().wrapFlavored(et.getId());
 			int exec = dbConnection.exec(remove);
 			if (exec > 0) {
 				ret.remove(et);
@@ -980,7 +985,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			DBConnection dbConnection = getDBConnection();
 			String update = "INSERT INTO " + Sticker.FLD_LINKTABLE
 				+ " (obj,etikette,lastupdate) VALUES (" + getWrappedId() + ","
-				+ JdbcLink.wrap(st.getId()) + "," + Long.toString(System.currentTimeMillis()) + ")";
+				+ getDBConnection().getJdbcLink().wrapFlavored(st.getId()) + ","
+				+ Long.toString(System.currentTimeMillis()) + ")";
 			int exec = dbConnection.exec(update);
 			if (exec == 1) {
 				ret.add(st);
@@ -1464,7 +1470,8 @@ public abstract class PersistentObject implements IPersistentObject {
 				
 				sql.append("SELECT ID FROM ").append(m[2]).append(" WHERE ");
 				if (!includeDeleted) {
-					sql.append("deleted=").append(JdbcLink.wrap("0")).append(" AND ");
+					sql.append("deleted=").append(getDBConnection().getJdbcLink().wrapFlavored("0"))
+						.append(" AND ");
 				}
 				
 				sql.append(m[1]).append("=").append(getWrappedId());
@@ -1776,9 +1783,10 @@ public abstract class PersistentObject implements IPersistentObject {
 					
 					head.append("INSERT INTO ").append(m[3]).append("(ID,").append(m[2]).append(",")
 						.append(m[1]);
-					tail.append(") VALUES (").append(JdbcLink.wrap(StringTool.unique("aij")))
+					tail.append(") VALUES (").append(
+						getDBConnection().getJdbcLink().wrapFlavored(StringTool.unique("aij")))
 						.append(",").append(getWrappedId()).append(",")
-						.append(JdbcLink.wrap(objectId));
+						.append(getDBConnection().getJdbcLink().wrapFlavored(objectId));
 					if (extra != null) {
 						for (String s : extra) {
 							String[] def = s.split("=");
@@ -1787,7 +1795,8 @@ public abstract class PersistentObject implements IPersistentObject {
 								return 0;
 							}
 							head.append(",").append(def[0]);
-							tail.append(",").append(JdbcLink.wrap(def[1]));
+							tail.append(",")
+								.append(getDBConnection().getJdbcLink().wrapFlavored(def[1]));
 						}
 					}
 					head.append(tail).append(")");
@@ -1874,7 +1883,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				StringBuilder sql = new StringBuilder(200);
 				sql.append("DELETE FROM ").append(m[3]).append(" WHERE ").append(m[2]).append("=")
 					.append(getWrappedId()).append(" AND ").append(m[1]).append("=")
-					.append(JdbcLink.wrap(oID));
+					.append(getDBConnection().getJdbcLink().wrapFlavored(oID));
 				if (dbConnection.isTrace()) {
 					String sq = sql.toString();
 					dbConnection.doTrace(sq);
@@ -1955,7 +1964,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.append(
 			fieldS.stream().map(s -> map(s)).reduce((u, t) -> u + StringConstants.COMMA + t).get());
 		sql.append(") VALUES (");
-		sql.append(valuesS.stream().map(s -> JdbcLink.wrap(ts(s)))
+		sql.append(valuesS.stream().map(s -> getDBConnection().getJdbcLink().wrapFlavored(ts(s)))
 			.reduce((u, t) -> u + StringConstants.COMMA + t).get());
 		sql.append(")");
 		
