@@ -6,6 +6,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -29,9 +30,11 @@ import ch.elexis.data.PersistentObject;
 
 public class EigenartikelComposite extends Composite implements IUnlockable {
 	
-	private WritableValue drugPackageEigenartikel = new WritableValue(null, Eigenartikel.class);
+	private WritableValue<Eigenartikel> drugPackageEigenartikel =
+		new WritableValue<>(null, Eigenartikel.class);
 	
-
+	private final boolean includeDeleteOption;
+	
 	private Button btnDeleteDrugPackage;
 	private Text txtPackageSizeString;
 	private Text txtGtin;
@@ -56,12 +59,22 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	 * @param style
 	 */
 	public EigenartikelComposite(Composite parent, int style, Eigenartikel eigenartikel){
+		this(parent, style, true, eigenartikel);
+	}
+	
+	public EigenartikelComposite(Composite parent, int style, boolean includeDeleteOption,
+		Eigenartikel eigenartikel){
 		super(parent, style);
 		this.eigenartikel = eigenartikel;
+		this.includeDeleteOption = includeDeleteOption;
 		this.drugPackageEigenartikel.setValue(eigenartikel);
 		
 		setLayout(new GridLayout(2, false));
 		createArticlePart();
+	}
+	
+	public void setEigenartikel(Eigenartikel eigenartikel){
+		this.drugPackageEigenartikel.setValue(eigenartikel);
 	}
 	
 	private void createArticlePart(){
@@ -70,30 +83,32 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		grpDrugPackages.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 2, 1));
 		grpDrugPackages.setText("");
 		
-		Composite compDpSelector = new Composite(grpDrugPackages, SWT.NONE);
-		compDpSelector.setLayout(new GridLayout(3, false));
-		compDpSelector.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		btnDeleteDrugPackage = new Button(compDpSelector, SWT.FLAT);
-		btnDeleteDrugPackage.setText(Messages.EigenartikelComposite_deleteArticle_text);
-		btnDeleteDrugPackage.setToolTipText(Messages.EigenartikelComposite_deleteArticle_text);
-		btnDeleteDrugPackage.setImage(Images.IMG_DELETE.getImage());
-		btnDeleteDrugPackage.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				if (eigenartikel != null && eigenartikel.exists()) {
-					eigenartikel.delete();
-					Composite p = getParent();
-					dispose();
-					
-					if (p.getParent() instanceof ScrolledComposite) {
-						ScrolledComposite sc = (ScrolledComposite) p.getParent();
-						sc.setMinSize(p.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-						sc.layout(true, true);
+		if (includeDeleteOption) {
+			Composite compDpSelector = new Composite(grpDrugPackages, SWT.NONE);
+			compDpSelector.setLayout(new GridLayout(3, false));
+			compDpSelector.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			
+			btnDeleteDrugPackage = new Button(compDpSelector, SWT.FLAT);
+			btnDeleteDrugPackage.setText(Messages.EigenartikelComposite_deleteArticle_text);
+			btnDeleteDrugPackage.setToolTipText(Messages.EigenartikelComposite_deleteArticle_text);
+			btnDeleteDrugPackage.setImage(Images.IMG_DELETE.getImage());
+			btnDeleteDrugPackage.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					if (eigenartikel != null && eigenartikel.exists()) {
+						eigenartikel.delete();
+						Composite p = getParent();
+						dispose();
+						
+						if (p.getParent() instanceof ScrolledComposite) {
+							ScrolledComposite sc = (ScrolledComposite) p.getParent();
+							sc.setMinSize(p.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+							sc.layout(true, true);
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 		
 		Composite compDpDetail = new Composite(grpDrugPackages, SWT.BORDER);
 		compDpDetail.setLayout(new GridLayout(4, false));
@@ -129,7 +144,8 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		txtMeasurementUnit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPackagesstring = new Label(compDpDetail, SWT.NONE);
-		lblPackagesstring.setToolTipText(Messages.EigenartikelComposite_lblPackagesstring_toolTipText);
+		lblPackagesstring
+			.setToolTipText(Messages.EigenartikelComposite_lblPackagesstring_toolTipText);
 		lblPackagesstring.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPackagesstring.setText(Messages.EigenartikelComposite_lblPackagesstring_text);
 		
@@ -175,7 +191,6 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		initDataBindings();
 	}
 	
-	
 	@Override
 	protected void checkSubclass(){
 		// Disable the check that prevents subclassing of SWT components
@@ -183,7 +198,9 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	
 	@Override
 	public void setUnlocked(boolean unlocked){
-		btnDeleteDrugPackage.setEnabled(unlocked);
+		if (includeDeleteOption) {
+			btnDeleteDrugPackage.setEnabled(unlocked);
+		}
 		btnHiCostAbsorption.setEnabled(unlocked);
 		txtGtin.setEditable(unlocked);
 		txtPharmacode.setEditable(unlocked);
@@ -196,19 +213,20 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		stockDetailComposite.setEnabled(unlocked);
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected DataBindingContext initDataBindings(){
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		IObservableValue observeTextTxtGtinObserveWidget =
+		ISWTObservableValue observeTextTxtGtinObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtGtin);
-		IObservableValue drugPackageEigenartikelEANObserveDetailValue = PojoProperties
+		IObservableValue<String> drugPackageEigenartikelEANObserveDetailValue = PojoProperties
 			.value(Eigenartikel.class, "EAN", String.class).observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtGtinObserveWidget,
 			drugPackageEigenartikelEANObserveDetailValue, null, null);
 		//
-		IObservableValue observeTextTxtPackageSizeIntObserveWidget =
+		ISWTObservableValue observeTextTxtPackageSizeIntObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtPackageSizeInt);
-		IObservableValue drugPackageEigenartikelPackungsGroesseObserveDetailValue =
+		IObservableValue<Integer> drugPackageEigenartikelPackungsGroesseObserveDetailValue =
 			PojoProperties.value(Eigenartikel.class, "packageSize", Integer.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtPackageSizeIntObserveWidget,
@@ -228,25 +246,25 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 			});
 		
 		//
-		IObservableValue observeTextTxtExfPriceObserveWidget =
+		ISWTObservableValue observeTextTxtExfPriceObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtExfPrice);
-		IObservableValue drugPackageEigenartikelEKPreisObserveDetailValue =
+		IObservableValue<String> drugPackageEigenartikelEKPreisObserveDetailValue =
 			PojoProperties.value(Eigenartikel.class, "exfPrice", String.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtExfPriceObserveWidget,
 			drugPackageEigenartikelEKPreisObserveDetailValue, null, null);
 		//
-		IObservableValue observeTextTxtpubPriceObserveWidget =
+		ISWTObservableValue observeTextTxtpubPriceObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtpubPrice);
-		IObservableValue drugPackageEigenartikelVKPreisObserveDetailValue =
+		IObservableValue<String> drugPackageEigenartikelVKPreisObserveDetailValue =
 			PojoProperties.value(Eigenartikel.class, "pubPrice", String.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtpubPriceObserveWidget,
 			drugPackageEigenartikelVKPreisObserveDetailValue, null, null);
 		//
-		IObservableValue observeTextTxtMeasurementUnitObserveWidget =
+		ISWTObservableValue observeTextTxtMeasurementUnitObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtMeasurementUnit);
-		IObservableValue drugPackageEigenartikelMeasurementUnitObserveDetailValue =
+		IObservableValue<String> drugPackageEigenartikelMeasurementUnitObserveDetailValue =
 			PojoProperties.value(Eigenartikel.class, "measurementUnit", String.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtMeasurementUnitObserveWidget,
@@ -266,37 +284,36 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 			});
 		
 		//
-		IObservableValue observeTextTxtPharmacodeObserveWidget =
+		ISWTObservableValue observeTextTxtPharmacodeObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtPharmacode);
-		IObservableValue drugPackageEigenartikelPharmaCodeObserveDetailValue =
+		IObservableValue<String> drugPackageEigenartikelPharmaCodeObserveDetailValue =
 			PojoProperties.value(Eigenartikel.class, "pharmaCode", String.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtPharmacodeObserveWidget,
 			drugPackageEigenartikelPharmaCodeObserveDetailValue, null, null);
 		//
-		IObservableValue observeTextTxtSellUnitObserveWidget =
+		ISWTObservableValue observeTextTxtSellUnitObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtSellUnit);
-		IObservableValue drugPackageEigenartikelSellUnitObserveDetailValue =
+		IObservableValue<String> drugPackageEigenartikelSellUnitObserveDetailValue =
 			PojoProperties.value(Eigenartikel.class, "sellUnit", String.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtSellUnitObserveWidget,
 			drugPackageEigenartikelSellUnitObserveDetailValue, null, null);
 		//
-		IObservableValue observeTooltipTextTxtPackageSizeStringObserveWidget =
+		ISWTObservableValue observeTooltipTextTxtPackageSizeStringObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtPackageSizeString);
-		IObservableValue drugPackageEigenartikelPackageSizeStringObserveDetailValue =
+		IObservableValue<String> drugPackageEigenartikelPackageSizeStringObserveDetailValue =
 			PojoProperties.value(Eigenartikel.class, "packageSizeString", String.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTooltipTextTxtPackageSizeStringObserveWidget,
 			drugPackageEigenartikelPackageSizeStringObserveDetailValue, null, null);
 		//
-		org.eclipse.core.databinding.observable.value.IObservableValue observeSelectionBtnHiCostAbsorptionObserveWidget =
-			org.eclipse.jface.databinding.swt.WidgetProperties.selection()
-				.observe(btnHiCostAbsorption);
-		org.eclipse.core.databinding.observable.value.IObservableValue drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue =
-			org.eclipse.core.databinding.beans.PojoProperties
+		ISWTObservableValue observeSelectionBtnHiCostAbsorptionObserveWidget =
+			WidgetProperties.selection().observe(btnHiCostAbsorption);
+		IObservableValue<Boolean> drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue =
+			PojoProperties
 				.value(ch.elexis.core.eigenartikel.Eigenartikel.class,
-					"healthInsuranceCostAbsorption", boolean.class)
+					"healthInsuranceCostAbsorption", Boolean.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeSelectionBtnHiCostAbsorptionObserveWidget,
 			drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue, null, null);

@@ -55,6 +55,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.stock.service.ArticleServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
+import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Stock;
 import ch.elexis.data.StockEntry;
@@ -285,6 +286,15 @@ public class ImportArticleDialog extends TitleAreaDialog {
 								.findStockEntryForArticleInStock(stock,
 									((Artikel) opArticle.get())
 										.storeToString());
+							
+							String result = "MODIFY";
+							if(stockEntry == null) {
+								PersistentObject article = (PersistentObject) opArticle.get();
+								stockEntry = CoreHub.getStockService()
+									.storeArticleInStock(stock, article.storeToString());
+								result = "ADDITION";
+							}
+							
 							if (stockEntry instanceof StockEntry) {
 								StockEntry poStockEntry = (StockEntry) stockEntry;
 								if (CoreHub.getLocalLockService().acquireLock(poStockEntry)
@@ -303,7 +313,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 											.setMaximumStock(StringTool.parseSafeInt(stockMax));
 									}
 									importCount++;
-									addToReport("SUCCESS '" + stock.getLabel() + "'", articleName,
+									addToReport("OK "+result+" '" + stock.getLabel() + "'", articleName,
 										gtin);
 									CoreHub.getLocalLockService().releaseLock(poStockEntry);
 								}
