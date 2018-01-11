@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
@@ -62,7 +63,9 @@ import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
 
 public class BlockSelector extends CodeSelectorFactory {
-	private IAction deleteAction, createAction, exportAction, copyAction;
+	protected static final String BLOCK_ONLY_FILTER_ENABLED = "blockselector/blockonlyfilter";
+	
+	private IAction deleteAction, createAction, exportAction, copyAction, searchBlocksOnly;
 	private CommonViewer cv;
 	private MenuManager mgr;
 	static SelectorPanelProvider slp;
@@ -118,9 +121,9 @@ public class BlockSelector extends CodeSelectorFactory {
 		}
 		
 		slp = new SelectorPanelProvider(lbName, true);
-		slp.addActions(createAction, exportAction);
+		slp.addActions(createAction, exportAction, searchBlocksOnly);
 		ViewerConfigurer vc =
-			new ViewerConfigurer(new BlockContentProvider(cv), new DefaultLabelProvider() {
+			new ViewerConfigurer(new BlockContentProvider(this, cv), new DefaultLabelProvider() {
 				@Override
 				public Image getImage(Object element){
 					if(element instanceof Leistungsblock) {
@@ -218,11 +221,23 @@ public class BlockSelector extends CodeSelectorFactory {
 				}
 			}
 		};
+		searchBlocksOnly = new Action("Nur Blöcke suchen", Action.AS_CHECK_BOX ) {
+			{
+				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
+				setToolTipText("Nur Blöcke suchen");
+				setChecked(CoreHub.userCfg.get(BLOCK_ONLY_FILTER_ENABLED, false));
+			}
+			
+			public void run(){
+				CoreHub.userCfg.set(BLOCK_ONLY_FILTER_ENABLED, isChecked());
+			};
+		};
 	}
 	
 	public static class BlockContentProvider implements
 			ViewerConfigurer.ICommonViewerContentProvider, ITreeContentProvider {
-		CommonViewer cv;
+		private BlockSelector selector;
+		private CommonViewer cv;
 		
 		private String queryFilter;
 		
@@ -234,8 +249,9 @@ public class BlockSelector extends CodeSelectorFactory {
 			}
 		};
 		
-		BlockContentProvider(CommonViewer c){
-			cv = c;
+		BlockContentProvider(BlockSelector selector, CommonViewer cv){
+			this.cv = cv;
+			this.selector = selector;
 		}
 		
 		public void startListening(){
@@ -253,11 +269,15 @@ public class BlockSelector extends CodeSelectorFactory {
 			Query<Leistungsblock> qbe = new Query<Leistungsblock>(Leistungsblock.class);
 			qbe.add(Leistungsblock.FLD_ID, Query.NOT_EQUAL, Leistungsblock.VERSION_ID);
 			if ((queryFilter != null && queryFilter.length() > 2)) {
-				qbe.startGroup();
-				qbe.add(Leistungsblock.FLD_NAME, Query.EQUALS, queryFilter);
-				qbe.or();
-				qbe.add(Leistungsblock.FLD_CODEELEMENTS, Query.LIKE, "%" + queryFilter + "%");
-				qbe.endGroup();
+				if (selector.searchBlocksOnly.isChecked()) {
+					qbe.add(Leistungsblock.FLD_NAME, Query.LIKE, "%" + queryFilter + "%");
+				} else {
+					qbe.startGroup();
+					qbe.add(Leistungsblock.FLD_NAME, Query.LIKE, "%" + queryFilter + "%");
+					qbe.or();
+					qbe.add(Leistungsblock.FLD_CODEELEMENTS, Query.LIKE, "%" + queryFilter + "%");
+					qbe.endGroup();
+				}
 			}
 			qbe.orderBy(false, Leistungsblock.FLD_NAME);
 			return qbe.execute().toArray();
@@ -284,8 +304,10 @@ public class BlockSelector extends CodeSelectorFactory {
 					viewer.getControl().setRedraw(false);
 					viewer.refresh();
 					if ((queryFilter != null && queryFilter.length() > 2)) {
-						if (viewer instanceof TreeViewer) {
-							((TreeViewer) viewer).expandAll();
+						if (!selector.searchBlocksOnly.isChecked()) {
+							if (viewer instanceof TreeViewer) {
+								((TreeViewer) viewer).expandAll();
+							}
 						}
 					} else {
 						((TreeViewer) viewer).collapseAll();

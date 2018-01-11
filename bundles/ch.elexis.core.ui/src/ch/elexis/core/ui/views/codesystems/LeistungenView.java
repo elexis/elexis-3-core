@@ -60,6 +60,7 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 	
 	@Override
 	public void createPartControl(final Composite parent){
+		delegatingSelectionProvider = new DelegatingSelectionProvider();
 		
 		parent.setLayout(new GridLayout());
 		ctab = new CTabFolder(parent, SWT.BOTTOM);
@@ -120,7 +121,6 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 		CodeSelectorFactory.makeTabs(ctab, getViewSite(),
 			ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
 		GlobalEventDispatcher.addActivationListener(this, this);
-		delegatingSelectionProvider = new DelegatingSelectionProvider();
 		getSite().setSelectionProvider(delegatingSelectionProvider);
 	}
 	

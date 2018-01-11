@@ -252,6 +252,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				if (o instanceof IVerrechenbar) {
 					return true;
 				}
+				if (o instanceof IDiagnose) {
+					return true;
+				}
 				if (o instanceof Leistungsblock) {
 					return true;
 				}

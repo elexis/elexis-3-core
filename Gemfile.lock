@@ -5,10 +5,9 @@ GEM
     ast (2.3.0)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
-    eclipse-plugin (0.4)
+    eclipse-plugin (0.4.1)
       nokogiri
-      rubyzip (>= 1.2.1)
-      zip-zip
+      rubyzip (~> 1.2.1)
     elexis-wiki-interface (0.5.4)
       eclipse-plugin (>= 0.1)
       mediawiki-gateway
@@ -36,7 +35,7 @@ GEM
     netrc (0.11.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
-    oga (2.11)
+    oga (2.13)
       ast
       ruby-ll (~> 2.1)
     rest-client (1.8.0)
@@ -54,17 +53,15 @@ GEM
     unf_ext (0.0.7.4)
     unicode (0.4.4.4)
     xml-simple (1.1.5)
-    zip-zip (0.3)
-      rubyzip (>= 1.0.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  eclipse-plugin
+  eclipse-plugin (~> 0.4)
   elexis-wiki-interface (>= 0.5.4)
   oga
-  rubyzip
+  rubyzip (~> 1.2.1)
   rugged
   trollop
   xml-simple

@@ -319,6 +319,9 @@ public class JdbcLink {
 	 * @param s
 	 *            der String
 	 * @return Datenbankkonform eingepackte String
+	 * 
+	 * @deprecated only escapes for DBFLAVOR_MYSQL, use {@link JdbcLink#wrapFlavored(String)} for
+	 *             correct wrapping
 	 */
 	public static String wrap(String s){
 		if (StringTool.isNothing(s)) {

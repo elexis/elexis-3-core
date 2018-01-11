@@ -38,9 +38,11 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.locks.LockResponseHelper;
+import ch.elexis.core.ui.selectors.FieldDescriptor;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
+import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.DefaultButtonProvider;
@@ -83,9 +85,15 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 		
 		EigenartikelTreeContentProvider eal = new EigenartikelTreeContentProvider(cv);
 		
-		DefaultControlFieldProvider dcfp = new DefaultControlFieldProvider(cv, new String[] {
-			EigenartikelTreeContentProvider.FILTER_KEY
-		});
+		ShowEigenartikelProductsAction seaoa = new ShowEigenartikelProductsAction(eal, this);
+		rearrangePackagesAction.setEnabled(CoreHub.userCfg.get(ShowEigenartikelProductsAction.FILTER_CFG, false));
+		
+		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
+			new FieldDescriptor<Eigenartikel>(EigenartikelTreeContentProvider.FILTER_KEY)
+		};
+		
+		SelectorPanelProvider slp = new SelectorPanelProvider(lbName, true);
+		slp.addActions(seaoa);
 		
 		DefaultButtonProvider dbp = new ViewerConfigurer.DefaultButtonProvider();
 		SimpleWidgetProvider swp =
@@ -97,7 +105,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 			ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED);
 		ElexisEventDispatcher.getInstance().addListeners(updateEventListener);
 		
-		return new ViewerConfigurer(eal, alp, dcfp, dbp, swp);
+		return new ViewerConfigurer(eal, alp, slp, dbp, swp);
 	}
 	
 	@Override
@@ -229,4 +237,8 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 				setEnabled(!initialized);
 			}
 		};
+
+	public void allowArticleRearrangement(boolean checked){
+		rearrangePackagesAction.setEnabled(checked);
+	}
 }
