@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    rubyzip (0.9.9)
+    rubyzip (1.2.1)
     xml-simple (1.1.2)
 
 PLATFORMS
@@ -10,5 +10,8 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  rubyzip (< 1.0)
+  rubyzip (~> 1.2.1)
   xml-simple
+
+BUNDLED WITH
+   1.16.0
