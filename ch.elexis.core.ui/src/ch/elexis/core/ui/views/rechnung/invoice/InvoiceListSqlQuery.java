@@ -22,6 +22,7 @@ import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.data.DBConnection;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
+import ch.rgw.tools.JdbcLink;
 
 public class InvoiceListSqlQuery {
 	
@@ -44,7 +45,7 @@ public class InvoiceListSqlQuery {
 	{
 		String query = null;
 		DBConnection dbConnection = PersistentObject.getDefaultConnection();
-		if (dbConnection != null && "postgresql".equalsIgnoreCase(dbConnection.getDBFlavor())) {
+		if (dbConnection != null && JdbcLink.DBFLAVOR_POSTGRESQL.equalsIgnoreCase(dbConnection.getDBFlavor())) {
 			query =
 				"( SELECT rz.id AS InvoiceId, rz.RnNummer AS InvoiceNo, rz.rndatum, rz.rndatumvon, rz.rndatumbis, rz.statusdatum, rz.InvoiceState, rz.InvoiceTotal, rz.MandantId, f.patientid AS PatientId, k.bezeichnung1 AS PatName1, k.bezeichnung2 AS PatName2, k.geschlecht AS PatSex, k.geburtsdatum AS PatDob, f.id AS FallId, f.gesetz AS FallGesetz, f.garantID AS FallGarantId, f.KostentrID AS FallKostentrID, rz.paymentCount, rz.paidAmount, rz.openAmount FROM (SELECT r.id, r.rnnummer, r.rndatum, r.rndatumvon, r.rndatumbis, r.statusdatum, r.fallid, r.MandantId, CAST(r.rnstatus AS NUMERIC) AS InvoiceState, CAST(r.betrag AS NUMERIC) AS InvoiceTotal, COUNT(z.id) AS paymentCount, CASE WHEN COUNT(z.id) = '0' THEN 0 ELSE SUM(CAST(z.betrag AS NUMERIC)) END paidAmount, CASE WHEN COUNT(z.id) = '0' THEN CAST(r.betrag AS NUMERIC) ELSE (CAST(r.betrag AS NUMERIC) - SUM(CAST(z.betrag AS NUMERIC))) END openAmount FROM RECHNUNGEN r LEFT JOIN zahlungen z ON z.rechnungsID = r.id AND z.deleted = '0' WHERE r.deleted = '0'"
 				+ " " + InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION
