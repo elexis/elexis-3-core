@@ -64,7 +64,7 @@ public class User extends PersistentObject {
 	 * @param password
 	 */
 	public User(Anwender anw, String username, String password){
-		create(username);
+		create(username.toLowerCase());
 		setAssignedContact(anw);
 		if (password == null || password.length() == 0) {
 			password = StringTool.unique("pswd");
@@ -75,7 +75,7 @@ public class User extends PersistentObject {
 	}
 	
 	protected User(final String id){
-		super(id);
+		super(id.toLowerCase());
 	}
 	
 	/**
@@ -86,7 +86,7 @@ public class User extends PersistentObject {
 	 * @return
 	 */
 	public static @NonNull User load(final String id) {
-		return new User(id.toLowerCase());
+		return new User(id);
 	}
 	
 	/**
