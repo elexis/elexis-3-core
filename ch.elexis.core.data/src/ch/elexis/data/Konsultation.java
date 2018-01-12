@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import java.security.InvalidParameterException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,6 +33,7 @@ import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.text.model.Samdas;
+import ch.rgw.crypt.BadParameterException;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -53,12 +55,13 @@ import ch.rgw.tools.VersionedResource.ResourceItem;
 public class Konsultation extends PersistentObject implements Comparable<Konsultation> {
 	public static final String FLD_ENTRY = "Eintrag";
 	public static final String DATE = "Datum";
+	public static final String FLD_TIME = "Zeit";
 	public static final String FLD_BILL_ID = "RechnungsID";
 	public static final String FLD_CASE_ID = "FallID";
 	public static final String FLD_MANDATOR_ID = "MandantID";
 	public static final String FLD_JOINT_DIAGNOSEN = "Diagnosen";
 	
-	private static final String TABLENAME = "BEHANDLUNGEN";
+	public static final String TABLENAME = "BEHANDLUNGEN";
 	volatile int actEntry;
 	
 	protected String getTableName(){
@@ -67,7 +70,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	
 	static {
 		addMapping(TABLENAME, FLD_MANDATOR_ID, PersistentObject.DATE_COMPOUND, FLD_CASE_ID,
-			FLD_BILL_ID, "Eintrag=S:V:Eintrag",
+			FLD_TIME, FLD_BILL_ID, "Eintrag=S:V:Eintrag",
 			FLD_JOINT_DIAGNOSEN + "=JOINT:BehandlungsID:DiagnoseID:BEHDL_DG_JOINT");
 	}
 	
@@ -363,6 +366,54 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	public String getDatum(){
 		String ret = get(DATE);
 		return ret;
+	}
+	
+	/**
+	 * Konsultationszeit setzen
+	 * 
+	 * @param time
+	 *            Zeit im Format HHMM oder HHMMSS
+	 * @param force
+	 *            wenn die zeit auch bei gesperrter Kons geändert werden soll
+	 */
+	public void setTime(String time, boolean force){
+		if (time != null) {
+			if (time.length() == 4) {
+				time += "00";
+			} else if (time.length() != 6) {
+				throw new InvalidParameterException("Time must be in HHMM or HHMMSS format");
+			}
+			if (force || isEditable(true)) {
+				set(FLD_TIME, time);
+			}
+		}
+	}
+	
+	/**
+	 * Konsultationszeit auslesen
+	 * 
+	 * @return Die Zeit der Ksonsultation. "000000" wenn keine Zeit gesetzt war (00:00)
+	 */
+	public String getTime(){
+		String time = get(FLD_TIME);
+		if (StringTool.isNothing(time)) {
+			return "000000";
+		} else {
+			return time;
+		}
+	}
+	
+	/**
+	 * Konsultationszeit setzen
+	 * 
+	 * @param time
+	 * @param force
+	 *            wenn die zeit auch bei gesperrter Kons geändert werden soll
+	 */
+	public void setTime(TimeTool time, boolean force){
+		if (force || isEditable(true)) {
+			set(FLD_TIME, time.toString(TimeTool.TIME_FULL).replaceAll(":", ""));
+		}
 	}
 	
 	public Rechnung getRechnung(){
@@ -1087,10 +1138,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				clone.addDiagnose(diagnose);
 			}
 			VersionedResource vr = clone.getEintrag();
-			vr.update(
-				"Diese Konsultation wurde durch die Korrektur der Rechnung "
-					+ invoiceSrc.getNr() + " erstellt.",
-				"Rechnungskorrektur");
+			vr.update("Diese Konsultation wurde durch die Korrektur der Rechnung "
+				+ invoiceSrc.getNr() + " erstellt.", "Rechnungskorrektur");
 			clone.setEintrag(vr, true);
 			return clone;
 		}

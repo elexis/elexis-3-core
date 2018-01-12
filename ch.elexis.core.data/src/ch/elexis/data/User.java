@@ -86,7 +86,7 @@ public class User extends PersistentObject {
 	 * @return
 	 */
 	public static @NonNull User load(final String id) {
-		return new User(id);
+		return new User(id.toLowerCase());
 	}
 	
 	/**

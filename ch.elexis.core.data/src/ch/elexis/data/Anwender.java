@@ -54,13 +54,12 @@ public class Anwender extends Person {
 	public static final String FLD_EXTINFO_MANDATORS = "Mandant";
 	
 	static {
-		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER,
-			FLD_LABEL + "=Bezeichnung3", FLD_JOINT_REMINDERS
-				+ "=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
+		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER, FLD_LABEL + "=Bezeichnung3",
+			FLD_JOINT_REMINDERS + "=JOINT:ReminderID:ResponsibleID:REMINDERS_RESPONSIBLE_LINK");
 	}
 	
 	public Anwender(String Username, String Password){
-		this(Username, Password, false);	
+		this(Username, Password, false);
 	}
 	
 	/**
@@ -77,7 +76,8 @@ public class Anwender extends Person {
 		
 		User user = new User(this, username, password);
 		if (isExecutiveDoctor)
-			user.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
+			user.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR),
+				true);
 	}
 	
 	public Anwender(final String Name, final String Vorname, final String Geburtsdatum,
@@ -92,6 +92,7 @@ public class Anwender extends Person {
 		}
 		return null;
 	}
+	
 	/**
 	 * Return a short or long label for this Anwender
 	 * 
@@ -171,7 +172,7 @@ public class Anwender extends Person {
 		List<String> edList = hashSet.stream().map(p -> p.getLabel()).collect(Collectors.toList());
 		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, edList.isEmpty() ? "" : ts(edList));
 	}
-
+	
 	@Override
 	protected String getConstraint(){
 		return Kontakt.FLD_IS_USER + StringTool.equals + JdbcLink.wrap(StringConstants.ONE);
@@ -207,49 +208,49 @@ public class Anwender extends Person {
 		User.load(ADMINISTRATOR).setAssignedContact(admin);
 		
 		CoreHub.actUser = admin;
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(admin, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(admin, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 	}
 	
 	/**
-	 * Login: Anwender anmelden, passenden Mandanten anmelden. (Jeder Anwender
-	 * ist entweder selber ein Mandant oder ist einem Mandanten zugeordnet)
+	 * Login: Anwender anmelden, passenden Mandanten anmelden. (Jeder Anwender ist entweder selber
+	 * ein Mandant oder ist einem Mandanten zugeordnet)
 	 * 
 	 * @param username
 	 *            Kurzname
 	 * @param password
 	 *            Passwort
-	 * @return <code>true</code> erfolgreich angemeldet, CoreHub.actUser
-	 *         gesetzt, else <code>false</code>
+	 * @return <code>true</code> erfolgreich angemeldet, CoreHub.actUser gesetzt, else
+	 *         <code>false</code>
 	 * @since 3.1 queries {@link User}
 	 */
-	public static boolean login(final String username, final String password) {
+	public static boolean login(final String username, final String password){
 		((LocalLockService) CoreHub.getLocalLockService()).reconfigure();
 		((ElexisServerEventService) CoreHub.getElexisServerEventService()).reconfigure();
-
+		
 		CoreHub.logoffAnwender();
-
+		
 		// check if user exists
 		User user = User.load(username);
 		if (!user.exists()) {
 			return false;
 		}
 		
-		if(!username.equals(user.get(FLD_ID))) {
+		if (!username.toLowerCase().equals(user.get(FLD_ID))) {
 			return false;
 		}
-
+		
 		// is the user currently active, or locked?
 		if (!user.isActive()) {
 			return false;
 		}
-
+		
 		// check if password is valid
 		boolean result = user.verifyPassword(password);
 		if (!result) {
 			return false;
 		}
-
+		
 		// check anwender is valid
 		Anwender anwender = Anwender.load(user.getAssignedContactId());
 		if (anwender == null) {
@@ -270,34 +271,35 @@ public class Anwender extends Person {
 		}
 		
 		// set user in system
-		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
 		CoreHub.actUser = anwender;
 		ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-
+			.fire(new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+		
 		cod.adaptForUser();
-
+		
 		CoreHub.actUser.setInitialMandator();
-
+		
 		CoreHub.userCfg = new SqlSettings(getConnection(), "USERCONFIG", "Param", "Value",
-				"UserID=" + CoreHub.actUser.getWrappedId());
-
+			"UserID=" + CoreHub.actUser.getWrappedId());
+		
 		CoreHub.heart.resume(true);
-
+		
 		return true;
 	}
 	
 	/**
 	 * @since 3.1
 	 */
-	public static void logoff() {
+	public static void logoff(){
 		CoreHub.logoffAnwender();
 	}
 	
 	private void setInitialMandator(){
 		String mandantLabel = (String) getExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS);
 		String MandantID = null;
-		if (mandantLabel!=null && mandantLabel.length()>0) {
+		if (mandantLabel != null && mandantLabel.length() > 0) {
 			mandantLabel = mandantLabel.split(",")[0];
 			for (Mandant m : CoreHub.getMandantenList()) {
 				if (m.getLabel().equals(mandantLabel)) {
@@ -319,14 +321,13 @@ public class Anwender extends Person {
 					CoreHub.setMandant(m);
 					
 				} else {
-					MessageEvent
-						.fireError("Kein Mandant definiert",
-							"Sie können Elexis erst normal benutzen, wenn Sie mindestens einen Mandanten definiert haben");
+					MessageEvent.fireError("Kein Mandant definiert",
+						"Sie können Elexis erst normal benutzen, wenn Sie mindestens einen Mandanten definiert haben");
 				}
 			}
 		}
 	}
-
+	
 	/**
 	 * 
 	 * @return <code>true</code> if {@link Anwender} is also {@link Mandant}
@@ -339,10 +340,11 @@ public class Anwender extends Person {
 	
 	/**
 	 * 
-	 * @param value <code>true</code> to define as {@link Mandant}, else <code>false</code>
+	 * @param value
+	 *            <code>true</code> to define as {@link Mandant}, else <code>false</code>
 	 * @since 3.1
 	 */
-	public void setExecutiveDoctor(boolean value) {
+	public void setExecutiveDoctor(boolean value){
 		set(FLD_IS_MANDATOR, ts(value));
 	}
 }
