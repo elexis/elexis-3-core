@@ -33,7 +33,6 @@ import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.text.model.Samdas;
-import ch.rgw.crypt.BadParameterException;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -738,9 +737,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	
 	/** Die zu dieser Konsultation gehörenden Leistungen holen */
 	public List<Verrechnet> getLeistungen(String[] prefetch){
-		Query<Verrechnet> qbe =
-			new Query<Verrechnet>(Verrechnet.class, Verrechnet.KONSULTATION, getId(),
-				Verrechnet.TABLENAME, prefetch);
+		Query<Verrechnet> qbe = new Query<Verrechnet>(Verrechnet.class, Verrechnet.KONSULTATION,
+			getId(), Verrechnet.TABLENAME, prefetch);
 		qbe.orderBy(false, Verrechnet.CLASS, Verrechnet.LEISTG_CODE);
 		return qbe.execute();
 	}
@@ -850,8 +848,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	public int getKosten(){
 		int sum = 0;
 		/*
-		 * TimeTool mine=new TimeTool(getDatum()); List<Verrechenbar> l=getLeistungen();
-		 * for(Verrechenbar v:l){ sum+=(v.getZahl()v.getKosten(mine)); }
+		 * TimeTool mine=new TimeTool(getDatum()); List<Verrechenbar>
+		 * l=getLeistungen(); for(Verrechenbar v:l){
+		 * sum+=(v.getZahl()v.getKosten(mine)); }
 		 */
 		Stm stm = getDBConnection().getStatement();
 		try {
@@ -926,8 +925,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			StringBuilder sb = new StringBuilder();
 			sb.append("UPDATE LEISTUNGEN SET SCALE='").append(scale).append("' WHERE BEHANDLUNG=")
 				.append(getWrappedId()) /*
-										 * .append ( " AND " ) .append ( "KLASSE=" ) .append (
-										 * JdbcLink . wrap (v .getClass ( ).getName ()))
+										 * .append ( " AND " ) .append ( "KLASSE=" )
+										 * .append ( JdbcLink . wrap (v .getClass (
+										 * ).getName ()))
 										 */
 				.append(" AND LEISTG_CODE=").append(JdbcLink.wrap(v.getId()));
 			
@@ -941,7 +941,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			StringBuilder sql = new StringBuilder();
 			sql.append("UPDATE LEISTUNGEN SET ZAHL=").append(nz)
 				/*
-				 * .append(" WHERE KLASSE=").append(JdbcLink.wrap(v.getClass().getName ()))
+				 * .append(" WHERE KLASSE=").append(JdbcLink.wrap(v.getClass
+				 * ().getName ()))
 				 */
 				.append(" WHERE LEISTG_CODE=").append(JdbcLink.wrap(v.getId()))
 				.append(" AND BEHANDLUNG=").append(getWrappedId());
@@ -976,7 +977,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		return true;
 	}
 	
-	/** Interface Comparable, um die Behandlungen nach Datum sortieren zu können */
+	/**
+	 * Interface Comparable, um die Behandlungen nach Datum sortieren zu können
+	 */
 	public int compareTo(Konsultation b){
 		TimeTool me = new TimeTool(getDatum());
 		TimeTool other = new TimeTool(b.getDatum());
@@ -1034,7 +1037,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	/*
-	 * public interface Listener { public boolean creatingKons(Konsultation k); }
+	 * public interface Listener { public boolean creatingKons(Konsultation k);
+	 * }
 	 */
 	
 	/**
