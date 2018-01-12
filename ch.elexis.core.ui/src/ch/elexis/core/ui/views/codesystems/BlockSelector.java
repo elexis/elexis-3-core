@@ -221,10 +221,10 @@ public class BlockSelector extends CodeSelectorFactory {
 				}
 			}
 		};
-		searchBlocksOnly = new Action("Nur Blöcke suchen", Action.AS_CHECK_BOX ) {
+		searchBlocksOnly = new Action("Blockinhalt nicht durchsuchen", Action.AS_CHECK_BOX) {
 			{
 				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
-				setToolTipText("Nur Blöcke suchen");
+				setToolTipText("Blockinhalt nicht durchsuchen");
 				setChecked(CoreHub.userCfg.get(BLOCK_ONLY_FILTER_ENABLED, false));
 			}
 			
