@@ -197,7 +197,9 @@ public class KonsDetailView extends ViewPart
 						ToggleCurrentKonsultationLockHandler.COMMAND_ID);
 					break;
 				case ElexisEvent.EVENT_UPDATE:
-					setKons(kons);
+					if (kons != null && kons.equals(actKons)) {
+						setKons(kons);
+					}
 					break;
 				case ElexisEvent.EVENT_DESELECTED:
 					deselectedKons = actKons;
@@ -732,15 +734,15 @@ public class KonsDetailView extends ViewPart
 	
 	@Override
 	public void activation(boolean mode){
-		if ((mode == false) && (text.isDirty())) {
+		if (mode == false) {
 			// save entry on deactivation if text was edited
-			if (actKons != null) {
+			if (actKons != null && (text.isDirty())) {
 				actKons.updateEintrag(text.getContentsAsXML(), false);
 				text.setDirty(false);
 			}
 		} else {
-			// load newest version on activation
-			if (actKons != null) {
+			// load newest version on activation, if there are no local changes
+			if (actKons != null && !text.isDirty()) {
 				setKonsText(actKons, actKons.getHeadVersion());
 			}
 		}
