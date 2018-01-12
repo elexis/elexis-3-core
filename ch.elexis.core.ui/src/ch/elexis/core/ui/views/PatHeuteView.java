@@ -556,6 +556,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			if (!bClosed && !bOpen) {
 				qbe.insertFalse();
 			}
+			qbe.orderBy(false, Konsultation.DATE,Konsultation.FLD_TIME);
+
 			qbe.addPostQueryFilter(new IFilter() {
 				public boolean select(final Object toTest){
 					if (filterAction.isChecked()) {

@@ -155,11 +155,13 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				"Zu einem abgeschlossenen Fall kann keine neue Konsultation erstellt werden");
 		} else {
 			create(null);
+			TimeTool now = new TimeTool();
 			set(new String[] {
-				DATE, FLD_CASE_ID, FLD_MANDATOR_ID
-			}, new TimeTool().toString(TimeTool.DATE_GER), fall.getId(),
-				CoreHub.actMandant.getId());
-			fall.getPatient().setInfoElement("LetzteBehandlung", getId());
+				DATE, FLD_TIME, FLD_CASE_ID, FLD_MANDATOR_ID
+			}, now.toString(TimeTool.DATE_GER),
+				now.toString(TimeTool.TIME_FULL).replaceAll(":", ""), fall.getId(),
+				ElexisEventDispatcher.getSelectedMandator().getId());
+			fall.getPatient().setExtInfoStoredObjectByKey("LetzteBehandlung", getId());
 		}
 		if (getDefaultDiagnose() != null)
 			addDiagnose(getDefaultDiagnose());
@@ -983,7 +985,14 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	public int compareTo(Konsultation b){
 		TimeTool me = new TimeTool(getDatum());
 		TimeTool other = new TimeTool(b.getDatum());
-		return me.compareTo(other);
+		int dateComp = me.compareTo(other);
+		if (dateComp == 0) {
+			String mine = getTime();
+			String others = b.getTime();
+			return mine.compareTo(others);
+		} else {
+			return dateComp;
+		}
 	}
 	
 	/**
