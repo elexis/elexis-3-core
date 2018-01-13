@@ -117,6 +117,7 @@ CREATE TABLE BEHANDLUNGEN(
 	MandantID		VARCHAR(25),					# foreign key from KONTAKT -> mandator
 	RechnungsID		VARCHAR(25),					# foreign key from RECHNUGNEN -> bill
 	Datum			CHAR(8),						# date of treatment
+	Zeit			CHAR(8),						# time the consultation was created
 	Diagnosen		VARCHAR(25),					# diagnoses
 	Leistungen		VARCHAR(25),					# deprecated, do not use.
 	Eintrag			BLOB							# treatment text (as VersionedResource)

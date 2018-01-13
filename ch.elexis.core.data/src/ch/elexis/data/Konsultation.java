@@ -159,7 +159,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			set(new String[] {
 				DATE, FLD_TIME, FLD_CASE_ID, FLD_MANDATOR_ID
 			}, now.toString(TimeTool.DATE_GER),
-				now.toString(TimeTool.TIME_FULL).replaceAll(":", ""), fall.getId(),
+				now.toString(TimeTool.TIME_FULL), fall.getId(),
 				ElexisEventDispatcher.getSelectedMandator().getId());
 			fall.getPatient().setExtInfoStoredObjectByKey("LetzteBehandlung", getId());
 		}
@@ -379,10 +379,10 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 */
 	public void setTime(String time, boolean force){
 		if (time != null) {
-			if (time.length() == 4) {
-				time += "00";
-			} else if (time.length() != 6) {
-				throw new InvalidParameterException("Time must be in HHMM or HHMMSS format");
+			if (time.length() == 5) {
+				time += ":00";
+			} else if (time.length() != 8) {
+				throw new InvalidParameterException("Time must be in HH:MM or HH:MM:SS format");
 			}
 			if (force || isEditable(true)) {
 				set(FLD_TIME, time);
@@ -398,7 +398,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	public String getTime(){
 		String time = get(FLD_TIME);
 		if (StringTool.isNothing(time)) {
-			return "000000";
+			return "00:00:00";
 		} else {
 			return time;
 		}
@@ -413,7 +413,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 */
 	public void setTime(TimeTool time, boolean force){
 		if (force || isEditable(true)) {
-			set(FLD_TIME, time.toString(TimeTool.TIME_FULL).replaceAll(":", ""));
+			set(FLD_TIME, time.toString(TimeTool.TIME_FULL));
 		}
 	}
 	
