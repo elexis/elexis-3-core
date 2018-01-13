@@ -535,7 +535,7 @@ class I18nInfo
         end
 
         File.open(filename, 'w:ISO-8859-1') do |file|
-          keys.each do |full_key|
+          keys.sort.uniq.each do |full_key|
             next unless full_key[1]
             project_id = full_key[0]
             tag_name, dummy =  get_key_value("#{full_key[1]}= 'dummy")
