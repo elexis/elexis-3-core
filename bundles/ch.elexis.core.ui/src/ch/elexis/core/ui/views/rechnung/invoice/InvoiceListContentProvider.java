@@ -41,6 +41,7 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
+import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
@@ -82,9 +83,11 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		"r.StatusDatum >= ? AND r.StatusDatum <= ?";
 	private static final String SQL_CONDITION_INVOICE_STATE_IN = "r.RnStatus IN ( ? )";
 	private static final String SQL_CONDITION_INVOICE_AMOUNT_UNTIL =
-		"r.betrag >= ? AND r.betrag <= ?";
-	private static final String SQL_CONDITION_INVOICE_AMOUNT_GREATER = "r.betrag >= ?";
-	private static final String SQL_CONDITION_INVOICE_AMOUNT_LESSER = "r.betrag <= ?";
+		"CAST(r.betrag AS SIGNED) >= ? AND CAST(r.betrag AS SIGNED) <= ?";
+	private static final String SQL_CONDITION_INVOICE_AMOUNT_GREATER =
+		"CAST(r.betrag AS SIGNED) >= ?";
+	private static final String SQL_CONDITION_INVOICE_AMOUNT_LESSER =
+		"CAST(r.betrag AS SIGNED) <= ?";
 	
 	//@formatter:on
 	
@@ -352,9 +355,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 						totalMoney.getCents(), totalMoney.getCents());
 				}
 			} catch (ParseException e) {
-				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
-					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Invalid amount", e);
-				ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
+				// invalid value entered - do nothing
 			}
 		}
 		return queryBuilder;
@@ -688,7 +689,14 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			 */
 			public PreparedStatement createPreparedStatement(DBConnection dbConnection){
 				if (queryBuilders != null) {
-					PreparedStatement ps = dbConnection.getPreparedStatement(getQuery());
+					String query = getQuery();
+					boolean isPostgres = JdbcLink.DBFLAVOR_POSTGRESQL
+						.equalsIgnoreCase(PersistentObject.getDefaultConnection().getDBFlavor());
+					if (isPostgres) {
+						// replace with postgres compatible type
+						query = query.replaceAll("SIGNED", "NUMERIC");
+					}
+					PreparedStatement ps = dbConnection.getPreparedStatement(query);
 					int i = 1;
 					for (QueryBuilder qb : queryBuilders) {
 						for (Object s : qb.getValue()) {
