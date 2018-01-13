@@ -165,7 +165,6 @@ public class Messages {
 	public static String FallDetailBlatt2_GuarantorNoSpecialChars = ch.elexis.core.l10n.Messages.FallDetailBlatt2_GuarantorNoSpecialChars;
 	public static String FallDetailBlatt2_InsNumber = ch.elexis.core.l10n.Messages.FallDetailBlatt2_InsNumber;
 	public static String FallDetailBlatt2_InsuranceNumber = ch.elexis.core.l10n.Messages.FallDetailBlatt2_InsuranceNumber;
-	public static String FallDetailBlatt2_Labek = ch.elexis.core.l10n.Messages.FallDetailBlatt2_Labek;
 	public static String FallDetailBlatt2_NoCaseSelected = ch.elexis.core.l10n.Messages.FallDetailBlatt2_NoCaseSelected;
 	public static String FallDetailBlatt2_PleaseSelectContactFor = ch.elexis.core.l10n.Messages.FallDetailBlatt2_PleaseSelectContactFor;
 	public static String FallDetailBlatt2_PleaseSelectCpntactCaption = ch.elexis.core.l10n.Messages.FallDetailBlatt2_PleaseSelectCpntactCaption;

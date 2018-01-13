@@ -84,7 +84,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		Messages.FallDetailBlatt2_PleaseSelectContactFor; //$NON-NLS-1$
 	private static final String SELECT_CONTACT_CAPTION =
 		Messages.FallDetailBlatt2_PleaseSelectCpntactCaption; //$NON-NLS-1$
-	private static final String LABEL = Messages.FallDetailBlatt2_Labek; //$NON-NLS-1$
+	private static final String LABEL = "Bezeichnung"; //$NON-NLS-1$
 	private static final String RECHNUNGSEMPFAENGER = Messages.FallDetailBlatt2_BillAdressee; //$NON-NLS-1$
 	private static final String VERSICHERUNGSNUMMER = Messages.FallDetailBlatt2_InsuranceNumber; //$NON-NLS-1$
 	private static final String KOSTENTRAEGER = Messages.FallDetailBlatt2_Guarantor; //$NON-NLS-1$

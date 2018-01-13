@@ -53,9 +53,6 @@ import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.TimeTool.TimeFormatException;
 
 public class KontaktErfassenDialog extends TitleAreaDialog {
-	private static final int KED_NAME = 0;
-	private static final int KED_FIRSTNAME = 1;
-	private static final int KED_ADDITIONAL = 7;
 	
 	private Button bOrganisation, bLabor, bPerson, bPatient, bAnwender, bMandant;
 	

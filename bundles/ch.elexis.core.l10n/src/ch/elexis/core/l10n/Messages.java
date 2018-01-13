@@ -930,7 +930,6 @@ public class Messages extends NLS {
 	public static String FallDetailBlatt2_GuarantorNoSpecialChars;
 	public static String FallDetailBlatt2_InsNumber;
 	public static String FallDetailBlatt2_InsuranceNumber;
-	public static String FallDetailBlatt2_Labek;
 	public static String FallDetailBlatt2_NoCaseSelected;
 	public static String FallDetailBlatt2_PleaseSelectContactFor;
 	public static String FallDetailBlatt2_PleaseSelectCpntactCaption;

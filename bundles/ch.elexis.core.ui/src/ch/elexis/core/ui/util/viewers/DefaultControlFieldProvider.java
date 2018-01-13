@@ -75,7 +75,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		listeners = new LinkedList<ControlFieldListener>();
 		tk = UiDesk.getToolkit();
 	}
-	
+
 	/**
 	 * Update and optionally redraw the control fields to order the content.
 	 * 
@@ -261,8 +261,8 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 				@Override
 				public void run(){
 					HashMap<String, String> hm = new HashMap<String, String>();
-					for (int i = 0; i < fields.length; i++) {
-						hm.put(fields[i], lastFiltered[i]);
+					for (int i = 0; i < dbFields.length; i++) {
+						hm.put(dbFields[i], lastFiltered[i]);
 					}
 					for (ControlFieldListener lis : listeners) {
 						lis.changed(hm);
@@ -349,7 +349,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	@Override
 	public void setQuery(final Query q){
 		boolean ch = false;
-		for (int i = 0; i < fields.length; i++) {
+		for (int i = 0; i < dbFields.length; i++) {
 			if (!lastFiltered[i].equals(StringTool.leer)) {
 				q.add(dbFields[i], "LIKE", lastFiltered[i] + "%", true); //$NON-NLS-1$ //$NON-NLS-2$
 				q.and();
