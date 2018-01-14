@@ -66,7 +66,17 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	boolean bCeaseFire;
 	
 	private Composite inner;
-
+	
+	/**
+	 * Default implementation of a ControlFieldProvider. Creates a composite with a text input field
+	 * for each of the fiels passed to the constructor.
+	 * 
+	 * Fires a ChangedEvent whenever at least tow chars are entered in one of the fields
+	 * 
+	 * @viewer Composite, where the viewer should be placed
+	 * @flds Array of fields to be placed. Each field is the name of a field, optionally followed by
+	 *       '=' and the localized to be displayed name
+	 */
 	public DefaultControlFieldProvider(final CommonViewer viewer, final String[] flds){
 		myViewer = viewer;
 		updateFields(flds, false);
@@ -75,7 +85,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		listeners = new LinkedList<ControlFieldListener>();
 		tk = UiDesk.getToolkit();
 	}
-
+	
 	/**
 	 * Update and optionally redraw the control fields to order the content.
 	 * 
@@ -219,7 +229,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	/**
 	 * Reaktion auf Eingaben in die Filterfelder. Reagiert erst wenn mindestens zwei Zeichen
 	 * eingegeben wurden oder das Feld geleert wurde.
-	 * */
+	 */
 	class ModListener implements ModifyListener {
 		@Override
 		public void modifyText(final ModifyEvent e){
