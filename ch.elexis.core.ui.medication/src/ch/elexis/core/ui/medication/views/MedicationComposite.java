@@ -13,7 +13,11 @@ import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.DateAndTimeObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -50,6 +54,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.progress.IProgressService;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -123,6 +128,7 @@ public class MedicationComposite extends Composite
 	private Text txtDisposalComment;
 	private Text txtStopComment;
 	private MedicationContentProviderComposite contentProviderComp;
+	private IProgressService progressService;
 	
 	/**
 	 * Create the composite.
@@ -139,7 +145,7 @@ public class MedicationComposite extends Composite
 		medicationTableComposite(partSite);
 		stateComposite();
 		medicationDetailComposite();
-		
+		progressService = partSite.getService(IProgressService.class);
 		showSearchFilterComposite(false);
 		showMedicationDetailComposite(null);
 		
@@ -226,8 +232,7 @@ public class MedicationComposite extends Composite
 		compositeState.setLayout(gl_compositeState);
 		compositeState.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		
-		contentProviderComp =
-			new MedicationContentProviderComposite(compositeState, SWT.NONE);
+		contentProviderComp = new MedicationContentProviderComposite(compositeState, SWT.NONE);
 		contentProviderComp
 			.setContentProvider((MedicationTableViewerContentProvider) medicationTableComposite
 				.getTableViewer().getContentProvider());
@@ -626,12 +631,10 @@ public class MedicationComposite extends Composite
 					newStoppedPrescription.setBeginDate(oldPrescription.getBeginTime());
 					TimeTool ttEndDate = new TimeTool(pres.getEndTime());
 					newStoppedPrescription.stop(ttEndDate);
-					newStoppedPrescription
-						.setStopReason("Änderung des Stop Datums von " + endDate);
+					newStoppedPrescription.setStopReason("Änderung des Stop Datums von " + endDate);
 					// stop the old prescription with current time
 					oldPrescription.stop(null);
-				}
-				else {
+				} else {
 					// apply stop reason if set
 					if (txtStopComment.getText() == null || txtStopComment.getText().isEmpty()) {
 						oldPrescription
@@ -646,10 +649,9 @@ public class MedicationComposite extends Composite
 		activateConfirmButton(false);
 		if (btnStopMedication.isEnabled())
 			showMedicationDetailComposite(null);
-
-		ElexisEventDispatcher.getInstance()
-			.fire(new ElexisEvent(pres.getPrescription(), Prescription.class,
-				ElexisEvent.EVENT_UPDATE));
+		
+		ElexisEventDispatcher.getInstance().fire(
+			new ElexisEvent(pres.getPrescription(), Prescription.class, ElexisEvent.EVENT_UPDATE));
 	}
 	
 	/**
@@ -708,6 +710,57 @@ public class MedicationComposite extends Composite
 		// Disable the check that prevents subclassing of SWT components
 	}
 	
+	private void reloadData(){
+		Job job = new Job("Medikation einlesen") {
+			List<Prescription> medicationInput;
+			List<Prescription> medicationHistoryInput;
+			String dailyCost;
+			
+			@Override
+			protected IStatus run(IProgressMonitor pm){
+				pm.setTaskName("Lade Medikationsliste");
+				pm.beginTask("Lade Medikation", 30);
+				medicationInput = MedicationViewHelper.loadInputData(false, pat.getId());
+				if (pm.isCanceled()) {
+					return Status.CANCEL_STATUS;
+				}
+				pm.worked(10);
+				medicationHistoryInput = MedicationViewHelper.loadInputData(true, pat.getId());
+				if (pm.isCanceled()) {
+					return Status.CANCEL_STATUS;
+				}
+				pm.worked(10);
+				
+				if (medicationInput != null) {
+					dailyCost = MedicationViewHelper.calculateDailyCostAsString(medicationInput);
+				}
+				
+				UiDesk.getDisplay().asyncExec(new Runnable() {
+					
+					@Override
+					public void run(){
+						medicationTableComposite.setInput(medicationInput);
+						medicationHistoryTableComposite.setInput(medicationHistoryInput);
+						if (medicationInput != null) {
+							lblDailyTherapyCost.setText(dailyCost);
+						} else {
+							lblDailyTherapyCost.setText("");
+						}
+						contentProviderComp.refresh();
+						selectedMedication.setValue(null);
+						lblLastDisposalLink.setText("");
+						showMedicationDetailComposite(null);
+					}
+					
+				});
+				return Status.OK_STATUS;
+			}
+		};
+		job.setPriority(Job.LONG);
+		job.setSystem(true);
+		job.schedule();
+	}
+	
 	public void updateUi(Patient pat, boolean forceUpdate){
 		if ((this.pat == pat) && !forceUpdate) {
 			return;
@@ -721,24 +774,8 @@ public class MedicationComposite extends Composite
 			return;
 		}
 		
-		List<Prescription> medicationInput = MedicationViewHelper.loadInputData(false, pat.getId());
-		medicationTableComposite.setInput(medicationInput);
+		reloadData();
 		
-		List<Prescription> medicationHistoryInput =
-			MedicationViewHelper.loadInputData(true, pat.getId());
-		medicationHistoryTableComposite.setInput(medicationHistoryInput);
-		
-		contentProviderComp.refresh();
-		selectedMedication.setValue(null);
-		lblLastDisposalLink.setText("");
-		showMedicationDetailComposite(null);
-		
-		if (medicationInput != null) {
-			String dailyCost = MedicationViewHelper.calculateDailyCostAsString(medicationInput);
-			lblDailyTherapyCost.setText(dailyCost);
-		} else {
-			lblDailyTherapyCost.setText("");
-		}
 	}
 	
 	@Override
@@ -746,7 +783,8 @@ public class MedicationComposite extends Composite
 		if (medicationTableComposite != null && medicationTableComposite.isVisible()) {
 			medicationTableComposite.setPendingInput();
 		}
-		if (medicationHistoryTableComposite != null && medicationHistoryTableComposite.isVisible()) {
+		if (medicationHistoryTableComposite != null
+			&& medicationHistoryTableComposite.isVisible()) {
 			medicationHistoryTableComposite.setPendingInput();
 		}
 		
@@ -811,7 +849,7 @@ public class MedicationComposite extends Composite
 	private void activateConfirmButton(boolean activate){
 		if (ctrlDecor == null)
 			initControlDecoration();
-
+		
 		MedicationTableViewerItem pres = (MedicationTableViewerItem) selectedMedication.getValue();
 		if (pres == null || pres.isStopped()) {
 			//activate = false;
