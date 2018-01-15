@@ -757,7 +757,7 @@ public class MedicationComposite extends Composite
 			}
 		};
 		job.setPriority(Job.LONG);
-		job.setSystem(true);
+		job.setUser(true);
 		job.schedule();
 	}
 	
