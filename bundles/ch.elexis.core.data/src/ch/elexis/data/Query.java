@@ -658,7 +658,7 @@ public class Query<T> {
 			ElexisStatus status =
 				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					"Fehler bei Datenbankabfrage " + ex.getMessage(), ex, ElexisStatus.LOG_ERRORS);
-			log.warn("Fehler bei Datenbankabfrage: " + ex.getMessage());
+			log.warn("Fehler [{}] bei Datenbankabfrage:\n[{};]", ex.getMessage(), expr);
 			throw new PersistenceException(status);
 		} finally {
 			connection.releaseStatement(stm);
