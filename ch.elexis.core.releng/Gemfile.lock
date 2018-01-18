@@ -56,14 +56,12 @@ GEM
     representable (2.3.0)
       uber (~> 0.0.7)
     retriable (2.1.0)
-    sequel (4.42.1)
     signet (0.7.3)
       addressable (~> 2.3)
       faraday (~> 0.9)
       jwt (~> 1.5)
       multi_json (~> 1.10)
     slop (3.6.0)
-    sqlite3 (1.3.13)
     trollop (2.1.2)
     uber (0.0.15)
 
@@ -76,9 +74,7 @@ DEPENDENCIES
   googleauth
   pry-byebug
   rake
-  sequel
-  sqlite3
   trollop
 
 BUNDLED WITH
-   1.13.7
+   1.16.0

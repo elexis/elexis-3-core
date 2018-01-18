@@ -7,6 +7,4 @@ gem 'google-api-client'
 gem 'pry-byebug'
 
 gem "google-cloud-translate"
-gem 'sequel'
-gem 'sqlite3'
 gem 'trollop'

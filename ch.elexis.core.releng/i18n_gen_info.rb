@@ -12,8 +12,6 @@
 # result = translate.list_translations('Hello world!', 'es', source: 'en')
 # puts result.translations.first.translated_text
 # to connect to the database
-# sudo apt-get install sqlite3 unixodbc unixodbc-bin libreoffice-base-drivers
-# /etc/odbcinst.ini aufgefüllt gemäss https://wiki.openoffice.org/wiki/Documentation/How_Tos/Using_SQLite_With_OpenOffice.org#SQLite_ODBC_Driver
 #
 require 'google/apis/translate_v2'
 require "rexml/document"
@@ -25,12 +23,9 @@ require 'pry-byebug'
 require 'csv'
 require 'net/http'
 require 'json'
-require 'sequel'
-require 'sqlite3'
 require 'trollop'
 require 'logger'
 $stdout.sync = true
-Sqlite3File = File.join(Dir.home, 'elexis-translation.db')
 
 class GoogleTranslation
   @@updated_cache = false
@@ -44,11 +39,17 @@ class GoogleTranslation
     # JSON.parse(response)
 
   def self.translationCache
-  	@@translationCache
+    @@translationCache
   end
   def self.translate_text(what, target_language='it', source_language='de')
     key = [what, target_language, source_language]
-    unless @@translationCache[key]
+    value = @@translationCache.find{|x, y| x[0].eql?(what) && x[1].eql?(target_language) && x[2].eql?(source_language) }
+    unless value
+      puts "what #{what}"
+      unless ENV['TRANSLATE_API_KEY']
+        puts "MISSING_KEY #{key} #{key.first.encoding}"
+        return
+      end
       begin
         value = Translate.list_translations(what, target_language, source: source_language)
         @@translationCache[key] = value.translations.collect{|x| x.translated_text}
@@ -57,18 +58,17 @@ class GoogleTranslation
       rescue => error
         puts error
         puts "translate_text failed. Is environment variable TRANSLATE_API_KEY not specified?"
-        binding.pry
-        exit
+        return
       end
     end
     value = @@translationCache[key]
+    puts "TRANSLATED_KEY #{key} into #{value} #{value.first.encoding}"
     value = value.first if value.is_a?(Array)
   end
-
   def self.load_cache
     @@translationCache = {}
     if File.exist?(CacheFileCSV)
-      CSV.foreach(CacheFileCSV, :force_quotes => true) do |cells|
+      CSV.foreach(CacheFileCSV, :encoding => 'utf-8', :force_quotes => true) do |cells|
         next if cells[0].eql?('src')
         key = [cells[0], cells[1], cells[2]]
         value = cells[3] ? cells[3].chomp : ''
@@ -80,8 +80,8 @@ class GoogleTranslation
   def self.save_cache
     return unless @@updated_cache
     puts "Saving #{@@translationCache.size} entries to #{CacheFileCSV}"
-    CSV.open(CacheFileCSV, "wb", :force_quotes => true) do |csv|
-      csv << ['src', 'dst', 'what', 'translated']
+    CSV.open(CacheFileCSV, "wb:UTF-8", :force_quotes => true) do |csv|
+      csv << ['what', 'dst', 'src', 'translated']
       @@translationCache.each do |key, value|
         csv << [key[0],
                 key[1],
@@ -110,17 +110,17 @@ class L10N_Cache
   Translations = Struct.new(:lang, :values)
   REGEX_TRAILING_LANG = /\.plugin$|\.(#{LanguageViews.keys.join('|')})$/
 
-  @@cacheCsvFile = File.join(Dir.home, 'l10n.csv')
-
   def self.get_translation(key, lang)
+    self.load_cache unless defined?(@@l10nCache)
     @@l10nCache[key] ? @@l10nCache[key][lang] : ''
   end
   def self.set_translation(key, lang, value)
+    self.load_cache unless defined?(@@l10nCache)
     @@l10nCache[key] ||= {}
     @@l10nCache[key][lang] = value
   end
 
-  def self.load_cache(cachefile = File.join(Dir.pwd,TRANSLATIONS_CSV_NAME))
+  def self.load_cache(cachefile)
     @@cacheCsvFile = cachefile
     @@l10nCache = {}
     if File.exist?(@@cacheCsvFile)
@@ -164,8 +164,6 @@ class L10N_Cache
     end
     puts "Wrote #{nr_missing} entries into #{missing_name}" if nr_missing > 0
   end
-  # Initialization
-  L10N_Cache.load_cache
 end
 
 class I18nInfo
@@ -187,6 +185,7 @@ class I18nInfo
   def initialize(directories)
     @@directories = []
     @gen_csv = false
+    @root_dir = directories.first
     directories ||= [ ARGV && ARGV[0] ]
     directories.each{ |dir| @@directories << File.expand_path(dir) }
     puts "Initialized for #{@@directories.size} directories"
@@ -325,6 +324,7 @@ class I18nInfo
   end
 
   def parse_plugin_and_messages
+    L10N_Cache.load_cache(File.join(Dir.pwd, L10N_Cache::TRANSLATIONS_CSV_NAME))
     start_dir = Dir.pwd
     @@directories.each do |directory|
       @main_dir = File.expand_path(directory)
@@ -372,20 +372,24 @@ class I18nInfo
       return
     end
     # translate_text(what, target_language='it', source_language='de')
-    CGI.unescapeHTML(GoogleTranslation.translate_text(string2translate, lang, source_lang))
+    translated = GoogleTranslation.translate_text(string2translate, lang, source_lang)
+    return unless translated
+    CGI.unescapeHTML(translated)
   end
 
   def add_csv_to_db_texts(csv_file)
     puts "Adding missing entries for  #{csv_file}"
-    msgs_to_add = read_translation_csv(ARGV.first)
+    L10N_Cache.load_cache(csv_file)
+    msgs_to_add = read_translation_csv(csv_file)
     inserts = {}
     msgs_to_add.each do |tag_name, value|
       next unless tag_name
+      tag_name = tag_name.encode('utf-8')
       german_translation = L10N_Cache.get_translation(tag_name, 'de')
       L10N_Cache::CSV_KEYS.each do |lang|
         next if lang.eql?(L10N_Cache::JavaLanguage)
         current_translation = L10N_Cache.get_translation(tag_name, lang)
-        binding.pry unless current_translation
+        # puts "current_translation for #{tag_name} #{lang} is #{current_translation}"
         if current_translation.size == 0
           if german_translation.size == 0
             next if lang.eql?('en')
@@ -404,11 +408,10 @@ class I18nInfo
     puts "Inserted #{inserts.size} missing entries of #{msgs_to_add.size}"
     msgs_to_add
   end
- def add_missing
+ def add_missing(csv_file)
+    raise "You must specify an existing CSV file" unless File.file?(csv_file)
+    L10N_Cache.load_cache(csv_file)
     main_language = 'de'
-    raise "You must specify a CSV to add" unless ARGV.size == 1
-    csv_file = ARGV.first
-    raise "You must specify a file not a directory?" if File.directory?(csv_file)
     messages = add_csv_to_db_texts(csv_file)
     L10N_Cache::save_cache(csv_file)
   end
@@ -492,6 +495,7 @@ class I18nInfo
   def to_properties
     Dir.chdir(main_dir)
     index = 0
+    L10N_Cache.load_cache(File.join(Dir.pwd, L10N_Cache::TRANSLATIONS_CSV_NAME))
     @@all_msgs  = read_translation_csv(File.join(start_dir, L10N_Cache::TRANSLATIONS_CSV_NAME))
     all_keys = @@all_msgs.keys.collect{|x| x }.uniq
     l10n_key =  all_keys.find{|x| /l10n$/.match(x)}
@@ -583,10 +587,9 @@ License: Eclipse Public License 1.0 (EPL)
 Useage: #{File.basename(__FILE__)} [-options] [directory1 directory]
   help manipulating files needed for translations
   using Cachefile        #{GoogleTranslation::CacheFileCSV} (UTF-8)
-    and SqLite3 database #{Sqlite3File}
 EOS
   opt :to_csv   ,         "Create #{L10N_Cache::TRANSLATIONS_CSV_NAME}.csv for all languages with entries for all [manifests|plugin]*.properties ", :default => false, :short => '-c'
-  opt :add_missing,       "Add missing translations for a given csv file via Googe Translator using $HOME/google_translation_cache.csv", :default => false, :short => '-a'
+  opt :add_missing,       "Add missing translations for a given csv file via Googe Translator using $HOME/google_translation_cache.csv", :default => nil, :short => '-a',          :type => String
   opt :to_properties,     "Create [manifests|plugin]*.properties for all languages from #{L10N_Cache::TRANSLATIONS_CSV_NAME}\n\n ", :default => false, :short => '-t'
 end
 
@@ -601,8 +604,8 @@ end
 i18n = I18nInfo.new(ARGV)
 i18n.start_dir = Dir.pwd
 i18n.main_dir ||= File.expand_path(ARGV.first) if ARGV.size > 0
-i18n.main_dir ||= Dir.pwd 
+i18n.main_dir ||= Dir.pwd
 i18n.to_csv if Options[:to_csv]
 i18n.to_properties if Options[:to_properties]
-i18n.add_missing if Options[:add_missing]
+i18n.add_missing(Options[:add_missing]) if Options[:add_missing]
 
