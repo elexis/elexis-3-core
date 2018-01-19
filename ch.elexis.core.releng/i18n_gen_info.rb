@@ -603,7 +603,10 @@ end
 
 i18n = I18nInfo.new(ARGV)
 i18n.start_dir = Dir.pwd
-i18n.main_dir ||= File.expand_path(ARGV.first) if ARGV.size > 0
+if ARGV.size > 0
+  i18n.main_dir = File.expand_path(ARGV.first)
+  raise "We expected #{ARGV.first} to be the name of an existing directory" unless File.directory?(i18n.main_dir)
+end
 i18n.main_dir ||= Dir.pwd
 i18n.to_csv if Options[:to_csv]
 i18n.to_properties if Options[:to_properties]
