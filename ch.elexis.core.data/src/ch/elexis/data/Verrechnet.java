@@ -66,6 +66,7 @@ public class Verrechnet extends PersistentObject {
 	public static final String INDICATED = Constants.FLD_EXT_INDICATED;
 	public static final String VATSCALE = Constants.VAT_SCALE;
 	public static final String FLD_EXT_PRESC_ID = Constants.FLD_EXT_PRESC_ID;
+	public static final String FLD_EXT_CHANGEDPRICE = Constants.FLD_EXT_CHANGEDPRICE;
 	
 	// keep a list of all ch.elexis.VerrechnetAdjuster extensions
 	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<IVerrechnetAdjuster>();
@@ -464,5 +465,13 @@ public class Verrechnet extends PersistentObject {
 	
 	protected Verrechnet(final String id){
 		super(id);
+	}
+	
+	public boolean isChangedPrice(){
+		String value = getDetail(Verrechnet.FLD_EXT_CHANGEDPRICE);
+		if (value != null) {
+			return value.equalsIgnoreCase("true");
+		}
+		return false;
 	}
 }
