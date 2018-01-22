@@ -49,7 +49,7 @@ public class EigenartikelTreeContentProvider
 		Query<Eigenartikel> qre = new Query<Eigenartikel>(Eigenartikel.class);
 		qre.add(Eigenartikel.FLD_TYP, Query.EQUALS, Eigenartikel.TYPNAME);
 		if (filter != null) {
-			qre.add(Eigenartikel.FLD_NAME, Query.LIKE, "%" + filter + "%");
+			qre.add(Eigenartikel.FLD_NAME, Query.LIKE, "%" + filter + "%", true);
 		}
 		if (!showProducts) {
 			qre.add(Eigenartikel.FLD_EXTID, Query.NOT_EQUAL, null);
