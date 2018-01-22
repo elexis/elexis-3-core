@@ -29,7 +29,7 @@ public class LocalDocumentServiceHolder {
 	private static Optional<ILocalDocumentService> localDocumentService;
 	
 	@Reference
-	public static void bind(ILocalDocumentService service){
+	public void bind(ILocalDocumentService service){
 		LocalDocumentServiceHolder.localDocumentService = Optional.ofNullable(service);
 		
 		service.registerSaveHandler(Brief.class, new ISaveHandler() {

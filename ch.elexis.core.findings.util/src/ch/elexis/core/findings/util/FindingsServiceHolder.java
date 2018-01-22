@@ -11,7 +11,7 @@ public class FindingsServiceHolder {
 	private static IFindingsService iFindingsService;
 	
 	@Reference(unbind = "-")
-	public static void setiFindingsService(IFindingsService iFindingsService){
+	public void setiFindingsService(IFindingsService iFindingsService){
 		FindingsServiceHolder.iFindingsService = iFindingsService;
 	}
 	

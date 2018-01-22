@@ -12,7 +12,7 @@ public class ScriptingServiceHolder {
 	private static IScriptingService iScriptingService;
 	
 	@Reference(unbind = "-", cardinality = ReferenceCardinality.OPTIONAL)
-	public static void setScriptingService(IScriptingService iScriptingService){
+	public void setScriptingService(IScriptingService iScriptingService){
 		ScriptingServiceHolder.iScriptingService = iScriptingService;
 	}
 	
