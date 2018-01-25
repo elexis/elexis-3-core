@@ -104,6 +104,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		if (labItem == null) {
 			labItem = labImportUtil.createLabItem(shortname, name, myLab, "", "", PDF,
 				LabItemTyp.DOCUMENT, group, prio);
+			log.debug("LabItem created [{}]", labItem);
 		}
 		
 		String titel = generatePDFTitle(file.getName(), dateTime);

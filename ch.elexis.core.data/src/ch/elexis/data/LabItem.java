@@ -100,6 +100,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	
 	/**
 	 * @since 3.2
+	 * @since 3.4 new LabItems are by default set to visible
 	 */
 	public LabItem(String k, String t, String laborId, String RefMann, String RefFrau, String Unit,
 		LabItemTyp type, String grp, String seq){
@@ -129,8 +130,8 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 			}
 		}
 		set(new String[] {
-			SHORTNAME, TITLE, LAB_ID, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE, GROUP, PRIO
-		}, k, t, laborId, RefMann, RefFrau, Unit, tp, grp, seq);
+			SHORTNAME, TITLE, LAB_ID, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE, GROUP, PRIO, VISIBLE
+		}, k, t, laborId, RefMann, RefFrau, Unit, tp, grp, seq, StringConstants.ONE);
 	}
 	
 	protected LabItem(){/* leer */
@@ -142,6 +143,11 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	
 	public static LabItem load(String id){
 		return new LabItem(id);
+	}
+	
+	@Override
+	public String toString(){
+		return getLabel();
 	}
 	
 	/**
@@ -358,14 +364,14 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 			setVisible(true);
 			return true;
 		}
-		return visible.equals("1"); //$NON-NLS-1$
+		return visible.equals(StringConstants.ONE);
 	}
 	
 	public void setVisible(boolean visible){
 		if (visible) {
-			set(VISIBLE, "1"); //$NON-NLS-1$
+			set(VISIBLE, StringConstants.ONE);
 		} else {
-			set(VISIBLE, "0"); //$NON-NLS-1$
+			set(VISIBLE, StringConstants.ZERO);
 		}
 	}
 	
