@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.JdbcLink;
@@ -62,6 +63,7 @@ public class Test_LabItem extends AbstractPersistentObjectTest {
 		LabItem item =
 			new LabItem("kuerzel1", "testname1", org, "0-1", "0-2", "mg/dl", LabItemTyp.NUMERIC,
 				"gruppe", "0");
+		assertEquals(StringConstants.ONE, item.get(LabItem.VISIBLE));
 		
 		List<LabItem> items = LabItem.getLabItems(org.getId(), "kuerzel1", "0-1", "0-2", "mg/dl");
 		assertEquals(1, items.size());
