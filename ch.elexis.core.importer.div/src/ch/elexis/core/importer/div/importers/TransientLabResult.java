@@ -8,6 +8,8 @@ import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
+import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
 
@@ -94,6 +96,8 @@ public class TransientLabResult {
 		// pathologic check takes place in labResult if it is numeric
 		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
 			flags = labResult.getFlags();
+		} else {
+			labResult.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT));
 		}
 		setFields(labResult);
 	}
@@ -113,6 +117,8 @@ public class TransientLabResult {
 		// pathologic check takes place in labResult if it is numeric
 		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
 			flags = labResult.getFlags();
+		} else {
+			labResult.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT));
 		}
 		setFields(labResult);
 		

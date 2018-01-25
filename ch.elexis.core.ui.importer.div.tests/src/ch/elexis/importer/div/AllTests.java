@@ -20,7 +20,8 @@ import junit.framework.TestSuite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	Test_HL7_parser.class, MultiFileParserTests.class, HL7InitLabItemTest.class
+	Test_HL7_parser.class, MultiFileParserTests.class, HL7InitLabItemTest.class,
+	TestPathologicDescription.class
 })
 public class AllTests {
 	public static Test suite() throws ClassNotFoundException{

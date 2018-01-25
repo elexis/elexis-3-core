@@ -52,6 +52,8 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 	public LabSettings(){
 		super(GRID);
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.userCfg));
+		// make sure default value is correct, in case no value is set yet
+		getPreferenceStore().setDefault(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
 	}
 	
 	@Override

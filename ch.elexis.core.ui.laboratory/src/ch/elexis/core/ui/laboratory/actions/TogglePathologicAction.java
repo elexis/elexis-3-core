@@ -7,6 +7,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
+import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.data.LabResult;
 
 public class TogglePathologicAction extends Action {
@@ -23,6 +25,7 @@ public class TogglePathologicAction extends Action {
 	public void run(){
 		for (LabResult result : results) {
 			result.setFlag(LabResultConstants.PATHOLOGIC, !isChecked());
+			result.setPathologicDescription(new PathologicDescription(Description.PATHO_MANUAL));
 		}
 		viewer.refresh();
 	}

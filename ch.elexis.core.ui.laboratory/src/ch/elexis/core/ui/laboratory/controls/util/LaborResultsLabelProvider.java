@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
+import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
 import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
@@ -71,6 +73,20 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		}
 	}
 	
+	private String getPathologicString(LabResult labResult){
+		StringBuilder sb = new StringBuilder();
+		if (labResult.isFlag(LabResultConstants.PATHOLOGIC)) {
+			sb.append("pathologisch");
+		} else {
+			sb.append("nicht pathologisch");
+		}
+		PathologicDescription description = labResult.getPathologicDescription();
+		if (description != null && !(description.getDescription() == Description.UNKNOWN)) {
+			sb.append(" - ").append(description.getLabel());
+		}
+		return sb.toString();
+	}
+	
 	private String getNonEmptyResultString(LabResult labResult){
 		String result = labResult.getResult();
 		if (result != null && result.isEmpty()) {
@@ -127,6 +143,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 							sb.append(" - "); //$NON-NLS-1$
 							sb.append(getResultString(labResult));
 							sb.append(getUnitAndReferenceString(labResult));
+							sb.append("\n").append(getPathologicString(labResult));
 							sb.append(getCommentString(labResult));
 						} else {
 							sb.append(",\n"); //$NON-NLS-1$
@@ -134,6 +151,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 							sb.append(" - "); //$NON-NLS-1$
 							sb.append(getResultString(labResult));
 							sb.append(getUnitAndReferenceString(labResult));
+							sb.append("\n").append(getPathologicString(labResult));
 							sb.append(getCommentString(labResult));
 						}
 					}
