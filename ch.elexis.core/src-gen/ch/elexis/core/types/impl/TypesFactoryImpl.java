@@ -24,6 +24,7 @@ import ch.elexis.core.types.Country;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
@@ -107,6 +108,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createLabItemTypFromString(eDataType, initialValue);
 			case TypesPackage.COUNTRY:
 				return createCountryFromString(eDataType, initialValue);
+			case TypesPackage.PATHOLOGIC_DESCRIPTION:
+				return createPathologicDescriptionFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -140,6 +143,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertLabItemTypToString(eDataType, instanceValue);
 			case TypesPackage.COUNTRY:
 				return convertCountryToString(eDataType, instanceValue);
+			case TypesPackage.PATHOLOGIC_DESCRIPTION:
+				return convertPathologicDescriptionToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -332,6 +337,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertCountryToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PathologicDescription createPathologicDescriptionFromString(EDataType eDataType, String initialValue) {
+		return (PathologicDescription)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertPathologicDescriptionToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 
