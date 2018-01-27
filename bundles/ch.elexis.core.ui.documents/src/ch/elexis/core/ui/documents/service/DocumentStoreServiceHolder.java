@@ -10,11 +10,11 @@ public class DocumentStoreServiceHolder {
 	private static DocumentStore localDocumentStore;
 	
 	@Reference
-	public static void bind(DocumentStore service){
+	public void bind(DocumentStore service){
 		DocumentStoreServiceHolder.localDocumentStore = service;
 	}
 	
-	public static void unbind(DocumentStore service){
+	public void unbind(DocumentStore service){
 		DocumentStoreServiceHolder.localDocumentStore = null;
 	}
 	

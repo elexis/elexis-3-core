@@ -10,7 +10,7 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -34,6 +34,7 @@ import ch.rgw.tools.TimeTool;
  *   <li>{@link ch.elexis.core.model.ILabResult#getOriginContact <em>Origin Contact</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabResult#getDate <em>Date</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabResult#getItem <em>Item</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getPathologicDescription <em>Pathologic Description</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getILabResult()
@@ -353,4 +354,16 @@ public interface ILabResult extends Identifiable {
 	 */
 	void setItem(ILabItem value);
 
+	PathologicDescription getPathologicDescription();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getPathologicDescription <em>Pathologic Description</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Pathologic Description</em>' attribute.
+	 * @see #getPathologicDescription()
+	 * @generated
+	 */
+	void setPathologicDescription(PathologicDescription value);
+	
 } // ILabResult

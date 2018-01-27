@@ -161,6 +161,7 @@ public class HL7Parser {
 								hl7LabResult.getUnit(), typ,
 								labItemResolver.getTestGroupName(hl7LabResult),
 								labItemResolver.getNextTestGroupSequence(hl7LabResult));
+						logger.debug("LabItem created [{}]", labItem);
 					}
 					
 					boolean importAsLongText =

@@ -46,10 +46,12 @@ public class EigenartikelTreeContentProvider
 	
 	@Override
 	public Object[] getElements(Object inputElement){
-		Query<Eigenartikel> qre = new Query<Eigenartikel>(Eigenartikel.class);
-		qre.add(Eigenartikel.FLD_TYP, Query.EQUALS, Eigenartikel.TYPNAME);
+		Query<Eigenartikel> qre = new Query<>(Eigenartikel.class, Eigenartikel.FLD_TYP,
+			Eigenartikel.TYPNAME, Eigenartikel.TABLENAME, new String[] {
+				Eigenartikel.FLD_NAME, Eigenartikel.FLD_EXTID, Eigenartikel.FLD_EXTINFO
+			});
 		if (filter != null) {
-			qre.add(Eigenartikel.FLD_NAME, Query.LIKE, "%" + filter + "%");
+			qre.add(Eigenartikel.FLD_NAME, Query.LIKE, "%" + filter + "%", true);
 		}
 		if (!showProducts) {
 			qre.add(Eigenartikel.FLD_EXTID, Query.NOT_EQUAL, null);
