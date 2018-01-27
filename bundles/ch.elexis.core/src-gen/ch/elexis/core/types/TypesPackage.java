@@ -224,6 +224,17 @@ public interface TypesPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '<em>Pathologic Description</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.PathologicDescription
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getPathologicDescription()
+	 * @generated
+	 */
+	int PATHOLOGIC_DESCRIPTION = 13;
+
+
+	/**
 	 * Returns the meta object for class '{@link java.lang.Comparable <em>Comparable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -360,6 +371,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getCountry();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.types.PathologicDescription <em>Pathologic Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Pathologic Description</em>'.
+	 * @see ch.elexis.core.types.PathologicDescription
+	 * @model instanceClass="ch.elexis.core.types.PathologicDescription"
+	 * @generated
+	 */
+	EDataType getPathologicDescription();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -512,6 +534,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType COUNTRY = eINSTANCE.getCountry();
+
+		/**
+		 * The meta object literal for the '<em>Pathologic Description</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.PathologicDescription
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getPathologicDescription()
+		 * @generated
+		 */
+		EDataType PATHOLOGIC_DESCRIPTION = eINSTANCE.getPathologicDescription();
 
 	}
 

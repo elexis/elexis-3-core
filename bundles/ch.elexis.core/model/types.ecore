@@ -68,4 +68,5 @@
     <eLiterals name="SENT" value="3"/>
     <eLiterals name="RECIVED" value="4"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="PathologicDescription" instanceClassName="ch.elexis.core.types.PathologicDescription"/>
 </ecore:EPackage>

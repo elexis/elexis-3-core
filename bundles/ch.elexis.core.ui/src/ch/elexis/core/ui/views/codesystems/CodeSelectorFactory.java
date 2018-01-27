@@ -720,7 +720,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	 */
 	public void activateContextMenu(IWorkbenchPartSite site,
 		DelegatingSelectionProvider selectionProvider, String viewId){
-		if (hasContextMenu()) {
+		if (hasContextMenu() && site.getPart() != null) {
 			selectionProvider.setSelectionProviderDelegate(getSelectionProvider());
 			site.registerContextMenu(viewId + "." + getCodeSystemName(), getMenuManager(),
 				selectionProvider);

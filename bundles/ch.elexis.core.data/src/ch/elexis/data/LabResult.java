@@ -37,6 +37,8 @@ import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
+import ch.elexis.core.types.PathologicDescription.Description;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -59,12 +61,14 @@ public class LabResult extends PersistentObject implements ILabResult {
 	public static final String REFMALE = "refmale"; //$NON-NLS-1$
 	public static final String REFFEMALE = "reffemale"; //$NON-NLS-1$
 	public static final String ORIGIN_ID = "OriginID"; //$NON-NLS-1$
+	public static final String PATHODESC = "pathodesc"; //$NON-NLS-1$
 	
 	public static final String EXTINFO_HL7_SUBID = "Hl7SubId";
 	
 	private static final String TABLENAME = "LABORWERTE"; //$NON-NLS-1$
 	private final String SMALLER = "<";
 	private final String BIGGER = ">";
+	private PathologicDescription pathologicDescription;
 	
 	private static Pattern refValuesPattern = Pattern.compile("\\((.*?)\\)"); //$NON-NLS-1$
 	private static String[] VALID_ABS_VALUES = new String[] {
@@ -81,7 +85,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	static {
 		addMapping(TABLENAME, PATIENT_ID, DATE_COMPOUND, ITEM_ID, RESULT, COMMENT, FLAGS,
 			"Quelle=Origin", TIME, UNIT, ANALYSETIME, OBSERVATIONTIME, TRANSMISSIONTIME, REFMALE, //$NON-NLS-1$
-			REFFEMALE, ORIGIN_ID);
+			REFFEMALE, ORIGIN_ID, PATHODESC);
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT LW.ID, LW." + OBSERVATIONTIME + ", LW." + DATE + ", LW." + TIME + ", ");
@@ -191,34 +195,56 @@ public class LabResult extends PersistentObject implements ILabResult {
 		this(p, date, item, result, comment, null, origin);
 	}
 	
-	private boolean isPathologic(final Gender g, final ILabItem item, final String result){
+	private boolean isPathologic(final Gender g, final ILabItem item, final String result,
+		boolean updateDescription){
 		if (item.getTyp().equals(LabItemTyp.ABSOLUTE)) {
 			if (result.toLowerCase().startsWith("pos")) { //$NON-NLS-1$
+				if (updateDescription) {
+					setPathologicDescription(
+						new PathologicDescription(Description.PATHO_ABSOLUT, "pos"));
+				}
 				return true;
 			}
 			if (result.trim().startsWith("+")) { //$NON-NLS-1$
+				if (updateDescription) {
+					setPathologicDescription(
+						new PathologicDescription(Description.PATHO_ABSOLUT, "+"));
+				}
 				return true;
 			}
-		} else /* if(item.getTyp().equals(LabItem.typ.NUMERIC)) */{
+		} else /* if(item.getTyp().equals(LabItem.typ.NUMERIC)) */ {
 			String nr;
+			boolean usedItemRef = false;
 			if (g == Gender.MALE) {
 				nr = getRefMale();
-				if (nr == null || nr.isEmpty()) {
-					nr = item.getReferenceMale();
-				}
+				usedItemRef = isUsingItemRef(REFMALE);
 			} else {
 				nr = getRefFemale();
-				if (nr == null || nr.isEmpty()) {
-					nr = item.getReferenceFemale();
-				}
+				usedItemRef = isUsingItemRef(REFFEMALE);
 			}
 			List<String> refStrings = parseRefString(nr);
 			// only test first string as range is defined in one string
-			if (!refStrings.isEmpty() && result != null) {
+			if (result != null && !refStrings.isEmpty() && !refStrings.get(0).isEmpty()) {
+				if (updateDescription) {
+					if (usedItemRef) {
+						setPathologicDescription(new PathologicDescription(
+							Description.PATHO_REF_ITEM, refStrings.get(0)));
+					} else {
+						setPathologicDescription(
+							new PathologicDescription(Description.PATHO_REF, refStrings.get(0)));
+					}
+				}
 				return testRef(refStrings.get(0), result);
 			}
 		}
+		if (updateDescription) {
+			setPathologicDescription(new PathologicDescription(Description.PATHO_NOREF));
+		}
 		return false;
+	}
+	
+	private boolean isPathologic(final Gender g, final ILabItem item, final String result){
+		return isPathologic(g, item, result, true);
 	}
 	
 	public boolean isLongText(){
@@ -548,6 +574,34 @@ public class LabResult extends PersistentObject implements ILabResult {
 	}
 	
 	/**
+	 * Test if we use the reference value from the result or the item on
+	 * {@link LabResult#resolvePreferedRefValue(String, String)}.
+	 * 
+	 * @param refField
+	 * @return
+	 */
+	private boolean isUsingItemRef(String refField){
+		boolean useLocalRefs =
+			CoreHub.userCfg.get(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+		String localRef;
+		if (REFMALE.equals(refField)) {
+			localRef = getItem().getReferenceMale();
+		} else {
+			localRef = getItem().getReferenceFemale();
+		}
+		
+		if (useLocalRefs && localRef != null && !localRef.isEmpty()) {
+			return true;
+		} else {
+			String ref = checkNull(get(refField));
+			if (ref.isEmpty()) {
+				return true;
+			}
+			return false;
+		}
+	}
+	
+	/**
 	 * Set arbitrary additional information
 	 * 
 	 * @param key
@@ -711,6 +765,20 @@ public class LabResult extends PersistentObject implements ILabResult {
 			return Kontakt.load(id);
 		}
 		return null;
+	}
+	
+	@Override
+	public PathologicDescription getPathologicDescription(){
+		if (pathologicDescription == null) {
+			pathologicDescription = PathologicDescription.of(get(PATHODESC));
+		}
+		return pathologicDescription;
+	}
+	
+	@Override
+	public void setPathologicDescription(PathologicDescription description){
+		this.pathologicDescription = description;
+		set(PATHODESC, description.toString());
 	}
 	
 	public static boolean isValidNumericRefValue(String value){

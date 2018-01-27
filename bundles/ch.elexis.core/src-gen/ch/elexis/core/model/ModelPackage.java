@@ -1475,13 +1475,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_RESULT__ITEM = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Pathologic Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_RESULT__PATHOLOGIC_DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>ILab Result</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int ILAB_RESULT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}' class.
@@ -2610,6 +2619,17 @@ public interface ModelPackage extends EPackage {
 	EReference getILabResult_Item();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabResult#getPathologicDescription <em>Pathologic Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Pathologic Description</em>'.
+	 * @see ch.elexis.core.model.ILabResult#getPathologicDescription()
+	 * @see #getILabResult()
+	 * @generated
+	 */
+	EAttribute getILabResult_PathologicDescription();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3566,6 +3586,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ILAB_RESULT__ITEM = eINSTANCE.getILabResult_Item();
+
+		/**
+		 * The meta object literal for the '<em><b>Pathologic Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_RESULT__PATHOLOGIC_DESCRIPTION = eINSTANCE.getILabResult_PathologicDescription();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}' class.

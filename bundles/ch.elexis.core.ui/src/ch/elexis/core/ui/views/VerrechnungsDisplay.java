@@ -529,6 +529,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 									newPrice = new Money(val);
 									v.setTP(newPrice.getCents());
 									v.setSecondaryScaleFactor(1);
+									// mark as changed price
+									v.setDetail(Verrechnet.FLD_EXT_CHANGEDPRICE, "true");
 								}
 								// v.setPreis(newPrice);
 								setLeistungen(

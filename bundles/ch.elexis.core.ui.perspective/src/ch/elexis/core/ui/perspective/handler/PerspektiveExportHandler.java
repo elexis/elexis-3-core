@@ -22,7 +22,7 @@ public class PerspektiveExportHandler extends AbstractHandler {
 	static IPerspectiveExportService perspectiveExportService;
 	
 	@Reference(unbind = "-")
-	public static void bind(IPerspectiveExportService service){
+	public void bind(IPerspectiveExportService service){
 		perspectiveExportService = service;
 	}
 	

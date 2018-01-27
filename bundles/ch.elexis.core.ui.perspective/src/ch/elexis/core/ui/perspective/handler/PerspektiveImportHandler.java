@@ -37,7 +37,7 @@ public class PerspektiveImportHandler extends AbstractHandler {
 	static IPerspectiveImportService perspectiveImportService;
 	
 	@Reference(unbind = "-")
-	public static void bind(IPerspectiveImportService service){
+	public void bind(IPerspectiveImportService service){
 		perspectiveImportService = service;
 	}
 	
