@@ -25,7 +25,7 @@
 
 # Table for all kinds of contact information (Patients, Relations, Labs)
 CREATE TABLE KONTAKT(
-	ID				VARCHAR(80) primary key,	# UUID
+	ID				VARCHAR(36) primary key,	# UUIDv4 RFC 4122 /OR/ legacy Elexis StringTool.unique()
 	lastupdate      BIGINT,                     # timestamp of last update
 	deleted			CHAR(1) default '0',		# indicates that this object is marked deleted
 	istOrganisation	CHAR(1) default '0',		# this object is an organization 
@@ -35,7 +35,7 @@ CREATE TABLE KONTAKT(
 	istMandant	    CHAR(1) default '0',		# is an elexis mandator
 	istLabor		CHAR(1)	default '0',		# is a lab
 	Land			CHAR(3),					# country as ISO code
-	Geburtsdatum	CHAR(8),					# bithdate as yyyymmdd
+	Geburtsdatum	CHAR(8),					# bithdate as yyyymmdd (ISO 8601 compliant)
 	Geschlecht		CHAR(1),					# sex m or w
 	TITEL			VARCHAR(255),				# title
 	TitelSuffix		VARCHAR(255),				# title suffix
@@ -44,7 +44,7 @@ CREATE TABLE KONTAKT(
 	Bezeichnung3	VARCHAR(255),				# name3
 	Strasse			VARCHAR(255),				# street
 	plz				VARCHAR(6),					# zip-code
-	Ort				VARCHAR(255),				# place (don't try Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch)
+	Ort				VARCHAR(255),				# place (possibly Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch)
 	Telefon1		VARCHAR(255),				# phone1
 	Telefon2		VARCHAR(255),				# phone2
 	fax				VARCHAR(255),				# you'll guess it
@@ -75,7 +75,7 @@ CREATE TABLE KONTAKT_ADRESS_JOINT(
 	deleted		CHAR(1) default '0',
 	myid		VARCHAR(36),					# ID of a KONTAKT 
 	otherid		VARCHAR(36),					# ID of a KONTAKT that ist related to myID
-	bezug		VARCHAR(80),					# Description of the relationship
+	bezug		VARCHAR(255),					# Description of the relationship
 	myRType		CHAR(4),						# My formal relationship type
 	otherRType	CHAR(4)							# Other formal relationship type
 );
@@ -95,11 +95,11 @@ CREATE TABLE FAELLE(
 	versnummer		VARCHAR(25),					# deprecated, do not use
 	fallnummer		VARCHAR(25),					# deprecated, do not use
 	betriebsnummer	VARCHAR(25),					# deprecated, do not use
-	diagnosen		VARCHAR(80),					# diagnoses related to this case
+	diagnosen		VARCHAR(255),					# diagnoses related to this case
 	datumvon		CHAR(8),						# date of beginning
 	datumbis		CHAR(8),						# end date
 	bezeichnung		VARCHAR(80),					# title of the case
-	grund			VARCHAR(80),					# reason for treatment
+	grund			VARCHAR(255),					# reason for treatment
 	gesetz			VARCHAR(20),					# deprecated, do not use
 	Status			VARCHAR(80),					# deprecated, do not use
 	ExtInfo			BLOB							# additional informations (hashtable)
@@ -142,7 +142,7 @@ CREATE TABLE ARTIKEL(
 	vk_preis		CHAR(8),						# price (sell) in cents/rp
 	typ				VARCHAR(15),					# type of the article
 	codeclass		VARCHAR(10),					# used differently
-	extid			VARCHAR(25),					# used differently
+	extid			VARCHAR(36),					# used differently
 	ValidFrom		CHAR(8),			
 	ValidTo			CHAR(8),
 	ATC_code		VARCHAR(255),
