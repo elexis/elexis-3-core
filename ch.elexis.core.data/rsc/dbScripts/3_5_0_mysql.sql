@@ -1,10 +1,14 @@
 ###
 # Tables of elexis core 
 # same order as in ch.elexis.core.data -> rsc/createDB.script  
+# except zusatzadresse which needs adaptation of its foreignt key constraint.
 ###
 
 alter table zusatzadresse drop foreign key FK_ZUSATZADRESSE_KONTAKT_ID;
-alter table kontakt modify id varchar(36);
+alter table kontakt modify id varchar(36) charset latin1;
+alter table zusatzadresse modify Kontakt_ID varchar(36) charset latin1;
+ALTER TABLE zusatzadresse add CONSTRAINT FK_ZUSATZADRESSE_KONTAKT_ID FOREIGN KEY (Kontakt_ID) REFERENCES kontakt(id);
+
 
 alter table kontakt_adress_joint modify id varchar(36),
 	modify myid varchar(36),
@@ -150,9 +154,6 @@ alter table bestellung_entry modify ID varchar(36),
 	modify stock varchar(36),
 	modify PROVIDER varchar(36);
 
-alter table zusatzadresse modify Kontakt_ID varchar(36);
-
-ALTER TABLE ZUSATZADRESSE ADD CONSTRAINT FK_ZUSATZADRESSE_KONTAKT_ID FOREIGN KEY (Kontakt_ID) REFERENCES KONTAKT(ID);
 
 alter table role modify id varchar(36);
 
