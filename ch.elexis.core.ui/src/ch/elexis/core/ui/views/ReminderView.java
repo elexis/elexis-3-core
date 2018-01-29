@@ -13,6 +13,8 @@ package ch.elexis.core.ui.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -89,6 +91,7 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Reminder;
 import ch.rgw.io.Settings;
+import ch.rgw.tools.TimeTool;
 
 public class ReminderView extends ViewPart implements IActivationListener, HeartListener {
 	
@@ -96,6 +99,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	
 	private IAction newReminderAction, deleteReminderAction, showOnlyOwnDueReminderToggleAction,
 			showSelfCreatedReminderAction, toggleAutoSelectPatientAction, reloadAction;
+	private IAction sortByDueDate;
 	private RestrictedAction showOthersRemindersAction;
 	private RestrictedAction selectPatientAction;
 	private boolean bVisible;
@@ -118,7 +122,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	
 	private CommonViewer cv = new CommonViewer();
 	private ViewerConfigurer vc;
-	private Query<Reminder> qbe = new Query<Reminder>(Reminder.class);
+	private Query<Reminder> qbe;
 	private ReminderFilter filter = new ReminderFilter();
 	private Patient actPatient;
 	private Text txtSearch;
@@ -182,6 +186,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			}
 		};
 	
+	public ReminderView(){
+		qbe = new Query<>(Reminder.class, null, null, Reminder.TABLENAME, new String[] {
+			Reminder.FLD_DUE, Reminder.FLD_PRIORITY, Reminder.FLD_ACTION_TYPE
+		});
+	}
+	
 	@Override
 	public void createPartControl(final Composite parent){
 		Composite content = new Composite(parent, SWT.NONE);
@@ -218,12 +228,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		
 		reminderLabelProvider.updateUserConfiguration();
 		
-		CommonContentProviderAdapter contentProvider = new ReminderViewCommonContentProvider();
+		ReminderViewCommonContentProvider contentProvider = new ReminderViewCommonContentProvider();
 		vc = new ViewerConfigurer(contentProvider, reminderLabelProvider, null,
 			new ViewerConfigurer.DefaultButtonProvider(),
 			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.MULTI, cv));
 		
-		makeActions();
+		makeActions(contentProvider);
 		
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createToolbar(reloadAction, newReminderAction, toggleAutoSelectPatientAction);
@@ -292,6 +302,9 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		Action labelResponsibility = new Action("Anzeige erweitern") {};
 		labelResponsibility.setEnabled(false);
 		
+		Action labelSorter = new Action("Anzeige sortieren") {};
+		labelSorter.setEnabled(false);
+		
 		MenuManager typeFilterSubMenu = new MenuManager("Nach Aktionstyp");
 		List<IContributionItem> ca =
 			ViewMenus.convertActionsToContributionItems((filterActionType));
@@ -299,7 +312,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			typeFilterSubMenu.add(iContributionItem);
 		}
 		return Arrays.asList(new ActionContributionItem(newReminderAction), null,
-			new ActionContributionItem(labelFilter),
+			new ActionContributionItem(labelSorter), new ActionContributionItem(sortByDueDate),
+			null, new ActionContributionItem(labelFilter),
 			new ActionContributionItem(showOnlyOwnDueReminderToggleAction), typeFilterSubMenu, null,
 			new ActionContributionItem(labelResponsibility),
 			new ActionContributionItem(showSelfCreatedReminderAction),
@@ -355,7 +369,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}
 	}
 	
-	private void makeActions(){
+	private void makeActions(final ReminderViewCommonContentProvider contentProvider){
 		newReminderAction = new Action(Messages.ReminderView_newReminderAction) { //$NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
@@ -404,6 +418,44 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				return (sel != null && sel.length == 1 && sel[0] instanceof Reminder);
 			}
 		};
+		sortByDueDate = new Action("by due date", Action.AS_CHECK_BOX) {
+			
+			int state = 0;
+			
+			@Override
+			public void run(){
+				
+				if (state == 0) {
+					contentProvider.setComparator(new Comparator<Reminder>() {
+						@Override
+						public int compare(Reminder o1, Reminder o2){
+							return TimeTool.compare(o2.getDateDue(), o1.getDateDue());
+						}
+					});
+					state = 1;
+					sortByDueDate.setText("by due date ascending");
+					sortByDueDate.setChecked(true);
+				} else if (state == 1) {
+					contentProvider.setComparator(new Comparator<Reminder>() {
+						@Override
+						public int compare(Reminder o1, Reminder o2){
+							return TimeTool.compare(o1.getDateDue(), o2.getDateDue());
+						}
+					});
+					state = 2;
+					sortByDueDate.setText("by due date descending");
+					sortByDueDate.setChecked(true);
+				} else if (state == 2) {
+					contentProvider.setComparator(null);
+					state = 0;
+					sortByDueDate.setText("by due date");
+					sortByDueDate.setChecked(false);
+				}
+				
+				cv.notify(CommonViewer.Message.update_keeplabels);
+			}
+		};
+		
 		showOnlyOwnDueReminderToggleAction =
 			new Action(Messages.ReminderView_onlyDueAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 				{
@@ -606,6 +658,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		public Image getColumnImage(Object element, int columnIndex){
 			if (element instanceof Reminder) {
 				Reminder reminder = (Reminder) element;
+				
+				ProcessStatus status = reminder.getStatus();
+				if (ProcessStatus.CLOSED == status) {
+					return Images.IMG_TICK.getImage();
+				}
+				
 				Type actionType = reminder.getActionType();
 				return determineActionTypeImage(actionType).getImage();
 			}
@@ -617,7 +675,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			if (element instanceof Reminder) {
 				Reminder reminder = (Reminder) element;
 				ProcessStatus status = reminder.getStatus();
-				if (ProcessStatus.CLOSED == status || ProcessStatus.ON_HOLD == status) {
+				if (ProcessStatus.ON_HOLD == status) {
 					return "[" + status.getLocaleText() + "] " + super.getText(element);
 				}
 			}
@@ -666,7 +724,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					Reminder.FLD_KONTAKT_ID, Reminder.FLD_VISIBILITY);
 				if (!vals[2].equals(patientId)) {
 					Visibility vis = Visibility.byNumericSafe(vals[3]);
-					if (vis != Visibility.ALWAYS && vis != Visibility.POPUP_ON_LOGIN ) {
+					if (vis != Visibility.ALWAYS && vis != Visibility.POPUP_ON_LOGIN) {
 						// other (non-selected patient) and not marked always visible
 						return false;
 					}
@@ -688,6 +746,9 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	}
 	
 	private class ReminderViewCommonContentProvider extends CommonContentProviderAdapter {
+		
+		private Comparator<Reminder> comparator;
+		
 		@Override
 		public Object[] getElements(final Object inputElement){
 			// Display reminders only if one is logged in
@@ -719,9 +780,9 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			}
 			
 			// split into sublists
-			List<Object> patientRelatedReminders = new ArrayList<>();
-			List<Object> patientRelatedRemindersCurrentPatient = new ArrayList<>();
-			List<Object> otherReminders = new ArrayList<>();
+			List<Reminder> patientRelatedReminders = new ArrayList<>();
+			List<Reminder> patientRelatedRemindersCurrentPatient = new ArrayList<>();
+			List<Reminder> otherReminders = new ArrayList<>();
 			
 			Patient currentPatient = ElexisEventDispatcher.getSelectedPatient();
 			for (Reminder reminder : reminders) {
@@ -737,6 +798,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				}
 			}
 			
+			if (comparator != null) {
+				Collections.sort(patientRelatedReminders, comparator);
+				Collections.sort(patientRelatedRemindersCurrentPatient, comparator);
+				Collections.sort(otherReminders, comparator);
+			}
+			
 			List<Object> resultList = new ArrayList<>();
 			resultList.add("------------ Aktueller Patient");
 			resultList.addAll(patientRelatedRemindersCurrentPatient);
@@ -748,5 +815,10 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			
 			return resultList.toArray();
 		}
+		
+		public void setComparator(Comparator<Reminder> comparator){
+			this.comparator = comparator;
+		}
+		
 	}
 }
