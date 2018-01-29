@@ -3,6 +3,7 @@ package ch.elexis.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import ch.elexis.core.model.IPersistentObject;
 import ch.rgw.tools.JdbcLink;
 
 @RunWith(Parameterized.class)
@@ -358,5 +360,18 @@ public class Test_Prescription extends AbstractPersistentObjectTest {
 		System.out
 			.println("Found failures " + nr_failures + " and " + nr_successes + " nr_successes");
 		assertEquals(0, nr_failures);
+	}
+	
+	@Test
+	public void testGetLastDisposed(){
+		Artikel artikel = new Artikel("TestArtikel", "TestArtikel");
+		Patient patient = new Patient("Maria", "Musterfrau", "17051966", "F");
+		Prescription prescription = new Prescription(artikel, patient, "0-8-15", "blalba");
+		IPersistentObject lastDisposed = prescription.getLastDisposed();
+		assertNull(lastDisposed);
+		Rezept rezept = new Rezept(patient);
+		rezept.addPrescription(prescription);
+		lastDisposed = prescription.getLastDisposed();
+		assertEquals(rezept, lastDisposed);
 	}
 }
