@@ -725,5 +725,5 @@ CREATE TABLE ZUSATZADRESSE (
 	
 );
 
-INSERT INTO CONFIG (param,wert) VALUES ('dbversion','3.5.0');
+INSERT INTO CONFIG (param,wert) VALUES ('dbversion','3.4.3');
 INSERT INTO CONFIG (param,wert) VALUES ('ElexisVersion','3.4.0');
