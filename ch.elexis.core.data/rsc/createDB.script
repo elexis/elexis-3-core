@@ -173,7 +173,7 @@ CREATE TABLE PATIENT_ARTIKEL_JOINT(
 	sortOrder		CHAR(3),						# manual sort order
 	prescDate		CHAR(8),						# date medication was prescribed
 	prescriptor		VARCHAR(36),					# the contact that prescribed this 
-	ExtInfo			LONGBLOB
+	ExtInfo			BLOB
 );
 
 CREATE INDEX paj1 on PATIENT_ARTIKEL_JOINT(PATIENTID);
@@ -181,8 +181,8 @@ CREATE INDEX PAJ2 on PATIENT_ARTIKEL_JOINT(REZEPTID);
 
 CREATE TABLE ARTIKEL_DETAILS(   
     ARTICLE_ID      VARCHAR(36),                    # foreign key from ARTIKEL                     
-    notes           LONGTEXT,                       # informations or usage of the article
-    image           LONGBLOB                        # an image or other binary data
+    notes           TEXT, 		                    # informations or usage of the article
+    image           BLOB     	              	    # an image or other binary data
 );
 
 # Das Konto ist eine Liste sämtlicher Forderungen und Zahlungen
@@ -291,14 +291,14 @@ CREATE TABLE BRIEFE(
 	modifiziert		CHAR(24),
 	gedruckt		CHAR(8),
 	geloescht		CHAR(2),
-	note			LONGTEXT,		  		   # Notizen
+	note			TEXT,		  		   # Notizen
 	absenderid		VARCHAR(36),           # foreign key from KONTAKT
 	destid			VARCHAR(36),           # foreign key from KONTAKT
 	behandlungsid	VARCHAR(36),           # foreign key from BEHANDLUNG
 	patientid		VARCHAR(36),           # foreign key from KONTAKT
 	Typ				VARCHAR(30),
 	MimeType		VARCHAR(80),
-	Path			LONGTEXT
+	Path			TEXT
 );
 
 CREATE INDEX i8 on BRIEFE (BehandlungsID);
@@ -312,7 +312,7 @@ CREATE TABLE OUTPUT_LOG(
 	ObjectType		VARCHAR(80),		# Class of object
 	Datum			CHAR(8),
 	Outputter		VARCHAR(255),		# identification of the output device/program
-	ExtInfo			LONGBLOB				# outputter specific information
+	ExtInfo			BLOB				# outputter specific information
 );
 
 CREATE INDEX bal_i1 ON OUTPUT_LOG (ObjectID);
@@ -470,7 +470,7 @@ CREATE TABLE LABORWERTE(
 	reffemale   VARCHAR(255),
 	OriginID    VARCHAR(36),
 	Kommentar	TEXT,
-	ExtInfo		LONGBLOB
+	ExtInfo		BLOB
 );
 
 CREATE INDEX labor1 on LABORWERTE (PatientID);
@@ -580,14 +580,14 @@ CREATE TABLE LOGS(
 	typ			VARCHAR(80),				
 	userID		VARCHAR(36),				# foreign key on modifying user
 	station		VARCHAR(255),				# modifying workstation name
-	ExtInfo		LONGBLOB
+	ExtInfo		BLOB
 );
 
 CREATE TABLE USERCONFIG(
     lastupdate  BIGINT,
 	UserID		VARCHAR(36),
 	Param		VARCHAR(80),
-	Value		LONGTEXT
+	Value		TEXT
 );
 CREATE INDEX UCFG ON USERCONFIG(Param);
 CREATE INDEX UCFG2 ON USERCONFIG(UserID);
@@ -640,7 +640,7 @@ CREATE TABLE DBIMAGE (
     Datum          CHAR(8),
     Prefix		   VARCHAR(80),				# A Unique ID of the image creator/importer
     Title          VARCHAR(80),  			# A title unique within the prefix's namespace
-    Bild           LONGBLOB
+    Bild           BLOB
 );
 CREATE INDEX DBIMAGE1 on DBIMAGE(Title);     
 
@@ -688,7 +688,7 @@ CREATE TABLE IF NOT EXISTS BESTELLUNGEN (
  	LASTUPDATE 	BIGINT DEFAULT NULL,
   	DELETED 	CHAR(1) DEFAULT '0',
 	DATUM  	    CHAR(8),
-	CONTENTS 	LONGBLOB,
+	CONTENTS 	BLOB,
 	PRIMARY KEY (ID)
 );
 
