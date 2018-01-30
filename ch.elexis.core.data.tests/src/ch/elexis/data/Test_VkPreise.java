@@ -44,7 +44,7 @@ public class Test_VkPreise extends AbstractPersistentObjectTest {
 	public void testStoringVkPreiseWithSameId() {
 		try
 		{
-			String id = String.valueOf(UUID.randomUUID()).substring(0, 20);
+			String id = String.valueOf(UUID.randomUUID());
 			Assert.assertEquals(1, link.exec("INSERT INTO VK_PREISE (ID) VALUES (" + JdbcLink.wrap(id)  +")"));
 			link.exec("INSERT INTO VK_PREISE (ID) VALUES (" + JdbcLink.wrap(id)  +")");
 			Assert.fail("should not happen");
@@ -59,7 +59,7 @@ public class Test_VkPreise extends AbstractPersistentObjectTest {
 	@Test
 	@Ignore("not working for postgre - char 8 field returns exactly 8 bytes only for postgre")
 	public void testStoringVkPreiseDatumIdChar8() throws SQLException {
-		String id = String.valueOf(UUID.randomUUID()).substring(0, 20);
+		String id = String.valueOf(UUID.randomUUID());
 		String datumVon = "2010121";
 		link.exec("INSERT INTO VK_PREISE (ID, DATUM_VON) VALUES (" + JdbcLink.wrap(id)  +", " + JdbcLink.wrap(datumVon) + ")");
 		ResultSet res = link.getStatement().query("SELECT DATUM_VON FROM VK_PREISE WHERE ID=" + JdbcLink.wrap(id));

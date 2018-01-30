@@ -116,7 +116,6 @@ CREATE TABLE BEHANDLUNGEN(
 	mandantid		VARCHAR(36),					# foreign key from KONTAKT -> mandator
 	rechnungsid		VARCHAR(36),					# foreign key from RECHNUGNEN -> bill
 	datum			CHAR(8),						# date of treatment as ISO 8601 (YYYYMMDD)
-	zeit			CHAR(8),						# time of treatment as HH:MM:SS
 	diagnosen		VARCHAR(25),					# diagnoses
 	leistungen		VARCHAR(25),					# deprecated, do not use.
 	eintrag			BLOB							# treatment text (as VersionedResource)
@@ -141,6 +140,7 @@ CREATE TABLE ARTIKEL(
 	ek_preis		CHAR(8),						# cost (buy) in cents/rp
 	vk_preis		CHAR(8),						# price (sell) in cents/rp
 	typ				VARCHAR(15),					# type of the article
+	LastImport		CHAR(8),
 	codeclass		VARCHAR(10),					# used differently
 	extid			VARCHAR(36),					# used differently
 	ValidFrom		CHAR(8),			
@@ -709,21 +709,7 @@ CREATE TABLE BESTELLUNG_ENTRY (
 ALTER TABLE BESTELLUNG_ENTRY 
 	ADD CONSTRAINT FK_BESTELLUNG_ENTRY_BESTELLUNG_ID FOREIGN KEY (BESTELLUNG) REFERENCES BESTELLUNGEN (ID);
 
-CREATE TABLE ZUSATZADRESSE (
-	ID       	VARCHAR(41) NOT NULL,
- 	LASTUPDATE 	BIGINT DEFAULT NULL,
-  	DELETED 	CHAR(1) DEFAULT '0',
-	Kontakt_ID		VARCHAR(36)  NOT NULL,
-	STRASSE1		VARCHAR(255),
-	STRASSE2		VARCHAR(255),
-	PLZ				VARCHAR(6),		
-	ORT				VARCHAR(255),
-	LAND			CHAR(3),			
-	TYP 			CHAR(4) DEFAULT '0',
-	Anschrift		TEXT,
-	PRIMARY KEY (ID)
-	
-);
 
-INSERT INTO CONFIG (param,wert) VALUES ('dbversion','3.4.3');
-INSERT INTO CONFIG (param,wert) VALUES ('ElexisVersion','3.4.0');
+
+INSERT INTO CONFIG (param,wert) VALUES ('dbversion','3.2.5');
+INSERT INTO CONFIG (param,wert) VALUES ('ElexisVersion','3.2.0');
