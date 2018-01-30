@@ -10,7 +10,10 @@ sudo -u postgres psql -c "grant all privileges  on database unittests to elexis;
 
 
 For mysql run the following commands
+(note: There seem to be issues with these Tests and MariaDB. So if they keep failing, make sure to use Mysql Server)
 
 bq. mysql --host=localhost --user root --password
 create database unittests; 
-grant all on unittests.* to elexis@localhost identified by 'elexisTest'; 
+grant all on unittests.* to elexisTest@localhost identified by 'elexisTest'; 
+
+Then, right-click on DataAllTests.launch and select "Run as" or "Debug as" DataAllTests.
