@@ -39,7 +39,7 @@ CREATE TABLE KONTAKT(
 	Geschlecht		CHAR(1),					# sex m or w
 	TITEL			VARCHAR(255),				# title
 	TitelSuffix		VARCHAR(255),				# title suffix
-	Bezeichnung1	VARCHAR(255),				# name1
+	Bezeichnung1	VARCHAR(80),				# name1
 	Bezeichnung2	VARCHAR(255),				# name2
 	Bezeichnung3	VARCHAR(255),				# name3
 	Strasse			VARCHAR(255),				# street
@@ -132,7 +132,7 @@ CREATE TABLE ARTIKEL(
 	subid			VARCHAR(20),                    # an ID depending of the type (e.g. Pharmacode)
 	lieferantid		VARCHAR(36),                    # foreign key from KONTAKT -> dealer
 	Klasse			VARCHAR(80),					# class of the objects representing this article
-	Name			VARCHAR(254),					# official name
+	Name			VARCHAR(80),					# official name
 	Name_intern		VARCHAR(254),					# internal name
 	maxbestand		CHAR(4),						# max number to hold on stock
 	minbestand		CHAR(4),						# min number on stock before ordering
@@ -257,7 +257,7 @@ CREATE TABLE DIAGNOSEN(
 	lastupdate      BIGINT,
 	deleted			CHAR(1) default '0',
 	DG_TXT			VARCHAR(255),
-	DG_CODE			VARCHAR(255),
+	DG_CODE			VARCHAR(80),
 	KLASSE			VARCHAR(80)
 );
 
@@ -598,8 +598,8 @@ CREATE TABLE XID(
 	deleted		CHAR(1) default '0',
 	type		VARCHAR(80),				# class of the object
 	object		VARCHAR(36),				# ID of the object
-	domain		VARCHAR(255),				# Domain of the XID used
-	domain_id	VARCHAR(255),				# ID of the object within that domain
+	domain		VARCHAR(100),				# Domain of the XID used
+	domain_id	VARCHAR(100),				# ID of the object within that domain
 	quality		CHAR(1) default '0'			# Assignment tag of the XID
 );
 CREATE INDEX XIDIDX1 on XID(domain);
@@ -666,7 +666,7 @@ CREATE TABLE STOCK_ENTRY (
 	LASTUPDATE BIGINT DEFAULT NULL,
 	DELETED CHAR(1) DEFAULT '0',
 	STOCK VARCHAR(36) NOT NULL,
-	ARTICLE_TYPE VARCHAR(255) NOT NULL,
+	ARTICLE_TYPE VARCHAR(100) NOT NULL,
 	ARTICLE_ID VARCHAR(36) NOT NULL, 
 	MIN INTEGER DEFAULT 0, 
 	CURRENT INTEGER DEFAULT 0, 
