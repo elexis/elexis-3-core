@@ -262,6 +262,8 @@ public class DBConnection {
 	}
 	
 	public void disconnect(){
+		if (jdbcLink == null)
+			return;
 		if (jdbcLink.DBFlavor.startsWith("hsqldb")) {
 			jdbcLink.exec("SHUTDOWN COMPACT");
 		}
@@ -294,18 +296,30 @@ public class DBConnection {
 	}
 	
 	public Stm getStatement(){
+		if (jdbcLink == null) {
+			return null;
+		}
 		return jdbcLink.getStatement();
 	}
 	
 	public void releaseStatement(Stm stm){
+		if (jdbcLink == null) {
+			return;
+		}
 		jdbcLink.releaseStatement(stm);
 	}
 	
 	public int exec(String sql){
+		if (jdbcLink == null) {
+			return 0;
+		}
 		return jdbcLink.exec(sql);
 	}
 	
 	public String wrapFlavored(String wert){
+		if (jdbcLink == null) {
+			return "";
+		}
 		return jdbcLink.wrapFlavored(wert);
 	}
 	
@@ -333,6 +347,9 @@ public class DBConnection {
 	}
 	
 	public Connection getConnection(){
+		if (jdbcLink == null) {
+			return null;
+		}
 		return jdbcLink.getConnection();
 	}
 }

@@ -150,6 +150,8 @@ public class SqlSettings extends Settings {
 			while (it.hasNext()) {
 				String parameterName = (String) it.next();
 				String parameterValue = get(parameterName, null);
+				if (selectStatement== null)
+					return;
 				selectStatement.setString(1, parameterName);
 				if (constraintKey != null && constraintValue != null) {
 					selectStatement.setString(2, constraintValue);

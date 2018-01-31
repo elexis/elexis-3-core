@@ -218,6 +218,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true für ok, false wenn keine Verbindung hergestellt werden konnte.
 	 */
 	public static boolean connect(final Settings cfg){
+
 		DBConnection dbConnection = new DBConnection();
 		dbConnection.setDBUser(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME));
 		dbConnection
@@ -699,6 +700,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * Die ID in einen datenbankgeeigneten Wrapper verpackt (je nach Datenbank; meist Hochkommata).
 	 */
 	public String getWrappedId(){
+		if (getDBConnection() == null || getDBConnection().getJdbcLink() == null) {
+			return id;
+		}
 		return getDBConnection().getJdbcLink().wrapFlavored(id);
 	}
 	
@@ -1372,6 +1376,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @since 3.1
 	 */
 	public boolean getBoolean(final String field){
+		if (getDBConnection() == null) {
+			return false;
+		}
 		String val = get(field);
 		return (StringConstants.ONE.equals(val)) ? true : false;
 	}
@@ -2912,6 +2919,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return
 	 */
 	private ResultSet executeSqlQuery(String sql, Stm stm){
+		if (defaultConnection == null || defaultConnection.getJdbcLink() == null) {
+			return null;
+		}
 		ResultSet res = null;
 		try {
 			res = stm.query(sql);

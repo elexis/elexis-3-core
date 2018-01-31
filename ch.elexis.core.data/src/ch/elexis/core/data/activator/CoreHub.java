@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -421,6 +422,10 @@ public class CoreHub implements BundleActivator {
 	 * get a list of all mandators known to this system
 	 */
 	public static List<Mandant> getMandantenList(){
+		if (PersistentObject.getDefaultConnection() == null) {
+				List<Mandant> emptyList = new ArrayList<Mandant>(); ;
+				return emptyList;
+				}
 		Query<Mandant> qbe = new Query<>(Mandant.class);
 		return qbe.execute();
 	}

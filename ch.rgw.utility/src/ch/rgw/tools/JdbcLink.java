@@ -485,6 +485,8 @@ public class JdbcLink {
 	 * @return
 	 */
 	public PreparedStatement getPreparedStatement(String sql){
+		if (dataSource == null) 
+			return null;
 		try {
 			Connection connection = dataSource.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sql);
