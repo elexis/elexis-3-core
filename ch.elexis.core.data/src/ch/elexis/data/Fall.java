@@ -339,6 +339,9 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 */
 	private static void update(){
 		// String is=getInfoString("Kostenträger");
+		if (PersistentObject.getDefaultConnection() == null) {
+			return;
+		}
 		Query<Fall> qbe = new Query<Fall>(Fall.class);
 		for (Fall fall : qbe.execute()) {
 			if (fall.getInfoString("Kostenträger").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -783,19 +786,19 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 						"VVG"); //$NON-NLS-1$
 					
 					PersistentObject
-						.getConnection()
+						.getDefaultConnection()
 						.exec(
 							"UPDATE VK_PREISE set typ='UVG' WHERE typ='ch.elexis.data.TarmedLeistungUVG'"); //$NON-NLS-1$
 					PersistentObject
-						.getConnection()
+						.getDefaultConnection()
 						.exec(
 							"UPDATE VK_PREISE set typ='KVG' WHERE typ='ch.elexis.data.TarmedLeistungKVG'"); //$NON-NLS-1$
 					PersistentObject
-						.getConnection()
+						.getDefaultConnection()
 						.exec(
 							"UPDATE VK_PREISE set typ='IV' WHERE typ='ch.elexis.data.TarmedLeistungIV'"); //$NON-NLS-1$
 					PersistentObject
-						.getConnection()
+						.getDefaultConnection()
 						.exec(
 							"UPDATE VK_PREISE set typ='MV' WHERE typ='ch.elexis.data.TarmedLeistungMV'"); //$NON-NLS-1$
 					update();

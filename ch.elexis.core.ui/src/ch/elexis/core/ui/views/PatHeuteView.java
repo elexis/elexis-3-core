@@ -350,7 +350,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	
 	@Override
 	public void dispose(){
-		cv.getConfigurer().getContentProvider().stopListening();
+		if (cv != null)
+			cv.getConfigurer().getContentProvider().stopListening();
 		kload.removeListener(this);
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		

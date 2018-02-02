@@ -82,7 +82,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	
 	@Override
 	public void stopListening(){
-		if (viewer != null) {
+		if (viewer != null  && viewer.getConfigurer() != null && viewer.getConfigurer().getControlFieldProvider() != null) {
 			viewer.getConfigurer().getControlFieldProvider().removeChangeListener(this);
 		}
 	}

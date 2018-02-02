@@ -27,16 +27,16 @@ public class TestInitializer {
 		if (dbflavor == FLAVOR_H2_MEM) {
 			link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "h2");
 		} else if (dbflavor == FLAVOR_MYSQL) {
-			link = JdbcLink.createMySqlLink("localhost", "unittests");
+			link = JdbcLink.createMySqlLink("localhost", "elexis_unit_tests");
 		} else if (dbflavor == FLAVOR_POSTGRES) {
-			link = JdbcLink.createPostgreSQLLink("localhost", "unittests");
+			link = JdbcLink.createPostgreSQLLink("localhost", "elexis_unit_tests");
 		}
 		
 		if (link == null) {
 			return link;
 		}
 		try {
-			boolean connectionOk = link.connect("elexisTest", "elexisTest");
+			boolean connectionOk = link.connect("elexis_unit_tests", "elexisTest");
 			if (connectionOk) {
 				return link;
 			}

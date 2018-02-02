@@ -4,16 +4,21 @@ You need to grant access to the mysql and postgresql databases unittest.
 
 For postgres run the following commands
 
-bq.  sudo -u postgres psql -c "create database unittests"
-sudo -u postgres psql -c "create user elexis with UNENCRYPTED password 'elexisTest';"
-sudo -u postgres psql -c "grant all privileges  on database unittests to elexis;"
+bq.  sudo -u postgres psql -c "create database elexis_unit_tests;"
+sudo -u postgres psql -c "create user elexis_unit_tests with UNENCRYPTED password 'elexisTest';"
+sudo -u postgres psql -c "grant all privileges  on database elexis_unit_tests to elexis_unit_tests;"
 
 
 For mysql run the following commands
-(note: There seem to be issues with these Tests and MariaDB. So if they keep failing, make sure to use Mysql Server)
 
 bq. mysql --host=localhost --user root --password
-create database unittests; 
-grant all on unittests.* to elexisTest@localhost identified by 'elexisTest'; 
+create database elexis_unit_tests;
+grant all on elexis_unit_tests.* to elexis_unit_tests@localhost identified by 'elexisTest';
 
-Then, right-click on DataAllTests.launch and select "Run as" or "Debug as" DataAllTests.
+Hint: If you are running on Debian or Ubuntu you may use for the first command @sudo mysql -uroot@
+
+h3. Running unit tests for all supported databases using maven
+
+You have to set the property @-Delexis.run.dbtests=true@ when calling maven.
+
+This is the default for running the Travis-CI integrations (see also @.travis.yml@).

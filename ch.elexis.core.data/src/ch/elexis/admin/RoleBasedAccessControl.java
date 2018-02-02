@@ -71,7 +71,11 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 		}
 		sb.append(StringConstants.CLOSEBRACKET + StringConstants.SEMICOLON);
 		
-		Stm stm = PersistentObject.getConnection().getStatement();
+		if ( PersistentObject.getDefaultConnection() == null)
+			return false;
+		Stm stm = PersistentObject.getDefaultConnection().getStatement();
+		if ( stm == null)
+			return false;
 		boolean ret = false;
 		try {
 			ResultSet result = stm.query(sb.toString());
@@ -84,7 +88,9 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 		} catch (SQLException e) {
 			log.error("Error querying access right ", e);
 		} finally {
-			PersistentObject.getConnection().releaseStatement(stm);
+			if ( PersistentObject.getDefaultConnection() == null)
+				return false;
+			PersistentObject.getDefaultConnection().releaseStatement(stm);
 		}
 		
 		return ret;
