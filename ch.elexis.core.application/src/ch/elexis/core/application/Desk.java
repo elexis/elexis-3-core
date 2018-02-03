@@ -133,9 +133,11 @@ public class Desk implements IApplication {
 			log.error("Exception caught", ex);
 			ex.printStackTrace();
 			return -1;
+		} finally {
+			UiDesk.getDisplay().dispose();
 		}
 	}
-	
+		
 	protected void initIdentifiers(){
 		if (CoreHub.globalCfg.get(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
 			LocalLock localLock = new LocalLock("initInstallationTimestamp");
