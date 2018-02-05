@@ -326,10 +326,12 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private String getServiceCode(Verrechnet verrechnet){
 		String ret = verrechnet.getCode();
 		IVerrechenbar verrechenbar = verrechnet.getVerrechenbar();
-		if (verrechenbar instanceof Eigenleistung || (verrechenbar instanceof Artikel
-			&& ((Artikel) verrechenbar).get(Artikel.FLD_TYP).equals("Eigenartikel"))) {
-			if (verrechenbar != null && verrechenbar.getId().equals(ret)) {
-				ret = "";
+		if (verrechenbar != null) {
+			if (verrechenbar instanceof Eigenleistung || (verrechenbar instanceof Artikel
+				&& "Eigenartikel".equals(((Artikel) verrechenbar).get(Artikel.FLD_TYP)))) {
+				if (verrechenbar.getId().equals(ret)) {
+					ret = "";
+				}
 			}
 		}
 		return ret;
