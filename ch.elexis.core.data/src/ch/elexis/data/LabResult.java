@@ -436,6 +436,10 @@ public class LabResult extends PersistentObject implements ILabResult {
 		setInt(FLAGS, flags);
 	}
 	
+	/**
+	 * if 1 is pathologic<br> 
+	 * if 0 non-pathologic or indetermined (see {@link #getPathologicDescription()}
+	 */
 	public int getFlags(){
 		return checkZero(get(FLAGS));
 	}

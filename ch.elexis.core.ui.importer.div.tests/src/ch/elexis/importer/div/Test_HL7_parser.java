@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -41,8 +42,10 @@ import org.junit.Test;
 
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.Messages;
+import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.core.ui.importer.div.importers.TestHL7Parser;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
@@ -287,7 +290,8 @@ public class Test_HL7_parser {
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> results = qr.execute();
 		assertFalse(results.isEmpty());
-		LabResult result = results.get(2);
+		assertEquals(2, results.size());
+		LabResult result = results.get(1);
 		String resultString = result.getComment();
 		assertFalse(resultString.contains("\\.br\\"));
 		assertTrue(resultString.contains("\n"));
@@ -364,7 +368,7 @@ public class Test_HL7_parser {
 		
 		qr = new Query<>(LabResult.class);
 		qr.add(LabResult.PATIENT_ID, Query.EQUALS, labResult.getPatient().getId());
-		assertEquals(6, qr.execute().size());
+		assertEquals(4, qr.execute().size());
 		
 		parseOneHL7file(
 			new File(workDir.toString(), "Analytica/zweites Resultat0217330708_6452745605734.hl7"),
@@ -387,7 +391,8 @@ public class Test_HL7_parser {
 			true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
-		List<LabResult> qrr = qr.execute();
+		assertEquals(2, qr.execute().size());
+		
 		int j = 0;
 		Query<LabItem> query = new Query<LabItem>(LabItem.class);
 		query.orderBy(false, LabItem.SHORTNAME);
@@ -400,9 +405,37 @@ public class Test_HL7_parser {
 				j++;
 			}
 		}
+		
+		assertEquals("NASOPHARYNGEALABSTRICH - Influenza A Virus  (Genom-Nachweis)",
+			itemArray[0].getName());
+		assertEquals("NASOPHARYNGEALABSTRICH - Influenza B Virus  (Genom-Nachweis)",
+			itemArray[1].getName());
+	}
+	
+	@Test
+	public void testImport_10655() throws IOException{
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		parseOneHL7file(new File(workDir.toString(), "Analytica/0218040634_6467538389964.hl7"),
+			false, true);
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
 		assertEquals(3, qrr.size());
-		assertTrue(itemArray[0].getLabel().contains("INFA, Influenza A Virus"));
-		assertTrue(itemArray[1].getLabel().contains("INFB, Influenza B Virus"));
-		assertTrue(itemArray[2].getLabel().contains("MAT, MATERIAL"));
+		
+		qr = new Query<LabResult>(LabResult.class);
+		qr.add(LabResult.COMMENT, Query.LIKE, "Candida albicans%");
+		
+		LabResult labResult = qr.execute().get(0);
+		assertEquals(0, labResult.getFlags());
+		assertEquals("text", labResult.getResult());
+		assertEquals(Description.PATHO_IMPORT_NO_INFO,
+			labResult.getPathologicDescription().getDescription());
+		assertTrue(labResult.getComment(), labResult.getComment().startsWith("Candida albicans"));
+		assertTrue(StringUtils.isEmpty(labResult.getRefMale()));
+		assertTrue(StringUtils.isEmpty(labResult.getRefFemale()));
+		
+		ILabItem item = labResult.getItem();
+		assertEquals("VAGINA-ABSTRICH - Kultur aerob", item.getName());
+		assertTrue(item.getGroup(), item.getGroup().startsWith("Z Automatisch"));
 	}
 }

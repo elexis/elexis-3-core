@@ -46,6 +46,7 @@ public class Test_HL7_Imports {
 			assertFalse(hl7Readers.isEmpty());
 			assertNotNull(hl7Readers.get(0).getVersion());
 			assertFalse(hl7Readers.get(0).getVersion().isEmpty());
+			System.out.println("Selected Reader ["+hl7Readers.get(0).getClass().getName()+"]");
 		} else {
 			System.out.println("Skipping Datei " + name);
 		}

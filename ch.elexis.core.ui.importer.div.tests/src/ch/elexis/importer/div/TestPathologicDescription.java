@@ -134,14 +134,14 @@ public class TestPathologicDescription {
 				j++;
 			}
 		}
-		assertEquals(3, qrr.size());
+		assertEquals(2, qrr.size());
 		boolean foundpatho1 = false;
 		for (j = 0; j < qrr.size(); j++) {
-			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Keimzahl")) {
+			if (qrr.get(j).getItem().getName().equalsIgnoreCase("URIN-VACUTAINER - Keimzahl")) {
 				assertFalse(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
-				assertEquals(Description.PATHO_IMPORT, description.getDescription());
+				assertEquals(Description.PATHO_IMPORT_NO_INFO, description.getDescription());
 				assertEquals("", description.getReference());
 				foundpatho1 = true;
 			}

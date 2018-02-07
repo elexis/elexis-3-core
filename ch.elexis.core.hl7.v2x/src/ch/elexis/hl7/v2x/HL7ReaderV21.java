@@ -278,7 +278,7 @@ public class HL7ReaderV21 extends HL7Reader {
 		String range = "";
 		String observationTime = "";
 		String status = "";
-		boolean flag = false;
+		Boolean flag;
 		
 		if (isTextOrNumeric(valueType)) {
 			name = obx.getObx4_OBSERVATIONSUBID().getValue();
