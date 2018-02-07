@@ -24,7 +24,7 @@ public class TransientLabResult {
 	private String refFemale;
 	private String unit;
 	private String subId;
-	private int flags;
+	private Integer flags;
 	
 	private TimeTool date;
 	private TimeTool analyseTime;
@@ -97,7 +97,13 @@ public class TransientLabResult {
 		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
 			flags = labResult.getFlags();
 		} else {
-			labResult.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT));
+			if (flags != null) {
+				labResult
+					.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT));
+			} else {
+				labResult.setPathologicDescription(
+					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO));
+			}
 		}
 		setFields(labResult);
 	}
@@ -111,14 +117,19 @@ public class TransientLabResult {
 			refVal = refFemale;
 		}
 		
-		ILabResult labResult =
-			labImportUtil.createLabResult(patient, date, labItem, result, comment, refVal, origin,
-				subId);
+		ILabResult labResult = labImportUtil.createLabResult(patient, date, labItem, result,
+			comment, refVal, origin, subId);
 		// pathologic check takes place in labResult if it is numeric
 		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
 			flags = labResult.getFlags();
 		} else {
-			labResult.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT));
+			if (flags != null) {
+				labResult
+					.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT));
+			} else {
+				labResult.setPathologicDescription(
+					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO));
+			}
 		}
 		setFields(labResult);
 		
@@ -137,7 +148,7 @@ public class TransientLabResult {
 		StringBuilder sb = new StringBuilder();
 		sb.append(labItem.getLabel()).append(", date ")
 			.append(getDate().toString(TimeTool.TIMESTAMP));
-			
+		
 		if (refMale != null) {
 			sb.append(" refm ").append(refMale);
 		}
@@ -195,14 +206,14 @@ public class TransientLabResult {
 			labResult.setTransmissionTime(transmissionTime);
 		}
 		// set all flags at once, flags is a string in the database
-		labResult.setFlags(flags);
+		labResult.setFlags((flags == null) ? 0 : flags);
 		labImportUtil.updateLabResult(labResult, this);
-//		if (setProperties != null) {
-//			Set<String> keys = setProperties.keySet();
-//			for (String string : keys) {
-//				labResult.set(string, setProperties.get(string));
-//			}
-//		}
+		//		if (setProperties != null) {
+		//			Set<String> keys = setProperties.keySet();
+		//			for (String string : keys) {
+		//				labResult.set(string, setProperties.get(string));
+		//			}
+		//		}
 	}
 	
 	public IPatient getPatient(){
@@ -306,7 +317,7 @@ public class TransientLabResult {
 		private String refMale;
 		private String refFemale;
 		private String unit;
-		private int flags;
+		private Integer flags;
 		
 		private TimeTool date;
 		private TimeTool analyseTime;
@@ -352,7 +363,7 @@ public class TransientLabResult {
 			return this;
 		}
 		
-		public Builder flags(int flags){
+		public Builder flags(Integer flags){
 			this.flags = flags;
 			return this;
 		}
@@ -391,12 +402,12 @@ public class TransientLabResult {
 			return this;
 		}
 		
-//		public Builder setProperty(String property, String value){
-//			if (setProperties == null) {
-//				setProperties = new HashMap<String, String>();
-//			}
-//			setProperties.put(property, value);
-//			return this;
-//		}
+		//		public Builder setProperty(String property, String value){
+		//			if (setProperties == null) {
+		//				setProperties = new HashMap<String, String>();
+		//			}
+		//			setProperties.put(property, value);
+		//			return this;
+		//		}
 	}
 }

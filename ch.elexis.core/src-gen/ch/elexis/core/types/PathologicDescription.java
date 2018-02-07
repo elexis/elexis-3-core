@@ -12,6 +12,8 @@ public class PathologicDescription {
 	public enum Description {
 			/** pathologic value from import */
 			PATHO_IMPORT("Aus Import"),
+			/** no pathologic value provided during import */
+			PATHO_IMPORT_NO_INFO("Aus Import (Keine Information vorhanden)"),
 			/** pathologic value determined by checking against absolute reference */
 			PATHO_ABSOLUT("Absoluter Wert"),
 			/** pathologic value determined by checking against reference from lab result */
@@ -19,7 +21,7 @@ public class PathologicDescription {
 			/** pathologic value determined by checking against reference from lab item */
 			PATHO_REF_ITEM("Parameter Referenzwert"),
 			/** pathologic value because no, or non parseable reference value */
-			PATHO_NOREF("Keine Referenzwert"),
+			PATHO_NOREF("Kein Referenzwert"),
 			/** pathologic value manually set */
 			PATHO_MANUAL("Manuell"),
 			/** default not known why the pathologic has its value */
