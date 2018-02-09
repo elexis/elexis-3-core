@@ -460,6 +460,9 @@ public class Messages extends NLS {
 	public static String ReminderView_onlyDueToolTip;
 	public static String ReminderView_onePatOnly;
 	public static String ReminderView_onlyOnePatientForActivation;
+	public static String ReminderView_sortByDueDate;
+	public static String ReminderView_sortByDueDateAscending;
+	public static String ReminderView_sortByDueDateDescending;
 	public static String RezeptBlatt_4;
 	public static String RezeptBlatt_6;
 	public static String RezeptBlatt_TemplateNameList;
