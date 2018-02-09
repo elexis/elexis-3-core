@@ -418,7 +418,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				return (sel != null && sel.length == 1 && sel[0] instanceof Reminder);
 			}
 		};
-		sortByDueDate = new Action("by due date", Action.AS_CHECK_BOX) {
+		sortByDueDate = new Action(Messages.ReminderView_sortByDueDate, Action.AS_CHECK_BOX) {
 			
 			int state = 0;
 			
@@ -433,7 +433,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 						}
 					});
 					state = 1;
-					sortByDueDate.setText("by due date ascending");
+					sortByDueDate.setText(Messages.ReminderView_sortByDueDateAscending);
 					sortByDueDate.setChecked(true);
 				} else if (state == 1) {
 					contentProvider.setComparator(new Comparator<Reminder>() {
@@ -443,12 +443,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 						}
 					});
 					state = 2;
-					sortByDueDate.setText("by due date descending");
+					sortByDueDate.setText(Messages.ReminderView_sortByDueDateDescending);
 					sortByDueDate.setChecked(true);
 				} else if (state == 2) {
 					contentProvider.setComparator(null);
 					state = 0;
-					sortByDueDate.setText("by due date");
+					sortByDueDate.setText(Messages.ReminderView_sortByDueDate);
 					sortByDueDate.setChecked(false);
 				}
 				
@@ -724,7 +724,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					Reminder.FLD_KONTAKT_ID, Reminder.FLD_VISIBILITY);
 				if (!vals[2].equals(patientId)) {
 					Visibility vis = Visibility.byNumericSafe(vals[3]);
-					if (vis != Visibility.ALWAYS && vis != Visibility.POPUP_ON_LOGIN) {
+					if (vis != Visibility.ALWAYS && vis != Visibility.POPUP_ON_LOGIN ) {
 						// other (non-selected patient) and not marked always visible
 						return false;
 					}
