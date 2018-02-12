@@ -13,8 +13,8 @@
 package ch.elexis.core.ui.views.codesystems;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -287,68 +287,64 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	 */
 	private static void addUserSpecifiedTabs(java.util.List<IConfigurationElement> list,
 		String settings, CTabFolder ctab, String point){
-		String[] userSettings = settings.split(",");
-		Map<Integer, IConfigurationElement> icMap = new TreeMap<Integer, IConfigurationElement>();
 		
+		Map<String, IConfigurationElement> allIcMap = new HashMap<String, IConfigurationElement>();
 		for (IConfigurationElement ic : list) {
 			try {
 				IDetailDisplay d = (IDetailDisplay) ic
 					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
-				
-				for (int i = 0; i < userSettings.length; i++) {
-					if (userSettings[i].equals(d.getTitle().trim())) {
-						icMap.put(i, ic);
-					}
-				}
-				
+				allIcMap.put(d.getTitle(), ic);
 			} catch (Exception e) {
 				ExHandler.handle(e);
 			}
 		}
 		
-		for (Integer key : icMap.keySet()) {
-			try {
-				IConfigurationElement ic = icMap.get(key);
-				PersistentObjectFactory po = (PersistentObjectFactory) ic
-					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
-				CodeSelectorFactory codeSelectorFactory = (CodeSelectorFactory) ic
-					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
-				if (codeSelectorFactory == null) {
-					String error = "CodeSelectorFactory is null: " + ic.getClass().getName(); //$NON-NLS-1$
-					SWTHelper.alert(CAPTION_ERROR, error);
-					log.error(error);
-					continue;
+		String[] userSettings = settings.split(",");
+		for (String tab : userSettings) {
+			if ("Favoriten".equals(tab)) {
+				if (point.equals(ExtensionPointConstantsUi.VERRECHNUNGSCODE)) {
+					new FavoritenCTabItem(ctab, SWT.NONE);
 				}
-				ICodeElement codeElement =
-					(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
-				if (codeElement == null) {
-					String message = "null code element for " //$NON-NLS-1$
-						+ codeSelectorFactory.getElementClass() + " in " + po.getClass();
-					SWTHelper.alert(CAPTION_ERROR, message); //$NON-NLS-1$
-					log.error(message);
-					continue;
+			} else {
+				try {
+					IConfigurationElement ic = allIcMap.get(tab);
+					if (ic == null) {
+						continue;
+					}
+					PersistentObjectFactory po = (PersistentObjectFactory) ic
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
+					CodeSelectorFactory codeSelectorFactory = (CodeSelectorFactory) ic
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+					if (codeSelectorFactory == null) {
+						String error = "CodeSelectorFactory is null: " + ic.getClass().getName(); //$NON-NLS-1$
+						SWTHelper.alert(CAPTION_ERROR, error);
+						log.error(error);
+						continue;
+					}
+					ICodeElement codeElement =
+						(ICodeElement) po.createTemplate(codeSelectorFactory.getElementClass());
+					if (codeElement == null) {
+						String message = "null code element for " //$NON-NLS-1$
+							+ codeSelectorFactory.getElementClass() + " in " + po.getClass();
+						SWTHelper.alert(CAPTION_ERROR, message); //$NON-NLS-1$
+						log.error(message);
+						continue;
+					}
+					String codeSystemName = codeElement.getCodeSystemName();
+					if (StringTool.isNothing(codeSystemName)) {
+						SWTHelper.alert(CAPTION_ERROR, "codesystemname"); //$NON-NLS-1$
+						codeSystemName = "??"; //$NON-NLS-1$
+					}
+					CTabItem tabItem = new CTabItem(ctab, SWT.NONE);
+					
+					tabItem.setText(codeSystemName);
+					tabItem.setData(codeElement);
+					tabItem.setData("csf", codeSelectorFactory);
+				} catch (CoreException ex) {
+					ExHandler.handle(ex);
 				}
-				String codeSystemName = codeElement.getCodeSystemName();
-				if (StringTool.isNothing(codeSystemName)) {
-					SWTHelper.alert(CAPTION_ERROR, "codesystemname"); //$NON-NLS-1$
-					codeSystemName = "??"; //$NON-NLS-1$
-				}
-				CTabItem tabItem = new CTabItem(ctab, SWT.NONE);
-				
-				tabItem.setText(codeSystemName);
-				tabItem.setData(codeElement);
-				tabItem.setData("csf", codeSelectorFactory);
-			} catch (CoreException ex) {
-				ExHandler.handle(ex);
 			}
-		}
-		
-		if (point.equals(ExtensionPointConstantsUi.VERRECHNUNGSCODE)) {
-			for (int i = 0; i < userSettings.length; i++) {
-				if (userSettings[i].equals("Favoriten")) {
-					new FavoritenCTabItem(ctab, SWT.NONE, i);
-				}
-			}
+			
 		}
 	}
 	
@@ -738,7 +734,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	 * 
 	 * @return
 	 */
-	protected DoubleClickListener getDoubleClickListener() {
+	protected DoubleClickListener getDoubleClickListener(){
 		return new DoubleClickListener() {
 			public void doubleClicked(PersistentObject obj, CommonViewer cv){
 				ICodeSelectorTarget target =
