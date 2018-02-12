@@ -7,15 +7,14 @@
  * Contributors: 
  * IBM - Initial API and implementation
  **********************************************************************/
-package ch.elexis.admin;
+package ch.elexis.core.acl;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.admin.messages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "ch.elexis.core.acl.messages";//$NON-NLS-1$
 	
 	public static String AccessControl_GroupAll;
-	public static String AccessControlDefaults_GroupAdminLaboratory;
 	public static String AccessControlDefaults_about;
 	public static String AccessControlDefaults_absolute;
 	public static String AccessControlDefaults_Access;
@@ -64,7 +63,6 @@ public class Messages extends NLS {
 	public static String AccessControlDefaults_grantRights;
 	public static String AccessControlDefaults_help;
 	public static String AccessControlDefaults_labValues;
-	public static String AccessControlDefaults_EditLaboratoryParameter;
 	public static String AccessControlDefaults_loadInfoStore;
 	public static String AccessControlDefaults_logIn;
 	public static String AccessControlDefaults_main_case;
