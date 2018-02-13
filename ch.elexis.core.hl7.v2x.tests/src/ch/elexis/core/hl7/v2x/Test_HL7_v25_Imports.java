@@ -107,7 +107,6 @@ public class Test_HL7_v25_Imports {
 		assertNull(lrd.getComment());
 		assertNull(lrd.getRange());
 		assertNull(lrd.getUnit());
-		assertEquals(1516271160000l, lrd.getOBRDateTime().getTime());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 	}
 }
