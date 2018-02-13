@@ -60,7 +60,6 @@ public class Test_HL7_v25_Imports {
 		assertNull(lrd.getRange());
 		assertNull(lrd.getUnit());
 		assertEquals("", lrd.getGroup());
-		assertEquals(1516812120000l, lrd.getOBRDateTime().getTime());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 		
 		lrd = (LabResultData) observations.get(1);
@@ -71,7 +70,6 @@ public class Test_HL7_v25_Imports {
 		assertNull(lrd.getComment());
 		assertNull(lrd.getRange());
 		assertNull(lrd.getUnit());
-		assertEquals(1516812120000l, lrd.getOBRDateTime().getTime());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 		
 		lrd = (LabResultData) observations.get(2);
@@ -82,7 +80,6 @@ public class Test_HL7_v25_Imports {
 		assertNull(lrd.getComment());
 		assertNull(lrd.getRange());
 		assertNull(lrd.getUnit());
-		assertEquals(1516812120000l, lrd.getOBRDateTime().getTime());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 	}
 	
