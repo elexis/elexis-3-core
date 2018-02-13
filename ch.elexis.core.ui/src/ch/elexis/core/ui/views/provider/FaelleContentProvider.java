@@ -16,13 +16,19 @@ import ch.elexis.data.Patient;
  */
 public class FaelleContentProvider implements IStructuredContentProvider {
 	
+	private FallComparator comparator;
+	
+	public FaelleContentProvider(){
+		comparator = new FallComparator();
+	}
+	
 	public Object[] getElements(final Object inputElement){
 		Patient act = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 		if (act == null) {
 			return new Object[0];
 		} else {
 			Fall[] cases = act.getFaelle();
-			Arrays.sort(cases, new FallComparator());
+			Arrays.sort(cases, comparator);
 			return cases;
 		}
 		
