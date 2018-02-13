@@ -40,6 +40,7 @@ public class Messages extends NLS {
 	public static String LaborView_nextPage;
 	public static String LaborView_parameter;
 	public static String LaborView_pathologic;
+	public static String LaborView_nonPathologic;
 	public static String LaborView_prevPage;
 	public static String LaborView_print;
 	public static String LaborView_printOrders;
