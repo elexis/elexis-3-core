@@ -204,14 +204,16 @@ public class BriefAuswahl extends ViewPart implements
 		UiDesk.asyncExec(new Runnable() {
 			public void run(){
 				Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-				if (pat == null) {
-					form.setText(Messages.BriefAuswahlNoPatientSelected); //$NON-NLS-1$
-				} else {
-					form.setText(pat.getLabel());
-					CTabItem sel = ctab.getSelection();
-					if (sel != null) {
-						CommonViewer cv = (CommonViewer) sel.getData();
-						cv.notify(CommonViewer.Message.update);
+				if (form != null && !form.isDisposed()) {
+					if (pat == null) {
+						form.setText(Messages.BriefAuswahlNoPatientSelected); //$NON-NLS-1$
+					} else {
+						form.setText(pat.getLabel());
+						CTabItem sel = ctab.getSelection();
+						if (sel != null) {
+							CommonViewer cv = (CommonViewer) sel.getData();
+							cv.notify(CommonViewer.Message.update);
+						}
 					}
 				}
 			}
