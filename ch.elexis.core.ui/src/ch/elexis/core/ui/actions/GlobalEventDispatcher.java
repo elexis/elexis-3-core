@@ -12,8 +12,8 @@
 
 package ch.elexis.core.ui.actions;
 
-import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -29,16 +29,17 @@ import ch.rgw.tools.Tree;
 
 public class GlobalEventDispatcher implements IPartListener2 {
 	private static GlobalEventDispatcher theInstance;
-	private final HashMap<IWorkbenchPart, LinkedList<IActivationListener>> activationListeners;
+	private final ConcurrentHashMap<IWorkbenchPart, LinkedList<IActivationListener>> activationListeners;
 	private final GlobalListener globalListener = new GlobalListener();
 	
 	private GlobalEventDispatcher(){
-		activationListeners = new HashMap<IWorkbenchPart, LinkedList<IActivationListener>>();
+		activationListeners =
+			new ConcurrentHashMap<IWorkbenchPart, LinkedList<IActivationListener>>();
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(this);
 		
 	}
 	
-	public static GlobalEventDispatcher getInstance(){
+	public static synchronized GlobalEventDispatcher getInstance(){
 		if (theInstance == null) {
 			theInstance = new GlobalEventDispatcher();
 		}
@@ -64,7 +65,8 @@ public class GlobalEventDispatcher implements IPartListener2 {
 	 * @param part
 	 *            The workbench part to observe
 	 */
-	public static void addActivationListener(final IActivationListener l, final IWorkbenchPart part){
+	public static void addActivationListener(final IActivationListener l,
+		final IWorkbenchPart part){
 		LinkedList<IActivationListener> list = getInstance().activationListeners.get(part);
 		if (list == null) {
 			list = new LinkedList<IActivationListener>();
@@ -151,13 +153,8 @@ public class GlobalEventDispatcher implements IPartListener2 {
 	};
 	
 	private static class GlobalListener implements ISelectionChangedListener {
-		boolean daempfung;
 		
 		public void selectionChanged(final SelectionChangedEvent event){
-			if (daempfung) {
-				return;
-			}
-			daempfung = true;
 			StructuredSelection sel = (StructuredSelection) event.getSelection();
 			
 			Object[] obj = sel.toArray();
@@ -171,9 +168,6 @@ public class GlobalEventDispatcher implements IPartListener2 {
 					}
 				}
 			}
-			daempfung = false;
 		}
-		
 	}
-	
 }
