@@ -231,7 +231,8 @@ public class TestPathologicDescription {
 				assertEquals("positiv", labResult.getResult());
 				// it is pathologic, but we don't know - we can't interpret
 				assertEquals(0, labResult.getFlags());
-				assertTrue(labResult.isPathologicFlagIndetermined());
+				assertTrue(labResult.isPathologicFlagIndetermined(pathologicDescription));
+				assertEquals("", labResult.getItem().getUnit());
 			} else if (labResult.getItem().getLabel().equalsIgnoreCase("TestStupidValues")) {
 				assertEquals(Description.PATHO_NOREF, pathologicDescription.getDescription());
 				assertEquals("hund", pathologicDescription.getReference());

@@ -468,11 +468,16 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * Do we really know about the state of the pathologic flag, or is it set to non-pathologic
 	 * because we simply don't now or can't determine?
 	 * 
+	 * @param pathologicDescription
+	 *            if <code>null</code> will fetch via db call
 	 * @return <code>true</code> if don't know, or can't determine
 	 * @since 3.4
 	 */
-	public boolean isPathologicFlagIndetermined(){
-		Description desc = getPathologicDescription().getDescription();
+	public boolean isPathologicFlagIndetermined(PathologicDescription pathologicDescription){
+		if (pathologicDescription == null) {
+			pathologicDescription = getPathologicDescription();
+		}
+		Description desc = pathologicDescription.getDescription();
 		return (Description.PATHO_NOREF == desc || Description.UNKNOWN == desc
 			|| Description.PATHO_IMPORT_NO_INFO == desc);
 	}

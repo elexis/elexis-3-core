@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
@@ -29,7 +30,8 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LaborParameterEditAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultDeleteAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
-import ch.elexis.core.ui.laboratory.actions.TogglePathologicAction;
+import ch.elexis.core.ui.laboratory.actions.LaborResultSetNonPathologicAction;
+import ch.elexis.core.ui.laboratory.actions.LaborResultSetPathologicAction;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.core.ui.laboratory.controls.util.ChangeNewDateSelection;
 import ch.elexis.core.ui.laboratory.controls.util.ChangeResultsDateSelection;
@@ -122,9 +124,11 @@ public class LaborResultsComposite extends Composite {
 			public void menuAboutToShow(IMenuManager manager){
 				List<LabResult> results = getSelectedResults();
 				if (results != null) {
-					mgr.add(new TogglePathologicAction(results, viewer));
+					mgr.add(new LaborResultSetPathologicAction(results, viewer));
+					mgr.add(new LaborResultSetNonPathologicAction(results, viewer));
 					mgr.add(new LaborResultEditDetailAction(results, viewer));
 					mgr.add(new LaborResultDeleteAction(results, viewer));
+					mgr.add(new Separator());
 					mgr.add(new LaborParameterEditAction(results, viewer));
 				}
 			}
