@@ -29,6 +29,17 @@ public class XidConstants {
 	public static final int ELEXIS_QUALITY = ASSIGNMENT_LOCAL | QUALITY_GUID;
 	
 	/**
+	 * Elexis INTERAL types
+	 */
+	public static final String DOMAIN_KONTAKT = XidConstants.DOMAIN_ELEXIS + "/kontakt/";
+	public static final String XID_KONTAKT_ANREDE = DOMAIN_KONTAKT + "anrede";
+	public static final String XID_KONTAKT_KANTON = DOMAIN_KONTAKT + "kanton";
+	public static final String XID_KONTAKT_SPEZ = DOMAIN_KONTAKT + "spez";
+	public static final String XID_KONTAKT_ROLLE = DOMAIN_KONTAKT + "rolle";
+	public static final String XID_KONTAKT_LAB_SENDING_FACILITY = DOMAIN_KONTAKT
+		+ "lab/sendingfacility";
+	
+	/**
 	 * GLOBAL
 	 */
 	public static final String EAN = "www.xid.ch/id/ean"; // European Article Number
