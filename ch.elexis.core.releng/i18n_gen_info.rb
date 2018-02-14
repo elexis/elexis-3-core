@@ -459,7 +459,7 @@ class I18nInfo
       key, value = get_key_value(line.chomp, replace_dots_by_underscore: false)
       keys << [project_name, key].join('_')
     end
-    plugin_key_hash = parse_plugin_xml(project_name, File.join(File.dirname(filename), 'plugin.xml'))
+    plugin_key_hash = parse_plugin_xml(project_name, File.join(File.dirname(filename), 'plugin.xml')) || {}
     keys += plugin_key_hash.keys
     LanguageViews.keys.each do |lang|
       lang_file = filename.sub('.properties', (lang.eql?('Java') ? '' : '_' + lang) + '.properties')
@@ -489,6 +489,15 @@ class I18nInfo
         end
       end
     end
+  end
+
+  def to_utf(string)
+    begin
+      m = /String\s+(\w+)\s*;/.match(string)
+    rescue => error
+      string = string.encode('UTF-8', 'ISO-8859-1')
+    end
+    string
   end
 
   # TODO: Generate properties files for all languages by default, but do correct stuff in l10n.{lang}
@@ -527,8 +536,9 @@ class I18nInfo
           msg_java =File.join(Dir.pwd.sub(L10N_Cache::REGEX_TRAILING_LANG, ''), 'src', project_name.split('.'), 'Messages.java').gsub("/#{lang}/", '/')
         end
         if File.exist?(msg_java)
-          keys = File.readlines(msg_java).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name, m[1]] if m }.compact
-          keys += File.readlines(msg_java).collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name.sub(/\.#{lang}$/, ''), m[1]] if m }.compact
+          lines = File.readlines(msg_java).collect{|line| to_utf(line) }
+          keys = lines.collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name, m[1]] if m }.compact
+          keys += lines.collect{|line| m = /String\s+(\w+)\s*;/.match(line); [ project_name.sub(/\.#{lang}$/, ''), m[1]] if m }.compact
           if keys.size == 0
             puts "Skipping #{msg_java} which contains no keys"
             next
