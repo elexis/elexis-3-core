@@ -763,6 +763,25 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			// existierenden Prüfungen durch eine zentrale hier mitersetzen.
 			IOptifier optifier = l.getOptifier();
 			Result<IVerrechenbar> result = optifier.add(l, this);
+			if (!result.isOK() && result.getCode() == 11) {
+				String initialResult = result.toString();
+				// code 11 is tarmed exclusion due to side see TarmedOptifier#EXKLUSIONSIDE
+				// set a context variable to specify the side see TarmedLeistung#SIDE, TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
+				optifier.putContext("Seite", "r");
+				result = optifier.add(l, this);
+				if (!result.isOK() && result.getCode() == 11) {
+					optifier.putContext("Seite", "l");
+					result = optifier.add(l, this);
+				}
+				if (result.isOK()) {
+					MessageEvent.fireInformation("Info",
+						"Achtung: " + initialResult + "\n\n Es wurde bei der Position "
+							+ l.getCode()
+							+ " automatisch die Seite gewechselt."
+							+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.");
+				}
+				optifier.clearContext();
+			}
 			if (result.isOK()) {
 				ElexisEventDispatcher.update(this);
 				// Statistik nachführen
