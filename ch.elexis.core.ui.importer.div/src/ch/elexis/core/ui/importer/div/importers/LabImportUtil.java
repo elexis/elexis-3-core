@@ -9,6 +9,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -102,7 +103,7 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		Labor labor = null;
 		// check if there is a connection to an XID
-		Kontakt k = (Kontakt) Xid.findObject(Kontakt.XID_KONTAKT_LAB_SENDING_FACILITY, identifier);
+		Kontakt k = (Kontakt) Xid.findObject(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, identifier);
 		if (k != null) {
 			labor = Labor.load(k.getId());
 		}
@@ -115,7 +116,7 @@ public class LabImportUtil implements ILabImportUtil {
 				Kontakt.DEFAULT_SORT);
 			if (ks.open() == Dialog.OK) {
 				labor = (Labor) ks.getSelection();
-				labor.addXid(Kontakt.XID_KONTAKT_LAB_SENDING_FACILITY, identifier, true);
+				labor.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, identifier, true);
 			}
 		}
 		return labor;
