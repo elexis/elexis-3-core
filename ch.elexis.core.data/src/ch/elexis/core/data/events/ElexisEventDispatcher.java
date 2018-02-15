@@ -301,6 +301,10 @@ public final class ElexisEventDispatcher extends Job {
 		return (Mandant) getSelected(Mandant.class);
 	}
 	
+	/**
+	 * Cancel rescheduling of the EventDispatcher. Events already in the event queue will still be
+	 * dispatched.
+	 */
 	public void shutDown(){
 		bStop = true;
 	}

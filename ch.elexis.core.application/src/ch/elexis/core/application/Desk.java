@@ -26,6 +26,7 @@ import ch.elexis.core.application.advisors.Messages;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
@@ -134,6 +135,9 @@ public class Desk implements IApplication {
 			ex.printStackTrace();
 			return -1;
 		} finally {
+			ElexisEventDispatcher.getInstance().shutDown();
+			// give ElexisEventDispatcher time to shut down
+			Thread.sleep(100);
 			UiDesk.getDisplay().dispose();
 		}
 	}
