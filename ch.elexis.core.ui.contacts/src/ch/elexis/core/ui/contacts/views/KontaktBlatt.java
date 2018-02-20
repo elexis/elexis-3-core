@@ -321,6 +321,12 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 					bTypes[i].setEnabled(false);
 				}
 			}
+			if (bTypes[3].getSelection() == true) {
+				// isPatient
+				def[17].getWidget().setEnabled(false);
+			} else {
+				def[17].getWidget().setEnabled(true);
+			}
 			if (bTypes[0].getSelection() == true) {
 				// isOrganisation
 				def[0].setLabel(BEZEICHNUNG);
