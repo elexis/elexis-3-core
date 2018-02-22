@@ -34,9 +34,12 @@ public class BriefDocumentDTO extends AbstractDocumentDTO {
 		setDescription(data[2]);
 		setTitle(data[3]);
 		setMimeType(data[4]);
-		setLastchanged(new Date(Long.valueOf(brief.get(Brief.FLD_LASTUPDATE))));
+    try {
+			setLastchanged(new Date(Long.valueOf(brief.get(Brief.FLD_LASTUPDATE))));
+		} catch (NumberFormatException nex) {
+			setLastchanged(new Date());
+		}
 		setCreated(new TimeTool(brief.get(Brief.FLD_DATE)).getTime());
-		
 		setExtension(evaluateExtension(data[4]));
 		
 		if (StringUtils.isNotEmpty(data[5])) {
