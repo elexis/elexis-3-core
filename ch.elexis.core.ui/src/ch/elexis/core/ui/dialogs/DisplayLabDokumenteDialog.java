@@ -131,35 +131,19 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 				}
 				int counter = 0;
 				for (IOpaqueDocument document : documentList) {
-					
-
-					String fileExtension = null; //This extension will be used to create the tempfile
-					
-					//First of all check the mimetype of the document
-					//Since mimeType is an open String, we check if it is valid
+					String fileExtension = null; 
 					try {
 						MimeType docMimeType = new MimeType(document.getMimeType());
-						//From the mimetype we deduce the extension that 
-						// will be used for the temporary file
 						fileExtension = MimeTool.getExtension(docMimeType.getPrimaryType());
 					}
 					catch(MimeTypeParseException mpe) {
-						//It means that the MimeType is not valid
-						//Maybe document.getMimeType() contains a filename
-						//In this case it has an extension
 						fileExtension = FileTool.getExtension(document.getMimeType());
 						
 						if(fileExtension == null) {
-							//If there is no extension in the mimeType
-							//try in the document name
 							fileExtension = FileTool.getExtension(docName);
 						}
 					}
 					
-					//If we didn't find any extension or mimetype
-					//we could do some exception, because we will not be able to open the file
-					//Or we could continue, and the user will have to choose the application
-					//to use to open the document
 					if(fileExtension == null) {
 						fileExtension = "";
 					}
